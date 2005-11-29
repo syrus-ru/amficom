@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.39 2005/11/28 12:25:54 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.40 2005/11/29 08:18:55 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.corba.CORBAClient;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/11/28 12:25:54 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/11/29 08:18:55 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -197,7 +197,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 				mClientServantManager,
 				clientCORBAActionProcessor);
 
-		final ClientPoolContext clientPoolContext = new MscharClientPoolContext(objectLoader);
+		final ClientPoolContext clientPoolContext = new AllClientPoolContext(objectLoader);
 
 		final CORBAClientImpl servant = new CORBAClientImpl();
 		final CORBAClient corbaClient = servant._this(mClientServantManager.getCORBAServer().getOrb());
