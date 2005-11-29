@@ -9,7 +9,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/config"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/event"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/leserver"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/leserver_interface.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/map"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mapview"/>
