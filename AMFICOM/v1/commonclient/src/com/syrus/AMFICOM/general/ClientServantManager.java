@@ -1,5 +1,5 @@
 /*
- * $Id: ClientServantManager.java,v 1.18 2005/10/31 12:30:02 bass Exp $
+ * $Id: ClientServantManager.java,v 1.19 2005/11/29 08:18:07 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.CommonServerHelper;
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/31 12:30:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/11/29 08:18:07 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -88,7 +88,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 		final String msg = I18N.getString("Error.ConnectionWith.ConnectionWith") + " '" + servantName + "' " + I18N.getString("Error.ConnectionWith.Lost");
 		final Boolean lost = this.connectionLostMap.get(servantName);
 		if (lost != null && !lost.booleanValue()) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 				msg,
 				I18N.getString("Error.ErrorOccur"),
 				JOptionPane.ERROR_MESSAGE);		
@@ -106,7 +106,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 		
 		final Boolean lost = this.connectionLostMap.get(servantName);
 		if (lost != null && lost.booleanValue()) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 				msg,
 				I18N.getString("Common.ClientServantManager.Title"),
 				JOptionPane.INFORMATION_MESSAGE);

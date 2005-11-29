@@ -1,5 +1,5 @@
 /*-
-* $Id: ProcessingDialog.java,v 1.18 2005/11/08 08:11:12 bob Exp $
+* $Id: ProcessingDialog.java,v 1.19 2005/11/29 08:17:23 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import javax.swing.JProgressBar;
 import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.client.launcher.Launcher;
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.util.Log;
 import com.syrus.util.WorkQueue;
 
@@ -31,7 +31,7 @@ import com.syrus.util.WorkQueue;
  * 
  * Using as blocking (modal) dialog processing task 
  * 
- * @version $Revision: 1.18 $, $Date: 2005/11/08 08:11:12 $
+ * @version $Revision: 1.19 $, $Date: 2005/11/29 08:17:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -82,7 +82,7 @@ public final class ProcessingDialog {
 			final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
 			final Dimension screenSize = defaultToolkit.getScreenSize();
 			final JDialog modalDialog = 
-				new JDialog(Environment.getActiveWindow(), true);
+				new JDialog(AbstractMainFrame.getActiveMainFrame(), true);
 			final JProgressBar progressBar = new JProgressBar();
 			progressBar.setStringPainted(true);
 			progressBar.setIndeterminate(true);

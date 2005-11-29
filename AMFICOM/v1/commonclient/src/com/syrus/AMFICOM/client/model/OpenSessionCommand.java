@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.45 2005/11/22 14:21:47 bass Exp $
+ * $Id: OpenSessionCommand.java,v 1.46 2005/11/29 08:17:23 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,8 +51,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2005/11/22 14:21:47 $
+ * @author $Author: bob $
+ * @version $Revision: 1.46 $, $Date: 2005/11/29 08:17:23 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -121,7 +121,7 @@ public class OpenSessionCommand extends AbstractCommand {
 							StorableObjectWrapper.COLUMN_NAME));
 				return true;
 			}
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					I18N.getString("Error.NoDomains"),
 					I18N.getString("Error.ErrorOccur"),
 					JOptionPane.ERROR_MESSAGE,
@@ -131,7 +131,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 					StatusMessageEvent.STATUS_MESSAGE,
 					I18N.getString("Common.StatusBar.NoSession")));
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					I18N.getString("Error.ServerConnection"),
 					I18N.getString("Error.ErrorOccur"),
 					JOptionPane.ERROR_MESSAGE,
@@ -141,7 +141,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 					StatusMessageEvent.STATUS_MESSAGE,
 					I18N.getString("Common.StatusBar.NoSession")));
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					I18N.getString("Error.WrongLogin"),
 					I18N.getString("Error.ErrorOccur"),
 					JOptionPane.ERROR_MESSAGE,
@@ -176,7 +176,7 @@ public class OpenSessionCommand extends AbstractCommand {
 				StatusMessageEvent.STATUS_MESSAGE,
 				I18N.getString("Common.StatusBar.OpeningSession")));
 		if (this.login == null || this.password == null || this.domainId == null) {
-			if (!this.showOpenSessionDialog((Environment.getActiveWindow()))) {
+			if (!this.showOpenSessionDialog(AbstractMainFrame.getActiveMainFrame())) {
 				this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 						StatusMessageEvent.STATUS_MESSAGE,
 						I18N.getString("Common.StatusBar.Aborted")));
@@ -187,7 +187,7 @@ public class OpenSessionCommand extends AbstractCommand {
 
 		final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
 		if (clientSessionEnvironment == null) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					I18N.getString("Error.OpenSession"),
 					I18N.getString("Error.SessionHasNotEstablish"),
 					JOptionPane.ERROR_MESSAGE,
@@ -210,7 +210,7 @@ public class OpenSessionCommand extends AbstractCommand {
 				this.logged = true;
 				return true;
 			}
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					I18N.getString("Error.WrongLogin"),
 					I18N.getString("Error"),
 					JOptionPane.ERROR_MESSAGE,
@@ -220,7 +220,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			return false;
 		} catch (CommunicationException ce) {
 			Log.errorMessage(ce);
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					I18N.getString("Error.ServerConnection"),
 					I18N.getString("Error.OpenSession"),
 					JOptionPane.ERROR_MESSAGE,

@@ -11,12 +11,11 @@ import java.util.logging.Level;
 import javax.swing.JInternalFrame;
 
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/22 15:04:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/11/29 08:17:23 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */

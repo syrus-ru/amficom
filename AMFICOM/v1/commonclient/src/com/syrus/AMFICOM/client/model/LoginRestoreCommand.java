@@ -1,5 +1,5 @@
 /*-
-* $Id: LoginRestoreCommand.java,v 1.13 2005/10/31 12:30:02 bass Exp $
+* $Id: LoginRestoreCommand.java,v 1.14 2005/11/29 08:17:23 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/31 12:30:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/11/29 08:17:23 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -34,7 +34,7 @@ public final class LoginRestoreCommand extends OpenSessionCommand implements Log
 
 	@Override
 	protected boolean logging() {
-		super.logged = this.showOpenSessionDialog(Environment.getActiveWindow());
+		super.logged = this.showOpenSessionDialog(AbstractMainFrame.getActiveMainFrame());
 		return true;
 	}
 
