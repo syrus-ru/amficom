@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.14 2005/11/28 15:01:05 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.15 2005/11/29 12:39:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 
+import java.lang.Thread.State;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -51,17 +52,23 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.AMFICOM.scheme.PathElement;
+import com.syrus.util.ApplicationProperties;
 import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/11/28 15:01:05 $
+ * @version $Revision: 1.15 $, $Date: 2005/11/29 12:39:36 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
+	/*-********************************************************************
+	 * String constants & i18n.                                           *
+	 **********************************************************************/
+
 	private static final char NEWLINE = '\n';
 
 	private static final char SPACE = ' ';
@@ -100,6 +107,49 @@ final class LineMismatchEventProcessor implements EventProcessor {
 
 	private static final Pattern METER_PLURAL_GENITIVE_REGEXP = Pattern.compile("(([0-9]*[^1])?[0,5-9]|[0-9]*1[0-9])");
 
+	/*-********************************************************************
+	 * Keys.                                                              *
+	 **********************************************************************/
+
+	private static final String KEY_REFRESH_POLICY = "DeliveryAttributesRefreshPolicy";
+
+	private static final String KEY_REFRESH_TIMEOUT = "DeliveryAttributesRefreshTimeout";
+
+	/*-********************************************************************
+	 * Default values.                                                    *
+	 **********************************************************************/
+
+	private static final String REFRESH_POLICY_ONEVENT = "onevent";
+
+	private static final String REFRESH_POLICY_ONTIMEOUT = "ontimeout";
+
+
+	private static final String DEFAULT_REFRESH_POLICY = REFRESH_POLICY_ONTIMEOUT;
+
+	private static final int DEFAULT_REFRESH_TIMEOUT = 300;
+
+
+	/**
+	 * Refresh policy; one of "onevent" and "ontimeout".
+	 *
+	 * @todo must be an enum.
+	 */
+	private static final String REFRESH_POLICY =
+			ApplicationProperties.getString(KEY_REFRESH_POLICY, DEFAULT_REFRESH_POLICY).equals(REFRESH_POLICY_ONEVENT)
+					? REFRESH_POLICY_ONEVENT
+					: REFRESH_POLICY_ONTIMEOUT;
+
+	/**
+	 * Refresh timeout, in millis.
+	 */
+	static final long REFRESH_TIMEOUT =
+			1000 * ApplicationProperties.getInt(KEY_REFRESH_TIMEOUT, DEFAULT_REFRESH_TIMEOUT);
+
+	static final Object REFRESH_LOCK = new Object();
+
+
+	private static Thread refreshThread = null;
+
 
 	private static Identifier creatorId = null;
 
@@ -130,9 +180,28 @@ final class LineMismatchEventProcessor implements EventProcessor {
 			final LEServerServantManager servantManager = LEServerSessionEnvironment.getInstance().getLEServerServantManager();
 			final ORB orb = servantManager.getCORBAServer().getOrb();
 
-			final Set<SystemUser> systemUsers = DeliveryAttributes
-					.getInstance(getCreatorId(), lineMismatchEvent.getSeverity())
-					.getSystemUsersRecursively();
+			final Set<SystemUser> systemUsers;
+
+			synchronized (REFRESH_LOCK) {
+				final DeliveryAttributes deliveryAttributes;
+				deliveryAttributes = DeliveryAttributes
+						.getInstance(getCreatorId(), lineMismatchEvent.getSeverity());
+				systemUsers = deliveryAttributes
+						.getSystemUsersRecursively();
+				if (REFRESH_POLICY == REFRESH_POLICY_ONEVENT) {
+					StorableObjectPool.refresh(Collections.singleton(deliveryAttributes.getId()));
+					Log.debugMessage("DeliveryAttributes refreshed", FINEST);
+				} else if (REFRESH_POLICY == REFRESH_POLICY_ONTIMEOUT) {
+					final Thread thread = getRefreshThread();
+					if (thread.getState() == State.NEW) {
+						thread.start();
+						Log.debugMessage("RefreshThread started", FINEST);
+					}
+				} else {
+					assert false : REFRESH_POLICY;
+				}
+			}
+
 			final Set<Identifier> systemUserIds = Identifier.createIdentifiers(systemUsers);
 
 			final Set<String> addresses = getAddresses(systemUserIds);
@@ -263,6 +332,42 @@ final class LineMismatchEventProcessor implements EventProcessor {
 		}
 	}
 
+	private static Thread getRefreshThread() {
+		synchronized (LineMismatchEventProcessor.class) {
+			if (refreshThread == null) {
+				refreshThread = new Thread("DeliveryAttributesRefreshThread") {
+					/**
+					 * @see Thread#run()
+					 */
+					@Override
+					public void run() {
+						while (true) {
+							try {
+								synchronized (REFRESH_LOCK) {
+									final Set<DeliveryAttributes> deliveryAttributes = new HashSet<DeliveryAttributes>();
+									final Identifier id = getCreatorId();
+									for (final Severity severity : Severity.values()) {
+										deliveryAttributes.add(DeliveryAttributes.getInstance(id, severity));
+									}
+									StorableObjectPool.refresh(Identifier.createIdentifiers(deliveryAttributes));
+									Log.debugMessage("DeliveryAttributes refreshed", FINEST);
+								}
+							} catch (final ApplicationException ae) {
+								Log.debugMessage(ae, SEVERE);
+							}
+							try {
+								sleep(REFRESH_TIMEOUT);
+							} catch (final InterruptedException ie) {
+								Log.debugMessage(ie, SEVERE);
+							}
+						}
+					}
+				};
+			}
+			return refreshThread;
+		}
+	}
+
 	private static StorableObjectCondition getCondition() {
 		synchronized (LineMismatchEventProcessor.class) {
 			if (condition == null) {
@@ -302,7 +407,7 @@ final class LineMismatchEventProcessor implements EventProcessor {
 		}
 	}
 
-	private static Identifier getCreatorId() {
+	static Identifier getCreatorId() {
 		synchronized (LineMismatchEventProcessor.class) {
 			if (creatorId == null) {
 				try {
