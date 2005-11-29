@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.55 2005/11/14 15:15:38 bass Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.56 2005/11/29 14:34:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/11/14 15:15:38 $
- * @author $Author: bass $
+ * @version $Revision: 1.56 $, $Date: 2005/11/29 14:34:19 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -60,7 +60,7 @@ final class AnalysisEvaluationProcessor {
 		@SuppressWarnings("unchecked")
 		final Action action = measurementResult.getAction();
 		final Measurement measurement = (Measurement) action;
-		Test test = null;
+		final Test test;
 		try {
 			test = (Test) StorableObjectPool.getStorableObject(measurement.getTestId(), true);
 		} catch (ApplicationException ae) {
@@ -75,7 +75,7 @@ final class AnalysisEvaluationProcessor {
 			return new Result[] { analyseAndEvaluate(measurementResult, analysis, measurementSetup.getEtalon()) };
 		}
 
-		Log.errorMessage("UNKNOWN AnalysisType for test '" + test.getId() + "'");
+		Log.debugMessage("UNKNOWN AnalysisType for test '" + test.getId() + "'", SEVERE);
 		return new Result[0];
 	}
 
