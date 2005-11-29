@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.27 2005/11/28 12:33:42 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.28 2005/11/29 14:58:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.omg.CORBA.SystemException;
-
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
@@ -26,8 +24,6 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.corba.CommonUser;
-import com.syrus.AMFICOM.general.corba.CommonUserHelper;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.UserLogin;
 import com.syrus.AMFICOM.security.UserLoginDatabase;
@@ -35,7 +31,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/11/28 12:33:42 $
+ * @version $Revision: 1.28 $, $Date: 2005/11/29 14:58:19 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -193,60 +189,60 @@ final class LoginProcessor extends SleepButWorkThread {
 		int i = 0;
 		synchronized (loginMap) {
 			for (final SessionKey sessionKey : loginMap.keySet()) {
+				i++;
+				final UserLogin userLogin = loginMap.get(sessionKey);
+				final Identifier userId = userLogin.getUserId();
+				SystemUser systemUser = null;
 				try {
-					i++;
-					final UserLogin userLogin = loginMap.get(sessionKey);
-					final Identifier userId = userLogin.getUserId();
-					SystemUser systemUser = null;
-					try {
-						systemUser = StorableObjectPool.getStorableObject(userId, true);
-					} catch (ApplicationException ae) {
-						Log.errorMessage(ae);
-					}
-
-					//	Порядковый номер
-					stringBuffer.append("\n");
-					stringBuffer.append(i);
-
-					//	Ключ соединения
-					stringBuffer.append(".\t Session key: '");
-					stringBuffer.append(sessionKey);
-					stringBuffer.append("'\n");
-
-					//	Идентификатор пользователя
-					stringBuffer.append("\t Id: '");
-					stringBuffer.append(userId);
-					stringBuffer.append("'\n");
-
-					//	Имя пользователя
-					stringBuffer.append("\t Login: '");
-					stringBuffer.append((systemUser != null) ? systemUser.getLogin() : "NULL");
-					stringBuffer.append("'\n");
-
-					//	Идентификатор домена
-					stringBuffer.append("\t Domain id: '");
-					stringBuffer.append(userLogin.getDomainId());
-
-					//	Имя машины, с которой пользователь вошёл в систему
-					final CommonUser commonUserRef = CommonUserHelper.narrow(corbaServer.stringToObject(userLogin.getUserIOR()));
-					final String userHostName = commonUserRef.getHostName();
-					stringBuffer.append("'\n");
-					stringBuffer.append("\t From host: '");
-					stringBuffer.append(userHostName);
-					stringBuffer.append("'\n");
-
-					//	Время входа в систему
-					stringBuffer.append("\t From date: ");
-					stringBuffer.append(userLogin.getLoginDate());
-					stringBuffer.append("'\n");
-
-					//	Время последнего дейсвия пользователя в системе
-					stringBuffer.append("\t Last active at: ");
-					stringBuffer.append(userLogin.getLastActivityDate());
-					stringBuffer.append("'\n");
-				} catch (SystemException se) {
-					Log.errorMessage(se);
+					systemUser = StorableObjectPool.getStorableObject(userId, true);
+				} catch (ApplicationException ae) {
+					Log.errorMessage(ae);
 				}
+
+				//	Порядковый номер
+				stringBuffer.append("\n");
+				stringBuffer.append(i);
+
+				//	Ключ соединения
+				stringBuffer.append(".\t Session key: '");
+				stringBuffer.append(sessionKey);
+				stringBuffer.append("'\n");
+
+				//	Идентификатор пользователя
+				stringBuffer.append("\t Id: '");
+				stringBuffer.append(userId);
+				stringBuffer.append("'\n");
+
+				//	Имя пользователя
+				stringBuffer.append("\t Login: '");
+				stringBuffer.append((systemUser != null) ? systemUser.getLogin() : "NULL");
+				stringBuffer.append("'\n");
+
+				//	Идентификатор домена
+				stringBuffer.append("\t Domain id: '");
+				stringBuffer.append(userLogin.getDomainId());
+
+				//	Имя машины, с которой пользователь вошёл в систему
+//				try {
+//					final CommonUser commonUserRef = CommonUserHelper.narrow(corbaServer.stringToObject(userLogin.getUserIOR()));
+//					final String userHostName = commonUserRef.getHostName();
+//					stringBuffer.append("'\n");
+//					stringBuffer.append("\t From host: '");
+//					stringBuffer.append(userHostName);
+//					stringBuffer.append("'\n");
+//				} catch (SystemException se) {
+//					Log.errorMessage("Login us illegal -- " + userLogin.getSessionKey());
+//				}
+
+				//	Время входа в систему
+				stringBuffer.append("\t From date: ");
+				stringBuffer.append(userLogin.getLoginDate());
+				stringBuffer.append("'\n");
+
+				//	Время последнего дейсвия пользователя в системе
+				stringBuffer.append("\t Last active at: ");
+				stringBuffer.append(userLogin.getLastActivityDate());
+				stringBuffer.append("'\n");
 			}
 		}
 		
