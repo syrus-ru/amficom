@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseContextSetup.java,v 1.16 2005/11/29 13:57:10 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.17 2005/11/29 15:46:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,15 +29,17 @@ import com.syrus.AMFICOM.measurement.MeasurementPortTypeDatabase;
 import com.syrus.AMFICOM.measurement.MonitoredElementDatabase;
 import com.syrus.AMFICOM.scheme.PathElementDatabase;
 import com.syrus.AMFICOM.scheme.SchemeCableLinkDatabase;
+import com.syrus.AMFICOM.scheme.SchemeCablePortDatabase;
 import com.syrus.AMFICOM.scheme.SchemeCableThreadDatabase;
 import com.syrus.AMFICOM.scheme.SchemeDatabase;
 import com.syrus.AMFICOM.scheme.SchemeElementDatabase;
 import com.syrus.AMFICOM.scheme.SchemeLinkDatabase;
 import com.syrus.AMFICOM.scheme.SchemePathDatabase;
+import com.syrus.AMFICOM.scheme.SchemePortDatabase;
 import com.syrus.AMFICOM.scheme.SchemeProtoElementDatabase;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/11/29 13:57:10 $
+ * @version $Revision: 1.17 $, $Date: 2005/11/29 15:46:53 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -73,6 +75,8 @@ final class DatabaseContextSetup {
 
 		DatabaseContext.registerDatabase(new SchemeProtoElementDatabase());
 		DatabaseContext.registerDatabase(new SchemeDatabase());
+		DatabaseContext.registerDatabase(new SchemePortDatabase());
+		DatabaseContext.registerDatabase(new SchemeCablePortDatabase());
 		DatabaseContext.registerDatabase(new SchemeLinkDatabase());
 		DatabaseContext.registerDatabase(new SchemeCableLinkDatabase());
 		DatabaseContext.registerDatabase(new SchemeCableThreadDatabase());
