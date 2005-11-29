@@ -185,8 +185,8 @@ public class RefAnalysis {
 
 		// long t0 = System.currentTimeMillis();
 		for (int i = 0; i < de.length; i++) {
-			final int posFrom = de[i].getBegin();
-			final int posTo = de[i].getEnd();
+			int posFrom = de[i].getBegin(); // incl.
+			int posTo = de[i].getEnd(); // excl.
 			double[] yArrMT = mt.getYArrayZeroPad(posFrom, posTo - posFrom);
 			for (int j = posFrom; j < posTo && j < veryLastPoint; j++) {
 				this.filtered[j] = yArrMT[j - posFrom];
@@ -194,6 +194,17 @@ public class RefAnalysis {
 					this.noise[j] = Math.abs(y[j] - this.filtered[j]);
 				}
 			}
+		}
+		// XXX: workaround:
+		// из-за того, что м.ф. ограничена уровнем шума,
+		// а м.з. начинаетс€ ниже, чем на уровне шума,
+		// в разности y и yMT в начале м.з. получаетс€ очень
+		// большой всплеск, который на графике "затмевает"
+		// всю остальную кривую (из-за авт. масштабировани€).
+		// ѕоэтому, в качестве WORKAROUND,
+		// уровень шума в первой точке не вычисл€ем.
+		if (this.noise.length > 0) {
+			this.noise[0] = 0.0;
 		}
 	}
 
