@@ -11,7 +11,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Collection;
 import java.util.List;
 
 import javax.swing.DefaultCellEditor;
@@ -33,25 +32,20 @@ import javax.swing.table.TableModel;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Trace;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ReportTable;
-import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
 import com.syrus.AMFICOM.Client.Model.ModelMath.ModelGenerator;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.ATable;
-import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.modelling.ModelEvent;
 import com.syrus.AMFICOM.modelling.TraceGenerator;
 import com.syrus.AMFICOM.modelling.TraceGenerator.Parameters;
-import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemePath;
-import com.syrus.AMFICOM.scheme.SchemePathWrapper;
-import com.syrus.io.BellcoreModelWriter;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
@@ -64,11 +58,9 @@ public class RefModelParamsFrame extends JInternalFrame
 	
 	ApplicationContext aContext;
 
-	WrapperedComboBox<SchemePath> pathComboBox = new WrapperedComboBox<SchemePath>(
-			SchemePathWrapper.getInstance(), 
-			StorableObjectWrapper.COLUMN_NAME, 
-			StorableObjectWrapper.COLUMN_ID);
+	SchemePath path;
 	
+	JTextField pathTextField = new JTextField();
 	ATable table;
 	ParamTableModel tableModel;
 
@@ -85,7 +77,7 @@ public class RefModelParamsFrame extends JInternalFrame
 	
 	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
-		aContext.getDispatcher().addPropertyChangeListener(SchemeEvent.TYPE, this);
+		aContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 	}
 
 	private void jbInit() throws Exception {
@@ -118,7 +110,7 @@ public class RefModelParamsFrame extends JInternalFrame
 		doItButton.setToolTipText(LangModelModel.getString("menuViewPerformModeling"));
 		
 		JPanel north = new JPanel(new BorderLayout());
-		north.add(this.pathComboBox, BorderLayout.CENTER);
+		north.add(this.pathTextField, BorderLayout.CENTER);
 		north.add(doItButton, BorderLayout.EAST);
 		JPanel basePanel = new JPanel(new BorderLayout());
 		basePanel.add(north, BorderLayout.NORTH);
@@ -130,18 +122,10 @@ public class RefModelParamsFrame extends JInternalFrame
 	}
 	
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals(SchemeEvent.TYPE)) {
-			SchemeEvent se = (SchemeEvent)evt;
-			if (se.isType(SchemeEvent.OPEN_SCHEME)) {
-				try {
-					Scheme scheme = (Scheme)se.getStorableObject();
-					if (scheme.getParentSchemeElement() != null || 
-							!scheme.getSchemePathsRecursively(false).isEmpty()) {
-						setModelingScheme(scheme);
-					}
-				} catch (ApplicationException e) {
-					Log.errorMessage(e);
-				}
+		if (evt.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
+			ObjectSelectedEvent se = (ObjectSelectedEvent)evt;
+			if (se.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
+				setModelingPath((SchemePath)se.getSelectedObject());
 			}
 		}
 	}
@@ -155,19 +139,18 @@ public class RefModelParamsFrame extends JInternalFrame
 	}
 
 	public void doIt() {
-		SchemePath path = (SchemePath)this.pathComboBox.getSelectedItem();
-		if (path == null) {
+		if (this.path == null) {
 			String error = "Не задан маршрут моделирования.\n";
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), error, "Ошибка",
 																		JOptionPane.OK_OPTION);
 			return;
 		}
 
-		BellcoreStructure bs = getTrace(path);
+		BellcoreStructure bs = getTrace(this.path);
 		if (bs == null)
 			return;
-		bs.title = "Модель \"" + path.getName() + "\"";
-		bs.schemePathId = path.getId().getIdentifierString();
+		bs.title = "Модель \"" + this.path.getName() + "\"";
+		bs.schemePathId = this.path.getId().getIdentifierString();
 		
 		Trace tr = new Trace(bs, Heap.MODELED_TRACE_KEY, Heap.getMinuitAnalysisParams());
 		Heap.openPrimaryTrace(tr);
@@ -184,36 +167,17 @@ public class RefModelParamsFrame extends JInternalFrame
 													new Integer(1000),
 													new Integer(1625),
 													new Double(40),
-													new Double(0.0),
-													new Double(0.95),
+													new Integer(0),
+													new Integer(0),
 													new Double(0.1),
 													new Double( -40),
 													new Double(0.5),
 													new Double(0.2)});
 	}
 
-	public void setModelingSchemes(Collection<Scheme> schemes) {
-		this.pathComboBox.removeAllItems();
-		try {
-			for (Scheme scheme : schemes) {
-				for (SchemePath path : scheme.getSchemePathsRecursively(false)) {
-					this.pathComboBox.addItem(path);
-				}
-			}
-		} catch (ApplicationException e) {
-			Log.errorMessage(e);
-		}
-	}
-
-	public void setModelingScheme(Scheme scheme) {
-		this.pathComboBox.removeAllItems();
-		try {
-			for (SchemePath path : scheme.getSchemePathsRecursively(false)) {
-				this.pathComboBox.addItem(path);
-			}
-		} catch (ApplicationException e) {
-			Log.errorMessage(e);
-		}
+	public void setModelingPath(SchemePath path) {
+		this.path = path;
+		this.pathTextField.setText(path.getName());
 	}
 
 	private BellcoreStructure getTrace(SchemePath path) {
@@ -222,8 +186,8 @@ public class RefModelParamsFrame extends JInternalFrame
 		int pulsWidth = ((Integer)this.tableModel.getValueAt(2, 1)).intValue();
 		int wave_length = ((Integer)this.tableModel.getValueAt(3, 1)).intValue();
 		double dinam_area = ((Double)this.tableModel.getValueAt(4, 1)).doubleValue();
-		double addNoise = Math.abs(((Double)this.tableModel.getValueAt(5,1)).doubleValue());
-		double formFactor = ((Double)this.tableModel.getValueAt(6, 1)).doubleValue();
+		int rcFilter = ((Integer)this.tableModel.getValueAt(5,1)).intValue();
+		int bcFilter = ((Integer)this.tableModel.getValueAt(6,1)).intValue();
 		double weldAtt = ((Double)this.tableModel.getValueAt(7, 1)).doubleValue();
 		double connectorRef = ((Double)this.tableModel.getValueAt(8, 1)).doubleValue();
 		double connectorAtt = ((Double)this.tableModel.getValueAt(9, 1)).doubleValue();
@@ -253,6 +217,15 @@ public class RefModelParamsFrame extends JInternalFrame
 				resolution, length, wave_length, pulsWidth, 1.468);
 		
 		TraceGenerator generator = new TraceGenerator(pars, rmip);
+
+		// При желании, проводим фильтрацию
+		if (rcFilter != 0) {
+			generator.performRCFiltering(rcFilter);
+		}
+		if (bcFilter != 0) {
+			generator.performBoxCarFiltering(bcFilter);
+		}
+		
 		return generator.getBellcore();
 		/*
 		NewModelGenerator mg = new NewModelGenerator(rmip,
@@ -310,11 +283,19 @@ class ParamTableModel extends AbstractTableModel {
 
 	public static final Integer[] waveLength = {
 		new Integer(850), new Integer(1310), new Integer(1550), new Integer(1625)};
+	
+	public static final Integer[] rcFilters = {
+		new Integer(0), new Integer(4), new Integer(8), new Integer(16)};
+	
+	public static final Integer[] bcFilters = {
+		new Integer(0), new Integer(4), new Integer(8), new Integer(16)};		
 
 	AComboBox lengthComboBox = new AComboBox();
 	AComboBox resolutionComboBox = new AComboBox();
 	AComboBox pulsWidthComboBox = new AComboBox();
 	AComboBox waveLengthComboBox = new AComboBox();
+	AComboBox rcFilterComboBox = new AComboBox();
+	AComboBox bcFilterComboBox = new AComboBox();
 
 	String[] columnNames = {"", ""};
 
@@ -324,8 +305,8 @@ class ParamTableModel extends AbstractTableModel {
 		{"Длительность импульса, нс", pulsWidthComboBox},
 		{"Длина волны, нм", waveLengthComboBox},
 		{"Динамический диапазон, дБ", new Double(40)},
-		{"Коэффициент шума", new Double(0)},
-		{"Форм-фактор коннектора", new Double(0.95)},
+		{"RC-фильтрация", rcFilterComboBox},
+		{"BC-фильтрация", bcFilterComboBox},
 		{"Потери на сварке, дБ", new Double(0.1)},
 		{"Отражение на коннекторе, дБ", new Double(-40)},
 		{"Потери на коннекторе, дБ", new Double(0.5)},
@@ -395,10 +376,11 @@ class ParamTableModel extends AbstractTableModel {
 			lengthComboBox.addItem(length[i]);
 		for(int i = 0; i < waveLength.length; i++)
 			waveLengthComboBox.addItem(waveLength[i]);
-//		for(int i = 0; i < resolution.length; i++)
-//			resolutionComboBox.addItem(resolution[i]);
-//		for(int i = 0; i < pulsWidth.length; i++)
-//			pulsWidthComboBox.addItem(pulsWidth[i]);
+		
+		for(int i = 0; i < bcFilters.length; i++)
+			bcFilterComboBox.addItem(bcFilters[i]);
+		for(int i = 0; i < rcFilters.length; i++)
+			rcFilterComboBox.addItem(rcFilters[i]);
 
 	}
 
@@ -414,6 +396,10 @@ class ParamTableModel extends AbstractTableModel {
 				pulsWidthComboBox.setSelectedItem(d[i]);
 			else if (i == 3)
 				waveLengthComboBox.setSelectedItem(d[i]);
+			else if (i == 5)
+				rcFilterComboBox.setSelectedItem(d[i]);
+			else if (i == 6)
+				bcFilterComboBox.setSelectedItem(d[i]);
 			else
 				data[i][1] = d[i];
 		}
@@ -454,6 +440,10 @@ class ParamTableModel extends AbstractTableModel {
 				return pulsWidthComboBox.getSelectedItem();
 			if (row == 3)
 				return waveLengthComboBox.getSelectedItem();
+			if (row == 5)
+				return rcFilterComboBox.getSelectedItem();
+			if (row == 6)
+				return bcFilterComboBox.getSelectedItem();
 		}
 		return data[row][col];
 	}
@@ -511,6 +501,14 @@ class ModelParamsTableEditor extends DefaultCellEditor {
 				this.model.waveLengthComboBox.setBackground(SystemColor.window);
 				return this.model.waveLengthComboBox;
 			}
+			if(row == 5) {
+				this.model.rcFilterComboBox.setBackground(SystemColor.window);
+				return this.model.rcFilterComboBox;
+			}
+			if(row == 6) {
+				this.model.bcFilterComboBox.setBackground(SystemColor.window);
+				return this.model.bcFilterComboBox;
+			}
 		}
 		return super.getTableCellEditorComponent (table, value, isSelected, row,  column);
 	}
@@ -556,6 +554,10 @@ class ModelParamsTableRenderer extends DefaultTableCellRenderer {
 			return this.model.pulsWidthComboBox;
 		if(column == 1 && row == 3)
 			return this.model.waveLengthComboBox;
+		if(column == 1 && row == 5)
+			return this.model.rcFilterComboBox;
+		if(column == 1 && row == 6)
+			return this.model.bcFilterComboBox;
 		return  super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 	}
 }

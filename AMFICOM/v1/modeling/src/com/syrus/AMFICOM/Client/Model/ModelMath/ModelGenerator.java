@@ -222,7 +222,7 @@ public class ModelGenerator {
 					System.out.println("Fail creating modeling element from port " + sourcePort.getName() + "(" +
 														 sourcePort.getId().getIdentifierString() + ")");
 					return null;
-				}
+				} 
 				this.reflectoElements.add(event);
 
 				event = addLink(sl);
