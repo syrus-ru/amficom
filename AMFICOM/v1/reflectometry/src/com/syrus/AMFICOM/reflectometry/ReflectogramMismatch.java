@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.16 2005/11/25 08:23:48 saa Exp $
+ * $Id: ReflectogramMismatch.java,v 1.17 2005/11/29 11:47:16 bass Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.util.TransferableObject;
  * если был бы доступен только один якорь.
  * 
  * @author Old Wise Saa
- * @author $Author: saa $
- * @version $Revision: 1.16 $, $Date: 2005/11/25 08:23:48 $
+ * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/11/29 11:47:16 $
  * @module reflectometry
  */
 public interface ReflectogramMismatch {
@@ -80,8 +80,8 @@ public interface ReflectogramMismatch {
 	 * событие: будет ли создан аларм, или же будет предупреждение.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: saa $
-	 * @version $Revision: 1.16 $, $Date: 2005/11/25 08:23:48 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.17 $, $Date: 2005/11/29 11:47:16 $
 	 * @module reflectometry
 	 */
 	enum Severity implements TransferableObject<IdlSeverity> {
@@ -98,7 +98,7 @@ public interface ReflectogramMismatch {
 		 */
 		SEVERITY_HARD("ReflectogramMismatch.Severity.Hard"); 
 
-		private static Severity[] values = values();
+		private static final Severity[] VALUES = values();
 
 		private final String key;
 
@@ -127,7 +127,7 @@ public interface ReflectogramMismatch {
 		 * @throws ArrayIndexOutOfBoundsException
 		 */
 		public static Severity valueOf(final int i) {
-			return values[i];
+			return VALUES[i];
 		}
 
 		/**
@@ -142,8 +142,8 @@ public interface ReflectogramMismatch {
 	/**
 	 * Тип отклонения.
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: saa $
-	 * @version $Revision: 1.16 $, $Date: 2005/11/25 08:23:48 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.17 $, $Date: 2005/11/29 11:47:16 $
 	 * @module reflectometry
 	 */
 	enum AlarmType implements TransferableObject<IdlAlarmType> {
@@ -165,7 +165,7 @@ public interface ReflectogramMismatch {
 		 */
 		TYPE_EVENTLISTCHANGED("ReflectogramMismatch.AlarmType.EventListChanged");
 
-		private static AlarmType[] values = values();
+		private static final AlarmType[] VALUES = values();
 
 		private final String key;
 
@@ -194,7 +194,7 @@ public interface ReflectogramMismatch {
 		 * @throws ArrayIndexOutOfBoundsException
 		 */
 		public static AlarmType valueOf(final int i) {
-			return values[i];
+			return VALUES[i];
 		}
 
 		public static AlarmType valueOf(final IdlAlarmType alarmType) {

@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.31 2005/11/28 13:47:40 bob Exp $
+* $Id: PermissionAttributes.java,v 1.32 2005/11/29 11:43:52 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,11 +34,12 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
+import com.syrus.util.TransferableObject;
 
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/11/28 13:47:40 $
- * @author $Author: bob $
+ * @version $Revision: 1.32 $, $Date: 2005/11/29 11:43:52 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
  */
@@ -46,7 +47,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 
 	// TODO generate serialVersionUID when all enum will be made 
 
-	public static enum Module {
+	public static enum Module implements TransferableObject<IdlModule> {
 		ADMINISTRATION(true),
 		SCHEME(true),
 		ELEMENTS_EDITOR(true),
@@ -63,9 +64,9 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		
 		private static final String KEY_ROOT = "Module.Description.";
 		
-		private static Module[] values = values();
-		private static List<Module> valueList = 
-			Collections.unmodifiableList(Arrays.asList(values));
+		private static final Module[] VALUES = values();
+		private static final List<Module> VALUE_LIST = 
+			Collections.unmodifiableList(Arrays.asList(VALUES));
 		
 		private final boolean enable;
 		private final String codename;
@@ -76,7 +77,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		}
 		
 		public static final Module valueOf(final int ordinal) {			
-			return values[ordinal];
+			return VALUES[ordinal];
 		} 
 		
 		public static final Module valueOf(final Integer ordinal) {
@@ -84,17 +85,21 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		}
 
 		public static Module valueOf(final IdlModule idlModule) {
-			return values[idlModule.value()];
+			return VALUES[idlModule.value()];
 		}
 		
-		public static final List<Module> getValueList() {
-			return valueList;
+		public static final List<Module> getVALUE_LIST() {
+			return VALUE_LIST;
 		}		
 		
 		public final IdlModule getTransferable() {
 			return IdlModule.from_int(this.ordinal());
 		}
-		
+
+		public IdlModule getTransferable(final ORB orb) {
+			return this.getTransferable();
+		}
+
 		public final String getCodename() {
 			return this.codename;
 		}
