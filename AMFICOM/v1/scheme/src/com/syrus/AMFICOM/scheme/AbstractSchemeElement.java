@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.73 2005/10/31 12:29:54 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.74 2005/11/29 13:57:10 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2005/10/31 12:29:54 $
+ * @version $Revision: 1.74 $, $Date: 2005/11/29 13:57:10 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement<T extends AbstractSchemeElement<T>>
@@ -311,6 +311,16 @@ public abstract class AbstractSchemeElement<T extends AbstractSchemeElement<T>>
 			}
 		}
 	}
+
+	/**
+	 * Returns the nearest {@link Scheme} that&apos;s parent to this object.
+	 * On the contrary to {@link #getParentScheme()}, this method is
+	 * guaranteed to return a non-{@code null} value.
+	 *
+	 * @return the nearest {@link Scheme} that&apos;s parent to this object.
+	 * @throws ApplicationException
+	 */
+	public abstract Scheme getNearestParentScheme() throws ApplicationException;
 
 	/*-********************************************************************
 	 * Children manipulation: characteristics                             *

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.148 2005/11/28 09:09:50 bass Exp $
+ * $Id: SchemeElement.java,v 1.149 2005/11/29 13:57:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.148 $, $Date: 2005/11/28 09:09:50 $
+ * @version $Revision: 1.149 $, $Date: 2005/11/29 13:57:10 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
@@ -1637,6 +1637,22 @@ public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
 
 	public IdlSchemeElementKind getKind() {
 		return IdlSchemeElementKind.from_int(this.kind);
+	}
+
+	/**
+	 * @throws ApplicationException if any of the underlying invocations of 
+	 *         {@link #getParentScheme() this.getParentScheme()},
+	 *         {@link #getParentSchemeElement() this.getParentSchemeElement()} or
+	 *         {@link SchemeElement#getNearestParentScheme()} throws
+	 *         {@code ApplicationException}.
+	 * @see AbstractSchemeElement#getNearestParentScheme()
+	 */
+	@Override
+	public Scheme getNearestParentScheme() throws ApplicationException {
+		final Scheme parentScheme = this.getParentScheme();
+		return parentScheme == null
+				? this.getParentSchemeElement().getNearestParentScheme()
+				: parentScheme;
 	}
 
 	/**

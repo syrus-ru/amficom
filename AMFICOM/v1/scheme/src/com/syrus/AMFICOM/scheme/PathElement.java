@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.90 2005/10/31 12:29:54 bass Exp $
+ * $Id: PathElement.java,v 1.91 2005/11/29 13:57:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.90 $, $Date: 2005/10/31 12:29:54 $
+ * @version $Revision: 1.91 $, $Date: 2005/11/29 13:57:10 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -570,10 +570,6 @@ public final class PathElement extends StorableObject<PathElement>
 			this.name = this.getAbstractSchemeElement().getName();
 		}
 		return this.name;
-	}
-
-	public Scheme getParentScheme() {
-		return getAbstractSchemeElement().getParentScheme();
 	}
 
 	Identifier getParentSchemePathId() {

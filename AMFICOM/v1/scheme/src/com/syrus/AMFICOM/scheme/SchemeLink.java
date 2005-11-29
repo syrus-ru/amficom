@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.101 2005/10/31 12:29:54 bass Exp $
+ * $Id: SchemeLink.java,v 1.102 2005/11/29 13:57:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.101 $, $Date: 2005/10/31 12:29:54 $
+ * @version $Revision: 1.102 $, $Date: 2005/11/29 13:57:10 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
@@ -1306,6 +1306,29 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 		}
 
 		XmlComplementorRegistry.complementStorableObject(schemeLink, SCHEMELINK_CODE, importType, POST_IMPORT);
+	}
+
+	/**
+	 * @throws IllegalStateException if this {@code SchemeLink} doesn&apos;t
+	 *         belong to any scheme.
+	 * @throws ApplicationException if any of the underlying invocations of 
+	 *         {@link #getParentSchemeProtoElement() this.getParentSchemeProtoElement()},
+	 *         {@link #getParentScheme() this.getParentScheme()},
+	 *         {@link #getParentSchemeElement() this.getParentSchemeElement()} or
+	 *         {@link SchemeElement#getNearestParentScheme()} throws an
+	 *         {@code ApplicationException}.
+	 * @see AbstractSchemeElement#getNearestParentScheme()
+	 */
+	@Override
+	public Scheme getNearestParentScheme() throws ApplicationException {
+		if (this.getParentSchemeProtoElement() != null) {
+			throw new IllegalStateException(this + " doesn't belong to any scheme");
+		}
+
+		final Scheme parentScheme = this.getParentScheme();
+		return parentScheme == null
+				? this.getParentSchemeElement().getNearestParentScheme()
+				: parentScheme;
 	}
 
 	/**

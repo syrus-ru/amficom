@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.114 2005/10/31 12:29:54 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.115 2005/11/29 13:57:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -92,7 +92,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.114 $, $Date: 2005/10/31 12:29:54 $
+ * @version $Revision: 1.115 $, $Date: 2005/11/29 13:57:10 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink<SchemeCableLink>
@@ -847,6 +847,17 @@ public final class SchemeCableLink extends AbstractSchemeLink<SchemeCableLink>
 		}
 		assert pathMembers.size() == 1;
 		return pathMembers.iterator().next();
+	}
+
+	/**
+	 * @throws ApplicationException if the underlying invocation of 
+	 *         {@link #getParentScheme() this.getParentScheme()},
+	 *         throws an {@code ApplicationException}.
+	 * @see AbstractSchemeElement#getNearestParentScheme()
+	 */
+	@Override
+	public Scheme getNearestParentScheme() throws ApplicationException {
+		return this.getParentScheme();
 	}
 
 	/**
