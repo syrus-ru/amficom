@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.32 2005/11/29 11:43:52 bass Exp $
+* $Id: PermissionAttributes.java,v 1.33 2005/11/29 11:51:11 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.TransferableObject;
 
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/11/29 11:43:52 $
+ * @version $Revision: 1.33 $, $Date: 2005/11/29 11:51:11 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -88,7 +88,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 			return VALUES[idlModule.value()];
 		}
 		
-		public static final List<Module> getVALUE_LIST() {
+		public static final List<Module> getValueList() {
 			return VALUE_LIST;
 		}		
 		
