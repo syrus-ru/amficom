@@ -283,7 +283,7 @@ implements BsHashChangeListener, EtalonMTMListener,
 
 	@Override
 	public void loggedIn() {
-		PermissionManager.resetCache();
+		PermissionManager.refresh();
 
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
 		final boolean readFilePermitted =
@@ -300,7 +300,7 @@ implements BsHashChangeListener, EtalonMTMListener,
 
 	@Override
 	public void loggedOut() {
-		PermissionManager.resetCache();
+		PermissionManager.refresh();
 
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
 

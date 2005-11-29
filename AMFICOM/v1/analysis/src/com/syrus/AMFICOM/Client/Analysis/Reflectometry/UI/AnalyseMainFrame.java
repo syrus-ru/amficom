@@ -484,7 +484,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 	
 	@Override
 	public void loggedIn() {
-		PermissionManager.resetCache();
+		PermissionManager.refresh();
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
@@ -502,7 +502,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 	@Override
 	public void loggedOut() {
-		PermissionManager.resetCache();
+		PermissionManager.refresh();
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 

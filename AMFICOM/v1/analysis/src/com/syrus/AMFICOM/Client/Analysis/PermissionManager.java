@@ -1,5 +1,5 @@
 /*-
- * $Id: PermissionManager.java,v 1.11 2005/11/23 13:27:16 saa Exp $
+ * $Id: PermissionManager.java,v 1.12 2005/11/29 09:41:58 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
  * Позволяет использовать кэширование прав.
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/11/23 13:27:16 $
+ * @version $Revision: 1.12 $, $Date: 2005/11/29 09:41:58 $
  * @module analysis
  */
 public class PermissionManager {
@@ -79,28 +79,28 @@ public class PermissionManager {
 	 */
 	public static void setAnalysisTranslation() {
 		currentTranslation = analysisTranslation;
-		resetCache();
+		refresh();
 	}
 	/**
 	 * Sets Reseach permissions mode
 	 */
 	public static void setReseachTranslation() {
 		currentTranslation = researchTranslation;
-		resetCache();
+		refresh();
 	}
 	/**
 	 * Sets Evaluation permissions mode
 	 */
 	public static void setEvaluationTranslation() {
 		currentTranslation = evaluationTranslation;
-		resetCache();
+		refresh();
 	}
 	/**
 	 * Sets default permissions mode, nothing allowed
 	 */
 	public static void setDefaultTranslation() {
 		currentTranslation = defaultTranslation;
-		resetCache();
+		refresh();
 	}
 
 	/**
@@ -110,13 +110,28 @@ public class PermissionManager {
 	public static void setCacheable(boolean cacheable) {
 		PermissionManager.cacheable = cacheable;
 		if (!cacheable)
-			resetCache();
+			refresh();
+	}
+
+	/**
+	 * Обновить права.
+	 * При выключенном кэшировании ничего не делает.
+	 * При включенном кэшировании очищает кэш и загружает все права.
+	 */
+	public static void refresh() {
+		resetCache();
+		// preload
+		if (cacheable) {
+			for (Operation op: currentTranslation.keySet()) {
+				isPermitted(op);
+			}
+		}
 	}
 
 	/**
 	 * Сбрасывает кэшированные права
 	 */
-	public static void resetCache() {
+	private static void resetCache() {
 		cache = null;
 	}
 

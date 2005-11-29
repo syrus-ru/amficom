@@ -231,7 +231,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 	@Override
 	public void loggedIn() {
-		PermissionManager.resetCache();
+		PermissionManager.refresh();
 
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
 
@@ -248,7 +248,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 	@Override
 	public void loggedOut() {
-		PermissionManager.resetCache();
+		PermissionManager.refresh();
 
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
 
