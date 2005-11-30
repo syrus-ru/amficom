@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.202 2005/10/31 12:30:18 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.203 2005/11/30 14:54:30 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,20 +26,21 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.syrus.AMFICOM.bugs.Crutch328;
 import com.syrus.util.EnumUtil;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.202 $, $Date: 2005/10/31 12:30:18 $
+ * @version $Revision: 1.203 $, $Date: 2005/11/30 14:54:30 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 9
  */
 
-public abstract class StorableObjectDatabase<T extends StorableObject> {
+public abstract class StorableObjectDatabase<T extends StorableObject<T>> {
 
 	public static final String APOSTROPHE = "'";
 	public static final String DOT = " . ";
@@ -669,7 +670,8 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		this.insertEntities(storableObjects);
 	}
 
-	protected final void insertEntities(final Set<T> storableObjects)
+	@Crutch328(notes = "should be inlined")
+	private void insertEntities(final Set<T> storableObjects)
 			throws IllegalDataException,
 				CreateObjectException {
 		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
@@ -909,7 +911,8 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		this.updateEntities(storableObjects);
 	}
 
-	protected final void updateEntities(final Set<T> storableObjects) throws UpdateObjectException {
+	@Crutch328(notes = "should be inlined")
+	private void updateEntities(final Set<T> storableObjects) throws UpdateObjectException {
 		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert !storableObjects.isEmpty() : ErrorMessages.NON_EMPTY_EXPECTED;
 		assert StorableObject.getEntityCodeOfIdentifiables(storableObjects) == this.getEntityCode() : ErrorMessages.ILLEGAL_ENTITY_CODE;
@@ -1491,8 +1494,8 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		final int lastPoint = className.lastIndexOf('.');
 		final String dbClassName = className.substring(0, lastPoint + 1) + "Database" + className.substring(lastPoint + 1);
 		try {
-			final Class clazz = Class.forName(dbClassName);
-			final Constructor constructor = clazz.getDeclaredConstructor(new Class[] {condition.getClass()});
+			final Class<?> clazz = Class.forName(dbClassName);
+			final Constructor<?> constructor = clazz.getDeclaredConstructor(new Class[] {condition.getClass()});
 			constructor.setAccessible(true);
 			databaseStorableObjectCondition = (DatabaseStorableObjectCondition) constructor.newInstance(new Object[] {condition});
 		} catch (ClassNotFoundException e) {
