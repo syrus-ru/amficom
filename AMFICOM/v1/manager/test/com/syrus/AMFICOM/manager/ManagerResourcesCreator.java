@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerResourcesCreator.java,v 1.2 2005/11/28 14:47:18 bob Exp $
+* $Id: ManagerResourcesCreator.java,v 1.3 2005/11/30 13:07:54 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.extensions.manager.PopupMenu;
 import com.syrus.AMFICOM.extensions.manager.UiHandler;
 import com.syrus.AMFICOM.extensions.manager.Validator;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.manager.UI.SystemUserPermissionPopupMenu;
+import com.syrus.AMFICOM.manager.UI.SystemUserDomainPopupMenu;
 import com.syrus.AMFICOM.manager.beans.DomainBeanFactory;
 import com.syrus.AMFICOM.manager.beans.MCMBeanFactory;
 import com.syrus.AMFICOM.manager.beans.MessageBeanFactory;
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.manager.viewers.WorkstationBeanUI;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:18 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/30 13:07:54 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -100,21 +100,21 @@ public final class ManagerResourcesCreator extends TestCase {
 			domainUIHandler.setId(ObjectEntities.DOMAIN);
 			domainUIHandler.setUiHandlerClass(DomainBeanUI.class.getName());
 			
-			BeanFactory networkFactory = domainsPerspective.addNewBeanFactory();
-			networkFactory.setId(NetBeanFactory.NET_CODENAME);
-			networkFactory.setBeanFactoryClass(NetBeanFactory.class.getName());
-			
-			UiHandler networkUIHandler = domainsPerspective.addNewUiHandler();
-			networkUIHandler.setId(NetBeanFactory.NET_CODENAME);
-			networkUIHandler.setUiHandlerClass(NetBeanUI.class.getName());
+//			BeanFactory networkFactory = domainsPerspective.addNewBeanFactory();
+//			networkFactory.setId(NetBeanFactory.NET_CODENAME);
+//			networkFactory.setBeanFactoryClass(NetBeanFactory.class.getName());
+//			
+//			UiHandler networkUIHandler = domainsPerspective.addNewUiHandler();
+//			networkUIHandler.setId(NetBeanFactory.NET_CODENAME);
+//			networkUIHandler.setUiHandlerClass(NetBeanUI.class.getName());
 			
 			Validator domainValidator = domainsPerspective.addNewValidator();
 			domainValidator.setSource(ObjectEntities.DOMAIN);
 			domainValidator.setTarget(ObjectEntities.DOMAIN);
 			
-			Validator netDomainValidator = domainsPerspective.addNewValidator();
-			netDomainValidator.setSource(NetBeanFactory.NET_CODENAME);
-			netDomainValidator.setTarget(ObjectEntities.DOMAIN);
+//			Validator netDomainValidator = domainsPerspective.addNewValidator();
+//			netDomainValidator.setSource(NetBeanFactory.NET_CODENAME);
+//			netDomainValidator.setTarget(ObjectEntities.DOMAIN);
 			
 			}
 			
@@ -125,11 +125,11 @@ public final class ManagerResourcesCreator extends TestCase {
 					perspective.setId(ObjectEntities.DOMAIN);
 					
 					UiHandler networkUIHandler = perspective.addNewUiHandler();
-					networkUIHandler.setId(NetBeanFactory.NET_CODENAME);
+					networkUIHandler.setId(NetBeanFactory.NET_CODENAME + ObjectEntities.DOMAIN);
 					networkUIHandler.setUiHandlerClass(NetBeanUI.class.getName());
 					
 					BeanFactory networkFactory = perspective.addNewBeanFactory();
-					networkFactory.setId(NetBeanFactory.NET_CODENAME);
+					networkFactory.setId(NetBeanFactory.NET_CODENAME + ObjectEntities.DOMAIN);
 					networkFactory.setBeanFactoryClass(NetBeanFactory.class.getName());
 					
 					BeanFactory rtuFactory = perspective.addNewBeanFactory();
@@ -192,6 +192,11 @@ public final class ManagerResourcesCreator extends TestCase {
 					userWorkstationValidator.setSource(ObjectEntities.SYSTEMUSER);
 					userWorkstationValidator.setTarget(WorkstationBeanFactory.WORKSTATION_CODENAME);
 					
+					PopupMenu userMenu = perspective.addNewPopupMenu();
+					userMenu.setId(ObjectEntities.SYSTEMUSER);
+					userMenu.setPopupMenuHandler(SystemUserDomainPopupMenu.class.getName());
+
+					
 				}
 
 				Perspective userPerspective = perspective.addNewPerspective();
@@ -236,9 +241,9 @@ public final class ManagerResourcesCreator extends TestCase {
 					permissionUserValidator.setSource(ObjectEntities.PERMATTR);
 					permissionUserValidator.setTarget(ObjectEntities.SYSTEMUSER);
 					
-					PopupMenu userMenu = userPerspective.addNewPopupMenu();
-					userMenu.setId(ObjectEntities.SYSTEMUSER);
-					userMenu.setPopupMenuHandler(SystemUserPermissionPopupMenu.class.getName());
+//					PopupMenu userMenu = userPerspective.addNewPopupMenu();
+//					userMenu.setId(ObjectEntities.SYSTEMUSER);
+//					userMenu.setPopupMenuHandler(SystemUserPermissionPopupMenu.class.getName());
 			    }	
 
 		    }
