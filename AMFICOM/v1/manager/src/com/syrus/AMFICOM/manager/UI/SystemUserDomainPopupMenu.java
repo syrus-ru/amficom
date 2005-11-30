@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserDomainPopupMenu.java,v 1.2 2005/11/17 09:00:35 bob Exp $
+* $Id: SystemUserDomainPopupMenu.java,v 1.3 2005/11/30 13:06:50 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -12,25 +12,32 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.Icon;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-import javax.swing.UIManager;
 
 import org.jgraph.graph.DefaultGraphCell;
 
 import com.syrus.AMFICOM.administration.Role;
+import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ClientServantManager;
+import com.syrus.AMFICOM.general.ClientSessionEnvironment;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.manager.beans.UserBean;
 import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.AMFICOM.manager.perspective.DomainPerpective;
-import com.syrus.AMFICOM.manager.perspective.SystemUserPerpective;
-import com.syrus.AMFICOM.manager.viewers.TableBeanUI;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/30 13:06:50 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -43,10 +50,9 @@ public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu<DomainPerpe
 		
 		final MPort port = (MPort) cell.getChildAt(0);
 		final UserBean userBean = (UserBean) port.getBean();
+		final SystemUser user = userBean.getUser();
 		
 		final JPopupMenu popupMenu = new JPopupMenu();
-		
-		final ManagerMainFrame managerMainFrame = perpective.getManagerMainFrame();
 		
 		for(final Role role : userBean.getRoles()) {
 
@@ -78,26 +84,74 @@ public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu<DomainPerpe
 			popupMenu.add(checkBoxMenuItem);
 		}
 		
-		popupMenu.addSeparator();
 		
-		final AbstractAction enterAction = new AbstractAction(I18N.getString("Manager.Dialog.GotoUserPermissions")) {
-
-			public void actionPerformed(ActionEvent e) {
-				final SystemUserPerpective systemUserPerpective = 
-					perpective.getSystemUserPerspective(userBean);
-				managerMainFrame.setPerspective(systemUserPerpective);
-			}
-		};
 		
-		final Icon enterIcon = UIManager.getIcon(TableBeanUI.ENTER_ICON);
-		if (enterIcon != null) {
-			enterAction.putValue(Action.SMALL_ICON, enterIcon);
+//		final AbstractAction enterAction = new AbstractAction(I18N.getString("Manager.Dialog.GotoUserPermissions")) {
+//
+//			public void actionPerformed(ActionEvent e) {
+//				final SystemUserPerpective systemUserPerpective = 
+//					perpective.getSystemUserPerspective(userBean);
+//				managerMainFrame.setPerspective(systemUserPerpective);
+//			}
+//		};
+//		
+//		final Icon enterIcon = UIManager.getIcon(TableBeanUI.ENTER_ICON);
+//		if (enterIcon != null) {
+//			enterAction.putValue(Action.SMALL_ICON, enterIcon);
+//		}
+//		
+//		
+//		popupMenu.add(enterAction);
+		
+		if (user.getVersion() != StorableObjectVersion.INITIAL_VERSION) {
+			popupMenu.addSeparator();
+			final AbstractAction changePasswordAction = 
+				new AbstractAction(I18N.getString("Manager.Dialog.ChangeUserPassword")) {
+	
+				public void actionPerformed(ActionEvent e) {
+					new PasswordSetter(user);
+				}
+			};
+			popupMenu.add(changePasswordAction);
+			
 		}
 		
-		
-		popupMenu.add(enterAction);
 		return popupMenu;
 	}
 	
+	private final class PasswordSetter extends PasswordDialog {
+		
+		private final SystemUser	systemUser;
+
+		public PasswordSetter(final SystemUser systemUser) {
+			this.systemUser = systemUser;
+		}
+		
+		@Override
+		protected void applyPassword(char[] password) {
+			final ClientSessionEnvironment instance = ClientSessionEnvironment.getInstance();
+			try {
+				final ClientServantManager clientServantManager = 
+					instance.getClientServantManager();
+				final LoginServer loginServerReference = 
+					clientServantManager.getLoginServerReference();
+				final IdlSessionKey idlSessionKey = 
+					LoginManager.getIdlSessionKey();
+				final IdlIdentifier userIdTransferable = 
+					this.systemUser.getId().getTransferable();
+				loginServerReference.setPassword(idlSessionKey, userIdTransferable, new String(password));
+			} catch (final CommunicationException e) {
+				JOptionPane.showMessageDialog(null, 
+					I18N.getString("Manager.Error.ErrorDuringPasswordChanging"), 
+					I18N.getString("Error"), 
+					JOptionPane.ERROR_MESSAGE);
+			} catch (AMFICOMRemoteException e) {
+				JOptionPane.showMessageDialog(null, 
+					I18N.getString("Manager.Error.ErrorDuringPasswordChanging"), 
+					I18N.getString("Error"), 
+					JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
 }
 
