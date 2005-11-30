@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.203 2005/11/30 14:54:30 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.204 2005/11/30 16:30:27 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,15 +26,14 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.bugs.Crutch328;
 import com.syrus.util.EnumUtil;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.203 $, $Date: 2005/11/30 14:54:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.204 $, $Date: 2005/11/30 16:30:27 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 9
@@ -670,7 +669,6 @@ public abstract class StorableObjectDatabase<T extends StorableObject<T>> {
 		this.insertEntities(storableObjects);
 	}
 
-	@Crutch328(notes = "should be inlined")
 	private void insertEntities(final Set<T> storableObjects)
 			throws IllegalDataException,
 				CreateObjectException {
@@ -911,7 +909,6 @@ public abstract class StorableObjectDatabase<T extends StorableObject<T>> {
 		this.updateEntities(storableObjects);
 	}
 
-	@Crutch328(notes = "should be inlined")
 	private void updateEntities(final Set<T> storableObjects) throws UpdateObjectException {
 		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert !storableObjects.isEmpty() : ErrorMessages.NON_EMPTY_EXPECTED;
