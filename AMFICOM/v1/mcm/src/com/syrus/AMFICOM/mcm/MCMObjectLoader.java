@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.32 2005/11/30 14:56:07 bass Exp $
+ * $Id: MCMObjectLoader.java,v 1.33 2005/11/30 15:42:34 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/11/30 14:56:07 $
+ * @version $Revision: 1.33 $, $Date: 2005/11/30 15:42:34 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -49,7 +49,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 	}
 
 	@Override
-	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+	public <T extends StorableObject<T>> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
@@ -68,7 +68,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 	}
 
 	@Override
-	public final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+	public final <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 

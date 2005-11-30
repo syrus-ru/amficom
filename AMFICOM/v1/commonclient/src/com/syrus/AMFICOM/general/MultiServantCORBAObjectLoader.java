@@ -1,5 +1,5 @@
 /*-
- * $Id: MultiServantCORBAObjectLoader.java,v 1.7 2005/10/21 12:03:18 arseniy Exp $
+ * $Id: MultiServantCORBAObjectLoader.java,v 1.8 2005/11/30 15:42:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/10/21 12:03:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/11/30 15:42:34 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -70,7 +70,7 @@ public final class MultiServantCORBAObjectLoader implements ObjectLoader {
 	}
 
 
-	public final <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+	public final <T extends StorableObject<T>> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
@@ -78,7 +78,7 @@ public final class MultiServantCORBAObjectLoader implements ObjectLoader {
 		return this.getCORBAObjectLoader(ids).loadStorableObjects(ids);
 	}
 
-	public final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+	public final <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 		return this.getCORBAObjectLoader(condition.getEntityCode()).loadStorableObjectsButIdsByCondition(ids, condition);
