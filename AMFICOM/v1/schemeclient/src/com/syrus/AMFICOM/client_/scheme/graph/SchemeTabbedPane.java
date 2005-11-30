@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.35 2005/11/25 14:10:47 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.36 2005/11/30 10:14:30 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,6 +51,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemePropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -69,7 +70,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.35 $, $Date: 2005/11/25 14:10:47 $
+ * @version $Revision: 1.36 $, $Date: 2005/11/30 10:14:30 $
  * @module schemeclient
  */
 
@@ -101,12 +102,40 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		this.tabs = new JTabbedPane(SwingConstants.BOTTOM);
 		this.tabs.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				UgoPanel p = getCurrentPanel();
+				ElementsPanel p = getCurrentPanel();
 				if (p != null) {
 					SchemeMarqueeHandler handler = getMarqueeHandler();
 					if (!handler.s.isSelected())
 						handler.s.setSelected(true);
 					handler.updateButtonsState(p.getGraph().getSelectionCells());
+					
+					SchemeResource res = p.getSchemeResource();
+					try {
+						switch (res.getCellContainerType()) {
+							case SchemeResource.SCHEME:
+								Scheme scheme = res.getScheme();
+								if (scheme != null) {
+									SchemeTabbedPane.this.aContext.getDispatcher().firePropertyChange(
+											new ObjectSelectedEvent(this, 
+													scheme, 
+													SchemePropertiesManager.getInstance(SchemeTabbedPane.this.aContext), 
+													ObjectSelectedEvent.SCHEME));
+								}
+								break;
+							case SchemeResource.SCHEME_ELEMENT:
+								SchemeElement SchemeElement = res.getSchemeElement();
+								if (SchemeElement != null) {
+									SchemeTabbedPane.this.aContext.getDispatcher().firePropertyChange(
+											new ObjectSelectedEvent(this, 
+													SchemeElement, 
+													SchemePropertiesManager.getInstance(SchemeTabbedPane.this.aContext), 
+													ObjectSelectedEvent.SCHEME_ELEMENT));
+								}
+								break;
+						}
+					} catch (ApplicationException e1) {
+						Log.errorMessage(e1);
+					}
 				}
 			}
 		});
