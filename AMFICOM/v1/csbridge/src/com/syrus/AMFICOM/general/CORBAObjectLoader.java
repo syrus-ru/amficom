@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.61 2005/11/22 14:26:56 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.62 2005/11/30 15:37:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/11/22 14:26:56 $
+ * @version $Revision: 1.62 $, $Date: 2005/11/30 15:37:15 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -79,7 +79,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 	 * Overridden in:
 	 * MCMObjectLoader
 	 */
-	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+	public <T extends StorableObject<T>> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null : NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
@@ -109,7 +109,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 	 * Overridden in:
 	 * MCMObjectLoader
 	 */
-	public <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+	public <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws ApplicationException {
 		assert ids != null : NON_NULL_EXPECTED;
 		assert condition != null : NON_NULL_EXPECTED;

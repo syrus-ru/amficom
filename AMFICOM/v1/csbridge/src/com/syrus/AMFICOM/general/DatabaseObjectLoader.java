@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.36 2005/11/30 14:56:07 bass Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.37 2005/11/30 15:37:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/11/30 14:56:07 $
+ * @version $Revision: 1.37 $, $Date: 2005/11/30 15:37:15 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -76,9 +76,9 @@ public class DatabaseObjectLoader implements ObjectLoader {
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
-		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
+		final StorableObjectDatabase<? extends StorableObject<?>> database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
-		database.save(storableObjects);
+		((StorableObjectDatabase) database).save(storableObjects);
 	}
 
 	public final void delete(final Set<? extends Identifiable> identifiables) {
