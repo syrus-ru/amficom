@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.39 2005/10/31 12:29:57 bass Exp $
+ * $Id: ImageResourceDatabase.java,v 1.40 2005/11/30 14:55:25 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/10/31 12:29:57 $
+ * @version $Revision: 1.40 $, $Date: 2005/11/30 14:55:25 $
  * @module resource
  */
 
@@ -260,8 +260,8 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 	}
 
 	@Override
-	public void insert(final Set<AbstractImageResource> storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
+	protected void insert(final Set<AbstractImageResource> storableObjects) throws IllegalDataException, CreateObjectException {
+		super.insert(storableObjects);
 		for (final AbstractImageResource abstractImageResource : storableObjects) {
 			if((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource)) {
 				try {
@@ -274,7 +274,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 	}
 
 	@Override
-	public void update(final Set<AbstractImageResource> storableObjects) throws UpdateObjectException {
+	protected void update(final Set<AbstractImageResource> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
 		for (final AbstractImageResource abstractImageResource : storableObjects) {
 			if ((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource)) {

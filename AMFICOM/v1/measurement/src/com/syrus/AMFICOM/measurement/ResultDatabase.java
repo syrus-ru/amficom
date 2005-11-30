@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.113 2005/10/31 12:30:15 bass Exp $
+ * $Id: ResultDatabase.java,v 1.114 2005/11/30 14:55:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.113 $, $Date: 2005/10/31 12:30:15 $
+ * @version $Revision: 1.114 $, $Date: 2005/11/30 14:55:26 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -276,8 +276,8 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 	}
 
 	@Override
-	public void insert(final Set<Result> storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
+	protected void insert(final Set<Result> storableObjects) throws IllegalDataException, CreateObjectException {
+		super.insert(storableObjects);
 
 		for (final Result result : storableObjects) {
 			this.insertResultParameters(result);

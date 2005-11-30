@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.9 2005/10/30 14:26:52 bass Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.10 2005/11/30 14:55:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/10/30 14:26:52 $
+ * @version $Revision: 1.10 $, $Date: 2005/11/30 14:55:26 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -128,8 +128,8 @@ public final class MeasurementPortTypeDatabase extends StorableObjectDatabase<Me
 	}
 
 	@Override
-	public void insert(final Set<MeasurementPortType> storableObjects) throws CreateObjectException, IllegalDataException {
-		super.insertEntities(storableObjects);
+	protected void insert(final Set<MeasurementPortType> storableObjects) throws CreateObjectException, IllegalDataException {
+		super.insert(storableObjects);
 
 		final Map<Identifier, EnumSet<MeasurementType>> measurementTypesMap = createMeasurementTypesMap(storableObjects);
 		super.insertLinkedEnums(measurementTypesMap,
@@ -139,8 +139,8 @@ public final class MeasurementPortTypeDatabase extends StorableObjectDatabase<Me
 	}
 
 	@Override
-	public void update(final Set<MeasurementPortType> storableObjects) throws UpdateObjectException {
-		super.updateEntities(storableObjects);
+	protected void update(final Set<MeasurementPortType> storableObjects) throws UpdateObjectException {
+		super.update(storableObjects);
 
 		final Map<Identifier, EnumSet<MeasurementType>> measurementTypesMap = createMeasurementTypesMap(storableObjects);
 		super.updateLinkedEnums(measurementTypesMap,

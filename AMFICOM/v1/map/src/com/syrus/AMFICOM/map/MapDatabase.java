@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.61 2005/10/31 12:30:13 bass Exp $
+ * $Id: MapDatabase.java,v 1.62 2005/11/30 14:55:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/10/31 12:30:13 $
+ * @version $Revision: 1.62 $, $Date: 2005/11/30 14:55:26 $
  * @author $Author: bass $
  * @module map
  */
@@ -257,7 +257,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 	}
 
 	@Override
-	public void insert(final Set<Map> storableObjects) throws IllegalDataException, CreateObjectException {
+	protected void insert(final Set<Map> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insert(storableObjects);
 		try {
 			for (int i = 0; i < LinkedEntities.values().length; i++) {
@@ -269,7 +269,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 	}
 
 	@Override
-	public void update(final Set<Map> storableObjects) throws UpdateObjectException {
+	protected void update(final Set<Map> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
 		for (int i = 0; i < LinkedEntities.values().length; i++) {
 			this.updateLinkedObjectIds(storableObjects, LinkedEntities.values()[i]);

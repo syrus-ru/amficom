@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.22 2005/10/31 12:30:15 bass Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.23 2005/11/30 14:55:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/31 12:30:15 $
+ * @version $Revision: 1.23 $, $Date: 2005/11/30 14:55:26 $
  * @author $Author: bass $
  * @module measurement
  */
@@ -173,7 +173,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 	}
 
 	@Override
-	public void update(final Set<IntervalsTemporalPattern> storableObjects) throws UpdateObjectException {
+	protected void update(final Set<IntervalsTemporalPattern> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
 		for (final IntervalsTemporalPattern intervalsTemporalPattern : storableObjects) {
 			this.updateLinkedTable(intervalsTemporalPattern);

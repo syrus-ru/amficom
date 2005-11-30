@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.46 2005/10/25 19:53:14 bass Exp $
+ * $Id: MapViewDatabase.java,v 1.47 2005/11/30 14:55:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/10/25 19:53:14 $
+ * @version $Revision: 1.47 $, $Date: 2005/11/30 14:55:26 $
  * @author $Author: bass $
  * @module mapview
  */
@@ -160,7 +160,7 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 	}
 
 	@Override
-	public void insert(final Set<MapView> storableObjects) throws IllegalDataException, CreateObjectException {
+	protected void insert(final Set<MapView> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insert(storableObjects);
 		try {
 			this.updateSchemeIds(storableObjects);
@@ -170,7 +170,7 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 	}
 
 	@Override
-	public void update(final Set<MapView> storableObjects) throws UpdateObjectException {
+	protected void update(final Set<MapView> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
 		this.updateSchemeIds(storableObjects);
 	}	

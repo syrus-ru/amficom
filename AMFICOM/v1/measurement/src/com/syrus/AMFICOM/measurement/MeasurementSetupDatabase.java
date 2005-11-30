@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.108 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.109 2005/11/30 14:55:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.108 $, $Date: 2005/09/14 18:35:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.109 $, $Date: 2005/11/30 14:55:26 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -205,8 +205,8 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 	}
 
 	@Override
-	public void insert(final Set<MeasurementSetup> storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
+	protected void insert(final Set<MeasurementSetup> storableObjects) throws IllegalDataException, CreateObjectException {
+		super.insert(storableObjects);
 
 		final Map<Identifier, Set<Identifier>> meIdsMap = createMonitoredElementIdsMap(storableObjects);
 		super.insertLinkedEntityIds(meIdsMap,
@@ -222,8 +222,8 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 	}
 
 	@Override
-	public void update(final Set<MeasurementSetup> storableObjects) throws UpdateObjectException {
-		super.updateEntities(storableObjects);
+	protected void update(final Set<MeasurementSetup> storableObjects) throws UpdateObjectException {
+		super.update(storableObjects);
 
 		final Map<Identifier, Set<Identifier>> meIdsMap = createMonitoredElementIdsMap(storableObjects);
 		super.updateLinkedEntityIds(meIdsMap,

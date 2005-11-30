@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserDatabase.java,v 1.18 2005/10/10 15:47:19 bob Exp $
+ * $Id: SystemUserDatabase.java,v 1.19 2005/11/30 14:55:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/10 15:47:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2005/11/30 14:55:25 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -142,8 +142,8 @@ public final class SystemUserDatabase extends StorableObjectDatabase<SystemUser>
 	}
 	
 	@Override
-	public void insert(final Set<SystemUser> systemUsers) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(systemUsers);
+	protected void insert(final Set<SystemUser> systemUsers) throws IllegalDataException, CreateObjectException {
+		super.insert(systemUsers);
 
 		final Map<Identifier, Set<Identifier>> roleIdsMap = this.createRoleIdsMap(systemUsers);
 		super.insertLinkedEntityIds(roleIdsMap,
@@ -153,7 +153,7 @@ public final class SystemUserDatabase extends StorableObjectDatabase<SystemUser>
 	}
 
 	@Override
-	public void update(final Set<SystemUser> systemUsers) throws UpdateObjectException {
+	protected void update(final Set<SystemUser> systemUsers) throws UpdateObjectException {
 		super.update(systemUsers);
 
 		final Map<Identifier, Set<Identifier>> roleIdsMap = this.createRoleIdsMap(systemUsers);

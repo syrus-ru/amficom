@@ -1,5 +1,5 @@
 /*-
- * $Id: EventTypeDatabase.java,v 1.47 2005/11/09 11:35:12 bass Exp $
+ * $Id: EventTypeDatabase.java,v 1.48 2005/11/30 14:55:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/11/09 11:35:12 $
+ * @version $Revision: 1.48 $, $Date: 2005/11/30 14:55:27 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -217,8 +217,8 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 	}
 
 	@Override
-	public void insert(final Set<EventType> storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
+	protected void insert(final Set<EventType> storableObjects) throws IllegalDataException, CreateObjectException {
+		super.insert(storableObjects);
 		try {
 			this.updateParameterTypes(storableObjects);
 			this.updateUserAlertKinds(storableObjects);
@@ -233,7 +233,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 	 * Do not updates parameter types.
 	 */
 	@Override
-	public void update(final Set<EventType> storableObjects) throws UpdateObjectException {
+	protected void update(final Set<EventType> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
 		this.updateParameterTypes(storableObjects);
 		this.updateUserAlertKinds(storableObjects);

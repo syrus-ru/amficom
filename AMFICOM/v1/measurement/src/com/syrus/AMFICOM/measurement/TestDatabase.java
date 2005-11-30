@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.135 2005/10/31 12:30:15 bass Exp $
+ * $Id: TestDatabase.java,v 1.136 2005/11/30 14:55:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.135 $, $Date: 2005/10/31 12:30:15 $
+ * @version $Revision: 1.136 $, $Date: 2005/11/30 14:55:26 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -284,8 +284,8 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 	}
 
 	@Override
-	public void insert(final Set<Test> tests) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(tests);
+	protected void insert(final Set<Test> tests) throws IllegalDataException, CreateObjectException {
+		super.insert(tests);
 
 		final Map<Identifier, Set<Identifier>> measurementSetupIdsMap = this.createMeasurementSetupIdsMap(tests);
 		super.insertLinkedEntityIds(measurementSetupIdsMap,
@@ -360,7 +360,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 	}
 
 	@Override
-	public void update(final Set<Test> tests) throws UpdateObjectException {
+	protected void update(final Set<Test> tests) throws UpdateObjectException {
 		super.update(tests);
 
 		final Map<Identifier, Set<Identifier>> measurementSetupIdsMap = this.createMeasurementSetupIdsMap(tests);

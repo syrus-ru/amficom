@@ -1,5 +1,5 @@
 /*-
- * $Id: CollectorDatabase.java,v 1.50 2005/10/31 12:30:13 bass Exp $
+ * $Id: CollectorDatabase.java,v 1.51 2005/11/30 14:55:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/10/31 12:30:13 $
+ * @version $Revision: 1.51 $, $Date: 2005/11/30 14:55:26 $
  * @author $Author: bass $
  * @module map
  */
@@ -120,7 +120,7 @@ public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
 	}
 
 	@Override
-	public void insert(final Set<Collector> storableObjects) throws IllegalDataException, CreateObjectException {
+	protected void insert(final Set<Collector> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insert(storableObjects);
 		try {
 			this.updatePhysicalLinks(storableObjects);
@@ -130,7 +130,7 @@ public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
 	}
 
 	@Override
-	public void update(final Set<Collector> storableObjects) throws UpdateObjectException {
+	protected void update(final Set<Collector> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
 		this.updatePhysicalLinks(storableObjects);
 	}	

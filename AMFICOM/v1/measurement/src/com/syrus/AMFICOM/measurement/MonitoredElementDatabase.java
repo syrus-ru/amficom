@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.9 2005/10/31 12:30:15 bass Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.10 2005/11/30 14:55:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/10/31 12:30:15 $
+ * @version $Revision: 1.10 $, $Date: 2005/11/30 14:55:26 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -183,8 +183,8 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 	}
 
 	@Override
-	public void insert(final Set<MonitoredElement> storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
+	protected void insert(final Set<MonitoredElement> storableObjects) throws IllegalDataException, CreateObjectException {
+		super.insert(storableObjects);
 		for (final Iterator iter = storableObjects.iterator(); iter.hasNext();) {
 			final MonitoredElement monitoredElement = (MonitoredElement) iter.next();
 			this.insertMonitoredDomainMemberIds(monitoredElement);
@@ -271,8 +271,8 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 	}
 
 	@Override
-	public void update(final Set<MonitoredElement> storableObjects) throws UpdateObjectException {
-		super.updateEntities(storableObjects);
+	protected void update(final Set<MonitoredElement> storableObjects) throws UpdateObjectException {
+		super.update(storableObjects);
 		this.updateMonitoredDomainMemberIds(storableObjects);
 	}
 
