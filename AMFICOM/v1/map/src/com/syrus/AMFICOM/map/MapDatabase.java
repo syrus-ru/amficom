@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.62 2005/11/30 14:55:26 bass Exp $
+ * $Id: MapDatabase.java,v 1.63 2005/11/30 15:15:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -45,7 +46,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/11/30 14:55:26 $
+ * @version $Revision: 1.63 $, $Date: 2005/11/30 15:15:32 $
  * @author $Author: bass $
  * @module map
  */
@@ -328,7 +329,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 				}
 			}
 			if(!linkedIds.isEmpty()) {
-				StorableObjectDatabase database = DatabaseContext.getDatabase(linkedIds.iterator().next().getMajor());
+				final StorableObjectDatabase<? extends StorableObject<?>> database = DatabaseContext.getDatabase(linkedIds.iterator().next().getMajor());
 				// Nothing to do but suppress a warning
 				database.delete(linkedIds);
 				linkedIds.clear();
