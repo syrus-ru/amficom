@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.31 2005/10/31 10:47:23 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.32 2005/11/30 14:56:07 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/10/31 10:47:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/11/30 14:56:07 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -207,7 +207,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 			for (final Short entityKey : levelLoadObjectsMap.keySet()) {
 				final Set<StorableObject> entityLevelLoadObjects = levelLoadObjectsMap.get(entityKey);
 				try {
-					final StorableObjectDatabase<StorableObject> database = DatabaseContext.getDatabase(entityKey);
+					final StorableObjectDatabase database = DatabaseContext.getDatabase(entityKey);
 					database.save(entityLevelLoadObjects);
 				}
 				catch (ApplicationException ae) {

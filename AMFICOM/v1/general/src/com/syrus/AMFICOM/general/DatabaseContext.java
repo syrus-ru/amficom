@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseContext.java,v 1.13 2005/10/31 12:30:18 bass Exp $
+ * $Id: DatabaseContext.java,v 1.14 2005/11/30 14:56:07 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.util.Log;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/31 12:30:18 $
+ * @version $Revision: 1.14 $, $Date: 2005/11/30 14:56:07 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -37,12 +37,12 @@ public final class DatabaseContext {
 		ENTITY_CODE_DATABASE_MAP.put(entityCode, database);
 	}
 
-	public static <T extends StorableObject> StorableObjectDatabase<T> getDatabase(final Short entityCode) {
+	public static <T extends StorableObject<T>> StorableObjectDatabase<T> getDatabase(final Short entityCode) {
 		return getDatabase(entityCode.shortValue());
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends StorableObject> StorableObjectDatabase<T> getDatabase(final short entityCode ) {
+	public static <T extends StorableObject<T>> StorableObjectDatabase<T> getDatabase(final short entityCode ) {
 		return (StorableObjectDatabase) ENTITY_CODE_DATABASE_MAP.get(entityCode);
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.35 2005/09/23 13:53:18 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.36 2005/11/30 14:56:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/09/23 13:53:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/11/30 14:56:07 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -25,7 +25,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 	 * CMServerObjectLoader
 	 * MServerObjectLoader
 	 */
-	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+	public <T extends StorableObject<T>> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
@@ -42,7 +42,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 	 * CMServerObjectLoader
 	 * MServerObjectLoader
 	 */
-	public <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+	public <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition)
 			throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
@@ -76,7 +76,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
-		final StorableObjectDatabase<StorableObject> database = DatabaseContext.getDatabase(entityCode);
+		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 		database.save(storableObjects);
 	}
