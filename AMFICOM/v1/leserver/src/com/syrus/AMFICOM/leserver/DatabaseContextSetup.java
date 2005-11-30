@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseContextSetup.java,v 1.17 2005/11/29 15:46:53 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.18 2005/11/30 11:21:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,20 +27,27 @@ import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementPortDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementPortTypeDatabase;
 import com.syrus.AMFICOM.measurement.MonitoredElementDatabase;
+import com.syrus.AMFICOM.scheme.CableChannelingItemDatabase;
 import com.syrus.AMFICOM.scheme.PathElementDatabase;
 import com.syrus.AMFICOM.scheme.SchemeCableLinkDatabase;
 import com.syrus.AMFICOM.scheme.SchemeCablePortDatabase;
 import com.syrus.AMFICOM.scheme.SchemeCableThreadDatabase;
 import com.syrus.AMFICOM.scheme.SchemeDatabase;
+import com.syrus.AMFICOM.scheme.SchemeDeviceDatabase;
 import com.syrus.AMFICOM.scheme.SchemeElementDatabase;
 import com.syrus.AMFICOM.scheme.SchemeLinkDatabase;
+import com.syrus.AMFICOM.scheme.SchemeMonitoringSolutionDatabase;
+import com.syrus.AMFICOM.scheme.SchemeOptimizeInfoDatabase;
+import com.syrus.AMFICOM.scheme.SchemeOptimizeInfoRtuDatabase;
+import com.syrus.AMFICOM.scheme.SchemeOptimizeInfoSwitchDatabase;
 import com.syrus.AMFICOM.scheme.SchemePathDatabase;
 import com.syrus.AMFICOM.scheme.SchemePortDatabase;
 import com.syrus.AMFICOM.scheme.SchemeProtoElementDatabase;
+import com.syrus.AMFICOM.scheme.SchemeProtoGroupDatabase;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/11/29 15:46:53 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/11/30 11:21:38 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -73,14 +80,21 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new EventSourceDatabase());
 		DatabaseContext.registerDatabase(new DeliveryAttributesDatabase());
 
+		DatabaseContext.registerDatabase(new SchemeProtoGroupDatabase());
 		DatabaseContext.registerDatabase(new SchemeProtoElementDatabase());
 		DatabaseContext.registerDatabase(new SchemeDatabase());
+		DatabaseContext.registerDatabase(new SchemeElementDatabase());
+		DatabaseContext.registerDatabase(new SchemeOptimizeInfoDatabase());
+		DatabaseContext.registerDatabase(new SchemeOptimizeInfoSwitchDatabase());
+		DatabaseContext.registerDatabase(new SchemeOptimizeInfoRtuDatabase());
+		DatabaseContext.registerDatabase(new SchemeMonitoringSolutionDatabase());
+		DatabaseContext.registerDatabase(new SchemeDeviceDatabase());
 		DatabaseContext.registerDatabase(new SchemePortDatabase());
 		DatabaseContext.registerDatabase(new SchemeCablePortDatabase());
 		DatabaseContext.registerDatabase(new SchemeLinkDatabase());
 		DatabaseContext.registerDatabase(new SchemeCableLinkDatabase());
 		DatabaseContext.registerDatabase(new SchemeCableThreadDatabase());
-		DatabaseContext.registerDatabase(new SchemeElementDatabase());
+		DatabaseContext.registerDatabase(new CableChannelingItemDatabase());
 		DatabaseContext.registerDatabase(new SchemePathDatabase());
 		DatabaseContext.registerDatabase(new PathElementDatabase());
 	}	

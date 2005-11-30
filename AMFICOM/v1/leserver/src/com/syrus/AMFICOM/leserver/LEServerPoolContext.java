@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerPoolContext.java,v 1.14 2005/11/13 06:34:54 bass Exp $
+ * $Id: LEServerPoolContext.java,v 1.15 2005/11/30 11:21:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/11/13 06:34:54 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/11/30 11:21:38 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -51,6 +51,7 @@ final class LEServerPoolContext extends PoolContext {
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, generalPoolSize);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, administrationPoolSize);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.EVENT_GROUP_CODE, eventPoolSize);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.SCHEME_GROUP_CODE, eventPoolSize);
 
 		StorableObjectPool.addObjectPool(ObjectEntities.TRANSPATH_TYPE_CODE, 10);
 		StorableObjectPool.addObjectPool(ObjectEntities.TRANSMISSIONPATH_CODE, 10);
@@ -58,13 +59,6 @@ final class LEServerPoolContext extends PoolContext {
 		StorableObjectPool.addObjectPool(ObjectEntities.MEASUREMENTPORT_TYPE_CODE, 10);
 		StorableObjectPool.addObjectPool(ObjectEntities.MONITOREDELEMENT_CODE, 10);
 		StorableObjectPool.addObjectPool(ObjectEntities.MEASUREMENTPORT_CODE, 10);
-
-		StorableObjectPool.addObjectPool(ObjectEntities.SCHEMEPATH_CODE, 10);
-		StorableObjectPool.addObjectPool(ObjectEntities.PATHELEMENT_CODE, 10);
-		StorableObjectPool.addObjectPool(ObjectEntities.SCHEMEELEMENT_CODE, 10);
-		StorableObjectPool.addObjectPool(ObjectEntities.SCHEMELINK_CODE, 10);
-		StorableObjectPool.addObjectPool(ObjectEntities.SCHEMECABLELINK_CODE, 10);
-		StorableObjectPool.addObjectPool(ObjectEntities.SCHEMECABLETHREAD_CODE, 10);
 	}
 
 	@Override
