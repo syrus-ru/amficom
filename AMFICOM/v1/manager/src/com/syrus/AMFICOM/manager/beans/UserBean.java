@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.2 2005/11/28 14:47:04 bob Exp $
+ * $Id: UserBean.java,v 1.3 2005/11/30 13:15:27 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.manager.beans;
 
 import java.beans.PropertyChangeEvent;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -44,7 +45,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:04 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/30 13:15:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -390,14 +391,17 @@ public class UserBean extends Bean implements WorkstationItem {
 				typicalCondition, 
 				true);
 		
-		final LinkedIdsCondition linkedIdsCondition = 
-			new LinkedIdsCondition(Identifier.createIdentifiers(beanLayoutItems),
-				ObjectEntities.LAYOUT_ITEM_CODE);
-		
-		return StorableObjectPool.getStorableObjectsByCondition(
-			linkedIdsCondition, 
-			true, 
-			true);
+		if (!beanLayoutItems.isEmpty()) {		
+			final LinkedIdsCondition linkedIdsCondition = 
+				new LinkedIdsCondition(Identifier.createIdentifiers(beanLayoutItems),
+					ObjectEntities.LAYOUT_ITEM_CODE);
+			
+			return StorableObjectPool.getStorableObjectsByCondition(
+				linkedIdsCondition, 
+				true, 
+				true);
+		}
+		return Collections.emptySet();
 	}
 	
 	public void setDomainId(final Identifier oldDomainId,

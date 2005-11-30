@@ -1,5 +1,5 @@
 /*-
-* $Id: FlushCommand.java,v 1.5 2005/11/17 09:00:35 bob Exp $
+* $Id: FlushCommand.java,v 1.6 2005/11/30 13:15:27 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.6 $, $Date: 2005/11/30 13:15:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -39,7 +39,7 @@ public class FlushCommand extends AbstractCommand {
 			final Perspective perspective = this.managerMainFrame.getPerspective();
 			if (perspective != null) {				
 				if (perspective.isValid()) {
-					StorableObjectPool.flush(ObjectEntities.LAYOUT_ITEM_CODE, LoginManager.getUserId(), true);
+//					StorableObjectPool.flush(ObjectEntities.LAYOUT_ITEM_CODE, LoginManager.getUserId(), true);
 					StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, LoginManager.getUserId(), true);
 					StorableObjectPool.flush(ObjectEntities.PERMATTR_CODE, LoginManager.getUserId(), true);
 					StorableObjectPool.flush(ObjectEntities.DOMAIN_CODE, LoginManager.getUserId(), true);
@@ -47,6 +47,7 @@ public class FlushCommand extends AbstractCommand {
 					StorableObjectPool.flush(ObjectEntities.KIS_CODE, LoginManager.getUserId(), true);
 					StorableObjectPool.flush(ObjectEntities.SERVER_CODE, LoginManager.getUserId(), true);
 					StorableObjectPool.flush(ObjectEntities.MCM_CODE, LoginManager.getUserId(), true);
+					StorableObjectPool.flush(ObjectEntities.DELIVERYATTRIBUTES_CODE, LoginManager.getUserId(), true);
 				} else {
 					JOptionPane.showMessageDialog(this.managerMainFrame.getGraph(), 
 						I18N.getString("Manager.Error.LayoutIsInvalid"),

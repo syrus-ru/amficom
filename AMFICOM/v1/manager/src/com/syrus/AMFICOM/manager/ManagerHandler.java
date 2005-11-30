@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerHandler.java,v 1.8 2005/11/28 14:47:05 bob Exp $
+* $Id: ManagerHandler.java,v 1.9 2005/11/30 13:15:27 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/11/28 14:47:05 $
+ * @version $Revision: 1.9 $, $Date: 2005/11/30 13:15:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -60,10 +60,8 @@ public final class ManagerHandler extends AbstractExtensionHandler {
 		this.beanUIs = new HashMap<String, BeanUI>();
 	}
 	
-	public final void setManagerMainFrame(final ManagerMainFrame managerMainFrame) 
-	throws ApplicationException {
+	public final void setManagerMainFrame(final ManagerMainFrame managerMainFrame) {
 		this.managerMainFrame = managerMainFrame;	
-		this.loadPerspectives();
 	}
 	
 	private final BeanUI loadBeanUI(final String handlerClass) {
@@ -117,7 +115,7 @@ public final class ManagerHandler extends AbstractExtensionHandler {
 		return popupMenu;
 	}
 	
-	private final void loadPerspectives() throws ApplicationException {
+	public final void loadPerspectives() throws ApplicationException {
 			for (final ManagerResource managerResource : this.managerExtensions.getManagerResourceArray()) {
 				if (managerResource instanceof Perspective) {
 					Perspective perspective = (Perspective) managerResource;

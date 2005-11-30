@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.18 2005/11/28 14:47:04 bob Exp $
+* $Id: Manager.java,v 1.19 2005/11/30 13:15:27 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,9 +9,11 @@
 package com.syrus.AMFICOM.manager.UI;
 
 import java.awt.Toolkit;
+import java.util.Date;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.Role;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserWrapper;
@@ -25,15 +27,17 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/11/28 14:47:04 $
+ * @version $Revision: 1.19 $, $Date: 2005/11/30 13:15:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -88,7 +92,13 @@ public class Manager extends AbstractApplication {
 		
 		StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(domainIds, ObjectEntities.MCM_CODE), true);
 		StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(domainIds, ObjectEntities.SERVER_CODE), true);
-		StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(domainIds, ObjectEntities.PERMATTR_CODE), true);
+		final Set<PermissionAttributes> permissionAttributes = 
+			StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(domainIds, ObjectEntities.PERMATTR_CODE), true);
+		for (final PermissionAttributes attributes : permissionAttributes) {
+			assert Log.debugMessage(attributes.getParentId() 
+				+ ", "
+				+ attributes.getDomainId(), Log.DEBUGLEVEL03);
+		}
 	}
 	
 	private void initUser() throws ApplicationException {
@@ -102,6 +112,11 @@ public class Manager extends AbstractApplication {
 		assert !systemUserWithLoginSys.isEmpty() : "There is no sys user";
 		
 		LoginManager.setUserId(systemUserWithLoginSys.iterator().next().getId());
+
+		final Domain domain = StorableObjectPool.getStorableObject(new Identifier("Domain_0"), true);
+		LoginManager.setDomainId(domain.getId());
+		
+		LoginManager.setIdlSessionKey(new IdlSessionKey(new Date().toString()));
 	}
 	
 	public static void main(String[] args) {

@@ -1,5 +1,5 @@
 /*-
-* $Id: MessageBean.java,v 1.1 2005/11/17 09:00:32 bob Exp $
+* $Id: MessageBean.java,v 1.2 2005/11/30 13:15:27 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
 */
 
 package com.syrus.AMFICOM.manager.beans;
+
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.Role;
 import com.syrus.AMFICOM.event.DeliveryAttributes;
@@ -20,7 +22,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/30 13:15:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -79,6 +81,8 @@ public class MessageBean extends Bean {
 	public void addRole(final Role role) {
 		assert Log.debugMessage(role, Log.DEBUGLEVEL03);
 		this.deliveryAttributes.addRole(role);
+		final Set<Identifier> roleIds = this.deliveryAttributes.getRoleIds();
+		assert Log.debugMessage(roleIds, Log.DEBUGLEVEL03);
 	}
 	
 	public void removeRole(final Role role) {

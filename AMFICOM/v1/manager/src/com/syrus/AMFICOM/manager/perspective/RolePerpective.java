@@ -1,5 +1,5 @@
 /*-
-* $Id: RolePerpective.java,v 1.1 2005/11/17 09:00:35 bob Exp $
+* $Id: RolePerpective.java,v 1.2 2005/11/30 13:15:27 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,8 +10,6 @@ package com.syrus.AMFICOM.manager.perspective;
 
 import java.util.Set;
 
-import javax.swing.JToolBar;
-
 import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphLayoutCache;
@@ -20,7 +18,6 @@ import org.jgraph.graph.Port;
 
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.Role;
-import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -33,19 +30,17 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.manager.UI.GraphRoutines;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.beans.RoleBean;
-import com.syrus.AMFICOM.manager.beans.RolePermissionBean;
-import com.syrus.AMFICOM.manager.beans.RolePermissionBeanFactory;
 import com.syrus.AMFICOM.manager.graph.MPort;
-import com.syrus.AMFICOM.manager.perspective.AbstractPerspective.Chechable;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:35 $
+ * Under deep construction
+ * 
+ * @version $Revision: 1.2 $, $Date: 2005/11/30 13:15:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -63,45 +58,78 @@ public class RolePerpective extends AbstractPerspective {
 		this.role = role;
 	}
 	
-	public void addEntities(final JToolBar entityToolBar) 
-	throws ApplicationException {
-		final RolePermissionBeanFactory factory = 
-			(RolePermissionBeanFactory) this.perspectiveData.getBeanFactory(ObjectEntities.PERMATTR);
+//	public void addEntities(final JToolBar entityToolBar) 
+//	throws ApplicationException {
+//		final RolePermissionBeanFactory factory = 
+//			(RolePermissionBeanFactory) this.perspectiveData.getBeanFactory(ObjectEntities.PERMATTR);
+//		
+//		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
+//		final DefaultGraphCell parentCell = graphRoutines.getDefaultGraphCell(this.layoutItem);
+//		
+//		class ModuleCheckable implements Chechable {
+//			
+//			private final Module module;
+//			
+//			public ModuleCheckable(final Module module) {
+//				this.module = module;
+//			}
+//			
+//			public boolean isNeedIn(final AbstractBean bean) {
+//				if (bean instanceof RolePermissionBean) {
+//					final RolePermissionBean permissionBean = (RolePermissionBean) bean;
+//					return permissionBean.getPermissionAttributes().getModule() == this.module;
+//				}
+//				return false;
+//			}			
+//		}
+//		
+//		
+//		
+//		for(final Module module : Module.getValueList()) {
+//			if (!module.isEnable()) {
+//				continue;
+//			}
+//			
+//			final ModuleCheckable moduleCheckable = new ModuleCheckable(module);
+//			
+//			this.managerMainFrame.addAction(
+//				this.createGetTheSameOrCreateNewAction(factory.getInstance(module), 
+//					moduleCheckable, 
+//					parentCell));
+//		}
+//	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.manager.perspective.AbstractPerspective#createActions()
+	 */
+	@Override
+	protected void createActions() throws ApplicationException {
+		// TODO Auto-generated method stub
 		
-		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
-		final DefaultGraphCell parentCell = graphRoutines.getDefaultGraphCell(this.layoutItem);
-		
-		class ModuleCheckable implements Chechable {
-			
-			private final Module module;
-			
-			public ModuleCheckable(final Module module) {
-				this.module = module;
-			}
-			
-			public boolean isNeedIn(final AbstractBean bean) {
-				if (bean instanceof RolePermissionBean) {
-					final RolePermissionBean permissionBean = (RolePermissionBean) bean;
-					return permissionBean.getPermissionAttributes().getModule() == this.module;
-				}
-				return false;
-			}			
-		}
-		
-		
-		
-		for(final Module module : Module.getValueList()) {
-			if (!module.isEnable()) {
-				continue;
-			}
-			
-			final ModuleCheckable moduleCheckable = new ModuleCheckable(module);
-			
-			this.managerMainFrame.addAction(
-				this.createGetTheSameOrCreateNewAction(factory.getInstance(module), 
-					moduleCheckable, 
-					parentCell));
-		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.manager.perspective.Perspective#getParentLayoutItem()
+	 */
+	public LayoutItem getParentLayoutItem() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.manager.perspective.Perspective#getSubPerspective(com.syrus.AMFICOM.manager.beans.AbstractBean)
+	 */
+	public Perspective getSubPerspective(AbstractBean bean) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.manager.perspective.Perspective#getSuperPerspective()
+	 */
+	public Perspective getSuperPerspective() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	public String getCodename() {
@@ -147,12 +175,12 @@ public class RolePerpective extends AbstractPerspective {
 	@SuppressWarnings("unchecked")
 	public void perspectiveApplied() 
 	throws ApplicationException {
-		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
-		graphRoutines.showLayerName(this.getCodename());
-		final DefaultGraphCell userCell = 
-			graphRoutines.getDefaultGraphCell(this.layoutItem);
-		
-		this.managerMainFrame.getTreeModel().setRoot(userCell);
+//		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
+//		graphRoutines.showLayerName(this.getCodename());
+//		final DefaultGraphCell userCell = 
+//			graphRoutines.getDefaultGraphCell(this.layoutItem);
+//		
+//		this.managerMainFrame.getTreeModel().setRoot(userCell);
 	}
 
 	public void createNecessaryItems() throws ApplicationException {

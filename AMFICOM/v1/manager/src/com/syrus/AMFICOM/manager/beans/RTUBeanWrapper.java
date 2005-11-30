@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanWrapper.java,v 1.1 2005/11/17 09:00:32 bob Exp $
+ * $Id: RTUBeanWrapper.java,v 1.2 2005/11/30 13:15:27 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/30 13:15:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -75,7 +75,7 @@ public class RTUBeanWrapper implements Wrapper<RTUBean> {
 				}
 			});
 		
-		this.refreshMCMs();
+//		this.refreshMCMs();
 	}
 
 	public static RTUBeanWrapper getInstance(final Dispatcher dispatcher) {

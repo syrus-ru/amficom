@@ -1,5 +1,5 @@
 /*-
- * $Id: WorkstationBeanFactory.java,v 1.2 2005/11/28 14:47:05 bob Exp $
+ * $Id: WorkstationBeanFactory.java,v 1.3 2005/11/30 13:15:27 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/30 13:15:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -41,16 +41,17 @@ public final class WorkstationBeanFactory extends AbstractBeanFactory<NonStorabl
 	}
 	
 	@Override
-	public NonStorableBean createBean(Perspective perspective) throws ApplicationException {
+	public NonStorableBean createBean(final Perspective perspective) throws ApplicationException {
 		return this.createBean(WORKSTATION_CODENAME + this.count);
 	}
 	
 	@Override
 	public NonStorableBean createBean(final String codename) 
 	throws ApplicationException {
-		++super.count;
+		++this.count;
 		final WorkstationBean bean = new WorkstationBean();
-		bean.setName(this.getName());
+		final String name = this.getName() + '-' + this.count;
+		bean.setName(name);
 		bean.setManagerMainFrame(super.graphText);
 		bean.setId(codename);
 		bean.setIdentifier(Identifier.VOID_IDENTIFIER);		

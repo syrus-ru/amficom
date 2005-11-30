@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainsPerspective.java,v 1.2 2005/11/28 14:47:05 bob Exp $
+* $Id: DomainsPerspective.java,v 1.3 2005/11/30 13:15:27 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,9 +25,6 @@ import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.Port;
 
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.MCM;
-import com.syrus.AMFICOM.administration.PermissionAttributes;
-import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -48,14 +44,13 @@ import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.beans.DomainBean;
 import com.syrus.AMFICOM.manager.beans.NetBeanFactory;
 import com.syrus.AMFICOM.manager.graph.MPort;
-import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/30 13:15:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -73,7 +68,7 @@ public final class DomainsPerspective extends AbstractPerspective {
 	@Override
 	protected void createActions() throws ApplicationException {
 		this.actions = new ArrayList<AbstractAction>(2);
-		this.actions.add(super.createAction(this.perspectiveData.getBeanFactory(NetBeanFactory.NET_CODENAME)));
+//		this.actions.add(super.createAction(this.perspectiveData.getBeanFactory(NetBeanFactory.NET_CODENAME)));
 		this.actions.add(super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.DOMAIN)));
 	}
 	

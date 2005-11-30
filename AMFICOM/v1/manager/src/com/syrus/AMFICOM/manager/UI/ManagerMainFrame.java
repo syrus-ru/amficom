@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.22 2005/11/28 14:47:04 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.23 2005/11/30 13:15:27 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.22 $, $Date: 2005/11/28 14:47:04 $
+ * @version $Revision: 1.23 $, $Date: 2005/11/30 13:15:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -107,7 +107,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 	
 	ManagerHandler	managerHandler;
 
-	private GraphRoutines	graphRoutines;
+	GraphRoutines	graphRoutines;
 
 	private Point	location;
 	
@@ -213,14 +213,10 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 					
 					treeFrame.setVisible(true);
 					graphFrame.setVisible(true);
-				propertiesFrame.setVisible(true);
+					propertiesFrame.setVisible(true);
 				}
 			}
 		});
-
-		
-	
-		super.windowArranger.arrange();
 		
 	}
 	
@@ -235,8 +231,81 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		
 		this.frames.put(TREE_FRAME, new UIDefaults.LazyValue() {
 
-			@SuppressWarnings("hiding")
+			@SuppressWarnings({"hiding","unqualified-field-access", "synthetic-access"})
 			public Object createValue(UIDefaults table) {
+				
+				
+				
+				// Construct Model and Graph
+				graphModel = new ManagerGraphModel(ManagerMainFrame.this);
+				
+				graph = new JGraph(graphModel,
+					new GraphLayoutCache(graphModel,
+							new DefaultCellViewFactory(),
+							true)) 
+//				{
+//					@Override
+//					public String getToolTipText(MouseEvent e) {
+//						return e.getX() + " x " + e.getY();
+//					}
+//				}
+				;
+				
+//				graph.setToolTipText("");
+				
+
+				
+				graphRoutines = new GraphRoutines(ManagerMainFrame.this);
+				
+				//	Use a Custom Marquee Handler
+				graph.setMarqueeHandler(new ManagerMarqueeHandler(ManagerMainFrame.this));
+
+				// Control-drag should clone selection
+				graph.setCloneable(true);
+
+				// Enable edit without final RETURN keystroke
+				graph.setInvokesStopCellEditing(true);
+
+				// When over a cell, jump to its default port (we only have one, anyway)
+				graph.setJumpToDefaultPort(true);
+				
+				
+				undoManager = new GraphUndoManager() {
+					// Override Superclass
+					@Override
+					public void undoableEditHappened(UndoableEditEvent e) {
+						// First Invoke Superclass
+						super.undoableEditHappened(e);
+						// Then Update Undo/Redo Buttons
+						updateHistoryButtons();
+					}
+				};
+
+				// Register UndoManager with the Model
+				graph.getModel().addUndoableEditListener(undoManager);
+
+				createModelListener();
+				
+				frames.get(GRAPH_FRAME);
+				
+				final ExtensionLauncher extensionLauncher = ExtensionLauncher.getInstance();
+				managerHandler = 
+					extensionLauncher.getExtensionHandler(ManagerHandler.class.getName());
+				
+				managerHandler.setManagerMainFrame(ManagerMainFrame.this);
+				try {
+					managerHandler.loadPerspectives();
+				} catch (ApplicationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				createPerspectives();
+				
+				createTreeModel();
+
+				enableDragAndDrop();
+				
 				final JScrollPane pane = new JScrollPane(ManagerMainFrame.this.tree);
 				final JInternalFrame frame = new JInternalFrame(I18N.getString(TREE_FRAME), true);
 				frame.setIconifiable(true);
@@ -324,75 +393,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		applicationModel.setCommand(GRAPH_FRAME, this.getShowWindowLazyCommand(this.frames, GRAPH_FRAME));
 		applicationModel.setCommand(PROPERTIES_FRAME, this.getShowWindowLazyCommand(this.frames, PROPERTIES_FRAME));
 		
-		final ExtensionLauncher extensionLauncher = ExtensionLauncher.getInstance();
-		this.managerHandler = 
-			extensionLauncher.getExtensionHandler("com.syrus.AMFICOM.manager.ManagerHandler");
 		
-		try {
-			this.managerHandler.setManagerMainFrame(this);
-		} catch (ApplicationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			System.exit(0);
-		}
-		
-		// Construct Model and Graph
-		this.graphModel = new ManagerGraphModel(this);
-		
-		this.graph = new JGraph(this.graphModel,
-			new GraphLayoutCache(this.graphModel,
-					new DefaultCellViewFactory(),
-					true)) 
-//		{
-//			@Override
-//			public String getToolTipText(MouseEvent e) {
-//				return e.getX() + " x " + e.getY();
-//			}
-//		}
-		;
-		
-//		this.graph.setToolTipText("");
-		
-
-		
-		this.graphRoutines = new GraphRoutines(this);
-		
-		//	Use a Custom Marquee Handler
-		this.graph.setMarqueeHandler(new ManagerMarqueeHandler(this));
-
-		// Control-drag should clone selection
-		this.graph.setCloneable(true);
-
-		// Enable edit without final RETURN keystroke
-		this.graph.setInvokesStopCellEditing(true);
-
-		// When over a cell, jump to its default port (we only have one, anyway)
-		this.graph.setJumpToDefaultPort(true);
-		
-		
-		this.undoManager = new GraphUndoManager() {
-			// Override Superclass
-			@Override
-			public void undoableEditHappened(UndoableEditEvent e) {
-				// First Invoke Superclass
-				super.undoableEditHappened(e);
-				// Then Update Undo/Redo Buttons
-				updateHistoryButtons();
-			}
-		};
-
-		// Register UndoManager with the Model
-		this.graph.getModel().addUndoableEditListener(this.undoManager);
-
-		this.createModelListener();
-		
-		this.frames.get(GRAPH_FRAME);
-		
-		this.createPerspectives();
-		
-		this.createTreeModel();
-
-		this.enableDragAndDrop();
 
 	}
 
@@ -420,6 +421,8 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		model.setVisible(PROPERTIES_FRAME, true);
 		
 		model.fireModelChanged();
+		
+		
 
 		this.windowArranger.arrange();
 	}
