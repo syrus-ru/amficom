@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesWrapper.java,v 1.5 2005/11/14 15:14:01 bob Exp $
+ * $Id: DeliveryAttributesWrapper.java,v 1.6 2005/11/30 15:58:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.PropertyChangeException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/11/14 15:14:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/11/30 15:58:08 $
  * @module event
  */
 public final class DeliveryAttributesWrapper
@@ -31,7 +31,8 @@ public final class DeliveryAttributesWrapper
 
 	public static final String LINKED_COLUMN_SYSTEM_USER_ID = "system_user_id";
 	public static final String LINKED_COLUMN_ROLE_ID = "role_id";
-	
+	public static final String LINKED_COLUMN_DELIVERY_ATTRIBUTES_ID = "delivery_attributes_id";
+
 	private static DeliveryAttributesWrapper instance;
 
 	private final List<String> keys;

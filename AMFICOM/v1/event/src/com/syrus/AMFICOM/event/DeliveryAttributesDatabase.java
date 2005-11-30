@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesDatabase.java,v 1.6 2005/11/22 20:20:55 bass Exp $
+ * $Id: DeliveryAttributesDatabase.java,v 1.7 2005/11/30 15:58:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.event;
 
 import static com.syrus.AMFICOM.event.DeliveryAttributesWrapper.COLUMN_SEVERITY;
+import static com.syrus.AMFICOM.event.DeliveryAttributesWrapper.LINKED_COLUMN_DELIVERY_ATTRIBUTES_ID;
 import static com.syrus.AMFICOM.event.DeliveryAttributesWrapper.LINKED_COLUMN_ROLE_ID;
 import static com.syrus.AMFICOM.event.DeliveryAttributesWrapper.LINKED_COLUMN_SYSTEM_USER_ID;
 import static com.syrus.AMFICOM.general.ObjectEntities.DELIVERYATTRIBUTES_CODE;
@@ -19,9 +20,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -29,13 +32,14 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/11/22 20:20:55 $
+ * @version $Revision: 1.7 $, $Date: 2005/11/30 15:58:08 $
  * @module event
  */
 public final class DeliveryAttributesDatabase extends
@@ -167,5 +171,62 @@ public final class DeliveryAttributesDatabase extends
 		this.retrieveLinksByOneQuery(deliveryAttributes);
 		
 		return deliveryAttributes;
+	}
+
+	/**
+	 * @param deliveryAttributes
+	 * @throws IllegalDataException
+	 * @throws CreateObjectException
+	 * @see StorableObjectDatabase#insert(Set)
+	 */
+	@Override
+	protected void insert(final Set<DeliveryAttributes> deliveryAttributes)
+	throws IllegalDataException, CreateObjectException {
+		super.insert(deliveryAttributes);
+
+		this.insertLinkedEntityIds(createRoleIdsMap(deliveryAttributes),
+				DELIVERY_ATTRIBUTES_ROLE_LINK,
+				LINKED_COLUMN_DELIVERY_ATTRIBUTES_ID,
+				LINKED_COLUMN_ROLE_ID);
+		this.insertLinkedEntityIds(createSystemUserIdsMap(deliveryAttributes),
+				DELIVERY_ATTRIBUTES_SYSTEM_USER_LINK,
+				LINKED_COLUMN_DELIVERY_ATTRIBUTES_ID,
+				LINKED_COLUMN_SYSTEM_USER_ID);
+	}
+
+	/**
+	 * @param deliveryAttributes
+	 * @throws UpdateObjectException
+	 * @see StorableObjectDatabase#update(Set)
+	 */
+	@Override
+	protected void update(final Set<DeliveryAttributes> deliveryAttributes)
+	throws UpdateObjectException {
+		super.update(deliveryAttributes);
+
+		this.updateLinkedEntityIds(createRoleIdsMap(deliveryAttributes),
+				DELIVERY_ATTRIBUTES_ROLE_LINK,
+				LINKED_COLUMN_DELIVERY_ATTRIBUTES_ID,
+				LINKED_COLUMN_ROLE_ID);
+		this.updateLinkedEntityIds(createSystemUserIdsMap(deliveryAttributes),
+				DELIVERY_ATTRIBUTES_SYSTEM_USER_LINK,
+				LINKED_COLUMN_DELIVERY_ATTRIBUTES_ID,
+				LINKED_COLUMN_SYSTEM_USER_ID);
+	}
+
+	private static Map<Identifier, Set<Identifier>> createRoleIdsMap(final Set<DeliveryAttributes> deliveryAttributes) {
+		final Map<Identifier, Set<Identifier>> roleIdsMap = new HashMap<Identifier, Set<Identifier>>();
+		for (final DeliveryAttributes deliveryAttribute : deliveryAttributes) {
+			roleIdsMap.put(deliveryAttribute.getId(), deliveryAttribute.getRoleIds());
+		}
+		return roleIdsMap;
+	}
+
+	private static Map<Identifier, Set<Identifier>> createSystemUserIdsMap(final Set<DeliveryAttributes> deliveryAttributes) {
+		final Map<Identifier, Set<Identifier>> userIdsMap = new HashMap<Identifier, Set<Identifier>>();
+		for (final DeliveryAttributes deliveryAttribute : deliveryAttributes) {
+			userIdsMap.put(deliveryAttribute.getId(), deliveryAttribute.getRoleIds());
+		}
+		return userIdsMap;
 	}
 }
