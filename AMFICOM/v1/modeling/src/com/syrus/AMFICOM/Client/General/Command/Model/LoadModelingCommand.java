@@ -58,7 +58,7 @@ public class LoadModelingCommand extends AbstractCommand {
 		
 		if (res.getSort().equals(ResultSort.RESULT_SORT_MODELING)) {
 			final Action action = res.getAction();
-			Measurement m = (Measurement) action;
+			Modeling m = (Modeling) action;
 			bs.title = m.getName();
 
 			try {
