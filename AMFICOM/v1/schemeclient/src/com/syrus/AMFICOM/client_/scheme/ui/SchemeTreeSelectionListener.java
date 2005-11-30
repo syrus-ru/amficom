@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeSelectionListener.java,v 1.16 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemeTreeSelectionListener.java,v 1.17 2005/11/30 08:14:05 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,9 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
+import java.awt.Cursor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.logging.Level;
@@ -46,8 +49,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.17 $, $Date: 2005/11/30 08:14:05 $
  * @module schemeclient
  */
 
@@ -56,9 +59,28 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 	ApplicationContext aContext;
 	private boolean doNotify = true; 
 	
-	public SchemeTreeSelectionListener(IconedTreeUI treeUI, ApplicationContext aContext) {
+	public SchemeTreeSelectionListener(final IconedTreeUI treeUI, final ApplicationContext aContext) {
 		this.treeUI = treeUI;
 		this.treeUI.getTree().addTreeSelectionListener(this);
+		this.treeUI.getTree().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					TreePath selectedPath1 = treeUI.getTree().getSelectionModel().getSelectionPath();
+					if (selectedPath1 != null) {
+						Item item = (Item)selectedPath1.getLastPathComponent();
+						Object object = item.getObject();
+						if (object instanceof Scheme) {
+							Scheme scheme = (Scheme)object;
+							treeUI.getTree().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+							aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.OPEN_SCHEME));
+							treeUI.getTree().setCursor(Cursor.getDefaultCursor());
+						}
+					}
+				}
+			}
+		});
+
 		setContext(aContext);
 	}
 	

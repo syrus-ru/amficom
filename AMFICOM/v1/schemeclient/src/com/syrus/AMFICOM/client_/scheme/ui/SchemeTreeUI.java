@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.34 2005/11/21 15:20:58 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.35 2005/11/30 08:14:05 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,9 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -18,6 +21,8 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -54,7 +59,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.34 $, $Date: 2005/11/21 15:20:58 $
+ * @version $Revision: 1.35 $, $Date: 2005/11/30 08:14:05 $
  * @module schemeclient
  */
 
