@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenMapViewCommand.java,v 1.3 2005/11/30 12:07:50 stas Exp $
+ * $Id: OpenMapViewCommand.java,v 1.4 2005/11/30 12:08:14 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -104,7 +104,7 @@ public class OpenMapViewCommand extends AbstractCommand {
 				mapFrame = mapCommand.getMapFrame();
 				mapFrame.setName(MapFrame.NAME);
 				
-				final ApplicationModel aModel = aContext.getApplicationModel();
+				final ApplicationModel aModel = this.aContext.getApplicationModel();
 				aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
 				aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_MAP, true);
 				aModel.fireModelChanged("");
