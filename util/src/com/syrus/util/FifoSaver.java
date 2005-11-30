@@ -1,5 +1,5 @@
 /*-
- * $Id: FIFOSaver.java,v 1.1 2005/11/30 15:50:06 arseniy Exp $
+ * $Id: FifoSaver.java,v 1.1 2005/11/30 15:57:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,11 +19,11 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/30 15:50:06 $
+ * @version $Revision: 1.1 $, $Date: 2005/11/30 15:57:02 $
  * @author $Author: arseniy $
  * @module util
  */
-public final class FIFOSaver {
+public final class FifoSaver {
 
 	private static final String KEY_CACHE_PATH = "CachePath";
 
@@ -39,7 +39,7 @@ public final class FIFOSaver {
 		init();
 	}
 
-	private FIFOSaver() {
+	private FifoSaver() {
 			// empty
 	}
 
