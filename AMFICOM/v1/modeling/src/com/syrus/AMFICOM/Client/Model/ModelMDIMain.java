@@ -8,6 +8,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -42,6 +43,7 @@ import com.syrus.AMFICOM.Client.General.Command.Model.SaveModelingCommand;
 import com.syrus.AMFICOM.Client.General.Command.Model.SchemeOpenCommand;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
@@ -57,6 +59,8 @@ import com.syrus.AMFICOM.client.UI.GeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapOpenCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.MapPropertiesEventHandler;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
@@ -78,8 +82,12 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemeEventHandler;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.report.DestinationModules;
+import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
@@ -114,7 +122,6 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 			@Override
 			public void componentShown(ComponentEvent e) {
 				ModelMDIMain.this.desktopPane.setPreferredSize(ModelMDIMain.this.desktopPane.getSize());
-				ModelMDIMain.this.windowArranger.arrange();
 			}
 		}
 		);
@@ -320,7 +327,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 					if (componentName == null) {
 						Log.debugMessage("Name is null for component: "
 								+ component,
-								Level.SEVERE);
+								Level.FINER);
 						continue;
 						
 					}
@@ -328,8 +335,8 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 					if (componentName == MapFrame.NAME) {
 						final JInternalFrame mapFrame = (JInternalFrame) component;
 						normalize(mapFrame);
-						mapFrame.setSize(3 * w / 4, h - 2 * minh);
-						mapFrame.setLocation(0, 2 * minh);						
+						mapFrame.setSize(11 * w / 20, h - 2 * minh);
+						mapFrame.setLocation(w / 5, 2 * minh);						
 					} 
 				}
 			}				
@@ -426,12 +433,14 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 	public void setContext(ApplicationContext aContext) {
 		if (this.aContext != null) {
 			this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_EVENT_TYPE, this);
+			this.aContext.getDispatcher().removePropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 		}
 		
 		super.setContext(aContext);
 		
 		if(aContext != null) {
 			this.aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_EVENT_TYPE, this);
+			this.aContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 		}
 	}
 
@@ -517,14 +526,14 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 //		PFTrace pf = Heap.getPFTracePrimary();
 		RefAnalysis ra = Heap.getRefAnalysisPrimary();
 		if (ra == null) {
-			showFrames(false);
+			showTraceFrames(false);
 		} else {
 //			double[] filtered = Heap.getRefAnalysisPrimary().filtered;
-			showFrames(true);
+			showTraceFrames(true);
 		}
 	}
 	
-	private void showFrames(boolean b) {
+	void showTraceFrames(boolean b) {
 		JInternalFrame analysisFrame = (JInternalFrame) this.frames.get(ANALYSIS_FRAME);
 		analysisFrame.setVisible(b);
 		JInternalFrame tdFrame = (JInternalFrame) this.frames.get(TRANS_DATA_FRAME);
@@ -535,6 +544,38 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		selectFrame.setVisible(b);
 		JInternalFrame modelParamsFrame = (JInternalFrame) this.frames.get(RefModelParamsFrame.NAME);
 		modelParamsFrame.setVisible(b);
+		
+		ApplicationModel aModel = this.aContext.getApplicationModel();
+		aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, b);
+		aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_TREE, b);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, b);
+		aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_TRANS_DATA, b);
+		aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS, b);
+		aModel.fireModelChanged("");
+	}
+	
+	void showSchemeFrames(boolean b) {
+		ApplicationModel aModel = this.aContext.getApplicationModel();
+	
+		JInternalFrame schemeFrame = (JInternalFrame) this.frames.get(SchemeViewerFrame.NAME);
+		schemeFrame.setVisible(b);
+		JInternalFrame generalFrame = (JInternalFrame) this.frames.get(GeneralPropertiesFrame.NAME);
+		generalFrame.setVisible(b);
+		JInternalFrame additionalFrame = (JInternalFrame) this.frames.get(AdditionalPropertiesFrame.NAME);
+		additionalFrame.setVisible(b);
+		JInternalFrame characteristicsFrame = (JInternalFrame) this.frames.get(CharacteristicPropertiesFrame.NAME);
+		characteristicsFrame.setVisible(b);
+		JInternalFrame mapFrame = MapDesktopCommand.findMapFrame(ModelMDIMain.this.desktopPane);
+		if (mapFrame != null) {
+			mapFrame.setVisible(b);
+			aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_MAP, b);
+		}
+		
+		aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_SCHEME, b);
+		aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES, b);
+		aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES, b);
+		aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS, b);
+		aModel.fireModelChanged("");
 	}
 
 	void setActiveRefId (String id)
@@ -542,34 +583,6 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.getCommand("menuFileRemoveCompare").setParameter("activeRefId", id);
 		aModel.getCommand("menuTraceRemoveCompare").setParameter("activeRefId", id);
-	}
-
-	public void setConnectionOpened()
-	{
-		ApplicationModel aModel = aContext.getApplicationModel();
-
-		aModel.setEnabled("menuSessionOpen", true);
-		aModel.setEnabled("menuSessionClose", false);
-		aModel.setEnabled("menuSessionConnection", true);
-		aModel.setEnabled("menuSessionChangePassword", false);
-
-		aModel.fireModelChanged();
-	}
-
-	public void setConnectionClosed()
-	{
-		ApplicationModel aModel = aContext.getApplicationModel();
-
-		aModel.setAllItemsEnabled(false);
-		aModel.setEnabled("menuSession", true);
-		aModel.setEnabled("menuSessionOpen", true);
-		aModel.setEnabled("menuSessionConnection", true);
-		aModel.setEnabled("menuExit", true);
-		aModel.setEnabled("menuView", true);
-		aModel.setEnabled("menuHelp", true);
-		aModel.setEnabled("menuHelpAbout", true);
-
-		aModel.fireModelChanged();
 	}
 
 	@Override
@@ -591,15 +604,17 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				aModel.getCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR).execute();
-				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_TREE).execute();
-				aModel.getCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS).execute();
-				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_TRANS_DATA).execute();
-				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS).execute();
-				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_SCHEME).execute();
-				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES).execute();
-				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES).execute();
-				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS).execute();
+				showTraceFrames(true);
+				showSchemeFrames(true);
+//				aModel.getCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR).execute();
+//				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_TREE).execute();
+//				aModel.getCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS).execute();
+//				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_TRANS_DATA).execute();
+//				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS).execute();
+//				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_SCHEME).execute();
+//				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES).execute();
+//				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES).execute();
+//				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS).execute();
 				
 				aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
 			}
@@ -608,14 +623,19 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 
 	@Override
 	public void loggedOut() {
+		Heap.closeAll();
+		
 		ApplicationModel aModel = aContext.getApplicationModel();
 
 		aModel.setEnabled("menuViewMapViewOpen", false);
 		aModel.setEnabled("menuViewSchemeOpen", false);
 		aModel.setEnabled("menuViewModelLoad", false);
 		aModel.setEnabled("menuFileOpen", false);
-		aModel.setEnabled("menuFileOpen", false);
+		aModel.setEnabled("menuFileOpenAs", false);
 
+		showTraceFrames(false);
+		showSchemeFrames(false);
+		
 		aModel.fireModelChanged();
 	}
 	
@@ -659,6 +679,19 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		}
 
 		aModel.fireModelChanged("");
+	}
+	
+		@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
+			ObjectSelectedEvent ose = (ObjectSelectedEvent)evt;
+			if (ose.isSelected(ObjectSelectedEvent.SCHEME)) {
+				Identifier id = ((Identifiable)ose.getSelectedObject()).getId();
+				ApplicationModel aModel = this.aContext.getApplicationModel();
+				aModel.getCommand("menuViewMapViewOpen").setParameter("scheme_id", id);
+			}
+		}
+		super.propertyChange(evt);
 	}
 
 	public void primaryTraceRemoved() {
