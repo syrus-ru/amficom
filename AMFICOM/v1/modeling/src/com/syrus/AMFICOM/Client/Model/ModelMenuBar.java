@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.Model;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainMenuBar;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
 import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
@@ -48,6 +49,7 @@ public class ModelMenuBar extends AbstractMainMenuBar {
 		final JMenuItem menuReportCreate = new JMenuItem();
 		
 		final JMenu menuWindow = new JMenu();
+		final JMenuItem	menuWindowArrange	= new JMenuItem();
 		final JMenuItem menuWindowTraceSelector = new JMenuItem();
 		final JMenuItem menuWindowPrimaryParameters = new JMenuItem();
 		final JMenuItem menuWindowAnalysis = new JMenuItem();
@@ -126,6 +128,9 @@ public class ModelMenuBar extends AbstractMainMenuBar {
 				
 		menuWindow.setText(I18N.getString(ApplicationModel.MENU_VIEW));
 		menuWindow.setName(ApplicationModel.MENU_VIEW);
+		menuWindowArrange.setText(I18N.getString(ApplicationModel.MENU_VIEW_ARRANGE));
+		menuWindowArrange.setName(ApplicationModel.MENU_VIEW_ARRANGE);
+		menuWindowArrange.addActionListener(this.actionAdapter);
 		menuWindowAdditionalProperties.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES));
 		menuWindowAdditionalProperties.setName(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES);
 		menuWindowAdditionalProperties.addActionListener(super.actionAdapter);
@@ -183,6 +188,8 @@ public class ModelMenuBar extends AbstractMainMenuBar {
 		
 		menuReport.add(menuReportCreate);
 		
+		menuWindow.add(menuWindowArrange);
+		menuWindow.addSeparator();
 		menuWindow.add(menuWindowAnalysis);
 		menuWindow.add(menuWindowTraceSelector);
 		menuWindow.add(menuWindowPrimaryParameters);
@@ -255,6 +262,8 @@ public class ModelMenuBar extends AbstractMainMenuBar {
 				
 				menuWindow.setVisible(aModel.isVisible(ApplicationModel.MENU_VIEW));
 				menuWindow.setEnabled(aModel.isEnabled(ApplicationModel.MENU_VIEW));
+				menuWindowArrange.setVisible(aModel.isVisible(ApplicationModel.MENU_VIEW_ARRANGE));
+				menuWindowArrange.setEnabled(aModel.isEnabled(ApplicationModel.MENU_VIEW_ARRANGE));
 				menuWindowAdditionalProperties.setVisible(aModel.isVisible(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES));
 				menuWindowAdditionalProperties.setEnabled(aModel.isEnabled(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES));
 				menuWindowAnalysis.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS));

@@ -17,7 +17,10 @@ public class DefaultModelApplicationModelFactory extends ModelApplicationModelFa
 		aModel.setUsable("menuSessionSave", false);
 		aModel.setUsable("menuSessionUndo", false);
 		aModel.setVisible("menuSessionOptions", false);
-		//aModel.setVisible("menuView", false);
+		
+		aModel.setVisible("menuView", false);
+		aModel.setVisible("menuViewSchemeOpen", false);
+		aModel.setVisible(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS, false);
 
 		aModel.setUsable("menuHelpContents", false);
 		aModel.setUsable("menuHelpFind", false);

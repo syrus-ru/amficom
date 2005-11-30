@@ -563,8 +563,9 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		generalFrame.setVisible(b);
 		JInternalFrame additionalFrame = (JInternalFrame) this.frames.get(AdditionalPropertiesFrame.NAME);
 		additionalFrame.setVisible(b);
-		JInternalFrame characteristicsFrame = (JInternalFrame) this.frames.get(CharacteristicPropertiesFrame.NAME);
-		characteristicsFrame.setVisible(b);
+// XXX temporary not shown - characteristics work bad and no room on desktop
+//		JInternalFrame characteristicsFrame = (JInternalFrame) this.frames.get(CharacteristicPropertiesFrame.NAME);
+//		characteristicsFrame.setVisible(b);
 		JInternalFrame mapFrame = MapDesktopCommand.findMapFrame(ModelMDIMain.this.desktopPane);
 		if (mapFrame != null) {
 			mapFrame.setVisible(b);
@@ -589,7 +590,6 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 	public void loggedIn() {
 		final ApplicationModel aModel = aContext.getApplicationModel();
 
-		aModel.setEnabled("menuViewMapViewOpen", true);
 		aModel.setEnabled("menuViewSchemeOpen", true);
 
 		aModel.setEnabled("menuFileOpen", true);
@@ -616,7 +616,9 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 //				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES).execute();
 //				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS).execute();
 				
+				aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);
 				aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
+				aModel.fireModelChanged();
 			}
 		});
 	}
@@ -633,6 +635,8 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		aModel.setEnabled("menuFileOpen", false);
 		aModel.setEnabled("menuFileOpenAs", false);
 
+		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, false);
+	
 		showTraceFrames(false);
 		showSchemeFrames(false);
 		
@@ -689,6 +693,8 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 				Identifier id = ((Identifiable)ose.getSelectedObject()).getId();
 				ApplicationModel aModel = this.aContext.getApplicationModel();
 				aModel.getCommand("menuViewMapViewOpen").setParameter("scheme_id", id);
+				aModel.setEnabled("menuViewMapViewOpen", true);
+				aModel.fireModelChanged("");
 			}
 		}
 		super.propertyChange(evt);
