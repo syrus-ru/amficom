@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSchemeViewCommand.java,v 1.1 2005/10/26 13:51:56 bass Exp $
+ * $Id: OpenSchemeViewCommand.java,v 1.2 2005/11/30 14:06:54 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ObserverApplicationModel;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/10/26 13:51:56 $
+ * @author $Author: stas $
+ * @version $Revision: 1.2 $, $Date: 2005/11/30 14:06:54 $
  * @module surveyclient_v1
  */
 
@@ -44,8 +44,5 @@ public class OpenSchemeViewCommand extends AbstractCommand {
 		aModel.getCommand(ObserverApplicationModel.MENU_VIEW_CHARACTERISTICS).execute();
 
 		aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
-		
-		// FIXME possibility not create new scheme
-		new SchemeNewCommand(this.aContext).execute();		
 	}
 }

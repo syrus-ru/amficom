@@ -43,6 +43,8 @@ public class ObserverApplicationModel extends ApplicationModel {
 		add(ApplicationModel.MENU_SESSION_CLOSE);
 		add(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD);
 		add(ApplicationModel.MENU_EXIT);
+		
+		add(ApplicationModel.MENU_VIEW_ARRANGE);
 
 		add(ObserverApplicationModel.MENU_START);
 		add(ObserverApplicationModel.MENU_START_SCHEDULER);
