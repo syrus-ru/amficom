@@ -1,4 +1,4 @@
--- $Id: systemuserrole.sql,v 1.1 2005/10/10 15:31:11 bob Exp $
+-- $Id: systemuserrolelink.sql,v 1.1 2005/12/01 12:42:57 arseniy Exp $
 
 CREATE TABLE SystemUserRoleLink (
  system_user_id NOT NULL,
