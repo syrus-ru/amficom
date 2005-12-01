@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.35 2005/11/28 13:56:11 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.36 2005/12/01 13:00:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,13 @@
  */
 
 package com.syrus.AMFICOM.administration;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PERMATTR_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -22,7 +29,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/11/28 13:56:11 $
+ * @version $Revision: 1.36 $, $Date: 2005/12/01 13:00:00 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -40,23 +47,22 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	private boolean checkDomain(final DomainMember domainMember) {
 		boolean condition = false;
 		try {
-			final Domain dmDomain = 
-				StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
+			final Domain dmDomain = StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
 			for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
 				final Identifier id = (Identifier) it.next();
-				if (id.getMajor() == ObjectEntities.DOMAIN_CODE) {
+				if (id.getMajor() == DOMAIN_CODE) {
 					final Domain domain = StorableObjectPool.getStorableObject(id, true);
-					if (dmDomain.equals(domain) || dmDomain.isChild(domain))
+					if (dmDomain.equals(domain) || dmDomain.isChild(domain)) {
 						condition = true;
+					}
 				}
 			}
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.errorMessage(ae);
 		}
 		return condition;
 	}
-	
+
 	private boolean checkDomain(final PermissionAttributes permissionAttributes) {
 		boolean condition = false;
 		try {
@@ -68,7 +74,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			final Domain dmDomain = StorableObjectPool.getStorableObject(domainId, true);
 			for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
 				final Identifier id = (Identifier) it.next();
-				if (id.getMajor() == ObjectEntities.DOMAIN_CODE) {
+				if (id.getMajor() == DOMAIN_CODE) {
 					final Domain domain = StorableObjectPool.getStorableObject(id, true);
 					if (dmDomain.equals(domain) || dmDomain.isChild(domain))
 						condition = true;
@@ -85,13 +91,33 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
-			case ObjectEntities.MCM_CODE:
+			case SYSTEMUSER_CODE:
+				final SystemUser systemUser = (SystemUser) storableObject;
+				switch (this.linkedEntityCode) {
+					case ROLE_CODE:
+						condition = super.conditionTest(systemUser.getRoleIds());
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
+				break;
+			case DOMAIN_CODE:
+				final Domain domain = (Domain) storableObject;
+				condition = this.checkDomain(domain);
+				break;
+			case SERVER_CODE:
+				final Server server = (Server) storableObject;
+				condition = this.checkDomain(server);
+				break;
+			case MCM_CODE:
 				final MCM mcm = (MCM) storableObject;
 				switch (this.linkedEntityCode) {
-					case ObjectEntities.SERVER_CODE:
+					case SERVER_CODE:
 						condition = super.conditionTest(mcm.getServerId());
 						break;
-					case ObjectEntities.DOMAIN_CODE:
+					case DOMAIN_CODE:
 						condition = this.checkDomain(mcm);
 						break;
 					default:
@@ -100,22 +126,14 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
-			case ObjectEntities.DOMAIN_CODE:
-				final Domain domain = (Domain) storableObject;
-				condition = this.checkDomain(domain);
-				break;
-			case ObjectEntities.SERVER_CODE:
-				final Server server = (Server) storableObject;
-				condition = this.checkDomain(server);
-				break;
-			case ObjectEntities.PERMATTR_CODE:
+			case PERMATTR_CODE:
 				final PermissionAttributes permissionAttributes = (PermissionAttributes) storableObject;
 				switch (this.linkedEntityCode) {
-					case ObjectEntities.DOMAIN_CODE:
+					case DOMAIN_CODE:
 						condition = this.checkDomain(permissionAttributes);
 						break;
-					case ObjectEntities.ROLE_CODE:
-					case ObjectEntities.SYSTEMUSER_CODE:
+					case ROLE_CODE:
+					case SYSTEMUSER_CODE:
 						condition = super.conditionTest(permissionAttributes.getParentId());
 						break;
 					default:
@@ -137,10 +155,12 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	@Override
 	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
-			case ObjectEntities.MCM_CODE:
-			case ObjectEntities.DOMAIN_CODE:
-			case ObjectEntities.SERVER_CODE:
-			case ObjectEntities.ROLE_CODE:
+			case SYSTEMUSER_CODE:
+			case DOMAIN_CODE:
+			case SERVER_CODE:
+			case MCM_CODE:
+			case PERMATTR_CODE:
+			case ROLE_CODE:
 				this.entityCode = entityCode;
 				break;
 			default:
