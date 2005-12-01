@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.69 2005/11/06 12:55:05 bob Exp $
+ * $Id: Domain.java,v 1.70 2005/12/01 12:09:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/11/06 12:55:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.70 $, $Date: 2005/12/01 12:09:23 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -143,42 +143,28 @@ public final class Domain extends DomainMember<Domain>
 		super.markAsChanged();
 	}
 
-	public final PermissionAttributes getPermissionAttributes(final Identifier userId,
-			final Module module) 
-	throws ApplicationException {
+	public final PermissionAttributes getPermissionAttributes(final Identifier userId, final Module module)
+			throws ApplicationException {
 		PermissionAttributes permissionAttributes = null;
-		final LinkedIdsCondition domainCondition = 
-			new LinkedIdsCondition(this.id, ObjectEntities.PERMATTR_CODE);
-		
-		final LinkedIdsCondition userCondition = 
-			new LinkedIdsCondition(userId, ObjectEntities.PERMATTR_CODE);
-		
-		final CompoundCondition compoundCondition 
-			= new CompoundCondition(
-				domainCondition, 
-				CompoundConditionSort.AND,
-				userCondition);
-		
-		compoundCondition.addCondition(new TypicalCondition(
-			module,
-			OperationSort.OPERATION_EQUALS,
-			ObjectEntities.PERMATTR_CODE,
-			PermissionAttributesWrapper.COLUMN_MODULE));
-		
-		final Set<PermissionAttributes> storableObjectsByCondition = 
-			StorableObjectPool.getStorableObjectsByCondition(
-			compoundCondition, 
-			true);
-		
-		if (!storableObjectsByCondition.isEmpty()) {
-			permissionAttributes = storableObjectsByCondition.iterator().next();
-		}
+		final LinkedIdsCondition domainCondition = new LinkedIdsCondition(this.id, ObjectEntities.PERMATTR_CODE);
+		final LinkedIdsCondition userCondition = new LinkedIdsCondition(userId, ObjectEntities.PERMATTR_CODE);
+		final CompoundCondition compoundCondition = new CompoundCondition(domainCondition, CompoundConditionSort.AND, userCondition);
+		compoundCondition.addCondition(new TypicalCondition(module,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.PERMATTR_CODE,
+				PermissionAttributesWrapper.COLUMN_MODULE));
 
+		final Set<PermissionAttributes> permAttrs = StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
+
+		if (!permAttrs.isEmpty()) {
+			permissionAttributes = permAttrs.iterator().next();
+		}
 		return permissionAttributes;
 	}
 
 	/**
 	 * create new instance for client
+	 * 
 	 * @param creatorId
 	 * @param domainId
 	 * @param name
