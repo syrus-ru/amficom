@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.28 2005/11/29 14:58:19 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.29 2005/12/01 12:24:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/11/29 14:58:19 $
+ * @version $Revision: 1.29 $, $Date: 2005/12/01 12:24:29 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -221,12 +221,12 @@ final class LoginProcessor extends SleepButWorkThread {
 				//	Идентификатор домена
 				stringBuffer.append("\t Domain id: '");
 				stringBuffer.append(userLogin.getDomainId());
+				stringBuffer.append("'\n");
 
 				//	Имя машины, с которой пользователь вошёл в систему
 //				try {
 //					final CommonUser commonUserRef = CommonUserHelper.narrow(corbaServer.stringToObject(userLogin.getUserIOR()));
 //					final String userHostName = commonUserRef.getHostName();
-//					stringBuffer.append("'\n");
 //					stringBuffer.append("\t From host: '");
 //					stringBuffer.append(userHostName);
 //					stringBuffer.append("'\n");
