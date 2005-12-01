@@ -32,3 +32,4 @@ build.xml
 .xml
 .javadocs
 common.properties
+*.jardesc
