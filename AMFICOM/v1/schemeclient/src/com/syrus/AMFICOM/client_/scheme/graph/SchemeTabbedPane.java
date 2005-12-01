@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.36 2005/11/30 10:14:30 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.37 2005/12/01 15:24:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,13 +44,13 @@ import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeElementPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemePropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -70,7 +70,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.36 $, $Date: 2005/11/30 10:14:30 $
+ * @version $Revision: 1.37 $, $Date: 2005/12/01 15:24:41 $
  * @module schemeclient
  */
 
@@ -128,7 +128,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 									SchemeTabbedPane.this.aContext.getDispatcher().firePropertyChange(
 											new ObjectSelectedEvent(this, 
 													SchemeElement, 
-													SchemePropertiesManager.getInstance(SchemeTabbedPane.this.aContext), 
+													SchemeElementPropertiesManager.getInstance(SchemeTabbedPane.this.aContext), 
 													ObjectSelectedEvent.SCHEME_ELEMENT));
 								}
 								break;
