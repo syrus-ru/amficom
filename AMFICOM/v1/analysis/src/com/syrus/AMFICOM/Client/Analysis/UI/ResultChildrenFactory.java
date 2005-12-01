@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.18 2005/11/18 14:37:42 stas Exp $
+ * $Id: ResultChildrenFactory.java,v 1.19 2005/12/01 14:16:49 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2005/11/18 14:37:42 $
+ * @version $Revision: 1.19 $, $Date: 2005/12/01 14:16:49 $
  * @module analysis
  */
 
@@ -72,6 +72,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 	private static final String	MONITOREDELEMENTS	= "monitoredelements";
 	private static final String	MEASUREMENTSETUPS	= "measurementsetups";
 	private static final String	DATES	= "dates";
+//	private static final String	DATES_MEASURE	= "dates_measure";
 //	private static final String	TODAY	= "today";
 //	private static final String	YESTERDAY	= "yesterday";
 //	private static final String	LASTWEEK	= "lastweek";
@@ -99,10 +100,10 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 		return root;
 	}
 	
-	private FiltrableIconedNode createDateItem(Date startDate, Date endDate, String title, StorableObjectCondition addCondition) throws CreateObjectException{
+	private FiltrableIconedNode createDateItem(Date startDate, Date endDate, String title, StorableObjectCondition addCondition, short entityCode) throws CreateObjectException{
 		TypicalCondition timeCondition = new TypicalCondition(startDate,
 				endDate, OperationSort.OPERATION_IN_RANGE,
-				ObjectEntities.TEST_CODE, TestWrapper.COLUMN_START_TIME);
+				entityCode, TestWrapper.COLUMN_START_TIME);
 		FiltrableIconedNode item2 = new FiltrableIconedNode();
 		item2.setObject(startDate);
 		item2.setName(title);
@@ -164,46 +165,6 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 					Log.errorMessage(ex);
 				}
 			} else if (s.equals(DATES)) {
-				/*if (item.getChildren().isEmpty()) { // add only if no children as they are constant
-					StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
-					
-					FiltrableIconedNode item2 = new FiltrableIconedNode();
-					item2.setObject(TODAY);
-					item2.setName("Сегодня");
-					item2.setChildrenFactory(this);
-					item2.setDefaultCondition(condition);
-					item.addChild(item2);
-
-					FiltrableIconedNode item3 = new FiltrableIconedNode();
-					item3.setObject(YESTERDAY);
-					item3.setName("Вчера");
-					item3.setChildrenFactory(this);
-					item3.setDefaultCondition(condition);
-					item.addChild(item2);
-					
-					FiltrableIconedNode item4 = new FiltrableIconedNode();
-					item4.setObject(LASTWEEK);
-					item4.setName("За неделю");
-					item4.setChildrenFactory(this);
-					item4.setDefaultCondition(condition);
-					item.addChild(item2);
-					
-					FiltrableIconedNode item5 = new FiltrableIconedNode();
-					item5.setObject(LASTMONTH);
-					item5.setName("За месяц");
-					item5.setChildrenFactory(this);
-					item5.setDefaultCondition(condition);
-					item.addChild(item2);
-					
-					FiltrableIconedNode item6 = new FiltrableIconedNode();
-					item6.setObject(ARBITRARYDATE);
-					item6.setName("По фильтру");
-					item6.setChildrenFactory(this);
-					item6.setDefaultCondition(condition);
-					item.addChild(item2);
-
-				}*/
-				
 				List<Item> children = new LinkedList<Item>(item.getChildren());
 				for (Item child : children) {
 					child.setParent(null);
@@ -211,10 +172,102 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 
 				Date startDate;
 				Date endDate;
+				this.calendar.setTimeInMillis(System.currentTimeMillis());
 								
 				try {
 					// today
 					StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
+					startDate = this.calendar.getTime();
+					this.calendar.setTime(startDate);
+					this.calendar.set(Calendar.HOUR_OF_DAY, 0);
+					this.calendar.set(Calendar.MINUTE, 0);
+					this.calendar.set(Calendar.SECOND, 0);
+					startDate = this.calendar.getTime();
+					this.calendar.add(Calendar.DAY_OF_MONTH, 1);
+					this.calendar.add(Calendar.SECOND, -1);
+					endDate = new Date(System.currentTimeMillis());					
+					Item item2 = createDateItem(startDate, endDate, 
+							LangModelAnalyse.getString("today") + " (" + shortDate.format(startDate) + ")", 
+							condition, condition.getEntityCode().shortValue());
+					item.addChild(item2);
+					
+					//yesterday
+					this.calendar.add(Calendar.DAY_OF_MONTH, -1);
+					endDate = this.calendar.getTime();
+					this.calendar.add(Calendar.DAY_OF_MONTH, -1);
+					this.calendar.add(Calendar.SECOND, 1);
+					startDate = this.calendar.getTime();					
+					Item item3 = createDateItem(startDate, endDate, 
+							LangModelAnalyse.getString("yesterday") + " (" + shortDate.format(startDate) + ")", 
+							condition, condition.getEntityCode().shortValue());
+					item.addChild(item3);
+					
+					//last week
+					this.calendar.add(Calendar.DAY_OF_MONTH, 2);
+					this.calendar.add(Calendar.SECOND, -1);
+					endDate = this.calendar.getTime();
+					this.calendar.add(Calendar.WEEK_OF_MONTH, -1);
+					this.calendar.add(Calendar.DAY_OF_MONTH, 1);
+					this.calendar.add(Calendar.SECOND, 1);
+					startDate = this.calendar.getTime();
+					Item item4 = createDateItem(startDate, endDate, 
+							LangModelAnalyse.getString("last_week") + " (" + shortDate.format(startDate) + "-" + shortDate.format(endDate) + ")", 
+							condition, condition.getEntityCode().shortValue());
+					item.addChild(item4);
+					
+					//last month
+					this.calendar.add(Calendar.WEEK_OF_MONTH, 1);
+					this.calendar.add(Calendar.MONTH, -1);
+					startDate = this.calendar.getTime();
+					Item item5 = createDateItem(startDate, endDate, 
+							LangModelAnalyse.getString("last_month") + " (" + shortDate.format(startDate) + "-" + shortDate.format(endDate) + ")", 
+							condition, condition.getEntityCode().shortValue());
+					item.addChild(item5);
+					
+					endDate = new Date(System.currentTimeMillis());
+					//arbitrary (default last half an hour)
+					this.calendar.setTime(endDate);
+					this.calendar.add(Calendar.MINUTE, -30);
+					startDate = this.calendar.getTime();
+
+					TypicalCondition timeCondition = new TypicalCondition(startDate,
+							endDate, OperationSort.OPERATION_IN_RANGE,
+							ObjectEntities.TEST_CODE, TestWrapper.COLUMN_START_TIME);
+					FiltrableIconedNode item6 = new FiltrableIconedNode();
+					item6.setObject(startDate);
+					item6.setName(LangModelAnalyse.getString("by_filter"));
+					item6.setChildrenFactory(this);
+					item6.setDefaultCondition(condition);
+					
+//					item6.setDefaultOperation(CompoundConditionSort.OR);
+					Filter f = new Filter(new TestConditionWrapper());
+					f.addCondition(timeCondition, TestConditionWrapper.START_TIME_CONDITION_KEY);
+					item6.setFilter(f);
+					item.addChild(item6);
+				} catch (CreateObjectException e) {
+					Log.errorMessage(e);
+				}
+			/*} else if (s.equals(DATES_MEASURE)) {
+				List<Item> children = new LinkedList<Item>(item.getChildren());
+				for (Item child : children) {
+					child.setParent(null);
+				}
+
+				Date startDate;
+				Date endDate;
+				this.calendar.setTimeInMillis(System.currentTimeMillis());
+								
+				try {
+					StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
+					// last hour
+					startDate = this.calendar.getTime();
+					this.calendar.setTime(startDate);
+					this.calendar.set(Calendar.SECOND, 0);
+					this.calendar.add(Calendar.HOUR_OF_DAY, -1);
+					startDate = this.calendar.getTime();
+					endDate = new Date(System.currentTimeMillis());
+					
+					// today
 					startDate = this.calendar.getTime();
 					this.calendar.setTime(startDate);
 					this.calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -276,7 +329,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 					item.addChild(item6);
 				} catch (CreateObjectException e) {
 					Log.errorMessage(e);
-				}
+				}*/
 			} else if (s.equals(MEASUREMENTSETUPS)) {
 				try {
 					StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
@@ -314,12 +367,28 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 			if (item.getChildren().isEmpty()) { // add only if no children as they are constant
 				MonitoredElement me = (MonitoredElement) nodeObject;
 				
+				FiltrableIconedNode item1 = new FiltrableIconedNode();
+				item1.setObject(DATES);
+//				item2.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
+				item1.setName(LangModelAnalyse.getString("on_date"));
+				item1.setChildrenFactory(this);
+				item1.setDefaultCondition(new LinkedIdsCondition(me.getId(), ObjectEntities.TEST_CODE));
+				item.addChild(item1);
+				
+				final StorableObjectCondition measurementStatusCondition = new TypicalCondition(MeasurementStatus._MEASUREMENT_STATUS_COMPLETED,
+						0,
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.MEASUREMENT_CODE,
+						MeasurementWrapper.COLUMN_STATUS);
+				
 				FiltrableIconedNode item2 = new FiltrableIconedNode();
 				item2.setObject(DATES);
 //				item2.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
-				item2.setName(LangModelAnalyse.getString("on_date"));
+				item2.setName(LangModelAnalyse.getString("on_date_measurement"));
 				item2.setChildrenFactory(this);
-				item2.setDefaultCondition(new LinkedIdsCondition(me.getId(), ObjectEntities.TEST_CODE));
+				item2.setDefaultCondition(new CompoundCondition(measurementStatusCondition, 
+						CompoundConditionSort.AND, 
+						new LinkedIdsCondition(me.getId(), ObjectEntities.MEASUREMENT_CODE)));
 				item.addChild(item2);
 				
 				FiltrableIconedNode item3 = new FiltrableIconedNode();
@@ -337,6 +406,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 			try {
 				StorableObjectPool.refresh();
 				StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
+				
 				Set<StorableObject> testSet = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 									
 				List<Item> toRemove = super.getItemsToRemove(testSet, items);
@@ -344,23 +414,48 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 				for (Item child : toRemove) {
 					child.setParent(null);
 				}
-
-				Collections.sort(toAdd, new WrapperComparator(TestWrapper.getInstance(), TestWrapper.COLUMN_START_TIME));
-				int i = 0;
-				SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-				for (Iterator it = toAdd.iterator(); it.hasNext();) {
-					Test test = (Test) it.next();
-					FiltrableIconedNode item2 = new FiltrableIconedNode();
-					item2.setObject(test);
-					item2.setName(sdf.format(test.getStartTime()));
-					item2.setChildrenFactory(this);
-					item2.setDefaultCondition(new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_CODE));
-					item2.setFilter(new Filter(new MeasurementConditionWrapper()));
-					item2.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_TESTING));
+				
+				if (condition.getEntityCode().shortValue() == ObjectEntities.TEST_CODE) {
+					Collections.sort(toAdd, new WrapperComparator(TestWrapper.getInstance(), TestWrapper.COLUMN_START_TIME));
+					int i = 0;
+					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+					final StorableObjectCondition measurementStatusCondition = new TypicalCondition(MeasurementStatus._MEASUREMENT_STATUS_COMPLETED,
+							0,
+							OperationSort.OPERATION_EQUALS,
+							ObjectEntities.MEASUREMENT_CODE,
+							MeasurementWrapper.COLUMN_STATUS);
+					for (Iterator it = toAdd.iterator(); it.hasNext();) {
+						Test test = (Test) it.next();
+						FiltrableIconedNode item2 = new FiltrableIconedNode();
+						item2.setObject(test);
+						item2.setName(sdf.format(test.getStartTime()));
+						item2.setChildrenFactory(this);
+						item2.setDefaultCondition(new CompoundCondition(measurementStatusCondition, 
+								CompoundConditionSort.AND,
+								new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_CODE)));
+						item2.setFilter(new Filter(new MeasurementConditionWrapper()));
+						item2.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_TESTING));
 						//XXX add possibility to insert item in arbitrary location
 //						item.addChildAt(item2, i);
-					item.addChild(item2);
-					i++;
+						item.addChild(item2);
+						i++;
+					}
+				} else if (condition.getEntityCode().shortValue() == ObjectEntities.MEASUREMENT_CODE) {
+					Collections.sort(toAdd, new WrapperComparator(MeasurementWrapper.getInstance(), MeasurementWrapper.COLUMN_START_TIME));
+					int i = 0;
+					for (Iterator it = toAdd.iterator(); it.hasNext();) {
+						Measurement measurement = (Measurement) it.next();
+						PopulatableIconedNode item2 = new PopulatableIconedNode();
+						item2.setObject(measurement);
+						item2.setName(measurement.getName());
+						item2.setCanHaveChildren(false);
+						item2.setChildrenFactory(this);
+						item2.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_RESULT));
+						// XXX add possibility to insert item in arbitrary location
+						// item.addChildAt(item2, i);
+						item.addChild(item2);
+						i++;
+					}
 				}
 			} catch (ApplicationException ex) {
 				Log.errorMessage(ex);
@@ -369,16 +464,8 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 		else if (nodeObject instanceof Test) {
 			try {
 				StorableObjectPool.refresh(Collections.singleton(((Test)nodeObject).getId()));
-				StorableObjectCondition hzKakoyCondition = ((FiltrableIconedNode)item).getResultingCondition();
+				StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
 				
-				final StorableObjectCondition measurementStatusCondition = new TypicalCondition(MeasurementStatus._MEASUREMENT_STATUS_COMPLETED,
-						0,
-						OperationSort.OPERATION_EQUALS,
-						ObjectEntities.MEASUREMENT_CODE,
-						MeasurementWrapper.COLUMN_STATUS);
-				final StorableObjectCondition condition = new CompoundCondition(hzKakoyCondition,
-						CompoundConditionSort.AND,
-						measurementStatusCondition);
 				final Set<Measurement> measurements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				
 				List<Item> toRemove = super.getItemsToRemove(measurements, items);
