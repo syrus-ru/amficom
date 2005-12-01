@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.22 2005/10/31 12:30:29 bass Exp $
+ * $Id: ElementsTabbedPane.java,v 1.23 2005/12/01 09:42:31 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,12 +41,14 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/10/31 12:30:29 $
+ * @author $Author: stas $
+ * @version $Revision: 1.23 $, $Date: 2005/12/01 09:42:31 $
  * @module schemeclient
  */
 
@@ -162,14 +164,27 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	public boolean hasUnsavedChanges(UgoPanel p) {
 		try {
 			if (p instanceof ElementsPanel) {
+				if (p.getGraph().isGraphChanged()) {
+					return true;
+				}
 				SchemeResource res = ((ElementsPanel)p).getSchemeResource();
 				boolean b = false;
-				if (res.getCellContainerType() == SchemeResource.SCHEME && res.getScheme().isChanged()) {
-					b = true;
-				} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT && res.getSchemeElement().isChanged()) {
-					b = true;
+				if (res.getCellContainerType() == SchemeResource.SCHEME) {
+					Scheme scheme = res.getScheme(); 
+					if (scheme != null && scheme.isChanged()) {
+						b = true;
+					} else {
+						Log.debugMessage("CellContainerType is scheme, while scheme is null", Level.FINE);
+					}
+				} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
+					SchemeElement schemeElement = res.getSchemeElement(); 
+					if (schemeElement != null && schemeElement.isChanged()) {
+						b = true;
+					} else {
+						Log.debugMessage("CellContainerType is schemeElement, while schemeElement is null", Level.FINE);
+					}
 				}
-				return b || p.getGraph().isGraphChanged();
+				return b;
 			}
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
