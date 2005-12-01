@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesDatabase.java,v 1.7 2005/11/30 15:58:08 bass Exp $
+ * $Id: DeliveryAttributesDatabase.java,v 1.8 2005/12/01 08:54:39 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/11/30 15:58:08 $
+ * @version $Revision: 1.8 $, $Date: 2005/12/01 08:54:39 $
  * @module event
  */
 public final class DeliveryAttributesDatabase extends
@@ -225,7 +225,7 @@ public final class DeliveryAttributesDatabase extends
 	private static Map<Identifier, Set<Identifier>> createSystemUserIdsMap(final Set<DeliveryAttributes> deliveryAttributes) {
 		final Map<Identifier, Set<Identifier>> userIdsMap = new HashMap<Identifier, Set<Identifier>>();
 		for (final DeliveryAttributes deliveryAttribute : deliveryAttributes) {
-			userIdsMap.put(deliveryAttribute.getId(), deliveryAttribute.getRoleIds());
+			userIdsMap.put(deliveryAttribute.getId(), deliveryAttribute.getSystemUserIds());
 		}
 		return userIdsMap;
 	}
