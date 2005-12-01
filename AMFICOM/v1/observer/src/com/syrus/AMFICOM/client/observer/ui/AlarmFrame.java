@@ -140,6 +140,7 @@ public class AlarmFrame extends JInternalFrame implements
 				new String[] {
 						AlarmWrapper.COLUMN_DATE,
 						AlarmWrapper.COLUMN_OPTICAL_DISTANCE,
+						AlarmWrapper.COLUMN_PHYSICAL_DISTANCE,
 						AlarmWrapper.COLUMN_ELEMENT,
 						AlarmWrapper.COLUMN_PATH });
 		this.table = new WrapperedTable<Alarm>(this.model);
@@ -156,7 +157,18 @@ public class AlarmFrame extends JInternalFrame implements
 				AlarmFrame.this.buttonFix.setEnabled(b);
 				AlarmFrame.this.buttonClose.setEnabled(b);
 				AlarmFrame.this.buttonDescribe.setEnabled(b);
+				
+				if (b) {
+					Alarm alarm = AlarmFrame.this.model.getObject(e.getFirstIndex());
+					
+					Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm);
+					MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_SELECTED_EVENT,
+							marker.getId(), marker.getPos(), alarm.getPath().getId(), 
+							alarm.getMonitoredElement().getId(), alarm.getPathElement().getId());
 
+					AlarmFrame.this.alarmMarkerMapping.put(alarm, marker);
+					AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
+				}
 			}
 		});
 
@@ -423,13 +435,15 @@ public class AlarmFrame extends JInternalFrame implements
 	}
 
 	void buttonDescribe_actionPerformed(ActionEvent e) {
-		Alarm alarm = (Alarm) this.model.getObject(this.table.getSelectedRow());
+		int selected = this.table.getSelectedRow();
+		if (selected != -1) {
+			Alarm alarm = this.model.getObject(selected);
 		
 		JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 				alarm.getEvent().getMessage(), 
 				LangModelObserver.getString("Message.information"), 
 				JOptionPane.INFORMATION_MESSAGE);
-		
+		}
 /*
 		AlarmDescriptor ad = null;
 		if(alarm.type_id.equals("rtutestalarm")
@@ -521,8 +535,10 @@ public class AlarmFrame extends JInternalFrame implements
 				alarm.getPathElement().getId());
 			this.aContext.getDispatcher().firePropertyChange(mEvent2);
 			
+			this.table.setSelectedValue(null);
 			this.model.removeObject(alarm);
 		}
+		updateContents();
 /*
 		for(int i = 0; i < alarms.length; i++) {
 			alarms[i].status = AlarmStatus.ALARM_STATUS_DELETED;
