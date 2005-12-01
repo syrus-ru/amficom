@@ -1,5 +1,5 @@
 /*-
-* $Id: NetBean.java,v 1.1 2005/11/30 13:15:27 bob Exp $
+* $Id: NetBean.java,v 1.2 2005/12/01 14:03:28 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/30 13:15:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/01 14:03:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -154,6 +154,10 @@ public class NetBean extends NonStorableBean {
 	@Override
 	public String getCodename() {
 		return this.id;
+	}
+	
+	public final Domain getDomain() {
+		return this.domain;
 	}
 
 }

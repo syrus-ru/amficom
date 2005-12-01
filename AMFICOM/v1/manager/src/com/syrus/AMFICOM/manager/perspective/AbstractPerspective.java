@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractPerspective.java,v 1.2 2005/11/28 14:47:05 bob Exp $
+* $Id: AbstractPerspective.java,v 1.3 2005/12/01 14:03:28 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
 */
 
 package com.syrus.AMFICOM.manager.perspective;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.LAYOUT_ITEM_CODE;
 
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -30,9 +32,17 @@ import org.jgraph.graph.GraphSelectionModel;
 
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.manager.UI.AbstractItemPopupMenu;
 import com.syrus.AMFICOM.manager.UI.ActionMutableTreeNode;
 import com.syrus.AMFICOM.manager.UI.GraphRoutines;
@@ -42,11 +52,12 @@ import com.syrus.AMFICOM.manager.beans.AbstractBeanFactory;
 import com.syrus.AMFICOM.manager.graph.ManagerGraphCell;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.AMFICOM.resource.LayoutItem;
+import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/01 14:03:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -212,8 +223,11 @@ public abstract class AbstractPerspective implements Perspective {
     						return;
     					}
     					
-    					for(final AbstractBean abstractBean : getLayoutBeans()) {
+    					final List<AbstractBean> layoutBeans2 = getLayoutBeans();
+    					assert Log.debugMessage(layoutBeans2, Log.DEBUGLEVEL03);
+						for(final AbstractBean abstractBean : layoutBeans2) {
 	 						if (chechable.isNeedIn(abstractBean)) {
+	 							assert Log.debugMessage("found:" + abstractBean, Log.DEBUGLEVEL03);
 	 							final GraphSelectionModel selectionModel = graph.getSelectionModel();
 	 							final ManagerGraphCell cell = 
 	 								graphRoutines.getDefaultGraphCell(abstractBean, perspective);
@@ -235,7 +249,7 @@ public abstract class AbstractPerspective implements Perspective {
     						0, 
     						beanUI.getImage(bean));
     					
-    					assert Log.debugMessage("Create " + bean, Log.DEBUGLEVEL10);
+    					assert Log.debugMessage("Create " + bean, Log.DEBUGLEVEL03);
 
     				} catch (final ApplicationException ae) {
     					ae.printStackTrace();
@@ -314,11 +328,8 @@ public abstract class AbstractPerspective implements Perspective {
 				+ identifierString , 
 			Log.DEBUGLEVEL10);
 		
-		final LayoutItem layoutItem = 
-		LayoutItem.createInstance(LoginManager.getUserId(), 
-			parentLayoutItemId, 
-			this.getCodename(), 
-			identifierString);
+		final LayoutItem layoutItem =
+			this.getLayoutItem(identifierString, this.getCodename(), parentLayoutItemId);
 	
 		assert Log.debugMessage("created "
 				+ layoutItem.getName()
@@ -415,6 +426,41 @@ public abstract class AbstractPerspective implements Perspective {
 		return this.perspectives;
 	}
 	
+	protected final LayoutItem getLayoutItem(final String name,
+	    	final String layoutName,
+	    	final Identifier parentLayoutItemId) 
+	throws ApplicationException {
+		final Set<StorableObjectCondition> conditions = new HashSet<StorableObjectCondition>(3);
+		conditions.add(new LinkedIdsCondition(LoginManager.getUserId(), LAYOUT_ITEM_CODE));
+		conditions.add(new TypicalCondition(layoutName,
+					OperationSort.OPERATION_EQUALS,					
+					LAYOUT_ITEM_CODE,
+					LayoutItemWrapper.COLUMN_LAYOUT_NAME));
+		conditions.add(new TypicalCondition(name,
+			OperationSort.OPERATION_EQUALS,					
+			LAYOUT_ITEM_CODE,
+			StorableObjectWrapper.COLUMN_NAME));
+		
+		final Set<LayoutItem> items = StorableObjectPool.getStorableObjectsByCondition(
+			new CompoundCondition(
+				conditions,
+				CompoundConditionSort.AND),
+			true);
+		
+		assert items.size() <= 1 : "name:" + name + ",\n layoutName:" + layoutName + ",\n parentLayoutItemId:" + parentLayoutItemId + ",\n items:" + items;
+		
+		if (!items.isEmpty()) {
+			return items.iterator().next();
+		}
+		
+		final LayoutItem layoutItem = 
+			LayoutItem.createInstance(LoginManager.getUserId(), 
+				parentLayoutItemId, 
+				layoutName, 
+				name);
+		return layoutItem;
+	}
+	
 	public AbstractBean createBean(final String codename) 
 	throws ApplicationException {
 		assert Log.debugMessage("codename is " + codename , Log.DEBUGLEVEL10);
@@ -465,11 +511,13 @@ public abstract class AbstractPerspective implements Perspective {
 	}
 	
 	public final void setLayoutBeans(final List<AbstractBean> layoutBeans) {
+		assert Log.debugMessage(layoutBeans, Log.DEBUGLEVEL03);
 		this.layoutBeans = layoutBeans;
 		this.firePropertyChangeEvent(this.propertyChangeEvent);
 	}
 	
 	public final void addLayoutBean(final AbstractBean bean) {
+		assert Log.debugMessage(bean, Log.DEBUGLEVEL03);
 		this.layoutBeans.add(bean);
 		this.firePropertyChangeEvent(this.propertyChangeEvent);
 	}

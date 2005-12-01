@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBean.java,v 1.1 2005/11/17 09:00:33 bob Exp $
+ * $Id: RTUBean.java,v 1.2 2005/12/01 14:03:28 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.manager.beans.RTUBeanWrapper.KEY_PORT;
 
 import java.beans.PropertyChangeEvent;
 
+import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -25,7 +26,7 @@ import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:33 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/01 14:03:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -115,9 +116,48 @@ public class RTUBean extends Bean implements DomainNetworkItem {
 	}
 
 	@Override
-	public void applyTargetPort(MPort oldPort, MPort newPort) {
-		// TODO Auto-generated method stub
+	public void applyTargetPort(final MPort oldPort, 
+			final MPort newPort) {
+		assert Log.debugMessage("was:" + oldPort
+				+ ", now:" + newPort, Log.DEBUGLEVEL03);
 		
+		if (newPort != null && oldPort != null) {
+			AbstractBean oldBean = oldPort.getBean();
+			final AbstractBean newBean = newPort.getBean();
+			if (newBean instanceof NetBean && oldBean instanceof NetBean) {
+				final NetBean newNetBean = (NetBean) newBean;
+				final NetBean oldNetBean = (NetBean) oldBean;
+				final Domain newDomain = newNetBean.getDomain();
+				final Domain oldDomain = oldNetBean.getDomain();
+				this.setDomain(oldDomain, newDomain);
+			}
+		}
+	}
+	
+	private void setDomain(final Domain oldDomain,
+	                       final Domain newDomain) {
+		this.setDomainId(oldDomain.getId(), newDomain.getId());
+//		try {
+//			final boolean oldDomainChild = oldDomain.isChild(newDomain);
+//			final boolean newDomainChild;
+//			if (!oldDomainChild) {
+//				newDomainChild = newDomain.isChild(oldDomain);
+//			} else {
+//				newDomainChild = false;
+//			}
+//			assert Log.debugMessage("oldDomainChild:" + oldDomainChild 
+//					+ ", newDomainChild:" + newDomainChild, Log.DEBUGLEVEL03);
+//			final GraphRoutines graphRoutines = 
+//				this.managerMainFrame.getGraphRoutines();
+//			final Set<ManagerGraphCell> defaultGraphCells =
+//				graphRoutines.getDefaultGraphCells(this);
+//			for (final ManagerGraphCell cell : defaultGraphCells) {
+//				assert Log.debugMessage(cell + ", " + cell.getPerspective(), Log.DEBUGLEVEL03);
+//			}
+//		} catch (ApplicationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 	
 	public void setDomainId(final Identifier oldDomainId,

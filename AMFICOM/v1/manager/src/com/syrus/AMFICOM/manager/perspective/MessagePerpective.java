@@ -1,5 +1,5 @@
 /*-
-* $Id: MessagePerpective.java,v 1.2 2005/11/28 14:47:05 bob Exp $
+* $Id: MessagePerpective.java,v 1.3 2005/12/01 14:03:28 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,9 +10,9 @@ package com.syrus.AMFICOM.manager.perspective;
 
 import static com.syrus.AMFICOM.event.DeliveryAttributesWrapper.COLUMN_SEVERITY;
 import static com.syrus.AMFICOM.general.ObjectEntities.DELIVERYATTRIBUTES_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LAYOUT_ITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ROLE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.LAYOUT_ITEM_CODE;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 
 import java.util.ArrayList;
@@ -45,10 +45,11 @@ import com.syrus.AMFICOM.manager.beans.RoleBean;
 import com.syrus.AMFICOM.manager.beans.RoleBeanFactory;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.AMFICOM.resource.LayoutItem;
+import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/01 14:03:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -109,6 +110,7 @@ public abstract class MessagePerpective extends AbstractPerspective {
 	}
 
 	public final void createNecessaryItems() throws ApplicationException {
+		assert Log.debugMessage(this.getCodename(), Log.DEBUGLEVEL03);
 		Set<DeliveryAttributes> deliveryAttributes = 
 			StorableObjectPool.getStorableObjectsByCondition(
 				new TypicalCondition(
@@ -141,6 +143,8 @@ public abstract class MessagePerpective extends AbstractPerspective {
 		
 		this.addItems(deliveryAttributes, existsNetworkLayoutItems, items);
 		
+		assert Log.debugMessage(deliveryAttributes, Log.DEBUGLEVEL03);
+		
 		for (final DeliveryAttributes attributes : deliveryAttributes) {			
 			this.addItems(attributes.getRoles(), existsNetworkLayoutItems, items);
 			
@@ -151,8 +155,9 @@ public abstract class MessagePerpective extends AbstractPerspective {
 				this.layoutItem = item;
 			}
 			final Identifier itemId = item.getId();
-			final Set<Identifier> roleIds = attributes.getRoleIds();			
-			for (final Identifier identifier : roleIds) {
+			final Set<Identifier> roleIds = attributes.getRoleIds();
+			assert Log.debugMessage(roleIds, Log.DEBUGLEVEL03);
+			for (final Identifier identifier : roleIds) {				
 				this.getLayoutItem(identifier, 
 					itemId, 
 					existsNetworkLayoutItems);

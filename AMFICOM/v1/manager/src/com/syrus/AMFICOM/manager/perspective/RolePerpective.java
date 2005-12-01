@@ -1,5 +1,5 @@
 /*-
-* $Id: RolePerpective.java,v 1.2 2005/11/30 13:15:27 bob Exp $
+* $Id: RolePerpective.java,v 1.3 2005/12/01 14:03:28 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
 /**
  * Under deep construction
  * 
- * @version $Revision: 1.2 $, $Date: 2005/11/30 13:15:27 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/01 14:03:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -197,10 +197,8 @@ public class RolePerpective extends AbstractPerspective {
 		
 		if (parentItems.isEmpty()) {
 			this.layoutItem = 
-				LayoutItem.createInstance(LoginManager.getUserId(), 
-					Identifier.VOID_IDENTIFIER, 
-					codename, 
-					this.role.getId().getIdentifierString());
+				this.getLayoutItem(this.role.getId().getIdentifierString(),
+					codename, Identifier.VOID_IDENTIFIER);
 			assert Log.debugMessage("create layout item for " 
 					+ this.role
 					+ " as "

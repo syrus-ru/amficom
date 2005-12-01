@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.19 2005/11/30 13:15:27 bob Exp $
+* $Id: Manager.java,v 1.20 2005/12/01 14:03:28 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,12 +14,10 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
-import com.syrus.AMFICOM.administration.Role;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserWrapper;
 import com.syrus.AMFICOM.client.launcher.Launcher;
 import com.syrus.AMFICOM.client.model.AbstractApplication;
-import com.syrus.AMFICOM.event.DeliveryAttributes;
 import com.syrus.AMFICOM.extensions.ExtensionLauncher;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -27,17 +25,15 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/11/30 13:15:27 $
+ * @version $Revision: 1.20 $, $Date: 2005/12/01 14:03:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -124,17 +120,17 @@ public class Manager extends AbstractApplication {
 	}
 	
 	void createDeliveryAttributes() throws ApplicationException {
-		final Identifier userId = LoginManager.getUserId();
-		final DeliveryAttributes attributes = 
-			DeliveryAttributes.getInstance(userId, Severity.SEVERITY_SOFT);
-		final Set<Role> roles = StorableObjectPool.getStorableObjectsByCondition(
-			new EquivalentCondition(ObjectEntities.ROLE_CODE),
-			true);
-		
-		attributes.setRoles(roles);
-		
-		
-		assert Log.debugMessage("Created " + attributes , Log.DEBUGLEVEL03);
+//		final Identifier userId = LoginManager.getUserId();
+//		final DeliveryAttributes attributes = 
+//			DeliveryAttributes.getInstance(userId, Severity.SEVERITY_SOFT);
+//		final Set<Role> roles = StorableObjectPool.getStorableObjectsByCondition(
+//			new EquivalentCondition(ObjectEntities.ROLE_CODE),
+//			true);
+//		
+//		attributes.setRoles(roles);
+//		
+//		
+//		assert Log.debugMessage("Created " + attributes , Log.DEBUGLEVEL03);
 	}
 	
 	

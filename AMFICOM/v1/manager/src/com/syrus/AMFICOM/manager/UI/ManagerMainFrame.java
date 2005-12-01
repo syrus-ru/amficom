@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.23 2005/11/30 13:15:27 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.24 2005/12/01 14:03:28 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.23 $, $Date: 2005/11/30 13:15:27 $
+ * @version $Revision: 1.24 $, $Date: 2005/12/01 14:03:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -747,7 +747,8 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 	
 	public boolean isPerspectiveValid() {
 		if (this.perspective != null) {
-			if (!this.perspective.isValid()) {
+			final boolean perspectiveValid = this.perspective.isValid();
+			if (!perspectiveValid) {
 				assert Log.debugMessage(this.perspective.getCodename() , Log.DEBUGLEVEL03);
 				JOptionPane.showMessageDialog(this.graph, 
 					I18N.getString("Manager.Error.LayoutIsInvalid"),

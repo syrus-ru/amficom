@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphRoutines.java,v 1.6 2005/11/28 14:47:04 bob Exp $
+* $Id: GraphRoutines.java,v 1.7 2005/12/01 14:03:28 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/11/28 14:47:04 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/01 14:03:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -900,6 +900,23 @@ public final class GraphRoutines {
 		return null;
 	}
 	
+	public Set<ManagerGraphCell> getDefaultGraphCells(final AbstractBean bean) {
+		final GraphModel model = this.graph.getModel();
+		final Set<ManagerGraphCell> set = new HashSet<ManagerGraphCell>(); 
+		final String beanId = bean.getId();
+		for(int i = 0; i < model.getRootCount(); i++) {
+			final DefaultGraphCell cell = (DefaultGraphCell) model.getRootAt(i);
+			if (!model.isEdge(cell) && !model.isPort(cell)) {
+				final ManagerGraphCell managerGraphCell = (ManagerGraphCell) cell;
+				final AbstractBean abstractBean = managerGraphCell.getAbstractBean();
+				if (abstractBean.getId().equals(beanId)) {
+					set.add(managerGraphCell);
+				}
+			}
+		}
+		
+		return set;
+	}
 	
 	public AbstractBean getBean(final LayoutItem layoutItem) 
 	throws ApplicationException {
@@ -909,7 +926,7 @@ public final class GraphRoutines {
 			MPort port = (MPort) defaultGraphCell.getChildAt(0);
 			return port.getBean();
 		}
-
+		
 		final ManagerHandler managerHandler = this.managerMainFrame.getManagerHandler();
 		final Perspective perspective = managerHandler.getPerspective(layoutItem.getLayoutName());
 		return perspective.createBean(layoutItem.getName());
@@ -931,6 +948,8 @@ public final class GraphRoutines {
 						LayoutItemWrapper.COLUMN_LAYOUT_NAME), 
 					true);
 
+			assert Log.debugMessage("layerName:" + layerName + ", " +  layoutItems, Log.DEBUGLEVEL03);
+			
 			layoutBeans = new ArrayList<AbstractBean>(layoutItems.size());			
 			for (final LayoutItem layoutItem : layoutItems) {
 				layoutBeans.add(this.getBean(layoutItem));

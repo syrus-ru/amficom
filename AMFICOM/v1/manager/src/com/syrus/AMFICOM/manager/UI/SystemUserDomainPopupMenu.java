@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserDomainPopupMenu.java,v 1.3 2005/11/30 13:06:50 bob Exp $
+* $Id: SystemUserDomainPopupMenu.java,v 1.4 2005/12/01 14:03:28 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,10 +34,11 @@ import com.syrus.AMFICOM.manager.beans.UserBean;
 import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.AMFICOM.manager.perspective.DomainPerpective;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
+import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/30 13:06:50 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/01 14:03:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -84,32 +85,14 @@ public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu<DomainPerpe
 			popupMenu.add(checkBoxMenuItem);
 		}
 		
-		
-		
-//		final AbstractAction enterAction = new AbstractAction(I18N.getString("Manager.Dialog.GotoUserPermissions")) {
-//
-//			public void actionPerformed(ActionEvent e) {
-//				final SystemUserPerpective systemUserPerpective = 
-//					perpective.getSystemUserPerspective(userBean);
-//				managerMainFrame.setPerspective(systemUserPerpective);
-//			}
-//		};
-//		
-//		final Icon enterIcon = UIManager.getIcon(TableBeanUI.ENTER_ICON);
-//		if (enterIcon != null) {
-//			enterAction.putValue(Action.SMALL_ICON, enterIcon);
-//		}
-//		
-//		
-//		popupMenu.add(enterAction);
-		
 		if (user.getVersion() != StorableObjectVersion.INITIAL_VERSION) {
 			popupMenu.addSeparator();
 			final AbstractAction changePasswordAction = 
 				new AbstractAction(I18N.getString("Manager.Dialog.ChangeUserPassword")) {
 	
-				public void actionPerformed(ActionEvent e) {
-					new PasswordSetter(user);
+				public void actionPerformed(final ActionEvent e) {
+					final PasswordSetter setter = new PasswordSetter(user);
+					setter.initUI();
 				}
 			};
 			popupMenu.add(changePasswordAction);
@@ -125,10 +108,11 @@ public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu<DomainPerpe
 
 		public PasswordSetter(final SystemUser systemUser) {
 			this.systemUser = systemUser;
+			assert Log.debugMessage(this.systemUser.getId(), Log.DEBUGLEVEL03);
 		}
 		
 		@Override
-		protected void applyPassword(char[] password) {
+		protected void applyPassword(final char[] password) {
 			final ClientSessionEnvironment instance = ClientSessionEnvironment.getInstance();
 			try {
 				final ClientServantManager clientServantManager = 
@@ -139,13 +123,17 @@ public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu<DomainPerpe
 					LoginManager.getIdlSessionKey();
 				final IdlIdentifier userIdTransferable = 
 					this.systemUser.getId().getTransferable();
-				loginServerReference.setPassword(idlSessionKey, userIdTransferable, new String(password));
+				loginServerReference.setPassword(idlSessionKey, 
+					userIdTransferable, 
+					new String(password));
 			} catch (final CommunicationException e) {
+				Log.errorMessage(e);
 				JOptionPane.showMessageDialog(null, 
 					I18N.getString("Manager.Error.ErrorDuringPasswordChanging"), 
 					I18N.getString("Error"), 
 					JOptionPane.ERROR_MESSAGE);
 			} catch (AMFICOMRemoteException e) {
+				Log.errorMessage(e);
 				JOptionPane.showMessageDialog(null, 
 					I18N.getString("Manager.Error.ErrorDuringPasswordChanging"), 
 					I18N.getString("Error"), 

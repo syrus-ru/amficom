@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserPerpective.java,v 1.2 2005/11/28 14:47:05 bob Exp $
+* $Id: SystemUserPerpective.java,v 1.3 2005/12/01 14:03:28 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/01 14:03:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -195,11 +195,9 @@ public final class SystemUserPerpective extends AbstractPerspective {
 		final LayoutItem userItem;
 		if (userLayoutItems.isEmpty()) {
 			userItem = 
-				LayoutItem.createInstance(LoginManager.getUserId(), 
-					Identifier.VOID_IDENTIFIER, 
+				this.getLayoutItem(userId.getIdentifierString(), 
 					this.getCodename(), 
-					userId.getIdentifierString());
-			
+					Identifier.VOID_IDENTIFIER);
 			assert Log.debugMessage("create layout item for " 
 					+ userId
 					+" as " 

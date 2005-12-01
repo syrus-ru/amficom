@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainsPerspective.java,v 1.3 2005/11/30 13:15:27 bob Exp $
+* $Id: DomainsPerspective.java,v 1.4 2005/12/01 14:03:28 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/30 13:15:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/01 14:03:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -168,10 +168,9 @@ public final class DomainsPerspective extends AbstractPerspective {
 		}
 		
 		final LayoutItem layoutItem = 
-			LayoutItem.createInstance(LoginManager.getUserId(), 
-				parentLayoutItemId, 
+			this.getLayoutItem(domainId.getIdentifierString(), 
 				this.getCodename(), 
-				domainId.getIdentifierString());
+				parentLayoutItemId);
 		
 		assert Log.debugMessage("create domain layout for " + domainId, 
 			Log.DEBUGLEVEL10);
@@ -181,31 +180,31 @@ public final class DomainsPerspective extends AbstractPerspective {
 		return layoutItem;
 	}
 	
-	private LayoutItem getNetworkLayoutItem(final Identifier domainId,
-			final Map<Identifier, LayoutItem> existsDomainLayoutItems,
-			final Map<Identifier, LayoutItem> existsNetworkLayoutItems) 
-		throws ApplicationException {
-		
-		if (existsNetworkLayoutItems.containsKey(domainId)) {
-			return existsNetworkLayoutItems.get(domainId);
-		}
-		
-		final Identifier parentLayoutItemId = 
-			existsDomainLayoutItems.get(domainId).getId();
-			
-			final LayoutItem layoutItem = 
-				LayoutItem.createInstance(LoginManager.getUserId(), 
-					parentLayoutItemId, 
-					this.getCodename(), 
-					NetBeanFactory.NET_CODENAME);
-			
-			assert Log.debugMessage("create network item for " + parentLayoutItemId , 
-				Log.DEBUGLEVEL10);
-			
-			existsNetworkLayoutItems.put(domainId, layoutItem);
-			
-			return layoutItem;
-		}
+//	private LayoutItem getNetworkLayoutItem(final Identifier domainId,
+//			final Map<Identifier, LayoutItem> existsDomainLayoutItems,
+//			final Map<Identifier, LayoutItem> existsNetworkLayoutItems) 
+//		throws ApplicationException {
+//		
+//		if (existsNetworkLayoutItems.containsKey(domainId)) {
+//			return existsNetworkLayoutItems.get(domainId);
+//		}
+//		
+//		final Identifier parentLayoutItemId = 
+//			existsDomainLayoutItems.get(domainId).getId();
+//			
+//			final LayoutItem layoutItem = 
+//				LayoutItem.createInstance(LoginManager.getUserId(), 
+//					parentLayoutItemId, 
+//					this.getCodename(), 
+//					NetBeanFactory.NET_CODENAME);
+//			
+//			assert Log.debugMessage("create network item for " + parentLayoutItemId , 
+//				Log.DEBUGLEVEL10);
+//			
+//			existsNetworkLayoutItems.put(domainId, layoutItem);
+//			
+//			return layoutItem;
+//		}
 	
 	
 	public void createNecessaryItems() throws ApplicationException {

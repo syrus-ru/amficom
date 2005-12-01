@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.3 2005/11/30 13:15:27 bob Exp $
+* $Id: DomainPerpective.java,v 1.4 2005/12/01 14:03:28 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/30 13:15:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/01 14:03:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -126,8 +126,12 @@ public final class DomainPerpective extends AbstractPerspective {
 					visibleTarget += graphLayoutCache.isVisible(targetPort) ? 1 : 0;
 				}
 
+				final String portBeanId = port.getBean().getId();
+//				assert Log.debugMessage("visibleTarget:" 
+//						+ visibleTarget
+//						+ ", portBeanId:" + portBeanId, Log.DEBUGLEVEL03);
 				if (visibleTarget == 0 && 
-						!port.getBean().getId().startsWith(NetBeanFactory.NET_CODENAME)) {
+						!portBeanId.startsWith(NetBeanFactory.NET_CODENAME)) {
 					return false;
 				}
 				
@@ -224,10 +228,7 @@ public final class DomainPerpective extends AbstractPerspective {
 		
 		if (domainNetworkItems.isEmpty()) {
 			final LayoutItem layoutItem = 
-				LayoutItem.createInstance(LoginManager.getUserId(), 
-					parentNetLayoutId, 
-					this.getCodename(), 
-					netId);
+				this.getLayoutItem(netId, this.getCodename(), parentNetLayoutId);
 			domainNetLayoutItemMap.put(domainId, layoutItem);
 			return layoutItem;
 		}
@@ -333,14 +334,17 @@ public final class DomainPerpective extends AbstractPerspective {
 		this.addItems(kiss, existsNetworkLayoutItems, domainLayoutItems);
 		//	create domain networks accorning to exist RTUs
 		for (final KIS kis : kiss) {
+			final Identifier domainId2 = kis.getDomainId();
 			final LayoutItem domainNetworkItem2 = 
 				this.getDomainNetworkItem(domainNetLayoutItemMap, 
 					currentUserCondition, 
 					layoutCondition, 
-					kis.getDomainId());
-			this.getLayoutItem(kis.getId(), 
-				domainNetworkItem2.getId(), 
-				existsNetworkLayoutItems);
+					domainId2);
+			if (domainId.equals(domainId2)) {
+				this.getLayoutItem(kis.getId(), 
+					domainNetworkItem2.getId(), 
+					existsNetworkLayoutItems);
+			}
 		}
 		
 		final Set<Server> servers = 
@@ -352,14 +356,17 @@ public final class DomainPerpective extends AbstractPerspective {
 		this.addItems(servers, existsNetworkLayoutItems, domainLayoutItems);
 		// create domain networks accorning to exist servers
 		for (final Server server : servers) {
+			final Identifier domainId2 = server.getDomainId();
 			final LayoutItem domainNetworkItem2 = 
 				this.getDomainNetworkItem(domainNetLayoutItemMap, 
 					currentUserCondition, 
 					layoutCondition, 
-					server.getDomainId());
-			this.getLayoutItem(server.getId(), 
-				domainNetworkItem2.getId(),
-				existsNetworkLayoutItems);
+					domainId2);
+			if (domainId.equals(domainId2)) {
+				this.getLayoutItem(server.getId(), 
+					domainNetworkItem2.getId(),
+					existsNetworkLayoutItems);
+			}
 		}
 		
 		final Set<MCM> mcms = 
@@ -372,14 +379,17 @@ public final class DomainPerpective extends AbstractPerspective {
 		
 //		 create domain networks accorning to exist mcms
 		for (final MCM mcm : mcms) {
+			final Identifier domainId2 = mcm.getDomainId();
 			final LayoutItem domainNetworkItem2 = 
 				this.getDomainNetworkItem(domainNetLayoutItemMap, 
 					currentUserCondition, 
 					layoutCondition, 
-					mcm.getDomainId());
-			this.getLayoutItem(mcm.getId(), 
-				domainNetworkItem2.getId(), 
-				existsNetworkLayoutItems);
+					domainId2);
+			if (domainId.equals(domainId2)) {
+				this.getLayoutItem(mcm.getId(), 
+					domainNetworkItem2.getId(), 
+					existsNetworkLayoutItems);
+			}
 		}
 		
 		final Set<PermissionAttributes> permissionAttributes =
@@ -402,36 +412,42 @@ public final class DomainPerpective extends AbstractPerspective {
 						currentUserCondition, 
 						layoutCondition, 
 						domainId2);
-				final LayoutItem networkWorkstationItem = 
-					this.getNetworkWorkstationItem(domainNetworkItem2, 
-						currentUserCondition, 
-						layoutCondition);
-				final Identifier networkWorkstationItemId = networkWorkstationItem.getId();
-				domainIdNetworkWorkstationItemIdMap.put(domainId2, 
-					networkWorkstationItemId);
-				assert Log.debugMessage(domainId2 + " > " + networkWorkstationItem, Log.DEBUGLEVEL03);
-				assert Log.debugMessage("networkWorkstationItemId:" 
-					+ networkWorkstationItemId
-					+ ", " 
-					+ networkWorkstationItem.getName()
-					+ '@'
-					+ networkWorkstationItem.getLayoutName(), 
-				Log.DEBUGLEVEL10);			
+				if (domainId.equals(domainId2)) {
+					final LayoutItem networkWorkstationItem = 
+						this.getNetworkWorkstationItem(domainNetworkItem2, 
+							currentUserCondition, 
+							layoutCondition);
+					final Identifier networkWorkstationItemId = networkWorkstationItem.getId();
+					domainIdNetworkWorkstationItemIdMap.put(domainId2, 
+						networkWorkstationItemId);
+					assert Log.debugMessage(domainId2 + " > " + networkWorkstationItem, 
+						Log.DEBUGLEVEL03);
+					assert Log.debugMessage("networkWorkstationItemId:" 
+						+ networkWorkstationItemId
+						+ ", " 
+						+ networkWorkstationItem.getName()
+						+ '@'
+						+ networkWorkstationItem.getLayoutName(), 
+					Log.DEBUGLEVEL10);			
+				}
 			}
 			//	create workstation items accorning to exist permissionAttributes
 			
-//			final Set<Identifier> userIds = 
-//				new HashSet<Identifier>(permissionAttributes.size());
-//			for (final PermissionAttributes attributes : permissionAttributes) {
-//				userIds.add(attributes.getParentId());
-//			}
-//			this.addItems(userIds, existsNetworkLayoutItems, domainLayoutItems);
+			final Set<Identifier> userIds = 
+				new HashSet<Identifier>(permissionAttributes.size());
 			for (final PermissionAttributes attributes : permissionAttributes) {
-				final Identifier parentLayoutItemId = 
-					domainIdNetworkWorkstationItemIdMap.get(attributes.getDomainId());
-				this.getLayoutItem(attributes.getParentId(), 
-					parentLayoutItemId, 
-					existsNetworkLayoutItems);
+				userIds.add(attributes.getParentId());
+			}
+			this.addItems(userIds, existsNetworkLayoutItems, domainLayoutItems);
+			for (final PermissionAttributes attributes : permissionAttributes) {
+				final Identifier domainId2 = attributes.getDomainId();
+				if (domainId.equals(domainId2)) {
+					final Identifier parentLayoutItemId = 
+						domainIdNetworkWorkstationItemIdMap.get(domainId2);
+					this.getLayoutItem(attributes.getParentId(), 
+						parentLayoutItemId, 
+						existsNetworkLayoutItems);
+				}
 			}
 		}
 		
