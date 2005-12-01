@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewController.java,v 1.63 2005/10/31 12:30:09 bass Exp $$
+ * $$Id: MapViewController.java,v 1.64 2005/12/01 15:46:46 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,8 +61,8 @@ import com.syrus.util.Log;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * 
- * @version $Revision: 1.63 $, $Date: 2005/10/31 12:30:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.64 $, $Date: 2005/12/01 15:46:46 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -175,7 +175,11 @@ public final class MapViewController {
 	 * @return контроллер
 	 */
 	public MapElementController getController(MapElement me) {
-		return this.ctlMap.get(me.getClass());
+		MapElementController controller = this.ctlMap.get(me.getClass());
+		if (controller == null) {
+			controller = this.ctlMap.get(me.getClass().getSuperclass());
+		}
+		return controller;
 	}
 
 
