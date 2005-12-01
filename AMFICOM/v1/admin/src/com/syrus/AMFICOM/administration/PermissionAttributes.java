@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.33 2005/11/29 11:51:11 bass Exp $
+* $Id: PermissionAttributes.java,v 1.34 2005/12/01 12:09:17 arseniy Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,14 +38,13 @@ import com.syrus.util.TransferableObject;
 
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/11/29 11:51:11 $
- * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2005/12/01 12:09:17 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module administration
  */
 public final class PermissionAttributes extends StorableObject<PermissionAttributes> {
-
-	// TODO generate serialVersionUID when all enum will be made 
+	private static final long serialVersionUID = -8967626134139619548L;
 
 	public static enum Module implements TransferableObject<IdlModule> {
 		ADMINISTRATION(true),
@@ -61,25 +60,25 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		OBSERVER(true),
 		PREDICTION(false),
 		REPORT(true);
-		
+
 		private static final String KEY_ROOT = "Module.Description.";
-		
+
 		private static final Module[] VALUES = values();
 		private static final List<Module> VALUE_LIST = 
 			Collections.unmodifiableList(Arrays.asList(VALUES));
-		
+
 		private final boolean enable;
 		private final String codename;
-		
-		private Module(final boolean enable){
+
+		private Module(final boolean enable) {
 			this.enable = enable;
 			this.codename = getJavaNamingStyleName(this.name());
 		}
-		
+
 		public static final Module valueOf(final int ordinal) {			
 			return VALUES[ordinal];
 		} 
-		
+
 		public static final Module valueOf(final Integer ordinal) {
 			return valueOf(ordinal.intValue());
 		}
@@ -87,11 +86,11 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		public static Module valueOf(final IdlModule idlModule) {
 			return VALUES[idlModule.value()];
 		}
-		
+
 		public static final List<Module> getValueList() {
 			return VALUE_LIST;
 		}		
-		
+
 		public final IdlModule getTransferable() {
 			return IdlModule.from_int(this.ordinal());
 		}
@@ -103,21 +102,21 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		public final String getCodename() {
 			return this.codename;
 		}
-		
+
 		public final String getDescription() {
 			return LangModelAdministation.getString(KEY_ROOT + this.codename);
 		}
-		
+
 		public final boolean isEnable() {
 			return this.enable;
 		}
 	}
-	
+
 	private interface SwitchableGroupNumber {
 		Module getModule();
 		boolean isEnable();
 	}
-	
+
 	/**
 	 * Administation permission enum
 	 * 
@@ -125,41 +124,41 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	 */
 	private enum Adminstration implements SwitchableGroupNumber {
 		ENTER(true),
-		
+
 		CREATE_DOMAIN(true),
 		CREATE_GROUP(false), // Создать группу
 		CREATE_USER(true),
 		CREATE_MEASUREMENT_MODULE(true),
 		CREATE_SERVER(true),
 		CREATE_WORKSTATION(true),
-		
+
 		CHANGE_DOMAIN(true),
 		CHANGE_GROUP(false), //
 		CHANGE_USER(true),
 		CHANGE_MEASUREMENT_MODULE(true),
 		CHANGE_SERVER(true),
 		CHANGE_WORKSTATION(true),
-		
+
 		DELETE_DOMAIN(true),
 		DELETE_GROUP(false), //
 		DELETE_USER(true);
 
-		
-		private final boolean	enable;
+
+		private final boolean enable;
 
 		private Adminstration(final boolean enable) {
 			this.enable = enable;			
-		}	
-		
+		}
+
 		public boolean isEnable() {
 			return this.enable;
 		}
-		
+
 		public final Module getModule() {
 			return Module.ADMINISTRATION;
 		}
 	}
-	
+
 	/**
 	 * ElementsEditor permission enum
 	 * 
@@ -170,22 +169,22 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		CREATE_AND_EDIT(true),
 		SAVING(true),
 		CREATE_CHANGE_SAVE_TYPE(true);
-		
-		private final boolean	enable;
-		
+
+		private final boolean enable;
+
 		private ElementsEditor(final boolean enable) {
 			this.enable = enable;			
-		}			
-		
+		}
+
 		public boolean isEnable() {
 			return this.enable;
 		}
-		
+
 		public final Module getModule() {
 			return Module.ELEMENTS_EDITOR;
 		}
 	}
-	
+
 	/**
 	 * Scheme permission enum
 	 * 
@@ -195,22 +194,22 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		ENTER(true),
 		CREATE_AND_EDIT(true),
 		SAVING(true);
-		
-		private final boolean	enable;
-		
+
+		private final boolean enable;
+
 		private Scheme(final boolean enable) {
 			this.enable = enable;			
-		}			
-		
+		}
+
 		public boolean isEnable() {
 			return this.enable;
 		}
-		
+
 		public final Module getModule() {
 			return Module.SCHEME;
 		}
 	}
-	
+
 	/**
 	 * MapEditor permission enum
 	 * 
@@ -218,29 +217,29 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	 */
 	private enum MapEditor implements SwitchableGroupNumber {
 		ENTER(true),
-		
+
 		EDIT_TOPOLOGICAL_SCHEME(true),
 		SAVE_TOPOLOGICAL_SCHEME(true),
 		SAVE_TOPOLOGICAL_VIEW(true),
-		
+
 		EDIT_BINDING(true),
 		SAVE_BINDING(true);
 
-		private final boolean	enable;
+		private final boolean enable;
 
 		private MapEditor(final boolean enable) {
 			this.enable = enable;			
-		}	
-		
+		}
+
 		public boolean isEnable() {
 			return this.enable;
 		}
-		
+
 		public final Module getModule() {
 			return Module.MAP_EDITOR;
 		}
 	}
-	
+
 	/**
 	 * Optimization permission enum
 	 * 
@@ -256,22 +255,22 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		ABORT_OPTIMIZATION(true),
 		SAVE_OPTIMIZATION_RESULT(true),
 		SAVE_OPTIMIZATION_OPTIONS(true);
-		
-		private final boolean	enable;
+
+		private final boolean enable;
 
 		private Optimization(final boolean enable) {
 			this.enable = enable;			
-		}	
-		
+		}
+
 		public boolean isEnable() {
 			return this.enable;
 		}
-		
+
 		public final Module getModule() {
 			return Module.OPTIMIZATION;
 		}
 	}
-	
+
 	/**
 	 * Modeling permission enum
 	 * 
@@ -282,25 +281,25 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 
 		OPEN_MAP(true),
 		OPEN_SCHEME(true),
-		
+
 		SET_MODELING_OPTIONS(true),
 		SAVE_REFLECTOGRAM_MODEL(true);
-		
-		private final boolean	enable;
+
+		private final boolean enable;
 
 		private Modeling(final boolean enable) {
 			this.enable = enable;			
-		}	
-		
+		}
+
 		public boolean isEnable() {
 			return this.enable;
 		}
-		
+
 		public final Module getModule() {
 			return Module.MODELING;
 		}
 	}
-	
+
 	/**
 	 * Scheduler permission enum
 	 * 
@@ -311,21 +310,21 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 
 //		Задать тестирование КИСа 
 //		Задать тестирование всех КИСов
- 
+
 		CREATE_TEST(true),
 		EDIT_TEST(true),
 		SAVE_TEST(true);
-		
-		private final boolean	enable;
+
+		private final boolean enable;
 
 		private Scheduler(final boolean enable) {
 			this.enable = enable;			
-		}	
-		
+		}
+
 		public boolean isEnable() {
 			return this.enable;
 		}
-		
+
 		public final Module getModule() {
 			return Module.SCHEDULER;
 		}
@@ -340,17 +339,17 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		ENTER(true),
 		OPEN_REFLECTOGRAM_FILE(true),
 		OPEN_REFLECTOGRAM(true);
-		
-		private final boolean	enable;
+
+		private final boolean enable;
 
 		private Analysis(final boolean enable) {
 			this.enable = enable;			
-		}	
-		
+		}
+
 		public boolean isEnable() {
 			return this.enable;
 		}
-		
+
 		public final Module getModule() {
 			return Module.ANALYSIS;
 		}
@@ -368,22 +367,22 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		SAVE_MEASUREMENT_SETUP(true),
 		SAVE_REFLECTOGRAM_FILE(true),
 		SAVE_SCHEME_BINDING(true);
-		
-		private final boolean	enable;
+
+		private final boolean enable;
 
 		private Research(final boolean enable) {
 			this.enable = enable;			
-		}	
-		
+		}
+
 		public boolean isEnable() {
 			return this.enable;
 		}
-		
+
 		public final Module getModule() {
 			return Module.RESEARCH;
 		}
 	}
-	
+
 	/**
 	 * Evaluation permission enum
 	 * 
@@ -397,22 +396,22 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		SAVE_MEASUREMENT_SETUP(true),
 		SAVE_REFLECTOGRAM_FILE(true),
 		EDIT_ETALON(true);
-		
-		private final boolean	enable;
+
+		private final boolean enable;
 
 		private Evaluation(final boolean enable) {
 			this.enable = enable;			
-		}	
-		
+		}
+
 		public boolean isEnable() {
 			return this.enable;
 		}
-		
+
 		public final Module getModule() {
 			return Module.EVALUATION;
 		}
 	}
-	
+
 	/**
 	 * Observe permission enum
 	 * 
@@ -425,22 +424,22 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		OPEN_MEASUREMENT_ARCHIVE(true),
 		QUICK_TASK(true),
 		ALARM_MANAGE(true);
-		
-		private final boolean	enable;
+
+		private final boolean enable;
 
 		private Observer(final boolean enable) {
 			this.enable = enable;			
-		}	
-		
+		}
+
 		public boolean isEnable() {
 			return this.enable;
 		}
-		
+
 		public final Module getModule() {
 			return Module.OBSERVER;
 		}
 	}
-	
+
 	/**
 	 * Prediction permission enum
 	 * 
@@ -449,22 +448,22 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	private enum Prediction implements SwitchableGroupNumber {
 		ENTER(true),
 		SAVE_PREDICTION_REFLECTOGRAM(true);
-		
-		private final boolean	enable;
+
+		private final boolean enable;
 
 		private Prediction(final boolean enable) {
 			this.enable = enable;			
-		}	
-		
+		}
+
 		public boolean isEnable() {
 			return this.enable;
 		}
-		
+
 		public final Module getModule() {
 			return Module.PREDICTION;
 		}
 	}
-	
+
 	/**
 	 * Report permission enum
 	 * 
@@ -474,22 +473,22 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		ENTER(true),
 		CREATE_TEMPLATE(true),
 		SAVE_TEMPLATE(true);
-		
-		private final boolean	enable;
+
+		private final boolean enable;
 
 		private Report(final boolean enable) {
 			this.enable = enable;			
-		}	
-		
+		}
+
 		public boolean isEnable() {
 			return this.enable;
 		}
-		
+
 		public final Module getModule() {
 			return Module.REPORT;
 		}
 	}
-	
+
 	public static enum PermissionCodename {
 		// Adminstration
 		ADMINISTRATION_ENTER(Adminstration.ENTER),
@@ -499,39 +498,39 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		ADMINISTRATION_CREATE_MEASUREMENT_MODULE(Adminstration.CREATE_MEASUREMENT_MODULE),
 		ADMINISTRATION_CREATE_SERVER(Adminstration.CREATE_SERVER),
 		ADMINISTRATION_CREATE_WORKSTATION(Adminstration.CREATE_WORKSTATION),
-		
+
 		ADMINISTRATION_CHANGE_DOMAIN(Adminstration.CHANGE_DOMAIN),
 		ADMINISTRATION_CHANGE_GROUP(Adminstration.CHANGE_GROUP),
 		ADMINISTRATION_CHANGE_USER(Adminstration.CHANGE_USER),
 		ADMINISTRATION_CHANGE_MEASUREMENT_MODULE(Adminstration.CHANGE_MEASUREMENT_MODULE),
 		ADMINISTRATION_CHANGE_SERVER(Adminstration.CHANGE_SERVER),
 		ADMINISTRATION_CHANGE_WORKSTATION(Adminstration.CHANGE_WORKSTATION),
-		
+
 		ADMINISTRATION_DELETE_DOMAIN(Adminstration.DELETE_DOMAIN),
 		ADMINISTRATION_DELETE_GROUP(Adminstration.DELETE_GROUP),
 		ADMINISTRATION_DELETE_USER(Adminstration.DELETE_USER),
-		
+
 		// ElementsEditor		
 		ELEMENTS_EDITOR_ENTER(ElementsEditor.ENTER),
 		ELEMENTS_EDITOR_CREATE_AND_EDIT(ElementsEditor.CREATE_AND_EDIT),
 		ELEMENTS_EDITOR_SAVING(ElementsEditor.SAVING),
 		ELEMENTS_EDITOR_CREATE_CHANGE_SAVE_TYPE(ElementsEditor.CREATE_CHANGE_SAVE_TYPE),
-		
+
 		// Scheme
 		SCHEME_ENTER(Scheme.ENTER),
 		SCHEME_CREATE_AND_EDIT(Scheme.CREATE_AND_EDIT),
 		SCHEME_SAVING(Scheme.SAVING),
-		
+
 		// MapEditor		
 		MAP_EDITOR_ENTER(MapEditor.ENTER),
-		
+
 		MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME(MapEditor.EDIT_TOPOLOGICAL_SCHEME),
 		MAP_EDITOR_SAVE_TOPOLOGICAL_SCHEME(MapEditor.SAVE_TOPOLOGICAL_SCHEME),
 		MAP_EDITOR_SAVE_TOPOLOGICAL_VIEW(MapEditor.SAVE_TOPOLOGICAL_VIEW),
-		
+
 		MAP_EDITOR_EDIT_BINDING(MapEditor.EDIT_BINDING),
 		MAP_EDITOR_SAVE_BINDING(MapEditor.SAVE_BINDING),
-		
+
 		// Optimization
 		OPTIMIZATION_ENTER(Optimization.ENTER),
 
@@ -542,37 +541,37 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		OPTIMIZATION_ABORT_OPTIMIZATION(Optimization.ABORT_OPTIMIZATION),
 		OPTIMIZATION_SAVE_OPTIMIZATION_RESULT(Optimization.SAVE_OPTIMIZATION_RESULT),
 		OPTIMIZATION_SAVE_OPTIMIZATION_OPTIONS(Optimization.SAVE_OPTIMIZATION_OPTIONS),
-		
+
 		// Modeling
 		MODELING_ENTER(Modeling.ENTER),
 
 		MODELING_OPEN_MAP(Modeling.OPEN_MAP),
 		MODELING_OPEN_SCHEME(Modeling.OPEN_SCHEME),
-		
+
 		MODELING_SET_MODELING_OPTIONS(Modeling.SET_MODELING_OPTIONS),
 		MODELING_SAVE_REFLECTOGRAM_MODEL(Modeling.SAVE_REFLECTOGRAM_MODEL),
-		
-		// Scheduler		
+
+		// Scheduler
 		SCHEDULER_ENTER(Scheduler.ENTER),
- 
+
 		SCHEDULER_CREATE_TEST(Scheduler.CREATE_TEST),
 		SCHEDULER_EDIT_TEST(Scheduler.EDIT_TEST),
 		SCHEDULER_SAVE_TEST(Scheduler.SAVE_TEST),
-		
+
 		// Analysis
 		ANALYSIS_ENTER(Analysis.ENTER),
 		ANALYSIS_OPEN_REFLECTOGRAM_FILE(Analysis.OPEN_REFLECTOGRAM_FILE),
 		ANALYSIS_OPEN_REFLECTOGRAM(Analysis.OPEN_REFLECTOGRAM),
-		
-		// Research 
+
+		// Research
 		RESEARCH_ENTER(Research.ENTER),
 		RESEARCH_OPEN_REFLECTOGRAM_FILE(Research.OPEN_REFLECTOGRAM_FILE),
 		RESEARCH_OPEN_REFLECTOGRAM(Research.OPEN_REFLECTOGRAM),
 		RESEARCH_SAVE_MEASUREMENT_SETUP(Research.SAVE_MEASUREMENT_SETUP),
 		RESEARCH_SAVE_REFLECTOGRAM_FILE(Research.SAVE_REFLECTOGRAM_FILE),
 		RESEARCH_SAVE_SCHEME_BINDING(Research.SAVE_SCHEME_BINDING),
-		
-		// Evaluation 
+
+		// Evaluation
 		EVALUATION_ENTER(Evaluation.ENTER),
 		EVALUATION_OPEN_REFLECTOGRAM(Evaluation.OPEN_REFLECTOGRAM),
 		EVALUATION_OPEN_REFLECTOGRAM_FILE(Evaluation.OPEN_REFLECTOGRAM_FILE),
@@ -580,7 +579,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		EVALUATION_SAVE_MEASUREMENT_SETUP(Evaluation.SAVE_MEASUREMENT_SETUP),
 		EVALUATION_SAVE_REFLECTOGRAM_FILE(Evaluation.SAVE_REFLECTOGRAM_FILE),
 		EVALUATION_EDIT_ETALON(Evaluation.EDIT_ETALON),
-		
+
 		// Observe
 		OBSERVER_ENTER(Observer.ENTER),
 		OBSERVER_OPEN_MAP(Observer.OPEN_MAP),
@@ -588,68 +587,67 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		OBSERVER_OPEN_MEASUREMENT_ARCHIVE(Observer.OPEN_MEASUREMENT_ARCHIVE),
 		OBSERVER_QUICK_TASK(Observer.QUICK_TASK),
 		OBSERVER_ALARM_MANAGE(Observer.ALARM_MANAGE),
-		
+
 		// Prediction
 		PREDICTION_ENTER(Prediction.ENTER),
 		PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM(Prediction.SAVE_PREDICTION_REFLECTOGRAM),
-		
+
 		// Report
 		REPORT_ENTER(Report.ENTER),
 		REPORT_CREATE_TEMPLATE(Report.CREATE_TEMPLATE),
 		REPORT_SAVE_TEMPLATE(Report.SAVE_TEMPLATE);
-		
-		private final Enum	e;		
+
+		private final Enum e;		
 
 		private static final String KEY_ROOT = "PermissionAttributes.Description.";
-		
+
 		private String codename;
 
 		private PermissionCodename(final SwitchableGroupNumber e) {
 			this.e = (Enum) e;
-			this.codename = e.getModule().getCodename() 
-				+ '.' 
-				+ getJavaNamingStyleName(this.e.name());			
+			this.codename = e.getModule().getCodename()
+				+ '.'
+				+ getJavaNamingStyleName(this.e.name());
 		}
-		
+
 		public final String getDescription() {
 			return LangModelAdministation.getString(KEY_ROOT + this.codename);
 		}
-		
+
 		public final String getCodename() {
 			return this.codename;
 		}
-		
+
 		final int getOrderInGroup() {
 			return this.e.ordinal();
 		}
-		
+
 		public final Module getModule() {
-			return ((SwitchableGroupNumber)this.e).getModule();
+			return ((SwitchableGroupNumber) this.e).getModule();
 		}
-		
+
 		public boolean isEnable() {
-			return this.getModule().isEnable() && ((SwitchableGroupNumber)this.e).isEnable();
+			return this.getModule().isEnable() && ((SwitchableGroupNumber) this.e).isEnable();
 		}
 	}
-	
+
 	private Identifier parentId;
-	
+
 	private Identifier domainId;
-	
+
 	private Module module;
-	
+
 	private BitSet permissions;
-	
+
 	private BitSet denyMask;
-	
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public PermissionAttributes(final IdlPermissionAttributes dt) throws CreateObjectException {
 		try {
 			this.fromTransferable(dt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -664,7 +662,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 			final Identifier parentId,
 			final Module module,
 			final BigInteger permissions,
-            final BigInteger denyMask) {
+			final BigInteger denyMask) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -674,20 +672,22 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		this.domainId = domainId;
 		this.parentId = parentId;
 		this.module = module;
-		
+
 		this.permissions = new BitSet();
 		this.setPermissions0(permissions);
-		
+
 		this.denyMask = new BitSet();
 		this.setDenyMask0(denyMask);
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		final IdlPermissionAttributes pat = (IdlPermissionAttributes)transferable;
+		final IdlPermissionAttributes pat = (IdlPermissionAttributes) transferable;
 		super.fromTransferable(pat);
 		this.domainId = new Identifier(pat.domainId);
 		this.parentId = new Identifier(pat.userId);
@@ -695,24 +695,26 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		if (this.permissions == null) {
 			this.permissions = new BitSet();
 		}
-		
+
 		this.setPermissionsByteArray0(pat.permissionMask);
-		
+
 		if (this.denyMask == null) {
 			this.denyMask = new BitSet();
 		}
-		
+
 		this.setDenyMaskByteArray0(pat.denyMask);
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	@Override
 	public IdlPermissionAttributes getTransferable(final ORB orb) {
-		assert this.isValid(): ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return IdlPermissionAttributesHelper.init(orb,
 				super.id.getTransferable(),
 				super.created.getTime(),
@@ -725,13 +727,13 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 				this.module.getTransferable(),
 				this.getPermissionByteArray0(),
 				this.getDenyMaskByteArray0());
-	}	
+	}
 
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.parentId != null && !this.parentId.isVoid()
-				&& this.domainId != null && 
+				&& this.domainId != null &&
 					(this.parentId.getMajor() == ObjectEntities.ROLE_CODE || !this.domainId.isVoid())
 				&& this.permissions != null;
 	}
@@ -745,13 +747,11 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	 * @throws CreateObjectException
 	 */
 	public static PermissionAttributes createInstance(final Identifier creatorId,
-	                                                  final Identifier domainId,
-	                                                  final Identifier userId,
-	                                                  final Module module) 
-	throws CreateObjectException {
+			final Identifier domainId,
+			final Identifier userId,
+			final Module module) throws CreateObjectException {
 		try {
-			final PermissionAttributes permissionAttributes = 
-				new PermissionAttributes(
+			final PermissionAttributes permissionAttributes = new PermissionAttributes(
 					IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERMATTR_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
@@ -766,12 +766,11 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 			permissionAttributes.markAsChanged();
 
 			return permissionAttributes;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
-	
+
 	/**
 	 * <p>
 	 * <b>Clients must never explicitly call this method. </b>
@@ -785,8 +784,8 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 			final Identifier domainId,
 			final Identifier parentId,
 			final Module module,
-            final BigInteger permissions,
-            final BigInteger denyMask) {
+			final BigInteger permissions,
+			final BigInteger denyMask) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.domainId = domainId;
 		this.parentId = parentId;
@@ -796,7 +795,9 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	}
 	
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
@@ -811,7 +812,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		}
 		return dependencies;
 	}
-	
+
 	/**
 	 * @param permissionCode permission codename
 	 * @param enable
@@ -823,7 +824,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	                                      final boolean enable) {
 		this.setSet(permissionCode, enable, this.permissions);
 	}
-	
+
 	/**
 	 * @param permissionCode permission codename
 	 * @param enable
@@ -835,14 +836,14 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	                                 final boolean enable) {
 		this.setSet(permissionCode, enable, this.denyMask);
 	}
-	
+
 	private final void setSet(final PermissionCodename permissionCode,
                               final boolean enable,
                               final BitSet bitSet) {
 		if (!permissionCode.isEnable()) {
 			throw new IllegalArgumentException("PermissionCode " + permissionCode.name() + " disabled.");
 		}
-		
+
 		if (this.module != permissionCode.getModule()) {
 			throw new IllegalArgumentException("This Permission doen't support " + permissionCode.name());
 		}
@@ -853,7 +854,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 			Log.DEBUGLEVEL10);
 		bitSet.set(permissionCode.getOrderInGroup(), enable);
 	}
-	
+
 	/**
 	 * @param permissionCode
 	 * @return true if permission is enabled for permissioncode 
@@ -864,7 +865,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	public final boolean isPermissionEnable(final PermissionCodename permissionCode) {
 		return this.isSet(permissionCode, this.permissions);
 	}
-	
+
 	/**
 	 * @param permissionCode
 	 * @return true if permission is denied for permissioncode 
@@ -875,13 +876,13 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	public final boolean isDenied(final PermissionCodename permissionCode) {
 		return this.isSet(permissionCode, this.denyMask);
 	}
-	
+
 	private final boolean isSet(final PermissionCodename permissionCode,
 	                            final BitSet bitSet) {
 		if (!permissionCode.isEnable()) {
 			throw new IllegalArgumentException("PermissionCode " + permissionCode.name() + " disabled.");
 		}
-		
+
 		if (this.module != permissionCode.getModule()) {
 			throw new IllegalArgumentException("This Permission doen't support " 
 				+ permissionCode.name() 
@@ -889,14 +890,14 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 				+ this.module
 				+ ", permissionCode.getModule():" + permissionCode.getModule());
 		}
-		
+
 		return bitSet.get(permissionCode.getOrderInGroup());
 	}
-	
+
 	/**
 	 * @return permission digital form 
 	 */
-	public final BigInteger getPermissions(){
+	public final BigInteger getPermissions() {
 		return new BigInteger(this.getPermissionByteArray0());
 	}
 
@@ -906,7 +907,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	final byte[] getPermissionByteArray0() {
 		return this.getBitSetMaskByteArray0(this.permissions);
 	}
-	
+
 	/**
 	 * set permission from permission digital form
 	 * @param permissions
@@ -915,7 +916,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		this.setPermissions0(permissions);
 		super.markAsChanged();
 	}
-	
+
 	final void setPermissions0(final BigInteger permissions) {
 		this.setPermissionsByteArray0(permissions.toByteArray());
 	}
@@ -927,11 +928,11 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	final void setPermissionsByteArray0(final byte[] bytes) {
 		this.setBitSetMaskByteArray0(bytes, this.permissions);
 	}
-	
+
 	/**
 	 * @return permission digital form 
 	 */
-	public final BigInteger getDenyMask(){
+	public final BigInteger getDenyMask() {
 		return new BigInteger(this.getDenyMaskByteArray0());
 	}
 
@@ -941,7 +942,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	final byte[] getDenyMaskByteArray0() {
 		return this.getBitSetMaskByteArray0(this.denyMask);
 	}
-	
+
 	private final byte[] getBitSetMaskByteArray0(final BitSet bitSet) {
 		final byte[] bytes = new byte[bitSet.length()/8+1];
 		for (int i=0; i<bitSet.length(); i++) {
@@ -951,7 +952,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		}
 		return bytes;
 	}
-	
+
 	/**
 	 * set permission from deny mask digital form
 	 * @param denyMask
@@ -960,7 +961,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		this.setDenyMask0(denyMask);
 		super.markAsChanged();
 	}
-	
+
 	final void setDenyMask0(final BigInteger denyMask) {
 		this.setDenyMaskByteArray0(denyMask.toByteArray());
 	}
@@ -972,7 +973,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	final void setDenyMaskByteArray0(final byte[] bytes) {
 		this.setBitSetMaskByteArray0(bytes, this.denyMask);
 	}
-	
+
 	private final void setBitSetMaskByteArray0(final byte[] bytes,
 			final BitSet bitSet) {
 		bitSet.clear();
@@ -982,25 +983,25 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		    }
 		}
 	}
-	
+
 	public final Identifier getDomainId() {
 		return this.domainId;
 	}
-	
+
 	public final void setDomainId(final Identifier domainId) {
 		this.domainId = domainId;
 		super.markAsChanged();
 	}
-	
+
 	public final Identifier getParentId() {
 		return this.parentId;
 	}
-	
+
 	public final void setParentId(final Identifier parentId) {
 		this.parentId = parentId;
 		super.markAsChanged();
 	}
-	
+
 	public final Module getModule() {
 		return this.module;
 	}
@@ -1012,14 +1013,14 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	protected PermissionAttributesWrapper getWrapper() {
 		return PermissionAttributesWrapper.getInstance();
 	}
-	
+
 	/**
-	 * generate string  as javaNamingStyle from string
+	 * generate string  as javaNamingStyle from string like JAVA_NAMING_STYLE
 	 */
 	static String getJavaNamingStyleName(final String string) {
-        final StringBuffer buffer = new StringBuffer();
-		String[] strings = string.split("_");
-		for(int i = 0; i < strings.length; i++) {
+		final StringBuffer buffer = new StringBuffer();
+		final String[] strings = string.split("_");
+		for (int i = 0; i < strings.length; i++) {
 			if (i == 0) {
 				buffer.append(strings[i].toLowerCase());
 			} else {
@@ -1030,4 +1031,3 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		return buffer.toString();
 	}
 }
-
