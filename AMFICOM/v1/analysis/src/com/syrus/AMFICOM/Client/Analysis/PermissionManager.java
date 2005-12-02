@@ -1,5 +1,5 @@
 /*-
- * $Id: PermissionManager.java,v 1.12 2005/11/29 09:41:58 saa Exp $
+ * $Id: PermissionManager.java,v 1.13 2005/12/02 16:47:58 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
  * Позволяет использовать кэширование прав.
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/11/29 09:41:58 $
+ * @version $Revision: 1.13 $, $Date: 2005/12/02 16:47:58 $
  * @module analysis
  */
 public class PermissionManager {
@@ -145,6 +145,7 @@ public class PermissionManager {
 		researchTranslation.put(Operation.SAVE_TRACE_FILE, PermissionCodename.RESEARCH_SAVE_REFLECTOGRAM_FILE);
 		researchTranslation.put(Operation.LOAD_TRACE, PermissionCodename.RESEARCH_OPEN_REFLECTOGRAM);
 		researchTranslation.put(Operation.SAVE_MEASUREMENT_SETUP, PermissionCodename.RESEARCH_SAVE_MEASUREMENT_SETUP);
+		researchTranslation.put(Operation.LOAD_ETALON, PermissionCodename.RESEARCH_OPEN_REFLECTOGRAM); // в эталоне будет показываться только р/г
 		// @todo add support for SAVE_SCHEME_BINDING
 
 		evaluationTranslation = new HashMap<Operation, PermissionCodename>();
