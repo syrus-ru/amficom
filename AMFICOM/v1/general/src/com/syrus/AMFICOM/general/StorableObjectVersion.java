@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectVersion.java,v 1.9 2005/12/02 09:26:12 bob Exp $
+ * $Id: StorableObjectVersion.java,v 1.10 2005/12/02 09:44:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,17 +10,16 @@ package com.syrus.AMFICOM.general;
 import java.io.Serializable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/12/02 09:26:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/12/02 09:44:26 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public final class StorableObjectVersion implements Serializable {
-	
-	public transient static final StorableObjectVersion INITIAL_VERSION = 
-			new StorableObjectVersion(0L);
-	public transient static final StorableObjectVersion ILLEGAL_VERSION = 
-			new StorableObjectVersion(-1L);
+	private static final long serialVersionUID = 4373418889318876641L;
+
+	public transient static final StorableObjectVersion INITIAL_VERSION = new StorableObjectVersion(0L);
+	public transient static final StorableObjectVersion ILLEGAL_VERSION = new StorableObjectVersion(-1L);
 
 	private final long version;
 
@@ -45,10 +44,10 @@ public final class StorableObjectVersion implements Serializable {
 	public StorableObjectVersion increment() {
 		if (this.version < Long.MAX_VALUE) {
 			long newVersion = this.version + 1;
-			if (this.equals(ILLEGAL_VERSION)) {
+			if (newVersion == ILLEGAL_VERSION.longValue()) {
 				newVersion++;
 			}
-			if (this.equals((INITIAL_VERSION))) {
+			if (newVersion == INITIAL_VERSION.longValue()) {
 				newVersion++;
 			}
 			return new StorableObjectVersion(newVersion);
