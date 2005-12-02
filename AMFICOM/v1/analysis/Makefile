@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.17 2005/10/19 11:35:36 arseniy Exp $
+# $Id: Makefile,v 1.18 2005/12/02 15:36:44 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -34,8 +34,11 @@ mapclient
 SOURCES := $(shell find $(SRCDIR) -name *.java)
 
 $(LIBNAME): .mach
-	$(CP) $(SRCDIR)/com/syrus/AMFICOM/Client/General/Lang/analysis_ru.properties \
+	$(CP) $(wildcard $(SRCDIR)/com/syrus/AMFICOM/Client/General/Lang/*.properties) \
 		$(CLASSDIR)/com/syrus/AMFICOM/Client/General/Lang
+	mkdir -p $(CLASSDIR)/com/syrus/AMFICOM/resource
+	$(CP) $(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.properties) \
+		$(CLASSDIR)/com/syrus/AMFICOM/resource
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
