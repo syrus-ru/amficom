@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.36 2005/09/01 14:02:18 max Exp $
+ * $Id: SiteNodeDatabase.java,v 1.37 2005/12/02 11:24:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/09/01 14:02:18 $
- * @author $Author: max $
+ * @version $Revision: 1.37 $, $Date: 2005/12/02 11:24:13 $
+ * @author $Author: bass $
  * @module map
  */
 public final class SiteNodeDatabase extends StorableObjectDatabase<SiteNode> {
@@ -140,7 +140,7 @@ public final class SiteNodeDatabase extends StorableObjectDatabase<SiteNode> {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				resultSet.getDouble(SiteNodeWrapper.COLUMN_LONGITUDE),

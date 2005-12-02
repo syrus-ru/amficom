@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItemDatabase.java,v 1.2 2005/09/14 19:28:43 arseniy Exp $
+* $Id: LayoutItemDatabase.java,v 1.3 2005/12/02 11:24:14 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/09/14 19:28:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/12/02 11:24:14 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module resource
  */
@@ -84,7 +84,7 @@ public class LayoutItemDatabase extends StorableObjectDatabase<LayoutItem> {
 				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_ID),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LAYOUT_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)));

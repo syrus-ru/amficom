@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.96 2005/10/25 19:53:05 bass Exp $
+ * $Id: MeasurementSetup.java,v 1.97 2005/12/02 11:24:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/10/25 19:53:05 $
+ * @version $Revision: 1.97 $, $Date: 2005/12/02 11:24:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -130,7 +130,7 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 		try {
 			final MeasurementSetup measurementSetup = new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTSETUP_CODE),
 				creatorId,
-				StorableObjectVersion.createInitial(),
+				StorableObjectVersion.INITIAL_VERSION,
 				parameterSet,
 				criteriaSet,
 				thresholdSet,

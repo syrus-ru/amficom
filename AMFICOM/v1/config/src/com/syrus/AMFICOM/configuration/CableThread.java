@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.44 2005/10/25 19:53:09 bass Exp $
+ * $Id: CableThread.java,v 1.45 2005/12/02 11:24:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/10/25 19:53:09 $
+ * @version $Revision: 1.45 $, $Date: 2005/12/02 11:24:18 $
  * @author $Author: bass $
  * @module config
  */
@@ -82,7 +82,7 @@ public final class CableThread extends DomainMember<CableThread>
 		try {
 			final CableThread cableThread = new CableThread(IdentifierPool.getGeneratedIdentifier(CABLETHREAD_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					domainId,
 					name,
 					description,

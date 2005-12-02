@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.34 2005/12/01 12:09:17 arseniy Exp $
+* $Id: PermissionAttributes.java,v 1.35 2005/12/02 11:24:11 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.TransferableObject;
 
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/12/01 12:09:17 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/12/02 11:24:11 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
  */
@@ -754,7 +754,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 			final PermissionAttributes permissionAttributes = new PermissionAttributes(
 					IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERMATTR_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					domainId,
 					userId,
 					module,

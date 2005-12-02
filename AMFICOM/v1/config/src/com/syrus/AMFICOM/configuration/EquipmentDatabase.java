@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.98 2005/09/28 10:01:42 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.99 2005/12/02 11:24:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/09/28 10:01:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.99 $, $Date: 2005/12/02 11:24:19 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -160,7 +160,7 @@ public final class EquipmentDatabase extends StorableObjectDatabase<Equipment> {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, EquipmentWrapper.COLUMN_PROTO_EQUIPMENT_ID),
 				(name != null) ? name : "",

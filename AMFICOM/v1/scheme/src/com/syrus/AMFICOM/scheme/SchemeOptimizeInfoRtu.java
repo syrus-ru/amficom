@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.34 2005/10/31 12:29:54 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.35 2005/12/02 11:24:16 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/10/31 12:29:54 $
+ * @version $Revision: 1.35 $, $Date: 2005/12/02 11:24:16 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu
@@ -131,7 +131,7 @@ public final class SchemeOptimizeInfoRtu
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					priceUsd,
 					rangeDb,

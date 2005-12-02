@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.22 2005/10/25 19:53:05 bass Exp $
+ * $Id: ParameterSet.java,v 1.23 2005/12/02 11:24:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameterSetHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/25 19:53:05 $
+ * @version $Revision: 1.23 $, $Date: 2005/12/02 11:24:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -105,7 +105,7 @@ public final class ParameterSet extends StorableObject<ParameterSet> {
 		try {
 			final ParameterSet set = new ParameterSet(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETERSET_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					sort.value(),
 					description,
 					parameters,

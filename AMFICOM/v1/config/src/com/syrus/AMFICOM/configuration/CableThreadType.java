@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThreadType.java,v 1.78 2005/10/31 12:29:56 bass Exp $
+ * $Id: CableThreadType.java,v 1.79 2005/12/02 11:24:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Shitlet;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.78 $, $Date: 2005/10/31 12:29:56 $
+ * @version $Revision: 1.79 $, $Date: 2005/12/02 11:24:19 $
  * @author $Author: bass $
  * @module config
  */
@@ -243,7 +243,7 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 		try {
 			final CableThreadType cableThreadType = new CableThreadType(IdentifierPool.getGeneratedIdentifier(CABLETHREAD_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					codename,
 					description,
 					name,

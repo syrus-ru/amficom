@@ -1,5 +1,5 @@
 /*-
- * $Id: Role.java,v 1.10 2005/11/17 16:12:38 bass Exp $
+ * $Id: Role.java,v 1.11 2005/12/02 11:24:11 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/11/17 16:12:38 $
+ * @version $Revision: 1.11 $, $Date: 2005/12/02 11:24:11 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -118,7 +118,7 @@ public final class Role extends StorableObject<Role>
 			final Identifier generatedIdentifier = IdentifierPool.getGeneratedIdentifier(ObjectEntities.ROLE_CODE);
 			final Role role = new Role(generatedIdentifier,
 					creatorId != null ? creatorId : generatedIdentifier,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					codename,
 					description);
 

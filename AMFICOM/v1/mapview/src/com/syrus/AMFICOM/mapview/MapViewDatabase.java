@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.47 2005/11/30 14:55:26 bass Exp $
+ * $Id: MapViewDatabase.java,v 1.48 2005/12/02 11:24:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/11/30 14:55:26 $
+ * @version $Revision: 1.48 $, $Date: 2005/12/02 11:24:20 $
  * @author $Author: bass $
  * @module mapview
  */
@@ -143,7 +143,7 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 					DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-					new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+					StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 					DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID),
 					DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 					DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),

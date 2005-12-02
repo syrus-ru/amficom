@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.33 2005/11/17 16:10:03 bass Exp $
+ * $Id: BitmapImageResource.java,v 1.34 2005/12/02 11:24:14 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/11/17 16:10:03 $
+ * @version $Revision: 1.34 $, $Date: 2005/12/02 11:24:14 $
  * @module resource
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource implements Cloneable {
@@ -68,7 +68,7 @@ public final class BitmapImageResource extends AbstractBitmapImageResource imple
 		try {
 			final BitmapImageResource bitmapImageResource = new BitmapImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					codename,
 					image);
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.85 2005/10/31 12:29:56 bass Exp $
+ * $Id: CableLinkType.java,v 1.86 2005/12/02 11:24:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/10/31 12:29:56 $
+ * @version $Revision: 1.86 $, $Date: 2005/12/02 11:24:19 $
  * @author $Author: bass $
  * @module config
  */
@@ -238,7 +238,7 @@ public final class CableLinkType extends AbstractLinkType<CableLinkType> impleme
 		try {
 			final CableLinkType cableLinkType = new CableLinkType(IdentifierPool.getGeneratedIdentifier(CABLELINK_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					codename,
 					description,
 					name,

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.10 2005/10/31 12:30:15 bass Exp $
+ * $Id: KIS.java,v 1.11 2005/12/02 11:24:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlKISHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/31 12:30:15 $
+ * @version $Revision: 1.11 $, $Date: 2005/12/02 11:24:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -111,7 +111,7 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 		try {
 			final KIS kis = new KIS(IdentifierPool.getGeneratedIdentifier(ObjectEntities.KIS_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					domainId,
 					name,
 					description,

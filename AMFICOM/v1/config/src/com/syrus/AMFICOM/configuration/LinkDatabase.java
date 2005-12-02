@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.50 2005/08/30 16:35:09 bass Exp $
+ * $Id: LinkDatabase.java,v 1.51 2005/12/02 11:24:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/08/30 16:35:09 $
+ * @version $Revision: 1.51 $, $Date: 2005/12/02 11:24:19 $
  * @author $Author: bass $
  * @module config
  */
@@ -145,7 +145,7 @@ public final class LinkDatabase extends StorableObjectDatabase<Link> {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 				(name != null) ? name : "",
 				(description != null) ? description : "",

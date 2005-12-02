@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementDatabase.java,v 1.18 2005/07/28 17:42:35 bass Exp $
+ * $Id: PathElementDatabase.java,v 1.19 2005/12/02 11:24:16 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/07/28 17:42:35 $
+ * @version $Revision: 1.19 $, $Date: 2005/12/02 11:24:16 $
  * @module scheme
  */
 public final class PathElementDatabase extends StorableObjectDatabase<PathElement> {
@@ -152,7 +152,7 @@ public final class PathElementDatabase extends StorableObjectDatabase<PathElemen
 				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_SCHEME_PATH_ID),
 				resultSet.getInt(COLUMN_SEQUENTIAL_NUMBER),
 				IdlKind.from_int(resultSet.getInt(COLUMN_KIND)),

@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.70 2005/12/01 12:09:23 arseniy Exp $
+ * $Id: Domain.java,v 1.71 2005/12/02 11:24:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/12/01 12:09:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.71 $, $Date: 2005/12/02 11:24:11 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -178,7 +178,7 @@ public final class Domain extends DomainMember<Domain>
 		try {
 			final Domain domain = new Domain(IdentifierPool.getGeneratedIdentifier(ObjectEntities.DOMAIN_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					domainId,
 					name,
 					description);

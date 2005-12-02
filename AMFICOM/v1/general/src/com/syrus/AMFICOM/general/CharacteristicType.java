@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.59 2005/10/31 12:30:19 bass Exp $
+ * $Id: CharacteristicType.java,v 1.60 2005/12/02 11:24:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/10/31 12:30:19 $
+ * @version $Revision: 1.60 $, $Date: 2005/12/02 11:24:10 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -147,7 +147,7 @@ public final class CharacteristicType
 		try {
 			CharacteristicType characteristicType = new CharacteristicType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					codename,
 					description,
 					name,

@@ -117,7 +117,7 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					location,
 					size,
 					VOID_IDENTIFIER,

@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.111 2005/10/31 12:30:13 bass Exp $
+ * $Id: NodeLink.java,v 1.112 2005/12/02 11:24:13 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.111 $, $Date: 2005/10/31 12:30:13 $
+ * @version $Revision: 1.112 $, $Date: 2005/12/02 11:24:13 $
  * @module map
  */
 public final class NodeLink extends StorableObject<NodeLink>
@@ -120,7 +120,7 @@ public final class NodeLink extends StorableObject<NodeLink>
 		try {
 			final NodeLink nodeLink = new NodeLink(IdentifierPool.getGeneratedIdentifier(NODELINK_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					physicalLink.getId(),
 					starNode.getId(),

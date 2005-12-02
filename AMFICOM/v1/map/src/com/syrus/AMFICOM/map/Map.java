@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.119 2005/10/31 12:30:13 bass Exp $
+ * $Id: Map.java,v 1.120 2005/12/02 11:24:13 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.Log;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.119 $, $Date: 2005/10/31 12:30:13 $
+ * @version $Revision: 1.120 $, $Date: 2005/12/02 11:24:13 $
  * @module map
  */
 public final class Map extends DomainMember<Map>
@@ -194,7 +194,7 @@ public final class Map extends DomainMember<Map>
 		try {
 			final Map map = new Map(IdentifierPool.getGeneratedIdentifier(MAP_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					domainId,
 					name,
 					description);

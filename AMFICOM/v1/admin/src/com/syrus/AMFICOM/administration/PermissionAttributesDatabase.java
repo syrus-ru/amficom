@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionAttributesDatabase.java,v 1.6 2005/10/10 15:48:03 bob Exp $
+ * $Id: PermissionAttributesDatabase.java,v 1.7 2005/12/02 11:24:11 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/10 15:48:03 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/12/02 11:24:11 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
  */
@@ -88,7 +88,7 @@ public final class PermissionAttributesDatabase extends StorableObjectDatabase<P
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_ID),
 				Module.valueOf(resultSet.getInt(COLUMN_MODULE)),

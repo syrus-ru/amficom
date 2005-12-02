@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkDatabase.java,v 1.2 2005/08/30 16:35:09 bass Exp $
+ * $Id: CableLinkDatabase.java,v 1.3 2005/12/02 11:24:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author max
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/08/30 16:35:09 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/02 11:24:19 $
  * @module config
  */
 
@@ -145,7 +145,7 @@ public class CableLinkDatabase extends StorableObjectDatabase<CableLink> {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 				(name != null) ? name : "",
 				(description != null) ? description : "",

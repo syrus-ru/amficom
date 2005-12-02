@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.53 2005/10/25 19:53:15 bass Exp $
+ * $Id: EventType.java,v 1.54 2005/12/02 11:24:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/10/25 19:53:15 $
+ * @version $Revision: 1.54 $, $Date: 2005/12/02 11:24:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -104,7 +104,7 @@ public final class EventType extends StorableObjectType<EventType> {
 		try {
 			final EventType eventType = new EventType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENT_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					codename,
 					description,
 					parameterTypes,

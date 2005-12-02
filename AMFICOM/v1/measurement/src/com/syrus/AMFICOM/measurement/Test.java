@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.177 2005/10/31 12:30:15 bass Exp $
+ * $Id: Test.java,v 1.178 2005/12/02 11:24:09 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.177 $, $Date: 2005/10/31 12:30:15 $
+ * @version $Revision: 1.178 $, $Date: 2005/12/02 11:24:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -173,7 +173,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 		try {
 			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					startTime,
 					endTime,
 					temporalPatternId,

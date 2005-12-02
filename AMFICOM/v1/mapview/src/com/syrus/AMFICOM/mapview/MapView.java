@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.75 2005/10/25 19:53:14 bass Exp $
+* $Id: MapView.java,v 1.76 2005/12/02 11:24:20 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * @author $Author: bass $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.75 $, $Date: 2005/10/25 19:53:14 $
+ * @version $Revision: 1.76 $, $Date: 2005/12/02 11:24:20 $
  * @module mapview
  */
 public final class MapView extends DomainMember<MapView> implements Describable {
@@ -170,7 +170,7 @@ public final class MapView extends DomainMember<MapView> implements Describable 
 		try {
 			final MapView mapView = new MapView(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAPVIEW_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					domainId,
 					name,
 					description,

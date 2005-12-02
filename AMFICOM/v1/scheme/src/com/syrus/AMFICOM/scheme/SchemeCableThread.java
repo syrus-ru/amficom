@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.107 2005/10/31 12:29:54 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.108 2005/12/02 11:24:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.107 $, $Date: 2005/10/31 12:29:54 $
+ * @version $Revision: 1.108 $, $Date: 2005/12/02 11:24:16 $
  * @module scheme
  */
 public final class SchemeCableThread
@@ -216,7 +216,7 @@ public final class SchemeCableThread
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					linkType,

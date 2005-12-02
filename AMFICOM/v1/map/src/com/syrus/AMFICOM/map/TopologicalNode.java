@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.91 2005/10/31 12:30:13 bass Exp $
+ * $Id: TopologicalNode.java,v 1.92 2005/12/02 11:24:13 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: bass $
- * @version $Revision: 1.91 $, $Date: 2005/10/31 12:30:13 $
+ * @version $Revision: 1.92 $, $Date: 2005/12/02 11:24:13 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode<TopologicalNode>
@@ -106,7 +106,7 @@ public final class TopologicalNode extends AbstractNode<TopologicalNode>
 		try {
 			final TopologicalNode topologicalNode = new TopologicalNode(IdentifierPool.getGeneratedIdentifier(TOPOLOGICALNODE_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					location.getX(),

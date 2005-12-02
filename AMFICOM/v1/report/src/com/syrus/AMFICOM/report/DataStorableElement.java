@@ -65,7 +65,7 @@ public class DataStorableElement extends AbstractDataStorableElement<DataStorabl
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					location,
 					new IntDimension(),
 					VOID_IDENTIFIER,

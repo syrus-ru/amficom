@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesDatabase.java,v 1.8 2005/12/01 08:54:39 bass Exp $
+ * $Id: DeliveryAttributesDatabase.java,v 1.9 2005/12/02 11:24:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/12/01 08:54:39 $
+ * @version $Revision: 1.9 $, $Date: 2005/12/02 11:24:21 $
  * @module event
  */
 public final class DeliveryAttributesDatabase extends
@@ -132,7 +132,7 @@ public final class DeliveryAttributesDatabase extends
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				Severity.valueOf(resultSet.getInt(COLUMN_SEVERITY)));
 		return deliveryAttributes;
 	}

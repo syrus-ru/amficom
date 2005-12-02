@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.79 2005/10/25 19:53:09 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.80 2005/12/02 11:24:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/10/25 19:53:09 $
+ * @version $Revision: 1.80 $, $Date: 2005/12/02 11:24:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -93,7 +93,7 @@ public final class TransmissionPathType extends StorableObjectType<TransmissionP
 		try {
 			final TransmissionPathType transmissionPathType = new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(TRANSPATH_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					codename,
 					description,
 					name);

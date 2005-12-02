@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.24 2005/11/16 18:36:13 max Exp $
+ * $Id: ReportTemplate.java,v 1.25 2005/12/02 11:24:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,8 +57,8 @@ import com.syrus.util.Log;
  * <p>Тип шаблона характеризует из какого модуля по нему можно построить
  * отчёт </p>
  * 
- * @author $Author: max $
- * @version $Revision: 1.24 $, $Date: 2005/11/16 18:36:13 $
+ * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/12/02 11:24:18 $
  * @module report
  */
 public class ReportTemplate extends StorableObject<ReportTemplate>
@@ -148,7 +148,7 @@ public class ReportTemplate extends StorableObject<ReportTemplate>
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					SheetSize.A4,

@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessDatabase.java,v 1.15 2005/09/14 19:01:23 arseniy Exp $
+ * $Id: ServerProcessDatabase.java,v 1.16 2005/12/02 11:24:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/14 19:01:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/12/02 11:24:11 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -85,7 +85,7 @@ public final class ServerProcessDatabase extends StorableObjectDatabase<ServerPr
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 				DatabaseIdentifier.getIdentifier(resultSet, ServerProcessWrapper.COLUMN_SERVER_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, ServerProcessWrapper.COLUMN_USER_ID),

@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.38 2005/10/31 12:30:21 bass Exp $
+ * $Id: EventSource.java,v 1.39 2005/12/02 11:24:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/10/31 12:30:21 $
+ * @version $Revision: 1.39 $, $Date: 2005/12/02 11:24:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -60,7 +60,7 @@ public final class EventSource extends StorableObject<EventSource> {
 		try {
 			final EventSource eventSource = new EventSource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTSOURCE_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					sourceEntityId);
 
 			assert eventSource.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;

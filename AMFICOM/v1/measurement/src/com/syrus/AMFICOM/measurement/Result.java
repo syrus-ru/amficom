@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.84 2005/11/14 14:22:24 bass Exp $
+ * $Id: Result.java,v 1.85 2005/12/02 11:24:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/11/14 14:22:24 $
+ * @version $Revision: 1.85 $, $Date: 2005/12/02 11:24:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -223,7 +223,7 @@ public final class Result extends StorableObject<Result> {
 		try {
 			final Result result = new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_CODE),
 				creatorId,
-				StorableObjectVersion.createInitial(),
+				StorableObjectVersion.INITIAL_VERSION,
 				action,
 				sort.value(),
 				parameters);

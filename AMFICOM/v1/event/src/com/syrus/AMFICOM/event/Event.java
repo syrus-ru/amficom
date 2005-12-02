@@ -1,5 +1,5 @@
 /*-
- * $Id: Event.java,v 1.45 2005/10/25 19:53:15 bass Exp $
+ * $Id: Event.java,v 1.46 2005/12/02 11:24:21 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/10/25 19:53:15 $
+ * @version $Revision: 1.46 $, $Date: 2005/12/02 11:24:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -106,7 +106,7 @@ public final class Event extends StorableObject<Event>
 		try {
 			final Event event = new Event(IdentifierPool.getGeneratedIdentifier(EVENT_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					type,
 					description,
 					eventParameters,

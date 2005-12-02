@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.38 2005/10/31 12:30:15 bass Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.39 2005/12/02 11:24:09 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/10/31 12:30:15 $
+ * @version $Revision: 1.39 $, $Date: 2005/12/02 11:24:09 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement
@@ -92,7 +92,7 @@ public final class IntervalsTemporalPattern
 		try {
 			final IntervalsTemporalPattern intervalsTemporalPattern = new IntervalsTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.INTERVALSTEMPORALPATTERN_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					intervalsAbstractTemporalPatternMap,
 					intervalsDuration);
 

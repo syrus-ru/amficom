@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTemporalPatternDatabase.java,v 1.12 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: PeriodicalTemporalPatternDatabase.java,v 1.13 2005/12/02 11:24:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/08 11:31:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/12/02 11:24:09 $
+ * @author $Author: bass $
  * @module measurement
  */
 
@@ -79,7 +79,7 @@ public final class PeriodicalTemporalPatternDatabase extends StorableObjectDatab
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				resultSet.getLong(PeriodicalTemporalPatternWrapper.COLUMN_PERIOD));
 		return periodicalTemporalPattern;
 	}

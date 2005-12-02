@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.115 2005/10/31 12:30:13 bass Exp $
+ * $Id: SiteNode.java,v 1.116 2005/12/02 11:24:13 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.115 $, $Date: 2005/10/31 12:30:13 $
+ * @version $Revision: 1.116 $, $Date: 2005/12/02 11:24:13 $
  * @module map
  */
 public class SiteNode extends AbstractNode<SiteNode>
@@ -145,7 +145,7 @@ public class SiteNode extends AbstractNode<SiteNode>
 		try {
 			final SiteNode siteNode = new SiteNode(IdentifierPool.getGeneratedIdentifier(SITENODE_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					siteNodeType.getImageId(),
 					name,
 					description,

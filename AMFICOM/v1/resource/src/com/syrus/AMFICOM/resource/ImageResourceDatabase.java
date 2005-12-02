@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.40 2005/11/30 14:55:25 bass Exp $
+ * $Id: ImageResourceDatabase.java,v 1.41 2005/12/02 11:24:14 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/11/30 14:55:25 $
+ * @version $Revision: 1.41 $, $Date: 2005/12/02 11:24:14 $
  * @module resource
  */
 
@@ -130,7 +130,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 						DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 						DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 						DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-						new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+						StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 						DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 						ByteArrayDatabase.toByteArray(resultSet.getBlob(COLUMN_IMAGE)));
 
@@ -147,7 +147,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 						DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 						DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 						DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-						new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+						StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 						DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 						DatabaseString.fromQuerySubString(resultSet.getString(ImageResourceWrapper.COLUMN_FILENAME)));
 				return fileImageResource;
@@ -161,7 +161,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 						DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 						DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 						DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-						new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+						StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 						ByteArrayDatabase.toByteArray(resultSet.getBlob(COLUMN_IMAGE)));
 				return schemeImageResource;
 			}

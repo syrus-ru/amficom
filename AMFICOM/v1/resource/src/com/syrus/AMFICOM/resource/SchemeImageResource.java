@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImageResource.java,v 1.40 2005/10/31 12:29:57 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.41 2005/12/02 11:24:14 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/10/31 12:29:57 $
+ * @version $Revision: 1.41 $, $Date: 2005/12/02 11:24:14 $
  * @module resource
  */
 public final class SchemeImageResource extends AbstractCloneableImageResource {
@@ -84,7 +84,7 @@ public final class SchemeImageResource extends AbstractCloneableImageResource {
 		try {
 			final SchemeImageResource schemeImageResource = new SchemeImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial());
+					StorableObjectVersion.INITIAL_VERSION);
 
 			assert schemeImageResource.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 

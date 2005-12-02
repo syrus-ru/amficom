@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.112 2005/11/17 17:49:38 bass Exp $
+ * $Id: SchemePath.java,v 1.113 2005/12/02 11:24:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.112 $, $Date: 2005/11/17 17:49:38 $
+ * @version $Revision: 1.113 $, $Date: 2005/12/02 11:24:16 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject<SchemePath>
@@ -170,7 +170,7 @@ public final class SchemePath extends StorableObject<SchemePath>
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					transmissionPath,

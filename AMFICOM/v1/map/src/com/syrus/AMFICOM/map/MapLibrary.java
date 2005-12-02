@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.38 2005/10/31 12:30:13 bass Exp $
+ * $Id: MapLibrary.java,v 1.39 2005/12/02 11:24:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/10/31 12:30:13 $
+ * @version $Revision: 1.39 $, $Date: 2005/12/02 11:24:13 $
  * @author $Author: bass $
  * @module map
  */
@@ -117,7 +117,7 @@ public final class MapLibrary extends StorableObject<MapLibrary>
 		try {
 			final MapLibrary mapLibrary = new MapLibrary(IdentifierPool.getGeneratedIdentifier(MAPLIBRARY_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					codename,
 					description,

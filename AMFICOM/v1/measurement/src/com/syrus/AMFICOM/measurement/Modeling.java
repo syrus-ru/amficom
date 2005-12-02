@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.63 2005/10/25 19:53:05 bass Exp $
+ * $Id: Modeling.java,v 1.64 2005/12/02 11:24:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/10/25 19:53:05 $
+ * @version $Revision: 1.64 $, $Date: 2005/12/02 11:24:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -169,7 +169,7 @@ public final class Modeling extends Action<Modeling> {
 		try {
 			final Modeling modeling = new Modeling(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					type,
 					monitoredElementId,
 					name,

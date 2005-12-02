@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.63 2005/11/30 15:15:32 bass Exp $
+ * $Id: MapDatabase.java,v 1.64 2005/12/02 11:24:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/11/30 15:15:32 $
+ * @version $Revision: 1.64 $, $Date: 2005/12/02 11:24:13 $
  * @author $Author: bass $
  * @module map
  */
@@ -250,7 +250,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				DatabaseIdentifier.getIdentifier(resultSet, MapWrapper.COLUMN_DOMAIN_ID));

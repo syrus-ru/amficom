@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.62 2005/11/30 15:37:15 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.63 2005/12/02 11:24:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/11/30 15:37:15 $
+ * @version $Revision: 1.63 $, $Date: 2005/12/02 11:24:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -153,7 +153,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 				final IdVersion[] idVersions = server.transmitRemoteVersions(idsT, sessionKeyT);
 				this.versionsMap = new HashMap<Identifier, StorableObjectVersion>(idVersions.length);
 				for (int i = 0; i < idVersions.length; i++) {
-					this.versionsMap.put(new Identifier(idVersions[i].id), new StorableObjectVersion(idVersions[i].version));
+					this.versionsMap.put(new Identifier(idVersions[i].id), StorableObjectVersion.valueOf(idVersions[i].version));
 				}
 			}
 		};

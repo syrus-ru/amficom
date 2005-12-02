@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeDatabase.java,v 1.35 2005/08/31 05:50:36 bass Exp $
+ * $Id: SiteNodeTypeDatabase.java,v 1.36 2005/12/02 11:24:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/08/31 05:50:36 $
+ * @version $Revision: 1.36 $, $Date: 2005/12/02 11:24:13 $
  * @author $Author: bass $
  * @module map
  */
@@ -111,7 +111,7 @@ public final class SiteNodeTypeDatabase extends StorableObjectDatabase<SiteNodeT
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				SiteNodeTypeSort.from_int(resultSet.getInt(SiteNodeTypeWrapper.COLUMN_SORT)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),

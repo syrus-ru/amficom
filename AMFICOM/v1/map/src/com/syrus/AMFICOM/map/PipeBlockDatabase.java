@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlockDatabase.java,v 1.1 2005/10/16 10:58:47 max Exp $
+ * $Id: PipeBlockDatabase.java,v 1.2 2005/12/02 11:24:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author max
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/10/16 10:58:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/12/02 11:24:13 $
  * @module map
  */
 
@@ -122,7 +122,7 @@ public class PipeBlockDatabase extends StorableObjectDatabase<PipeBlock> {
 				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
 				resultSet.getInt(COLUMN_NUMBER),
 				resultSet.getInt(COLUMN_DIMENSION_X),
 				resultSet.getInt(COLUMN_DIMENSION_Y),

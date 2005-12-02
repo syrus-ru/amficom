@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.19 2005/10/31 12:29:56 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.20 2005/12/02 11:24:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/10/31 12:29:56 $
+ * @version $Revision: 1.20 $, $Date: 2005/12/02 11:24:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -136,7 +136,7 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 		try {
 			final ProtoEquipment protoEquipment = new ProtoEquipment(IdentifierPool.getGeneratedIdentifier(PROTOEQUIPMENT_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					type,
 					name,
 					description,

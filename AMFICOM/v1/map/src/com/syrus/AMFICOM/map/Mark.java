@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.67 2005/10/25 19:53:10 bass Exp $
+ * $Id: Mark.java,v 1.68 2005/12/02 11:24:13 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bass $
- * @version $Revision: 1.67 $, $Date: 2005/10/25 19:53:10 $
+ * @version $Revision: 1.68 $, $Date: 2005/12/02 11:24:13 $
  * @module map
  */
 public final class Mark extends AbstractNode<Mark> {
@@ -122,7 +122,7 @@ public final class Mark extends AbstractNode<Mark> {
 		try {
 			final Mark mark = new Mark(IdentifierPool.getGeneratedIdentifier(MARK_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					longitude,

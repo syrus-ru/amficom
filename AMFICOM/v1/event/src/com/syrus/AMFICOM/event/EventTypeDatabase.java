@@ -1,5 +1,5 @@
 /*-
- * $Id: EventTypeDatabase.java,v 1.48 2005/11/30 14:55:27 bass Exp $
+ * $Id: EventTypeDatabase.java,v 1.49 2005/12/02 11:24:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/11/30 14:55:27 $
+ * @version $Revision: 1.49 $, $Date: 2005/12/02 11:24:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -108,7 +108,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
 		return eventType;

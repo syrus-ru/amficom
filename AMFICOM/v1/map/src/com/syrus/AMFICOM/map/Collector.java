@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.101 2005/10/31 12:30:13 bass Exp $
+ * $Id: Collector.java,v 1.102 2005/12/02 11:24:13 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.101 $, $Date: 2005/10/31 12:30:13 $
+ * @version $Revision: 1.102 $, $Date: 2005/12/02 11:24:13 $
  * @module map
  */
 public final class Collector extends StorableObject<Collector>
@@ -105,7 +105,7 @@ public final class Collector extends StorableObject<Collector>
 		try {
 			final Collector collector = new Collector(IdentifierPool.getGeneratedIdentifier(COLLECTOR_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description);
 

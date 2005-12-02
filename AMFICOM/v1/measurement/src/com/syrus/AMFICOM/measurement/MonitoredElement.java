@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.8 2005/10/25 19:53:05 bass Exp $
+ * $Id: MonitoredElement.java,v 1.9 2005/12/02 11:24:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/25 19:53:05 $
+ * @version $Revision: 1.9 $, $Date: 2005/12/02 11:24:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -106,7 +106,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 		try {
 			final MonitoredElement monitoredElement = new MonitoredElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MONITOREDELEMENT_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					domainId,
 					name,
 					measurementPortId,

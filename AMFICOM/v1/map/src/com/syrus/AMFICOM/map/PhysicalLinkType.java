@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.108 2005/10/31 12:30:13 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.109 2005/12/02 11:24:13 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.108 $, $Date: 2005/10/31 12:30:13 $
+ * @version $Revision: 1.109 $, $Date: 2005/12/02 11:24:13 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType> 
@@ -158,7 +158,7 @@ public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType>
 		try {
 			final PhysicalLinkType physicalLinkType = new PhysicalLinkType(IdentifierPool.getGeneratedIdentifier(PHYSICALLINK_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					sort,
 					codename,
 					name,

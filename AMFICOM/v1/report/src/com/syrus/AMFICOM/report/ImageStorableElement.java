@@ -99,7 +99,7 @@ public final class ImageStorableElement
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					location,
 					size,
 					VOID_IDENTIFIER,

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.48 2005/09/21 13:47:58 bass Exp $
+ * $Id: CharacteristicDatabase.java,v 1.49 2005/12/02 11:24:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/09/21 13:47:58 $
+ * @version $Revision: 1.49 $, $Date: 2005/12/02 11:24:10 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -123,7 +123,7 @@ public final class CharacteristicDatabase extends StorableObjectDatabase<Charact
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				characteristicType,
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),

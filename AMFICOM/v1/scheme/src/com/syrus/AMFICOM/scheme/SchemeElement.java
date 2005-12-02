@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.149 2005/11/29 13:57:10 bass Exp $
+ * $Id: SchemeElement.java,v 1.150 2005/12/02 11:24:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.149 $, $Date: 2005/11/29 13:57:10 $
+ * @version $Revision: 1.150 $, $Date: 2005/12/02 11:24:17 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
@@ -277,7 +277,7 @@ public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					SCHEME_CONTAINER,
 					name,
 					childScheme.getDescription(),
@@ -462,7 +462,7 @@ public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					SCHEME_ELEMENT_CONTAINER,
 					name,
 					description,
@@ -542,7 +542,7 @@ public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					SCHEME_ELEMENT_CONTAINER,					
 					name,
 					description,

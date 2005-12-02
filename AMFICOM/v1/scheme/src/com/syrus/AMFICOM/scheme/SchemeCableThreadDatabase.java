@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThreadDatabase.java,v 1.17 2005/08/31 17:23:36 bass Exp $
+ * $Id: SchemeCableThreadDatabase.java,v 1.18 2005/12/02 11:24:17 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/08/31 17:23:36 $
+ * @version $Revision: 1.18 $, $Date: 2005/12/02 11:24:17 $
  * @module scheme
  */
 public final class SchemeCableThreadDatabase extends StorableObjectDatabase<SchemeCableThread> {
@@ -150,7 +150,7 @@ public final class SchemeCableThreadDatabase extends StorableObjectDatabase<Sche
 				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_LINK_TYPE_ID),

@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.44 2005/10/31 12:30:13 bass Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.45 2005/12/02 11:24:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/10/31 12:30:13 $
+ * @version $Revision: 1.45 $, $Date: 2005/12/02 11:24:13 $
  * @author $Author: bass $
  * @module map
  */
@@ -142,7 +142,7 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				type,

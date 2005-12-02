@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.92 2005/11/29 15:47:15 bass Exp $
+ * $Id: PathElement.java,v 1.93 2005/12/02 11:24:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.92 $, $Date: 2005/11/29 15:47:15 $
+ * @version $Revision: 1.93 $, $Date: 2005/12/02 11:24:17 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -345,7 +345,7 @@ public final class PathElement extends StorableObject<PathElement>
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					parentSchemePath,
 					startAbstractSchemePort,
 					endAbstractSchemePort);
@@ -386,7 +386,7 @@ public final class PathElement extends StorableObject<PathElement>
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					parentSchemePath,
 					schemeCableThread);
 			parentSchemePath.getPathElementContainerWrappee().addToCache(pathElement, usePool);
@@ -426,7 +426,7 @@ public final class PathElement extends StorableObject<PathElement>
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					parentSchemePath,
 					schemeLink);
 			parentSchemePath.getPathElementContainerWrappee().addToCache(pathElement, usePool);

@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.96 2005/10/25 19:53:05 bass Exp $
+ * $Id: Measurement.java,v 1.97 2005/12/02 11:24:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStat
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/10/25 19:53:05 $
+ * @version $Revision: 1.97 $, $Date: 2005/12/02 11:24:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -252,7 +252,7 @@ public final class Measurement extends Action<Measurement> {
 		try {
 			final Measurement measurement = new Measurement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					type,
 					monitoredElementId,
 					name,

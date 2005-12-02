@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.33 2005/10/07 10:04:21 bass Exp $
+ * $Id: FileImageResource.java,v 1.34 2005/12/02 11:24:14 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/10/07 10:04:21 $
+ * @version $Revision: 1.34 $, $Date: 2005/12/02 11:24:14 $
  * @module resource
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
@@ -66,7 +66,7 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 		try {
 			final FileImageResource fileImageResource = new FileImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					codeName,
 					fileName);
 

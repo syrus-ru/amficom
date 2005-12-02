@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.59 2005/10/25 19:53:15 bass Exp $
+ * $Id: Server.java,v 1.60 2005/12/02 11:24:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/10/25 19:53:15 $
+ * @version $Revision: 1.60 $, $Date: 2005/12/02 11:24:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -156,7 +156,7 @@ public final class Server extends DomainMember<Server>
 		try {
 			final Server server = new Server(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVER_CODE),
 						creatorId,
-						StorableObjectVersion.createInitial(),
+						StorableObjectVersion.INITIAL_VERSION,
 						domainId,
 						name,
 						description,

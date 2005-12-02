@@ -1,5 +1,5 @@
 /*-
-* $Id: StorableObjectXMLData.java,v 1.5 2005/10/19 10:22:28 bob Exp $
+* $Id: StorableObjectXMLData.java,v 1.6 2005/12/02 11:24:10 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/10/19 10:22:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/12/02 11:24:10 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module general
  */
@@ -34,7 +34,7 @@ public abstract class StorableObjectXMLData {
 		} else if (className.equals(Identifier.class.getName())) {
 			object = value != null ? new Identifier(value) : Identifier.VOID_IDENTIFIER;
 		} else if (className.equals(StorableObjectVersion.class.getName())) {
-			object = new StorableObjectVersion(Long.parseLong(value));
+			object = StorableObjectVersion.valueOf(Long.parseLong(value));
 		} else if (className.equals(DataType.class.getName())) {
 			object = DataType.valueOf(Integer.parseInt(value));
 		} else if (className.equals(Date.class.getName())) {

@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.25 2005/10/25 19:53:05 bass Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.26 2005/12/02 11:24:09 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
 
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/10/25 19:53:05 $
+ * @version $Revision: 1.26 $, $Date: 2005/12/02 11:24:09 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement
@@ -102,7 +102,7 @@ public final class PeriodicalTemporalPattern
 		try {
 			final PeriodicalTemporalPattern periodicalTemporalPattern = new PeriodicalTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					period);
 
 			assert periodicalTemporalPattern.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;

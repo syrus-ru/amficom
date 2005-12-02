@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtuDatabase.java,v 1.11 2005/08/02 19:28:54 bass Exp $
+ * $Id: SchemeOptimizeInfoRtuDatabase.java,v 1.12 2005/12/02 11:24:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/08/02 19:28:54 $
+ * @version $Revision: 1.12 $, $Date: 2005/12/02 11:24:17 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase<SchemeOptimizeInfoRtu> {
@@ -149,7 +149,7 @@ public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase<
 				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 				resultSet.getInt(COLUMN_PRICE),
 				resultSet.getFloat(COLUMN_RANGE),

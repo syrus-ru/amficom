@@ -1,5 +1,5 @@
 /*-
- * $Id: DataDatabase.java,v 1.2 2005/10/06 09:09:20 max Exp $
+ * $Id: DataDatabase.java,v 1.3 2005/12/02 11:24:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.2 $, $Date: 2005/10/06 09:09:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/12/02 11:24:18 $
  * @module report
  */
 
@@ -157,7 +157,7 @@ public class DataDatabase extends StorableObjectDatabase<DataStorableElement> {
 				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
 				resultSet.getInt(COLUMN_LOCATION_X),
 				resultSet.getInt(COLUMN_LOCATION_Y),
 				resultSet.getInt(COLUMN_SIZE_WIDTH),

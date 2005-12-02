@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItem.java,v 1.16 2005/10/31 12:29:57 bass Exp $
+* $Id: LayoutItem.java,v 1.17 2005/12/02 11:24:14 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.resource.corba.IdlLayoutItemHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  * @author $Author: bass $
  * @module resource
  */
@@ -100,7 +100,7 @@ public final class LayoutItem extends StorableObject<LayoutItem>
 		try {
 			final LayoutItem layout = new LayoutItem(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LAYOUT_ITEM_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					parentId,
 					layoutName,
 					name);

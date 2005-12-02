@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.125 2005/10/31 12:29:54 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.126 2005/12/02 11:24:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.125 $, $Date: 2005/10/31 12:29:54 $
+ * @version $Revision: 1.126 $, $Date: 2005/12/02 11:24:16 $
  * @module scheme
  */
 public final class SchemeProtoElement
@@ -255,7 +255,7 @@ public final class SchemeProtoElement
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					label,
@@ -316,7 +316,7 @@ public final class SchemeProtoElement
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					label,

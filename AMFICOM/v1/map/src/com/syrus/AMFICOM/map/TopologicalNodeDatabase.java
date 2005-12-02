@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.37 2005/08/31 05:50:36 bass Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.38 2005/12/02 11:24:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/08/31 05:50:36 $
+ * @version $Revision: 1.38 $, $Date: 2005/12/02 11:24:13 $
  * @author $Author: bass $
  * @module map
  */
@@ -101,7 +101,7 @@ public final class TopologicalNodeDatabase extends StorableObjectDatabase<Topolo
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				resultSet.getDouble(TopologicalNodeWrapper.COLUMN_LONGITUDE),

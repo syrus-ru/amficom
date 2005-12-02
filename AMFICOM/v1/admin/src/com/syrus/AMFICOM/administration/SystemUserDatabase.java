@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserDatabase.java,v 1.19 2005/11/30 14:55:25 bass Exp $
+ * $Id: SystemUserDatabase.java,v 1.20 2005/12/02 11:24:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/11/30 14:55:25 $
+ * @version $Revision: 1.20 $, $Date: 2005/12/02 11:24:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -98,7 +98,7 @@ public final class SystemUserDatabase extends StorableObjectDatabase<SystemUser>
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(SystemUserWrapper.COLUMN_LOGIN)),
 				resultSet.getInt(SystemUserWrapper.COLUMN_SORT),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),

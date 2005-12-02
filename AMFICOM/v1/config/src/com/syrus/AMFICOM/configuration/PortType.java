@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.108 2005/10/31 12:29:56 bass Exp $
+ * $Id: PortType.java,v 1.109 2005/12/02 11:24:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.108 $, $Date: 2005/10/31 12:29:56 $
+ * @version $Revision: 1.109 $, $Date: 2005/12/02 11:24:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -240,7 +240,7 @@ public final class PortType extends StorableObjectType<PortType>
 		try {
 			final PortType portType = new PortType(IdentifierPool.getGeneratedIdentifier(PORT_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					codename,
 					description,
 					name,

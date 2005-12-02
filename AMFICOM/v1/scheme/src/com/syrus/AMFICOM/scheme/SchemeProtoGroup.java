@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.88 2005/10/31 12:29:54 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.89 2005/12/02 11:24:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.88 $, $Date: 2005/10/31 12:29:54 $
+ * @version $Revision: 1.89 $, $Date: 2005/12/02 11:24:17 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject<SchemeProtoGroup>
@@ -179,7 +179,7 @@ public final class SchemeProtoGroup extends StorableObject<SchemeProtoGroup>
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					symbol,

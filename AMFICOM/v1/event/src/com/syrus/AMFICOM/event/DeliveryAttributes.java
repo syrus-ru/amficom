@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.8 2005/11/29 14:49:06 bass Exp $
+ * $Id: DeliveryAttributes.java,v 1.9 2005/12/02 11:24:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/11/29 14:49:06 $
+ * @version $Revision: 1.9 $, $Date: 2005/12/02 11:24:21 $
  * @module event
  */
 public final class DeliveryAttributes extends StorableObject<DeliveryAttributes> {
@@ -178,7 +178,7 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 						IdentifierPool.getGeneratedIdentifier(DELIVERYATTRIBUTES_CODE),
 						creatorId,
 						new Date(),
-						StorableObjectVersion.createInitial(),
+						StorableObjectVersion.INITIAL_VERSION,
 						severity);
 				deliveryAttributes.markAsChanged();
 				StorableObjectPool.flush(deliveryAttributes, creatorId, false);

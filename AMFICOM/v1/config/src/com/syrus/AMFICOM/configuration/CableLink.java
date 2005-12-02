@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.14 2005/10/25 19:53:09 bass Exp $
+ * $Id: CableLink.java,v 1.15 2005/12/02 11:24:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/10/25 19:53:09 $
+ * @version $Revision: 1.15 $, $Date: 2005/12/02 11:24:19 $
  * @module config
  */
 public final class CableLink extends AbstractLink<CableLink> {
@@ -103,7 +103,7 @@ public final class CableLink extends AbstractLink<CableLink> {
 		try {
 			final CableLink cableLink = new CableLink(IdentifierPool.getGeneratedIdentifier(CABLELINK_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					domainId,
 					name,
 					description,

@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.129 2005/12/02 09:26:47 bob Exp $
+ * $Id: StorableObject.java,v 1.130 2005/12/02 11:24:10 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.129 $, $Date: 2005/12/02 09:26:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.130 $, $Date: 2005/12/02 11:24:10 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -126,7 +126,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 				created,
 				creatorId,
 				creatorId,
-				StorableObjectVersion.createInitial());
+				StorableObjectVersion.INITIAL_VERSION);
 	}
 
 	/**
@@ -143,7 +143,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 		this.modified = new Date(transferable.modified);
 		this.creatorId = new Identifier(transferable.creatorId);
 		this.modifierId = new Identifier(transferable.modifierId);
-		this.version = new StorableObjectVersion(transferable.version);
+		this.version = StorableObjectVersion.valueOf(transferable.version);
 
 		this.changed = false;
 
@@ -374,7 +374,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 		 * Initialize version vith 0L, like for all newly created
 		 * objects.
 		 */
-		clone.version = StorableObjectVersion.createInitial();
+		clone.version = StorableObjectVersion.INITIAL_VERSION;
 
 		clone.changed = false;
 		clone.markAsChanged();
@@ -670,8 +670,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bob $
-	 * @version $Revision: 1.129 $, $Date: 2005/12/02 09:26:47 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.130 $, $Date: 2005/12/02 11:24:10 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -795,8 +795,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bob $
-	 * @version $Revision: 1.129 $, $Date: 2005/12/02 09:26:47 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.130 $, $Date: 2005/12/02 11:24:10 $
 	 * @module general
 	 */
 	@Retention(SOURCE)

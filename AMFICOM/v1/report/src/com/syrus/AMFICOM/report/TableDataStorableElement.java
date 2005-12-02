@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.15 2005/11/16 18:37:17 max Exp $
+ * $Id: TableDataStorableElement.java,v 1.16 2005/12/02 11:24:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 /**
  * Класс для отображения данных в табличном виде
- * @author $Author: max $
- * @version $Revision: 1.15 $, $Date: 2005/11/16 18:37:17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/12/02 11:24:18 $
  * @module report
  */
 public final class TableDataStorableElement extends AbstractDataStorableElement<TableDataStorableElement> {
@@ -78,7 +78,7 @@ public final class TableDataStorableElement extends AbstractDataStorableElement<
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					location,
 					new IntDimension(),
 					VOID_IDENTIFIER,

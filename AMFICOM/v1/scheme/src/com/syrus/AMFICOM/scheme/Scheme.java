@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.120 2005/10/31 12:29:54 bass Exp $
+ * $Id: Scheme.java,v 1.121 2005/12/02 11:24:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,7 +87,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.120 $, $Date: 2005/10/31 12:29:54 $
+ * @version $Revision: 1.121 $, $Date: 2005/12/02 11:24:16 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -276,7 +276,7 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					domainId,
 					name,
 					description,

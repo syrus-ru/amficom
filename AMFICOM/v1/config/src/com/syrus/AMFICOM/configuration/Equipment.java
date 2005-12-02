@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.149 2005/10/31 12:29:56 bass Exp $
+ * $Id: Equipment.java,v 1.150 2005/12/02 11:24:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,7 +60,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.149 $, $Date: 2005/10/31 12:29:56 $
+ * @version $Revision: 1.150 $, $Date: 2005/12/02 11:24:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -194,7 +194,7 @@ public final class Equipment extends DomainMember<Equipment>
 		try {
 			final Equipment equipment = new Equipment(IdentifierPool.getGeneratedIdentifier(EQUIPMENT_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					domainId,
 					protoEquipmentId,
 					name,

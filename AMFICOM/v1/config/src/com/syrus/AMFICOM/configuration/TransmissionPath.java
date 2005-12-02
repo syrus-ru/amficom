@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.101 2005/10/25 19:53:09 bass Exp $
+ * $Id: TransmissionPath.java,v 1.102 2005/12/02 11:24:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.101 $, $Date: 2005/10/25 19:53:09 $
+ * @version $Revision: 1.102 $, $Date: 2005/12/02 11:24:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -107,7 +107,7 @@ public final class TransmissionPath extends DomainMember<TransmissionPath>
 		try {
 			final TransmissionPath transmissionPath = new TransmissionPath(IdentifierPool.getGeneratedIdentifier(TRANSMISSIONPATH_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					domainId,
 					name,
 					description,

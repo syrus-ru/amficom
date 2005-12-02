@@ -1,5 +1,5 @@
 /*-
- * $Id: ImageDatabase.java,v 1.4 2005/10/08 13:16:31 arseniy Exp $
+ * $Id: ImageDatabase.java,v 1.5 2005/12/02 11:24:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/10/08 13:16:31 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/12/02 11:24:18 $
  * @module report
  */
 
@@ -145,7 +145,7 @@ public class ImageDatabase extends StorableObjectDatabase<ImageStorableElement> 
 				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
 				resultSet.getInt(COLUMN_LOCATION_X),
 				resultSet.getInt(COLUMN_LOCATION_Y),
 				resultSet.getInt(COLUMN_SIZE_WIDTH),

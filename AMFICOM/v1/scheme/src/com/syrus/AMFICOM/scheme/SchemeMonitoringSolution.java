@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.85 2005/10/31 12:29:54 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.86 2005/12/02 11:24:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.85 $, $Date: 2005/10/31 12:29:54 $
+ * @version $Revision: 1.86 $, $Date: 2005/12/02 11:24:17 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -188,7 +188,7 @@ public final class SchemeMonitoringSolution
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					price,
@@ -237,7 +237,7 @@ public final class SchemeMonitoringSolution
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					price,

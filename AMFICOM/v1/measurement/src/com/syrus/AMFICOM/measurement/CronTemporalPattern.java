@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.28 2005/10/25 19:53:05 bass Exp $
+ * $Id: CronTemporalPattern.java,v 1.29 2005/12/02 11:24:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPatternHelper;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/10/25 19:53:05 $
+ * @version $Revision: 1.29 $, $Date: 2005/12/02 11:24:09 $
  * @author $Author: bass $
  * @module measurement
  */
@@ -797,7 +797,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern<CronTempo
 		try {
 			final CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					description,
 					cronString);
 
@@ -820,7 +820,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern<CronTempo
 		try {
 			final CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_CODE),
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					description,
 					cronStrings);
 
@@ -837,7 +837,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern<CronTempo
 	public static String getCronStringsDescription(final String[] cronStrings) {
 		final CronTemporalPattern pattern = new CronTemporalPattern(null,
 				null,
-				StorableObjectVersion.createInitial(),
+				StorableObjectVersion.INITIAL_VERSION,
 				null,
 				cronStrings);
 		final String desc = pattern.toString();

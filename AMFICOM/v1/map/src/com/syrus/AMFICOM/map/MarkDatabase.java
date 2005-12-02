@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.33 2005/10/20 11:11:23 krupenn Exp $
+ * $Id: MarkDatabase.java,v 1.34 2005/12/02 11:24:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/10/20 11:11:23 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.34 $, $Date: 2005/12/02 11:24:13 $
+ * @author $Author: bass $
  * @module map
  */
 public final class MarkDatabase extends StorableObjectDatabase<Mark> {
@@ -138,7 +138,7 @@ public final class MarkDatabase extends StorableObjectDatabase<Mark> {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				resultSet.getDouble(MarkWrapper.COLUMN_LONGITUDE),

@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.204 2005/11/30 16:30:27 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.205 2005/12/02 11:24:10 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.204 $, $Date: 2005/11/30 16:30:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.205 $, $Date: 2005/12/02 11:24:10 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 9
@@ -563,7 +563,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject<T>> {
 			while (resultSet.next()) {
 				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
 				final long version = resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION);
-				versionsMap.put(id, new StorableObjectVersion(version));
+				versionsMap.put(id, StorableObjectVersion.valueOf(version));
 			}
 		}
 		catch (SQLException sqle) {

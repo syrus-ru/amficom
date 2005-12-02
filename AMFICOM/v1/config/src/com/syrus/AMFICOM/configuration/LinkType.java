@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.91 2005/10/31 12:29:56 bass Exp $
+ * $Id: LinkType.java,v 1.92 2005/12/02 11:24:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/10/31 12:29:56 $
+ * @version $Revision: 1.92 $, $Date: 2005/12/02 11:24:19 $
  * @author $Author: bass $
  * @module config
  */
@@ -239,7 +239,7 @@ public final class LinkType extends AbstractLinkType<LinkType> implements XmlBea
 		try {
 			final LinkType linkType = new LinkType(IdentifierPool.getGeneratedIdentifier(LINK_TYPE_CODE),
 						creatorId,
-						StorableObjectVersion.createInitial(),
+						StorableObjectVersion.INITIAL_VERSION,
 						codename,
 						description,
 						name,

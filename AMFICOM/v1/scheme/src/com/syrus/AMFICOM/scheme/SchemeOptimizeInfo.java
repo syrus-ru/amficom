@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.79 2005/10/31 12:29:54 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.80 2005/12/02 11:24:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.79 $, $Date: 2005/10/31 12:29:54 $
+ * @version $Revision: 1.80 $, $Date: 2005/12/02 11:24:16 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject<SchemeOptimizeInfo>
@@ -227,7 +227,7 @@ public final class SchemeOptimizeInfo extends StorableObject<SchemeOptimizeInfo>
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.createInitial(),
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					optimizationMode,

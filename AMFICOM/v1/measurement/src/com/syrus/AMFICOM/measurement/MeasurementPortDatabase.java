@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.3 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.4 2005/12/02 11:24:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/14 18:35:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/12/02 11:24:09 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -122,7 +122,7 @@ public final class MeasurementPortDatabase extends StorableObjectDatabase<Measur
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				measurementPortType,
 				(name != null) ? name : "",
 				(description != null) ? description : "",

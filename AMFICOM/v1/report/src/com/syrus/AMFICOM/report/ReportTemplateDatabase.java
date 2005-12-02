@@ -1,5 +1,5 @@
 /*-
- * $Id: ReportTemplateDatabase.java,v 1.2 2005/10/06 12:10:18 arseniy Exp $
+ * $Id: ReportTemplateDatabase.java,v 1.3 2005/12/02 11:24:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/10/06 12:10:18 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/12/02 11:24:18 $
  * @module report
  */
 public class ReportTemplateDatabase extends StorableObjectDatabase<ReportTemplate> {
@@ -128,7 +128,7 @@ public class ReportTemplateDatabase extends StorableObjectDatabase<ReportTemplat
 				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 				SheetSize.values()[resultSet.getInt(COLUMN_SHEET_SIZE)],

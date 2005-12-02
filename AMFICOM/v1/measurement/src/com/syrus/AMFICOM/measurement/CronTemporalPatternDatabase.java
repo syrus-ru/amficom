@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPatternDatabase.java,v 1.14 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: CronTemporalPatternDatabase.java,v 1.15 2005/12/02 11:24:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/08 11:31:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/12/02 11:24:09 $
+ * @author $Author: bass $
  * @module measurement
  */
 
@@ -98,7 +98,7 @@ public final class CronTemporalPatternDatabase extends StorableObjectDatabase<Cr
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				cronStrings);
 		return temporalPattern;

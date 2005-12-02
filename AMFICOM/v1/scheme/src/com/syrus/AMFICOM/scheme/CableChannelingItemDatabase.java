@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemDatabase.java,v 1.20 2005/10/16 18:18:24 bass Exp $
+ * $Id: CableChannelingItemDatabase.java,v 1.21 2005/12/02 11:24:16 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/10/16 18:18:24 $
+ * @version $Revision: 1.21 $, $Date: 2005/12/02 11:24:16 $
  * @module scheme
  */
 public final class CableChannelingItemDatabase extends StorableObjectDatabase<CableChannelingItem> {
@@ -167,7 +167,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase<Ca
 				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
 				resultSet.getDouble(COLUMN_START_SPARE),
 				resultSet.getDouble(COLUMN_END_SPARE),
 				resultSet.getInt(COLUMN_ROW_X),

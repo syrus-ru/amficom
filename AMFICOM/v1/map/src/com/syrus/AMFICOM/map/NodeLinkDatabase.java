@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.37 2005/09/27 07:44:44 krupenn Exp $
+ * $Id: NodeLinkDatabase.java,v 1.38 2005/12/02 11:24:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/09/27 07:44:44 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.38 $, $Date: 2005/12/02 11:24:13 $
+ * @author $Author: bass $
  * @module map
  */
 public final class NodeLinkDatabase extends StorableObjectDatabase<NodeLink> {
@@ -99,7 +99,7 @@ public final class NodeLinkDatabase extends StorableObjectDatabase<NodeLink> {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_START_NODE_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_END_NODE_ID),
