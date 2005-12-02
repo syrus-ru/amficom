@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeAlarmHandler.java,v 1.7 2005/10/31 12:30:29 bass Exp $
+ * $Id: SchemeAlarmHandler.java,v 1.8 2005/12/02 09:21:16 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,14 +28,15 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCellContainer;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/10/31 12:30:29 $
+ * @author $Author: stas $
+ * @version $Revision: 1.8 $, $Date: 2005/12/02 09:21:16 $
  * @module schemeclient_v1
  */
 
@@ -126,8 +127,13 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 				this.pane.openScheme(parentScheme);
 			} else {
 				SchemeElement parentSchemeElement = schemeLink.getParentSchemeElement();
-				if (parentSchemeElement != null) {
-					this.pane.openSchemeElement(parentSchemeElement);
+				if (parentSchemeElement != null ) {
+					SchemeCellContainer cellContainer = getNonEmptyParent(parentSchemeElement);
+					if (cellContainer instanceof Scheme) {
+						this.pane.openScheme((Scheme)cellContainer);
+					} else if (cellContainer instanceof SchemeElement) {
+						this.pane.openSchemeElement((SchemeElement)cellContainer);
+					}
 				}
 			}
 		} else if (pathElement.getKind().equals(IdlKind.SCHEME_ELEMENT)) { 
@@ -137,11 +143,27 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 				this.pane.openScheme(parentScheme);
 			} else {
 				SchemeElement parentSchemeElement = schemeElement.getParentSchemeElement();
-				if (parentSchemeElement != null) {
-					this.pane.openSchemeElement(parentSchemeElement);
+				if (parentSchemeElement != null ) {
+					SchemeCellContainer cellContainer = getNonEmptyParent(parentSchemeElement);
+					if (cellContainer instanceof Scheme) {
+						this.pane.openScheme((Scheme)cellContainer);
+					} else if (cellContainer instanceof SchemeElement) {
+						this.pane.openSchemeElement((SchemeElement)cellContainer);
+					}
 				}
 			}
 		}
+	}
+	
+	private SchemeCellContainer getNonEmptyParent(SchemeElement se) {
+		if (se.getSchemeCell() != null && !se.getSchemeCell().getData().isEmpty()) {
+			return se;
+		}
+		SchemeElement parent = se.getParentSchemeElement();
+		if (parent != null) {
+			return getNonEmptyParent(parent);
+		}
+		return se.getParentScheme();
 	}
 	
 	private class AlarmPainter extends Thread {
