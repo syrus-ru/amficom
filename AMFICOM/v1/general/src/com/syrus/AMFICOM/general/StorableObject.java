@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.128 2005/11/22 09:50:14 bass Exp $
+ * $Id: StorableObject.java,v 1.129 2005/12/02 09:26:47 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.128 $, $Date: 2005/11/22 09:50:14 $
- * @author $Author: bass $
+ * @version $Revision: 1.129 $, $Date: 2005/12/02 09:26:47 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -279,11 +279,11 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	protected final void setUpdated(final Identifier modifierId) {
 		this.savedModified = this.modified;
 		this.savedModifierId = this.modifierId;
-		this.savedVersion = this.version.clone();
+		this.savedVersion = this.version;
 
 		this.modified = new Date(System.currentTimeMillis());
 		this.modifierId = modifierId;
-		this.version.increment();
+		this.version = this.version.increment();
 		this.changed = false;
 	}
 
@@ -573,7 +573,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	}
 	
 	@Override
-	public final String toString() {
+	public String toString() {
 		return '{' + this.id.toString()
 				+ "; changed: " + this.isChanged()
 				+ "; persistent: " + this.isPersistent() + '}';
@@ -670,8 +670,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.128 $, $Date: 2005/11/22 09:50:14 $
+	 * @author $Author: bob $
+	 * @version $Revision: 1.129 $, $Date: 2005/12/02 09:26:47 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -795,8 +795,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.128 $, $Date: 2005/11/22 09:50:14 $
+	 * @author $Author: bob $
+	 * @version $Revision: 1.129 $, $Date: 2005/12/02 09:26:47 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
