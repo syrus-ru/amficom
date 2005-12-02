@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.24 2005/12/01 14:03:28 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.25 2005/12/02 13:07:45 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.24 $, $Date: 2005/12/01 14:03:28 $
+ * @version $Revision: 1.25 $, $Date: 2005/12/02 13:07:45 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -530,6 +530,27 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		url = getClass().getClassLoader().getResource(
 				"com/syrus/AMFICOM/manager/resources/icons/copy.gif");
 		action.putValue(Action.SMALL_ICON, new ImageIcon(url));
+		
+		graphToolBar.add(copy = new EventRedirector(action));
+		
+		// Paste
+		action = javax.swing.TransferHandler // JAVA13:
+												// org.jgraph.plaf.basic.TransferHandler
+				.getPasteAction();
+		url = getClass().getClassLoader().getResource(
+				"org/jgraph/example/resources/paste.gif");
+		action.putValue(Action.SMALL_ICON, new ImageIcon(url));
+		graphToolBar.add(paste = new EventRedirector(action));
+
+		// Cut
+		action = javax.swing.TransferHandler // JAVA13:
+												// org.jgraph.plaf.basic.TransferHandler
+				.getCutAction();
+		url = getClass().getClassLoader().getResource(
+				"org/jgraph/example/resources/cut.gif");
+		action.putValue(Action.SMALL_ICON, new ImageIcon(url));
+		graphToolBar.add(cut = new EventRedirector(action));
+		
 		// Remove
 		URL removeUrl = getClass().getClassLoader().getResource(
 				"com/syrus/AMFICOM/manager/resources/icons/delete.gif");
@@ -793,4 +814,23 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		return this.treeModel;
 	}
 
+
+	// This will change the source of the actionevent to graph.
+	protected class EventRedirector extends AbstractAction {
+
+		protected Action action;
+
+		// Construct the "Wrapper" Action
+		public EventRedirector(Action a) {
+			super("", (ImageIcon) a.getValue(Action.SMALL_ICON));
+			this.action = a;
+		}
+
+		// Redirect the Actionevent
+		public void actionPerformed(ActionEvent e) {
+			e = new ActionEvent(graph, e.getID(), e.getActionCommand(), e
+					.getModifiers());
+			action.actionPerformed(e);
+		}
+	}
 }

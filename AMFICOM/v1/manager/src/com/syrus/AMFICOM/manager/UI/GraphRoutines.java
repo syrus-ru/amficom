@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphRoutines.java,v 1.7 2005/12/01 14:03:28 bob Exp $
+* $Id: GraphRoutines.java,v 1.8 2005/12/02 13:07:45 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/12/01 14:03:28 $
+ * @version $Revision: 1.8 $, $Date: 2005/12/02 13:07:45 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -266,7 +266,7 @@ public final class GraphRoutines {
 		return cell;
 	}
 	
-	void arrangeLayoutItems() throws ApplicationException {
+	public void arrangeLayoutItems() throws ApplicationException {
 		this.arrangeLayoutItems(this.managerMainFrame.getPerspective());
 	}
 	

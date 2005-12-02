@@ -1,5 +1,5 @@
 /*-
-* $Id: PerspectiveTreeModel.java,v 1.2 2005/11/28 14:47:04 bob Exp $
+* $Id: PerspectiveTreeModel.java,v 1.3 2005/12/02 13:07:45 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:04 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/02 13:07:45 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -179,6 +179,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 				}
 				
 				final List<ActionMutableTreeNode> actions = this.getActions(perspective);
+//				assert Log.debugMessage(actions, Log.DEBUGLEVEL03);
 				return actions.get(index - count);
 				
 			}
@@ -222,8 +223,9 @@ public final class PerspectiveTreeModel implements TreeModel {
 				final LayoutItem parentLayoutItem = subPerspective.getParentLayoutItem();
 				final GraphRoutines graphRoutines = 
 					this.managerMainFrame.getGraphRoutines();
+//				assert Log.debugMessage(parentLayoutItem, Log.DEBUGLEVEL03);
 				final ManagerGraphCell graphCell = 
-					graphRoutines.getDefaultGraphCell(parentLayoutItem, false);
+					graphRoutines.getDefaultGraphCell(parentLayoutItem, false);				
 				final AbstractBean bean2 = graphCell.getAbstractBean();
 				if (bean.getCodename().equals(bean2.getCodename())) {
 					final List<ActionMutableTreeNode> actions = this.getActions(subPerspective);
@@ -236,7 +238,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 			final LayoutItem parentLayoutItem = perspective.getParentLayoutItem();
 			
 			final List<ActionMutableTreeNode> actions = this.getActions(perspective);
-			
+//			assert Log.debugMessage(actions, Log.DEBUGLEVEL03);
 			if (parentLayoutItem != null) {
 				final GraphRoutines graphRoutines = 
 					this.managerMainFrame.getGraphRoutines();
@@ -538,7 +540,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 			perspective.addPropertyChangeListener(new PropertyChangeListener() {
 
 				public void propertyChange(final PropertyChangeEvent evt) {
-//					assert Log.debugMessage(Log.DEBUGLEVEL03);
+					assert Log.debugMessage(perspective, Log.DEBUGLEVEL03);
 					updateParentItems();					
 				}
 			});
@@ -562,10 +564,11 @@ public final class PerspectiveTreeModel implements TreeModel {
 				if (!this.model.isPort(node) && !this.model.isEdge(node)) {
 					final ManagerGraphCell cell = (ManagerGraphCell) node;
 					final Perspective perspective2 = cell.getPerspective();
-					final MPort port = cell.getMPort();
+					final MPort port = cell.getMPort();					
 					if (perspective2 != this.perspective) {
 						continue;
 					}
+					assert Log.debugMessage(this.perspective + " > port: " +port, Log.DEBUGLEVEL03);
 					final List<Port> targets = port.getTargets();
 					boolean targetEmpty = true;
 					for (final Port port2 : targets) {
@@ -586,6 +589,8 @@ public final class PerspectiveTreeModel implements TreeModel {
 					}
 				}
 			}	
+			
+			assert Log.debugMessage(this.perspective + " > firstLevel: " + this.firstLevel, Log.DEBUGLEVEL03);
 			
 			reload(getRoot());
 		}

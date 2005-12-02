@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractPerspective.java,v 1.3 2005/12/01 14:03:28 bob Exp $
+* $Id: AbstractPerspective.java,v 1.4 2005/12/02 13:07:45 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/01 14:03:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/02 13:07:45 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -112,6 +112,7 @@ public abstract class AbstractPerspective implements Perspective {
 	public void firePropertyChangeEvent(final PropertyChangeEvent event) {
 		if (this.listeners != null && !this.listeners.isEmpty()) {
 			for (final PropertyChangeListener listener : this.listeners) {
+				assert Log.debugMessage(listener, Log.DEBUGLEVEL03);
 				listener.propertyChange(event);
 			}
 		}
@@ -135,12 +136,7 @@ public abstract class AbstractPerspective implements Perspective {
 		}
 		return this.actionNodes;
 	}
-	
-	protected final AbstractAction createAction(final AbstractBeanFactory<?> factory) 
-	throws ApplicationException {
-		return this.createAction(factory, null);
-	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected final AbstractAction createGetTheSameOrCreateNewAction(final AbstractBeanFactory<?> factory,
 				final Chechable chechable,
@@ -186,6 +182,7 @@ public abstract class AbstractPerspective implements Perspective {
    						0, 
    						0, 
    						beanUI.getImage(bean));
+					firePropertyChangeEvent(propertyChangeEvent);
    				} catch (final ApplicationException ae) {
    					ae.printStackTrace();
    					JOptionPane.showMessageDialog(graph, 
@@ -249,6 +246,8 @@ public abstract class AbstractPerspective implements Perspective {
     						0, 
     						beanUI.getImage(bean));
     					
+    					firePropertyChangeEvent(propertyChangeEvent);
+    					
     					assert Log.debugMessage("Create " + bean, Log.DEBUGLEVEL03);
 
     				} catch (final ApplicationException ae) {
@@ -265,8 +264,19 @@ public abstract class AbstractPerspective implements Perspective {
     		return action;
     	}
 	
+	protected final AbstractAction createAction(final AbstractBeanFactory<?> factory) 
+	throws ApplicationException {
+		return this.createAction(factory, null, null);
+	}
+	
+	protected final AbstractAction createAction(final AbstractBeanFactory<?> factory,
+			final DefaultGraphCell parentCell) throws ApplicationException {
+		return this.createAction(factory, null, parentCell);
+	}
+	
 	@SuppressWarnings("unchecked")
 	protected final AbstractAction createAction(final AbstractBeanFactory<?> factory,
+	        final PostBeanCreationAction postBeanCreationAction,                                    
 			final DefaultGraphCell parentCell) 
 	throws ApplicationException {
 		final String name = factory.getName();
@@ -293,6 +303,11 @@ public abstract class AbstractPerspective implements Perspective {
 						0, 
 						0, 
 						beanUI.getImage(bean));
+					
+					if (postBeanCreationAction != null) {
+						postBeanCreationAction.postActionPerform(bean);
+					}
+					firePropertyChangeEvent(propertyChangeEvent);
 				} catch (final ApplicationException ae) {
 					ae.printStackTrace();
 					JOptionPane.showMessageDialog(managerMainFrame.getGraph(), 
@@ -501,11 +516,6 @@ public abstract class AbstractPerspective implements Perspective {
 		return this.perspectiveData.isBeanUISupported(codename);
 	}
 	
-	protected interface Chechable {
-		boolean isNeedIn(final AbstractBean bean);
-	}
-
-	
 	public final List<AbstractBean> getLayoutBeans() {
 		return this.layoutBeans;
 	}
@@ -527,5 +537,15 @@ public abstract class AbstractPerspective implements Perspective {
 		this.layoutBeans.remove(bean);		
 		this.firePropertyChangeEvent(this.propertyChangeEvent);
 	}
+	
+	/////// inner classess ////
+	protected interface Chechable<T extends AbstractBean> {
+		boolean isNeedIn(final T bean);
+	}
+
+	protected interface PostBeanCreationAction<T extends AbstractBean> {
+		void postActionPerform(final T bean) throws ApplicationException;
+	}
+
 }
 

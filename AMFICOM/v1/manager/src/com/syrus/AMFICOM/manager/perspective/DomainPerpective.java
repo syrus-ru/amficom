@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.4 2005/12/01 14:03:28 bob Exp $
+* $Id: DomainPerpective.java,v 1.5 2005/12/02 13:07:45 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,19 +23,15 @@ import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.Port;
 
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.Server;
-import com.syrus.AMFICOM.administration.SystemUser;
-import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -56,7 +52,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/01 14:03:28 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/02 13:07:45 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -83,8 +79,20 @@ public final class DomainPerpective extends AbstractPerspective {
 		final DefaultGraphCell networkCell = 
 			graphRoutines.getDefaultGraphCell(this.domainNetworkItem);
 		
-		this.actions.add(
-			super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.SYSTEMUSER)));
+		final PostBeanCreationAction<UserBean> addUserBeanPerspectiveAction = 
+			new PostBeanCreationAction<UserBean>() {
+
+				public void postActionPerform(final UserBean userBean) throws ApplicationException {
+					addUserPerspective(userBean);			
+					final DomainPerpective perspective = DomainPerpective.this;
+					graphRoutines.arrangeLayoutItems();
+					graphRoutines.showLayerName(perspective.getCodename(), true);
+					graphRoutines.fixLayoutItemCharacteristics();
+				}
+			};
+		
+		this.actions.add(super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.SYSTEMUSER),
+			addUserBeanPerspectiveAction, null));
 
 		this.actions.add(
 			super.createAction(this.perspectiveData.getBeanFactory(WorkstationBeanFactory.WORKSTATION_CODENAME), 
@@ -141,44 +149,51 @@ public final class DomainPerpective extends AbstractPerspective {
 		return true;
 	}
 
-	public void insertBean(AbstractBean bean) {
-		Identifier beanId = bean.getIdentifier();
-		if (beanId != null) {
-			try {
-				final StorableObject storableObject = 
-					StorableObjectPool.getStorableObject(beanId, true);
-				if (storableObject instanceof DomainMember) {
-					DomainMember  domainMember = (DomainMember)storableObject;
-					domainMember.setDomainId(this.getDomainId());
-				}
-				if (storableObject instanceof SystemUser) {
-					final SystemUser systemUser = (SystemUser) storableObject;
-					final Identifier userId = systemUser.getId();
-					
-					for(final Module module : Module.getValueList()) {
-						if (!module.isEnable()) {
-							continue;
-						}
-						final Domain domain = this.domainBean.getDomain();
-						PermissionAttributes permissionAttributes = 
-							domain.getPermissionAttributes(userId, module);
-						
-						if (permissionAttributes == null) {
-							permissionAttributes = 
-								PermissionAttributes.createInstance(
-									LoginManager.getUserId(),
-									domain.getId(),
-									userId,
-									module);
-						}
-					}
-				}
-			} catch (final ApplicationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
+//	public void insertBean(final AbstractBean bean) {
+//		try {
+//			throw new Exception("DomainPerpective.insertBean");
+//		} catch (final Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//
+//		final Identifier beanId = bean.getIdentifier();
+//		if (beanId != null) {
+//			try {
+//				final StorableObject storableObject = 
+//					StorableObjectPool.getStorableObject(beanId, true);
+//				if (storableObject instanceof DomainMember) {
+//					DomainMember  domainMember = (DomainMember)storableObject;
+//					domainMember.setDomainId(this.getDomainId());
+//				}
+//				if (storableObject instanceof SystemUser) {
+//					final SystemUser systemUser = (SystemUser) storableObject;
+//					final Identifier userId = systemUser.getId();
+//					
+//					for(final Module module : Module.getValueList()) {
+//						if (!module.isEnable()) {
+//							continue;
+//						}
+//						final Domain domain = this.domainBean.getDomain();
+//						PermissionAttributes permissionAttributes = 
+//							domain.getPermissionAttributes(userId, module);
+//						
+//						if (permissionAttributes == null) {
+//							permissionAttributes = 
+//								PermissionAttributes.createInstance(
+//									LoginManager.getUserId(),
+//									domain.getId(),
+//									userId,
+//									module);
+//						}
+//					}
+//				}
+//			} catch (final ApplicationException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 	
 	public final LayoutItem getParentLayoutItem() {
 		return this.domainNetworkItem;
@@ -486,16 +501,20 @@ public final class DomainPerpective extends AbstractPerspective {
 		graphRoutines.showLayerName(codename, false);
 	
 		if (this.firstStart) {
-		for (final AbstractBean bean : this.getLayoutBeans()) {
-			if (bean instanceof UserBean) {
-				SystemUserPerpective systemUserPerpective = 
-					this.getSystemUserPerspective((UserBean) bean);
-				this.addSubPerspective(systemUserPerpective);
-				this.managerMainFrame.putPerspective(systemUserPerpective);
+			for (final AbstractBean bean : this.getLayoutBeans()) {
+				if (bean instanceof UserBean) {
+					this.addUserPerspective((UserBean)bean);
+				}
 			}
+			this.firstStart = false;
 		}
-		this.firstStart = false;
-		}
+	}
+	
+	public void addUserPerspective(final UserBean userBean) throws ApplicationException {
+		SystemUserPerpective systemUserPerpective = 
+			this.getSystemUserPerspective(userBean);
+		this.addSubPerspective(systemUserPerpective);		
+		this.managerMainFrame.putPerspective(systemUserPerpective);
 	}
 
 	public Perspective getSuperPerspective() {

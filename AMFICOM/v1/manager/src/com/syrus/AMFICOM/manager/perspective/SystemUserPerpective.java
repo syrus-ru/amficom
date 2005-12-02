@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserPerpective.java,v 1.3 2005/12/01 14:03:28 bob Exp $
+* $Id: SystemUserPerpective.java,v 1.4 2005/12/02 13:07:45 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/01 14:03:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/02 13:07:45 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -74,7 +74,7 @@ public final class SystemUserPerpective extends AbstractPerspective {
 			(PermissionBeanFactory) this.perspectiveData.
 					getBeanFactory(ObjectEntities.PERMATTR);
 		
-		class ModuleCheckable implements Chechable {
+		class ModuleCheckable implements Chechable<PermissionBean> {
 			
 			private final Module module;
 			
@@ -82,12 +82,8 @@ public final class SystemUserPerpective extends AbstractPerspective {
 				this.module = module;
 			}
 			
-			public boolean isNeedIn(final AbstractBean bean) {
-				if (bean instanceof PermissionBean) {
-					final PermissionBean permissionBean = (PermissionBean) bean;				
-					return permissionBean.getPermissionAttributes().getModule() == this.module;
-				}
-				return false;
+			public boolean isNeedIn(final PermissionBean bean) {
+				return bean.getPermissionAttributes().getModule() == this.module;
 			}
 			
 		}		

@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserDomainPopupMenu.java,v 1.4 2005/12/01 14:03:28 bob Exp $
+* $Id: SystemUserDomainPopupMenu.java,v 1.5 2005/12/02 13:07:45 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/01 14:03:28 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/02 13:07:45 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -85,7 +85,8 @@ public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu<DomainPerpe
 			popupMenu.add(checkBoxMenuItem);
 		}
 		
-		if (user.getVersion() != StorableObjectVersion.INITIAL_VERSION) {
+		final StorableObjectVersion version = user.getVersion();
+		if (StorableObjectVersion.INITIAL_VERSION != version) {
 			popupMenu.addSeparator();
 			final AbstractAction changePasswordAction = 
 				new AbstractAction(I18N.getString("Manager.Dialog.ChangeUserPassword")) {
