@@ -1,5 +1,5 @@
 /*-
- * $Id: FifoSaver.java,v 1.2 2005/12/02 10:57:57 arseniy Exp $
+ * $Id: FifoSaver.java,v 1.3 2005/12/02 13:55:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/02 10:57:57 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/02 13:55:00 $
  * @author $Author: arseniy $
  * @module util
  */
@@ -30,7 +30,7 @@ public final class FifoSaver {
 	private static final String DEFAULT_HOME = System.getProperty("user.dir");
 	private static final String DEFAULT_CACHE_PATH = DEFAULT_HOME + File.separator
 			+ "cache" + File.separator + Application.getApplicationName();
-	public static final String FILE_SUFFIX = "Fifo.serialized";
+	public static final String FILE_SUFFIX = ".fifo";
 
 	private static File cacheDir;
 
