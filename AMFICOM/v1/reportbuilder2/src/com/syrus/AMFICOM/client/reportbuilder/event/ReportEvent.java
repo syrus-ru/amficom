@@ -1,5 +1,5 @@
 /*
- * $Id: ReportEvent.java,v 1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: ReportEvent.java,v 1.1.1.1 2005/12/02 11:37:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.beans.PropertyChangeEvent;
  * Используется в редакторе шаблонов отчётов для передачи событий типа
  * извещение, где даже не важно откуда пришло событие.
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/12/02 11:37:17 $
+ * @version $Revision: 1.1.1.1 $, $Date: 2005/12/02 11:37:17 $
  * @module reportbuilder_v1
  */
 public abstract class ReportEvent extends PropertyChangeEvent{
