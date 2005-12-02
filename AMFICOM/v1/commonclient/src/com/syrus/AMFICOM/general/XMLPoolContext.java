@@ -1,5 +1,5 @@
 /*
- * $Id: XMLPoolContext.java,v 1.9 2005/11/10 13:24:27 bob Exp $
+ * $Id: XMLPoolContext.java,v 1.10 2005/12/02 15:21:00 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,19 +7,16 @@
  */
 package com.syrus.AMFICOM.general;
 
-import java.util.Collections;
-import java.util.Set;
-
-import com.syrus.io.LRUSaver;
 import com.syrus.util.LRUMap;
+import com.syrus.util.LRUMapSaver;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/11/10 13:24:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/12/02 15:21:00 $
+ * @author $Author: arseniy $
  * @module commonclient
  */
 public final class XMLPoolContext extends PoolContext {
-	private static XMLStubLRUSaver instance;
+	private static XMLStubLRUMapSaver instance;
 
 	public XMLPoolContext(final XMLObjectLoader objectLoader) {
 		super(objectLoader);
@@ -42,29 +39,37 @@ public final class XMLPoolContext extends PoolContext {
 	}
 
 	@Override
-	public LRUSaver<Identifier, StorableObject> getLRUSaver() {
+	public LRUMapSaver<Identifier, StorableObject> getLRUMapSaver() {
 		if (instance == null) {
-			synchronized (XMLStubLRUSaver.class) {
+			synchronized (XMLStubLRUMapSaver.class) {
 				if (instance == null) {
-					instance = new XMLStubLRUSaver();
+					instance = new XMLStubLRUMapSaver();
 				}
 			}
 		}
-		return instance;
+		return null;
 	}
 
 	final XMLObjectLoader getObjectLoader() {
 		return (XMLObjectLoader) super.objectLoader;
 	}
 
-	private class XMLStubLRUSaver implements LRUSaver<Identifier, StorableObject> {
+	
+	private static class XMLStubLRUMapSaver extends LRUMapSaver<Identifier, StorableObject> {
 
-		public Set<StorableObject> load(String objectEntityName) {
-			return Collections.emptySet();
+		XMLStubLRUMapSaver() {
+			super("");
 		}
 
-		public void save(LRUMap<Identifier, StorableObject> lruMap, String objectEntityName, boolean cleanLRUMap) {
-			// nothing yopta
+		@Override
+		protected void populateLRUMap(final LRUMap<Identifier, StorableObject> lruMap, final Object readObject) {
+			// nothing
+		}
+
+		@Override
+		protected Object getObjectToWrite(final LRUMap<Identifier, StorableObject> lruMap) {
+			// nothing
+			return null;
 		}
 	}
 }

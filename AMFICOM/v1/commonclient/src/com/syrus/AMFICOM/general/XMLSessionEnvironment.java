@@ -1,5 +1,5 @@
 /*
- * $Id: XMLSessionEnvironment.java,v 1.11 2005/11/10 13:24:50 bob Exp $
+ * $Id: XMLSessionEnvironment.java,v 1.12 2005/12/02 15:21:00 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.util.ApplicationProperties;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/11/10 13:24:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/12/02 15:21:00 $
+ * @author $Author: arseniy $
  * @module commonclient
  */
 public final class XMLSessionEnvironment {
@@ -126,11 +126,11 @@ public final class XMLSessionEnvironment {
 	}
 	
 	public void openSession() throws ApplicationException {
-		StorableObjectPool.deserialize(this.poolContext.getLRUSaver());
+		StorableObjectPool.deserialize(this.poolContext.getLRUMapSaver());
 	}
 
 	public void closeSession() {
-		StorableObjectPool.serialize(this.poolContext.getLRUSaver());
+		StorableObjectPool.serialize(this.poolContext.getLRUMapSaver());
 	}
 
 	public static void createInstance() {

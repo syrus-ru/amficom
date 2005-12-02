@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerPoolContext.java,v 1.15 2005/11/30 11:21:38 arseniy Exp $
+ * $Id: LEServerPoolContext.java,v 1.16 2005/12/02 15:22:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.leserver;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LRUMapSaver;
+import com.syrus.AMFICOM.general.IdentifierLRUMapSaver;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.ObjectLoader;
@@ -17,11 +17,11 @@ import com.syrus.AMFICOM.general.PoolContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
-import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
+import com.syrus.util.LRUMapSaver;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/11/30 11:21:38 $
+ * @version $Revision: 1.16 $, $Date: 2005/12/02 15:22:24 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -34,6 +34,8 @@ final class LEServerPoolContext extends PoolContext {
 	private static final int GENERAL_POOL_SIZE = 1000;
 	private static final int ADMINISTRATION_POOL_SIZE = 1000;
 	private static final int EVENT_POOL_SIZE = 1000;
+
+	private static LRUMapSaver<Identifier, StorableObject> LRU_MAP_SAVER;
 
 	public LEServerPoolContext(final ObjectLoader objectLoader) {
 		super(objectLoader);
@@ -59,10 +61,14 @@ final class LEServerPoolContext extends PoolContext {
 		StorableObjectPool.addObjectPool(ObjectEntities.MEASUREMENTPORT_TYPE_CODE, 10);
 		StorableObjectPool.addObjectPool(ObjectEntities.MONITOREDELEMENT_CODE, 10);
 		StorableObjectPool.addObjectPool(ObjectEntities.MEASUREMENTPORT_CODE, 10);
+
+		if (LRU_MAP_SAVER == null) {
+			LRU_MAP_SAVER = new IdentifierLRUMapSaver(super.objectLoader);
+		}
 	}
 
 	@Override
-	public LRUSaver<Identifier, StorableObject> getLRUSaver() {
-		return LRUMapSaver.getInstance();
+	public LRUMapSaver<Identifier, StorableObject> getLRUMapSaver() {
+		return LRU_MAP_SAVER;
 	}
 }

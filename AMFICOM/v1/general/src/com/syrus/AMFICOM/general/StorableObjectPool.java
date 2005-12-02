@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.204 2005/11/10 15:47:05 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.205 2005/12/02 15:19:12 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,14 +29,14 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.bugs.Crutch235;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.LRUMap;
+import com.syrus.util.LRUMapSaver;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.204 $, $Date: 2005/11/10 15:47:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.205 $, $Date: 2005/12/02 15:19:12 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 8
@@ -1280,43 +1280,34 @@ public final class StorableObjectPool {
 
 	/*	Serialization */
 
-	public static void deserialize(final LRUSaver<Identifier, StorableObject> saver) throws ApplicationException {
+	public static void deserialize(final LRUMapSaver<Identifier, StorableObject> lruMapSaver) throws ApplicationException {
+		final long t0 = System.currentTimeMillis();
 		synchronized (objectPoolMap) {
-			final long time0 = System.currentTimeMillis();
-			long refreshingTime = 0;
 			for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
 				entityCodeIterator.advance();
 				final short entityCode = entityCodeIterator.key();
-				final Set<StorableObject> storableObjects = saver.load(ObjectEntities.codeToString(entityCode));
-				try {
-					putStorableObjects(storableObjects);
-				} catch (IllegalObjectEntityException e) {
-					Log.errorMessage("Cannot get entity '" + ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
-					Log.errorMessage(e);
-				}
-				final long time1 = System.currentTimeMillis();
-				refresh(Identifier.createIdentifiers(storableObjects));
-				refreshingTime += (System.currentTimeMillis() - time1);
-				
+				final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
+				lruMapSaver.load(ObjectEntities.codeToString(entityCode), objectPool);
 			}
-
-			Log.debugMessage("deserializing time " + (System.currentTimeMillis() - time0)
-					+ " ms, refreshing time " + refreshingTime + " ms", Log.DEBUGLEVEL08);
-
 		}
+		final long t1 = System.currentTimeMillis();
+		refresh();
+		final long t2 = System.currentTimeMillis();
+		Log.debugMessage("Deserialization time " + (t1 - t0) + " ms, refresh time " + (t2 - t1) + " ms", Log.DEBUGLEVEL08);
 	}
 
-	public static void serialize(final LRUSaver<Identifier, StorableObject> saver) {
+	public static void serialize(final LRUMapSaver<Identifier, StorableObject> lruMapSaver) {
+		final long t0 = System.currentTimeMillis();
 		synchronized (objectPoolMap) {
-			final long time0 = System.currentTimeMillis();
 			for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
 				entityCodeIterator.advance();
 				final short entityCode = entityCodeIterator.key();
-				final LRUMap<Identifier, StorableObject> map = getLRUMap(entityCode);
-				saver.save(map, ObjectEntities.codeToString(entityCode), true);
+				final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
+				lruMapSaver.save(objectPool, ObjectEntities.codeToString(entityCode), true);
 			}
-			Log.debugMessage("serializing time " + (System.currentTimeMillis() - time0) + " ms", Log.DEBUGLEVEL08);
 		}
+		final long t1 = System.currentTimeMillis();
+		Log.debugMessage("Serialization time " + (t1 - t0) + " ms", Log.DEBUGLEVEL08);
 	}
 
 

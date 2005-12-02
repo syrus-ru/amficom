@@ -1,5 +1,5 @@
 /*
- * $Id: ClientPoolContext.java,v 1.20 2005/10/11 14:21:25 arseniy Exp $
+ * $Id: ClientPoolContext.java,v 1.21 2005/12/02 15:21:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,11 @@
 
 package com.syrus.AMFICOM.general;
 
-import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
+import com.syrus.util.LRUMapSaver;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/10/11 14:21:25 $
+ * @version $Revision: 1.21 $, $Date: 2005/12/02 15:21:21 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -30,6 +30,8 @@ class ClientPoolContext extends PoolContext {
 	private static final int CONFIGURATION_POOL_SIZE = 1000;
 	private static final int MEASUREMENT_POOL_SIZE = 1000;
 	private static final int REPORT_POOL_SIZE = 1000;
+
+	private static final LRUMapSaver<Identifier, StorableObject> LRU_MAP_SAVER = new StorableObjectLRUMapSaver();
 
 	public ClientPoolContext(final ObjectLoader objectLoader) {
 		super(objectLoader);
@@ -54,7 +56,7 @@ class ClientPoolContext extends PoolContext {
 	}
 
 	@Override
-	public LRUSaver<Identifier, StorableObject> getLRUSaver() {
-		return ClientLRUMapSaver.getInstance();
+	public LRUMapSaver<Identifier, StorableObject> getLRUMapSaver() {
+		return LRU_MAP_SAVER;
 	}
 }
