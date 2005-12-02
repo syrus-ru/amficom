@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.45 2005/10/31 12:29:58 bass Exp $
+ * $Id: LRUMap.java,v 1.46 2005/12/02 15:16:56 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/10/31 12:29:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.46 $, $Date: 2005/12/02 15:16:56 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -65,6 +65,10 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 
 	public int size() {
 		return this.entityCount;
+	}
+
+	public boolean isEmpty() {
+		return this.entityCount == 0;
 	}
 
 	public int indexOf(final K key) {
@@ -197,6 +201,52 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 		stringBuffer.append(" }");
 		
 		return stringBuffer.toString();
+	}
+
+	public K[] getKeys() {
+		final K[] keys = (K[]) new Object[this.entityCount];
+		for (int i = 0; i < this.entityCount; i++) {
+			keys[i] = this.array[i].getKey();
+		}
+		return keys;
+	}
+
+	public V[] getValues() {
+		final V[] values = (V[]) new Object[this.entityCount];
+		for (int i = 0; i < this.entityCount; i++) {
+			values[i] = this.array[i].getValue();
+		}
+		return values;
+	}
+
+	IEntry<K, V>[] getEntries() {
+		return this.array;
+	}
+
+	void populate(final IEntry<K, V>[] entries) {
+		if (entries == null) {
+			throw new NullPointerException("entries are null");
+		}
+
+		this.entityCount = Math.min(entries.length, this.array.length);
+		System.arraycopy(entries, 0, this.array, 0, this.entityCount);
+	}
+
+	public void populate(final K[] keys, final V[] values) {
+		if (keys == null) {
+			throw new NullPointerException("keys are null");
+		}
+		if (values == null) {
+			throw new NullPointerException("values are null");
+		}
+		if (keys.length != values.length) {
+			throw new IllegalArgumentException("keys.length: " + keys.length + ", values.length: " + values.length);
+		}
+
+		this.entityCount = Math.min(keys.length, this.array.length);
+		for (int i = 0; i < this.entityCount; i++) {
+			this.array[i] = new Entry(keys[i], values[i]);
+		}
 	}
 
 
