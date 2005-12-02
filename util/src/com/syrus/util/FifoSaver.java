@@ -1,5 +1,5 @@
 /*-
- * $Id: FifoSaver.java,v 1.1 2005/11/30 15:57:02 arseniy Exp $
+ * $Id: FifoSaver.java,v 1.2 2005/12/02 10:57:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/30 15:57:02 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/02 10:57:57 $
  * @author $Author: arseniy $
  * @module util
  */
@@ -30,36 +30,34 @@ public final class FifoSaver {
 	private static final String DEFAULT_HOME = System.getProperty("user.dir");
 	private static final String DEFAULT_CACHE_PATH = DEFAULT_HOME + File.separator
 			+ "cache" + File.separator + Application.getApplicationName();
-	public static final String EXTENSION = "Fifo.serialized";
+	public static final String FILE_SUFFIX = "Fifo.serialized";
 
-	private static String pathNameOfSaveDir;
-	private static File saveDir;
+	private static File cacheDir;
 
 	static {
 		init();
 	}
 
 	private FifoSaver() {
-			// empty
+		// empty
+		assert false;
 	}
 
 	private static void init() {
-		if (pathNameOfSaveDir == null) {
-			pathNameOfSaveDir = ApplicationProperties.getString(KEY_CACHE_PATH, DEFAULT_CACHE_PATH);
-			final String applicationName = Application.getApplicationName();
-			if (!pathNameOfSaveDir.endsWith(applicationName) && !pathNameOfSaveDir.endsWith(applicationName + File.separator)) {
-				pathNameOfSaveDir = pathNameOfSaveDir + File.separator + applicationName;
-			}
+		String cachePath = ApplicationProperties.getString(KEY_CACHE_PATH, DEFAULT_CACHE_PATH);
+		final String applicationName = Application.getApplicationName();
+		if (!cachePath.endsWith(applicationName) && !cachePath.endsWith(applicationName + File.separator)) {
+			cachePath += File.separator + applicationName;
 		}
-		if (saveDir == null || !saveDir.exists()) {
-			saveDir = new File(pathNameOfSaveDir);
-			saveDir.mkdirs();
+		if (cacheDir == null || !cacheDir.exists()) {
+			cacheDir = new File(cachePath);
+			cacheDir.mkdirs();
 		}		
 	}
 
 	public static Map<String, Fifo> load(final int fifoCapacity) {
 		final Map<String, Fifo> fifoMap = new HashMap<String, Fifo>();
-		final File[] fifoFiles = saveDir.listFiles(new FifoFileFilter());
+		final File[] fifoFiles = cacheDir.listFiles(new FifoFileFilter());
 		if(fifoFiles == null) {
 			return fifoMap;
 		}
@@ -72,7 +70,7 @@ public final class FifoSaver {
 
 	private static void loadFifo(final Map<String, Fifo> fifoMap, final File fifoFile, final int fifoCapacity) {
 		final String fifoFileName = fifoFile.getName();
-		final int offset = fifoFileName.indexOf(EXTENSION);
+		final int offset = fifoFileName.indexOf(FILE_SUFFIX);
 		final String entityName = fifoFileName.substring(0, offset);
 
 		Log.debugMessage("Loading Fifo '" + entityName + "'", Log.DEBUGLEVEL10);
@@ -88,7 +86,7 @@ public final class FifoSaver {
 			}
 			final Object[] objects = (Object[]) objectInputStream.readObject();
 			final Fifo fifo = new Fifo(fifoCapacity);
-			fifo.setObjects(objects);
+			fifo.populate(objects);
 			fifoMap.put(entityName, fifo);
 			return;
 		} catch (FileNotFoundException fnfe) {
@@ -106,7 +104,7 @@ public final class FifoSaver {
 	}
 
 	public static void save(final Fifo fifo, final String entityName) {
-		final String path = saveDir.getPath() + File.separator + entityName + EXTENSION;
+		final String path = cacheDir.getPath() + File.separator + entityName + FILE_SUFFIX;
 		final File fifoFile = new File(path);
 		final File tmpFifoFile = new File(path + ".swp");
 		try {
