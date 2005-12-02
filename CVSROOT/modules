@@ -166,8 +166,9 @@ report			AMFICOM/v1/report
 #M	reportclient
 reportclient		AMFICOM/v1/reportclient
 #M	reportbuilder	Report builder module
-reportbuilder		AMFICOM/v1/reportbuilder
-reportbuilder_v1	AMFICOM/v1/reportbuilder
+reportbuilder		AMFICOM/v1/reportbuilder2
+#M oldreportbuilder	Report builder module (original history prior to 20051202; R/O)
+oldreportbuilder	AMFICOM/v1/reportbuilder
 #M	reportother
 reportother		AMFICOM/v1/reportother
 #M	resource	Images'n'stuff
