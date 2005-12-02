@@ -1,5 +1,5 @@
 /*
- * $Id: ClientServantManager.java,v 1.19 2005/11/29 08:18:07 bob Exp $
+ * $Id: ClientServantManager.java,v 1.20 2005/12/02 11:36:57 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,12 +25,12 @@ import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/11/29 08:18:07 $
+ * @version $Revision: 1.20 $, $Date: 2005/12/02 11:36:57 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
-abstract class ClientServantManager extends VerifiedConnectionManager implements BaseConnectionManager, ServerConnectionManager {
+public abstract class ClientServantManager extends VerifiedConnectionManager implements BaseConnectionManager, ServerConnectionManager {
 	static final String KEY_SERVER_HOST_NAME = "ServerHostName";
 	static final String SERVER_HOST_NAME = "localhost";
 
