@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectVersion.java,v 1.8 2005/09/20 06:50:57 arseniy Exp $
+ * $Id: StorableObjectVersion.java,v 1.9 2005/12/02 09:26:12 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,18 +10,19 @@ package com.syrus.AMFICOM.general;
 import java.io.Serializable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/20 06:50:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/12/02 09:26:12 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public final class StorableObjectVersion implements Cloneable, Serializable {
-	private static final long serialVersionUID = -5642797178846561548L;
+public final class StorableObjectVersion implements Serializable {
+	
+	public transient static final StorableObjectVersion INITIAL_VERSION = 
+			new StorableObjectVersion(0L);
+	public transient static final StorableObjectVersion ILLEGAL_VERSION = 
+			new StorableObjectVersion(-1L);
 
-	public transient static final StorableObjectVersion INITIAL_VERSION = new StorableObjectVersion(0L);
-	public transient static final StorableObjectVersion ILLEGAL_VERSION = new StorableObjectVersion(-1L);
-
-	private long version;
+	private final long version;
 
 	public StorableObjectVersion(final long version) {
 		this.version = version;
@@ -41,19 +42,18 @@ public final class StorableObjectVersion implements Cloneable, Serializable {
 		return (this.version > storableObjectVersion.version);
 	}
 
-	public void increment() {
+	public StorableObjectVersion increment() {
 		if (this.version < Long.MAX_VALUE) {
-			this.version++;
+			long newVersion = this.version + 1;
 			if (this.equals(ILLEGAL_VERSION)) {
-				this.version++;
+				newVersion++;
 			}
 			if (this.equals((INITIAL_VERSION))) {
-				this.version++;
+				newVersion++;
 			}
+			return new StorableObjectVersion(newVersion);
 		}
-		else {
-			this.version = Long.MIN_VALUE;
-		}
+		return new StorableObjectVersion(Long.MIN_VALUE);
 	}
 
 	public long longValue() {
@@ -78,18 +78,27 @@ public final class StorableObjectVersion implements Cloneable, Serializable {
 		return (int) (this.version ^ (this.version >>> 32));
 	}
 
+	/**
+	 * @deprecated as unnecessary
+	 */
 	@Override
+	@Deprecated
 	public StorableObjectVersion clone() {
 		return new StorableObjectVersion(this.version);
 	}
 
+	
 	@Override
 	public String toString() {
 		return Long.toString(this.version);
 	}
 
+	/**
+	 * @deprecated use direct {@link #INITIAL_VERSION} 
+	 */
+	@Deprecated
 	public static StorableObjectVersion createInitial() {
-		return INITIAL_VERSION.clone();
+		return INITIAL_VERSION;
 	}
 
 }
