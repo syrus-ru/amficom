@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectVersion.java,v 1.11 2005/12/02 11:22:38 bass Exp $
+ * $Id: StorableObjectVersion.java,v 1.12 2005/12/02 11:25:42 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import java.io.Serializable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/12/02 11:22:38 $
+ * @version $Revision: 1.12 $, $Date: 2005/12/02 11:25:42 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -87,15 +87,15 @@ public final class StorableObjectVersion implements Serializable, Comparable<Sto
 
 	public static StorableObjectVersion valueOf(final long l) {
 		return l >= MIN_CACHED_VERSION && l <= MAX_CACHED_VERSION
-			? VersionCache.cache[(int) l - MIN_CACHED_VERSION]
-			: new StorableObjectVersion(l);
+				? VersionCache.cache[(int) l - MIN_CACHED_VERSION]
+				: new StorableObjectVersion(l);
 	}
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @спизжено_у Josh Bloch
 	 * @author $Author: bass $
-	 * @version $Revision: 1.11 $, $Date: 2005/12/02 11:22:38 $
+	 * @version $Revision: 1.12 $, $Date: 2005/12/02 11:25:42 $
 	 * @module general
 	 */
 	private static class VersionCache {
@@ -106,8 +106,9 @@ public final class StorableObjectVersion implements Serializable, Comparable<Sto
 		static final StorableObjectVersion cache[] = new StorableObjectVersion[MAX_CACHED_VERSION - MIN_CACHED_VERSION + 1];
 
 		static {
-			for (int i = 0; i < cache.length; i++)
+			for (int i = 0; i < cache.length; i++) {
 				cache[i] = new StorableObjectVersion(i + MIN_CACHED_VERSION);
+			}
 		}
 	}
 }
