@@ -1,5 +1,5 @@
 /*
- * $Id: SchedulerReportModel.java,v 1.5 2005/11/16 18:55:25 max Exp $
+ * $Id: SchedulerReportModel.java,v 1.6 2005/12/05 10:16:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,9 +42,6 @@ public class SchedulerReportModel extends ReportModel {
 	 */ 
 	public static String TESTS_LIST = "testsList";
 	
-	public SchedulerReportModel(){
-	}
-
 	@Override
 	public ReportType getReportKind(String reportName){
 		ReportType result = ReportType.TABLE;
@@ -55,12 +52,16 @@ public class SchedulerReportModel extends ReportModel {
 	
 	@Override
 	public RenderingComponent createReport(
-			AbstractDataStorableElement<?> element,
-			Object data,
-			ApplicationContext aContext) throws CreateReportException{
+			final AbstractDataStorableElement<?> dataStorableElement,
+			final Object data,
+			final ApplicationContext aContext)
+	throws CreateReportException{
+		@SuppressWarnings("unchecked")
+		final AbstractDataStorableElement rawDataStorableElement = dataStorableElement;
+
 		RenderingComponent result = null;
-		String reportName = element.getReportName();
-		String modelClassName = element.getModelClassName();		
+		String reportName = dataStorableElement.getReportName();
+		String modelClassName = dataStorableElement.getModelClassName();		
 		
 		if (reportName.equals(TEST_PARAMETERS)) {
 			if (!(data instanceof Identifier))
@@ -75,7 +76,7 @@ public class SchedulerReportModel extends ReportModel {
 					Test test = StorableObjectPool.getStorableObject(testId,true); 
 					result = TestReport.createReport(
 							test,
-							(TableDataStorableElement)element);
+							(TableDataStorableElement) rawDataStorableElement);
 				} catch (CreateReportException e) {
 				} catch (ApplicationException e) {
 				}
@@ -88,8 +89,8 @@ public class SchedulerReportModel extends ReportModel {
 						modelClassName,
 						CreateReportException.WRONG_DATA_TO_INSTALL);
 			result = TableModelVerticalDivider.createReport(
-					(AbstractTableModel)data,
-					(TableDataStorableElement)element);
+					(AbstractTableModel) data,
+					(TableDataStorableElement) rawDataStorableElement);
 		}
 		
 		if (result == null)
