@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.26 2005/12/05 14:41:22 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.27 2005/12/05 15:39:01 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.awt.Point;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,8 +25,10 @@ import java.util.TooManyListenersException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.ActionMap;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
@@ -35,6 +38,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
@@ -69,7 +73,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.26 $, $Date: 2005/12/05 14:41:22 $
+ * @version $Revision: 1.27 $, $Date: 2005/12/05 15:39:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -524,25 +528,13 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		// Edit Block
 		//
 		graphToolBar.addSeparator();
-		Action action;
 		URL url;
 
-//		// Copy
-//		action = TransferHandler // JAVA13:
-//												// org.jgraph.plaf.basic.TransferHandler
-//				.getCopyAction();
-//		url = getClass().getClassLoader().getResource(
-//				"com/syrus/AMFICOM/manager/resources/icons/copy.gif");
-//		action.putValue(Action.SMALL_ICON, new ImageIcon(url));
-//		
-//		graphToolBar.add(copy = new EventRedirector(action));
-//		copy.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Copy"));
+		final InputMap imap = this.graph.getInputMap();
+		final ActionMap map = this.graph.getActionMap();
 		
 		// Paste
-//		action = javax.swing.TransferHandler // JAVA13:
-//												// org.jgraph.plaf.basic.TransferHandler
-//				.getPasteAction();
-		action = new AbstractAction() {
+		this.paste = new AbstractAction() {
 
 			@SuppressWarnings({"synthetic-access","unqualified-field-access"})
 			public void actionPerformed(ActionEvent e) {				
@@ -562,18 +554,18 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		};
 		url = getClass().getClassLoader().getResource(
 				"org/jgraph/example/resources/paste.gif");
-		action.putValue(Action.SMALL_ICON, new ImageIcon(url));
-		graphToolBar.add(paste = new EventRedirector(action));
-		paste.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Paste"));
+		this.paste.putValue(Action.SMALL_ICON, new ImageIcon(url));
+		graphToolBar.add(this.paste);
+		this.paste.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Paste"));
+		
+		imap.put(KeyStroke.getKeyStroke("ctrl V"), "paste");
+		map.put("paste", this.paste);
+
 		
 		// Cut
-//		action = javax.swing.TransferHandler // JAVA13:
-//												// org.jgraph.plaf.basic.TransferHandler
-//				.getCutAction();
-		
 		this.buffer = new CellBuffer();
 		
-		action = new AbstractAction() {
+		this.cut = new AbstractAction() {
 
 			@SuppressWarnings({"unqualified-field-access","synthetic-access", "unchecked"})
 			public void actionPerformed(final ActionEvent e) {
@@ -597,12 +589,16 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			}
 		};
 		
-		url = getClass().getClassLoader().getResource(
+		final ClassLoader classLoader = getClass().getClassLoader();
+		url = classLoader.getResource(
 				"org/jgraph/example/resources/cut.gif");
-		action.putValue(Action.SMALL_ICON, new ImageIcon(url));
-		graphToolBar.add(cut = new EventRedirector(action));
-		cut.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Cut"));
-		cut.setEnabled(false);
+		this.cut.putValue(Action.SMALL_ICON, new ImageIcon(url));
+		graphToolBar.add(this.cut);
+		this.cut.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Cut"));
+		this.cut.setEnabled(false);
+		
+		imap.put(KeyStroke.getKeyStroke("ctrl X"), "cut");
+		map.put("cut", this.cut);		
 		
 		this.updateBufferButtons();
 
@@ -638,6 +634,9 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		this.remove.setEnabled(false);
 		graphToolBar.add(this.remove);
 		this.remove.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Delete"));
+		
+		imap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "delete");
+		map.put("delete", this.remove);		
 		
 		graphToolBar.addSeparator();
 		{
