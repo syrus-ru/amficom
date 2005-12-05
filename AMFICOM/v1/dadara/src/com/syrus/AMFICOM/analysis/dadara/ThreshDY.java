@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.23 2005/11/10 13:16:37 saa Exp $
+ * $Id: ThreshDY.java,v 1.24 2005/12/05 16:40:46 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.23 $, $Date: 2005/11/10 13:16:37 $
+ * @version $Revision: 1.24 $, $Date: 2005/12/05 16:40:46 $
  * @module
  */
 public class ThreshDY extends Thresh {
@@ -132,10 +132,13 @@ public class ThreshDY extends Thresh {
 	}
 	private void snapAndLimit(int key) // привязать к сетке и скорректировать при неправильном знаке  
 	{
-		if (this.values[key] * (IS_KEY_UPPER[key] ? 1 : -1) < 0)
+		final int sign = IS_KEY_UPPER[key] ? 1 : -1;
+		if (this.values[key] * sign < 0)
 			this.values[key] = 0;
 		if (VALUE_FRACTION > 0)
 			this.values[key] = Math.rint(this.values[key] * VALUE_FRACTION) / VALUE_FRACTION;
+		if (this.values[key] == 0)
+			this.values[key] = sign / VALUE_FRACTION;
 	}
 	private void interLimit(int key) // наложить ограничение согласно LIMIT_KEY
 	{
