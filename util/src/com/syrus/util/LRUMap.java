@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.47 2005/12/05 09:06:46 arseniy Exp $
+ * $Id: LRUMap.java,v 1.48 2005/12/05 16:35:58 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/12/05 09:06:46 $
+ * @version $Revision: 1.48 $, $Date: 2005/12/05 16:35:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -35,7 +35,7 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 	}
 
 	public LRUMap(final int capacity) {
-		if (capacity > 0) {
+		if (capacity >= 0) {
 			this.array = new IEntry[capacity];
 		} else {
 			throw new IllegalArgumentException("Illegal capacity: " + capacity);
@@ -91,13 +91,15 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 		this.remove(key);
 		final IEntry<K, V> newEntry = new Entry(key, value);
 		V ret = null;
-		if (this.array[this.array.length - 1] != null) {
-			ret = this.array[this.array.length - 1].getValue();
+		if (this.array.length > 0) {
+			if (this.array[this.array.length - 1] != null) {
+				ret = this.array[this.array.length - 1].getValue();
+			}
+			for (int i = this.array.length - 1; i > 0; i--) {
+				this.array[i] = this.array[i - 1];
+			}
+			this.array[0] = newEntry;
 		}
-		for (int i = this.array.length - 1; i > 0; i--) {
-			this.array[i] = this.array[i - 1];
-		}
-		this.array[0] = newEntry;
 		return ret;
 	}
 
