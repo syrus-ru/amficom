@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.8 2005/12/05 14:41:22 bob Exp $
+# $Id: Makefile,v 1.9 2005/12/05 18:24:27 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -55,14 +55,7 @@ $(LIBNAME): .mach
 	touch $@
 
 .PHONY: xml
-xml: .xml
-
-.xml: $(LIBNAME_MANAGER_SCHEMAS)
-	touch $@
-
-.PHONY: xmlinstall
-xmlinstall: .xml $(LIBDIR)
-	install -m 0644 $(LIBNAME_MANAGER_SCHEMAS) $(LIBDIR)
+xml: $(LIBNAME_MANAGER_SCHEMAS)
 
 $(LIBNAME_EXTENSIONS_SCHEMAS):
 	$(error $(LOGNAME), you forgot to build $@)
@@ -74,10 +67,6 @@ $(LIBNAME_MANAGER_SCHEMAS): $(LIBNAME_EXTENSIONS_SCHEMAS)
 		-out $@ \
 		$(XMLDIR)/$(MODULE_NAME).xsd \
 		$(XMLDIR)/$(MODULE_NAME).xsdconfig
-	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/extensions/impl
-	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/extensions/impl
-	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/extensions/*.java
-	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/extensions/*.class
 
 .PHONY: xmlclean
 xmlclean:
@@ -89,18 +78,25 @@ xmlclean:
 		$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/extensions; \
 	fi
 	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/extensions
-	$(RM) .xml
 
-.PHONY:	clean
-clean:	cleanmach xmlclean
+.PHONY: clean
+clean: cleanmach xmlclean
 	$(RM) $(LIBNAME)
 
-.PHONY:	cleanmach
+.PHONY: cleanmach
 cleanmach:
 	$(RM) -r $(CLASSDIR)/com
 	$(RM) .mach
 
-#### Install ####
-.PHONY:	install
-install: $(LIBNAME) $(LIBDIR) xmlinstall
-	$(CP) $^
+
+.PHONY: xmlinstall
+xmlinstall: $(LIBDIR) $(LIBDIR)/$(LIBNAME_MANAGER_SCHEMAS)
+
+.PHONY: install
+install: $(LIBDIR) $(LIBDIR)/$(LIBNAME) xmlinstall
+
+$(LIBDIR)/$(LIBNAME_MANAGER_SCHEMAS): $(LIBNAME_MANAGER_SCHEMAS)
+	install -m 0644 -p $(LIBNAME_MANAGER_SCHEMAS) $(LIBDIR)
+
+$(LIBDIR)/$(LIBNAME): $(LIBNAME)
+	install -m 0644 -p $(LIBNAME) $(LIBDIR)

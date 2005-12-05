@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.6 2005/11/16 14:25:48 bass Exp $
+# $Id: Makefile,v 1.7 2005/12/05 18:24:27 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -20,15 +20,7 @@ LIBNAME_EXTENSIONS_SCHEMAS = $(MODULE_NAME)_schemas.jar
 LIBNAME_RESOURCES_SCHEMAS = resources_schemas.jar
 
 .PHONY: xml
-xml: .xml
-
-.xml: $(LIBNAME_EXTENSIONS_SCHEMAS) $(LIBNAME_RESOURCES_SCHEMAS)
-	touch $@
-
-.PHONY: xmlinstall
-xmlinstall: .xml $(LIBDIR)
-	install -m 0644 $(LIBNAME_EXTENSIONS_SCHEMAS) $(LIBDIR)
-	install -m 0644 $(LIBNAME_RESOURCES_SCHEMAS) $(LIBDIR)
+xml: $(LIBNAME_EXTENSIONS_SCHEMAS) $(LIBNAME_RESOURCES_SCHEMAS)
 
 $(LIBNAME_EXTENSIONS_SCHEMAS):
 	$(RM) -r $(XMLCLASSDIR)/*
@@ -57,4 +49,28 @@ xmlclean:
 		$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/extensions; \
 	fi
 	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/extensions
-	$(RM) .xml
+
+.PHONY: clean
+clean: cleanmach xmlclean
+	$(RM) $(LIBNAME)
+
+.PHONY:	cleanmach
+cleanmach:
+	$(RM) -r $(CLASSDIR)/com
+	$(RM) .mach
+
+
+.PHONY: xmlinstall
+xmlinstall: $(LIBDIR) $(LIBDIR)/$(LIBNAME_EXTENSIONS_SCHEMAS) $(LIBDIR)/$(LIBNAME_RESOURCES_SCHEMAS)
+
+.PHONY:	install
+install: $(LIBDIR) $(LIBDIR)/$(LIBNAME) xmlinstall
+
+$(LIBDIR)/$(LIBNAME_EXTENSIONS_SCHEMAS): $(LIBNAME_EXTENSIONS_SCHEMAS)
+	install -m 0644 -p $(LIBNAME_EXTENSIONS_SCHEMAS) $(LIBDIR)
+
+$(LIBDIR)/$(LIBNAME_RESOURCES_SCHEMAS): $(LIBNAME_RESOURCES_SCHEMAS)
+	install -m 0644 -p $(LIBNAME_RESOURCES_SCHEMAS) $(LIBDIR)
+
+$(LIBDIR)/$(LIBNAME): $(LIBNAME)
+	install -m 0644 -p $(LIBNAME) $(LIBDIR)

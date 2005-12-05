@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.java.inc.mk,v 1.10 2005/11/11 12:50:27 bass Exp $
+# $Id: Makefile.java.inc.mk,v 1.11 2005/12/05 18:24:27 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -152,6 +152,13 @@ ifeq ($(JAVAMAIL_HOME),)
 JAVAMAILCLASSPATH = $(EXTLIBDIR)/mail.jar
 else
 JAVAMAILCLASSPATH = $(JAVAMAIL_HOME)/mail.jar
+endif
+
+# Xalan-J
+ifeq ($(XALANJ_HOME),)
+XALANJCLASSPATH := $(EXTLIBDIR)/xalan.jar
+else
+XALANJCLASSPATH := $(XALANJ_HOME)/bin/xalan.jar
 endif
 
 ENCODING ?= KOI8-R

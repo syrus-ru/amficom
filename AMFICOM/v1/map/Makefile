@@ -1,85 +1,92 @@
+#
+# $Id: Makefile,v 1.52 2005/12/05 18:24:27 bass Exp $
+#
+# vim:set ft=make:
+#
+
 MODULE_NAME := map
 
 LIBNAME := $(MODULE_NAME).jar
+LIBNAMEXML := $(MODULE_NAME)xml.jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-IDL_SOURCES = $(IDLDIR)/map.idl
+IDL_SOURCES = $(IDLDIR)/$(MODULE_NAME).idl
 
 include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
+$(call checkenve,TROVE4JCLASSPATH)
 $(call checkenve,XMLBEANSCLASSPATH)
 $(call checkenve,SCOMP)
 $(call checkenve,SCOMPFLAGS)
 
-
-LIBNAME_GENERALXML = generalxml.jar
-LIBNAME_CONFIGURATIONXML = configurationxml.jar
-LIBNAME_MAPXML = $(MODULE_NAME)xml.jar
+GENERALXML = $(LIBDIR)/generalxml.jar
+CONFIGURATIONXML = $(LIBDIR)/configurationxml.jar
 
 DEPENDENCIES = \
-configuration \
-general \
 administration \
+general \
+configuration \
 resource \
 util \
 bugs
 
-XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
+EXTCLASSPATH := $(TROVE4JCLASSPATH):$(XMLBEANSCLASSPATH)
+XMLCLASSPATH := $(LIBDIR)/$(LIBNAMEXML):$(GENERALXML):$(CONFIGURATIONXML)
 
-EXTCLASSPATH := $(TROVE4JCLASSPATH)
 
-SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java)
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/*.java)
+XSD_SOURCES := $(wildcard $(XMLDIR)/*.xsd)
+XSD_CONFIG := $(XMLDIR)/$(MODULE_NAME).xsdconfig
+
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/map
+		-C $(CLASSDIR) com
 
-
-.mach: .corba .xml $(CLASSDIR)
+.mach: $(CLASSDIR) xml .corba
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
-
-.PHONY: idlclean
-idlclean:
-	cd $(SRCDIR)/com/syrus/AMFICOM/map/corba && \
-		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/map/corba/.cvsignore | grep .java)
-	$(RM) .idl
 
 .PHONY: corba
 corba: .corba
 
-.corba: $(CLASSDIR) $(LIBNAME_MAPXML) .idl
-	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH) \
+.corba: $(CLASSDIR) .idl xml
+	$(JAVAC) \
+		$(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		-sourcepath $(SRCDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/map/corba/*.java
+		$(SRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/corba/*.java
 	touch $@
 
-
-#### XML ####
 .PHONY: xml
-xml: .xml
+xml: $(LIBNAMEXML)
 
-.xml: $(LIBNAME_MAPXML)
-	touch $@
+$(GENERALXML) $(CONFIGURATIONXML):
+	$(error $(LOGNAME), you forgot to build $@)
 
-.PHONY: xmlinstall
-xmlinstall: .xml $(LIBDIR)
-	install -m 0644 $(LIBNAME_MAPXML) $(LIBDIR)
+$(LIBNAMEXML): $(XSD_SOURCES) $(XSD_CONFIG) $(GENERALXML) $(CONFIGURATIONXML)
+	$(RM) -r $(XMLCLASSDIR)/*
+	$(SCOMP) $(SCOMPFLAGS) \
+		-cp $(XMLBEANSCLASSPATH):$(GENERALXML):$(CONFIGURATIONXML) \
+		-out $@ \
+		$(XSD_SOURCES) \
+		$(XSD_CONFIG)
 
-$(LIBNAME_MAPXML): 
-	$(SCOMP) $(SCOMPFLAGS) -out $@ \
-		$(wildcard $(XMLDIR)/*.xsd) \
-		$(XMLDIR)/$(MODULE_NAME).xsdconfig
-	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/general
-	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/general
-	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/configuration
-	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/configuration
+.PHONY: xmlclean
+xmlclean:
+	$(RM) $(LIBNAMEXML)
+	if [ -f $(XMLSRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/xml/.cvsignore ]; \
+	then \
+		cd $(XMLSRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/xml && $(RM) -r `cat .cvsignore`; \
+	else \
+		$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/xml; \
+	fi
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/xml
 
 .PHONY: clean
-clean: cleanmach cleancorba cleanxml
+clean: cleanmach cleancorba xmlclean
 	$(RM) $(LIBNAME)
 
 .PHONY: cleanmach
@@ -89,25 +96,35 @@ cleanmach:
 
 .PHONY: cleancorba
 cleancorba: idlclean
-	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/map/corba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/corba
 	$(RM) .corba
 
-.PHONY: cleanxml xmlclean
-cleanxml xmlclean:
-	$(RM) $(LIBNAME_MAPXML)
-	if [ -f $(XMLSRCDIR)/com/syrus/AMFICOM/map/xml/.cvsignore ]; \
-	then \
-		cd $(XMLSRCDIR)/com/syrus/AMFICOM/map/xml && $(RM) -r `cat .cvsignore`; \
-	else \
-		$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/map/xml; \
-	fi
-	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/map/xml
-	$(RM) .xml
+.PHONY: idlclean
+idlclean:
+	cd $(SRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/corba && \
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/corba/.cvsignore | grep .java)
+	$(RM) .idl
 
-#### Install ####
+
+.PHONY: xmlinstall
+xmlinstall: $(LIBDIR) $(LIBDIR)/$(LIBNAMEXML)
+
 .PHONY: install
-install: xmlinstall $(LIBNAME) $(LIBDIR)
-	install -m 0644 $(LIBNAME) $(LIBDIR)
+install: $(LIBDIR) $(LIBDIR)/$(LIBNAME) xmlinstall
+
+$(LIBDIR)/$(LIBNAMEXML): $(LIBNAMEXML)
+	install -m 0644 -p $(LIBNAMEXML) $(LIBDIR)
+
+$(LIBDIR)/$(LIBNAME): $(LIBNAME)
+	install -m 0644 -p $(LIBNAME) $(LIBDIR)
+
+.PHONY: xmluninstall
+xmluninstall:
+	$(RM) $(LIBDIR)/$(LIBNAMEXML)
+
+.PHONY: uninstall
+uninstall: xmluninstall
+	$(RM) $(LIBDIR)/$(LIBNAME)
 
 #### Archive ####
 .PHONY: arch
@@ -116,9 +133,10 @@ arch:
 		Makefile \
 		$(IDL_SOURCES) \
 		$(SOURCES) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/*.properties) \
 		$(wildcard $(XMLDIR)/*.xsd) \
 		$(XMLDIR)/$(MODULE_NAME).xsdconfig
 
 .PHONY: pmd
 pmd:
-	$(JAVA) -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/map text $(PMD_RULES) 
+	$(JAVA) -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/$(MODULE_NAME) text $(PMD_RULES) 
