@@ -1,5 +1,5 @@
 /*-
-* $Id: Perspective.java,v 1.2 2005/11/28 14:47:05 bob Exp $
+* $Id: Perspective.java,v 1.3 2005/12/05 14:41:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,10 +22,11 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.AMFICOM.resource.LayoutItem;
+import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/05 14:41:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -53,6 +54,10 @@ public interface Perspective {
 	Validator getValidator();
 	
 	boolean isSupported(final AbstractBean bean);
+	
+	boolean isUndeletable(final AbstractBean bean);
+	
+	boolean isCuttable(final AbstractBean bean);
 	
 	void setPerspectiveData(final PerspectiveData perspectiveData);
 	
@@ -83,5 +88,7 @@ public interface Perspective {
 	void removePropertyChangeListener(final PropertyChangeListener listener);
 	
 	void firePropertyChangeEvent(final PropertyChangeEvent event);
+	
+	void putBean(final AbstractBean abstractBean);
 }
 

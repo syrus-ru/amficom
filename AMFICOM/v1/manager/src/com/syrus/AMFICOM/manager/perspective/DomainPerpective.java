@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.5 2005/12/02 13:07:45 bob Exp $
+* $Id: DomainPerpective.java,v 1.6 2005/12/05 14:41:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.manager.UI.GraphRoutines;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.beans.DomainBean;
+import com.syrus.AMFICOM.manager.beans.DomainNetworkItem;
 import com.syrus.AMFICOM.manager.beans.NetBeanFactory;
 import com.syrus.AMFICOM.manager.beans.UserBean;
 import com.syrus.AMFICOM.manager.beans.WorkstationBeanFactory;
@@ -52,7 +53,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/12/02 13:07:45 $
+ * @version $Revision: 1.6 $, $Date: 2005/12/05 14:41:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -535,7 +536,19 @@ public final class DomainPerpective extends AbstractPerspective {
 	
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + " for " + this.domainBean.getIdentifier().getIdentifierString();
+		return this.getClass().getSimpleName() 
+			+ " for " 
+			+ this.domainBean.getIdentifier().getIdentifierString();
+	}
+	
+	@Override
+	public final void putBean(final AbstractBean abstractBean) {
+		if (abstractBean instanceof DomainNetworkItem) {
+			final DomainNetworkItem networkItem = (DomainNetworkItem)abstractBean;
+			networkItem.setDomainId(Identifier.VOID_IDENTIFIER, 
+				this.domainBean.getIdentifier());
+		}
+		
 	}
 }
 

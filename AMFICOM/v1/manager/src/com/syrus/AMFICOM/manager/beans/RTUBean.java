@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBean.java,v 1.2 2005/12/01 14:03:28 bob Exp $
+ * $Id: RTUBean.java,v 1.3 2005/12/05 14:41:22 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/01 14:03:28 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/05 14:41:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -172,7 +172,7 @@ public class RTUBean extends Bean implements DomainNetworkItem {
 	
 	@Override
 	public void dispose() throws ApplicationException {
-		Log.debugMessage(this.identifier.getIdentifierString(), Log.DEBUGLEVEL10);
+		Log.debugMessage(this.identifier.getIdentifierString(), Log.DEBUGLEVEL03);
 		StorableObjectPool.delete(this.identifier);		
 		super.disposeLayoutItem();
 	}

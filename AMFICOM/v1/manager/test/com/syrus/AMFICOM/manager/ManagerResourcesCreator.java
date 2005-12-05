@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerResourcesCreator.java,v 1.3 2005/11/30 13:07:54 bob Exp $
+* $Id: ManagerResourcesCreator.java,v 1.4 2005/12/05 14:41:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.manager.viewers.WorkstationBeanUI;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/30 13:07:54 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/05 14:41:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -120,86 +120,92 @@ public final class ManagerResourcesCreator extends TestCase {
 			
 //			 create domain perspective 
 			{			
-				final Perspective perspective = domainsPerspective.addNewPerspective();
+				final Perspective domainPerspective = domainsPerspective.addNewPerspective();
 				{
-					perspective.setId(ObjectEntities.DOMAIN);
+					domainPerspective.setId(ObjectEntities.DOMAIN);
 					
-					UiHandler networkUIHandler = perspective.addNewUiHandler();
+					UiHandler networkUIHandler = domainPerspective.addNewUiHandler();
 					networkUIHandler.setId(NetBeanFactory.NET_CODENAME + ObjectEntities.DOMAIN);
 					networkUIHandler.setUiHandlerClass(NetBeanUI.class.getName());
 					
-					BeanFactory networkFactory = perspective.addNewBeanFactory();
+					BeanFactory networkFactory = domainPerspective.addNewBeanFactory();
 					networkFactory.setId(NetBeanFactory.NET_CODENAME + ObjectEntities.DOMAIN);
 					networkFactory.setBeanFactoryClass(NetBeanFactory.class.getName());
 					
-					BeanFactory rtuFactory = perspective.addNewBeanFactory();
+					BeanFactory rtuFactory = domainPerspective.addNewBeanFactory();
 					rtuFactory.setId(ObjectEntities.KIS);
 					rtuFactory.setBeanFactoryClass(RTUBeanFactory.class.getName());
 					
-					UiHandler rtuUIHandler = perspective.addNewUiHandler();
+					UiHandler rtuUIHandler = domainPerspective.addNewUiHandler();
 					rtuUIHandler.setId(ObjectEntities.KIS);
 					rtuUIHandler.setUiHandlerClass(KISBeanUI.class.getName());
 					
-					BeanFactory serverFactory = perspective.addNewBeanFactory();
+					BeanFactory serverFactory = domainPerspective.addNewBeanFactory();
 					serverFactory.setId(ObjectEntities.SERVER);
 					serverFactory.setBeanFactoryClass(ServerBeanFactory.class.getName());
 					
-					UiHandler serverUIHandler = perspective.addNewUiHandler();
+					UiHandler serverUIHandler = domainPerspective.addNewUiHandler();
 					serverUIHandler.setId(ObjectEntities.SERVER);
 					serverUIHandler.setUiHandlerClass(ServerBeanUI.class.getName());
 					
-					BeanFactory mcmFactory = perspective.addNewBeanFactory();
+					BeanFactory mcmFactory = domainPerspective.addNewBeanFactory();
 					mcmFactory.setId(ObjectEntities.MCM);
 					mcmFactory.setBeanFactoryClass(MCMBeanFactory.class.getName());
 					
-					UiHandler mcmUIHandler = perspective.addNewUiHandler();
+					UiHandler mcmUIHandler = domainPerspective.addNewUiHandler();
 					mcmUIHandler.setId(ObjectEntities.MCM);
 					mcmUIHandler.setUiHandlerClass(MCMBeanUI.class.getName());
 					
-					BeanFactory workstationFactory = perspective.addNewBeanFactory();
+					BeanFactory workstationFactory = domainPerspective.addNewBeanFactory();
 					workstationFactory.setId(WorkstationBeanFactory.WORKSTATION_CODENAME);
 					workstationFactory.setBeanFactoryClass(WorkstationBeanFactory.class.getName());
 					
-					UiHandler workstationUIHandler = perspective.addNewUiHandler();
+					UiHandler workstationUIHandler = domainPerspective.addNewUiHandler();
 					workstationUIHandler.setId(WorkstationBeanFactory.WORKSTATION_CODENAME);
 					workstationUIHandler.setUiHandlerClass(WorkstationBeanUI.class.getName());
 					
-					BeanFactory userFactory = perspective.addNewBeanFactory();
+					BeanFactory userFactory = domainPerspective.addNewBeanFactory();
 					userFactory.setId(ObjectEntities.SYSTEMUSER);
 					userFactory.setBeanFactoryClass(UserBeanFactory.class.getName());
 					
-					UiHandler userUIHandler = perspective.addNewUiHandler();
+					UiHandler userUIHandler = domainPerspective.addNewUiHandler();
 					userUIHandler.setId(ObjectEntities.SYSTEMUSER);
 					userUIHandler.setUiHandlerClass(SystemUserBeanUI.class.getName());
 					
-					Validator mcmNetValidator = perspective.addNewValidator();
+					Validator mcmNetValidator = domainPerspective.addNewValidator();
 					mcmNetValidator.setSource(ObjectEntities.MCM);
 					mcmNetValidator.setTarget(NetBeanFactory.NET_CODENAME);
 					
-					Validator rtuNetValidator = perspective.addNewValidator();
+					Validator rtuNetValidator = domainPerspective.addNewValidator();
 					rtuNetValidator.setSource( ObjectEntities.KIS);
 					rtuNetValidator.setTarget(NetBeanFactory.NET_CODENAME);
 					
-					Validator serverNetValidator = perspective.addNewValidator();
+					Validator serverNetValidator = domainPerspective.addNewValidator();
 					serverNetValidator.setSource(ObjectEntities.SERVER);
 					serverNetValidator.setTarget(NetBeanFactory.NET_CODENAME);
 					
-					Validator workstationNetValidator = perspective.addNewValidator();
+					Validator workstationNetValidator = domainPerspective.addNewValidator();
 					workstationNetValidator.setSource(WorkstationBeanFactory.WORKSTATION_CODENAME);
 					workstationNetValidator.setTarget(NetBeanFactory.NET_CODENAME);
 					
-					Validator userWorkstationValidator = perspective.addNewValidator();
+					Validator userWorkstationValidator = domainPerspective.addNewValidator();
 					userWorkstationValidator.setSource(ObjectEntities.SYSTEMUSER);
 					userWorkstationValidator.setTarget(WorkstationBeanFactory.WORKSTATION_CODENAME);
 					
-					PopupMenu userMenu = perspective.addNewPopupMenu();
+					PopupMenu userMenu = domainPerspective.addNewPopupMenu();
 					userMenu.setId(ObjectEntities.SYSTEMUSER);
 					userMenu.setPopupMenuHandler(SystemUserDomainPopupMenu.class.getName());
 
+				
+					domainPerspective.addUndeletable(NetBeanFactory.NET_CODENAME);
 					
+					domainPerspective.addCutable(ObjectEntities.SYSTEMUSER);
+					domainPerspective.addCutable(ObjectEntities.SERVER);
+					domainPerspective.addCutable(ObjectEntities.KIS);
+					domainPerspective.addCutable(ObjectEntities.MCM);
 				}
 
-				Perspective userPerspective = perspective.addNewPerspective();
+				Perspective userPerspective = domainPerspective.addNewPerspective();
 //				 create user perspective 
 				{			
 //					final ManagerResource resource = managerExtensions.addNewManagerResource();

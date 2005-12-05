@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.7 2005/11/16 15:12:56 bass Exp $
+# $Id: Makefile,v 1.8 2005/12/05 14:41:22 bob Exp $
 #
 # vim:set ft=make:
 #
@@ -10,6 +10,9 @@ LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
 XMLDIR = schemas
+XMLSRCDIR = schemas/src
+XMLCLASSSRCDIR = schemas/classes
+
 include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,XMLBEANSCLASSPATH)

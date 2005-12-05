@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerHandler.java,v 1.9 2005/11/30 13:15:27 bob Exp $
+* $Id: ManagerHandler.java,v 1.10 2005/12/05 14:41:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.manager;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,7 +34,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/11/30 13:15:27 $
+ * @version $Revision: 1.10 $, $Date: 2005/12/05 14:41:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -220,12 +221,21 @@ public final class ManagerHandler extends AbstractExtensionHandler {
 			subperspectiveMap.put(perspective2.getId(), data);
 		}
 		
+		final Set<String> undeletable = new HashSet<String>();
+		undeletable.addAll(Arrays.asList(perspective.getUndeletableArray()));
+		
+		
+		final Set<String> cutable = new HashSet<String>();
+		cutable.addAll(Arrays.asList(perspective.getCutableArray()));
+		
 		PerspectiveData perspectiveData = 
 			new PerspectiveData(perspectiveFactories, 
 				beanUI,
 				popupMenus,
 				subperspectiveMap,
-				new PerspectiveValidator(sourceTargetMap));
+				new PerspectiveValidator(sourceTargetMap),
+				undeletable,
+				cutable);
 		
 		final String perspectiveCodename = perspective.getId().intern();
 		

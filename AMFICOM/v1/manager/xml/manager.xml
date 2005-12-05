@@ -3,19 +3,16 @@
     <man:managerResource xsi:type="man:perspective" id="domains">
       <man:handler>com.syrus.AMFICOM.manager.perspective.DomainsPerspective</man:handler>
       <man:beanFactory id="Domain" beanFactoryClass="com.syrus.AMFICOM.manager.beans.DomainBeanFactory"/>
-      <man:beanFactory id="Net" beanFactoryClass="com.syrus.AMFICOM.manager.beans.NetBeanFactory"/>
       <man:uiHandler id="Domain" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.DomainBeanUI"/>
-      <man:uiHandler id="Net" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.NetBeanUI"/>
       <man:validator source="Domain" target="Domain"/>
-      <man:validator source="Net" target="Domain"/>
       <man:perspective id="Domain">
-        <man:beanFactory id="Net" beanFactoryClass="com.syrus.AMFICOM.manager.beans.NetBeanFactory"/>
+        <man:beanFactory id="NetDomain" beanFactoryClass="com.syrus.AMFICOM.manager.beans.NetBeanFactory"/>
         <man:beanFactory id="KIS" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RTUBeanFactory"/>
         <man:beanFactory id="Server" beanFactoryClass="com.syrus.AMFICOM.manager.beans.ServerBeanFactory"/>
         <man:beanFactory id="MCM" beanFactoryClass="com.syrus.AMFICOM.manager.beans.MCMBeanFactory"/>
         <man:beanFactory id="Workstation" beanFactoryClass="com.syrus.AMFICOM.manager.beans.WorkstationBeanFactory"/>
         <man:beanFactory id="SystemUser" beanFactoryClass="com.syrus.AMFICOM.manager.beans.UserBeanFactory"/>
-        <man:uiHandler id="Net" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.NetBeanUI"/>
+        <man:uiHandler id="NetDomain" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.NetBeanUI"/>
         <man:uiHandler id="KIS" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.KISBeanUI"/>
         <man:uiHandler id="Server" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.ServerBeanUI"/>
         <man:uiHandler id="MCM" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.MCMBeanUI"/>
@@ -26,6 +23,7 @@
         <man:validator source="Server" target="Net"/>
         <man:validator source="Workstation" target="Net"/>
         <man:validator source="SystemUser" target="Workstation"/>
+        <man:popupMenu id="SystemUser" popupMenuHandler="com.syrus.AMFICOM.manager.UI.SystemUserDomainPopupMenu"/>
         <man:perspective id="SystemUser">
           <man:beanFactory id="SystemUser" beanFactoryClass="com.syrus.AMFICOM.manager.beans.UserBeanFactory"/>
           <man:beanFactory id="PermissionAttributes" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
@@ -71,8 +69,12 @@
           <man:validator source="prediction" target="SystemUser"/>
           <man:validator source="report" target="SystemUser"/>
           <man:validator source="PermissionAttributes" target="SystemUser"/>
-          <man:popupMenu id="SystemUser" popupMenuHandler="com.syrus.AMFICOM.manager.UI.SystemUserPermissionPopupMenu"/>
         </man:perspective>
+        <man:undeletable>Net</man:undeletable>
+        <man:cutable>SystemUser</man:cutable>
+        <man:cutable>Server</man:cutable>
+        <man:cutable>KIS</man:cutable>
+        <man:cutable>MCM</man:cutable>
       </man:perspective>
     </man:managerResource>
     <man:managerResource xsi:type="man:perspective" id="Role">

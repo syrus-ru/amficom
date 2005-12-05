@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModel.java,v 1.15 2005/11/28 14:47:04 bob Exp $
+* $Id: ManagerGraphModel.java,v 1.16 2005/12/05 14:41:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/11/28 14:47:04 $
+ * @version $Revision: 1.16 $, $Date: 2005/12/05 14:41:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -58,7 +58,7 @@ public class ManagerGraphModel extends DefaultGraphModel {
 		}
 		
 		Log.debugMessage("ManagerGraphModel.acceptsSource() | > " 
-			+ result, Log.DEBUGLEVEL10);
+			+ result, Log.DEBUGLEVEL03);
 		return result;
 	}	
 	
@@ -67,7 +67,7 @@ public class ManagerGraphModel extends DefaultGraphModel {
 		boolean result = source != null && target != null;
 		if (result) {
 			if (source.getTargets().size() > 0) {
-				Log.debugMessage("ManagerGraphModel.isTargetValid | source already refer to target", Log.DEBUGLEVEL10);
+				Log.debugMessage("source already refer to target", Log.DEBUGLEVEL03);
 				result = false;
 			}
 			if (result) {
@@ -106,13 +106,13 @@ public class ManagerGraphModel extends DefaultGraphModel {
 				+ source 
 				+ " > " 
 				+ target, 
-			Log.DEBUGLEVEL10);
+			Log.DEBUGLEVEL03);
 		if (sourceBean != null && targetBean != null) {
 			final Validator validator = this.managerMainFrame.getPerspective().getValidator();
 			boolean result = validator.isValid(sourceBean.getCodename(), targetBean.getCodename()) && 
 				!this.isLooped(source, target);
 			Log.debugMessage("ManagerGraphModel.isTargetValid | " + result, 
-				Log.DEBUGLEVEL10);
+				Log.DEBUGLEVEL03);
 //			return result;
 		}
 //		return false;

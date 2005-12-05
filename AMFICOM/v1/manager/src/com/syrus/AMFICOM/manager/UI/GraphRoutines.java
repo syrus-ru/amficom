@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphRoutines.java,v 1.8 2005/12/02 13:07:45 bob Exp $
+* $Id: GraphRoutines.java,v 1.9 2005/12/05 14:41:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -49,6 +49,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.manager.ManagerHandler;
+import com.syrus.AMFICOM.manager.UI.ManagerMainFrame.CellBuffer;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.beans.Bean;
 import com.syrus.AMFICOM.manager.graph.MPort;
@@ -61,7 +62,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/12/02 13:07:45 $
+ * @version $Revision: 1.9 $, $Date: 2005/12/05 14:41:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -105,7 +106,7 @@ public final class GraphRoutines {
 				this.graphModel.isConnectionPermitted(sourcePort, targetPort);
 			assert Log.debugMessage(sourcePort + ">" + targetPort + ", "
 					+ (canConnect ? "can connect" : "cannot connect"), 
-				Log.DEBUGLEVEL10);
+				Log.DEBUGLEVEL03);
 			if (canConnect) {
 				DefaultEdge edge = new DefaultEdge();
 				edge.setSource(sourcePort);
@@ -358,6 +359,7 @@ public final class GraphRoutines {
 		assert Log.debugMessage(item, Log.DEBUGLEVEL10);
 		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
 		final GraphModel model = this.graph.getModel();
+		final CellBuffer cellBuffer = this.managerMainFrame.getCellBuffer();
 		
 		DefaultGraphCell parentCell = null;
 		final Identifier parentId = item.getParentId();
@@ -415,7 +417,9 @@ public final class GraphRoutines {
 					0, 
 					beanUI.getImage(bean));
 			if (!graphLayoutCache.isVisible(itemCell)) {
-				graphLayoutCache.setVisible(itemCell, true);
+				if (!cellBuffer.isExists(itemCell)) {
+					graphLayoutCache.setVisible(itemCell, true);
+				}
 			}
 			
 //			if (parentCell != null) {
@@ -857,23 +861,27 @@ public final class GraphRoutines {
 			final boolean visible) {
 		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
 		final GraphModel model = this.graph.getModel();
+		final CellBuffer cellBuffer = this.managerMainFrame.getCellBuffer();
 		
 		final String name = item.getName();
 		final String layoutName = item.getLayoutName();
 		for(int i = 0; i < model.getRootCount(); i++) {
 			final DefaultGraphCell cell = (DefaultGraphCell) model.getRootAt(i);
 			if (!model.isEdge(cell) && !model.isPort(cell)) {				
-				final ManagerGraphCell graphCell = (ManagerGraphCell) cell;
+				final ManagerGraphCell managerGraphCell = (ManagerGraphCell) cell;
+				final ManagerGraphCell graphCell = managerGraphCell;
 				final AbstractBean bean = graphCell.getAbstractBean();				
 				final Perspective perspective = graphCell.getPerspective();
 				final String codename = perspective.getCodename();
 				if (codename.equals(layoutName) && 
 						name.equals(bean.getId())) {
-					if (visible && !graphLayoutCache.isVisible(cell)) {
+					if (visible && 
+							!graphLayoutCache.isVisible(cell) && 
+							!cellBuffer.isExists(managerGraphCell)) {
 						graphLayoutCache.setVisible(cell, true);
 					}
 					
-					return (ManagerGraphCell) cell;
+					return managerGraphCell;
 				}
 			}
 		}
@@ -970,6 +978,7 @@ public final class GraphRoutines {
 		if (show) {
 		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
 		final GraphModel model = this.graph.getModel();
+		final CellBuffer cellBuffer = this.managerMainFrame.getCellBuffer();
 		
 		for(int i = 0; i<model.getRootCount(); i++) {
 			final Object rootAt = model.getRootAt(i);
@@ -980,8 +989,10 @@ public final class GraphRoutines {
 				
 				assert Log.debugMessage("port:" + port + (visible ? " visible" : " hide"), 
 					Log.DEBUGLEVEL10);				
-				final TreeNode parent = port.getParent();
-				graphLayoutCache.setVisible(parent, visible);
+				final ManagerGraphCell parent = (ManagerGraphCell) port.getParent();
+				if (!cellBuffer.isExists(parent)) {
+					graphLayoutCache.setVisible(parent, visible);
+				}
 			}
 		}
 		

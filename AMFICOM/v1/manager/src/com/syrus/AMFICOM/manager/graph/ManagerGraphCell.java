@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphCell.java,v 1.1 2005/11/28 14:47:05 bob Exp $
+* $Id: ManagerGraphCell.java,v 1.2 2005/12/05 14:41:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/28 14:47:05 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/05 14:41:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -27,6 +27,10 @@ public final class ManagerGraphCell extends DefaultGraphCell {
 	public ManagerGraphCell(final Object userObject, 
 			final Perspective perspective) {
 		super(userObject);
+		this.perspective = perspective;
+	}
+
+	public final void setPerspective(Perspective perspective) {
 		this.perspective = perspective;
 	}
 	
@@ -46,4 +50,3 @@ public final class ManagerGraphCell extends DefaultGraphCell {
 		return this.getMPort().getBean();
 	}
 }
-

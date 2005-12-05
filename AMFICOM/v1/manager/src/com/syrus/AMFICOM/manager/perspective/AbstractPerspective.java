@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractPerspective.java,v 1.4 2005/12/02 13:07:45 bob Exp $
+* $Id: AbstractPerspective.java,v 1.5 2005/12/05 14:41:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/02 13:07:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/05 14:41:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -516,6 +516,18 @@ public abstract class AbstractPerspective implements Perspective {
 		return this.perspectiveData.isBeanUISupported(codename);
 	}
 	
+	public final boolean isUndeletable(final AbstractBean bean) {
+		final String codename = bean.getCodename();
+		assert Log.debugMessage(codename, Log.DEBUGLEVEL10);
+		return this.perspectiveData.isUndeletable(codename);
+	}
+	
+	public final boolean isCuttable(final AbstractBean bean) {
+		final String codename = bean.getCodename();
+		assert Log.debugMessage(codename, Log.DEBUGLEVEL10);
+		return this.perspectiveData.isCuttable(codename);
+	}
+	
 	public final List<AbstractBean> getLayoutBeans() {
 		return this.layoutBeans;
 	}
@@ -538,6 +550,10 @@ public abstract class AbstractPerspective implements Perspective {
 		this.firePropertyChangeEvent(this.propertyChangeEvent);
 	}
 	
+	public void putBean(AbstractBean abstractBean) {
+		// nothing		
+	}
+	
 	/////// inner classess ////
 	protected interface Chechable<T extends AbstractBean> {
 		boolean isNeedIn(final T bean);
@@ -547,5 +563,6 @@ public abstract class AbstractPerspective implements Perspective {
 		void postActionPerform(final T bean) throws ApplicationException;
 	}
 
+	
 }
 

@@ -1,5 +1,5 @@
 /*-
-* $Id: PerspectiveTreeModel.java,v 1.3 2005/12/02 13:07:45 bob Exp $
+* $Id: PerspectiveTreeModel.java,v 1.4 2005/12/05 14:41:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,11 +24,13 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.Port;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.manager.ManagerHandler;
+import com.syrus.AMFICOM.manager.UI.ManagerMainFrame.CellBuffer;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.AMFICOM.manager.graph.ManagerGraphCell;
@@ -37,7 +39,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/02 13:07:45 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/05 14:41:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -112,6 +114,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 			return actions.get(index - size);
 		}
 		if (parent instanceof ManagerGraphCell) {
+			final CellBuffer cellBuffer = this.managerMainFrame.getCellBuffer();
 			final ManagerGraphCell cell = (ManagerGraphCell) parent;
 			final Perspective perspective = cell.getPerspective();
 			final List<AbstractBean> layoutBeans = 
@@ -134,12 +137,19 @@ public final class PerspectiveTreeModel implements TreeModel {
 					continue;
 				}
 
+				node = (ManagerGraphCell) mport2.getParent();
+				if (cellBuffer.isExists(node)) {
+					node = null;
+					continue;
+				}
+				
 //				assert Log.debugMessage("3:" + bean, Log.DEBUGLEVEL03);
 				if(count == index) {
-					node = (ManagerGraphCell) mport2.getParent();
 //					assert Log.debugMessage("node found", Log.DEBUGLEVEL03);
 					break;
 				}
+				
+				node = null;
 				
 				count++;
 			}
@@ -256,6 +266,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 	}
 	
 	private final int getChildCount(final ManagerGraphCell cell) {
+		final CellBuffer cellBuffer = this.managerMainFrame.getCellBuffer();
 		final Perspective perspective = cell.getPerspective();
 		final List<AbstractBean> layoutBeans = 
 			perspective.getLayoutBeans();
@@ -274,8 +285,16 @@ public final class PerspectiveTreeModel implements TreeModel {
 			if (layoutBeans != null && !layoutBeans.contains(bean)) {
 				continue;
 			}
+			
+			final ManagerGraphCell parent = (ManagerGraphCell) mport2.getParent();
+			final boolean exists = cellBuffer.isExists(parent);
+//			assert Log.debugMessage(parent + " , " + exists, Log.DEBUGLEVEL03);
+			if(exists){
+				continue;
+			}
 			count++;
 		}
+//		assert Log.debugMessage(cell + " > " + count, Log.DEBUGLEVEL03);
 		return count;
 	}
 	
@@ -556,6 +575,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 		}
 		
 		public final void updateParentItems() {
+			final CellBuffer cellBuffer = managerMainFrame.getCellBuffer();
 			assert Log.debugMessage(LOGLEVEL);
 			this.firstLevel.clear();
 
@@ -565,7 +585,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 					final ManagerGraphCell cell = (ManagerGraphCell) node;
 					final Perspective perspective2 = cell.getPerspective();
 					final MPort port = cell.getMPort();					
-					if (perspective2 != this.perspective) {
+					if (perspective2 != this.perspective || cellBuffer.isExists(cell)) {
 						continue;
 					}
 					assert Log.debugMessage(this.perspective + " > port: " +port, Log.DEBUGLEVEL03);

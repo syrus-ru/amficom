@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.25 2005/12/02 13:07:45 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.26 2005/12/05 14:41:22 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.awt.Point;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +36,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
-import javax.swing.TransferHandler;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
@@ -62,12 +62,14 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.extensions.ExtensionLauncher;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.manager.ManagerHandler;
+import com.syrus.AMFICOM.manager.beans.AbstractBean;
+import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.AMFICOM.manager.graph.ManagerGraphCell;
 import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.25 $, $Date: 2005/12/02 13:07:45 $
+ * @version $Revision: 1.26 $, $Date: 2005/12/05 14:41:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -110,6 +112,8 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 	GraphRoutines	graphRoutines;
 
 	private Point	location;
+
+	private CellBuffer	buffer;
 	
 	public ManagerMainFrame(final ApplicationContext aContext) {
 		super(aContext, "Manager", new AbstractMainMenuBar(aContext.getApplicationModel()) {
@@ -523,33 +527,85 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		Action action;
 		URL url;
 
-		// Copy
-		action = TransferHandler // JAVA13:
-												// org.jgraph.plaf.basic.TransferHandler
-				.getCopyAction();
-		url = getClass().getClassLoader().getResource(
-				"com/syrus/AMFICOM/manager/resources/icons/copy.gif");
-		action.putValue(Action.SMALL_ICON, new ImageIcon(url));
-		
-		graphToolBar.add(copy = new EventRedirector(action));
+//		// Copy
+//		action = TransferHandler // JAVA13:
+//												// org.jgraph.plaf.basic.TransferHandler
+//				.getCopyAction();
+//		url = getClass().getClassLoader().getResource(
+//				"com/syrus/AMFICOM/manager/resources/icons/copy.gif");
+//		action.putValue(Action.SMALL_ICON, new ImageIcon(url));
+//		
+//		graphToolBar.add(copy = new EventRedirector(action));
+//		copy.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Copy"));
 		
 		// Paste
-		action = javax.swing.TransferHandler // JAVA13:
-												// org.jgraph.plaf.basic.TransferHandler
-				.getPasteAction();
+//		action = javax.swing.TransferHandler // JAVA13:
+//												// org.jgraph.plaf.basic.TransferHandler
+//				.getPasteAction();
+		action = new AbstractAction() {
+
+			@SuppressWarnings({"synthetic-access","unqualified-field-access"})
+			public void actionPerformed(ActionEvent e) {				
+				final GraphLayoutCache cache = graph.getGraphLayoutCache();
+				arranging = true;
+				ManagerGraphCell managerGraphCell = buffer.getCell();
+				buffer.clear();
+				if (managerGraphCell != null) {
+					cache.setVisible(managerGraphCell, true);
+					managerGraphCell.setPerspective(perspective);
+					perspective.putBean(managerGraphCell.getAbstractBean());
+					perspective.firePropertyChangeEvent(new PropertyChangeEvent(this, "layoutBeans", null, null));
+				}
+				arranging = false;
+				updateBufferButtons();
+			}
+		};
 		url = getClass().getClassLoader().getResource(
 				"org/jgraph/example/resources/paste.gif");
 		action.putValue(Action.SMALL_ICON, new ImageIcon(url));
 		graphToolBar.add(paste = new EventRedirector(action));
-
+		paste.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Paste"));
+		
 		// Cut
-		action = javax.swing.TransferHandler // JAVA13:
-												// org.jgraph.plaf.basic.TransferHandler
-				.getCutAction();
+//		action = javax.swing.TransferHandler // JAVA13:
+//												// org.jgraph.plaf.basic.TransferHandler
+//				.getCutAction();
+		
+		this.buffer = new CellBuffer();
+		
+		action = new AbstractAction() {
+
+			@SuppressWarnings({"unqualified-field-access","synthetic-access", "unchecked"})
+			public void actionPerformed(final ActionEvent e) {
+				
+				if (!ManagerMainFrame.this.graph.isSelectionEmpty()) {
+					final GraphModel model = ManagerMainFrame.this.graph.getModel();
+					final GraphLayoutCache graphLayoutCache = graph.getGraphLayoutCache();
+					final ManagerGraphCell selectionCell = (ManagerGraphCell) graph.getSelectionCell();
+					final MPort port = selectionCell.getMPort();
+					final List list = new ArrayList();
+					for(final Iterator iterator = port.edges(); iterator.hasNext();) {
+						list.add(iterator.next());						
+					}
+					model.remove(list.toArray());
+					buffer.putCells(selectionCell);
+					graphLayoutCache.setVisible(selectionCell, false);
+					treeModel.reload();			
+					graph.getSelectionModel().clearSelection();
+				}
+				updateBufferButtons();
+			}
+		};
+		
 		url = getClass().getClassLoader().getResource(
 				"org/jgraph/example/resources/cut.gif");
 		action.putValue(Action.SMALL_ICON, new ImageIcon(url));
 		graphToolBar.add(cut = new EventRedirector(action));
+		cut.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Cut"));
+		cut.setEnabled(false);
+		
+		this.updateBufferButtons();
+
 		
 		// Remove
 		URL removeUrl = getClass().getClassLoader().getResource(
@@ -560,13 +616,13 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (!ManagerMainFrame.this.graph.isSelectionEmpty()) {
 					Object[] cells = ManagerMainFrame.this.graph.getSelectionCells();
-					GraphModel model = ManagerMainFrame.this.graph.getModel();
+					final GraphModel model = ManagerMainFrame.this.graph.getModel();
 					cells = ManagerMainFrame.this.graph.getDescendants(cells);
-					List list = new ArrayList(3 * cells.length / 2);
-					for(Object cell: cells) {
+					final List list = new ArrayList(3 * cells.length / 2);
+					for(final Object cell: cells) {
 						if (model.isPort(cell)) {
-							Port port = (Port)cell;
-							for(Iterator it=port.edges();it.hasNext();) {
+							final Port port = (Port)cell;
+							for(final Iterator it=port.edges();it.hasNext();) {
 								list.add(it.next());
 							}
 						}						
@@ -576,6 +632,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 					
 					
 				}
+				
 			}
 		};
 		this.remove.setEnabled(false);
@@ -677,6 +734,17 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		this.redo.setEnabled(this.undoManager.canRedo(this.graph.getGraphLayoutCache()));
 	}
 
+	protected void updateBufferButtons() {
+		boolean exists = this.buffer.isExists();
+		if (exists) {
+			final AbstractBean abstractBean = 
+				this.buffer.getCell().getAbstractBean();
+			exists = this.perspective.isSupported(abstractBean);
+		}
+		
+		this.paste.setEnabled(exists);
+	}
+	
 	private void createTreeModel() {		
 //		this.treeModel = new NonRootGraphTreeModel(this);
 		this.treeModel = new PerspectiveTreeModel(this);
@@ -752,6 +820,8 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			this.graphRoutines.arrangeLayoutItems(perspective);
 			this.graphRoutines.showLayerName(perspective.getCodename(), true);
 			this.graphRoutines.fixLayoutItemCharacteristics();
+			this.graph.getSelectionModel().clearSelection();
+			updateBufferButtons();
 		} catch (final ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -814,6 +884,40 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		return this.treeModel;
 	}
 
+	public final CellBuffer getCellBuffer() {
+		return this.buffer;
+	}
+	
+	public final class CellBuffer {
+		
+		private ManagerGraphCell managerGraphCell;
+		
+		@SuppressWarnings({"hiding","unqualified-field-access"})		
+		public final void putCells(final ManagerGraphCell cell) {
+			assert Log.debugMessage(cell, Log.DEBUGLEVEL03);
+			if (this.managerGraphCell != null) {
+				final GraphModel model = graph.getModel();
+				model.remove(new Object[] { this.managerGraphCell});				
+			}
+			this.managerGraphCell = cell;
+		}
+		
+		public final boolean isExists() {
+			return this.managerGraphCell != null;
+		}
+		
+		public final boolean isExists(final ManagerGraphCell cell) {
+			return this.managerGraphCell == cell;
+		}
+		
+		public final ManagerGraphCell getCell() {
+			return this.managerGraphCell;
+		}
+		
+		public final void clear() {
+			this.managerGraphCell = null;
+		}
+	}
 
 	// This will change the source of the actionevent to graph.
 	protected class EventRedirector extends AbstractAction {
@@ -821,16 +925,21 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		protected Action action;
 
 		// Construct the "Wrapper" Action
-		public EventRedirector(Action a) {
+		public EventRedirector(final Action a) {
 			super("", (ImageIcon) a.getValue(Action.SMALL_ICON));
 			this.action = a;
 		}
 
 		// Redirect the Actionevent
-		public void actionPerformed(ActionEvent e) {
-			e = new ActionEvent(graph, e.getID(), e.getActionCommand(), e
-					.getModifiers());
-			action.actionPerformed(e);
+		@SuppressWarnings("unqualified-field-access")
+		public void actionPerformed(final ActionEvent e) {
+			final ActionEvent actionEvent = 
+				new ActionEvent(graph, 
+					e.getID(), 
+					e.getActionCommand(), 
+					e.getModifiers());
+			assert Log.debugMessage(e, Log.DEBUGLEVEL03);
+			this.action.actionPerformed(actionEvent);
 		}
 	}
 }

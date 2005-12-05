@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerMarqueeHandler.java,v 1.9 2005/11/17 09:00:35 bob Exp $
+* $Id: ManagerMarqueeHandler.java,v 1.10 2005/12/05 14:41:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,10 +28,11 @@ import org.jgraph.graph.PortView;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.AMFICOM.manager.perspective.Perspective;
+import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.10 $, $Date: 2005/12/05 14:41:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -167,15 +168,19 @@ public class ManagerMarqueeHandler extends BasicMarqueeHandler {
 				&& this.firstPort != this.port) {
 			// Then Establish Connection
 			// connect((Port) firstPort.getCell(), (Port) port.getCell());
-			MPort sourcePort = (MPort) this.firstPort.getCell();
-			MPort targetPort = (MPort) this.port.getCell();
+			
+			final MPort sourcePort = (MPort) this.firstPort.getCell();
+			final MPort targetPort = (MPort) this.port.getCell();
+			assert Log.debugMessage(sourcePort + " -> " + targetPort, Log.DEBUGLEVEL03);
 			DefaultEdge edge = this.graphText.getGraphRoutines().createEdge(
 				(DefaultGraphCell)sourcePort.getParent(), 
 				(DefaultGraphCell)targetPort.getParent());
 			
 			
 			
+			
 			if (edge != null) {
+				assert Log.debugMessage(edge + "," + edge.getClass().getSimpleName(), Log.DEBUGLEVEL03);
 //				Object userObject = sourcePort.getUserObject();
 //				if (userObject instanceof AbstractBean) {
 ////					System.out.println("MyMarqueeHandler.mouseReleased()");
@@ -183,7 +188,8 @@ public class ManagerMarqueeHandler extends BasicMarqueeHandler {
 //					// XXX
 ////					bean.updateEdgeAttributes(edge, targetPort);
 //				}
-				GraphLayoutCache graphLayoutCache = this.graphText.graph.getGraphLayoutCache();
+				final GraphLayoutCache graphLayoutCache = 
+					this.graphText.graph.getGraphLayoutCache();
 				graphLayoutCache.refresh(graphLayoutCache.getMapping(edge, true), true);
 			}
 			e.consume();

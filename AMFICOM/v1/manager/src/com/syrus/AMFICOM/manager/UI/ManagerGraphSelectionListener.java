@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphSelectionListener.java,v 1.5 2005/11/28 14:47:04 bob Exp $
+* $Id: ManagerGraphSelectionListener.java,v 1.6 2005/12/05 14:41:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/11/28 14:47:04 $
+ * @version $Revision: 1.6 $, $Date: 2005/12/05 14:41:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -71,11 +71,11 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 		
 		final Perspective perspective = managerMainFrame.getPerspective();
 		
-		boolean deleteAllow = true;
+		boolean deleteAllow = false;
+		boolean cutAllow = false;
 		
 		if (model.isEdge(cell)) {
 			if (e.isAddedCell()) {
-				deleteAllow = false;
 				final Edge edge = (Edge)cell;
 				final TreeNode sourceNode = (TreeNode) edge.getSource();
 				final TreeNode targetNode = (TreeNode) edge.getSource();
@@ -115,7 +115,9 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 						if (parentLayoutItem != null) {	
 							try {
 								final GraphRoutines graphRoutines = managerMainFrame.getGraphRoutines();
+								deleteAllow |= !perspective.isUndeletable(abstractBean);
 								deleteAllow &= graphRoutines.getBean(parentLayoutItem) != abstractBean;
+								cutAllow |= perspective.isCuttable(abstractBean);
 	
 								managerMainFrame.beanUI = perspective.getBeanUI(abstractBean.getCodename());
 								JPanel propertyPanel2 = managerMainFrame.beanUI.getPropertyPanel(abstractBean);
@@ -150,6 +152,7 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 		
 		boolean enabled = !managerMainFrame.graph.isSelectionEmpty();
 		managerMainFrame.remove.setEnabled(enabled && deleteAllow);
+		managerMainFrame.cut.setEnabled(enabled && cutAllow);
 	}
 }
 
