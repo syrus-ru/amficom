@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.46 2005/12/02 15:16:56 arseniy Exp $
+ * $Id: LRUMap.java,v 1.47 2005/12/05 09:06:46 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/12/02 15:16:56 $
+ * @version $Revision: 1.47 $, $Date: 2005/12/05 09:06:46 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -223,16 +223,20 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 		return this.array;
 	}
 
-	void populate(final IEntry<K, V>[] entries) {
+	synchronized void populate(final IEntry<K, V>[] entries) {
 		if (entries == null) {
 			throw new NullPointerException("entries are null");
 		}
 
 		this.entityCount = Math.min(entries.length, this.array.length);
 		System.arraycopy(entries, 0, this.array, 0, this.entityCount);
+		for (int i = this.entityCount; i < this.array.length; i++) {
+			this.array[i] = null;
+		}
+		this.modCount = 0;
 	}
 
-	public void populate(final K[] keys, final V[] values) {
+	public synchronized void populate(final K[] keys, final V[] values) {
 		if (keys == null) {
 			throw new NullPointerException("keys are null");
 		}
@@ -247,6 +251,10 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 		for (int i = 0; i < this.entityCount; i++) {
 			this.array[i] = new Entry(keys[i], values[i]);
 		}
+		for (int i = this.entityCount; i < this.array.length; i++) {
+			this.array[i] = null;
+		}
+		this.modCount = 0;
 	}
 
 
