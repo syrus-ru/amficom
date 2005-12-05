@@ -9,7 +9,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/admin"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/config"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/csbridge"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/leserver"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/generalxml.jar"/>
@@ -22,5 +21,6 @@
 	<classpathentry kind="lib" path="manager_schemas.jar"/>
 	<classpathentry kind="var" path="AMFICOM_LIB/extensions_schemas.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/extensions"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/leserver_interface.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
