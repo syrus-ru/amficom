@@ -99,8 +99,4 @@ public abstract class ReportModel
 	 * Возвращает список элементов ШАБЛОНА ОТЧЁТА, доступных для данного модуля
 	 */
 	public abstract Collection<String> getTemplateElementNames();
-
-	public ReportModel()
-	{
-	}
 }
