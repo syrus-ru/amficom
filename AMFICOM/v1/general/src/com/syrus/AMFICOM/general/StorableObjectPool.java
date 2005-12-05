@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.205 2005/12/02 15:19:12 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.206 2005/12/05 16:36:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.LRUMapSaver;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.205 $, $Date: 2005/12/02 15:19:12 $
+ * @version $Revision: 1.206 $, $Date: 2005/12/05 16:36:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -205,7 +205,7 @@ public final class StorableObjectPool {
 
 	public static void addObjectPoolGroup(final short groupCode, final int size) {
 		assert ObjectGroupEntities.isGroupCodeValid(groupCode) : ErrorMessages.ILLEGAL_GROUP_CODE;
-		final int objectPoolSize = (size <= 0 || size > MAX_OBJECT_POOL_SIZE) ? MAX_OBJECT_POOL_SIZE : size;
+		final int objectPoolSize = (size < 0) ? 0 : (size > MAX_OBJECT_POOL_SIZE) ? MAX_OBJECT_POOL_SIZE : size;
 		for (final short entityCode : ObjectGroupEntities.getEntityCodes(groupCode).toArray()) {
 			addObjectPool(entityCode, objectPoolSize);
 		}
