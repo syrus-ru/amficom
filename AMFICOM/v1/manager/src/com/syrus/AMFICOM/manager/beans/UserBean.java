@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.3 2005/11/30 13:15:27 bob Exp $
+ * $Id: UserBean.java,v 1.4 2005/12/06 15:14:39 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/30 13:15:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/06 15:14:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -408,20 +408,20 @@ public class UserBean extends Bean implements WorkstationItem {
 	                        final Identifier newDomainId) {
 		assert Log.debugMessage(oldDomainId
 				+ ", now:" + newDomainId, 
-			Log.DEBUGLEVEL09);
+			Log.DEBUGLEVEL10);
 		try {			
 			final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 			for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
 				assert Log.debugMessage(layoutItem.getName() 
 					+ '@' + layoutItem.getLayoutName(), 
-				Log.DEBUGLEVEL09);
+				Log.DEBUGLEVEL10);
 				Log.debugMessage(layoutItem.getId() + ", "
 					+ layoutItem.getName() 
 					+ '@' 
 					+ layoutItem.getLayoutName()
 					+ ", this.codeName:" + this.id, 
-				Log.DEBUGLEVEL09);		
-
+				Log.DEBUGLEVEL10);		
+//
 				if (layoutItem.getLayoutName().startsWith(ObjectEntities.SYSTEMUSER)) {
 					final String layoutName = !newDomainId.isVoid() ? 
 							newDomainId.getIdentifierString() : 
@@ -430,8 +430,8 @@ public class UserBean extends Bean implements WorkstationItem {
 						+ layoutItem.getName() 
 						+ '@' 
 						+ layoutName, 
-					Log.DEBUGLEVEL09);		
-					layoutItem.setLayoutName(layoutName);
+					Log.DEBUGLEVEL10);		
+//					layoutItem.setLayoutName(layoutName);
 					UserItem portBean = 
 						(UserItem) graphRoutines.getBean(layoutItem);
 					portBean.setDomainId(oldDomainId, newDomainId);

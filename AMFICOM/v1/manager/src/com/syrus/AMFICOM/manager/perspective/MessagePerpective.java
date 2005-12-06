@@ -1,5 +1,5 @@
 /*-
-* $Id: MessagePerpective.java,v 1.4 2005/12/02 13:07:45 bob Exp $
+* $Id: MessagePerpective.java,v 1.5 2005/12/06 15:14:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/02 13:07:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/06 15:14:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -110,7 +110,7 @@ public abstract class MessagePerpective extends AbstractPerspective {
 	}
 
 	public final void createNecessaryItems() throws ApplicationException {
-		assert Log.debugMessage(this.getCodename(), Log.DEBUGLEVEL03);
+		assert Log.debugMessage(this.getCodename(), Log.DEBUGLEVEL10);
 		Set<DeliveryAttributes> deliveryAttributes = 
 			StorableObjectPool.getStorableObjectsByCondition(
 				new TypicalCondition(
@@ -143,7 +143,7 @@ public abstract class MessagePerpective extends AbstractPerspective {
 		
 		this.addItems(deliveryAttributes, existsNetworkLayoutItems, items);
 		
-		assert Log.debugMessage(deliveryAttributes, Log.DEBUGLEVEL03);
+		assert Log.debugMessage(deliveryAttributes, Log.DEBUGLEVEL10);
 		
 		for (final DeliveryAttributes attributes : deliveryAttributes) {			
 			this.addItems(attributes.getRoles(), existsNetworkLayoutItems, items);
@@ -156,7 +156,7 @@ public abstract class MessagePerpective extends AbstractPerspective {
 			}
 			final Identifier itemId = item.getId();
 			final Set<Identifier> roleIds = attributes.getRoleIds();
-			assert Log.debugMessage(roleIds, Log.DEBUGLEVEL03);
+			assert Log.debugMessage(roleIds, Log.DEBUGLEVEL10);
 			for (final Identifier identifier : roleIds) {				
 				this.getLayoutItem(identifier, 
 					itemId, 

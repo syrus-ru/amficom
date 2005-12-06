@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerHandler.java,v 1.10 2005/12/05 14:41:22 bob Exp $
+* $Id: ManagerHandler.java,v 1.11 2005/12/06 15:14:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.extensions.manager.PopupMenu;
 import com.syrus.AMFICOM.extensions.manager.UiHandler;
 import com.syrus.AMFICOM.extensions.manager.Validator;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.manager.UI.AbstractItemPopupMenu;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.manager.beans.AbstractBeanFactory;
@@ -34,7 +35,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/12/05 14:41:22 $
+ * @version $Revision: 1.11 $, $Date: 2005/12/06 15:14:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -253,20 +254,27 @@ public final class ManagerHandler extends AbstractExtensionHandler {
 		public PerspectiveValidator(final Map<String, Set<String>> sourceTargetMap) {
 			this.sourceTargetMap = sourceTargetMap;
 		}
+
+		private String getCodename(final String id) {
+			final int index = id.indexOf(Identifier.SEPARATOR);
+			return index >= 0 ? id.substring(0, index) : id;
+		}
 		
 		public boolean isValid(final String source,
 				final String target) {
-			final Set<String> targetKeys = this.sourceTargetMap.get(source);
+			final String sourceCodename = this.getCodename(source);
+			final String targetCodename = this.getCodename(target);
+			final Set<String> targetKeys = this.sourceTargetMap.get(sourceCodename);
 			
-			assert Log.debugMessage(source 
+			assert Log.debugMessage(sourceCodename 
 				+ " -> "
-				+ target 
+				+ targetCodename 
 				+ "(expected:"
 				+ targetKeys
 				+ ')', 
-			Log.DEBUGLEVEL10);
+			Log.DEBUGLEVEL10);			
 			
-			return targetKeys != null ? targetKeys.contains(target) : false;
+			return targetKeys != null ? targetKeys.contains(targetCodename) : false;
 		}
 	}
 }

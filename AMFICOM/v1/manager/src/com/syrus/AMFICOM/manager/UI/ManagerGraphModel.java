@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModel.java,v 1.16 2005/12/05 14:41:22 bob Exp $
+* $Id: ManagerGraphModel.java,v 1.17 2005/12/06 15:14:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,12 +16,14 @@ import org.jgraph.graph.Port;
 
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.graph.MPort;
+import com.syrus.AMFICOM.manager.graph.ManagerGraphCell;
+import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.perspective.Validator;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/12/05 14:41:22 $
+ * @version $Revision: 1.17 $, $Date: 2005/12/06 15:14:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -40,12 +42,15 @@ public class ManagerGraphModel extends DefaultGraphModel {
 		// null port doesn't supply
 		boolean result = port != null;
 		if (result) {
-			Edge edge2 = (Edge) edge;
+			final Edge edge2 = (Edge) edge;
 			final MPort source = (MPort)edge2.getSource();
 			final MPort target = (MPort) edge2.getTarget();
-			Log.debugMessage("ManagerGraphModel.acceptsSource | port " + port 
-				+ "\n\t" + source + " -> " + target, Log.DEBUGLEVEL10);
-			if (port == source) {			
+//			assert Log.debugMessage("port " + port 
+//				+ "\n\t" + source + " -> " + target, Log.DEBUGLEVEL03);
+			if (port == source) {
+//				assert Log.debugMessage("port == source", Log.DEBUGLEVEL03);
+//				assert Log.debugMessage(source + ", " + target, Log.DEBUGLEVEL03);
+//				result = false;
 				// Changing source 
 			} else {
 				//	Changing target
@@ -57,8 +62,8 @@ public class ManagerGraphModel extends DefaultGraphModel {
 			}
 		}
 		
-		Log.debugMessage("ManagerGraphModel.acceptsSource() | > " 
-			+ result, Log.DEBUGLEVEL03);
+		assert Log.debugMessage("> " 
+			+ result, Log.DEBUGLEVEL10);
 		return result;
 	}	
 	
@@ -79,7 +84,7 @@ public class ManagerGraphModel extends DefaultGraphModel {
 	
 	private boolean isLooped(final MPort startPort,
 	                         final MPort destPort) {
-		Log.debugMessage("ManagerGraphModel.isLooped | startPort:" 
+		Log.debugMessage("startPort:" 
 				+ startPort 
 				+ ", destPort:" 
 				+ destPort, 
@@ -98,25 +103,35 @@ public class ManagerGraphModel extends DefaultGraphModel {
 	}
 	
 	private boolean isTargetValid(final MPort source,
-	                              final MPort target) {	
-		
-		AbstractBean sourceBean = source.getBean();
-		AbstractBean targetBean = target.getBean();
-		Log.debugMessage("ManagerGraphModel.isTargetValid | " 
-				+ source 
-				+ " > " 
-				+ target, 
-			Log.DEBUGLEVEL03);
+	                              final MPort target) {
+		final AbstractBean sourceBean = source.getBean();
+		final AbstractBean targetBean = target.getBean();
 		if (sourceBean != null && targetBean != null) {
-			final Validator validator = this.managerMainFrame.getPerspective().getValidator();
-			boolean result = validator.isValid(sourceBean.getCodename(), targetBean.getCodename()) && 
-				!this.isLooped(source, target);
-			Log.debugMessage("ManagerGraphModel.isTargetValid | " + result, 
-				Log.DEBUGLEVEL03);
-//			return result;
+			final ManagerGraphCell sourceCell = (ManagerGraphCell) source.getParent();
+			final ManagerGraphCell targetCell = (ManagerGraphCell) target.getParent();
+			final Perspective perspective = sourceCell.getPerspective();
+			
+			assert perspective == targetCell.getPerspective();
+			
+			final Validator validator = perspective.getValidator();
+			final boolean valid = validator.isValid(sourceBean.getId(), targetBean.getId());
+			final boolean looped = this.isLooped(source, target);
+			final boolean result = valid && !looped;
+			assert Log.debugMessage(result 
+					+", valid:" + valid + ", looped:" + looped, 
+				Log.DEBUGLEVEL10);
+			if (!valid) {
+				assert Log.debugMessage(source 
+					+ " > " 
+					+ target, 
+				Log.DEBUGLEVEL10);
+				assert Log.debugMessage(result 
+					+", valid:" + valid + ", looped:" + looped, 
+				Log.DEBUGLEVEL10);				
+			}
+			return result;
 		}
-//		return false;
-		return true;
+		return false;
 	}
 	
 	@Override
@@ -125,13 +140,19 @@ public class ManagerGraphModel extends DefaultGraphModel {
 		// null port doesn't supply
 		boolean result = port != null;			
 		if (result) {
-			Edge edge2 = (Edge) edge;
+			final Edge edge2 = (Edge) edge;
+			final MPort source = (MPort)edge2.getSource();
+			final MPort target = (MPort) edge2.getTarget();
+
+			assert Log.debugMessage("source:" + source + ", target:" + target + ", port: " + port, Log.DEBUGLEVEL10);
+			
 			result = this.isTargetValid((MPort)edge2.getSource(), 
-				(MPort) edge2.getTarget());
+				(MPort) port);
 			
 			// XXX is need check for link count ?
 			// XXX check for looping
 		}
+		assert Log.debugMessage(port + "> " + result, Log.DEBUGLEVEL10);
 		return result;
 	}			
 }

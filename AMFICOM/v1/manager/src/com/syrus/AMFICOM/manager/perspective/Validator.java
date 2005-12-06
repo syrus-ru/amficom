@@ -1,5 +1,5 @@
 /*-
-* $Id: Validator.java,v 1.1 2005/11/17 09:00:35 bob Exp $
+* $Id: Validator.java,v 1.2 2005/12/06 15:14:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -12,12 +12,12 @@ import com.syrus.AMFICOM.manager.beans.AbstractBean;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/06 15:14:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public interface Validator<T extends AbstractBean> {
+public interface Validator {
 
 	boolean isValid(final String source, final String target);
 }

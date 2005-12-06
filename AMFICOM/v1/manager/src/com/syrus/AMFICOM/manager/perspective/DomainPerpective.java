@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.6 2005/12/05 14:41:22 bob Exp $
+* $Id: DomainPerpective.java,v 1.7 2005/12/06 15:14:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -46,6 +46,7 @@ import com.syrus.AMFICOM.manager.beans.NetBeanFactory;
 import com.syrus.AMFICOM.manager.beans.UserBean;
 import com.syrus.AMFICOM.manager.beans.WorkstationBeanFactory;
 import com.syrus.AMFICOM.manager.graph.MPort;
+import com.syrus.AMFICOM.manager.graph.ManagerGraphCell;
 import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
@@ -53,7 +54,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/12/05 14:41:22 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/06 15:14:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -64,9 +65,10 @@ public final class DomainPerpective extends AbstractPerspective {
 	private LayoutItem	domainNetworkItem;
 	private final Map<Identifier, SystemUserPerpective> userPerspectiveMap;
 	private boolean	firstStart;
+	private DomainValidator domainValidator;
 	
 	public DomainPerpective(final DomainBean domainBean) {
-		assert Log.debugMessage(domainBean.getIdentifier(), Log.DEBUGLEVEL03);
+		assert Log.debugMessage(domainBean.getIdentifier(), Log.DEBUGLEVEL10);
 		this.domainBean = domainBean;
 		this.userPerspectiveMap = new HashMap<Identifier, SystemUserPerpective>();
 		this.firstStart = true;
@@ -136,9 +138,6 @@ public final class DomainPerpective extends AbstractPerspective {
 				}
 
 				final String portBeanId = port.getBean().getId();
-//				assert Log.debugMessage("visibleTarget:" 
-//						+ visibleTarget
-//						+ ", portBeanId:" + portBeanId, Log.DEBUGLEVEL03);
 				if (visibleTarget == 0 && 
 						!portBeanId.startsWith(NetBeanFactory.NET_CODENAME)) {
 					return false;
@@ -150,51 +149,6 @@ public final class DomainPerpective extends AbstractPerspective {
 		return true;
 	}
 
-//	public void insertBean(final AbstractBean bean) {
-//		try {
-//			throw new Exception("DomainPerpective.insertBean");
-//		} catch (final Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//
-//		final Identifier beanId = bean.getIdentifier();
-//		if (beanId != null) {
-//			try {
-//				final StorableObject storableObject = 
-//					StorableObjectPool.getStorableObject(beanId, true);
-//				if (storableObject instanceof DomainMember) {
-//					DomainMember  domainMember = (DomainMember)storableObject;
-//					domainMember.setDomainId(this.getDomainId());
-//				}
-//				if (storableObject instanceof SystemUser) {
-//					final SystemUser systemUser = (SystemUser) storableObject;
-//					final Identifier userId = systemUser.getId();
-//					
-//					for(final Module module : Module.getValueList()) {
-//						if (!module.isEnable()) {
-//							continue;
-//						}
-//						final Domain domain = this.domainBean.getDomain();
-//						PermissionAttributes permissionAttributes = 
-//							domain.getPermissionAttributes(userId, module);
-//						
-//						if (permissionAttributes == null) {
-//							permissionAttributes = 
-//								PermissionAttributes.createInstance(
-//									LoginManager.getUserId(),
-//									domain.getId(),
-//									userId,
-//									module);
-//						}
-//					}
-//				}
-//			} catch (final ApplicationException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//	}
 	
 	public final LayoutItem getParentLayoutItem() {
 		return this.domainNetworkItem;
@@ -249,7 +203,7 @@ public final class DomainPerpective extends AbstractPerspective {
 			return layoutItem;
 		}
 		
-		assert Log.debugMessage(domainNetworkItems, Log.DEBUGLEVEL03);
+		assert Log.debugMessage(domainNetworkItems, Log.DEBUGLEVEL10);
 		assert domainNetworkItems.size() == 1;
 		final LayoutItem layoutItem = domainNetworkItems.iterator().next();
 		domainNetLayoutItemMap.put(domainId, layoutItem);
@@ -437,7 +391,7 @@ public final class DomainPerpective extends AbstractPerspective {
 					domainIdNetworkWorkstationItemIdMap.put(domainId2, 
 						networkWorkstationItemId);
 					assert Log.debugMessage(domainId2 + " > " + networkWorkstationItem, 
-						Log.DEBUGLEVEL03);
+						Log.DEBUGLEVEL10);
 					assert Log.debugMessage("networkWorkstationItemId:" 
 						+ networkWorkstationItemId
 						+ ", " 
@@ -544,11 +498,52 @@ public final class DomainPerpective extends AbstractPerspective {
 	@Override
 	public final void putBean(final AbstractBean abstractBean) {
 		if (abstractBean instanceof DomainNetworkItem) {
-			final DomainNetworkItem networkItem = (DomainNetworkItem)abstractBean;
+			final GraphRoutines graphRoutines = 
+				this.managerMainFrame.getGraphRoutines();
+			final ManagerGraphCell defaultGraphCell = 
+				graphRoutines.getDefaultGraphCell(abstractBean, this);
+			assert Log.debugMessage(defaultGraphCell, Log.DEBUGLEVEL10);
+			final DomainNetworkItem networkItem = 
+				(DomainNetworkItem) abstractBean;
 			networkItem.setDomainId(Identifier.VOID_IDENTIFIER, 
 				this.domainBean.getIdentifier());
 		}
 		
+	}
+	
+	@Override
+	public Validator getValidator() {
+		if (this.domainValidator == null) {
+			this.domainValidator = new DomainValidator(super.getValidator());
+		}
+		return this.domainValidator;
+	}
+	
+	private final class DomainValidator implements Validator {
+
+		private final Validator validator;
+		
+		
+		public DomainValidator(final Validator validator) {
+			this.validator = validator;
+		}
+		
+		private String getCodename(final String id) {
+			final int index = id.indexOf(Identifier.SEPARATOR);
+			return index >= 0 ? id.substring(0, index) : id;
+		}
+		
+		
+		public boolean isValid(final String source,
+				final String target) {
+			final String targetCodename = this.getCodename(target);
+			if (!targetCodename.equals(NetBeanFactory.NET_CODENAME + ObjectEntities.DOMAIN)) {
+				return this.validator.isValid(source, target);
+			} 
+			final String string = NetBeanFactory.NET_CODENAME + domainBean.getId();			
+			return target.equals(string) &&
+				this.validator.isValid(source, target);
+		}
 	}
 }
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.27 2005/12/05 15:39:01 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.28 2005/12/06 15:14:39 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import javax.swing.ActionMap;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
@@ -54,6 +55,7 @@ import org.jgraph.graph.GraphSelectionModel;
 import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
 
+import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
@@ -73,7 +75,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.27 $, $Date: 2005/12/05 15:39:01 $
+ * @version $Revision: 1.28 $, $Date: 2005/12/06 15:14:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -242,25 +244,16 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			@SuppressWarnings({"hiding","unqualified-field-access", "synthetic-access"})
 			public Object createValue(UIDefaults table) {
 				
-				
-				
-				// Construct Model and Graph
+				final JInternalFrame frame = new JInternalFrame(I18N.getString(TREE_FRAME), true);
+				frame.setIconifiable(true);
+//						 Construct Model and Graph
 				graphModel = new ManagerGraphModel(ManagerMainFrame.this);
 				
 				graph = new JGraph(graphModel,
 					new GraphLayoutCache(graphModel,
 							new DefaultCellViewFactory(),
-							true)) 
-//				{
-//					@Override
-//					public String getToolTipText(MouseEvent e) {
-//						return e.getX() + " x " + e.getY();
-//					}
-//				}
-				;
-				
-//				graph.setToolTipText("");
-				
+							true));
+
 
 				
 				graphRoutines = new GraphRoutines(ManagerMainFrame.this);
@@ -300,26 +293,15 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 				managerHandler = 
 					extensionLauncher.getExtensionHandler(ManagerHandler.class.getName());
 				
-				managerHandler.setManagerMainFrame(ManagerMainFrame.this);
-				try {
-					managerHandler.loadPerspectives();
-				} catch (ApplicationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				createPerspectives();
-				
 				createTreeModel();
 
 				enableDragAndDrop();
 				
 				final JScrollPane pane = new JScrollPane(ManagerMainFrame.this.tree);
-				final JInternalFrame frame = new JInternalFrame(I18N.getString(TREE_FRAME), true);
-				frame.setIconifiable(true);
 				frame.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 				desktopPane1.add(frame);
 				frame.getContentPane().add(pane);
+				
 				return frame;
 			}
 		});		
@@ -332,6 +314,8 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			
 			// show graph frame
 			
+			final JInternalFrame frame = new JInternalFrame(I18N.getString(GRAPH_FRAME), true);
+				
 			final JPanel panel = new JPanel(new GridBagLayout());
 			
 			final GridBagConstraints gbc = new GridBagConstraints();
@@ -343,7 +327,8 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			
 			gbc.weightx = 1.0;
 
-			panel.add(createToolBar(), gbc);
+			final JToolBar createToolBar = createToolBar(frame);
+			panel.add(createToolBar, gbc);
 			
 			gbc.weightx = 0.0;
 			gbc.weighty = 1.0;
@@ -360,7 +345,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			gbc.gridheight = GridBagConstraints.REMAINDER;
 			gbc.weighty = 0.0;
 			
-			JInternalFrame frame = new JInternalFrame(I18N.getString(GRAPH_FRAME), true);
+			
 			frame.setIconifiable(true);
 			desktopPane1.add(frame);
 			frame.getContentPane().add(panel);
@@ -430,9 +415,29 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		
 		model.fireModelChanged();
 		
-		
-
 		this.windowArranger.arrange();
+		
+		
+		new ProcessingDialog(new Runnable() {
+			public void run() {
+				graph.setVisible(false);
+
+				managerHandler.setManagerMainFrame(ManagerMainFrame.this);
+				try {
+					managerHandler.loadPerspectives();
+				} catch (ApplicationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				createPerspectives();
+				
+				treeModel.fillRootItems();
+				
+				graph.setVisible(true);
+			}
+		}, I18N.getString("Common.ProcessingDialog.PlsWait"));
+		
 	}
 	
 	@Override
@@ -468,7 +473,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		return perspectives;
 	}
 	
-	JToolBar createToolBar() {
+	JToolBar createToolBar(final JComponent parent) {
 		JToolBar graphToolBar = new JToolBar(SwingConstants.HORIZONTAL);
 		graphToolBar.setFloatable(false);
 		
@@ -530,8 +535,10 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		graphToolBar.addSeparator();
 		URL url;
 
-		final InputMap imap = this.graph.getInputMap();
-		final ActionMap map = this.graph.getActionMap();
+//		final JComponent component = parent;
+		final JComponent component = graph;
+		final InputMap imap = component.getInputMap();
+		final ActionMap map = component.getActionMap();
 		
 		// Paste
 		this.paste = new AbstractAction() {
@@ -745,7 +752,6 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 	}
 	
 	private void createTreeModel() {		
-//		this.treeModel = new NonRootGraphTreeModel(this);
 		this.treeModel = new PerspectiveTreeModel(this);
 		this.tree = new JTree(this.treeModel);
 		

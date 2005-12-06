@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractPerspective.java,v 1.5 2005/12/05 14:41:22 bob Exp $
+* $Id: AbstractPerspective.java,v 1.6 2005/12/06 15:14:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/12/05 14:41:22 $
+ * @version $Revision: 1.6 $, $Date: 2005/12/06 15:14:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -92,7 +92,7 @@ public abstract class AbstractPerspective implements Perspective {
 	}
 	
 	public final void addPropertyChangeListener(final PropertyChangeListener listener) {
-		assert Log.debugMessage(listener + this.getCodename(), Log.DEBUGLEVEL03);
+		assert Log.debugMessage(listener + this.getCodename(), Log.DEBUGLEVEL10);
 		if (this.listeners == null) {
 			this.listeners = new ArrayList<PropertyChangeListener>();
 		}
@@ -112,7 +112,7 @@ public abstract class AbstractPerspective implements Perspective {
 	public void firePropertyChangeEvent(final PropertyChangeEvent event) {
 		if (this.listeners != null && !this.listeners.isEmpty()) {
 			for (final PropertyChangeListener listener : this.listeners) {
-				assert Log.debugMessage(listener, Log.DEBUGLEVEL03);
+				assert Log.debugMessage(listener, Log.DEBUGLEVEL10);
 				listener.propertyChange(event);
 			}
 		}
@@ -221,10 +221,10 @@ public abstract class AbstractPerspective implements Perspective {
     					}
     					
     					final List<AbstractBean> layoutBeans2 = getLayoutBeans();
-    					assert Log.debugMessage(layoutBeans2, Log.DEBUGLEVEL03);
+    					assert Log.debugMessage(layoutBeans2, Log.DEBUGLEVEL10);
 						for(final AbstractBean abstractBean : layoutBeans2) {
 	 						if (chechable.isNeedIn(abstractBean)) {
-	 							assert Log.debugMessage("found:" + abstractBean, Log.DEBUGLEVEL03);
+	 							assert Log.debugMessage("found:" + abstractBean, Log.DEBUGLEVEL10);
 	 							final GraphSelectionModel selectionModel = graph.getSelectionModel();
 	 							final ManagerGraphCell cell = 
 	 								graphRoutines.getDefaultGraphCell(abstractBean, perspective);
@@ -248,7 +248,7 @@ public abstract class AbstractPerspective implements Perspective {
     					
     					firePropertyChangeEvent(propertyChangeEvent);
     					
-    					assert Log.debugMessage("Create " + bean, Log.DEBUGLEVEL03);
+    					assert Log.debugMessage("Create " + bean, Log.DEBUGLEVEL10);
 
     				} catch (final ApplicationException ae) {
     					ae.printStackTrace();
@@ -381,7 +381,7 @@ public abstract class AbstractPerspective implements Perspective {
 	}
 
 	private final String getNamePrefix(final String codename) {
-		final int index = codename.indexOf('_');
+		final int index = codename.indexOf(Identifier.SEPARATOR);
 		return index >= 0 ? codename.substring(0, index) : codename;
 	}
 	
@@ -533,19 +533,19 @@ public abstract class AbstractPerspective implements Perspective {
 	}
 	
 	public final void setLayoutBeans(final List<AbstractBean> layoutBeans) {
-		assert Log.debugMessage(layoutBeans, Log.DEBUGLEVEL03);
+		assert Log.debugMessage(layoutBeans, Log.DEBUGLEVEL10);
 		this.layoutBeans = layoutBeans;
 		this.firePropertyChangeEvent(this.propertyChangeEvent);
 	}
 	
 	public final void addLayoutBean(final AbstractBean bean) {
-		assert Log.debugMessage(bean, Log.DEBUGLEVEL03);
+		assert Log.debugMessage(bean, Log.DEBUGLEVEL10);
 		this.layoutBeans.add(bean);
 		this.firePropertyChangeEvent(this.propertyChangeEvent);
 	}
 	
 	public final void removeLayoutBean(final AbstractBean bean) {
-		assert Log.debugMessage(bean, Log.DEBUGLEVEL03);
+		assert Log.debugMessage(bean, Log.DEBUGLEVEL10);
 		this.layoutBeans.remove(bean);		
 		this.firePropertyChangeEvent(this.propertyChangeEvent);
 	}

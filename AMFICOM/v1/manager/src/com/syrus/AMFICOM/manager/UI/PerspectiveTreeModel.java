@@ -1,5 +1,5 @@
 /*-
-* $Id: PerspectiveTreeModel.java,v 1.4 2005/12/05 14:41:22 bob Exp $
+* $Id: PerspectiveTreeModel.java,v 1.5 2005/12/06 15:14:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.Port;
 
@@ -39,7 +38,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/05 14:41:22 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/06 15:14:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -61,24 +60,24 @@ public final class PerspectiveTreeModel implements TreeModel {
 	public PerspectiveTreeModel(final ManagerMainFrame managerMainFrame) {
 		this.managerMainFrame = managerMainFrame;
 		this.root = new DefaultMutableTreeNode("Administration");
-		this.fillRootItems();
+		this.rootItems = new ArrayList<PerspectiveMutableTreeNode>();
 	}	
 	
 	private ManagerHandler getManagerHandler() {
 		return this.managerMainFrame.getManagerHandler();
 	}
 	
-	private void fillRootItems() {
-		if (this.rootItems == null) { 
-			final Collection<Perspective> perspectives = 
-				this.getManagerHandler().getPerspectives();
-			this.rootItems = new ArrayList<PerspectiveMutableTreeNode>(perspectives.size());
-			for (final Perspective perspective : perspectives) {
-				final PerspectiveMutableTreeNode perspectiveNode = 
-					new PerspectiveMutableTreeNode(perspective);
-				this.rootItems.add(perspectiveNode);
-			}
+	public void fillRootItems() {
+		final Collection<Perspective> perspectives = 
+			this.getManagerHandler().getPerspectives();
+		this.rootItems.clear();
+		for (final Perspective perspective : perspectives) {
+			assert Log.debugMessage(perspective, LOGLEVEL);
+			final PerspectiveMutableTreeNode perspectiveNode = 
+				new PerspectiveMutableTreeNode(perspective);
+			this.rootItems.add(perspectiveNode);
 		}
+		this.reload();
 	}
 	
 	public Object getRoot() {
@@ -119,8 +118,8 @@ public final class PerspectiveTreeModel implements TreeModel {
 			final Perspective perspective = cell.getPerspective();
 			final List<AbstractBean> layoutBeans = 
 				perspective.getLayoutBeans();
-//			assert Log.debugMessage("parent:" + parent, Log.DEBUGLEVEL03);
-//			assert Log.debugMessage(layoutBeans, Log.DEBUGLEVEL03);
+//			assert Log.debugMessage("parent:" + parent, LOGLEVEL);
+//			assert Log.debugMessage(layoutBeans, LOGLEVEL);
 			final MPort port = (MPort) cell.getChildAt(0);
 			final List<Port> sources = port.getSources();
 			int count = 0;
@@ -128,11 +127,11 @@ public final class PerspectiveTreeModel implements TreeModel {
 			for(final Port port2: sources) {
 				final MPort mport2 = (MPort)port2;
 				final AbstractBean bean = mport2.getBean();
-//				assert Log.debugMessage("1:" + bean, Log.DEBUGLEVEL03);
+//				assert Log.debugMessage("1:" + bean, LOGLEVEL);
 				if (bean == null) {
 					continue;
 				}
-//				assert Log.debugMessage("2:" + bean, Log.DEBUGLEVEL03);
+//				assert Log.debugMessage("2:" + bean, LOGLEVEL);
 				if (layoutBeans != null && !layoutBeans.contains(bean)) {
 					continue;
 				}
@@ -143,9 +142,9 @@ public final class PerspectiveTreeModel implements TreeModel {
 					continue;
 				}
 				
-//				assert Log.debugMessage("3:" + bean, Log.DEBUGLEVEL03);
+//				assert Log.debugMessage("3:" + bean, LOGLEVEL);
 				if(count == index) {
-//					assert Log.debugMessage("node found", Log.DEBUGLEVEL03);
+//					assert Log.debugMessage("node found", LOGLEVEL);
 					break;
 				}
 				
@@ -189,7 +188,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 				}
 				
 				final List<ActionMutableTreeNode> actions = this.getActions(perspective);
-//				assert Log.debugMessage(actions, Log.DEBUGLEVEL03);
+//				assert Log.debugMessage(actions, LOGLEVEL);
 				return actions.get(index - count);
 				
 			}
@@ -204,7 +203,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 		if (parent == this.root) {
 			return this.rootItems.size();
 		}
-//		assert Log.debugMessage(parent, Log.DEBUGLEVEL03);
+//		assert Log.debugMessage(parent, LOGLEVEL);
 		if (parent instanceof PerspectiveMutableTreeNode) {
 			final PerspectiveMutableTreeNode perspectiveNode = 
 				(PerspectiveMutableTreeNode) parent;
@@ -233,7 +232,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 				final LayoutItem parentLayoutItem = subPerspective.getParentLayoutItem();
 				final GraphRoutines graphRoutines = 
 					this.managerMainFrame.getGraphRoutines();
-//				assert Log.debugMessage(parentLayoutItem, Log.DEBUGLEVEL03);
+//				assert Log.debugMessage(parentLayoutItem, LOGLEVEL);
 				final ManagerGraphCell graphCell = 
 					graphRoutines.getDefaultGraphCell(parentLayoutItem, false);				
 				final AbstractBean bean2 = graphCell.getAbstractBean();
@@ -248,7 +247,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 			final LayoutItem parentLayoutItem = perspective.getParentLayoutItem();
 			
 			final List<ActionMutableTreeNode> actions = this.getActions(perspective);
-//			assert Log.debugMessage(actions, Log.DEBUGLEVEL03);
+//			assert Log.debugMessage(actions, LOGLEVEL);
 			if (parentLayoutItem != null) {
 				final GraphRoutines graphRoutines = 
 					this.managerMainFrame.getGraphRoutines();
@@ -258,7 +257,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 					count += actions.size();
 				}
 			}
-//			assert Log.debugMessage("total childCount of " + parent + " is " + count, Log.DEBUGLEVEL03);
+//			assert Log.debugMessage("total childCount of " + parent + " is " + count, LOGLEVEL);
 			return count;
 			
 		}
@@ -288,13 +287,13 @@ public final class PerspectiveTreeModel implements TreeModel {
 			
 			final ManagerGraphCell parent = (ManagerGraphCell) mport2.getParent();
 			final boolean exists = cellBuffer.isExists(parent);
-//			assert Log.debugMessage(parent + " , " + exists, Log.DEBUGLEVEL03);
+//			assert Log.debugMessage(parent + " , " + exists, LOGLEVEL);
 			if(exists){
 				continue;
 			}
 			count++;
 		}
-//		assert Log.debugMessage(cell + " > " + count, Log.DEBUGLEVEL03);
+//		assert Log.debugMessage(cell + " > " + count, LOGLEVEL);
 		return count;
 	}
 	
@@ -450,9 +449,9 @@ public final class PerspectiveTreeModel implements TreeModel {
         final TreeNode[] pathToRoot = this.getPathToRoot(aNode, 0);
 //        if (Log.isLoggable(LOGLEVEL)) 
 //        {
-//        	assert Log.debugMessage("node:" + aNode, Log.DEBUGLEVEL03);
+//        	assert Log.debugMessage("node:" + aNode, LOGLEVEL);
 //			for (final TreeNode node : pathToRoot) {
-//				assert Log.debugMessage(node, Log.DEBUGLEVEL03);
+//				assert Log.debugMessage(node, LOGLEVEL);
 //			}
 //		}
 		return pathToRoot;
@@ -487,7 +486,7 @@ public final class PerspectiveTreeModel implements TreeModel {
     private TreeNode getParent(final TreeNode treeNode) {
     	if (treeNode instanceof PerspectiveMutableTreeNode) {
     		final TreeNode parent = this.root;
-//    		assert Log.debugMessage("1:" + treeNode + ", " + parent, Log.DEBUGLEVEL03);
+//    		assert Log.debugMessage("1:" + treeNode + ", " + parent, LOGLEVEL);
 			return parent;
     	}
     	if (treeNode instanceof ManagerGraphCell) {
@@ -496,7 +495,7 @@ public final class PerspectiveTreeModel implements TreeModel {
     		final List<Port> targets = port.getTargets();
     		if (!targets.isEmpty()) {
     			final TreeNode parent = ((MPort)targets.get(0)).getParent();
-//    			assert Log.debugMessage("2:" + treeNode + ", " + parent, Log.DEBUGLEVEL03);
+//    			assert Log.debugMessage("2:" + treeNode + ", " + parent, LOGLEVEL);
 				return parent;
     		}
 
@@ -510,7 +509,7 @@ public final class PerspectiveTreeModel implements TreeModel {
     				return this.getParent(parent);
     			}
     		}
-//    		assert Log.debugMessage("3:" + treeNode + ", " + parent, Log.DEBUGLEVEL03);
+//    		assert Log.debugMessage("3:" + treeNode + ", " + parent, LOGLEVEL);
 			return parent;
     	}
     	return this.root;
@@ -521,11 +520,11 @@ public final class PerspectiveTreeModel implements TreeModel {
 		if (superPerspective == null) {
 			for (final PerspectiveMutableTreeNode treeNode : this.rootItems) {
 				if (treeNode.getPerspective() == perspective) {
-//					assert Log.debugMessage("/0" + perspective + ", " + treeNode, Log.DEBUGLEVEL03);
+//					assert Log.debugMessage("/0" + perspective + ", " + treeNode, LOGLEVEL);
 					return treeNode;
 				}
 			}
-//			assert Log.debugMessage("/1" + perspective + ", " + this.root, Log.DEBUGLEVEL03);
+//			assert Log.debugMessage("/1" + perspective + ", " + this.root, LOGLEVEL);
 			return this.root;
 		}
 		final List<AbstractBean> layoutBeans = 
@@ -539,7 +538,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 				return defaultGraphCell;
 			}
 		}
-//		assert Log.debugMessage("/3" + perspective + ", " + this.root, Log.DEBUGLEVEL03);
+//		assert Log.debugMessage("/3" + perspective + ", " + this.root, LOGLEVEL);
 		return this.root;
     }
 	
@@ -555,11 +554,10 @@ public final class PerspectiveTreeModel implements TreeModel {
 			this.perspective = perspective;
 			this.model = managerMainFrame.graphModel;
 			this.firstLevel = new ArrayList<ManagerGraphCell>();		
-//			assert Log.debugMessage(perspective, Log.DEBUGLEVEL03);
 			perspective.addPropertyChangeListener(new PropertyChangeListener() {
 
 				public void propertyChange(final PropertyChangeEvent evt) {
-					assert Log.debugMessage(perspective, Log.DEBUGLEVEL03);
+					assert Log.debugMessage(perspective, LOGLEVEL);
 					updateParentItems();					
 				}
 			});
@@ -588,7 +586,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 					if (perspective2 != this.perspective || cellBuffer.isExists(cell)) {
 						continue;
 					}
-					assert Log.debugMessage(this.perspective + " > port: " +port, Log.DEBUGLEVEL03);
+					assert Log.debugMessage(this.perspective + " > port: " +port, LOGLEVEL);
 					final List<Port> targets = port.getTargets();
 					boolean targetEmpty = true;
 					for (final Port port2 : targets) {
@@ -610,7 +608,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 				}
 			}	
 			
-			assert Log.debugMessage(this.perspective + " > firstLevel: " + this.firstLevel, Log.DEBUGLEVEL03);
+			assert Log.debugMessage(this.perspective + " > firstLevel: " + this.firstLevel, LOGLEVEL);
 			
 			reload(getRoot());
 		}

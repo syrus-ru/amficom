@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphRoutines.java,v 1.9 2005/12/05 14:41:22 bob Exp $
+* $Id: GraphRoutines.java,v 1.10 2005/12/06 15:14:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/12/05 14:41:22 $
+ * @version $Revision: 1.10 $, $Date: 2005/12/06 15:14:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -106,7 +106,7 @@ public final class GraphRoutines {
 				this.graphModel.isConnectionPermitted(sourcePort, targetPort);
 			assert Log.debugMessage(sourcePort + ">" + targetPort + ", "
 					+ (canConnect ? "can connect" : "cannot connect"), 
-				Log.DEBUGLEVEL03);
+				Log.DEBUGLEVEL10);
 			if (canConnect) {
 				DefaultEdge edge = new DefaultEdge();
 				edge.setSource(sourcePort);
@@ -873,8 +873,9 @@ public final class GraphRoutines {
 				final AbstractBean bean = graphCell.getAbstractBean();				
 				final Perspective perspective = graphCell.getPerspective();
 				final String codename = perspective.getCodename();
+				final String id = bean.getId();
 				if (codename.equals(layoutName) && 
-						name.equals(bean.getId())) {
+						name.equals(id)) {
 					if (visible && 
 							!graphLayoutCache.isVisible(cell) && 
 							!cellBuffer.isExists(managerGraphCell)) {
@@ -883,6 +884,15 @@ public final class GraphRoutines {
 					
 					return managerGraphCell;
 				}
+//				if (name.equals(id)) {
+//					assert Log.debugMessage(codename 
+//							+ " = " 
+//							+ layoutName
+//							+ ", name:" 
+//							+ name
+//							+ "  = id:" 
+//							+ id, Log.DEBUGLEVEL03);
+//				}
 			}
 		}
 		
@@ -956,7 +966,7 @@ public final class GraphRoutines {
 						LayoutItemWrapper.COLUMN_LAYOUT_NAME), 
 					true);
 
-			assert Log.debugMessage("layerName:" + layerName + ", " +  layoutItems, Log.DEBUGLEVEL03);
+			assert Log.debugMessage("layerName:" + layerName + ", " +  layoutItems, Log.DEBUGLEVEL10);
 			
 			layoutBeans = new ArrayList<AbstractBean>(layoutItems.size());			
 			for (final LayoutItem layoutItem : layoutItems) {
