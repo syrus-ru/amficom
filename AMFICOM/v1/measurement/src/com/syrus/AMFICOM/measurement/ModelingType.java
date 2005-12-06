@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingType.java,v 1.63 2005/10/31 12:30:15 bass Exp $
+ * $Id: ModelingType.java,v 1.64 2005/12/06 09:45:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,20 +9,21 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.EnumSet;
 
+import org.omg.CORBA.BAD_PARAM;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.util.Log;
-import com.syrus.util.TransferableObject;
+import com.syrus.util.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/10/31 12:30:15 $
+ * @version $Revision: 1.64 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public enum ModelingType implements TransferableObject<IdlModelingType>,
+public enum ModelingType implements IdlTransferableObject<IdlModelingType>,
 		ActionType<IdlModelingType> {
 	DADARA_MODELING("dadara_modeling",
 			EnumSet.noneOf(ParameterType.class),
@@ -84,11 +85,10 @@ public enum ModelingType implements TransferableObject<IdlModelingType>,
 		return this.description;
 	}
 
-	@SuppressWarnings("unused")
-	public IdlModelingType getTransferable(final ORB orb) {
+	public IdlModelingType getIdlTransferable(final ORB orb) {
 		try {
 			return IdlModelingType.from_int(this.getCode());
-		} catch (org.omg.CORBA.BAD_PARAM bp) {
+		} catch (final BAD_PARAM bp) {
 			Log.errorMessage("Illegal code: " + this.getCode() + ", returning UNKNOWN");
 			return IdlModelingType.UNKNOWN_MODELINGTYPE;
 		}

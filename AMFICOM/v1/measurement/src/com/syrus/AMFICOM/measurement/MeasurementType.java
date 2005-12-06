@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementType.java,v 1.110 2005/10/31 12:30:15 bass Exp $
+ * $Id: MeasurementType.java,v 1.111 2005/12/06 09:45:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashSet;
 
+import org.omg.CORBA.BAD_PARAM;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ParameterType;
@@ -21,7 +22,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.110 $, $Date: 2005/10/31 12:30:15 $
+ * @version $Revision: 1.111 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -95,11 +96,10 @@ public enum MeasurementType implements ActionType<IdlMeasurementType> {
 		return this.description;
 	}
 
-	@SuppressWarnings("unused")
-	public IdlMeasurementType getTransferable(final ORB orb) {
+	public IdlMeasurementType getIdlTransferable(final ORB orb) {
 		try {
 			return IdlMeasurementType.from_int(this.getCode());
-		} catch (org.omg.CORBA.BAD_PARAM bp) {
+		} catch (final BAD_PARAM bp) {
 			Log.errorMessage("Illegal code: " + this.getCode() + ", returning UNKNOWN");
 			return IdlMeasurementType.UNKNOWN_MEASUREMENTTYPE;
 		}
@@ -112,7 +112,7 @@ public enum MeasurementType implements ActionType<IdlMeasurementType> {
 		int i = 0;
 		synchronized (measurementTypes) {
 			for (final MeasurementType measurementType : measurementTypes) {
-				idlMeasurementTypes[i++] = measurementType.getTransferable(orb);
+				idlMeasurementTypes[i++] = measurementType.getIdlTransferable(orb);
 			}
 		}
 		return idlMeasurementTypes;

@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.42 2005/12/02 11:24:20 bass Exp $
+ * $Id: Marker.java,v 1.43 2005/12/06 09:45:30 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *         и окно рефлектограммы инициализирует маркер такой            *
  *         информацией, после чего опять используется Lo.               *
  *
- * @version $Revision: 1.42 $, $Date: 2005/12/02 11:24:20 $
+ * @version $Revision: 1.43 $, $Date: 2005/12/06 09:45:30 $
  * @module mapview
  * @author $Author: bass $
  * @author Andrei Kroupennikov
@@ -473,7 +473,7 @@ public class Marker extends AbstractNode<Marker> {
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	@Override
-	public final IdlStorableObject getTransferable(final ORB orb) {
+	public final IdlStorableObject getIdlTransferable(final ORB orb) {
 		throw new UnsupportedOperationException();
 	}
 

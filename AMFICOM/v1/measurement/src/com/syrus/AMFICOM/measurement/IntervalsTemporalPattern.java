@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.39 2005/12/02 11:24:09 bass Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.40 2005/12/06 09:45:11 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/12/02 11:24:09 $
+ * @version $Revision: 1.40 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement
@@ -456,7 +456,7 @@ public final class IntervalsTemporalPattern
 	 * </p>
 	 */
 	@Override
-	public IdlIntervalsTemporalPattern getTransferable(final ORB orb) {
+	public IdlIntervalsTemporalPattern getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		IntervalTemporalPatternId[] intervalTemporalPatternsIdT;
@@ -469,7 +469,7 @@ public final class IntervalsTemporalPattern
 				final Long ms = it.next();
 				final Identifier temporalPatternId = this.intervalsAbstractTemporalPatternMap.get(ms);
 				intervalTemporalPatternsIdT[i] = new IntervalTemporalPatternId(ms.longValue(),
-						temporalPatternId.getTransferable());
+						temporalPatternId.getIdlTransferable());
 			}
 		}
 
@@ -490,11 +490,11 @@ public final class IntervalsTemporalPattern
 		}
 
 		return IdlIntervalsTemporalPatternHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				intervalTemporalPatternsIdT,
 				durationsT);

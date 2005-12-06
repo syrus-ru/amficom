@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.39 2005/12/02 11:24:21 bass Exp $
+ * $Id: EventSource.java,v 1.40 2005/12/06 09:42:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/12/02 11:24:21 $
+ * @version $Revision: 1.40 $, $Date: 2005/12/06 09:42:28 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -88,18 +88,18 @@ public final class EventSource extends StorableObject<EventSource> {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlEventSource getTransferable(final ORB orb) {
+	public IdlEventSource getIdlTransferable(final ORB orb) {
 		return IdlEventSourceHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
-				this.sourceEntityId.getTransferable());
+				this.sourceEntityId.getIdlTransferable());
 	}
 
 	public Identifier getSourceEntityId() {

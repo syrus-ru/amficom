@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.178 2005/12/02 11:24:09 bass Exp $
+ * $Id: Test.java,v 1.179 2005/12/06 09:45:11 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -43,10 +43,10 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPacka
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
-import com.syrus.util.TransferableObject;
+import com.syrus.util.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.178 $, $Date: 2005/12/02 11:24:09 $
+ * @version $Revision: 1.179 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -334,10 +334,10 @@ public final class Test extends StorableObject<Test> implements Describable {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlTest getTransferable(final ORB orb) {
+	public IdlTest getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] msIdsT = Identifier.createTransferables(this.measurementSetupIds);
@@ -350,18 +350,18 @@ public final class Test extends StorableObject<Test> implements Describable {
 		}
 		
 		return IdlTestHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
-				this.timeStamps.getTransferable(orb),
-				this.measurementType.getTransferable(orb),
-				this.analysisType.getTransferable(orb),
-				this.groupTestId.getTransferable(),
+				this.timeStamps.getIdlTransferable(orb),
+				this.measurementType.getIdlTransferable(orb),
+				this.analysisType.getIdlTransferable(orb),
+				this.groupTestId.getIdlTransferable(),
 				TestStatus.from_int(this.status),
-				this.monitoredElement.getId().getTransferable(),
+				this.monitoredElement.getId().getIdlTransferable(),
 				this.description,
 				this.numberOfMeasurements,
 				testStops,
@@ -613,14 +613,14 @@ public final class Test extends StorableObject<Test> implements Describable {
 		int i = 0;
 		synchronized (tests) {
 			for (final Test test : tests) {
-				transferables[i++] = test.getTransferable(orb);
+				transferables[i++] = test.getIdlTransferable(orb);
 			}
 		}
 		return transferables;
 	}
 
 	public final class TestTimeStamps
-			implements TransferableObject<IdlTestTimeStamps> {
+			implements IdlTransferableObject<IdlTestTimeStamps> {
 		private static final long serialVersionUID = -3560328752462377043L;
 
 		Date startTime;
@@ -682,10 +682,9 @@ public final class Test extends StorableObject<Test> implements Describable {
 
 		/**
 		 * @param orb
-		 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+		 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 		 */
-		@SuppressWarnings("unused")
-		public IdlTestTimeStamps getTransferable(final ORB orb) {
+		public IdlTestTimeStamps getIdlTransferable(final ORB orb) {
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			final IdlTestTimeStamps ttst = new IdlTestTimeStamps();
 			switch (this.discriminator) {
@@ -695,7 +694,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 					ttst.ptts(new PeriodicalTestTimeStamps(this.startTime.getTime(),
 							this.endTime.getTime(),
-							this.temporalPatternId.getTransferable()));
+							this.temporalPatternId.getIdlTransferable()));
 					break;
 				default:
 					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.35 2005/12/02 11:24:16 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.36 2005/12/06 09:44:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/12/02 11:24:16 $
+ * @version $Revision: 1.36 $, $Date: 2005/12/06 09:44:22 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu
@@ -204,21 +204,21 @@ public final class SchemeOptimizeInfoRtu
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlSchemeOptimizeInfoRtu getTransferable(final ORB orb) {
+	public IdlSchemeOptimizeInfoRtu getIdlTransferable(final ORB orb) {
 		return IdlSchemeOptimizeInfoRtuHelper.init(orb,
-				super.id.getTransferable(),
+				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
 				this.name,
 				this.priceUsd,
 				this.rangeDb,
-				this.parentSchemeOptimizeInfoId.getTransferable());
+				this.parentSchemeOptimizeInfoId.getIdlTransferable());
 	}
 
 	/**

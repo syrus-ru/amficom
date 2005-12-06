@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.5 2005/10/31 10:47:23 arseniy Exp $
+ * $Id: EventQueue.java,v 1.6 2005/12/06 09:45:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/10/31 10:47:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/12/06 09:45:58 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -115,7 +115,7 @@ final class EventQueue extends SleepButWorkThread {
 		final IdlEvent[] idlEvents = new IdlEvent[this.eventEqueue.size()];
 		int i = 0;
 		for (final ReflectogramMismatchEvent event : this.eventEqueue) {
-			idlEvents[i++] = event.getTransferable(orb);
+			idlEvents[i++] = event.getIdlTransferable(orb);
 		}
 		return idlEvents;
 	}

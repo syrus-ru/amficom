@@ -1,5 +1,5 @@
 /*-
- * $Id: DataType.java,v 1.13 2005/10/31 12:30:18 bass Exp $
+ * $Id: DataType.java,v 1.14 2005/12/06 09:42:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,15 +12,15 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.corba.IdlDataType;
 import com.syrus.util.Codeable;
 import com.syrus.util.Log;
-import com.syrus.util.TransferableObject;
+import com.syrus.util.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/31 12:30:18 $
+ * @version $Revision: 1.14 $, $Date: 2005/12/06 09:42:52 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public enum DataType implements TransferableObject<IdlDataType>, Codeable {
+public enum DataType implements IdlTransferableObject<IdlDataType>, Codeable {
 	INTEGER("integer"),
 	DOUBLE("double"),
 	STRING("string"),
@@ -79,7 +79,7 @@ public enum DataType implements TransferableObject<IdlDataType>, Codeable {
 	}
 
 	@SuppressWarnings("unused")
-	public IdlDataType getTransferable(final ORB orb) {
+	public IdlDataType getIdlTransferable(final ORB orb) {
 		try {
 			return IdlDataType.from_int(this.getCode());
 		} catch (org.omg.CORBA.BAD_PARAM bp) {

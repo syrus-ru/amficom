@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.6 2005/11/28 14:59:59 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.7 2005/12/06 09:42:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/11/28 14:59:59 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/06 09:42:28 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -176,9 +176,9 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(ORB)
 	 */
-	public IdlLineMismatchEvent getTransferable(final ORB orb) {
+	public IdlLineMismatchEvent getIdlTransferable(final ORB orb) {
 		final IdlMismatchData mismatchData = new IdlMismatchData();
 		if (this.hasMismatch()) {
 			mismatchData.mismatchPair(IdlMismatch._TRUE, new IdlMismatchPair(
@@ -200,12 +200,12 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		}
 
 		return IdlLineMismatchEventHelper.init(orb,
-				this.getAlarmType().getTransferable(orb),
-				this.getSeverity().getTransferable(orb),
+				this.getAlarmType().getIdlTransferable(orb),
+				this.getSeverity().getIdlTransferable(orb),
 				mismatchData,
-				this.getAffectedPathElementId().getTransferable(orb),
+				this.getAffectedPathElementId().getIdlTransferable(orb),
 				spatialData,
-				this.getResultId().getTransferable(orb),
+				this.getResultId().getIdlTransferable(orb),
 				this.getMismatchOpticalDistance(),
 				this.getMismatchPhysicalDistance(),
 				this.mismatchCreated.getTime());

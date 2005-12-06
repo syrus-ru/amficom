@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.150 2005/12/02 11:24:17 bass Exp $
+ * $Id: SchemeElement.java,v 1.151 2005/12/06 09:44:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.150 $, $Date: 2005/12/02 11:24:17 $
+ * @version $Revision: 1.151 $, $Date: 2005/12/06 09:44:22 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
@@ -948,30 +948,30 @@ public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlSchemeElement getTransferable(final ORB orb) {
+	public IdlSchemeElement getIdlTransferable(final ORB orb) {
 		return IdlSchemeElementHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				super.getName(),
 				super.getDescription(),
 				this.label,
 				this.getKind(),
-				this.getProtoEquipmentId().getTransferable(),
-				this.getEquipmentId().getTransferable(),
-				this.getKisId().getTransferable(),
-				this.getSiteNodeId().getTransferable(),
-				this.getSymbolId().getTransferable(),
-				this.getUgoCellId().getTransferable(),
-				this.getSchemeCellId().getTransferable(),
-				this.getParentSchemeId().getTransferable(),
-				this.getParentSchemeElementId().getTransferable());
+				this.getProtoEquipmentId().getIdlTransferable(),
+				this.getEquipmentId().getIdlTransferable(),
+				this.getKisId().getIdlTransferable(),
+				this.getSiteNodeId().getIdlTransferable(),
+				this.getSymbolId().getIdlTransferable(),
+				this.getUgoCellId().getIdlTransferable(),
+				this.getSchemeCellId().getIdlTransferable(),
+				this.getParentSchemeId().getIdlTransferable(),
+				this.getParentSchemeElementId().getIdlTransferable());
 	}
 
 	/**

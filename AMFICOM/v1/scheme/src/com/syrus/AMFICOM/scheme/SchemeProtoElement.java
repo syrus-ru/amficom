@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.126 2005/12/02 11:24:16 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.127 2005/12/06 09:44:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.126 $, $Date: 2005/12/02 11:24:16 $
+ * @version $Revision: 1.127 $, $Date: 2005/12/06 09:44:22 $
  * @module scheme
  */
 public final class SchemeProtoElement
@@ -669,26 +669,26 @@ public final class SchemeProtoElement
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlSchemeProtoElement getTransferable(final ORB orb) {
+	public IdlSchemeProtoElement getIdlTransferable(final ORB orb) {
 		return IdlSchemeProtoElementHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.name,
 				this.description,
 				this.label,
-				this.protoEquipmentId.getTransferable(),
-				this.symbolId.getTransferable(),
-				this.ugoCellId.getTransferable(),
-				this.schemeCellId.getTransferable(),
-				this.parentSchemeProtoGroupId.getTransferable(),
-				this.parentSchemeProtoElementId.getTransferable());
+				this.protoEquipmentId.getIdlTransferable(),
+				this.symbolId.getIdlTransferable(),
+				this.ugoCellId.getIdlTransferable(),
+				this.schemeCellId.getIdlTransferable(),
+				this.parentSchemeProtoGroupId.getIdlTransferable(),
+				this.parentSchemeProtoElementId.getIdlTransferable());
 	}
 
 	/**

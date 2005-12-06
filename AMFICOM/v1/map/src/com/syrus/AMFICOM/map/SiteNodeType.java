@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.110 2005/12/02 11:24:13 bass Exp $
+ * $Id: SiteNodeType.java,v 1.111 2005/12/06 09:43:34 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,7 +79,7 @@ import com.syrus.util.Log;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: bass $
- * @version $Revision: 1.110 $, $Date: 2005/12/02 11:24:13 $
+ * @version $Revision: 1.111 $, $Date: 2005/12/06 09:43:34 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType<SiteNodeType>
@@ -211,24 +211,24 @@ public final class SiteNodeType extends StorableObjectType<SiteNodeType>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlSiteNodeType getTransferable(final ORB orb) {
+	public IdlSiteNodeType getIdlTransferable(final ORB orb) {
 		return IdlSiteNodeTypeHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.sort,
 				this.codename,
 				this.name,
 				this.description,
-				this.imageId.getTransferable(),
+				this.imageId.getIdlTransferable(),
 				this.topological,
-				this.mapLibraryId.getTransferable());
+				this.mapLibraryId.getIdlTransferable());
 	}
 
 	public boolean isTopological() {

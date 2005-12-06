@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.84 2005/12/02 11:24:17 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.85 2005/12/06 09:44:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.84 $, $Date: 2005/12/02 11:24:17 $
+ * @version $Revision: 1.85 $, $Date: 2005/12/06 09:44:22 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -461,27 +461,27 @@ public final class CableChannelingItem
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlCableChannelingItem getTransferable(final ORB orb) {
+	public IdlCableChannelingItem getIdlTransferable(final ORB orb) {
 		return IdlCableChannelingItemHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.startSpare,
 				this.endSpare,
 				this.rowX,
 				this.placeY,
 				this.sequentialNumber,
-				this.physicalLinkId.getTransferable(),
-				this.pipeBlockId.getTransferable(),
-				this.startSiteNodeId.getTransferable(),
-				this.endSiteNodeId.getTransferable(),
-				this.parentSchemeCableLinkId.getTransferable());
+				this.physicalLinkId.getIdlTransferable(),
+				this.pipeBlockId.getIdlTransferable(),
+				this.startSiteNodeId.getIdlTransferable(),
+				this.endSiteNodeId.getIdlTransferable(),
+				this.parentSchemeCableLinkId.getIdlTransferable());
 	}
 
 	/**

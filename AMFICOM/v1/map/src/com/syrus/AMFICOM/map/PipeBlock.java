@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlock.java,v 1.12 2005/12/02 11:24:13 bass Exp $
+ * $Id: PipeBlock.java,v 1.13 2005/12/06 09:43:34 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
  * и матрицу пролегани€ кабелей по трубам тоннел€.
  *
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/12/02 11:24:13 $
+ * @version $Revision: 1.13 $, $Date: 2005/12/06 09:43:34 $
  * @module map
  */
 public final class PipeBlock 
@@ -168,18 +168,18 @@ public final class PipeBlock
 	}
 
 	@Override
-	public IdlPipeBlock getTransferable(final ORB orb) {
+	public IdlPipeBlock getIdlTransferable(final ORB orb) {
 		
 		int dimensionX = this.dimension.getWidth();
 		int dimensionY = this.dimension.getHeight();
 		
 		return IdlPipeBlockHelper.init(
 				orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.number,
 				dimensionX,

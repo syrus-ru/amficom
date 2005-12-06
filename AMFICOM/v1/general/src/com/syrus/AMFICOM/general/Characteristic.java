@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.81 2005/12/02 11:24:10 bass Exp $
+ * $Id: Characteristic.java,v 1.82 2005/12/06 09:42:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/12/02 11:24:10 $
+ * @version $Revision: 1.82 $, $Date: 2005/12/06 09:42:52 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -258,21 +258,21 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public IdlCharacteristic getTransferable(final ORB orb) {
+	public IdlCharacteristic getIdlTransferable(final ORB orb) {
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		
 		return IdlCharacteristicHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
-				this.type.getId().getTransferable(),
+				this.type.getId().getIdlTransferable(),
 				this.name,
 				this.description,
 				(this.value == null) ? "" : this.value,
-				this.parentCharacterizableId.getTransferable(),
+				this.parentCharacterizableId.getIdlTransferable(),
 				this.editable,
 				this.visible);
 	}

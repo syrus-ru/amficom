@@ -1,26 +1,29 @@
 /*-
- * $Id: MapFeature.java,v 1.6 2005/08/31 05:50:36 bass Exp $
+ * $Id: MapFeature.java,v 1.7 2005/12/06 09:43:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.map;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 
+import org.omg.CORBA.ORB;
+
 import com.syrus.AMFICOM.map.corba.IdlMapFeature;
+import com.syrus.util.IdlTransferableObject;
 
 /**
- * 
  * @author Maxim Selivanov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/08/31 05:50:36 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/06 09:43:34 $
  * @module map
  */
+public class MapFeature implements IdlTransferableObject<IdlMapFeature> {
+	private static final long serialVersionUID = 6461287614714505638L;
 
-public class MapFeature {
-	
 	private double centerX;
 	private double centerY;
 	
@@ -38,8 +41,16 @@ public class MapFeature {
 		this.centerY = ft.centerY;
 		this.name = ft.name;
 	}
+
+	/**
+	 * @param orb
+	 * @see IdlTransferableObject#getIdlTransferable(ORB)
+	 */
+	public IdlMapFeature getIdlTransferable(final ORB orb) {
+		return this.getIdlTransferable();
+	}
 	
-	public IdlMapFeature getTransferable() {
+	public IdlMapFeature getIdlTransferable() {
 		return new IdlMapFeature(this.centerX, this.centerY, this.name);
 	}
 

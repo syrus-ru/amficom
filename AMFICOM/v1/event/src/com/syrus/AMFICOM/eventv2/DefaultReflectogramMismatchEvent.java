@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultReflectogramMismatchEvent.java,v 1.9 2005/10/22 19:07:25 bass Exp $
+ * $Id: DefaultReflectogramMismatchEvent.java,v 1.10 2005/12/06 09:42:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.reflectometry.SOAnchor;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/10/22 19:07:25 $
+ * @version $Revision: 1.10 $, $Date: 2005/12/06 09:42:28 $
  * @module event
  */
 public final class DefaultReflectogramMismatchEvent extends
@@ -213,9 +213,9 @@ public final class DefaultReflectogramMismatchEvent extends
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(ORB)
 	 */
-	public IdlReflectogramMismatchEvent getTransferable(final ORB orb) {
+	public IdlReflectogramMismatchEvent getIdlTransferable(final ORB orb) {
 		final IdlMismatchData mismatchData = new IdlMismatchData();
 		if (this.hasMismatch()) {
 			mismatchData.mismatchPair(IdlMismatch._TRUE, new IdlMismatchPair(this.getMinMismatch(), this.getMaxMismatch()));
@@ -226,8 +226,8 @@ public final class DefaultReflectogramMismatchEvent extends
 		final IdlAnchorData anchorData = new IdlAnchorData();
 		if (this.hasAnchors()) {
 			anchorData.anchorPair(IdlAnchor._TRUE, new IdlAnchorPair(
-					this.anchor1Id.getId().getTransferable(orb),
-					this.anchor2Id.getId().getTransferable(orb),
+					this.anchor1Id.getId().getIdlTransferable(orb),
+					this.anchor2Id.getId().getIdlTransferable(orb),
 					this.getAnchor1Coord(),
 					this.getAnchor2Coord()));
 		} else {
@@ -237,14 +237,14 @@ public final class DefaultReflectogramMismatchEvent extends
 		return IdlReflectogramMismatchEventHelper.init(orb,
 				this.created.getTime(),
 				mismatchData,
-				this.getSeverity().getTransferable(orb),
+				this.getSeverity().getIdlTransferable(orb),
 				anchorData,
 				this.getCoord(),
 				this.getEndCoord(),
-				this.getAlarmType().getTransferable(orb),
+				this.getAlarmType().getIdlTransferable(orb),
 				this.getDeltaX(),
-				this.getResultId().getTransferable(orb),
-				this.getMonitoredElementId().getTransferable(orb));
+				this.getResultId().getIdlTransferable(orb),
+				this.getMonitoredElementId().getIdlTransferable(orb));
 	}
 
 	public static ReflectogramMismatchEvent valueOf(
@@ -399,7 +399,7 @@ public final class DefaultReflectogramMismatchEvent extends
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.9 $, $Date: 2005/10/22 19:07:25 $
+	 * @version $Revision: 1.10 $, $Date: 2005/12/06 09:42:28 $
 	 * @module event
 	 */
 	private class SoAnchorImpl implements SOAnchor, Identifiable, Serializable {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImageResource.java,v 1.41 2005/12/02 11:24:14 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.42 2005/12/06 09:44:56 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/12/02 11:24:14 $
+ * @version $Revision: 1.42 $, $Date: 2005/12/06 09:44:56 $
  * @module resource
  */
 public final class SchemeImageResource extends AbstractCloneableImageResource {
@@ -114,18 +114,18 @@ public final class SchemeImageResource extends AbstractCloneableImageResource {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlImageResource getTransferable(final ORB orb) {
+	public IdlImageResource getIdlTransferable(final ORB orb) {
 		final IdlImageResourceData imageResourceData = new IdlImageResourceData();
 		imageResourceData.image(ImageResourceSort.SCHEME, this.image);
 		return IdlImageResourceHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				imageResourceData);
 	}

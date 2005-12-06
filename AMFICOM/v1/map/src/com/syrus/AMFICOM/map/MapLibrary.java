@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.39 2005/12/02 11:24:13 bass Exp $
+ * $Id: MapLibrary.java,v 1.40 2005/12/06 09:43:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/12/02 11:24:13 $
+ * @version $Revision: 1.40 $, $Date: 2005/12/06 09:43:34 $
  * @author $Author: bass $
  * @module map
  */
@@ -185,18 +185,18 @@ public final class MapLibrary extends StorableObject<MapLibrary>
 	}
 
 	@Override
-	public IdlMapLibrary getTransferable(final ORB orb) {
+	public IdlMapLibrary getIdlTransferable(final ORB orb) {
 		return IdlMapLibraryHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.name,
 				this.codename,
 				this.description,
-				this.parentMapLibraryId.getTransferable());
+				this.parentMapLibraryId.getIdlTransferable());
 	}
 
 	synchronized void setAttributes(final Date created,

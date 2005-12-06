@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.43 2005/11/30 15:37:15 bass Exp $
+ * $Id: ServerCore.java,v 1.44 2005/12/06 09:41:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/11/30 15:37:15 $
+ * @version $Revision: 1.44 $, $Date: 2005/12/06 09:41:41 $
  * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -161,7 +161,7 @@ public abstract class ServerCore implements CommonServerOperations {
 			final IdVersion[] idVersions = new IdVersion[versionsMap.size()];
 			int i = 0;
 			for (final Identifier id : versionsMap.keySet()) {
-				idVersions[i++] = new IdVersion(id.getTransferable(), versionsMap.get(id).longValue());
+				idVersions[i++] = new IdVersion(id.getIdlTransferable(), versionsMap.get(id).longValue());
 			}
 
 			//-Before return, ensure, that objects in pool are up to date.

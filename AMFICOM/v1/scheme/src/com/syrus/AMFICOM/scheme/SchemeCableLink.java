@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.116 2005/12/02 11:24:17 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.117 2005/12/06 09:44:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -92,7 +92,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.116 $, $Date: 2005/12/02 11:24:17 $
+ * @version $Revision: 1.117 $, $Date: 2005/12/06 09:44:22 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink<SchemeCableLink>
@@ -444,26 +444,26 @@ public final class SchemeCableLink extends AbstractSchemeLink<SchemeCableLink>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlSchemeCableLink getTransferable(final ORB orb) {
+	public IdlSchemeCableLink getIdlTransferable(final ORB orb) {
 		return IdlSchemeCableLinkHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				super.getName(),
 				super.getDescription(),
 				super.getPhysicalLength(),
 				super.getOpticalLength(),
-				this.getAbstractLinkTypeId().getTransferable(),
-				this.getAbstractLinkId().getTransferable(),
-				this.getSourceAbstractSchemePortId().getTransferable(),
-				this.getTargetAbstractSchemePortId().getTransferable(),
-				this.getParentSchemeId().getTransferable());
+				this.getAbstractLinkTypeId().getIdlTransferable(),
+				this.getAbstractLinkId().getIdlTransferable(),
+				this.getSourceAbstractSchemePortId().getIdlTransferable(),
+				this.getTargetAbstractSchemePortId().getIdlTransferable(),
+				this.getParentSchemeId().getIdlTransferable());
 	}
 
 	/**

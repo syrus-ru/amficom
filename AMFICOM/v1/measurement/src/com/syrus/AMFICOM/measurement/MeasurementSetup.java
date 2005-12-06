@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.97 2005/12/02 11:24:09 bass Exp $
+ * $Id: MeasurementSetup.java,v 1.98 2005/12/06 09:45:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/12/02 11:24:09 $
+ * @version $Revision: 1.98 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -185,24 +185,24 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public IdlMeasurementSetup getTransferable(final ORB orb) {
+	public IdlMeasurementSetup getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
 		final IdlMeasurementType[] mts = MeasurementType.createTransferables(this.measurementTypes, orb);
 
-		final IdlIdentifier voidIdlIdentifier = Identifier.VOID_IDENTIFIER.getTransferable();
+		final IdlIdentifier voidIdlIdentifier = Identifier.VOID_IDENTIFIER.getIdlTransferable();
 		return IdlMeasurementSetupHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
-				this.parameterSet.getId().getTransferable(),
-				(this.criteriaSet != null) ? this.criteriaSet.getId().getTransferable() : voidIdlIdentifier,
-				(this.thresholdSet != null) ? this.thresholdSet.getId().getTransferable() : voidIdlIdentifier,
-				(this.etalon != null) ? this.etalon.getId().getTransferable() : voidIdlIdentifier,
+				this.parameterSet.getId().getIdlTransferable(),
+				(this.criteriaSet != null) ? this.criteriaSet.getId().getIdlTransferable() : voidIdlIdentifier,
+				(this.thresholdSet != null) ? this.thresholdSet.getId().getIdlTransferable() : voidIdlIdentifier,
+				(this.etalon != null) ? this.etalon.getId().getIdlTransferable() : voidIdlIdentifier,
 				this.description,
 				this.measurementDuration,
 				meIds,

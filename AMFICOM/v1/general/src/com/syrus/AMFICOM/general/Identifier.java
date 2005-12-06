@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.90 2005/11/10 13:58:48 bass Exp $
+ * $Id: Identifier.java,v 1.91 2005/12/06 09:42:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.util.TransferableObject;
+import com.syrus.util.IdlTransferableObject;
 
 /**
  * <code>Identifier</code>s, alike {@link String}s, are immutable. Hence, when
@@ -32,13 +32,13 @@ import com.syrus.util.TransferableObject;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.90 $, $Date: 2005/11/10 13:58:48 $
+ * @version $Revision: 1.91 $, $Date: 2005/12/06 09:42:52 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public final class Identifier implements Comparable<Identifier>,
-		TransferableObject<IdlIdentifier>, Identifiable {
+		IdlTransferableObject<IdlIdentifier>, Identifiable {
 	private static final long serialVersionUID = 1721559813677093072L;
 
 	public static final char SEPARATOR = '_';
@@ -137,13 +137,13 @@ public final class Identifier implements Comparable<Identifier>,
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlIdentifier getTransferable(@SuppressWarnings("unused") final ORB orb) {
-		return this.getTransferable();
+	public IdlIdentifier getIdlTransferable(@SuppressWarnings("unused") final ORB orb) {
+		return this.getIdlTransferable();
 	}
 
-	public IdlIdentifier getTransferable() {
+	public IdlIdentifier getIdlTransferable() {
 		return new IdlIdentifier(this.getIdentifierCode());
 	}
 
@@ -219,7 +219,7 @@ public final class Identifier implements Comparable<Identifier>,
 		int i = 0;
 		synchronized (identifiables) {
 			for (final Identifiable identifiable : identifiables) {
-				ids[i++] = identifiable.getId().getTransferable();
+				ids[i++] = identifiable.getId().getIdlTransferable();
 			}
 		}
 		return ids;
@@ -235,7 +235,7 @@ public final class Identifier implements Comparable<Identifier>,
 		final int length = identifiables.length;
 		final IdlIdentifier[] ids = new IdlIdentifier[length];
 		for (int i = 0; i < length; i++)
-			ids[i] = identifiables[i].getId().getTransferable();
+			ids[i] = identifiables[i].getId().getIdlTransferable();
 		return ids;
 	}
 

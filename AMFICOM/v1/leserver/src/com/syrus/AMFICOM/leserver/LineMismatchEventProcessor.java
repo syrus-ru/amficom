@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.17 2005/11/29 14:49:21 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.18 2005/12/06 09:43:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/11/29 14:49:21 $
+ * @version $Revision: 1.18 $, $Date: 2005/12/06 09:43:07 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
@@ -149,7 +149,7 @@ final class LineMismatchEventProcessor implements EventProcessor {
 								lineMismatchEvent,
 								createMessage(lineMismatchEvent),
 								systemUserId);
-				notificationEvents[i++] = popupNotificationEvent.getTransferable(orb);
+				notificationEvents[i++] = popupNotificationEvent.getIdlTransferable(orb);
 			}
 			for (final String address : addresses) {
 				final EmailNotificationEvent emailNotificationEvent =
@@ -157,7 +157,7 @@ final class LineMismatchEventProcessor implements EventProcessor {
 									lineMismatchEvent,
 									address,
 									createMessage(lineMismatchEvent));
-				notificationEvents[i++] = emailNotificationEvent.getTransferable(orb);
+				notificationEvents[i++] = emailNotificationEvent.getIdlTransferable(orb);
 			}
 
 			servantManager.getEventServerReference().receiveEvents(notificationEvents);

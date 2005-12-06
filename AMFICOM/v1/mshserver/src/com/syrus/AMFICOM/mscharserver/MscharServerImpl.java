@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.24 2005/11/28 12:47:46 arseniy Exp $
+ * $Id: MscharServerImpl.java,v 1.25 2005/12/06 09:44:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.io.FileLoader;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/11/28 12:47:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/12/06 09:44:56 $
+ * @author $Author: bass $
  * @module mscharserver
  */
 final class MscharServerImpl extends IdentifierGeneratorServerCore implements MscharServerOperations {
@@ -92,7 +92,7 @@ final class MscharServerImpl extends IdentifierGeneratorServerCore implements Ms
 			final IdlMapFeature[] idlMapFeatures = new IdlMapFeature[mapFeatures.size()];
 			int i = 0;
 			for (final MapFeature mapFeature : mapFeatures) {
-				idlMapFeatures[i++] = mapFeature.getTransferable();
+				idlMapFeatures[i++] = mapFeature.getIdlTransferable();
 			}
 			return idlMapFeatures;
 		} catch (final Throwable t) {
@@ -109,14 +109,14 @@ final class MscharServerImpl extends IdentifierGeneratorServerCore implements Ms
 			List<MapDescriptor> mapDescriptors = parser.getMapDescriptors();
 			if (mapDescriptors.isEmpty()) {
 				final MapDescriptor nullMapDescriptor = new MapDescriptor("", "", "", 0, 0);
-				final IdlMapDescriptor nullTransferable = nullMapDescriptor.getTransferable();
+				final IdlMapDescriptor nullTransferable = nullMapDescriptor.getIdlTransferable();
 				final IdlMapDescriptor[] IdlMapDescriptors = new IdlMapDescriptor[] { nullTransferable };
 				return IdlMapDescriptors;
 			}
 			final IdlMapDescriptor[] idlMapDescriptors = new IdlMapDescriptor[mapDescriptors.size()];
 			int i = 0;
 			for (final MapDescriptor descriptor : mapDescriptors) {
-				idlMapDescriptors[i++] = descriptor.getTransferable();
+				idlMapDescriptors[i++] = descriptor.getIdlTransferable();
 			}
 			return idlMapDescriptors;
 		} catch (final Throwable t) {
@@ -136,13 +136,13 @@ final class MscharServerImpl extends IdentifierGeneratorServerCore implements Ms
 			final IdlLayerDescriptor[] idlLayerDescriptors = new IdlLayerDescriptor[layerDescriptors.size()];
 			if (layerDescriptors.isEmpty()) {
 				final LayerDescriptor nullLayerDescriptor = new LayerDescriptor("", "", 0, 0);
-				final IdlLayerDescriptor nullTransferable = nullLayerDescriptor.getTransferable();
+				final IdlLayerDescriptor nullTransferable = nullLayerDescriptor.getIdlTransferable();
 				final IdlLayerDescriptor[] IdlLayerDescriptors = new IdlLayerDescriptor[] { nullTransferable };
 				return IdlLayerDescriptors;
 			}
 			int i = 0;
 			for (final LayerDescriptor layerFile : layerDescriptors) {
-				idlLayerDescriptors[i++] = layerFile.getTransferable();
+				idlLayerDescriptors[i++] = layerFile.getIdlTransferable();
 			}
 			return idlLayerDescriptors;
 		} catch (final Throwable t) {

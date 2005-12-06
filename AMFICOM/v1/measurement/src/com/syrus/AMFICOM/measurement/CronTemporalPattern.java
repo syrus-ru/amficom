@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.29 2005/12/02 11:24:09 bass Exp $
+ * $Id: CronTemporalPattern.java,v 1.30 2005/12/06 09:45:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPatternHelper;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/12/02 11:24:09 $
+ * @version $Revision: 1.30 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @module measurement
  */
@@ -874,16 +874,16 @@ public final class CronTemporalPattern extends AbstractTemporalPattern<CronTempo
 	
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlCronTemporalPattern getTransferable(final ORB orb) {
+	public IdlCronTemporalPattern getIdlTransferable(final ORB orb) {
 		return IdlCronTemporalPatternHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.description,
 				getCronStrings());

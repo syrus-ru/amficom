@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.59 2005/11/17 16:19:10 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.60 2005/12/06 09:42:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
  * </ul>
  *
  * @author $Author: bass $
- * @version $Revision: 1.59 $, $Date: 2005/11/17 16:19:10 $
+ * @version $Revision: 1.60 $, $Date: 2005/12/06 09:42:52 $
  * @module general
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -276,17 +276,17 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	/**
 	 * Creates a new object on every invocation.
 	 *
-	 * @see StorableObjectCondition#getTransferable(ORB)
+	 * @see StorableObjectCondition#getIdlTransferable(ORB)
 	 */
-	public final IdlStorableObjectCondition getTransferable(final ORB orb) {
-		return this.getTransferable();
+	public final IdlStorableObjectCondition getIdlTransferable(final ORB orb) {
+		return this.getIdlTransferable();
 	}
 
-	public final IdlStorableObjectCondition getTransferable() {
+	public final IdlStorableObjectCondition getIdlTransferable() {
 		IdlIdentifier[] linkedIdTransferable = new IdlIdentifier[this.delegate.linkedIds.size()];
 		int i = 0;
 		for (Iterator<Identifier> it = this.delegate.linkedIds.iterator(); it.hasNext(); i++)
-			linkedIdTransferable[i] = it.next().getTransferable();
+			linkedIdTransferable[i] = it.next().getIdlTransferable();
 
 		final IdlLinkedIdsCondition transferable = new IdlLinkedIdsCondition(this.delegate.entityCode.shortValue(),
 				this.delegate.linkedEntityCode,

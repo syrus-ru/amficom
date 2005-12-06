@@ -1,5 +1,5 @@
 /*-
- * $Id: EventType.java,v 1.2 2005/10/07 14:58:57 bass Exp $
+ * $Id: EventType.java,v 1.3 2005/12/06 09:42:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,16 +12,16 @@ import org.omg.CORBA.BAD_PARAM;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlEventPackage.IdlEventType;
-import com.syrus.util.TransferableObject;
+import com.syrus.util.IdlTransferableObject;
 
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/10/07 14:58:57 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/06 09:42:28 $
  * @module event
  */
-public enum EventType implements TransferableObject<IdlEventType> {
+public enum EventType implements IdlTransferableObject<IdlEventType> {
 	REFLECTORGAM_MISMATCH("reflectogramMismatch"),
 	LINE_MISMATCH("lineMismatch"),
 	NOTIFICATION("notification");
@@ -36,7 +36,7 @@ public enum EventType implements TransferableObject<IdlEventType> {
 		return this.codename;
 	}
 
-	public IdlEventType getTransferable(final ORB orb) {
+	public IdlEventType getIdlTransferable(final ORB orb) {
 		try {
 			return IdlEventType.from_int(this.ordinal());
 		} catch (final BAD_PARAM bp) {

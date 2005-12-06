@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.121 2005/12/02 11:24:16 bass Exp $
+ * $Id: Scheme.java,v 1.122 2005/12/06 09:44:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,7 +87,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.121 $, $Date: 2005/12/02 11:24:16 $
+ * @version $Revision: 1.122 $, $Date: 2005/12/06 09:44:22 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -672,28 +672,28 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlScheme getTransferable(final ORB orb) {
+	public IdlScheme getIdlTransferable(final ORB orb) {
 		/*
 		 * domainId is assumed to be non-null.
 		 */
 		return IdlSchemeHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.name, this.description, this.label,
 				this.width, this.height, this.getKind(),
-				super.getDomainId().getTransferable(),
-				this.mapId.getTransferable(),
-				this.symbolId.getTransferable(),
-				this.ugoCellId.getTransferable(),
-				this.schemeCellId.getTransferable(),
-				this.parentSchemeElementId.getTransferable());
+				super.getDomainId().getIdlTransferable(),
+				this.mapId.getIdlTransferable(),
+				this.symbolId.getIdlTransferable(),
+				this.ugoCellId.getIdlTransferable(),
+				this.schemeCellId.getIdlTransferable(),
+				this.parentSchemeElementId.getIdlTransferable());
 	}
 
 	/**

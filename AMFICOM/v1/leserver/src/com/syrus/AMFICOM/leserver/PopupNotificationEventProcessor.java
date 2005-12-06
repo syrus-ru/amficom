@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupNotificationEventProcessor.java,v 1.8 2005/11/28 12:34:29 arseniy Exp $
+ * $Id: PopupNotificationEventProcessor.java,v 1.9 2005/12/06 09:43:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/11/28 12:34:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/12/06 09:43:07 $
  * @module leserver
  */
 final class PopupNotificationEventProcessor implements EventProcessor {
@@ -69,7 +69,7 @@ final class PopupNotificationEventProcessor implements EventProcessor {
 						continue;
 					}
 					final MessageReceiver messageReceiver = MessageReceiverHelper.narrow(object);
-					messageReceiver.receiveMessages(popupNotificationEvent.getTransferable(corbaServer.getOrb()));
+					messageReceiver.receiveMessages(popupNotificationEvent.getIdlTransferable(corbaServer.getOrb()));
 				} catch (final SystemException se) {
 					Log.debugMessage(se, SEVERE);
 				}

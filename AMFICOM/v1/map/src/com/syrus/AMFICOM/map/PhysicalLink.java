@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.146 2005/12/02 11:24:13 bass Exp $
+ * $Id: PhysicalLink.java,v 1.147 2005/12/06 09:43:34 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,7 +77,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.146 $, $Date: 2005/12/02 11:24:13 $
+ * @version $Revision: 1.147 $, $Date: 2005/12/06 09:43:34 $
  * @module map
  */
 public class PhysicalLink extends StorableObject<PhysicalLink>
@@ -320,24 +320,24 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlPhysicalLink getTransferable(final ORB orb) {
+	public IdlPhysicalLink getIdlTransferable(final ORB orb) {
 		final IdlIdentifier[] pipeBlockIds = Identifier.createTransferables(this.binding.getPipeBlocks());
 		return IdlPhysicalLinkHelper.init(
 				orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.name,
 				this.description,
-				this.physicalLinkType.getId().getTransferable(),
-				this.startNodeId.getTransferable(),
-				this.endNodeId.getTransferable(),
+				this.physicalLinkType.getId().getIdlTransferable(),
+				this.startNodeId.getIdlTransferable(),
+				this.endNodeId.getIdlTransferable(),
 				this.city,
 				this.street,
 				this.building,

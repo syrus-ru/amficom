@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.85 2005/12/02 11:24:09 bass Exp $
+ * $Id: Result.java,v 1.86 2005/12/06 09:45:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/12/02 11:24:09 $
+ * @version $Revision: 1.86 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -116,22 +116,22 @@ public final class Result extends StorableObject<Result> {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public IdlResult getTransferable(final ORB orb) {
+	public IdlResult getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		final IdlParameter[] pts = new IdlParameter[this.parameters.length];
 		for (int i = 0; i < pts.length; i++) {
-			pts[i] = this.parameters[i].getTransferable(orb);
+			pts[i] = this.parameters[i].getIdlTransferable(orb);
 		}
 
-		final IdlIdentifier voidIdlIdentifier = Identifier.VOID_IDENTIFIER.getTransferable();
-		final IdlIdentifier nonVoidIdlIdentifier = this.action.getId().getTransferable();
+		final IdlIdentifier voidIdlIdentifier = Identifier.VOID_IDENTIFIER.getIdlTransferable();
+		final IdlIdentifier nonVoidIdlIdentifier = this.action.getId().getIdlTransferable();
 		return IdlResultHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				(this.sort == ResultSort._RESULT_SORT_MEASUREMENT)
 						? nonVoidIdlIdentifier

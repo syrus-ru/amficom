@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.113 2005/12/02 11:24:16 bass Exp $
+ * $Id: SchemePath.java,v 1.114 2005/12/06 09:44:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.113 $, $Date: 2005/12/02 11:24:16 $
+ * @version $Revision: 1.114 $, $Date: 2005/12/06 09:44:22 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject<SchemePath>
@@ -258,21 +258,21 @@ public final class SchemePath extends StorableObject<SchemePath>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlSchemePath getTransferable(final ORB orb) {
+	public IdlSchemePath getIdlTransferable(final ORB orb) {
 		return IdlSchemePathHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.name,
 				this.description,
-				this.transmissionPathId.getTransferable(),
-				this.parentSchemeMonitoringSolutionId.getTransferable());
+				this.transmissionPathId.getIdlTransferable(),
+				this.parentSchemeMonitoringSolutionId.getIdlTransferable());
 	}
 
 	/**

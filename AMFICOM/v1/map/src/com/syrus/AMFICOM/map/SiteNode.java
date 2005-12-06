@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.116 2005/12/02 11:24:13 bass Exp $
+ * $Id: SiteNode.java,v 1.117 2005/12/06 09:43:34 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.116 $, $Date: 2005/12/02 11:24:13 $
+ * @version $Revision: 1.117 $, $Date: 2005/12/06 09:43:34 $
  * @module map
  */
 public class SiteNode extends AbstractNode<SiteNode>
@@ -206,27 +206,27 @@ public class SiteNode extends AbstractNode<SiteNode>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlSiteNode getTransferable(final ORB orb) {
+	public IdlSiteNode getIdlTransferable(final ORB orb) {
 		return IdlSiteNodeHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.name,
 				this.description,
 				this.location.getX(),
 				this.location.getY(),
-				this.imageId.getTransferable(),
-				this.type.getId().getTransferable(),
+				this.imageId.getIdlTransferable(),
+				this.type.getId().getIdlTransferable(),
 				this.city,
 				this.street,
 				this.building,
-				this.attachmentSiteNodeId.getTransferable());
+				this.attachmentSiteNodeId.getIdlTransferable());
 	}
 	
 	@Override

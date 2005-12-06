@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.97 2005/12/02 11:24:09 bass Exp $
+ * $Id: Measurement.java,v 1.98 2005/12/06 09:45:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStat
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/12/02 11:24:09 $
+ * @version $Revision: 1.98 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -125,26 +125,26 @@ public final class Measurement extends Action<Measurement> {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public IdlMeasurement getTransferable(final ORB orb) {
+	public IdlMeasurement getIdlTransferable(final ORB orb) {
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		return IdlMeasurementHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
-				(IdlMeasurementType) super.type.getTransferable(orb),
-				super.monitoredElementId.getTransferable(),
+				(IdlMeasurementType) super.type.getIdlTransferable(orb),
+				super.monitoredElementId.getIdlTransferable(),
 				this.name,
-				this.setup.getId().getTransferable(),
+				this.setup.getId().getIdlTransferable(),
 				this.startTime.getTime(),
 				this.duration,
 				MeasurementStatus.from_int(this.status),
 				this.localAddress,
-				this.testId.getTransferable());
+				this.testId.getIdlTransferable());
 	}
 
 	/**

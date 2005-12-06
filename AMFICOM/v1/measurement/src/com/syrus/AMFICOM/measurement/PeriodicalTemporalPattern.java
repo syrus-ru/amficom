@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.26 2005/12/02 11:24:09 bass Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.27 2005/12/06 09:45:11 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/12/02 11:24:09 $
+ * @version $Revision: 1.27 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement
@@ -152,15 +152,15 @@ public final class PeriodicalTemporalPattern
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public IdlPeriodicalTemporalPattern getTransferable(final ORB orb) {
+	public IdlPeriodicalTemporalPattern getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		return IdlPeriodicalTemporalPatternHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.period);
 	}

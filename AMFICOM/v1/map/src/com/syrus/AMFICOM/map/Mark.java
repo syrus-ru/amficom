@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.68 2005/12/02 11:24:13 bass Exp $
+ * $Id: Mark.java,v 1.69 2005/12/06 09:43:34 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bass $
- * @version $Revision: 1.68 $, $Date: 2005/12/02 11:24:13 $
+ * @version $Revision: 1.69 $, $Date: 2005/12/06 09:43:34 $
  * @module map
  */
 public final class Mark extends AbstractNode<Mark> {
@@ -151,22 +151,22 @@ public final class Mark extends AbstractNode<Mark> {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlMark getTransferable(final ORB orb) {
+	public IdlMark getIdlTransferable(final ORB orb) {
 		return IdlMarkHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.name,
 				this.description,
 				this.location.getX(),
 				this.location.getY(),
-				this.physicalLink.getId().getTransferable(),
+				this.physicalLink.getId().getIdlTransferable(),
 				this.distance,
 				this.city,
 				this.street,

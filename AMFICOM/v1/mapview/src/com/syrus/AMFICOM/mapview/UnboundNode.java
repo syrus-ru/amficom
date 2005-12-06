@@ -1,5 +1,5 @@
 /*-
- * $Id: UnboundNode.java,v 1.34 2005/12/02 11:24:20 bass Exp $
+ * $Id: UnboundNode.java,v 1.35 2005/12/06 09:45:30 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  *
  * @author $Author: bass $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.34 $, $Date: 2005/12/02 11:24:20 $
+ * @version $Revision: 1.35 $, $Date: 2005/12/06 09:45:30 $
  * @module mapview
  */
 public final class UnboundNode extends SiteNode {
@@ -180,7 +180,7 @@ public final class UnboundNode extends SiteNode {
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	@Override
-	public IdlSiteNode getTransferable(final ORB orb) {
+	public IdlSiteNode getIdlTransferable(final ORB orb) {
 		throw new UnsupportedOperationException();
 	}
 

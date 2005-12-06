@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.42 2005/11/10 13:58:48 bass Exp $
+ * $Id: CompoundCondition.java,v 1.43 2005/12/06 09:42:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  *
- * @version $Revision: 1.42 $, $Date: 2005/11/10 13:58:48 $
+ * @version $Revision: 1.43 $, $Date: 2005/12/06 09:42:52 $
  * @author $Author: bass $
  * @module general
  */
@@ -162,20 +162,20 @@ public final class CompoundCondition implements StorableObjectCondition {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlStorableObjectCondition getTransferable(final ORB orb) {
-		return this.getTransferable();
+	public IdlStorableObjectCondition getIdlTransferable(final ORB orb) {
+		return this.getIdlTransferable();
 	}
 
-	public IdlStorableObjectCondition getTransferable() {
+	public IdlStorableObjectCondition getIdlTransferable() {
 		final IdlCompoundCondition transferable = new IdlCompoundCondition();
 		transferable.sort = CompoundConditionSort.from_int(this.operation);
 		transferable.innerConditions = new IdlStorableObjectCondition[this.conditions.size()];
 		int i = 0;
 		for (final Iterator<StorableObjectCondition> storableObjectConditionIterator = this.conditions.iterator(); storableObjectConditionIterator.hasNext(); i++) {
 			final StorableObjectCondition storableObjectCondition = storableObjectConditionIterator.next();
-			transferable.innerConditions[i] = storableObjectCondition.getTransferable();
+			transferable.innerConditions[i] = storableObjectCondition.getIdlTransferable();
 		}
 		
 		final IdlStorableObjectCondition condition = new IdlStorableObjectCondition();

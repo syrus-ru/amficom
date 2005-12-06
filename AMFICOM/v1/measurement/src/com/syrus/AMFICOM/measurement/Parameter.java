@@ -1,5 +1,5 @@
 /*
- * $Id: Parameter.java,v 1.22 2005/10/31 12:30:15 bass Exp $
+ * $Id: Parameter.java,v 1.23 2005/12/06 09:45:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,16 +26,16 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.measurement.corba.IdlParameter;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
-import com.syrus.util.TransferableObject;
+import com.syrus.util.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/31 12:30:15 $
+ * @version $Revision: 1.23 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Parameter implements TransferableObject<IdlParameter>,
+public final class Parameter implements IdlTransferableObject<IdlParameter>,
 		Identifiable {
 	private static final long serialVersionUID = -5102988777073070109L;
 
@@ -81,12 +81,12 @@ public final class Parameter implements TransferableObject<IdlParameter>,
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlParameter getTransferable(final ORB orb) {
+	public IdlParameter getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final byte[] ptValue = new byte[this.value.length];
 		System.arraycopy(this.value, 0, ptValue, 0, ptValue.length);
-		return new IdlParameter(this.id.getTransferable(), this.type.getTransferable(orb), ptValue);
+		return new IdlParameter(this.id.getIdlTransferable(), this.type.getIdlTransferable(orb), ptValue);
 	}
 	
 	/**

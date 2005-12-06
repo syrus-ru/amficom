@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.9 2005/12/02 11:24:21 bass Exp $
+ * $Id: DeliveryAttributes.java,v 1.10 2005/12/06 09:42:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/12/02 11:24:21 $
+ * @version $Revision: 1.10 $, $Date: 2005/12/06 09:42:28 $
  * @module event
  */
 public final class DeliveryAttributes extends StorableObject<DeliveryAttributes> {
@@ -95,18 +95,18 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 
 	/**
 	 * @param orb
-	 * @see StorableObject#getTransferable(ORB)
+	 * @see StorableObject#getIdlTransferable(ORB)
 	 */
 	@Override
-	public IdlStorableObject getTransferable(final ORB orb) {
+	public IdlStorableObject getIdlTransferable(final ORB orb) {
 		return IdlDeliveryAttributesHelper.init(orb,
-				this.id.getTransferable(orb),
+				this.id.getIdlTransferable(orb),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(orb),
-				this.modifierId.getTransferable(orb),
+				this.creatorId.getIdlTransferable(orb),
+				this.modifierId.getIdlTransferable(orb),
 				this.version.longValue(),
-				this.severity.getTransferable(orb),
+				this.severity.getIdlTransferable(orb),
 				Identifier.createTransferables(this.getRoleIds0()),
 				Identifier.createTransferables(this.getSystemUserIds0()));
 	}

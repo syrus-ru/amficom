@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.82 2005/12/02 11:24:16 bass Exp $
+ * $Id: SchemePort.java,v 1.83 2005/12/06 09:44:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.82 $, $Date: 2005/12/02 11:24:16 $
+ * @version $Revision: 1.83 $, $Date: 2005/12/06 09:44:22 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort<SchemePort>
@@ -306,24 +306,24 @@ public final class SchemePort extends AbstractSchemePort<SchemePort>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlSchemePort getTransferable(final ORB orb) {
+	public IdlSchemePort getIdlTransferable(final ORB orb) {
 		return IdlSchemePortHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				super.getName(),
 				super.getDescription(),
 				super.getDirectionType(),
-				super.portTypeId.getTransferable(),
-				super.portId.getTransferable(),
-				super.measurementPortId.getTransferable(),
-				super.parentSchemeDeviceId.getTransferable());
+				super.portTypeId.getIdlTransferable(),
+				super.portId.getIdlTransferable(),
+				super.measurementPortId.getIdlTransferable(),
+				super.parentSchemeDeviceId.getIdlTransferable());
 	}
 
 	/**

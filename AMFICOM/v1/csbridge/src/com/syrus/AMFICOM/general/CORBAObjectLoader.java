@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.63 2005/12/02 11:24:21 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.64 2005/12/06 09:41:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/12/02 11:24:21 $
+ * @version $Revision: 1.64 $, $Date: 2005/12/06 09:41:41 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -115,7 +115,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 		assert condition != null : NON_NULL_EXPECTED;
 
 		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
-		final IdlStorableObjectCondition conditionT = condition.getTransferable();
+		final IdlStorableObjectCondition conditionT = condition.getIdlTransferable();
 
 		final LoadCORBAAction<T> action = new LoadCORBAAction<T>() {
 			public void perform() throws AMFICOMRemoteException, ApplicationException {

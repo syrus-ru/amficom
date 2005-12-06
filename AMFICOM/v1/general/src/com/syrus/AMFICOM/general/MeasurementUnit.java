@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementUnit.java,v 1.11 2005/10/31 12:30:18 bass Exp $
+ * $Id: MeasurementUnit.java,v 1.12 2005/12/06 09:42:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,19 +7,22 @@
  */
 package com.syrus.AMFICOM.general;
 
+import org.omg.CORBA.BAD_PARAM;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlMeasurementUnit;
 import com.syrus.util.Codeable;
+import com.syrus.util.IdlTransferableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/31 12:30:18 $
+ * @version $Revision: 1.12 $, $Date: 2005/12/06 09:42:52 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public enum MeasurementUnit implements Codeable {
+public enum MeasurementUnit implements Codeable,
+		IdlTransferableObject<IdlMeasurementUnit> {
 	NONDIMENSIONAL("nondimensional"),
 
 	KILOMETER("km"),
@@ -83,11 +86,14 @@ public enum MeasurementUnit implements Codeable {
 		return this.name;
 	}
 
-	@SuppressWarnings("unused")
-	public IdlMeasurementUnit getTransferable(final ORB orb) {
+	public IdlMeasurementUnit getIdlTransferable(final ORB orb) {
+		return this.getIdlTransferable();
+	}
+
+	public IdlMeasurementUnit getIdlTransferable() {
 		try {
 			return IdlMeasurementUnit.from_int(this.getCode());
-		} catch (org.omg.CORBA.BAD_PARAM bp) {
+		} catch (final BAD_PARAM bp) {
 			Log.errorMessage("Illegal code: " + this.getCode() + ", returning UNKNOWN");
 			return IdlMeasurementUnit.UNKNOWN_MEASUREMENTUNIT;
 		}

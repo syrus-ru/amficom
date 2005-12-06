@@ -1,5 +1,5 @@
 /*-
- * $Id: UnboundLink.java,v 1.33 2005/12/02 11:24:20 bass Exp $
+ * $Id: UnboundLink.java,v 1.34 2005/12/06 09:45:30 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
  * 
  * @author $Author: bass $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.33 $, $Date: 2005/12/02 11:24:20 $
+ * @version $Revision: 1.34 $, $Date: 2005/12/06 09:45:30 $
  * @module mapview
  */
 public final class UnboundLink extends PhysicalLink {
@@ -130,7 +130,7 @@ public final class UnboundLink extends PhysicalLink {
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	@Override
-	public IdlPhysicalLink getTransferable(final ORB orb) {
+	public IdlPhysicalLink getIdlTransferable(final ORB orb) {
 		throw new UnsupportedOperationException();
 	}
 

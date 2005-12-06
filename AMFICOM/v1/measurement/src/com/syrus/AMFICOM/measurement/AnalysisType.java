@@ -1,29 +1,31 @@
 /*-
- * $Id: AnalysisType.java,v 1.105 2005/10/31 12:30:15 bass Exp $
+ * $Id: AnalysisType.java,v 1.106 2005/12/06 09:45:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.measurement;
 
 import java.util.EnumSet;
 
+import org.omg.CORBA.BAD_PARAM;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.util.Log;
-import com.syrus.util.TransferableObject;
+import com.syrus.util.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.105 $, $Date: 2005/10/31 12:30:15 $
+ * @version $Revision: 1.106 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public enum AnalysisType implements TransferableObject<IdlAnalysisType>,
+public enum AnalysisType implements IdlTransferableObject<IdlAnalysisType>,
 		ActionType<IdlAnalysisType>, Describable {
 	DADARA("dadara",
 			EnumSet.of(ParameterType.REFLECTOGRAMMA),
@@ -127,11 +129,10 @@ public enum AnalysisType implements TransferableObject<IdlAnalysisType>,
 				"AnalysisType.setName() is unsupported");		
 	}
 
-	@SuppressWarnings("unused")
-	public IdlAnalysisType getTransferable(final ORB orb) {
+	public IdlAnalysisType getIdlTransferable(final ORB orb) {
 		try {
 			return IdlAnalysisType.from_int(this.getCode());
-		} catch (org.omg.CORBA.BAD_PARAM bp) {
+		} catch (final BAD_PARAM bp) {
 			Log.errorMessage("Illegal code: " + this.getCode() + ", returning UNKNOWN");
 			return IdlAnalysisType.UNKNOWN_ANALYSISTYPE;
 		}

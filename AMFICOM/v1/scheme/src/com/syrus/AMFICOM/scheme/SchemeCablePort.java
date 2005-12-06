@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.81 2005/12/02 11:24:17 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.82 2005/12/06 09:44:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.81 $, $Date: 2005/12/02 11:24:17 $
+ * @version $Revision: 1.82 $, $Date: 2005/12/06 09:44:22 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort<SchemeCablePort>
@@ -292,24 +292,24 @@ public final class SchemeCablePort extends AbstractSchemePort<SchemeCablePort>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlSchemeCablePort getTransferable(final ORB orb) {
+	public IdlSchemeCablePort getIdlTransferable(final ORB orb) {
 		return IdlSchemeCablePortHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				super.getName(),
 				super.getDescription(),
 				super.getDirectionType(),
-				super.portTypeId.getTransferable(),
-				super.portId.getTransferable(),
-				super.measurementPortId.getTransferable(),
-				super.parentSchemeDeviceId.getTransferable());
+				super.portTypeId.getIdlTransferable(),
+				super.portId.getIdlTransferable(),
+				super.measurementPortId.getIdlTransferable(),
+				super.parentSchemeDeviceId.getIdlTransferable());
 	}
 
 	/**

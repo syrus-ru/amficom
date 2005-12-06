@@ -1,5 +1,5 @@
 /*-
- * $Id: Event.java,v 1.46 2005/12/02 11:24:21 bass Exp $
+ * $Id: Event.java,v 1.47 2005/12/06 09:42:28 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/12/02 11:24:21 $
+ * @version $Revision: 1.47 $, $Date: 2005/12/06 09:42:28 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -145,28 +145,28 @@ public final class Event extends StorableObject<Event>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlEvent getTransferable(final ORB orb) {
+	public IdlEvent getIdlTransferable(final ORB orb) {
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		int i = 0;
 		final IdlEventParameter[] idlEventParameters = new IdlEventParameter[this.eventParameters.size()];
 		for (final EventParameter eventParameter : this.eventParameters) {
-			idlEventParameters[i++] = eventParameter.getTransferable(orb);
+			idlEventParameters[i++] = eventParameter.getIdlTransferable(orb);
 		}
 
 		final IdlIdentifier[] idlEventSourceIds = Identifier.createTransferables(this.eventSourceIds);
 
 		return IdlEventHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
-				this.type.getId().getTransferable(),
+				this.type.getId().getIdlTransferable(),
 				this.description,
 				idlEventParameters,
 				idlEventSourceIds);

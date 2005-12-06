@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.206 2005/12/05 16:36:59 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.207 2005/12/06 09:42:52 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.util.LRUMapSaver;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.206 $, $Date: 2005/12/05 16:36:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.207 $, $Date: 2005/12/06 09:42:52 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 8
@@ -1271,7 +1271,7 @@ public final class StorableObjectPool {
 		assert localStorableObject.id.equals(remoteStorableObject.id) : "Local: '" + localStorableObject.id + "', remote: '" + remoteStorableObject.id + "'";
 
 		try {
-			localStorableObject.fromTransferable(remoteStorableObject.getTransferable(CRUTCH_ORB));
+			localStorableObject.fromTransferable(remoteStorableObject.getIdlTransferable(CRUTCH_ORB));
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
 		}

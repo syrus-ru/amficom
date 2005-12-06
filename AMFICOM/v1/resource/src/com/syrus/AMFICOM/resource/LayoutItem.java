@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItem.java,v 1.17 2005/12/02 11:24:14 bass Exp $
+* $Id: LayoutItem.java,v 1.18 2005/12/06 09:44:56 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.resource.corba.IdlLayoutItemHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * @author $Author: bass $
  * @module resource
  */
@@ -151,17 +151,17 @@ public final class LayoutItem extends StorableObject<LayoutItem>
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public IdlLayoutItem getTransferable(final ORB orb) {
+	public IdlLayoutItem getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		return IdlLayoutItemHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
-				this.parentId.getTransferable(),
+				this.parentId.getIdlTransferable(),
 				this.layoutName,
 				this.name);
 	}

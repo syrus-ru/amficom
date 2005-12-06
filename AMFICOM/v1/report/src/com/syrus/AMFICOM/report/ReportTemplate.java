@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.25 2005/12/02 11:24:18 bass Exp $
+ * $Id: ReportTemplate.java,v 1.26 2005/12/06 09:44:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
  * отчёт </p>
  * 
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/12/02 11:24:18 $
+ * @version $Revision: 1.26 $, $Date: 2005/12/06 09:44:56 $
  * @module report
  */
 public class ReportTemplate extends StorableObject<ReportTemplate>
@@ -189,13 +189,13 @@ public class ReportTemplate extends StorableObject<ReportTemplate>
 	}
 	
 	@Override
-	public IdlStorableObject getTransferable(ORB orb) {
+	public IdlStorableObject getIdlTransferable(ORB orb) {
 		return IdlReportTemplateHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.name,
 				this.description,

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.16 2005/12/02 11:24:09 bass Exp $
+ * $Id: MeasurementPort.java,v 1.17 2005/12/06 09:45:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPort;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortHelper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/12/02 11:24:09 $
+ * @version $Revision: 1.17 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -142,22 +142,22 @@ public final class MeasurementPort extends StorableObject<MeasurementPort>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlMeasurementPort getTransferable(final ORB orb) {
+	public IdlMeasurementPort getIdlTransferable(final ORB orb) {
 		return IdlMeasurementPortHelper.init(orb,
-				super.id.getTransferable(),
+				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
-				this.type.getId().getTransferable(),
+				this.type.getId().getIdlTransferable(),
 				this.name,
 				this.description,
-				this.kisId.getTransferable(),
-				this.portId.getTransferable());
+				this.kisId.getIdlTransferable(),
+				this.portId.getIdlTransferable());
 	}
 
 	public MeasurementPortType getType() {

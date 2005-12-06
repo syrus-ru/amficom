@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultSmsNotificationEvent.java,v 1.1 2005/10/11 08:58:25 bass Exp $
+ * $Id: DefaultSmsNotificationEvent.java,v 1.2 2005/12/06 09:42:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.eventv2.corba.IdlSmsNotificationEventHelper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/10/11 08:58:25 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/06 09:42:28 $
  * @module event
  */
 public final class DefaultSmsNotificationEvent extends
@@ -41,9 +41,9 @@ public final class DefaultSmsNotificationEvent extends
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(ORB)
 	 */
-	public IdlSmsNotificationEvent getTransferable(final ORB orb) {
+	public IdlSmsNotificationEvent getIdlTransferable(final ORB orb) {
 		return IdlSmsNotificationEventHelper.init(orb, this.cellular,
 				this.message);
 	}

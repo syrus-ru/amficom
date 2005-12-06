@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.76 2005/12/02 11:24:20 bass Exp $
+* $Id: MapView.java,v 1.77 2005/12/06 09:45:30 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * @author $Author: bass $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.76 $, $Date: 2005/12/02 11:24:20 $
+ * @version $Revision: 1.77 $, $Date: 2005/12/06 09:45:30 $
  * @module mapview
  */
 public final class MapView extends DomainMember<MapView> implements Describable {
@@ -228,27 +228,27 @@ public final class MapView extends DomainMember<MapView> implements Describable 
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlMapView getTransferable(final ORB orb) {
+	public IdlMapView getIdlTransferable(final ORB orb) {
 		final IdlIdentifier[] schemeIdsTransferable = Identifier.createTransferables(this.schemes);		
 
 		return IdlMapViewHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
-				this.getDomainId().getTransferable(),
+				this.getDomainId().getIdlTransferable(),
 				this.name,
 				this.description,
 				this.center.getX(),
 				this.center.getY(),
 				this.scale,
 				this.defaultScale,
-				this.map.getId().getTransferable(),
+				this.map.getId().getIdlTransferable(),
 				schemeIdsTransferable);
 	}
 

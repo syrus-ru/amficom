@@ -1,5 +1,5 @@
 /*-
- * $Id: Event.java,v 1.2 2005/10/07 14:58:57 bass Exp $
+ * $Id: Event.java,v 1.3 2005/12/06 09:42:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,14 +9,14 @@
 package com.syrus.AMFICOM.eventv2;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
-import com.syrus.util.TransferableObject;
+import com.syrus.util.IdlTransferableObject;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/10/07 14:58:57 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/06 09:42:28 $
  * @module event
  */
-public interface Event<T extends IdlEvent> extends TransferableObject<T> {
+public interface Event<T extends IdlEvent> extends IdlTransferableObject<T> {
 	EventType getType(); 
 }

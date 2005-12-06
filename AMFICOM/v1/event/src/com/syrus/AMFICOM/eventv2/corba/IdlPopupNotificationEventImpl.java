@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPopupNotificationEventImpl.java,v 1.5 2005/11/17 16:20:09 bass Exp $
+ * $Id: IdlPopupNotificationEventImpl.java,v 1.6 2005/12/06 09:42:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/11/17 16:20:09 $
+ * @version $Revision: 1.6 $, $Date: 2005/12/06 09:42:28 $
  * @module event
  */
 final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
@@ -38,7 +38,7 @@ final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
 			final double mismatchPhysicalDistance,
 			final long mismatchCreated,
 			final IdlSeverity severity) {
-		final IdlIdentifier voidId = VOID_IDENTIFIER.getTransferable();
+		final IdlIdentifier voidId = VOID_IDENTIFIER.getIdlTransferable();
 		this.id = voidId;
 		this.creatorId = voidId;
 		this.modifierId = voidId;

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.23 2005/12/02 11:24:09 bass Exp $
+ * $Id: ParameterSet.java,v 1.24 2005/12/06 09:45:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameterSetHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/12/02 11:24:09 $
+ * @version $Revision: 1.24 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -147,20 +147,20 @@ public final class ParameterSet extends StorableObject<ParameterSet> {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public IdlParameterSet getTransferable(final ORB orb) {
+	public IdlParameterSet getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		final IdlParameter[] pts = new IdlParameter[this.parameters.length];
 		for (int i = 0; i < pts.length; i++)
-			pts[i] = this.parameters[i].getTransferable(orb);
+			pts[i] = this.parameters[i].getIdlTransferable(orb);
 
 		final IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
 		return IdlParameterSetHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				ParameterSetSort.from_int(this.sort),
 				this.description,

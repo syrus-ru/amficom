@@ -161,26 +161,27 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 		
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.StorableObject#getTransferable(org.omg.CORBA.ORB)
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.StorableObject#getIdlTransferable(ORB)
 	 */
 	@Override
-	public IdlStorableObject getTransferable(ORB orb) {
+	public IdlStorableObject getIdlTransferable(final ORB orb) {
 		return IdlAttachedTextHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.location.getX(),
 				this.location.getY(),
 				this.size.getWidth(),
 				this.size.getHeight(),
-				this.reportTemplateId.getTransferable(),
+				this.reportTemplateId.getIdlTransferable(),
 				this.text,
-				this.verticalAttacherId.getTransferable(),
-				this.horizontalAttacherId.getTransferable(),
+				this.verticalAttacherId.getIdlTransferable(),
+				this.horizontalAttacherId.getIdlTransferable(),
 				this.distanceX,
 				this.distanceY,
 				new IdlFont(this.font.getName(), this.font.getStyle(), this.font.getSize()),

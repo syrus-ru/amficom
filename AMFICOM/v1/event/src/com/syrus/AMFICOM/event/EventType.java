@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.54 2005/12/02 11:24:21 bass Exp $
+ * $Id: EventType.java,v 1.55 2005/12/06 09:42:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/12/02 11:24:21 $
+ * @version $Revision: 1.55 $, $Date: 2005/12/06 09:42:28 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -144,10 +144,10 @@ public final class EventType extends StorableObjectType<EventType> {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlEventType getTransferable(final ORB orb) {
+	public IdlEventType getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlParameterType[] parTypesT = ParameterType.createTransferables(this.parameterTypes, orb);
@@ -162,15 +162,15 @@ public final class EventType extends StorableObjectType<EventType> {
 			for (final AlertKind alertKind : userAlertKinds) {
 				alertKindsT[j] = alertKind;
 			}
-			userAlertKindsT[i] = new IdlUserAlertKinds(userId.getTransferable(), alertKindsT);
+			userAlertKindsT[i] = new IdlUserAlertKinds(userId.getIdlTransferable(), alertKindsT);
 		}
 
 		return IdlEventTypeHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",

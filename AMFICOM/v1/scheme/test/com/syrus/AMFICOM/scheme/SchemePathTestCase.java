@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.33 2005/11/10 15:48:13 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.34 2005/12/06 09:44:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/11/10 15:48:13 $
+ * @version $Revision: 1.34 $, $Date: 2005/12/06 09:44:23 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -138,7 +138,7 @@ public final class SchemePathTestCase extends TestCase {
 			public synchronized IdlIdentifier[] getGeneratedIdentifierRange(short entity, int size) throws AMFICOMRemoteException {
 				final IdlIdentifier ids[] = new IdlIdentifier[size];
 				for (int i = 0; i < size; i++) {
-					ids[i] = new Identifier(ObjectEntities.codeToString(entity) + '_' + this.l++).getTransferable();
+					ids[i] = new Identifier(ObjectEntities.codeToString(entity) + '_' + this.l++).getIdlTransferable();
 				}
 				return ids;
 			}

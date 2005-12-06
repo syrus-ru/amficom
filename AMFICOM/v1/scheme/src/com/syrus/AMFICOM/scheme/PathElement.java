@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.93 2005/12/02 11:24:17 bass Exp $
+ * $Id: PathElement.java,v 1.94 2005/12/06 09:44:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.93 $, $Date: 2005/12/02 11:24:17 $
+ * @version $Revision: 1.94 $, $Date: 2005/12/06 09:44:23 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -739,35 +739,35 @@ public final class PathElement extends StorableObject<PathElement>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlPathElement getTransferable(final ORB orb) {
+	public IdlPathElement getIdlTransferable(final ORB orb) {
 		final IdlData data = new IdlData();
 		final IdlKind idlKind = this.getKind();
 		switch (this.getKind().value()) {
 			case _SCHEME_ELEMENT:
 				data.schemeElementData(idlKind, new IdlSchemeElementData(
-						this.startAbstractSchemePortId.getTransferable(),
-						this.endAbstractSchemePortId.getTransferable()));
+						this.startAbstractSchemePortId.getIdlTransferable(),
+						this.endAbstractSchemePortId.getIdlTransferable()));
 				break;
 			case _SCHEME_CABLE_LINK:
-				data.schemeCableThreadId(idlKind, this.schemeCableThreadId.getTransferable());
+				data.schemeCableThreadId(idlKind, this.schemeCableThreadId.getIdlTransferable());
 				break;
 			case _SCHEME_LINK:
-				data.schemeLinkId(idlKind, this.schemeLinkId.getTransferable());
+				data.schemeLinkId(idlKind, this.schemeLinkId.getIdlTransferable());
 				break;
 			default:
 				assert false;
 		}
 		return IdlPathElementHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
-				this.parentSchemePathId.getTransferable(),
+				this.parentSchemePathId.getIdlTransferable(),
 				this.sequentialNumber, data);
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.10 2005/11/13 06:29:01 bass Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.11 2005/12/06 09:43:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/11/13 06:29:01 $
+ * @version $Revision: 1.11 $, $Date: 2005/12/06 09:43:07 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor implements
@@ -181,7 +181,7 @@ final class ReflectogramMismatchEventProcessor implements
 					reflectogramMismatchEvent.getCreated());
 			final LEServerServantManager servantManager = LEServerSessionEnvironment.getInstance().getLEServerServantManager();
 			servantManager.getEventServerReference().receiveEvents(new IdlEvent[] {
-					lineMismatchEvent.getTransferable(servantManager.getCORBAServer().getOrb())});
+					lineMismatchEvent.getIdlTransferable(servantManager.getCORBAServer().getOrb())});
 		} catch (final ApplicationException ae) {
 			throw new EventProcessingException(ae);
 		} catch (final IdlEventProcessingException epe) {

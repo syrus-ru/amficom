@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionType.java,v 1.24 2005/10/07 10:04:19 bass Exp $
+ * $Id: ActionType.java,v 1.25 2005/12/06 09:45:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,15 +10,15 @@ package com.syrus.AMFICOM.measurement;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.util.Codeable;
-import com.syrus.util.TransferableObject;
+import com.syrus.util.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/10/07 10:04:19 $
+ * @version $Revision: 1.25 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public interface ActionType<T extends IDLEntity> extends TransferableObject<T>, Codeable {
+public interface ActionType<T extends IDLEntity> extends IdlTransferableObject<T>, Codeable {
 
 	String getCodename();
 

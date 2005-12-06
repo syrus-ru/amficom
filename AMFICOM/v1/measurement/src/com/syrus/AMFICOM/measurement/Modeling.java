@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.64 2005/12/02 11:24:09 bass Exp $
+ * $Id: Modeling.java,v 1.65 2005/12/06 09:45:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/12/02 11:24:09 $
+ * @version $Revision: 1.65 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -99,20 +99,20 @@ public final class Modeling extends Action<Modeling> {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public IdlModeling getTransferable(final ORB orb) {
+	public IdlModeling getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		return IdlModelingHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
-				(IdlModelingType) super.type.getTransferable(orb),
-				super.monitoredElementId.getTransferable(),
+				(IdlModelingType) super.type.getIdlTransferable(orb),
+				super.monitoredElementId.getIdlTransferable(),
 				this.name,
-				this.argumentSet.getId().getTransferable());
+				this.argumentSet.getId().getIdlTransferable());
 	}
 
 	public short getEntityCode() {

@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.39 2005/11/28 12:31:58 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.40 2005/12/06 09:43:07 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/11/28 12:31:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/12/06 09:43:07 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -79,7 +79,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 			int i = 0;
 			for (final Domain domain : domains) {
 				Log.debugMessage("Domain '" + domain.getId() + "', '" + domain.getName() + "'", Log.DEBUGLEVEL08);
-				domainsT[i] = domain.getTransferable(orb);
+				domainsT[i] = domain.getIdlTransferable(orb);
 			}
 			return domainsT;
 		} catch (ApplicationException ae) {
@@ -129,8 +129,8 @@ final class LoginServerImplementation extends LoginServerPOA {
 		}
 
 		final String userIOR = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer().objectToString(commonUser);
-		idlSessionKeyHolder.value = LoginProcessor.addUserLogin(userId, domainId, userIOR).getTransferable();
-		userIdTH.value = userId.getTransferable();
+		idlSessionKeyHolder.value = LoginProcessor.addUserLogin(userId, domainId, userIOR).getIdlTransferable();
+		userIdTH.value = userId.getIdlTransferable();
 		return;
 	}
 
@@ -175,9 +175,9 @@ final class LoginServerImplementation extends LoginServerPOA {
 		LoginProcessor.updateUserLoginLastActivityDate(sessionKey);
 
 		final UserLogin userLogin = LoginProcessor.getUserLogin(sessionKey);
-		userIdTH.value = userLogin.getUserId().getTransferable();
+		userIdTH.value = userLogin.getUserId().getIdlTransferable();
 		final Identifier domainId = userLogin.getDomainId();
-		domainIdTH.value = (domainId == null ? Identifier.VOID_IDENTIFIER : domainId).getTransferable();
+		domainIdTH.value = (domainId == null ? Identifier.VOID_IDENTIFIER : domainId).getIdlTransferable();
 	}
 
 	public void setPassword(final IdlSessionKey sessionKeyT, final IdlIdentifier userIdT, final String password)

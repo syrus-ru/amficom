@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.16 2005/12/02 11:24:18 bass Exp $
+ * $Id: TableDataStorableElement.java,v 1.17 2005/12/06 09:44:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
 /**
  * Класс для отображения данных в табличном виде
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/12/02 11:24:18 $
+ * @version $Revision: 1.17 $, $Date: 2005/12/06 09:44:56 $
  * @module report
  */
 public final class TableDataStorableElement extends AbstractDataStorableElement<TableDataStorableElement> {
@@ -133,19 +133,19 @@ public final class TableDataStorableElement extends AbstractDataStorableElement<
 	}
 	
 	@Override
-	public IdlStorableObject getTransferable(ORB orb) {
+	public IdlStorableObject getIdlTransferable(ORB orb) {
 		return IdlTableDataHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.location.getX(),
 				this.location.getY(),
 				this.size.getWidth(),
 				this.size.getHeight(),
-				this.reportTemplateId.getTransferable(),
+				this.reportTemplateId.getIdlTransferable(),
 				this.reportName,
 				this.modelClassName,
 				this.verticalDivisionsCount);

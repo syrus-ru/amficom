@@ -158,20 +158,20 @@ public final class ImageStorableElement
 	}
 	
 	@Override
-	public IdlStorableObject getTransferable(ORB orb) {
+	public IdlStorableObject getIdlTransferable(ORB orb) {
 		return IdlImageHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.location.getX(),
 				this.location.getY(),
 				this.size.getWidth(),
 				this.size.getHeight(),
-				this.reportTemplateId.getTransferable(),
-				this.bitmapImageResourceId.getTransferable());
+				this.reportTemplateId.getIdlTransferable(),
+				this.bitmapImageResourceId.getIdlTransferable());
 	}
 	
 	private BitmapImageResource getBitmapImageResource() throws ApplicationException {

@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.17 2005/11/29 11:47:16 bass Exp $
+ * $Id: ReflectogramMismatch.java,v 1.18 2005/12/06 09:46:06 bass Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.reflectometry.corba.IdlAlarmType;
 import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
-import com.syrus.util.TransferableObject;
+import com.syrus.util.IdlTransferableObject;
 
 /**
  * Описание несоответствия рефлектограммы эталону.
@@ -69,7 +69,7 @@ import com.syrus.util.TransferableObject;
  * 
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/11/29 11:47:16 $
+ * @version $Revision: 1.18 $, $Date: 2005/12/06 09:46:06 $
  * @module reflectometry
  */
 public interface ReflectogramMismatch {
@@ -81,10 +81,10 @@ public interface ReflectogramMismatch {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.17 $, $Date: 2005/11/29 11:47:16 $
+	 * @version $Revision: 1.18 $, $Date: 2005/12/06 09:46:06 $
 	 * @module reflectometry
 	 */
-	enum Severity implements TransferableObject<IdlSeverity> {
+	enum Severity implements IdlTransferableObject<IdlSeverity> {
 		/**
 		 * just a convenience level, not a real alarm
 		 */
@@ -108,9 +108,9 @@ public interface ReflectogramMismatch {
 
 		/**
 		 * @param orb
-		 * @see TransferableObject#getTransferable(ORB)
+		 * @see IdlTransferableObject#getIdlTransferable(ORB)
 		 */
-		public IdlSeverity getTransferable(final ORB orb) {
+		public IdlSeverity getIdlTransferable(final ORB orb) {
 			return IdlSeverity.from_int(this.ordinal());
 		}
 
@@ -143,10 +143,10 @@ public interface ReflectogramMismatch {
 	 * Тип отклонения.
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.17 $, $Date: 2005/11/29 11:47:16 $
+	 * @version $Revision: 1.18 $, $Date: 2005/12/06 09:46:06 $
 	 * @module reflectometry
 	 */
-	enum AlarmType implements TransferableObject<IdlAlarmType> {
+	enum AlarmType implements IdlTransferableObject<IdlAlarmType> {
 		/**
 		 * тип не определен
 		 * XXX: используется только вместе с SEVERITY_NONE
@@ -175,9 +175,9 @@ public interface ReflectogramMismatch {
 
 		/**
 		 * @param orb
-		 * @see TransferableObject#getTransferable(ORB)
+		 * @see IdlTransferableObject#getIdlTransferable(ORB)
 		 */
-		public IdlAlarmType getTransferable(final ORB orb) {
+		public IdlAlarmType getIdlTransferable(final ORB orb) {
 			return IdlAlarmType.from_int(this.ordinal());
 		}
 

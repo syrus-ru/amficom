@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultPopupNotificationEvent.java,v 1.13 2005/11/22 19:33:13 bass Exp $
+ * $Id: DefaultPopupNotificationEvent.java,v 1.14 2005/12/06 09:42:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/11/22 19:33:13 $
+ * @version $Revision: 1.14 $, $Date: 2005/12/06 09:42:28 $
  * @module event
  */
 public final class DefaultPopupNotificationEvent extends
@@ -92,17 +92,17 @@ public final class DefaultPopupNotificationEvent extends
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(ORB)
 	 */
-	public IdlPopupNotificationEvent getTransferable(final ORB orb) {
+	public IdlPopupNotificationEvent getIdlTransferable(final ORB orb) {
 		return IdlPopupNotificationEventHelper.init(orb,
-				this.getTargetUserId().getTransferable(orb),
+				this.getTargetUserId().getIdlTransferable(orb),
 				this.getMessage(),
-				this.getResultId().getTransferable(orb),
+				this.getResultId().getIdlTransferable(orb),
 				this.getMismatchOpticalDistance(),
 				this.getMismatchPhysicalDistance(),
 				this.mismatchCreated.getTime(),
-				this.getSeverity().getTransferable(orb));
+				this.getSeverity().getIdlTransferable(orb));
 	}
 
 	public static PopupNotificationEvent valueOf(

@@ -1,24 +1,28 @@
 /*-
- * $Id: LayerDescriptor.java,v 1.3 2005/08/22 06:17:27 max Exp $
+ * $Id: LayerDescriptor.java,v 1.4 2005/12/06 09:43:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.map;
 
+import org.omg.CORBA.ORB;
+
 import com.syrus.AMFICOM.map.corba.IdlLayerDescriptor;
+import com.syrus.util.IdlTransferableObject;
 
 /**
- * 
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.3 $, $Date: 2005/08/22 06:17:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/12/06 09:43:34 $
  * @module map
  */
+public class LayerDescriptor implements MapFileDescriptor,
+		IdlTransferableObject<IdlLayerDescriptor> {
+	private static final long serialVersionUID = -1252210481592291979L;
 
-public class LayerDescriptor implements MapFileDescriptor {
-	
 	private String fileName;
 	private String filePathName;
 	private long length;
@@ -38,7 +42,15 @@ public class LayerDescriptor implements MapFileDescriptor {
 		this.lastModified = descriptor.lastModified;
 	}
 
-	public IdlLayerDescriptor getTransferable() {
+	/**
+	 * @param orb
+	 * @see IdlTransferableObject#getIdlTransferable(ORB)
+	 */
+	public IdlLayerDescriptor getIdlTransferable(final ORB orb) {
+		return this.getIdlTransferable();
+	}
+
+	public IdlLayerDescriptor getIdlTransferable() {
 		return new IdlLayerDescriptor(this.fileName, this.filePathName, this.length, this.lastModified);
 	}
 

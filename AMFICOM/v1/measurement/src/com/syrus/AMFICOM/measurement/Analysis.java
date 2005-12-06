@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.86 2005/12/02 11:24:09 bass Exp $
+ * $Id: Analysis.java,v 1.87 2005/12/06 09:45:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/12/02 11:24:09 $
+ * @version $Revision: 1.87 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -105,22 +105,22 @@ public final class Analysis extends Action<Analysis> {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public IdlAnalysis getTransferable(final ORB orb) {
+	public IdlAnalysis getIdlTransferable(final ORB orb) {
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		return IdlAnalysisHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
-				(IdlAnalysisType) super.type.getTransferable(orb),
-				super.monitoredElementId.getTransferable(),
-				((super.parentAction != null) ? super.parentAction.getId() : Identifier.VOID_IDENTIFIER).getTransferable(),
+				(IdlAnalysisType) super.type.getIdlTransferable(orb),
+				super.monitoredElementId.getIdlTransferable(),
+				((super.parentAction != null) ? super.parentAction.getId() : Identifier.VOID_IDENTIFIER).getIdlTransferable(),
 				this.name != null ? this.name : "",
-				this.criteriaSet.getId().getTransferable());
+				this.criteriaSet.getId().getIdlTransferable());
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseIdentifierGeneratorServer.java,v 1.10 2005/11/25 12:21:24 arseniy Exp $
+ * $Id: DatabaseIdentifierGeneratorServer.java,v 1.11 2005/12/06 09:41:41 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/11/25 12:21:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/12/06 09:41:41 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -23,7 +23,7 @@ public class DatabaseIdentifierGeneratorServer implements IdentifierGeneratorSer
 
 	public IdlIdentifier getGeneratedIdentifier(final short entity) throws AMFICOMRemoteException {
 		try {
-			return IdentifierGenerator.generateIdentifier(entity).getTransferable();
+			return IdentifierGenerator.generateIdentifier(entity).getIdlTransferable();
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new AMFICOMRemoteException();
@@ -38,7 +38,7 @@ public class DatabaseIdentifierGeneratorServer implements IdentifierGeneratorSer
 			final Identifier[] identifiers = IdentifierGenerator.generateIdentifierRange(entity, size);
 			final IdlIdentifier[] transferables = new IdlIdentifier[identifiers.length];
 			for (int i = 0; i < identifiers.length; i++) {
-				transferables[i] = identifiers[i].getTransferable();
+				transferables[i] = identifiers[i].getIdlTransferable();
 			}
 
 			return transferables;

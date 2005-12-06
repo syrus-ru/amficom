@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectCondition.java,v 1.22 2005/11/17 16:19:10 bass Exp $
+ * $Id: StorableObjectCondition.java,v 1.23 2005/12/06 09:42:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,16 +12,16 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
-import com.syrus.util.TransferableObject;
+import com.syrus.util.IdlTransferableObject;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/11/17 16:19:10 $
+ * @version $Revision: 1.23 $, $Date: 2005/12/06 09:42:52 $
  * @author $Author: bass $
  * @module general
  */
 public interface StorableObjectCondition
-		extends TransferableObject<IdlStorableObjectCondition> {
+		extends IdlTransferableObject<IdlStorableObjectCondition> {
 	boolean isConditionTrue(final StorableObject<?> storableObject) throws IllegalObjectEntityException;
 
 	/**
@@ -49,9 +49,9 @@ public interface StorableObjectCondition
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
-	IdlStorableObjectCondition getTransferable(final ORB orb);
+	IdlStorableObjectCondition getIdlTransferable(final ORB orb);
 
-	IdlStorableObjectCondition getTransferable();
+	IdlStorableObjectCondition getIdlTransferable();
 }

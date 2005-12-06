@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.120 2005/12/02 11:24:13 bass Exp $
+ * $Id: Map.java,v 1.121 2005/12/06 09:43:34 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.Log;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.120 $, $Date: 2005/12/02 11:24:13 $
+ * @version $Revision: 1.121 $, $Date: 2005/12/06 09:43:34 $
  * @module map
  */
 public final class Map extends DomainMember<Map>
@@ -315,10 +315,10 @@ public final class Map extends DomainMember<Map>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlMap getTransferable(final ORB orb) {
+	public IdlMap getIdlTransferable(final ORB orb) {
 		final IdlIdentifier[] idlSiteNodeIds = Identifier.createTransferables(this.siteNodeIds);
 		final IdlIdentifier[] idlTopologicalNodeIds = Identifier.createTransferables(this.topologicalNodeIds);
 		final IdlIdentifier[] idlNodeLinkIds = Identifier.createTransferables(this.nodeLinkIds);
@@ -329,13 +329,13 @@ public final class Map extends DomainMember<Map>
 		final IdlIdentifier[] idlExternalNodesIds = Identifier.createTransferables(this.externalNodeIds);
 		final IdlIdentifier[] idlMapLibraryIds = Identifier.createTransferables(this.mapLibraryIds);
 		return IdlMapHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
-				this.getDomainId().getTransferable(),
+				this.getDomainId().getIdlTransferable(),
 				this.name,
 				this.description,
 				idlSiteNodeIds,

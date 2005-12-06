@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultEmailNotificationEvent.java,v 1.3 2005/11/22 19:33:13 bass Exp $
+ * $Id: DefaultEmailNotificationEvent.java,v 1.4 2005/12/06 09:42:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.eventv2.corba.IdlEmailNotificationEventHelper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/11/22 19:33:13 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/06 09:42:28 $
  * @module event
  */
 public final class DefaultEmailNotificationEvent extends
@@ -62,9 +62,9 @@ public final class DefaultEmailNotificationEvent extends
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(ORB)
 	 */
-	public IdlEmailNotificationEvent getTransferable(final ORB orb) {
+	public IdlEmailNotificationEvent getIdlTransferable(final ORB orb) {
 		return IdlEmailNotificationEventHelper.init(orb, this.email,
 				this.subject, this.message);
 	}

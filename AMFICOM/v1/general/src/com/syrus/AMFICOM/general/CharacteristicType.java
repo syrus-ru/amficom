@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.60 2005/12/02 11:24:10 bass Exp $
+ * $Id: CharacteristicType.java,v 1.61 2005/12/06 09:42:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/12/02 11:24:10 $
+ * @version $Revision: 1.61 $, $Date: 2005/12/06 09:42:52 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -268,19 +268,19 @@ public final class CharacteristicType
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public IdlCharacteristicType getTransferable(final ORB orb) {
+	public IdlCharacteristicType getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL + ", id: '" + this.id + "'";
 		return IdlCharacteristicTypeHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name,
-				this.dataType.getTransferable(orb),
+				this.dataType.getIdlTransferable(orb),
 				CharacteristicTypeSort.from_int(this.sort));
 	}
 

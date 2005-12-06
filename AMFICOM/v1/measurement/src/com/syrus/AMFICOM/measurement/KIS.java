@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.11 2005/12/02 11:24:09 bass Exp $
+ * $Id: KIS.java,v 1.12 2005/12/06 09:45:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlKISHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/12/02 11:24:09 $
+ * @version $Revision: 1.12 $, $Date: 2005/12/06 09:45:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -145,25 +145,25 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlKIS getTransferable(final ORB orb) {
+	public IdlKIS getIdlTransferable(final ORB orb) {
 
 		return IdlKISHelper.init(orb,
-				super.id.getTransferable(),
+				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
-				this.getDomainId().getTransferable(),
+				this.getDomainId().getIdlTransferable(),
 				this.name,
 				this.description,
 				this.hostname,
 				this.tcpPort,
-				this.equipmentId.getTransferable(),
-				this.mcmId.getTransferable());
+				this.equipmentId.getIdlTransferable(),
+				this.mcmId.getIdlTransferable());
 	}
 
 	public String getName() {

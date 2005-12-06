@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginManager.java,v 1.36 2005/11/28 13:17:11 arseniy Exp $
+ * $Id: LoginManager.java,v 1.37 2005/12/06 09:41:41 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/11/28 13:17:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/12/06 09:41:41 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -111,7 +111,7 @@ public final class LoginManager {
 		try {
 			final IdlSessionKeyHolder idlSessionKeyHolder = new IdlSessionKeyHolder();
 			final IdlIdentifierHolder userIdHolder = new IdlIdentifierHolder();
-			loginServer.login(login, password, loginDomainId.getTransferable(), commonUser, idlSessionKeyHolder, userIdHolder);
+			loginServer.login(login, password, loginDomainId.getIdlTransferable(), commonUser, idlSessionKeyHolder, userIdHolder);
 
 			idlSessionKey = idlSessionKeyHolder.value;
 			sessionKey = new SessionKey(idlSessionKey);

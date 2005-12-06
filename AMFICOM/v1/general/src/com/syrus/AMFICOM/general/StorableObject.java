@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.130 2005/12/02 11:24:10 bass Exp $
+ * $Id: StorableObject.java,v 1.131 2005/12/06 09:42:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,16 +33,16 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
-import com.syrus.util.TransferableObject;
+import com.syrus.util.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.130 $, $Date: 2005/12/02 11:24:10 $
+ * @version $Revision: 1.131 $, $Date: 2005/12/06 09:42:52 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public abstract class StorableObject<T extends StorableObject<T>> implements Identifiable,
-		TransferableObject<IdlStorableObject> {
+		IdlTransferableObject<IdlStorableObject> {
 	private static final long serialVersionUID = 3904998894075738999L;
 
 	protected Identifier id;
@@ -177,15 +177,15 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlStorableObject getTransferable(final ORB orb) {
+	public IdlStorableObject getIdlTransferable(final ORB orb) {
 		return IdlStorableObjectHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue());
 	}
 
@@ -410,7 +410,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 		int i = 0;
 		synchronized (storableObjects) {
 			for (final StorableObject storableObject : storableObjects) {
-				transferables[i++] = storableObject.getTransferable(orb);
+				transferables[i++] = storableObject.getIdlTransferable(orb);
 			}
 		}
 		return transferables;
@@ -671,7 +671,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.130 $, $Date: 2005/12/02 11:24:10 $
+	 * @version $Revision: 1.131 $, $Date: 2005/12/06 09:42:52 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -796,7 +796,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.130 $, $Date: 2005/12/02 11:24:10 $
+	 * @version $Revision: 1.131 $, $Date: 2005/12/06 09:42:52 $
 	 * @module general
 	 */
 	@Retention(SOURCE)

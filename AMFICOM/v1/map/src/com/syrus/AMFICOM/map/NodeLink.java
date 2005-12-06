@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.112 2005/12/02 11:24:13 bass Exp $
+ * $Id: NodeLink.java,v 1.113 2005/12/06 09:43:34 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.112 $, $Date: 2005/12/02 11:24:13 $
+ * @version $Revision: 1.113 $, $Date: 2005/12/06 09:43:34 $
  * @module map
  */
 public final class NodeLink extends StorableObject<NodeLink>
@@ -151,20 +151,20 @@ public final class NodeLink extends StorableObject<NodeLink>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlNodeLink getTransferable(final ORB orb) {
+	public IdlNodeLink getIdlTransferable(final ORB orb) {
 		return IdlNodeLinkHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
-				this.physicalLinkId.getTransferable(),
-				this.startNodeId.getTransferable(),
-				this.endNodeId.getTransferable(),
+				this.physicalLinkId.getIdlTransferable(),
+				this.startNodeId.getIdlTransferable(),
+				this.endNodeId.getIdlTransferable(),
 				this.length);
 	}
 

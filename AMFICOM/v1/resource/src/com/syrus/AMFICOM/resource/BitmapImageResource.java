@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.34 2005/12/02 11:24:14 bass Exp $
+ * $Id: BitmapImageResource.java,v 1.35 2005/12/06 09:44:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/12/02 11:24:14 $
+ * @version $Revision: 1.35 $, $Date: 2005/12/06 09:44:57 $
  * @module resource
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource implements Cloneable {
@@ -100,21 +100,21 @@ public final class BitmapImageResource extends AbstractBitmapImageResource imple
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlImageResource getTransferable(final ORB orb) {
+	public IdlImageResource getIdlTransferable(final ORB orb) {
 		final IdlBitmapImageResourceData bitmapImageResourceData = new IdlBitmapImageResourceData();
 		bitmapImageResourceData.codename = this.codename;
 		bitmapImageResourceData.image = this.image;
 		final IdlImageResourceData imageResourceData = new IdlImageResourceData();
 		imageResourceData.bitmapImageResourceData(bitmapImageResourceData);
 		return IdlImageResourceHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				imageResourceData);
 	}

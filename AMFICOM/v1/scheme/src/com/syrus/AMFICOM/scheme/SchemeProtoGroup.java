@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.89 2005/12/02 11:24:17 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.90 2005/12/06 09:44:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.89 $, $Date: 2005/12/02 11:24:17 $
+ * @version $Revision: 1.90 $, $Date: 2005/12/06 09:44:23 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject<SchemeProtoGroup>
@@ -336,21 +336,21 @@ public final class SchemeProtoGroup extends StorableObject<SchemeProtoGroup>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlSchemeProtoGroup getTransferable(final ORB orb) {
+	public IdlSchemeProtoGroup getIdlTransferable(final ORB orb) {
 		return IdlSchemeProtoGroupHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.name,
 				this.description,
-				this.symbolId.getTransferable(),
-				this.parentSchemeProtoGroupId.getTransferable());
+				this.symbolId.getIdlTransferable(),
+				this.parentSchemeProtoGroupId.getIdlTransferable());
 	}
 
 	/**

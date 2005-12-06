@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalImageQuery.java,v 1.15 2005/08/31 05:50:36 bass Exp $
+ * $Id: TopologicalImageQuery.java,v 1.16 2005/12/06 09:43:34 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,17 +12,23 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 import java.awt.Image;
 
+import org.omg.CORBA.ORB;
+
 import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.util.IdlTransferableObject;
 
 /**
  * Класс-запрос для обращения к серверу топографических данных через пул
  * 
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/08/31 05:50:36 $
- * @module mapinfo_v1
+ * @version $Revision: 1.16 $, $Date: 2005/12/06 09:43:34 $
+ * @module mapinfo
  */
-public final class TopologicalImageQuery implements Comparable<TopologicalImageQuery> {
+public final class TopologicalImageQuery
+		implements Comparable<TopologicalImageQuery>,
+		IdlTransferableObject<IdlTopologicalImageQuery> {
+	private static final long serialVersionUID = 5174295311154560836L;
 
 	/**
 	 * Для участков изображения, добавляемых в кэш "на всякий случай", до
@@ -166,11 +172,19 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 	}
 
 	/**
+	 * @param orb
+	 * @see IdlTransferableObject#getIdlTransferable(ORB)
+	 */
+	public IdlTopologicalImageQuery getIdlTransferable(final ORB orb) {
+		return this.getIdlTransferable();
+	}
+
+	/**
 	 * <p>
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
-	public IdlTopologicalImageQuery getTransferable() {
+	public IdlTopologicalImageQuery getIdlTransferable() {
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		return new IdlTopologicalImageQuery(this.mapImageWidth,
 				this.mapImageHeight,

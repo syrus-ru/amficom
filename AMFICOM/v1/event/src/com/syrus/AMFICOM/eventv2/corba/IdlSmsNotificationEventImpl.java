@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSmsNotificationEventImpl.java,v 1.3 2005/10/13 10:47:42 bass Exp $
+ * $Id: IdlSmsNotificationEventImpl.java,v 1.4 2005/12/06 09:42:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/13 10:47:42 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/06 09:42:28 $
  * @module event
  */
 final class IdlSmsNotificationEventImpl extends IdlSmsNotificationEvent {
@@ -32,7 +32,7 @@ final class IdlSmsNotificationEventImpl extends IdlSmsNotificationEvent {
 	}
 
 	IdlSmsNotificationEventImpl(final String cellular, final String message) {
-		final IdlIdentifier voidId = VOID_IDENTIFIER.getTransferable();
+		final IdlIdentifier voidId = VOID_IDENTIFIER.getIdlTransferable();
 		this.id = voidId;
 		this.creatorId = voidId;
 		this.modifierId = voidId;

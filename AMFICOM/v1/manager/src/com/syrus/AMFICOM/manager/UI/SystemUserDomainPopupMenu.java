@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserDomainPopupMenu.java,v 1.5 2005/12/02 13:07:45 bob Exp $
+* $Id: SystemUserDomainPopupMenu.java,v 1.6 2005/12/06 09:46:37 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/12/02 13:07:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/12/06 09:46:37 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -123,7 +123,7 @@ public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu<DomainPerpe
 				final IdlSessionKey idlSessionKey = 
 					LoginManager.getIdlSessionKey();
 				final IdlIdentifier userIdTransferable = 
-					this.systemUser.getId().getTransferable();
+					this.systemUser.getId().getIdlTransferable();
 				loginServerReference.setPassword(idlSessionKey, 
 					userIdTransferable, 
 					new String(password));

@@ -1,5 +1,5 @@
 /*-
- * $Id: IdentifierGeneratorServerCore.java,v 1.5 2005/10/31 12:29:52 bass Exp $
+ * $Id: IdentifierGeneratorServerCore.java,v 1.6 2005/12/06 09:41:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCod
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/10/31 12:29:52 $
+ * @version $Revision: 1.6 $, $Date: 2005/12/06 09:41:41 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -38,7 +38,7 @@ public abstract class IdentifierGeneratorServerCore extends ServerCore implement
 		try {
 			Log.debugMessage("Generating an identifier for '"
 					+ ObjectEntities.codeToString(entityCode) + "'", Level.CONFIG);
-			return IdentifierGenerator.generateIdentifier(entityCode).getTransferable();
+			return IdentifierGenerator.generateIdentifier(entityCode).getIdlTransferable();
 		} catch (final IllegalObjectEntityException ioee) {
 			throw this.processDefaultIllegalObjectEntityException(ioee, entityCode);
 		} catch (final IdentifierGenerationException ige) {

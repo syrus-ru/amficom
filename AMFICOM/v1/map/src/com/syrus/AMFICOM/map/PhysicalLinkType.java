@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.109 2005/12/02 11:24:13 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.110 2005/12/06 09:43:34 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.109 $, $Date: 2005/12/02 11:24:13 $
+ * @version $Revision: 1.110 $, $Date: 2005/12/06 09:43:34 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType> 
@@ -200,16 +200,16 @@ public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlPhysicalLinkType getTransferable(final ORB orb) {
+	public IdlPhysicalLinkType getIdlTransferable(final ORB orb) {
 		return IdlPhysicalLinkTypeHelper.init(orb,
-				this.id.getTransferable(),
+				this.id.getIdlTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
 				this.sort,
 				this.codename,
@@ -218,7 +218,7 @@ public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType>
 				this.bindingDimension.getWidth(),
 				this.bindingDimension.getHeight(),
 				this.topological,
-				this.mapLibraryId.getTransferable());
+				this.mapLibraryId.getIdlTransferable());
 	}
 
 	@Override

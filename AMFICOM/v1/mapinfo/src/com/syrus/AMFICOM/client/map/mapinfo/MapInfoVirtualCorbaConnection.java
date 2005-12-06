@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoVirtualCorbaConnection.java,v 1.9 2005/11/22 14:26:56 bass Exp $
+ * $Id: MapInfoVirtualCorbaConnection.java,v 1.10 2005/12/06 09:43:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -133,7 +133,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 		final IdlSessionKey idlSessionKey = LoginManager.getIdlSessionKey();
 		final IdlLayerDescriptor[] idlLayerDescriptors;
 		try {
-			idlLayerDescriptors = this.mscharServer.getLayerDescriptors(mapDescriptor.getTransferable(),idlSessionKey);
+			idlLayerDescriptors = this.mscharServer.getLayerDescriptors(mapDescriptor.getIdlTransferable(),idlSessionKey);
 		} catch (AMFICOMRemoteException e) {
 			Log.errorMessage(e.getMessage());
 			return Collections.emptyList();
