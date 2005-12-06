@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.62 2005/12/06 11:31:12 bass Exp $
+ * $Id: CharacteristicType.java,v 1.63 2005/12/06 11:51:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/12/06 11:31:12 $
+ * @version $Revision: 1.63 $, $Date: 2005/12/06 11:51:57 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -143,7 +143,8 @@ public final class CharacteristicType
 			final String description,
 			final String name,
 			final DataType dataType,
-			final IdlCharacteristicTypeSort sort) throws CreateObjectException {
+			final CharacteristicTypeSort sort)
+	throws CreateObjectException {
 		try {
 			CharacteristicType characteristicType = new CharacteristicType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_TYPE_CODE),
 					creatorId,
@@ -152,7 +153,7 @@ public final class CharacteristicType
 					description,
 					name,
 					dataType,
-					CharacteristicTypeSort.valueOf(sort));
+					sort);
 
 			assert characteristicType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
