@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.61 2005/12/06 09:42:52 bass Exp $
+ * $Id: CharacteristicType.java,v 1.62 2005/12/06 11:31:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,13 +27,13 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypeHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicType;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/12/06 09:42:52 $
+ * @version $Revision: 1.62 $, $Date: 2005/12/06 11:31:12 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -46,7 +46,7 @@ public final class CharacteristicType
 
 	private String name;
 	private DataType dataType;
-	private int sort;
+	private CharacteristicTypeSort sort;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -65,7 +65,7 @@ public final class CharacteristicType
 			final String description,
 			final String name,
 			final DataType dataType,
-			final int sort) {
+			final CharacteristicTypeSort sort) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -110,7 +110,7 @@ public final class CharacteristicType
 		}
 		this.name = ctt.name;
 		this.dataType = DataType.fromTransferable(ctt.dataType);
-		this.sort = ctt.sort.value();
+		this.sort = CharacteristicTypeSort.valueOf(ctt.sort);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -143,7 +143,7 @@ public final class CharacteristicType
 			final String description,
 			final String name,
 			final DataType dataType,
-			final CharacteristicTypeSort sort) throws CreateObjectException {
+			final IdlCharacteristicTypeSort sort) throws CreateObjectException {
 		try {
 			CharacteristicType characteristicType = new CharacteristicType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_TYPE_CODE),
 					creatorId,
@@ -152,7 +152,7 @@ public final class CharacteristicType
 					description,
 					name,
 					dataType,
-					sort.value());
+					CharacteristicTypeSort.valueOf(sort));
 
 			assert characteristicType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -281,7 +281,7 @@ public final class CharacteristicType
 				super.description != null ? super.description : "",
 				this.name,
 				this.dataType.getIdlTransferable(orb),
-				CharacteristicTypeSort.from_int(this.sort));
+				this.sort.getIdlTransferable(orb));
 	}
 
 	/**
@@ -303,11 +303,20 @@ public final class CharacteristicType
 		return this.dataType;
 	}
 
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	protected void setDataType0(final DataType dataType) {
+	private void setDataType0(final DataType dataType) {
 		this.dataType = dataType;
+	}
+
+	/**
+	 * <em>As long as</em> client is allowed to set {@code dataType}
+	 * property via the corresponding wrapper, this modifier method should
+	 * also remain public.
+	 *
+	 * @param dataType
+	 */
+	public void setDataType(final DataType dataType) {
+		this.setDataType0(dataType);
+		this.markAsChanged();
 	}
 
 	public String getName() {
@@ -320,18 +329,22 @@ public final class CharacteristicType
 	}
 
 	public CharacteristicTypeSort getSort() {
-		return CharacteristicTypeSort.from_int(this.sort);
+		return this.sort;
+	}
+
+	private void setSort0(final CharacteristicTypeSort sort) {
+		this.sort = sort;
 	}
 	
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <em>As long as</em> client is allowed to set {@code sort} property
+	 * via the corresponding wrapper, this modifier method should also
+	 * remain public.
+	 *
+	 * @param sort
 	 */
-	protected void setSort0(final CharacteristicTypeSort sort) {
-		this.sort = sort.value();
-	}
-	
 	public void setSort(final CharacteristicTypeSort sort) {
-		this.setSort(sort);
+		this.setSort0(sort);
 		super.markAsChanged();
 	}
 
@@ -347,7 +360,7 @@ public final class CharacteristicType
 			final String description,
 			final String name,
 			final DataType dataType,
-			final int sort) {
+			final CharacteristicTypeSort sort) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 		this.name = name;
 		this.dataType = dataType;

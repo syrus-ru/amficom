@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.116 2005/11/28 12:08:55 arseniy Exp $
+ * $Id: general.idl,v 1.117 2005/12/06 11:30:22 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -258,7 +258,7 @@ module general {
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlCharacteristicType : IdlStorableObject {
 			/*\u002a\u002f@SuppressWarnings("all")/**/
-			enum CharacteristicTypeSort {
+			enum IdlCharacteristicTypeSort {
 				CHARACTERISTICTYPESORT_OPTICAL,
 				CHARACTERISTICTYPESORT_ELECTRICAL,
 				CHARACTERISTICTYPESORT_OPERATIONAL,
@@ -270,7 +270,7 @@ module general {
 			public WString256 description;
 			public WString128 name;
 			public IdlDataType dataType;
-			public CharacteristicTypeSort sort;
+			public IdlCharacteristicTypeSort sort;
 
 			factory init(in IdlIdentifier id,
 					in long long created,
@@ -282,7 +282,7 @@ module general {
 					in WString256 description,
 					in WString128 name,
 					in IdlDataType dataType,
-					in CharacteristicTypeSort sort);
+					in IdlCharacteristicTypeSort sort);
 		};
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/

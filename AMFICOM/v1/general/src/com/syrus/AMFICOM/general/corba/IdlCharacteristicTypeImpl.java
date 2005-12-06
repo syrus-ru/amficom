@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlCharacteristicTypeImpl.java,v 1.3 2005/08/08 11:27:26 arseniy Exp $
+ * $Id: IdlCharacteristicTypeImpl.java,v 1.4 2005/12/06 11:31:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,12 +9,12 @@
 package com.syrus.AMFICOM.general.corba;
 
 import com.syrus.AMFICOM.general.CharacteristicType;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/08 11:27:26 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/12/06 11:31:12 $
  * @module general
  */
 final class IdlCharacteristicTypeImpl extends IdlCharacteristicType {
@@ -34,7 +34,7 @@ final class IdlCharacteristicTypeImpl extends IdlCharacteristicType {
 			final String description,
 			final String name,
 			final IdlDataType dataType,
-			final CharacteristicTypeSort sort) {
+			final IdlCharacteristicTypeSort sort) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeWrapper.java,v 1.21 2005/10/25 19:53:04 bass Exp $
+ * $Id: CharacteristicTypeWrapper.java,v 1.22 2005/12/06 11:31:12 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
-
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/25 19:53:04 $
+ * @version $Revision: 1.22 $, $Date: 2005/12/06 11:31:12 $
  * @author $Author: bass $
- * @author Tashoyan Arseniy Feliksovich
+ * @author Vladimir Dolzhenko
  * @module general
  */
 public final class CharacteristicTypeWrapper extends StorableObjectWrapper<CharacteristicType> {
@@ -66,9 +64,10 @@ public final class CharacteristicTypeWrapper extends StorableObjectWrapper<Chara
 				|| key.equals(COLUMN_NAME) 
 				|| key.equals(COLUMN_DESCRIPTION)) {
 			return String.class;
-		} else if (key.equals(COLUMN_DATA_TYPE_CODE)
-				|| key.equals(COLUMN_SORT)) {
-			return Integer.class;	
+		} else if (key.equals(COLUMN_DATA_TYPE_CODE)) {
+			return DataType.class;	
+		} else if (key.equals(COLUMN_SORT)) {
+			return CharacteristicTypeSort.class;	
 		}
 		return null;
 	}
@@ -95,7 +94,7 @@ public final class CharacteristicTypeWrapper extends StorableObjectWrapper<Chara
 			else if (key.equals(COLUMN_DATA_TYPE_CODE))
 				return characteristicType.getDataType();
 			else if (key.equals(COLUMN_SORT))
-				return new Integer(characteristicType.getSort().value());
+				return characteristicType.getSort();
 		}
 		return value;
 	}
@@ -114,10 +113,9 @@ public final class CharacteristicTypeWrapper extends StorableObjectWrapper<Chara
 			else if (key.equals(COLUMN_NAME))
 				characteristicType.setName((String) value);
 			else if (key.equals(COLUMN_SORT))
-				characteristicType.setSort0(CharacteristicTypeSort.from_int(((Integer) value).intValue()));
+				characteristicType.setSort((CharacteristicTypeSort) value);
 			else if (key.equals(COLUMN_DATA_TYPE_CODE))
-				characteristicType.setDataType0((DataType) value);
+				characteristicType.setDataType((DataType) value);
 		}
 	}
-
 }
