@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.108 2005/10/19 10:22:56 bob Exp $
+ * $Id: EquipmentType.java,v 1.109 2005/12/06 09:41:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,16 +21,16 @@ import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment.XmlEquipmentType;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.util.Codeable;
-import com.syrus.util.TransferableObject;
+import com.syrus.util.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.108 $, $Date: 2005/10/19 10:22:56 $
- * @author $Author: bob $
+ * @version $Revision: 1.109 $, $Date: 2005/12/06 09:41:25 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public enum EquipmentType implements Namable, Codeable,
-		TransferableObject<IdlEquipmentType> {
+		IdlTransferableObject<IdlEquipmentType> {
 	REFLECTOMETER("reflectometer"),
 	OPTICAL_SWITCH("optical_switch"),
 	MUFF("muff"),
@@ -119,7 +119,7 @@ public enum EquipmentType implements Namable, Codeable,
 		throw new UnsupportedOperationException(ErrorMessages.METHOD_NOT_NEEDED);
 	}
 
-	public IdlEquipmentType getTransferable(final ORB orb) {
+	public IdlEquipmentType getIdlTransferable(final ORB orb) {
 		try {
 			return IdlEquipmentType.from_int(this.getCode());
 		} catch (org.omg.CORBA.BAD_PARAM bp) {
@@ -138,7 +138,7 @@ public enum EquipmentType implements Namable, Codeable,
 		int i = 0;
 		synchronized (equipmentTypes) {
 			for (final EquipmentType equipmentType : equipmentTypes) {
-				idlEquipmentTypes[i++] = equipmentType.getTransferable(orb);
+				idlEquipmentTypes[i++] = equipmentType.getIdlTransferable(orb);
 			}
 		}
 		return idlEquipmentTypes;

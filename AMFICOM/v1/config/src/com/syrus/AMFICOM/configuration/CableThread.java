@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.45 2005/12/02 11:24:18 bass Exp $
+ * $Id: CableThread.java,v 1.46 2005/12/06 09:41:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/12/02 11:24:18 $
+ * @version $Revision: 1.46 $, $Date: 2005/12/06 09:41:25 $
  * @author $Author: bass $
  * @module config
  */
@@ -110,21 +110,21 @@ public final class CableThread extends DomainMember<CableThread>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlCableThread getTransferable(final ORB orb) {
+	public IdlCableThread getIdlTransferable(final ORB orb) {
 		return IdlCableThreadHelper.init(orb,
-				super.id.getTransferable(),
+				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
-				this.getDomainId().getTransferable(),
+				this.getDomainId().getIdlTransferable(),
 				this.name,
 				this.description,
-				this.type.getId().getTransferable());
+				this.type.getId().getIdlTransferable());
 	}
 
 	protected synchronized void setAttributes(final Date created,

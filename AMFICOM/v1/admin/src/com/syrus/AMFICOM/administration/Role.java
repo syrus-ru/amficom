@@ -1,5 +1,5 @@
 /*-
- * $Id: Role.java,v 1.11 2005/12/02 11:24:11 bass Exp $
+ * $Id: Role.java,v 1.12 2005/12/06 09:41:12 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/12/02 11:24:11 $
+ * @version $Revision: 1.12 $, $Date: 2005/12/06 09:41:12 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -158,15 +158,15 @@ public final class Role extends StorableObject<Role>
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public IdlRole getTransferable(final ORB orb) {
+	public IdlRole getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		return IdlRoleHelper.init(orb,
-				super.id.getTransferable(),
+				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
 				this.codename,
 				this.description);

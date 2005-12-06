@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.92 2005/12/02 11:24:19 bass Exp $
+ * $Id: LinkType.java,v 1.93 2005/12/06 09:41:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.92 $, $Date: 2005/12/02 11:24:19 $
+ * @version $Revision: 1.93 $, $Date: 2005/12/06 09:41:25 $
  * @author $Author: bass $
  * @module config
  */
@@ -298,23 +298,23 @@ public final class LinkType extends AbstractLinkType<LinkType> implements XmlBea
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlLinkType getTransferable(final ORB orb) {
+	public IdlLinkType getIdlTransferable(final ORB orb) {
 
 		return IdlLinkTypeHelper.init(orb,
-				super.id.getTransferable(),
+				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",
 				LinkTypeSort.from_int(this.sort), this.manufacturer, this.manufacturerCode,
-				this.imageId.getTransferable());
+				this.imageId.getIdlTransferable());
 	}
 
 	/**

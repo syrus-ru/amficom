@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.59 2005/12/02 11:24:11 bass Exp $
+ * $Id: MCM.java,v 1.60 2005/12/06 09:41:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/12/02 11:24:11 $
+ * @version $Revision: 1.60 $, $Date: 2005/12/06 09:41:12 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -110,22 +110,22 @@ public final class MCM extends DomainMember<MCM>
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public IdlMCM getTransferable(final ORB orb) {
+	public IdlMCM getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		return IdlMCMHelper.init(orb,
-				super.id.getTransferable(),
+				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
-				super.domainId.getTransferable(),
+				super.domainId.getIdlTransferable(),
 				this.name,
 				this.description,
 				this.hostname,
-				this.userId.getTransferable(),
-				this.serverId.getTransferable());
+				this.userId.getIdlTransferable(),
+				this.serverId.getIdlTransferable());
 	}
 
 	/*

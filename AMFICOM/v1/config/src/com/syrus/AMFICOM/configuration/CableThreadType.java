@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThreadType.java,v 1.79 2005/12/02 11:24:19 bass Exp $
+ * $Id: CableThreadType.java,v 1.80 2005/12/06 09:41:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Shitlet;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.79 $, $Date: 2005/12/02 11:24:19 $
+ * @version $Revision: 1.80 $, $Date: 2005/12/06 09:41:25 $
  * @author $Author: bass $
  * @module config
  */
@@ -297,23 +297,23 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlCableThreadType getTransferable(final ORB orb) {
+	public IdlCableThreadType getIdlTransferable(final ORB orb) {
 		return IdlCableThreadTypeHelper.init(orb,
-				super.id.getTransferable(),
+				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",
 				this.color,
-				this.linkTypeId.getTransferable(),
-				this.cableLinkTypeId.getTransferable());
+				this.linkTypeId.getIdlTransferable(),
+				this.cableLinkTypeId.getIdlTransferable());
 	}
 
 	/**

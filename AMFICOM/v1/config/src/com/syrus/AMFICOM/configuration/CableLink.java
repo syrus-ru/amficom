@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.15 2005/12/02 11:24:19 bass Exp $
+ * $Id: CableLink.java,v 1.16 2005/12/06 09:41:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/12/02 11:24:19 $
+ * @version $Revision: 1.16 $, $Date: 2005/12/06 09:41:25 $
  * @module config
  */
 public final class CableLink extends AbstractLink<CableLink> {
@@ -140,21 +140,21 @@ public final class CableLink extends AbstractLink<CableLink> {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlCableLink getTransferable(final ORB orb) {
+	public IdlCableLink getIdlTransferable(final ORB orb) {
 		return IdlCableLinkHelper.init(orb,
-				super.id.getTransferable(),
+				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
-				this.getDomainId().getTransferable(),
+				this.getDomainId().getIdlTransferable(),
 				this.name,
 				this.description,
-				super.type.getId().getTransferable(),
+				super.type.getId().getIdlTransferable(),
 				this.inventoryNo,
 				this.supplier,
 				this.supplierCode,

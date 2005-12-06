@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.20 2005/12/02 11:24:19 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.21 2005/12/06 09:41:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/12/02 11:24:19 $
+ * @version $Revision: 1.21 $, $Date: 2005/12/06 09:41:25 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -235,18 +235,18 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 	}
 
 	/**
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 * @param orb
 	 */
 	@Override
-	public IdlProtoEquipment getTransferable(final ORB orb) {
-		return IdlProtoEquipmentHelper.init(orb, this.id.getTransferable(),
+	public IdlProtoEquipment getIdlTransferable(final ORB orb) {
+		return IdlProtoEquipmentHelper.init(orb, this.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
-				this.type.getTransferable(orb),
+				this.type.getIdlTransferable(orb),
 				this.name != null ? this.name : "",
 				this.description != null ? this.description : "",
 				this.manufacturer,

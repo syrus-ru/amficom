@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.105 2005/12/02 11:24:19 bass Exp $
+ * $Id: Port.java,v 1.106 2005/12/06 09:41:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.105 $, $Date: 2005/12/02 11:24:19 $
+ * @version $Revision: 1.106 $, $Date: 2005/12/06 09:41:25 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -128,21 +128,21 @@ public final class Port extends StorableObject<Port>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlPort getTransferable(final ORB orb) {
+	public IdlPort getIdlTransferable(final ORB orb) {
 
 		return IdlPortHelper.init(orb,
-				super.id.getTransferable(),
+				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
-				this.type.getId().getTransferable(),
+				this.type.getId().getIdlTransferable(),
 				this.description,
-				this.equipmentId.getTransferable());
+				this.equipmentId.getIdlTransferable());
 	}
 
 	public Identifier getTypeId() {

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.150 2005/12/02 11:24:19 bass Exp $
+ * $Id: Equipment.java,v 1.151 2005/12/06 09:41:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,7 +60,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.150 $, $Date: 2005/12/02 11:24:19 $
+ * @version $Revision: 1.151 $, $Date: 2005/12/06 09:41:25 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -319,19 +319,19 @@ public final class Equipment extends DomainMember<Equipment>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlEquipment getTransferable(final ORB orb) {
+	public IdlEquipment getIdlTransferable(final ORB orb) {
 		return IdlEquipmentHelper.init(orb,
-				super.id.getTransferable(),
+				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
-				this.getDomainId().getTransferable(),
-				this.protoEquipmentId.getTransferable(),
+				this.getDomainId().getIdlTransferable(),
+				this.protoEquipmentId.getIdlTransferable(),
 				this.name != null ? this.name : "",
 				this.description != null ? this.description : "",
 				this.supplier != null ? this.supplier : "",
@@ -343,7 +343,7 @@ public final class Equipment extends DomainMember<Equipment>
 				this.swSerial != null ? this.swSerial : "",
 				this.swVersion != null ? this.swVersion : "",
 				this.inventoryNumber != null ? this.inventoryNumber : "",
-				this.imageId.getTransferable());
+				this.imageId.getIdlTransferable());
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.35 2005/12/02 11:24:11 bass Exp $
+* $Id: PermissionAttributes.java,v 1.36 2005/12/06 09:41:12 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,12 +33,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.IdlTransferableObject;
 import com.syrus.util.Log;
-import com.syrus.util.TransferableObject;
 
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/12/02 11:24:11 $
+ * @version $Revision: 1.36 $, $Date: 2005/12/06 09:41:12 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -46,7 +46,7 @@ import com.syrus.util.TransferableObject;
 public final class PermissionAttributes extends StorableObject<PermissionAttributes> {
 	private static final long serialVersionUID = -8967626134139619548L;
 
-	public static enum Module implements TransferableObject<IdlModule> {
+	public static enum Module implements IdlTransferableObject<IdlModule> {
 		ADMINISTRATION(true),
 		SCHEME(true),
 		ELEMENTS_EDITOR(true),
@@ -91,12 +91,12 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 			return VALUE_LIST;
 		}		
 
-		public final IdlModule getTransferable() {
+		public IdlModule getIdlTransferable() {
 			return IdlModule.from_int(this.ordinal());
 		}
 
-		public IdlModule getTransferable(final ORB orb) {
-			return this.getTransferable();
+		public IdlModule getIdlTransferable(final ORB orb) {
+			return this.getIdlTransferable();
 		}
 
 		public final String getCodename() {
@@ -713,18 +713,18 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	 * </p>
 	 */
 	@Override
-	public IdlPermissionAttributes getTransferable(final ORB orb) {
+	public IdlPermissionAttributes getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return IdlPermissionAttributesHelper.init(orb,
-				super.id.getTransferable(),
+				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
-				this.domainId.getTransferable(),
-				this.parentId.getTransferable(),
-				this.module.getTransferable(),
+				this.domainId.getIdlTransferable(),
+				this.parentId.getIdlTransferable(),
+				this.module.getIdlTransferable(),
 				this.getPermissionByteArray0(),
 				this.getDenyMaskByteArray0());
 	}

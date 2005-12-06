@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.75 2005/12/02 11:24:19 bass Exp $
+ * $Id: Link.java,v 1.76 2005/12/06 09:41:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/12/02 11:24:19 $
+ * @version $Revision: 1.76 $, $Date: 2005/12/06 09:41:25 $
  * @module config
  */
 public final class Link extends AbstractLink<Link> {
@@ -138,21 +138,21 @@ public final class Link extends AbstractLink<Link> {
 	}
 
 	/**
-	 * @see com.syrus.util.TransferableObject#getTransferable(ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(ORB)
 	 */
 	@Override
-	public IdlLink getTransferable(final ORB orb) {
+	public IdlLink getIdlTransferable(final ORB orb) {
 		return IdlLinkHelper.init(orb,
-				super.id.getTransferable(),
+				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
-				this.getDomainId().getTransferable(),
+				this.getDomainId().getIdlTransferable(),
 				this.name,
 				this.description,
-				super.type.getId().getTransferable(),
+				super.type.getId().getIdlTransferable(),
 				this.inventoryNo,
 				this.supplier,
 				this.supplierCode,

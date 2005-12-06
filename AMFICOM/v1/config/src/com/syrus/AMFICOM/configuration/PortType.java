@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.109 2005/12/02 11:24:19 bass Exp $
+ * $Id: PortType.java,v 1.110 2005/12/06 09:41:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.109 $, $Date: 2005/12/02 11:24:19 $
+ * @version $Revision: 1.110 $, $Date: 2005/12/06 09:41:25 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -287,16 +287,16 @@ public final class PortType extends StorableObjectType<PortType>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlPortType getTransferable(final ORB orb) {
+	public IdlPortType getIdlTransferable(final ORB orb) {
 		return IdlPortTypeHelper.init(orb,
-				super.id.getTransferable(),
+				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",

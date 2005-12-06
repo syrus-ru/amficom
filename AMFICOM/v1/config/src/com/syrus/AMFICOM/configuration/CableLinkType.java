@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.86 2005/12/02 11:24:19 bass Exp $
+ * $Id: CableLinkType.java,v 1.87 2005/12/06 09:41:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/12/02 11:24:19 $
+ * @version $Revision: 1.87 $, $Date: 2005/12/06 09:41:25 $
  * @author $Author: bass $
  * @module config
  */
@@ -301,17 +301,17 @@ public final class CableLinkType extends AbstractLinkType<CableLinkType> impleme
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlCableLinkType getTransferable(final ORB orb) {
+	public IdlCableLinkType getIdlTransferable(final ORB orb) {
 
 		return IdlCableLinkTypeHelper.init(orb,
-				super.id.getTransferable(),
+				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
@@ -319,7 +319,7 @@ public final class CableLinkType extends AbstractLinkType<CableLinkType> impleme
 				LinkTypeSort.from_int(this.sort),
 				this.manufacturer,
 				this.manufacturerCode,
-				this.imageId.getTransferable());
+				this.imageId.getIdlTransferable());
 	}
 
 	/**

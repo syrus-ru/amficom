@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.80 2005/12/02 11:24:19 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.81 2005/12/06 09:41:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/12/02 11:24:19 $
+ * @version $Revision: 1.81 $, $Date: 2005/12/06 09:41:25 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -117,17 +117,17 @@ public final class TransmissionPathType extends StorableObjectType<TransmissionP
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
-	public IdlTransmissionPathType getTransferable(final ORB orb) {
+	public IdlTransmissionPathType getIdlTransferable(final ORB orb) {
 
 		return IdlTransmissionPathTypeHelper.init(orb,
-				super.id.getTransferable(),
+				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
