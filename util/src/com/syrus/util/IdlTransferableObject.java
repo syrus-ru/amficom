@@ -1,5 +1,5 @@
 /*-
- * $Id: TransferableObject.java,v 1.1 2005/10/07 10:04:21 bass Exp $
+ * $Id: IdlTransferableObject.java,v 1.1 2005/12/06 09:40:54 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import org.omg.CORBA.portable.IDLEntity;
 /**
  * @author Tashoyan Arseniy Feliksovich
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/10/07 10:04:21 $
+ * @version $Revision: 1.1 $, $Date: 2005/12/06 09:40:54 $
  * @module util
  */
-public interface TransferableObject<T extends IDLEntity> extends Serializable {
-	T getTransferable(final ORB orb);
+public interface IdlTransferableObject<T extends IDLEntity> extends Serializable {
+	T getIdlTransferable(final ORB orb);
 }
