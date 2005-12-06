@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationTreeModel.java,v 1.13 2005/09/29 05:58:59 stas Exp $
+ * $Id: ConfigurationTreeModel.java,v 1.14 2005/12/06 14:13:49 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,11 @@
 package com.syrus.AMFICOM.client_.configuration.ui;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import javax.swing.UIManager;
 
@@ -18,6 +22,7 @@ import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
@@ -28,6 +33,7 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.logic.AbstractChildrenFactory;
@@ -37,10 +43,11 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/09/29 05:58:59 $
+ * @version $Revision: 1.14 $, $Date: 2005/12/06 14:13:49 $
  * @module schemeclient
  */
 
@@ -100,6 +107,8 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 			return MeasurementTypePropertiesManager.getInstance(aContext);
 		if (object instanceof IdlKind)
 				return null;
+		if (object instanceof EquipmentType)
+			return null;
 		throw new UnsupportedOperationException("Unknown object " + object); //$NON-NLS-1$
 	}
 	
@@ -131,7 +140,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 				createPortTypes(node, contents, PortTypeKind.PORT_KIND_CABLE);
 			}
 			else if (s.equals(SchemeResourceKeys.PROTO_EQUIPMENT)) {
-				createProtoEquipments(node, contents);
+				createEquipmentTypes(node, contents);
 			}
 			// else if (s.equals("TransmissionPathType")) {
 			// try {
@@ -156,6 +165,28 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 			else if (s.equals(SchemeResourceKeys.MEASUREMENT_TYPES)) {
 				createMeasurementTypes(node, contents);
 			} 
+		} else if (node.getObject() instanceof EquipmentType) {
+			EquipmentType eqt = (EquipmentType)node.getObject();
+			
+			TypicalCondition condition = new TypicalCondition(eqt,
+					 OperationSort.OPERATION_EQUALS,
+					 ObjectEntities.PROTOEQUIPMENT_CODE,
+					 StorableObjectWrapper.COLUMN_TYPE_CODE);
+			try {
+				Collection<StorableObject> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+				
+				Collection<StorableObject> toAdd = super.getObjectsToAdd(protoEquipments, contents);
+				Collection<Item> toRemove = super.getItemsToRemove(protoEquipments, node.getChildren());
+				for (Item child : toRemove) {
+					child.setParent(null);
+				}
+				for (Iterator it = toAdd.iterator(); it.hasNext();) {
+					ProtoEquipment protoEquipment = (ProtoEquipment) it.next();
+					node.addChild(new PopulatableIconedNode(this, protoEquipment, false));
+				}
+			} catch (ApplicationException e) {
+				Log.errorMessage(e);
+			}
 		}
 	}
 	
@@ -204,7 +235,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 			}
 		} 
 		catch (ApplicationException ex) {
-			ex.printStackTrace();
+			Log.errorMessage(ex);
 		}
 	}
 	
@@ -224,7 +255,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 			}
 		} 
 		catch (ApplicationException ex) {
-			ex.printStackTrace();
+			Log.errorMessage(ex);
 		}
 	}
 
@@ -247,27 +278,35 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 			}
 		} 
 		catch (ApplicationException ex) {
-			ex.printStackTrace();
+			Log.errorMessage(ex);
 		}
 	}
 	
-	private void createProtoEquipments(Item node, Collection<Object> contents) {
+	private void createEquipmentTypes(Item node, Collection<Object> contents) {
 		try {
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PROTOEQUIPMENT_CODE);
 			Collection<StorableObject> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			
-			Collection toAdd = super.getObjectsToAdd(protoEquipments, contents);
-			Collection<Item> toRemove = super.getItemsToRemove(protoEquipments, node.getChildren());
+			Set<EquipmentType> eqts = new HashSet<EquipmentType>();
+			for (Iterator it = protoEquipments.iterator(); it.hasNext();) {
+				ProtoEquipment protoEquipment = (ProtoEquipment)it.next();
+				eqts.add(protoEquipment.getType());
+			}
+			
+			Collection toAdd = getObjectsToAdd2(eqts, contents);
+			toAdd.remove(EquipmentType.BUG_136);
+			
+			Collection<Item> toRemove = getItemsToRemove2(eqts, node.getChildren());
 			for (Item child : toRemove) {
 				child.setParent(null);
 			}
 			for (Iterator it = toAdd.iterator(); it.hasNext();) {
-				ProtoEquipment type = (ProtoEquipment)it.next();
-				node.addChild(new PopulatableIconedNode(this, type, false));
+				EquipmentType type = (EquipmentType)it.next();
+				node.addChild(new PopulatableIconedNode(this, type, UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
 			}
 		} 
 		catch (ApplicationException ex) {
-			ex.printStackTrace();
+			Log.errorMessage(ex);
 		}
 	}
 	
@@ -287,7 +326,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 				node.addChild(new PopulatableIconedNode(this, type, false));
 			}
 		} catch (ApplicationException ex) {
-			ex.printStackTrace();
+			Log.errorMessage(ex);
 		}
 	}
 	
@@ -300,4 +339,28 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 			}
 		}
 	}
+	
+	protected List<Object> getObjectsToAdd2(
+			final Collection<? extends Object> newObjs, 
+			final Collection<? extends Object> existingObjs) {
+		final List<Object> toAdd = new LinkedList<Object>();
+		for (final Object itObj : newObjs) {
+			if (!existingObjs.contains(itObj)) {
+				toAdd.add(itObj);
+			}	
+ 		}
+ 		return toAdd;
+ 	}
+	
+ 	protected List<Item> getItemsToRemove2(
+ 			final Collection<? extends Object> newObjs, 
+ 			final Collection<? extends Item> existingObjs) {
+ 		final List<Item> toRemove = new LinkedList<Item>(existingObjs);
+		for (final Item childItem : existingObjs) {
+			if (newObjs.contains(childItem.getObject())) {
+				toRemove.remove(childItem);
+ 			}
+ 		}
+ 		return toRemove;
+ 	}
 }
