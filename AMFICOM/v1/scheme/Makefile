@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.50 2005/12/05 18:24:27 bass Exp $
+# $Id: Makefile,v 1.51 2005/12/06 12:58:49 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -36,14 +36,13 @@ bugs
 EXTCLASSPATH := $(TROVE4JCLASSPATH):$(XMLBEANSCLASSPATH)
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAMEXML):$(GENERALXML):$(CONFIGURATIONXML):$(MAPXML)
 
-
-SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/*.java)
+SOURCES := $(shell find $(SRCDIR) -name '*.java')
 XSD_SOURCES := $(wildcard $(XMLDIR)/*.xsd)
 XSD_CONFIG := $(XMLDIR)/$(MODULE_NAME).xsdconfig
 
 
 $(LIBNAME): .mach
-	$(JAR) -cf $@ \
+	$(JAR) cf $@ \
 		-C $(CLASSDIR) com
 
 .mach: $(CLASSDIR) xml .corba
@@ -94,8 +93,8 @@ clean: cleanmach cleancorba xmlclean
 
 .PHONY: cleanmach
 cleanmach:
-	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
-	$(RM) .mach
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES))) \
+		.mach
 
 .PHONY: cleancorba
 cleancorba: idlclean
