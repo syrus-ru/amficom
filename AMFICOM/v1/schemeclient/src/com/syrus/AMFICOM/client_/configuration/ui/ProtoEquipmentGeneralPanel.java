@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentGeneralPanel.java,v 1.8 2005/10/31 12:30:25 bass Exp $
+ * $Id: ProtoEquipmentGeneralPanel.java,v 1.9 2005/12/06 14:13:24 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,9 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -45,8 +48,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/10/31 12:30:25 $
+ * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2005/12/06 14:13:24 $
  * @module schemeclient
  */
 
@@ -59,7 +62,7 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 	JTextField tfNameText = new JTextField();
 	JButton commitButton = new JButton();
 	JLabel lbCodenameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.CODENAME));
-	AComboBox tfEqtCombo = new AComboBox(EquipmentType.values());
+	AComboBox tfEqtCombo;
 	JLabel lbManufacturerLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER));
 	JTextField tfManufacturerText = new JTextField();
 	JLabel lbManufacturerCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER_CODE));
@@ -87,6 +90,10 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	private void jbInit() throws Exception {
+		Set<EquipmentType> eqts = new HashSet<EquipmentType>(Arrays.asList(EquipmentType.values()));
+		eqts.remove(EquipmentType.BUG_136);
+		this.tfEqtCombo = new AComboBox(eqts.toArray(new EquipmentType[eqts.size()]));
+		
 		final GridBagLayout gbPanel0 = new GridBagLayout();
 		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
 		this.pnPanel0.setLayout(gbPanel0);
