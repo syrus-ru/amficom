@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.147 2005/12/06 09:43:34 bass Exp $
+ * $Id: PhysicalLink.java,v 1.148 2005/12/06 11:33:06 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,6 +37,7 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.bugs.Crutch134;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -57,7 +58,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
@@ -77,7 +78,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.147 $, $Date: 2005/12/06 09:43:34 $
+ * @version $Revision: 1.148 $, $Date: 2005/12/06 11:33:06 $
  * @module map
  */
 public class PhysicalLink extends StorableObject<PhysicalLink>
@@ -262,7 +263,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 	private void copyCharacteristics(PhysicalLinkType physicalLinkType2, boolean usePool) throws ApplicationException {
 		try {
 			for (final Characteristic characteristic : physicalLinkType2.getCharacteristics0(usePool)) {
-				if(characteristic.getType().getSort().value() == CharacteristicTypeSort._CHARACTERISTICTYPESORT_OPERATIONAL) {
+				if (characteristic.getType().getSort() == CharacteristicTypeSort.OPERATIONAL) {
 					final Characteristic characteristicClone = characteristic.clone();
 					this.addCharacteristic(characteristicClone, usePool);
 				}

@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.117 2005/12/06 09:43:34 bass Exp $
+ * $Id: SiteNode.java,v 1.118 2005/12/06 11:33:06 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -45,7 +46,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlSiteNode;
@@ -67,7 +68,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.117 $, $Date: 2005/12/06 09:43:34 $
+ * @version $Revision: 1.118 $, $Date: 2005/12/06 11:33:06 $
  * @module map
  */
 public class SiteNode extends AbstractNode<SiteNode>
@@ -173,7 +174,7 @@ public class SiteNode extends AbstractNode<SiteNode>
 	private void copyCharacteristics(SiteNodeType siteNodeType, boolean usePool) throws ApplicationException {
 		try {
 			for (final Characteristic characteristic : siteNodeType.getCharacteristics0(usePool)) {
-				if(characteristic.getType().getSort().value() == CharacteristicTypeSort._CHARACTERISTICTYPESORT_OPERATIONAL) {
+				if (characteristic.getType().getSort() == CharacteristicTypeSort.OPERATIONAL) {
 					final Characteristic characteristicClone = characteristic.clone();
 					this.addCharacteristic(characteristicClone, usePool);
 				}

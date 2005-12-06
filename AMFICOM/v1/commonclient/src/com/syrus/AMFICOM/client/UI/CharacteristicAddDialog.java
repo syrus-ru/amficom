@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.20 2005/10/31 12:30:01 bass Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.21 2005/12/06 11:35:25 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,13 +42,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/10/31 12:30:01 $
+ * @version $Revision: 1.21 $, $Date: 2005/12/06 11:35:25 $
  * @module commonclient
  */
 
@@ -56,7 +56,7 @@ public class CharacteristicAddDialog {
 
 	protected int result = JOptionPane.CANCEL_OPTION;
 
-	protected CharacteristicTypeSort sort;
+	protected IdlCharacteristicTypeSort sort;
 	private CharacteristicType selectedType;
 
 	WrapperedComboBox<CharacteristicType> characteristicTypeComboBox;
@@ -145,7 +145,7 @@ public class CharacteristicAddDialog {
 		return this.panel;
 	}
 
-	public int showDialog(final CharacteristicTypeSort ctSort, final Collection<Characteristic> characterisctics) {
+	public int showDialog(final IdlCharacteristicTypeSort ctSort, final Collection<Characteristic> characterisctics) {
 		this.sort = ctSort;
 
 		final String okButton = LangModelGeneral.getString(ResourceKeys.I18N_ADD);

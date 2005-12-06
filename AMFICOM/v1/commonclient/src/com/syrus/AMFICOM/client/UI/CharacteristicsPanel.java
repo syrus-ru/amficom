@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.24 2005/10/31 12:30:01 bass Exp $
+ * $Id: CharacteristicsPanel.java,v 1.25 2005/12/06 11:35:25 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,6 +51,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.CharacteristicWrapper;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -58,27 +59,27 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/10/31 12:30:01 $
+ * @version $Revision: 1.25 $, $Date: 2005/12/06 11:35:25 $
  * @module commonclient
  */
 public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
-	protected static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
-		CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL,	
-		CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
-		CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
-		CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
+	protected static IdlCharacteristicTypeSort[] sorts = new IdlCharacteristicTypeSort[] {
+		IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL,	
+		IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
+		IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
+		IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
 	};
 
 	protected ApplicationContext aContext;
-	protected CharacteristicTypeSort selectedTypeSort;
+	protected IdlCharacteristicTypeSort selectedTypeSort;
 	protected Map<Identifier, Set<Characteristic>> characteristics = new HashMap<Identifier, Set<Characteristic>>();
-	protected Set<CharacteristicTypeSort> editableSorts = new HashSet<CharacteristicTypeSort>();
-	protected Map<CharacteristicTypeSort, CharacterizableObject> typeSortsCharacterizedIds = new HashMap<CharacteristicTypeSort, CharacterizableObject>();
+	protected Set<IdlCharacteristicTypeSort> editableSorts = new HashSet<IdlCharacteristicTypeSort>();
+	protected Map<IdlCharacteristicTypeSort, CharacterizableObject> typeSortsCharacterizedIds = new HashMap<IdlCharacteristicTypeSort, CharacterizableObject>();
 	protected Map<CharacterizableObject, List<Characteristic>> addedCharacteristics = new HashMap<CharacterizableObject, List<Characteristic>>();
 	protected Map<CharacterizableObject, List<Characteristic>> removedCharacteristics = new HashMap<CharacterizableObject, List<Characteristic>>();
 
@@ -107,22 +108,22 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 				final int index,
 				final boolean isSelected,
 				final boolean cellHasFocus) {
-			final CharacteristicTypeSort sort = (CharacteristicTypeSort)value;
+			final IdlCharacteristicTypeSort sort = (IdlCharacteristicTypeSort)value;
 			String name;
 			switch (sort.value()) {
-				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_OPTICAL:
+				case IdlCharacteristicTypeSort._CHARACTERISTICTYPESORT_OPTICAL:
 					name = LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_OPTICAL);
 					break;
-				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_ELECTRICAL:
+				case IdlCharacteristicTypeSort._CHARACTERISTICTYPESORT_ELECTRICAL:
 					name = LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_ELECTRICAL);
 					break;
-				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_OPERATIONAL:
+				case IdlCharacteristicTypeSort._CHARACTERISTICTYPESORT_OPERATIONAL:
 					name = LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_OPERATIONAL);
 					break;
-				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_INTERFACE:
+				case IdlCharacteristicTypeSort._CHARACTERISTICTYPESORT_INTERFACE:
 					name = LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_INTERFACE);
 					break;
-				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL:
+				case IdlCharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL:
 					name = LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_VISUAL);
 					break;
 				default:
@@ -177,14 +178,14 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		this.wTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		this.characteristicTypeSortCombo = new AComboBox(sorts);
-		this.characteristicTypeSortCombo.addItem(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
+		this.characteristicTypeSortCombo.addItem(IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
 		this.characteristicTypeSortCombo.setRenderer(new CharacteristicTypeSortRenderer());
 		this.characteristicTypeSortCombo.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				item_stateChanged(e);
 			}
 		});
-		this.selectedTypeSort = (CharacteristicTypeSort) this.characteristicTypeSortCombo.getSelectedItem();
+		this.selectedTypeSort = (IdlCharacteristicTypeSort) this.characteristicTypeSortCombo.getSelectedItem();
 
 		final GridBagLayout gbPanel0 = new GridBagLayout();
 		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
@@ -297,7 +298,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		this.elementSelected(this.selectedTypeSort);
 	}
 
-	public void setTypeSortMapping(final CharacteristicTypeSort typeSort,
+	public void setTypeSortMapping(final IdlCharacteristicTypeSort typeSort,
 			final Characterizable characterizable,
 			final Identifier characterizableId,
 			final boolean isEditable) {
@@ -317,6 +318,14 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		this.wtModel.setColumnEditable(1, b);
 	}
 
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
+	void elementSelected(final IdlCharacteristicTypeSort selectedType) {
+		this.elementSelected(CharacteristicTypeSort.valueOf(selectedType));
+	}
+
 	void elementSelected(final CharacteristicTypeSort selectedType) {
 		if (selectedType == null) {
 			this.showNoSelection();
@@ -326,12 +335,16 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		this.wtModel.clear();
 		final Collection<Characteristic> chars2add = new LinkedList<Characteristic>();
 		for (final Set<Characteristic> chars : this.characteristics.values()) {
-			if (chars != null) {
-				for (final Characteristic ch : chars) {
-					if (ch.getType().getSort().equals(selectedType)) {
-						chars2add.add(ch);
-					}
+			if (chars == null) {
+				continue;
+			}
+
+			for (final Characteristic ch : chars) {
+				if (ch.getType().getSort() != selectedType) {
+					continue;
 				}
+
+				chars2add.add(ch);
 			}
 		}
 		this.wtModel.setValues(chars2add);
@@ -344,7 +357,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 	}
 
 	void item_stateChanged(final ItemEvent e) {
-		this.selectedTypeSort = (CharacteristicTypeSort) e.getItem();
+		this.selectedTypeSort = (IdlCharacteristicTypeSort) e.getItem();
 		this.setPropsEditable(this.editableSorts.contains(this.selectedTypeSort));
 		this.elementSelected(this.selectedTypeSort);
 	}
