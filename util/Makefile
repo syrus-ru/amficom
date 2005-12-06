@@ -1,41 +1,49 @@
 #
-# $Id: Makefile,v 1.31 2005/10/12 10:03:33 bass Exp $
+# $Id: Makefile,v 1.32 2005/12/06 13:00:24 bass Exp $
 #
 # vim:set ft=make:
 #
 
-MODULE_NAME = util
+MODULE_NAME := util
 
-LIBNAME = util.jar
+LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
+
+IDL_SOURCES = 
 
 include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
+$(call checkenve,JDBCCLASSPATH)
+$(call checkenve,XMLBEANSCLASSPATH)
 
 DEPENDENCIES =
+
+EXTCLASSPATH := $(JDBCCLASSPATH):$(XMLBEANSCLASSPATH)
+XMLCLASSPATH :=
 
 SOURCES := $(shell find $(SRCDIR) -name '*.java')
 
 
-.PHONY: export
-export: $(LIBNAME) $(MODULE_NAME)client.jar $(MODULE_NAME)server.jar
+$(LIBNAME): .mach
+	$(JAR) cf $@ \
+		-C $(CLASSDIR) com
 
-.mach:
-	$(JAVAC) \
-		$(JAVACFLAGS) \
-		-classpath "$(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR)" \
-	 	$(SOURCES)
+.mach: $(CLASSDIR)
+	$(JAVAC) $(JAVACFLAGS) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		$(SOURCES)
 	touch $@
 
-.PHONY:	cleanmach
+
+.PHONY: clean
+clean: cleanmach
+	$(RM) $(LIBNAME)
+
+.PHONY: cleanmach
 cleanmach:
 	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES))) \
 		.mach
-
-.PHONY:	clean
-clean: cleanmach
-	$(RM) $(LIBNAME)
 
 .PHONY: dist
 dist: distclean
@@ -43,18 +51,23 @@ dist: distclean
 	cd .. && tar cf $(MODULE_NAME)-$(MODULE_VERSION).tar $(MODULE_NAME)
 	bzip2 -9 ../$(MODULE_NAME)-$(MODULE_VERSION).tar
 
-$(LIBNAME): .mach
-	$(JAR) cf $@ \
-		-C $(CLASSDIR) com
 
-install: $(LIBNAME) $(LIBDIR)
-	$(CP) $^
+.PHONY: install
+install: $(LIBDIR) $(LIBDIR)/$(LIBNAME)
+
+$(LIBDIR)/$(LIBNAME): $(LIBNAME)
+	install -m 0644 -p $(LIBNAME) $(LIBDIR)
+
+.PHONY: uninstall
+uninstall:
+	$(RM) $(LIBDIR)/$(LIBNAME)
 
 #### Archive ####
 .PHONY: arch
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
+		$(IDL_SOURCES) \
 		$(SOURCES)
 
 .javadocs: $(JAVADOCDIR)
