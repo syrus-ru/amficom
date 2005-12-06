@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.22 2005/11/21 15:24:46 stas Exp $
+ * $Id: GraphActions.java,v 1.23 2005/12/06 14:14:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,6 +33,7 @@ import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultGraphModel;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.Edge;
+import com.jgraph.graph.GraphCell;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.Port;
 import com.jgraph.pad.ImageCell;
@@ -52,7 +53,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2005/11/21 15:24:46 $
+ * @version $Revision: 1.23 $, $Date: 2005/12/06 14:14:18 $
  * @module schemeclient
  */
 
@@ -303,7 +304,7 @@ public class GraphActions {
 		return null;
 	}
 
-	public static void setObjectsColor(SchemeGraph graph, Object[] objs, Color color) {
+	public static void setObjectsColor(SchemeGraph graph, GraphCell[] objs, Color color) {
 		Set<Edge> edges = new HashSet<Edge>();
 		Set<DefaultGraphCell> cells = new HashSet<DefaultGraphCell>();
 		
@@ -323,7 +324,7 @@ public class GraphActions {
 		}
 	}
 	
-	public static void setObjectColor(SchemeGraph graph, Object obj, Color color) {
+	public static void setObjectColor(SchemeGraph graph, GraphCell obj, Color color) {
 		if (obj instanceof Edge) {
 			setEdgeColor(graph, obj, color);
 		} else {
@@ -331,12 +332,12 @@ public class GraphActions {
 		}
 	}
 	
-	public static void setObjectsBackColor(SchemeGraph graph, Object[] objs,
+	public static void setObjectsBackColor(SchemeGraph graph, GraphCell[] objs,
 			Color color) {
 		Map map = GraphConstants.createMap();
 		GraphConstants.setBackground(map, color);
 		GraphConstants.setOpaque(map, true);
-		Map<Object, Map> viewMap = new HashMap<Object, Map>();
+		Map<GraphCell, Map> viewMap = new HashMap<GraphCell, Map>();
 
 		for (int i = 0; i < objs.length; i++)
 			viewMap.put(objs[i], GraphConstants.cloneMap(map));
@@ -344,56 +345,64 @@ public class GraphActions {
 		graph.getGraphLayoutCache().edit(viewMap, null, null, null);
 	}
 
-	public static void setObjectBackColor(SchemeGraph graph, Object obj,
+	public static void setObjectBackColor(SchemeGraph graph, GraphCell obj,
 			Color color) {
 		Map map = GraphConstants.createMap();
 		GraphConstants.setBackground(map, color);
 		GraphConstants.setOpaque(map, true);
-		Map<Object, Map> viewMap = new HashMap<Object, Map>();
+		Map<GraphCell, Map> viewMap = new HashMap<GraphCell, Map>();
 		viewMap.put(obj, GraphConstants.cloneMap(map));
 		graph.getGraphLayoutCache().edit(viewMap, null, null, null);
 	}
 
-	public static void setEdgeColor(SchemeGraph graph, Object[] edges, Color color) {
+	static int edgeCount = 0;
+	public static void setEdgeColor(SchemeGraph graph, GraphCell[] edges, Color color) {
 		Map map = GraphConstants.createMap();
 		GraphConstants.setLineColor(map, color);
 		GraphConstants.setForeground(map, graph.getForeground());
-		Map<Object, Map> viewMap = new HashMap<Object, Map>();
+		Map<GraphCell, Map> viewMap = new HashMap<GraphCell, Map>();
 
-		for (int i = 0; i < edges.length; i++)
+		System.out.println("Edge: " + edgeCount++);
+		for (int i = 0; i < edges.length; i++) {
+			System.out.print(edges.toString() + ";\t");
 			viewMap.put(edges[i], GraphConstants.cloneMap(map));
-
+		}
 		graph.getGraphLayoutCache().edit(viewMap, null, null, null);
+		System.out.println("\n done!");
 	}
 
-	public static void setEdgeColor(SchemeGraph graph, Object edge, Color color) {
+	public static void setEdgeColor(SchemeGraph graph, GraphCell edge, Color color) {
 		Map map = GraphConstants.createMap();
 		GraphConstants.setLineColor(map, color);
 		GraphConstants.setForeground(map, graph.getForeground());
-		Map<Object, Map> viewMap = new HashMap<Object, Map>();
+		Map<GraphCell, Map> viewMap = new HashMap<GraphCell, Map>();
 		viewMap.put(edge, GraphConstants.cloneMap(map));
 		graph.getGraphLayoutCache().edit(viewMap, null, null, null);
 	}
 
-	public static void setObjectsForeColor(SchemeGraph graph, Object[] objs,
+	static int objCount = 0;
+	public static void setObjectsForeColor(SchemeGraph graph, GraphCell[] objs,
 			Color color) {
 		Map map = GraphConstants.createMap();
 		GraphConstants.setBorderColor(map, color);
 		GraphConstants.setForeground(map, graph.getForeground());
-		Map<Object, Map> viewMap = new HashMap<Object, Map>();
+		Map<GraphCell, Map> viewMap = new HashMap<GraphCell, Map>();
 
-		for (int i = 0; i < objs.length; i++)
+		System.out.println("Obj: " + objCount++);
+		for (int i = 0; i < objs.length; i++) {
+			System.out.print(objs[i].toString() + ";\t");
 			viewMap.put(objs[i], GraphConstants.cloneMap(map));
-
+		}
 		graph.getGraphLayoutCache().edit(viewMap, null, null, null);
+		System.out.println("\n done!");
 	}
 
-	public static void setObjectForeColor(SchemeGraph graph, Object obj,
+	public static void setObjectForeColor(SchemeGraph graph, GraphCell obj,
 			Color color) {
 		Map map = GraphConstants.createMap();
 		GraphConstants.setBorderColor(map, color);
 		GraphConstants.setForeground(map, graph.getForeground());
-		Map<Object, Map> viewMap = new HashMap<Object, Map>();
+		Map<GraphCell, Map> viewMap = new HashMap<GraphCell, Map>();
 		viewMap.put(obj, GraphConstants.cloneMap(map));
 		graph.getGraphLayoutCache().edit(viewMap, null, null, null);
 	}

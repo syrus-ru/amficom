@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeAlarmHandler.java,v 1.8 2005/12/02 09:21:16 stas Exp $
+ * $Id: SchemeAlarmHandler.java,v 1.9 2005/12/06 14:14:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,15 @@ import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.Thread.State;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.jgraph.graph.DefaultGraphCell;
+import com.jgraph.graph.GraphCell;
 import com.syrus.AMFICOM.client.event.MarkerEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
@@ -36,7 +39,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/12/02 09:21:16 $
+ * @version $Revision: 1.9 $, $Date: 2005/12/06 14:14:18 $
  * @module schemeclient_v1
  */
 
@@ -100,7 +103,6 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 					Log.errorMessage(e);
 				}
 			} else if (event.getMarkerEventType() == MarkerEvent.MARKER_DELETED_EVENT) {
-				
 				ElementsPanel panel = this.panelsMap.get(event.getMarkerId());
 				if (panel != null) {
 					AlarmPainter painter = this.paintersMap.get(panel);
@@ -110,6 +112,21 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 							painter.removeAlarmedCell(cell);
 						}
 					}
+				}
+			} else if (event.getMarkerEventType() == MarkerEvent.MARKER_SELECTED_EVENT) {
+				ElementsPanel panel = this.panelsMap.get(event.getMarkerId());
+				if (panel != null) {
+					AlarmPainter painter = this.paintersMap.get(panel);
+					DefaultGraphCell cell = this.cellsMap.get(event.getMarkerId());
+					if (painter == null || painter.getState() == State.TERMINATED) {
+							painter = new AlarmPainter(panel.getGraph(), cell);
+							this.paintersMap.put(panel, painter);
+							painter.start();
+						} else {
+							synchronized (this) {
+								painter.addAlarmedCell(cell);
+							}
+						}
 				}
 			}
 		}
@@ -168,7 +185,7 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 	
 	private class AlarmPainter extends Thread {
 		Set<DefaultGraphCell> cellsSet;
-		Object[] cells;
+		GraphCell[] cells;
 		SchemeGraph graph;
 		
 		AlarmPainter(SchemeGraph graph, DefaultGraphCell cell) {
@@ -178,40 +195,63 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 		}
 		
 		synchronized void addAlarmedCell(DefaultGraphCell cell) {
+			if (this.cellsSet.contains(cell)) {
+				return;
+			}
 			this.cellsSet.add(cell);
-			this.cells = this.cellsSet.toArray(new DefaultGraphCell[this.cellsSet.size()]);
-			this.cells = this.graph.getDescendants(this.cells);
+			
+			Object[] allChilds = this.graph.getDescendants(this.cellsSet.toArray(new DefaultGraphCell[this.cellsSet.size()])); 
+			List<Object> childList = new ArrayList<Object>();
+			
+			for (Object obj : allChilds) {
+//				if (!(obj instanceof DefaultPort || obj instanceof PortEdge || obj instanceof DeviceGroup)) {
+					childList.add(obj);
+//				}
+			}
+			this.cells = childList.toArray(new GraphCell[childList.size()]);
 		}
 		
 		synchronized void removeAlarmedCell(DefaultGraphCell cell) {
-			GraphActions.setObjectColor(this.graph, cell, Color.BLACK);
+			
+			Object[] cells1 = this.cellsSet.toArray(new DefaultGraphCell[this.cellsSet.size()]);
+			Set descendants1 = SchemeGraph.getDescendants1(cells1);
+			GraphActions.setObjectsColor(this.graph, (GraphCell[])descendants1.toArray(new GraphCell[descendants1.size()]), Color.BLACK);
 			this.cellsSet.remove(cell);
-			this.cells = this.cellsSet.toArray(new DefaultGraphCell[this.cellsSet.size()]);
-			this.cells = this.graph.getDescendants(this.cells);
+			Object[] allChilds = this.graph.getDescendants(this.cellsSet.toArray(new DefaultGraphCell[this.cellsSet.size()])); 
+			List<Object> childList = new ArrayList<Object>();
+			
+			for (Object obj : allChilds) {
+//				if (!(obj instanceof DefaultPort || obj instanceof DeviceGroup)) {
+					childList.add(obj);
+//				}
+			}
+			this.cells = childList.toArray(new GraphCell[childList.size()]);
 		}
 		
 		@Override
 		public void run() {
-			while (true) {
-				if (this.cells.length == 0) {
-					break;
+				while (true) {
+					try {
+						sleep(REPAINT_TIME);
+					} catch (InterruptedException e) {
+						Log.errorMessage(e);
+					}
+					synchronized (this) {
+						if (this.cells.length == 0) {
+							break;
+						}
+						GraphActions.setObjectsColor(this.graph, this.cells, Color.RED);
+					}
+					try {
+						sleep(REPAINT_TIME);
+					} catch (InterruptedException e) {
+						Log.errorMessage(e);
+					}
+					
+					synchronized (this) {
+						GraphActions.setObjectsColor(this.graph, this.cells, Color.BLACK);
+					}
 				}
-				GraphActions.setObjectsColor(this.graph, this.cells, Color.RED);
-
-				try {
-					sleep(REPAINT_TIME);
-				} catch (InterruptedException e) {
-					Log.errorMessage(e);
-				}
-				
-				GraphActions.setObjectsColor(this.graph, this.cells, Color.BLACK);
-
-				try {
-					sleep(REPAINT_TIME);
-				} catch (InterruptedException e) {
-					Log.errorMessage(e);
-				}
-			}
 		}
 	}
 }

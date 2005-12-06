@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.23 2005/11/03 11:51:43 stas Exp $
+ * $Id: SchemeGraph.java,v 1.24 2005/12/06 14:14:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -28,6 +29,7 @@ import com.jgraph.graph.ConnectionSet;
 import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.Edge;
 import com.jgraph.graph.EdgeView;
+import com.jgraph.graph.GraphCell;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.GraphLayoutCache;
 import com.jgraph.graph.GraphModel;
@@ -52,7 +54,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2005/11/03 11:51:43 $
+ * @version $Revision: 1.24 $, $Date: 2005/12/06 14:14:18 $
  * @module schemeclient
  */
 
@@ -332,7 +334,7 @@ public class SchemeGraph extends GPGraph {
 
 	public static Set getDescendants(GraphModel model, Object[] cells) {
 		if (cells != null) {
-			Set<Object> result = new HashSet<Object>();
+			Set result = new HashSet();
 			for (Object cell : cells) {
 				addObject(result, model, cell);
 			}
@@ -341,7 +343,7 @@ public class SchemeGraph extends GPGraph {
 		return null;
 	}
 	
-	private static void addObject(Set<Object> objects, GraphModel model, Object cell) {
+	private static void addObject(Set objects, GraphModel model, Object cell) {
 		if (!objects.contains(cell)) {
 			objects.add(cell);
 			for (int i = 0; i < model.getChildCount(cell); i++) {
@@ -352,16 +354,27 @@ public class SchemeGraph extends GPGraph {
 
 	public static Set getDescendants1(Object[] cells) {
 		if (cells != null) {
-			Set<Object> result = new HashSet<Object>();
+			Set result = new HashSet();
 			for (Object cell : cells) {
 				addObject(result, cell);
 			}
 			return result;
 		}
-		return null;
+		return Collections.emptySet();
 	}
 	
-	private static void addObject(Set<Object> objects, Object cell) {
+	public static Set<GraphCell> getDescendants2(Collection<GraphCell> cells) {
+		if (cells != null) {
+			Set<GraphCell> result = new HashSet<GraphCell>();
+			for (GraphCell cell : cells) {
+				addObject2(result, cell);
+			}
+			return result;
+		}
+		return Collections.emptySet();
+	}
+	
+	private static void addObject(Set objects, Object cell) {
 		if (!objects.contains(cell)) {
 			objects.add(cell);
 			if (cell instanceof TreeNode) {
@@ -372,13 +385,25 @@ public class SchemeGraph extends GPGraph {
 			}
 		}
 	}
+	
+	private static void addObject2(Set<GraphCell> objects, GraphCell cell) {
+		if (!objects.contains(cell)) {
+			objects.add(cell);
+			if (cell instanceof TreeNode) {
+				TreeNode node = (TreeNode)cell;
+				for (int i = 0; i < node.getChildCount(); i++) {
+					addObject2(objects, (GraphCell)node.getChildAt(i)); 
+				}
+			}
+		}
+	}
 
 	
 	public Serializable getArchiveableState(Object[] cells) {
 		Object[] flat = getDescendants(getModel(), cells).toArray();
 		ConnectionSet cs = ConnectionSet.create(getModel(), flat, false);
 		Map viewAttributes = GraphConstants.createAttributes(cells, getGraphLayoutCache());
-		ArrayList<Object> v = new ArrayList<Object>(3);
+		ArrayList v = new ArrayList(3);
 		v.add(cells);
 		v.add(viewAttributes);
 		v.add(cs);
