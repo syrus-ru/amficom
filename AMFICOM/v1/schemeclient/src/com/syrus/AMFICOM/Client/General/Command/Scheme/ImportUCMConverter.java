@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUCMConverter.java,v 1.14 2005/12/06 11:40:35 bass Exp $
+ * $Id: ImportUCMConverter.java,v 1.15 2005/12/06 11:52:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import com.jgraph.graph.DefaultGraphCell;
+
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -45,7 +46,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
-import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -57,7 +58,6 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -115,7 +115,7 @@ public class ImportUCMConverter {
 		final Set<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		final CharacteristicType characteristicType = characteristicTypes.isEmpty()
 				? CharacteristicType.createInstance(this.userId, CharacteristicTypeCodenames.COMMON_COLOUR,
-						"", "color", DataType.INTEGER, IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL)
+						"", "color", DataType.INTEGER, CharacteristicTypeSort.VISUAL)
 				: characteristicTypes.iterator().next();
 		assert characteristicType != null : NON_NULL_EXPECTED;
 		final String name = characteristicType.getName();

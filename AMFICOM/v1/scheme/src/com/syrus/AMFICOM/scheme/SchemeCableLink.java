@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.118 2005/12/06 11:33:06 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.119 2005/12/06 11:52:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,6 +56,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
+import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DataType;
@@ -74,7 +75,6 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -92,7 +92,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.118 $, $Date: 2005/12/06 11:33:06 $
+ * @version $Revision: 1.119 $, $Date: 2005/12/06 11:52:22 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink<SchemeCableLink>
@@ -1037,7 +1037,7 @@ public final class SchemeCableLink extends AbstractSchemeLink<SchemeCableLink>
 		final StorableObjectCondition condition = new TypicalCondition(CharacteristicTypeCodenames.COMMON_COLOUR, OperationSort.OPERATION_EQUALS, CHARACTERISTIC_TYPE_CODE, COLUMN_CODENAME);
 		final Set<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		final CharacteristicType characteristicType = characteristicTypes.isEmpty()
-				? CharacteristicType.createInstance(creatorId, CharacteristicTypeCodenames.COMMON_COLOUR, "", "color", DataType.INTEGER, IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL)
+				? CharacteristicType.createInstance(creatorId, CharacteristicTypeCodenames.COMMON_COLOUR, "", "color", DataType.INTEGER, CharacteristicTypeSort.VISUAL)
 				: characteristicTypes.iterator().next();
 
 		assert characteristicType != null : NON_NULL_EXPECTED;

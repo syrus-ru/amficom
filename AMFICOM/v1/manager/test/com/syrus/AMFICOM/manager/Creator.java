@@ -1,5 +1,5 @@
 /*-
-* $Id: Creator.java,v 1.2 2005/12/06 11:35:26 bass Exp $
+* $Id: Creator.java,v 1.3 2005/12/06 11:52:22 bass Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.administration.Role.RoleCodename;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
+import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -27,13 +28,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/06 11:35:26 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/06 11:52:22 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -716,7 +716,7 @@ public class Creator extends TestCase {
 				"name", 
 				"name", 
 				DataType.STRING, 
-				IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 			
 		}
 		
@@ -726,7 +726,7 @@ public class Creator extends TestCase {
 				"x coordinate", 
 				"x coordinate", 
 				DataType.STRING, 
-				IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 			
 		}
 
@@ -736,7 +736,7 @@ public class Creator extends TestCase {
 				"y coordinate", 
 				"y coordinate", 
 				DataType.STRING, 
-				IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 			
 		}
 		
@@ -746,7 +746,7 @@ public class Creator extends TestCase {
 				"Полное имя пользотеля", 
 				"ФИО", 
 				DataType.STRING, 
-				IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 			
 		}
 		
@@ -756,7 +756,7 @@ public class Creator extends TestCase {
 				"Должность", 
 				"Должность", 
 				DataType.STRING, 
-				IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 			
 		}
 
@@ -766,7 +766,7 @@ public class Creator extends TestCase {
 				"Подразделение", 
 				"Подразделение", 
 				DataType.STRING, 
-				IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		{
@@ -775,7 +775,7 @@ public class Creator extends TestCase {
 				"Организация", 
 				"Организация", 
 				DataType.STRING, 
-				IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		{
@@ -784,7 +784,7 @@ public class Creator extends TestCase {
 				"Номер комнаты", 
 				"Номер комнаты", 
 				DataType.STRING, 
-				IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		{
@@ -793,7 +793,7 @@ public class Creator extends TestCase {
 				"Город", 
 				"Город", 
 				DataType.STRING, 
-				IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		{
@@ -802,7 +802,7 @@ public class Creator extends TestCase {
 				"Улица", 
 				"Улица", 
 				DataType.STRING, 
-				IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		{
@@ -811,7 +811,7 @@ public class Creator extends TestCase {
 				"Дом", 
 				"Дом", 
 				DataType.STRING, 
-				IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		{
@@ -820,7 +820,7 @@ public class Creator extends TestCase {
 				"Адрес электронной почты", 
 				"Электронная почта", 
 				DataType.STRING, 
-				IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		{
@@ -829,7 +829,7 @@ public class Creator extends TestCase {
 				"Телефон", 
 				"Телефон", 
 				DataType.STRING, 
-				IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		{
@@ -838,7 +838,7 @@ public class Creator extends TestCase {
 				"Сотовый телефон", 
 				"Сотовый телефон", 
 				DataType.STRING, 
-				IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_TYPE_CODE, userId, true);

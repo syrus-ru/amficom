@@ -1,5 +1,5 @@
 /*-
- * $$Id: AbstractLinkController.java,v 1.50 2005/12/06 11:34:01 bass Exp $$
+ * $$Id: AbstractLinkController.java,v 1.51 2005/12/06 11:52:21 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DataType;
@@ -36,7 +37,6 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.util.Log;
@@ -45,7 +45,7 @@ import com.syrus.util.Shitlet;
 /**
  * Контроллер линейного элемента карты.
  * 
- * @version $Revision: 1.50 $, $Date: 2005/12/06 11:34:01 $
+ * @version $Revision: 1.51 $, $Date: 2005/12/06 11:52:21 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -125,7 +125,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			final Identifier userId, 
 			final String codename,
 			final String name) {
-		final IdlCharacteristicTypeSort sort = IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL;
+		final CharacteristicTypeSort sort = CharacteristicTypeSort.VISUAL;
 		final DataType dataType = DataType.STRING;
 
 		final StorableObjectCondition pTypeCondition = new TypicalCondition(codename,

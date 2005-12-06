@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.21 2005/12/06 11:35:25 bass Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.22 2005/12/06 11:52:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.CharacteristicTypeWrapper;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifier;
@@ -48,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/12/06 11:35:25 $
+ * @version $Revision: 1.22 $, $Date: 2005/12/06 11:52:21 $
  * @module commonclient
  */
 
@@ -220,7 +221,7 @@ public class CharacteristicAddDialog {
 								this.nameField.getText(),
 								this.nameField.getText(),
 								DataType.STRING,
-								this.sort);
+								CharacteristicTypeSort.valueOf(this.sort));
 						StorableObjectPool.flush(this.selectedType, LoginManager.getUserId(), false); 
 					} catch (ApplicationException e) {
 						Log.errorMessage(e);

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.53 2005/12/06 11:40:35 bass Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.54 2005/12/06 11:52:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -81,7 +82,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/12/06 11:40:35 $
+ * @version $Revision: 1.54 $, $Date: 2005/12/06 11:52:22 $
  * @module schemeclient
  */
 
@@ -114,7 +115,7 @@ public class SchemeObjectsFactory {
 	
 	public static CharacteristicType createCharacteristicType(String name, IdlCharacteristicTypeSort sort) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		CharacteristicType type = CharacteristicType.createInstance(userId, name, EMPTY, name, DataType.STRING, sort);
+		CharacteristicType type = CharacteristicType.createInstance(userId, name, EMPTY, name, DataType.STRING, CharacteristicTypeSort.valueOf(sort));
 		type.setCodename(type.getId().getIdentifierString());
 		return type;
 	}
