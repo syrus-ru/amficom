@@ -65,7 +65,7 @@ public class AlarmFrame extends JInternalFrame implements
 
 	private Wrapper<Alarm> wrapper;
 	WrapperedTableModel<Alarm> model;
-	private WrapperedTable table;
+	WrapperedTable table;
 
 	JPanel actionPanel = new JPanel();
 	JButton buttonAcknowledge = new JButton();
@@ -151,7 +151,7 @@ public class AlarmFrame extends JInternalFrame implements
 					return;
 				}
 				
-				boolean b = e.getFirstIndex() != -1;
+				boolean b = AlarmFrame.this.table.getSelectedRow() != -1;
 				AlarmFrame.this.buttonDelete.setEnabled(b);
 				AlarmFrame.this.buttonAcknowledge.setEnabled(b);
 				AlarmFrame.this.buttonFix.setEnabled(b);
@@ -209,13 +209,7 @@ public class AlarmFrame extends JInternalFrame implements
 
 		this.table.getSelectionModel().setSelectionMode(
 				ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		this.table.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
-					public void valueChanged(ListSelectionEvent e) {
-						alarmTable_valueChanged(e);
-					}
-				});
-
+		
 		this.actionPanel.setLayout(new FlowLayout());
 		this.buttonAcknowledge.setText("Подтвердить");
 		this.buttonAcknowledge.addActionListener(new ActionListener() {
@@ -307,19 +301,19 @@ public class AlarmFrame extends JInternalFrame implements
 
 	public void updateContents() {
 		
-		try {
+//		try {
 			// TODO use ObjectEntities.ALARM_CODE
-			StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.UPDIKE_CODE);
-			Set<Alarm> alarms = StorableObjectPool.<Alarm>getStorableObjectsByCondition(condition , true);
-			this.model.setValues(alarms);
+//			StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.UPDIKE_CODE);
+//			Set<Alarm> alarms = StorableObjectPool.<Alarm>getStorableObjectsByCondition(condition , true);
+//			this.model.setValues(alarms);
 
 			this.buttonAcknowledge.setEnabled(false);
 			this.buttonFix.setEnabled(false);
 			this.buttonDelete.setEnabled(false);
 			this.buttonDescribe.setEnabled(false);
-		} catch(ApplicationException e) {
-			e.printStackTrace();
-		}
+//		} catch(ApplicationException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	public void alarmTable_valueChanged(ListSelectionEvent e) {
@@ -335,7 +329,12 @@ public class AlarmFrame extends JInternalFrame implements
 			// no rows are selected
 		}
 		else {
-			Alarm alarm = (Alarm) this.model.getObject(this.table.getSelectedRow());
+			Alarm alarm = this.model.getObject(this.table.getSelectedRow());
+			MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_SELECTED_EVENT,
+					this.alarmMarkerMapping.get(alarm).getId(), alarm.getEvent().getMismatchOpticalDistance(),
+					alarm.getPath().getId(), alarm.getMonitoredElement().getId(),
+					alarm.getPathElement().getId());
+			this.aContext.getDispatcher().firePropertyChange(mEvent2);
 /*
 			Pool.put("activecontext", "useractionselected", "alarm_selected");
 			Pool.put("activecontext", "selected_id", alarm.getId());
@@ -502,42 +501,25 @@ public class AlarmFrame extends JInternalFrame implements
 	}
 
 	void buttonFix_actionPerformed(ActionEvent e) {
-		int mini = this.table.getSelectionModel().getMinSelectionIndex();
-		int maxi = this.table.getSelectionModel().getMaxSelectionIndex();
-		Alarm[] alarms = new Alarm[maxi - mini + 1];
-		for(int i = 0; i + mini < maxi + 1; i++)
-			alarms[i] = (Alarm) this.model.getObject(i + mini);
-/*
-		for(int i = 0; i < alarms.length; i++) {
-			alarms[i].status = AlarmStatus.ALARM_STATUS_FIXED;
-			alarms[i].fixed_when = System.currentTimeMillis();
-			alarms[i].fixed_by = aContext.getSessionInterface().getUserId();
-			aContext.getDataSourceInterface().SetAlarm(alarms[i].getId());
-		}
-		updateContents();
-*/
-	}
-
-	void buttonDelete_actionPerformed(ActionEvent e) {
-		int mini = this.table.getSelectionModel().getMinSelectionIndex();
-		int maxi = this.table.getSelectionModel().getMaxSelectionIndex();
-		
-		Alarm[] alarms = new Alarm[maxi - mini + 1];
-		
-		for(int i = 0; i + mini < maxi + 1; i++) {
-			alarms[i] = (Alarm) this.model.getObject(i + mini);
-		}
-		
-		for(Alarm alarm : alarms) {
-			MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
+		Alarm alarm = this.model.getObject(this.table.getSelectedRow());
+		MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
 				this.alarmMarkerMapping.get(alarm).getId(), alarm.getEvent().getMismatchOpticalDistance(),
 				alarm.getPath().getId(), alarm.getMonitoredElement().getId(),
 				alarm.getPathElement().getId());
-			this.aContext.getDispatcher().firePropertyChange(mEvent2);
+		this.aContext.getDispatcher().firePropertyChange(mEvent2);
+	}
+
+	void buttonDelete_actionPerformed(ActionEvent e) {
+		Alarm alarm = this.model.getObject(this.table.getSelectedRow());
+		MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
+				this.alarmMarkerMapping.get(alarm).getId(), alarm.getEvent().getMismatchOpticalDistance(),
+				alarm.getPath().getId(), alarm.getMonitoredElement().getId(),
+				alarm.getPathElement().getId());
+		this.aContext.getDispatcher().firePropertyChange(mEvent2);
 			
-			this.table.setSelectedValue(null);
-			this.model.removeObject(alarm);
-		}
+		this.table.setSelectedValue(null);
+		this.model.removeObject(alarm);
+
 		updateContents();
 /*
 		for(int i = 0; i < alarms.length; i++) {
