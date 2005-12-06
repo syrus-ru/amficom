@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortCharacteristicsPanel.java,v 1.15 2005/10/31 12:30:29 bass Exp $
+ * $Id: SchemePortCharacteristicsPanel.java,v 1.16 2005/12/06 11:40:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,13 +14,13 @@ import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/10/31 12:30:29 $
+ * @version $Revision: 1.16 $, $Date: 2005/12/06 11:40:35 $
  * @module schemeclient
  */
 
@@ -49,7 +49,7 @@ public class SchemePortCharacteristicsPanel extends CharacteristicsPanel {
 		super.clear();
 		if (this.schemePort != null) {
 			try {
-				super.setTypeSortMapping(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
+				super.setTypeSortMapping(IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 						this.schemePort,
 						this.schemePort.getId(), true);
 				super.addCharacteristics(this.schemePort.getCharacteristics(true), this.schemePort.getId());

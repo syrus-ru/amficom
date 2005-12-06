@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.18 2005/10/31 12:30:25 bass Exp $
+ * $Id: AddPropFrame.java,v 1.19 2005/12/06 11:40:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,21 +42,21 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/10/31 12:30:25 $
+ * @version $Revision: 1.19 $, $Date: 2005/12/06 11:40:35 $
  * @module schemeclient
  */
 
 public class AddPropFrame extends JDialog {
 	private static final long serialVersionUID = 1962940947796494298L;
 	protected int res = JOptionPane.CANCEL_OPTION;
-	protected CharacteristicTypeSort sort;
+	protected IdlCharacteristicTypeSort sort;
 	
 	private CharacteristicType selectedType;
 	final WrapperedComboBox<CharacteristicType> characteristicTypeComboBox = new WrapperedComboBox<CharacteristicType>(CharacteristicTypeWrapper.getInstance(),
@@ -193,14 +193,14 @@ public class AddPropFrame extends JDialog {
 		super.dispose();
 	}
 
-	public int showDialog(final CharacteristicTypeSort sort0, final Collection<CharacteristicType> chars) {
+	public int showDialog(final IdlCharacteristicTypeSort sort0, final Collection<CharacteristicType> chars) {
 		this.sort = sort0;
 
 		try {
 			final EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CHARACTERISTIC_TYPE_CODE);
 			Collection<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			for (final CharacteristicType ctype : characteristicTypes) {
-				if (ctype.getSort().equals(this.sort) && !chars.contains(ctype)) {
+				if (ctype.getSort().ordinal() == this.sort.value() && !chars.contains(ctype)) {
 					this.characteristicTypeComboBox.addItem(ctype);
 				}
 			}

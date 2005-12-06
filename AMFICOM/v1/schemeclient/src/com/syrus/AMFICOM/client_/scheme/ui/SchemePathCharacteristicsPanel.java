@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathCharacteristicsPanel.java,v 1.4 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemePathCharacteristicsPanel.java,v 1.5 2005/12/06 11:40:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
 
@@ -37,7 +37,7 @@ public class SchemePathCharacteristicsPanel extends CharacteristicsPanel {
 
 		if (this.schemePath != null) {
 			try {
-				super.setTypeSortMapping(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
+				super.setTypeSortMapping(IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 						this.schemePath,
 						this.schemePath.getId(), true);
 				super.addCharacteristics(this.schemePath.getCharacteristics(true), this.schemePath.getId());

@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUCMConverter.java,v 1.13 2005/11/05 13:43:20 stas Exp $
+ * $Id: ImportUCMConverter.java,v 1.14 2005/12/06 11:40:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -115,7 +115,7 @@ public class ImportUCMConverter {
 		final Set<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		final CharacteristicType characteristicType = characteristicTypes.isEmpty()
 				? CharacteristicType.createInstance(this.userId, CharacteristicTypeCodenames.COMMON_COLOUR,
-						"", "color", DataType.INTEGER, CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL)
+						"", "color", DataType.INTEGER, IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL)
 				: characteristicTypes.iterator().next();
 		assert characteristicType != null : NON_NULL_EXPECTED;
 		final String name = characteristicType.getName();

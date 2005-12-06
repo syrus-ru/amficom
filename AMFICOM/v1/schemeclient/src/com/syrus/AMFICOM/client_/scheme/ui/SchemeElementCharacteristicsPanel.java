@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementCharacteristicsPanel.java,v 1.16 2005/10/31 12:30:29 bass Exp $
+ * $Id: SchemeElementCharacteristicsPanel.java,v 1.17 2005/12/06 11:40:34 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,13 +14,13 @@ import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/10/31 12:30:29 $
+ * @version $Revision: 1.17 $, $Date: 2005/12/06 11:40:34 $
  * @module schemeclient
  */
 
@@ -46,7 +46,7 @@ public class SchemeElementCharacteristicsPanel extends CharacteristicsPanel {
 
 		if (this.schemeElement != null) {
 			try {
-				super.setTypeSortMapping(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
+				super.setTypeSortMapping(IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 						this.schemeElement,
 						this.schemeElement.getId(), true);
 				super.addCharacteristics(this.schemeElement.getCharacteristics(true), this.schemeElement.getId());
