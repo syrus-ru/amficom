@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicType.java,v 1.67 2005/12/07 20:07:37 bass Exp $
+ * $Id: CharacteristicType.java,v 1.68 2005/12/07 20:35:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,9 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.WARNING;
 
@@ -27,13 +30,15 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypeHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicType;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristicTypeSort;
+import com.syrus.AMFICOM.general.xml.XmlDataType;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/12/07 20:07:37 $
+ * @version $Revision: 1.68 $, $Date: 2005/12/07 20:35:02 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -125,7 +130,21 @@ public final class CharacteristicType
 			final XmlCharacteristicType characteristicType,
 			final String importType)
 	throws XmlConversionException {
-		throw new UnsupportedOperationException();
+		try {
+			XmlComplementorRegistry.complementStorableObject(characteristicType, CHARACTERISTIC_TYPE_CODE, importType, PRE_IMPORT);
+	
+			this.codename = characteristicType.getCodename();
+			this.description = characteristicType.isSetDescription()
+					? characteristicType.getDescription()
+					: "";
+			this.name = characteristicType.getName();
+			this.dataType.fromXmlTransferable(characteristicType.xgetDataType(), importType);
+			this.sort.fromXmlTransferable(characteristicType.xgetSort(), importType);
+	
+			XmlComplementorRegistry.complementStorableObject(characteristicType, CHARACTERISTIC_TYPE_CODE, importType, POST_IMPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
+		}
 	}
 
 	/**
@@ -298,7 +317,30 @@ public final class CharacteristicType
 			final String importType,
 			final boolean usePool)
 	throws XmlConversionException {
-		throw new UnsupportedOperationException();
+		try {
+			this.id.getXmlTransferable(characteristicType.addNewId(), importType);
+
+			characteristicType.setCodename(this.codename);
+
+			if (characteristicType.isSetDescription()) {
+				characteristicType.unsetDescription();
+			}
+			if (this.description.length() != 0) {
+				characteristicType.setDescription(this.description);
+			}
+
+			final XmlDataType xmlDataType = XmlDataType.Factory.newInstance();
+			this.dataType.getXmlTransferable(xmlDataType, importType, usePool);
+			characteristicType.xsetDataType(xmlDataType);
+
+			final XmlCharacteristicTypeSort xmlCharacteristicTypeSort = XmlCharacteristicTypeSort.Factory.newInstance();
+			this.sort.getXmlTransferable(xmlCharacteristicTypeSort, importType, usePool);
+			characteristicType.xsetSort(xmlCharacteristicTypeSort);
+
+			XmlComplementorRegistry.complementStorableObject(characteristicType, CHARACTERISTIC_TYPE_CODE, importType, EXPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
+		}
 	}
 
 	public DataType getDataType() {
