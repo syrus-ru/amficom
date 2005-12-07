@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeExportCommand.java,v 1.12 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemeExportCommand.java,v 1.13 2005/12/07 16:42:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.scheme.xml.SchemesDocument;
 import com.syrus.AMFICOM.scheme.xml.XmlScheme;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeSeq;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
 
 public class SchemeExportCommand extends ImportExportCommand {
 	SchemeTabbedPane pane;
@@ -54,8 +55,8 @@ public class SchemeExportCommand extends ImportExportCommand {
 				
 				final File schemeFile = new File(fileName);
 				saveSchemeXML(schemeFile, xmlScheme);
-			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+			} catch (final XmlConversionException xce) {
+				Log.errorMessage(xce);
 			}		
 		}
 	}

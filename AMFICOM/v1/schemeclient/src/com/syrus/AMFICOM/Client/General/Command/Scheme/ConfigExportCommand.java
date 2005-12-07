@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigExportCommand.java,v 1.7 2005/10/31 12:30:26 bass Exp $
+ * $Id: ConfigExportCommand.java,v 1.8 2005/12/07 16:42:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
 
 public class ConfigExportCommand extends ImportExportCommand {
 	SchemeTabbedPane pane;
@@ -106,9 +107,11 @@ public class ConfigExportCommand extends ImportExportCommand {
 			}
 			File configFile = new File(fileName);
 			saveConfigXML(configFile, xmlLinkTypes, xmlCableLinkTypes, xmlPortTypes, xmlEquipmentTypes, xmlEquipments);
-		} catch (ApplicationException e) {
-			Log.errorMessage(e);
-		}		
+		} catch (final ApplicationException ae) {
+			Log.errorMessage(ae);
+		} catch (final XmlConversionException xce) {
+			Log.errorMessage(xce);
+		}
 	}
 	
 	private void saveConfigXML(File f, 

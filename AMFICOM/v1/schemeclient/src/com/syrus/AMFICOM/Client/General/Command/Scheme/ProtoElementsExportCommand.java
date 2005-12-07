@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoElementsExportCommand.java,v 1.5 2005/10/31 12:30:25 bass Exp $
+ * $Id: ProtoElementsExportCommand.java,v 1.6 2005/12/07 16:42:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.scheme.xml.SchemeProtoGroupsDocument;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroupSeq;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
 
 public class ProtoElementsExportCommand extends ImportExportCommand {
 	SchemeTabbedPane pane;
@@ -59,9 +60,11 @@ public class ProtoElementsExportCommand extends ImportExportCommand {
 			}
 			final File protoFile = new File(fileName);
 			saveProtoGroupsXML(protoFile, xmlProtoGroups);
-		} catch (ApplicationException e) {
-			Log.errorMessage(e);
-		}		
+		} catch (final ApplicationException ae) {
+			Log.errorMessage(ae);
+		} catch (final XmlConversionException xce) {
+			Log.errorMessage(xce);
+		}
 	}
 	
 	private void saveProtoGroupsXML(File f, Set<XmlSchemeProtoGroup> xmlProtoGroups) {
