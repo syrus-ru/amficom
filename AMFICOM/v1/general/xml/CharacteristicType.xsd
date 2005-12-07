@@ -7,7 +7,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: CharacteristicType.xsd,v 1.7 2005/09/14 19:49:08 bass Exp $
+			$Id: CharacteristicType.xsd,v 1.8 2005/12/07 19:23:58 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -17,28 +17,8 @@
 
 	<xsd:include
 		schemaLocation = "StorableObjectType.xsd"/>
-
-	<xsd:simpleType name = "XmlCharacteristicTypeSort">
-		<xsd:restriction base = "xsd:string">
-			<xsd:enumeration value = "visual"/>
-			<xsd:enumeration value = "operational"/>
-			<xsd:enumeration value = "interface"/>
-			<xsd:enumeration value = "electrical"/>
-			<xsd:enumeration value = "optical"/>
-		</xsd:restriction>
-	</xsd:simpleType>
-
-	<xsd:simpleType name = "XmlDataType">
-		<xsd:restriction base = "xsd:string">
-			<xsd:enumeration value = "integer"/>
-			<xsd:enumeration value = "double"/>
-			<xsd:enumeration value = "string"/>
-			<xsd:enumeration value = "date"/>
-			<xsd:enumeration value = "long"/>
-			<xsd:enumeration value = "raw"/>
-			<xsd:enumeration value = "boolean"/>
-		</xsd:restriction>
-	</xsd:simpleType>
+	<xsd:include
+		schemaLocation = "CharacteristicTypeSort.xsd"/>
 
 	<xsd:complexType name = "XmlCharacteristicType" final = "#all">
 		<xsd:complexContent>
@@ -46,9 +26,19 @@
 				<xsd:sequence>
 					<xsd:element name = "name" type = "xsd:string"/>
 					<xsd:element name = "sort" type = "general:XmlCharacteristicTypeSort"/>
-					<xsd:element name = "dataType" type = "general:XmlDataType"/>
-					<xsd:element name = "editable" type = "xsd:boolean"/>
-					<xsd:element name = "visible" type = "xsd:boolean"/>
+					<xsd:element name = "dataType">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:string">
+								<xsd:enumeration value = "integer"/>
+								<xsd:enumeration value = "double"/>
+								<xsd:enumeration value = "string"/>
+								<xsd:enumeration value = "date"/>
+								<xsd:enumeration value = "long"/>
+								<xsd:enumeration value = "raw"/>
+								<xsd:enumeration value = "boolean"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
