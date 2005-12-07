@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.29 2005/12/07 14:08:02 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.30 2005/12/07 15:20:22 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.29 $, $Date: 2005/12/07 14:08:02 $
+ * @version $Revision: 1.30 $, $Date: 2005/12/07 15:20:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -877,10 +877,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		@SuppressWarnings({"hiding","unqualified-field-access"})		
 		public final void putCells(final ManagerGraphCell cell) {
 			assert Log.debugMessage(cell, Log.DEBUGLEVEL03);
-			if (this.managerGraphCell != null) {
-				final GraphModel model = graph.getModel();
-				model.remove(new Object[] { this.managerGraphCell});				
-			}
+			this.clear();
 			this.managerGraphCell = cell;
 		}
 		
@@ -897,6 +894,10 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		}
 		
 		public final void clear() {
+			if (this.managerGraphCell != null) {
+				final GraphModel model = graph.getModel();
+				model.remove(new Object[] { this.managerGraphCell});				
+			}
 			this.managerGraphCell = null;
 		}
 	}
