@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractPerspective.java,v 1.6 2005/12/06 15:14:39 bob Exp $
+* $Id: AbstractPerspective.java,v 1.7 2005/12/07 14:08:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/12/06 15:14:39 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/07 14:08:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -139,7 +139,7 @@ public abstract class AbstractPerspective implements Perspective {
 
 	@SuppressWarnings("unchecked")
 	protected final AbstractAction createGetTheSameOrCreateNewAction(final AbstractBeanFactory<?> factory,
-				final Chechable chechable,
+				final Checkable checkable,
 				final DefaultGraphCell parentCell) 
 	throws ApplicationException {		
    		final String name = factory.getName();
@@ -162,7 +162,7 @@ public abstract class AbstractPerspective implements Perspective {
 					}
    					final List<AbstractBean> layoutBeans2 = getLayoutBeans();
 					for(final AbstractBean abstractBean : layoutBeans2) {
-						if (chechable.isNeedIn(abstractBean)) {
+						if (checkable.isNeedIn(abstractBean)) {
 							final GraphSelectionModel selectionModel = graph.getSelectionModel();
 							selectionModel.setSelectionCell(graphRoutines.getDefaultGraphCell(abstractBean, perspective));
 							assert Log.debugMessage("found", Log.DEBUGLEVEL10);
@@ -199,7 +199,7 @@ public abstract class AbstractPerspective implements Perspective {
 	
 	@SuppressWarnings("unchecked")
 	protected final AbstractAction createGetTheSameOrCreateNewAction(final AbstractBeanFactory<?> factory,
- 				final Chechable chechable,
+ 				final Checkable checkable,
  				final DefaultGraphCell parentCell,
  				final String codename) 
  	throws ApplicationException {
@@ -223,7 +223,7 @@ public abstract class AbstractPerspective implements Perspective {
     					final List<AbstractBean> layoutBeans2 = getLayoutBeans();
     					assert Log.debugMessage(layoutBeans2, Log.DEBUGLEVEL10);
 						for(final AbstractBean abstractBean : layoutBeans2) {
-	 						if (chechable.isNeedIn(abstractBean)) {
+	 						if (checkable.isNeedIn(abstractBean)) {
 	 							assert Log.debugMessage("found:" + abstractBean, Log.DEBUGLEVEL10);
 	 							final GraphSelectionModel selectionModel = graph.getSelectionModel();
 	 							final ManagerGraphCell cell = 
@@ -555,8 +555,8 @@ public abstract class AbstractPerspective implements Perspective {
 	}
 	
 	/////// inner classess ////
-	protected interface Chechable<T extends AbstractBean> {
-		boolean isNeedIn(final T bean);
+	protected interface Checkable {
+		boolean isNeedIn(final AbstractBean bean);
 	}
 
 	protected interface PostBeanCreationAction<T extends AbstractBean> {

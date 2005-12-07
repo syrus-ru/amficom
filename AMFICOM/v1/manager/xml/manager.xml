@@ -18,10 +18,11 @@
         <man:uiHandler id="MCM" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.MCMBeanUI"/>
         <man:uiHandler id="Workstation" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.WorkstationBeanUI"/>
         <man:uiHandler id="SystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.SystemUserBeanUI"/>
-        <man:validator source="MCM" target="Net"/>
-        <man:validator source="KIS" target="Net"/>
-        <man:validator source="Server" target="Net"/>
-        <man:validator source="Workstation" target="Net"/>
+        <man:validator source="NetDomain" target="NetDomain"/>
+        <man:validator source="MCM" target="NetDomain"/>
+        <man:validator source="KIS" target="NetDomain"/>
+        <man:validator source="Server" target="NetDomain"/>
+        <man:validator source="Workstation" target="NetDomain"/>
         <man:validator source="SystemUser" target="Workstation"/>
         <man:popupMenu id="SystemUser" popupMenuHandler="com.syrus.AMFICOM.manager.UI.SystemUserDomainPopupMenu"/>
         <man:perspective id="SystemUser">
@@ -70,7 +71,7 @@
           <man:validator source="report" target="SystemUser"/>
           <man:validator source="PermissionAttributes" target="SystemUser"/>
         </man:perspective>
-        <man:undeletable>Net</man:undeletable>
+        <man:undeletable>NetDomain</man:undeletable>
         <man:cutable>SystemUser</man:cutable>
         <man:cutable>Server</man:cutable>
         <man:cutable>KIS</man:cutable>

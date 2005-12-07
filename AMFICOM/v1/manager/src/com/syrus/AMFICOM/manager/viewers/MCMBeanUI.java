@@ -1,5 +1,5 @@
 /*-
-* $Id: MCMBeanUI.java,v 1.5 2005/11/17 09:00:35 bob Exp $
+* $Id: MCMBeanUI.java,v 1.6 2005/12/07 14:08:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.manager.beans.MCMBeanWrapper;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.6 $, $Date: 2005/12/07 14:08:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -40,8 +40,7 @@ public class MCMBeanUI extends TableBeanUI<MCMBean> {
 				KEY_HOSTNAME,
 				KEY_SERVER_ID,
 				KEY_USER_ID}, 
-				"com/syrus/AMFICOM/manager/resources/icons/mcm.gif", 
-				"com/syrus/AMFICOM/manager/resources/mcm.png");
+				"mcm");
 		
 		final ManagerModel managerModel = (ManagerModel)this.managerMainFrame.getModel();
 		final Dispatcher dispatcher = managerModel.getDispatcher();

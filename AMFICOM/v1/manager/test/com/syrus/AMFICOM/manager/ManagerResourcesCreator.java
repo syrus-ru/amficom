@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerResourcesCreator.java,v 1.4 2005/12/05 14:41:22 bob Exp $
+* $Id: ManagerResourcesCreator.java,v 1.5 2005/12/07 14:08:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.manager.viewers.WorkstationBeanUI;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/05 14:41:22 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/07 14:08:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -172,21 +172,25 @@ public final class ManagerResourcesCreator extends TestCase {
 					userUIHandler.setId(ObjectEntities.SYSTEMUSER);
 					userUIHandler.setUiHandlerClass(SystemUserBeanUI.class.getName());
 					
+					Validator netNetValidator = domainPerspective.addNewValidator();
+					netNetValidator.setSource(NetBeanFactory.NET_CODENAME + ObjectEntities.DOMAIN);
+					netNetValidator.setTarget(NetBeanFactory.NET_CODENAME + ObjectEntities.DOMAIN);
+					
 					Validator mcmNetValidator = domainPerspective.addNewValidator();
 					mcmNetValidator.setSource(ObjectEntities.MCM);
-					mcmNetValidator.setTarget(NetBeanFactory.NET_CODENAME);
+					mcmNetValidator.setTarget(NetBeanFactory.NET_CODENAME + ObjectEntities.DOMAIN);
 					
 					Validator rtuNetValidator = domainPerspective.addNewValidator();
 					rtuNetValidator.setSource( ObjectEntities.KIS);
-					rtuNetValidator.setTarget(NetBeanFactory.NET_CODENAME);
+					rtuNetValidator.setTarget(NetBeanFactory.NET_CODENAME + ObjectEntities.DOMAIN);
 					
 					Validator serverNetValidator = domainPerspective.addNewValidator();
 					serverNetValidator.setSource(ObjectEntities.SERVER);
-					serverNetValidator.setTarget(NetBeanFactory.NET_CODENAME);
+					serverNetValidator.setTarget(NetBeanFactory.NET_CODENAME + ObjectEntities.DOMAIN);
 					
 					Validator workstationNetValidator = domainPerspective.addNewValidator();
 					workstationNetValidator.setSource(WorkstationBeanFactory.WORKSTATION_CODENAME);
-					workstationNetValidator.setTarget(NetBeanFactory.NET_CODENAME);
+					workstationNetValidator.setTarget(NetBeanFactory.NET_CODENAME + ObjectEntities.DOMAIN);
 					
 					Validator userWorkstationValidator = domainPerspective.addNewValidator();
 					userWorkstationValidator.setSource(ObjectEntities.SYSTEMUSER);
@@ -197,7 +201,7 @@ public final class ManagerResourcesCreator extends TestCase {
 					userMenu.setPopupMenuHandler(SystemUserDomainPopupMenu.class.getName());
 
 				
-					domainPerspective.addUndeletable(NetBeanFactory.NET_CODENAME);
+					domainPerspective.addUndeletable(NetBeanFactory.NET_CODENAME + ObjectEntities.DOMAIN);
 					
 					domainPerspective.addCutable(ObjectEntities.SYSTEMUSER);
 					domainPerspective.addCutable(ObjectEntities.SERVER);

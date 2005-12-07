@@ -1,5 +1,5 @@
 /*-
-* $Id: WorkstationBeanUI.java,v 1.4 2005/11/17 09:00:35 bob Exp $
+* $Id: WorkstationBeanUI.java,v 1.5 2005/12/07 14:08:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.manager.beans.NonStorableBean;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/07 14:08:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -21,9 +21,7 @@ import com.syrus.AMFICOM.manager.beans.NonStorableBean;
 public class WorkstationBeanUI extends AbstractBeanUI<NonStorableBean> {
 
 	public WorkstationBeanUI(final ManagerMainFrame managerMainFrame) {
-		super(managerMainFrame, 
-			"com/syrus/AMFICOM/manager/resources/icons/arm.gif", 
-			"com/syrus/AMFICOM/manager/resources/arm.gif");
+		super(managerMainFrame, "workstation");
 	}
 }
 

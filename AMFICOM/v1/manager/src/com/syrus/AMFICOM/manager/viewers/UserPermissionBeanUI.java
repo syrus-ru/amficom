@@ -1,5 +1,5 @@
 /*-
-* $Id: UserPermissionBeanUI.java,v 1.2 2005/11/17 09:00:35 bob Exp $
+* $Id: UserPermissionBeanUI.java,v 1.3 2005/12/07 14:08:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,23 +16,19 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.UIManager;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import com.syrus.AMFICOM.administration.PermissionAttributes;
-import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -45,7 +41,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/07 14:08:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -62,9 +58,6 @@ public class UserPermissionBeanUI extends AbstractBeanUI<PermissionBean> {
 
 	private PermissionBean	bean;
 	
-	private Map<Module, Icon> iconCache;
-	private Map<Module, Icon> imageCache;
-
 	public UserPermissionBeanUI(final ManagerMainFrame managerMainFrame) {
 		super(managerMainFrame);
 		this.createTable();
@@ -169,54 +162,14 @@ public class UserPermissionBeanUI extends AbstractBeanUI<PermissionBean> {
 		this.bean.removePropertyChangeListener(this.listener);
 	}
 	
-	private final Icon getCachedIcon(final Module module) {
-		if (this.iconCache == null) {
-			this.iconCache = new HashMap<Module, Icon>();
-		}
-		
-		Icon icon = this.iconCache.get(module);
-		if (icon == null) {
-			final String iconUrl = "com/syrus/AMFICOM/manager/resources/icons/" + module.getCodename() +".gif";
-			final URL resource = AbstractBeanFactory.class.getClassLoader().getResource(iconUrl);
-			if (resource != null) {
-				icon = new ImageIcon(resource);
-				this.iconCache.put(module, icon);
-			} else {
-				assert Log.debugMessage("PermissionBeanUI.getCachedIcon | " + iconUrl + " not found ",
-					Log.DEBUGLEVEL09);
-			}
-		}
-		return icon;
-	}	
-	
-	private final Icon getCachedImage(final Module module) {
-		if (this.imageCache == null) {
-			this.imageCache = new HashMap<Module, Icon>();
-		}
-		
-		Icon image = this.imageCache.get(module);
-		if (image == null) {
-			final String imageUrl = "com/syrus/AMFICOM/manager/resources/" + module.getCodename() +".gif";
-			final URL resource = AbstractBeanFactory.class.getClassLoader().getResource(imageUrl);
-			if (resource != null) {
-				image = new ImageIcon(resource);
-				this.imageCache.put(module, image);
-			} else {
-				assert Log.debugMessage("PermissionBeanUI.getCachedImage | " + imageUrl + " not found ",
-					Log.DEBUGLEVEL09);
-			}
-		}
-		return image;
-	}
-
 	@Override
 	public Icon getIcon(AbstractBeanFactory<PermissionBean> factory) {
-		return this.getCachedIcon(((PermissionBeanFactory)factory).getModule());
+		return UIManager.getIcon("com.syrus.AMFICOM.manager.resources.icons." + ((PermissionBeanFactory)factory).getModule().getCodename());
 	}
 	
 	@Override
 	public Icon getImage(final PermissionBean bean) {
-		return this.getCachedImage(bean.getPermissionAttributes().getModule());
+		return UIManager.getIcon("com.syrus.AMFICOM.manager.resources." + bean.getPermissionAttributes().getModule().getCodename());
 	}
 	
 	private class PermissionTableModel extends AbstractTableModel {

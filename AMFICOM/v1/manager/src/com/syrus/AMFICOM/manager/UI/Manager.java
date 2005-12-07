@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.20 2005/12/01 14:03:28 bob Exp $
+* $Id: Manager.java,v 1.21 2005/12/07 14:08:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,12 +28,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.resources.ResourceHandler;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/12/01 14:03:28 $
+ * @version $Revision: 1.21 $, $Date: 2005/12/07 14:08:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -50,7 +51,13 @@ public class Manager extends AbstractApplication {
 	@Override
 	protected void init() {
 		final ExtensionLauncher extensionLauncher = ExtensionLauncher.getInstance();
-		extensionLauncher.addExtensions("xml/manager.xml");	
+		extensionLauncher.addExtensions("xml/manager.xml");
+		
+		extensionLauncher.addExtensions("xml/resources.xml");
+		
+		extensionLauncher.getExtensionHandler(ResourceHandler.class.getName());
+		
+		
 		super.aContext.setApplicationModel(new ManagerModel(super.aContext));
 
 		

@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.28 2005/12/06 15:14:39 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.29 2005/12/07 14:08:02 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -75,7 +74,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.28 $, $Date: 2005/12/06 15:14:39 $
+ * @version $Revision: 1.29 $, $Date: 2005/12/07 14:08:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -327,7 +326,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			
 			gbc.weightx = 1.0;
 
-			final JToolBar createToolBar = createToolBar(frame);
+			final JToolBar createToolBar = createToolBar();
 			panel.add(createToolBar, gbc);
 			
 			gbc.weightx = 0.0;
@@ -473,20 +472,17 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		return perspectives;
 	}
 	
-	JToolBar createToolBar(final JComponent parent) {
+	JToolBar createToolBar() {
 		JToolBar graphToolBar = new JToolBar(SwingConstants.HORIZONTAL);
 		graphToolBar.setFloatable(false);
 		
 		{
 			// Toggle Connect Mode
-			URL connectUrl = getClass().getClassLoader().getResource(
-				"com/syrus/AMFICOM/manager/resources/icons/connecton.gif");
-			final ImageIcon connectonIcon = new ImageIcon(connectUrl);
+			final Icon connectonIcon = 
+				UIManager.getIcon("com.syrus.AMFICOM.manager.resources.action.connecton");
 			
-			connectUrl = getClass().getClassLoader().getResource(
-				"com/syrus/AMFICOM/manager/resources/icons/connectoff.gif");
-			
-			final ImageIcon connectoffIcon = new ImageIcon(connectUrl);
+			final Icon connectoffIcon = 
+				UIManager.getIcon("com.syrus.AMFICOM.manager.resources.action.connectoff");
 			
 			AbstractAction action = new AbstractAction("", connectonIcon) {
 				public void actionPerformed(ActionEvent e) {
@@ -504,9 +500,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		
 //		 Undo
 		graphToolBar.addSeparator();
-		URL undoUrl = getClass().getClassLoader().getResource(
-				"com/syrus/AMFICOM/manager/resources/icons/undo.gif");
-		ImageIcon undoIcon = new ImageIcon(undoUrl);
+		Icon undoIcon = UIManager.getIcon("com.syrus.AMFICOM.manager.resources.action.undo");
 		this.undo = new AbstractAction("", undoIcon) {
 			public void actionPerformed(ActionEvent e) {
 				undo();
@@ -517,9 +511,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 //		toolBar.add(this.undo);
 
 		// Redo
-		URL redoUrl = getClass().getClassLoader().getResource(
-				"com/syrus/AMFICOM/manager/resources/icons/redo.gif");
-		ImageIcon redoIcon = new ImageIcon(redoUrl);
+		Icon redoIcon = UIManager.getIcon("com.syrus.AMFICOM.manager.resources.action.redo");
 		this.redo = new AbstractAction("", redoIcon) {
 			public void actionPerformed(ActionEvent e) {
 				redo();
@@ -533,9 +525,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		// Edit Block
 		//
 		graphToolBar.addSeparator();
-		URL url;
 
-//		final JComponent component = parent;
 		final JComponent component = graph;
 		final InputMap imap = component.getInputMap();
 		final ActionMap map = component.getActionMap();
@@ -559,9 +549,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 				updateBufferButtons();
 			}
 		};
-		url = getClass().getClassLoader().getResource(
-				"org/jgraph/example/resources/paste.gif");
-		this.paste.putValue(Action.SMALL_ICON, new ImageIcon(url));
+		this.paste.putValue(Action.SMALL_ICON, UIManager.getIcon("org.jgraph.example.resources.action.paste"));
 		graphToolBar.add(this.paste);
 		this.paste.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Paste"));
 		
@@ -596,10 +584,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			}
 		};
 		
-		final ClassLoader classLoader = getClass().getClassLoader();
-		url = classLoader.getResource(
-				"org/jgraph/example/resources/cut.gif");
-		this.cut.putValue(Action.SMALL_ICON, new ImageIcon(url));
+		this.cut.putValue(Action.SMALL_ICON, UIManager.getIcon("org.jgraph.example.resources.action.cut"));
 		graphToolBar.add(this.cut);
 		this.cut.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Cut"));
 		this.cut.setEnabled(false);
@@ -611,10 +596,8 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 
 		
 		// Remove
-		URL removeUrl = getClass().getClassLoader().getResource(
-				"com/syrus/AMFICOM/manager/resources/icons/delete.gif");
-		ImageIcon removeIcon = new ImageIcon(removeUrl);
-		this.remove = new AbstractAction("", removeIcon) {
+		final Icon deleteIcon = UIManager.getIcon("org.jgraph.example.resources.action.delete");
+		this.remove = new AbstractAction("", deleteIcon) {
 			@SuppressWarnings("unchecked")
 			public void actionPerformed(ActionEvent e) {
 				if (!ManagerMainFrame.this.graph.isSelectionEmpty()) {
@@ -649,10 +632,8 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		{
 			// Zoom Std
 
-			URL zoomUrl = getClass().getClassLoader().getResource(
-					"com/syrus/AMFICOM/manager/resources/icons/zoom.gif");
-			ImageIcon zoomIcon = new ImageIcon(zoomUrl);
-			Action zoom = new AbstractAction("", zoomIcon) {
+			final Icon zoomIcon = UIManager.getIcon("org.jgraph.example.resources.action.zoom");
+			final Action zoom = new AbstractAction("", zoomIcon) {
 				
 				private static final long	serialVersionUID	= 1338961419658950016L;
 
@@ -667,10 +648,8 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		
 		{
 			// Zoom In
-			URL zoomInUrl = getClass().getClassLoader().getResource(
-					"com/syrus/AMFICOM/manager/resources/icons/zoomin.gif");
-			ImageIcon zoomInIcon = new ImageIcon(zoomInUrl);
-			AbstractAction zoomIn = new AbstractAction("", zoomInIcon) {
+			final Icon zoomInIcon = UIManager.getIcon("org.jgraph.example.resources.action.zoomin");
+			final AbstractAction zoomIn = new AbstractAction("", zoomInIcon) {
 				public void actionPerformed(ActionEvent e) {
 					ManagerMainFrame.this.graph.setScale(2.0 * ManagerMainFrame.this.graph.getScale());
 				}
@@ -681,10 +660,8 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		
 		{
 			// Zoom Out
-			URL zoomOutUrl = getClass().getClassLoader().getResource(
-					"com/syrus/AMFICOM/manager/resources/icons/zoomout.gif");
-			ImageIcon zoomOutIcon = new ImageIcon(zoomOutUrl);
-			AbstractAction zoomOut = new AbstractAction("", zoomOutIcon) {
+			final Icon zoomOutIcon = UIManager.getIcon("org.jgraph.example.resources.action.zoomout");
+			final AbstractAction zoomOut = new AbstractAction("", zoomOutIcon) {
 				public void actionPerformed(ActionEvent e) {
 					ManagerMainFrame.this.graph.setScale(ManagerMainFrame.this.graph.getScale() / 2.0);
 				}
@@ -698,7 +675,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		
 		{
 			
-			AbstractAction flush = new AbstractAction("", UIManager.getIcon(ResourceKeys.ICON_REFRESH)) {
+			final AbstractAction flush = new AbstractAction("", UIManager.getIcon(ResourceKeys.ICON_REFRESH)) {
 				
 				public void actionPerformed(ActionEvent e) {
 					ManagerMainFrame.this.getContext().getApplicationModel().getCommand(ManagerModel.FLUSH_COMMAND).execute();

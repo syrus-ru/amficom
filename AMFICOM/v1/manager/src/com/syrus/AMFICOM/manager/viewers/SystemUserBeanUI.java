@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserBeanUI.java,v 1.4 2005/11/17 09:00:35 bob Exp $
+* $Id: SystemUserBeanUI.java,v 1.5 2005/12/07 14:08:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.manager.beans.UserBeanWrapper;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/07 14:08:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -25,8 +25,7 @@ public class SystemUserBeanUI extends TableBeanUI<UserBean> {
 		super(managerMainFrame,
 			UserBeanWrapper.getInstance(),
 			UserBeanWrapper.getInstance().getKeys().toArray(new String[0]), 
-			"com/syrus/AMFICOM/manager/resources/icons/user.gif", 
-			"com/syrus/AMFICOM/manager/resources/user.gif");
+			"user");
 	}	
 }
 
