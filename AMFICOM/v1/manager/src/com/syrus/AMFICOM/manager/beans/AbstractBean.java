@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.2 2005/11/28 14:47:05 bob Exp $
+ * $Id: AbstractBean.java,v 1.3 2005/12/07 15:43:50 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,12 +24,11 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.manager.graph.MPort;
-import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/07 15:43:50 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphRoutines.java,v 1.10 2005/12/06 15:14:39 bob Exp $
+* $Id: GraphRoutines.java,v 1.11 2005/12/07 15:40:36 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -49,7 +49,6 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.manager.ManagerHandler;
-import com.syrus.AMFICOM.manager.UI.ManagerMainFrame.CellBuffer;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.beans.Bean;
 import com.syrus.AMFICOM.manager.graph.MPort;
@@ -62,7 +61,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/12/06 15:14:39 $
+ * @version $Revision: 1.11 $, $Date: 2005/12/07 15:40:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

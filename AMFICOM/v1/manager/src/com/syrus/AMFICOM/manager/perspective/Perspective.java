@@ -1,5 +1,5 @@
 /*-
-* $Id: Perspective.java,v 1.3 2005/12/05 14:41:22 bob Exp $
+* $Id: Perspective.java,v 1.4 2005/12/07 15:43:50 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,11 +22,10 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.AMFICOM.resource.LayoutItem;
-import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/05 14:41:22 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/07 15:43:50 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainsPerspective.java,v 1.4 2005/12/01 14:03:28 bob Exp $
+* $Id: DomainsPerspective.java,v 1.5 2005/12/07 15:43:50 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -42,7 +42,6 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.manager.UI.GraphRoutines;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.beans.DomainBean;
-import com.syrus.AMFICOM.manager.beans.NetBeanFactory;
 import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
@@ -50,7 +49,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/01 14:03:28 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/07 15:43:50 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

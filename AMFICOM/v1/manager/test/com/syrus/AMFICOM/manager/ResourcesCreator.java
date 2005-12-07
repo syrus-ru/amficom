@@ -1,5 +1,5 @@
 /*-
-* $Id: ResourcesCreator.java,v 1.1 2005/12/07 14:08:02 bob Exp $
+* $Id: ResourcesCreator.java,v 1.2 2005/12/07 15:43:50 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.manager;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -30,7 +29,7 @@ import com.syrus.AMFICOM.resources.ImageResourceHandler;
 import com.syrus.AMFICOM.resources.ResourceHandler;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/12/07 14:08:02 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/07 15:43:50 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

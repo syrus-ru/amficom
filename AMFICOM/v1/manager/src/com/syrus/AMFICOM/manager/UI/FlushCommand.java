@@ -1,5 +1,5 @@
 /*-
-* $Id: FlushCommand.java,v 1.8 2005/12/07 15:21:05 bob Exp $
+* $Id: FlushCommand.java,v 1.9 2005/12/07 15:40:36 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,12 +18,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.manager.UI.ManagerMainFrame.CellBuffer;
 import com.syrus.AMFICOM.manager.perspective.Perspective;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/12/07 15:21:05 $
+ * @version $Revision: 1.9 $, $Date: 2005/12/07 15:40:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

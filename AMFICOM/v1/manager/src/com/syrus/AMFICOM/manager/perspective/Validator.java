@@ -1,5 +1,5 @@
 /*-
-* $Id: Validator.java,v 1.2 2005/12/06 15:14:39 bob Exp $
+* $Id: Validator.java,v 1.3 2005/12/07 15:43:50 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,11 +8,8 @@
 
 package com.syrus.AMFICOM.manager.perspective;
 
-import com.syrus.AMFICOM.manager.beans.AbstractBean;
-
-
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/06 15:14:39 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/07 15:43:50 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
