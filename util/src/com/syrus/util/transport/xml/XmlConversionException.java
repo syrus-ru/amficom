@@ -1,17 +1,17 @@
 /*-
- * $Id: XmlConversionException.java,v 1.2 2005/12/07 16:38:25 bass Exp $
+ * $Id: XmlConversionException.java,v 1.1 2005/12/07 17:15:29 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.util;
+package com.syrus.util.transport.xml;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/12/07 16:38:25 $
+ * @version $Revision: 1.1 $, $Date: 2005/12/07 17:15:29 $
  * @module util
  */
 public final class XmlConversionException extends Exception {
