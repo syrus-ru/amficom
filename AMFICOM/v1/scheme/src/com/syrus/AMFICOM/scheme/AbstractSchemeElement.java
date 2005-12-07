@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.75 2005/12/07 16:41:54 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.76 2005/12/07 17:17:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemeElement;
 import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemeElement;
 import com.syrus.util.Log;
-import com.syrus.util.XmlConversionException;
+import com.syrus.util.transport.xml.XmlConversionException;
 
 /**
  * This class is never used directly, it was provided just in order for source
@@ -48,7 +48,7 @@ import com.syrus.util.XmlConversionException;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/12/07 16:41:54 $
+ * @version $Revision: 1.76 $, $Date: 2005/12/07 17:17:21 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement<T extends AbstractSchemeElement<T>>

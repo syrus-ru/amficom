@@ -1,5 +1,5 @@
 /*-
- * $Id: EventProcessingException.java,v 1.3 2005/12/06 09:43:07 bass Exp $
+ * $Id: EventProcessingException.java,v 1.4 2005/12/07 17:17:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,12 @@ package com.syrus.AMFICOM.leserver;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
-import com.syrus.util.IdlTransferableObject;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/12/06 09:43:07 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/07 17:17:21 $
  * @module leserver
  */
 final class EventProcessingException extends Exception

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.64 2005/12/07 16:41:50 bass Exp $
+ * $Id: CharacteristicType.java,v 1.65 2005/12/07 17:16:24 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,11 +29,11 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicType;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
-import com.syrus.util.XmlConversionException;
-import com.syrus.util.XmlTransferableObject;
+import com.syrus.util.transport.xml.XmlConversionException;
+import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/12/07 16:41:50 $
+ * @version $Revision: 1.65 $, $Date: 2005/12/07 17:16:24 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -291,7 +291,7 @@ public final class CharacteristicType
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlCharacteristicType characteristicType,

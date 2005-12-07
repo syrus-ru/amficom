@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.37 2005/12/07 16:41:54 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.38 2005/12/07 17:17:20 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,15 +43,15 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoRtu;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoRtuHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfoRtu;
 import com.syrus.util.Log;
-import com.syrus.util.XmlConversionException;
-import com.syrus.util.XmlTransferableObject;
+import com.syrus.util.transport.xml.XmlConversionException;
+import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * #07 in hierarchy.
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/12/07 16:41:54 $
+ * @version $Revision: 1.38 $, $Date: 2005/12/07 17:17:20 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu
@@ -205,7 +205,7 @@ public final class SchemeOptimizeInfoRtu
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlSchemeOptimizeInfoRtu getIdlTransferable(final ORB orb) {
@@ -227,7 +227,7 @@ public final class SchemeOptimizeInfoRtu
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeOptimizeInfoRtu schemeOptimizeInfoRtu,

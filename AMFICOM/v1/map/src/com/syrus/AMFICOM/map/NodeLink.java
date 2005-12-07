@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.114 2005/12/07 16:41:51 bass Exp $
+ * $Id: NodeLink.java,v 1.115 2005/12/07 17:17:18 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSo
 import com.syrus.AMFICOM.map.xml.XmlNodeLink;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
-import com.syrus.util.XmlConversionException;
-import com.syrus.util.XmlTransferableObject;
+import com.syrus.util.transport.xml.XmlConversionException;
+import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * Фрагмент линии на топологической схеме. Фрагмент представляет собой линейный
@@ -51,7 +51,7 @@ import com.syrus.util.XmlTransferableObject;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.114 $, $Date: 2005/12/07 16:41:51 $
+ * @version $Revision: 1.115 $, $Date: 2005/12/07 17:17:18 $
  * @module map
  */
 public final class NodeLink extends StorableObject<NodeLink>
@@ -152,7 +152,7 @@ public final class NodeLink extends StorableObject<NodeLink>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlNodeLink getIdlTransferable(final ORB orb) {
@@ -440,7 +440,7 @@ public final class NodeLink extends StorableObject<NodeLink>
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlNodeLink nodeLink,
 			final String importType,

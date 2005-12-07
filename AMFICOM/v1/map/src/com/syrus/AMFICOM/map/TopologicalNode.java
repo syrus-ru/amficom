@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.94 2005/12/07 16:41:51 bass Exp $
+ * $Id: TopologicalNode.java,v 1.95 2005/12/07 17:17:18 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
 import com.syrus.AMFICOM.map.xml.XmlTopologicalNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
-import com.syrus.util.XmlConversionException;
-import com.syrus.util.XmlTransferableObject;
+import com.syrus.util.transport.xml.XmlConversionException;
+import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * Топологический узел нв топологической схеме. Топологический узел может
@@ -47,7 +47,7 @@ import com.syrus.util.XmlTransferableObject;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: bass $
- * @version $Revision: 1.94 $, $Date: 2005/12/07 16:41:51 $
+ * @version $Revision: 1.95 $, $Date: 2005/12/07 17:17:18 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode<TopologicalNode>
@@ -143,7 +143,7 @@ public final class TopologicalNode extends AbstractNode<TopologicalNode>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlTopologicalNode getIdlTransferable(final ORB orb) {
@@ -270,7 +270,7 @@ public final class TopologicalNode extends AbstractNode<TopologicalNode>
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlTopologicalNode topologicalNode,

@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.179 2005/12/06 09:45:11 bass Exp $
+ * $Id: Test.java,v 1.180 2005/12/07 17:17:16 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -43,10 +43,10 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPacka
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
-import com.syrus.util.IdlTransferableObject;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.179 $, $Date: 2005/12/06 09:45:11 $
+ * @version $Revision: 1.180 $, $Date: 2005/12/07 17:17:16 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -334,7 +334,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlTest getIdlTransferable(final ORB orb) {
@@ -682,7 +682,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 
 		/**
 		 * @param orb
-		 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+		 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 		 */
 		public IdlTestTimeStamps getIdlTransferable(final ORB orb) {
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;

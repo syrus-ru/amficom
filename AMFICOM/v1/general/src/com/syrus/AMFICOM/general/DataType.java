@@ -1,5 +1,5 @@
 /*-
- * $Id: DataType.java,v 1.15 2005/12/06 11:24:46 bass Exp $
+ * $Id: DataType.java,v 1.16 2005/12/07 17:16:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,10 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.corba.IdlDataType;
 import com.syrus.util.Codeable;
 import com.syrus.util.Log;
-import com.syrus.util.IdlTransferableObject;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/12/06 11:24:46 $
+ * @version $Revision: 1.16 $, $Date: 2005/12/07 17:16:24 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general

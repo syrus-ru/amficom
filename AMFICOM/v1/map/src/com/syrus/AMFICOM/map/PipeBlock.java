@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlock.java,v 1.14 2005/12/07 16:41:51 bass Exp $
+ * $Id: PipeBlock.java,v 1.15 2005/12/07 17:17:18 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.map.corba.IdlPipeBlockHelper;
 import com.syrus.AMFICOM.map.xml.XmlPipeBlock;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
-import com.syrus.util.XmlConversionException;
-import com.syrus.util.XmlTransferableObject;
+import com.syrus.util.transport.xml.XmlConversionException;
+import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * Объект привязки кабелей к тоннелю. Принадлежит определенному тоннелю.
@@ -48,7 +48,7 @@ import com.syrus.util.XmlTransferableObject;
  * и матрицу пролегания кабелей по трубам тоннеля.
  *
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/12/07 16:41:51 $
+ * @version $Revision: 1.15 $, $Date: 2005/12/07 17:17:18 $
  * @module map
  */
 public final class PipeBlock 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.115 2005/12/07 16:41:54 bass Exp $
+ * $Id: SchemeDevice.java,v 1.116 2005/12/07 17:17:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,14 +71,14 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeDevice;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemePort;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemePortSeq;
 import com.syrus.util.Log;
-import com.syrus.util.XmlConversionException;
-import com.syrus.util.XmlTransferableObject;
+import com.syrus.util.transport.xml.XmlConversionException;
+import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.115 $, $Date: 2005/12/07 16:41:54 $
+ * @version $Revision: 1.116 $, $Date: 2005/12/07 17:17:20 $
  * @module scheme
  */
 public final class SchemeDevice
@@ -487,7 +487,7 @@ public final class SchemeDevice
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlSchemeDevice getIdlTransferable(final ORB orb) {
@@ -509,7 +509,7 @@ public final class SchemeDevice
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeDevice schemeDevice,

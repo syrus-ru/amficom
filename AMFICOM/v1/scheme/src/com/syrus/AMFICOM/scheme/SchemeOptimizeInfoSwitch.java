@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitch.java,v 1.37 2005/12/07 16:41:54 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitch.java,v 1.38 2005/12/07 17:17:20 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,15 +43,15 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoSwitch;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoSwitchHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfoSwitch;
 import com.syrus.util.Log;
-import com.syrus.util.XmlConversionException;
-import com.syrus.util.XmlTransferableObject;
+import com.syrus.util.transport.xml.XmlConversionException;
+import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * #06 in hierarchy.
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/12/07 16:41:54 $
+ * @version $Revision: 1.38 $, $Date: 2005/12/07 17:17:20 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitch
@@ -205,7 +205,7 @@ public final class SchemeOptimizeInfoSwitch
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlSchemeOptimizeInfoSwitch getIdlTransferable(final ORB orb) {
@@ -227,7 +227,7 @@ public final class SchemeOptimizeInfoSwitch
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch,

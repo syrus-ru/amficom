@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.76 2005/12/06 09:41:25 bass Exp $
+ * $Id: Link.java,v 1.77 2005/12/07 17:16:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.76 $, $Date: 2005/12/06 09:41:25 $
+ * @version $Revision: 1.77 $, $Date: 2005/12/07 17:16:25 $
  * @module config
  */
 public final class Link extends AbstractLink<Link> {
@@ -138,7 +138,7 @@ public final class Link extends AbstractLink<Link> {
 	}
 
 	/**
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
 	 */
 	@Override
 	public IdlLink getIdlTransferable(final ORB orb) {

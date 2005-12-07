@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigExportCommand.java,v 1.8 2005/12/07 16:42:24 bass Exp $
+ * $Id: ConfigExportCommand.java,v 1.9 2005/12/07 17:17:36 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.util.Log;
-import com.syrus.util.XmlConversionException;
+import com.syrus.util.transport.xml.XmlConversionException;
 
 public class ConfigExportCommand extends ImportExportCommand {
 	SchemeTabbedPane pane;

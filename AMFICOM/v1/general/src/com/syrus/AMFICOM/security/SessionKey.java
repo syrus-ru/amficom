@@ -1,5 +1,5 @@
 /*
- * $Id: SessionKey.java,v 1.13 2005/12/06 09:42:52 bass Exp $
+ * $Id: SessionKey.java,v 1.14 2005/12/07 17:16:24 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,10 +10,10 @@ package com.syrus.AMFICOM.security;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
-import com.syrus.util.IdlTransferableObject;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/12/06 09:42:52 $
+ * @version $Revision: 1.14 $, $Date: 2005/12/07 17:16:24 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -37,7 +37,7 @@ public final class SessionKey implements IdlTransferableObject<IdlSessionKey> {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	public IdlSessionKey getIdlTransferable(final ORB orb) {
 		return this.getIdlTransferable();

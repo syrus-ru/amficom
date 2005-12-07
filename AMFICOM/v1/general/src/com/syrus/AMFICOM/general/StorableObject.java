@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.132 2005/12/07 16:40:31 bass Exp $
+ * $Id: StorableObject.java,v 1.133 2005/12/07 17:16:24 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,11 +33,11 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
-import com.syrus.util.IdlTransferableObject;
 import com.syrus.util.Wrapper;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.132 $, $Date: 2005/12/07 16:40:31 $
+ * @version $Revision: 1.133 $, $Date: 2005/12/07 17:16:24 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -178,7 +178,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	public IdlStorableObject getIdlTransferable(final ORB orb) {
 		return IdlStorableObjectHelper.init(orb,
@@ -672,7 +672,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.132 $, $Date: 2005/12/07 16:40:31 $
+	 * @version $Revision: 1.133 $, $Date: 2005/12/07 17:16:24 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -797,7 +797,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.132 $, $Date: 2005/12/07 16:40:31 $
+	 * @version $Revision: 1.133 $, $Date: 2005/12/07 17:16:24 $
 	 * @module general
 	 */
 	@Retention(SOURCE)

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.49 2005/12/07 16:41:54 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.50 2005/12/07 17:17:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemeLink;
 import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemeLink;
 import com.syrus.util.Log;
-import com.syrus.util.XmlConversionException;
+import com.syrus.util.transport.xml.XmlConversionException;
 
 /**
  * This class is never used directly, it was provided just in order for source
@@ -48,7 +48,7 @@ import com.syrus.util.XmlConversionException;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/12/07 16:41:54 $
+ * @version $Revision: 1.50 $, $Date: 2005/12/07 17:17:20 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.16 2005/12/06 09:41:25 bass Exp $
+ * $Id: CableLink.java,v 1.17 2005/12/07 17:16:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/12/06 09:41:25 $
+ * @version $Revision: 1.17 $, $Date: 2005/12/07 17:16:25 $
  * @module config
  */
 public final class CableLink extends AbstractLink<CableLink> {
@@ -140,7 +140,7 @@ public final class CableLink extends AbstractLink<CableLink> {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlCableLink getIdlTransferable(final ORB orb) {

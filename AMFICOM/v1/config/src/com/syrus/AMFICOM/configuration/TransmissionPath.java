@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.103 2005/12/06 09:41:25 bass Exp $
+ * $Id: TransmissionPath.java,v 1.104 2005/12/07 17:16:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.103 $, $Date: 2005/12/06 09:41:25 $
+ * @version $Revision: 1.104 $, $Date: 2005/12/07 17:16:25 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -140,7 +140,7 @@ public final class TransmissionPath extends DomainMember<TransmissionPath>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlTransmissionPath getIdlTransferable(final ORB orb) {

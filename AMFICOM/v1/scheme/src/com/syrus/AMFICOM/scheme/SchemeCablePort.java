@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.83 2005/12/07 16:41:54 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.84 2005/12/07 17:17:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,14 +55,14 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeCablePortHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCablePort;
 import com.syrus.util.Log;
-import com.syrus.util.XmlConversionException;
-import com.syrus.util.XmlTransferableObject;
+import com.syrus.util.transport.xml.XmlConversionException;
+import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.83 $, $Date: 2005/12/07 16:41:54 $
+ * @version $Revision: 1.84 $, $Date: 2005/12/07 17:17:20 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort<SchemeCablePort>
@@ -293,7 +293,7 @@ public final class SchemeCablePort extends AbstractSchemePort<SchemeCablePort>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlSchemeCablePort getIdlTransferable(final ORB orb) {
@@ -318,7 +318,7 @@ public final class SchemeCablePort extends AbstractSchemePort<SchemeCablePort>
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeCablePort schemeCablePort,

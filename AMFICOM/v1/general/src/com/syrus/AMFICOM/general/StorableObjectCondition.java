@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectCondition.java,v 1.23 2005/12/06 09:42:52 bass Exp $
+ * $Id: StorableObjectCondition.java,v 1.24 2005/12/07 17:16:24 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,11 +12,11 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
-import com.syrus.util.IdlTransferableObject;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/12/06 09:42:52 $
+ * @version $Revision: 1.24 $, $Date: 2005/12/07 17:16:24 $
  * @author $Author: bass $
  * @module general
  */
@@ -49,7 +49,7 @@ public interface StorableObjectCondition
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	IdlStorableObjectCondition getIdlTransferable(final ORB orb);
 

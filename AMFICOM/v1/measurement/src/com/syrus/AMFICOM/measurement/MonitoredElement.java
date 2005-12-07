@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.10 2005/12/06 09:45:11 bass Exp $
+ * $Id: MonitoredElement.java,v 1.11 2005/12/07 17:17:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/12/06 09:45:11 $
+ * @version $Revision: 1.11 $, $Date: 2005/12/07 17:17:16 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -139,7 +139,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlMonitoredElement getIdlTransferable(final ORB orb) {

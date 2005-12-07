@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.94 2005/12/07 16:41:51 bass Exp $
+ * $Id: LinkType.java,v 1.95 2005/12/07 17:16:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,11 +42,11 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
-import com.syrus.util.XmlConversionException;
-import com.syrus.util.XmlTransferableObject;
+import com.syrus.util.transport.xml.XmlConversionException;
+import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/12/07 16:41:51 $
+ * @version $Revision: 1.95 $, $Date: 2005/12/07 17:16:25 $
  * @author $Author: bass $
  * @module config
  */
@@ -299,7 +299,7 @@ public final class LinkType extends AbstractLinkType<LinkType> implements XmlTra
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlLinkType getIdlTransferable(final ORB orb) {
@@ -323,7 +323,7 @@ public final class LinkType extends AbstractLinkType<LinkType> implements XmlTra
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	@Shitlet
 	public void getXmlTransferable(final XmlLinkType linkType,

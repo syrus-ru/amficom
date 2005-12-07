@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.7 2005/12/06 09:42:28 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.8 2005/12/07 17:16:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/12/06 09:42:28 $
+ * @version $Revision: 1.8 $, $Date: 2005/12/07 17:16:25 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -176,7 +176,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
 	 */
 	public IdlLineMismatchEvent getIdlTransferable(final ORB orb) {
 		final IdlMismatchData mismatchData = new IdlMismatchData();

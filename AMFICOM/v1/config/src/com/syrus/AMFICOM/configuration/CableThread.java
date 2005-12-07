@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.46 2005/12/06 09:41:25 bass Exp $
+ * $Id: CableThread.java,v 1.47 2005/12/07 17:16:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/12/06 09:41:25 $
+ * @version $Revision: 1.47 $, $Date: 2005/12/07 17:16:25 $
  * @author $Author: bass $
  * @module config
  */
@@ -110,7 +110,7 @@ public final class CableThread extends DomainMember<CableThread>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlCableThread getIdlTransferable(final ORB orb) {

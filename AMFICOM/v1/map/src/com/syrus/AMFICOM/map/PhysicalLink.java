@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.149 2005/12/07 16:41:51 bass Exp $
+ * $Id: PhysicalLink.java,v 1.150 2005/12/07 17:17:18 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,8 +65,8 @@ import com.syrus.AMFICOM.map.xml.XmlPipeBlock;
 import com.syrus.AMFICOM.map.xml.XmlPipeBlockSeq;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
-import com.syrus.util.XmlConversionException;
-import com.syrus.util.XmlTransferableObject;
+import com.syrus.util.transport.xml.XmlConversionException;
+import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * Линия топологический схемы. Линия имеет начальный и конечный узлы,
@@ -77,7 +77,7 @@ import com.syrus.util.XmlTransferableObject;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.149 $, $Date: 2005/12/07 16:41:51 $
+ * @version $Revision: 1.150 $, $Date: 2005/12/07 17:17:18 $
  * @module map
  */
 public class PhysicalLink extends StorableObject<PhysicalLink>
@@ -320,7 +320,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlPhysicalLink getIdlTransferable(final ORB orb) {
@@ -867,7 +867,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public final void getXmlTransferable(
 			final XmlPhysicalLink physicalLink,

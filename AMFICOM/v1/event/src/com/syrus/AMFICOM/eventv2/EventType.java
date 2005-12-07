@@ -1,5 +1,5 @@
 /*-
- * $Id: EventType.java,v 1.3 2005/12/06 09:42:28 bass Exp $
+ * $Id: EventType.java,v 1.4 2005/12/07 17:16:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,13 +12,13 @@ import org.omg.CORBA.BAD_PARAM;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlEventPackage.IdlEventType;
-import com.syrus.util.IdlTransferableObject;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/12/06 09:42:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/07 17:16:25 $
  * @module event
  */
 public enum EventType implements IdlTransferableObject<IdlEventType> {

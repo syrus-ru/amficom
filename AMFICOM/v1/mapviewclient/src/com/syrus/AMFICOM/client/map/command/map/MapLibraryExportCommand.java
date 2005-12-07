@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryExportCommand.java,v 1.20 2005/12/07 16:42:24 bass Exp $$
+ * $$Id: MapLibraryExportCommand.java,v 1.21 2005/12/07 17:17:15 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.xml.MapLibraryDocument;
 import com.syrus.util.Log;
-import com.syrus.util.XmlConversionException;
+import com.syrus.util.transport.xml.XmlConversionException;
 
 /**
  * Класс $RCSfile: MapLibraryExportCommand.java,v $ используется для закрытия карты при
@@ -52,7 +52,7 @@ import com.syrus.util.XmlConversionException;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @version $Revision: 1.20 $, $Date: 2005/12/07 16:42:24 $
+ * @version $Revision: 1.21 $, $Date: 2005/12/07 17:17:15 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient

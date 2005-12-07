@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoElementsExportCommand.java,v 1.6 2005/12/07 16:42:24 bass Exp $
+ * $Id: ProtoElementsExportCommand.java,v 1.7 2005/12/07 17:17:36 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.scheme.xml.SchemeProtoGroupsDocument;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroupSeq;
 import com.syrus.util.Log;
-import com.syrus.util.XmlConversionException;
+import com.syrus.util.transport.xml.XmlConversionException;
 
 public class ProtoElementsExportCommand extends ImportExportCommand {
 	SchemeTabbedPane pane;

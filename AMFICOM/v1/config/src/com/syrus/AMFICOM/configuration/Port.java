@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.106 2005/12/06 09:41:25 bass Exp $
+ * $Id: Port.java,v 1.107 2005/12/07 17:16:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.106 $, $Date: 2005/12/06 09:41:25 $
+ * @version $Revision: 1.107 $, $Date: 2005/12/07 17:16:25 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -128,7 +128,7 @@ public final class Port extends StorableObject<Port>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlPort getIdlTransferable(final ORB orb) {

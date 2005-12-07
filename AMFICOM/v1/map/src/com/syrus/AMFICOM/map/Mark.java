@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.69 2005/12/06 09:43:34 bass Exp $
+ * $Id: Mark.java,v 1.70 2005/12/07 17:17:18 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bass $
- * @version $Revision: 1.69 $, $Date: 2005/12/06 09:43:34 $
+ * @version $Revision: 1.70 $, $Date: 2005/12/07 17:17:18 $
  * @module map
  */
 public final class Mark extends AbstractNode<Mark> {
@@ -151,7 +151,7 @@ public final class Mark extends AbstractNode<Mark> {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlMark getIdlTransferable(final ORB orb) {

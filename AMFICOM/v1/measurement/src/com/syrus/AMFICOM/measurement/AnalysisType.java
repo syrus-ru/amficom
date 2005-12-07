@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisType.java,v 1.106 2005/12/06 09:45:11 bass Exp $
+ * $Id: AnalysisType.java,v 1.107 2005/12/07 17:17:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,10 +17,10 @@ import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.util.Log;
-import com.syrus.util.IdlTransferableObject;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.106 $, $Date: 2005/12/06 09:45:11 $
+ * @version $Revision: 1.107 $, $Date: 2005/12/07 17:17:16 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement

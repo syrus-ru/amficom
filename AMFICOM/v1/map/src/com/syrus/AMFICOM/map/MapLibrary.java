@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.41 2005/12/07 16:41:51 bass Exp $
+ * $Id: MapLibrary.java,v 1.42 2005/12/07 17:17:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,12 +56,12 @@ import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkTypeSeq;
 import com.syrus.AMFICOM.map.xml.XmlSiteNodeType;
 import com.syrus.AMFICOM.map.xml.XmlSiteNodeTypeSeq;
 import com.syrus.util.Log;
-import com.syrus.util.XmlConversionException;
-import com.syrus.util.XmlTransferableObject;
+import com.syrus.util.transport.xml.XmlConversionException;
+import com.syrus.util.transport.xml.XmlTransferableObject;
 
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/12/07 16:41:51 $
+ * @version $Revision: 1.42 $, $Date: 2005/12/07 17:17:18 $
  * @author $Author: bass $
  * @module map
  */
@@ -311,7 +311,7 @@ public final class MapLibrary extends StorableObject<MapLibrary>
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlMapLibrary mapLibrary,
 			final String importType,

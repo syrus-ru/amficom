@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.36 2005/12/06 09:41:12 bass Exp $
+* $Id: PermissionAttributes.java,v 1.37 2005/12/07 17:16:26 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,12 +33,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.util.IdlTransferableObject;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/12/06 09:41:12 $
+ * @version $Revision: 1.37 $, $Date: 2005/12/07 17:16:26 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration

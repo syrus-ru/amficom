@@ -1,5 +1,5 @@
 /*-
- * $Id: LayerDescriptor.java,v 1.4 2005/12/06 09:43:34 bass Exp $
+ * $Id: LayerDescriptor.java,v 1.5 2005/12/07 17:17:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,12 @@ package com.syrus.AMFICOM.map;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.map.corba.IdlLayerDescriptor;
-import com.syrus.util.IdlTransferableObject;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
  * @author Maxim Selivanov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/12/06 09:43:34 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/07 17:17:18 $
  * @module map
  */
 public class LayerDescriptor implements MapFileDescriptor,

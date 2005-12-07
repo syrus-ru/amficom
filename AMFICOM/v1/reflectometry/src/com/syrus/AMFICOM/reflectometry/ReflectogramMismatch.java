@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.18 2005/12/06 09:46:06 bass Exp $
+ * $Id: ReflectogramMismatch.java,v 1.19 2005/12/07 17:17:17 bass Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.reflectometry.corba.IdlAlarmType;
 import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
-import com.syrus.util.IdlTransferableObject;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
  * Описание несоответствия рефлектограммы эталону.
@@ -69,7 +69,7 @@ import com.syrus.util.IdlTransferableObject;
  * 
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/12/06 09:46:06 $
+ * @version $Revision: 1.19 $, $Date: 2005/12/07 17:17:17 $
  * @module reflectometry
  */
 public interface ReflectogramMismatch {
@@ -81,7 +81,7 @@ public interface ReflectogramMismatch {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.18 $, $Date: 2005/12/06 09:46:06 $
+	 * @version $Revision: 1.19 $, $Date: 2005/12/07 17:17:17 $
 	 * @module reflectometry
 	 */
 	enum Severity implements IdlTransferableObject<IdlSeverity> {
@@ -143,7 +143,7 @@ public interface ReflectogramMismatch {
 	 * Тип отклонения.
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.18 $, $Date: 2005/12/06 09:46:06 $
+	 * @version $Revision: 1.19 $, $Date: 2005/12/07 17:17:17 $
 	 * @module reflectometry
 	 */
 	enum AlarmType implements IdlTransferableObject<IdlAlarmType> {

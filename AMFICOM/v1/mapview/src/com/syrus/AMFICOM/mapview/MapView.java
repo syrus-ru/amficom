@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.77 2005/12/06 09:45:30 bass Exp $
+* $Id: MapView.java,v 1.78 2005/12/07 17:17:16 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * @author $Author: bass $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.77 $, $Date: 2005/12/06 09:45:30 $
+ * @version $Revision: 1.78 $, $Date: 2005/12/07 17:17:16 $
  * @module mapview
  */
 public final class MapView extends DomainMember<MapView> implements Describable {
@@ -228,7 +228,7 @@ public final class MapView extends DomainMember<MapView> implements Describable 
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlMapView getIdlTransferable(final ORB orb) {

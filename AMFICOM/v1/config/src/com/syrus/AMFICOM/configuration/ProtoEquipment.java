@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.22 2005/12/07 16:41:51 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.23 2005/12/07 17:16:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,11 +48,11 @@ import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Shitlet;
-import com.syrus.util.XmlConversionException;
-import com.syrus.util.XmlTransferableObject;
+import com.syrus.util.transport.xml.XmlConversionException;
+import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/12/07 16:41:51 $
+ * @version $Revision: 1.23 $, $Date: 2005/12/07 17:16:25 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -246,7 +246,7 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 	}
 
 	/**
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 * @param orb
 	 */
 	@Override
@@ -269,7 +269,7 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlProtoEquipment protoEquipment,
 			final String importType,

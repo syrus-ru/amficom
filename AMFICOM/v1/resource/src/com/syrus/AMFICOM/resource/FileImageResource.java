@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.35 2005/12/06 09:44:56 bass Exp $
+ * $Id: FileImageResource.java,v 1.36 2005/12/07 17:17:16 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/12/06 09:44:56 $
+ * @version $Revision: 1.36 $, $Date: 2005/12/07 17:17:16 $
  * @module resource
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
@@ -108,7 +108,7 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlImageResource getIdlTransferable(final ORB orb) {

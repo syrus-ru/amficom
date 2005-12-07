@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.12 2005/12/06 09:45:11 bass Exp $
+ * $Id: KIS.java,v 1.13 2005/12/07 17:17:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlKISHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/12/06 09:45:11 $
+ * @version $Revision: 1.13 $, $Date: 2005/12/07 17:17:16 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -145,7 +145,7 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlKIS getIdlTransferable(final ORB orb) {

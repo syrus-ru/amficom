@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.88 2005/12/07 16:41:54 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.89 2005/12/07 17:17:20 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,11 +55,11 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemePort;
 import com.syrus.util.Log;
-import com.syrus.util.XmlConversionException;
+import com.syrus.util.transport.xml.XmlConversionException;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.88 $, $Date: 2005/12/07 16:41:54 $
+ * @version $Revision: 1.89 $, $Date: 2005/12/07 17:17:20 $
  * @module scheme
  */
 public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>

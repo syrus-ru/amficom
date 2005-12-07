@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalImageQuery.java,v 1.16 2005/12/06 09:43:34 bass Exp $
+ * $Id: TopologicalImageQuery.java,v 1.17 2005/12/07 17:17:18 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,13 +16,13 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
 import com.syrus.AMFICOM.resource.DoublePoint;
-import com.syrus.util.IdlTransferableObject;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
  * Класс-запрос для обращения к серверу топографических данных через пул
  * 
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/12/06 09:43:34 $
+ * @version $Revision: 1.17 $, $Date: 2005/12/07 17:17:18 $
  * @module mapinfo
  */
 public final class TopologicalImageQuery

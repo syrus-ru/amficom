@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.119 2005/12/07 16:41:51 bass Exp $
+ * $Id: SiteNode.java,v 1.120 2005/12/07 17:17:18 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,8 +51,8 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
 import com.syrus.AMFICOM.map.xml.XmlSiteNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
-import com.syrus.util.XmlConversionException;
-import com.syrus.util.XmlTransferableObject;
+import com.syrus.util.transport.xml.XmlConversionException;
+import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * Сетевой узел на топологической схеме. Характеризуется типом
@@ -67,7 +67,7 @@ import com.syrus.util.XmlTransferableObject;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.119 $, $Date: 2005/12/07 16:41:51 $
+ * @version $Revision: 1.120 $, $Date: 2005/12/07 17:17:18 $
  * @module map
  */
 public class SiteNode extends AbstractNode<SiteNode>
@@ -206,7 +206,7 @@ public class SiteNode extends AbstractNode<SiteNode>
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlSiteNode getIdlTransferable(final ORB orb) {
@@ -366,7 +366,7 @@ public class SiteNode extends AbstractNode<SiteNode>
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public final void getXmlTransferable(final XmlSiteNode siteNode,
 			final String importType,

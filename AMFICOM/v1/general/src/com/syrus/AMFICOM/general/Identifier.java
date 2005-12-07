@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.91 2005/12/06 09:42:52 bass Exp $
+ * $Id: Identifier.java,v 1.92 2005/12/07 17:16:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.util.IdlTransferableObject;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
  * <code>Identifier</code>s, alike {@link String}s, are immutable. Hence, when
@@ -32,7 +32,7 @@ import com.syrus.util.IdlTransferableObject;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.91 $, $Date: 2005/12/06 09:42:52 $
+ * @version $Revision: 1.92 $, $Date: 2005/12/07 17:16:24 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -137,7 +137,7 @@ public final class Identifier implements Comparable<Identifier>,
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	public IdlIdentifier getIdlTransferable(@SuppressWarnings("unused") final ORB orb) {
 		return this.getIdlTransferable();
