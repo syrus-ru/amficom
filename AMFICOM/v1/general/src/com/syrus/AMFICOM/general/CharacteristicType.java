@@ -1,9 +1,9 @@
-/*
- * $Id: CharacteristicType.java,v 1.65 2005/12/07 17:16:24 bass Exp $
+/*-
+ * $Id: CharacteristicType.java,v 1.66 2005/12/07 19:21:50 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.general;
@@ -33,7 +33,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/12/07 17:16:24 $
+ * @version $Revision: 1.66 $, $Date: 2005/12/07 19:21:50 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -46,7 +46,7 @@ public final class CharacteristicType
 
 	private String name;
 	private DataType dataType;
-	private CharacteristicTypeSort sort;
+	private final CharacteristicTypeSort.Proxy sort = new CharacteristicTypeSort.Proxy();
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -76,7 +76,7 @@ public final class CharacteristicType
 				description);
 		this.name = name;
 		this.dataType = dataType;
-		this.sort = sort;
+		this.sort.setValue(sort);
 	}
 
 	/**
@@ -110,7 +110,7 @@ public final class CharacteristicType
 		}
 		this.name = ctt.name;
 		this.dataType = DataType.fromTransferable(ctt.dataType);
-		this.sort = CharacteristicTypeSort.valueOf(ctt.sort);
+		this.sort.fromIdlTransferable(ctt.sort);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -331,11 +331,11 @@ public final class CharacteristicType
 	}
 
 	public CharacteristicTypeSort getSort() {
-		return this.sort;
+		return this.sort.getValue();
 	}
 
 	private void setSort0(final CharacteristicTypeSort sort) {
-		this.sort = sort;
+		this.sort.setValue(sort);
 	}
 	
 	/**
@@ -366,7 +366,7 @@ public final class CharacteristicType
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 		this.name = name;
 		this.dataType = dataType;
-		this.sort = sort;
+		this.sort.setValue(sort);
 	}
 
 	@Override
