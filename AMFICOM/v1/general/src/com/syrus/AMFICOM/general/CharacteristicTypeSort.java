@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicTypeSort.java,v 1.3 2005/12/07 19:22:41 bass Exp $
+ * $Id: CharacteristicTypeSort.java,v 1.4 2005/12/07 19:58:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicTypeSort;
-import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
@@ -21,7 +20,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/12/07 19:22:41 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/07 19:58:56 $
  * @module general
  */
 public enum CharacteristicTypeSort {
@@ -64,7 +63,7 @@ public enum CharacteristicTypeSort {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.3 $, $Date: 2005/12/07 19:22:41 $
+	 * @version $Revision: 1.4 $, $Date: 2005/12/07 19:58:56 $
 	 * @module general
 	 */
 	public static final class Proxy
@@ -95,7 +94,7 @@ public enum CharacteristicTypeSort {
 
 		/**
 		 * @param orb
-		 * @see IdlTransferableObject#getIdlTransferable(ORB)
+		 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
 		 */
 		public IdlCharacteristicTypeSort getIdlTransferable(final ORB orb) {
 			return IdlCharacteristicTypeSort.from_int(this.value.ordinal());
