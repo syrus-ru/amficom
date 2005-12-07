@@ -28,7 +28,7 @@ cmserver_interface \
 mscharserver_interface \
 util
 
-EXTCLASSPATH := $(EXTLIBDIR)/kunststoff.jar:$(TROVE4JCLASSPATH)
+EXTCLASSPATH := $(EXTLIBDIR)/kunststoff.jar:$(TROVE4JCLASSPATH):$(XMLBEANSCLASSPATH)
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
 

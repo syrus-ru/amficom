@@ -24,7 +24,7 @@ csbridge \
 commonclient \
 filterclient
 
-EXTCLASSPATH := $(TROVE4JCLASSPATH)
+EXTCLASSPATH := $(TROVE4JCLASSPATH):$(XMLBEANSCLASSPATH)
 
 SOURCES := $(shell find . -name *java)
 
