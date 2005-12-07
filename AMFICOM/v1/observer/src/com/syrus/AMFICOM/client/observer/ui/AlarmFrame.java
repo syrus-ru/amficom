@@ -6,8 +6,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -39,11 +37,9 @@ import com.syrus.AMFICOM.eventv2.Event;
 import com.syrus.AMFICOM.eventv2.PopupNotificationEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -57,8 +53,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
-public class AlarmFrame extends JInternalFrame implements
-		PropertyChangeListener {
+public class AlarmFrame extends JInternalFrame {
 	ApplicationContext aContext;
 
 	boolean initial_init = true;
@@ -124,6 +119,8 @@ public class AlarmFrame extends JInternalFrame implements
 
 							AlarmFrame.this.alarmMarkerMapping.put(alarm, marker);
 							AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
+							
+							AlarmFrame.this.table.setSelectedValue(alarm);
 						}
 					}
 				}
@@ -151,23 +148,55 @@ public class AlarmFrame extends JInternalFrame implements
 					return;
 				}
 				
-				boolean b = AlarmFrame.this.table.getSelectedRow() != -1;
+				int n = AlarmFrame.this.table.getSelectedRow();
+				int first = e.getFirstIndex();
+				int last = e.getLastIndex();
+				boolean firstb = AlarmFrame.this.table.getSelectionModel().isSelectedIndex(first);
+				boolean lastb = AlarmFrame.this.table.getSelectionModel().isSelectedIndex(last);
+				boolean b = n != -1;
 				AlarmFrame.this.buttonDelete.setEnabled(b);
 				AlarmFrame.this.buttonAcknowledge.setEnabled(b);
 				AlarmFrame.this.buttonFix.setEnabled(b);
 				AlarmFrame.this.buttonClose.setEnabled(b);
 				AlarmFrame.this.buttonDescribe.setEnabled(b);
 				
-				if (b) {
-					Alarm alarm = AlarmFrame.this.model.getObject(e.getFirstIndex());
-					
-					Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm);
-					MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_SELECTED_EVENT,
-							marker.getId(), marker.getPos(), alarm.getPath().getId(), 
-							alarm.getMonitoredElement().getId(), alarm.getPathElement().getId());
+				Alarm alarm1 = AlarmFrame.this.model.getObject(first);
+				
+				if (firstb) {
+					Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm1);
+					MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
+							marker.getId(), marker.getPos(), alarm1.getPath().getId(), 
+							alarm1.getMonitoredElement().getId(), alarm1.getPathElement().getId());
 
-					AlarmFrame.this.alarmMarkerMapping.put(alarm, marker);
+					AlarmFrame.this.alarmMarkerMapping.put(alarm1, marker);
 					AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
+				} else {
+					Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm1);
+					MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
+							marker.getId(), marker.getPos(), alarm1.getPath().getId(), 
+							alarm1.getMonitoredElement().getId(), alarm1.getPathElement().getId());
+
+					AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
+				}
+				
+				if (first != last) {
+					Alarm alarm2 = AlarmFrame.this.model.getObject(last);
+					if (lastb) {
+						Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm2);
+						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
+								marker.getId(), marker.getPos(), alarm2.getPath().getId(), 
+								alarm2.getMonitoredElement().getId(), alarm2.getPathElement().getId());
+
+						AlarmFrame.this.alarmMarkerMapping.put(alarm2, marker);
+						AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
+					} else {
+						Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm2);
+						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
+								marker.getId(), marker.getPos(), alarm2.getPath().getId(), 
+								alarm2.getMonitoredElement().getId(), alarm2.getPathElement().getId());
+
+						AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
+					}
 				}
 			}
 		});
@@ -282,7 +311,6 @@ public class AlarmFrame extends JInternalFrame implements
 
 	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
-		aContext.getDispatcher().addPropertyChangeListener("alarmreceived", this);
 	}
 
 	public ApplicationContext getContext() {
@@ -291,12 +319,6 @@ public class AlarmFrame extends JInternalFrame implements
 
 	public ApplicationModel getModel() {
 		return this.aContext.getApplicationModel();
-	}
-
-	public void propertyChange(PropertyChangeEvent pce) {
-		if(pce.getPropertyName().equals("alarmreceived")) {
-			updateContents();
-		}
 	}
 
 	public void updateContents() {
@@ -314,119 +336,6 @@ public class AlarmFrame extends JInternalFrame implements
 //		} catch(ApplicationException e) {
 //			e.printStackTrace();
 //		}
-	}
-
-	public void alarmTable_valueChanged(ListSelectionEvent e) {
-		if(e.getValueIsAdjusting())
-			return;
-
-		ListSelectionModel lsm = (ListSelectionModel) e.getSource();
-		if(lsm.isSelectionEmpty()) {
-			this.buttonAcknowledge.setEnabled(false);
-			this.buttonFix.setEnabled(false);
-			this.buttonDelete.setEnabled(false);
-			this.buttonDescribe.setEnabled(false);
-			// no rows are selected
-		}
-		else {
-			Alarm alarm = this.model.getObject(this.table.getSelectedRow());
-			MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_SELECTED_EVENT,
-					this.alarmMarkerMapping.get(alarm).getId(), alarm.getEvent().getMismatchOpticalDistance(),
-					alarm.getPath().getId(), alarm.getMonitoredElement().getId(),
-					alarm.getPathElement().getId());
-			this.aContext.getDispatcher().firePropertyChange(mEvent2);
-/*
-			Pool.put("activecontext", "useractionselected", "alarm_selected");
-			Pool.put("activecontext", "selected_id", alarm.getId());
-
-			if(aContext.getDispatcher() != null)
-				aContext.getDispatcher().notify(
-						new OperationEvent(this, 0, "activecontextevent"));
-
-			switch(alarm.status.value()) {
-				case AlarmStatus._ALARM_STATUS_GENERATED:
-					buttonAcknowledge.setEnabled(true);
-					buttonFix.setEnabled(true);
-					buttonDelete.setEnabled(true);
-					buttonDescribe.setEnabled(true);
-					break;
-				case AlarmStatus._ALARM_STATUS_ASSIGNED:
-					buttonAcknowledge.setEnabled(false);
-					buttonFix.setEnabled(true);
-					buttonDelete.setEnabled(true);
-					buttonDescribe.setEnabled(true);
-					break;
-				case AlarmStatus._ALARM_STATUS_FIXED:
-					buttonAcknowledge.setEnabled(false);
-					buttonFix.setEnabled(false);
-					buttonDelete.setEnabled(true);
-					buttonDescribe.setEnabled(true);
-			}
-
-			try {
-				SchemeNavigateEvent ev = null;
-				MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool
-						.getStorableObject(alarm.getMonitoredElementId(), true);
-				if(me
-						.getSort()
-						.equals(
-								MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
-					List tpathIds = me.getMonitoredDomainMemberIds();
-
-					Identifier domain_id = new Identifier(
-							((RISDSessionInfo) aContext.getSessionInterface())
-									.getAccessIdentifier().domain_id);
-					Domain domain = (Domain) ConfigurationStorableObjectPool
-							.getStorableObject(domain_id, true);
-					DomainCondition condition = new DomainCondition(
-							domain,
-							ObjectEntities.SCHEME_PATH_ENTITY_CODE);
-					List paths = SchemeStorableObjectPool
-							.getStorableObjectsByCondition(condition, true);
-
-					for(Iterator it = paths.iterator(); it.hasNext();) {
-						SchemePath sp = (SchemePath) it.next();
-						if(tpathIds.contains(sp.pathImpl().getId())) {
-							ev = new SchemeNavigateEvent(new SchemePath[] { sp
-							}, SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT);
-							break;
-						}
-					}
-				}
-				else if(me.getSort().equals(
-						MonitoredElementSort.MONITOREDELEMENT_SORT_EQUIPMENT)) {
-					List eqIds = me.getMonitoredDomainMemberIds();
-
-					Identifier domain_id = new Identifier(
-							((RISDSessionInfo) aContext.getSessionInterface())
-									.getAccessIdentifier().domain_id);
-					Domain domain = (Domain) ConfigurationStorableObjectPool
-							.getStorableObject(domain_id, true);
-					DomainCondition condition = new DomainCondition(
-							domain,
-							ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE);
-					List elements = SchemeStorableObjectPool
-							.getStorableObjectsByCondition(condition, true);
-
-					for(Iterator it = elements.iterator(); it.hasNext();) {
-						SchemeElement se = (SchemeElement) it.next();
-						if(eqIds.contains(se.equipmentImpl().getId())) {
-							ev = new SchemeNavigateEvent(
-									new SchemeElement[] { se
-									},
-									SchemeNavigateEvent.SCHEME_ELEMENT_SELECTED_EVENT);
-							break;
-						}
-					}
-				}
-				perform_processing = false;
-				aContext.getDispatcher().notify(ev);
-				perform_processing = true;
-			} catch(ApplicationException ex) {
-				ex.printStackTrace();
-			}
-*/
-		}
 	}
 
 	void buttonRefresh_actionPerformed(ActionEvent e) {
@@ -516,7 +425,8 @@ public class AlarmFrame extends JInternalFrame implements
 				alarm.getPath().getId(), alarm.getMonitoredElement().getId(),
 				alarm.getPathElement().getId());
 		this.aContext.getDispatcher().firePropertyChange(mEvent2);
-			
+		AlarmFrame.this.alarmMarkerMapping.remove(alarm);
+		
 		this.table.setSelectedValue(null);
 		this.model.removeObject(alarm);
 
