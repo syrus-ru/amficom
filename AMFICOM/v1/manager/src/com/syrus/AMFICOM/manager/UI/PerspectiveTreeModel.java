@@ -1,5 +1,5 @@
 /*-
-* $Id: PerspectiveTreeModel.java,v 1.5 2005/12/06 15:14:39 bob Exp $
+* $Id: PerspectiveTreeModel.java,v 1.6 2005/12/07 15:20:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import org.jgraph.graph.GraphModel;
+import org.jgraph.graph.GraphSelectionModel;
 import org.jgraph.graph.Port;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/12/06 15:14:39 $
+ * @version $Revision: 1.6 $, $Date: 2005/12/07 15:20:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -422,6 +423,17 @@ public final class PerspectiveTreeModel implements TreeModel {
 
 	public void reload() {		
 		this.reload(this.root);
+		final Perspective perspective = this.managerMainFrame.getPerspective();
+		final LayoutItem parentLayoutItem = perspective.getParentLayoutItem();
+		if (parentLayoutItem != null) {
+			final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
+			final ManagerGraphCell defaultGraphCell = 
+				graphRoutines.getDefaultGraphCell(parentLayoutItem);
+			final GraphSelectionModel selectionModel = 
+				this.managerMainFrame.graph.getSelectionModel();
+			selectionModel.setSelectionCell(defaultGraphCell);
+			
+		}
 	}
 	
 	public void reload(final TreeNode node) {
