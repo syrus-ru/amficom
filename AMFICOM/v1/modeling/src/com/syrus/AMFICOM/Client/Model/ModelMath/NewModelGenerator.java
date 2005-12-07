@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 //        Size of the weld  =  eventSize !!!                   //
 /////////////////////////////////////////////////////////////////
 
-/*
+
 public class NewModelGenerator
 {
 	private static final double dDynamicDiapazon = 5.;
@@ -582,4 +582,3 @@ class EventParams2 extends ReflectogramEvent
 				return ret;
 	}
 }
-*/
