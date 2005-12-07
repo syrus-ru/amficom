@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.93 2005/12/06 09:41:25 bass Exp $
+ * $Id: LinkType.java,v 1.94 2005/12/07 16:41:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
-import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
@@ -39,19 +38,20 @@ import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/12/06 09:41:25 $
+ * @version $Revision: 1.94 $, $Date: 2005/12/07 16:41:51 $
  * @author $Author: bass $
  * @module config
  */
 
-public final class LinkType extends AbstractLinkType<LinkType> implements XmlBeansTransferable<XmlLinkType> {
+public final class LinkType extends AbstractLinkType<LinkType> implements XmlTransferableObject<XmlLinkType> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -209,8 +209,9 @@ public final class LinkType extends AbstractLinkType<LinkType> implements XmlBea
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 
@@ -273,13 +274,13 @@ public final class LinkType extends AbstractLinkType<LinkType> implements XmlBea
 	/**
 	 * @param linkType
 	 * @param importType
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @throws XmlConversionException
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	@Shitlet
 	public void fromXmlTransferable(final XmlLinkType linkType,
 			final String importType)
-	throws ApplicationException {
+	throws XmlConversionException {
 		this.name = linkType.getName();
 		this.codename = linkType.getCodename();
 		this.description = linkType.isSetDescription()
@@ -321,14 +322,14 @@ public final class LinkType extends AbstractLinkType<LinkType> implements XmlBea
 	 * @param linkType
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	@Shitlet
 	public void getXmlTransferable(final XmlLinkType linkType,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		this.id.getXmlTransferable(linkType.addNewId(), importType);
 		linkType.setName(this.name);
 		linkType.setCodename(this.codename);

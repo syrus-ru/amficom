@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.94 2005/12/06 09:44:23 bass Exp $
+ * $Id: PathElement.java,v 1.95 2005/12/07 16:41:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,6 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElement;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementHelper;
@@ -62,6 +61,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlSchemeElementData;
 import com.syrus.AMFICOM.scheme.xml.XmlPathElement;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * #17 in hierarchy.
@@ -71,7 +72,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.94 $, $Date: 2005/12/06 09:44:23 $
+ * @version $Revision: 1.95 $, $Date: 2005/12/07 16:41:54 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -79,7 +80,7 @@ import com.syrus.util.Log;
 public final class PathElement extends StorableObject<PathElement>
 		implements Describable, Comparable<PathElement>,
 		PathMember<SchemePath, PathElement>, ReverseDependencyContainer,
-		XmlBeansTransferable<XmlPathElement>{
+		XmlTransferableObject<XmlPathElement>{
 	private static final long serialVersionUID = 3905799768986038576L;
 
 	Identifier parentSchemePathId;
@@ -775,14 +776,14 @@ public final class PathElement extends StorableObject<PathElement>
 	 * @param pathElement
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlPathElement pathElement,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -1189,12 +1190,12 @@ public final class PathElement extends StorableObject<PathElement>
 	/**
 	 * @param xmlPathElement
 	 * @param importType
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @throws XmlConversionException
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void fromXmlTransferable(final XmlPathElement xmlPathElement,
 			final String importType)
-	throws ApplicationException {
+	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
 

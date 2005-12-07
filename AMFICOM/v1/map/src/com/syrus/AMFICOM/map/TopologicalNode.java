@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.93 2005/12/06 09:43:34 bass Exp $
+ * $Id: TopologicalNode.java,v 1.94 2005/12/07 16:41:51 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
-import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -33,14 +32,14 @@ import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
 import com.syrus.AMFICOM.map.xml.XmlTopologicalNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
-import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * Топологический узел нв топологической схеме. Топологический узел может
@@ -48,11 +47,11 @@ import com.syrus.util.Log;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: bass $
- * @version $Revision: 1.93 $, $Date: 2005/12/06 09:43:34 $
+ * @version $Revision: 1.94 $, $Date: 2005/12/07 16:41:51 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode<TopologicalNode>
-		implements XmlBeansTransferable<XmlTopologicalNode> {
+		implements XmlTransferableObject<XmlTopologicalNode> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -270,14 +269,14 @@ public final class TopologicalNode extends AbstractNode<TopologicalNode>
 	 * @param topologicalNode
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlTopologicalNode topologicalNode,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		this.id.getXmlTransferable(topologicalNode.addNewId(), importType);
 		topologicalNode.setX(this.location.getX());
 		topologicalNode.setY(this.location.getY());
@@ -312,7 +311,7 @@ public final class TopologicalNode extends AbstractNode<TopologicalNode>
 	public void fromXmlTransferable(
 			final XmlTopologicalNode xmlTopologicalNode,
 			final String importType)
-	throws ApplicationException {
+	throws XmlConversionException {
 		this.active = xmlTopologicalNode.getActive();
 		super.location.setLocation(xmlTopologicalNode.getX(), xmlTopologicalNode.getY());
 	}
@@ -357,8 +356,9 @@ public final class TopologicalNode extends AbstractNode<TopologicalNode>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 

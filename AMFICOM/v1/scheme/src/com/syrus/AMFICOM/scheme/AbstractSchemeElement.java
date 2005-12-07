@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.74 2005/11/29 13:57:10 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.75 2005/12/07 16:41:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,6 +40,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemeElement;
 import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemeElement;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
 
 /**
  * This class is never used directly, it was provided just in order for source
@@ -47,7 +48,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.74 $, $Date: 2005/11/29 13:57:10 $
+ * @version $Revision: 1.75 $, $Date: 2005/12/07 16:41:54 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement<T extends AbstractSchemeElement<T>>
@@ -285,13 +286,14 @@ public abstract class AbstractSchemeElement<T extends AbstractSchemeElement<T>>
 	 * @param abstractSchemeElement
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
+	 * @throws XmlConversionException
+	 * @throws ApplicationException 
 	 */
 	final void getXmlTransferable(
 			final XmlAbstractSchemeElement abstractSchemeElement,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException, ApplicationException {
 		super.id.getXmlTransferable(abstractSchemeElement.addNewId(), importType);
 		abstractSchemeElement.setName(this.name);
 		if (abstractSchemeElement.isSetDescription()) {

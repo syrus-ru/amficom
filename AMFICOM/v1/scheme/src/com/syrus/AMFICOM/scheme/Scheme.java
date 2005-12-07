@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.122 2005/12/06 09:44:22 bass Exp $
+ * $Id: Scheme.java,v 1.123 2005/12/07 16:41:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,8 +56,6 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
@@ -82,18 +80,20 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfo;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfoSeq;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.122 $, $Date: 2005/12/06 09:44:22 $
+ * @version $Revision: 1.123 $, $Date: 2005/12/07 16:41:54 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
 public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 		implements Describable, SchemeCellContainer,
-		ReverseDependencyContainer, XmlBeansTransferable<XmlScheme> {
+		ReverseDependencyContainer, XmlTransferableObject<XmlScheme> {
 	private static final long serialVersionUID = 3257289136389173298L;
 
 	private static final int DEFAULT_WIDTH = 840;
@@ -342,8 +342,9 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 
@@ -700,116 +701,120 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 	 * @param scheme
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlScheme scheme,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
-		super.id.getXmlTransferable(scheme.addNewId(), importType);
-		scheme.setName(this.name);
-		if (scheme.isSetDescription()) {
-			scheme.unsetDescription();
-		}
-		if (this.description.length() != 0) {
-			scheme.setDescription(this.description);
-		}
-		if (scheme.isSetLabel()) {
-			scheme.unsetLabel();
-		}
-		if (this.label.length() != 0) {
-			scheme.setLabel(this.label);
-		}
-		scheme.setWidth(this.width);
-		scheme.setHeight(this.height);
-		scheme.setKind(XmlScheme.Kind.Enum.forInt(this.getKind().value() + 1));
-		if (scheme.isSetDomainId()) {
-			scheme.unsetDomainId();
-		}
-		super.getDomainId().getXmlTransferable(scheme.addNewDomainId(), importType);
-		if (scheme.isSetMapId()) {
-			scheme.unsetMapId();
-		}
-		if (!this.mapId.isVoid()) {
-			this.mapId.getXmlTransferable(scheme.addNewMapId(), importType);
-		}
-		if (scheme.isSetSymbolId()) {
-			scheme.unsetSymbolId();
-		}
-		if (!this.symbolId.isVoid()) {
-			this.symbolId.getXmlTransferable(scheme.addNewSymbolId(), importType);
-		}
-		if (scheme.isSetUgoCellId()) {
-			scheme.unsetUgoCellId();
-		}
-		if (!this.ugoCellId.isVoid()) {
-			this.ugoCellId.getXmlTransferable(scheme.addNewUgoCellId(), importType);
-		}
-		if (scheme.isSetSchemeCellId()) {
-			scheme.unsetSchemeCellId();
-		}
-		if (!this.schemeCellId.isVoid()) {
-			this.schemeCellId.getXmlTransferable(scheme.addNewSchemeCellId(), importType);
-		}
-		if (scheme.isSetParentSchemeElementId()) {
-			scheme.unsetParentSchemeElementId();
-		}
-		if (!this.parentSchemeElementId.isVoid()) {
-			this.parentSchemeElementId.getXmlTransferable(scheme.addNewParentSchemeElementId(), importType);
-		}
-		if (scheme.isSetSchemeElements()) {
-			scheme.unsetSchemeElements();
-		}
-		final Set<SchemeElement> schemeElements = this.getSchemeElements0(usePool);
-		if (!schemeElements.isEmpty()) {
-			final XmlSchemeElementSeq schemeElementSeq = scheme.addNewSchemeElements();
-			for (final SchemeElement schemeElement : schemeElements) {
-				schemeElement.getXmlTransferable(schemeElementSeq.addNewSchemeElement(), importType, usePool);
+	throws XmlConversionException {
+		try {
+			super.id.getXmlTransferable(scheme.addNewId(), importType);
+			scheme.setName(this.name);
+			if (scheme.isSetDescription()) {
+				scheme.unsetDescription();
 			}
-		}
-		if (scheme.isSetSchemeLinks()) {
-			scheme.unsetSchemeLinks();
-		}
-		final Set<SchemeLink> schemeLinks = this.getSchemeLinks0(usePool);
-		if (!schemeLinks.isEmpty()) {
-			final XmlSchemeLinkSeq schemeLinkSeq = scheme.addNewSchemeLinks(); 
-			for (final SchemeLink schemeLink : schemeLinks) {
-				schemeLink.getXmlTransferable(schemeLinkSeq.addNewSchemeLink(), importType, usePool);
+			if (this.description.length() != 0) {
+				scheme.setDescription(this.description);
 			}
-		}
-		if (scheme.isSetSchemeCableLinks()) {
-			scheme.unsetSchemeCableLinks();
-		}
-		final Set<SchemeCableLink> schemeCableLinks = this.getSchemeCableLinks0(usePool);
-		if (!schemeCableLinks.isEmpty()) {
-			final XmlSchemeCableLinkSeq schemeCableLinkSeq = scheme.addNewSchemeCableLinks();
-			for (final SchemeCableLink schemeCableLink : schemeCableLinks) {
-				schemeCableLink.getXmlTransferable(schemeCableLinkSeq.addNewSchemeCableLink(), importType, usePool);
+			if (scheme.isSetLabel()) {
+				scheme.unsetLabel();
 			}
-		}
-		if (scheme.isSetSchemeOptimizeInfos()) {
-			scheme.unsetSchemeOptimizeInfos();
-		}
-		final Set<SchemeOptimizeInfo> schemeOptimizeInfos = this.getSchemeOptimizeInfos0(usePool);
-		if (!schemeOptimizeInfos.isEmpty()) {
-			final XmlSchemeOptimizeInfoSeq schemeOptimizeInfoSeq = scheme.addNewSchemeOptimizeInfos();
-			for (final SchemeOptimizeInfo schemeOptimizeInfo : schemeOptimizeInfos) {
-				schemeOptimizeInfo.getXmlTransferable(schemeOptimizeInfoSeq.addNewSchemeOptimizeInfo(), importType, usePool);
+			if (this.label.length() != 0) {
+				scheme.setLabel(this.label);
 			}
-		}
-		if (scheme.isSetSchemeMonitoringSolutions()) {
-			scheme.unsetSchemeMonitoringSolutions();
-		}
-		final Set<SchemeMonitoringSolution> schemeMonitoringSolutions = this.getSchemeMonitoringSolutions0(usePool);
-		if (!schemeMonitoringSolutions.isEmpty()) {
-			final XmlSchemeMonitoringSolutionSeq schemeMonitoringSolutionSeq = scheme.addNewSchemeMonitoringSolutions();
-			for (final SchemeMonitoringSolution schemeMonitoringSolution : schemeMonitoringSolutions) {
-				schemeMonitoringSolution.getXmlTransferable(schemeMonitoringSolutionSeq.addNewSchemeMonitoringSolution(), importType, usePool);
+			scheme.setWidth(this.width);
+			scheme.setHeight(this.height);
+			scheme.setKind(XmlScheme.Kind.Enum.forInt(this.getKind().value() + 1));
+			if (scheme.isSetDomainId()) {
+				scheme.unsetDomainId();
 			}
+			super.getDomainId().getXmlTransferable(scheme.addNewDomainId(), importType);
+			if (scheme.isSetMapId()) {
+				scheme.unsetMapId();
+			}
+			if (!this.mapId.isVoid()) {
+				this.mapId.getXmlTransferable(scheme.addNewMapId(), importType);
+			}
+			if (scheme.isSetSymbolId()) {
+				scheme.unsetSymbolId();
+			}
+			if (!this.symbolId.isVoid()) {
+				this.symbolId.getXmlTransferable(scheme.addNewSymbolId(), importType);
+			}
+			if (scheme.isSetUgoCellId()) {
+				scheme.unsetUgoCellId();
+			}
+			if (!this.ugoCellId.isVoid()) {
+				this.ugoCellId.getXmlTransferable(scheme.addNewUgoCellId(), importType);
+			}
+			if (scheme.isSetSchemeCellId()) {
+				scheme.unsetSchemeCellId();
+			}
+			if (!this.schemeCellId.isVoid()) {
+				this.schemeCellId.getXmlTransferable(scheme.addNewSchemeCellId(), importType);
+			}
+			if (scheme.isSetParentSchemeElementId()) {
+				scheme.unsetParentSchemeElementId();
+			}
+			if (!this.parentSchemeElementId.isVoid()) {
+				this.parentSchemeElementId.getXmlTransferable(scheme.addNewParentSchemeElementId(), importType);
+			}
+			if (scheme.isSetSchemeElements()) {
+				scheme.unsetSchemeElements();
+			}
+			final Set<SchemeElement> schemeElements = this.getSchemeElements0(usePool);
+			if (!schemeElements.isEmpty()) {
+				final XmlSchemeElementSeq schemeElementSeq = scheme.addNewSchemeElements();
+				for (final SchemeElement schemeElement : schemeElements) {
+					schemeElement.getXmlTransferable(schemeElementSeq.addNewSchemeElement(), importType, usePool);
+				}
+			}
+			if (scheme.isSetSchemeLinks()) {
+				scheme.unsetSchemeLinks();
+			}
+			final Set<SchemeLink> schemeLinks = this.getSchemeLinks0(usePool);
+			if (!schemeLinks.isEmpty()) {
+				final XmlSchemeLinkSeq schemeLinkSeq = scheme.addNewSchemeLinks(); 
+				for (final SchemeLink schemeLink : schemeLinks) {
+					schemeLink.getXmlTransferable(schemeLinkSeq.addNewSchemeLink(), importType, usePool);
+				}
+			}
+			if (scheme.isSetSchemeCableLinks()) {
+				scheme.unsetSchemeCableLinks();
+			}
+			final Set<SchemeCableLink> schemeCableLinks = this.getSchemeCableLinks0(usePool);
+			if (!schemeCableLinks.isEmpty()) {
+				final XmlSchemeCableLinkSeq schemeCableLinkSeq = scheme.addNewSchemeCableLinks();
+				for (final SchemeCableLink schemeCableLink : schemeCableLinks) {
+					schemeCableLink.getXmlTransferable(schemeCableLinkSeq.addNewSchemeCableLink(), importType, usePool);
+				}
+			}
+			if (scheme.isSetSchemeOptimizeInfos()) {
+				scheme.unsetSchemeOptimizeInfos();
+			}
+			final Set<SchemeOptimizeInfo> schemeOptimizeInfos = this.getSchemeOptimizeInfos0(usePool);
+			if (!schemeOptimizeInfos.isEmpty()) {
+				final XmlSchemeOptimizeInfoSeq schemeOptimizeInfoSeq = scheme.addNewSchemeOptimizeInfos();
+				for (final SchemeOptimizeInfo schemeOptimizeInfo : schemeOptimizeInfos) {
+					schemeOptimizeInfo.getXmlTransferable(schemeOptimizeInfoSeq.addNewSchemeOptimizeInfo(), importType, usePool);
+				}
+			}
+			if (scheme.isSetSchemeMonitoringSolutions()) {
+				scheme.unsetSchemeMonitoringSolutions();
+			}
+			final Set<SchemeMonitoringSolution> schemeMonitoringSolutions = this.getSchemeMonitoringSolutions0(usePool);
+			if (!schemeMonitoringSolutions.isEmpty()) {
+				final XmlSchemeMonitoringSolutionSeq schemeMonitoringSolutionSeq = scheme.addNewSchemeMonitoringSolutions();
+				for (final SchemeMonitoringSolution schemeMonitoringSolution : schemeMonitoringSolutions) {
+					schemeMonitoringSolution.getXmlTransferable(schemeMonitoringSolutionSeq.addNewSchemeMonitoringSolution(), importType, usePool);
+				}
+			}
+			scheme.setImportType(importType);
+			XmlComplementorRegistry.complementStorableObject(scheme, SCHEME_CODE, importType, EXPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-		scheme.setImportType(importType);
-		XmlComplementorRegistry.complementStorableObject(scheme, SCHEME_CODE, importType, EXPORT);
 	}
 
 	Identifier getUgoCellId() {
@@ -1164,72 +1169,76 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 	/**
 	 * @param scheme
 	 * @param importType
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @throws XmlConversionException
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void fromXmlTransferable(final XmlScheme scheme,
 			final String importType)
-	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(scheme, SCHEME_CODE, importType, PRE_IMPORT);
-
-		this.name = scheme.getName();
-		this.description = scheme.isSetDescription()
-				? scheme.getDescription()
-				: "";
-		this.label = scheme.isSetLabel()
-				? scheme.getLabel()
-				: "";
-		this.width = scheme.getWidth();
-		this.height = scheme.getHeight();
-		this.kind = scheme.getKind().intValue() - 1;
-		if (scheme.isSetDomainId()) {
-			super.setDomainId0(Identifier.fromXmlTransferable(scheme.getDomainId(), importType, MODE_THROW_IF_ABSENT));
-		} else {
-			throw new UpdateObjectException("Scheme.fromXmlTransferable() | "
-					+ XML_BEAN_NOT_COMPLETE);
-		}
-		this.mapId = scheme.isSetMapId()
-				? Identifier.fromXmlTransferable(scheme.getMapId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
-		this.symbolId = scheme.isSetSymbolId()
-				? Identifier.fromXmlTransferable(scheme.getSymbolId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
-		this.ugoCellId = scheme.isSetUgoCellId()
-				? Identifier.fromXmlTransferable(scheme.getUgoCellId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
-		this.schemeCellId = scheme.isSetSchemeCellId()
-				? Identifier.fromXmlTransferable(scheme.getSchemeCellId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
-		this.parentSchemeElementId = scheme.isSetParentSchemeElementId()
-				? Identifier.fromXmlTransferable(scheme.getParentSchemeElementId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
-		if (scheme.isSetSchemeElements()) {
-			for (final XmlSchemeElement schemeElement : scheme.getSchemeElements().getSchemeElementArray()) {
-				SchemeElement.createInstance(super.creatorId, schemeElement, importType);
+	throws XmlConversionException {
+		try {
+			XmlComplementorRegistry.complementStorableObject(scheme, SCHEME_CODE, importType, PRE_IMPORT);
+	
+			this.name = scheme.getName();
+			this.description = scheme.isSetDescription()
+					? scheme.getDescription()
+					: "";
+			this.label = scheme.isSetLabel()
+					? scheme.getLabel()
+					: "";
+			this.width = scheme.getWidth();
+			this.height = scheme.getHeight();
+			this.kind = scheme.getKind().intValue() - 1;
+			if (scheme.isSetDomainId()) {
+				super.setDomainId0(Identifier.fromXmlTransferable(scheme.getDomainId(), importType, MODE_THROW_IF_ABSENT));
+			} else {
+				throw new XmlConversionException("Scheme.fromXmlTransferable() | "
+						+ XML_BEAN_NOT_COMPLETE);
 			}
-		}
-		if (scheme.isSetSchemeLinks()) {
-			for (final XmlSchemeLink schemeLink : scheme.getSchemeLinks().getSchemeLinkArray()) {
-				SchemeLink.createInstance(super.creatorId, schemeLink, importType);
+			this.mapId = scheme.isSetMapId()
+					? Identifier.fromXmlTransferable(scheme.getMapId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER;
+			this.symbolId = scheme.isSetSymbolId()
+					? Identifier.fromXmlTransferable(scheme.getSymbolId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER;
+			this.ugoCellId = scheme.isSetUgoCellId()
+					? Identifier.fromXmlTransferable(scheme.getUgoCellId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER;
+			this.schemeCellId = scheme.isSetSchemeCellId()
+					? Identifier.fromXmlTransferable(scheme.getSchemeCellId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER;
+			this.parentSchemeElementId = scheme.isSetParentSchemeElementId()
+					? Identifier.fromXmlTransferable(scheme.getParentSchemeElementId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER;
+			if (scheme.isSetSchemeElements()) {
+				for (final XmlSchemeElement schemeElement : scheme.getSchemeElements().getSchemeElementArray()) {
+					SchemeElement.createInstance(super.creatorId, schemeElement, importType);
+				}
 			}
-		}
-		if (scheme.isSetSchemeCableLinks()) {
-			for (final XmlSchemeCableLink schemeCableLink : scheme.getSchemeCableLinks().getSchemeCableLinkArray()) {
-				SchemeCableLink.createInstance(super.creatorId, schemeCableLink, importType);
+			if (scheme.isSetSchemeLinks()) {
+				for (final XmlSchemeLink schemeLink : scheme.getSchemeLinks().getSchemeLinkArray()) {
+					SchemeLink.createInstance(super.creatorId, schemeLink, importType);
+				}
 			}
-		}
-		if (scheme.isSetSchemeOptimizeInfos()) {
-			for (final XmlSchemeOptimizeInfo schemeOptimizeInfo : scheme.getSchemeOptimizeInfos().getSchemeOptimizeInfoArray()) {
-				// empty so far
+			if (scheme.isSetSchemeCableLinks()) {
+				for (final XmlSchemeCableLink schemeCableLink : scheme.getSchemeCableLinks().getSchemeCableLinkArray()) {
+					SchemeCableLink.createInstance(super.creatorId, schemeCableLink, importType);
+				}
 			}
-		}
-		if (scheme.isSetSchemeMonitoringSolutions()) {
-			for (final XmlSchemeMonitoringSolution schemeMonitoringSolution : scheme.getSchemeMonitoringSolutions().getSchemeMonitoringSolutionArray()) {
-				// empty so far
+			if (scheme.isSetSchemeOptimizeInfos()) {
+				for (final XmlSchemeOptimizeInfo schemeOptimizeInfo : scheme.getSchemeOptimizeInfos().getSchemeOptimizeInfoArray()) {
+					// empty so far
+				}
 			}
+			if (scheme.isSetSchemeMonitoringSolutions()) {
+				for (final XmlSchemeMonitoringSolution schemeMonitoringSolution : scheme.getSchemeMonitoringSolutions().getSchemeMonitoringSolutionArray()) {
+					// empty so far
+				}
+			}
+	
+			XmlComplementorRegistry.complementStorableObject(scheme, SCHEME_CODE, importType, POST_IMPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-
-		XmlComplementorRegistry.complementStorableObject(scheme, SCHEME_CODE, importType, POST_IMPORT);
 	}
 
 	/**

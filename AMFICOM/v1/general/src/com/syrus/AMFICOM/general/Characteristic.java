@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.82 2005/12/06 09:42:52 bass Exp $
+ * $Id: Characteristic.java,v 1.83 2005/12/07 16:41:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
-import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -29,10 +28,11 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/12/06 09:42:52 $
+ * @version $Revision: 1.83 $, $Date: 2005/12/07 16:41:50 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
 public final class Characteristic extends AbstractCloneableStorableObject<Characteristic>
 		implements TypedObject<CharacteristicType>,
 		ReverseDependencyContainer,
-		XmlBeansTransferable<XmlCharacteristic> {
+		XmlTransferableObject<XmlCharacteristic> {
 	private static final long serialVersionUID = -2746555753961778403L;
 
 	private CharacteristicType type;
@@ -217,8 +217,9 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 
@@ -245,12 +246,12 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	/**
 	 * @param characteristic
 	 * @param importType
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @throws XmlConversionException
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void fromXmlTransferable(final XmlCharacteristic characteristic,
 			final String importType)
-	throws ApplicationException {
+	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -281,14 +282,14 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	 * @param characteristic
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlCharacteristic characteristic,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
 

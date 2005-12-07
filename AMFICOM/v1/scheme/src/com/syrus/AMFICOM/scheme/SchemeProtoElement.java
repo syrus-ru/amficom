@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.127 2005/12/06 09:44:22 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.128 2005/12/07 16:41:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,8 +61,6 @@ import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
@@ -79,19 +77,21 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeLinkSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElement;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElementSeq;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.127 $, $Date: 2005/12/06 09:44:22 $
+ * @version $Revision: 1.128 $, $Date: 2005/12/07 16:41:54 $
  * @module scheme
  */
 public final class SchemeProtoElement
 		extends AbstractCloneableStorableObject<SchemeProtoElement>
 		implements Describable, SchemeCellContainer,
 		Characterizable, ReverseDependencyContainer,
-		XmlBeansTransferable<XmlSchemeProtoElement> {
+		XmlTransferableObject<XmlSchemeProtoElement> {
 	private static final long serialVersionUID = 3689348806202569782L;
 
 	private String name;
@@ -379,8 +379,9 @@ public final class SchemeProtoElement
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 
@@ -695,105 +696,109 @@ public final class SchemeProtoElement
 	 * @param schemeProtoElement
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeProtoElement schemeProtoElement,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
-		super.id.getXmlTransferable(schemeProtoElement.addNewId(), importType);
-		schemeProtoElement.setName(this.name);
-		if (schemeProtoElement.isSetDescription()) {
-			schemeProtoElement.unsetDescription();
-		}
-		if (this.description.length() != 0) {
-			schemeProtoElement.setDescription(this.description);
-		}
-		if (schemeProtoElement.isSetLabel()) {
-			schemeProtoElement.unsetLabel();
-		}
-		if (this.label.length() != 0) {
-			schemeProtoElement.setLabel(this.label);
-		}
-		if (schemeProtoElement.isSetProtoEquipmentId()) {
-			schemeProtoElement.unsetProtoEquipmentId();
-		}
-		if (!this.protoEquipmentId.isVoid()) {
-			this.protoEquipmentId.getXmlTransferable(schemeProtoElement.addNewProtoEquipmentId(), importType);
-		}
-		if (schemeProtoElement.isSetSymbolId()) {
-			schemeProtoElement.unsetSymbolId();
-		}
-		if (!this.symbolId.isVoid()) {
-			this.symbolId.getXmlTransferable(schemeProtoElement.addNewSymbolId(), importType);
-		}
-		if (schemeProtoElement.isSetUgoCellId()) {
-			schemeProtoElement.unsetUgoCellId();
-		}
-		if (!this.ugoCellId.isVoid()) {
-			this.ugoCellId.getXmlTransferable(schemeProtoElement.addNewUgoCellId(), importType);
-		}
-		if (schemeProtoElement.isSetSchemeCellId()) {
-			schemeProtoElement.unsetSchemeCellId();
-		}
-		if (!this.schemeCellId.isVoid()) {
-			this.schemeCellId.getXmlTransferable(schemeProtoElement.addNewSchemeCellId(), importType);
-		}
-		if (schemeProtoElement.isSetParentSchemeProtoGroupId()) {
-			schemeProtoElement.unsetParentSchemeProtoGroupId();
-		}
-		if (!this.parentSchemeProtoGroupId.isVoid()) {
-			this.parentSchemeProtoGroupId.getXmlTransferable(schemeProtoElement.addNewParentSchemeProtoGroupId(), importType);
-		}
-		if (schemeProtoElement.isSetParentSchemeProtoElementId()) {
-			schemeProtoElement.unsetParentSchemeProtoElementId();
-		}
-		if (!this.parentSchemeProtoElementId.isVoid()) {
-			this.parentSchemeProtoElementId.getXmlTransferable(schemeProtoElement.addNewParentSchemeProtoElementId(), importType);
-		}
-		if (schemeProtoElement.isSetCharacteristics()) {
-			schemeProtoElement.unsetCharacteristics();
-		}
-		final Set<Characteristic> characteristics = this.getCharacteristics0(usePool);
-		if (false && !characteristics.isEmpty()) {
-			final XmlCharacteristicSeq xmlCharacteristicSeq = schemeProtoElement.addNewCharacteristics();
-			for (final Characteristic characteristic : characteristics) {
-				characteristic.getXmlTransferable(xmlCharacteristicSeq.addNewCharacteristic(), importType, usePool);
+	throws XmlConversionException {
+		try {
+			super.id.getXmlTransferable(schemeProtoElement.addNewId(), importType);
+			schemeProtoElement.setName(this.name);
+			if (schemeProtoElement.isSetDescription()) {
+				schemeProtoElement.unsetDescription();
 			}
-		}
-		if (schemeProtoElement.isSetSchemeProtoElements()) {
-			schemeProtoElement.unsetSchemeProtoElements();
-		}
-		final Set<SchemeProtoElement> schemeProtoElements = this.getSchemeProtoElements0(usePool);
-		if (!schemeProtoElements.isEmpty()) {
-			final XmlSchemeProtoElementSeq schemeProtoElementSeq = schemeProtoElement.addNewSchemeProtoElements();
-			for (final SchemeProtoElement schemeProtoElement2 : schemeProtoElements) {
-				schemeProtoElement2.getXmlTransferable(schemeProtoElementSeq.addNewSchemeProtoElement(), importType, usePool);
+			if (this.description.length() != 0) {
+				schemeProtoElement.setDescription(this.description);
 			}
-		}
-		if (schemeProtoElement.isSetSchemeDevices()) {
-			schemeProtoElement.unsetSchemeDevices();
-		}
-		final Set<SchemeDevice> schemeDevices = this.getSchemeDevices0(usePool);
-		if (!schemeDevices.isEmpty()) {
-			final XmlSchemeDeviceSeq schemeDeviceSeq = schemeProtoElement.addNewSchemeDevices();
-			for (final SchemeDevice schemeDevice : schemeDevices) {
-				schemeDevice.getXmlTransferable(schemeDeviceSeq.addNewSchemeDevice(), importType, usePool);
+			if (schemeProtoElement.isSetLabel()) {
+				schemeProtoElement.unsetLabel();
 			}
-		}
-		if (schemeProtoElement.isSetSchemeLinks()) {
-			schemeProtoElement.unsetSchemeLinks();
-		}
-		final Set<SchemeLink> schemeLinks = this.getSchemeLinks0(usePool);
-		if (!schemeLinks.isEmpty()) {
-			final XmlSchemeLinkSeq schemeLinkSeq = schemeProtoElement.addNewSchemeLinks();
-			for (final SchemeLink schemeLink : schemeLinks) {
-				schemeLink.getXmlTransferable(schemeLinkSeq.addNewSchemeLink(), importType, usePool);
+			if (this.label.length() != 0) {
+				schemeProtoElement.setLabel(this.label);
 			}
+			if (schemeProtoElement.isSetProtoEquipmentId()) {
+				schemeProtoElement.unsetProtoEquipmentId();
+			}
+			if (!this.protoEquipmentId.isVoid()) {
+				this.protoEquipmentId.getXmlTransferable(schemeProtoElement.addNewProtoEquipmentId(), importType);
+			}
+			if (schemeProtoElement.isSetSymbolId()) {
+				schemeProtoElement.unsetSymbolId();
+			}
+			if (!this.symbolId.isVoid()) {
+				this.symbolId.getXmlTransferable(schemeProtoElement.addNewSymbolId(), importType);
+			}
+			if (schemeProtoElement.isSetUgoCellId()) {
+				schemeProtoElement.unsetUgoCellId();
+			}
+			if (!this.ugoCellId.isVoid()) {
+				this.ugoCellId.getXmlTransferable(schemeProtoElement.addNewUgoCellId(), importType);
+			}
+			if (schemeProtoElement.isSetSchemeCellId()) {
+				schemeProtoElement.unsetSchemeCellId();
+			}
+			if (!this.schemeCellId.isVoid()) {
+				this.schemeCellId.getXmlTransferable(schemeProtoElement.addNewSchemeCellId(), importType);
+			}
+			if (schemeProtoElement.isSetParentSchemeProtoGroupId()) {
+				schemeProtoElement.unsetParentSchemeProtoGroupId();
+			}
+			if (!this.parentSchemeProtoGroupId.isVoid()) {
+				this.parentSchemeProtoGroupId.getXmlTransferable(schemeProtoElement.addNewParentSchemeProtoGroupId(), importType);
+			}
+			if (schemeProtoElement.isSetParentSchemeProtoElementId()) {
+				schemeProtoElement.unsetParentSchemeProtoElementId();
+			}
+			if (!this.parentSchemeProtoElementId.isVoid()) {
+				this.parentSchemeProtoElementId.getXmlTransferable(schemeProtoElement.addNewParentSchemeProtoElementId(), importType);
+			}
+			if (schemeProtoElement.isSetCharacteristics()) {
+				schemeProtoElement.unsetCharacteristics();
+			}
+			final Set<Characteristic> characteristics = this.getCharacteristics0(usePool);
+			if (false && !characteristics.isEmpty()) {
+				final XmlCharacteristicSeq xmlCharacteristicSeq = schemeProtoElement.addNewCharacteristics();
+				for (final Characteristic characteristic : characteristics) {
+					characteristic.getXmlTransferable(xmlCharacteristicSeq.addNewCharacteristic(), importType, usePool);
+				}
+			}
+			if (schemeProtoElement.isSetSchemeProtoElements()) {
+				schemeProtoElement.unsetSchemeProtoElements();
+			}
+			final Set<SchemeProtoElement> schemeProtoElements = this.getSchemeProtoElements0(usePool);
+			if (!schemeProtoElements.isEmpty()) {
+				final XmlSchemeProtoElementSeq schemeProtoElementSeq = schemeProtoElement.addNewSchemeProtoElements();
+				for (final SchemeProtoElement schemeProtoElement2 : schemeProtoElements) {
+					schemeProtoElement2.getXmlTransferable(schemeProtoElementSeq.addNewSchemeProtoElement(), importType, usePool);
+				}
+			}
+			if (schemeProtoElement.isSetSchemeDevices()) {
+				schemeProtoElement.unsetSchemeDevices();
+			}
+			final Set<SchemeDevice> schemeDevices = this.getSchemeDevices0(usePool);
+			if (!schemeDevices.isEmpty()) {
+				final XmlSchemeDeviceSeq schemeDeviceSeq = schemeProtoElement.addNewSchemeDevices();
+				for (final SchemeDevice schemeDevice : schemeDevices) {
+					schemeDevice.getXmlTransferable(schemeDeviceSeq.addNewSchemeDevice(), importType, usePool);
+				}
+			}
+			if (schemeProtoElement.isSetSchemeLinks()) {
+				schemeProtoElement.unsetSchemeLinks();
+			}
+			final Set<SchemeLink> schemeLinks = this.getSchemeLinks0(usePool);
+			if (!schemeLinks.isEmpty()) {
+				final XmlSchemeLinkSeq schemeLinkSeq = schemeProtoElement.addNewSchemeLinks();
+				for (final SchemeLink schemeLink : schemeLinks) {
+					schemeLink.getXmlTransferable(schemeLinkSeq.addNewSchemeLink(), importType, usePool);
+				}
+			}
+			XmlComplementorRegistry.complementStorableObject(schemeProtoElement, SCHEMEPROTOELEMENT_CODE, importType, EXPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-		XmlComplementorRegistry.complementStorableObject(schemeProtoElement, SCHEMEPROTOELEMENT_CODE, importType, EXPORT);
 	}
 
 	Identifier getUgoCellId() {
@@ -1215,73 +1220,77 @@ public final class SchemeProtoElement
 	/**
 	 * @param schemeProtoElement
 	 * @param importType
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @throws XmlConversionException
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void fromXmlTransferable(
 			final XmlSchemeProtoElement schemeProtoElement,
 			final String importType)
-	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(schemeProtoElement, SCHEMEPROTOELEMENT_CODE, importType, PRE_IMPORT);
-
-		this.name = schemeProtoElement.getName();
-		this.description = schemeProtoElement.isSetDescription()
-				? schemeProtoElement.getDescription()
-				: "";
-		this.label = schemeProtoElement.isSetLabel()
-				? schemeProtoElement.getLabel()
-				: "";
-		this.protoEquipmentId = schemeProtoElement.isSetProtoEquipmentId()
-				? Identifier.fromXmlTransferable(schemeProtoElement.getProtoEquipmentId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
-		this.symbolId = schemeProtoElement.isSetSymbolId()
-				? Identifier.fromXmlTransferable(schemeProtoElement.getSymbolId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
-		this.ugoCellId = schemeProtoElement.isSetUgoCellId()
-				? Identifier.fromXmlTransferable(schemeProtoElement.getUgoCellId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
-		this.schemeCellId = schemeProtoElement.isSetSchemeCellId()
-				? Identifier.fromXmlTransferable(schemeProtoElement.getSchemeCellId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
-		final boolean setParentSchemeProtoGroupId = schemeProtoElement.isSetParentSchemeProtoGroupId();
-		final boolean setParentSchemeProtoElementId = schemeProtoElement.isSetParentSchemeProtoElementId();
-		if (setParentSchemeProtoGroupId) {
-			assert !setParentSchemeProtoElementId : OBJECT_STATE_ILLEGAL;
-
-			this.parentSchemeProtoGroupId = Identifier.fromXmlTransferable(schemeProtoElement.getParentSchemeProtoGroupId(), importType, MODE_THROW_IF_ABSENT);
-			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
-		} else if (setParentSchemeProtoElementId) {
-			assert !setParentSchemeProtoGroupId : OBJECT_STATE_ILLEGAL;
-
-			this.parentSchemeProtoGroupId = VOID_IDENTIFIER;
-			this.parentSchemeProtoElementId = Identifier.fromXmlTransferable(schemeProtoElement.getParentSchemeProtoElementId(), importType, MODE_THROW_IF_ABSENT);
-		} else {
-			throw new UpdateObjectException(
-					"SchemeProtoElement.fromXmlTransferable() | "
-					+ XML_BEAN_NOT_COMPLETE);
-		}
-		if (schemeProtoElement.isSetCharacteristics()) {
-			for (final XmlCharacteristic characteristic : schemeProtoElement.getCharacteristics().getCharacteristicArray()) {
-				Characteristic.createInstance(super.creatorId, characteristic, importType);
+	throws XmlConversionException {
+		try {
+			XmlComplementorRegistry.complementStorableObject(schemeProtoElement, SCHEMEPROTOELEMENT_CODE, importType, PRE_IMPORT);
+	
+			this.name = schemeProtoElement.getName();
+			this.description = schemeProtoElement.isSetDescription()
+					? schemeProtoElement.getDescription()
+					: "";
+			this.label = schemeProtoElement.isSetLabel()
+					? schemeProtoElement.getLabel()
+					: "";
+			this.protoEquipmentId = schemeProtoElement.isSetProtoEquipmentId()
+					? Identifier.fromXmlTransferable(schemeProtoElement.getProtoEquipmentId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER;
+			this.symbolId = schemeProtoElement.isSetSymbolId()
+					? Identifier.fromXmlTransferable(schemeProtoElement.getSymbolId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER;
+			this.ugoCellId = schemeProtoElement.isSetUgoCellId()
+					? Identifier.fromXmlTransferable(schemeProtoElement.getUgoCellId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER;
+			this.schemeCellId = schemeProtoElement.isSetSchemeCellId()
+					? Identifier.fromXmlTransferable(schemeProtoElement.getSchemeCellId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER;
+			final boolean setParentSchemeProtoGroupId = schemeProtoElement.isSetParentSchemeProtoGroupId();
+			final boolean setParentSchemeProtoElementId = schemeProtoElement.isSetParentSchemeProtoElementId();
+			if (setParentSchemeProtoGroupId) {
+				assert !setParentSchemeProtoElementId : OBJECT_STATE_ILLEGAL;
+	
+				this.parentSchemeProtoGroupId = Identifier.fromXmlTransferable(schemeProtoElement.getParentSchemeProtoGroupId(), importType, MODE_THROW_IF_ABSENT);
+				this.parentSchemeProtoElementId = VOID_IDENTIFIER;
+			} else if (setParentSchemeProtoElementId) {
+				assert !setParentSchemeProtoGroupId : OBJECT_STATE_ILLEGAL;
+	
+				this.parentSchemeProtoGroupId = VOID_IDENTIFIER;
+				this.parentSchemeProtoElementId = Identifier.fromXmlTransferable(schemeProtoElement.getParentSchemeProtoElementId(), importType, MODE_THROW_IF_ABSENT);
+			} else {
+				throw new XmlConversionException(
+						"SchemeProtoElement.fromXmlTransferable() | "
+						+ XML_BEAN_NOT_COMPLETE);
 			}
-		}
-		if (schemeProtoElement.isSetSchemeProtoElements()) {
-			for (final XmlSchemeProtoElement schemeProtoElement2 : schemeProtoElement.getSchemeProtoElements().getSchemeProtoElementArray()) {
-				createInstance(super.creatorId, schemeProtoElement2, importType);
+			if (schemeProtoElement.isSetCharacteristics()) {
+				for (final XmlCharacteristic characteristic : schemeProtoElement.getCharacteristics().getCharacteristicArray()) {
+					Characteristic.createInstance(super.creatorId, characteristic, importType);
+				}
 			}
-		}
-		if (schemeProtoElement.isSetSchemeDevices()) {
-			for (final XmlSchemeDevice schemeDevice : schemeProtoElement.getSchemeDevices().getSchemeDeviceArray()) {
-				SchemeDevice.createInstance(super.creatorId, schemeDevice, importType);
+			if (schemeProtoElement.isSetSchemeProtoElements()) {
+				for (final XmlSchemeProtoElement schemeProtoElement2 : schemeProtoElement.getSchemeProtoElements().getSchemeProtoElementArray()) {
+					createInstance(super.creatorId, schemeProtoElement2, importType);
+				}
 			}
-		}
-		if (schemeProtoElement.isSetSchemeLinks()) {
-			for (final XmlSchemeLink schemeLink : schemeProtoElement.getSchemeLinks().getSchemeLinkArray()) {
-				SchemeLink.createInstance(super.creatorId, schemeLink, importType);
+			if (schemeProtoElement.isSetSchemeDevices()) {
+				for (final XmlSchemeDevice schemeDevice : schemeProtoElement.getSchemeDevices().getSchemeDeviceArray()) {
+					SchemeDevice.createInstance(super.creatorId, schemeDevice, importType);
+				}
 			}
+			if (schemeProtoElement.isSetSchemeLinks()) {
+				for (final XmlSchemeLink schemeLink : schemeProtoElement.getSchemeLinks().getSchemeLinkArray()) {
+					SchemeLink.createInstance(super.creatorId, schemeLink, importType);
+				}
+			}
+	
+			XmlComplementorRegistry.complementStorableObject(schemeProtoElement, SCHEMEPROTOELEMENT_CODE, importType, POST_IMPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-
-		XmlComplementorRegistry.complementStorableObject(schemeProtoElement, SCHEMEPROTOELEMENT_CODE, importType, POST_IMPORT);
 	}
 
 	/**

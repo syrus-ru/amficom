@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.118 2005/12/06 11:33:06 bass Exp $
+ * $Id: SiteNode.java,v 1.119 2005/12/07 16:41:51 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
-import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -44,9 +43,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlSiteNode;
@@ -54,6 +51,8 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
 import com.syrus.AMFICOM.map.xml.XmlSiteNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * Сетевой узел на топологической схеме. Характеризуется типом
@@ -68,12 +67,12 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.118 $, $Date: 2005/12/06 11:33:06 $
+ * @version $Revision: 1.119 $, $Date: 2005/12/07 16:41:51 $
  * @module map
  */
 public class SiteNode extends AbstractNode<SiteNode>
 		implements Characterizable,
-		TypedObject<SiteNodeType>, XmlBeansTransferable<XmlSiteNode> {
+		TypedObject<SiteNodeType>, XmlTransferableObject<XmlSiteNode> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -366,13 +365,13 @@ public class SiteNode extends AbstractNode<SiteNode>
 	 * @param siteNode
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public final void getXmlTransferable(final XmlSiteNode siteNode,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		this.id.getXmlTransferable(siteNode.addNewId(), importType);
 		siteNode.setName(this.name);
 		if(this.description != null && this.description.length() != 0) {
@@ -422,67 +421,67 @@ public class SiteNode extends AbstractNode<SiteNode>
 
 	public final void fromXmlTransferable(final XmlSiteNode xmlSiteNode,
 			final String importType)
-	throws ApplicationException {
-		this.name = xmlSiteNode.getName();
-		if(xmlSiteNode.isSetDescription()) {
-			this.description = xmlSiteNode.getDescription();
-		}
-		else {
-			this.description = "";
-		}
-		if(xmlSiteNode.isSetCity()) {
-			this.city = xmlSiteNode.getCity();
-		}
-		else {
-			this.city = "";
-		}
-		if(xmlSiteNode.isSetStreet()) {
-			this.street = xmlSiteNode.getStreet();
-		}
-		else {
-			this.street = "";
-		}
-		if(xmlSiteNode.isSetBuilding()) {
-			this.building = xmlSiteNode.getBuilding();
-		}
-		else {
-			this.building = "";
-		}
-
-		super.location.setLocation(xmlSiteNode.getX(), xmlSiteNode.getY());
-		if (xmlSiteNode.isSetAttachmentSiteNodeId()) {
-			// NOTE: this call to Identifier.fromXmlTransferable may result in
-			// ObjectNotFoundException if this siteNode is being imported prior
-			// to it's attachment site node.
-			// to avoid the exception make sure imported site node are correctly
-			// sorted. This is done by sorting site nodes at export time
-			// (exporting from AMFICOM - see Map#getXmlTransferable,
-			// exporting from UniCableMap - see module 'importUCM').
-			this.attachmentSiteNodeId = Identifier.fromXmlTransferable(xmlSiteNode.getAttachmentSiteNodeId(), importType, MODE_THROW_IF_ABSENT); 
-		} else {
-			this.attachmentSiteNodeId = VOID_IDENTIFIER;
-		}
-
-		final TypicalCondition condition = new TypicalCondition(xmlSiteNode.getSiteNodeTypeCodename(),
-				OperationSort.OPERATION_EQUALS,
-				SITENODE_TYPE_CODE,
-				StorableObjectWrapper.COLUMN_CODENAME);
-
-		//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-		Set<SiteNodeType> siteNodeTypes = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
-		if (siteNodeTypes.isEmpty()) {
-			condition.setValue(SiteNodeType.DEFAULT_BUILDING);
-
-			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-			siteNodeTypes = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
-			if (siteNodeTypes.isEmpty()) {
-				throw new CreateObjectException("SiteNodeType \'" + SiteNodeType.DEFAULT_BUILDING + "\' not found");
+	throws XmlConversionException {
+		try {
+			this.name = xmlSiteNode.getName();
+			if(xmlSiteNode.isSetDescription()) {
+				this.description = xmlSiteNode.getDescription();
+			} else {
+				this.description = "";
 			}
+			if(xmlSiteNode.isSetCity()) {
+				this.city = xmlSiteNode.getCity();
+			} else {
+				this.city = "";
+			}
+			if(xmlSiteNode.isSetStreet()) {
+				this.street = xmlSiteNode.getStreet();
+			} else {
+				this.street = "";
+			}
+			if(xmlSiteNode.isSetBuilding()) {
+				this.building = xmlSiteNode.getBuilding();
+			} else {
+				this.building = "";
+			}
+	
+			super.location.setLocation(xmlSiteNode.getX(), xmlSiteNode.getY());
+			if (xmlSiteNode.isSetAttachmentSiteNodeId()) {
+				// NOTE: this call to Identifier.fromXmlTransferable may result in
+				// ObjectNotFoundException if this siteNode is being imported prior
+				// to it's attachment site node.
+				// to avoid the exception make sure imported site node are correctly
+				// sorted. This is done by sorting site nodes at export time
+				// (exporting from AMFICOM - see Map#getXmlTransferable,
+				// exporting from UniCableMap - see module 'importUCM').
+				this.attachmentSiteNodeId = Identifier.fromXmlTransferable(xmlSiteNode.getAttachmentSiteNodeId(), importType, MODE_THROW_IF_ABSENT); 
+			} else {
+				this.attachmentSiteNodeId = VOID_IDENTIFIER;
+			}
+	
+			final TypicalCondition condition = new TypicalCondition(xmlSiteNode.getSiteNodeTypeCodename(),
+					OperationSort.OPERATION_EQUALS,
+					SITENODE_TYPE_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
+	
+			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+			Set<SiteNodeType> siteNodeTypes = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
+			if (siteNodeTypes.isEmpty()) {
+				condition.setValue(SiteNodeType.DEFAULT_BUILDING);
+	
+				//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+				siteNodeTypes = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
+				if (siteNodeTypes.isEmpty()) {
+					throw new XmlConversionException("SiteNodeType \'" + SiteNodeType.DEFAULT_BUILDING + "\' not found");
+				}
+			}
+			
+			this.type = siteNodeTypes.iterator().next();
+	
+			this.imageId = this.type.getImageId();
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-		
-		this.type = siteNodeTypes.iterator().next();
-
-		this.imageId = this.type.getImageId();
 	}
 
 	/**
@@ -525,8 +524,9 @@ public class SiteNode extends AbstractNode<SiteNode>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 

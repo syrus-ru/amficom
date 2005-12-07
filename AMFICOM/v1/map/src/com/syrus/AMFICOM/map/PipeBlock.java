@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlock.java,v 1.13 2005/12/06 09:43:34 bass Exp $
+ * $Id: PipeBlock.java,v 1.14 2005/12/07 16:41:51 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.PIPEBLOCK_CODE;
-import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -33,7 +32,6 @@ import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlPipeBlock;
@@ -41,7 +39,8 @@ import com.syrus.AMFICOM.map.corba.IdlPipeBlockHelper;
 import com.syrus.AMFICOM.map.xml.XmlPipeBlock;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
-import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * Объект привязки кабелей к тоннелю. Принадлежит определенному тоннелю.
@@ -49,12 +48,12 @@ import com.syrus.util.Log;
  * и матрицу пролегания кабелей по трубам тоннеля.
  *
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/12/06 09:43:34 $
+ * @version $Revision: 1.14 $, $Date: 2005/12/07 16:41:51 $
  * @module map
  */
 public final class PipeBlock 
 		extends StorableObject<PipeBlock>
-		implements XmlBeansTransferable<XmlPipeBlock>,
+		implements XmlTransferableObject<XmlPipeBlock>,
 		Comparable<PipeBlock> {
 	private static final long serialVersionUID = -6089210980096232608L;
 
@@ -481,7 +480,8 @@ public final class PipeBlock
 	public void getXmlTransferable(
 			XmlPipeBlock xmlPipeBlock, 
 			String importType, 
-			boolean usePool) throws ApplicationException {
+			boolean usePool)
+	throws XmlConversionException {
 		this.id.getXmlTransferable(xmlPipeBlock.addNewId(), importType);
 		xmlPipeBlock.setNumber(this.number);
 		xmlPipeBlock.setDimensionX(this.dimension.getWidth());
@@ -502,8 +502,8 @@ public final class PipeBlock
 
 	public void fromXmlTransferable(
 			XmlPipeBlock xmlPipeBlock, 
-			String importType) throws ApplicationException {
-
+			String importType)
+	throws XmlConversionException {
 		this.number = xmlPipeBlock.isSetNumber() ?
 				xmlPipeBlock.getNumber()
 				: 0;
@@ -561,8 +561,9 @@ public final class PipeBlock
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 

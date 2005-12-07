@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThreadType.java,v 1.80 2005/12/06 09:41:25 bass Exp $
+ * $Id: CableThreadType.java,v 1.81 2005/12/07 16:41:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
-import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
@@ -40,15 +39,17 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * <code>CableThreadType</code>, among other fields, contain references to
@@ -56,13 +57,13 @@ import com.syrus.util.Shitlet;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.80 $, $Date: 2005/12/06 09:41:25 $
+ * @version $Revision: 1.81 $, $Date: 2005/12/07 16:41:51 $
  * @author $Author: bass $
  * @module config
  */
 
 public final class CableThreadType extends StorableObjectType<CableThreadType>
-		implements Namable, XmlBeansTransferable<XmlCableThreadType> {
+		implements Namable, XmlTransferableObject<XmlCableThreadType> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -218,8 +219,9 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 
@@ -276,23 +278,27 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 	/**
 	 * @param cableThreadType
 	 * @param importType
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @throws XmlConversionException
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	@Shitlet
 	public void fromXmlTransferable(final XmlCableThreadType cableThreadType,
 			final String importType)
-	throws ApplicationException {
-		this.name = cableThreadType.getName();
-		this.codename = cableThreadType.getCodename();
-		this.description = cableThreadType.isSetDescription()
-				? cableThreadType.getDescription()
-				: "";
-		this.color = cableThreadType.isSetColor()
-				? Integer.parseInt(cableThreadType.getColor())
-				: -1;
-		this.linkTypeId = Identifier.fromXmlTransferable(cableThreadType.getLinkTypeId(), importType, MODE_THROW_IF_ABSENT);
-		this.cableLinkTypeId = Identifier.fromXmlTransferable(cableThreadType.getCableLinkTypeId(), importType, MODE_THROW_IF_ABSENT);
+	throws XmlConversionException {
+		try {
+			this.name = cableThreadType.getName();
+			this.codename = cableThreadType.getCodename();
+			this.description = cableThreadType.isSetDescription()
+					? cableThreadType.getDescription()
+					: "";
+			this.color = cableThreadType.isSetColor()
+					? Integer.parseInt(cableThreadType.getColor())
+					: -1;
+			this.linkTypeId = Identifier.fromXmlTransferable(cableThreadType.getLinkTypeId(), importType, MODE_THROW_IF_ABSENT);
+			this.cableLinkTypeId = Identifier.fromXmlTransferable(cableThreadType.getCableLinkTypeId(), importType, MODE_THROW_IF_ABSENT);
+		} catch (final ObjectNotFoundException onfe) {
+			throw new XmlConversionException(onfe);
+		}
 	}
 
 	/**
@@ -320,15 +326,15 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 	 * @param cableThreadType
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	@Shitlet
 	public void getXmlTransferable(
 			final XmlCableThreadType cableThreadType,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.121 2005/12/06 09:43:34 bass Exp $
+ * $Id: Map.java,v 1.122 2005/12/07 16:41:51 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN
 import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
-import static java.util.logging.Level.SEVERE;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -41,7 +40,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
@@ -60,7 +58,8 @@ import com.syrus.AMFICOM.map.xml.XmlSiteNode;
 import com.syrus.AMFICOM.map.xml.XmlSiteNodeSeq;
 import com.syrus.AMFICOM.map.xml.XmlTopologicalNode;
 import com.syrus.AMFICOM.map.xml.XmlTopologicalNodeSeq;
-import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * Топологическая схема, которая содержит в себе набор связанных друг с другом
@@ -68,11 +67,11 @@ import com.syrus.util.Log;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.121 $, $Date: 2005/12/06 09:43:34 $
+ * @version $Revision: 1.122 $, $Date: 2005/12/07 16:41:51 $
  * @module map
  */
 public final class Map extends DomainMember<Map>
-		implements Namable, XmlBeansTransferable<XmlMap> {
+		implements Namable, XmlTransferableObject<XmlMap> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -1102,13 +1101,13 @@ public final class Map extends DomainMember<Map>
 	 * @param map
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlMap map,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		this.id.getXmlTransferable(map.addNewId(), importType);
 		map.setName(this.name);
 		if(this.description != null && this.description.length() != 0) {
@@ -1204,70 +1203,74 @@ public final class Map extends DomainMember<Map>
 		super(id, importType, MAP_CODE, created, creatorId);
 	}
 
-	public void fromXmlTransferable(final XmlMap xmlMap, final String importType) throws ApplicationException {
-		this.name = xmlMap.getName();
-		if(xmlMap.isSetDescription()) {
-			this.description = xmlMap.getDescription();
-		}
-		else {
-			this.description = "";
-		}
-
-		this.siteNodeIds = new HashSet<Identifier>();
-		this.topologicalNodeIds = new HashSet<Identifier>();
-		this.nodeLinkIds = new HashSet<Identifier>();
-		this.physicalLinkIds = new HashSet<Identifier>();
-		this.markIds = new HashSet<Identifier>();
-		this.collectorIds = new HashSet<Identifier>();
-
-		this.mapIds = new HashSet<Identifier>();
-		this.externalNodeIds = new HashSet<Identifier>();
-		this.mapLibraryIds = new HashSet<Identifier>();
-
-		final XmlMapLibraryEntrySeq mapLibraryEntries = xmlMap.getMapLibraryEntries();
-		if (mapLibraryEntries != null) {
-			for (final String xmlMapLibraryEntry : mapLibraryEntries.getMapLibraryEntryArray()) {
-				final StorableObjectCondition pTypeCondition = new TypicalCondition(xmlMapLibraryEntry,
-						OperationSort.OPERATION_EQUALS,
-						MAPLIBRARY_CODE,
-						StorableObjectWrapper.COLUMN_CODENAME);
-
-				final Collection<MapLibrary> pTypes = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
-				if (pTypes.size() == 0) {
-					throw new ApplicationException("Library " + xmlMapLibraryEntry + " does not exist. Cannot proceed with import");
+	public void fromXmlTransferable(final XmlMap xmlMap, final String importType)
+	throws XmlConversionException {
+		try {
+			this.name = xmlMap.getName();
+			if (xmlMap.isSetDescription()) {
+				this.description = xmlMap.getDescription();
+			} else {
+				this.description = "";
+			}
+	
+			this.siteNodeIds = new HashSet<Identifier>();
+			this.topologicalNodeIds = new HashSet<Identifier>();
+			this.nodeLinkIds = new HashSet<Identifier>();
+			this.physicalLinkIds = new HashSet<Identifier>();
+			this.markIds = new HashSet<Identifier>();
+			this.collectorIds = new HashSet<Identifier>();
+	
+			this.mapIds = new HashSet<Identifier>();
+			this.externalNodeIds = new HashSet<Identifier>();
+			this.mapLibraryIds = new HashSet<Identifier>();
+	
+			final XmlMapLibraryEntrySeq mapLibraryEntries = xmlMap.getMapLibraryEntries();
+			if (mapLibraryEntries != null) {
+				for (final String xmlMapLibraryEntry : mapLibraryEntries.getMapLibraryEntryArray()) {
+					final StorableObjectCondition pTypeCondition = new TypicalCondition(xmlMapLibraryEntry,
+							OperationSort.OPERATION_EQUALS,
+							MAPLIBRARY_CODE,
+							StorableObjectWrapper.COLUMN_CODENAME);
+	
+					final Collection<MapLibrary> pTypes = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+					if (pTypes.size() == 0) {
+						throw new ApplicationException("Library " + xmlMapLibraryEntry + " does not exist. Cannot proceed with import");
+					}
+					this.addMapLibrary(pTypes.iterator().next());
 				}
-				this.addMapLibrary(pTypes.iterator().next());
 			}
-		}
-
-		if(xmlMap.isSetTopologicalNodes()) {
-			for (final XmlTopologicalNode xmlTopologicalNode : xmlMap.getTopologicalNodes().getTopologicalNodeArray()) {
-				this.addNode(TopologicalNode.createInstance(this.creatorId, importType, xmlTopologicalNode));
+	
+			if(xmlMap.isSetTopologicalNodes()) {
+				for (final XmlTopologicalNode xmlTopologicalNode : xmlMap.getTopologicalNodes().getTopologicalNodeArray()) {
+					this.addNode(TopologicalNode.createInstance(this.creatorId, importType, xmlTopologicalNode));
+				}
 			}
-		}
-
-		if(xmlMap.isSetSiteNodes()) {
-			for (final XmlSiteNode xmlSiteNode : xmlMap.getSiteNodes().getSiteNodeArray()) {
-				this.addNode(SiteNode.createInstance(this.creatorId, importType, xmlSiteNode));
+	
+			if(xmlMap.isSetSiteNodes()) {
+				for (final XmlSiteNode xmlSiteNode : xmlMap.getSiteNodes().getSiteNodeArray()) {
+					this.addNode(SiteNode.createInstance(this.creatorId, importType, xmlSiteNode));
+				}
 			}
-		}
-
-		if(xmlMap.isSetPhysicalLinks()) {
-			for (final XmlPhysicalLink xmlPhysicalLink : xmlMap.getPhysicalLinks().getPhysicalLinkArray()) {
-				this.addPhysicalLink(PhysicalLink.createInstance(this.creatorId, importType, xmlPhysicalLink));
+	
+			if(xmlMap.isSetPhysicalLinks()) {
+				for (final XmlPhysicalLink xmlPhysicalLink : xmlMap.getPhysicalLinks().getPhysicalLinkArray()) {
+					this.addPhysicalLink(PhysicalLink.createInstance(this.creatorId, importType, xmlPhysicalLink));
+				}
 			}
-		}
-
-		if(xmlMap.isSetNodeLinks()) {
-			for (final XmlNodeLink xmlNodeLink : xmlMap.getNodeLinks().getNodeLinkArray()) {
-				this.addNodeLink(NodeLink.createInstance(this.creatorId, importType, xmlNodeLink));
+	
+			if(xmlMap.isSetNodeLinks()) {
+				for (final XmlNodeLink xmlNodeLink : xmlMap.getNodeLinks().getNodeLinkArray()) {
+					this.addNodeLink(NodeLink.createInstance(this.creatorId, importType, xmlNodeLink));
+				}
 			}
-		}
-
-		if(xmlMap.isSetCollectors()) {
-			for (final XmlCollector xmlCollector : xmlMap.getCollectors().getCollectorArray()) {
-				this.addCollector(Collector.createInstance(this.creatorId, importType, xmlCollector));
+	
+			if(xmlMap.isSetCollectors()) {
+				for (final XmlCollector xmlCollector : xmlMap.getCollectors().getCollectorArray()) {
+					this.addCollector(Collector.createInstance(this.creatorId, importType, xmlCollector));
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
 	}
 
@@ -1312,8 +1315,9 @@ public final class Map extends DomainMember<Map>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 

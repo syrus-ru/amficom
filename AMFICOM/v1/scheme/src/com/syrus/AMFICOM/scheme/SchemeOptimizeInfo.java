@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.81 2005/12/06 09:44:22 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.82 2005/12/07 16:41:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,23 +42,24 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfo;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfo;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.81 $, $Date: 2005/12/06 09:44:22 $
+ * @version $Revision: 1.82 $, $Date: 2005/12/07 16:41:54 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject<SchemeOptimizeInfo>
 		implements Describable, ReverseDependencyContainer,
-		XmlBeansTransferable<XmlSchemeOptimizeInfo> {
+		XmlTransferableObject<XmlSchemeOptimizeInfo> {
 	private static final long serialVersionUID = 3761127137155232822L;
 
 	private String name;
@@ -402,14 +403,14 @@ public final class SchemeOptimizeInfo extends StorableObject<SchemeOptimizeInfo>
 	 * @param schemeOptimizeInfo
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeOptimizeInfo schemeOptimizeInfo,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -678,13 +679,13 @@ public final class SchemeOptimizeInfo extends StorableObject<SchemeOptimizeInfo>
 	/**
 	 * @param xmlSchemeOptimizeInfo
 	 * @param importType
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @throws XmlConversionException
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void fromXmlTransferable(
 			final XmlSchemeOptimizeInfo xmlSchemeOptimizeInfo,
 			final String importType)
-	throws ApplicationException {
+	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
 

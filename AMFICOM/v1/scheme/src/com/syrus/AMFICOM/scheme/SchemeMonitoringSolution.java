@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.87 2005/12/06 09:44:22 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.88 2005/12/07 16:41:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,24 +44,25 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeMonitoringSolution;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeMonitoringSolutionHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeMonitoringSolution;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.87 $, $Date: 2005/12/06 09:44:22 $
+ * @version $Revision: 1.88 $, $Date: 2005/12/07 16:41:54 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
 		extends StorableObject<SchemeMonitoringSolution>
 		implements Describable, ReverseDependencyContainer,
-		XmlBeansTransferable<XmlSchemeMonitoringSolution> {
+		XmlTransferableObject<XmlSchemeMonitoringSolution> {
 	private static final long serialVersionUID = 3906364939487949361L;
 
 	private String name;
@@ -382,14 +383,14 @@ public final class SchemeMonitoringSolution
 	 * @param schemeMonitoringSolution
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeMonitoringSolution schemeMonitoringSolution,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -718,13 +719,13 @@ public final class SchemeMonitoringSolution
 	/**
 	 * @param xmlSchemeMonitoringSolution
 	 * @param importType
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @throws XmlConversionException
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void fromXmlTransferable(
 			final XmlSchemeMonitoringSolution xmlSchemeMonitoringSolution,
 			final String importType)
-	throws ApplicationException {
+	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.90 2005/12/06 09:44:23 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.91 2005/12/07 16:41:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,6 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -59,18 +58,20 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElementSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroupSeq;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.90 $, $Date: 2005/12/06 09:44:23 $
+ * @version $Revision: 1.91 $, $Date: 2005/12/07 16:41:54 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject<SchemeProtoGroup>
 		implements Describable, SchemeSymbolContainer,
 		ReverseDependencyContainer,
-		XmlBeansTransferable<XmlSchemeProtoGroup> {
+		XmlTransferableObject<XmlSchemeProtoGroup> {
 	private static final long serialVersionUID = 3256721788422862901L;
 
 	private String name;
@@ -238,8 +239,9 @@ public final class SchemeProtoGroup extends StorableObject<SchemeProtoGroup>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 
@@ -357,56 +359,60 @@ public final class SchemeProtoGroup extends StorableObject<SchemeProtoGroup>
 	 * @param schemeProtoGroup
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeProtoGroup schemeProtoGroup,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
-		super.id.getXmlTransferable(schemeProtoGroup.addNewId(), importType);
-		schemeProtoGroup.setName(this.name);
-		if (schemeProtoGroup.isSetDescription()) {
-			schemeProtoGroup.unsetDescription();
-		}
-		if (this.description.length() != 0) {
-			schemeProtoGroup.setDescription(this.description);
-		}
-		if (schemeProtoGroup.isSetSymbolId()) {
-			schemeProtoGroup.unsetSymbolId();
-		}
-		if (!this.symbolId.isVoid()) {
-			this.symbolId.getXmlTransferable(schemeProtoGroup.addNewSymbolId(), importType);
-		}
-		if (schemeProtoGroup.isSetParentSchemeProtoGroupId()) {
-			schemeProtoGroup.unsetParentSchemeProtoGroupId();
-		}
-		if (!this.parentSchemeProtoGroupId.isVoid()) {
-			this.parentSchemeProtoGroupId.getXmlTransferable(schemeProtoGroup.addNewParentSchemeProtoGroupId(), importType);
-		}
-		if (schemeProtoGroup.isSetSchemeProtoGroups()) {
-			schemeProtoGroup.unsetSchemeProtoGroups();
-		}
-		final Set<SchemeProtoGroup> schemeProtoGroups = this.getSchemeProtoGroups0(usePool);
-		if (!schemeProtoGroups.isEmpty()) {
-			final XmlSchemeProtoGroupSeq schemeProtoGroupSeq = schemeProtoGroup.addNewSchemeProtoGroups();
-			for (final SchemeProtoGroup schemeProtoGroup2 : schemeProtoGroups) {
-				schemeProtoGroup2.getXmlTransferable(schemeProtoGroupSeq.addNewSchemeProtoGroup(), importType, usePool);
+	throws XmlConversionException {
+		try {
+			super.id.getXmlTransferable(schemeProtoGroup.addNewId(), importType);
+			schemeProtoGroup.setName(this.name);
+			if (schemeProtoGroup.isSetDescription()) {
+				schemeProtoGroup.unsetDescription();
 			}
-		}
-		if (schemeProtoGroup.isSetSchemeProtoElements()) {
-			schemeProtoGroup.unsetSchemeProtoElements();
-		}
-		final Set<SchemeProtoElement> schemeProtoElements = this.getSchemeProtoElements0(usePool);
-		if (!schemeProtoElements.isEmpty()) {
-			final XmlSchemeProtoElementSeq schemeProtoElementSeq = schemeProtoGroup.addNewSchemeProtoElements();
-			for (final SchemeProtoElement schemeProtoElement : schemeProtoElements) {
-				schemeProtoElement.getXmlTransferable(schemeProtoElementSeq.addNewSchemeProtoElement(), importType, usePool);
+			if (this.description.length() != 0) {
+				schemeProtoGroup.setDescription(this.description);
 			}
+			if (schemeProtoGroup.isSetSymbolId()) {
+				schemeProtoGroup.unsetSymbolId();
+			}
+			if (!this.symbolId.isVoid()) {
+				this.symbolId.getXmlTransferable(schemeProtoGroup.addNewSymbolId(), importType);
+			}
+			if (schemeProtoGroup.isSetParentSchemeProtoGroupId()) {
+				schemeProtoGroup.unsetParentSchemeProtoGroupId();
+			}
+			if (!this.parentSchemeProtoGroupId.isVoid()) {
+				this.parentSchemeProtoGroupId.getXmlTransferable(schemeProtoGroup.addNewParentSchemeProtoGroupId(), importType);
+			}
+			if (schemeProtoGroup.isSetSchemeProtoGroups()) {
+				schemeProtoGroup.unsetSchemeProtoGroups();
+			}
+			final Set<SchemeProtoGroup> schemeProtoGroups = this.getSchemeProtoGroups0(usePool);
+			if (!schemeProtoGroups.isEmpty()) {
+				final XmlSchemeProtoGroupSeq schemeProtoGroupSeq = schemeProtoGroup.addNewSchemeProtoGroups();
+				for (final SchemeProtoGroup schemeProtoGroup2 : schemeProtoGroups) {
+					schemeProtoGroup2.getXmlTransferable(schemeProtoGroupSeq.addNewSchemeProtoGroup(), importType, usePool);
+				}
+			}
+			if (schemeProtoGroup.isSetSchemeProtoElements()) {
+				schemeProtoGroup.unsetSchemeProtoElements();
+			}
+			final Set<SchemeProtoElement> schemeProtoElements = this.getSchemeProtoElements0(usePool);
+			if (!schemeProtoElements.isEmpty()) {
+				final XmlSchemeProtoElementSeq schemeProtoElementSeq = schemeProtoGroup.addNewSchemeProtoElements();
+				for (final SchemeProtoElement schemeProtoElement : schemeProtoElements) {
+					schemeProtoElement.getXmlTransferable(schemeProtoElementSeq.addNewSchemeProtoElement(), importType, usePool);
+				}
+			}
+			schemeProtoGroup.setImportType(importType);
+			XmlComplementorRegistry.complementStorableObject(schemeProtoGroup, SCHEMEPROTOGROUP_CODE, importType, EXPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-		schemeProtoGroup.setImportType(importType);
-		XmlComplementorRegistry.complementStorableObject(schemeProtoGroup, SCHEMEPROTOGROUP_CODE, importType, EXPORT);
 	}
 
 	/**
@@ -572,37 +578,41 @@ public final class SchemeProtoGroup extends StorableObject<SchemeProtoGroup>
 	/**
 	 * @param schemeProtoGroup
 	 * @param importType
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @throws XmlConversionException
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void fromXmlTransferable(
 			final XmlSchemeProtoGroup schemeProtoGroup,
 			final String importType)
-	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(schemeProtoGroup, SCHEMEPROTOGROUP_CODE, importType, PRE_IMPORT);
-
-		this.name = schemeProtoGroup.getName();
-		this.description = schemeProtoGroup.isSetDescription()
-				? schemeProtoGroup.getDescription()
-				: "";
-		this.symbolId = schemeProtoGroup.isSetSymbolId()
-				? Identifier.fromXmlTransferable(schemeProtoGroup.getSymbolId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
-		this.parentSchemeProtoGroupId = schemeProtoGroup.isSetParentSchemeProtoGroupId()
-				? Identifier.fromXmlTransferable(schemeProtoGroup.getParentSchemeProtoGroupId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
-		if (schemeProtoGroup.isSetSchemeProtoGroups()) {
-			for (final XmlSchemeProtoGroup schemeProtoGroup2 : schemeProtoGroup.getSchemeProtoGroups().getSchemeProtoGroupArray()) {
-				createInstance(super.creatorId, schemeProtoGroup2);
+	throws XmlConversionException {
+		try {
+			XmlComplementorRegistry.complementStorableObject(schemeProtoGroup, SCHEMEPROTOGROUP_CODE, importType, PRE_IMPORT);
+	
+			this.name = schemeProtoGroup.getName();
+			this.description = schemeProtoGroup.isSetDescription()
+					? schemeProtoGroup.getDescription()
+					: "";
+			this.symbolId = schemeProtoGroup.isSetSymbolId()
+					? Identifier.fromXmlTransferable(schemeProtoGroup.getSymbolId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER;
+			this.parentSchemeProtoGroupId = schemeProtoGroup.isSetParentSchemeProtoGroupId()
+					? Identifier.fromXmlTransferable(schemeProtoGroup.getParentSchemeProtoGroupId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER;
+			if (schemeProtoGroup.isSetSchemeProtoGroups()) {
+				for (final XmlSchemeProtoGroup schemeProtoGroup2 : schemeProtoGroup.getSchemeProtoGroups().getSchemeProtoGroupArray()) {
+					createInstance(super.creatorId, schemeProtoGroup2);
+				}
 			}
-		}
-		if (schemeProtoGroup.isSetSchemeProtoElements()) {
-			for (final XmlSchemeProtoElement schemeProtoElement : schemeProtoGroup.getSchemeProtoElements().getSchemeProtoElementArray()) {
-				SchemeProtoElement.createInstance(super.creatorId, schemeProtoElement, importType);
+			if (schemeProtoGroup.isSetSchemeProtoElements()) {
+				for (final XmlSchemeProtoElement schemeProtoElement : schemeProtoGroup.getSchemeProtoElements().getSchemeProtoElementArray()) {
+					SchemeProtoElement.createInstance(super.creatorId, schemeProtoElement, importType);
+				}
 			}
+	
+			XmlComplementorRegistry.complementStorableObject(schemeProtoGroup, SCHEMEPROTOGROUP_CODE, importType, POST_IMPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-
-		XmlComplementorRegistry.complementStorableObject(schemeProtoGroup, SCHEMEPROTOGROUP_CODE, importType, POST_IMPORT);
 	}
 
 	/**

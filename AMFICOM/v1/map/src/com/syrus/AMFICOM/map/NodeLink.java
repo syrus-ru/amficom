@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.113 2005/12/06 09:43:34 bass Exp $
+ * $Id: NodeLink.java,v 1.114 2005/12/07 16:41:51 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
 import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -31,10 +30,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlNodeLink;
@@ -43,6 +42,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSo
 import com.syrus.AMFICOM.map.xml.XmlNodeLink;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * Фрагмент линии на топологической схеме. Фрагмент представляет собой линейный
@@ -50,11 +51,11 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.113 $, $Date: 2005/12/06 09:43:34 $
+ * @version $Revision: 1.114 $, $Date: 2005/12/07 16:41:51 $
  * @module map
  */
 public final class NodeLink extends StorableObject<NodeLink>
-		implements MapElement, XmlBeansTransferable<XmlNodeLink> {
+		implements MapElement, XmlTransferableObject<XmlNodeLink> {
 	private static final long serialVersionUID = 3257290240262617393L;
 
 	private String name;
@@ -438,13 +439,13 @@ public final class NodeLink extends StorableObject<NodeLink>
 	 * @param nodeLink
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlNodeLink nodeLink,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		this.id.getXmlTransferable(nodeLink.addNewId(), importType);
 		nodeLink.setLength(this.length);
 		this.physicalLinkId.getXmlTransferable(nodeLink.addNewPhysicalLinkId(), importType);
@@ -474,17 +475,22 @@ public final class NodeLink extends StorableObject<NodeLink>
 		this.selected = false;
 	}
 
-	public void fromXmlTransferable(final XmlNodeLink xmlNodeLink, final String importType) throws ApplicationException {
-		this.length = xmlNodeLink.getLength();
-
-		final Identifier startNodeId1 = Identifier.fromXmlTransferable(xmlNodeLink.getStartNodeId(), importType, MODE_THROW_IF_ABSENT);
-		final Identifier endNodeId1 = Identifier.fromXmlTransferable(xmlNodeLink.getEndNodeId(), importType, MODE_THROW_IF_ABSENT);
-
-		this.physicalLinkId = Identifier.fromXmlTransferable(xmlNodeLink.getPhysicalLinkId(), importType, MODE_THROW_IF_ABSENT);
-		this.startNodeId = startNodeId1;
-		this.endNodeId = endNodeId1;
-		
-		this.getPhysicalLink().addNodeLink(this);
+	public void fromXmlTransferable(final XmlNodeLink xmlNodeLink, final String importType)
+	throws XmlConversionException {
+		try {
+			this.length = xmlNodeLink.getLength();
+	
+			final Identifier startNodeId1 = Identifier.fromXmlTransferable(xmlNodeLink.getStartNodeId(), importType, MODE_THROW_IF_ABSENT);
+			final Identifier endNodeId1 = Identifier.fromXmlTransferable(xmlNodeLink.getEndNodeId(), importType, MODE_THROW_IF_ABSENT);
+	
+			this.physicalLinkId = Identifier.fromXmlTransferable(xmlNodeLink.getPhysicalLinkId(), importType, MODE_THROW_IF_ABSENT);
+			this.startNodeId = startNodeId1;
+			this.endNodeId = endNodeId1;
+			
+			this.getPhysicalLink().addNodeLink(this);
+		} catch (final ObjectNotFoundException onfe) {
+			throw new XmlConversionException(onfe);
+		}
 	}
 
 	/**
@@ -527,8 +533,9 @@ public final class NodeLink extends StorableObject<NodeLink>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 

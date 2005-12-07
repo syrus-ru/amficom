@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.21 2005/12/06 09:41:25 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.22 2005/12/07 16:41:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
-import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -43,24 +42,24 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/12/06 09:41:25 $
+ * @version $Revision: 1.22 $, $Date: 2005/12/07 16:41:51 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 		implements Characterizable, Namable,
-		XmlBeansTransferable<XmlProtoEquipment> {
+		XmlTransferableObject<XmlProtoEquipment> {
 	private static final long serialVersionUID = 7066410483749919904L;
 
 	private EquipmentType type;
@@ -193,8 +192,9 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 
@@ -210,28 +210,39 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 	}
 
 	/**
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 * @param protoEquipment
 	 * @param importType
-	 * @throws ApplicationException
+	 * @throws XmlConversionException
 	 */
 	@Shitlet
-	public void fromXmlTransferable(final XmlProtoEquipment protoEquipment, final String importType) throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(protoEquipment, PROTOEQUIPMENT_CODE, importType, PRE_IMPORT);
-
-		this.type = EquipmentType.fromXmlTransferable(protoEquipment.getXmlEquipmentType());
-
-		this.name = protoEquipment.getName();
-		this.description = protoEquipment.isSetDescription() ? protoEquipment.getDescription() : "";
-		this.manufacturer = protoEquipment.isSetManufacturer() ? protoEquipment.getManufacturer() : "";
-		this.manufacturerCode = protoEquipment.isSetManufacturerCode() ? protoEquipment.getManufacturerCode() : "";
-		if (protoEquipment.isSetCharacteristics()) {
-			for (final XmlCharacteristic characteristic : protoEquipment.getCharacteristics().getCharacteristicArray()) {
-				Characteristic.createInstance(super.creatorId, characteristic, importType);
+	public void fromXmlTransferable(final XmlProtoEquipment protoEquipment, final String importType)
+	throws XmlConversionException {
+		try {
+			XmlComplementorRegistry.complementStorableObject(protoEquipment, PROTOEQUIPMENT_CODE, importType, PRE_IMPORT);
+	
+			this.type = EquipmentType.fromXmlTransferable(protoEquipment.getXmlEquipmentType());
+	
+			this.name = protoEquipment.getName();
+			this.description = protoEquipment.isSetDescription()
+					? protoEquipment.getDescription()
+					: "";
+			this.manufacturer = protoEquipment.isSetManufacturer()
+					? protoEquipment.getManufacturer()
+					: "";
+			this.manufacturerCode = protoEquipment.isSetManufacturerCode()
+					? protoEquipment.getManufacturerCode()
+					: "";
+			if (protoEquipment.isSetCharacteristics()) {
+				for (final XmlCharacteristic characteristic : protoEquipment.getCharacteristics().getCharacteristicArray()) {
+					Characteristic.createInstance(super.creatorId, characteristic, importType);
+				}
 			}
+	
+			XmlComplementorRegistry.complementStorableObject(protoEquipment, PROTOEQUIPMENT_CODE, importType, POST_IMPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae); 
 		}
-
-		XmlComplementorRegistry.complementStorableObject(protoEquipment, PROTOEQUIPMENT_CODE, importType, POST_IMPORT);
 	}
 
 	/**
@@ -257,48 +268,52 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 	 * @param protoEquipment
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlProtoEquipment protoEquipment,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
-		super.id.getXmlTransferable(protoEquipment.addNewId(), importType);
-
-		protoEquipment.setXmlEquipmentType(this.type.getXmlTransferable());
-
-		protoEquipment.setName(this.name);
-		if (protoEquipment.isSetDescription()) {
-			protoEquipment.unsetDescription();
-		}
-		if (this.description != null && this.description.length() != 0) {
-			protoEquipment.setDescription(this.description);
-		}
-		if (protoEquipment.isSetManufacturer()) {
-			protoEquipment.unsetManufacturer();
-		}
-		if (this.manufacturer != null && this.manufacturer.length() != 0) {
-			protoEquipment.setManufacturer(this.manufacturer);
-		}
-		if (protoEquipment.isSetManufacturerCode()) {
-			protoEquipment.unsetManufacturerCode();
-		}
-		if (this.manufacturerCode != null && this.manufacturerCode.length() != 0) {
-			protoEquipment.setManufacturerCode(this.manufacturerCode);
-		}
-		if (protoEquipment.isSetCharacteristics()) {
-			protoEquipment.unsetCharacteristics();
-		}
-		final Set<Characteristic> characteristics = this.getCharacteristics(false);
-		if (false && !characteristics.isEmpty()) {
-			final XmlCharacteristicSeq characteristicSeq = protoEquipment.addNewCharacteristics();
-			for (final Characteristic characteristic : characteristics) {
-				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);
+	throws XmlConversionException {
+		try {
+			super.id.getXmlTransferable(protoEquipment.addNewId(), importType);
+	
+			protoEquipment.setXmlEquipmentType(this.type.getXmlTransferable());
+	
+			protoEquipment.setName(this.name);
+			if (protoEquipment.isSetDescription()) {
+				protoEquipment.unsetDescription();
 			}
+			if (this.description != null && this.description.length() != 0) {
+				protoEquipment.setDescription(this.description);
+			}
+			if (protoEquipment.isSetManufacturer()) {
+				protoEquipment.unsetManufacturer();
+			}
+			if (this.manufacturer != null && this.manufacturer.length() != 0) {
+				protoEquipment.setManufacturer(this.manufacturer);
+			}
+			if (protoEquipment.isSetManufacturerCode()) {
+				protoEquipment.unsetManufacturerCode();
+			}
+			if (this.manufacturerCode != null && this.manufacturerCode.length() != 0) {
+				protoEquipment.setManufacturerCode(this.manufacturerCode);
+			}
+			if (protoEquipment.isSetCharacteristics()) {
+				protoEquipment.unsetCharacteristics();
+			}
+			final Set<Characteristic> characteristics = this.getCharacteristics(false);
+			if (false && !characteristics.isEmpty()) {
+				final XmlCharacteristicSeq characteristicSeq = protoEquipment.addNewCharacteristics();
+				for (final Characteristic characteristic : characteristics) {
+					characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);
+				}
+			}
+	
+			XmlComplementorRegistry.complementStorableObject(protoEquipment, PROTOEQUIPMENT_CODE, importType, EXPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-
-		XmlComplementorRegistry.complementStorableObject(protoEquipment, PROTOEQUIPMENT_CODE, importType, EXPORT);
 	}
 
 	public EquipmentType getType() {

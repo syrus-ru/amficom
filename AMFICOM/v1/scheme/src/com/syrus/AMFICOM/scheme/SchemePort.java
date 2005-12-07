@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.83 2005/12/06 09:44:22 bass Exp $
+ * $Id: SchemePort.java,v 1.84 2005/12/07 16:41:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,8 +47,6 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -58,16 +56,18 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePortHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemePort;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.83 $, $Date: 2005/12/06 09:44:22 $
+ * @version $Revision: 1.84 $, $Date: 2005/12/07 16:41:54 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort<SchemePort>
-		implements XmlBeansTransferable<XmlSchemePort> {
+		implements XmlTransferableObject<XmlSchemePort> {
 	private static final long serialVersionUID = 3256436993469658930L;
 
 	/**
@@ -258,8 +258,9 @@ public final class SchemePort extends AbstractSchemePort<SchemePort>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 
@@ -330,27 +331,31 @@ public final class SchemePort extends AbstractSchemePort<SchemePort>
 	 * @param schemePort
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlSchemePort schemePort,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
-		super.getXmlTransferable(schemePort, importType, usePool);
-		if (schemePort.isSetPortTypeId()) {
-			schemePort.unsetPortTypeId();
+	throws XmlConversionException {
+		try {
+			super.getXmlTransferable(schemePort, importType, usePool);
+			if (schemePort.isSetPortTypeId()) {
+				schemePort.unsetPortTypeId();
+			}
+			if (!super.portTypeId.isVoid()) {
+				super.portTypeId.getXmlTransferable(schemePort.addNewPortTypeId(), importType);
+			}
+			if (schemePort.isSetPortId()) {
+				schemePort.unsetPortId();
+			}
+			if (!super.portId.isVoid()) {
+				super.portId.getXmlTransferable(schemePort.addNewPortId(), importType);
+			}
+			XmlComplementorRegistry.complementStorableObject(schemePort, SCHEMEPORT_CODE, importType, EXPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-		if (!super.portTypeId.isVoid()) {
-			super.portTypeId.getXmlTransferable(schemePort.addNewPortTypeId(), importType);
-		}
-		if (schemePort.isSetPortId()) {
-			schemePort.unsetPortId();
-		}
-		if (!super.portId.isVoid()) {
-			super.portId.getXmlTransferable(schemePort.addNewPortId(), importType);
-		}
-		XmlComplementorRegistry.complementStorableObject(schemePort, SCHEMEPORT_CODE, importType, EXPORT);
 	}
 
 	/**
@@ -382,35 +387,39 @@ public final class SchemePort extends AbstractSchemePort<SchemePort>
 	/**
 	 * @param schemePort
 	 * @param importType
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @throws XmlConversionException
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void fromXmlTransferable(final XmlSchemePort schemePort,
 			final String importType)
-	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(schemePort, SCHEMEPORT_CODE, importType, PRE_IMPORT);
-
-		super.fromXmlTransferable(schemePort, importType);
-
-		final boolean setPortTypeId = schemePort.isSetPortTypeId();
-		final boolean setPortId = schemePort.isSetPortId();
-		if (setPortTypeId) {
-			assert !setPortId : OBJECT_STATE_ILLEGAL;
-
-			super.portTypeId = Identifier.fromXmlTransferable(schemePort.getPortTypeId(), importType, MODE_THROW_IF_ABSENT);
-			super.portId = VOID_IDENTIFIER;
-		} else if (setPortId) {
-			assert !setPortTypeId : OBJECT_STATE_ILLEGAL;
-
-			super.portTypeId = VOID_IDENTIFIER;
-			super.portId = Identifier.fromXmlTransferable(schemePort.getPortId(), importType, MODE_THROW_IF_ABSENT);
-		} else {
-			throw new UpdateObjectException(
-					"SchemePort.fromXmlTransferable() | "
-					+ XML_BEAN_NOT_COMPLETE);
+	throws XmlConversionException {
+		try {
+			XmlComplementorRegistry.complementStorableObject(schemePort, SCHEMEPORT_CODE, importType, PRE_IMPORT);
+	
+			super.fromXmlTransferable(schemePort, importType);
+	
+			final boolean setPortTypeId = schemePort.isSetPortTypeId();
+			final boolean setPortId = schemePort.isSetPortId();
+			if (setPortTypeId) {
+				assert !setPortId : OBJECT_STATE_ILLEGAL;
+	
+				super.portTypeId = Identifier.fromXmlTransferable(schemePort.getPortTypeId(), importType, MODE_THROW_IF_ABSENT);
+				super.portId = VOID_IDENTIFIER;
+			} else if (setPortId) {
+				assert !setPortTypeId : OBJECT_STATE_ILLEGAL;
+	
+				super.portTypeId = VOID_IDENTIFIER;
+				super.portId = Identifier.fromXmlTransferable(schemePort.getPortId(), importType, MODE_THROW_IF_ABSENT);
+			} else {
+				throw new XmlConversionException(
+						"SchemePort.fromXmlTransferable() | "
+						+ XML_BEAN_NOT_COMPLETE);
+			}
+	
+			XmlComplementorRegistry.complementStorableObject(schemePort, SCHEMEPORT_CODE, importType, POST_IMPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-
-		XmlComplementorRegistry.complementStorableObject(schemePort, SCHEMEPORT_CODE, importType, POST_IMPORT);
 	}
 
 	/**

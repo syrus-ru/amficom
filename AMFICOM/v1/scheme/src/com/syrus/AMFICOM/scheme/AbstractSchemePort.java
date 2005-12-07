@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.87 2005/10/31 12:29:54 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.88 2005/12/07 16:41:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,10 +55,11 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemePort;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.87 $, $Date: 2005/10/31 12:29:54 $
+ * @version $Revision: 1.88 $, $Date: 2005/12/07 16:41:54 $
  * @module scheme
  */
 public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
@@ -630,12 +631,13 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 	 * @param abstractSchemePort
 	 * @param importType
 	 * @param usePool
+	 * @throws XmlConversionException
 	 * @throws ApplicationException
 	 */
 	final void getXmlTransferable(final XmlAbstractSchemePort abstractSchemePort,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException, ApplicationException {
 		super.id.getXmlTransferable(abstractSchemePort.addNewId(), importType);
 		abstractSchemePort.setName(this.name);
 		if (abstractSchemePort.isSetDescription()) {

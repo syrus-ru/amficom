@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.63 2005/12/06 11:51:57 bass Exp $
+ * $Id: CharacteristicType.java,v 1.64 2005/12/07 16:41:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
-import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
@@ -27,13 +26,14 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypeHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicType;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/12/06 11:51:57 $
+ * @version $Revision: 1.64 $, $Date: 2005/12/07 16:41:50 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
 
 public final class CharacteristicType
 		extends StorableObjectType<CharacteristicType>
-		implements Namable, XmlBeansTransferable<XmlCharacteristicType> {
+		implements Namable, XmlTransferableObject<XmlCharacteristicType> {
 	private static final long serialVersionUID = 6153350736368296076L;
 
 	private String name;
@@ -118,13 +118,13 @@ public final class CharacteristicType
 	/**
 	 * @param characteristicType
 	 * @param importType
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @throws XmlConversionException
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void fromXmlTransferable(
 			final XmlCharacteristicType characteristicType,
 			final String importType)
-	throws ApplicationException {
+	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -260,8 +260,9 @@ public final class CharacteristicType
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 
@@ -289,14 +290,14 @@ public final class CharacteristicType
 	 * @param characteristicType
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlCharacteristicType characteristicType,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
 

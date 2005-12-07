@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.40 2005/12/06 09:43:34 bass Exp $
+ * $Id: MapLibrary.java,v 1.41 2005/12/07 16:41:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,6 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.logic.Library;
 import com.syrus.AMFICOM.general.logic.LibraryEntry;
@@ -57,15 +56,17 @@ import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkTypeSeq;
 import com.syrus.AMFICOM.map.xml.XmlSiteNodeType;
 import com.syrus.AMFICOM.map.xml.XmlSiteNodeTypeSeq;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/12/06 09:43:34 $
+ * @version $Revision: 1.41 $, $Date: 2005/12/07 16:41:51 $
  * @author $Author: bass $
  * @module map
  */
 public final class MapLibrary extends StorableObject<MapLibrary>
-		implements Namable, Library, XmlBeansTransferable<XmlMapLibrary> {
+		implements Namable, Library, XmlTransferableObject<XmlMapLibrary> {
 	private static final long	serialVersionUID	= -8616969914711251336L;
 
 	private String name;
@@ -309,13 +310,13 @@ public final class MapLibrary extends StorableObject<MapLibrary>
 	 * @param mapLibrary
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlMapLibrary mapLibrary,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		mapLibrary.setName(this.name);
 		mapLibrary.setCodename(this.codename);
 		if(this.description != null && this.description.length() != 0) {
@@ -366,26 +367,30 @@ public final class MapLibrary extends StorableObject<MapLibrary>
 		this.parentMapLibraryId = VOID_IDENTIFIER;
 	}
 
-	public void fromXmlTransferable(final XmlMapLibrary xmlMapLibrary, final String importType) throws ApplicationException {
-		this.name = xmlMapLibrary.getName();
-		this.codename = xmlMapLibrary.getCodename();
-		if(xmlMapLibrary.isSetDescription()) {
-			this.description = xmlMapLibrary.getDescription();
-		}
-		else {
-			this.description = "";
-		}
-
-		if(xmlMapLibrary.isSetPhysicalLinkTypes()) {
-			for (final XmlPhysicalLinkType xmlPhysicalLinkType : xmlMapLibrary.getPhysicalLinkTypes().getPhysicalLinkTypeArray()) {
-				this.addChild(PhysicalLinkType.createInstance(this.creatorId, importType, xmlPhysicalLinkType));
+	public void fromXmlTransferable(final XmlMapLibrary xmlMapLibrary, final String importType)
+	throws XmlConversionException {
+		try {
+			this.name = xmlMapLibrary.getName();
+			this.codename = xmlMapLibrary.getCodename();
+			if (xmlMapLibrary.isSetDescription()) {
+				this.description = xmlMapLibrary.getDescription();
+			} else {
+				this.description = "";
 			}
-		}
-
-		if(xmlMapLibrary.isSetSiteNodeTypes()) {
-			for (final XmlSiteNodeType xmlSiteNodeType : xmlMapLibrary.getSiteNodeTypes().getSiteNodeTypeArray()) {
-				this.addChild(SiteNodeType.createInstance(this.creatorId, importType, xmlSiteNodeType));
+	
+			if (xmlMapLibrary.isSetPhysicalLinkTypes()) {
+				for (final XmlPhysicalLinkType xmlPhysicalLinkType : xmlMapLibrary.getPhysicalLinkTypes().getPhysicalLinkTypeArray()) {
+					this.addChild(PhysicalLinkType.createInstance(this.creatorId, importType, xmlPhysicalLinkType));
+				}
 			}
+	
+			if (xmlMapLibrary.isSetSiteNodeTypes()) {
+				for (final XmlSiteNodeType xmlSiteNodeType : xmlMapLibrary.getSiteNodeTypes().getSiteNodeTypeArray()) {
+					this.addChild(SiteNodeType.createInstance(this.creatorId, importType, xmlSiteNodeType));
+				}
+			}
+		} catch (final CreateObjectException coe) {
+			throw new XmlConversionException(coe);
 		}
 	}
 
@@ -484,8 +489,9 @@ public final class MapLibrary extends StorableObject<MapLibrary>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 

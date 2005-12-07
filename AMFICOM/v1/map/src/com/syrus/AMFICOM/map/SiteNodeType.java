@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.111 2005/12/06 09:43:34 bass Exp $
+ * $Id: SiteNodeType.java,v 1.112 2005/12/07 16:41:51 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,6 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
@@ -67,6 +66,8 @@ import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * Тип сетевого узла топологической схемы. Существует несколько
@@ -79,12 +80,12 @@ import com.syrus.util.Log;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: bass $
- * @version $Revision: 1.111 $, $Date: 2005/12/06 09:43:34 $
+ * @version $Revision: 1.112 $, $Date: 2005/12/07 16:41:51 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType<SiteNodeType>
 		implements Characterizable, Namable,
-		LibraryEntry, XmlBeansTransferable<XmlSiteNodeType> {
+		LibraryEntry, XmlTransferableObject<XmlSiteNodeType> {
 
 	public static final String DEFAULT_WELL = "defaultwell";
 	public static final String DEFAULT_PIQUET = "defaultpiquet";
@@ -295,14 +296,14 @@ public final class SiteNodeType extends StorableObjectType<SiteNodeType>
 	 * @param siteNodeType
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlSiteNodeType siteNodeType,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		try {
 			this.id.getXmlTransferable(siteNodeType.addNewId(), importType);
 			siteNodeType.setName(this.name);
@@ -325,7 +326,7 @@ public final class SiteNodeType extends StorableObjectType<SiteNodeType>
 				imageCodenameToWrite = imageCodename;
 				image = ((BitmapImageResource) abstractBitmapImageResource).getImage();
 			} else {
-				throw new ApplicationException("Invalid imsge resource type for \'" 
+				throw new XmlConversionException("Invalid imsge resource type for \'" 
 						+ abstractBitmapImageResource.getCodename()
 						+ "'\'");
 			}
@@ -335,7 +336,9 @@ public final class SiteNodeType extends StorableObjectType<SiteNodeType>
 			out.close();
 			siteNodeType.setImage(imageCodenameToWrite);
 		} catch (final IOException ioe) {
-			throw new ApplicationException(ioe);
+			throw new XmlConversionException(ioe);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
 	}
 
@@ -367,29 +370,33 @@ public final class SiteNodeType extends StorableObjectType<SiteNodeType>
 
 	public void fromXmlTransferable(final XmlSiteNodeType xmlSiteNodeType,
 			final String importType)
-	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(xmlSiteNodeType, SITENODE_TYPE_CODE, importType, PRE_IMPORT);
-
-		this.name = xmlSiteNodeType.getName();
-		if(xmlSiteNodeType.isSetDescription()) {
-			this.description = xmlSiteNodeType.getDescription();
+	throws XmlConversionException {
+		try {
+			XmlComplementorRegistry.complementStorableObject(xmlSiteNodeType, SITENODE_TYPE_CODE, importType, PRE_IMPORT);
+	
+			this.name = xmlSiteNodeType.getName();
+			if(xmlSiteNodeType.isSetDescription()) {
+				this.description = xmlSiteNodeType.getDescription();
+			}
+			else {
+				this.description = "";
+			}
+			// NOTE: '- 1' is obligatory since enumerations in idl and xsd
+			// have different indexing
+			this.sort = SiteNodeTypeSort.from_int(xmlSiteNodeType.getSort().intValue() - 1);
+			this.topological = xmlSiteNodeType.getTopological();
+	
+			final String imageCodeName = xmlSiteNodeType.getImage();
+			Identifier loadedImageId = getImageId(this.modifierId, imageCodeName);
+	
+			if (loadedImageId == null) {
+				throw new CreateObjectException("ImageResource \'" + imageCodeName + "\' not found");
+			}
+			
+			this.imageId = loadedImageId;
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-		else {
-			this.description = "";
-		}
-		// NOTE: '- 1' is obligatory since enumerations in idl and xsd
-		// have different indexing
-		this.sort = SiteNodeTypeSort.from_int(xmlSiteNodeType.getSort().intValue() - 1);
-		this.topological = xmlSiteNodeType.getTopological();
-
-		final String imageCodeName = xmlSiteNodeType.getImage();
-		Identifier loadedImageId = getImageId(this.modifierId, imageCodeName);
-
-		if (loadedImageId == null) {
-			throw new CreateObjectException("ImageResource \'" + imageCodeName + "\' not found");
-		}
-		
-		this.imageId = loadedImageId;
 	}
 
 	/**
@@ -491,8 +498,9 @@ public final class SiteNodeType extends StorableObjectType<SiteNodeType>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 

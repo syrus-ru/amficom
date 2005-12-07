@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.110 2005/12/06 09:43:34 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.111 2005/12/07 16:41:51 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.logic.Library;
 import com.syrus.AMFICOM.general.logic.LibraryEntry;
@@ -54,6 +53,8 @@ import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkType;
 import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkTypeSort;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * Тип линии топологической схемы. Существует несколько предустановленных
@@ -61,12 +62,12 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.110 $, $Date: 2005/12/06 09:43:34 $
+ * @version $Revision: 1.111 $, $Date: 2005/12/07 16:41:51 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType> 
 		implements Characterizable, Namable,
-		LibraryEntry, XmlBeansTransferable<XmlPhysicalLinkType> {
+		LibraryEntry, XmlTransferableObject<XmlPhysicalLinkType> {
 
 	/** тоннель */
 	public static final String DEFAULT_TUNNEL = "defaulttunnel";
@@ -317,14 +318,14 @@ public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType>
 	 * @param physicalLinkType
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlPhysicalLinkType physicalLinkType,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		this.id.getXmlTransferable(physicalLinkType.addNewId(), importType);
 		physicalLinkType.setName(this.name);
 		if(this.description != null && this.description.length() != 0) {
@@ -367,7 +368,7 @@ public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType>
 	public void fromXmlTransferable(
 			final XmlPhysicalLinkType xmlPhysicalLinkType,
 			final String importType)
-	throws ApplicationException {
+	throws XmlConversionException {
 		this.name = xmlPhysicalLinkType.getName();
 		this.codename = xmlPhysicalLinkType.getCodename();
 		if(xmlPhysicalLinkType.isSetDescription()) {
@@ -490,8 +491,9 @@ public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 	

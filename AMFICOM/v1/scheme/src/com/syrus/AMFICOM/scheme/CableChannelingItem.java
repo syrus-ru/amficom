@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.85 2005/12/06 09:44:22 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.86 2005/12/07 16:41:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,6 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -61,12 +60,14 @@ import com.syrus.AMFICOM.scheme.corba.IdlCableChannelingItem;
 import com.syrus.AMFICOM.scheme.corba.IdlCableChannelingItemHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlCableChannelingItem;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.85 $, $Date: 2005/12/06 09:44:22 $
+ * @version $Revision: 1.86 $, $Date: 2005/12/07 16:41:54 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -74,7 +75,7 @@ public final class CableChannelingItem
 		implements Comparable<CableChannelingItem>,
 		PathMember<SchemeCableLink, CableChannelingItem>,
 		ReverseDependencyContainer,
-		XmlBeansTransferable<XmlCableChannelingItem>{
+		XmlTransferableObject<XmlCableChannelingItem>{
 	private static final long serialVersionUID = 3256437027796038705L;
 
 	private double startSpare;
@@ -306,8 +307,9 @@ public final class CableChannelingItem
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 
@@ -488,36 +490,40 @@ public final class CableChannelingItem
 	 * @param cableChannelingItem
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlCableChannelingItem cableChannelingItem,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
-		super.id.getXmlTransferable(cableChannelingItem.addNewId(), importType);
-		cableChannelingItem.setStartSpare(this.startSpare);
-		cableChannelingItem.setEndSpare(this.endSpare);
-		cableChannelingItem.setRowX(this.rowX);
-		cableChannelingItem.setPlaceY(this.placeY);
-		cableChannelingItem.setSequentialNumber(this.sequentialNumber);
-		if (cableChannelingItem.isSetPhysicalLinkId()) {
-			cableChannelingItem.unsetPhysicalLinkId();
+	throws XmlConversionException {
+		try {
+			super.id.getXmlTransferable(cableChannelingItem.addNewId(), importType);
+			cableChannelingItem.setStartSpare(this.startSpare);
+			cableChannelingItem.setEndSpare(this.endSpare);
+			cableChannelingItem.setRowX(this.rowX);
+			cableChannelingItem.setPlaceY(this.placeY);
+			cableChannelingItem.setSequentialNumber(this.sequentialNumber);
+			if (cableChannelingItem.isSetPhysicalLinkId()) {
+				cableChannelingItem.unsetPhysicalLinkId();
+			}
+			if (!this.physicalLinkId.isVoid()) {
+				this.physicalLinkId.getXmlTransferable(cableChannelingItem.addNewPhysicalLinkId(), importType);
+			}
+			if (cableChannelingItem.isSetPipeBlockId()) {
+				cableChannelingItem.unsetPipeBlockId();
+			}
+			if (!this.pipeBlockId.isVoid()) {
+				this.pipeBlockId.getXmlTransferable(cableChannelingItem.addNewPipeBlockId(), importType);
+			}
+			this.startSiteNodeId.getXmlTransferable(cableChannelingItem.addNewStartSiteNodeId(), importType);
+			this.endSiteNodeId.getXmlTransferable(cableChannelingItem.addNewEndSiteNodeId(), importType);
+			this.parentSchemeCableLinkId.getXmlTransferable(cableChannelingItem.addNewParentSchemeCableLinkId(), importType);
+			XmlComplementorRegistry.complementStorableObject(cableChannelingItem, CABLECHANNELINGITEM_CODE, importType, EXPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-		if (!this.physicalLinkId.isVoid()) {
-			this.physicalLinkId.getXmlTransferable(cableChannelingItem.addNewPhysicalLinkId(), importType);
-		}
-		if (cableChannelingItem.isSetPipeBlockId()) {
-			cableChannelingItem.unsetPipeBlockId();
-		}
-		if (!this.pipeBlockId.isVoid()) {
-			this.pipeBlockId.getXmlTransferable(cableChannelingItem.addNewPipeBlockId(), importType);
-		}
-		this.startSiteNodeId.getXmlTransferable(cableChannelingItem.addNewStartSiteNodeId(), importType);
-		this.endSiteNodeId.getXmlTransferable(cableChannelingItem.addNewEndSiteNodeId(), importType);
-		this.parentSchemeCableLinkId.getXmlTransferable(cableChannelingItem.addNewParentSchemeCableLinkId(), importType);
-		XmlComplementorRegistry.complementStorableObject(cableChannelingItem, CABLECHANNELINGITEM_CODE, importType, EXPORT);
 	}
 
 	/**
@@ -824,31 +830,35 @@ public final class CableChannelingItem
 	/**
 	 * @param cableChannelingItem
 	 * @param importType
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @throws XmlConversionException
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void fromXmlTransferable(
 			final XmlCableChannelingItem cableChannelingItem,
 			final String importType)
-	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(cableChannelingItem, CABLECHANNELINGITEM_CODE, importType, PRE_IMPORT);
-
-		this.startSpare = cableChannelingItem.getStartSpare();
-		this.endSpare = cableChannelingItem.getEndSpare();
-		this.rowX = cableChannelingItem.getRowX();
-		this.placeY = cableChannelingItem.getPlaceY();
-		this.sequentialNumber = cableChannelingItem.getSequentialNumber();
-		this.physicalLinkId = cableChannelingItem.isSetPhysicalLinkId()
-				? Identifier.fromXmlTransferable(cableChannelingItem.getPhysicalLinkId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
-		this.setPipeBlockId0(cableChannelingItem.isSetPipeBlockId()
-				? Identifier.fromXmlTransferable(cableChannelingItem.getPipeBlockId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER);
-		this.startSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getStartSiteNodeId(), importType, MODE_THROW_IF_ABSENT);
-		this.endSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getEndSiteNodeId(), importType, MODE_THROW_IF_ABSENT);
-		this.parentSchemeCableLinkId = Identifier.fromXmlTransferable(cableChannelingItem.getParentSchemeCableLinkId(), importType, MODE_THROW_IF_ABSENT);
-
-		XmlComplementorRegistry.complementStorableObject(cableChannelingItem, CABLECHANNELINGITEM_CODE, importType, POST_IMPORT);
+	throws XmlConversionException {
+		try {
+			XmlComplementorRegistry.complementStorableObject(cableChannelingItem, CABLECHANNELINGITEM_CODE, importType, PRE_IMPORT);
+	
+			this.startSpare = cableChannelingItem.getStartSpare();
+			this.endSpare = cableChannelingItem.getEndSpare();
+			this.rowX = cableChannelingItem.getRowX();
+			this.placeY = cableChannelingItem.getPlaceY();
+			this.sequentialNumber = cableChannelingItem.getSequentialNumber();
+			this.physicalLinkId = cableChannelingItem.isSetPhysicalLinkId()
+					? Identifier.fromXmlTransferable(cableChannelingItem.getPhysicalLinkId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER;
+			this.setPipeBlockId0(cableChannelingItem.isSetPipeBlockId()
+					? Identifier.fromXmlTransferable(cableChannelingItem.getPipeBlockId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER);
+			this.startSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getStartSiteNodeId(), importType, MODE_THROW_IF_ABSENT);
+			this.endSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getEndSiteNodeId(), importType, MODE_THROW_IF_ABSENT);
+			this.parentSchemeCableLinkId = Identifier.fromXmlTransferable(cableChannelingItem.getParentSchemeCableLinkId(), importType, MODE_THROW_IF_ABSENT);
+	
+			XmlComplementorRegistry.complementStorableObject(cableChannelingItem, CABLECHANNELINGITEM_CODE, importType, POST_IMPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
+		}
 	}
 
 	/**

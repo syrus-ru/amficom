@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.148 2005/12/06 11:33:06 bass Exp $
+ * $Id: PhysicalLink.java,v 1.149 2005/12/07 16:41:51 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
 import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,10 +54,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
@@ -68,6 +65,8 @@ import com.syrus.AMFICOM.map.xml.XmlPipeBlock;
 import com.syrus.AMFICOM.map.xml.XmlPipeBlockSeq;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * Линия топологический схемы. Линия имеет начальный и конечный узлы,
@@ -78,12 +77,12 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.148 $, $Date: 2005/12/06 11:33:06 $
+ * @version $Revision: 1.149 $, $Date: 2005/12/07 16:41:51 $
  * @module map
  */
 public class PhysicalLink extends StorableObject<PhysicalLink>
 		implements Characterizable, TypedObject<PhysicalLinkType>,
-		MapElement, XmlBeansTransferable<XmlPhysicalLink> {
+		MapElement, XmlTransferableObject<XmlPhysicalLink> {
 	private static final long serialVersionUID = 4121409622671570743L;
 
 	private String name;
@@ -867,14 +866,14 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 	 * @param physicalLink
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public final void getXmlTransferable(
 			final XmlPhysicalLink physicalLink,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		this.id.getXmlTransferable(physicalLink.addNewId(), importType);
 		physicalLink.setName(this.name);
 		if(this.description != null && this.description.length() != 0) {
@@ -929,62 +928,62 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 
 	public final void fromXmlTransferable(final XmlPhysicalLink xmlPhysicalLink,
 			final String importType)
-	throws ApplicationException {
-		this.name = xmlPhysicalLink.getName();
-		if(xmlPhysicalLink.isSetDescription()) {
-			this.description = xmlPhysicalLink.getDescription();
-		}
-		else {
-			this.description = "";
-		}
-		if(xmlPhysicalLink.isSetCity()) {
-			this.city = xmlPhysicalLink.getCity();
-		}
-		else {
-			this.city = "";
-		}
-		if(xmlPhysicalLink.isSetStreet()) {
-			this.street = xmlPhysicalLink.getStreet();
-		}
-		else {
-			this.street = "";
-		}
-		if(xmlPhysicalLink.isSetBuilding()) {
-			this.building = xmlPhysicalLink.getBuilding();
-		}
-		else {
-			this.building = "";
-		}
-
-		this.startNodeId = Identifier.fromXmlTransferable(xmlPhysicalLink.getStartNodeId(), importType, MODE_THROW_IF_ABSENT);
-		this.endNodeId = Identifier.fromXmlTransferable(xmlPhysicalLink.getEndNodeId(), importType, MODE_THROW_IF_ABSENT);
-
-		final TypicalCondition condition = new TypicalCondition(xmlPhysicalLink.getPhysicalLinkTypeCodename(),
-				OperationSort.OPERATION_EQUALS,
-				PHYSICALLINK_TYPE_CODE,
-				StorableObjectWrapper.COLUMN_CODENAME);
-
-		//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-		Set<PhysicalLinkType> physicalLinkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
-		if (physicalLinkTypes.isEmpty()) {
-			condition.setValue(PhysicalLinkType.DEFAULT_TUNNEL);
-
+	throws XmlConversionException {
+		try {
+			this.name = xmlPhysicalLink.getName();
+			if(xmlPhysicalLink.isSetDescription()) {
+				this.description = xmlPhysicalLink.getDescription();
+			} else {
+				this.description = "";
+			}
+			if(xmlPhysicalLink.isSetCity()) {
+				this.city = xmlPhysicalLink.getCity();
+			} else {
+				this.city = "";
+			}
+			if(xmlPhysicalLink.isSetStreet()) {
+				this.street = xmlPhysicalLink.getStreet();
+			} else {
+				this.street = "";
+			}
+			if(xmlPhysicalLink.isSetBuilding()) {
+				this.building = xmlPhysicalLink.getBuilding();
+			} else {
+				this.building = "";
+			}
+	
+			this.startNodeId = Identifier.fromXmlTransferable(xmlPhysicalLink.getStartNodeId(), importType, MODE_THROW_IF_ABSENT);
+			this.endNodeId = Identifier.fromXmlTransferable(xmlPhysicalLink.getEndNodeId(), importType, MODE_THROW_IF_ABSENT);
+	
+			final TypicalCondition condition = new TypicalCondition(xmlPhysicalLink.getPhysicalLinkTypeCodename(),
+					OperationSort.OPERATION_EQUALS,
+					PHYSICALLINK_TYPE_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
+	
 			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-			physicalLinkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
+			Set<PhysicalLinkType> physicalLinkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
 			if (physicalLinkTypes.isEmpty()) {
-				throw new CreateObjectException("PhysicalLinkType \'" + PhysicalLinkType.DEFAULT_TUNNEL + "\' not found");
+				condition.setValue(PhysicalLinkType.DEFAULT_TUNNEL);
+	
+				//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+				physicalLinkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
+				if (physicalLinkTypes.isEmpty()) {
+					throw new CreateObjectException("PhysicalLinkType \'" + PhysicalLinkType.DEFAULT_TUNNEL + "\' not found");
+				}
 			}
-		}
-		
-		this.physicalLinkType = physicalLinkTypes.iterator().next();
-
-		SortedSet<PipeBlock> pipeBlocks = new TreeSet<PipeBlock>();
-		if(xmlPhysicalLink.isSetPipeBlocks()) {
-			for (final XmlPipeBlock xmlPipeBlock : xmlPhysicalLink.getPipeBlocks().getPipeBlockArray()) {
-				pipeBlocks.add(PipeBlock.createInstance(this.creatorId, importType, xmlPipeBlock));
+			
+			this.physicalLinkType = physicalLinkTypes.iterator().next();
+	
+			SortedSet<PipeBlock> pipeBlocks = new TreeSet<PipeBlock>();
+			if(xmlPhysicalLink.isSetPipeBlocks()) {
+				for (final XmlPipeBlock xmlPipeBlock : xmlPhysicalLink.getPipeBlocks().getPipeBlockArray()) {
+					pipeBlocks.add(PipeBlock.createInstance(this.creatorId, importType, xmlPipeBlock));
+				}
 			}
+			this.binding = new PhysicalLinkBinding(pipeBlocks);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-		this.binding = new PhysicalLinkBinding(pipeBlocks);
 	}
 
 	/**
@@ -1027,8 +1026,9 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 

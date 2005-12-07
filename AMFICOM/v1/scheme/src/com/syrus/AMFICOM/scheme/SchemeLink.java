@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.104 2005/12/06 09:44:22 bass Exp $
+ * $Id: SchemeLink.java,v 1.105 2005/12/07 16:41:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,8 +60,6 @@ import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -70,16 +68,18 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeLink;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeLinkHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeLink;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.104 $, $Date: 2005/12/06 09:44:22 $
+ * @version $Revision: 1.105 $, $Date: 2005/12/07 16:41:54 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
-		implements XmlBeansTransferable<XmlSchemeLink> {
+		implements XmlTransferableObject<XmlSchemeLink> {
 	private static final long serialVersionUID = 3834587703751947064L;
 
 	private Identifier siteNodeId;
@@ -469,8 +469,9 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 
@@ -768,64 +769,68 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 	 * @param schemeLink
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeLink schemeLink,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
-		super.getXmlTransferable(schemeLink, importType, usePool);
-		if (schemeLink.isSetLinkTypeId()) {
-			schemeLink.unsetLinkTypeId();
+	throws XmlConversionException {
+		try {
+			super.getXmlTransferable(schemeLink, importType, usePool);
+			if (schemeLink.isSetLinkTypeId()) {
+				schemeLink.unsetLinkTypeId();
+			}
+			if (!super.abstractLinkTypeId.isVoid()) {
+				super.abstractLinkTypeId.getXmlTransferable(schemeLink.addNewLinkTypeId(), importType);
+			}
+			if (schemeLink.isSetLinkId()) {
+				schemeLink.unsetLinkId();
+			}
+			if (!super.abstractLinkId.isVoid()) {
+				super.abstractLinkId.getXmlTransferable(schemeLink.addNewLinkId(), importType);
+			}
+			if (schemeLink.isSetSourceSchemePortId()) {
+				schemeLink.unsetSourceSchemePortId();
+			}
+			if (!super.sourceAbstractSchemePortId.isVoid()) {
+				super.sourceAbstractSchemePortId.getXmlTransferable(schemeLink.addNewSourceSchemePortId(), importType);
+			}
+			if (schemeLink.isSetTargetSchemePortId()) {
+				schemeLink.unsetTargetSchemePortId();
+			}
+			if (!super.targetAbstractSchemePortId.isVoid()) {
+				super.targetAbstractSchemePortId.getXmlTransferable(schemeLink.addNewTargetSchemePortId(), importType);
+			}
+			if (schemeLink.isSetSiteNodeId()) {
+				schemeLink.unsetSiteNodeId();
+			}
+			if (!this.siteNodeId.isVoid()) {
+				this.siteNodeId.getXmlTransferable(schemeLink.addNewSiteNodeId(), importType);
+			}
+			if (schemeLink.isSetParentSchemeId()) {
+				schemeLink.unsetParentSchemeId();
+			}
+			if (!super.parentSchemeId.isVoid()) {
+				super.parentSchemeId.getXmlTransferable(schemeLink.addNewParentSchemeId(), importType);
+			}
+			if (schemeLink.isSetParentSchemeElementId()) {
+				schemeLink.unsetParentSchemeElementId();
+			}
+			if (!this.parentSchemeElementId.isVoid()) {
+				this.parentSchemeElementId.getXmlTransferable(schemeLink.addNewParentSchemeElementId(), importType);
+			}
+			if (schemeLink.isSetParentSchemeProtoElementId()) {
+				schemeLink.unsetParentSchemeProtoElementId();
+			}
+			if (!this.parentSchemeProtoElementId.isVoid()) {
+				this.parentSchemeProtoElementId.getXmlTransferable(schemeLink.addNewParentSchemeProtoElementId(), importType);
+			}
+			XmlComplementorRegistry.complementStorableObject(schemeLink, SCHEMELINK_CODE, importType, EXPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-		if (!super.abstractLinkTypeId.isVoid()) {
-			super.abstractLinkTypeId.getXmlTransferable(schemeLink.addNewLinkTypeId(), importType);
-		}
-		if (schemeLink.isSetLinkId()) {
-			schemeLink.unsetLinkId();
-		}
-		if (!super.abstractLinkId.isVoid()) {
-			super.abstractLinkId.getXmlTransferable(schemeLink.addNewLinkId(), importType);
-		}
-		if (schemeLink.isSetSourceSchemePortId()) {
-			schemeLink.unsetSourceSchemePortId();
-		}
-		if (!super.sourceAbstractSchemePortId.isVoid()) {
-			super.sourceAbstractSchemePortId.getXmlTransferable(schemeLink.addNewSourceSchemePortId(), importType);
-		}
-		if (schemeLink.isSetTargetSchemePortId()) {
-			schemeLink.unsetTargetSchemePortId();
-		}
-		if (!super.targetAbstractSchemePortId.isVoid()) {
-			super.targetAbstractSchemePortId.getXmlTransferable(schemeLink.addNewTargetSchemePortId(), importType);
-		}
-		if (schemeLink.isSetSiteNodeId()) {
-			schemeLink.unsetSiteNodeId();
-		}
-		if (!this.siteNodeId.isVoid()) {
-			this.siteNodeId.getXmlTransferable(schemeLink.addNewSiteNodeId(), importType);
-		}
-		if (schemeLink.isSetParentSchemeId()) {
-			schemeLink.unsetParentSchemeId();
-		}
-		if (!super.parentSchemeId.isVoid()) {
-			super.parentSchemeId.getXmlTransferable(schemeLink.addNewParentSchemeId(), importType);
-		}
-		if (schemeLink.isSetParentSchemeElementId()) {
-			schemeLink.unsetParentSchemeElementId();
-		}
-		if (!this.parentSchemeElementId.isVoid()) {
-			this.parentSchemeElementId.getXmlTransferable(schemeLink.addNewParentSchemeElementId(), importType);
-		}
-		if (schemeLink.isSetParentSchemeProtoElementId()) {
-			schemeLink.unsetParentSchemeProtoElementId();
-		}
-		if (!this.parentSchemeProtoElementId.isVoid()) {
-			this.parentSchemeProtoElementId.getXmlTransferable(schemeLink.addNewParentSchemeProtoElementId(), importType);
-		}
-		XmlComplementorRegistry.complementStorableObject(schemeLink, SCHEMELINK_CODE, importType, EXPORT);
 	}
 
 	void setAttributes(final Date created,
@@ -1237,75 +1242,79 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 	/**
 	 * @param schemeLink
 	 * @param importType
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @throws XmlConversionException
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void fromXmlTransferable(final XmlSchemeLink schemeLink,
 			final String importType)
-	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(schemeLink, SCHEMELINK_CODE, importType, PRE_IMPORT);
-
-		super.fromXmlTransferable(schemeLink, importType);
-
-		final boolean setLinkTypeId = schemeLink.isSetLinkTypeId();
-		final boolean setLinkId = schemeLink.isSetLinkId();
-		if (setLinkTypeId) {
-			assert !setLinkId : OBJECT_STATE_ILLEGAL;
-
-			super.abstractLinkTypeId = Identifier.fromXmlTransferable(schemeLink.getLinkTypeId(), importType, MODE_THROW_IF_ABSENT);
-			super.abstractLinkId = VOID_IDENTIFIER;
-		} else if (setLinkId) {
-			assert !setLinkTypeId : OBJECT_STATE_ILLEGAL;
-
-			super.abstractLinkTypeId = VOID_IDENTIFIER;
-			super.abstractLinkId = Identifier.fromXmlTransferable(schemeLink.getLinkId(), importType, MODE_THROW_IF_ABSENT);
-		} else {
-			throw new UpdateObjectException(
-					"SchemeLink.fromXmlTransferable() | "
-					+ XML_BEAN_NOT_COMPLETE);
+	throws XmlConversionException {
+		try {
+			XmlComplementorRegistry.complementStorableObject(schemeLink, SCHEMELINK_CODE, importType, PRE_IMPORT);
+	
+			super.fromXmlTransferable(schemeLink, importType);
+	
+			final boolean setLinkTypeId = schemeLink.isSetLinkTypeId();
+			final boolean setLinkId = schemeLink.isSetLinkId();
+			if (setLinkTypeId) {
+				assert !setLinkId : OBJECT_STATE_ILLEGAL;
+	
+				super.abstractLinkTypeId = Identifier.fromXmlTransferable(schemeLink.getLinkTypeId(), importType, MODE_THROW_IF_ABSENT);
+				super.abstractLinkId = VOID_IDENTIFIER;
+			} else if (setLinkId) {
+				assert !setLinkTypeId : OBJECT_STATE_ILLEGAL;
+	
+				super.abstractLinkTypeId = VOID_IDENTIFIER;
+				super.abstractLinkId = Identifier.fromXmlTransferable(schemeLink.getLinkId(), importType, MODE_THROW_IF_ABSENT);
+			} else {
+				throw new XmlConversionException(
+						"SchemeLink.fromXmlTransferable() | "
+						+ XML_BEAN_NOT_COMPLETE);
+			}
+	
+			super.sourceAbstractSchemePortId = schemeLink.isSetSourceSchemePortId()
+					? Identifier.fromXmlTransferable(schemeLink.getSourceSchemePortId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER;
+			super.targetAbstractSchemePortId = schemeLink.isSetTargetSchemePortId()
+					? Identifier.fromXmlTransferable(schemeLink.getTargetSchemePortId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER;
+			this.siteNodeId = schemeLink.isSetSiteNodeId()
+					? Identifier.fromXmlTransferable(schemeLink.getSiteNodeId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER;
+	
+			final boolean setParentSchemeId = schemeLink.isSetParentSchemeId();
+			final boolean setParentSchemeElementId = schemeLink.isSetParentSchemeElementId();
+			final boolean setParentSchemeProtoElementId = schemeLink.isSetParentSchemeProtoElementId();
+			if (setParentSchemeId) {
+				assert !setParentSchemeElementId : OBJECT_STATE_ILLEGAL;
+				assert !setParentSchemeProtoElementId : OBJECT_STATE_ILLEGAL;
+	
+				super.parentSchemeId = Identifier.fromXmlTransferable(schemeLink.getParentSchemeId(), importType, MODE_THROW_IF_ABSENT);
+				this.parentSchemeElementId = VOID_IDENTIFIER;
+				this.parentSchemeProtoElementId = VOID_IDENTIFIER;
+			} else if (setParentSchemeElementId) {
+				assert !setParentSchemeId : OBJECT_STATE_ILLEGAL;
+				assert !setParentSchemeProtoElementId : OBJECT_STATE_ILLEGAL;
+	
+				super.parentSchemeId = VOID_IDENTIFIER;
+				this.parentSchemeElementId = Identifier.fromXmlTransferable(schemeLink.getParentSchemeElementId(), importType, MODE_THROW_IF_ABSENT);
+				this.parentSchemeProtoElementId = VOID_IDENTIFIER;
+			} else if (setParentSchemeProtoElementId) {
+				assert !setParentSchemeId : OBJECT_STATE_ILLEGAL;
+				assert !setParentSchemeElementId : OBJECT_STATE_ILLEGAL;
+	
+				super.parentSchemeId = VOID_IDENTIFIER;
+				this.parentSchemeElementId = VOID_IDENTIFIER;
+				this.parentSchemeProtoElementId = Identifier.fromXmlTransferable(schemeLink.getParentSchemeProtoElementId(), importType, MODE_THROW_IF_ABSENT);
+			} else {
+				throw new XmlConversionException(
+						"SchemeLink.fromXmlTransferable() | "
+						+ XML_BEAN_NOT_COMPLETE);
+			}
+	
+			XmlComplementorRegistry.complementStorableObject(schemeLink, SCHEMELINK_CODE, importType, POST_IMPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-
-		super.sourceAbstractSchemePortId = schemeLink.isSetSourceSchemePortId()
-				? Identifier.fromXmlTransferable(schemeLink.getSourceSchemePortId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
-		super.targetAbstractSchemePortId = schemeLink.isSetTargetSchemePortId()
-				? Identifier.fromXmlTransferable(schemeLink.getTargetSchemePortId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
-		this.siteNodeId = schemeLink.isSetSiteNodeId()
-				? Identifier.fromXmlTransferable(schemeLink.getSiteNodeId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
-
-		final boolean setParentSchemeId = schemeLink.isSetParentSchemeId();
-		final boolean setParentSchemeElementId = schemeLink.isSetParentSchemeElementId();
-		final boolean setParentSchemeProtoElementId = schemeLink.isSetParentSchemeProtoElementId();
-		if (setParentSchemeId) {
-			assert !setParentSchemeElementId : OBJECT_STATE_ILLEGAL;
-			assert !setParentSchemeProtoElementId : OBJECT_STATE_ILLEGAL;
-
-			super.parentSchemeId = Identifier.fromXmlTransferable(schemeLink.getParentSchemeId(), importType, MODE_THROW_IF_ABSENT);
-			this.parentSchemeElementId = VOID_IDENTIFIER;
-			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
-		} else if (setParentSchemeElementId) {
-			assert !setParentSchemeId : OBJECT_STATE_ILLEGAL;
-			assert !setParentSchemeProtoElementId : OBJECT_STATE_ILLEGAL;
-
-			super.parentSchemeId = VOID_IDENTIFIER;
-			this.parentSchemeElementId = Identifier.fromXmlTransferable(schemeLink.getParentSchemeElementId(), importType, MODE_THROW_IF_ABSENT);
-			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
-		} else if (setParentSchemeProtoElementId) {
-			assert !setParentSchemeId : OBJECT_STATE_ILLEGAL;
-			assert !setParentSchemeElementId : OBJECT_STATE_ILLEGAL;
-
-			super.parentSchemeId = VOID_IDENTIFIER;
-			this.parentSchemeElementId = VOID_IDENTIFIER;
-			this.parentSchemeProtoElementId = Identifier.fromXmlTransferable(schemeLink.getParentSchemeProtoElementId(), importType, MODE_THROW_IF_ABSENT);
-		} else {
-			throw new UpdateObjectException(
-					"SchemeLink.fromXmlTransferable() | "
-					+ XML_BEAN_NOT_COMPLETE);
-		}
-
-		XmlComplementorRegistry.complementStorableObject(schemeLink, SCHEMELINK_CODE, importType, POST_IMPORT);
 	}
 
 	/**

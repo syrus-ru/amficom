@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.103 2005/12/06 09:43:34 bass Exp $
+ * $Id: Collector.java,v 1.104 2005/12/07 16:41:52 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
-import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -35,10 +34,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -48,18 +47,20 @@ import com.syrus.AMFICOM.map.corba.IdlCollectorHelper;
 import com.syrus.AMFICOM.map.xml.XmlCollector;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.103 $, $Date: 2005/12/06 09:43:34 $
+ * @version $Revision: 1.104 $, $Date: 2005/12/07 16:41:52 $
  * @module map
  */
 public final class Collector extends StorableObject<Collector>
 		implements Describable, Characterizable,
-		MapElement, XmlBeansTransferable<XmlCollector> {
+		MapElement, XmlTransferableObject<XmlCollector> {
 	private static final long serialVersionUID = 4049922679379212598L;
 
 	private String name;
@@ -354,13 +355,13 @@ public final class Collector extends StorableObject<Collector>
 	 * @param collector
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlCollector collector,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		this.id.getXmlTransferable(collector.addNewId(), importType);
 		collector.setName(this.name);
 		if(this.description != null && this.description.length() != 0) {
@@ -397,19 +398,23 @@ public final class Collector extends StorableObject<Collector>
 		this.physicalLinkIds = new HashSet<Identifier>();
 	}
 
-	public void fromXmlTransferable(final XmlCollector xmlCollector, final String importType) throws ApplicationException {
-		this.name = xmlCollector.getName();
-		if(xmlCollector.isSetDescription()) {
-			this.description = xmlCollector.getDescription();
-		}
-		else {
-			this.description = "";
-		}
-
-		if(xmlCollector.isSetPhysicalLinkIds()) {
-			for (final XmlIdentifier physicalLinkId : xmlCollector.getPhysicalLinkIds().getIdArray()) {
-				this.addPhysicalLinkId(Identifier.fromXmlTransferable(physicalLinkId, importType, MODE_THROW_IF_ABSENT));
+	public void fromXmlTransferable(final XmlCollector xmlCollector, final String importType)
+	throws XmlConversionException {
+		try {
+			this.name = xmlCollector.getName();
+			if (xmlCollector.isSetDescription()) {
+				this.description = xmlCollector.getDescription();
+			} else {
+				this.description = "";
 			}
+	
+			if (xmlCollector.isSetPhysicalLinkIds()) {
+				for (final XmlIdentifier physicalLinkId : xmlCollector.getPhysicalLinkIds().getIdArray()) {
+					this.addPhysicalLinkId(Identifier.fromXmlTransferable(physicalLinkId, importType, MODE_THROW_IF_ABSENT));
+				}
+			}
+		} catch (final ObjectNotFoundException onfe) {
+			throw new XmlConversionException(onfe);
 		}
 	}
 
@@ -453,8 +458,9 @@ public final class Collector extends StorableObject<Collector>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
 		}
 	}
 

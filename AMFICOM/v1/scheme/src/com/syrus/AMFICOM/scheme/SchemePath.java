@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.114 2005/12/06 09:44:22 bass Exp $
+ * $Id: SchemePath.java,v 1.115 2005/12/07 16:41:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,6 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
@@ -66,18 +65,20 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 import com.syrus.AMFICOM.scheme.xml.XmlSchemePath;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
+import com.syrus.util.XmlConversionException;
+import com.syrus.util.XmlTransferableObject;
 
 /**
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.114 $, $Date: 2005/12/06 09:44:22 $
+ * @version $Revision: 1.115 $, $Date: 2005/12/07 16:41:54 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject<SchemePath>
 		implements Describable, Characterizable,
 		PathOwner<PathElement>, ReverseDependencyContainer,
-		XmlBeansTransferable<XmlSchemePath> {
+		XmlTransferableObject<XmlSchemePath> {
 	private static final long serialVersionUID = 3257567312831132469L;
 
 	private String name;
@@ -279,13 +280,13 @@ public final class SchemePath extends StorableObject<SchemePath>
 	 * @param schemePath
 	 * @param importType
 	 * @param usePool
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 * @throws XmlConversionException
+	 * @see com.syrus.util.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlSchemePath schemePath,
 			final String importType,
 			final boolean usePool)
-	throws ApplicationException {
+	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -471,12 +472,12 @@ public final class SchemePath extends StorableObject<SchemePath>
 	/**
 	 * @param xmlSchemePath
 	 * @param importType
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @throws XmlConversionException
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void fromXmlTransferable(final XmlSchemePath xmlSchemePath,
 			final String importType)
-	throws ApplicationException {
+	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
 
