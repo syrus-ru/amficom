@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.131 2005/12/06 09:42:52 bass Exp $
+ * $Id: StorableObject.java,v 1.132 2005/12/07 16:40:31 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,9 +34,10 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.IdlTransferableObject;
+import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.131 $, $Date: 2005/12/06 09:42:52 $
+ * @version $Revision: 1.132 $, $Date: 2005/12/07 16:40:31 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -579,7 +580,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 				+ "; persistent: " + this.isPersistent() + '}';
 	}
 
-	protected abstract StorableObjectWrapper<T> getWrapper();
+	protected abstract Wrapper<T> getWrapper();
 
 	@SuppressWarnings("unchecked")
 	public final Object getValue(final String key) {
@@ -671,7 +672,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.131 $, $Date: 2005/12/06 09:42:52 $
+	 * @version $Revision: 1.132 $, $Date: 2005/12/07 16:40:31 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -796,7 +797,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.131 $, $Date: 2005/12/06 09:42:52 $
+	 * @version $Revision: 1.132 $, $Date: 2005/12/07 16:40:31 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
