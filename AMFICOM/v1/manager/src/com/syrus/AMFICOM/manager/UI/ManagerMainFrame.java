@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.30 2005/12/07 15:20:22 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.31 2005/12/07 15:40:24 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
@@ -74,7 +73,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.30 $, $Date: 2005/12/07 15:20:22 $
+ * @version $Revision: 1.31 $, $Date: 2005/12/07 15:40:24 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -558,7 +557,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 
 		
 		// Cut
-		this.buffer = new CellBuffer();
+		this.buffer = new CellBuffer(this);
 		
 		this.cut = new AbstractAction() {
 
@@ -870,59 +869,4 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		return this.buffer;
 	}
 	
-	public final class CellBuffer {
-		
-		private ManagerGraphCell managerGraphCell;
-		
-		@SuppressWarnings({"hiding","unqualified-field-access"})		
-		public final void putCells(final ManagerGraphCell cell) {
-			assert Log.debugMessage(cell, Log.DEBUGLEVEL03);
-			this.clear();
-			this.managerGraphCell = cell;
-		}
-		
-		public final boolean isExists() {
-			return this.managerGraphCell != null;
-		}
-		
-		public final boolean isExists(final ManagerGraphCell cell) {
-			return this.managerGraphCell == cell;
-		}
-		
-		public final ManagerGraphCell getCell() {
-			return this.managerGraphCell;
-		}
-		
-		public final void clear() {
-			if (this.managerGraphCell != null) {
-				final GraphModel model = graph.getModel();
-				model.remove(new Object[] { this.managerGraphCell});				
-			}
-			this.managerGraphCell = null;
-		}
-	}
-
-	// This will change the source of the actionevent to graph.
-	protected class EventRedirector extends AbstractAction {
-
-		protected Action action;
-
-		// Construct the "Wrapper" Action
-		public EventRedirector(final Action a) {
-			super("", (ImageIcon) a.getValue(Action.SMALL_ICON));
-			this.action = a;
-		}
-
-		// Redirect the Actionevent
-		@SuppressWarnings("unqualified-field-access")
-		public void actionPerformed(final ActionEvent e) {
-			final ActionEvent actionEvent = 
-				new ActionEvent(graph, 
-					e.getID(), 
-					e.getActionCommand(), 
-					e.getModifiers());
-			assert Log.debugMessage(e, Log.DEBUGLEVEL03);
-			this.action.actionPerformed(actionEvent);
-		}
-	}
 }
