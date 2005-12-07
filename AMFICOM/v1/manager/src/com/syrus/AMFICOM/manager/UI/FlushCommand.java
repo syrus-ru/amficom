@@ -1,5 +1,5 @@
 /*-
-* $Id: FlushCommand.java,v 1.7 2005/12/01 14:03:28 bob Exp $
+* $Id: FlushCommand.java,v 1.8 2005/12/07 15:21:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.manager.UI;
 
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -17,11 +18,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.manager.UI.ManagerMainFrame.CellBuffer;
 import com.syrus.AMFICOM.manager.perspective.Perspective;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/12/01 14:03:28 $
+ * @version $Revision: 1.8 $, $Date: 2005/12/07 15:21:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -36,20 +38,38 @@ public class FlushCommand extends AbstractCommand {
 	
 	@Override
 	public void execute() {
-		try {
+		
 			final Perspective perspective = this.managerMainFrame.getPerspective();
 			if (perspective != null) {				
 				if (perspective.isValid()) {
-					final Identifier userId = LoginManager.getUserId();
-					StorableObjectPool.flush(ObjectEntities.LAYOUT_ITEM_CODE, userId, true);
-					StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, userId, true);
-					StorableObjectPool.flush(ObjectEntities.PERMATTR_CODE, userId, true);
-					StorableObjectPool.flush(ObjectEntities.DOMAIN_CODE, userId, true);
-					StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, userId, true);
-					StorableObjectPool.flush(ObjectEntities.KIS_CODE, userId, true);
-					StorableObjectPool.flush(ObjectEntities.SERVER_CODE, userId, true);
-					StorableObjectPool.flush(ObjectEntities.MCM_CODE, userId, true);
-					StorableObjectPool.flush(ObjectEntities.DELIVERYATTRIBUTES_CODE, userId, true);
+					final CellBuffer cellBuffer = this.managerMainFrame.getCellBuffer();
+
+					new ProcessingDialog(new Runnable() {
+						public void run() {
+							try {
+								// clear cache
+								cellBuffer.clear();
+								
+								final Identifier userId = LoginManager.getUserId();
+								StorableObjectPool.flush(ObjectEntities.LAYOUT_ITEM_CODE, userId, true);
+								StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, userId, true);
+								StorableObjectPool.flush(ObjectEntities.PERMATTR_CODE, userId, true);
+								StorableObjectPool.flush(ObjectEntities.DOMAIN_CODE, userId, true);
+								StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, userId, true);
+								StorableObjectPool.flush(ObjectEntities.KIS_CODE, userId, true);
+								StorableObjectPool.flush(ObjectEntities.SERVER_CODE, userId, true);
+								StorableObjectPool.flush(ObjectEntities.MCM_CODE, userId, true);
+								StorableObjectPool.flush(ObjectEntities.DELIVERYATTRIBUTES_CODE, userId, true);
+							} catch (final ApplicationException e1) {
+								e1.printStackTrace();
+								JOptionPane.showMessageDialog(null, 
+									e1.getMessage(), 
+									I18N.getString("Error"),
+									JOptionPane.ERROR_MESSAGE);
+							}
+							}
+					}, I18N.getString("Common.ProcessingDialog.PlsWait"));
+					
 				} else {
 					JOptionPane.showMessageDialog(this.managerMainFrame.getGraph(), 
 						I18N.getString("Manager.Error.LayoutIsInvalid"),
@@ -57,13 +77,7 @@ public class FlushCommand extends AbstractCommand {
 						JOptionPane.ERROR_MESSAGE);
 				}
 			}
-		} catch (final ApplicationException e1) {
-			e1.printStackTrace();
-			JOptionPane.showMessageDialog(null, 
-				e1.getMessage(), 
-				I18N.getString("Error"),
-				JOptionPane.ERROR_MESSAGE);
-		}
+		
 	}
 	
 }
