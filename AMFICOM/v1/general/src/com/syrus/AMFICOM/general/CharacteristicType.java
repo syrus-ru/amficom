@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicType.java,v 1.66 2005/12/07 19:21:50 bass Exp $
+ * $Id: CharacteristicType.java,v 1.67 2005/12/07 20:07:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/12/07 19:21:50 $
+ * @version $Revision: 1.67 $, $Date: 2005/12/07 20:07:37 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -45,7 +45,7 @@ public final class CharacteristicType
 	private static final long serialVersionUID = 6153350736368296076L;
 
 	private String name;
-	private DataType dataType;
+	private final DataType.Proxy dataType = new DataType.Proxy();
 	private final CharacteristicTypeSort.Proxy sort = new CharacteristicTypeSort.Proxy();
 
 	/**
@@ -75,7 +75,7 @@ public final class CharacteristicType
 				codename,
 				description);
 		this.name = name;
-		this.dataType = dataType;
+		this.dataType.setValue(dataType);
 		this.sort.setValue(sort);
 	}
 
@@ -109,7 +109,7 @@ public final class CharacteristicType
 			Log.errorMessage(ae);
 		}
 		this.name = ctt.name;
-		this.dataType = DataType.fromTransferable(ctt.dataType);
+		this.dataType.fromIdlTransferable(ctt.dataType);
 		this.sort.fromIdlTransferable(ctt.sort);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -302,11 +302,11 @@ public final class CharacteristicType
 	}
 
 	public DataType getDataType() {
-		return this.dataType;
+		return this.dataType.getValue();
 	}
 
 	private void setDataType0(final DataType dataType) {
-		this.dataType = dataType;
+		this.dataType.setValue(dataType);
 	}
 
 	/**
@@ -365,7 +365,7 @@ public final class CharacteristicType
 			final CharacteristicTypeSort sort) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 		this.name = name;
-		this.dataType = dataType;
+		this.dataType.setValue(dataType);
 		this.sort.setValue(sort);
 	}
 

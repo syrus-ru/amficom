@@ -1,0 +1,29 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xsd:schema 
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/general/xml"
+	elementFormDefault = "qualified">
+
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: DataType.xsd,v 1.1 2005/12/07 20:07:37 bass Exp $
+
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:simpleType name = "XmlDataType">
+		<xsd:restriction base = "xsd:string">
+			<xsd:enumeration value = "integer"/>
+			<xsd:enumeration value = "double"/>
+			<xsd:enumeration value = "string"/>
+			<xsd:enumeration value = "date"/>
+			<xsd:enumeration value = "long"/>
+			<xsd:enumeration value = "raw"/>
+			<xsd:enumeration value = "boolean"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

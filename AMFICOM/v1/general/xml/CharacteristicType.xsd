@@ -7,7 +7,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: CharacteristicType.xsd,v 1.8 2005/12/07 19:23:58 bass Exp $
+			$Id: CharacteristicType.xsd,v 1.9 2005/12/07 20:07:37 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -19,26 +19,23 @@
 		schemaLocation = "StorableObjectType.xsd"/>
 	<xsd:include
 		schemaLocation = "CharacteristicTypeSort.xsd"/>
+	<xsd:include
+		schemaLocation = "DataType.xsd"/>
 
 	<xsd:complexType name = "XmlCharacteristicType" final = "#all">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObjectType">
 				<xsd:sequence>
-					<xsd:element name = "name" type = "xsd:string"/>
-					<xsd:element name = "sort" type = "general:XmlCharacteristicTypeSort"/>
-					<xsd:element name = "dataType">
+					<xsd:element name = "name">
 						<xsd:simpleType>
 							<xsd:restriction base = "xsd:string">
-								<xsd:enumeration value = "integer"/>
-								<xsd:enumeration value = "double"/>
-								<xsd:enumeration value = "string"/>
-								<xsd:enumeration value = "date"/>
-								<xsd:enumeration value = "long"/>
-								<xsd:enumeration value = "raw"/>
-								<xsd:enumeration value = "boolean"/>
+								<xsd:minLength value = "1"/>
+								<xsd:maxLength value = "128"/>
 							</xsd:restriction>
 						</xsd:simpleType>
 					</xsd:element>
+					<xsd:element name = "sort" type = "general:XmlCharacteristicTypeSort"/>
+					<xsd:element name = "dataType" type = "general:XmlDataType"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
