@@ -1,4 +1,4 @@
--- $Id: characteristic.sql,v 1.12 2005/06/15 17:03:09 bass Exp $
+-- $Id: characteristic.sql,v 1.13 2005/12/08 15:57:28 bass Exp $
 
 CREATE TABLE Characteristic (
  id NUMBER(19),
@@ -12,11 +12,11 @@ CREATE TABLE Characteristic (
 --
  name VARCHAR2(128 CHAR) NOT NULL,
  description VARCHAR2(256 CHAR),
- value VARCHAR2(256 CHAR),
+ value VARCHAR2(256 CHAR) NOT NULL,
  editable NUMBER(1) NOT NULL,
  visible NUMBER(1) NOT NULL,
 --
- characterizable_id NUMBER(19),
+ characterizable_id NUMBER(19) NOT NULL,
 --
  CONSTRAINT chc_pk PRIMARY KEY (id),
  CONSTRAINT chc_creator_fk FOREIGN KEY (creator_id)
