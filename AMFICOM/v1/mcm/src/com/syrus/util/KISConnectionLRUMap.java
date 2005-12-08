@@ -1,5 +1,5 @@
 /*-
- * $Id: KISConnectionLRUMap.java,v 1.6 2005/09/12 19:50:07 arseniy Exp $
+ * $Id: KISConnectionLRUMap.java,v 1.7 2005/12/08 15:31:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,10 @@ import com.syrus.AMFICOM.mcm.KISConnection;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/09/12 19:50:07 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/08 15:31:56 $
  * @module mcm
  */
-public class KISConnectionLRUMap extends LRUMap<Identifier, KISConnection> {
+public class KISConnectionLRUMap extends ArrayLRUMap<Identifier, KISConnection> {
 	private static final long serialVersionUID = 2946433898920082018L;
 
 	public KISConnectionLRUMap() {
@@ -39,7 +39,7 @@ public class KISConnectionLRUMap extends LRUMap<Identifier, KISConnection> {
 
 		// Find the nearest to the right side of array non-established connection.
 		//Return it if exists.
-		assert (super.array.length == super.entityCount) : "ERROR before LRUMap resize: entity count " + super.entityCount
+		assert (super.array.length == super.entityCount) : "ERROR before ArrayLRUMap resize: entity count " + super.entityCount
 				+ " does not match array length " + super.array.length;
 
 		for (int i = super.array.length - 1; i >= 0; i--) {

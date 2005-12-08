@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.207 2005/12/06 09:42:52 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.208 2005/12/08 15:29:59 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,6 @@ package com.syrus.AMFICOM.general;
 import gnu.trove.TShortObjectHashMap;
 import gnu.trove.TShortObjectIterator;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,8 +33,8 @@ import com.syrus.util.LRUMapSaver;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.207 $, $Date: 2005/12/06 09:42:52 $
- * @author $Author: bass $
+ * @version $Revision: 1.208 $, $Date: 2005/12/08 15:29:59 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 8
@@ -58,7 +56,7 @@ public final class StorableObjectPool {
 	public static final String БАЙАН = "[:]/\\/\\/\\/\\/|||||||||||||||||||||||||||[:]";
 
 	/**
-	 * <short entityCode, (? extends LRUMap) objectPool>
+	 * <short entityCode, LRUMap objectPool>
 	 * Implementation of object pool itself
 	 */
 	private static TShortObjectHashMap objectPoolMap;
@@ -67,11 +65,6 @@ public final class StorableObjectPool {
 	 * Object loader -- loads objects, not found in pool
 	 */
 	private static ObjectLoader objectLoader;
-
-	/**
-	 * Class of object pool. Must be subclass of LRUMap
-	 */
-	private static Class objectPoolClass;
 
 	private static final Map<Short, Set<Identifier>> DELETED_IDS_MAP = new HashMap<Short, Set<Identifier>>();
 
@@ -187,72 +180,58 @@ public final class StorableObjectPool {
 		// singleton
 		assert false;
 	}
-	
+
+	/**
+	 * Подготовка к использованию.
+	 * Загрузчик объектов <code>{@link StorableObjectPool#objectLoader}</code>
+	 * выставляется в значение <code>objectLoader1</code>
+	 * Если <code>objectLoader1 == null</code>,
+	 * то возбуждается исключение <code>NullPointerException</code>.
+	 * Карта хранилищ объектов <code>{@link StorableObjectPool#objectPoolMap}</code>
+	 * либо создаётся, либо, если уже  была создана прежде, опустошается.
+	 * После вызова этого метода класс к работе ещё не готов,
+	 * поскольку нет зарегистрированных хранилищ объектов. 
+	 * @param objectLoader1
+	 */
 	public static void init(final ObjectLoader objectLoader1) {
-		init(objectLoader1, LRUMap.class);
-	}
+		if (objectLoader1 ==null) {
+			throw new NullPointerException("Object loader is null");
+		}
 
-	public static void init(final ObjectLoader objectLoader1, final Class objectPoolClass1) {
-		objectPoolMap = new TShortObjectHashMap();
 		objectLoader = objectLoader1;
-		try {
-			objectPoolClass = Class.forName(objectPoolClass1.getName());
-		} catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + objectPoolClass1.getName() + "' cannot be found, using default");
-			objectPoolClass = LRUMap.class;
+		if (objectPoolMap == null) {
+			objectPoolMap = new TShortObjectHashMap();
+		} else {
+			objectPoolMap.clear();
 		}
 	}
 
-	public static void addObjectPoolGroup(final short groupCode, final int size) {
+	/**
+	 * Зарегистрировать хранилища объектов всех сущностей группы <code>groupCode</code>.
+	 * @param groupCode
+	 * @param capacity
+	 * @param objectTimeToLive
+	 */
+	public static void addObjectPoolGroup(final short groupCode, final int capacity, final long objectTimeToLive) {
 		assert ObjectGroupEntities.isGroupCodeValid(groupCode) : ErrorMessages.ILLEGAL_GROUP_CODE;
-		final int objectPoolSize = (size < 0) ? 0 : (size > MAX_OBJECT_POOL_SIZE) ? MAX_OBJECT_POOL_SIZE : size;
+		final int objectPoolSize = (capacity < 0) ? 0 : (capacity > MAX_OBJECT_POOL_SIZE) ? MAX_OBJECT_POOL_SIZE : capacity;
 		for (final short entityCode : ObjectGroupEntities.getEntityCodes(groupCode).toArray()) {
-			addObjectPool(entityCode, objectPoolSize);
+			addObjectPool(entityCode, objectPoolSize, objectTimeToLive);
 		}
 	}
 
-	public static void addObjectPool(final short entityCode, final int objectPoolSize) {
+	/**
+	 * Зарегистрировать хранилище объектов для сущности <code>entityCode</code>.
+	 * @param entityCode
+	 * @param objectPoolCapacity
+	 * @param objectTimeToLive
+	 */
+	public static void addObjectPool(final short entityCode, final int objectPoolCapacity, final long objectTimeToLive) {
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
-		try {
-			final Constructor constructor = objectPoolClass.getConstructor(new Class[] { int.class});
-			final Object obj = constructor.newInstance(new Object[] { new Integer(objectPoolSize)});
-			if (obj instanceof LRUMap) {
-				final LRUMap objectPool = (LRUMap) obj;
-				objectPoolMap.put(entityCode, objectPool);
-				Log.debugMessage("Pool for '" + ObjectEntities.codeToString(entityCode)
-						+ "'/" + entityCode + " of size " + objectPoolSize + " added", Log.DEBUGLEVEL08);
-			} else {
-				throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | Object pool class "
-						+ objectPoolClass.getName() + " must extend LRUMap");
-			}
-		} catch (SecurityException e) {
-			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass "
-					+ objectPoolClass.getName() + " SecurityException " + e.getMessage());
-		} catch (IllegalArgumentException e) {
-			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass "
-					+ objectPoolClass.getName() + " IllegalArgumentException " + e.getMessage());
-		} catch (NoSuchMethodException e) {
-			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass "
-					+ objectPoolClass.getName() + " NoSuchMethodException " + e.getMessage());
-		} catch (InstantiationException e) {
-			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass "
-					+ objectPoolClass.getName() + " InstantiationException " + e.getMessage());
-		} catch (IllegalAccessException e) {
-			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass "
-					+ objectPoolClass.getName() + " IllegalAccessException " + e.getMessage());
-		} catch (final InvocationTargetException ite) {
-			final Throwable cause = ite.getCause();
-			if (cause instanceof AssertionError) {
-				final String message = cause.getMessage();
-				if (message == null)
-					assert false;
-				else
-					assert false : message;
-			} else
-				throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass "
-						+ objectPoolClass.getName() + " InvocationTargetException " + ite.getMessage());
-		}
-
+		final LRUMap objectPool = new LRUMap(objectPoolCapacity, objectTimeToLive);
+		objectPoolMap.put(entityCode, objectPool);
+		Log.debugMessage("Pool for '" + ObjectEntities.codeToString(entityCode)
+				+ "'/" + entityCode + " of capacity " + objectPoolCapacity + " added", Log.DEBUGLEVEL08);
 	}
 
 
@@ -455,12 +434,19 @@ public final class StorableObjectPool {
 
 		final Set<T> storableObjects = new HashSet<T>();
 		synchronized (objectPool) {
-			for (final T storableObject : objectPool) {
+			for (final T storableObject : objectPool.values()) {
 				final Identifier id = storableObject.getId();
 				if (!loadButIds.contains(id) && condition.isConditionTrue(storableObject)) {
 					storableObjects.add(storableObject);
 				}
 			}
+		}
+
+		/*
+		 * According to contract of LRUMap move found objects to the beginging.
+		 */
+		for (final StorableObject storableObject : storableObjects) {
+			objectPool.get(storableObject.getId());
 		}
 
 		Log.debugMessage("Found in pool " + storableObjects.size() + " objects: " + Identifier.createStrings(storableObjects),
@@ -499,16 +485,6 @@ public final class StorableObjectPool {
 				}
 			}
 
-		}
-
-		/*
-		 * This block is only needed in order for LRUMap to rehash
-		 * itself. Since it affects performance, we've turned it off.
-		 */
-		if (false) {
-			for (final StorableObject storableObject : storableObjects) {
-				objectPool.get(storableObject.getId());
-			}
 		}
 
 		Log.debugMessage("Returning " + storableObjects.size() + " objects: " + Identifier.createStrings(storableObjects),
@@ -562,6 +538,7 @@ public final class StorableObjectPool {
 
 	/**
 	 * Clean from pool changed objects from the supplied set.
+	 * Also cleans delete marks on the supplied objects (if any). 
 	 * Objects must NOT belong to the same entity.
 	 * @param identifiables
 	 */
@@ -589,7 +566,7 @@ public final class StorableObjectPool {
 
 			final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityKey);
 			if (objectPool != null) {
-				for (final Iterator<StorableObject> it = objectPool.iterator(); it.hasNext();) {
+				for (final Iterator<StorableObject> it = objectPool.values().iterator(); it.hasNext();) {
 					final StorableObject storableObject = it.next();
 					if (entityIds.contains(storableObject.getId()) && storableObject.isChanged()) {
 						it.remove();
@@ -614,7 +591,7 @@ public final class StorableObjectPool {
 
 		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool != null) {
-			for (final Iterator<StorableObject> it = objectPool.iterator(); it.hasNext();) {
+			for (final Iterator<StorableObject> it = objectPool.values().iterator(); it.hasNext();) {
 				final StorableObject storableObject = it.next();
 				if (storableObject.isChanged()) {
 					it.remove();
@@ -884,7 +861,7 @@ public final class StorableObjectPool {
 		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool != null) {
 			synchronized (objectPool) {
-				for (final StorableObject storableObject : objectPool) {
+				for (final StorableObject storableObject : objectPool.values()) {
 					checkChangedWithDependencies(storableObject, 0);
 				}
 			}
@@ -1131,7 +1108,7 @@ public final class StorableObjectPool {
 
 		final Set<StorableObject> refreshObjects = new HashSet<StorableObject>();
 		synchronized (objectPool) {
-			for (final StorableObject storableObject : objectPool) {
+			for (final StorableObject storableObject : objectPool.values()) {
 				final Identifier id = storableObject.getId();
 				if (ids.contains(id) && !storableObject.isChanged() && (entityDeletedIds == null || !entityDeletedIds.contains(id))) {
 					refreshObjects.add(storableObject);
@@ -1166,7 +1143,7 @@ public final class StorableObjectPool {
 
 				refreshObjects.clear();
 				synchronized (objectPool) {
-					for (final StorableObject storableObject : objectPool) {
+					for (final StorableObject storableObject : objectPool.values()) {
 						if (!storableObject.isChanged() && (entityDeletedIds == null || !entityDeletedIds.contains(storableObject.getId()))) {
 							refreshObjects.add(storableObject);
 						}
@@ -1311,18 +1288,18 @@ public final class StorableObjectPool {
 	}
 
 
-	/*	Truncate */
-
-	public static void truncate(final short entityCode) {
-		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
-		if (objectPool instanceof StorableObjectResizableLRUMap) {
-			((StorableObjectResizableLRUMap) objectPool).truncate(true);
-		}
-		else {
-			Log.errorMessage("ERROR: Object pool class '" + objectPool.getClass().getName()
-					+ "' not 'StorableObjectResizableLRUMap' -- cannot truncate pool");
-		}
-	}
+//	/*	Truncate */
+//
+//	public static void truncate(final short entityCode) {
+//		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
+//		if (objectPool instanceof StorableObjectResizableLRUMap) {
+//			((StorableObjectResizableLRUMap) objectPool).truncate(true);
+//		}
+//		else {
+//			Log.errorMessage("ERROR: Object pool class '" + objectPool.getClass().getName()
+//					+ "' not 'StorableObjectResizableLRUMap' -- cannot truncate pool");
+//		}
+//	}
 
 	private static <T extends StorableObject> LRUMap<Identifier, T> getLRUMap(final Short entityCode) {
 		return getLRUMap(entityCode.shortValue());

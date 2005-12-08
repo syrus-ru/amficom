@@ -1,5 +1,5 @@
 /*
- * $Id: ClientPoolContext.java,v 1.21 2005/12/02 15:21:21 arseniy Exp $
+ * $Id: ClientPoolContext.java,v 1.22 2005/12/08 15:31:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,25 +12,12 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.LRUMapSaver;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/12/02 15:21:21 $
+ * @version $Revision: 1.22 $, $Date: 2005/12/08 15:31:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
 class ClientPoolContext extends PoolContext {
-
-	private static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
-	private static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
-	private static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize";
-	private static final String KEY_MEASUREMENT_POOL_SIZE = "MeasurementPoolSize";
-	private static final String KEY_REPORT_POOL_SIZE = "ReportPoolSize";
-
-	private static final int GENERAL_POOL_SIZE = 1000;
-	private static final int ADMINISTRATION_POOL_SIZE = 1000;
-	private static final int CONFIGURATION_POOL_SIZE = 1000;
-	private static final int MEASUREMENT_POOL_SIZE = 1000;
-	private static final int REPORT_POOL_SIZE = 1000;
-
 	private static final LRUMapSaver<Identifier, StorableObject> LRU_MAP_SAVER = new StorableObjectLRUMapSaver();
 
 	public ClientPoolContext(final ObjectLoader objectLoader) {
@@ -39,20 +26,25 @@ class ClientPoolContext extends PoolContext {
 
 	@Override
 	public void init() {
-		final Class lruMapClass = StorableObjectResizableLRUMap.class;
-
 		final int generalPoolSize = ApplicationProperties.getInt(KEY_GENERAL_POOL_SIZE, GENERAL_POOL_SIZE);
 		final int administrationPoolSize = ApplicationProperties.getInt(KEY_ADMINISTRATION_POOL_SIZE, ADMINISTRATION_POOL_SIZE);
 		final int configurationPoolSize = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_SIZE, CONFIGURATION_POOL_SIZE);
 		final int measurementPoolSize = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_SIZE, MEASUREMENT_POOL_SIZE);
 		final int reportPoolSize = ApplicationProperties.getInt(KEY_REPORT_POOL_SIZE, REPORT_POOL_SIZE);
 
-		StorableObjectPool.init(super.objectLoader, lruMapClass);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, generalPoolSize);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, administrationPoolSize);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, configurationPoolSize);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, measurementPoolSize);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.REPORT_GROUP_CODE, reportPoolSize);
+		// All convert to ns
+		final long generalPoolTimeToLive = ApplicationProperties.getInt(KEY_GENERAL_POOL_TIME_TO_LIVE, GENERAL_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+		final long administrationPoolTimeToLive = ApplicationProperties.getInt(KEY_ADMINISTRATION_POOL_TIME_TO_LIVE, ADMINISTRATION_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+		final long configurationPoolTimeToLive = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_TIME_TO_LIVE, CONFIGURATION_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+		final long measurementPoolTimeToLive = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_TIME_TO_LIVE, MEASUREMENT_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+		final long reportPoolTimeToLive = ApplicationProperties.getInt(KEY_REPORT_POOL_TIME_TO_LIVE, REPORT_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+
+		StorableObjectPool.init(super.objectLoader);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, generalPoolSize, generalPoolTimeToLive);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, administrationPoolSize, administrationPoolTimeToLive);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, configurationPoolSize, configurationPoolTimeToLive);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, measurementPoolSize, measurementPoolTimeToLive);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.REPORT_GROUP_CODE, reportPoolSize, reportPoolTimeToLive);
 	}
 
 	@Override

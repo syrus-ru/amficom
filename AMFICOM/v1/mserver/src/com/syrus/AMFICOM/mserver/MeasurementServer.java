@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.88 2005/11/28 12:35:30 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.89 2005/12/08 15:31:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/11/28 12:35:30 $
+ * @version $Revision: 1.89 $, $Date: 2005/12/08 15:31:19 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -423,8 +423,6 @@ final class MeasurementServer extends SleepButWorkThread {
 			}
 
 			mcmIdsToAbortTests.clear();
-
-			StorableObjectPool.truncate(ObjectEntities.TEST_CODE);
 		} else {
 			Log.errorMessage("abortTests | Collection is NULL or empty");
 		}

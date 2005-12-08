@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerPoolContext.java,v 1.18 2005/12/02 15:22:04 arseniy Exp $
+ * $Id: CMServerPoolContext.java,v 1.19 2005/12/08 15:31:24 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,31 +15,16 @@ import com.syrus.AMFICOM.general.ObjectLoader;
 import com.syrus.AMFICOM.general.PoolContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.LRUMapSaver;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/12/02 15:22:04 $
+ * @version $Revision: 1.19 $, $Date: 2005/12/08 15:31:24 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  */
 final class CMServerPoolContext extends PoolContext {
-	private static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
-	private static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
-	private static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize";
-	private static final String KEY_MEASUREMENT_POOL_SIZE = "MeasurementPoolSize";
-	private static final String KEY_EVENT_POOL_SIZE = "EventPoolSize";
-	private static final String KEY_REPORT_POOL_SIZE = "ReportPoolSize";
-
-	private static final int GENERAL_POOL_SIZE = 1000;
-	private static final int ADMINISTRATION_POOL_SIZE = 1000;
-	private static final int CONFIGURATION_POOL_SIZE = 1000;
-	private static final int MEASUREMENT_POOL_SIZE = 1000;
-	private static final int EVENT_POOL_SIZE = 1000;
-	private static final int REPORT_POOL_SIZE = 1000;
-
 	private static LRUMapSaver<Identifier, StorableObject> LRU_MAP_SAVER;
 	
 	public CMServerPoolContext(final ObjectLoader objectLoader) {
@@ -48,8 +33,6 @@ final class CMServerPoolContext extends PoolContext {
 
 	@Override
 	public void init() {
-		final Class lruMapClass = StorableObjectResizableLRUMap.class;
-
 		final int generalPoolSize = ApplicationProperties.getInt(KEY_GENERAL_POOL_SIZE, GENERAL_POOL_SIZE);
 		final int administrationPoolSize = ApplicationProperties.getInt(KEY_ADMINISTRATION_POOL_SIZE, ADMINISTRATION_POOL_SIZE);
 		final int configurationPoolSize = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_SIZE, CONFIGURATION_POOL_SIZE);
@@ -57,13 +40,21 @@ final class CMServerPoolContext extends PoolContext {
 		final int eventPoolSize = ApplicationProperties.getInt(KEY_EVENT_POOL_SIZE, EVENT_POOL_SIZE);
 		final int reportPoolSize = ApplicationProperties.getInt(KEY_REPORT_POOL_SIZE, REPORT_POOL_SIZE);
 
-		StorableObjectPool.init(super.objectLoader, lruMapClass);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, generalPoolSize);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, administrationPoolSize);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, configurationPoolSize);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, measurementPoolSize);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.EVENT_GROUP_CODE, eventPoolSize);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.REPORT_GROUP_CODE, reportPoolSize);
+		// All convert to ns
+		final long generalPoolTimeToLive = ApplicationProperties.getInt(KEY_GENERAL_POOL_TIME_TO_LIVE, GENERAL_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+		final long administrationPoolTimeToLive = ApplicationProperties.getInt(KEY_ADMINISTRATION_POOL_TIME_TO_LIVE, ADMINISTRATION_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+		final long configurationPoolTimeToLive = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_TIME_TO_LIVE, CONFIGURATION_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+		final long measurementPoolTimeToLive = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_TIME_TO_LIVE, MEASUREMENT_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+		final long eventPoolTimeToLive = ApplicationProperties.getInt(KEY_EVENT_POOL_TIME_TO_LIVE, EVENT_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+		final long reportPoolTimeToLive = ApplicationProperties.getInt(KEY_REPORT_POOL_TIME_TO_LIVE, REPORT_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+
+		StorableObjectPool.init(super.objectLoader);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, generalPoolSize, generalPoolTimeToLive);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, administrationPoolSize, administrationPoolTimeToLive);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, configurationPoolSize, configurationPoolTimeToLive);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, measurementPoolSize, measurementPoolTimeToLive);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.EVENT_GROUP_CODE, eventPoolSize, eventPoolTimeToLive);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.REPORT_GROUP_CODE, reportPoolSize, reportPoolTimeToLive);
 
 		if (LRU_MAP_SAVER == null) {
 			LRU_MAP_SAVER = new IdentifierLRUMapSaver(super.objectLoader);

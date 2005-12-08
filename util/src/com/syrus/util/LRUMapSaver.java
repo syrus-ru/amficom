@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMapSaver.java,v 1.1 2005/12/02 15:14:06 arseniy Exp $
+ * $Id: LRUMapSaver.java,v 1.2 2005/12/08 15:29:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,14 +14,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Map;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/12/02 15:14:06 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/08 15:29:20 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
-public abstract class LRUMapSaver<K, V> {
+public abstract class LRUMapSaver<K, V extends LRUMap.Retainable> {
 	private static final String KEY_CACHE_PATH = "CachePath";
 
 	private static final String DEFAULT_HOME = System.getProperty("user.dir");
@@ -44,7 +45,7 @@ public abstract class LRUMapSaver<K, V> {
 	}
 
 	public void load(final String entityName, final LRUMap<K, V> lruMap) {
-		Log.debugMessage("Loading LRUMap '" + entityName + "'", Log.DEBUGLEVEL10);
+		Log.debugMessage("Loading ArrayLRUMap '" + entityName + "'", Log.DEBUGLEVEL10);
 		final File lruMapFile = new File(this.cacheDir.getPath() + File.separator + entityName + this.fileSuffix);
 		try {
 			final ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(lruMapFile));
@@ -57,7 +58,8 @@ public abstract class LRUMapSaver<K, V> {
 			}
 			final Object readObject = objectInputStream.readObject();
 			objectInputStream.close();
-			this.populateLRUMap(lruMap, readObject);
+			final Map<K, V> map = this.getMap(readObject);
+			lruMap.putAll(map);
 		} catch (FileNotFoundException fnfe) {
 			Log.debugMessage("Warning: " + fnfe.getMessage(), Log.DEBUGLEVEL10);
 		} catch (IOException ioe) {
@@ -69,7 +71,7 @@ public abstract class LRUMapSaver<K, V> {
 		}
 	}
 
-	protected abstract void populateLRUMap(final LRUMap<K, V> lruMap, final Object readObject);
+	protected abstract Map<K, V> getMap(final Object readObject);
 
 	public void save(final LRUMap<K, V> lruMap, final String entityName, final boolean clearLRUMap) {
 		if (lruMap.isEmpty()) {
@@ -81,7 +83,7 @@ public abstract class LRUMapSaver<K, V> {
 		final File tmpLruMapFile = new File(path + ".swp");
 		try {
 			final ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(tmpLruMapFile));
-			Log.debugMessage("Saving LRUMap '" + entityName + "' to file " + lruMapFile.getAbsolutePath(), Log.DEBUGLEVEL10);
+			Log.debugMessage("Saving ArrayLRUMap '" + entityName + "' to file " + lruMapFile.getAbsolutePath(), Log.DEBUGLEVEL10);
 			objectOutputStream.writeObject(entityName);
 			objectOutputStream.writeObject(this.getObjectToWrite(lruMap));
 			objectOutputStream.flush();

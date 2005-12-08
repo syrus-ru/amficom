@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectLRUMapSaver.java,v 1.1 2005/12/02 15:20:18 arseniy Exp $
+ * $Id: StorableObjectLRUMapSaver.java,v 1.2 2005/12/08 15:30:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,11 +7,15 @@
  */
 package com.syrus.AMFICOM.general;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+
 import com.syrus.util.LRUMap;
 import com.syrus.util.LRUMapSaver;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/12/02 15:20:18 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/08 15:30:54 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -24,22 +28,18 @@ public final class StorableObjectLRUMapSaver extends LRUMapSaver<Identifier, Sto
 	}
 
 	@Override
-	protected void populateLRUMap(final LRUMap<Identifier, StorableObject> lruMap, final Object readObject) {
-		final Object[] readObjects = (Object[]) readObject;
-		final StorableObject[] readStorableObjects = new StorableObject[readObjects.length];
-		System.arraycopy(readObjects, 0, readStorableObjects, 0, readObjects.length);
-
-		final Identifier[] ids = new Identifier[readStorableObjects.length];
-		int i = 0;
+	protected Map<Identifier, StorableObject> getMap(final Object readObject) {
+		final HashSet<StorableObject> readStorableObjects = (HashSet<StorableObject>) readObject;
+		final Map<Identifier, StorableObject> map = new HashMap<Identifier, StorableObject>(readStorableObjects.size());
 		for (final StorableObject storableObject : readStorableObjects) {
-			ids[i++] = storableObject.getId();
+			map.put(storableObject.getId(), storableObject);
 		}
-		lruMap.populate(ids, readStorableObjects);
+		return map;
 	}
 
 	@Override
 	protected Object getObjectToWrite(final LRUMap<Identifier, StorableObject> lruMap) {
-		return lruMap.getValues();
+		return new HashSet<StorableObject>(lruMap.values());
 	}
 
 }

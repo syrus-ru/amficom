@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.133 2005/12/07 17:16:24 bass Exp $
+ * $Id: StorableObject.java,v 1.134 2005/12/08 15:29:59 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,17 +33,19 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
+
+import com.syrus.util.LRUMap.Retainable;
 import com.syrus.util.Wrapper;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.133 $, $Date: 2005/12/07 17:16:24 $
- * @author $Author: bass $
+ * @version $Revision: 1.134 $, $Date: 2005/12/08 15:29:59 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public abstract class StorableObject<T extends StorableObject<T>> implements Identifiable,
-		IdlTransferableObject<IdlStorableObject> {
+		IdlTransferableObject<IdlStorableObject>, Retainable {
 	private static final long serialVersionUID = 3904998894075738999L;
 
 	protected Identifier id;
@@ -671,8 +673,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.133 $, $Date: 2005/12/07 17:16:24 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.134 $, $Date: 2005/12/08 15:29:59 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -796,13 +798,20 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.133 $, $Date: 2005/12/07 17:16:24 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.134 $, $Date: 2005/12/08 15:29:59 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
 	@Target(METHOD)
 	protected static @interface ParameterizationPending {
 		String[] value();
+	}
+
+	/**
+	 * @see {@link com.syrus.util.LRUMap.Retainable#retain()}.
+	 */
+	public boolean retain() {
+		return this.isChanged() || this.isPersistent();
 	}
 }

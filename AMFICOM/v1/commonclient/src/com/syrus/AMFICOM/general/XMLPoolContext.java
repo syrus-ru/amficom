@@ -1,5 +1,5 @@
 /*
- * $Id: XMLPoolContext.java,v 1.10 2005/12/02 15:21:00 arseniy Exp $
+ * $Id: XMLPoolContext.java,v 1.11 2005/12/08 15:31:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,11 +7,13 @@
  */
 package com.syrus.AMFICOM.general;
 
+import java.util.Map;
+
 import com.syrus.util.LRUMap;
 import com.syrus.util.LRUMapSaver;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/12/02 15:21:00 $
+ * @version $Revision: 1.11 $, $Date: 2005/12/08 15:31:06 $
  * @author $Author: arseniy $
  * @module commonclient
  */
@@ -24,18 +26,17 @@ public final class XMLPoolContext extends PoolContext {
 
 	@Override
 	public void init() {
-		final Class cacheClass = StorableObjectResizableLRUMap.class;
-
-		StorableObjectPool.init(super.objectLoader, cacheClass);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, 1000);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, 1000);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, 1000);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, 1000);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.EVENT_GROUP_CODE, 1000);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.RESOURCE_GROUP_CODE, 1000);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MAP_GROUP_CODE, 1000);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.SCHEME_GROUP_CODE, 1000);
-		//StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MAPVIEW_GROUP_CODE, 1000);
+		StorableObjectPool.init(super.objectLoader);
+		final long timeToLive = 120 * 60 * 1000 * 1000 * 1000;
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, 1000, timeToLive);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, 1000, timeToLive);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, 1000, timeToLive);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, 1000, timeToLive);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.EVENT_GROUP_CODE, 1000, timeToLive);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.RESOURCE_GROUP_CODE, 1000, timeToLive);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MAP_GROUP_CODE, 1000, timeToLive);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.SCHEME_GROUP_CODE, 1000, timeToLive);
+		//StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MAPVIEW_GROUP_CODE, 1000, timeToLive);
 	}
 
 	@Override
@@ -62,8 +63,9 @@ public final class XMLPoolContext extends PoolContext {
 		}
 
 		@Override
-		protected void populateLRUMap(final LRUMap<Identifier, StorableObject> lruMap, final Object readObject) {
+		protected Map<Identifier, StorableObject> getMap(final Object readObject) {
 			// nothing
+			return null;
 		}
 
 		@Override

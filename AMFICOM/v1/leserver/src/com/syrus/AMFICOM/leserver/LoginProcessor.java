@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.29 2005/12/01 12:24:29 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.30 2005/12/08 15:31:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/12/01 12:24:29 $
+ * @version $Revision: 1.30 $, $Date: 2005/12/08 15:31:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -53,6 +53,7 @@ final class LoginProcessor extends SleepButWorkThread {
 	public LoginProcessor() {
 		super(ApplicationProperties.getInt(KEY_LOGIN_PROCESSOR_TICK_TIME, LOGIN_PROCESSOR_TICK_TIME) * 1000,
 				ApplicationProperties.getInt(KEY_LOGIN_PROCESSOR_MAX_FALLS, MAX_FALLS));
+		super.setName("LoginProcessor");
 
 		if (loginMap == null) {
 			loginMap = Collections.synchronizedMap(new HashMap<SessionKey, UserLogin>());
