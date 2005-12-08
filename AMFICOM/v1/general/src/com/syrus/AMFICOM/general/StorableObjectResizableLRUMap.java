@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectResizableLRUMap.java,v 1.13 2005/09/30 09:21:49 bass Exp $
+ * $Id: StorableObjectResizableLRUMap.java,v 1.14 2005/12/08 15:30:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,15 +12,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.util.LRUMap;
+import com.syrus.util.ArrayLRUMap;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/30 09:21:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/12/08 15:30:20 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
+ * @deprecated Use new class {@link com.syrus.util.LRUMap} instead.
  */
-public class StorableObjectResizableLRUMap extends LRUMap<Identifier, StorableObject> {
+@Deprecated
+public class StorableObjectResizableLRUMap extends ArrayLRUMap<Identifier, StorableObject> {
 	private static final long serialVersionUID = 5983495252523370955L;
 	
 	private int initialCapacity;
@@ -44,7 +46,7 @@ public class StorableObjectResizableLRUMap extends LRUMap<Identifier, StorableOb
 			return thrownObject;
 		}
 
-		assert (super.array.length == super.entityCount) : "ERROR before LRUMap resize: entity count " + super.entityCount
+		assert (super.array.length == super.entityCount) : "ERROR before ArrayLRUMap resize: entity count " + super.entityCount
 				+ " does not match array length " + super.array.length;
 
 		for (int i = super.array.length - 1; i >= 0; i--) {
