@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.Client.General.Model.ModelApplicationModel;
 import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 
 public class ModelMenuBar extends AbstractMainMenuBar {
@@ -143,8 +144,8 @@ public class ModelMenuBar extends AbstractMainMenuBar {
 		menuWindowGeneralProperties.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES));
 		menuWindowGeneralProperties.setName(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES);
 		menuWindowGeneralProperties.addActionListener(super.actionAdapter);
-		menuWindowMap.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_MAP));
-		menuWindowMap.setName(ModelApplicationModel.MENU_WINDOW_MAP);
+		menuWindowMap.setText(I18N.getString(MapEditorApplicationModel.ITEM_VIEW_MAP));
+		menuWindowMap.setName(MapEditorApplicationModel.ITEM_VIEW_MAP);
 		menuWindowMap.addActionListener(super.actionAdapter);
 		menuWindowModelRapameters.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS));
 		menuWindowModelRapameters.setName(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS);
@@ -272,8 +273,8 @@ public class ModelMenuBar extends AbstractMainMenuBar {
 				menuWindowCharacteristics.setEnabled(aModel.isEnabled(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS));
 				menuWindowGeneralProperties.setVisible(aModel.isVisible(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES));
 				menuWindowGeneralProperties.setEnabled(aModel.isEnabled(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES));
-				menuWindowMap.setVisible(aModel.isVisible(ModelApplicationModel.MENU_WINDOW_MAP));
-				menuWindowMap.setEnabled(aModel.isEnabled(ModelApplicationModel.MENU_WINDOW_MAP));
+				menuWindowMap.setVisible(aModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_MAP));
+				menuWindowMap.setEnabled(aModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_MAP));
 				menuWindowModelRapameters.setVisible(aModel.isVisible(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS));
 				menuWindowModelRapameters.setEnabled(aModel.isEnabled(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS));
 				menuWindowPrimaryParameters.setVisible(aModel.isVisible(ModelApplicationModel.MENU_WINDOW_TREE));

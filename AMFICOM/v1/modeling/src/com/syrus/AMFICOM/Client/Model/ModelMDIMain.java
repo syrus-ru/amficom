@@ -38,7 +38,6 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
 import com.syrus.AMFICOM.Client.General.Command.Model.LoadModelingCommand;
-import com.syrus.AMFICOM.Client.General.Command.Model.OpenMapViewCommand;
 import com.syrus.AMFICOM.Client.General.Command.Model.SaveModelingCommand;
 import com.syrus.AMFICOM.Client.General.Command.Model.SchemeOpenCommand;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
@@ -61,6 +60,7 @@ import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapOpenCommand;
+import com.syrus.AMFICOM.client.map.command.map.OpenLinkedMapViewCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.MapPropertiesEventHandler;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
@@ -70,6 +70,7 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
+import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.client.model.MapSurveyApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.client.resource.I18N;
@@ -390,7 +391,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 
 		MapApplicationModelFactory mapApplicationModelFactory = new MapSurveyApplicationModelFactory();
 
-		aModel.setCommand("menuViewMapViewOpen", new OpenMapViewCommand(this.desktopPane, this.aContext, mapApplicationModelFactory));
+		aModel.setCommand("menuViewMapViewOpen", new OpenLinkedMapViewCommand(this.desktopPane, this.aContext, mapApplicationModelFactory));
 		
 		aModel.setCommand("menuViewModelSave", new SaveModelingCommand(aContext, "primarytrace"));
 		aModel.setCommand("menuViewModelLoad", new LoadModelingCommand(aContext));
@@ -425,21 +426,20 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES, this.getLazyCommand(GeneralPropertiesFrame.NAME));
 		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES, this.getLazyCommand(AdditionalPropertiesFrame.NAME));
 		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS, this.getLazyCommand(CharacteristicPropertiesFrame.NAME));
-		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_MAP, this.getLazyCommand(MapFrame.NAME));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_VIEW_MAP, this.getLazyCommand(MapFrame.NAME));
 		
 		aModel.fireModelChanged("");
 	}
 
+	@Override
 	public void setContext(ApplicationContext aContext) {
 		if (this.aContext != null) {
-			this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_EVENT_TYPE, this);
 			this.aContext.getDispatcher().removePropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 		}
 		
 		super.setContext(aContext);
 		
 		if(aContext != null) {
-			this.aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_EVENT_TYPE, this);
 			this.aContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 		}
 	}
@@ -569,7 +569,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		JInternalFrame mapFrame = MapDesktopCommand.findMapFrame(ModelMDIMain.this.desktopPane);
 		if (mapFrame != null) {
 			mapFrame.setVisible(b);
-			aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_MAP, b);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_MAP, b);
 		}
 		
 		aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_SCHEME, b);
