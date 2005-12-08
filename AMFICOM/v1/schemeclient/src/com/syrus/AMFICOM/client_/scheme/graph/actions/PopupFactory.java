@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.21 2005/10/31 12:30:28 bass Exp $
+ * $Id: PopupFactory.java,v 1.22 2005/12/08 10:43:49 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -459,7 +459,7 @@ public class PopupFactory {
 				SchemePath path = SchemeResource.getSchemePath();
 				if (id.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
 					try {
-						SchemeElement se = StorableObjectPool.getStorableObject(id, false);
+						SchemeElement se = StorableObjectPool.getStorableObject(id, true);
 						PathBuilder.createPEbySE(path, se);
 					} catch (ApplicationException e) {
 						Log.errorMessage(e);
@@ -499,7 +499,7 @@ public class PopupFactory {
 				SchemePath path = SchemeResource.getSchemePath();
 				if (id.getMajor() == ObjectEntities.SCHEMELINK_CODE) {
 					try {
-						SchemeLink link = StorableObjectPool.getStorableObject(id, false);
+						SchemeLink link = StorableObjectPool.getStorableObject(id, true);
 						if (PathBuilder.createPEbySL(path, link) == null) {
 							Log.debugMessage("Can't add to path " + link.getName(), Level.WARNING); //$NON-NLS-1$
 						}
@@ -508,7 +508,7 @@ public class PopupFactory {
 					}
 				} else if (id.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE) {
 					try {
-						SchemeCableLink link = StorableObjectPool.getStorableObject(id, false);
+						SchemeCableLink link = StorableObjectPool.getStorableObject(id, true);
 						if (PathBuilder.createPEbySCL(path, link) == null) {
 							Log.debugMessage("Can't add to path " + link.getName(), Level.WARNING); //$NON-NLS-1$
 						}
@@ -517,7 +517,7 @@ public class PopupFactory {
 					}
 				} else if (id.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
 					try {
-						SchemeElement se = StorableObjectPool.getStorableObject(id, false);
+						SchemeElement se = StorableObjectPool.getStorableObject(id, true);
 						if (PathBuilder.createPEbySE(path, se) == null) {
 							Log.debugMessage("Can't add to path " + se.getName(), Level.WARNING); //$NON-NLS-1$
 						}

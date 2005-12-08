@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeSelectionListener.java,v 1.17 2005/11/30 08:14:05 stas Exp $
+ * $Id: SchemeTreeSelectionListener.java,v 1.18 2005/12/08 10:43:49 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.UI.tree.Visualizable;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
@@ -50,7 +51,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/11/30 08:14:05 $
+ * @version $Revision: 1.18 $, $Date: 2005/12/08 10:43:49 $
  * @module schemeclient
  */
 
@@ -145,7 +146,7 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 			type = ObjectSelectedEvent.SCHEME_CABLEPORT;
 		else if (object instanceof Measurement)
 			type = ObjectSelectedEvent.MEASUREMENT;
-		else if (object instanceof String || object instanceof IdlKind) {
+		else if (object instanceof String || object instanceof IdlKind || object instanceof EquipmentType) {
 			type = ObjectSelectedEvent.OTHER_OBJECT;
 			if (manager != null)
 				object = null; 
