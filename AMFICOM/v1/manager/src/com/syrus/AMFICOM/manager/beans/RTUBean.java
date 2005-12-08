@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBean.java,v 1.3 2005/12/05 14:41:22 bob Exp $
+ * $Id: RTUBean.java,v 1.4 2005/12/08 13:21:09 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/05 14:41:22 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/08 13:21:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -119,7 +119,7 @@ public class RTUBean extends Bean implements DomainNetworkItem {
 	public void applyTargetPort(final MPort oldPort, 
 			final MPort newPort) {
 		assert Log.debugMessage("was:" + oldPort
-				+ ", now:" + newPort, Log.DEBUGLEVEL03);
+				+ ", now:" + newPort, Log.DEBUGLEVEL10);
 		
 		if (newPort != null && oldPort != null) {
 			AbstractBean oldBean = oldPort.getBean();
@@ -137,27 +137,6 @@ public class RTUBean extends Bean implements DomainNetworkItem {
 	private void setDomain(final Domain oldDomain,
 	                       final Domain newDomain) {
 		this.setDomainId(oldDomain.getId(), newDomain.getId());
-//		try {
-//			final boolean oldDomainChild = oldDomain.isChild(newDomain);
-//			final boolean newDomainChild;
-//			if (!oldDomainChild) {
-//				newDomainChild = newDomain.isChild(oldDomain);
-//			} else {
-//				newDomainChild = false;
-//			}
-//			assert Log.debugMessage("oldDomainChild:" + oldDomainChild 
-//					+ ", newDomainChild:" + newDomainChild, Log.DEBUGLEVEL03);
-//			final GraphRoutines graphRoutines = 
-//				this.managerMainFrame.getGraphRoutines();
-//			final Set<ManagerGraphCell> defaultGraphCells =
-//				graphRoutines.getDefaultGraphCells(this);
-//			for (final ManagerGraphCell cell : defaultGraphCells) {
-//				assert Log.debugMessage(cell + ", " + cell.getPerspective(), Log.DEBUGLEVEL03);
-//			}
-//		} catch (ApplicationException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 	}
 	
 	public void setDomainId(final Identifier oldDomainId,

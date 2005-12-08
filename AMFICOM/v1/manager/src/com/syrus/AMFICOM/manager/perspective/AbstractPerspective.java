@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractPerspective.java,v 1.7 2005/12/07 14:08:02 bob Exp $
+* $Id: AbstractPerspective.java,v 1.8 2005/12/08 13:21:09 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/12/07 14:08:02 $
+ * @version $Revision: 1.8 $, $Date: 2005/12/08 13:21:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -550,7 +550,7 @@ public abstract class AbstractPerspective implements Perspective {
 		this.firePropertyChangeEvent(this.propertyChangeEvent);
 	}
 	
-	public void putBean(AbstractBean abstractBean) {
+	public void putBean(AbstractBean abstractBean) throws ApplicationException {
 		// nothing		
 	}
 	

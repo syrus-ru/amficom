@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.21 2005/12/07 14:08:02 bob Exp $
+* $Id: Manager.java,v 1.22 2005/12/08 13:21:09 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/12/07 14:08:02 $
+ * @version $Revision: 1.22 $, $Date: 2005/12/08 13:21:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -66,7 +66,6 @@ public class Manager extends AbstractApplication {
 			assert Log.debugMessage("XML session" , Log.DEBUGLEVEL10);
 			try {
 				this.initUser();
-				this.createDeliveryAttributes();
 				this.loadDomainMembers();
 			} catch (ApplicationException e) {
 				// TODO Auto-generated catch block
@@ -95,13 +94,8 @@ public class Manager extends AbstractApplication {
 		
 		StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(domainIds, ObjectEntities.MCM_CODE), true);
 		StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(domainIds, ObjectEntities.SERVER_CODE), true);
-		final Set<PermissionAttributes> permissionAttributes = 
-			StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(domainIds, ObjectEntities.PERMATTR_CODE), true);
-		for (final PermissionAttributes attributes : permissionAttributes) {
-			assert Log.debugMessage(attributes.getParentId() 
-				+ ", "
-				+ attributes.getDomainId(), Log.DEBUGLEVEL03);
-		}
+		StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(domainIds, ObjectEntities.PERMATTR_CODE), true);
+		
 	}
 	
 	private void initUser() throws ApplicationException {
@@ -125,20 +119,5 @@ public class Manager extends AbstractApplication {
 	public static void main(String[] args) {
 		Launcher.launchApplicationClass(Manager.class);
 	}
-	
-	void createDeliveryAttributes() throws ApplicationException {
-//		final Identifier userId = LoginManager.getUserId();
-//		final DeliveryAttributes attributes = 
-//			DeliveryAttributes.getInstance(userId, Severity.SEVERITY_SOFT);
-//		final Set<Role> roles = StorableObjectPool.getStorableObjectsByCondition(
-//			new EquivalentCondition(ObjectEntities.ROLE_CODE),
-//			true);
-//		
-//		attributes.setRoles(roles);
-//		
-//		
-//		assert Log.debugMessage("Created " + attributes , Log.DEBUGLEVEL03);
-	}
-	
 	
 }

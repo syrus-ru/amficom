@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.31 2005/12/07 15:40:24 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.32 2005/12/08 13:21:09 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.31 $, $Date: 2005/12/07 15:40:24 $
+ * @version $Revision: 1.32 $, $Date: 2005/12/08 13:21:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -483,7 +483,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			final Icon connectoffIcon = 
 				UIManager.getIcon("com.syrus.AMFICOM.manager.resources.action.connectoff");
 			
-			AbstractAction action = new AbstractAction("", connectonIcon) {
+			final AbstractAction action = new AbstractAction("", connectonIcon) {
 				public void actionPerformed(ActionEvent e) {
 					ManagerMainFrame.this.graph.setPortsVisible(!ManagerMainFrame.this.graph.isPortsVisible());
 					this.putValue(SMALL_ICON, ManagerMainFrame.this.graph.isPortsVisible() ? connectonIcon : connectoffIcon);
@@ -530,10 +530,11 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		final ActionMap map = component.getActionMap();
 		
 		// Paste
-		this.paste = new AbstractAction() {
+		final Icon pasteIcon = UIManager.getIcon("org.jgraph.example.resources.action.paste");
+		this.paste = new AbstractAction("", pasteIcon) {
 
 			@SuppressWarnings({"synthetic-access","unqualified-field-access"})
-			public void actionPerformed(ActionEvent e) {				
+			public void actionPerformed(final ActionEvent e) {				
 				final GraphLayoutCache cache = graph.getGraphLayoutCache();
 				arranging = true;
 				ManagerGraphCell managerGraphCell = buffer.getCell();
@@ -541,14 +542,18 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 				if (managerGraphCell != null) {
 					cache.setVisible(managerGraphCell, true);
 					managerGraphCell.setPerspective(perspective);
-					perspective.putBean(managerGraphCell.getAbstractBean());
+					try {
+						perspective.putBean(managerGraphCell.getAbstractBean());
+					} catch (final ApplicationException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					perspective.firePropertyChangeEvent(new PropertyChangeEvent(this, "layoutBeans", null, null));
 				}
 				arranging = false;
 				updateBufferButtons();
 			}
 		};
-		this.paste.putValue(Action.SMALL_ICON, UIManager.getIcon("org.jgraph.example.resources.action.paste"));
 		graphToolBar.add(this.paste);
 		this.paste.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Paste"));
 		
@@ -559,7 +564,9 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		// Cut
 		this.buffer = new CellBuffer(this);
 		
-		this.cut = new AbstractAction() {
+		final Icon cutIcon = UIManager.getIcon("org.jgraph.example.resources.action.cut");
+		
+		this.cut = new AbstractAction("", cutIcon) {
 
 			@SuppressWarnings({"unqualified-field-access","synthetic-access", "unchecked"})
 			public void actionPerformed(final ActionEvent e) {
@@ -574,16 +581,25 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 						list.add(iterator.next());						
 					}
 					model.remove(list.toArray());
+
+					
 					buffer.putCells(selectionCell);
 					graphLayoutCache.setVisible(selectionCell, false);
-					treeModel.reload();			
-					graph.getSelectionModel().clearSelection();
+
+					try {
+						final Perspective perspective2 = getPerspective();					
+						final AbstractBean abstractBean = selectionCell.getAbstractBean();
+						abstractBean.disposeLayoutItem();
+						perspective2.removeLayoutBean(abstractBean);
+					} catch (ApplicationException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 				updateBufferButtons();
 			}
 		};
-		
-		this.cut.putValue(Action.SMALL_ICON, UIManager.getIcon("org.jgraph.example.resources.action.cut"));
+
 		graphToolBar.add(this.cut);
 		this.cut.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Cut"));
 		this.cut.setEnabled(false);

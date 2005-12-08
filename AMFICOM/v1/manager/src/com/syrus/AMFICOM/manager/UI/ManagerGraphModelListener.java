@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModelListener.java,v 1.6 2005/11/28 14:47:04 bob Exp $
+* $Id: ManagerGraphModelListener.java,v 1.7 2005/12/08 13:21:09 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/11/28 14:47:04 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/08 13:21:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -318,12 +318,23 @@ public class ManagerGraphModelListener implements GraphModelListener {
 			} 
 			if (removed != null) {
 				if (changed != null) {
-					for(Object changedObject : changed) {
-						System.out.println("changedObject after delete " + changedObject + '[' + changedObject.getClass().getName() + ']');
+					for(final Object changedObject : changed) {
+//						assert Log.debugMessage("changedObject " 
+//							+ changedObject 
+//							+ '[' 
+//							+ changedObject.getClass().getName() 
+//							+ ']', 
+//						Log.DEBUGLEVEL03);						
+						this.disposePort(changedObject, model);
 					}
 				}
-				for(Object removedObject : removed) {
-					System.out.println("removedObject " + removedObject + '[' + removedObject.getClass().getName() + ']');
+				for(final Object removedObject : removed) {
+					assert Log.debugMessage("removedObject " 
+							+ removedObject 
+							+ '[' 
+							+ removedObject.getClass().getName() 
+							+ ']', 
+						Log.DEBUGLEVEL03);
 					// First of all remove all edges
 					 if (model.isEdge(removedObject)) {
 						Edge edge = (Edge) removedObject;
@@ -334,7 +345,7 @@ public class ManagerGraphModelListener implements GraphModelListener {
 						AbstractBean bean = source.getUserObject();
 						bean.applyTargetPort(target, null);
 						final LayoutItem layoutItem = this.getLayoutItem(bean.getId());
-						Log.debugMessage("removedObject | layoutItem:" 
+						assert Log.debugMessage("removedObject | layoutItem:" 
 								+ layoutItem.getName() 
 								+ ", layoutName:" 
 								+ layoutItem.getLayoutName(),
@@ -343,15 +354,8 @@ public class ManagerGraphModelListener implements GraphModelListener {
 					 } 
 				}
 				
-				for(Object removedObject : removed) {
-					System.out.println("removedObject " + removedObject + '[' + removedObject.getClass().getName() + ']');
-					// First of all remove all edges
-					 if (model.isPort(removedObject)) {
-						 MPort source = (MPort) removedObject;
-						 AbstractBean bean = source.getUserObject();
-						 bean.dispose();
-						 this.managerMainFrame.perspective.removeLayoutBean(bean);
-					 }
+				for(final Object removedObject : removed) {
+					this.disposePort(removedObject, model);
 				}
 				
 				treeModel.reload();
@@ -365,6 +369,27 @@ public class ManagerGraphModelListener implements GraphModelListener {
 			JOptionPane.showMessageDialog(this.managerMainFrame.graph, exception
 					.getMessage(), I18N.getString("Manager.Error"),
 				JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void disposePort(final Object disposedObject,
+			final GraphModel model) 
+	throws ApplicationException {
+		final boolean port = model.isPort(disposedObject);
+		// First of all remove all edges
+		assert Log.debugMessage("disposedObject " 
+				+ disposedObject 
+				+ '[' 
+				+ disposedObject.getClass().getName() 
+				+ ']'
+				+ (port ? " is a port" : " is not a port"), 
+			Log.DEBUGLEVEL03);
+		
+		if (port) {
+			final MPort source = (MPort) disposedObject;
+			final AbstractBean bean = source.getUserObject();
+			bean.dispose();
+			this.managerMainFrame.perspective.removeLayoutBean(bean);
 		}
 	}
 	

@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.4 2005/12/06 15:14:39 bob Exp $
+ * $Id: UserBean.java,v 1.5 2005/12/08 13:21:09 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/06 15:14:39 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/08 13:21:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -176,7 +176,7 @@ public class UserBean extends Bean implements WorkstationItem {
 	throws ApplicationException {
 		String value = this.propertyName.get(codename);
 		if (value == null) {
-			Characteristic characteristic = this.findCharacteristic(codename);		
+			final Characteristic characteristic = this.findCharacteristic(codename);		
 			value = characteristic.getValue();
 			this.propertyName.put(codename, value);
 		}
@@ -191,8 +191,8 @@ public class UserBean extends Bean implements WorkstationItem {
 		if (value2 != value &&
 				(value2 != null && !value2.equals(value) ||
 				!value.equals(value2))) {
-			String oldValue = value2;
-			Characteristic characteristic = this.findCharacteristic(codename);
+			final String oldValue = value2;
+			final Characteristic characteristic = this.findCharacteristic(codename);
 			characteristic.setValue(value);
 			this.propertyName.put(codename, value);
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, key, oldValue, value));

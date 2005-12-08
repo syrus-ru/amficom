@@ -1,5 +1,5 @@
 /*-
-* $Id: CellBuffer.java,v 1.1 2005/12/07 15:40:44 bob Exp $
+* $Id: CellBuffer.java,v 1.2 2005/12/08 13:21:09 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import org.jgraph.graph.GraphModel;
 import com.syrus.AMFICOM.manager.graph.ManagerGraphCell;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/12/07 15:40:44 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/08 13:21:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -29,7 +29,10 @@ final class CellBuffer {
 	}
 	
 	public final void putCells(final ManagerGraphCell cell) {
-		this.clear();
+		if (this.managerGraphCell != null) {
+			final GraphModel model = this.managerMainFrame.graph.getModel();
+			model.remove(new Object[] { this.managerGraphCell});				
+		}
 		this.managerGraphCell = cell;
 	}
 	
@@ -46,10 +49,6 @@ final class CellBuffer {
 	}
 	
 	public final void clear() {
-		if (this.managerGraphCell != null) {
-			final GraphModel model = this.managerMainFrame.graph.getModel();
-			model.remove(new Object[] { this.managerGraphCell});				
-		}
 		this.managerGraphCell = null;
 	}
 }

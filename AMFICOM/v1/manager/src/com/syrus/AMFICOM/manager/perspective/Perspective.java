@@ -1,5 +1,5 @@
 /*-
-* $Id: Perspective.java,v 1.4 2005/12/07 15:43:50 bob Exp $
+* $Id: Perspective.java,v 1.5 2005/12/08 13:21:09 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/07 15:43:50 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/08 13:21:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -88,6 +88,6 @@ public interface Perspective {
 	
 	void firePropertyChangeEvent(final PropertyChangeEvent event);
 	
-	void putBean(final AbstractBean abstractBean);
+	void putBean(final AbstractBean abstractBean) throws ApplicationException;
 }
 

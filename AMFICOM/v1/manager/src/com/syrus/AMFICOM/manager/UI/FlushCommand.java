@@ -1,5 +1,5 @@
 /*-
-* $Id: FlushCommand.java,v 1.9 2005/12/07 15:40:36 bob Exp $
+* $Id: FlushCommand.java,v 1.10 2005/12/08 13:21:09 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/12/07 15:40:36 $
+ * @version $Revision: 1.10 $, $Date: 2005/12/08 13:21:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -47,7 +47,7 @@ public class FlushCommand extends AbstractCommand {
 						public void run() {
 							try {
 								// clear cache
-								cellBuffer.clear();
+								cellBuffer.putCells(null);
 								
 								final Identifier userId = LoginManager.getUserId();
 								StorableObjectPool.flush(ObjectEntities.LAYOUT_ITEM_CODE, userId, true);

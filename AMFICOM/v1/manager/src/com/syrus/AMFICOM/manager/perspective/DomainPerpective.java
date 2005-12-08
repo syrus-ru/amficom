@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.7 2005/12/06 15:14:39 bob Exp $
+* $Id: DomainPerpective.java,v 1.8 2005/12/08 13:21:09 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/12/06 15:14:39 $
+ * @version $Revision: 1.8 $, $Date: 2005/12/08 13:21:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -496,7 +496,8 @@ public final class DomainPerpective extends AbstractPerspective {
 	}
 	
 	@Override
-	public final void putBean(final AbstractBean abstractBean) {
+	public final void putBean(final AbstractBean abstractBean) 
+	throws ApplicationException {
 		if (abstractBean instanceof DomainNetworkItem) {
 			final GraphRoutines graphRoutines = 
 				this.managerMainFrame.getGraphRoutines();
@@ -507,6 +508,32 @@ public final class DomainPerpective extends AbstractPerspective {
 				(DomainNetworkItem) abstractBean;
 			networkItem.setDomainId(Identifier.VOID_IDENTIFIER, 
 				this.domainBean.getIdentifier());
+			
+			if (abstractBean instanceof UserBean) {
+				final LinkedIdsCondition currentUserCondition = 
+					new LinkedIdsCondition(LoginManager.getUserId(), ObjectEntities.LAYOUT_ITEM_CODE);
+				
+				final TypicalCondition layoutCondition = 
+					new TypicalCondition(this.getCodename(),
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.LAYOUT_ITEM_CODE,
+						LayoutItemWrapper.COLUMN_LAYOUT_NAME);
+				
+				final LayoutItem networkWorkstationItem = 
+					this.getNetworkWorkstationItem(this.domainNetworkItem, 
+						currentUserCondition, 
+						layoutCondition);
+				
+				final LayoutItem layoutItem = this.getLayoutItem(abstractBean.getId(), 
+					this.getCodename(), 
+					networkWorkstationItem.getId());
+			} else {
+				final LayoutItem layoutItem = this.getLayoutItem(abstractBean.getId(), 
+					this.getCodename(), 
+					this.domainNetworkItem.getId());
+			}
+			
+			graphRoutines.arrangeLayoutItems();
 		}
 		
 	}
