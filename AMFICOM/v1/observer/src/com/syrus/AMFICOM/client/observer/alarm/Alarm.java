@@ -1,5 +1,5 @@
 /*-
- * $Id: Alarm.java,v 1.4 2005/11/23 12:19:10 arseniy Exp $
+ * $Id: Alarm.java,v 1.5 2005/12/08 10:45:19 stas Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,8 +33,8 @@ import com.syrus.util.Log;
 
 /**
  * @author krupenn
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/11/23 12:19:10 $
+ * @author $Author: stas $
+ * @version $Revision: 1.5 $, $Date: 2005/12/08 10:45:19 $
  * @module observer
  */
 public final class Alarm extends StorableObject<Alarm> {
@@ -42,8 +42,8 @@ public final class Alarm extends StorableObject<Alarm> {
 
 	private PopupNotificationEvent event;
 	private SchemePath path;
-	private MonitoredElement me;
 	private PathElement pathElement;
+	private Measurement m;
 	
 	public Alarm(final PopupNotificationEvent event) {
 		this.event = event;
@@ -60,11 +60,11 @@ public final class Alarm extends StorableObject<Alarm> {
 			Result result = StorableObjectPool.getStorableObject(resultId, true);
 			if (result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
 				final Action action = result.getAction();
-				Measurement m = (Measurement) action;
+				this.m = (Measurement) action;
 				
 				Identifier meId = m.getMonitoredElementId();
-				this.me = StorableObjectPool.getStorableObject(meId, true);
-				Set<Identifier> tpathIds = this.me.getMonitoredDomainMemberIds();
+				MonitoredElement me = StorableObjectPool.getStorableObject(meId, true);
+				Set<Identifier> tpathIds = me.getMonitoredDomainMemberIds();
 
 				if (!tpathIds.isEmpty()) {
 					Set<SchemePath> schemePaths = StorableObjectPool.getStorableObjectsByCondition(
@@ -89,8 +89,12 @@ public final class Alarm extends StorableObject<Alarm> {
 		return this.pathElement;
 	}
 	
-	public MonitoredElement getMonitoredElement() {
-		return this.me;
+	public MonitoredElement getMonitoredElement() throws ApplicationException {
+		return this.m.getMonitoredElement();
+	}
+	
+	public Measurement getMeasurement() {
+		return this.m;
 	}
 
 	public PopupNotificationEvent getEvent() {

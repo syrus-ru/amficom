@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmWrapper.java,v 1.2 2005/11/06 14:37:32 stas Exp $
+ * $Id: AlarmWrapper.java,v 1.3 2005/12/08 10:45:19 stas Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
@@ -43,7 +44,7 @@ public class AlarmWrapper extends StorableObjectWrapper<Alarm> {
 	}
 
 	public String getName(String key) {
-		return key;
+		return I18N.getString("Wrapper.Keys." + key);
 	}
 
 	@Override

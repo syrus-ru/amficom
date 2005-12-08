@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.ListSelectionEvent;
@@ -96,11 +97,7 @@ public class AlarmFrame extends JInternalFrame {
 				if (result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
 					final Action action = result.getAction();
 					Measurement m = (Measurement) action;
-					
-					// notify about measurement
-					AlarmFrame.this.aContext.getDispatcher().firePropertyChange(
-							new ObjectSelectedEvent(this, m, null, ObjectSelectedEvent.MEASUREMENT));
-					
+				
 					Identifier meId = m.getMonitoredElementId();
 					MonitoredElement me = StorableObjectPool.getStorableObject(meId, true);
 					Set<Identifier> tpathIds = me.getMonitoredDomainMemberIds();
@@ -142,6 +139,7 @@ public class AlarmFrame extends JInternalFrame {
 						AlarmWrapper.COLUMN_PATH });
 		this.table = new WrapperedTable<Alarm>(this.model);
 		
+		this.table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				if (e.getValueIsAdjusting()) {
@@ -160,43 +158,55 @@ public class AlarmFrame extends JInternalFrame {
 				AlarmFrame.this.buttonClose.setEnabled(b);
 				AlarmFrame.this.buttonDescribe.setEnabled(b);
 				
-				Alarm alarm1 = AlarmFrame.this.model.getObject(first);
-				
-				if (firstb) {
-					Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm1);
-					MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-							marker.getId(), marker.getPos(), alarm1.getPath().getId(), 
-							alarm1.getMonitoredElement().getId(), alarm1.getPathElement().getId());
-
-					AlarmFrame.this.alarmMarkerMapping.put(alarm1, marker);
-					AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
-				} else {
-					Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm1);
-					MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-							marker.getId(), marker.getPos(), alarm1.getPath().getId(), 
-							alarm1.getMonitoredElement().getId(), alarm1.getPathElement().getId());
-
-					AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
-				}
-				
-				if (first != last) {
+				try {
+					Alarm alarm1 = AlarmFrame.this.model.getObject(first);
 					Alarm alarm2 = AlarmFrame.this.model.getObject(last);
-					if (lastb) {
-						Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm2);
-						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-								marker.getId(), marker.getPos(), alarm2.getPath().getId(), 
-								alarm2.getMonitoredElement().getId(), alarm2.getPathElement().getId());
+					
+					final ApplicationContext aContext1 = AlarmFrame.this.aContext;
+					if (!firstb) {
+						Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm1);
+						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
+								marker.getId(), marker.getPos(), alarm1.getPath().getId(), 
+								alarm1.getMonitoredElement().getId(), alarm1.getPathElement().getId());
 
-						AlarmFrame.this.alarmMarkerMapping.put(alarm2, marker);
-						AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
-					} else {
+						aContext1.getDispatcher().firePropertyChange(mEvent);
+					}
+					if (!lastb && first != last) {
 						Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm2);
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
 								marker.getId(), marker.getPos(), alarm2.getPath().getId(), 
 								alarm2.getMonitoredElement().getId(), alarm2.getPathElement().getId());
 
-						AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
+						aContext1.getDispatcher().firePropertyChange(mEvent);
 					}
+					
+					if (firstb) {
+						Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm1);
+						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
+								marker.getId(), marker.getPos(), alarm1.getPath().getId(), 
+								alarm1.getMonitoredElement().getId(), alarm1.getPathElement().getId());
+
+						AlarmFrame.this.alarmMarkerMapping.put(alarm1, marker);
+						aContext1.getDispatcher().firePropertyChange(mEvent);
+						// notify about measurement
+						aContext1.getDispatcher().firePropertyChange(
+								new ObjectSelectedEvent(this, alarm1.getMeasurement(), null, ObjectSelectedEvent.MEASUREMENT));
+					} 
+					if (lastb && first != last) {
+						Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm2);
+						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
+								marker.getId(), marker.getPos(), alarm2.getPath().getId(), 
+								alarm2.getMonitoredElement().getId(), alarm2.getPathElement().getId());
+						
+						AlarmFrame.this.alarmMarkerMapping.put(alarm2, marker);
+						aContext1.getDispatcher().firePropertyChange(mEvent);
+						
+						// notify about measurement
+						aContext1.getDispatcher().firePropertyChange(
+								new ObjectSelectedEvent(this, alarm1.getMeasurement(), null, ObjectSelectedEvent.MEASUREMENT));
+					} 
+				} catch (ApplicationException e1) {
+					Log.errorMessage(e1);
 				}
 			}
 		});
@@ -284,7 +294,8 @@ public class AlarmFrame extends JInternalFrame {
 		});
 
 		// this.getContentPane().add(toolBar, BorderLayout.NORTH);
-		this.getContentPane().add(this.table, BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane(this.table);
+		this.getContentPane().add(scrollPane, BorderLayout.CENTER);
 		this.actionPanel.add(this.buttonAcknowledge);
 		this.actionPanel.add(this.buttonFix);
 		this.actionPanel.add(this.buttonDelete);
@@ -410,25 +421,33 @@ public class AlarmFrame extends JInternalFrame {
 	}
 
 	void buttonFix_actionPerformed(ActionEvent e) {
-		Alarm alarm = this.model.getObject(this.table.getSelectedRow());
-		MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-				this.alarmMarkerMapping.get(alarm).getId(), alarm.getEvent().getMismatchOpticalDistance(),
-				alarm.getPath().getId(), alarm.getMonitoredElement().getId(),
-				alarm.getPathElement().getId());
-		this.aContext.getDispatcher().firePropertyChange(mEvent2);
+		try {
+			Alarm alarm = this.model.getObject(this.table.getSelectedRow());
+			MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
+					this.alarmMarkerMapping.get(alarm).getId(), alarm.getEvent().getMismatchOpticalDistance(),
+					alarm.getPath().getId(), alarm.getMonitoredElement().getId(),
+					alarm.getPathElement().getId());
+			this.aContext.getDispatcher().firePropertyChange(mEvent2);
+		} catch (ApplicationException e1) {
+			Log.errorMessage(e1);
+		}
 	}
 
 	void buttonDelete_actionPerformed(ActionEvent e) {
-		Alarm alarm = this.model.getObject(this.table.getSelectedRow());
-		MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-				this.alarmMarkerMapping.get(alarm).getId(), alarm.getEvent().getMismatchOpticalDistance(),
-				alarm.getPath().getId(), alarm.getMonitoredElement().getId(),
-				alarm.getPathElement().getId());
-		this.aContext.getDispatcher().firePropertyChange(mEvent2);
-		AlarmFrame.this.alarmMarkerMapping.remove(alarm);
-		
-		this.table.setSelectedValue(null);
-		this.model.removeObject(alarm);
+		try {
+			Alarm alarm = this.model.getObject(this.table.getSelectedRow());
+			MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
+					this.alarmMarkerMapping.get(alarm).getId(), alarm.getEvent().getMismatchOpticalDistance(),
+					alarm.getPath().getId(), alarm.getMonitoredElement().getId(),
+					alarm.getPathElement().getId());
+			this.aContext.getDispatcher().firePropertyChange(mEvent2);
+			AlarmFrame.this.alarmMarkerMapping.remove(alarm);
+			
+			this.table.setSelectedValue(null);
+			this.model.removeObject(alarm);
+		} catch (ApplicationException e1) {
+			Log.errorMessage(e1);
+		}
 
 		updateContents();
 /*

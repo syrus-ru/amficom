@@ -9,6 +9,10 @@ public class DefaultObserverApplicationModelFactory extends
 
 	public ApplicationModel create() {
 		ApplicationModel aModel = super.create();
+		
+		aModel.setVisible(ObserverApplicationModel.MENU_OPEN, false);
+		aModel.setVisible(ObserverApplicationModel.MENU_OPEN_SCHEME, false);
+		
 		return aModel;
 	}
 }

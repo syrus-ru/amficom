@@ -77,6 +77,7 @@ public class ObserverApplicationModel extends ApplicationModel {
 		add(ApplicationModel.MENU_HELP_ABOUT);
 		
 		this.initUIConstats();
+		I18N.addResourceBundle("com.syrus.AMFICOM.resource.observer");
 		I18N.addResourceBundle("com.syrus.AMFICOM.client.resource.map");
 		I18N.addResourceBundle("com.syrus.AMFICOM.client.report.report");
 		I18N.addResourceBundle("com.syrus.AMFICOM.resource.SchemeMessages");

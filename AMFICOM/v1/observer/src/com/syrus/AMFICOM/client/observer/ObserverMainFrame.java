@@ -12,6 +12,7 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.client.UI.AdditionalPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
@@ -57,6 +58,8 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemeEventHandler;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeSelectionListener;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.resource.LangModelObserver;
 import com.syrus.AMFICOM.resource.ObserverResourceKeys;
 import com.syrus.util.Log;
@@ -329,35 +332,30 @@ public class ObserverMainFrame extends AbstractMainFrame {
 	@Override
 	public void setContext(ApplicationContext aContext) {
 		if (this.aContext != null) {
-			this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_EVENT_TYPE, this);
+			this.aContext.getDispatcher().removePropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 		}
 		
 		super.setContext(aContext);
 		
 		if(aContext != null) {
-			this.aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_EVENT_TYPE, this);
+			this.aContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 		}
 	}
 
-	@Override
-	public void propertyChange(PropertyChangeEvent pce) {
-		if (pce.getPropertyName().equals(MapEvent.MAP_EVENT_TYPE)) {
-			MapEvent mapEvent = (MapEvent) pce;
 
-			if(mapEvent.getMapEventType().equals(MapEvent.MAP_FRAME_SHOWN)) {
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
+			ObjectSelectedEvent ose = (ObjectSelectedEvent)evt;
+			if (ose.isSelected(ObjectSelectedEvent.SCHEME)) {
+				Identifier id = ((Identifiable)ose.getSelectedObject()).getId();
 				ApplicationModel aModel = this.aContext.getApplicationModel();
-				aModel.setEnabled(ObserverApplicationModel.MENU_VIEW_MAP, true);
-				aModel.fireModelChanged();
-				this.windowArranger.arrange();
-				
-			} else if (pce.getPropertyName().equals(MapEvent.MAP_VIEW_CLOSED)) {
-				ApplicationModel aModel = this.aContext.getApplicationModel();
-				aModel.setEnabled(ObserverApplicationModel.MENU_VIEW_MAP, false);
-				aModel.fireModelChanged();
-				this.windowArranger.arrange();
+				aModel.getCommand(ObserverApplicationModel.MENU_OPEN_MAP).setParameter("scheme_id", id);
+				aModel.setEnabled(ObserverApplicationModel.MENU_OPEN_MAP, true);
+				aModel.fireModelChanged("");
 			}
 		}
-		super.propertyChange(pce);
+		super.propertyChange(evt);
 	}
 
 	@Override
@@ -378,7 +376,6 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		aModel.setEnabled(ObserverApplicationModel.MENU_START_MAP_EDITOR, true);
 
 		aModel.setEnabled(ObserverApplicationModel.MENU_OPEN_SCHEME, true);
-		aModel.setEnabled(ObserverApplicationModel.MENU_OPEN_MAP, true);
 		
 		aModel.setEnabled(ObserverApplicationModel.MENU_VIEW_MAP, true);
 		aModel.setEnabled(ObserverApplicationModel.MENU_VIEW_SCHEME, true);
@@ -388,6 +385,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		aModel.setEnabled(ObserverApplicationModel.MENU_VIEW_NAVIGATOR, true);
 		aModel.setEnabled(ObserverApplicationModel.MENU_VIEW_RESULTS, true);
 		aModel.setEnabled(ObserverApplicationModel.MENU_VIEW_ALARMS, true);
+		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);
 
 		aModel.setEnabled(ObserverApplicationModel.MENU_REPORT_BY_TEMPLATE, true);
 
