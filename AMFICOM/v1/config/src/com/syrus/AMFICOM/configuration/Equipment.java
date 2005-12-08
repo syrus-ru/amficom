@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.153 2005/12/07 17:16:25 bass Exp $
+ * $Id: Equipment.java,v 1.154 2005/12/08 16:12:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,7 +49,6 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
@@ -60,7 +59,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.153 $, $Date: 2005/12/07 17:16:25 $
+ * @version $Revision: 1.154 $, $Date: 2005/12/08 16:12:54 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -290,7 +289,7 @@ public final class Equipment extends DomainMember<Equipment>
 	throws XmlConversionException {
 		try {
 			XmlComplementorRegistry.complementStorableObject(equipment, EQUIPMENT_CODE, importType, PRE_IMPORT);
-	
+
 			this.name = equipment.getName();
 			this.description = equipment.isSetDescription()
 					? equipment.getDescription()
@@ -335,7 +334,7 @@ public final class Equipment extends DomainMember<Equipment>
 					Characteristic.createInstance(super.creatorId, characteristic, importType);
 				}
 			}
-	
+
 			XmlComplementorRegistry.complementStorableObject(equipment, EQUIPMENT_CODE, importType, POST_IMPORT);
 		} catch (final ApplicationException ae) {
 			throw new XmlConversionException(ae);
@@ -453,7 +452,7 @@ public final class Equipment extends DomainMember<Equipment>
 				equipment.unsetCharacteristics();
 			}
 			final Set<Characteristic> characteristics = this.getCharacteristics(false);
-			if (false && !characteristics.isEmpty()) {
+			if (!characteristics.isEmpty()) {
 				final XmlCharacteristicSeq characteristicSeq = equipment.addNewCharacteristics();
 				for (final Characteristic characteristic : characteristics) {
 					characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);

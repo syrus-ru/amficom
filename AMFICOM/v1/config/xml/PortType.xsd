@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: PortType.xsd,v 1.7 2005/09/14 19:49:30 bass Exp $
+			$Id: PortType.xsd,v 1.8 2005/12/08 16:12:54 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -19,6 +19,9 @@
 	<xsd:import
 		namespace = "http://syrus.com/AMFICOM/general/xml"
 		schemaLocation = "../../general/xml/StorableObjectType.xsd"/>
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/Characteristic.xsd"/>
 
 	<xsd:element name = "portTypes" type = "configuration:XmlPortTypeSeq">
 		<xsd:key name = "portTypeId">
@@ -49,6 +52,8 @@
 					<xsd:element name = "name" type = "xsd:string"/>
 					<xsd:element name = "sort" type = "configuration:XmlPortTypeSort"/>
 					<xsd:element name = "kind" type = "configuration:XmlPortTypeKind"/>
+					<xsd:element ref = "general:characteristics"
+						minOccurs = "0"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>

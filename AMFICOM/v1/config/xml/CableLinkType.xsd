@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: CableLinkType.xsd,v 1.7 2005/09/14 19:49:30 bass Exp $
+			$Id: CableLinkType.xsd,v 1.8 2005/12/08 16:12:54 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -19,6 +19,9 @@
 	<xsd:import
 		namespace = "http://syrus.com/AMFICOM/general/xml"
 		schemaLocation = "../../general/xml/StorableObjectType.xsd"/>
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/Characteristic.xsd"/>
 	<xsd:include schemaLocation = "CableThreadType.xsd"/>
 	<xsd:include schemaLocation = "LinkType.xsd"/>
 
@@ -39,6 +42,8 @@
 					<xsd:element name = "manufacturer" type = "xsd:string" minOccurs = "0"/>
 					<xsd:element name = "manufacturerCode" type = "xsd:string" minOccurs = "0"/>
 					<xsd:element name = "cableThreadTypes" type = "configuration:XmlCableThreadTypeSeq" minOccurs = "0"/>
+					<xsd:element ref = "general:characteristics"
+						minOccurs = "0"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>

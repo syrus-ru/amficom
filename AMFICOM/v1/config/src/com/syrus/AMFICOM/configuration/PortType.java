@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.112 2005/12/07 17:16:25 bass Exp $
+ * $Id: PortType.java,v 1.113 2005/12/08 16:12:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,9 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.WARNING;
 
@@ -48,7 +51,10 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
@@ -56,7 +62,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.112 $, $Date: 2005/12/07 17:16:25 $
+ * @version $Revision: 1.113 $, $Date: 2005/12/08 16:12:54 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -277,13 +283,26 @@ public final class PortType extends StorableObjectType<PortType>
 	public void fromXmlTransferable(final XmlPortType portType,
 			final String importType)
 	throws XmlConversionException {
-		this.name = portType.getName();
-		this.codename = portType.getCodename();
-		this.description = portType.isSetDescription()
-				? portType.getDescription()
-				: "";
-		this.sort = portType.getSort().intValue() - 1;
-		this.kind = portType.getKind().intValue() - 1;
+		try {
+			XmlComplementorRegistry.complementStorableObject(portType, PORT_TYPE_CODE, importType, PRE_IMPORT);
+
+			this.name = portType.getName();
+			this.codename = portType.getCodename();
+			this.description = portType.isSetDescription()
+					? portType.getDescription()
+					: "";
+			this.sort = portType.getSort().intValue() - 1;
+			this.kind = portType.getKind().intValue() - 1;
+			if (portType.isSetCharacteristics()) {
+				for (final XmlCharacteristic characteristic : portType.getCharacteristics().getCharacteristicArray()) {
+					Characteristic.createInstance(super.creatorId, characteristic, importType);
+				}
+			}
+			
+			XmlComplementorRegistry.complementStorableObject(portType, PORT_TYPE_CODE, importType, POST_IMPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
+		}
 	}
 
 	/**
@@ -318,17 +337,34 @@ public final class PortType extends StorableObjectType<PortType>
 			final String importType,
 			final boolean usePool)
 	throws XmlConversionException {
-		this.id.getXmlTransferable(portType.addNewId(), importType);
-		portType.setName(this.name);
-		portType.setCodename(this.codename);
-		if (portType.isSetDescription()) {
-			portType.unsetDescription();
+		try {
+			this.id.getXmlTransferable(portType.addNewId(), importType);
+			portType.setName(this.name);
+			portType.setCodename(this.codename);
+			if (portType.isSetDescription()) {
+				portType.unsetDescription();
+			}
+			if (this.description.length() != 0) {
+				portType.setDescription(this.description);
+			}
+			portType.setSort(XmlPortTypeSort.Enum.forInt(this.getSort().value() + 1));
+			portType.setKind(XmlPortTypeKind.Enum.forInt(this.getKind().value() + 1));
+			
+			if (portType.isSetCharacteristics()) {
+				portType.unsetCharacteristics();
+			}
+			final Set<Characteristic> characteristics = this.getCharacteristics(false);
+			if (!characteristics.isEmpty()) {
+				final XmlCharacteristicSeq characteristicSeq = portType.addNewCharacteristics();
+				for (final Characteristic characteristic : characteristics) {
+					characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);
+				}
+			}
+
+			XmlComplementorRegistry.complementStorableObject(portType, PORT_TYPE_CODE, importType, EXPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-		if (this.description.length() != 0) {
-			portType.setDescription(this.description);
-		}
-		portType.setSort(XmlPortTypeSort.Enum.forInt(this.getSort().value() + 1));
-		portType.setKind(XmlPortTypeKind.Enum.forInt(this.getKind().value() + 1));
 	}
 
 	protected synchronized void setAttributes(final Date created,

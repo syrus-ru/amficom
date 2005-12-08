@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.89 2005/12/07 17:17:20 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.90 2005/12/08 16:12:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.89 $, $Date: 2005/12/07 17:17:20 $
+ * @version $Revision: 1.90 $, $Date: 2005/12/08 16:12:55 $
  * @module scheme
  */
 public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
@@ -658,7 +658,7 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 			abstractSchemePort.unsetCharacteristics();
 		}
 		final Set<Characteristic> characteristics = this.getCharacteristics0(usePool);
-		if (false && !characteristics.isEmpty()) {
+		if (!characteristics.isEmpty()) {
 			final XmlCharacteristicSeq characteristicSeq = abstractSchemePort.addNewCharacteristics();
 			for (final Characteristic characteristic : characteristics) {
 				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);

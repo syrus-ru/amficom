@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.95 2005/12/07 17:16:25 bass Exp $
+ * $Id: LinkType.java,v 1.96 2005/12/08 16:12:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,9 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.WARNING;
 
@@ -29,6 +32,7 @@ import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkType
 import com.syrus.AMFICOM.configuration.xml.XmlLinkType;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -38,7 +42,10 @@ import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
@@ -46,7 +53,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/12/07 17:16:25 $
+ * @version $Revision: 1.96 $, $Date: 2005/12/08 16:12:54 $
  * @author $Author: bass $
  * @module config
  */
@@ -281,20 +288,33 @@ public final class LinkType extends AbstractLinkType<LinkType> implements XmlTra
 	public void fromXmlTransferable(final XmlLinkType linkType,
 			final String importType)
 	throws XmlConversionException {
-		this.name = linkType.getName();
-		this.codename = linkType.getCodename();
-		this.description = linkType.isSetDescription()
-				? linkType.getDescription()
-				: "";
-		this.sort = linkType.getSort().intValue() - 1;
-		this.manufacturer = linkType.isSetManufacturer()
-				? linkType.getManufacturer()
-				: "";
-		this.manufacturerCode = linkType.isSetManufacturerCode() 
-				? linkType.getManufacturerCode()
-				: "";
-		// TODO read imageId - see SiteNodeType.getImageId(Identifier userId, String codename) for example
-		this.imageId = VOID_IDENTIFIER;
+		try {
+			XmlComplementorRegistry.complementStorableObject(linkType, LINK_TYPE_CODE, importType, PRE_IMPORT);
+
+			this.name = linkType.getName();
+			this.codename = linkType.getCodename();
+			this.description = linkType.isSetDescription()
+					? linkType.getDescription()
+					: "";
+			this.sort = linkType.getSort().intValue() - 1;
+			this.manufacturer = linkType.isSetManufacturer()
+					? linkType.getManufacturer()
+					: "";
+			this.manufacturerCode = linkType.isSetManufacturerCode() 
+					? linkType.getManufacturerCode()
+					: "";
+			// TODO read imageId - see SiteNodeType.getImageId(Identifier userId, String codename) for example
+			this.imageId = VOID_IDENTIFIER;
+			if (linkType.isSetCharacteristics()) {
+				for (final XmlCharacteristic characteristic : linkType.getCharacteristics().getCharacteristicArray()) {
+					Characteristic.createInstance(super.creatorId, characteristic, importType);
+				}
+			}
+
+			XmlComplementorRegistry.complementStorableObject(linkType, LINK_TYPE_CODE, importType, POST_IMPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
+		}
 	}
 
 	/**
@@ -330,29 +350,46 @@ public final class LinkType extends AbstractLinkType<LinkType> implements XmlTra
 			final String importType,
 			final boolean usePool)
 	throws XmlConversionException {
-		this.id.getXmlTransferable(linkType.addNewId(), importType);
-		linkType.setName(this.name);
-		linkType.setCodename(this.codename);
-		if (linkType.isSetDescription()) {
-			linkType.unsetDescription();
+		try {
+			this.id.getXmlTransferable(linkType.addNewId(), importType);
+			linkType.setName(this.name);
+			linkType.setCodename(this.codename);
+			if (linkType.isSetDescription()) {
+				linkType.unsetDescription();
+			}
+			if (this.description.length() != 0) {
+				linkType.setDescription(this.description);
+			}
+			linkType.setSort(XmlLinkTypeSort.Enum.forInt(this.getSort().value() + 1));
+			if (linkType.isSetManufacturer()) {
+				linkType.unsetManufacturer();
+			}
+			if (this.manufacturer.length() != 0) {
+				linkType.setManufacturer(this.manufacturer);
+			}
+			if (linkType.isSetManufacturerCode()) {
+				linkType.unsetManufacturerCode();
+			}
+			if (this.manufacturerCode.length() != 0) {
+				linkType.setManufacturerCode(this.manufacturerCode);
+			}
+			// TODO write image to file
+			
+			if (linkType.isSetCharacteristics()) {
+				linkType.unsetCharacteristics();
+			}
+			final Set<Characteristic> characteristics = this.getCharacteristics(false);
+			if (!characteristics.isEmpty()) {
+				final XmlCharacteristicSeq characteristicSeq = linkType.addNewCharacteristics();
+				for (final Characteristic characteristic : characteristics) {
+					characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);
+				}
+			}
+
+			XmlComplementorRegistry.complementStorableObject(linkType, LINK_TYPE_CODE, importType, EXPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
-		if (this.description.length() != 0) {
-			linkType.setDescription(this.description);
-		}
-		linkType.setSort(XmlLinkTypeSort.Enum.forInt(this.getSort().value() + 1));
-		if (linkType.isSetManufacturer()) {
-			linkType.unsetManufacturer();
-		}
-		if (this.manufacturer.length() != 0) {
-			linkType.setManufacturer(this.manufacturer);
-		}
-		if (linkType.isSetManufacturerCode()) {
-			linkType.unsetManufacturerCode();
-		}
-		if (this.manufacturerCode.length() != 0) {
-			linkType.setManufacturerCode(this.manufacturerCode);
-		}
-		// TODO write image to file
 	}
 
 	@Override

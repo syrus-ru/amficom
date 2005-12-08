@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.129 2005/12/07 17:17:20 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.130 2005/12/08 16:12:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.129 $, $Date: 2005/12/07 17:17:20 $
+ * @version $Revision: 1.130 $, $Date: 2005/12/08 16:12:55 $
  * @module scheme
  */
 public final class SchemeProtoElement
@@ -759,7 +759,7 @@ public final class SchemeProtoElement
 				schemeProtoElement.unsetCharacteristics();
 			}
 			final Set<Characteristic> characteristics = this.getCharacteristics0(usePool);
-			if (false && !characteristics.isEmpty()) {
+			if (!characteristics.isEmpty()) {
 				final XmlCharacteristicSeq xmlCharacteristicSeq = schemeProtoElement.addNewCharacteristics();
 				for (final Characteristic characteristic : characteristics) {
 					characteristic.getXmlTransferable(xmlCharacteristicSeq.addNewCharacteristic(), importType, usePool);

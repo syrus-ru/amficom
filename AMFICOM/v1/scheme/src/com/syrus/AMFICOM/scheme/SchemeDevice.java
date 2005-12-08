@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.116 2005/12/07 17:17:20 bass Exp $
+ * $Id: SchemeDevice.java,v 1.117 2005/12/08 16:12:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.116 $, $Date: 2005/12/07 17:17:20 $
+ * @version $Revision: 1.117 $, $Date: 2005/12/08 16:12:55 $
  * @module scheme
  */
 public final class SchemeDevice
@@ -541,7 +541,7 @@ public final class SchemeDevice
 				schemeDevice.unsetCharacteristics();
 			}
 			final Set<Characteristic> characteristics = this.getCharacteristics0(usePool);
-			if (false && !characteristics.isEmpty()) {
+			if (!characteristics.isEmpty()) {
 				final XmlCharacteristicSeq characteristicSeq = schemeDevice.addNewCharacteristics();
 				for (final Characteristic characteristic : characteristics) {
 					characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);

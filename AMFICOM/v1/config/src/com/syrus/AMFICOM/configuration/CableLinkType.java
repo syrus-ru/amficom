@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.89 2005/12/07 17:16:25 bass Exp $
+ * $Id: CableLinkType.java,v 1.90 2005/12/08 16:12:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,9 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.WARNING;
 
@@ -32,6 +35,7 @@ import com.syrus.AMFICOM.configuration.xml.XmlCableThreadType;
 import com.syrus.AMFICOM.configuration.xml.XmlCableThreadTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -42,7 +46,10 @@ import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
@@ -50,7 +57,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/12/07 17:16:25 $
+ * @version $Revision: 1.90 $, $Date: 2005/12/08 16:12:54 $
  * @author $Author: bass $
  * @module config
  */
@@ -280,6 +287,8 @@ public final class CableLinkType extends AbstractLinkType<CableLinkType> impleme
 			final String importType)
 	throws XmlConversionException {
 		try {
+			XmlComplementorRegistry.complementStorableObject(cableLinkType, CABLELINK_TYPE_CODE, importType, PRE_IMPORT);
+
 			this.name = cableLinkType.getName();
 			this.codename = cableLinkType.getCodename();
 			this.description = cableLinkType.isSetDescription()
@@ -299,8 +308,15 @@ public final class CableLinkType extends AbstractLinkType<CableLinkType> impleme
 					CableThreadType.createInstance(this.creatorId, cableThreadType, importType);
 				}
 			}
-		} catch (final CreateObjectException coe) {
-			throw new XmlConversionException(coe);
+			if (cableLinkType.isSetCharacteristics()) {
+				for (final XmlCharacteristic characteristic : cableLinkType.getCharacteristics().getCharacteristicArray()) {
+					Characteristic.createInstance(super.creatorId, characteristic, importType);
+				}
+			}
+			
+			XmlComplementorRegistry.complementStorableObject(cableLinkType, CABLELINK_TYPE_CODE, importType, POST_IMPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
 	}
 
@@ -340,39 +356,56 @@ public final class CableLinkType extends AbstractLinkType<CableLinkType> impleme
 			final String importType,
 			final boolean usePool)
 	throws XmlConversionException {
-		super.id.getXmlTransferable(cableLinkType.addNewId(), importType);
-		cableLinkType.setName(this.name);
-		cableLinkType.setCodename(this.codename);
-		if (cableLinkType.isSetDescription()) {
-			cableLinkType.unsetDescription();
-		}
-		if (this.description.length() != 0) {
-			cableLinkType.setDescription(this.description);
-		}
-		cableLinkType.setSort(XmlLinkTypeSort.Enum.forInt(this.sort));
-		if (cableLinkType.isSetManufacturer()) {
-			cableLinkType.unsetManufacturer();
-		}
-		if (this.manufacturer.length() != 0) {
-			cableLinkType.setManufacturer(this.manufacturer);
-		}
-		if (cableLinkType.isSetManufacturerCode()) {
-			cableLinkType.unsetManufacturerCode();
-		}
-		if (this.manufacturerCode.length() != 0) {
-			cableLinkType.setManufacturerCode(this.manufacturerCode);
-		}
-		// TODO write image to file
-
-		if (cableLinkType.isSetCableThreadTypes()) {
-			cableLinkType.unsetCableThreadTypes();
-		}
-		final Set<CableThreadType> cableThreadTypes = this.getCableThreadTypes(true);
-		if (!cableThreadTypes.isEmpty()) {
-			final XmlCableThreadTypeSeq cableThreadTypeSeq = cableLinkType.addNewCableThreadTypes();
-			for (final CableThreadType cableThreadType : cableThreadTypes) {
-				cableThreadType.getXmlTransferable(cableThreadTypeSeq.addNewCableThreadType(), importType, usePool);
+		try {
+			super.id.getXmlTransferable(cableLinkType.addNewId(), importType);
+			cableLinkType.setName(this.name);
+			cableLinkType.setCodename(this.codename);
+			if (cableLinkType.isSetDescription()) {
+				cableLinkType.unsetDescription();
 			}
+			if (this.description.length() != 0) {
+				cableLinkType.setDescription(this.description);
+			}
+			cableLinkType.setSort(XmlLinkTypeSort.Enum.forInt(this.sort));
+			if (cableLinkType.isSetManufacturer()) {
+				cableLinkType.unsetManufacturer();
+			}
+			if (this.manufacturer.length() != 0) {
+				cableLinkType.setManufacturer(this.manufacturer);
+			}
+			if (cableLinkType.isSetManufacturerCode()) {
+				cableLinkType.unsetManufacturerCode();
+			}
+			if (this.manufacturerCode.length() != 0) {
+				cableLinkType.setManufacturerCode(this.manufacturerCode);
+			}
+			// TODO write image to file
+	
+			if (cableLinkType.isSetCableThreadTypes()) {
+				cableLinkType.unsetCableThreadTypes();
+			}
+			final Set<CableThreadType> cableThreadTypes = this.getCableThreadTypes(true);
+			if (!cableThreadTypes.isEmpty()) {
+				final XmlCableThreadTypeSeq cableThreadTypeSeq = cableLinkType.addNewCableThreadTypes();
+				for (final CableThreadType cableThreadType : cableThreadTypes) {
+					cableThreadType.getXmlTransferable(cableThreadTypeSeq.addNewCableThreadType(), importType, usePool);
+				}
+			}
+	
+			if (cableLinkType.isSetCharacteristics()) {
+				cableLinkType.unsetCharacteristics();
+			}
+			final Set<Characteristic> characteristics = this.getCharacteristics(false);
+			if (!characteristics.isEmpty()) {
+				final XmlCharacteristicSeq characteristicSeq = cableLinkType.addNewCharacteristics();
+				for (final Characteristic characteristic : characteristics) {
+					characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);
+				}
+			}
+
+			XmlComplementorRegistry.complementStorableObject(cableLinkType, CABLELINK_TYPE_CODE, importType, EXPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
 	}
 

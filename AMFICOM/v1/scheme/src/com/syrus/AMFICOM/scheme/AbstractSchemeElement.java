@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.76 2005/12/07 17:17:21 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.77 2005/12/08 16:12:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.76 $, $Date: 2005/12/07 17:17:21 $
+ * @version $Revision: 1.77 $, $Date: 2005/12/08 16:12:55 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement<T extends AbstractSchemeElement<T>>
@@ -306,7 +306,7 @@ public abstract class AbstractSchemeElement<T extends AbstractSchemeElement<T>>
 		if (abstractSchemeElement.isSetCharacteristics()) { 
 			abstractSchemeElement.unsetCharacteristics();
 		}
-		if (false && !characteristics.isEmpty()) {
+		if (!characteristics.isEmpty()) {
 			final XmlCharacteristicSeq characteristicSeq = abstractSchemeElement.addNewCharacteristics();
 			for (final Characteristic characteristic : characteristics) {
 				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);

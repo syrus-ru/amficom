@@ -1,5 +1,5 @@
 /**
- * $Id: MapXMLTest.java,v 1.6 2005/10/03 16:19:09 krupenn Exp $
+ * $Id: MapXMLTest.java,v 1.7 2005/12/08 16:12:54 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -144,13 +144,14 @@ public class MapXMLTest {
 		   lnode.setDimensionY(1);
 		   XmlCharacteristicSeq chars = lnode.addNewCharacteristics();
 		   XmlCharacteristic char1 = chars.addNewCharacteristic();
-		   char1.setTypecodename(AbstractLinkController.ATTRIBUTE_STYLE);
+		   // Broken
+//		   char1.setTypecodename(AbstractLinkController.ATTRIBUTE_STYLE);
 		   char1.setValue("dashed"); //$NON-NLS-1$
 		   XmlCharacteristic char2 = chars.addNewCharacteristic();
-		   char2.setTypecodename(AbstractLinkController.ATTRIBUTE_COLOR);
+//		   char2.setTypecodename(AbstractLinkController.ATTRIBUTE_COLOR);
 		   char2.setValue(String.valueOf(0xFF004000));
 		   XmlCharacteristic char3 = chars.addNewCharacteristic();
-		   char3.setTypecodename(AbstractLinkController.ATTRIBUTE_THICKNESS);
+//		   char3.setTypecodename(AbstractLinkController.ATTRIBUTE_THICKNESS);
 		   char3.setValue(String.valueOf(1));
 
 		   printInstance(doc);
