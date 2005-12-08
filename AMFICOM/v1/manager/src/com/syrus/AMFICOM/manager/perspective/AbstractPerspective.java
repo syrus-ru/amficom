@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractPerspective.java,v 1.8 2005/12/08 13:21:09 bob Exp $
+* $Id: AbstractPerspective.java,v 1.9 2005/12/08 16:06:15 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/12/08 13:21:09 $
+ * @version $Revision: 1.9 $, $Date: 2005/12/08 16:06:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -512,8 +512,9 @@ public abstract class AbstractPerspective implements Perspective {
 	
 	public final boolean isSupported(final AbstractBean bean) {
 		final String codename = bean.getCodename();
-		assert Log.debugMessage(codename, Log.DEBUGLEVEL10);
-		return this.perspectiveData.isBeanUISupported(codename);
+		final boolean supported = this.perspectiveData.isBeanUISupported(codename);
+		assert Log.debugMessage(codename + " is " + (supported ? "" : "not ") + "supported.", Log.DEBUGLEVEL10);
+		return supported;
 	}
 	
 	public final boolean isUndeletable(final AbstractBean bean) {
