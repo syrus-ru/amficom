@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModelListener.java,v 1.7 2005/12/08 13:21:09 bob Exp $
+* $Id: ManagerGraphModelListener.java,v 1.8 2005/12/08 16:07:58 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/12/08 13:21:09 $
+ * @version $Revision: 1.8 $, $Date: 2005/12/08 16:07:58 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -344,13 +344,14 @@ public class ManagerGraphModelListener implements GraphModelListener {
 
 						AbstractBean bean = source.getUserObject();
 						bean.applyTargetPort(target, null);
-						final LayoutItem layoutItem = this.getLayoutItem(bean.getId());
-						assert Log.debugMessage("removedObject | layoutItem:" 
-								+ layoutItem.getName() 
-								+ ", layoutName:" 
-								+ layoutItem.getLayoutName(),
-							Log.DEBUGLEVEL10);
-						layoutItem.setParentId(Identifier.VOID_IDENTIFIER);
+						assert Log.debugMessage(bean.getId(), Log.DEBUGLEVEL03);
+//						final LayoutItem layoutItem = this.getLayoutItem(bean.getId());
+//						assert Log.debugMessage("removedObject | layoutItem:" 
+//								+ layoutItem.getName() 
+//								+ ", layoutName:" 
+//								+ layoutItem.getLayoutName(),
+//							Log.DEBUGLEVEL10);
+//						layoutItem.setParentId(Identifier.VOID_IDENTIFIER);
 					 } 
 				}
 				
