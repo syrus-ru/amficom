@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewTableController.java,v 1.16 2005/12/08 08:44:25 stas Exp $$
+ * $$Id: MapViewTableController.java,v 1.17 2005/12/08 09:20:58 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/12/08 08:44:25 $
+ * @version $Revision: 1.17 $, $Date: 2005/12/08 09:20:58 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -85,7 +85,7 @@ public final class MapViewTableController implements Wrapper {
 		else
 		if(key.equals(KEY_DOMAIN)) {
 			try {
-				Domain domain = StorableObjectPool.getStorableObject(view.getDomainId(), false);
+				Domain domain = StorableObjectPool.getStorableObject(view.getDomainId(), true);
 				result = domain.getName();
 			} catch(ApplicationException e) {
 				e.printStackTrace();
@@ -94,12 +94,8 @@ public final class MapViewTableController implements Wrapper {
 		else
 		if(key.equals(KEY_USER)) {
 			try {
-				SystemUser user = StorableObjectPool.getStorableObject(view.getCreatorId(), false);
-				if (user != null) {
-					result = user.getName();
-				} else {
-					result = "unknown";
-				}
+				SystemUser user = StorableObjectPool.getStorableObject(view.getCreatorId(), true);
+				result = user.getName();
 			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}
