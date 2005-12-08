@@ -1,5 +1,5 @@
 /*-
- * $$Id: ViewMapWindowCommand.java,v 1.37 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: ViewMapWindowCommand.java,v 1.38 2005/12/08 10:43:00 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * Команда отображает окно карты
  *  
- * @version $Revision: 1.37 $, $Date: 2005/10/11 08:56:11 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.38 $, $Date: 2005/12/08 10:43:00 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -79,6 +79,7 @@ public class ViewMapWindowCommand extends AbstractCommand {
 			}
 
 			this.mapFrame.setVisible(true);
+			this.mapFrame.toFront();
 			this.aContext.getDispatcher().firePropertyChange(
 					new MapEvent(this, MapEvent.MAP_FRAME_SHOWN, this.mapFrame));
 			this.aContext.getDispatcher().firePropertyChange(
