@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.34 2005/12/06 09:44:23 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.35 2005/12/08 16:11:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -54,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/12/06 09:44:23 $
+ * @version $Revision: 1.35 $, $Date: 2005/12/08 16:11:03 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -122,11 +121,11 @@ public final class SchemePathTestCase extends TestCase {
 			public void setLevel(final Level newLevel) {
 			}
 		});
-		StorableObjectPool.init(new EmptySchemeObjectLoader(), StorableObjectResizableLRUMap.class);
-		StorableObjectPool.addObjectPoolGroup(CONFIGURATION_GROUP_CODE, 20);
-		StorableObjectPool.addObjectPoolGroup(RESOURCE_GROUP_CODE, 20);
-		StorableObjectPool.addObjectPoolGroup(MAP_GROUP_CODE, 20);
-		StorableObjectPool.addObjectPoolGroup(SCHEME_GROUP_CODE, 20);
+		StorableObjectPool.init(new EmptySchemeObjectLoader());
+		StorableObjectPool.addObjectPoolGroup(CONFIGURATION_GROUP_CODE, 20, 120 * 60 * 1000 * 1000 * 1000);
+		StorableObjectPool.addObjectPoolGroup(RESOURCE_GROUP_CODE, 20, 120 * 60 * 1000 * 1000 * 1000);
+		StorableObjectPool.addObjectPoolGroup(MAP_GROUP_CODE, 20, 120 * 60 * 1000 * 1000 * 1000);
+		StorableObjectPool.addObjectPoolGroup(SCHEME_GROUP_CODE, 20, 120 * 60 * 1000 * 1000 * 1000);
 		final IdentifierGeneratorServer identifierGeneratorServer = new IdentifierGeneratorServer() {
 			private long l;
 			private static final long serialVersionUID = -9123341768454319489L;
