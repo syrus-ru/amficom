@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphSelectionListener.java,v 1.6 2005/12/05 14:41:22 bob Exp $
+* $Id: ManagerGraphSelectionListener.java,v 1.7 2005/12/08 16:07:04 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,10 +29,11 @@ import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.resource.LayoutItem;
+import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/12/05 14:41:22 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/08 16:07:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -71,7 +72,7 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 		
 		final Perspective perspective = managerMainFrame.getPerspective();
 		
-		boolean deleteAllow = false;
+		boolean deleteAllow = true;
 		boolean cutAllow = false;
 		
 		if (model.isEdge(cell)) {
@@ -110,14 +111,26 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 				
 				if (userObject instanceof AbstractBean) {
 					final AbstractBean abstractBean = (AbstractBean)userObject;
-					if (perspective.isSupported(abstractBean)) {
+					final boolean supported = perspective.isSupported(abstractBean);
+					if (supported) {
 						final LayoutItem parentLayoutItem = perspective.getParentLayoutItem();
+						final GraphRoutines graphRoutines = managerMainFrame.getGraphRoutines();
+						final boolean undeletable = perspective.isUndeletable(abstractBean);
+						assert Log.debugMessage(abstractBean 
+								+ " is " 
+								+ (undeletable ? "undeletable " : "deletable"), 
+							Log.DEBUGLEVEL10);
+						deleteAllow &= !undeletable;
+						cutAllow |= perspective.isCuttable(abstractBean);
 						if (parentLayoutItem != null) {	
 							try {
-								final GraphRoutines graphRoutines = managerMainFrame.getGraphRoutines();
-								deleteAllow |= !perspective.isUndeletable(abstractBean);
-								deleteAllow &= graphRoutines.getBean(parentLayoutItem) != abstractBean;
-								cutAllow |= perspective.isCuttable(abstractBean);
+	
+								final boolean parent = graphRoutines.getBean(parentLayoutItem) == abstractBean;
+								if (parent) {
+									assert Log.debugMessage(abstractBean + " is a parent ", Log.DEBUGLEVEL10);
+								}
+
+								deleteAllow &= !parent;
 	
 								managerMainFrame.beanUI = perspective.getBeanUI(abstractBean.getCodename());
 								JPanel propertyPanel2 = managerMainFrame.beanUI.getPropertyPanel(abstractBean);
@@ -140,8 +153,8 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 							}
 						}
 					}
-										
-				}				
+				}		
+			
 			} else {
 				selectionModel.clearSelection();
 			}
@@ -151,6 +164,8 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 		panel.repaint();
 		
 		boolean enabled = !managerMainFrame.graph.isSelectionEmpty();
+//		assert Log.debugMessage("enabled:" + enabled , Log.DEBUGLEVEL03);
+//		assert Log.debugMessage("deleteAllow:" + deleteAllow, Log.DEBUGLEVEL03);
 		managerMainFrame.remove.setEnabled(enabled && deleteAllow);
 		managerMainFrame.cut.setEnabled(enabled && cutAllow);
 	}
