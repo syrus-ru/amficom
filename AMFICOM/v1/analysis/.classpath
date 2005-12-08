@@ -22,5 +22,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mapclient"/>
 	<classpathentry kind="var" path="AMFICOM_LIB/schemexml.jar"/>
+	<classpathentry sourcepath="/EXTLIB/xml-xmlbeans-src.zip" kind="var" path="EXTLIB/xbean.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

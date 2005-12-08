@@ -23,5 +23,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/reportclient"/>
 	<classpathentry kind="var" path="AMFICOM_LIB/schemexml.jar"/>
 	<classpathentry kind="var" path="AMFICOM_LIB/mapxml.jar"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/generalxml.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

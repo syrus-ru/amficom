@@ -13,5 +13,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/reflectometry"/>
 	<classpathentry kind="var" path="AMFICOM_LIB/generalxml.jar"/>
+	<classpathentry sourcepath="/EXTLIB/xml-xmlbeans-src.zip" kind="var" path="EXTLIB/xbean.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

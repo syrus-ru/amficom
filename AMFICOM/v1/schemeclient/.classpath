@@ -23,5 +23,6 @@
 	<classpathentry kind="var" path="AMFICOM_LIB/schemexml.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mapclient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mapview"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/generalxml.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
