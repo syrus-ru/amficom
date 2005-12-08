@@ -1,182 +1,449 @@
-/*
- * $Id: LRUMap.java,v 1.48 2005/12/05 16:35:58 arseniy Exp $
+/*-
+ * $Id: LRUMap.java,v 1.49 2005/12/08 15:28:58 arseniy Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-
 package com.syrus.util;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.AbstractCollection;
+import java.util.AbstractSet;
+import java.util.Collection;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
+
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/12/05 16:35:58 $
+ * @version $Revision: 1.49 $, $Date: 2005/12/08 15:28:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
-public class LRUMap<K, V> implements Serializable, Iterable<V> {
-	private static final long serialVersionUID = 5686622326974494326L;
+public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, Cloneable, Serializable {
+	private static final long serialVersionUID = 7021342098557013331L;
 
-	public static final int SIZE = 10;
+	public static final int CAPACITY = 10;
+	public static final long TIME_TO_LIVE = 10 * 60 * 1000 * 1000 * 1000;	//10 min
 
-	protected IEntry<K, V>[] array;
+	private int capacity;
+	private long timeToLive;	//in ns
+	private transient LinkedList<Entry<K, V>> data;
+	private transient Map<K, Entry<K, V>> index;
 
-	protected transient int modCount = 0;
-
-	protected int entityCount = 0;
+	private transient int modCount;
 
 	public LRUMap() {
-		this(SIZE);
+		this(CAPACITY, TIME_TO_LIVE);
 	}
 
 	public LRUMap(final int capacity) {
-		if (capacity >= 0) {
-			this.array = new IEntry[capacity];
-		} else {
-			throw new IllegalArgumentException("Illegal capacity: " + capacity);
+		this(capacity, TIME_TO_LIVE);
+	}
+
+	public LRUMap(final long timeToLive) {
+		this(CAPACITY, timeToLive);
+	}
+
+	public LRUMap(final int capacity, final long timeToLive) {
+		this.capacity = capacity;
+		this.timeToLive = timeToLive;
+
+		this.data = new LinkedList<Entry<K, V>>();
+		this.index = new HashMap<K, Entry<K, V>>();
+
+		this.modCount = 0;
+
+		//this.entriesToRemove = new LinkedList<Entry<K, V>>();
+	}
+
+
+	public boolean containsKey(final Object key) {
+		assert this.index.size() == this.data.size() : "index: " + this.index + ", data: " + this.data;
+
+		return getEntry(key) != null;
+	}
+
+	public boolean containsValue(final Object value) {
+		assert this.index.size() == this.data.size() : "index: " + this.index + ", data: " + this.data;
+
+		for (final Entry<K, V> entry : this.data) {
+			if (equalsWithNull(entry.getValue(), value)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public V get(final Object key) {
+		assert this.index.size() == this.data.size() : "index: " + this.index + ", data: " + this.data;
+
+		final Entry<K, V> entry = this.getEntry(key);
+		if (entry == null) {
+			return null;
+		}
+		this.modCount++;
+		this.moveToBegin(entry);
+		entry.updateLastAccessTimeStamp();
+		return entry.getValue();
+	}
+
+	public V unmodifiableGet(final Object key) {
+		assert this.index.size() == this.data.size() : "index: " + this.index + ", data: " + this.data;
+
+		final Entry<K, V> entry = this.getEntry(key);
+		if (entry == null) {
+			return null;
+		}
+		return entry.getValue();
+	}
+
+	public V put(final K key, final V value) {
+		assert this.index.size() == this.data.size() : "index: " + this.index + ", data: " + this.data;
+
+		this.modCount++;
+
+		this.scanForRemove();
+
+		final Entry<K, V> oldEntry = this.index.get(key);
+		if (oldEntry == null) {
+			final Entry<K, V> newEntry = new Entry<K, V>(key, value);
+			this.index.put(key, newEntry);
+			this.data.addFirst(newEntry);
+			return null;
+		}
+		final V oldValue = oldEntry.getValue();
+		oldEntry.setValue(value);
+		oldEntry.updateLastAccessTimeStamp();
+		this.moveToBegin(oldEntry);
+		return oldValue;
+	}
+
+	public void putAll(final Map<? extends K, ? extends V> t) {
+		assert this.index.size() == this.data.size() : "index: " + this.index + ", data: " + this.data;
+
+		for (final Map.Entry<? extends K, ? extends V> entry : t.entrySet()) {
+			this.put(entry.getKey(), entry.getValue());
 		}
 	}
 
-	public synchronized void clear() {
-		for (int i = 0; i < this.array.length; i++) {
-			this.array[i] = null;
+	public V remove(final Object key) {
+		assert this.index.size() == this.data.size() : "index: " + this.index + ", data: " + this.data;
+
+		final Entry<K, V> entry = this.getEntry(key);
+		if (entry == null) {
+			return null;
 		}
-		this.entityCount = 0;
+
+		final V oldValue = entry.getValue();
+		this.deleteEntry(entry);
+		return oldValue;
 	}
 
-	/**
-	 * value iterator
-	 */
-	public Iterator<V> iterator() {
-		return new Itr();
-	}
+	public void clear() {
+		assert this.index.size() == this.data.size() : "index: " + this.index + ", data: " + this.data;
 
-	/**
-	 * key iterator
-	 */
-	public Iterator<K> keyIterator() {
-		return new KeyIterator();
+		this.modCount++;
+		this.index.clear();
+		this.data.clear();
 	}
 
 	public int size() {
-		return this.entityCount;
+		assert this.index.size() == this.data.size() : "index: " + this.index + ", data: " + this.data;
+
+		return this.data.size();
 	}
 
 	public boolean isEmpty() {
-		return this.entityCount == 0;
+		assert this.index.size() == this.data.size() : "index: " + this.index + ", data: " + this.data;
+
+		return this.data.isEmpty();
 	}
 
-	public int indexOf(final K key) {
-		int index = -1;
-		if (key != null) {
-			for (int i = 0; i < this.array.length; i++) {
-				final IEntry entry = this.array[i];
-				if (entry != null && entry.getKey().equals(key)) {
-					index = i;
-					break;
+
+	private transient volatile Set<K> keySet = null;
+
+	public Set<K> keySet() {
+		if (this.keySet == null) {
+			this.keySet = new AbstractSet<K>() {
+
+				@Override
+				public Iterator<K> iterator() {
+					assert LRUMap.this.index.size() == LRUMap.this.data.size()
+							: "index: " + LRUMap.this.index + ", data: " + LRUMap.this.data;
+
+					return new KeyLRUMapIterator();
 				}
-			}
-		}
-		return index;
-	}
 
-	public synchronized V put(final K key, final V value) {
-		this.modCount++;
-		this.entityCount += (this.entityCount == this.array.length) ? 0 : 1;
-		this.remove(key);
-		final IEntry<K, V> newEntry = new Entry(key, value);
-		V ret = null;
-		if (this.array.length > 0) {
-			if (this.array[this.array.length - 1] != null) {
-				ret = this.array[this.array.length - 1].getValue();
-			}
-			for (int i = this.array.length - 1; i > 0; i--) {
-				this.array[i] = this.array[i - 1];
-			}
-			this.array[0] = newEntry;
-		}
-		return ret;
-	}
+				@Override
+				public boolean contains(final Object object) {
+					assert LRUMap.this.index.size() == LRUMap.this.data.size()
+							: "index: " + LRUMap.this.index + ", data: " + LRUMap.this.data;
 
-	public synchronized V get(final K key) {
-		if (key != null) {
-			int i = 0;
-			IEntry<K, V> entry = null;
-			for (; i < this.array.length; i++) {
-				if (this.array[i] != null && key.equals(this.array[i].getKey())) {
-					entry = this.array[i];
-					break;
+					return LRUMap.this.containsKey(object);
 				}
-			}
-			if (entry != null) {
-				this.modCount++;
-				this.array[i] = this.array[0];
-				this.array[0] = entry;
-				return entry.getValue();
-			}
-			return null;
-		}
-		throw new IllegalArgumentException("Key is NULL");
-	}
 
-	public synchronized V unmodifiableGet(final K key) {
-		if (key != null) {
-			V ret = null;
-			for (int i = 0; i < this.array.length; i++) {
-				if (this.array[i] != null && key.equals(this.array[i].getKey())) {
-					ret = this.array[i].getValue();
-					break;
+				@Override
+				public boolean remove(final Object object) {
+					assert LRUMap.this.index.size() == LRUMap.this.data.size()
+							: "index: " + LRUMap.this.index + ", data: " + LRUMap.this.data;
+
+					return LRUMap.this.remove(object) != null;
 				}
-			}
-			return ret;
-		}
-		throw new IllegalArgumentException("Key is NULL");
-	}
 
-	public synchronized boolean containsKey(final K key) {
-		if (key != null) {
-			for (int i = 0; i < this.array.length; i++) {
-				if (this.array[i] != null && key.equals(this.array[i].getKey())) {
-					return true;
+				@Override
+				public int size() {
+					assert LRUMap.this.index.size() == LRUMap.this.data.size()
+							: "index: " + LRUMap.this.index + ", data: " + LRUMap.this.data;
+
+					return LRUMap.this.size();
 				}
-			}
-			return false;
+
+				@Override
+				public void clear() {
+					assert LRUMap.this.index.size() == LRUMap.this.data.size()
+							: "index: " + LRUMap.this.index + ", data: " + LRUMap.this.data;
+
+					LRUMap.this.clear();
+				}
+
+			};
 		}
-		throw new IllegalArgumentException("Key is NULL");
+		return this.keySet;
 	}
 
-	public synchronized V remove(final K key) {
-		this.modCount++;
-		if (key != null) {
-			V ret = null;
-			for (int i = 0; i < this.array.length; i++) {
-				final IEntry<K, V> entry = this.array[i];
-				if (entry != null && entry.getKey() != null && key.equals(entry.getKey())) {
-					ret = entry.getValue();
-					for (int j = i; j < this.array.length - 1; j++) {
-						this.array[j] = this.array[j + 1];
+
+	private transient volatile Collection<V> values = null;
+
+	public Collection<V> values() {
+		if (this.values == null) {
+			this.values = new AbstractCollection<V>() {
+
+				@Override
+				public Iterator<V> iterator() {
+					assert LRUMap.this.index.size() == LRUMap.this.data.size()
+							: "index: " + LRUMap.this.index + ", data: " + LRUMap.this.data;
+
+					return new ValueLRUMapIterator();
+				}
+
+				@Override
+				public boolean contains(final Object object) {
+					assert LRUMap.this.index.size() == LRUMap.this.data.size()
+							: "index: " + LRUMap.this.index + ", data: " + LRUMap.this.data;
+
+					for (final Entry<K, V> entry : LRUMap.this.data) {
+						if (equalsWithNull(object, entry.getValue())) {
+							return true;
+						}
 					}
-					this.array[this.array.length - 1] = null;
-					this.entityCount -= (this.entityCount == 0) ? 0 : 1;
-					break;
+					return false;
 				}
-			}				
-			return ret;
+
+				@Override
+				public boolean remove(final Object object) {
+					assert LRUMap.this.index.size() == LRUMap.this.data.size()
+							: "index: " + LRUMap.this.index + ", data: " + LRUMap.this.data;
+
+					for (final Iterator<Entry<K, V>> it = LRUMap.this.data.iterator(); it.hasNext();) {
+						final Entry<K, V> entry = it.next();
+						if (equalsWithNull(object, entry.getValue())) {
+							it.remove();
+							LRUMap.this.index.remove(entry.getKey());
+							LRUMap.this.modCount++;
+							return true;
+						}
+					}
+					return false;
+				}
+
+				@Override
+				public int size() {
+					assert LRUMap.this.index.size() == LRUMap.this.data.size()
+							: "index: " + LRUMap.this.index + ", data: " + LRUMap.this.data;
+
+					return LRUMap.this.size();
+				}
+
+				@Override
+				public void clear() {
+					assert LRUMap.this.index.size() == LRUMap.this.data.size()
+							: "index: " + LRUMap.this.index + ", data: " + LRUMap.this.data;
+
+					LRUMap.this.clear();
+				}
+
+			};
 		}
-		throw new IllegalArgumentException("Key is NULL");
+		return this.values;
+	}
+
+
+	private transient volatile Set<Map.Entry<K,V>> entrySet = null;
+
+	public Set<Map.Entry<K,V>> entrySet() {
+		if (this.entrySet == null) {
+			this.entrySet = new AbstractSet<Map.Entry<K,V>>() {
+
+				@Override
+				public Iterator<Map.Entry<K,V>> iterator() {
+					assert LRUMap.this.index.size() == LRUMap.this.data.size()
+							: "index: " + LRUMap.this.index + ", data: " + LRUMap.this.data;
+
+					return new EntryLRUMapIterator();
+				}
+
+				@Override
+				public boolean contains(final Object object) {
+					assert LRUMap.this.index.size() == LRUMap.this.data.size()
+							: "index: " + LRUMap.this.index + ", data: " + LRUMap.this.data;
+
+					if (!(object instanceof Map.Entry)) {
+						return false;
+					}
+					final Map.Entry<K,V> thatEntry = (Map.Entry<K,V>) object;
+					final Entry<K, V> thisEntry = LRUMap.this.getEntry(thatEntry.getKey());
+					return thisEntry != null && equalsWithNull(thisEntry.getValue(), thatEntry.getValue());
+				}
+
+				@Override
+				public boolean remove(final Object object) {
+					assert LRUMap.this.index.size() == LRUMap.this.data.size()
+							: "index: " + LRUMap.this.index + ", data: " + LRUMap.this.data;
+
+					if (!(object instanceof Map.Entry)) {
+						return false;
+					}
+					final Map.Entry<K,V> thatEntry = (Map.Entry<K,V>) object;
+					final Entry<K, V> thisEntry = LRUMap.this.getEntry(thatEntry.getKey());
+					if (thisEntry != null && equalsWithNull(thisEntry.getValue(), thatEntry.getValue())) {
+						LRUMap.this.deleteEntry(thisEntry);
+						return true;
+					}
+					return false;
+				}
+
+				@Override
+				public int size() {
+					assert LRUMap.this.index.size() == LRUMap.this.data.size()
+							: "index: " + LRUMap.this.index + ", data: " + LRUMap.this.data;
+
+					return LRUMap.this.size();
+				}
+
+				@Override
+				public void clear() {
+					assert LRUMap.this.index.size() == LRUMap.this.data.size()
+							: "index: " + LRUMap.this.index + ", data: " + LRUMap.this.data;
+
+					LRUMap.this.clear();
+				}
+			};
+		}
+		return this.entrySet;
+	}
+
+	@Override
+	public Object clone() {
+		try {
+			final LRUMap<K, V> clone = (LRUMap<K, V>) super.clone();
+
+			clone.capacity = this.capacity;
+			clone.timeToLive = this.timeToLive;
+			clone.data = new LinkedList<Entry<K, V>>(this.data);
+			clone.index = new HashMap<K, Entry<K, V>>(this.index);
+			clone.modCount = 0;
+			clone.keySet = null;
+			clone.values = null;
+			clone.entrySet = null;
+
+			return clone();
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError();
+		}
+	}
+
+
+	private Entry<K, V> getEntry(final Object key) {
+		return this.index.get(key);
+	}
+
+	private void moveToBegin(final Entry<K, V> entry) {
+		this.data.remove(entry);
+		this.data.addFirst(entry);
+	}
+
+	private void scanForRemove() {
+		if (this.data.size() < this.capacity) {
+			return;
+		}
+
+		for (final ListIterator<Entry<K, V>> it = this.data.listIterator(this.data.size()); it.hasPrevious();) {
+			final Entry<K, V> entry = it.previous();
+			if (entry.getIdleTime() < this.timeToLive) {
+				return;
+			}
+
+			if (entry.getValue().retain()) {
+				continue;
+			}
+			this.modCount++;
+			this.index.remove(entry.getKey());
+			it.remove();
+		}
+	}
+
+	private void deleteEntry(final Entry<K, V> entry) {
+		this.modCount++;
+		this.index.remove(entry.getKey());
+		this.data.remove(entry);
+	}
+
+	private void writeObject(final ObjectOutputStream objectOutputStream) throws IOException {
+		objectOutputStream.defaultWriteObject();
+
+		objectOutputStream.writeInt(this.data.size());
+		for (final Map.Entry entry : this.data) {
+			objectOutputStream.writeObject(entry.getKey());
+			objectOutputStream.writeObject(entry.getValue());
+		}
+	}
+
+	private void readObject(final ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
+		objectInputStream.defaultReadObject();
+
+		final int size = objectInputStream.readInt();
+		this.data = new LinkedList<Entry<K, V>>();
+		this.index = new HashMap<K, Entry<K, V>>(size);
+		for (int i = 0; i < size; i++) {
+			final K key = (K) objectInputStream.readObject();
+			final V value = (V) objectInputStream.readObject();
+			final Entry<K, V> entry = new Entry<K, V>(key, value);
+			this.data.add(entry);
+			this.index.put(key, entry);
+		}
+	}
+
+	private static boolean equalsWithNull(final Object object1, final Object object2) {
+		return (object1 == null) ? (object2 == null) : object1.equals(object2);
 	}
 
 	@Override
 	public String toString() {
 		final StringBuffer stringBuffer = new StringBuffer();
 		stringBuffer.append("{");
-		for (int i = 0; i < this.entityCount; i++) {
-			final IEntry<K, V> entry = this.array[i];
+		for (final Iterator<Entry<K, V>> it = this.data.iterator(); it.hasNext();) {
+			final Entry<K, V> entry = it.next();
 			final K key = entry.getKey();
 			final V value = entry.getValue();
 
@@ -190,14 +457,10 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 
 			stringBuffer.append(" : ");
 
-			if (value == this) {
-				stringBuffer.append("This LRUMap");
-			} else {
-				stringBuffer.append(value);
-			}
+			stringBuffer.append(value);
 
-			if (i < this.entityCount - 1) {
-				stringBuffer.append(",");
+			if (it.hasNext()) {
+				stringBuffer.append(";");
 			}
 		}
 		stringBuffer.append(" }");
@@ -205,174 +468,130 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 		return stringBuffer.toString();
 	}
 
-	public K[] getKeys() {
-		final K[] keys = (K[]) new Object[this.entityCount];
-		for (int i = 0; i < this.entityCount; i++) {
-			keys[i] = this.array[i].getKey();
-		}
-		return keys;
+
+	public static interface Retainable {
+		boolean retain();
 	}
 
-	public V[] getValues() {
-		final V[] values = (V[]) new Object[this.entityCount];
-		for (int i = 0; i < this.entityCount; i++) {
-			values[i] = this.array[i].getValue();
-		}
-		return values;
-	}
+	private static class Entry<L, W extends Retainable> implements Map.Entry<L, W> {
+		private L key;
+		private W value;
+		private long creationTimeStamp;
+		private long lastAccessTimeStamp;
 
-	IEntry<K, V>[] getEntries() {
-		return this.array;
-	}
-
-	synchronized void populate(final IEntry<K, V>[] entries) {
-		if (entries == null) {
-			throw new NullPointerException("entries are null");
+		Entry(final L key, final W value) {
+			this.key = key;
+			this.value = value;
+			final long timeStamp = System.nanoTime();
+			this.creationTimeStamp = this.lastAccessTimeStamp = timeStamp;
 		}
 
-		this.entityCount = Math.min(entries.length, this.array.length);
-		System.arraycopy(entries, 0, this.array, 0, this.entityCount);
-		for (int i = this.entityCount; i < this.array.length; i++) {
-			this.array[i] = null;
-		}
-		this.modCount = 0;
-	}
-
-	public synchronized void populate(final K[] keys, final V[] values) {
-		if (keys == null) {
-			throw new NullPointerException("keys are null");
-		}
-		if (values == null) {
-			throw new NullPointerException("values are null");
-		}
-		if (keys.length != values.length) {
-			throw new IllegalArgumentException("keys.length: " + keys.length + ", values.length: " + values.length);
-		}
-
-		this.entityCount = Math.min(keys.length, this.array.length);
-		for (int i = 0; i < this.entityCount; i++) {
-			this.array[i] = new Entry(keys[i], values[i]);
-		}
-		for (int i = this.entityCount; i < this.array.length; i++) {
-			this.array[i] = null;
-		}
-		this.modCount = 0;
-	}
-
-
-	protected static interface IEntry<L, W> {
-		L getKey();
-
-		W getValue();
-	}
-
-	protected class Entry implements IEntry<K, V> {
-		private K key;
-		private V value;
-
-		public Entry(final K key, final V value) {
-			if (key != null) {
-				if (value != null) {
-					this.key = key;
-					this.value = value;
-				} else {
-					throw new IllegalArgumentException("Value is NULL");
-				}
-			} else {
-				throw new IllegalArgumentException("Key is NULL");
-			}
-		}
-
-		public K getKey() {
+		public L getKey() {
 			return this.key;
 		}
 
-		public V getValue() {
+		public W getValue() {
 			return this.value;
 		}
+
+		public W setValue(final W value) {
+			final W oldValue = this.value;
+			this.value = value;
+			return oldValue;
+		}
+
+		@Override
+		public boolean equals(final Object object) {
+			if (!(object instanceof Map.Entry)) {
+				return false;
+			}
+
+			final Map.Entry that = (Map.Entry) object;
+			return ((this.key == null ? that.getKey() == null : this.key.equals(that.getKey()))
+					&& (this.value == null ? that.getValue() == null : this.value.equals(that.getValue())));
+		}
+
+    @Override
+		public int hashCode() {
+			int keyHash = (this.key == null ? 0 : this.key.hashCode());
+			int valueHash = (this.value == null ? 0 : this.value.hashCode());
+			return keyHash ^ valueHash;
+		}
+
+    @Override
+		public String toString() {
+        return this.key + " : " + this.value;
+    }
+
+		long getLifeTime() {
+			return System.nanoTime() - this.creationTimeStamp;
+		}
+
+		long getIdleTime() {
+			return System.nanoTime() - this.lastAccessTimeStamp;
+		}
+
+		void updateLastAccessTimeStamp() {
+			this.lastAccessTimeStamp = System.nanoTime();
+		}
+
 	}
 
-
-	private abstract class AbstractIterator {
-		/**
-		 * Index of element to be returned by subsequent call to next.
-		 */
-		int cursor = 0;
+	private abstract class LRUMapIterator<T> implements Iterator<T> {
+		private int expectedModCount;
+		private Iterator<Entry<K, V>> dataIterator;
+		private Entry<K, V> lastReturned;
 		
-		/**
-		 * Index of element returned by most recent call to next or previous.
-		 * Reset to -1 if this element is deleted by a call to remove.
-		 */
-		int lastRet = -1;
-
-		/**
-		 * The modCount value that the iterator believes that the backing List
-		 * should have. If this expectation is violated, the iterator has detected
-		 * concurrent modification.
-		 */
-		int expectedModCount = LRUMap.this.modCount;
+		LRUMapIterator() {
+			this.expectedModCount = LRUMap.this.modCount;
+			this.dataIterator = LRUMap.this.data.iterator();
+		}
 
 		public final boolean hasNext() {
-			return this.cursor != LRUMap.this.entityCount;
+			return this.dataIterator.hasNext();
+		}
+
+		final Entry<K, V> nextEntry() {
+			this.checkForComodification();
+			if (this.dataIterator.hasNext()) {
+				this.lastReturned = this.dataIterator.next();
+				return this.lastReturned;
+			}
+			throw new NoSuchElementException();
 		}
 
 		public final void remove() {
-			if (this.lastRet == -1) {
+			if (this.lastReturned == null) {
 				throw new IllegalStateException();
 			}
 			this.checkForComodification();
-
-			try {
-				LRUMap.this.remove(LRUMap.this.array[this.lastRet].getKey());
-				if (this.lastRet < this.cursor) {
-					this.cursor--;
-				}
-				this.lastRet = -1;
-				this.expectedModCount = LRUMap.this.modCount;
-			} catch (IndexOutOfBoundsException e) {
-				Log.errorMessage(e);
-				throw new ConcurrentModificationException();
-			}
+			this.dataIterator.remove();
+			LRUMap.this.index.remove(this.lastReturned.getKey());
+			this.lastReturned = null;
 		}
 
-		final void checkForComodification() {
+		private void checkForComodification() {
 			if (LRUMap.this.modCount != this.expectedModCount) {
 				throw new ConcurrentModificationException();
 			}
 		}
 	}
 
-	private class Itr extends AbstractIterator implements Iterator<V> {
-		public V next() {
-			this.checkForComodification();
-			try {
-				final IEntry<K, V> nextEntry = LRUMap.this.array[this.cursor];
-				this.lastRet = this.cursor++;
-				return nextEntry.getValue();
-			} catch (NullPointerException npe) {
-				this.checkForComodification();
-				throw new NoSuchElementException();
-			} catch (IndexOutOfBoundsException ioobe) {
-				this.checkForComodification();
-				throw new NoSuchElementException();
-			}
+	private final class EntryLRUMapIterator extends LRUMapIterator<Map.Entry<K,V>> {
+		public Entry<K, V> next() {
+			return this.nextEntry();
 		}
 	}
 
-	private class KeyIterator extends AbstractIterator implements Iterator<K> {
+	private final class KeyLRUMapIterator extends LRUMapIterator<K> {
 		public K next() {
-			this.checkForComodification();
-			try {
-				final IEntry<K, V> nextEntry = LRUMap.this.array[this.cursor];
-				this.lastRet = this.cursor++;
-				return nextEntry.getKey();
-			} catch (NullPointerException npe) {
-				this.checkForComodification();
-				throw new NoSuchElementException();
-			} catch (IndexOutOfBoundsException ioobe) {
-				this.checkForComodification();
-				throw new NoSuchElementException();
-			}
+			return this.nextEntry().getKey();
+		}
+	}
+
+	private final class ValueLRUMapIterator extends LRUMapIterator<V> {
+		public V next() {
+			return this.nextEntry().getValue();
 		}
 	}
 
