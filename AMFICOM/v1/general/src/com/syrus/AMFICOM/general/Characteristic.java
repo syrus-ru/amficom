@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.84 2005/12/07 17:16:24 bass Exp $
+ * $Id: Characteristic.java,v 1.85 2005/12/08 16:12:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,11 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 
 import java.util.Collections;
 import java.util.Date;
@@ -32,7 +36,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/12/07 17:16:24 $
+ * @version $Revision: 1.85 $, $Date: 2005/12/08 16:12:08 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -252,7 +256,31 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	public void fromXmlTransferable(final XmlCharacteristic characteristic,
 			final String importType)
 	throws XmlConversionException {
-		throw new UnsupportedOperationException();
+		try {
+			XmlComplementorRegistry.complementStorableObject(characteristic, CHARACTERISTIC_CODE, importType, PRE_IMPORT);
+
+			this.type = StorableObjectPool.getStorableObject(
+					Identifier.fromXmlTransferable(
+							characteristic.getTypeId(),
+							importType,
+							MODE_THROW_IF_ABSENT),
+					true);
+			this.name = characteristic.getName();
+			this.description = characteristic.isSetDescription()
+					? characteristic.getDescription()
+					: "";
+			this.value = characteristic.getDescription();
+			this.editable = characteristic.getEditable();
+			this.visible = characteristic.getVisible();
+			this.parentCharacterizableId = Identifier.fromXmlTransferable(
+					characteristic.getParentCharacterizableId(),
+					importType,
+					MODE_THROW_IF_ABSENT);
+
+			XmlComplementorRegistry.complementStorableObject(characteristic, CHARACTERISTIC_CODE, importType, POST_IMPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
+		}
 	}
 
 	/**
@@ -290,7 +318,27 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 			final String importType,
 			final boolean usePool)
 	throws XmlConversionException {
-		throw new UnsupportedOperationException();
+		try {
+			this.id.getXmlTransferable(characteristic.addNewId(), importType);
+			this.type.getId().getXmlTransferable(characteristic.addNewTypeId(), importType);
+			characteristic.setName(this.name);
+
+			if (characteristic.isSetDescription()) {
+				characteristic.unsetDescription();
+			}
+			if (this.description.length() != 0) {
+				characteristic.setDescription(this.description);
+			}
+
+			characteristic.setValue(this.value);
+			characteristic.setEditable(this.editable);
+			characteristic.setVisible(this.visible);
+			this.parentCharacterizableId.getXmlTransferable(characteristic.addNewParentCharacterizableId(), importType);
+
+			XmlComplementorRegistry.complementStorableObject(characteristic, CHARACTERISTIC_CODE, importType, EXPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
+		}
 	}
 
 	public boolean isEditable() {
