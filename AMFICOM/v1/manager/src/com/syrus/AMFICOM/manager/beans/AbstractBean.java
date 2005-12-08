@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.3 2005/12/07 15:43:50 bob Exp $
+ * $Id: AbstractBean.java,v 1.4 2005/12/08 16:07:19 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/07 15:43:50 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/08 16:07:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -78,8 +78,6 @@ public abstract class AbstractBean {
 		
 		final Set<LayoutItem> layoutItems = 
 			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);	
-		
-//		Log.debugMessage("AbstractBean.disposeLayoutItem | delete: " + layoutItems, Log.DEBUGLEVEL10);
 		
 		for(final LayoutItem layoutItem : layoutItems) {
 			StorableObjectPool.delete(layoutItem.getCharacteristics(false));
