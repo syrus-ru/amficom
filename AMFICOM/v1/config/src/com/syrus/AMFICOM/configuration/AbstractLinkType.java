@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkType.java,v 1.29 2005/10/25 19:53:09 bass Exp $
+ * $Id: AbstractLinkType.java,v 1.30 2005/12/08 16:58:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 
 import java.util.Collections;
@@ -21,21 +22,23 @@ import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkType
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/10/25 19:53:09 $
+ * @version $Revision: 1.30 $, $Date: 2005/12/08 16:58:09 $
  * @author $Author: bass $
  * @module config
  */
 public abstract class AbstractLinkType<T extends AbstractLinkType<T>>
 		extends StorableObjectType<T>
-		implements Namable, Characterizable {
+		implements Namable, Characterizable, ReverseDependencyContainer {
 	private static final long serialVersionUID = 6276017738364160981L;
 
 	AbstractLinkType(/*IdlAbstractLinkType*/) {
@@ -85,6 +88,23 @@ public abstract class AbstractLinkType<T extends AbstractLinkType<T>>
 	public abstract String getName();
 
 	public abstract void setName(final String Name);
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 */
+	public final Set<Identifiable> getReverseDependencies(final boolean usePool)
+	throws ApplicationException {
+		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
+		reverseDependencies.add(this.id);
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		}
+		reverseDependencies.remove(null);
+		reverseDependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(reverseDependencies);
+	}
 
 	/*-********************************************************************
 	 * Children manipulation: characteristics                             *

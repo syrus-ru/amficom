@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.24 2005/12/08 16:12:54 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.25 2005/12/08 16:58:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
@@ -39,6 +40,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -52,14 +54,14 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/12/08 16:12:54 $
+ * @version $Revision: 1.25 $, $Date: 2005/12/08 16:58:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 		implements Characterizable, Namable,
-		XmlTransferableObject<XmlProtoEquipment> {
+		XmlTransferableObject<XmlProtoEquipment>, ReverseDependencyContainer {
 	private static final long serialVersionUID = 7066410483749919904L;
 
 	private EquipmentType type;
@@ -392,6 +394,23 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 	@Override
 	protected ProtoEquipmentWrapper getWrapper() {
 		return ProtoEquipmentWrapper.getInstance();
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 */
+	public Set<Identifiable> getReverseDependencies(final boolean usePool)
+	throws ApplicationException {
+		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
+		reverseDependencies.add(this.id);
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		}
+		reverseDependencies.remove(null);
+		reverseDependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(reverseDependencies);
 	}
 
 	/*-********************************************************************

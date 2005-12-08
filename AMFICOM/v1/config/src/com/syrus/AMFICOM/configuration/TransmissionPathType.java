@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.82 2005/12/07 17:16:25 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.83 2005/12/08 16:58:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
 
@@ -32,19 +33,20 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/12/07 17:16:25 $
+ * @version $Revision: 1.83 $, $Date: 2005/12/08 16:58:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 
 public final class TransmissionPathType extends StorableObjectType<TransmissionPathType>
-		implements Characterizable, Namable {
+		implements Characterizable, Namable, ReverseDependencyContainer {
 
 	private static final long serialVersionUID = 5311725679846973948L;
 
@@ -168,6 +170,23 @@ public final class TransmissionPathType extends StorableObjectType<TransmissionP
 	@Override
 	protected TransmissionPathTypeWrapper getWrapper() {
 		return TransmissionPathTypeWrapper.getInstance();
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 */
+	public Set<Identifiable> getReverseDependencies(final boolean usePool)
+	throws ApplicationException {
+		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
+		reverseDependencies.add(this.id);
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		}
+		reverseDependencies.remove(null);
+		reverseDependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(reverseDependencies);
 	}
 
 	/*-********************************************************************

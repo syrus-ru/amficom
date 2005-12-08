@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.104 2005/12/07 17:16:25 bass Exp $
+ * $Id: TransmissionPath.java,v 1.105 2005/12/08 16:58:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NOT_IMPLEMENTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 
@@ -33,12 +34,13 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.104 $, $Date: 2005/12/07 17:16:25 $
+ * @version $Revision: 1.105 $, $Date: 2005/12/08 16:58:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -47,7 +49,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 public final class TransmissionPath extends DomainMember<TransmissionPath>
 		implements MonitoredDomainMember,
 		Characterizable,
-		TypedObject<TransmissionPathType> {
+		TypedObject<TransmissionPathType>, ReverseDependencyContainer {
 
 	private static final long serialVersionUID = 8129503678304843903L;
 
@@ -280,6 +282,23 @@ public final class TransmissionPath extends DomainMember<TransmissionPath>
 	@Override
 	protected TransmissionPathWrapper getWrapper() {
 		return TransmissionPathWrapper.getInstance();
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 */
+	public Set<Identifiable> getReverseDependencies(final boolean usePool)
+	throws ApplicationException {
+		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
+		reverseDependencies.add(this.id);
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		}
+		reverseDependencies.remove(null);
+		reverseDependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(reverseDependencies);
 	}
 
 	/*-********************************************************************

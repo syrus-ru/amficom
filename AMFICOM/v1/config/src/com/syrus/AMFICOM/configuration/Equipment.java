@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.154 2005/12/08 16:12:54 bass Exp $
+ * $Id: Equipment.java,v 1.155 2005/12/08 16:58:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,6 +47,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
@@ -59,7 +60,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.154 $, $Date: 2005/12/08 16:12:54 $
+ * @version $Revision: 1.155 $, $Date: 2005/12/08 16:58:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -67,7 +68,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 public final class Equipment extends DomainMember<Equipment>
 		implements MonitoredDomainMember,
 		Characterizable,
-		XmlTransferableObject<XmlEquipment> {
+		XmlTransferableObject<XmlEquipment>, ReverseDependencyContainer {
 	private static final long serialVersionUID = 2432748205979033898L;
 
 	private Identifier protoEquipmentId;
@@ -671,6 +672,23 @@ public final class Equipment extends DomainMember<Equipment>
 	@Override
 	protected EquipmentWrapper getWrapper() {
 		return EquipmentWrapper.getInstance();
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 */
+	public Set<Identifiable> getReverseDependencies(final boolean usePool)
+	throws ApplicationException {
+		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
+		reverseDependencies.add(this.id);
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		}
+		reverseDependencies.remove(null);
+		reverseDependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(reverseDependencies);
 	}
 
 	/*-********************************************************************

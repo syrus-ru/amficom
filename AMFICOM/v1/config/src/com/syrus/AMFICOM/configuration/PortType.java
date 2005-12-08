@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.113 2005/12/08 16:12:54 bass Exp $
+ * $Id: PortType.java,v 1.114 2005/12/08 16:58:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,6 +47,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -62,7 +63,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.113 $, $Date: 2005/12/08 16:12:54 $
+ * @version $Revision: 1.114 $, $Date: 2005/12/08 16:58:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -70,7 +71,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 
 public final class PortType extends StorableObjectType<PortType>
 		implements Characterizable, Namable,
-		XmlTransferableObject<XmlPortType> {
+		XmlTransferableObject<XmlPortType>, ReverseDependencyContainer {
 	private static final long serialVersionUID = -115251480084275101L;
 
 	private String name;
@@ -423,6 +424,23 @@ public final class PortType extends StorableObjectType<PortType>
 	@Override
 	protected PortTypeWrapper getWrapper() {
 		return PortTypeWrapper.getInstance();
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 */
+	public Set<Identifiable> getReverseDependencies(final boolean usePool)
+	throws ApplicationException {
+		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
+		reverseDependencies.add(this.id);
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		}
+		reverseDependencies.remove(null);
+		reverseDependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(reverseDependencies);
 	}
 
 	/*-********************************************************************
