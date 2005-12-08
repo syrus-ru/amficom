@@ -105,7 +105,7 @@ public class RefModelParamsFrame extends JInternalFrame
 		doItButton.setToolTipText(LangModelModel.getString("menuViewPerformModeling"));
 		
 		final JComboBox modelTypeChooseCB = new JComboBox(new String[] {
-				"Шумовая модель", "Физическая модель"
+				"Физическая модель", "Формальная модель"
 		});
 		modelTypeChooseCB.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -144,10 +144,9 @@ public class RefModelParamsFrame extends JInternalFrame
 						new Double( -40),
 						new Double(0.5),
 						new Double(0.2)});
-				
-				this.table.setDefaultRenderer(Object.class, new NoiseModelParamsTableRenderer(this.noiseTableModel));
-				this.table.setDefaultEditor(Object.class, new NoiseModelParamsTableEditor(this.noiseTableModel));
 			}
+			this.table.setDefaultRenderer(Object.class, new NoiseModelParamsTableRenderer(this.noiseTableModel));
+			this.table.setDefaultEditor(Object.class, new NoiseModelParamsTableEditor(this.noiseTableModel));
 			this.table.setModel(this.noiseTableModel);
 		} else {
 			if (this.physTableModel == null) {
@@ -164,10 +163,9 @@ public class RefModelParamsFrame extends JInternalFrame
 						new Double(-40),
 						new Double(0.5),
 						new Double(0.2)});
-				
-				this.table.setDefaultRenderer(Object.class, new PhysModelParamsTableRenderer(this.physTableModel));
-				this.table.setDefaultEditor(Object.class, new PhysModelParamsTableEditor(this.physTableModel));
 			}
+			this.table.setDefaultRenderer(Object.class, new PhysModelParamsTableRenderer(this.physTableModel));
+			this.table.setDefaultEditor(Object.class, new PhysModelParamsTableEditor(this.physTableModel));
 			this.table.setModel(this.physTableModel);
 		}
 		this.table.updateUI();
