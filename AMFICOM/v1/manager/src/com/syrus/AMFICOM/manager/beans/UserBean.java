@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.6 2005/12/09 09:21:27 bob Exp $
+ * $Id: UserBean.java,v 1.7 2005/12/09 09:22:41 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -45,7 +44,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/12/09 09:21:27 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/09 09:22:41 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
