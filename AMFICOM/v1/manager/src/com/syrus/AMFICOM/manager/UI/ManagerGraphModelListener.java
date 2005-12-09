@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModelListener.java,v 1.8 2005/12/08 16:07:58 bob Exp $
+* $Id: ManagerGraphModelListener.java,v 1.9 2005/12/09 12:20:23 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/12/08 16:07:58 $
+ * @version $Revision: 1.9 $, $Date: 2005/12/09 12:20:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -388,6 +388,18 @@ public class ManagerGraphModelListener implements GraphModelListener {
 		
 		if (port) {
 			final MPort source = (MPort) disposedObject;
+			final Set edges = source.getEdges();
+			for (final Object object : edges) {
+				final Edge edge = (Edge) object;
+				final Object source2 = edge.getSource();
+				final Object target2 = edge.getTarget();
+				if (source == source2) {
+					((MPort)target2).removeEdge(edge);
+				}
+				if (source == target2) {
+					((MPort)source2).removeEdge(edge);
+				}
+			}
 			final AbstractBean bean = source.getUserObject();
 			bean.dispose();
 			this.managerMainFrame.perspective.removeLayoutBean(bean);
