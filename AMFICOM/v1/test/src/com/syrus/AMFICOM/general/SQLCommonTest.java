@@ -1,5 +1,5 @@
 /*
- * $Id: SQLCommonTest.java,v 1.3 2005/07/15 12:00:46 arseniy Exp $
+ * $Id: SQLCommonTest.java,v 1.4 2005/12/09 14:50:16 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ public class SQLCommonTest extends CommonTest {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		}
 		catch (Exception e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			System.exit(0);
 		}
 	}

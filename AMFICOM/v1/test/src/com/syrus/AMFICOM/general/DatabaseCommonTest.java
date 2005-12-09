@@ -1,11 +1,42 @@
 /*
- * $Id: DatabaseCommonTest.java,v 1.13 2005/10/20 11:28:26 bob Exp $
+ * $Id: DatabaseCommonTest.java,v 1.14 2005/12/09 14:50:16 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.general;
+
+import static com.syrus.AMFICOM.general.ObjectGroupEntities.ADMINISTRATION_GROUP_CODE;
+import static com.syrus.AMFICOM.general.ObjectGroupEntities.CONFIGURATION_GROUP_CODE;
+import static com.syrus.AMFICOM.general.ObjectGroupEntities.EVENT_GROUP_CODE;
+import static com.syrus.AMFICOM.general.ObjectGroupEntities.GENERAL_GROUP_CODE;
+import static com.syrus.AMFICOM.general.ObjectGroupEntities.MEASUREMENT_GROUP_CODE;
+import static com.syrus.AMFICOM.general.ObjectGroupEntities.SCHEME_GROUP_CODE;
+import static com.syrus.AMFICOM.general.PoolContext.ADMINISTRATION_POOL_SIZE;
+import static com.syrus.AMFICOM.general.PoolContext.ADMINISTRATION_POOL_TIME_TO_LIVE;
+import static com.syrus.AMFICOM.general.PoolContext.CONFIGURATION_POOL_SIZE;
+import static com.syrus.AMFICOM.general.PoolContext.CONFIGURATION_POOL_TIME_TO_LIVE;
+import static com.syrus.AMFICOM.general.PoolContext.EVENT_POOL_SIZE;
+import static com.syrus.AMFICOM.general.PoolContext.EVENT_POOL_TIME_TO_LIVE;
+import static com.syrus.AMFICOM.general.PoolContext.GENERAL_POOL_SIZE;
+import static com.syrus.AMFICOM.general.PoolContext.GENERAL_POOL_TIME_TO_LIVE;
+import static com.syrus.AMFICOM.general.PoolContext.KEY_ADMINISTRATION_POOL_SIZE;
+import static com.syrus.AMFICOM.general.PoolContext.KEY_ADMINISTRATION_POOL_TIME_TO_LIVE;
+import static com.syrus.AMFICOM.general.PoolContext.KEY_CONFIGURATION_POOL_SIZE;
+import static com.syrus.AMFICOM.general.PoolContext.KEY_CONFIGURATION_POOL_TIME_TO_LIVE;
+import static com.syrus.AMFICOM.general.PoolContext.KEY_EVENT_POOL_SIZE;
+import static com.syrus.AMFICOM.general.PoolContext.KEY_EVENT_POOL_TIME_TO_LIVE;
+import static com.syrus.AMFICOM.general.PoolContext.KEY_GENERAL_POOL_SIZE;
+import static com.syrus.AMFICOM.general.PoolContext.KEY_GENERAL_POOL_TIME_TO_LIVE;
+import static com.syrus.AMFICOM.general.PoolContext.KEY_MEASUREMENT_POOL_SIZE;
+import static com.syrus.AMFICOM.general.PoolContext.KEY_MEASUREMENT_POOL_TIME_TO_LIVE;
+import static com.syrus.AMFICOM.general.PoolContext.KEY_SCHEME_POOL_SIZE;
+import static com.syrus.AMFICOM.general.PoolContext.KEY_SCHEME_POOL_TIME_TO_LIVE;
+import static com.syrus.AMFICOM.general.PoolContext.MEASUREMENT_POOL_SIZE;
+import static com.syrus.AMFICOM.general.PoolContext.MEASUREMENT_POOL_TIME_TO_LIVE;
+import static com.syrus.AMFICOM.general.PoolContext.SCHEME_POOL_SIZE;
+import static com.syrus.AMFICOM.general.PoolContext.SCHEME_POOL_TIME_TO_LIVE;
 
 import com.syrus.AMFICOM.administration.DomainDatabase;
 import com.syrus.AMFICOM.administration.MCMDatabase;
@@ -61,11 +92,12 @@ import com.syrus.AMFICOM.scheme.SchemePathDatabase;
 import com.syrus.AMFICOM.scheme.SchemePortDatabase;
 import com.syrus.AMFICOM.scheme.SchemeProtoElementDatabase;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroupDatabase;
+import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/20 11:28:26 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2005/12/09 14:50:16 $
+ * @author $Author: arseniy $
  * @module test
  */
 public class DatabaseCommonTest extends SQLCommonTest {
@@ -80,7 +112,7 @@ public class DatabaseCommonTest extends SQLCommonTest {
 	void oneTimeSetUp() {
 		super.oneTimeSetUp();
 		initDatabaseContext();
-		initStorableObjectPools();
+		initStorableObjectPool();
 		setSysUser();
 	}
 
@@ -153,17 +185,31 @@ public class DatabaseCommonTest extends SQLCommonTest {
 		//More database drivers...
 	}
 
-	private static void initStorableObjectPools() {
+	private static void initStorableObjectPool() {
 		final ObjectLoader objectLoader = new DatabaseObjectLoader();
-		final Class lruMapClass = StorableObjectResizableLRUMap.class;
 
-		StorableObjectPool.init(objectLoader, lruMapClass);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, 100);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, 100);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, 100);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, 100);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.EVENT_GROUP_CODE, 100);
-		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.SCHEME_GROUP_CODE, 100);
+		final int generalPoolSize = ApplicationProperties.getInt(KEY_GENERAL_POOL_SIZE, GENERAL_POOL_SIZE);
+		final int administrationPoolSize = ApplicationProperties.getInt(KEY_ADMINISTRATION_POOL_SIZE, ADMINISTRATION_POOL_SIZE);
+		final int configurationPoolSize = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_SIZE, CONFIGURATION_POOL_SIZE);
+		final int measurementPoolSize = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_SIZE, MEASUREMENT_POOL_SIZE);
+		final int eventPoolSize = ApplicationProperties.getInt(KEY_EVENT_POOL_SIZE, EVENT_POOL_SIZE);
+		final int schemePoolSize = ApplicationProperties.getInt(KEY_SCHEME_POOL_SIZE, SCHEME_POOL_SIZE);
+
+		// All convert to ns
+		final long generalPoolTimeToLive = ApplicationProperties.getInt(KEY_GENERAL_POOL_TIME_TO_LIVE, GENERAL_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+		final long administrationPoolTimeToLive = ApplicationProperties.getInt(KEY_ADMINISTRATION_POOL_TIME_TO_LIVE, ADMINISTRATION_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+		final long configurationPoolTimeToLive = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_TIME_TO_LIVE, CONFIGURATION_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+		final long measurementPoolTimeToLive = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_TIME_TO_LIVE, MEASUREMENT_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+		final long eventPoolTimeToLive = ApplicationProperties.getInt(KEY_EVENT_POOL_TIME_TO_LIVE, EVENT_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+		final long schemePoolTimeToLive = ApplicationProperties.getInt(KEY_SCHEME_POOL_TIME_TO_LIVE, SCHEME_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+
+		StorableObjectPool.init(objectLoader);
+		StorableObjectPool.addObjectPoolGroup(GENERAL_GROUP_CODE, generalPoolSize, generalPoolTimeToLive);
+		StorableObjectPool.addObjectPoolGroup(ADMINISTRATION_GROUP_CODE, administrationPoolSize, administrationPoolTimeToLive);
+		StorableObjectPool.addObjectPoolGroup(CONFIGURATION_GROUP_CODE, configurationPoolSize, configurationPoolTimeToLive);
+		StorableObjectPool.addObjectPoolGroup(MEASUREMENT_GROUP_CODE, measurementPoolSize, measurementPoolTimeToLive);
+		StorableObjectPool.addObjectPoolGroup(EVENT_GROUP_CODE, eventPoolSize, eventPoolTimeToLive);
+		StorableObjectPool.addObjectPoolGroup(SCHEME_GROUP_CODE, schemePoolSize, schemePoolTimeToLive);
 		//More pools...
 	}
 
@@ -173,7 +219,7 @@ public class DatabaseCommonTest extends SQLCommonTest {
 		try {
 			sysUser = userDatabase.retrieveForLogin(SystemUserWrapper.SYS_LOGIN);
 		} catch (ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 			System.exit(0);
 		}
 	}
