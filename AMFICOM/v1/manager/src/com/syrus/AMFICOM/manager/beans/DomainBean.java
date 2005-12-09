@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.4 2005/12/09 12:19:51 bob Exp $
+ * $Id: DomainBean.java,v 1.5 2005/12/09 16:14:31 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,25 +20,19 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CompoundCondition;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.manager.ManagerHandler;
 import com.syrus.AMFICOM.manager.UI.GraphRoutines;
 import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.AMFICOM.manager.graph.ManagerGraphCell;
-import com.syrus.AMFICOM.resource.LayoutItem;
-import com.syrus.AMFICOM.resource.LayoutItemWrapper;
+import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/09 12:19:51 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/09 16:14:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -83,16 +77,87 @@ public final class DomainBean extends Bean {
 	}
 	
 	@Override
-	public void applyTargetPort(MPort oldPort, MPort newPort) {
+	public void applyTargetPort(final MPort oldPort, final MPort newPort) 
+	throws ApplicationException {
+		assert Log.debugMessage("oldPort:" 
+				+ oldPort
+				+ ", newPort:"
+				+ newPort, 
+			Log.DEBUGLEVEL10);
 		Identifier parentId = Identifier.VOID_IDENTIFIER;
 		if (newPort != null) {
 			parentId = ((DomainBean) newPort.getUserObject()).getIdentifier();
-		}		
+		}
+		
+		final Identifier parentDomainId = this.domain.getParentDomainId();
+		
 		assert Log.debugMessage(this.domain.getId() 
-				+ ", set parent " 
-				+ parentId,
-			Log.DEBUGLEVEL10); 
-		this.domain.setDomainId(parentId);
+			+ ", set parent " 
+			+ parentId,
+		Log.DEBUGLEVEL10); 
+		this.domain.setDomainId(parentId);		
+		
+		final ManagerHandler managerHandler = this.managerMainFrame.getManagerHandler();
+		if (!parentId.isVoid()) {
+			final Perspective newPerspective = managerHandler.getPerspective(parentId.getIdentifierString());
+			final Perspective currentPerspective = this.managerMainFrame.getPerspective();			
+			final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
+			final String netName = NetBeanFactory.NET_CODENAME + this.domain.getId().getIdentifierString();
+			
+			if (parentDomainId.isVoid()) {
+				newPerspective.createNecessaryItems();
+				graphRoutines.arrangeLayoutItems(newPerspective);
+				graphRoutines.showLayerName(currentPerspective.getCodename(), true);				
+				final ManagerGraphCell defaultGraphCell = 
+					graphRoutines.getDefaultGraphCell(netName,
+						newPerspective.getCodename(),
+						false);
+				newPerspective.addLayoutBean(defaultGraphCell.getAbstractBean());
+				graphRoutines.arrangeLayoutItems();
+			} else {
+				final Perspective oldPerspective = 
+					managerHandler.getPerspective(parentDomainId.getIdentifierString());
+				final ManagerGraphCell networkCell = graphRoutines.getDefaultGraphCell(netName, 
+					oldPerspective.getCodename(), 
+					false);
+				
+				final GraphModel model = this.managerMainFrame.getGraph().getModel();
+				
+				final MPort port = networkCell.getMPort();
+				final Set edges = port.getEdges();
+				
+				for (final Object edge : edges) {
+					port.removeEdge(edge);
+				}
+				model.remove(edges.toArray());
+				
+				final AbstractBean netBean = networkCell.getAbstractBean();
+				netBean.disposeLayoutItem();
+				
+				assert Log.debugMessage(networkCell
+						+ ", oldPerspective:"
+						+ oldPerspective
+						+ ", newPerspective:"
+						+ newPerspective, Log.DEBUGLEVEL10);
+				
+				oldPerspective.removeLayoutBean(netBean);
+				networkCell.setPerspective(newPerspective);
+				newPerspective.addLayoutBean(netBean);
+				
+				newPerspective.createNecessaryItems();
+				graphRoutines.arrangeLayoutItems(oldPerspective);
+				graphRoutines.arrangeLayoutItems(newPerspective);
+				graphRoutines.showLayerName(currentPerspective.getCodename(), true);				
+				graphRoutines.arrangeLayoutItems();
+				this.managerMainFrame.getTreeModel().reload();
+			}
+		}
+		
+		assert Log.debugMessage("was parentDomainId: " 
+				+ parentDomainId
+				+ ", now:"
+				+ parentId, 
+			Log.DEBUGLEVEL10);
 	}	
 
 	@Override
