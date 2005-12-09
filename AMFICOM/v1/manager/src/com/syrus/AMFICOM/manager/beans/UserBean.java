@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.5 2005/12/08 13:21:09 bob Exp $
+ * $Id: UserBean.java,v 1.6 2005/12/09 09:21:27 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/12/08 13:21:09 $
+ * @version $Revision: 1.6 $, $Date: 2005/12/09 09:21:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -141,31 +141,41 @@ public class UserBean extends Bean implements WorkstationItem {
 		return roleIds.contains(role.getId());
 	}
 	
-	private Characteristic findCharacteristic(final String codename) throws ApplicationException {
-		TypicalCondition typicalCondition = new TypicalCondition(codename, 
+	private Characteristic findCharacteristic(final String codename,
+			final boolean createIfAbsent) throws ApplicationException {
+		final TypicalCondition typicalCondition = new TypicalCondition(codename, 
 			OperationSort.OPERATION_EQUALS, 
 			ObjectEntities.CHARACTERISTIC_TYPE_CODE,
 			StorableObjectWrapper.COLUMN_CODENAME);
-		Set<StorableObject> storableObjectsByCondition = StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
+		final Set<CharacteristicType> characteristicTypes = 
+			StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
 		
-		if (!storableObjectsByCondition.isEmpty()) {
-			CharacteristicType characteristicType = (CharacteristicType) storableObjectsByCondition.iterator().next();
-			Identifier characteristicTypeId = characteristicType.getId();
-			for(Characteristic characteristic : this.user.getCharacteristics(false)) {
+		if (!characteristicTypes.isEmpty()) {
+			final CharacteristicType characteristicType = characteristicTypes.iterator().next();
+			final Identifier characteristicTypeId = characteristicType.getId();
+			for(final Characteristic characteristic : this.user.getCharacteristics(false)) {
 				if (characteristic.getType().getId().equals(characteristicTypeId)) {
 					return characteristic;
 				}
 			}			
-			final Characteristic characteristic = 
-				Characteristic.createInstance(LoginManager.getUserId(), 
-					characteristicType, 
-					codename, 
-					codename, 
-					"", 
-					this.user, 
-					true, 
-					true);
-			return characteristic;
+			if (createIfAbsent) {
+				final Characteristic characteristic = 
+					Characteristic.createInstance(LoginManager.getUserId(), 
+						characteristicType, 
+						codename, 
+						codename, 
+						"", 
+						this.user, 
+						true, 
+						true);
+				assert Log.debugMessage("Create characteristic: " 
+						+ characteristic.getId()
+						+ ", codename:" 
+						+ characteristicType.getDescription(), Log.DEBUGLEVEL10);
+				return characteristic;
+			}
+			// othewise
+			return null;
 		}
 		
 		throw new ObjectNotFoundException("Characteristic type with codename '" + codename + "' not found");
@@ -176,8 +186,10 @@ public class UserBean extends Bean implements WorkstationItem {
 	throws ApplicationException {
 		String value = this.propertyName.get(codename);
 		if (value == null) {
-			final Characteristic characteristic = this.findCharacteristic(codename);		
-			value = characteristic.getValue();
+			final Characteristic characteristic = this.findCharacteristic(codename, false);
+			if (characteristic != null) {
+				value = characteristic.getValue();				
+			}
 			this.propertyName.put(codename, value);
 		}
 		return value;
@@ -192,8 +204,11 @@ public class UserBean extends Bean implements WorkstationItem {
 				(value2 != null && !value2.equals(value) ||
 				!value.equals(value2))) {
 			final String oldValue = value2;
-			final Characteristic characteristic = this.findCharacteristic(codename);
-			characteristic.setValue(value);
+			final Characteristic characteristic = this.findCharacteristic(codename, 
+				value.length() > 0);
+			if (characteristic != null) {
+				characteristic.setValue(value);
+			}
 			this.propertyName.put(codename, value);
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, key, oldValue, value));
 		}
