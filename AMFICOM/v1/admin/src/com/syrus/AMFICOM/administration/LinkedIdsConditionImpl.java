@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.38 2005/12/09 15:04:00 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.39 2005/12/09 15:37:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,11 @@ import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -28,8 +30,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/12/09 15:04:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.39 $, $Date: 2005/12/09 15:37:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -38,12 +40,62 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
 	@SuppressWarnings("unused")
 	private LinkedIdsConditionImpl(final Set<? extends Identifiable> linkedIdentifiables, final Short linkedEntityCode, final Short entityCode) {
-		this.linkedIdentifiables = linkedIdentifiables;
+//		this.linkedIdentifiables = linkedIdentifiables;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
+
+		if (this.entityCode.shortValue() == DOMAIN_CODE && this.linkedEntityCode == DOMAIN_CODE) {
+			final Set<Domain> linkedDomains = new HashSet<Domain>();
+			Set<Identifier> linkedDomainIds = null;
+			for (final Identifiable linkedIdentifiable : linkedIdentifiables) {
+				if (linkedIdentifiable instanceof Domain) {
+					linkedDomains.add((Domain) linkedIdentifiable);
+				} else if (linkedIdentifiable instanceof Identifier) {
+					final Identifier linkedDomainId = (Identifier) linkedIdentifiable;
+					assert linkedDomainId.getMajor() == DOMAIN_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + linkedDomainId.getMajor();
+					if (linkedDomainIds == null) {
+						linkedDomainIds = new HashSet<Identifier>();
+					}
+					linkedDomainIds.add(linkedDomainId);
+				}
+			}
+			if (linkedDomainIds != null && !linkedDomainIds.isEmpty()) {
+				try {
+					final Set<Domain> loadedDomains = StorableObjectPool.getStorableObjects(linkedDomainIds, true);
+					linkedDomains.addAll(loadedDomains);
+				} catch (ApplicationException ae) {
+					Log.errorMessage(ae);
+				}
+			}
+			this.linkedIdentifiables = linkedDomains;
+		} else {
+			this.linkedIdentifiables = linkedIdentifiables;
+		}
+	}
+
+	private boolean checkDomain(final Domain domain) {
+		try {
+			for (final Identifiable linkedIdentifiable : this.linkedIdentifiables) {
+				if (linkedIdentifiable instanceof Domain) {
+					final Domain linkedDomain = (Domain) linkedIdentifiable;
+					if (domain.isChild(linkedDomain)) {
+						return true;
+					}
+				} else {
+					throw new IllegalStateException("Linked entities can be only domains");
+				}
+			}
+		} catch (final ApplicationException ae) {
+			Log.errorMessage(ae);
+		}
+		return false;
 	}
 
 	private boolean checkDomain(final DomainMember domainMember) {
+		if (domainMember instanceof Domain) {
+			throw new IllegalArgumentException("Cannot be used for domains");
+		}
+
 		boolean condition = false;
 		try {
 			final Identifier domainId = domainMember.getDomainId();
@@ -51,8 +103,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				return false;
 			}
 			final Domain dmDomain = StorableObjectPool.getStorableObject(domainId, true);
-			for (final Identifiable identifiable : this.linkedIdentifiables) {
-				final Identifier id = identifiable.getId();
+			for (final Identifiable linkedIdentifiable : this.linkedIdentifiables) {
+				final Identifier id = linkedIdentifiable.getId();
 				if (id.getMajor() == DOMAIN_CODE) {
 					final Domain domain = StorableObjectPool.getStorableObject(id, true);
 					if (dmDomain.equals(domain) || dmDomain.isChild(domain)) {
