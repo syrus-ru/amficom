@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.24 2005/08/28 15:13:36 arseniy Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.25 2005/12/09 11:36:13 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/08/28 15:13:36 $
+ * @version $Revision: 1.25 $, $Date: 2005/12/09 11:36:13 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -30,7 +30,7 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 		assert (columnName != null) : "Column name is null -- maybe entity '"
 				+ ObjectEntities.codeToString(this.getEntityCode()) + " isn't supported";
 
-		return StorableObjectDatabase.idsEnumerationString(this.condition.getLinkedIds(), columnName, true).toString();
+		return StorableObjectDatabase.idsEnumerationString(this.condition.getLinkedIdentifiables(), columnName, true).toString();
 	}
 
 	protected String getLinkedQuery(final String linkedColumnIdName,

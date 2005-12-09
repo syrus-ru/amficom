@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.3 2005/09/22 15:17:02 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.4 2005/12/09 11:36:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,14 +14,13 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifiable;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/22 15:17:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/09 11:36:10 $
  * @author $Author: arseniy $
  * @module resource
  */
@@ -31,8 +30,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	protected static final Short LAYOUT_ITEM_SHORT = new Short(ObjectEntities.LAYOUT_ITEM_CODE);
 
 	@SuppressWarnings("unused")
-	private LinkedIdsConditionImpl(final Set<Identifier> linkedIds, final Short linkedEntityCode, final Short entityCode) {
-		this.linkedIds = linkedIds;
+	private LinkedIdsConditionImpl(final Set<? extends Identifiable> linkedIdentifiables, final Short linkedEntityCode, final Short entityCode) {
+		this.linkedIdentifiables = linkedIdentifiables;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 	}

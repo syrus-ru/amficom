@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.24 2005/10/17 15:25:35 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.25 2005/12/09 11:36:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,22 +22,21 @@ import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifiable;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.24 $
- * @author $Author: max $
+ * @version $Revision: 1.25 $
+ * @author $Author: arseniy $
  * @module map
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	private static final long serialVersionUID = 4853544689882844284L;
 
 	@SuppressWarnings("unused")
-	private LinkedIdsConditionImpl(final Set<Identifier> linkedIds, final Short linkedEntityCode, final Short entityCode) {
-		this.linkedIds = linkedIds;
+	private LinkedIdsConditionImpl(final Set<? extends Identifiable> linkedIdentifiables, final Short linkedEntityCode, final Short entityCode) {
+		this.linkedIdentifiables = linkedIdentifiables;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 	}
@@ -61,8 +60,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					// finding a physical link by endpoint is the same for
 					// topological node and site node
 				case SITENODE_CODE:
-					boolean condition1 = super.conditionTest(physicalLink.getStartNodeId());
-					boolean condition2 = super.conditionTest(physicalLink.getEndNodeId());
+					final boolean condition1 = super.conditionTest(physicalLink.getStartNodeId());
+					final boolean condition2 = super.conditionTest(physicalLink.getEndNodeId());
 					return condition1 | condition2;
 				case PHYSICALLINK_TYPE_CODE:
 					return super.conditionTest(physicalLink.getType().getId());
@@ -79,8 +78,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					// finding a node link by endpoint is the same for
 					// topological node and site node
 				case SITENODE_CODE:
-					boolean condition1 = super.conditionTest(nodeLink.getStartNodeId());
-					boolean condition2 = super.conditionTest(nodeLink.getEndNodeId());
+					final boolean condition1 = super.conditionTest(nodeLink.getStartNodeId());
+					final boolean condition2 = super.conditionTest(nodeLink.getEndNodeId());
 					return condition1 | condition2;
 				default:
 					throw newExceptionLinkedEntityIllegal();

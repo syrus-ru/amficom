@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.14 2005/10/18 12:52:06 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.15 2005/12/09 11:36:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,22 +11,21 @@ package com.syrus.AMFICOM.mapview;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifiable;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.14 $
- * @author $Author: max $
+ * @version $Revision: 1.15 $
+ * @author $Author: arseniy $
  * @module mapview
  */
 final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 	private static final long serialVersionUID = 2623692593535601296L;
 
 	@SuppressWarnings("unused")
-	private LinkedIdsConditionImpl(final Set<Identifier> linkedIds, final Short linkedEntityCode, final Short entityCode) {
-		this.linkedIds = linkedIds;
+	private LinkedIdsConditionImpl(final Set<? extends Identifiable> linkedIdentifiables, final Short linkedEntityCode, final Short entityCode) {
+		this.linkedIdentifiables = linkedIdentifiables;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 	}
@@ -36,7 +35,7 @@ final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCo
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.MAPVIEW_CODE:
-				MapView mapView = (MapView) storableObject;
+				final MapView mapView = (MapView) storableObject;
 				switch (super.linkedEntityCode) {
 				case ObjectEntities.DOMAIN_CODE:
 					return super.conditionTest(mapView.getDomainId());

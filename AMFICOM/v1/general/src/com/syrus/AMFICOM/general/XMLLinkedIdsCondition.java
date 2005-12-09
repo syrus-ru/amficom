@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLLinkedIdsCondition.java,v 1.5 2005/10/31 12:30:18 bass Exp $
+* $Id: XMLLinkedIdsCondition.java,v 1.6 2005/12/09 11:36:13 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/10/31 12:30:18 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/12/09 11:36:13 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general
  */
@@ -119,8 +119,9 @@ extends XMLStorableObjectCondition<LinkedIdsCondition> {
 	protected Set<Identifier> getIdsByCondition(final String field) throws IllegalDataException {
 		final String baseQuery = super.getBaseQuery();
 		Set<Identifier> identifiers = null;
-		for(Identifier id : super.condition.getLinkedIds()) {
-			Set<Identifier> ids = super.getIdsByCondition(baseQuery 
+		for (final Identifiable identifiable : super.condition.getLinkedIdentifiables()) {
+			final Identifier id = identifiable.getId();
+			final Set<Identifier> ids = super.getIdsByCondition(baseQuery 
 					+ '/' 
 					+ field 
 					+ "[text()='" 

@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.36 2005/12/01 13:00:00 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.37 2005/12/09 11:36:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -29,7 +28,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/12/01 13:00:00 $
+ * @version $Revision: 1.37 $, $Date: 2005/12/09 11:36:11 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -38,8 +37,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	private static final long serialVersionUID = -5632280454863134902L;
 
 	@SuppressWarnings("unused")
-	private LinkedIdsConditionImpl(final Set<Identifier> linkedIds, final Short linkedEntityCode, final Short entityCode) {
-		this.linkedIds = linkedIds;
+	private LinkedIdsConditionImpl(final Set<? extends Identifiable> linkedIdentifiables, final Short linkedEntityCode, final Short entityCode) {
+		this.linkedIdentifiables = linkedIdentifiables;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 	}
@@ -48,8 +47,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		boolean condition = false;
 		try {
 			final Domain dmDomain = StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
-			for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
-				final Identifier id = (Identifier) it.next();
+			for (final Identifiable identifiable : this.linkedIdentifiables) {
+				final Identifier id = identifiable.getId();
 				if (id.getMajor() == DOMAIN_CODE) {
 					final Domain domain = StorableObjectPool.getStorableObject(id, true);
 					if (dmDomain.equals(domain) || dmDomain.isChild(domain)) {
@@ -72,8 +71,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				return false;
 			}
 			final Domain dmDomain = StorableObjectPool.getStorableObject(domainId, true);
-			for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
-				final Identifier id = (Identifier) it.next();
+			for (final Identifiable identifiable : this.linkedIdentifiables) {
+				final Identifier id = identifiable.getId();
 				if (id.getMajor() == DOMAIN_CODE) {
 					final Domain domain = StorableObjectPool.getStorableObject(id, true);
 					if (dmDomain.equals(domain) || dmDomain.isChild(domain))

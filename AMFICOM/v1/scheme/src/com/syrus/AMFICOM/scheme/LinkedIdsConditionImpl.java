@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.49 2005/10/31 12:29:54 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.50 2005/12/09 11:36:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,16 +54,16 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/10/31 12:29:54 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.50 $, $Date: 2005/12/09 11:36:13 $
  * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	private static final long serialVersionUID = -7694706898728720012L;
 
 	@SuppressWarnings("unused")
-	private LinkedIdsConditionImpl(final Set<Identifier> linkedIds, final Short linkedEntityCode, final Short entityCode) {
-		this.linkedIds = linkedIds;
+	private LinkedIdsConditionImpl(final Set<? extends Identifiable> linkedIdentifiables, final Short linkedEntityCode, final Short entityCode) {
+		this.linkedIdentifiables = linkedIdentifiables;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 	}
@@ -72,7 +72,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	private boolean checkDomain(final DomainMember domainMember) {
 		try {
 			final Domain dmDomain = StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
-			for (final Identifier id : this.linkedIds) {
+			for (final Identifiable identifiable : this.linkedIdentifiables) {
+				final Identifier id = identifiable.getId();
 				if (id.getMajor() == DOMAIN_CODE
 						&& dmDomain.isChild(StorableObjectPool.<Domain>getStorableObject(id, true))) {
 					return true;
@@ -286,9 +287,9 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					if(pathElement.getKind() != IdlKind.SCHEME_ELEMENT) {
 						return false;
 					}
-					AbstractSchemePort startSchemePort = pathElement.getStartAbstractSchemePort();
+					final AbstractSchemePort startSchemePort = pathElement.getStartAbstractSchemePort();
 					if(startSchemePort != null) {
-						SchemeDevice sd = startSchemePort.getParentSchemeDevice();
+						final SchemeDevice sd = startSchemePort.getParentSchemeDevice();
 						if(sd != null) {
 							if(super.conditionTest(sd.parentSchemeElementId)) {
 								return true;
@@ -296,9 +297,9 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						}
 						
 					}
-					AbstractSchemePort endSchemePort = pathElement.getEndAbstractSchemePort();
+					final AbstractSchemePort endSchemePort = pathElement.getEndAbstractSchemePort();
 					if(endSchemePort != null) {
-						SchemeDevice sd = endSchemePort.getParentSchemeDevice();
+						final SchemeDevice sd = endSchemePort.getParentSchemeDevice();
 						if(sd != null) {
 							if(super.conditionTest(sd.parentSchemeElementId)) {
 								return true;
@@ -310,7 +311,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					if(pathElement.getKind() != IdlKind.SCHEME_ELEMENT) {
 						return false;
 					}
-					AbstractSchemePort endSchemePort2 = pathElement.getEndAbstractSchemePort();
+					final AbstractSchemePort endSchemePort2 = pathElement.getEndAbstractSchemePort();
 					if(endSchemePort2 != null) {
 						if(super.conditionTest(endSchemePort2.measurementPortId)) {
 							return true;
@@ -321,7 +322,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					if(pathElement.getKind() != IdlKind.SCHEME_CABLE_LINK) {
 						return false;
 					}
-					SchemeCableThread schemeCableThread2 = pathElement.getSchemeCableThread();
+					final SchemeCableThread schemeCableThread2 = pathElement.getSchemeCableThread();
 					boolean condition = false;
 					if(schemeCableThread2 != null) {
 						condition = super.conditionTest(schemeCableThread2.parentSchemeCableLinkId);

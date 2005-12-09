@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.2 2005/10/08 13:16:31 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.3 2005/12/09 11:36:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,13 +17,12 @@ import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTEMPLATE_CODE;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifiable;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author $Author: arseniy $
  * @module report
  */
@@ -31,8 +30,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	private static final long serialVersionUID = 4853544689882844284L;
 
 	@SuppressWarnings("unused")
-	private LinkedIdsConditionImpl(final Set<Identifier> linkedIds, final Short linkedEntityCode, final Short entityCode) {
-		this.linkedIds = linkedIds;
+	private LinkedIdsConditionImpl(final Set<? extends Identifiable> linkedIdentifiables, final Short linkedEntityCode, final Short entityCode) {
+		this.linkedIdentifiables = linkedIdentifiables;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 	}

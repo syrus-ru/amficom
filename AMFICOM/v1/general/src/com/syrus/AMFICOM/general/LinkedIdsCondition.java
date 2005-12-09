@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.60 2005/12/06 09:42:52 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.61 2005/12/09 11:36:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -68,8 +67,8 @@ import com.syrus.util.Log;
  * {@link #isNeedMore(Set)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  *
- * @author $Author: bass $
- * @version $Revision: 1.60 $, $Date: 2005/12/06 09:42:52 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.61 $, $Date: 2005/12/09 11:36:13 $
  * @module general
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -96,94 +95,20 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	 * Field is used by descendants only, and never directly.
 	 */
 
-	protected Set<Identifier> linkedIds;
+	protected Set<? extends Identifiable> linkedIdentifiables;
 
 	private LinkedIdsCondition delegate;
 
-	public LinkedIdsCondition(final Identifier identifier, final short entityCode) {
-		this(identifier, new Short(entityCode));
+	public LinkedIdsCondition(final Identifiable identifiable, final short entityCode) {
+		this(identifiable, new Short(entityCode));
 	}
 
-	public LinkedIdsCondition(final Identifier identifier, final Short entityCode) {
-		this(Collections.singleton(identifier), entityCode);
+	public LinkedIdsCondition(final Identifiable identifiable, final Short entityCode) {
+		this(Collections.singleton(identifiable), entityCode);
 	}
 
-	public LinkedIdsCondition(final Set<Identifier> linkedIds, final short entityCode) {
-		this(linkedIds, new Short(entityCode));
-	}
-
-	public LinkedIdsCondition(final IdlLinkedIdsCondition transferable) {
-		final Short code = new Short(transferable.entityCode);
-		short linkedCode = transferable.linkedEntityCode;
-
-		final Set<Identifier> linkIds = new HashSet<Identifier>(transferable.linkedIds.length);
-		for (int i = 0; i < transferable.linkedIds.length; i++) {
-			linkIds.add(new Identifier(transferable.linkedIds[i]));
-		}
-
-		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(code.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl";
-		try {
-			Constructor<?> ctor;
-			ctor = Class.forName(className).getDeclaredConstructor(new Class[] {Set.class, Short.class, Short.class});
-			ctor.setAccessible(true);
-			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] {linkIds, new Short(linkedCode), code});
-		} catch (ClassNotFoundException cnfe) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className
-					+ " not found on the classpath"
-					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
-		} catch (ClassCastException cce) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
-					+ className + " doesn't inherit from "
-					+ LinkedIdsCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Level.WARNING);
-		} catch (NoSuchMethodException nsme) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
-					+ className + " doesn't have the constructor expected"
-					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
-		} catch (InstantiationException ie) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
-					+ className + " is abstract"
-					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
-		} catch (InvocationTargetException ite) {
-			final Throwable cause = ite.getCause();
-			if (cause instanceof AssertionError) {
-				final String message = cause.getMessage();
-				if (message == null)
-					assert false;
-				else
-					assert false : message;
-			} else
-				Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
-						+ "constructor throws an exception in class "
-						+ className + CREATING_A_DUMMY_CONDITION, Level.WARNING);
-		} catch (IllegalAccessException iae) {
-			/*
-			 * Never.
-			 */
-			Log.debugMessage(iae, Level.SEVERE);
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
-					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
-		} catch (IllegalArgumentException iae) {
-			/*
-			 * Never.
-			 */
-			Log.debugMessage(iae, Level.SEVERE);
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
-					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
-		} catch (SecurityException se) {
-			/*
-			 * Never.
-			 */
-			Log.debugMessage(se, Level.SEVERE);
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
-					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
-		} finally {
-			if (this.delegate == null) {
-				this.delegate = createDummyCondition();
-				this.delegate.entityCode = code;
-				this.delegate.linkedEntityCode = linkedCode;
-				this.delegate.linkedIds = linkIds;
-			}
-		}
+	public LinkedIdsCondition(final Set<? extends Identifiable> linkedIdentifiables, final short entityCode) {
+		this(linkedIdentifiables, new Short(entityCode));
 	}
 
 	/**
@@ -193,71 +118,129 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		// Empty constructor used by descendants only.
 	}
 
-	private LinkedIdsCondition(final Set<Identifier> linkedIds, final Short entityCode) {
-		final short linkedCode = StorableObject.getEntityCodeOfIdentifiables(linkedIds);
+	private LinkedIdsCondition(final Set<? extends Identifiable> linkedIdentifiables, final Short entityCode) {
+		final short linkedCode = StorableObject.getEntityCodeOfIdentifiables(linkedIdentifiables);
 
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl";
 		try {
-			Constructor<?> ctor;
-			ctor = Class.forName(className).getDeclaredConstructor(new Class[] {Set.class, Short.class, Short.class});
+			final Constructor<?> ctor = Class.forName(className).getDeclaredConstructor(new Class[] {Set.class, Short.class, Short.class});
 			ctor.setAccessible(true);
-			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] {linkedIds, new Short(linkedCode), entityCode});
+			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] {linkedIdentifiables, new Short(linkedCode), entityCode});
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className
-					+ " not found on the classpath"
-					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
+					+ " not found on the classpath" + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (ClassCastException cce) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
-					+ className + " doesn't inherit from "
-					+ LinkedIdsCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Level.WARNING);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " + className
+					+ " doesn't inherit from " + LinkedIdsCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (NoSuchMethodException nsme) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
-					+ className + " doesn't have the constructor expected"
-					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " + className
+					+ " doesn't have the constructor expected" + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InstantiationException ie) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
-					+ className + " is abstract"
-					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " + className
+					+ " is abstract" + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InvocationTargetException ite) {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
-				if (message == null)
+				if (message == null) {
 					assert false;
-				else
+				} else {
 					assert false : message;
-			} else
+				}
+			} else {
 				Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
-						+ "constructor throws an exception in class "
-						+ className
-						+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
+						+ "constructor throws an exception in class " + className + CREATING_A_DUMMY_CONDITION, Level.WARNING);
+			}
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
 			 */
 			Log.debugMessage(iae, Level.SEVERE);
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
-					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException" + CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
 			Log.debugMessage(iae, Level.SEVERE);
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
-					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException" + CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
 			Log.debugMessage(se, Level.SEVERE);
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
-					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException" + CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} finally {
 			if (this.delegate == null) {
 				this.delegate = createDummyCondition();
 				this.delegate.entityCode = entityCode;
 				this.delegate.linkedEntityCode = linkedCode;
-				this.delegate.linkedIds = linkedIds;
+				this.delegate.linkedIdentifiables = linkedIdentifiables;
+			}
+		}
+	}
+
+	public LinkedIdsCondition(final IdlLinkedIdsCondition transferable) {
+		final Short code = new Short(transferable.entityCode);
+		short linkedCode = transferable.linkedEntityCode;
+
+		final Set<Identifiable> lnkIdentifiables = new HashSet<Identifiable>(transferable.linkedIds.length);
+		for (int i = 0; i < transferable.linkedIds.length; i++) {
+			lnkIdentifiables.add(new Identifier(transferable.linkedIds[i]));
+		}
+
+		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(code.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl";
+		try {
+			final Constructor<?> ctor = Class.forName(className).getDeclaredConstructor(new Class[] {Set.class, Short.class, Short.class});
+			ctor.setAccessible(true);
+			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] {lnkIdentifiables, new Short(linkedCode), code});
+		} catch (ClassNotFoundException cnfe) {
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className
+					+ " not found on the classpath" + CREATING_A_DUMMY_CONDITION, Level.WARNING);
+		} catch (ClassCastException cce) {
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " + className
+					+ " doesn't inherit from " + LinkedIdsCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Level.WARNING);
+		} catch (NoSuchMethodException nsme) {
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " + className
+					+ " doesn't have the constructor expected" + CREATING_A_DUMMY_CONDITION, Level.WARNING);
+		} catch (InstantiationException ie) {
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " + className
+					+ " is abstract" + CREATING_A_DUMMY_CONDITION, Level.WARNING);
+		} catch (InvocationTargetException ite) {
+			final Throwable cause = ite.getCause();
+			if (cause instanceof AssertionError) {
+				final String message = cause.getMessage();
+				if (message == null) {
+					assert false;
+				} else {
+					assert false : message;
+				}
+			} else
+				Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
+						+ "constructor throws an exception in class " + className + CREATING_A_DUMMY_CONDITION, Level.WARNING);
+		} catch (IllegalAccessException iae) {
+			/*
+			 * Never.
+			 */
+			Log.debugMessage(iae, Level.SEVERE);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException" + CREATING_A_DUMMY_CONDITION, Level.SEVERE);
+		} catch (IllegalArgumentException iae) {
+			/*
+			 * Never.
+			 */
+			Log.debugMessage(iae, Level.SEVERE);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException" + CREATING_A_DUMMY_CONDITION, Level.SEVERE);
+		} catch (SecurityException se) {
+			/*
+			 * Never.
+			 */
+			Log.debugMessage(se, Level.SEVERE);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException" + CREATING_A_DUMMY_CONDITION, Level.SEVERE);
+		} finally {
+			if (this.delegate == null) {
+				this.delegate = createDummyCondition();
+				this.delegate.entityCode = code;
+				this.delegate.linkedEntityCode = linkedCode;
+				this.delegate.linkedIdentifiables = lnkIdentifiables;
 			}
 		}
 	}
@@ -283,10 +266,11 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	}
 
 	public final IdlStorableObjectCondition getIdlTransferable() {
-		IdlIdentifier[] linkedIdTransferable = new IdlIdentifier[this.delegate.linkedIds.size()];
+		final IdlIdentifier[] linkedIdTransferable = new IdlIdentifier[this.delegate.linkedIdentifiables.size()];
 		int i = 0;
-		for (Iterator<Identifier> it = this.delegate.linkedIds.iterator(); it.hasNext(); i++)
-			linkedIdTransferable[i] = it.next().getIdlTransferable();
+		for (final Identifiable linkedIdentifiable : this.delegate.linkedIdentifiables) {
+			linkedIdTransferable[i++] = linkedIdentifiable.getId().getIdlTransferable();
+		}
 
 		final IdlLinkedIdsCondition transferable = new IdlLinkedIdsCondition(this.delegate.entityCode.shortValue(),
 				this.delegate.linkedEntityCode,
@@ -353,20 +337,21 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this.delegate.setEntityCode(entityCode);
 	}
 
-	public final void setLinkedIds(final Set<Identifier> linkedIds) {
-		this.delegate.linkedEntityCode = StorableObject.getEntityCodeOfIdentifiables(linkedIds);
-		this.delegate.linkedIds = linkedIds;
+	public final void setLinkedIdentifiables(final Set<? extends Identifiable> linkedIdentifiables) {
+		this.delegate.linkedEntityCode = StorableObject.getEntityCodeOfIdentifiables(linkedIdentifiables);
+		this.delegate.linkedIdentifiables = linkedIdentifiables;
 	}
 
-	public final Set<Identifier> getLinkedIds() {
-		return this.delegate.linkedIds;
+	public final Set<? extends Identifiable> getLinkedIdentifiables() {
+		return this.delegate.linkedIdentifiables;
 	}
 
-	public final void setLinkedId(final Identifier linkedId) {
-		this.setLinkedIds(Collections.singleton(linkedId));
+	public final void setLinkedIdentifiable(final Identifiable linkedIdentifiable) {
+		this.setLinkedIdentifiables(Collections.singleton(linkedIdentifiable));
 	}
 
-	protected final Map<Short, Set<Identifier>> sort(Set<Identifier> linkIds) {
+	@Deprecated
+	protected final Map<Short, Set<Identifier>> sort(final Set<Identifier> linkIds) {
 		final Map<Short, Set<Identifier>> codeIdsMap = new HashMap<Short, Set<Identifier>>();
 		for (final Identifier id : linkIds) {
 			final short code = id.getMajor();
@@ -384,17 +369,21 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		assert identifiables != null : ErrorMessages.NON_NULL_EXPECTED;
 		for (final Identifiable identifiable : identifiables) {
 			final Identifier id = identifiable.getId();
-			for (final Identifier linkedId : this.linkedIds) {
-				if (id.equals(linkedId))
+			for (final Identifiable linkedIdentifiable : this.linkedIdentifiables) {
+				final Identifier linkedId = linkedIdentifiable.getId();
+				if (id.equals(linkedId)) {
 					return true;
+				}
 			}
 		}
 		return false;
 	}
 
-	protected final boolean conditionTest(final Identifier id) {
-		if (id != null) {
-			for (final Identifier linkedId : this.linkedIds) {
+	protected final boolean conditionTest(final Identifiable identifiable) {
+		if (identifiable != null) {
+			final Identifier id = identifiable.getId();
+			for (final Identifiable linkedIdentifiable : this.linkedIdentifiables) {
+				final Identifier linkedId = linkedIdentifiable.getId();
 				if (id.equals(linkedId)) {
 					return true;
 				}
@@ -423,7 +412,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		buffer.append(", all ");
 		buffer.append(ObjectEntities.codeToString(this.delegate.entityCode));
 		buffer.append(" for linked ids ");
-		buffer.append(Identifier.createStrings(this.delegate.linkedIds));
+		buffer.append(Identifier.createStrings(this.delegate.linkedIdentifiables));
 		return buffer.toString();
 	}
 }

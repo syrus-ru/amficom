@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.35 2005/10/31 12:29:56 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.36 2005/12/09 11:36:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.Domain;
@@ -31,16 +30,16 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/10/31 12:29:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/12/09 11:36:12 $
+ * @author $Author: arseniy $
  * @module config
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	private static final long serialVersionUID = 310220981399135743L;
 
 	@SuppressWarnings("unused")
-	private LinkedIdsConditionImpl(final Set<Identifier> linkedIds, final Short linkedEntityCode, final Short entityCode) {
-		this.linkedIds = linkedIds;
+	private LinkedIdsConditionImpl(final Set<? extends Identifiable> linkedIdentifiables, final Short linkedEntityCode, final Short entityCode) {
+		this.linkedIdentifiables = linkedIdentifiables;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 	}
@@ -49,8 +48,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		boolean condition = false;
 		try {
 			final Domain dmDomain = (Domain) StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
-			for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
-				final Identifier id = (Identifier) it.next();
+			for (final Identifiable identifiable : this.linkedIdentifiables) {
+				final Identifier id = identifiable.getId();
 				if (id.getMajor() == DOMAIN_CODE) {
 					final Domain domain = (Domain) StorableObjectPool.getStorableObject(id, true);
 					if (dmDomain.isChild(domain)) {
@@ -69,7 +68,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
 			case CABLETHREAD_TYPE_CODE:
-				CableThreadType cableThreadType = (CableThreadType) storableObject;
+				final CableThreadType cableThreadType = (CableThreadType) storableObject;
 				switch (this.linkedEntityCode) {
 					case CABLELINK_TYPE_CODE:
 						condition = super.conditionTest(cableThreadType.getCableLinkType().getId());
@@ -81,7 +80,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				}
 				break;
 			case EQUIPMENT_CODE:
-				Equipment equipment = (Equipment) storableObject;
+				final Equipment equipment = (Equipment) storableObject;
 				switch (this.linkedEntityCode) {
 					case DOMAIN_CODE:
 						condition = this.checkDomain(equipment);
@@ -93,7 +92,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				}
 				break;
 			case TRANSMISSIONPATH_CODE:
-				TransmissionPath transmissionPath = (TransmissionPath) storableObject;
+				final TransmissionPath transmissionPath = (TransmissionPath) storableObject;
 				switch (this.linkedEntityCode) {
 					case PORT_CODE:
 						final boolean precondition1 = super.conditionTest(transmissionPath.getStartPortId());
@@ -111,14 +110,14 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				}
 				break;
 			case PORT_CODE:
-				Port port = (Port) storableObject;
+				final Port port = (Port) storableObject;
 				switch (this.linkedEntityCode) {
 					case EQUIPMENT_CODE:
 						condition = super.conditionTest(port.getEquipmentId());
 						break;
 					case DOMAIN_CODE:
 						try {
-							Equipment equipment1 = (Equipment) StorableObjectPool.getStorableObject(port.getEquipmentId(), true);
+							final Equipment equipment1 = (Equipment) StorableObjectPool.getStorableObject(port.getEquipmentId(), true);
 							condition = this.checkDomain(equipment1);
 						} catch (ApplicationException ae) {
 							Log.errorMessage(ae);

@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.69 2005/12/01 13:54:26 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.70 2005/12/09 11:36:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
@@ -18,11 +17,11 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.Domain;
@@ -38,7 +37,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/12/01 13:54:26 $
+ * @version $Revision: 1.70 $, $Date: 2005/12/09 11:36:13 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -47,8 +46,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	private static final long serialVersionUID = 7761036306511084255L;
 
 	@SuppressWarnings("unused")
-	private LinkedIdsConditionImpl(final Set<Identifier> linkedIds, final Short linkedEntityCode, final Short entityCode) {
-		this.linkedIds = linkedIds;
+	private LinkedIdsConditionImpl(final Set<? extends Identifiable> linkedIdentifiables, final Short linkedEntityCode, final Short entityCode) {
+		this.linkedIdentifiables = linkedIdentifiables;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 	}
@@ -57,8 +56,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		boolean condition = false;
 		try {
 			final Domain dmDomain = (Domain) StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
-			for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
-				final Identifier id = (Identifier) it.next();
+			for (final Identifiable identifiable : this.linkedIdentifiables) {
+				final Identifier id = identifiable.getId();
 				if (id.getMajor() == ObjectEntities.DOMAIN_CODE) {
 					final Domain domain = (Domain) StorableObjectPool.getStorableObject(id, true);
 					if (dmDomain.equals(domain) || dmDomain.isChild(domain)) {
@@ -142,7 +141,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				final MeasurementSetup measurementSetup = (MeasurementSetup) storableObject;
 				switch (this.linkedEntityCode) {
 					case MONITOREDELEMENT_CODE:
-						Set<Identifier> params = new HashSet<Identifier>();
+						final Set<Identifier> params = new HashSet<Identifier>();
 						params.addAll(measurementSetup.getMonitoredElementIds());
 						condition = super.conditionTest(params);
 						break;
@@ -289,7 +288,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case MEASUREMENT_CODE:
 				switch (this.linkedEntityCode) {
 					case TEST_CODE:
-						return needMoreMeasurementsForTests(this.linkedIds, identifiables);
+						return needMoreMeasurementsForTests(this.linkedIdentifiables, identifiables);
 					default:
 						return true;
 				}
@@ -298,17 +297,21 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		}
 	}
 
-	private static boolean needMoreMeasurementsForTests(final Set<Identifier> testIds,
+	private static boolean needMoreMeasurementsForTests(final Set<? extends Identifiable> testIdentifiables,
 			final Set<? extends Identifiable> measurementIdentifiables) {
-		for (final Identifier testId : testIds) {
+		for (final Identifiable testIdentifiable : testIdentifiables) {
 			Test test = null;
-			try {
-				test = StorableObjectPool.getStorableObject(testId, false);
-			} catch (ApplicationException ae) {
-				Log.errorMessage(ae);
-			}
-			if (test == null) {
-				return true;
+			if (testIdentifiable instanceof Test) {
+				test = (Test) testIdentifiable;
+			} else if (testIdentifiable instanceof Identifier) {
+				try {
+					test = StorableObjectPool.getStorableObject((Identifier) testIdentifiable, false);
+				} catch (ApplicationException ae) {
+					Log.errorMessage(ae);
+				}
+				if (test == null) {
+					return true;
+				}
 			}
 
 			int numberOfTestMeasurements = 0;
@@ -329,7 +332,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					continue;
 				}
 
-				if (measurement.getTestId().equals(testId)) {
+				if (measurement.getTestId().equals(test.getId())) {
 					numberOfTestMeasurements++;
 				}
 			}
