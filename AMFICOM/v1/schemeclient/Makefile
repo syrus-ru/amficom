@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.18 2005/10/22 16:01:06 arseniy Exp $
+# $Id: Makefile,v 1.19 2005/12/09 09:19:42 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -31,7 +31,7 @@ filterclient \
 reportclient \
 mapclient
 
-XMLCLASSPATH := $(LIBDIR)/configurationxml.jar:$(LIBDIR)/schemexml.jar
+XMLCLASSPATH := $(LIBDIR)/generalxml.jar:$(LIBDIR)/configurationxml.jar:$(LIBDIR)/schemexml.jar
 EXTCLASSPATH := $(EXTLIBDIR)/jgraphpad.jar
 
 SOURCES := $(shell find $(SRCDIR) -name '*.java')
