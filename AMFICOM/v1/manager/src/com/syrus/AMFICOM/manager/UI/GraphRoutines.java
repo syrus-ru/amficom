@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphRoutines.java,v 1.11 2005/12/07 15:40:36 bob Exp $
+* $Id: GraphRoutines.java,v 1.12 2005/12/09 12:18:56 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/12/07 15:40:36 $
+ * @version $Revision: 1.12 $, $Date: 2005/12/09 12:18:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -918,9 +918,12 @@ public final class GraphRoutines {
 	}
 	
 	public Set<ManagerGraphCell> getDefaultGraphCells(final AbstractBean bean) {
+		return this.getDefaultGraphCells(bean.getId());
+	}
+	
+	public Set<ManagerGraphCell> getDefaultGraphCells(final String beanId) {
 		final GraphModel model = this.graph.getModel();
 		final Set<ManagerGraphCell> set = new HashSet<ManagerGraphCell>(); 
-		final String beanId = bean.getId();
 		for(int i = 0; i < model.getRootCount(); i++) {
 			final DefaultGraphCell cell = (DefaultGraphCell) model.getRootAt(i);
 			if (!model.isEdge(cell) && !model.isPort(cell)) {
