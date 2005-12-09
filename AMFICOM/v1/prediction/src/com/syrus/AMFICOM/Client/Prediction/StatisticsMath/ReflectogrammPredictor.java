@@ -1,7 +1,8 @@
 package com.syrus.AMFICOM.Client.Prediction.StatisticsMath;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 
 public class ReflectogrammPredictor
 {
