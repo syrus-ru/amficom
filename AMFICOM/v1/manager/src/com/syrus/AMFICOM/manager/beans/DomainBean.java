@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.3 2005/12/08 16:05:17 bob Exp $
+ * $Id: DomainBean.java,v 1.4 2005/12/09 12:19:51 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,8 @@ import static com.syrus.AMFICOM.manager.beans.DomainBeanWrapper.KEY_NAME;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Set;
+
+import org.jgraph.graph.GraphModel;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainMember;
@@ -28,13 +30,15 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.manager.UI.GraphRoutines;
 import com.syrus.AMFICOM.manager.graph.MPort;
+import com.syrus.AMFICOM.manager.graph.ManagerGraphCell;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/08 16:05:17 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/09 12:19:51 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -95,35 +99,44 @@ public final class DomainBean extends Bean {
 	public void dispose() throws ApplicationException {
 		assert Log.debugMessage("DomainBean.dispose | " + this.identifier, Log.DEBUGLEVEL03);
 		
-		final CompoundCondition compoundCondition = 
-			new CompoundCondition(new TypicalCondition(
-				this.getId(), 
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.LAYOUT_ITEM_CODE,
-				LayoutItemWrapper.COLUMN_LAYOUT_NAME),
-				CompoundConditionSort.AND,
-				new LinkedIdsCondition(
-					LoginManager.getUserId(),
-					ObjectEntities.LAYOUT_ITEM_CODE) {
-					@Override
-					public boolean isNeedMore(Set< ? extends Identifiable> storableObjects) {
-						return storableObjects.isEmpty();
-					}
-				});
+//		final CompoundCondition compoundCondition = 
+//			new CompoundCondition(new TypicalCondition(
+//				this.getId(), 
+//				OperationSort.OPERATION_EQUALS,
+//				ObjectEntities.LAYOUT_ITEM_CODE,
+//				LayoutItemWrapper.COLUMN_LAYOUT_NAME),
+//				CompoundConditionSort.AND,
+//				new LinkedIdsCondition(
+//					LoginManager.getUserId(),
+//					ObjectEntities.LAYOUT_ITEM_CODE) {
+//					@Override
+//					public boolean isNeedMore(Set< ? extends Identifiable> storableObjects) {
+//						return storableObjects.isEmpty();
+//					}
+//				});
+//		
+//		final Set<LayoutItem> layoutItems = 
+//			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);	
+//		
+//		for(final LayoutItem layoutItem : layoutItems) {
+//			StorableObjectPool.delete(layoutItem.getCharacteristics(false));
+//		}
+//		
+//		StorableObjectPool.delete(layoutItems);
+//		
+//		this.disposeDomainMember(ObjectEntities.KIS_CODE);
+//		this.disposeDomainMember(ObjectEntities.SERVER_CODE);
+//		this.disposeDomainMember(ObjectEntities.MCM_CODE);		
+//		this.disposeUsers();
 		
-		final Set<LayoutItem> layoutItems = 
-			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);	
-		
-		for(final LayoutItem layoutItem : layoutItems) {
-			StorableObjectPool.delete(layoutItem.getCharacteristics(false));
+		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
+		final Set<ManagerGraphCell> netDomainCells = 
+			graphRoutines.getDefaultGraphCells(NetBeanFactory.NET_CODENAME + this.id);
+		final GraphModel model = this.managerMainFrame.getGraph().getModel();
+		for (final ManagerGraphCell cell : netDomainCells) {
+			assert Log.debugMessage(cell, Log.DEBUGLEVEL03);			
 		}
-		
-		StorableObjectPool.delete(layoutItems);
-		
-		this.disposeDomainMember(ObjectEntities.KIS_CODE);
-		this.disposeDomainMember(ObjectEntities.SERVER_CODE);
-		this.disposeDomainMember(ObjectEntities.MCM_CODE);		
-		this.disposeUsers();
+		model.remove(netDomainCells.toArray());
 		
 		StorableObjectPool.delete(this.identifier);		
 		
