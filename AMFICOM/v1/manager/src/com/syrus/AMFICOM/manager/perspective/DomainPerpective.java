@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.8 2005/12/08 13:21:09 bob Exp $
+* $Id: DomainPerpective.java,v 1.9 2005/12/09 16:13:46 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -54,7 +55,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/12/08 13:21:09 $
+ * @version $Revision: 1.9 $, $Date: 2005/12/09 16:13:46 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -421,7 +422,39 @@ public final class DomainPerpective extends AbstractPerspective {
 			}
 		}
 		
-		this.domainNetworkItem = domainNetLayoutItemMap.get(domainId);
+		
+		// XXX bug due to cuncurrentmodification at lru map during search
+		final Set<Domain> domains = 
+			StorableObjectPool.getStorableObjectsByCondition(
+//				new LinkedIdsCondition(domainId, ObjectEntities.DOMAIN_CODE),
+				new EquivalentCondition(ObjectEntities.DOMAIN_CODE),
+				true);
+		
+//		 create domain networks accorning to exist mcms
+		for (final Domain domain : domains) {
+			final Identifier domainId2 = domain.getDomainId();
+			if (domainId2.equals(domainId)) {				
+				final LayoutItem domainNetworkItem2 = 
+					this.getDomainNetworkItem(domainNetLayoutItemMap, 
+						currentUserCondition, 
+						layoutCondition, 
+						domain.getId());
+				assert Log.debugMessage("Get network item " 
+						+ domainNetworkItem2 
+						+ " for " 
+						+ domain, 
+						Log.DEBUGLEVEL10);
+			}
+		}
+		
+		this.domainNetworkItem = domainNetLayoutItemMap.get(domainId);		
+		// create network if domain is empty 
+		if (this.domainNetworkItem == null) {
+			this.domainNetworkItem = this.getDomainNetworkItem(domainNetLayoutItemMap, 
+				currentUserCondition, 
+				layoutCondition, 
+				domainId);
+		}
 	}
 	
 	public SystemUserPerpective getSystemUserPerspective(final UserBean userBean) {
@@ -466,7 +499,7 @@ public final class DomainPerpective extends AbstractPerspective {
 	}
 	
 	public void addUserPerspective(final UserBean userBean) throws ApplicationException {
-		SystemUserPerpective systemUserPerpective = 
+		final SystemUserPerpective systemUserPerpective = 
 			this.getSystemUserPerspective(userBean);
 		this.addSubPerspective(systemUserPerpective);		
 		this.managerMainFrame.putPerspective(systemUserPerpective);
