@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.70 2005/10/12 10:03:31 bass Exp $
+# $Id: Makefile,v 1.71 2005/12/09 10:00:02 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -46,8 +46,7 @@ EXTCLASSPATH := $(TROVE4JCLASSPATH)
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
 
-SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mcm/*.java) \
-	$(SRCDIR)/com/syrus/util/KISConnectionLRUMap.java
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mcm/*.java)
 
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)

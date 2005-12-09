@@ -1,5 +1,5 @@
 /*-
- * $Id: KISConnectionManager.java,v 1.13 2005/10/31 10:47:23 arseniy Exp $
+ * $Id: KISConnectionManager.java,v 1.14 2005/12/09 10:00:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,33 +8,28 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import com.syrus.AMFICOM.general.Identifier;
-
-import com.syrus.util.KISConnectionLRUMap;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.KIS;
-import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
+import com.syrus.util.LRUMap;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/31 10:47:23 $
+ * @version $Revision: 1.14 $, $Date: 2005/12/09 10:00:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
-final class KISConnectionManager/* extends SleepButWorkThread*/ {
-
-	/**
-	 * KISConnectionLRUMap <Identifier kisId, KISConnection kisConnection>
-	 */
-	private KISConnectionLRUMap kisConnections;
+final class KISConnectionManager {
+	private LRUMap<Identifier, KISConnection> kisConnections;
 
 	public KISConnectionManager() {
-//		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_TICK_TIME, MeasurementControlModule.KIS_TICK_TIME) * 1000,
-//				ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_MAX_FALLS, MeasurementControlModule.KIS_MAX_FALLS));
-
-		this.kisConnections = new KISConnectionLRUMap(ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_MAX_OPENED_CONNECTIONS,
-				MeasurementControlModule.KIS_MAX_OPENED_CONNECTIONS));
+		final int maxOpenedConnections = ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_MAX_OPENED_CONNECTIONS,
+				MeasurementControlModule.KIS_MAX_OPENED_CONNECTIONS);
+		final long connectionTimeToRetain = ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_CONNECTION_TIMEOUT,
+				MeasurementControlModule.KIS_CONNECTION_TIMEOUT) * 1000 * 1000 * 1000;
+		this.kisConnections = new LRUMap<Identifier, KISConnection>(maxOpenedConnections, connectionTimeToRetain);
 	}
 
 	KISConnection getConnection(final KIS kis) throws CommunicationException {
@@ -61,12 +56,4 @@ final class KISConnectionManager/* extends SleepButWorkThread*/ {
 		return kisConnection;
 	}
 
-//	protected void processFall() {
-//		switch (super.fallCode) {
-//		case FALL_CODE_NO_ERROR:
-//			break;
-//		default:
-//			Log.errorMessage("Unknown error code: " + super.fallCode);
-//		}
-//	}
 }

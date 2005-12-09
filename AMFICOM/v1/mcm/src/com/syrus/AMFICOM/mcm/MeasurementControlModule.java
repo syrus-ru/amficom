@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.144 2005/11/28 12:35:30 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.145 2005/12/09 10:00:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.144 $, $Date: 2005/11/28 12:35:30 $
+ * @version $Revision: 1.145 $, $Date: 2005/12/09 10:00:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -263,7 +263,6 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 	private static void activateKISConnectionManager() {
 		kisConnectionManager = new KISConnectionManager();
-//		kisConnectionManager.start();
 	}
 
 	private static void activateKISTransceivers() {

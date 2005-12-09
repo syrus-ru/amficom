@@ -1,5 +1,5 @@
 /*-
- * $Id: TCPKISConnection.java,v 1.25 2005/10/31 10:47:23 arseniy Exp $
+ * $Id: TCPKISConnection.java,v 1.26 2005/12/09 10:00:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/10/31 10:47:23 $
+ * @version $Revision: 1.26 $, $Date: 2005/12/09 10:00:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -138,6 +138,14 @@ final class TCPKISConnection implements KISConnection {
 
 	public Identifier getKISId() {
 		return this.kisId;
+	}
+
+	/**
+	 * Retain in LRUMap if this connection is established.
+	 * @see {@link com.syrus.util.LRUMap.Retainable#retain()}.
+	 */
+	public boolean retain() {
+		return this.isEstablished();
 	}
 
 	/**
