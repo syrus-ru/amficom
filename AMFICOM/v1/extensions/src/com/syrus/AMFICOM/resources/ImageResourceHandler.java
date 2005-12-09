@@ -1,5 +1,5 @@
 /*-
-* $Id: ImageResourceHandler.java,v 1.3 2005/12/07 14:06:05 bob Exp $
+* $Id: ImageResourceHandler.java,v 1.4 2005/12/09 16:17:31 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,10 +16,11 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.extensions.resources.Image;
+import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/07 14:06:05 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/09 16:17:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module extensions
@@ -37,7 +38,12 @@ public class ImageResourceHandler implements ConcreateResourceHandler<Image> {
 		final int height = useSize ? image.getSize().getHeight() : -1;
 		
 		if (useSize) {
-			System.out.println(id + " required for scaling to : " + width + "x" + height);
+			assert Log.debugMessage(id 
+					+ " required for scaling to : " 
+					+ width 
+					+ 'x' 
+					+ height, 
+				Log.DEBUGLEVEL08);
 		}
 		
 		if (resource != null) {
