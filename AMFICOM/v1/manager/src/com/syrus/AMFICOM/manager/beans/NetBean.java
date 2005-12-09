@@ -1,5 +1,5 @@
 /*-
-* $Id: NetBean.java,v 1.3 2005/12/08 16:05:58 bob Exp $
+* $Id: NetBean.java,v 1.4 2005/12/09 12:19:30 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,11 +10,11 @@ package com.syrus.AMFICOM.manager.beans;
 
 import static com.syrus.AMFICOM.manager.beans.NetBeanFactory.NET_CODENAME;
 
+import java.util.Collections;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/08 16:05:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/09 12:19:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -55,19 +55,22 @@ public class NetBean extends NonStorableBean {
 				true, 
 				true);
 		
-		final LinkedIdsCondition linkedIdsCondition = 
-			new LinkedIdsCondition(Identifier.createIdentifiers(beanLayoutItems),
-				ObjectEntities.LAYOUT_ITEM_CODE);
-		
-		final Set<LayoutItem> beanChildrenLayoutItems =  
-			StorableObjectPool.getStorableObjectsByCondition(
-				linkedIdsCondition, 
-				true, 
-				true);
-
-		assert Log.debugMessage(beanChildrenLayoutItems, Log.DEBUGLEVEL03);
-		
-		return beanChildrenLayoutItems; 
+		if (!beanLayoutItems.isEmpty()) {
+			final LinkedIdsCondition linkedIdsCondition = 
+				new LinkedIdsCondition(beanLayoutItems,
+					ObjectEntities.LAYOUT_ITEM_CODE);
+			
+			final Set<LayoutItem> beanChildrenLayoutItems =  
+				StorableObjectPool.getStorableObjectsByCondition(
+					linkedIdsCondition, 
+					true, 
+					true);
+	
+			assert Log.debugMessage(beanChildrenLayoutItems, Log.DEBUGLEVEL03);
+			
+			return beanChildrenLayoutItems; 
+		}
+		return Collections.emptySet();
 	}
 	
 	@Override
