@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.39 2005/12/09 15:37:16 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.40 2005/12/09 15:38:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/12/09 15:37:16 $
+ * @version $Revision: 1.40 $, $Date: 2005/12/09 15:38:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -40,7 +40,6 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
 	@SuppressWarnings("unused")
 	private LinkedIdsConditionImpl(final Set<? extends Identifiable> linkedIdentifiables, final Short linkedEntityCode, final Short entityCode) {
-//		this.linkedIdentifiables = linkedIdentifiables;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 
@@ -57,6 +56,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						linkedDomainIds = new HashSet<Identifier>();
 					}
 					linkedDomainIds.add(linkedDomainId);
+				} else {
+					throw new IllegalArgumentException("Linked identifiables can only be Domains or Identifiers of Domains");
 				}
 			}
 			if (linkedDomainIds != null && !linkedDomainIds.isEmpty()) {
