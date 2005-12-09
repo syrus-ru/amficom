@@ -1,5 +1,5 @@
 /*
- * $Id: AllClientPoolContext.java,v 1.2 2005/12/08 15:31:06 arseniy Exp $
+ * $Id: AllClientPoolContext.java,v 1.3 2005/12/09 14:49:47 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/08 15:31:06 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/09 14:49:47 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -36,7 +36,7 @@ final class AllClientPoolContext extends ClientPoolContext {
 		final long resourcePoolTimeToLive = ApplicationProperties.getInt(KEY_RESOURCE_POOL_TIME_TO_LIVE, RESOURCE_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
 		final long mapPoolTimeToLive = ApplicationProperties.getInt(KEY_MAP_POOL_TIME_TO_LIVE, MAP_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
 		final long schemePoolTimeToLive = ApplicationProperties.getInt(KEY_SCHEME_POOL_TIME_TO_LIVE, SCHEME_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
-		final long mapViewPoolTimeToLive = ApplicationProperties.getInt(KEY_MAPVIEW_POOL_TIME_TO_LIVE, MAP_VIEW_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+		final long mapViewPoolTimeToLive = ApplicationProperties.getInt(KEY_MAPVIEW_POOL_TIME_TO_LIVE, MAPVIEW_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
 
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.EVENT_GROUP_CODE, eventPoolSize, eventPoolTimeToLive);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.RESOURCE_GROUP_CODE, resourcePoolSize, resourcePoolTimeToLive);

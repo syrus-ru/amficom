@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerPoolContext.java,v 1.11 2005/12/08 15:31:29 arseniy Exp $
+ * $Id: MscharServerPoolContext.java,v 1.12 2005/12/09 14:49:47 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.LRUMapSaver;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/12/08 15:31:29 $
+ * @version $Revision: 1.12 $, $Date: 2005/12/09 14:49:47 $
  * @module mscharserver
  */
 final class MscharServerPoolContext extends PoolContext {
@@ -46,7 +46,7 @@ final class MscharServerPoolContext extends PoolContext {
 		final long resourcePoolTimeToLive = ApplicationProperties.getInt(KEY_RESOURCE_POOL_TIME_TO_LIVE, RESOURCE_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
 		final long mapPoolTimeToLive = ApplicationProperties.getInt(KEY_MAP_POOL_TIME_TO_LIVE, MAP_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
 		final long schemePoolTimeToLive = ApplicationProperties.getInt(KEY_SCHEME_POOL_TIME_TO_LIVE, SCHEME_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
-		final long mapViewPoolTimeToLive = ApplicationProperties.getInt(KEY_MAPVIEW_POOL_TIME_TO_LIVE, MAP_VIEW_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
+		final long mapViewPoolTimeToLive = ApplicationProperties.getInt(KEY_MAPVIEW_POOL_TIME_TO_LIVE, MAPVIEW_POOL_TIME_TO_LIVE) * 60 * 1000 * 1000 * 1000;
 
 		StorableObjectPool.init(super.objectLoader);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, generalPoolSize, generalPoolTimeToLive);
