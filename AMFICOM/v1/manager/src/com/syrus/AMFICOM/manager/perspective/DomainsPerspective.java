@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainsPerspective.java,v 1.5 2005/12/07 15:43:50 bob Exp $
+* $Id: DomainsPerspective.java,v 1.6 2005/12/09 16:13:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/12/07 15:43:50 $
+ * @version $Revision: 1.6 $, $Date: 2005/12/09 16:13:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -66,9 +66,30 @@ public final class DomainsPerspective extends AbstractPerspective {
 	
 	@Override
 	protected void createActions() throws ApplicationException {
-		this.actions = new ArrayList<AbstractAction>(2);
-//		this.actions.add(super.createAction(this.perspectiveData.getBeanFactory(NetBeanFactory.NET_CODENAME)));
-		this.actions.add(super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.DOMAIN)));
+		this.actions = new ArrayList<AbstractAction>(1);
+		
+		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
+		
+		final PostBeanCreationAction<DomainBean> addDomainBeanPerspectiveAction = 
+			new PostBeanCreationAction<DomainBean>() {
+
+				public void postActionPerform(final DomainBean domainBean) throws ApplicationException {
+					addDomainPerspective(domainBean);			
+					final DomainsPerspective perspective = DomainsPerspective.this;
+					graphRoutines.arrangeLayoutItems();
+					graphRoutines.showLayerName(perspective.getCodename(), true);
+					graphRoutines.fixLayoutItemCharacteristics();
+				}
+			};
+		this.actions.add(super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.DOMAIN),
+			addDomainBeanPerspectiveAction, null));
+	}
+	
+	public void addDomainPerspective(final DomainBean domainBean) throws ApplicationException {
+		final DomainPerpective domainPerpective = 
+			this.getDomainPerspective(domainBean);
+		this.addSubPerspective(domainPerpective);		
+		this.managerMainFrame.putPerspective(domainPerpective);
 	}
 	
 	public String getCodename() {
@@ -113,10 +134,11 @@ public final class DomainsPerspective extends AbstractPerspective {
 		if (this.firstStart) {
 			for (final AbstractBean bean : this.getLayoutBeans()) {
 				if (bean instanceof DomainBean) {
-					DomainPerpective domainPerspective = 
-						this.getDomainPerspective((DomainBean) bean);
-					this.addSubPerspective(domainPerspective);
-					this.managerMainFrame.putPerspective(domainPerspective);
+					this.addDomainPerspective((DomainBean) bean);
+//					DomainPerpective domainPerspective = 
+//						this.getDomainPerspective((DomainBean) bean);
+//					this.addSubPerspective(domainPerspective);
+//					this.managerMainFrame.putPerspective(domainPerspective);
 				}
 			}
 			
