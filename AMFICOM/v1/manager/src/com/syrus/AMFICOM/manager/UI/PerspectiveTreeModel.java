@@ -1,5 +1,5 @@
 /*-
-* $Id: PerspectiveTreeModel.java,v 1.7 2005/12/07 15:40:36 bob Exp $
+* $Id: PerspectiveTreeModel.java,v 1.8 2005/12/09 16:16:04 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/12/07 15:40:36 $
+ * @version $Revision: 1.8 $, $Date: 2005/12/09 16:16:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -232,7 +232,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 				final LayoutItem parentLayoutItem = subPerspective.getParentLayoutItem();
 				final GraphRoutines graphRoutines = 
 					this.managerMainFrame.getGraphRoutines();
-//				assert Log.debugMessage(parentLayoutItem, LOGLEVEL);
+				assert parentLayoutItem != null : "parentLayoutItem of " + subPerspective + " is null";
 				final ManagerGraphCell graphCell = 
 					graphRoutines.getDefaultGraphCell(parentLayoutItem, false);				
 				final AbstractBean bean2 = graphCell.getAbstractBean();

@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModel.java,v 1.17 2005/12/06 15:14:39 bob Exp $
+* $Id: ManagerGraphModel.java,v 1.18 2005/12/09 16:16:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/12/06 15:14:39 $
+ * @version $Revision: 1.18 $, $Date: 2005/12/09 16:16:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -111,7 +111,7 @@ public class ManagerGraphModel extends DefaultGraphModel {
 			final ManagerGraphCell targetCell = (ManagerGraphCell) target.getParent();
 			final Perspective perspective = sourceCell.getPerspective();
 			
-			assert perspective == targetCell.getPerspective();
+			assert perspective == targetCell.getPerspective() : targetCell;
 			
 			final Validator validator = perspective.getValidator();
 			final boolean valid = validator.isValid(sourceBean.getId(), targetBean.getId());
