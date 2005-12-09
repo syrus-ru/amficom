@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphRoutines.java,v 1.12 2005/12/09 12:18:56 bob Exp $
+* $Id: GraphRoutines.java,v 1.13 2005/12/09 16:15:27 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/12/09 12:18:56 $
+ * @version $Revision: 1.13 $, $Date: 2005/12/09 16:15:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -270,7 +270,7 @@ public final class GraphRoutines {
 		this.arrangeLayoutItems(this.managerMainFrame.getPerspective());
 	}
 	
-	void arrangeLayoutItems(final Perspective perspective) throws ApplicationException {
+	public void arrangeLayoutItems(final Perspective perspective) throws ApplicationException {
 		this.managerMainFrame.arranging = true;
 		final String layoutName = perspective.getCodename();
 
@@ -858,12 +858,18 @@ public final class GraphRoutines {
 	
 	public ManagerGraphCell getDefaultGraphCell(final LayoutItem item, 
 			final boolean visible) {
-		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
-		final GraphModel model = this.graph.getModel();
-		final CellBuffer cellBuffer = this.managerMainFrame.getCellBuffer();
-		
 		final String name = item.getName();
 		final String layoutName = item.getLayoutName();
+
+		return getDefaultGraphCell(name, layoutName, visible);
+	}
+
+	public ManagerGraphCell getDefaultGraphCell(final String name,
+			final String layoutName,
+			final boolean visible) {
+		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
+		final GraphModel model = this.graph.getModel();
+		final CellBuffer cellBuffer = this.managerMainFrame.getCellBuffer();		
 		for(int i = 0; i < model.getRootCount(); i++) {
 			final DefaultGraphCell cell = (DefaultGraphCell) model.getRootAt(i);
 			if (!model.isEdge(cell) && !model.isPort(cell)) {				
@@ -883,20 +889,12 @@ public final class GraphRoutines {
 					
 					return managerGraphCell;
 				}
-//				if (name.equals(id)) {
-//					assert Log.debugMessage(codename 
-//							+ " = " 
-//							+ layoutName
-//							+ ", name:" 
-//							+ name
-//							+ "  = id:" 
-//							+ id, Log.DEBUGLEVEL03);
-//				}
 			}
 		}
 		
 		return null;
 	}
+	
 	
 	
 	public ManagerGraphCell getDefaultGraphCell(final AbstractBean bean,
