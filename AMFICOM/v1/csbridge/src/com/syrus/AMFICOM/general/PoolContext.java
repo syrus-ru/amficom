@@ -1,5 +1,5 @@
 /*-
- * $Id: PoolContext.java,v 1.11 2005/12/08 15:30:54 arseniy Exp $
+ * $Id: PoolContext.java,v 1.12 2005/12/09 14:46:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.LRUMapSaver;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/12/08 15:30:54 $
+ * @version $Revision: 1.12 $, $Date: 2005/12/09 14:46:51 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -59,7 +59,7 @@ public abstract class PoolContext {
 	protected static final int REPORT_POOL_TIME_TO_LIVE = 120;	//min
 	protected static final int MAP_POOL_TIME_TO_LIVE = 120;	//min
 	protected static final int SCHEME_POOL_TIME_TO_LIVE = 120;	//min
-	protected static final int MAP_VIEW_POOL_TIME_TO_LIVE = 120;	//min
+	protected static final int MAPVIEW_POOL_TIME_TO_LIVE = 120;	//min
 
 	protected ObjectLoader objectLoader;
 
