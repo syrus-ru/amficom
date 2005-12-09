@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.8 2005/10/31 12:30:00 bass Exp $
+* $Id: TestView.java,v 1.9 2005/12/09 13:28:02 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/31 12:30:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/12/09 13:28:02 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -218,12 +218,12 @@ public final class TestView {
 						final NumberFormat numberFormat = NumberFormat.getInstance();
 						numberFormat.setMaximumFractionDigits(3);
 						final double d = reflectometryEvaluationOverallResult.getD();
-						Log.debugMessage("d:" + d,
+						Log.debugMessage("d: " + d,
 							Log.DEBUGLEVEL10);
 						this.testD = numberFormat.format(d);
 						numberFormat.setMaximumFractionDigits(2);
 						final double q = reflectometryEvaluationOverallResult.getQ();
-						Log.debugMessage("q:" + q,
+						Log.debugMessage("q: " + q,
 							Log.DEBUGLEVEL10);
 						this.testQ = numberFormat.format(q);
 					}
