@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.123 2005/12/07 17:17:18 bass Exp $
+ * $Id: Map.java,v 1.124 2005/12/09 11:38:59 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,8 +66,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: bass $
- * @version $Revision: 1.123 $, $Date: 2005/12/07 17:17:18 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.124 $, $Date: 2005/12/09 11:38:59 $
  * @module map
  */
 public final class Map extends DomainMember<Map>
@@ -246,12 +246,11 @@ public final class Map extends DomainMember<Map>
 //			StorableObjectPool.getStorableObjectsByCondition(condition, true);
 //		}
 
-		if(!this.physicalLinkIds.isEmpty()) {
-			if(condition == null) {
+		if (!this.physicalLinkIds.isEmpty()) {
+			if (condition == null) {
 				condition = new LinkedIdsCondition(this.physicalLinkIds, ObjectEntities.CHARACTERISTIC_CODE);
-			}
-			else {
-				condition.setLinkedIds(this.physicalLinkIds);
+			} else {
+				condition.setLinkedIdentifiables(this.physicalLinkIds);
 			}
 			StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
@@ -261,25 +260,23 @@ public final class Map extends DomainMember<Map>
 //			StorableObjectPool.getStorableObjectsByCondition(condition, true);
 //		}
 
-		if(!this.collectorIds.isEmpty()) {
-			if(condition == null) {
+		if (!this.collectorIds.isEmpty()) {
+			if (condition == null) {
 				condition = new LinkedIdsCondition(this.collectorIds, ObjectEntities.CHARACTERISTIC_CODE);
+			} else {
+				condition.setLinkedIdentifiables(this.collectorIds);
 			}
-			else {
-				condition.setLinkedIds(this.collectorIds);
-			}
-			
+
 			StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 
-		if(!this.externalNodeIds.isEmpty()) {
-			if(condition == null) {
+		if (!this.externalNodeIds.isEmpty()) {
+			if (condition == null) {
 				condition = new LinkedIdsCondition(this.externalNodeIds, ObjectEntities.CHARACTERISTIC_CODE);
+			} else {
+				condition.setLinkedIdentifiables(this.externalNodeIds);
 			}
-			else {
-				condition.setLinkedIds(this.externalNodeIds);
-			}
-			
+
 			StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 	}
@@ -1025,8 +1022,7 @@ public final class Map extends DomainMember<Map>
 		me.setSelected(selected);
 		if (selected) {
 			this.selectedElements.add(me);
-		}
-		else {
+		} else {
 			this.selectedElements.remove(me);
 		}
 	}

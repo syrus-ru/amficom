@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.25 2005/11/14 15:15:38 bass Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.26 2005/12/09 11:38:59 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/11/14 15:15:38 $
- * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/12/09 11:38:59 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module analysis
  */
@@ -290,7 +290,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				}
 				if (!measurementIds.isEmpty()) {
 					condition.setEntityCode(ObjectEntities.RESULT_CODE);
-					condition.setLinkedIds(measurementIds);
+					condition.setLinkedIdentifiables(measurementIds);
 					for (Iterator iter = StorableObjectPool.getStorableObjectsByCondition(condition, true)
 							.iterator(); iter.hasNext();) {
 						Result result = (Result) iter.next();

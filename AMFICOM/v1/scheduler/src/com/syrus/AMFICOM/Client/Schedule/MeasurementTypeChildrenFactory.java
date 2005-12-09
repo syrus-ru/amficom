@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.17 2005/10/06 13:18:02 bob Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.18 2005/12/09 11:38:59 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/10/06 13:18:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2005/12/09 11:38:59 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -72,7 +72,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 					measurementPortCondition = new LinkedIdsCondition(kis.getId(),
 																		ObjectEntities.MEASUREMENTPORT_CODE);
 				else
-					measurementPortCondition.setLinkedId(kis.getId());
+					measurementPortCondition.setLinkedIdentifiable(kis.getId());
 
 				final Set<MeasurementPort> measurementPorts = 
 					StorableObjectPool.getStorableObjectsByCondition(measurementPortCondition, true, true);

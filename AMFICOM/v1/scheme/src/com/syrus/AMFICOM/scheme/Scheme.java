@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.124 2005/12/07 17:17:20 bass Exp $
+ * $Id: Scheme.java,v 1.125 2005/12/09 11:39:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -86,8 +86,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #03 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.124 $, $Date: 2005/12/07 17:17:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.125 $, $Date: 2005/12/09 11:39:00 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -483,7 +483,7 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 			if (this.currentSolutionLinkedIdsCondition == null) {
 				this.currentSolutionLinkedIdsCondition = new LinkedIdsCondition(schemeOptimizeInfoId, SCHEMEMONITORINGSOLUTION_CODE);
 			} else {
-				this.currentSolutionLinkedIdsCondition.setLinkedId(schemeOptimizeInfoId);
+				this.currentSolutionLinkedIdsCondition.setLinkedIdentifiable(schemeOptimizeInfoId);
 			}
 			if (this.currentSolutionCompoundCondition1 == null) {
 				this.currentSolutionCompoundCondition1 = new CompoundCondition(
