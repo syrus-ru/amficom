@@ -1,5 +1,5 @@
 /*-
-* $Id: ResourceHandler.java,v 1.1 2005/11/11 11:14:30 bob Exp $
+* $Id: ResourceHandler.java,v 1.2 2005/12/12 13:40:13 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.extensions.AbstractExtensionHandler;
-import com.syrus.AMFICOM.extensions.ExtensionPoint;
 import com.syrus.AMFICOM.extensions.resources.Handler;
 import com.syrus.AMFICOM.extensions.resources.Resource;
 import com.syrus.AMFICOM.extensions.resources.Resources;
@@ -21,28 +20,21 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/11 11:14:30 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/12 13:40:13 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module resources
  */
-public final class ResourceHandler extends AbstractExtensionHandler {
+public final class ResourceHandler extends AbstractExtensionHandler<Resources> {
 
 	private static final Map<String, ConcreateResourceHandler> HANDLES = 
 		new HashMap<String, ConcreateResourceHandler>();
 
 	private final static Level LOGLEVEL = Log.DEBUGLEVEL08;
 	
-	private final Resources	resources;	
-
-	public ResourceHandler(final ExtensionPoint extensionPoint) {
-		this((Resources)extensionPoint);
-	}
-	
-	public ResourceHandler(final Resources resources) {
-		this.resources = resources;
-		this.loadHandlers();
-		this.loadResources();
+	public void addHandlerData(final Resources resources) {
+		this.loadHandlers(resources);
+		this.loadResources(resources);
 	}
 
 	private ConcreateResourceHandler getHandler(final String clazz) {
@@ -51,8 +43,8 @@ public final class ResourceHandler extends AbstractExtensionHandler {
 			new Object[] {});
     }
 	
-	private void loadHandlers() {
-		for (final Resource resource : this.resources.getResourceArray()) {
+	private void loadHandlers(final Resources resources) {
+		for (final Resource resource : resources.getResourceArray()) {
 			// processing only handlers
 			if (resource instanceof Handler) {
 				final Handler handler = (Handler) resource;
@@ -73,8 +65,8 @@ public final class ResourceHandler extends AbstractExtensionHandler {
 		}
 	}
 
-	private void loadResources() {
-		for (final Resource resource : this.resources.getResourceArray()) {
+	private void loadResources(final Resources resources) {
+		for (final Resource resource : resources.getResourceArray()) {
 			// skip handler
 			if (resource instanceof Handler) {
 				continue;

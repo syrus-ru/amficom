@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionBeanFactory.java,v 1.2 2005/11/28 14:47:05 bob Exp $
+* $Id: PermissionBeanFactory.java,v 1.3 2005/12/12 13:40:56 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,10 +26,11 @@ import com.syrus.AMFICOM.manager.UI.ManagerModel;
 import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.perspective.RolePerpective;
 import com.syrus.AMFICOM.manager.perspective.SystemUserPerpective;
+import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/12 13:40:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

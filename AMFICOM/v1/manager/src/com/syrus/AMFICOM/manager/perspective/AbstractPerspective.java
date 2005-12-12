@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractPerspective.java,v 1.9 2005/12/08 16:06:15 bob Exp $
+* $Id: AbstractPerspective.java,v 1.10 2005/12/12 13:40:56 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/12/08 16:06:15 $
+ * @version $Revision: 1.10 $, $Date: 2005/12/12 13:40:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -184,6 +184,7 @@ public abstract class AbstractPerspective implements Perspective {
    						beanUI.getImage(bean));
 					firePropertyChangeEvent(propertyChangeEvent);
    				} catch (final ApplicationException ae) {
+   					Log.errorMessage(ae);
    					ae.printStackTrace();
    					JOptionPane.showMessageDialog(graph, 
    						ae.getMessage(), 
@@ -251,6 +252,7 @@ public abstract class AbstractPerspective implements Perspective {
     					assert Log.debugMessage("Create " + bean, Log.DEBUGLEVEL10);
 
     				} catch (final ApplicationException ae) {
+    					Log.errorMessage(ae);
     					ae.printStackTrace();
     					JOptionPane.showMessageDialog(graph, 
     						ae.getMessage(), 

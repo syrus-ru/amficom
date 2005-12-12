@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractExtensionHandler.java,v 1.1 2005/11/11 11:14:30 bob Exp $
+* $Id: AbstractExtensionHandler.java,v 1.2 2005/12/12 13:40:13 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,12 +15,12 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/11 11:14:30 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/12 13:40:13 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module extensions
  */
-public class AbstractExtensionHandler implements ExtensionHandler {
+public abstract class AbstractExtensionHandler<T extends ExtensionPoint> implements ExtensionHandler<T> {
 	
 	private static final String INVALID_UNDERLYING_IMPLEMENTATION = 
 		"Invalid underlying implementation: ";

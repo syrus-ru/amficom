@@ -1,5 +1,5 @@
 /*-
-* $Id: ResourcesCreator.java,v 1.2 2005/12/07 15:43:50 bob Exp $
+* $Id: ResourcesCreator.java,v 1.3 2005/12/12 13:41:08 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.resources.ImageResourceHandler;
 import com.syrus.AMFICOM.resources.ResourceHandler;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/07 15:43:50 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/12 13:41:08 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -38,7 +38,7 @@ public final class ResourcesCreator extends TestCase {
 
 	public void testCreateUIResourceDocument() throws Exception {
 		final boolean enableOutput = true;
-		final String xmlFilePath = "xml/resources.xml";
+		final String xmlFilePath = "resources/xml/resources.xml";
 		
 		
     	final XmlOptions opt = (new XmlOptions()).setSavePrettyPrint();

@@ -1,5 +1,5 @@
 /*-
-* $Id: ResourcesTest.java,v 1.1 2005/12/12 08:36:12 bob Exp $
+* $Id: ResourcesTest.java,v 1.2 2005/12/12 13:40:26 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/12/12 08:36:12 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/12 13:40:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module extensions
@@ -36,7 +36,7 @@ import junit.framework.TestCase;
 public class ResourcesTest extends TestCase {
 
 	public void testCreation() throws Exception {
-		final String xmlFilePath = "xml/resource.xml";
+		final String xmlFilePath = "xml/ccresource.xml";
 		this.buildDocument(true, xmlFilePath);
 	}
 
@@ -58,9 +58,16 @@ public class ResourcesTest extends TestCase {
 		{			
 			final Resource resource = resources.addNewResource();
 			final Handler handler = (Handler) resource.changeType(Handler.type);
-			handler.setId("font");
-			handler.setHandlerClass("com.syrus.AMFICOM.resources.FontResourceHandler");
+			handler.setId(Font.type.getName().getLocalPart());
+			handler.setHandlerClass(FontResourceHandler.class.getName());
 	    }
+		
+		{
+			Resource resource = resources.addNewResource();
+			Handler handler = (Handler) resource.changeType(Handler.type);
+			handler.setId(Image.type.getName().getLocalPart());
+			handler.setHandlerClass(ImageResourceHandler.class.getName());
+		}
 		
 		{			
 			final Resource resource = resources.addNewResource();

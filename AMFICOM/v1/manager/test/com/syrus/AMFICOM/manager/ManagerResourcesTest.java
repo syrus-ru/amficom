@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerResourcesTest.java,v 1.3 2005/12/12 10:40:26 bob Exp $
+* $Id: ManagerResourcesTest.java,v 1.4 2005/12/12 13:41:08 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,8 +8,6 @@
 
 package com.syrus.AMFICOM.manager;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.UIManager;
@@ -22,7 +20,7 @@ import com.syrus.AMFICOM.resources.ResourceHandler;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/12 10:40:26 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/12 13:41:08 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -33,18 +31,14 @@ public class ManagerResourcesTest extends TestCase {
 		junit.textui.TestRunner.run(ManagerResourcesTest.class);
 	}
 
-	public void testLoadResources() throws MalformedURLException {
+	public void testLoadResources() {
 		final ExtensionLauncher extensionLauncher = 
 			ExtensionLauncher.getInstance();
 		
 		final String resourceName = "xml/resources.xml";
-		final File file = new File(resourceName);
-		final URL url;
-		if (file.exists()) {
-			url = file.toURL();
-		} else {
-			url = ManagerResourcesTest.class.getClassLoader().getResource(resourceName);
-		}
+
+		final ClassLoader classLoader = ManagerResourcesTest.class.getClassLoader();
+		final URL url = classLoader.getResource(resourceName);
 		
 		extensionLauncher.addExtensions(url);		
 		extensionLauncher.getExtensionHandler(ResourceHandler.class.getName());

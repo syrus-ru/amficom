@@ -1,5 +1,5 @@
 /*-
-* $Id: ImageResourceHandler.java,v 1.5 2005/12/12 11:47:13 bob Exp $
+* $Id: ImageResourceHandler.java,v 1.6 2005/12/12 13:40:13 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/12/12 11:47:13 $
+ * @version $Revision: 1.6 $, $Date: 2005/12/12 13:40:13 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module extensions
@@ -29,9 +29,8 @@ public class ImageResourceHandler implements ConcreateResourceHandler<Image> {
 	
 	public void load(final Image image) {
 		final String id = image.getId();
-		final String filename = image.getFilename();
-		
-		final URL resource = ImageResourceHandler.class.getClassLoader().getResource(filename);
+		final String url = image.getFilename();
+		final URL resource = ImageResourceHandler.class.getClassLoader().getResource(url);
 		
 		final boolean useSize = image.isSetSize();
 		final int width = useSize ? image.getSize().getWidth() : -1;
@@ -57,7 +56,8 @@ public class ImageResourceHandler implements ConcreateResourceHandler<Image> {
 				}
 			});
 		} else {
-			final String message = "Image file " + filename + " for id '" + id + "' does not exist.";
+			final String message = "Image file " + url + " for id '" + id + "' does not exist.";
+			System.err.println(message);
 			Log.errorMessage(message);
 		}
 	}

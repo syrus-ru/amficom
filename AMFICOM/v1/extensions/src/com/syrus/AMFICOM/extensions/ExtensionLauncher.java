@@ -1,5 +1,5 @@
 /*-
-* $Id: ExtensionLauncher.java,v 1.2 2005/12/12 10:19:32 bob Exp $
+* $Id: ExtensionLauncher.java,v 1.3 2005/12/12 13:40:13 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,14 +13,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.xmlbeans.XmlException;
 
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/12 10:19:32 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/12 13:40:13 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module resources
@@ -35,14 +38,15 @@ public final class ExtensionLauncher {
 	private static ExtensionLauncher instance;
 	
 	private Map<String, ExtensionHandler> extensionHandlers; 
-	private Map<URL, Map<String, ExtensionPoint>> extensionManifests;
+	private Map<URL, Map<String, Set<ExtensionPoint>>> extensionManifests;
 	
 	private ExtensionLauncher() {
+		assert Log.debugMessage(Log.DEBUGLEVEL03);
 		this.extensionHandlers = 
 			Collections.synchronizedMap(new HashMap<String, ExtensionHandler>());
 		
 		this.extensionManifests = 
-			Collections.synchronizedMap(new HashMap<URL, Map<String, ExtensionPoint>>());
+			Collections.synchronizedMap(new HashMap<URL, Map<String, Set<ExtensionPoint>>>());
 	}
 
     public static synchronized ExtensionLauncher getInstance() {
@@ -53,10 +57,10 @@ public final class ExtensionLauncher {
     }
     
     public final void addExtensions(final URL url) {
-    	Map<String, ExtensionPoint> extensionManifest = 
+    	Map<String, Set<ExtensionPoint>> extensionManifest = 
     		this.extensionManifests.get(url);
     	if (extensionManifest == null) {
-    		extensionManifest = new HashMap<String, ExtensionPoint>();
+    		extensionManifest = new HashMap<String, Set<ExtensionPoint>>();
 			if (url != null) {
 				this.extensionManifests.put(url, extensionManifest);
 				final RootDocument document;
@@ -68,7 +72,15 @@ public final class ExtensionLauncher {
 				}
 				final ExtensionPoint[] extensionArray = document.getRoot().getExtensionArray();
 				for (final ExtensionPoint point : extensionArray) {
-					extensionManifest.put(point.getId(), point);
+					final String id = point.getId();
+					Set<ExtensionPoint> set = extensionManifest.get(id);
+					if (set == null) {
+						set = new HashSet<ExtensionPoint>();
+						extensionManifest.put(id, set);
+					}
+					synchronized (set) {
+						set.add(point);
+					}					
 				}
 			} else {
 				Log.errorMessage("Extension file '" + url + "' isn't exist");
@@ -79,22 +91,39 @@ public final class ExtensionLauncher {
     public final <T extends ExtensionHandler> T getExtensionHandler(final String id) {
     	// get from initialized extension handles
     	T handler = (T) this.extensionHandlers.get(id);
-    	// if extension handler has not exist - init it 
-    	if (handler == null) {
-    		// search for all xml file name contexts
-    		for (final URL xmlFileName : this.extensionManifests.keySet()) {
-    			final Map<String, ExtensionPoint> extensionManifest = 
-    				this.extensionManifests.get(xmlFileName);
-				final ExtensionPoint point = extensionManifest.get(id);
-				if (point != null) {
+    	for (final URL xmlFileName : this.extensionManifests.keySet()) {
+			final Map<String, Set<ExtensionPoint>> extensionManifest = 
+				this.extensionManifests.get(xmlFileName);
+			final Set<ExtensionPoint> pointSet = extensionManifest.get(id);
+			if (pointSet != null) {
+				ExtensionHandler handler2 = this.extensionHandlers.get(id);
+				if (handler2 == null) {
 					// acqure extension handler from extension point
-					final ExtensionHandler extensionHandler = this.getExtension(point);
-					this.extensionHandlers.put(id, extensionHandler);
-					handler = (T) extensionHandler;
-					break;
+					final ExtensionHandler extensionHandler;
+					final ExtensionHandler extensionHandler2 = this.extensionHandlers.get(id);
+					if (extensionHandler2 == null) {
+						extensionHandler = this.getExtension(id);
+						this.extensionHandlers.put(id, extensionHandler);
+					} else {
+						extensionHandler = extensionHandler2;
+					}
+					handler = (T) extensionHandler;						
+				} else {
+					handler = (T) handler2;
 				}
+				synchronized (pointSet) {
+					for(final Iterator<ExtensionPoint> iterator = pointSet.iterator(); iterator.hasNext();) {
+						final ExtensionPoint next = iterator.next();
+						handler.addHandlerData(next);
+						iterator.remove();
+					}
+				}
+				
+				break;
+			} else {
+					assert Log.debugMessage("pointSet for " + id + " is null.", Log.DEBUGLEVEL03);
 			}
-    	}
+		}
     	
     	if (handler == null) {
     		Log.errorMessage("Extension handler for '" + id + "' isn't exist");
@@ -102,13 +131,12 @@ public final class ExtensionLauncher {
     	return handler;
     }
     
-    private final ExtensionHandler getExtension(final ExtensionPoint point) {
-    	final String id = point.getId();
+    private final ExtensionHandler getExtension(final String id) {
     	try {
 			final Constructor ctor = 
-				Class.forName(id).getDeclaredConstructor(new Class[] {ExtensionPoint.class});
+				Class.forName(id).getDeclaredConstructor(new Class[] {});
 			final ExtensionHandler extensionHandler = 
-				(ExtensionHandler) ctor.newInstance(new Object[] {point});			
+				(ExtensionHandler) ctor.newInstance(new Object[] {});			
 			return extensionHandler;
 		} catch (final ClassNotFoundException cnfe) {
 			Log.errorMessage(INVOKE_EXTENSION + "Class " + id

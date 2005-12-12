@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.24 2005/12/12 10:40:26 bob Exp $
+* $Id: Manager.java,v 1.25 2005/12/12 13:40:56 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,9 +9,6 @@
 package com.syrus.AMFICOM.manager.UI;
 
 import java.awt.Toolkit;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
 import java.util.Set;
 
@@ -36,7 +33,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/12/12 10:40:26 $
+ * @version $Revision: 1.25 $, $Date: 2005/12/12 13:40:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -50,27 +47,13 @@ public class Manager extends AbstractApplication {
 
 	}
 	
-	private final URL getURL(final String resourceName) {
-		final File file = new File(resourceName);
-		final URL url;
-		if (file.exists()) {
-			try {
-				url = file.toURL();
-			} catch (final MalformedURLException e) {
-				return null;
-			}
-		} else {
-			url = Manager.class.getClassLoader().getResource(resourceName);
-		}
-		return url;
-	}
-	
 	@Override
 	protected void init() {
 		final ExtensionLauncher extensionLauncher = ExtensionLauncher.getInstance();
-		extensionLauncher.addExtensions(this.getURL("xml/manager.xml"));
+		final ClassLoader classLoader = Manager.class.getClassLoader();
+		extensionLauncher.addExtensions(classLoader.getResource("xml/manager.xml"));
 		
-		extensionLauncher.addExtensions(this.getURL("xml/resources.xml"));
+		extensionLauncher.addExtensions(classLoader.getResource("xml/resources.xml"));
 		
 		extensionLauncher.getExtensionHandler(ResourceHandler.class.getName());
 		

@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerHandler.java,v 1.11 2005/12/06 15:14:39 bob Exp $
+* $Id: ManagerHandler.java,v 1.12 2005/12/12 13:40:56 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.extensions.AbstractExtensionHandler;
-import com.syrus.AMFICOM.extensions.ExtensionPoint;
 import com.syrus.AMFICOM.extensions.manager.BeanFactory;
 import com.syrus.AMFICOM.extensions.manager.ManagerExtensions;
 import com.syrus.AMFICOM.extensions.manager.ManagerResource;
@@ -35,31 +34,27 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/12/06 15:14:39 $
+ * @version $Revision: 1.12 $, $Date: 2005/12/12 13:40:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public final class ManagerHandler extends AbstractExtensionHandler {
+public final class ManagerHandler extends AbstractExtensionHandler<ManagerExtensions> {
 	
-	private final ManagerExtensions	managerExtensions;
+	private ManagerExtensions	managerExtensions;
 	private ManagerMainFrame	managerMainFrame;
-	private final Map<String, com.syrus.AMFICOM.manager.perspective.Perspective> perspectiveMap;
+	private Map<String, com.syrus.AMFICOM.manager.perspective.Perspective> perspectiveMap;
 	
-	private final Map<String, AbstractBeanFactory> factories;
-	private final Map<String, AbstractItemPopupMenu> popupMenus;
-	private final Map<String, BeanUI> beanUIs;
+	private Map<String, AbstractBeanFactory> factories;
+	private Map<String, AbstractItemPopupMenu> popupMenus;
+	private Map<String, BeanUI> beanUIs;
 
-	public ManagerHandler(final ExtensionPoint extensionPoint) {
-		this((ManagerExtensions)extensionPoint);
-	}
-	
-	public ManagerHandler(final ManagerExtensions managerExtensions) {
+	public void addHandlerData(final ManagerExtensions managerExtensions) {
 		this.managerExtensions = managerExtensions;
 		this.perspectiveMap = new HashMap<String, com.syrus.AMFICOM.manager.perspective.Perspective>();
 		this.factories = new HashMap<String, AbstractBeanFactory>();
 		this.popupMenus = new HashMap<String, AbstractItemPopupMenu>();
-		this.beanUIs = new HashMap<String, BeanUI>();
+		this.beanUIs = new HashMap<String, BeanUI>();		
 	}
 	
 	public final void setManagerMainFrame(final ManagerMainFrame managerMainFrame) {

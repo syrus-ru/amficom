@@ -1,5 +1,5 @@
 /*-
-* $Id: PerspectiveTreeModel.java,v 1.8 2005/12/09 16:16:04 bob Exp $
+* $Id: PerspectiveTreeModel.java,v 1.9 2005/12/12 13:40:56 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,10 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/12/09 16:16:04 $
+ * 
+ * TODO rebuild moving methods to nodes (pattern visitor)
+ * 
+ * @version $Revision: 1.9 $, $Date: 2005/12/12 13:40:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
