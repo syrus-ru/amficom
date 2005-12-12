@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.30 2005/11/24 08:04:15 bob Exp $
+ * $Id: AbstractApplication.java,v 1.31 2005/12/12 14:07:41 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,16 +9,12 @@
 package com.syrus.AMFICOM.client.model;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 
-import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -40,6 +36,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.extensions.ExtensionLauncher;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -47,12 +44,13 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.XMLSessionEnvironment;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment.SessionKind;
+import com.syrus.AMFICOM.resources.ResourceHandler;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/11/24 08:04:15 $
+ * @version $Revision: 1.31 $, $Date: 2005/12/12 14:07:41 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -194,124 +192,12 @@ public abstract class AbstractApplication {
 			new SimpleDateFormat(
 				I18N.getString(
 					ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT)));
-
-		UIManager.put(ResourceKeys.ICON_OPEN_SESSION, 
-			new ImageIcon(
-					Toolkit.getDefaultToolkit().getImage(
-						"images/open_session.gif")
-					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-
-		UIManager.put(ResourceKeys.ICON_CLOSE_SESSION, 
-				new ImageIcon(
-					Toolkit.getDefaultToolkit().getImage(
-							"images/close_session.gif")
-						.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-
-		UIManager.put(ResourceKeys.ICON_DOMAIN_SELECTION, 
-				new ImageIcon(
-					Toolkit.getDefaultToolkit().getImage("images/domains.gif")
-						.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-
-		UIManager.put(ResourceKeys.ICON_GENERAL, 
-				new ImageIcon(
-					Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		UIManager.put(ResourceKeys.ICON_FURTHER, 
-			new ImageIcon(
-				Toolkit.getDefaultToolkit().getImage("images/further.gif")));
-		UIManager.put(ResourceKeys.ICON_DELETE,
-				new ImageIcon(
-					Toolkit.getDefaultToolkit().getImage("images/delete.gif")));
-		UIManager.put(ResourceKeys.ICON_INTRODUCE, 
-			new ImageIcon(
-				Toolkit.getDefaultToolkit().getImage("images/introduce.gif")));
-		UIManager.put(ResourceKeys.ICON_OPEN_FILE, 
-				new ImageIcon(
-					Toolkit.getDefaultToolkit().getImage("images/openfile.gif")));
-
-		UIManager.put(ResourceKeys.ICON_ADD_FILE, 
-				new ImageIcon(
-					Toolkit.getDefaultToolkit().getImage("images/addfile.gif")));
-		UIManager.put(ResourceKeys.ICON_REMOVE_FILE, 
-				new ImageIcon(
-					Toolkit.getDefaultToolkit().getImage("images/removefile.gif")));
-
-		UIManager.put(ResourceKeys.ICON_MINI_PATHMODE, 
-				new ImageIcon(
-					Toolkit.getDefaultToolkit().getImage("images/pathmode.gif")
-						.getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
-
-		UIManager.put(ResourceKeys.ICON_MINI_FOLDER, 
-			new ImageIcon(
-				Toolkit.getDefaultToolkit().getImage("images/folder.gif")
-					.getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
-
-		UIManager.put(ResourceKeys.ICON_MINI_PORT, 
-			new ImageIcon(
-				Toolkit.getDefaultToolkit().getImage("images/port.gif")
-					.getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
-
-		UIManager.put(ResourceKeys.ICON_MINI_TESTING, 
-			new ImageIcon(
-				Toolkit.getDefaultToolkit().getImage("images/testing.gif")
-					.getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
-
-		UIManager.put(ResourceKeys.ICON_MINI_MEASUREMENT_SETUP, 
-			new ImageIcon(
-				Toolkit.getDefaultToolkit().getImage("images/testsetup.gif")
-					.getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
-
-		UIManager.put(ResourceKeys.ICON_MINI_RESULT, 
-				new ImageIcon(
-					Toolkit.getDefaultToolkit().getImage("images/result.gif")
-						.getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
-
-		UIManager.put(ResourceKeys.ICON_REFRESH, 
-				new ImageIcon(
-					Toolkit.getDefaultToolkit().getImage("images/refresh.gif")
-						.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		
-		UIManager.put(ResourceKeys.ICON_SYNCHRONIZE, new ImageIcon(Toolkit
-				.getDefaultToolkit().getImage("images/synchronize.gif").getScaledInstance(16,
-						16, Image.SCALE_SMOOTH)));
-				
-		UIManager.put(ResourceKeys.ICON_ADD, 
-				new ImageIcon(
-					Toolkit.getDefaultToolkit().getImage("images/newprop.gif")));
+		final ExtensionLauncher extensionLauncher = ExtensionLauncher.getInstance();
+		final ClassLoader classLoader = AbstractApplication.class.getClassLoader();
+		extensionLauncher.addExtensions(classLoader.getResource("xml/ccresource.xml"));
 		
-		UIManager.put(ResourceKeys.ICON_COMMIT, 
-				new ImageIcon(
-					Toolkit.getDefaultToolkit().getImage("images/commit.gif")));
-		
-		UIManager.put(ResourceKeys.ICON_TIME_DATE, 
-			new ImageIcon(
-				Toolkit.getDefaultToolkit().getImage("images/timedate.gif")));
-		
-		UIManager.put(ResourceKeys.IMAGE_LOGIN_LOGO, 
-			new UIDefaults.LazyValue() {
-
-				public Object createValue(UIDefaults table) {
-					return new ImageIcon(
-						Toolkit.getDefaultToolkit().getImage(
-							"images/main/logo2.jpg"));
-				}
-		});
-		
-		UIManager.put(ResourceKeys.INSETS_NULL, 
-			new UIDefaults.LazyValue() {
-
-				public Object createValue(UIDefaults table) {
-					return new Insets(0, 0, 0, 0);
-				}
-		});
-
-		UIManager.put(ResourceKeys.INSETS_ICONED_BUTTON, 
-			new UIDefaults.LazyValue() {
-
-				public Object createValue(UIDefaults table) {
-					return new Insets(1, 1, 1, 1);
-				}
-		});
-
+		extensionLauncher.getExtensionHandler(ResourceHandler.class.getName());
 		UIManager.put(ResourceKeys.TABLE_NO_FOCUS_BORDER, 
 			new UIDefaults.LazyValue() {
 
@@ -319,15 +205,6 @@ public abstract class AbstractApplication {
 					return new EmptyBorder(1, 2, 1, 2);
 				}
 		});
-
-		UIManager.put(ResourceKeys.SIZE_BUTTON, new UIDefaults.LazyValue() {
-
-			public Object createValue(UIDefaults table) {
-				return new Dimension(24, 24);
-			}
-		});
-
-		UIManager.put(ResourceKeys.SIZE_NULL, new Dimension(0, 0));
 
 		this.initUIStyles();
 	}
