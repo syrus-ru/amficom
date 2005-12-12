@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceKeys.java,v 1.14 2005/10/21 12:36:54 bob Exp $
+ * $Id: ResourceKeys.java,v 1.15 2005/12/12 14:09:16 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/21 12:36:54 $
+ * @version $Revision: 1.15 $, $Date: 2005/12/12 14:09:16 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -49,15 +49,15 @@ public interface ResourceKeys {
 	String	ICON_TIME_DATE							= "com.surus.AMFICOM.icon.general.timedate";
 
 	/* Mini Icons */
-	Object	ICON_MINI_FOLDER						= "com.syrus.AMFICOM.icon.mini.general.folder";
+	String	ICON_MINI_FOLDER						= "com.syrus.AMFICOM.icon.mini.general.folder";
 	String	ICON_MINI_PATHMODE						= "com.syrus.AMFICOM.icon.mini.general.pathmode";
-	Object	ICON_MINI_PORT							= "com.syrus.AMFICOM.icon.mini.general.port";
-	Object	ICON_MINI_MEASUREMENT_SETUP				= "com.syrus.AMFICOM.icon.mini.general.measurementSetup";
-	Object	ICON_MINI_RESULT						= "com.syrus.AMFICOM.icon.mini.general.result";
-	Object	ICON_MINI_TESTING						= "com.syrus.AMFICOM.icon.mini.general.testing";
+	String	ICON_MINI_PORT							= "com.syrus.AMFICOM.icon.mini.general.port";
+	String	ICON_MINI_MEASUREMENT_SETUP				= "com.syrus.AMFICOM.icon.mini.general.measurementSetup";
+	String	ICON_MINI_RESULT						= "com.syrus.AMFICOM.icon.mini.general.result";
+	String	ICON_MINI_TESTING						= "com.syrus.AMFICOM.icon.mini.general.testing";
 
 	/* Images */
-	Object	IMAGE_LOGIN_LOGO						= "LoginLogo";
+	String	IMAGE_LOGIN_LOGO						= "LoginLogo";
 
 	/* Internationalization keys */
 	String	I18N_ROOT								= "root";													//$NON-NLS-1$
