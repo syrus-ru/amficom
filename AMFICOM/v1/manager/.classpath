@@ -23,5 +23,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/extensions"/>
 	<classpathentry kind="var" path="AMFICOM_LIB/leserver_interface.jar"/>
 	<classpathentry kind="var" path="AMFICOM_LIB/resources_schemas.jar"/>
+	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
