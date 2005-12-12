@@ -1,5 +1,5 @@
 /*-
-* $Id: ResourcesTest.java,v 1.1 2005/11/11 11:14:30 bob Exp $
+* $Id: ResourcesTest.java,v 1.1 2005/12/12 08:36:12 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/11 11:14:30 $
+ * @version $Revision: 1.1 $, $Date: 2005/12/12 08:36:12 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module extensions
