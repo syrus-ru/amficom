@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.7 2005/12/05 18:24:27 bass Exp $
+# $Id: Makefile,v 1.8 2005/12/12 09:04:34 bob Exp $
 #
 # vim:set ft=make:
 #
@@ -18,6 +18,15 @@ $(call checkenve,SCOMPFLAGS)
 
 LIBNAME_EXTENSIONS_SCHEMAS = $(MODULE_NAME)_schemas.jar
 LIBNAME_RESOURCES_SCHEMAS = resources_schemas.jar
+
+DEPENDENCIES = \
+util 
+
+EXTCLASSPATH := $(TROVE4JCLASSPATH):$(XMLBEANSCLASSPATH):$(XALANJCLASSPATH)
+XMLCLASSPATH := $(LIBDIR)/$(LIBNAMEXML):$(LIBDIR)/$(LIBNAME_EXTENSIONS_SCHEMAS):$(LIBDIR)/$(LIBNAME_RESOURCES_SCHEMAS)
+
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/extensions/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/resources/*.java) 
 
 .PHONY: xml
 xml: $(LIBNAME_EXTENSIONS_SCHEMAS) $(LIBNAME_RESOURCES_SCHEMAS)
@@ -65,6 +74,16 @@ xmlinstall: $(LIBDIR) $(LIBDIR)/$(LIBNAME_EXTENSIONS_SCHEMAS) $(LIBDIR)/$(LIBNAM
 
 .PHONY:	install
 install: $(LIBDIR) $(LIBDIR)/$(LIBNAME) xmlinstall
+
+$(LIBNAME): .mach
+	$(JAR) cf $@ \
+		-C $(CLASSDIR) com
+
+.mach: $(CLASSDIR) xml
+	$(JAVAC) $(JAVACFLAGS) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		$(SOURCES)
+	touch $@
 
 $(LIBDIR)/$(LIBNAME_EXTENSIONS_SCHEMAS): $(LIBNAME_EXTENSIONS_SCHEMAS)
 	install -m 0644 -p $(LIBNAME_EXTENSIONS_SCHEMAS) $(LIBDIR)
