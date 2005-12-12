@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserDomainPopupMenu.java,v 1.6 2005/12/06 09:46:37 bass Exp $
+* $Id: SystemUserDomainPopupMenu.java,v 1.7 2005/12/12 07:24:27 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,24 +22,20 @@ import com.syrus.AMFICOM.administration.Role;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ClientServantManager;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.manager.beans.UserBean;
 import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.AMFICOM.manager.perspective.DomainPerpective;
-import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/12/06 09:46:37 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/12/12 07:24:27 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -114,19 +110,13 @@ public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu<DomainPerpe
 		
 		@Override
 		protected void applyPassword(final char[] password) {
-			final ClientSessionEnvironment instance = ClientSessionEnvironment.getInstance();
 			try {
-				final ClientServantManager clientServantManager = 
-					instance.getClientServantManager();
-				final LoginServer loginServerReference = 
-					clientServantManager.getLoginServerReference();
-				final IdlSessionKey idlSessionKey = 
-					LoginManager.getIdlSessionKey();
-				final IdlIdentifier userIdTransferable = 
-					this.systemUser.getId().getIdlTransferable();
-				loginServerReference.setPassword(idlSessionKey, 
-					userIdTransferable, 
-					new String(password));
+				final ClientSessionEnvironment instance = 
+					ClientSessionEnvironment.getInstance();
+				
+				LoginManager.setPassword(instance, 
+					this.systemUser.getId(), 
+					new String(password));				
 			} catch (final CommunicationException e) {
 				Log.errorMessage(e);
 				JOptionPane.showMessageDialog(null, 
