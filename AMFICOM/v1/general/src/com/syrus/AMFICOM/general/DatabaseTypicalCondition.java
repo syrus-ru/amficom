@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalCondition.java,v 1.18 2005/11/11 09:15:16 arseniy Exp $
+ * $Id: DatabaseTypicalCondition.java,v 1.19 2005/12/12 12:43:29 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
  * }
  * </pre>
  *
- * @version $Revision: 1.18 $, $Date: 2005/11/11 09:15:16 $
+ * @version $Revision: 1.19 $, $Date: 2005/12/12 12:43:29 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -40,7 +40,7 @@ public final class DatabaseTypicalCondition extends AbstractDatabaseTypicalCondi
 
 	private static final String DATABASE_TYPICAL_CONDITION_INIT = "DatabaseTypicalCondition.<init>() | ";	
 
-	public DatabaseTypicalCondition(TypicalCondition condition) {
+	public DatabaseTypicalCondition(final TypicalCondition condition) {
 		super(condition);
 		final String className = "com.syrus.AMFICOM."
 				+ ObjectGroupEntities.getGroupName(condition.getEntityCode().shortValue()).toLowerCase().replaceAll("group$", "")
@@ -66,8 +66,7 @@ public final class DatabaseTypicalCondition extends AbstractDatabaseTypicalCondi
 				final String message = cause.getMessage();
 				if (message == null) {
 					assert false;
-				}
-				else {
+				} else {
 					assert false : message;
 				}
 			} else {
