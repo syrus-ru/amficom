@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectLRUMapSaver.java,v 1.2 2005/12/08 15:30:54 arseniy Exp $
+ * $Id: StorableObjectLRUMapSaver.java,v 1.3 2005/12/12 07:43:09 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.LRUMapSaver;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/08 15:30:54 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/12 07:43:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -39,7 +39,13 @@ public final class StorableObjectLRUMapSaver extends LRUMapSaver<Identifier, Sto
 
 	@Override
 	protected Object getObjectToWrite(final LRUMap<Identifier, StorableObject> lruMap) {
-		return new HashSet<StorableObject>(lruMap.values());
+		final HashSet<StorableObject> storableObjectsToWrite = new HashSet<StorableObject>(lruMap.size());
+		for (final StorableObject storableObject : lruMap.values()) {
+			if (!storableObject.isChanged()) {
+				storableObjectsToWrite.add(storableObject);
+			}
+		}
+		return storableObjectsToWrite;
 	}
 
 }
