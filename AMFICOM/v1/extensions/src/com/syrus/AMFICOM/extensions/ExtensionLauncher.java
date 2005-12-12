@@ -1,5 +1,5 @@
 /*-
-* $Id: ExtensionLauncher.java,v 1.1 2005/11/11 11:14:30 bob Exp $
+* $Id: ExtensionLauncher.java,v 1.2 2005/12/12 10:19:32 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -7,22 +7,20 @@
 */
 package com.syrus.AMFICOM.extensions;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.xmlbeans.XmlException;
 
-import com.syrus.AMFICOM.extensions.ExtensionPoint;
-import com.syrus.AMFICOM.extensions.RootDocument;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/11 11:14:30 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/12 10:19:32 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module resources
@@ -37,14 +35,14 @@ public final class ExtensionLauncher {
 	private static ExtensionLauncher instance;
 	
 	private Map<String, ExtensionHandler> extensionHandlers; 
-	private Map<String, Map<String, ExtensionPoint>> extensionManifests;
+	private Map<URL, Map<String, ExtensionPoint>> extensionManifests;
 	
 	private ExtensionLauncher() {
 		this.extensionHandlers = 
 			Collections.synchronizedMap(new HashMap<String, ExtensionHandler>());
 		
 		this.extensionManifests = 
-			Collections.synchronizedMap(new HashMap<String, Map<String, ExtensionPoint>>());
+			Collections.synchronizedMap(new HashMap<URL, Map<String, ExtensionPoint>>());
 	}
 
     public static synchronized ExtensionLauncher getInstance() {
@@ -54,28 +52,27 @@ public final class ExtensionLauncher {
     	return instance;
     }
     
-    public final void addExtensions(final String xmlFilePath) {
+    public final void addExtensions(final URL url) {
     	Map<String, ExtensionPoint> extensionManifest = 
-    		this.extensionManifests.get(xmlFilePath);
+    		this.extensionManifests.get(url);
     	if (extensionManifest == null) {
     		extensionManifest = new HashMap<String, ExtensionPoint>();
-	    	final File xmlFile = new File(xmlFilePath);    	
-	    	if (xmlFile.exists()) {
-	    		this.extensionManifests.put(xmlFilePath, extensionManifest);
-		    	final RootDocument document;
+			if (url != null) {
+				this.extensionManifests.put(url, extensionManifest);
+				final RootDocument document;
 				try {
-					document = this.parseXml(xmlFile);
+					document = this.parseXml(url);
 				} catch (final XmlException e) {
 					Log.errorException(e);
 					return;
 				}
-		    	final ExtensionPoint[] extensionArray = document.getRoot().getExtensionArray();
-		    	for (final ExtensionPoint point : extensionArray) {
-		    		extensionManifest.put(point.getId(), point);
+				final ExtensionPoint[] extensionArray = document.getRoot().getExtensionArray();
+				for (final ExtensionPoint point : extensionArray) {
+					extensionManifest.put(point.getId(), point);
 				}
-	    	} else {
-	    		Log.errorMessage("Extension file '" + xmlFilePath + "' isn't exist");
-	    	}
+			} else {
+				Log.errorMessage("Extension file '" + url + "' isn't exist");
+			}
     	}
     }
     
@@ -85,7 +82,7 @@ public final class ExtensionLauncher {
     	// if extension handler has not exist - init it 
     	if (handler == null) {
     		// search for all xml file name contexts
-    		for (final String xmlFileName : this.extensionManifests.keySet()) {
+    		for (final URL xmlFileName : this.extensionManifests.keySet()) {
     			final Map<String, ExtensionPoint> extensionManifest = 
     				this.extensionManifests.get(xmlFileName);
 				final ExtensionPoint point = extensionManifest.get(id);
@@ -159,17 +156,17 @@ public final class ExtensionLauncher {
 		return null;
     }
 
-    private final RootDocument parseXml(final File xmlFile) throws XmlException {		
+    private final RootDocument parseXml(final URL xmlFile) throws XmlException {		
 		final RootDocument rootDoc;
 		try {			
 			rootDoc = RootDocument.Factory.parse(xmlFile);
 			if (rootDoc.validate()) {
 				return rootDoc;
 			}
-			throw new XmlException("Document '" + xmlFile.getAbsolutePath() + "' isn't valid.");
+			throw new XmlException("Document '" + xmlFile + "' isn't valid.");
 		} catch (final IOException e) {
 			Log.errorException(e);
-			throw new XmlException("Cannot read document '" + xmlFile.getAbsolutePath() + "'.");
+			throw new XmlException("Cannot read document '" + xmlFile + "'.");
 		}
 	}    
 }
