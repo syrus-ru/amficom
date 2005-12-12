@@ -41,7 +41,7 @@ ${MAILCLASSPATH}:\
 ${XMLCLASSPATH}
 
 APPNAME="leserver"
-#JAVAFLAGS="-agentlib:jdwp=transport=dt_socket,address=8001,server=y,suspend=n"
+JAVAFLAGS="-agentlib:jdwp=transport=dt_socket,address=7999,server=y,suspend=n"
 JAVAFLAGS="${JAVAFLAGS} -Xms128m -Xmx256m -server -ea"
 MAIN="com.syrus.AMFICOM.leserver.LoginEventServer"
 MAINOPTS=""
