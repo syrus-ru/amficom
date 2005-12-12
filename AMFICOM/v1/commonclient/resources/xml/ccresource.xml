@@ -1,0 +1,106 @@
+<ext:root xmlns:ext="http://syrus.com/AMFICOM/extensions">
+  <ext:extension xsi:type="res:resources" id="com.syrus.AMFICOM.resources.ResourceHandler" xmlns:res="http://syrus.com/AMFICOM/extensions/resources" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <res:resource xsi:type="res:handler" id="font" handlerClass="com.syrus.AMFICOM.resources.FontResourceHandler"/>
+    <res:resource xsi:type="res:handler" id="image" handlerClass="com.syrus.AMFICOM.resources.ImageResourceHandler"/>
+    <res:resource xsi:type="res:handler" id="insets" handlerClass="com.syrus.AMFICOM.resources.InsetsResourceHandler"/>
+    <res:resource xsi:type="res:handler" id="dimension" handlerClass="com.syrus.AMFICOM.resources.DimensionResourceHandler"/>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.general.opensession">
+      <res:filename>images/open_session.gif</res:filename>
+      <res:size width="16" height="16"/>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.general.closesession">
+      <res:filename>images/close_session.gif</res:filename>
+      <res:size width="16" height="16"/>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.general.domainselection">
+      <res:filename>images/domains.gif</res:filename>
+      <res:size width="16" height="16"/>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.general">
+      <res:filename>images/general.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.general.further">
+      <res:filename>images/further.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.general.delete">
+      <res:filename>images/delete.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.general.introduce">
+      <res:filename>images/introduce.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.general.openfile">
+      <res:filename>images/openfile.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.general.addfile">
+      <res:filename>images/addfile.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.general.removefile">
+      <res:filename>images/removefile.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.mini.general.pathmode">
+      <res:filename>images/pathmode.gif</res:filename>
+      <res:size width="15" height="15"/>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.mini.general.folder">
+      <res:filename>images/folder.gif</res:filename>
+      <res:size width="15" height="15"/>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.mini.general.port">
+      <res:filename>images/port.gif</res:filename>
+      <res:size width="15" height="15"/>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.mini.general.testing">
+      <res:filename>images/testing.gif</res:filename>
+      <res:size width="15" height="15"/>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.mini.general.measurementSetup">
+      <res:filename>images/testsetup.gif</res:filename>
+      <res:size width="15" height="15"/>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.mini.general.result">
+      <res:filename>images/result.gif</res:filename>
+      <res:size width="15" height="15"/>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.general.refresh">
+      <res:filename>images/refresh.gif</res:filename>
+      <res:size width="16" height="16"/>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.general.synchronize">
+      <res:filename>images/synchronize.gif</res:filename>
+      <res:size width="16" height="16"/>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.general.add">
+      <res:filename>images/newprop.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.general.commit">
+      <res:filename>images/commit.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.general.add">
+      <res:filename>images/newprop.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.surus.AMFICOM.icon.general.timedate">
+      <res:filename>images/timedate.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="LoginLogo">
+      <res:filename>images/main/logo2.jpg</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:insets" id="insets.null">
+      <res:top>0</res:top>
+      <res:left>0</res:left>
+      <res:bottom>0</res:bottom>
+      <res:right>0</res:right>
+    </res:resource>
+    <res:resource xsi:type="res:insets" id="insets.iconedButton">
+      <res:top>1</res:top>
+      <res:left>1</res:left>
+      <res:bottom>1</res:bottom>
+      <res:right>1</res:right>
+    </res:resource>
+    <res:resource xsi:type="res:dimension" id="Button.size">
+      <res:size width="24" height="24"/>
+    </res:resource>
+    <res:resource xsi:type="res:dimension" id="Null.size">
+      <res:size width="0" height="0"/>
+    </res:resource>
+  </ext:extension>
+</ext:root>
