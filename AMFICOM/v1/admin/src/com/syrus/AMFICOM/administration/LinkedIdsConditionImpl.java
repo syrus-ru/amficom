@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.41 2005/12/09 15:43:28 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.42 2005/12/12 07:43:50 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/12/09 15:43:28 $
+ * @version $Revision: 1.42 $, $Date: 2005/12/12 07:43:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -43,7 +43,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 
-		if (this.entityCode.shortValue() == DOMAIN_CODE) {
+		if (this.entityCode.shortValue() == DOMAIN_CODE && this.linkedEntityCode == DOMAIN_CODE) {
 			final Set<Domain> linkedDomains = new HashSet<Domain>();
 			Set<Identifier> linkedDomainIds = null;
 			for (final Identifiable linkedIdentifiable : linkedIdentifiables) {
