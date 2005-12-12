@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerResourcesTest.java,v 1.1 2005/12/12 08:16:51 bob Exp $
+* $Id: ManagerResourcesTest.java,v 1.2 2005/12/12 10:21:09 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.resources.ResourceHandler;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/12/12 08:16:51 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/12 10:21:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -32,7 +32,8 @@ public class ManagerResourcesTest extends TestCase {
 	public void testLoadResources() {
 		final ExtensionLauncher extensionLauncher = 
 			ExtensionLauncher.getInstance();
-		extensionLauncher.addExtensions("xml/resources.xml");		
+		
+		extensionLauncher.addExtensions(ManagerResourcesTest.class.getClassLoader().getResource("xml/resources.xml"));		
 		extensionLauncher.getExtensionHandler(ResourceHandler.class.getName());
 		
 		final String[] strings = new String[] {

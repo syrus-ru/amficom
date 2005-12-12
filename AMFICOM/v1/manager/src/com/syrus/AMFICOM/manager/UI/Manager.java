@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.22 2005/12/08 13:21:09 bob Exp $
+* $Id: Manager.java,v 1.23 2005/12/12 10:20:53 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserWrapper;
 import com.syrus.AMFICOM.client.launcher.Launcher;
@@ -34,7 +33,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/12/08 13:21:09 $
+ * @version $Revision: 1.23 $, $Date: 2005/12/12 10:20:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -51,9 +50,11 @@ public class Manager extends AbstractApplication {
 	@Override
 	protected void init() {
 		final ExtensionLauncher extensionLauncher = ExtensionLauncher.getInstance();
-		extensionLauncher.addExtensions("xml/manager.xml");
+		final ClassLoader classLoader = Manager.class.getClassLoader();
 		
-		extensionLauncher.addExtensions("xml/resources.xml");
+		extensionLauncher.addExtensions(classLoader.getResource("xml/manager.xml"));
+		
+		extensionLauncher.addExtensions(classLoader.getResource("xml/resources.xml"));
 		
 		extensionLauncher.getExtensionHandler(ResourceHandler.class.getName());
 		
