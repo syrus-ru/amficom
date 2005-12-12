@@ -1,5 +1,5 @@
 /*-
-* $Id: CommonClientResourcesTest.java,v 1.1 2005/12/12 14:08:30 bob Exp $
+* $Id: CommonClientResourcesCreator.java,v 1.1 2005/12/12 14:19:25 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,12 +31,12 @@ import junit.framework.TestCase;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/12/12 14:08:30 $
+ * @version $Revision: 1.1 $, $Date: 2005/12/12 14:19:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
- * @module extensions
+ * @module commonclient
  */
-public class CommonClientResourcesTest extends TestCase {
+public class CommonClientResourcesCreator extends TestCase {
 
 	public void testCreation() throws Exception {
 		final String xmlFilePath = "resources/xml/ccresource.xml";
@@ -212,16 +212,16 @@ public class CommonClientResourcesTest extends TestCase {
 			image.setSize(size);
 	    }
 		
-		{			
-			final Resource resource = resources.addNewResource();
-			final Image image = (Image) resource.changeType(Image.type);
-			image.setId(ResourceKeys.ICON_MINI_MEASUREMENT_SETUP);
-			image.setFilename("images/testsetup.gif");
-			Size size = Size.Factory.newInstance();
-			size.setWidth(15);
-			size.setHeight(15);
-			image.setSize(size);
-	    }
+//		{			
+//			final Resource resource = resources.addNewResource();
+//			final Image image = (Image) resource.changeType(Image.type);
+//			image.setId(ResourceKeys.ICON_MINI_MEASUREMENT_SETUP);
+//			image.setFilename("images/testsetup.gif");
+//			Size size = Size.Factory.newInstance();
+//			size.setWidth(15);
+//			size.setHeight(15);
+//			image.setSize(size);
+//	    }
 		
 		{			
 			final Resource resource = resources.addNewResource();

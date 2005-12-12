@@ -53,10 +53,6 @@
       <res:filename>images/testing.gif</res:filename>
       <res:size width="15" height="15"/>
     </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.mini.general.measurementSetup">
-      <res:filename>images/testsetup.gif</res:filename>
-      <res:size width="15" height="15"/>
-    </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.mini.general.result">
       <res:filename>images/result.gif</res:filename>
       <res:size width="15" height="15"/>
