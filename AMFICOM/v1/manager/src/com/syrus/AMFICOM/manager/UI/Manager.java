@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.25 2005/12/12 13:40:56 bob Exp $
+* $Id: Manager.java,v 1.26 2005/12/12 15:31:44 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,9 +8,11 @@
 
 package com.syrus.AMFICOM.manager.UI;
 
-import java.awt.Toolkit;
 import java.util.Date;
 import java.util.Set;
+
+import javax.swing.ImageIcon;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.SystemUser;
@@ -33,7 +35,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/12/12 13:40:56 $
+ * @version $Revision: 1.26 $, $Date: 2005/12/12 15:31:44 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -75,8 +77,10 @@ public class Manager extends AbstractApplication {
 		}
 		
 		final ManagerMainFrame managerMainFrame = new ManagerMainFrame(super.aContext);
+		
+		final ImageIcon imageIcon = (ImageIcon)UIManager.getIcon("com.syrus.AMFICOM.icon.administrate");
 		super.startMainFrame(managerMainFrame, 
-			Toolkit.getDefaultToolkit().getImage("images/main/administrate_mini.gif"));
+			imageIcon.getImage());
 		if (xmlSession) {
 			managerMainFrame.loggedIn();
 		}
