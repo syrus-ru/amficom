@@ -1,5 +1,5 @@
 /*
- * $Id: TestIdentifier.java,v 1.11 2005/09/29 08:28:27 arseniy Exp $
+ * $Id: TestIdentifier.java,v 1.12 2005/12/12 07:47:39 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import junit.framework.TestCase;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/29 08:28:27 $
+ * @version $Revision: 1.12 $, $Date: 2005/12/12 07:47:39 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -141,12 +141,12 @@ public class TestIdentifier extends TestCase {
 				&& subIds.size() <= identifiables1.size());
 	}
 
-	public void _testToString() {
-		Identifier id = new Identifier(144396663052566551L);
+	public void testToString() {
+		final Identifier id = new Identifier(181269885001678185L);
 		System.out.println("String: " + id);
 	}
 
-	public void testGetLongValue() {
+	public void _testGetLongValue() {
 		final Identifier identifier = new Identifier("ParameterSet_24");
 		final long identifierCode = identifier.getIdentifierCode();
 		System.out.println("Identifier: '" + identifier + "', code: " + identifierCode);
