@@ -1,5 +1,5 @@
 /*-
-* $Id: ImageResourceHandler.java,v 1.4 2005/12/09 16:17:31 bob Exp $
+* $Id: ImageResourceHandler.java,v 1.5 2005/12/12 11:47:13 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/09 16:17:31 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/12 11:47:13 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module extensions
@@ -57,7 +57,8 @@ public class ImageResourceHandler implements ConcreateResourceHandler<Image> {
 				}
 			});
 		} else {
-			System.err.println("Image file " + filename + " for id '" + id + "' is not exists.");
+			final String message = "Image file " + filename + " for id '" + id + "' does not exist.";
+			Log.errorMessage(message);
 		}
 	}
 }
