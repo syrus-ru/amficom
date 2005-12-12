@@ -1,5 +1,5 @@
 /*-
-* $Id: CommonClientResourcesCreator.java,v 1.1 2005/12/12 14:19:25 bob Exp $
+* $Id: CommonClientResourcesCreator.java,v 1.2 2005/12/12 15:26:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/12/12 14:19:25 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/12 15:26:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -329,6 +329,17 @@ public class CommonClientResourcesCreator extends TestCase {
 			size.setWidth(0);
 			size.setHeight(0);
 			dimension.setSize(size);
+	    }
+		
+		{			
+			final Resource resource = resources.addNewResource();
+			final Image image = (Image) resource.changeType(Image.type);
+			image.setId("com.syrus.AMFICOM.icon.administrate");
+			image.setFilename("images/main/administrate_mini.gif");
+			Size size = Size.Factory.newInstance();
+			size.setWidth(16);
+			size.setHeight(16);
+			image.setSize(size);
 	    }
 
 		// Document contains two concrete resources and is valid
