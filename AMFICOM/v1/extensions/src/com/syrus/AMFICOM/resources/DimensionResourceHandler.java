@@ -1,5 +1,5 @@
 /*-
-* $Id: DimensionResourceHandler.java,v 1.3 2005/12/12 13:40:13 bob Exp $
+* $Id: DimensionResourceHandler.java,v 1.4 2005/12/12 15:25:42 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/12 13:40:13 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/12 15:25:42 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module extensions
@@ -31,7 +31,7 @@ public class DimensionResourceHandler implements ConcreateResourceHandler<Dimens
 				+ id 
 				+ " is " 
 				+ awtDimension, 
-			Log.DEBUGLEVEL03);
+			Log.DEBUGLEVEL08);
 		UIManager.put(id, awtDimension);
 	}
 }
