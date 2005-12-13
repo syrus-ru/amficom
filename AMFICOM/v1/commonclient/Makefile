@@ -26,7 +26,8 @@ filter \
 leserver_interface \
 cmserver_interface \
 mscharserver_interface \
-util
+util \
+extensions
 
 EXTCLASSPATH := $(EXTLIBDIR)/kunststoff.jar:$(TROVE4JCLASSPATH):$(XMLBEANSCLASSPATH)
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
