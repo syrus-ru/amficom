@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserDomainPopupMenu.java,v 1.7 2005/12/12 07:24:27 bob Exp $
+* $Id: SystemUserDomainPopupMenu.java,v 1.8 2005/12/13 14:47:44 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/12/12 07:24:27 $
+ * @version $Revision: 1.8 $, $Date: 2005/12/13 14:47:44 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -106,6 +106,13 @@ public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu<DomainPerpe
 		public PasswordSetter(final SystemUser systemUser) {
 			this.systemUser = systemUser;
 			assert Log.debugMessage(this.systemUser.getId(), Log.DEBUGLEVEL03);
+		}
+		
+		@Override
+		protected String getTitle() {
+			return this.systemUser.getName()
+				+ ':'
+				+ I18N.getString("Common.ChangePassword.ChangingPassword");
 		}
 		
 		@Override
