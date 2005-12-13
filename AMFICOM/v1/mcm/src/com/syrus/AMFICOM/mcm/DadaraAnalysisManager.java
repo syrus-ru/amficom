@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.74 2005/10/31 10:47:23 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.75 2005/12/13 16:32:30 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/10/31 10:47:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.75 $, $Date: 2005/12/13 16:32:30 $
+ * @author $Author: saa $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -18,6 +18,7 @@ package com.syrus.AMFICOM.mcm;
 //*
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.Etalon;
@@ -123,7 +124,7 @@ final class DadaraAnalysisManager implements AnalysisManager {
 	}
 
 	public Parameter[] analyse() throws AnalysisException {
-		Log.debugMessage("entered", Log.DEBUGLEVEL07);
+		Log.debugMessage("entered", Level.FINER);
 
 		// output parameters (not Parameter[] yet)
 		final Map<ParameterType, byte[]> outParameters = new HashMap<ParameterType, byte[]>(); // Map<String codename, byte[] rawData>
@@ -139,12 +140,12 @@ final class DadaraAnalysisManager implements AnalysisManager {
 		// Получаем эталон (может быть null, тогда сравнение не проводим)
 		final Etalon etalon = obtainEtalon();
 
-		Log.debugMessage("bs = " + bs, Log.DEBUGLEVEL08);
-		Log.debugMessage("ap = " + ap, Log.DEBUGLEVEL08);
-		Log.debugMessage("etalon = " + etalon, Log.DEBUGLEVEL08);
+		Log.debugMessage("bs = " + bs, Level.FINER);
+		Log.debugMessage("ap = " + ap, Level.FINER);
+		Log.debugMessage("etalon = " + etalon, Level.FINER);
 
 		// === Обрабатываем входные данные, анализируем, сравниваем ===
-		Log.debugMessage("starting analysis", Log.DEBUGLEVEL07);
+		Log.debugMessage("starting analysis", Level.FINER);
 
 		// проводим анализ
 		final AnalysisResult ar = CoreAnalysisManager.performAnalysis(bs, ap);
@@ -200,7 +201,7 @@ final class DadaraAnalysisManager implements AnalysisManager {
 			}
 		}
 
-		Log.debugMessage("done, returning Parameter[" + ret.length + "]", Log.DEBUGLEVEL07);
+		Log.debugMessage("done, returning Parameter[" + ret.length + "]", Level.FINER);
 		return ret;
 	}
 }
