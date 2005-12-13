@@ -1,5 +1,5 @@
 /*-
-* $Id: PerspectiveTreeModel.java,v 1.9 2005/12/12 13:40:56 bob Exp $
+* $Id: PerspectiveTreeModel.java,v 1.10 2005/12/13 14:48:15 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
  * 
  * TODO rebuild moving methods to nodes (pattern visitor)
  * 
- * @version $Revision: 1.9 $, $Date: 2005/12/12 13:40:56 $
+ * @version $Revision: 1.10 $, $Date: 2005/12/13 14:48:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -556,7 +556,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 		return this.root;
     }
 	
-	private final class PerspectiveMutableTreeNode extends DefaultMutableTreeNode {
+	final class PerspectiveMutableTreeNode extends DefaultMutableTreeNode {
 		private final Perspective	perspective;
 		
 		private final List<ManagerGraphCell>		firstLevel;
