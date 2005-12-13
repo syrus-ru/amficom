@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.18 2005/12/02 15:36:44 arseniy Exp $
+# $Id: Makefile,v 1.19 2005/12/13 12:15:22 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -15,6 +15,7 @@ $(call checkenve,JAVA_HOME)
 
 DEPENDENCIES = \
 util \
+extensions \
 dadara \
 general \
 administration \
@@ -40,7 +41,8 @@ $(LIBNAME): .mach
 	$(CP) $(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.properties) \
 		$(CLASSDIR)/com/syrus/AMFICOM/resource
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com
+		-C $(CLASSDIR) com \
+		-C $(CLASSDIR) xml
 
 
 .mach:	$(CLASSDIR)
