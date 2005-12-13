@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.2 2005/11/28 14:47:04 bob Exp $
+* $Id: UserBeanFactory.java,v 1.3 2005/12/13 13:37:50 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:04 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/13 13:37:50 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -73,7 +73,7 @@ public final class UserBeanFactory extends IdentifiableBeanFactory<UserBean> {
 		
 		final DomainPerpective domainPerpective = (DomainPerpective) perspective;
 		
-		final String login = I18N.getString("Manager.Entity.User") + "-" + (++super.count);
+		final String login = "user_" + (++super.count);
 		
 		final SystemUser user = SystemUser.createInstance(LoginManager.getUserId(),
 			login,
