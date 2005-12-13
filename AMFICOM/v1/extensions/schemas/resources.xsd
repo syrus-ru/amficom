@@ -8,7 +8,7 @@
 
 	<xs:annotation>
 		<xs:documentation xml:lang = "en">
-			$Id: resources.xsd,v 1.1 2005/11/11 12:46:16 bass Exp $
+			$Id: resources.xsd,v 1.2 2005/12/13 09:02:01 bob Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -94,15 +94,40 @@
 		</xs:restriction>
 	</xs:simpleType>
 	
+	<xs:complexType name="rgb">
+		<xs:sequence>
+			<xs:element name="red" type="f:colorValue"/>
+			<xs:element name="green" type="f:colorValue"/>
+			<xs:element name="blue" type="f:colorValue"/>
+			<xs:element name="alpha" type="f:colorValue" minOccurs="0" maxOccurs="1"/>					
+		</xs:sequence>
+	</xs:complexType>
+	
 	<xs:complexType name="color">
 		<xs:complexContent>
 			<xs:extension base="f:resource">
-				<xs:sequence>
-					<xs:element name="red" type="f:colorValue"/>
-					<xs:element name="green" type="f:colorValue"/>
-					<xs:element name="blue" type="f:colorValue"/>
-					<xs:element name="alpha" type="f:colorValue" minOccurs="0" maxOccurs="1"/>					
-				</xs:sequence>
+				<xs:choice>
+					<xs:element name="rgb" type="f:rgb"/>					
+					<xs:element name="name">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="white"/>
+							    <xs:enumeration value="lightGray"/>
+							    <xs:enumeration value="gray"/>
+							    <xs:enumeration value="darkGray"/>
+							    <xs:enumeration value="black"/>
+							    <xs:enumeration value="red"/>
+							    <xs:enumeration value="pink"/>
+							    <xs:enumeration value="orange"/>
+							    <xs:enumeration value="yellow"/>
+							    <xs:enumeration value="green"/>
+							    <xs:enumeration value="magenta"/>
+							    <xs:enumeration value="cyan"/>
+							    <xs:enumeration value="blue"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>						
+				</xs:choice>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
