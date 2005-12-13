@@ -1,5 +1,5 @@
 /*-
-* $Id: PasswordDialog.java,v 1.2 2005/12/01 14:03:28 bob Exp $
+* $Id: PasswordDialog.java,v 1.3 2005/12/13 14:47:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import javax.swing.JPasswordField;
 import com.syrus.AMFICOM.client.resource.I18N;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/01 14:03:28 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/13 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -90,7 +90,7 @@ public class PasswordDialog {
 		boolean correct = false;
 		do {
 			final JDialog dialog = optionPane.createDialog(null, 
-				I18N.getString("Common.ChangePassword.ChangingPassword"));
+				this.getTitle());
 			dialog.setVisible(true);
 			if (optionPane.getValue() == okButton) {
 				final String checkPassword = checkPassword();
@@ -138,6 +138,10 @@ public class PasswordDialog {
 			this.applyPassword(password);
 		}
 		return null;
+	}
+	
+	protected String getTitle() {
+		return I18N.getString("Common.ChangePassword.ChangingPassword");
 	}
 	
 	protected void applyPassword(final char[] password) {
