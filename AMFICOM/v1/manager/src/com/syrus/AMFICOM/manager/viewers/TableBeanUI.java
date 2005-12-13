@@ -1,5 +1,5 @@
 /*-
-* $Id: TableBeanUI.java,v 1.5 2005/12/07 14:08:02 bob Exp $
+* $Id: TableBeanUI.java,v 1.6 2005/12/13 15:07:08 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/12/07 14:08:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/12/13 15:07:08 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -69,6 +69,7 @@ public abstract class TableBeanUI<T extends Bean> extends AbstractBeanUI<T> {
  			
  			this.table = new WrapperedPropertyTable<T>(this.model);
  			this.table.setTableHeader(null);
+ 			this.table.setDefaultTableCellRenderer();
  	
  			this.listener = new PropertyChangeListener() {
  				public void propertyChange(final PropertyChangeEvent evt) {
