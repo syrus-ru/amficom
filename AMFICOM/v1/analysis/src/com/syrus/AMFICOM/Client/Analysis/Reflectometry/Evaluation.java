@@ -1,8 +1,7 @@
 
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry;
 
-import java.awt.Image;
-
+import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ThresholdsMainFrame;
@@ -19,7 +18,8 @@ public class Evaluation extends AbstractApplication {
 	@Override
 	protected void init() {
 		super.aContext.setApplicationModel(new ReflectometryAnalyseApplicationModelFactory().create());
-		super.startMainFrame(new ThresholdsMainFrame(this.aContext), (Image) UIManager.get(AnalysisResourceKeys.ICON_EVALUATE_MINI));
+		final ImageIcon imageIcon = (ImageIcon) UIManager.getIcon(AnalysisResourceKeys.ICON_EVALUATE_MINI);
+		super.startMainFrame(new ThresholdsMainFrame(this.aContext), imageIcon.getImage());
 	}
 
 	public static void main(String[] args) {

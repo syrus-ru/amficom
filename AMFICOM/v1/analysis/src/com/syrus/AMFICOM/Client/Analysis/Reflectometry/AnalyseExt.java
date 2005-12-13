@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry;
 
-import java.awt.Image;
-
+import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame;
@@ -18,7 +17,8 @@ public class AnalyseExt extends AbstractApplication {
 	@Override
 	protected void init() {
 		super.aContext.setApplicationModel(new ReflectometryAnalyseApplicationModelFactory().create());
-		super.startMainFrame(new AnalyseMainFrame(this.aContext), (Image) UIManager.get(AnalysisResourceKeys.ICON_SURVEY_MINI));
+		final ImageIcon imageIcon = (ImageIcon) UIManager.getIcon(AnalysisResourceKeys.ICON_SURVEY_MINI);
+		super.startMainFrame(new AnalyseMainFrame(this.aContext), imageIcon.getImage());
 	}
 
 	public static void main(String[] args) {
