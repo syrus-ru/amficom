@@ -1,5 +1,5 @@
 /*-
-* $Id: ExtensionLauncher.java,v 1.3 2005/12/12 13:40:13 bob Exp $
+* $Id: ExtensionLauncher.java,v 1.4 2005/12/13 09:20:31 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import org.apache.xmlbeans.XmlException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/12 13:40:13 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/13 09:20:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module resources
@@ -41,7 +41,6 @@ public final class ExtensionLauncher {
 	private Map<URL, Map<String, Set<ExtensionPoint>>> extensionManifests;
 	
 	private ExtensionLauncher() {
-		assert Log.debugMessage(Log.DEBUGLEVEL03);
 		this.extensionHandlers = 
 			Collections.synchronizedMap(new HashMap<String, ExtensionHandler>());
 		
@@ -57,6 +56,7 @@ public final class ExtensionLauncher {
     }
     
     public final void addExtensions(final URL url) {
+    	assert Log.debugMessage(url, Log.DEBUGLEVEL08);
     	Map<String, Set<ExtensionPoint>> extensionManifest = 
     		this.extensionManifests.get(url);
     	if (extensionManifest == null) {
@@ -79,6 +79,7 @@ public final class ExtensionLauncher {
 						extensionManifest.put(id, set);
 					}
 					synchronized (set) {
+//						assert Log.debugMessage("id:" + id + ", " + url, Log.DEBUGLEVEL03);
 						set.add(point);
 					}					
 				}
@@ -92,6 +93,7 @@ public final class ExtensionLauncher {
     	// get from initialized extension handles
     	T handler = (T) this.extensionHandlers.get(id);
     	for (final URL xmlFileName : this.extensionManifests.keySet()) {
+//    		assert Log.debugMessage("id:" + id + ", " + xmlFileName, Log.DEBUGLEVEL03);
 			final Map<String, Set<ExtensionPoint>> extensionManifest = 
 				this.extensionManifests.get(xmlFileName);
 			final Set<ExtensionPoint> pointSet = extensionManifest.get(id);
@@ -114,12 +116,11 @@ public final class ExtensionLauncher {
 				synchronized (pointSet) {
 					for(final Iterator<ExtensionPoint> iterator = pointSet.iterator(); iterator.hasNext();) {
 						final ExtensionPoint next = iterator.next();
+//						assert Log.debugMessage(handler + " > " + next, Log.DEBUGLEVEL03);
 						handler.addHandlerData(next);
 						iterator.remove();
 					}
 				}
-				
-				break;
 			} else {
 					assert Log.debugMessage("pointSet for " + id + " is null.", Log.DEBUGLEVEL03);
 			}

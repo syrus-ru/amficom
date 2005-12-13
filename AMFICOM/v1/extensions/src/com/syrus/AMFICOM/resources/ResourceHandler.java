@@ -1,5 +1,5 @@
 /*-
-* $Id: ResourceHandler.java,v 1.2 2005/12/12 13:40:13 bob Exp $
+* $Id: ResourceHandler.java,v 1.3 2005/12/13 09:20:31 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/12 13:40:13 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/13 09:20:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module resources
@@ -33,6 +33,7 @@ public final class ResourceHandler extends AbstractExtensionHandler<Resources> {
 	private final static Level LOGLEVEL = Log.DEBUGLEVEL08;
 	
 	public void addHandlerData(final Resources resources) {
+//		assert Log.debugMessage(resources, Log.DEBUGLEVEL03);
 		this.loadHandlers(resources);
 		this.loadResources(resources);
 	}
