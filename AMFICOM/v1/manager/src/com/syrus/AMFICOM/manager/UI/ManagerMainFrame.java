@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.32 2005/12/08 13:21:09 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.33 2005/12/13 13:37:32 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,6 +66,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.extensions.ExtensionLauncher;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.manager.ManagerHandler;
+import com.syrus.AMFICOM.manager.UI.PerspectiveTreeModel.PerspectiveMutableTreeNode;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.AMFICOM.manager.graph.ManagerGraphCell;
@@ -73,7 +74,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.32 $, $Date: 2005/12/08 13:21:09 $
+ * @version $Revision: 1.33 $, $Date: 2005/12/13 13:37:32 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -767,6 +768,10 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 					final ActionMutableTreeNode actionTreeNode = 
 						(ActionMutableTreeNode) lastPathComponent;
 					setPerspective(actionTreeNode.getPerspective());
+				} else if (lastPathComponent instanceof PerspectiveTreeModel.PerspectiveMutableTreeNode) {
+					final PerspectiveTreeModel.PerspectiveMutableTreeNode cell = 
+						(PerspectiveMutableTreeNode) lastPathComponent;
+					setPerspective(cell.getPerspective());
 				}
 			}
 		});
