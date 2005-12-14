@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.19 2005/12/13 12:15:22 arseniy Exp $
+# $Id: Makefile,v 1.20 2005/12/14 15:41:11 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -71,6 +71,7 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(SOURCES) \
+		$(wildcard resources/xml/*.xml) \
 		$(SRCDIR)/com/syrus/AMFICOM/Client/General/Lang/analysis_ru.properties \
 		Application.properties analysis.properties \
 		analysis.sh
