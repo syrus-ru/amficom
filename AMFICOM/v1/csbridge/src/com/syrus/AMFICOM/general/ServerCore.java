@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.44 2005/12/06 09:41:41 bass Exp $
+ * $Id: ServerCore.java,v 1.45 2005/12/14 11:16:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/12/06 09:41:41 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2005/12/14 11:16:51 $
  * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -87,7 +87,7 @@ public abstract class ServerCore implements CommonServerOperations {
 					+ ObjectEntities.codeToString(StorableObject.getEntityCodeOfIdentifiables(idsT)) + "'s for ids: "
 					+ ids, Level.FINEST);
 
-			final Set<? extends StorableObject> storableObjects = StorableObjectPool.getStorableObjects(ids, true);
+			final Set<StorableObject> storableObjects = StorableObjectPool.getStorableObjects(ids, true);
 			final IdlStorableObject[] transferables = StorableObject.createTransferables(storableObjects, this.orb);
 			return transferables;
 		} catch (ApplicationException ae) {
@@ -117,19 +117,55 @@ public abstract class ServerCore implements CommonServerOperations {
 
 			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
 
-			Log.debugMessage("Requested '" + ObjectEntities.codeToString(entityCode) + "'s but ids: " + ids, Level.FINEST);
+			Log.debugMessage("Requested '" + ObjectEntities.codeToString(entityCode) + "'s but ids: " + ids + " for condition: " + condition, Level.FINEST);
 
 			/**
 			 * NOTE: If it is impossible to load objects by Loader - return only those
 			 * from Pool
 			 */
-			final Set<? extends StorableObject> storableObjects = StorableObjectPool.getStorableObjectsButIdsByCondition(ids,
+			final Set<StorableObject> storableObjects = StorableObjectPool.getStorableObjectsButIdsByCondition(ids,
 					condition,
 					true,
 					false);
 			final IdlStorableObject[] transferables = StorableObject.createTransferables(storableObjects, this.orb);
 			return transferables;
 		} catch (final ApplicationException ae) {
+			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_RETRIEVE);
+		} catch (final AMFICOMRemoteException are) {
+			throw are;
+		} catch (final Throwable throwable) {
+			throw this.processDefaultThrowable(throwable);
+		}
+	}
+
+	public final IdlIdentifier[] transmitIdentifiersButIdsByCondition(final IdlIdentifier[] idsT,
+			final IdlStorableObjectCondition conditionT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+		try {
+			assert idsT != null && sessionKeyT != null && conditionT != null : ErrorMessages.NON_NULL_EXPECTED;
+
+			final StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(conditionT);
+			final short entityCode = condition.getEntityCode().shortValue();
+
+			assert idsT.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(idsT);
+			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+
+			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
+			this.validateAccess(sessionKeyT, userId, domainId);
+
+			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
+
+			Log.debugMessage("Requested identifiers of '" + ObjectEntities.codeToString(entityCode) + "'s but ids: " + ids + " for condition: " + condition, Level.FINEST);
+
+			/**
+			 * NOTE: If it is impossible to load identifiers by Loader - return only those
+			 * from Pool
+			 */
+			final Set<Identifier> identifiers = StorableObjectPool.getIdentifiersButIdsByCondition(ids, condition, true, false);
+			final IdlIdentifier[] transferables = Identifier.createTransferables(identifiers);
+			return transferables;
+		} catch (ApplicationException ae) {
 			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_RETRIEVE);
 		} catch (final AMFICOMRemoteException are) {
 			throw are;
@@ -188,7 +224,7 @@ public abstract class ServerCore implements CommonServerOperations {
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
 			this.validateAccess(sessionKeyT, userId, domainId);
 
-			final Set<StorableObject<?>> storableObjects = StorableObjectPool.fromTransferables(storableObjectsT, true);
+			final Set<? extends StorableObject<?>> storableObjects = StorableObjectPool.fromTransferables(storableObjectsT, true);
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
