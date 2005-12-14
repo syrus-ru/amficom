@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.64 2005/12/06 09:41:41 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.65 2005/12/14 11:15:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/12/06 09:41:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.65 $, $Date: 2005/12/14 11:15:33 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -35,7 +35,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 	ServerConnectionManager serverConnectionManager;
 	private CORBAActionProcessor corbaActionProcessor;
 
-	private abstract class LoadCORBAAction<T extends StorableObject> implements CORBAAction {
+	private static abstract class LoadCORBAAction<T extends Identifiable> implements CORBAAction {
 		Set<T> loadedObjects;
 
 		Set<T> getLoadedObjects() {
@@ -131,6 +131,31 @@ public class CORBAObjectLoader implements ObjectLoader {
 		final Set<T> loadedObjects = action.getLoadedObjects();
 		if (loadedObjects != null) {
 			return loadedObjects;
+		}
+		return Collections.emptySet();
+	}
+
+	public Set<Identifier> loadIdentifiersButIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition)
+			throws ApplicationException {
+		assert ids != null : NON_NULL_EXPECTED;
+		assert condition != null : NON_NULL_EXPECTED;
+
+		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
+		final IdlStorableObjectCondition conditionT = condition.getIdlTransferable();
+
+		final LoadCORBAAction<Identifier> action = new LoadCORBAAction<Identifier>() {
+			public void perform() throws AMFICOMRemoteException, ApplicationException {
+				final IdlSessionKey sessionKeyT = LoginManager.getIdlSessionKey();
+				final CommonServer server = CORBAObjectLoader.this.serverConnectionManager.getServerReference();
+				final IdlIdentifier[] transferables = server.transmitIdentifiersButIdsByCondition(idsT, conditionT, sessionKeyT);
+				this.loadedObjects = Identifier.fromTransferables(transferables);
+			}
+		};
+
+		this.corbaActionProcessor.performAction(action);
+		final Set<Identifier> loadedIdentifiers = action.getLoadedObjects();
+		if (loadedIdentifiers != null) {
+			return loadedIdentifiers;
 		}
 		return Collections.emptySet();
 	}
