@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.136 2005/12/14 14:17:03 bass Exp $
+ * $Id: StorableObject.java,v 1.137 2005/12/14 14:17:49 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.136 $, $Date: 2005/12/14 14:17:03 $
+ * @version $Revision: 1.137 $, $Date: 2005/12/14 14:17:49 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -633,7 +633,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.136 $, $Date: 2005/12/14 14:17:03 $
+	 * @version $Revision: 1.137 $, $Date: 2005/12/14 14:17:49 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -742,7 +742,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.136 $, $Date: 2005/12/14 14:17:03 $
+	 * @version $Revision: 1.137 $, $Date: 2005/12/14 14:17:49 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
@@ -752,7 +752,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	}
 
 	/**
-	 * @see {@link com.syrus.util.LRUMap.Retainable#retain()}.
+	 * @see com.syrus.util.LRUMap.Retainable#retain()
 	 */
 	public boolean retain() {
 		return this.isChanged();
