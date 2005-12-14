@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.38 2005/12/14 10:15:26 bob Exp $
+* $Id: PermissionAttributes.java,v 1.39 2005/12/14 14:14:34 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/12/14 10:15:26 $
+ * @version $Revision: 1.39 $, $Date: 2005/12/14 14:14:34 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -122,7 +122,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	 * 
 	 *  <p><b>WARNING !!! Never change the order or delete items, only appending to the end of list permitted</b></p>  
 	 */
-	private enum Adminstration implements SwitchableGroupNumber {
+	private enum Administration implements SwitchableGroupNumber {
 		ENTER(true),
 
 		CREATE_DOMAIN(true),
@@ -141,12 +141,19 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 
 		DELETE_DOMAIN(true),
 		DELETE_GROUP(false), //
-		DELETE_USER(true);
+		DELETE_USER(true),
+		
+		DELETE_MEASUREMENT_MODULE(true),
+		DELETE_SERVER(true),
+		DELETE_WORKSTATION(true),
 
+		CREATE_RTU(true),
+		CHANGE_RTU(true),
+		DELETE_RTU(true);
 
 		private final boolean enable;
 
-		private Adminstration(final boolean enable) {
+		private Administration(final boolean enable) {
 			this.enable = enable;			
 		}
 
@@ -491,24 +498,30 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 
 	public static enum PermissionCodename {
 		// Adminstration
-		ADMINISTRATION_ENTER(Adminstration.ENTER),
-		ADMINISTRATION_CREATE_DOMAIN(Adminstration.CREATE_DOMAIN),
-		ADMINISTRATION_CREATE_GROUP(Adminstration.CREATE_GROUP),
-		ADMINISTRATION_CREATE_USER(Adminstration.CREATE_USER),
-		ADMINISTRATION_CREATE_MEASUREMENT_MODULE(Adminstration.CREATE_MEASUREMENT_MODULE),
-		ADMINISTRATION_CREATE_SERVER(Adminstration.CREATE_SERVER),
-		ADMINISTRATION_CREATE_WORKSTATION(Adminstration.CREATE_WORKSTATION),
+		ADMINISTRATION_ENTER(Administration.ENTER),
+		ADMINISTRATION_CREATE_DOMAIN(Administration.CREATE_DOMAIN),
+		ADMINISTRATION_CREATE_GROUP(Administration.CREATE_GROUP),
+		ADMINISTRATION_CREATE_USER(Administration.CREATE_USER),
+		ADMINISTRATION_CREATE_MEASUREMENT_MODULE(Administration.CREATE_MEASUREMENT_MODULE),
+		ADMINISTRATION_CREATE_SERVER(Administration.CREATE_SERVER),
+		ADMINISTRATION_CREATE_RTU(Administration.CREATE_RTU),
+		ADMINISTRATION_CREATE_WORKSTATION(Administration.CREATE_WORKSTATION),
+		
+		ADMINISTRATION_CHANGE_DOMAIN(Administration.CHANGE_DOMAIN),
+		ADMINISTRATION_CHANGE_GROUP(Administration.CHANGE_GROUP),
+		ADMINISTRATION_CHANGE_USER(Administration.CHANGE_USER),
+		ADMINISTRATION_CHANGE_MEASUREMENT_MODULE(Administration.CHANGE_MEASUREMENT_MODULE),
+		ADMINISTRATION_CHANGE_SERVER(Administration.CHANGE_SERVER),
+		ADMINISTRATION_CHANGE_RTU(Administration.CHANGE_RTU),
+		ADMINISTRATION_CHANGE_WORKSTATION(Administration.CHANGE_WORKSTATION),
 
-		ADMINISTRATION_CHANGE_DOMAIN(Adminstration.CHANGE_DOMAIN),
-		ADMINISTRATION_CHANGE_GROUP(Adminstration.CHANGE_GROUP),
-		ADMINISTRATION_CHANGE_USER(Adminstration.CHANGE_USER),
-		ADMINISTRATION_CHANGE_MEASUREMENT_MODULE(Adminstration.CHANGE_MEASUREMENT_MODULE),
-		ADMINISTRATION_CHANGE_SERVER(Adminstration.CHANGE_SERVER),
-		ADMINISTRATION_CHANGE_WORKSTATION(Adminstration.CHANGE_WORKSTATION),
-
-		ADMINISTRATION_DELETE_DOMAIN(Adminstration.DELETE_DOMAIN),
-		ADMINISTRATION_DELETE_GROUP(Adminstration.DELETE_GROUP),
-		ADMINISTRATION_DELETE_USER(Adminstration.DELETE_USER),
+		ADMINISTRATION_DELETE_DOMAIN(Administration.DELETE_DOMAIN),
+		ADMINISTRATION_DELETE_GROUP(Administration.DELETE_GROUP),
+		ADMINISTRATION_DELETE_USER(Administration.DELETE_USER),		
+		ADMINISTRATION_DELETE_MEASUREMENT_MODULE(Administration.DELETE_MEASUREMENT_MODULE),
+		ADMINISTRATION_DELETE_SERVER(Administration.DELETE_SERVER),
+		ADMINISTRATION_DELETE_RTU(Administration.DELETE_RTU),
+		ADMINISTRATION_DELETE_WORKSTATION(Administration.DELETE_WORKSTATION),
 
 		// ElementsEditor		
 		ELEMENTS_EDITOR_ENTER(ElementsEditor.ENTER),
