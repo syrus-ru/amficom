@@ -50,7 +50,9 @@ $(LIBNAME): .mach
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/resource/*.properties) \
 		$(CLASSDIR)/com/syrus/AMFICOM/client/resource
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com
+		-C $(CLASSDIR) com \
+		-C $(CLASSDIR) images \
+		-C $(CLASSDIR) xml
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
