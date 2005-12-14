@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.135 2005/12/14 13:25:51 bass Exp $
+ * $Id: StorableObject.java,v 1.136 2005/12/14 14:17:03 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.135 $, $Date: 2005/12/14 13:25:51 $
+ * @version $Revision: 1.136 $, $Date: 2005/12/14 14:17:03 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -633,11 +633,11 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.135 $, $Date: 2005/12/14 13:25:51 $
+	 * @version $Revision: 1.136 $, $Date: 2005/12/14 14:17:03 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
-	protected static class StorableObjectContainerWrappee<T extends StorableObject> {
+	protected static class StorableObjectContainerWrappee<T extends StorableObject<T>> {
 		private static final long serialVersionUID = -1264974065379428032L;
 
 		private boolean cacheBuilt = false;
@@ -650,7 +650,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 		 * @param wrapper
 		 * @param entityCode
 		 */
-		public StorableObjectContainerWrappee(final StorableObject wrapper,
+		public StorableObjectContainerWrappee(final StorableObject<?> wrapper,
 				final short entityCode) {
 			this.condition = new LinkedIdsCondition(wrapper.getId(), entityCode);
 		}
@@ -667,15 +667,11 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 			}
 
 			if (this.cacheBuilt) {
-				if (!this.containeeIds.contains(containee)) {
-					this.containeeIds.add(containee.getId());
-				}
+				this.containeeIds.add(containee.getId());
 			} else if (buildCacheOnModification()) {
 				this.ensureCacheBuilt(usePool);
 
-				if (!this.containeeIds.contains(containee)) {
-					this.containeeIds.add(containee.getId());
-				}
+				this.containeeIds.add(containee.getId());
 			}
 		}
 
@@ -688,15 +684,11 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 		public final void removeFromCache(final T containee, final boolean usePool)
 		throws ApplicationException {
 			if (this.cacheBuilt) {
-				if (this.containeeIds.contains(containee)) {
-					this.containeeIds.remove(containee);
-				}
+				this.containeeIds.remove(containee);
 			} else if (buildCacheOnModification()) {
 				this.ensureCacheBuilt(usePool);
 
-				if (this.containeeIds.contains(containee)) {
-					this.containeeIds.remove(containee);
-				}
+				this.containeeIds.remove(containee);
 			}
 		}
 
@@ -733,15 +725,9 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 					if (this.containeeIds == null) {
 						this.containeeIds = Collections.synchronizedSet(new HashSet<Identifier>());
 					} else {
-						synchronized (this.containeeIds) {
-							for (final Iterator<Identifier> containeeIdIterator = this.containeeIds.iterator(); containeeIdIterator.hasNext();) {
-								containeeIdIterator.remove();
-							}
-						}
+						this.containeeIds.clear();
 					}
-					for (final Identifier containeeId : StorableObjectPool.getIdentifiersByCondition(this.condition, this.useLoader())) {
-						this.containeeIds.add(containeeId);
-					}
+					this.containeeIds.addAll(StorableObjectPool.getIdentifiersByCondition(this.condition, this.useLoader()));
 					this.cacheBuilt = true;
 				}
 			}
@@ -756,7 +742,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.135 $, $Date: 2005/12/14 13:25:51 $
+	 * @version $Revision: 1.136 $, $Date: 2005/12/14 14:17:03 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
