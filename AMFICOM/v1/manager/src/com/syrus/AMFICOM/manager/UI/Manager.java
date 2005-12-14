@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.26 2005/12/12 15:31:44 bob Exp $
+* $Id: Manager.java,v 1.27 2005/12/14 15:52:41 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/12/12 15:31:44 $
+ * @version $Revision: 1.27 $, $Date: 2005/12/14 15:52:41 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -117,7 +117,7 @@ public class Manager extends AbstractApplication {
 		final Domain domain = StorableObjectPool.getStorableObject(new Identifier("Domain_0"), true);
 		LoginManager.setDomainId(domain.getId());
 		
-		LoginManager.setIdlSessionKey(new IdlSessionKey(new Date().toString()));
+		LoginManager.setIdlSessionKey(new IdlSessionKey(new Date().toString()));		
 	}
 	
 	public static void main(String[] args) {
