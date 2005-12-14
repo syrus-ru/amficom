@@ -1,5 +1,5 @@
 /*
- * $Id: TestCreateAdministrationCharacteristics.java,v 1.2 2005/11/14 11:32:12 bob Exp $
+ * $Id: TestCreateAdministrationCharacteristics.java,v 1.3 2005/12/14 15:55:55 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,18 +13,17 @@ import junit.framework.TestCase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
+import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.resource.LayoutItem;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/14 11:32:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/12/14 15:55:55 $
+ * @author $Author: bass $
  * @module test
  */
 public class TestCreateAdministrationCharacteristics extends TestCase {
@@ -48,7 +47,7 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 				"name", 
 				"name", 
 				DataType.STRING, 
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 			
 		}
 		
@@ -58,7 +57,7 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 				"x coordinate", 
 				"x coordinate", 
 				DataType.STRING, 
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 			
 		}
 
@@ -68,7 +67,7 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 				"y coordinate", 
 				"y coordinate", 
 				DataType.STRING, 
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 			
 		}
 		
@@ -78,7 +77,7 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 				"Полное имя пользотеля", 
 				"ФИО", 
 				DataType.STRING, 
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 			
 		}
 		
@@ -88,7 +87,7 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 				"Должность", 
 				"Должность", 
 				DataType.STRING, 
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 			
 		}
 
@@ -98,7 +97,7 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 				"Подразделение", 
 				"Подразделение", 
 				DataType.STRING, 
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		{
@@ -107,7 +106,7 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 				"Организация", 
 				"Организация", 
 				DataType.STRING, 
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		{
@@ -116,7 +115,7 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 				"Номер комнаты", 
 				"Номер комнаты", 
 				DataType.STRING, 
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		{
@@ -125,7 +124,7 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 				"Город", 
 				"Город", 
 				DataType.STRING, 
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		{
@@ -134,7 +133,7 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 				"Улица", 
 				"Улица", 
 				DataType.STRING, 
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		{
@@ -143,7 +142,7 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 				"Дом", 
 				"Дом", 
 				DataType.STRING, 
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		{
@@ -152,7 +151,7 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 				"Адрес электронной почты", 
 				"Электронная почта", 
 				DataType.STRING, 
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		{
@@ -161,7 +160,7 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 				"Телефон", 
 				"Телефон", 
 				DataType.STRING, 
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		{
@@ -170,7 +169,7 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 				"Сотовый телефон", 
 				"Сотовый телефон", 
 				DataType.STRING, 
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+				CharacteristicTypeSort.VISUAL); 
 		}
 		
 		StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_TYPE_CODE, userId, true);
