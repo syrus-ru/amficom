@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.4 2005/12/08 16:07:19 bob Exp $
+ * $Id: AbstractBean.java,v 1.5 2005/12/14 15:08:30 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/08 16:07:19 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -103,6 +103,18 @@ public abstract class AbstractBean {
 	public abstract String getName();
 	
 	public abstract String getCodename();
+	
+	public abstract boolean isEditable();
+	
+	public abstract boolean isDeletable();
+	
+//	public boolean isEditable() {
+//		return true;
+//	}
+//	
+//	public  boolean isDeletable() {
+//		return true;
+//	}
 	
 	public abstract void setName(final String name);
 

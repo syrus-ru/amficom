@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBean.java,v 1.2 2005/11/28 14:47:05 bob Exp $
+ * $Id: ServerBean.java,v 1.3 2005/12/14 15:08:30 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,9 +14,11 @@ import static com.syrus.AMFICOM.manager.beans.ServerBeanWrapper.KEY_NAME;
 
 import java.beans.PropertyChangeEvent;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -25,7 +27,7 @@ import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -39,7 +41,25 @@ public class ServerBean extends Bean implements DomainNetworkItem {
 		super.setIdentifier(id);
 		this.server = StorableObjectPool.getStorableObject(this.identifier, true);
 	}
-
+	
+	@Override
+	public boolean isDeletable() {
+		try {
+			return Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_SERVER);
+		} catch (ApplicationException e) {
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean isEditable() {
+		try {
+			return Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_SERVER);
+		} catch (ApplicationException e) {
+			return false;
+		}
+	}
+	
 	public final String getDescription() {
 		return this.server.getDescription();
 	}

@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserPerpective.java,v 1.5 2005/12/07 14:08:02 bob Exp $
+* $Id: SystemUserPerpective.java,v 1.6 2005/12/14 15:08:30 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import org.jgraph.graph.Port;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -48,7 +49,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/12/07 14:08:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -103,6 +104,9 @@ public final class SystemUserPerpective extends AbstractPerspective {
 			}
 		}
 		
+		final boolean permitted = 
+			Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_USER);
+
 		for(final Module module : Module.getValueList()) {
 			if (!module.isEnable()) {
 				continue;
@@ -110,10 +114,12 @@ public final class SystemUserPerpective extends AbstractPerspective {
 			
 			final ModuleCheckable moduleCheckable = new ModuleCheckable(module);
 			
-			this.actions.add(
+			final AbstractAction action = 
 				this.createGetTheSameOrCreateNewAction(factory.getUserInstance(module), 
 					moduleCheckable, 
-					cell));
+					cell);
+			action.setEnabled(permitted);
+			this.actions.add(action);
 		}
 	}
 	

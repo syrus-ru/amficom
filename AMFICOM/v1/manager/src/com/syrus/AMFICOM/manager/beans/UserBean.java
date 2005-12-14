@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.7 2005/12/09 09:22:41 bob Exp $
+ * $Id: UserBean.java,v 1.8 2005/12/14 15:08:30 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
+import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -44,7 +45,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/12/09 09:22:41 $
+ * @version $Revision: 1.8 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -76,10 +77,9 @@ public class UserBean extends Bean implements WorkstationItem {
 	
 	@Override
 	public void dispose() throws ApplicationException {
-		assert Log.debugMessage("UserBean.dispose | " 
-				+ Identifier.createIdentifiers(this.user.getCharacteristics(false)),
+		assert Log.debugMessage(this.user.getCharacteristics(false),
 			Log.DEBUGLEVEL09);
-		assert Log.debugMessage("UserBean.dispose | " + this.identifier, Log.DEBUGLEVEL09);		
+		assert Log.debugMessage(this.identifier, Log.DEBUGLEVEL09);		
 		StorableObjectPool.delete(this.user.getCharacteristics(false));
 		StorableObjectPool.delete(this.identifier);		
 		
@@ -109,6 +109,24 @@ public class UserBean extends Bean implements WorkstationItem {
 //		GraphConstants.setLineColor(attributes, Color.LIGHT_GRAY);
 //		GraphConstants.setForeground(attributes, Color.BLACK);
 //	}
+	
+	@Override
+	public boolean isDeletable() {
+		try {
+			return Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_USER);
+		} catch (ApplicationException e) {
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean isEditable() {
+		try {
+			return Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_USER);
+		} catch (ApplicationException e) {
+			return false;
+		}
+	}
 
 	private void refreshRoles() throws ApplicationException {
 		Log.debugMessage(Log.DEBUGLEVEL09);

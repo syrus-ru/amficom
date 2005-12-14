@@ -1,5 +1,5 @@
 /*-
-* $Id: NetBean.java,v 1.4 2005/12/09 12:19:30 bob Exp $
+* $Id: NetBean.java,v 1.5 2005/12/14 15:08:30 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,7 +14,9 @@ import java.util.Collections;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -28,7 +30,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/09 12:19:30 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -40,6 +42,24 @@ public class NetBean extends NonStorableBean {
 	public NetBean(final Domain domain) {
 		this.domain = domain;				
 	} 
+	
+	@Override
+	public boolean isDeletable() {
+		try {
+			return Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_DOMAIN);
+		} catch (ApplicationException e) {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isEditable() {
+		try {
+			return Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_DOMAIN);
+		} catch (ApplicationException e) {
+			return false;
+		}
+	}
 	
 	private Set<LayoutItem> getBeanChildrenLayoutItems() 
 	throws ApplicationException{

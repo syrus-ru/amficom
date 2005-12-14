@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBean.java,v 1.2 2005/11/28 14:47:04 bob Exp $
+ * $Id: MCMBean.java,v 1.3 2005/12/14 15:08:30 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,9 @@ import static com.syrus.AMFICOM.manager.beans.MCMBeanWrapper.KEY_USER_ID;
 import java.beans.PropertyChangeEvent;
 
 import com.syrus.AMFICOM.administration.MCM;
+import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -26,7 +28,7 @@ import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:04 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -41,6 +43,24 @@ public class MCMBean extends Bean implements DomainNetworkItem {
 		this.mcm = StorableObjectPool.getStorableObject(this.identifier, true);
 	}
 
+	@Override
+	public boolean isDeletable() {
+		try {
+			return Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_MEASUREMENT_MODULE);
+		} catch (ApplicationException e) {
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean isEditable() {
+		try {
+			return Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_MEASUREMENT_MODULE);
+		} catch (ApplicationException e) {
+			return false;
+		}
+	}
+	
 	public final String getDescription() {
 		return this.mcm.getDescription();
 	}

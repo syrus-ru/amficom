@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserDomainPopupMenu.java,v 1.9 2005/12/13 14:48:33 bob Exp $
+* $Id: SystemUserDomainPopupMenu.java,v 1.10 2005/12/14 15:08:30 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,10 +18,12 @@ import javax.swing.JPopupMenu;
 
 import org.jgraph.graph.DefaultGraphCell;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.Role;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -34,7 +36,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/12/13 14:48:33 $
+ * @version $Revision: 1.10 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -43,7 +45,13 @@ public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu<DomainPerpe
 	
 	@Override
 	public JPopupMenu getPopupMenu(final DefaultGraphCell cell,
-			final DomainPerpective perpective) {
+			final DomainPerpective perpective) throws ApplicationException {
+		
+		final boolean permitted = 
+			Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_USER);
+		if (!permitted) {
+			return null;
+		}
 		
 		final MPort port = (MPort) cell.getChildAt(0);
 		final UserBean userBean = (UserBean) port.getBean();

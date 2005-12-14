@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractPerspective.java,v 1.10 2005/12/12 13:40:56 bob Exp $
+* $Id: AbstractPerspective.java,v 1.11 2005/12/14 15:08:30 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/12/12 13:40:56 $
+ * @version $Revision: 1.11 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -155,6 +155,10 @@ public abstract class AbstractPerspective implements Perspective {
    			
 			@SuppressWarnings("unqualified-field-access")
 			public void actionPerformed(final ActionEvent e) {
+				if (!this.isEnabled()) {
+					return;
+				}
+				
    				try {
    					final Perspective currentPerspective = managerMainFrame.getPerspective();
 					if (currentPerspective != perspective) {
@@ -211,10 +215,14 @@ public abstract class AbstractPerspective implements Perspective {
     		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
     		final JGraph graph = this.managerMainFrame.getGraph();
     		final Perspective perspective = this;
-    		AbstractAction action = new AbstractAction(icon != null ? "" : name, icon) {
+    		final AbstractAction action = new AbstractAction(icon != null ? "" : name, icon) {
     			
     			@SuppressWarnings("unqualified-field-access")
 				public void actionPerformed(final ActionEvent e) {
+    				if (!this.isEnabled()) {
+    					return;
+    				}
+    				
     				try {
     					final Perspective currentPerspective = managerMainFrame.getPerspective();
     					if (currentPerspective != perspective) {
@@ -289,6 +297,9 @@ public abstract class AbstractPerspective implements Perspective {
 			
 			@SuppressWarnings("unqualified-field-access")
 			public void actionPerformed(final ActionEvent e) {
+				if (!this.isEnabled()) {
+					return;
+				}
 				try {
 					final Perspective currentPerspective = managerMainFrame.getPerspective();
 					if (currentPerspective != perspective) {
@@ -560,6 +571,10 @@ public abstract class AbstractPerspective implements Perspective {
 	/////// inner classess ////
 	protected interface Checkable {
 		boolean isNeedIn(final AbstractBean bean);
+	}
+	
+	protected interface ActionPermission {
+		boolean isPermitted(final AbstractAction abstractAction);
 	}
 
 	protected interface PostBeanCreationAction<T extends AbstractBean> {

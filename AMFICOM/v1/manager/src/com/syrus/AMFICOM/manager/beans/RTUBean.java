@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBean.java,v 1.4 2005/12/08 13:21:09 bob Exp $
+ * $Id: RTUBean.java,v 1.5 2005/12/14 15:08:30 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,9 @@ import static com.syrus.AMFICOM.manager.beans.RTUBeanWrapper.KEY_PORT;
 import java.beans.PropertyChangeEvent;
 
 import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -26,7 +28,7 @@ import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/08 13:21:09 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -39,6 +41,24 @@ public class RTUBean extends Bean implements DomainNetworkItem {
 	protected void setIdentifier(Identifier storableObject) throws ApplicationException {
 		super.setIdentifier(storableObject);
 		this.kis = StorableObjectPool.getStorableObject(this.identifier, true);
+	}
+	
+	@Override
+	public boolean isDeletable() {
+		try {
+			return Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_RTU);
+		} catch (ApplicationException e) {
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean isEditable() {
+		try {
+			return Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_RTU);
+		} catch (ApplicationException e) {
+			return false;
+		}
 	}
 	
 	@Override

@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainsPerspective.java,v 1.6 2005/12/09 16:13:22 bob Exp $
+* $Id: DomainsPerspective.java,v 1.7 2005/12/14 15:08:30 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,8 +25,10 @@ import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.Port;
 
 import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
@@ -49,7 +51,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/12/09 16:13:22 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -81,8 +83,11 @@ public final class DomainsPerspective extends AbstractPerspective {
 					graphRoutines.fixLayoutItemCharacteristics();
 				}
 			};
-		this.actions.add(super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.DOMAIN),
-			addDomainBeanPerspectiveAction, null));
+		final AbstractAction addDomainAction = 
+			super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.DOMAIN),
+				addDomainBeanPerspectiveAction, null);
+		addDomainAction.setEnabled(Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_DOMAIN));
+		this.actions.add(addDomainAction);
 	}
 	
 	public void addDomainPerspective(final DomainBean domainBean) throws ApplicationException {

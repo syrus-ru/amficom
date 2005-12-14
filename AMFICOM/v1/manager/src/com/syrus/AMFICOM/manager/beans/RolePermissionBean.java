@@ -1,5 +1,5 @@
 /*-
- * $Id: RolePermissionBean.java,v 1.1 2005/11/17 09:00:32 bob Exp $
+ * $Id: RolePermissionBean.java,v 1.2 2005/12/14 15:08:30 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -29,6 +29,16 @@ public class RolePermissionBean extends Bean implements RoleItem {
 
 	private PermissionAttributes permissionAttributes;
 
+	@Override
+	public boolean isDeletable() {
+		return false;
+	}
+
+	@Override
+	public boolean isEditable() {
+		return false;
+	}
+	
 	@Override
 	protected void setIdentifier(final Identifier id) 
 	throws ApplicationException {

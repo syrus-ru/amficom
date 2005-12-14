@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.9 2005/12/09 16:13:46 bob Exp $
+* $Id: DomainPerpective.java,v 1.10 2005/12/14 15:08:30 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
@@ -55,7 +56,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/12/09 16:13:46 $
+ * @version $Revision: 1.10 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -80,6 +81,9 @@ public final class DomainPerpective extends AbstractPerspective {
 		this.actions = new ArrayList<AbstractAction>();
 		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 
+		final boolean changeDomain = 
+			Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_DOMAIN);
+		
 		final DefaultGraphCell networkCell = 
 			graphRoutines.getDefaultGraphCell(this.domainNetworkItem);
 		
@@ -95,21 +99,31 @@ public final class DomainPerpective extends AbstractPerspective {
 				}
 			};
 		
-		this.actions.add(super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.SYSTEMUSER),
-			addUserBeanPerspectiveAction, null));
+		final AbstractAction addSystemUserAction = 
+			super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.SYSTEMUSER),
+				addUserBeanPerspectiveAction, null);
+		addSystemUserAction.setEnabled(changeDomain && Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_USER));
+		this.actions.add(addSystemUserAction);
 
-		this.actions.add(
+		final AbstractAction addNetworkAction = 
 			super.createAction(this.perspectiveData.getBeanFactory(WorkstationBeanFactory.WORKSTATION_CODENAME), 
-				networkCell));
-		this.actions.add(
-			super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.KIS), 
-				networkCell));
-		this.actions.add(
-			super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.SERVER), 
-				networkCell));
-		this.actions.add(
-			super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.MCM), 
-				networkCell));
+				networkCell);		
+		addNetworkAction.setEnabled(changeDomain && Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_WORKSTATION));		
+		this.actions.add(addNetworkAction);
+		
+		final AbstractAction addRTUAction = super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.KIS), 
+				networkCell);
+		addRTUAction.setEnabled(changeDomain && Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_RTU));
+		this.actions.add(addRTUAction);
+		
+		final AbstractAction addServerAction = super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.SERVER), 
+				networkCell);
+		addServerAction.setEnabled(changeDomain && Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_SERVER));
+		this.actions.add(addServerAction);
+		final AbstractAction addMCMAction = super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.MCM), 
+				networkCell);
+		addMCMAction.setEnabled(changeDomain && Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_MEASUREMENT_MODULE));
+		this.actions.add(addMCMAction);
 	}
 	
 	public String getCodename() {

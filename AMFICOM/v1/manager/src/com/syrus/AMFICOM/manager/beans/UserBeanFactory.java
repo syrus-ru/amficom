@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.3 2005/12/13 13:37:50 bob Exp $
+* $Id: UserBeanFactory.java,v 1.4 2005/12/14 15:08:30 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
@@ -37,7 +36,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/13 13:37:50 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

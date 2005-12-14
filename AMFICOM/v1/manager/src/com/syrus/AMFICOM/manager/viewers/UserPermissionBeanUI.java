@@ -1,5 +1,5 @@
 /*-
-* $Id: UserPermissionBeanUI.java,v 1.3 2005/12/07 14:08:02 bob Exp $
+* $Id: UserPermissionBeanUI.java,v 1.4 2005/12/14 15:08:30 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/07 14:08:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -82,8 +82,8 @@ public class UserPermissionBeanUI extends AbstractBeanUI<PermissionBean> {
  			        
  			        return this.getModel().getValueAt(rowIndex, 0).toString();
  			    }
- 				
- 				@Override
+
+ 			    @Override
  				protected JTableHeader createDefaultTableHeader() {
  					return new JTableHeader(this.columnModel) {
  			            @Override
@@ -106,7 +106,15 @@ public class UserPermissionBeanUI extends AbstractBeanUI<PermissionBean> {
  					model.fireTableDataChanged();
  				}
  			};
- 			 
+ 			
+ 			final TableCellRenderer booleanRenderer = this.table.getDefaultRenderer(Boolean.class);
+ 			final TableCellRenderer objectRenderer = this.table.getDefaultRenderer(Object.class);
+
+ 			this.table.setDefaultRenderer(Boolean.class, new UPTableCellRenderer(booleanRenderer));
+
+ 			this.table.setDefaultRenderer(Object.class, new UPTableCellRenderer(objectRenderer));
+
+ 			
  			final JTableHeader tableHeader = this.table.getTableHeader();
  			
  			this.panel = new JPanel(new GridBagLayout());
@@ -178,8 +186,10 @@ public class UserPermissionBeanUI extends AbstractBeanUI<PermissionBean> {
 		private PermissionAttributes	permissionAttributes;
 		private List<String>	keys;
 		private PermissionBeanWrapper	permissionBeanWrapper;
+		private boolean	permitted;
 
 		public void setPermissionBean(final PermissionBean	permissionBean) {
+			this.permitted = permissionBean.isEditable();
 			this.permissionBean = permissionBean;			
 			this.permissionAttributes = this.permissionBean.getPermissionAttributes();
 			this.permissionBeanWrapper = 
@@ -242,7 +252,8 @@ public class UserPermissionBeanUI extends AbstractBeanUI<PermissionBean> {
 				final PermissionCodename permissionCode = 
 					PermissionCodename.valueOf(this.keys.get(rowIndex));
 				try {
-					return this.permissionBean.getRolePermission(permissionCode);
+					return this.permitted &&
+						this.permissionBean.getRolePermission(permissionCode);
 				} catch (final ApplicationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

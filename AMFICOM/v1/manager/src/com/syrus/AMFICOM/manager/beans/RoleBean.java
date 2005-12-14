@@ -1,5 +1,5 @@
 /*-
- * $Id: RoleBean.java,v 1.2 2005/11/28 14:47:05 bob Exp $
+ * $Id: RoleBean.java,v 1.3 2005/12/14 15:08:30 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -36,8 +36,14 @@ public class RoleBean extends Bean {
 
 	private Role	role;
 
-	RoleBean() {
-		// nothing
+	@Override
+	public boolean isDeletable() {
+		return true;
+	}
+
+	@Override
+	public boolean isEditable() {
+		return false;
 	}
 	
 	@Override

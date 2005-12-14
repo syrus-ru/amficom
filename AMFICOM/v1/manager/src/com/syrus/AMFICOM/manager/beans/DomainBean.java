@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.5 2005/12/09 16:14:31 bob Exp $
+ * $Id: DomainBean.java,v 1.6 2005/12/14 15:08:30 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -32,7 +33,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/12/09 16:14:31 $
+ * @version $Revision: 1.6 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -45,6 +46,24 @@ public final class DomainBean extends Bean {
 	protected void setIdentifier(Identifier storableObject) throws ApplicationException {
 		super.setIdentifier(storableObject);
 		this.domain = StorableObjectPool.getStorableObject(this.identifier, true);
+	}
+	
+	@Override
+	public boolean isDeletable() {
+		try {
+			return Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_DOMAIN);
+		} catch (ApplicationException e) {
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean isEditable() {
+		try {
+			return Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_DOMAIN);
+		} catch (ApplicationException e) {
+			return false;
+		}
 	}
 	
 	public final String getDescription() {

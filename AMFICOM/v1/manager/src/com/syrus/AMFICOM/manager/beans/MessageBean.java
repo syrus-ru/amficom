@@ -1,5 +1,5 @@
 /*-
-* $Id: MessageBean.java,v 1.2 2005/11/30 13:15:27 bob Exp $
+* $Id: MessageBean.java,v 1.3 2005/12/14 15:08:30 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,12 +22,12 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/30 13:15:27 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class MessageBean extends Bean {
+public final class MessageBean extends Bean {
 	
 	private DeliveryAttributes deliveryAttributes;   	
 	
@@ -41,10 +41,17 @@ public class MessageBean extends Bean {
 	public String getCodename() {
 		return ObjectEntities.DELIVERYATTRIBUTES;
 	}
+
+	@Override
+	public boolean isDeletable() {
+		return false;
+	}
 	
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.manager.AbstractBean#applyTargetPort(com.syrus.AMFICOM.manager.MPort, com.syrus.AMFICOM.manager.MPort)
-	 */
+	@Override
+	public boolean isEditable() {
+		return false;
+	}
+	
 	@Override
 	public void applyTargetPort(MPort oldPort,
 								MPort newPort) throws ApplicationException {
@@ -58,9 +65,6 @@ public class MessageBean extends Bean {
 		return this.deliveryAttributes.getSeverity().getLocalizedName();
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.manager.AbstractBean#setName(java.lang.String)
-	 */
 	@Override
 	public void setName(String name) {
 		// TODO Auto-generated method stub

@@ -1,5 +1,5 @@
 /*-
-* $Id: MTreeCellRenderer.java,v 1.1 2005/11/28 14:47:04 bob Exp $
+* $Id: MTreeCellRenderer.java,v 1.2 2005/12/14 15:08:30 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/28 14:47:04 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -60,8 +60,10 @@ public final class MTreeCellRenderer extends DefaultTreeCellRenderer {
 				final int bold = this.defaultFont.isBold() ? Font.PLAIN : Font.BOLD;
 				this.actionNodeFont = this.defaultFont.deriveFont(italic | bold);
 			}
+			label.setEnabled(abstractAction.isEnabled());
 			label.setFont(this.actionNodeFont);
 		} else {
+			label.setEnabled(true);
 			label.setFont(this.defaultFont);
 		}
 		

@@ -1,5 +1,5 @@
 /*-
- * $Id: PermissionBean.java,v 1.1 2005/11/17 09:00:32 bob Exp $
+ * $Id: PermissionBean.java,v 1.2 2005/12/14 15:08:30 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -87,6 +88,24 @@ public final class PermissionBean extends Bean implements UserItem {
 				+ newDomainId, 
 			Log.DEBUGLEVEL09);
 		this.permissionAttributes.setDomainId(newDomainId);
+	}
+	
+	@Override
+	public boolean isDeletable() {
+		try {
+			return Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_USER);
+		} catch (ApplicationException e) {
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean isEditable() {
+		try {
+			return Checker.isPermitted(PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_USER);
+		} catch (ApplicationException e) {
+			return false;
+		}
 	}
 	
 	@Override

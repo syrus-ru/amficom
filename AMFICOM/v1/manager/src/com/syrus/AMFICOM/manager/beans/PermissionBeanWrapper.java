@@ -1,6 +1,6 @@
 
 /*-
- * $Id: PermissionBeanWrapper.java,v 1.1 2005/11/17 09:00:33 bob Exp $
+ * $Id: PermissionBeanWrapper.java,v 1.2 2005/12/14 15:08:30 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:33 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/14 15:08:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -114,7 +114,10 @@ public class PermissionBeanWrapper implements Wrapper<PermissionBean> {
 			final PermissionCodename codename = this.permissionCodenamesMap.get(key);
 			if (codename != null) {
 				Boolean bValue = (Boolean) value;
-				permissionBean.getPermissionAttributes().setPermissionEnable(codename, bValue.booleanValue());
+				final boolean booleanValue = bValue.booleanValue();
+				final PermissionAttributes permissionAttributes = permissionBean.getPermissionAttributes();
+				permissionAttributes.setPermissionEnable(codename, booleanValue);
+				permissionAttributes.setDenidEnable(codename, !booleanValue);
 			}
 		}
 	}
