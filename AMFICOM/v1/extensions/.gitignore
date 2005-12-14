@@ -2,3 +2,5 @@ docs
 classes
 .xml
 *.jar
+.classpath
+.project
