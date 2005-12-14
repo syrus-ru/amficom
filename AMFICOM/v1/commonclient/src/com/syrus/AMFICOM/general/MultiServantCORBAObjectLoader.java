@@ -1,5 +1,5 @@
 /*-
- * $Id: MultiServantCORBAObjectLoader.java,v 1.8 2005/11/30 15:42:34 bass Exp $
+ * $Id: MultiServantCORBAObjectLoader.java,v 1.9 2005/12/14 11:34:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/11/30 15:42:34 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/12/14 11:34:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -82,6 +82,12 @@ public final class MultiServantCORBAObjectLoader implements ObjectLoader {
 			final StorableObjectCondition condition) throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 		return this.getCORBAObjectLoader(condition.getEntityCode()).loadStorableObjectsButIdsByCondition(ids, condition);
+	}
+
+	public final Set<Identifier> loadIdentifiersButIdsByCondition(final Set<Identifier> ids,
+			final StorableObjectCondition condition) throws ApplicationException {
+		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
+		return this.getCORBAObjectLoader(condition.getEntityCode()).loadIdentifiersButIdsByCondition(ids, condition);
 	}
 
 	public final Map<Identifier, StorableObjectVersion> getRemoteVersions(final Set<Identifier> ids) throws ApplicationException {
