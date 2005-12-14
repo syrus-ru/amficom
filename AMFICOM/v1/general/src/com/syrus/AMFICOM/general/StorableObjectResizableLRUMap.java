@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectResizableLRUMap.java,v 1.14 2005/12/08 15:30:20 arseniy Exp $
+ * $Id: StorableObjectResizableLRUMap.java,v 1.15 2005/12/14 13:25:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.util.Set;
 import com.syrus.util.ArrayLRUMap;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/12/08 15:30:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/12/14 13:25:51 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * @deprecated Use new class {@link com.syrus.util.LRUMap} instead.
@@ -42,7 +42,7 @@ public class StorableObjectResizableLRUMap extends ArrayLRUMap<Identifier, Stora
 		assert (value != null) : ErrorMessages.NON_NULL_EXPECTED;
 
 		final StorableObject thrownObject = super.put(key, value);
-		if (!shouldBeRetained(thrownObject)) {
+		if (thrownObject == null || !thrownObject.retain()) {
 			return thrownObject;
 		}
 
@@ -51,7 +51,7 @@ public class StorableObjectResizableLRUMap extends ArrayLRUMap<Identifier, Stora
 
 		for (int i = super.array.length - 1; i >= 0; i--) {
 			final StorableObject storableObject = super.array[i].getValue();
-			if (!shouldBeRetained(storableObject)) {
+			if (storableObject == null || !storableObject.retain()) {
 				for (int j = i; j < super.array.length - 1; j++) {
 					super.array[j] = super.array[j + 1];
 				}
@@ -108,7 +108,7 @@ public class StorableObjectResizableLRUMap extends ArrayLRUMap<Identifier, Stora
 					retainedEntries.add(entry);
 				else {
 					final StorableObject value = entry.getValue();
-					if (shouldBeRetained(value)) {
+					if (value != null && value.retain()) {
 						retainedEntries.add(entry);
 					}
 				}
@@ -122,13 +122,5 @@ public class StorableObjectResizableLRUMap extends ArrayLRUMap<Identifier, Stora
 			super.array[i] = entry;
 		}
 		super.entityCount = size;
-	}
-
-	/**
-	 * @param storableObject
-	 */
-	private boolean shouldBeRetained(final StorableObject storableObject) {
-		return storableObject != null
-				&& (storableObject.isChanged() || storableObject.isPersistent());
 	}
 }

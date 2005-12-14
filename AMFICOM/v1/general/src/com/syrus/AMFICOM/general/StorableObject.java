@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.134 2005/12/08 15:29:59 arseniy Exp $
+ * $Id: StorableObject.java,v 1.135 2005/12/14 13:25:51 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.general;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.PERSISTENCE_COUNTER_NEGATIVE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
@@ -39,8 +38,8 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.134 $, $Date: 2005/12/08 15:29:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.135 $, $Date: 2005/12/14 13:25:51 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -59,8 +58,6 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 
 	private boolean deleted;
 
-	private transient volatile int cachedTimes;
-
 	private Date savedModified;
 	private Identifier savedModifierId;
 	private StorableObjectVersion savedVersion;
@@ -71,7 +68,6 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	protected StorableObject(/*IdlStorableObject*/) {
 		this.changed = false;
 		this.deleted = false;
-		this.cachedTimes = 0;
 	}
 
 	/**
@@ -102,7 +98,6 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 
 		this.changed = false;
 		this.deleted = false;
-		this.cachedTimes = 0;
 
 		this.savedModified = null;
 		this.savedModifierId = null;
@@ -224,16 +219,6 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	}
 
 	/**
-	 * @return {@code true} if not only pool holds a reference to this
-	 *         object, but also some external chache, and the object thus
-	 *         should never be squeezed out of the pool. 
-	 */
-	final boolean isPersistent() {
-		assert this.cachedTimes >= 0;
-		return this.cachedTimes > 0;
-	}
-
-	/**
 	 * This method is called in:
 	 * 1) all setters of a StorableObject
 	 * 2) static method createInstance of StorableObject
@@ -254,29 +239,6 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 
 	final void markAsDeleted() {
 		this.deleted = true;
-	}
-
-	/**
-	 * Is invoked solely by caching facilities.
-	 */
-	final void markAsPersistent() {
-		if (!this.isPersistent()) {
-			try {
-				StorableObjectPool.putStorableObject(this);
-			} catch (final IllegalObjectEntityException ioee) {
-				assert false : ioee.getMessage();
-			}
-		}
-		this.cachedTimes++;
-	}
-
-	/**
-	 * Is invoked solely by caching facilities.
-	 */
-	final void cleanupPersistence() {
-		assert this.isPersistent() : PERSISTENCE_COUNTER_NEGATIVE + this
-				+ "; cached " + (this.cachedTimes - 1) + " time(s)";
-		this.cachedTimes--;
 	}
 
 	protected final void setUpdated(final Identifier modifierId) {
@@ -383,8 +345,6 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 		clone.markAsChanged();
 
 		clone.deleted = false;
-
-		clone.cachedTimes = 0;
 
 		return clone;
 	}
@@ -578,8 +538,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	@Override
 	public String toString() {
 		return '{' + this.id.toString()
-				+ "; changed: " + this.isChanged()
-				+ "; persistent: " + this.isPersistent() + '}';
+				+ "; changed: " + this.isChanged()  + '}';
 	}
 
 	protected abstract Wrapper<T> getWrapper();
@@ -673,8 +632,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.134 $, $Date: 2005/12/08 15:29:59 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.135 $, $Date: 2005/12/14 13:25:51 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -685,7 +644,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 
 		private StorableObjectCondition condition;
 
-		private Set<T> containees;
+		private Set<Identifier> containeeIds;
 
 		/**
 		 * @param wrapper
@@ -708,16 +667,14 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 			}
 
 			if (this.cacheBuilt) {
-				if (!this.containees.contains(containee)) {
-					containee.markAsPersistent();
-					this.containees.add(containee);
+				if (!this.containeeIds.contains(containee)) {
+					this.containeeIds.add(containee.getId());
 				}
 			} else if (buildCacheOnModification()) {
 				this.ensureCacheBuilt(usePool);
 
-				if (!this.containees.contains(containee)) {
-					containee.markAsPersistent();
-					this.containees.add(containee);
+				if (!this.containeeIds.contains(containee)) {
+					this.containeeIds.add(containee.getId());
 				}
 			}
 		}
@@ -731,21 +688,26 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 		public final void removeFromCache(final T containee, final boolean usePool)
 		throws ApplicationException {
 			if (this.cacheBuilt) {
-				if (this.containees.contains(containee)) {
-					containee.cleanupPersistence();
-					this.containees.remove(containee);
+				if (this.containeeIds.contains(containee)) {
+					this.containeeIds.remove(containee);
 				}
 			} else if (buildCacheOnModification()) {
 				this.ensureCacheBuilt(usePool);
 
-				if (this.containees.contains(containee)) {
-					containee.cleanupPersistence();
-					this.containees.remove(containee);
+				if (this.containeeIds.contains(containee)) {
+					this.containeeIds.remove(containee);
 				}
 			}
 		}
 
 		/**
+		 * <p>Returns a set of {@code StorableObject}s corresponding to cached ids, removing
+		 * from ids those conforming to deleted objects.</p>
+		 * 
+		 * <p>This call returns a new {@code Set} instance on every invocation. The set
+		 * returned is mutable; however, any modifications made to it do not get reflected
+		 * in cache&apos;s internal state.</p>
+		 *
 		 * @param usePool
 		 * @throws ApplicationException
 		 */
@@ -753,14 +715,11 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 		public final Set<T> getContainees(final boolean usePool)
 		throws ApplicationException {
 			this.ensureCacheBuilt(usePool);
-			synchronized (this.containees) {
-				for (final Iterator<T> containeeIterator = this.containees.iterator(); containeeIterator.hasNext();) {
-					if (containeeIterator.next().isDeleted()) {
-						containeeIterator.remove();
-					}
-				}
+			synchronized (this.containeeIds) {
+				final Set<T> containees = new HashSet<T>(StorableObjectPool.<T>getStorableObjects(this.containeeIds, this.useLoader()));
+				this.containeeIds.retainAll(containees);
+				return containees;
 			}
-			return this.containees;
 		}
 
 		/**
@@ -771,19 +730,17 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 		throws ApplicationException {
 			synchronized (this) {
 				if (!this.cacheBuilt || usePool) {
-					if (this.containees == null) {
-						this.containees = Collections.synchronizedSet(new HashSet<T>());
+					if (this.containeeIds == null) {
+						this.containeeIds = Collections.synchronizedSet(new HashSet<Identifier>());
 					} else {
-						synchronized (this.containees) {
-							for (final Iterator<T> containeeIterator = this.containees.iterator(); containeeIterator.hasNext();) {
-								containeeIterator.next().cleanupPersistence();
-								containeeIterator.remove();
+						synchronized (this.containeeIds) {
+							for (final Iterator<Identifier> containeeIdIterator = this.containeeIds.iterator(); containeeIdIterator.hasNext();) {
+								containeeIdIterator.remove();
 							}
 						}
 					}
-					for (final T containee : StorableObjectPool.<T>getStorableObjectsByCondition(this.condition, this.useLoader())) {
-						containee.markAsPersistent();
-						this.containees.add(containee);
+					for (final Identifier containeeId : StorableObjectPool.getIdentifiersByCondition(this.condition, this.useLoader())) {
+						this.containeeIds.add(containeeId);
 					}
 					this.cacheBuilt = true;
 				}
@@ -798,8 +755,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.134 $, $Date: 2005/12/08 15:29:59 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.135 $, $Date: 2005/12/14 13:25:51 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
@@ -812,6 +769,6 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 * @see {@link com.syrus.util.LRUMap.Retainable#retain()}.
 	 */
 	public boolean retain() {
-		return this.isChanged() || this.isPersistent();
+		return this.isChanged();
 	}
 }

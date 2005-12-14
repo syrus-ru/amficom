@@ -1,5 +1,5 @@
 /*-
- * $Id: ErrorMessages.java,v 1.27 2005/11/09 15:15:43 bass Exp $
+ * $Id: ErrorMessages.java,v 1.28 2005/12/14 13:25:51 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/11/09 15:15:43 $
+ * @version $Revision: 1.28 $, $Date: 2005/12/14 13:25:51 $
  * @module general
  */
 public final class ErrorMessages {
@@ -45,7 +45,6 @@ public final class ErrorMessages {
 	public static final String NOT_IMPLEMENTED = "Not implemented";
 	public static final String OPERATION_IS_OPTIONAL = "The operation is optional, and not implemented here";
 	public static final String XML_BEAN_NOT_COMPLETE = "The xml bean is incomplete and thus not usable when updating a storable object";
-	public static final String PERSISTENCE_COUNTER_NEGATIVE = "Persistence counter is negative: ";
 	public static final String \u0425\u0423\u041b\u0418_\u041f\u0423\u0421\u0422\u041e\u0419 = "\u0425\u0443\u043b\u0438 \u043f\u0443\u0441\u0442\u043e\u0439-\u0442\u043e, \u0430?";
 
 	private ErrorMessages() {
