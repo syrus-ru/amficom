@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.37 2005/12/07 17:16:26 bass Exp $
+* $Id: PermissionAttributes.java,v 1.38 2005/12/14 10:15:26 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/12/07 17:16:26 $
- * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/12/14 10:15:26 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
  */
@@ -823,6 +823,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	public final void setPermissionEnable(final PermissionCodename permissionCode,
 	                                      final boolean enable) {
 		this.setSet(permissionCode, enable, this.permissions);
+		this.markAsChanged();
 	}
 
 	/**
@@ -835,6 +836,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	public final void setDenidEnable(final PermissionCodename permissionCode,
 	                                 final boolean enable) {
 		this.setSet(permissionCode, enable, this.denyMask);
+		this.markAsChanged();
 	}
 
 	private final void setSet(final PermissionCodename permissionCode,
