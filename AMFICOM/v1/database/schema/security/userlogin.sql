@@ -1,10 +1,10 @@
--- $Id: userlogin.sql,v 1.8 2005/10/15 18:04:18 arseniy Exp $
+-- $Id: userlogin.sql,v 1.9 2005/12/14 11:31:09 arseniy Exp $
 
 CREATE TABLE UserLogin (
  session_key VARCHAR2(128 CHAR) NOT NULL,
  user_id NOT NULL,
  domain_id,
- user_host_name VARCHAR2(64 CHAR) NOT NULL,
+ user_ior VARCHAR2(1000 BYTE) NOT NULL,
  login_date DATE NOT NULL,
  last_activity_date DATE NOT NULL,
 --
