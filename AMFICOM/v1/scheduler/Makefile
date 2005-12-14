@@ -26,7 +26,7 @@ filterclient
 
 EXTCLASSPATH := $(TROVE4JCLASSPATH):$(XMLBEANSCLASSPATH)
 
-SOURCES := $(shell find . -name *java)
+SOURCES := $(shell find $(SRCDIR) -name *java)
 
 
 $(LIBNAME): .mach
