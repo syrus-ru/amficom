@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.46 2005/10/31 12:30:19 bass Exp $
+ * $Id: StorableObjectXML.java,v 1.47 2005/12/14 13:10:12 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.Log;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.46 $, $Date: 2005/10/31 12:30:19 $
- * @author $Author: bass $
+ * @version $Revision: 1.47 $, $Date: 2005/12/14 13:10:12 $
+ * @author $Author: arseniy $
  * @module general
  */
 public class StorableObjectXML {
@@ -59,11 +59,9 @@ public class StorableObjectXML {
 			final StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
 		Set<T> set = null;
 		final Set<Identifier> identifiers = this.reflectXMLCondition(condition).getIdsByCondition();
-		Log.debugMessage("identifiers:" + Identifier.createStrings(identifiers),
-				Log.DEBUGLEVEL10);
+		Log.debugMessage("Identifiers:" + Identifier.toString(identifiers), Log.DEBUGLEVEL10);
 		identifiers.removeAll(ids);
-		Log.debugMessage("cleaned identifiers:" + Identifier.createStrings(identifiers),
-				Log.DEBUGLEVEL10);
+		Log.debugMessage("Cleaned identifiers:" + Identifier.toString(identifiers), Log.DEBUGLEVEL10);
 		for (final Identifier id : identifiers) {
 			try {
 				final T storableObject = this.<T> retrieve(id);

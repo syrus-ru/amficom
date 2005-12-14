@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerObjectLoader.java,v 1.16 2005/11/30 14:56:07 bass Exp $
+ * $Id: MServerObjectLoader.java,v 1.17 2005/12/14 13:14:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/11/30 14:56:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/12/14 13:14:18 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
  */
@@ -179,8 +179,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 		final CORBAObjectLoader corbaObjectLoader = this.getCORBAObjectLoaderForMCMId(mcmId);
 		final Set<T> mcmLoadedObjects = corbaObjectLoader.loadStorableObjects(loadIds);
 
-		Log.debugMessage("Loaded: " + Identifier.createStrings(mcmLoadedObjects),
-				Log.DEBUGLEVEL10);
+		Log.debugMessage("Loaded: " + Identifier.toString(mcmLoadedObjects), Log.DEBUGLEVEL10);
 
 		Identifier.subtractFromIdentifiers(loadIds, mcmLoadedObjects);
 		loadedObjects.addAll(mcmLoadedObjects);
@@ -198,8 +197,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 		final CORBAObjectLoader corbaObjectLoader = this.getCORBAObjectLoaderForMCMId(mcmId);
 		final Set<T> mcmLoadedObjects = corbaObjectLoader.loadStorableObjectsButIdsByCondition(loadButIds, condition);
 
-		Log.debugMessage("Loaded: "
-				+ Identifier.createStrings(mcmLoadedObjects), Log.DEBUGLEVEL10);
+		Log.debugMessage("Loaded: " + Identifier.toString(mcmLoadedObjects), Log.DEBUGLEVEL10);
 
 		Identifier.addToIdentifiers(loadButIds, mcmLoadedObjects);
 		loadedObjects.addAll(mcmLoadedObjects);

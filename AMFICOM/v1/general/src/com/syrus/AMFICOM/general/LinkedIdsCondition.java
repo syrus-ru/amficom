@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.61 2005/12/09 11:36:13 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.62 2005/12/14 13:10:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.Log;
  * </ul>
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.61 $, $Date: 2005/12/09 11:36:13 $
+ * @version $Revision: 1.62 $, $Date: 2005/12/14 13:10:12 $
  * @module general
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -412,7 +412,9 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		buffer.append(", all ");
 		buffer.append(ObjectEntities.codeToString(this.delegate.entityCode));
 		buffer.append(" for linked ids ");
-		buffer.append(Identifier.createStrings(this.delegate.linkedIdentifiables));
+		synchronized (this.delegate.linkedIdentifiables) {
+			buffer.append(Identifier.toString(this.delegate.linkedIdentifiables));
+		}
 		return buffer.toString();
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.209 2005/12/14 11:08:08 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.210 2005/12/14 13:10:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.LRUMapSaver;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.209 $, $Date: 2005/12/14 11:08:08 $
+ * @version $Revision: 1.210 $, $Date: 2005/12/14 13:10:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -330,14 +330,13 @@ public final class StorableObjectPool {
 			}
 		}
 
-		Log.debugMessage("Found in pool " + storableObjects.size() + " objects: " + Identifier.createStrings(storableObjects),
+		Log.debugMessage("Found in pool " + storableObjects.size() + " objects: " + Identifier.toString(storableObjects),
 				Log.DEBUGLEVEL08);
 
 		if (useLoader && !loadIds.isEmpty()) {
 			final Set<T> loadedObjects = objectLoader.loadStorableObjects(loadIds);
 
-			Log.debugMessage("Loaded " + loadedObjects.size() + " objects: " + Identifier.createStrings(loadedObjects),
-					Log.DEBUGLEVEL08);
+			Log.debugMessage("Loaded " + loadedObjects.size() + " objects: " + Identifier.toString(loadedObjects), Log.DEBUGLEVEL08);
 
 			for (final T storableObject : loadedObjects) {
 				storableObjects.add(storableObject);
@@ -345,7 +344,7 @@ public final class StorableObjectPool {
 			}
 		}
 
-		Log.debugMessage("Returning " + storableObjects.size() + " objects: " + Identifier.createStrings(storableObjects),
+		Log.debugMessage("Returning " + storableObjects.size() + " objects: " + Identifier.toString(storableObjects),
 				Log.DEBUGLEVEL08);
 
 		return storableObjects;
@@ -449,7 +448,7 @@ public final class StorableObjectPool {
 			objectPool.get(storableObject.getId());
 		}
 
-		Log.debugMessage("Found in pool " + storableObjects.size() + " objects: " + Identifier.createStrings(storableObjects),
+		Log.debugMessage("Found in pool " + storableObjects.size() + " objects: " + Identifier.toString(storableObjects),
 				Log.DEBUGLEVEL08);
 
 		if (useLoader && condition.isNeedMore(Identifier.createSumIdentifiables(storableObjects, ids))) {
@@ -465,8 +464,7 @@ public final class StorableObjectPool {
 				loadedObjects = Collections.emptySet();
 			}
 			assert loadedObjects != null : ErrorMessages.NON_NULL_EXPECTED; 
-			Log.debugMessage("Loaded " + loadedObjects.size() + " objects: " + Identifier.createStrings(loadedObjects),
-					Log.DEBUGLEVEL08);
+			Log.debugMessage("Loaded " + loadedObjects.size() + " objects: " + Identifier.toString(loadedObjects), Log.DEBUGLEVEL08);
 
 			for (final T loadedStorableObject : loadedObjects) {
 				final Identifier id = loadedStorableObject.getId();
@@ -487,7 +485,7 @@ public final class StorableObjectPool {
 
 		}
 
-		Log.debugMessage("Returning " + storableObjects.size() + " objects: " + Identifier.createStrings(storableObjects),
+		Log.debugMessage("Returning " + storableObjects.size() + " objects: " + Identifier.toString(storableObjects),
 				Log.DEBUGLEVEL08);
 
 		return storableObjects;
@@ -592,7 +590,7 @@ public final class StorableObjectPool {
 			}
 		}
 
-		Log.debugMessage("Found in pool " + identifiers.size() + " identifiers: " + Identifier.createStrings(identifiers),
+		Log.debugMessage("Found in pool " + identifiers.size() + " identifiers: " + Identifier.toString(identifiers),
 				Log.DEBUGLEVEL08);
 
 		if (useLoader && condition.isNeedMore(Identifier.createSumIdentifiables(storableObjects, ids))) {
@@ -608,7 +606,7 @@ public final class StorableObjectPool {
 				loadedIdentifiers = Collections.emptySet();
 			}
 			assert loadedIdentifiers != null : ErrorMessages.NON_NULL_EXPECTED; 
-			Log.debugMessage("Loaded " + loadedIdentifiers.size() + " identifiers: " + Identifier.createStrings(loadedIdentifiers),
+			Log.debugMessage("Loaded " + loadedIdentifiers.size() + " identifiers: " + Identifier.toString(loadedIdentifiers),
 					Log.DEBUGLEVEL08);
 
 			for (final Identifier loadedIdentifier : loadedIdentifiers) {
@@ -627,8 +625,7 @@ public final class StorableObjectPool {
 
 		}
 
-		Log.debugMessage("Returning " + identifiers.size() + " identifiers: " + Identifier.createStrings(identifiers),
-				Log.DEBUGLEVEL08);
+		Log.debugMessage("Returning " + identifiers.size() + " identifiers: " + Identifier.toString(identifiers), Log.DEBUGLEVEL08);
 
 		return identifiers;
 	}
@@ -1108,7 +1105,7 @@ public final class StorableObjectPool {
 				setUpdatedObjects.add(storableObject);
 			}
 
-			Log.debugMessage("Saving objects: " + Identifier.createStrings(storableObjects), Log.DEBUGLEVEL08);
+			Log.debugMessage("Saving objects: " + Identifier.toString(storableObjects), Log.DEBUGLEVEL08);
 			objectLoader.saveStorableObjects(storableObjects);
 
 			for (final StorableObject setUpdatedObject : setUpdatedObjects) {
