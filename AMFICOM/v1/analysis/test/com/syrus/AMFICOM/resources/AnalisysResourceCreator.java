@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalisysResourceCreator.java,v 1.1 2005/12/13 10:45:55 bob Exp $
+ * $Id: AnalisysResourceCreator.java,v 1.2 2005/12/14 08:14:03 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,9 +29,10 @@ import com.syrus.AMFICOM.extensions.resources.Image;
 import com.syrus.AMFICOM.extensions.resources.Resource;
 import com.syrus.AMFICOM.extensions.resources.Resources;
 import com.syrus.AMFICOM.extensions.resources.Rgb;
+import com.syrus.AMFICOM.extensions.resources.Color.Name.Enum;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/12/13 10:45:55 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/14 08:14:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module analysis
@@ -225,15 +226,15 @@ public class AnalisysResourceCreator extends TestCase {
 		colors.put(AnalysisResourceKeys.COLOR_SELECT, Color.GRAY); 
 		
 
-		final Map<String, Color> colorMap = ColorResourceHandler.getColorMap();
+		final Map<Enum, Color> colorMap = ColorResourceHandler.getColorMap();
 		for (final String key : colors.keySet()) {
 			
 			final Color color = colors.get(key);
 			
-			String name = null;
-			for (final String colorMapKey : colorMap.keySet()) {
-				if (colorMap.get(colorMapKey) == color) {
-					name = colorMapKey;
+			Enum name = null;
+			for (final Enum colorEnum : colorMap.keySet()) {
+				if (colorMap.get(colorEnum) == color) {
+					name = colorEnum;
 					break;
 				}
 			}
@@ -242,7 +243,7 @@ public class AnalisysResourceCreator extends TestCase {
 				(com.syrus.AMFICOM.extensions.resources.Color) resource.changeType(com.syrus.AMFICOM.extensions.resources.Color.type);
 			color2.setId(key);
 			if (name != null) {
-				color2.setName(com.syrus.AMFICOM.extensions.resources.Color.Name.Enum.forString(name));
+				color2.setName(name);
 			} else {
 				final Rgb rgb = color2.addNewRgb();
 				rgb.setRed(color.getRed());
