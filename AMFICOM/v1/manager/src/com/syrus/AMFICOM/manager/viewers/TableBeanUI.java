@@ -1,5 +1,5 @@
 /*-
-* $Id: TableBeanUI.java,v 1.6 2005/12/13 15:07:08 bob Exp $
+* $Id: TableBeanUI.java,v 1.7 2005/12/14 12:29:17 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,11 +10,14 @@ package com.syrus.AMFICOM.manager.viewers;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.image.ColorModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
 
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
@@ -24,7 +27,7 @@ import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/12/13 15:07:08 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/14 12:29:17 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -68,7 +71,6 @@ public abstract class TableBeanUI<T extends Bean> extends AbstractBeanUI<T> {
  			this.model = new WrapperedPropertyTableModel<T>(wrapper, null, keys);
  			
  			this.table = new WrapperedPropertyTable<T>(this.model);
- 			this.table.setTableHeader(null);
  			this.table.setDefaultTableCellRenderer();
  	
  			this.listener = new PropertyChangeListener() {
@@ -83,8 +85,14 @@ public abstract class TableBeanUI<T extends Bean> extends AbstractBeanUI<T> {
  			gbc.fill = GridBagConstraints.BOTH;
  			gbc.gridwidth = GridBagConstraints.REMAINDER;
  			gbc.weightx = 1.0;
+ 			gbc.weighty = 0.0;
+ 			
+ 			gbc.gridheight = GridBagConstraints.RELATIVE;
+ 			final JTableHeader tableHeader = table.getTableHeader();
+ 			this.panel.add(tableHeader, gbc);
  			gbc.weighty = 1.0;
  			gbc.gridheight = GridBagConstraints.REMAINDER;
+
  			this.panel.add(new JScrollPane(this.table), gbc);
 		
  		}
