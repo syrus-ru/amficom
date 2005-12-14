@@ -1,5 +1,5 @@
 /*
- * $Id: XMLObjectLoader.java,v 1.13 2005/11/30 15:37:15 bass Exp $
+ * $Id: XMLObjectLoader.java,v 1.14 2005/12/14 11:16:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/11/30 15:37:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/12/14 11:16:08 $
+ * @author $Author: arseniy $
  * @author Voffka
  * @module csbridge
  */
@@ -50,6 +50,14 @@ public final class XMLObjectLoader implements ObjectLoader {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		return this.soXML.retrieveButIdsByCondition(ids, condition);
+	}
+
+	public Set<Identifier> loadIdentifiersButIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition)
+			throws ApplicationException {
+		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		//@todo Maybe not efficient.
+		return Identifier.createIdentifiers(this.soXML.retrieveButIdsByCondition(ids, condition));
 	}
 
 	public Map<Identifier, StorableObjectVersion> getRemoteVersions(final Set<Identifier> ids) {

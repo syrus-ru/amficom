@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.37 2005/11/30 15:37:15 bass Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.38 2005/12/14 11:16:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/11/30 15:37:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/12/14 11:16:08 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -43,8 +43,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 	 * MServerObjectLoader
 	 */
 	public <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
-			final StorableObjectCondition condition)
-			throws ApplicationException {
+			final StorableObjectCondition condition) throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 		final short entityCode = condition.getEntityCode().shortValue();
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
@@ -52,6 +51,16 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		final StorableObjectDatabase<T> database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 		return database.retrieveButIdsByCondition(ids, condition);
+	}
+
+	public Set<Identifier> loadIdentifiersButIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition) throws ApplicationException {
+		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
+		final short entityCode = condition.getEntityCode().shortValue();
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
+		final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
+		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
+		return database.retrieveIdentifiersButIdsByCondition(ids, condition);
 	}
 
 	public final Map<Identifier, StorableObjectVersion> getRemoteVersions(final Set<Identifier> ids) throws ApplicationException {
