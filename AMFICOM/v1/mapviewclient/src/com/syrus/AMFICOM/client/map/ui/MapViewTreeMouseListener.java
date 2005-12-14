@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewTreeMouseListener.java,v 1.6 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: MapViewTreeMouseListener.java,v 1.7 2005/12/14 09:40:28 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/30 16:08:42 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2005/12/14 09:40:28 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -43,13 +43,15 @@ public final class MapViewTreeMouseListener extends MouseAdapter {
 	public void mouseClicked(MouseEvent e) {
 		if(SwingUtilities.isRightMouseButton(e)) {
 			TreePath treePath = this.tree.getPathForLocation(e.getX(), e.getY());
-			Item item = (Item )treePath.getLastPathComponent();
-			Object object = item.getObject();
-			if(object instanceof SiteNodeType
-					|| object instanceof PhysicalLinkType) {
-				this.tree.setSelectionPath(treePath);
-				JPopupMenu popupMenu = new TreePopupMenu(object, this.aContext);
-				popupMenu.show(this.tree, e.getX(), e.getY());
+			if (treePath != null) {
+				Item item = (Item )treePath.getLastPathComponent();
+				Object object = item.getObject();
+				if(object instanceof SiteNodeType
+						|| object instanceof PhysicalLinkType) {
+					this.tree.setSelectionPath(treePath);
+					JPopupMenu popupMenu = new TreePopupMenu(object, this.aContext);
+					popupMenu.show(this.tree, e.getX(), e.getY());
+				}
 			}
 		}
 		else if(SwingUtilities.isLeftMouseButton(e)) {
