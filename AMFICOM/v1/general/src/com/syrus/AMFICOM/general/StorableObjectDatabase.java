@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.205 2005/12/02 11:24:10 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.206 2005/12/14 11:07:31 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.205 $, $Date: 2005/12/02 11:24:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.206 $, $Date: 2005/12/14 11:07:31 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 9
@@ -235,13 +235,10 @@ public abstract class StorableObjectDatabase<T extends StorableObject<T>> {
 	protected abstract T updateEntityFromResultSet(T storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException;
 
-	public final Set<T> retrieveByCondition(final StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
-		return this.retrieveByCondition(this.getConditionQuery(condition));
-	}
 
-	protected Set<T> retrieveByCondition(final String conditionQuery)
-			throws RetrieveObjectException, IllegalDataException {
+	////////////////////////////////////////////// Retrieve Objects /////////////////////////////////////////////
+
+	protected Set<T> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		final Set<T> storableObjects = new HashSet<T>();
 
 		final String sql = this.retrieveQuery(conditionQuery);
@@ -288,9 +285,32 @@ public abstract class StorableObjectDatabase<T extends StorableObject<T>> {
 		return storableObjects;
 	}
 
-	public final Set<T> retrieveButIdsByCondition(final Set<Identifier> ids,
-			final StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
+	public final Set<T> retrieveByCondition(final StorableObjectCondition condition)
+			throws RetrieveObjectException, IllegalDataException {
+		return this.retrieveByCondition(this.getConditionQuery(condition));
+	}
+
+	public final Set<T> retrieveButIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition)
+			throws RetrieveObjectException, IllegalDataException {
+		assert StorableObject.hasSingleTypeEntities(ids) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
+
 		final StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
+
+		if (condition != null) {
+			stringBuffer.append(SQL_AND);
+			stringBuffer.append(OPEN_BRACKET);
+			stringBuffer.append(this.getConditionQuery(condition));
+			stringBuffer.append(CLOSE_BRACKET);
+		}
+
+		return this.retrieveByCondition(stringBuffer.toString());
+	}
+
+	public final Set<T> retrieveByIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition)
+			throws RetrieveObjectException, IllegalDataException {
+		assert StorableObject.hasSingleTypeEntities(ids) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
+
+		final StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true);
 
 		if (condition != null) {
 			stringBuffer.append(SQL_AND);
@@ -326,17 +346,98 @@ public abstract class StorableObjectDatabase<T extends StorableObject<T>> {
 		}
 	}
 
-	public final Set<T> retrieveByIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
+
+	////////////////////////////////////////// Retrieve Identifiers /////////////////////////////////////////////
+
+	public final Set<Identifier> retrieveIdentifiersByCondition(final String conditionQuery) throws RetrieveObjectException {
+		final Set<Identifier> identifiers = new HashSet<Identifier>();
+		final String tableName = this.getEntityName();
+
+		final StringBuffer sql = new StringBuffer(SQL_SELECT);
+		sql.append(StorableObjectWrapper.COLUMN_ID);
+		sql.append(SQL_FROM);
+		sql.append(tableName);
+		sql.append(SQL_WHERE);
+		sql.append(conditionQuery);
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.createStatement();
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql.toString());
+			while (resultSet.next()) {
+				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
+				identifiers.add(id);
+			}
+		} catch (SQLException sqle) {
+			final String mesg = "Cannot execute query -- " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		} finally {
+			try {
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					try {
+						if (resultSet != null) {
+							resultSet.close();
+							resultSet = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
+				}
+			} catch (SQLException sqle1) {
+				Log.errorMessage(sqle1);
+			}
+		}
+		
+		return identifiers;
+	}
+
+	public final Set<Identifier> retrieveIdentifiersByCondition(final StorableObjectCondition condition) throws RetrieveObjectException {
+		return this.retrieveIdentifiersByCondition(this.getConditionQuery(condition));
+	}
+
+	public final Set<Identifier> retrieveIdentifiersButIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition) throws RetrieveObjectException {
+		assert StorableObject.hasSingleTypeEntities(ids) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
+
+		final StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
+
+		if (condition != null) {
+			stringBuffer.append(SQL_AND);
+			stringBuffer.append(OPEN_BRACKET);
+			stringBuffer.append(this.getConditionQuery(condition));
+			stringBuffer.append(CLOSE_BRACKET);
+		}
+
+		return this.retrieveIdentifiersByCondition(stringBuffer.toString());
+	}
+
+	public final Set<Identifier> retrieveIdentifiersByIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition) throws RetrieveObjectException {
+		assert StorableObject.hasSingleTypeEntities(ids) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
+
 		final StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true);
 
 		if (condition != null) {
 			stringBuffer.append(SQL_AND);
+			stringBuffer.append(OPEN_BRACKET);
 			stringBuffer.append(this.getConditionQuery(condition));
+			stringBuffer.append(CLOSE_BRACKET);
 		}
 
-		return this.retrieveByCondition(stringBuffer.toString());
+		return this.retrieveIdentifiersByCondition(stringBuffer.toString());
 	}
+
+
+	////////////////////////////////////////// Retrieve linked objects /////////////////////////////////////////////
 
 	/**
 	 * Map&lt;StorableObject, List&lt;Identifier&gt;&gt;
@@ -605,66 +706,6 @@ public abstract class StorableObjectDatabase<T extends StorableObject<T>> {
 		return versionsMap;
 	}
 
-	private Set<Identifier> retrievePresentInDatabaseIds(final Set<Identifier> ids) throws RetrieveObjectException {
-		assert StorableObject.hasSingleTypeEntities(ids) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
-		final String tableName = this.getEntityName();
-
-		final Set<Identifier> presentInDatabaseIds = new HashSet<Identifier>();
-
-		final StringBuffer sql = new StringBuffer(SQL_SELECT);
-		sql.append(StorableObjectWrapper.COLUMN_ID);
-		sql.append(SQL_FROM);
-		sql.append(tableName);
-		sql.append(SQL_WHERE);
-		sql.append(idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true));
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = null;
-		try {
-			connection = DatabaseConnection.getConnection();
-			statement = connection.createStatement();
-			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql.toString());
-			while (resultSet.next()) {
-				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
-				presentInDatabaseIds.add(id);
-			}
-		}
-		catch (SQLException sqle) {
-			final String mesg = "Cannot check presence -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				try {
-					if (statement != null) {
-						statement.close();
-						statement = null;
-					}
-				} finally {
-					try {
-						if (resultSet != null) {
-							resultSet.close();
-							resultSet = null;
-						}
-					} finally {
-						if (connection != null) {
-							DatabaseConnection.releaseConnection(connection);
-							connection = null;
-						}
-					}
-				}
-			} catch (SQLException sqle1) {
-				Log.errorMessage(sqle1);
-			}
-		}
-
-		return presentInDatabaseIds;
-	}
-
-
-	// //////////////////// insert /////////////////////////
-
 	protected void insert(final Set<T> storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 	}
@@ -885,7 +926,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject<T>> {
 		assert StorableObject.getEntityCodeOfIdentifiables(storableObjects) == this.getEntityCode() : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
 		final Set<Identifier> ids = Identifier.createIdentifiers(storableObjects);
-		final Set<Identifier> dbIds = this.retrievePresentInDatabaseIds(ids);
+		final Set<Identifier> dbIds = this.retrieveIdentifiersByIdsByCondition(ids, null);
 
 		final Set<T> updateStorableObjects = new HashSet<T>();
 		final Set<T> insertStorableObjects = new HashSet<T>();
