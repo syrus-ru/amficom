@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCommonTest.java,v 1.14 2005/12/09 14:50:16 arseniy Exp $
+ * $Id: DatabaseCommonTest.java,v 1.15 2005/12/14 16:46:10 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -58,6 +58,7 @@ import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.ProtoEquipmentDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
+import com.syrus.AMFICOM.event.DeliveryAttributesDatabase;
 import com.syrus.AMFICOM.event.EventDatabase;
 import com.syrus.AMFICOM.event.EventSourceDatabase;
 import com.syrus.AMFICOM.event.EventTypeDatabase;
@@ -96,8 +97,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/12/09 14:50:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/12/14 16:46:10 $
+ * @author $Author: bass $
  * @module test
  */
 public class DatabaseCommonTest extends SQLCommonTest {
@@ -132,6 +133,7 @@ public class DatabaseCommonTest extends SQLCommonTest {
 		DatabaseContext.registerDatabase(new ServerProcessDatabase());
 		DatabaseContext.registerDatabase(new PermissionAttributesDatabase());
 		DatabaseContext.registerDatabase(new RoleDatabase());
+		DatabaseContext.registerDatabase(new DeliveryAttributesDatabase());
 
 		DatabaseContext.registerDatabase(new PortTypeDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathTypeDatabase());

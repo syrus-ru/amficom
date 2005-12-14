@@ -1,40 +1,62 @@
 /*
- * $Id: RoleAttributtesAddition.java,v 1.1 2005/12/14 15:49:46 bob Exp $
+ * $Id: RoleAttributtesAddition.java,v 1.2 2005/12/14 16:46:10 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
+
 package com.syrus.AMFICOM.administration;
+
+import static com.syrus.AMFICOM.general.CharacteristicTypeCodenames.USER_EMAIL;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.DELIVERYATTRIBUTES_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Set;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
+import junit.swingui.TestRunner;
 
 import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.administration.Role.RoleCodename;
+import com.syrus.AMFICOM.event.DeliveryAttributes;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
+import com.syrus.util.Log;
 
 /**
  * 
  * Sets Administration permission to Media Monitoring Administrator role added on 14/12/2005
  * 
- * @version $Revision: 1.1 $, $Date: 2005/12/14 15:49:46 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/12/14 16:46:10 $
+ * @author $Author: bass $
  * @module test
  */
 public class RoleAttributtesAddition extends TestCase {
+	private static Identifier characteristicTypeId = null;
+
+	private static StorableObjectCondition condition = null;
 
 	public RoleAttributtesAddition(final String name) {
 		super(name);
@@ -44,6 +66,37 @@ public class RoleAttributtesAddition extends TestCase {
 		final DatabaseCommonTest commonTest = new DatabaseCommonTest();
 		commonTest.addTestSuite(RoleAttributtesAddition.class);
 		return commonTest.createTestSetup();
+	}
+
+	public void testCreateDefaultDeliveryRule() throws ApplicationException {
+		final SystemUser systemUser = DatabaseCommonTest.getSysUser();
+		final Identifier systemUserId = systemUser.getId();
+
+		for (final Severity severity : Severity.values()) {
+			DeliveryAttributes.getInstance(systemUserId, severity).addSystemUser(systemUser);
+		}
+		StorableObjectPool.flush(DELIVERYATTRIBUTES_CODE, systemUserId, true);
+
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(
+				new CompoundCondition(
+						getCondition(),
+						AND,
+						new LinkedIdsCondition(
+								systemUserId,
+								CHARACTERISTIC_CODE)),
+				true);
+
+		final int size = characteristics.size();
+		if (size == 0) {
+			final CharacteristicType characteristicType = StorableObjectPool.getStorableObject(getCharacteristicTypeId(), true);
+			Characteristic characteristic = Characteristic.createInstance(systemUserId, characteristicType, "name", "description", "amficom@cbr.ru", systemUser, true, true);
+			Log.debugMessage("Created e-mail address: " + characteristic.getValue(), SEVERE);
+			StorableObjectPool.flush(CHARACTERISTIC_CODE, systemUserId, true);
+		} else if (size == 1) {
+			Log.debugMessage("Loaded e-mail address: " + characteristics.iterator().next().getValue(), SEVERE);
+		} else {
+			fail(size + " e-mail addresses found");
+		}
 	}
 
 	public void testCreateAdditionalRoleAttributtes() throws ApplicationException {
@@ -112,5 +165,49 @@ public class RoleAttributtesAddition extends TestCase {
 	
 		
 		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, userId, true);
+	}
+
+	private static StorableObjectCondition getCondition() {
+		synchronized (RoleAttributtesAddition.class) {
+			if (condition == null) {
+				condition = new LinkedIdsCondition(getCharacteristicTypeId(), CHARACTERISTIC_CODE);
+			}
+			return condition;
+		}
+	}
+
+
+	private static Identifier getCharacteristicTypeId() {
+		synchronized (RoleAttributtesAddition.class) {
+			if (characteristicTypeId == null) {
+				try {
+					final Set<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(
+							new TypicalCondition(
+									USER_EMAIL,
+									OPERATION_EQUALS,
+									CHARACTERISTIC_TYPE_CODE,
+									COLUMN_CODENAME),
+							true);
+					assert characteristicTypes != null : NON_NULL_EXPECTED;
+					final int size = characteristicTypes.size();
+					assert size == 1 : size;
+					characteristicTypeId = characteristicTypes.iterator().next().getId();
+				} catch (final ApplicationException ae) {
+					Log.debugMessage(ae, SEVERE);
+					characteristicTypeId = VOID_IDENTIFIER;
+		
+					/*
+					 * Never. But log the exception prior to issuing an
+					 * eror.
+					 */
+					assert false;
+				}
+			}
+			return characteristicTypeId;
+		}
+	}
+
+	public static void main(final String args[]) {
+		TestRunner.run(RoleAttributtesAddition.class);
 	}
 }
