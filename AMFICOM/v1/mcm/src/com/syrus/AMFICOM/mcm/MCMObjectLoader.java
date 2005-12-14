@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.34 2005/11/30 15:44:25 bass Exp $
+ * $Id: MCMObjectLoader.java,v 1.35 2005/12/14 11:57:00 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/11/30 15:44:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2005/12/14 11:57:00 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -67,24 +67,6 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		}
 	}
 
-	@Override
-	public final <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
-			final StorableObjectCondition condition) throws ApplicationException {
-		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
-
-		final short entityCode = condition.getEntityCode().shortValue();
-		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
-		switch (entityCode) {
-			case MEASUREMENT_CODE:
-			case ANALYSIS_CODE:
-			case RESULT_CODE:
-				return this.databaseObjectLoader.loadStorableObjectsButIdsByCondition(ids, condition);
-			default:
-				return this.loadStorableObjectsButIdsByConditionCustom(ids, condition);
-		}
-	}
-
 	private final <T extends StorableObject> Set<T> loadStorableObjectsCustom(final Set<Identifier> ids) throws ApplicationException {
 		final Set<T> objects = this.databaseObjectLoader.loadStorableObjects(ids);
 		final Set<Identifier> loadIds = Identifier.createSubtractionIdentifiers(ids, objects);
@@ -110,6 +92,26 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		this.insertWithDependencies(loadObjectsMap);
 
 		return objects;
+	}
+
+
+
+	@Override
+	public final <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+			final StorableObjectCondition condition) throws ApplicationException {
+		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		final short entityCode = condition.getEntityCode().shortValue();
+		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		switch (entityCode) {
+			case MEASUREMENT_CODE:
+			case ANALYSIS_CODE:
+			case RESULT_CODE:
+				return this.databaseObjectLoader.loadStorableObjectsButIdsByCondition(ids, condition);
+			default:
+				return this.loadStorableObjectsButIdsByConditionCustom(ids, condition);
+		}
 	}
 
 	private final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByConditionCustom(final Set<Identifier> ids,
@@ -183,8 +185,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 				boolean needLoad = true;
 				try {
 					needLoad = !StorableObjectDatabase.isPresentInDatabase(dependency.getId());
-				}
-				catch (ApplicationException ae) {
+				} catch (ApplicationException ae) {
 					Log.errorMessage(ae);
 				}
 				if (needLoad) {
@@ -201,6 +202,8 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		return missingDependencesMap;
 	}
 
+
+
 	private void insertWithDependencies(final Map<Integer, Map<Short, Set<StorableObject>>> dependenciesMap) {
 		for (final Integer dependencyKey : dependenciesMap.keySet()) {
 			final Map<Short, Set<StorableObject>> levelLoadObjectsMap = dependenciesMap.get(dependencyKey);
@@ -216,6 +219,39 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 			}
 		}
 	}
+
+
+
+	@Override
+	public final Set<Identifier> loadIdentifiersButIdsByCondition(final Set<Identifier> ids,
+			final StorableObjectCondition condition) throws ApplicationException {
+		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		final short entityCode = condition.getEntityCode().shortValue();
+		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		switch (entityCode) {
+			case MEASUREMENT_CODE:
+			case ANALYSIS_CODE:
+			case RESULT_CODE:
+				return this.databaseObjectLoader.loadIdentifiersButIdsByCondition(ids, condition);
+			default:
+				return this.loadIdentifiersButIdsByConditionCustom(ids, condition);
+		}
+	}
+
+	private final Set<Identifier> loadIdentifiersButIdsByConditionCustom(final Set<Identifier> ids,
+			final StorableObjectCondition condition) throws ApplicationException {
+		final Set<Identifier> identifiers = this.databaseObjectLoader.loadIdentifiersButIdsByCondition(ids, condition);
+		final Set<Identifier> loadButIds = Identifier.createSumIdentifiers(ids, identifiers);
+
+		final Set<Identifier> loadedIdentifiers = super.loadIdentifiersButIdsByCondition(loadButIds, condition);
+		identifiers.addAll(loadedIdentifiers);
+		
+		return identifiers;
+	}
+
+
 
 	@Override
 	public final Map<Identifier, StorableObjectVersion> getRemoteVersions(final Set<Identifier> ids) throws ApplicationException {
