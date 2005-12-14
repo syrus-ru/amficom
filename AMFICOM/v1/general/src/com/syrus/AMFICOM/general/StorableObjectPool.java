@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.208 2005/12/08 15:29:59 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.209 2005/12/14 11:08:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.LRUMapSaver;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.208 $, $Date: 2005/12/08 15:29:59 $
+ * @version $Revision: 1.209 $, $Date: 2005/12/14 11:08:08 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -380,12 +380,12 @@ public final class StorableObjectPool {
 	}
 
 	/**
-	 * Get {@link Set} of {@link StorableObject} matching the condition with ids not in the given set.
+	 * Get {@link Set} of {@link StorableObject} matching the condition with identifiers not in the given set.
 	 * This method breaks in case of load error.
 	 * @param ids
 	 * @param condition
 	 * @param useLoader
-	 * @return {@link Set} of {@link StorableObject} matching the given condition with ids not in the given set.
+	 * @return {@link Set} of {@link StorableObject} matching the given condition with identifiers are not in the given set.
 	 * @throws ApplicationException
 	 */
 	public static <T extends StorableObject> Set<T> getStorableObjectsButIdsByCondition(final Set<Identifier> ids,
@@ -395,13 +395,13 @@ public final class StorableObjectPool {
 	}
 
 	/**
-	 * Get {@link Set} of {@link StorableObject} matching the condition with ids not in the given set.
+	 * Get {@link Set} of {@link StorableObject} matching the condition with identifiers not in the given set.
 	 * 3-d parameter controls if break on load error
 	 * @param ids
 	 * @param condition
 	 * @param useLoader
 	 * @param breakOnLoadError
-	 * @return {@link Set} of {@link StorableObject} matching the given condition with ids not in the given set.
+	 * @return {@link Set} of {@link StorableObject} matching the given condition with identifiers are not in the given set.
 	 * @throws ApplicationException
 	 */
 	public static <T extends StorableObject> Set<T> getStorableObjectsButIdsByCondition(final Set<Identifier> ids,
@@ -416,7 +416,7 @@ public final class StorableObjectPool {
 		assert (ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids)) : "Condition entity code: "
 				+ condition.getEntityCode() + ", ids entity code: " + StorableObject.getEntityCodeOfIdentifiables(ids);
 
-		Log.debugMessage("Requested but: " + ids + ", for condition: " + condition, Log.DEBUGLEVEL08);
+		Log.debugMessage("Requested objects but: " + ids + ", for condition: " + condition, Log.DEBUGLEVEL08);
 
 		final LRUMap<Identifier, T> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
@@ -491,6 +491,146 @@ public final class StorableObjectPool {
 				Log.DEBUGLEVEL08);
 
 		return storableObjects;
+	}
+
+	/**
+	 * Get {@link Set} of {@link Identifier} of {@link StorableObject}, matching the given condition.
+	 * This method breaks in case of load error.
+	 * @param condition
+	 * @param useLoader
+	 * @return {@link Set} of {@link Identifier} of {@link StorableObject}, matching the given condition.
+	 * @throws ApplicationException
+	 */
+	public static Set<Identifier> getIdentifiersByCondition(final StorableObjectCondition condition, final boolean useLoader)  throws ApplicationException {
+		return getIdentifiersByCondition(condition, useLoader, true);
+	}
+
+	/**
+	 * Get {@link Set} of {@link Identifier} of {@link StorableObject}, matching the given condition.
+	 * 3-d parameter controls if break on load error
+	 * @param condition
+	 * @param useLoader
+	 * @param breakOnLoadError
+	 * @return {@link Set} of {@link Identifier} of {@link StorableObject}, matching the given condition.
+	 * @throws ApplicationException
+	 */
+	public static Set<Identifier> getIdentifiersByCondition(final StorableObjectCondition condition,
+			final boolean useLoader,
+			final boolean breakOnLoadError) throws ApplicationException {
+		final Set<Identifier> emptySet = Collections.emptySet();
+		return getIdentifiersButIdsByCondition(emptySet, condition, useLoader, breakOnLoadError);
+	}
+
+	/**
+	 * Get {@link Set} of {@link Identifier} of {@link StorableObject} matching the condition, not belonging to the given set.
+	 * This method breaks in case of load error.
+	 * @param ids
+	 * @param condition
+	 * @param useLoader
+	 * @return {@link Set} of {@link Identifier} of {@link StorableObject} matching the condition, not belonging to the given set.
+	 * @throws ApplicationException
+	 */
+	public static Set<Identifier> getIdentifiersButIdsByCondition(final Set<Identifier> ids,
+			final StorableObjectCondition condition,
+			final boolean useLoader) throws ApplicationException {
+		return getIdentifiersButIdsByCondition(ids, condition, useLoader, true);
+	}
+
+	/**
+	 * Get {@link Set} of {@link Identifier} of {@link StorableObject} matching the condition, not belonging to the given set.
+	 * 3-d parameter controls if break on load error
+	 * @param ids
+	 * @param condition
+	 * @param useLoader
+	 * @param breakOnLoadError
+	 * @return {@link Set} of {@link Identifier} of {@link StorableObject} matching the condition, not belonging to the given set.
+	 * @throws ApplicationException
+	 */
+	public static Set<Identifier> getIdentifiersButIdsByCondition(final Set<Identifier> ids,
+			final StorableObjectCondition condition,
+			final boolean useLoader,
+			final boolean breakOnLoadError) throws ApplicationException {
+		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert condition != null : ErrorMessages.NON_NULL_EXPECTED;
+
+		final short entityCode = condition.getEntityCode().shortValue();
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert (ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids)) : "Condition entity code: "
+				+ condition.getEntityCode() + ", ids entity code: " + StorableObject.getEntityCodeOfIdentifiables(ids);
+
+		Log.debugMessage("Requested identifiers but: " + ids + ", for condition: " + condition, Log.DEBUGLEVEL08);
+
+		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
+		if (objectPool == null) {
+			Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
+			return Collections.emptySet();
+		}
+
+		final Set<Identifier> loadButIds = new HashSet<Identifier>(ids);
+		final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
+		if (entityDeletedIds != null) {
+			Log.debugMessage("Found among deleted (added to excluded): " + entityDeletedIds, Log.DEBUGLEVEL08);
+			Identifier.addToIdentifiers(loadButIds, entityDeletedIds);
+		}
+
+		/*
+		 * We use Set of StorableObjects in addition to Set of Identifiers
+		 * to improve perfomance in subsequent call of StorableObjectCondition.isNeedMore(Set).
+		 * Method isNeedMore accepts Set of Identifiables and restores every object,
+		 * using cast to StorableObject, if it is possible or calls the method StorableObjectPool.getStorableObject().
+		 * The second way is more expensive, so it is desirable to pass into isNeedMore Set of StorableObjects.*/
+		final Set<Identifier> identifiers = new HashSet<Identifier>();
+		final Set<StorableObject> storableObjects = new HashSet<StorableObject>();
+		synchronized (objectPool) {
+			for (final StorableObject storableObject : objectPool.values()) {
+				final Identifier id = storableObject.getId();
+				if (!loadButIds.contains(id) && condition.isConditionTrue(storableObject)) {
+					identifiers.add(id);
+					storableObjects.add(storableObject);
+				}
+			}
+		}
+
+		Log.debugMessage("Found in pool " + identifiers.size() + " identifiers: " + Identifier.createStrings(identifiers),
+				Log.DEBUGLEVEL08);
+
+		if (useLoader && condition.isNeedMore(Identifier.createSumIdentifiables(storableObjects, ids))) {
+			Identifier.addToIdentifiers(loadButIds, identifiers);
+			Set<Identifier> loadedIdentifiers = null;
+			try {
+				loadedIdentifiers = objectLoader.loadIdentifiersButIdsByCondition(loadButIds, condition);
+			} catch (ApplicationException ae) {
+				if (breakOnLoadError) {
+					throw ae;
+				}
+				Log.errorMessage(ae);
+				loadedIdentifiers = Collections.emptySet();
+			}
+			assert loadedIdentifiers != null : ErrorMessages.NON_NULL_EXPECTED; 
+			Log.debugMessage("Loaded " + loadedIdentifiers.size() + " identifiers: " + Identifier.createStrings(loadedIdentifiers),
+					Log.DEBUGLEVEL08);
+
+			for (final Identifier loadedIdentifier : loadedIdentifiers) {
+				if (!objectPool.containsKey(loadedIdentifier)) {
+					identifiers.add(loadedIdentifier);
+				} else {
+					final StorableObject poolStorableObject = objectPool.get(loadedIdentifier);
+					if (!poolStorableObject.isChanged()) {
+						identifiers.add(loadedIdentifier);
+					} else {
+						Log.errorMessage("Local version of object '" + loadedIdentifier
+								+ "' do not match condition, but remote version matches condition; it is changed locally -- not returning it");
+					}
+				}
+			}
+
+		}
+
+		Log.debugMessage("Returning " + identifiers.size() + " identifiers: " + Identifier.createStrings(identifiers),
+				Log.DEBUGLEVEL08);
+
+		return identifiers;
 	}
 
 
