@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.92 2005/12/07 17:16:24 bass Exp $
+ * $Id: Identifier.java,v 1.93 2005/12/14 12:54:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.92 $, $Date: 2005/12/07 17:16:24 $
- * @author $Author: bass $
+ * @version $Revision: 1.93 $, $Date: 2005/12/14 12:54:27 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -194,33 +194,48 @@ public final class Identifier implements Comparable<Identifier>,
 		return new Identifier(id);
 	}
 
+	/**
+	 * Create <code>Set</code> of <code>String</code> representations of identifiers.
+	 * NOTE: Method is not synchronized on argument.
+	 * @param identifiables
+	 * @return A newly created <code>Set</code> of <code>String</code> representations of identifiers.
+	 */
 	public static Set<String> createStrings(final Collection<? extends Identifiable> identifiables) {
-		assert identifiables != null: NON_NULL_EXPECTED;
+		assert identifiables != null : NON_NULL_EXPECTED;
 
 		final Set<String> idStrings = new HashSet<String>(identifiables.size());
-		synchronized (identifiables) {
-			for (final Identifiable identifiable : identifiables) {
-				idStrings.add(identifiable.getId().toString());
-			}
+		for (final Identifiable identifiable : identifiables) {
+			idStrings.add(identifiable.getId().toString());
 		}
 		return idStrings;
 	}
 
 	/**
+	 * Create string representation of set of identifiers.
+	 * NOTE: Method is not synchronized on argument.
+	 * @param identifiables
+	 * @return String representation of set of identifiers.
+	 */
+	public static String toString(final Collection<? extends Identifiable> identifiables) {
+		assert identifiables != null : NON_NULL_EXPECTED;
+		return createStrings(identifiables).toString();
+	}
+
+	/**
+	 * Create array if {@link IdlIdentifier} obtained from given <code>Set</code> of {@link Identifiable}
+	 * NOTE: Method is not synchronized on argument.
 	 * @param identifiables <code>Collection&lt;Identifiable&gt;</code>
 	 * @return a newly created <code>IdlIdentifier[]</code> with
 	 *         elements ordered in the same way as returned by the iterator.
 	 * @see #fromTransferables(IdlIdentifier[])
 	 */
 	public static IdlIdentifier[] createTransferables(final Collection<? extends Identifiable> identifiables) {
-		assert identifiables != null: NON_NULL_EXPECTED;
+		assert identifiables != null : NON_NULL_EXPECTED;
 
 		final IdlIdentifier[] ids = new IdlIdentifier[identifiables.size()];
 		int i = 0;
-		synchronized (identifiables) {
-			for (final Identifiable identifiable : identifiables) {
-				ids[i++] = identifiable.getId().getIdlTransferable();
-			}
+		for (final Identifiable identifiable : identifiables) {
+			ids[i++] = identifiable.getId().getIdlTransferable();
 		}
 		return ids;
 	}
@@ -234,34 +249,35 @@ public final class Identifier implements Comparable<Identifier>,
 		
 		final int length = identifiables.length;
 		final IdlIdentifier[] ids = new IdlIdentifier[length];
-		for (int i = 0; i < length; i++)
+		for (int i = 0; i < length; i++) {
 			ids[i] = identifiables[i].getId().getIdlTransferable();
+		}
 		return ids;
 	}
 
 	/**
-	 * Creates new set of identifiers from the given set of identifiables.
+	 * Creates new <code>Set</code> of {@link Identifier} from the given <code>Set</code> of {@link Identifiable}.
+	 * NOTE: Method is not synchronized on argument.
 	 * @param identifiables
-	 * @return Set (modifiable) of identifiers
+	 * @return <code>Set</code> (modifiable) of {@link Identifier}
 	 */
 	public static Set<Identifier> createIdentifiers(final Set<? extends Identifiable> identifiables) {
-		assert identifiables != null: NON_NULL_EXPECTED;
+		assert identifiables != null : NON_NULL_EXPECTED;
 
 		final Set<Identifier> identifiers = new HashSet<Identifier>(identifiables.size());
-		synchronized (identifiables) {
-			for (final Identifiable identifiable : identifiables) {
-				identifiers.add(identifiable.getId());
-			}
+		for (final Identifiable identifiable : identifiables) {
+			identifiers.add(identifiable.getId());
 		}
 		return identifiers;
 	}
 
 	/**
-	 * Creates Map<Short entityCode, Set<Identifier> ids>
+	 * Creates <code>Map<Short entityCode, Set<Identifier> ids></code>.
+	 * NOTE: Method is not synchronized on argument.
 	 * @param identifiables
 	 */
 	public static Map<Short, Set<Identifier>> createEntityIdsMap(final Set<? extends Identifiable> identifiables) {
-		assert identifiables != null: NON_NULL_EXPECTED;
+		assert identifiables != null : NON_NULL_EXPECTED;
 
 		final Map<Short, Set<Identifier>> entityIdsMap = new HashMap<Short, Set<Identifier>>();
 		for (final Identifiable identifiable : identifiables) {
@@ -278,7 +294,8 @@ public final class Identifier implements Comparable<Identifier>,
 	}
 
 	/**
-	 * Creates new set of identifiables, containing values from both supplied sets of identifiables
+	 * Creates new <code>Set</code>of {@link Identifiable}, containing values from both supplied sets of identifiables
+	 * NOTE: Method is not synchronized on arguments.
 	 * @param identifiables1
 	 * @param identifiables2
 	 * @return Set of identifiables
@@ -289,17 +306,14 @@ public final class Identifier implements Comparable<Identifier>,
 		assert identifiables2 != null : NON_NULL_EXPECTED;
 
 		final Set<Identifiable> identifiables = new HashSet<Identifiable>(identifiables1.size() + identifiables2.size());
-		synchronized (identifiables1) {
-			identifiables.addAll(identifiables1);
-		}
-		synchronized (identifiables2) {
-			identifiables.addAll(identifiables2);
-		}
+		identifiables.addAll(identifiables1);
+		identifiables.addAll(identifiables2);
 		return identifiables;
 	}
 
 	/**
-	 * Creates new set of identifiers, containing values from both supplied sets of identifiables
+	 * Creates new <code>Set</code>of {@link Identifier}, containing values from both supplied sets of identifiables
+	 * NOTE: Method is not synchronized on arguments.
 	 * @param identifiables1
 	 * @param identifiables2
 	 * @return Set of identifiers
@@ -310,25 +324,25 @@ public final class Identifier implements Comparable<Identifier>,
 		assert identifiables2 != null : NON_NULL_EXPECTED;
 
 		final Set<Identifier> identifiers = new HashSet<Identifier>(identifiables1.size() + identifiables2.size());
-		synchronized (identifiables1) {
-			for (final Identifiable identifiable : identifiables1) {
-				identifiers.add(identifiable.getId());
-			}
+		for (final Identifiable identifiable : identifiables1) {
+			identifiers.add(identifiable.getId());
 		}
-		synchronized (identifiables2) {
-			for (final Identifiable identifiable : identifiables2) {
-				identifiers.add(identifiable.getId());
-			}
+		for (final Identifiable identifiable : identifiables2) {
+			identifiers.add(identifiable.getId());
 		}
 		return identifiers;
 	}
 
 	/**
-	 * Creates new set of identifiers, containing values from set <code>identifiables1</code>
-	 * with exception to those, containing in set <code>identifiables2</code>
-	 *
-	 * @param minuendi see <a href = "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=minuend">Merriam-Webster Dictionary</a>.
-	 * @param subtrahendi <a href = "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=subtrahend">ditto</a>.
+	 * Creates new set of identifiers, containing values from set
+	 * <code>identifiables1</code> with exception to those, containing in set
+	 * <code>identifiables2</code>
+	 * NOTE: Method is not synchronized on arguments. Need synchronization on <code>subtrahendi</code>.
+	 * 
+	 * @param minuendi
+	 *        see <a href = "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=minuend">Merriam-Webster Dictionary</a>.
+	 * @param subtrahendi
+	 *        <a href = "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=subtrahend">ditto</a>.
 	 * @return Set of identifiers
 	 */
 	public static Set<Identifier> createSubtractionIdentifiers(final Set<? extends Identifiable> minuendi,
@@ -337,10 +351,9 @@ public final class Identifier implements Comparable<Identifier>,
 		assert subtrahendi != null : NON_NULL_EXPECTED;
 
 		final Set<Identifier> identifiers = createIdentifiers(minuendi);
-		synchronized (subtrahendi) {
-			for (final Identifiable subtrahendum : subtrahendi) {
-				identifiers.remove(subtrahendum.getId());
-			}
+
+		for (final Identifiable subtrahendum : subtrahendi) {
+			identifiers.remove(subtrahendum.getId());
 		}
 		return identifiers;
 	}
@@ -349,6 +362,7 @@ public final class Identifier implements Comparable<Identifier>,
 	 * Adds to set of identifiers <code>identifiers</code>
 	 * identifiers from set of identifiables <code>identifiables</code>.
 	 * (I. e., parameter <code>identifiers</code> is passed as &quot;inout&quot; argument.)
+	 * NOTE: Method is not synchronized on arguments. Need synchronization on <code>identifiables</code>.
 	 * @param identifiers
 	 * @param identifiables
 	 */
@@ -356,35 +370,38 @@ public final class Identifier implements Comparable<Identifier>,
 		assert identifiers != null : NON_NULL_EXPECTED;
 		assert identifiables != null : NON_NULL_EXPECTED;
 
-		synchronized (identifiables) {
-			for (final Identifiable identifiable : identifiables) {
-				identifiers.add(identifiable.getId());
-			}
+		for (final Identifiable identifiable : identifiables) {
+			identifiers.add(identifiable.getId());
 		}
 	}
 
 	/**
-	 * Removes from set of identifiers <code>identifiers</code> those,
-	 * which contained in set of identifiables <code>identifiables</code>.
-	 * (I. e., parameter <code>identifiers</code> is passed as &quot;inout&quot; argument.)
-	 *
-	 * @param minuendi see <a href = "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=minuend">Merriam-Webster Dictionary</a>.
-	 * @param subtrahendi <a href = "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=subtrahend">ditto</a>.
+	 * Removes from set of identifiers <code>identifiers</code> those, which
+	 * contained in set of identifiables <code>identifiables</code>. (I. e.,
+	 * parameter <code>identifiers</code> is passed as &quot;inout&quot;
+	 * argument.)
+	 * NOTE: Method is not synchronized on arguments. Need synchronization on <code>subtrahendi</code>.
+	 * 
+	 * @param minuendi
+	 *        see <a href =
+	 *        "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=minuend">Merriam-Webster
+	 *        Dictionary</a>.
+	 * @param subtrahendi
+	 *        <a href =
+	 *        "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=subtrahend">ditto</a>.
 	 */
-	public static void subtractFromIdentifiers(final Set<Identifier> minuendi,
-			final Set<? extends Identifiable> subtrahendi) {
+	public static void subtractFromIdentifiers(final Set<Identifier> minuendi, final Set<? extends Identifiable> subtrahendi) {
 		assert minuendi != null : NON_NULL_EXPECTED;
 		assert subtrahendi != null : NON_NULL_EXPECTED;
 
-		synchronized (subtrahendi) {
-			for (final Identifiable subtrahendum : subtrahendi) {
-				minuendi.remove(subtrahendum.getId());
-			}
+		for (final Identifiable subtrahendum : subtrahendi) {
+			minuendi.remove(subtrahendum.getId());
 		}
 	}
 
 	/**
-	 * @param transferables <code>IdlIdentifier[]</code>
+	 * @param transferables
+	 *        <code>IdlIdentifier[]</code>
 	 * @return a newly created <code>Set&lt;Identifier&gt;</code>.
 	 * @see #createTransferables(Collection)
 	 */
