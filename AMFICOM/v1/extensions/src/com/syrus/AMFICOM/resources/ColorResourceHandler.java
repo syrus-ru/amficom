@@ -1,5 +1,5 @@
 /*-
-* $Id: ColorResourceHandler.java,v 1.3 2005/12/13 09:02:01 bob Exp $
+* $Id: ColorResourceHandler.java,v 1.4 2005/12/14 08:14:23 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,14 +20,16 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/13 09:02:01 $
+ * Color xml resource handler 
+ * 
+ * @version $Revision: 1.4 $, $Date: 2005/12/14 08:14:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module extensions
  */
 public class ColorResourceHandler implements ConcreateResourceHandler<Color>{
 	
-	private static Map<String, java.awt.Color> COLOR_MAP; 
+	private static Map<Enum, java.awt.Color> COLOR_MAP; 
 	
 	public void load(final Color color) {
 		final java.awt.Color awtColor;
@@ -47,10 +49,9 @@ public class ColorResourceHandler implements ConcreateResourceHandler<Color>{
 			}
 		} else {
 			final Enum colorEnum = color.getName();
-			final String name = colorEnum.toString();
-			awtColor = getColorMap().get(name);
+			awtColor = getColorMap().get(colorEnum);
 			if (awtColor == null) {
-				Log.errorMessage("Color alias for " + name + " does not registered.");
+				Log.errorMessage("Color alias for " + colorEnum.toString() + " does not registered.");
 			}
 		}
 		final String id = color.getId();
@@ -58,22 +59,25 @@ public class ColorResourceHandler implements ConcreateResourceHandler<Color>{
 		UIManager.put(id, awtColor);
 	}
 	
-	public static synchronized Map<String, java.awt.Color> getColorMap() {
+	/**
+	 * @return Xml Color mapping to java.awt.Color
+	 */
+	public static synchronized Map<Enum, java.awt.Color> getColorMap() {
 		if (COLOR_MAP == null) {
-			COLOR_MAP = new HashMap<String, java.awt.Color>(13);
-			COLOR_MAP.put("white", java.awt.Color.white);
-			COLOR_MAP.put("lightGray", java.awt.Color.lightGray);
-			COLOR_MAP.put("gray", java.awt.Color.gray);
-			COLOR_MAP.put("darkGray", java.awt.Color.darkGray);
-			COLOR_MAP.put("black", java.awt.Color.black);
-			COLOR_MAP.put("red", java.awt.Color.red);
-			COLOR_MAP.put("pink", java.awt.Color.pink);
-			COLOR_MAP.put("orange", java.awt.Color.orange);
-			COLOR_MAP.put("yellow", java.awt.Color.yellow);
-			COLOR_MAP.put("green", java.awt.Color.green);
-			COLOR_MAP.put("magenta", java.awt.Color.magenta);
-			COLOR_MAP.put("cyan", java.awt.Color.cyan);
-			COLOR_MAP.put("blue", java.awt.Color.blue);
+			COLOR_MAP = new HashMap<Enum, java.awt.Color>(13);
+			COLOR_MAP.put(Color.Name.WHITE, java.awt.Color.WHITE);
+			COLOR_MAP.put(Color.Name.LIGHT_GRAY, java.awt.Color.LIGHT_GRAY);
+			COLOR_MAP.put(Color.Name.GRAY, java.awt.Color.GRAY);
+			COLOR_MAP.put(Color.Name.DARK_GRAY, java.awt.Color.DARK_GRAY);
+			COLOR_MAP.put(Color.Name.BLACK, java.awt.Color.BLACK);
+			COLOR_MAP.put(Color.Name.RED, java.awt.Color.RED);
+			COLOR_MAP.put(Color.Name.PINK, java.awt.Color.PINK);
+			COLOR_MAP.put(Color.Name.ORANGE, java.awt.Color.ORANGE);
+			COLOR_MAP.put(Color.Name.YELLOW, java.awt.Color.YELLOW);
+			COLOR_MAP.put(Color.Name.GREEN, java.awt.Color.GREEN);
+			COLOR_MAP.put(Color.Name.MAGENTA, java.awt.Color.MAGENTA);
+			COLOR_MAP.put(Color.Name.CYAN, java.awt.Color.CYAN);
+			COLOR_MAP.put(Color.Name.BLUE, java.awt.Color.BLUE);
 		}
 
 		return COLOR_MAP;
