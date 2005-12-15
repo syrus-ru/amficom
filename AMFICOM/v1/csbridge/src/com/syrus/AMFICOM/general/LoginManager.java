@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginManager.java,v 1.38 2005/12/12 07:23:27 bob Exp $
+ * $Id: LoginManager.java,v 1.39 2005/12/15 13:34:51 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 
+import java.util.Date;
 import java.util.Set;
 
 import org.omg.CORBA.SystemException;
@@ -30,8 +31,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/12/12 07:23:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.39 $, $Date: 2005/12/15 13:34:51 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -202,43 +203,6 @@ public final class LoginManager {
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	public static void setIdlSessionKey(final IdlSessionKey idlSessionKey) {
-		if (idlSessionKey == null) {
-			throw new NullPointerException();
-		}
-
-		LoginManager.idlSessionKey = idlSessionKey;
-	}
-	
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	public static void setUserId(final Identifier userId1) {
-		if (userId1 == null) {
-			throw new NullPointerException();
-		} else if (userId1.getMajor() != SYSTEMUSER_CODE || userId1.isVoid()) {
-			throw new IllegalArgumentException(userId1.toString());
-		}
-
-		userId = userId1;
-	}
-	
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	public static void setDomainId(final Identifier domainId1) {
-		if (domainId1 == null) {
-			throw new NullPointerException();
-		} else if (domainId1.getMajor() != DOMAIN_CODE || domainId1.isVoid()) {
-			throw new IllegalArgumentException(domainId1.toString());
-		}
-
-		domainId = domainId1;
-	}
-
-	/**
 	 * @throws IllegalStateException if not logged in.
 	 */
 	public static Identifier getUserId() {
@@ -249,36 +213,37 @@ public final class LoginManager {
 	}
 
 	/**
+	 * Set my own password
+	 * @param password
+	 * @throws CommunicationException
+	 * @throws AMFICOMRemoteException
+	 */
+	public static void setPassword(final String password) throws CommunicationException, AMFICOMRemoteException {
+		loginServerConnectionManager.getLoginServerReference().setPassword(idlSessionKey, userId.getIdlTransferable(), password);
+	}
+
+	/**
 	 * set password to user
-	 * @param baseSessionEnvironment
 	 * @param systemUserId
 	 * @param password
 	 * @throws CommunicationException
 	 * @throws AMFICOMRemoteException
 	 * @throws IllegalArgumentException if systemUserId is not system user id
 	 */
-	public static void setPassword(final BaseSessionEnvironment baseSessionEnvironment,
-		final Identifier systemUserId,
-		final String password) 
-	throws CommunicationException, AMFICOMRemoteException {
-		
+	public static void setPassword(final Identifier systemUserId, final String password)
+			throws CommunicationException, AMFICOMRemoteException {
+
 		if (systemUserId.getMajor() != ObjectEntities.SYSTEMUSER_CODE) {
 			throw new IllegalArgumentException("System user identifier expected.");
 		}
-		
-		final BaseConnectionManager connectionManager = 
-			baseSessionEnvironment.getConnectionManager();
-		final LoginServer loginServerReference = 
-			connectionManager.getLoginServerReference();
-		final IdlIdentifier userIdTransferable = 
-			systemUserId.getIdlTransferable();
-		loginServerReference.setPassword(idlSessionKey, 
-			userIdTransferable, 
-			new String(password));
+
+		final IdlIdentifier userIdTransferable = systemUserId.getIdlTransferable();
+		loginServerConnectionManager.getLoginServerReference().setPassword(idlSessionKey, userIdTransferable, password);
 	}
-	
+
 	/**
-	 * @throws IllegalStateException if not logged in.
+	 * @throws IllegalStateException
+	 *         if not logged in.
 	 */
 	public static Identifier getDomainId() {
 		if (isLoggedIn()) {
@@ -294,5 +259,17 @@ public final class LoginManager {
 				: userId.isVoid() && domainId.isVoid()
 						: userId + "; " + domainId + "; logged in: " + loggedIn;
 		return loggedIn;
+	}
+
+	public static void loginXmlStub(final Identifier userId1, final Identifier domainId1) {
+		assert userId1 != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert domainId1 != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert userId1.getMajor() == ObjectEntities.SYSTEMUSER_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert domainId1.getMajor() == ObjectEntities.DOMAIN_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+
+		userId = userId1;
+		domainId = domainId1;
+		idlSessionKey = new IdlSessionKey("XMLStub_" + (new Date()).toString());
+		sessionKey = new SessionKey(idlSessionKey);
 	}
 }
