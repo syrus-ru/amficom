@@ -1,5 +1,5 @@
 /*
- * $Id: TestStorableObjectPool.java,v 1.2 2005/06/19 18:43:56 arseniy Exp $
+ * $Id: TestStorableObjectPool.java,v 1.3 2005/12/15 13:59:17 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import junit.framework.Test;
 import com.syrus.AMFICOM.measurement.Measurement;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/19 18:43:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/12/15 13:59:17 $
+ * @author $Author: bass $
  * @module test
  */
 public final class TestStorableObjectPool extends DatabaseCommonTest {
@@ -69,7 +69,7 @@ public final class TestStorableObjectPool extends DatabaseCommonTest {
 		final Set ids = new HashSet();
 		ids.add(new Identifier("Measurement_2742"));
 		ids.add(new Identifier("Measurement_2701"));
-		final Set set1 = StorableObjectPool.getStorableObjectsByConditionButIds(ids, ec, true);
+		final Set set1 = StorableObjectPool.getStorableObjectsButIdsByCondition(ids, ec, true);
 		for (final Iterator it = set1.iterator(); it.hasNext();) {
 			final Measurement measurement = (Measurement) it.next();
 			System.out.println("Measurement: '" + measurement.getId() + "'");

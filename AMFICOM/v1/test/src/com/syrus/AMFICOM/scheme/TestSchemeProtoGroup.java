@@ -1,5 +1,5 @@
 /*-
- * $Id: TestSchemeProtoGroup.java,v 1.2 2005/07/15 12:00:46 arseniy Exp $
+ * $Id: TestSchemeProtoGroup.java,v 1.3 2005/12/15 13:59:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/15 12:00:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/12/15 13:59:17 $
+ * @author $Author: bass $
  * @module test
  */
 public final class TestSchemeProtoGroup extends TestCase {
@@ -46,7 +46,7 @@ public final class TestSchemeProtoGroup extends TestCase {
 		//butIds.add(new Identifier("SchemeProtoGroup_93"));
 		butIds.add(Identifier.VOID_IDENTIFIER);
 		//final Set<SchemeProtoGroup> set = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		final Set<SchemeProtoGroup> set = StorableObjectPool.getStorableObjectsByConditionButIds(butIds, lic, true);
+		final Set<SchemeProtoGroup> set = StorableObjectPool.getStorableObjectsButIdsByCondition(butIds, lic, true);
 		for (SchemeProtoGroup schemeProtoGroup : set) {
 			System.out.println("group: " + schemeProtoGroup.getName());
 		}

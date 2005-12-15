@@ -1,5 +1,5 @@
 /*
- * $Id: TestLoadTiming.java,v 1.1 2005/12/06 11:57:03 saa Exp $
+ * $Id: TestLoadTiming.java,v 1.2 2005/12/15 14:01:15 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.Result;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/12/06 11:57:03 $
- * @author $Author: saa $
+ * @version $Revision: 1.2 $, $Date: 2005/12/15 14:01:15 $
+ * @author $Author: bass $
  * @module test
  */
 public final class TestLoadTiming extends TestCase {
@@ -206,13 +206,13 @@ public final class TestLoadTiming extends TestCase {
 		System.out.println("   averageTime/ms                  minimalTime/ms                action");
 		for (int i = 0; i < expectations.length; i++) {
 			System.out.printf("%7.3f ( %5.1f%% of %7.3f ) %7.3f ( %5.1f%% of %7.3f )   %s\n",
-					measured[i].getAverage(),
-					measured[i].getAverage() / expectations[i].expectation.getAverage() * 100.0,
-					expectations[i].expectation.getAverage(),
-					measured[i].getMin(),
-					measured[i].getMin() / expectations[i].expectation.getMin() * 100.0,
-					expectations[i].expectation.getMin(),
-					expectations[i].profiler.getClass().getSimpleName()
+					Double.valueOf(measured[i].getAverage()),
+					Double.valueOf(measured[i].getAverage() / expectations[i].expectation.getAverage() * 100.0),
+					Double.valueOf(expectations[i].expectation.getAverage()),
+					Double.valueOf(measured[i].getMin()),
+					Double.valueOf(measured[i].getMin() / expectations[i].expectation.getMin() * 100.0),
+					Double.valueOf(expectations[i].expectation.getMin()),
+					Double.valueOf(expectations[i].profiler.getClass().getSimpleName())
 					);
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: TestEvaluationType.java,v 1.3 2005/06/19 18:43:56 arseniy Exp $
+ * $Id: TestEvaluationType.java,v 1.4 2005/12/15 13:59:17 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/19 18:43:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/12/15 13:59:17 $
+ * @author $Author: bass $
  * @module test
  */
 public class TestEvaluationType extends DatabaseCommonTest {
@@ -81,7 +81,7 @@ public class TestEvaluationType extends DatabaseCommonTest {
 		butIds.addAll(thParTypIds);
 		butIds.addAll(etaParTypIds);
 		butIds.addAll(outParTypIds);
-		Set parameterTypes = StorableObjectPool.getStorableObjectsByConditionButIds(butIds, ec, true);
+		Set parameterTypes = StorableObjectPool.getStorableObjectsButIdsByCondition(butIds, ec, true);
 		Set parameterTypeIds = Identifier.createIdentifiers(parameterTypes);
 		for (Iterator it = parameterTypeIds.iterator(); it.hasNext();) {
 			System.out.println("Loaded: '" + it.next() + "'");
