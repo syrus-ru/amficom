@@ -1,5 +1,5 @@
 /*
- * $Id: TestEventSource.java,v 1.4 2005/06/19 18:43:56 arseniy Exp $
+ * $Id: TestEventSource.java,v 1.5 2005/12/15 14:13:10 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,13 +7,12 @@
  */
 package com.syrus.AMFICOM.event;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 
-import com.syrus.AMFICOM.event.corba.EventSource_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
@@ -21,24 +20,25 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/19 18:43:56 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/15 14:13:10 $
  * @author $Author: arseniy $
  * @module event_v1
  */
-public class TestEventSource extends DatabaseCommonTest {
+public class TestEventSource extends TestCase {
 
-	public TestEventSource(String name) {
+	public TestEventSource(final String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		addTestSuite(TestEventSource.class);
-		return createTestSetup();
+		final DatabaseCommonTest commonTest = new DatabaseCommonTest();
+		commonTest.addTestSuite(TestEventSource.class);
+		return commonTest.createTestSetup();
 	}
 
 	public void testCreateInstance() throws ApplicationException {
 		Identifier sourceEntityId;
-		List eventSources = new LinkedList();
+		final List<EventSource> eventSources = new LinkedList<EventSource>();
 
 		sourceEntityId = new Identifier("MCM_19");
 		eventSources.add(createAndTestEventSource(sourceEntityId));
@@ -52,28 +52,12 @@ public class TestEventSource extends DatabaseCommonTest {
 		sourceEntityId = new Identifier("TransmissionPath_19");
 		eventSources.add(createAndTestEventSource(sourceEntityId));
 
-		EventSource eventSource;
-		for (Iterator it = eventSources.iterator(); it.hasNext();) {
-			eventSource = (EventSource) it.next();
-			System.out.println("id: "+ eventSource.getId());
-		}
-		StorableObjectPool.flush(ObjectEntities.EVENTSOURCE_CODE, false);
+		System.out.println("Event Sources: "+ Identifier.toString(eventSources));
+		StorableObjectPool.flush(ObjectEntities.EVENTSOURCE_CODE, DatabaseCommonTest.getSysUser().getId(), false);
 	}
 
-	private EventSource createAndTestEventSource(Identifier sourceEntityId) throws ApplicationException {
-		EventSource eventSource = EventSource.createInstance(creatorUser.getId(), sourceEntityId);
-
-		EventSource_Transferable est = (EventSource_Transferable) eventSource.getTransferable();
-
-		EventSource eventSource1 = new EventSource(est);
-		assertEquals(eventSource.getId(), eventSource1.getId());
-		assertEquals(eventSource.getCreated(), eventSource1.getCreated());
-		assertEquals(eventSource.getModified(), eventSource1.getModified());
-		assertEquals(eventSource.getCreatorId(), eventSource1.getCreatorId());
-		assertEquals(eventSource.getModifierId(), eventSource1.getModifierId());
-		assertEquals(eventSource.getVersion(), eventSource1.getVersion());
-		assertEquals(eventSource.getSourceEntityId(), eventSource1.getSourceEntityId());
-
+	private EventSource createAndTestEventSource(final Identifier sourceEntityId) throws ApplicationException {
+		EventSource eventSource = EventSource.createInstance(DatabaseCommonTest.getSysUser().getId(), sourceEntityId);
 		return eventSource;
 	}
 //
