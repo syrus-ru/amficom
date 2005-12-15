@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.96 2005/12/07 17:17:21 bass Exp $
+ * $Id: PathElement.java,v 1.97 2005/12/15 15:18:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.96 $, $Date: 2005/12/07 17:17:21 $
+ * @version $Revision: 1.97 $, $Date: 2005/12/15 15:18:13 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -165,8 +165,8 @@ public final class PathElement extends StorableObject<PathElement>
 			final Identifier modifierId,
 			final StorableObjectVersion version,
 			final SchemePath parentSchemePath,
-			final AbstractSchemePort startAbstractSchemePort,
-			final AbstractSchemePort endSbstractSchemePort)
+			final AbstractSchemePort<?> startAbstractSchemePort,
+			final AbstractSchemePort<?> endSbstractSchemePort)
 	throws ApplicationException {
 		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
 		/*
@@ -285,8 +285,8 @@ public final class PathElement extends StorableObject<PathElement>
 			final SchemePath parentSchemePath,
 			final int sequentialNumber,
 			final IdlKind kind,
-			final AbstractSchemePort startAbstractSchemePort,
-			final AbstractSchemePort endAbstractSchemePort,
+			final AbstractSchemePort<?> startAbstractSchemePort,
+			final AbstractSchemePort<?> endAbstractSchemePort,
 			final SchemeCableThread schemeCableThread,
 			final SchemeLink schemeLink) {
 		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
@@ -317,8 +317,8 @@ public final class PathElement extends StorableObject<PathElement>
 	@ParameterizationPending(value = {"final boolean usePool"})
 	public static PathElement createInstance(final Identifier creatorId,
 			final SchemePath parentSchemePath,
-			final AbstractSchemePort startAbstractSchemePort,
-			final AbstractSchemePort endAbstractSchemePort)
+			final AbstractSchemePort<?> startAbstractSchemePort,
+			final AbstractSchemePort<?> endAbstractSchemePort)
 	throws CreateObjectException {
 		final boolean usePool = false;
 
@@ -451,24 +451,47 @@ public final class PathElement extends StorableObject<PathElement>
 		return this.sequentialNumber <= that.sequentialNumber ? this.sequentialNumber < that.sequentialNumber ? -1 : 0 : 1;
 	}
 
+	public Identifier getAbstractSchemeElementId() {
+		final Identifier abstractSchemeElementId;
+
+		switch (this.getKind().value()) {
+		case _SCHEME_CABLE_LINK:
+			abstractSchemeElementId = this.getSchemeCableThread().getParentSchemeCableLinkId();
+			break;
+		case _SCHEME_ELEMENT:
+			abstractSchemeElementId = this.getSchemeElementId();
+			break;
+		case _SCHEME_LINK:
+			abstractSchemeElementId = this.getSchemeLinkId();
+			break;
+		default:
+			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
+		}
+
+		assert abstractSchemeElementId != null : NON_NULL_EXPECTED + "; " + this + "; id = " + this.getId().getIdentifierCode();
+		assert abstractSchemeElementId.isVoid() : NON_VOID_EXPECTED + "; " + this + "; id = " + this.getId().getIdentifierCode();
+
+		return abstractSchemeElementId;
+	}
+
 	public AbstractSchemeElement<?> getAbstractSchemeElement() {
 		final AbstractSchemeElement<?> abstractSchemeElement;
 		
 		switch (this.getKind().value()) {
-			case _SCHEME_CABLE_LINK:
-				abstractSchemeElement = this.getSchemeCableLink();
-				break;
-			case _SCHEME_ELEMENT:
-				abstractSchemeElement = this.getSchemeElement();
-				break;
-			case _SCHEME_LINK:
-				abstractSchemeElement = this.getSchemeLink();
-				break;
-			default:
-				throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
+		case _SCHEME_CABLE_LINK:
+			abstractSchemeElement = this.getSchemeCableLink();
+			break;
+		case _SCHEME_ELEMENT:
+			abstractSchemeElement = this.getSchemeElement();
+			break;
+		case _SCHEME_LINK:
+			abstractSchemeElement = this.getSchemeLink();
+			break;
+		default:
+			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
 		}
 
-		assert abstractSchemeElement != null : this + "; id = " + this.getId().getIdentifierCode();
+		assert abstractSchemeElement != null : NON_NULL_EXPECTED + "; " + this + "; id = " + this.getId().getIdentifierCode();
 
 		return abstractSchemeElement;
 	}
@@ -634,20 +657,35 @@ public final class PathElement extends StorableObject<PathElement>
 		}
 	}
 
+	private Identifier getSchemeElementId() {
+		final SchemeDevice parentSchemeDevice;
+		if (this.startAbstractSchemePortId.isVoid()) {
+			if (this.endAbstractSchemePortId.isVoid()) {
+				Log.debugMessage("Both (abstract) scheme ports of this path element are null. Seems strange, unless it's the only element of its parent path. Returning null as well.",
+						SEVERE);
+				return VOID_IDENTIFIER;
+			}
+			parentSchemeDevice = this.getEndAbstractSchemePort().getParentSchemeDevice();
+		} else {
+			parentSchemeDevice = this.getStartAbstractSchemePort().getParentSchemeDevice();
+			assert this.endAbstractSchemePortId.isVoid() || this.getEndAbstractSchemePort().getParentSchemeDeviceId().equals(parentSchemeDevice) : NO_COMMON_PARENT;
+		}
+		assert parentSchemeDevice != null;
+		return parentSchemeDevice.getParentSchemeElementId();
+	}
+
 	public SchemeElement getSchemeElement() {
-		final AbstractSchemePort<?> startAbstractSchemePort = this.getStartAbstractSchemePort();
-		final AbstractSchemePort<?> endAbstractSchemePort = this.getEndAbstractSchemePort();
-		SchemeDevice parentSchemeDevice;
-		if (startAbstractSchemePort == null) {
-			if (endAbstractSchemePort == null) {
+		final SchemeDevice parentSchemeDevice;
+		if (this.startAbstractSchemePortId.isVoid()) {
+			if (this.endAbstractSchemePortId.isVoid()) {
 				Log.debugMessage("Both (abstract) scheme ports of this path element are null. Seems strange, unless it's the only element of its parent path. Returning null as well.",
 						SEVERE);
 				return null;
 			}
-			parentSchemeDevice = endAbstractSchemePort.getParentSchemeDevice();
+			parentSchemeDevice = this.getEndAbstractSchemePort().getParentSchemeDevice();
 		} else {
-			parentSchemeDevice = startAbstractSchemePort.getParentSchemeDevice();
-			assert endAbstractSchemePort == null || endAbstractSchemePort.getParentSchemeDeviceId().equals(parentSchemeDevice) : NO_COMMON_PARENT;
+			parentSchemeDevice = this.getStartAbstractSchemePort().getParentSchemeDevice();
+			assert this.endAbstractSchemePortId.isVoid() || this.getEndAbstractSchemePort().getParentSchemeDeviceId().equals(parentSchemeDevice) : NO_COMMON_PARENT;
 		}
 		assert parentSchemeDevice != null;
 		return parentSchemeDevice.getParentSchemeElement();
