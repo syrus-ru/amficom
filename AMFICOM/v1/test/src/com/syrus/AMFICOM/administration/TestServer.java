@@ -1,5 +1,5 @@
 /*
- * $Id: TestServer.java,v 1.9 2005/09/14 19:21:18 arseniy Exp $
+ * $Id: TestServer.java,v 1.10 2005/12/15 13:41:40 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CORBACommonTest;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -25,11 +24,13 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/14 19:21:18 $
+ * @version $Revision: 1.10 $, $Date: 2005/12/15 13:41:40 $
  * @author $Author: arseniy $
  * @module test
  */
 public final class TestServer extends TestCase {
+	private static final String KEY_SERVER_HOST_NAME = "ServerHostName";
+	private static final String SERVER_HOST_NAME = "amficom";
 
 	public TestServer(final String name) {
 		super(name);
@@ -51,7 +52,7 @@ public final class TestServer extends TestCase {
 				domain.getId(),
 				"Первый сервер",
 				"Единственный сервер",
-				ApplicationProperties.getString(CORBACommonTest.KEY_SERVER_HOST_NAME, CORBACommonTest.SERVER_HOST_NAME));
+				ApplicationProperties.getString(KEY_SERVER_HOST_NAME, SERVER_HOST_NAME));
 
 		StorableObjectPool.flush(server, DatabaseCommonTest.getSysUser().getId(), true);
 	}

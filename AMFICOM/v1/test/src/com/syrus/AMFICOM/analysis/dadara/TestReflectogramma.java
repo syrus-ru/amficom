@@ -1,5 +1,5 @@
 /*
- * $Id: TestReflectogramma.java,v 1.2 2005/07/15 12:00:46 arseniy Exp $
+ * $Id: TestReflectogramma.java,v 1.3 2005/12/15 13:42:41 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/15 12:00:46 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/15 13:42:41 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -66,7 +66,7 @@ public final class TestReflectogramma extends TestCase {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		}
 		catch (Exception e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			System.exit(-1);
 		}
 	}
