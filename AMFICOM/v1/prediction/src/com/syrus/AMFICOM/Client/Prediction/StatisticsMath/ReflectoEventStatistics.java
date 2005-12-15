@@ -17,24 +17,24 @@ import com.syrus.io.BellcoreStructure;
 
 public class ReflectoEventStatistics
 {
-	public static final int waveLength1310 = 1310;
-	public static final int waveLength1550 = 1550;
-	public static final int waveLength1625 = 1625;
+	private static final int waveLength1310 = 1310;
+	private static final int waveLength1550 = 1550;
+	private static final int waveLength1625 = 1625;
 
-	public int waveLength = 1550;
+	private int waveLength = 1550;
 
 	public ReflectoEventContainer []statData;
-	public ReflectoEventContainer reference;
-	public double []referenceArray;
+	private ReflectoEventContainer reference;
+	double []referenceArray;
 
-	public double delta_x=0;
-	public double maxRefValue=0;
+	double delta_x=0;
+	private double maxRefValue=0;
 
-	double []values; // Helping array;
+	private double []values; // Helping array;
 
-	public long lowerTime;
-	public long upperTime;
-	public MonitoredElement me;
+	private long lowerTime;
+	private long upperTime;
+	private MonitoredElement me;
 
 	private static final int nBins = 70;
 
@@ -67,7 +67,8 @@ public class ReflectoEventStatistics
 //    setMeanReflectogramm();
 	}
 
-	public ReflectoEventStatistics(ReflectoEventContainer []statData,
+	// unused
+	private ReflectoEventStatistics(ReflectoEventContainer []statData,
 			ReflectoEventContainer reference,
 			long lowerTime, long upperTime, MonitoredElement me,
 			int waveLength)
@@ -102,7 +103,7 @@ public class ReflectoEventStatistics
 		}
 	}
 
-	public void setRefArray(ReflectoEventContainer reference)
+	private void setRefArray(ReflectoEventContainer reference)
 	{
 		BellcoreStructure bs = reference.bs;
 		if(bs != null)
@@ -124,7 +125,7 @@ public class ReflectoEventStatistics
 		}
 	}
 
-	public void setStatData(ReflectoEventContainer []statData)
+	private void setStatData(ReflectoEventContainer []statData)
 	{
 		if(statData == null) return;
 		this.statData = statData;
@@ -139,13 +140,14 @@ public class ReflectoEventStatistics
 	}
 
 
-	public ReflectoEventContainer []getStatData()
+	// unused?
+	private ReflectoEventContainer []getStatData()
 	{
 		return this.statData;
 	}
 
 
-	public void setReference(ReflectoEventContainer reference)
+	private void setReference(ReflectoEventContainer reference)
 	{
 		if(reference == null) return;
 		this.reference = reference;
