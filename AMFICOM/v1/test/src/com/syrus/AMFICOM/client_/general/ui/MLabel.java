@@ -13,12 +13,13 @@ import java.awt.Graphics;
 
 import javax.swing.JLabel;
 
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 
 /**
  * @author Vladimir Dolzhenko
  */
 public class MLabel extends JLabel implements Comparable {
+	private static final long serialVersionUID = 3114499641497137402L;
 
 	private int	status;
 
@@ -32,6 +33,7 @@ public class MLabel extends JLabel implements Comparable {
 		this.status = status;
 	}
 
+	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Color color = null;

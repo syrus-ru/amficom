@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProtoEquipment.java,v 1.1 2005/09/28 13:24:51 arseniy Exp $
+ * $Id: TestProtoEquipment.java,v 1.2 2005/12/15 13:53:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,19 +7,15 @@
  */
 package com.syrus.AMFICOM.configuration;
 
-import java.util.Iterator;
-
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DatabaseCommonTest;
-import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+
 /**
- * @version $Revision: 1.1 $, $Date: 2005/09/28 13:24:51 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/15 13:53:08 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -37,9 +33,7 @@ public final class TestProtoEquipment extends TestCase {
 	}
 
 	public void testCreateInstance() throws ApplicationException {
-		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
-		final Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
-		final EquipmentType equipmentType = (EquipmentType) it.next();
+		final EquipmentType equipmentType = EquipmentType.REFLECTOMETER;
 
 		final ProtoEquipment protoEquipment = ProtoEquipment.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				equipmentType,
