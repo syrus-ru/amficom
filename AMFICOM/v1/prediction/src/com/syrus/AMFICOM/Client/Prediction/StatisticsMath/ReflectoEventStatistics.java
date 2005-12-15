@@ -21,13 +21,15 @@ public class ReflectoEventStatistics
 	private static final int waveLength1550 = 1550;
 	private static final int waveLength1625 = 1625;
 
+	public ReflectoEventContainer []statData;
+
+	double []referenceArray;
+	double delta_x=0;
+
 	private int waveLength = 1550;
 
-	public ReflectoEventContainer []statData;
 	private ReflectoEventContainer reference;
-	double []referenceArray;
 
-	double delta_x=0;
 	private double maxRefValue=0;
 
 	private double []values; // Helping array;
