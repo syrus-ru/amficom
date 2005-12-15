@@ -167,7 +167,6 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements 
 
 	public void setAnalysisType (int type)
 	{
-		ReflectoEventStatistics stats = (ReflectoEventStatistics)Pool.get("statData", "theStatData");
 		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 		{
 			TimeDependencePanel panel = (TimeDependencePanel)jLayeredPane.getComponent(i);
