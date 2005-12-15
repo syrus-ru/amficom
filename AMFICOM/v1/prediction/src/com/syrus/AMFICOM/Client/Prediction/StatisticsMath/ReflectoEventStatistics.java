@@ -20,7 +20,22 @@ public class ReflectoEventStatistics
 	public static final int waveLength1310 = 1310;
 	public static final int waveLength1550 = 1550;
 	public static final int waveLength1625 = 1625;
+
 	public int waveLength = 1550;
+
+	public ReflectoEventContainer []statData;
+	public ReflectoEventContainer reference;
+	public double []referenceArray;
+
+	public double delta_x=0;
+	public double maxRefValue=0;
+
+	double []values; // Helping array;
+
+	public long lowerTime;
+	public long upperTime;
+	public MonitoredElement me;
+
 	private static final int nBins = 70;
 
 	private final String tdd = "tdd";
@@ -28,28 +43,14 @@ public class ReflectoEventStatistics
 	private final String linFit = "linFit";
 	private final String histo = "histo";
 
-	public ReflectoEventContainer []statData;
-	public ReflectoEventContainer reference;
-	public double []referenceArray;
-
-	private double []meanReflectogramm;
-	private int nReflectogrammsForAveraging=0;
-
-
-	public double delta_x=0;
-	public double maxRefValue=0;
-
-	double []values; // Helping array;
-
 	private Hashtable attenuationCache;
 	private Hashtable splashAmplitudeCache;
 	private Hashtable energyLossCache;
 	private Hashtable amplitudeCache;
 	private Hashtable reflectionCache;
 
-	public long lowerTime;
-	public long upperTime;
-	public MonitoredElement me;
+	private double []meanReflectogramm;
+	private int nReflectogrammsForAveraging=0;
 
 	public ReflectoEventStatistics(ReflectoEventContainer []statData,
 			ReflectoEventContainer reference,
