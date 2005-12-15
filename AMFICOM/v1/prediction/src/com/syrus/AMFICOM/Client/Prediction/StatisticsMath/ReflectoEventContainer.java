@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Prediction.StatisticsMath;
 
-import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.ShortReflectogramEvent;
 import com.syrus.io.BellcoreStructure;
 
 public class ReflectoEventContainer
@@ -12,9 +13,8 @@ public class ReflectoEventContainer
 
 
 	public ReflectoEventContainer(ShortReflectogramEvent []sre,
-																ReflectogramEvent []re, BellcoreStructure bs,
-																long date)
-	{
+			ReflectogramEvent []re, BellcoreStructure bs,
+			long date) {
 		this.bs = bs;
 		this.sre = sre;
 		this.re = re;
