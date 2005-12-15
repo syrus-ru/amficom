@@ -1,5 +1,5 @@
 /*
- * $Id: TestEvent.java,v 1.5 2005/12/15 14:13:10 arseniy Exp $
+ * $Id: TestEvent.java,v 1.6 2005/12/15 14:16:36 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,9 +25,9 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/12/15 14:13:10 $
+ * @version $Revision: 1.6 $, $Date: 2005/12/15 14:16:36 $
  * @author $Author: arseniy $
- * @module event_v1
+ * @module test
  */
 public class TestEvent extends TestCase {
 

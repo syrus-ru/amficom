@@ -1,5 +1,5 @@
 /*
- * $Id: TestTransmissionPathType.java,v 1.6 2005/08/19 15:55:21 arseniy Exp $
+ * $Id: TestTransmissionPathType.java,v 1.7 2005/12/15 14:16:36 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,9 +15,9 @@ import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/19 15:55:21 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/15 14:16:36 $
  * @author $Author: arseniy $
- * @module config_v1
+ * @module test
  */
 public class TestTransmissionPathType extends TestCase {
 

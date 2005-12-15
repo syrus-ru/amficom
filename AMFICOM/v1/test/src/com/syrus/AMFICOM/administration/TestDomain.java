@@ -1,5 +1,5 @@
 /*
- * $Id: TestDomain.java,v 1.6 2005/12/12 07:47:39 arseniy Exp $
+ * $Id: TestDomain.java,v 1.7 2005/12/15 14:16:36 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,11 +21,10 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/12/12 07:47:39 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/15 14:16:36 $
  * @author $Author: arseniy $
  * @module test
  */
