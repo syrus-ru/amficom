@@ -669,7 +669,8 @@ public class ReflectoEventStatistics
 		return coord;
 	}
 
-	public double []getMeanReflectogramm(boolean reCount)
+	// unused?
+	private double []getMeanReflectogramm(boolean reCount)
 	{
 		if(reCount)
 		{
