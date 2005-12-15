@@ -6,13 +6,19 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.ReflectoEventStatistics;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.ReflectogrammPredictor;
 import com.syrus.AMFICOM.Client.Prediction.UI.Calendar.DateSelectionDialog;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.io.*;
+import com.syrus.io.BellcorePredictionWriter;
+import com.syrus.io.BellcoreReader;
+import com.syrus.io.BellcoreStructure;
+import com.syrus.io.BellcoreWriter;
 
 public class CountPredictedReflectogramm
 		extends VoidCommand
@@ -39,9 +45,9 @@ public class CountPredictedReflectogramm
 		reflectoEventStatistics = (ReflectoEventStatistics)Pool.get("statData", "theStatData");
 		if (reflectoEventStatistics == null) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-																		"Статистические данные не найдены",
-																		"Ошибка",
-																		JOptionPane.OK_OPTION);
+					"Статистические данные не найдены",
+					"Ошибка",
+					JOptionPane.OK_OPTION);
 			return;
 		}
 
@@ -50,16 +56,16 @@ public class CountPredictedReflectogramm
 			return;
 
 		long date = dsd.getDate();
-		ReflectogrammPredictor rep = new ReflectogrammPredictor(date, reflectoEventStatistics);
 
-		if (rep == null || rep.getPredictedReflectogramm() == null)
+		final double[] predictedReflectogramm = new ReflectogrammPredictor(
+				date, reflectoEventStatistics).getPredictedReflectogramm();
+
+		if (predictedReflectogramm == null)
 			return;
 
 		String title = "Ожидание на " + sdf.format(new Date(date));
-		MonitoredElement me = rep.getStatistics().getMonitoredElement();
+		MonitoredElement me = reflectoEventStatistics.getMonitoredElement();
 		title = title + ", трасса: " + me.getName();
-
-		double[] predicted = rep.getPredictedReflectogramm();
 
 		BellcoreStructure main = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
 		byte[] tmp = new BellcoreWriter().write(main);
@@ -70,7 +76,7 @@ public class CountPredictedReflectogramm
 		bs.title = title;
 
 		BellcorePredictionWriter writer = new BellcorePredictionWriter(bs);
-		writer.setDataPoints(predicted);
+		writer.setDataPoints(predictedReflectogramm);
 		writer.setTime(System.currentTimeMillis() / 1000);
 
 		Pool.put("bellcorestructure", bs.title, bs);
