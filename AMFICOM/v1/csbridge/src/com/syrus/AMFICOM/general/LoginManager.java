@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginManager.java,v 1.39 2005/12/15 13:34:51 arseniy Exp $
+ * $Id: LoginManager.java,v 1.40 2005/12/16 11:21:12 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import org.omg.CORBA.SystemException;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.corba.IdlDomain;
+import com.syrus.AMFICOM.bugs.Crutch366;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/12/15 13:34:51 $
+ * @version $Revision: 1.40 $, $Date: 2005/12/16 11:21:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -261,6 +262,13 @@ public final class LoginManager {
 		return loggedIn;
 	}
 
+	/**
+	 * This method is only used to emulate login in XML session.
+	 * It is crutch.
+	 * @param userId1
+	 * @param domainId1
+	 */
+	@Crutch366(notes = "Implement universal login procedure.")
 	public static void loginXmlStub(final Identifier userId1, final Identifier domainId1) {
 		assert userId1 != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert domainId1 != null : ErrorMessages.NON_NULL_EXPECTED;
