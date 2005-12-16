@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.45 2005/12/14 11:16:51 arseniy Exp $
+ * $Id: ServerCore.java,v 1.46 2005/12/16 13:48:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.45 $, $Date: 2005/12/14 11:16:51 $
+ * @version $Revision: 1.46 $, $Date: 2005/12/16 13:48:31 $
  * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -189,7 +189,7 @@ public abstract class ServerCore implements CommonServerOperations {
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 			final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
-			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
+			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED + "; entity: " + ObjectEntities.codeToString(entityCode);
 
 			Log.debugMessage("Versions for '" + ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
 
@@ -233,7 +233,7 @@ public abstract class ServerCore implements CommonServerOperations {
 					+ Identifier.createIdentifiers(storableObjects), Level.FINEST);
 
 			final StorableObjectDatabase<? extends StorableObject<?>> database = DatabaseContext.getDatabase(entityCode);
-			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
+			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED + "; entity: " + ObjectEntities.codeToString(entityCode);
 			((StorableObjectDatabase) database).save(storableObjects);
 		} catch (ApplicationException ae) {
 			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_UPDATE);

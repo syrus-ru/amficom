@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.38 2005/12/14 11:16:08 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.39 2005/12/16 13:48:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/12/14 11:16:08 $
+ * @version $Revision: 1.39 $, $Date: 2005/12/16 13:48:31 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -33,7 +33,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		final StorableObjectDatabase<T> database = DatabaseContext.getDatabase(entityCode);
-		assert database != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert database != null : ErrorMessages.NON_NULL_EXPECTED + "; entity: " + ObjectEntities.codeToString(entityCode);
 		return database.retrieveByIdsByCondition(ids, null);
 	}
 
@@ -49,7 +49,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
 		final StorableObjectDatabase<T> database = DatabaseContext.getDatabase(entityCode);
-		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
+		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED + "; entity: " + ObjectEntities.codeToString(entityCode);
 		return database.retrieveButIdsByCondition(ids, condition);
 	}
 
@@ -59,7 +59,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
 		final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
-		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
+		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED + "; entity: " + ObjectEntities.codeToString(entityCode);
 		return database.retrieveIdentifiersButIdsByCondition(ids, condition);
 	}
 
@@ -72,7 +72,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
-		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
+		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED + "; entity: " + ObjectEntities.codeToString(entityCode);
 		final Map<Identifier, StorableObjectVersion> versionsMap = database.retrieveVersions(ids);
 		return versionsMap;
 	}
@@ -86,7 +86,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		final StorableObjectDatabase<? extends StorableObject<?>> database = DatabaseContext.getDatabase(entityCode);
-		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
+		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED + "; entity: " + ObjectEntities.codeToString(entityCode);
 		((StorableObjectDatabase) database).save(storableObjects);
 	}
 
@@ -98,7 +98,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(identifiables);
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
-		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
+		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED + "; entity: " + ObjectEntities.codeToString(entityCode);
 		database.delete(identifiables);
 	}
 
