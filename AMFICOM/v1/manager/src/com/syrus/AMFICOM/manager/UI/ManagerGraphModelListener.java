@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModelListener.java,v 1.11 2005/12/16 14:43:21 bob Exp $
+* $Id: ManagerGraphModelListener.java,v 1.12 2005/12/16 15:28:14 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.manager.UI;
 
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
@@ -49,7 +50,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/12/16 14:43:21 $
+ * @version $Revision: 1.12 $, $Date: 2005/12/16 15:28:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -98,11 +99,6 @@ public class ManagerGraphModelListener implements GraphModelListener {
 			}
 			
 			if (changed != null && removed == null) {
-//				try {
-//					throw new Exception("ManagerGraphModelListener.graphChanged");
-//				} catch (final Exception e1) {
-//					e1.printStackTrace();
-//				}
 				for(Object changedObject : changed) {
 					assert Log.debugMessage("changedObject " 
 							+ changedObject 
@@ -190,7 +186,16 @@ public class ManagerGraphModelListener implements GraphModelListener {
 						Rectangle2D rectangle2D = GraphConstants.getBounds(attributes);
 						String title = cell.getUserObject().toString();
 
-						if (!this.managerMainFrame.arranging) {								
+						if (!this.managerMainFrame.arranging) {				
+							if (!port.getTargets().isEmpty()) {
+								final TreeNode treeNode = cell;
+								final TreeNode[] pathToRoot = treeModel.getPathToRoot(treeNode);
+								if (pathToRoot.length > 1) {
+									final TreeNode treeNodeParent = pathToRoot[pathToRoot.length - 2];
+									treeModel.nodesChanged(treeNodeParent, treeNode);
+								}
+							}
+							
 							String codeName = bean.getId();
 							LayoutItem item = this.getLayoutItem(codeName);
 							if (item == null) {

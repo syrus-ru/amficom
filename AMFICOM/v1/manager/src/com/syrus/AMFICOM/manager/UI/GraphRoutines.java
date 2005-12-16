@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphRoutines.java,v 1.14 2005/12/16 14:43:21 bob Exp $
+* $Id: GraphRoutines.java,v 1.15 2005/12/16 15:28:14 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/12/16 14:43:21 $
+ * @version $Revision: 1.15 $, $Date: 2005/12/16 15:28:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -257,16 +257,6 @@ public final class GraphRoutines {
 							new Hashtable<GraphCell, AttributeMap>();
 						viewMap.put(cell, attributeMap);
 						graph.getModel().edit(viewMap, null, null, null);
-						
-//						final PerspectiveTreeModel treeModel = managerMainFrame.getTreeModel();
-//						
-//						final TreeNode treeNode = cell;
-//						final TreeNode[] pathToRoot = treeModel.getPathToRoot(treeNode);
-//						if (pathToRoot.length > 1) {
-//							final TreeNode treeNodeParent = pathToRoot[pathToRoot.length - 2];
-//							treeModel.nodesChanged(treeNodeParent, 
-//								treeNode);
-//						}
 					}
 					
 				}
