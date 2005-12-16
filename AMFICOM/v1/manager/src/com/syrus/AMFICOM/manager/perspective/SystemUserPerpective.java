@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserPerpective.java,v 1.6 2005/12/14 15:08:30 bob Exp $
+* $Id: SystemUserPerpective.java,v 1.7 2005/12/16 09:36:07 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/12/14 15:08:30 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/16 09:36:07 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -282,6 +282,11 @@ public final class SystemUserPerpective extends AbstractPerspective {
 	
 	public Perspective getSubPerspective(AbstractBean bean) {
 		return null;
+	}
+	
+	@Override
+	public String toString() {
+		return "SystemUserPerpective for " + this.getCodename();
 	}
 }
 
