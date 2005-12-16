@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.83 2005/12/08 14:26:28 arseniy Exp $
+# $Id: Makefile,v 1.84 2005/12/16 13:51:07 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -42,7 +42,7 @@ $(LIBNAME): .mach
 	$(JAR) cf $@ \
 		-C $(CLASSDIR) com
 
-.mach: $(CLASSDIR) xml .corba
+.mach: $(CLASSDIR) $(LIBNAMEXML) .corba
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
@@ -51,7 +51,7 @@ $(LIBNAME): .mach
 .PHONY: corba
 corba: .corba
 
-.corba: $(CLASSDIR) .idl xml
+.corba: $(CLASSDIR) .idl $(LIBNAMEXML)
 	$(JAVAC) \
 		$(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
@@ -137,7 +137,7 @@ arch:
 		$(wildcard $(XMLDIR)/*.xsd) \
 		$(XMLDIR)/$(MODULE_NAME).xsdconfig
 
-.javadocs: .idl xml $(JAVADOCDIR)
+.javadocs: .idl $(LIBNAMEXML) $(JAVADOCDIR)
 	$(JAVADOC) \
 		$(JAVADOCFLAGS) \
 		-link "http://$(JAVADOCHOST)/apidocs/trove/" \
