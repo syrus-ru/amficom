@@ -1,5 +1,5 @@
 /*-
-* $Id: PerspectiveTreeModel.java,v 1.11 2005/12/16 09:35:16 bob Exp $
+* $Id: PerspectiveTreeModel.java,v 1.12 2005/12/16 11:21:14 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
+import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -42,7 +43,7 @@ import com.syrus.util.Log;
  * 
  * TODO rebuild moving methods to nodes (pattern visitor)
  * 
- * @version $Revision: 1.11 $, $Date: 2005/12/16 09:35:16 $
+ * @version $Revision: 1.12 $, $Date: 2005/12/16 11:21:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -569,6 +570,52 @@ public final class PerspectiveTreeModel implements TreeModel {
 //		assert Log.debugMessage("/3" + perspective + ", " + this.root, LOGLEVEL);
 		return this.root;
     }
+	
+	public void nodesChanged(final TreeNode parentNode,
+		final TreeNode childNode) {
+		if (parentNode != null) {
+			if (parentNode == getRoot()) {
+				this.fireTreeNodesChanged(this, getPathToRoot(parentNode), null, null);
+			} else {
+				this.fireTreeNodesChanged(this, 
+					this.getPathToRoot(parentNode), 
+					new int[] {this.getIndexOfChild(parentNode, childNode)},
+					new Object[] {childNode});
+			}
+		} 
+	}
+   
+   /**
+	 * Notifies all listeners that have registered interest for notification on
+	 * this event type. The event instance is lazily created using the
+	 * parameters passed into the fire method.
+	 * 
+	 * @param source
+	 *            the node being changed
+	 * @param path
+	 *            the path to the root node
+	 * @param childIndices
+	 *            the indices of the changed elements
+	 * @param children
+	 *            the changed elements
+	 * @see EventListenerList
+	 */
+	protected void fireTreeNodesChanged(final Object source,
+			final Object[] path,
+			final int[] childIndices,
+			final Object[] children) {
+		if (this.treeModelListeners != null 
+				&& !this.treeModelListeners.isEmpty()) {
+			final TreeModelEvent e = 
+				new TreeModelEvent(source, 
+					path, 
+					childIndices,
+					children);
+			for (final TreeModelListener listener : this.treeModelListeners) {
+				listener.treeNodesChanged(e);
+			}
+		}
+	}
 	
 	final class PerspectiveMutableTreeNode extends DefaultMutableTreeNode {
 		private final Perspective	perspective;
