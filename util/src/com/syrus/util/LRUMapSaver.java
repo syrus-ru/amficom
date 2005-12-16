@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMapSaver.java,v 1.2 2005/12/08 15:29:20 arseniy Exp $
+ * $Id: LRUMapSaver.java,v 1.3 2005/12/16 13:41:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.io.ObjectOutputStream;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/08 15:29:20 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/16 13:41:39 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -45,7 +45,7 @@ public abstract class LRUMapSaver<K, V extends LRUMap.Retainable> {
 	}
 
 	public void load(final String entityName, final LRUMap<K, V> lruMap) {
-		Log.debugMessage("Loading ArrayLRUMap '" + entityName + "'", Log.DEBUGLEVEL10);
+		Log.debugMessage("Loading LRUMap '" + entityName + "'", Log.DEBUGLEVEL10);
 		final File lruMapFile = new File(this.cacheDir.getPath() + File.separator + entityName + this.fileSuffix);
 		try {
 			final ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(lruMapFile));
@@ -83,7 +83,7 @@ public abstract class LRUMapSaver<K, V extends LRUMap.Retainable> {
 		final File tmpLruMapFile = new File(path + ".swp");
 		try {
 			final ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(tmpLruMapFile));
-			Log.debugMessage("Saving ArrayLRUMap '" + entityName + "' to file " + lruMapFile.getAbsolutePath(), Log.DEBUGLEVEL10);
+			Log.debugMessage("Saving LRUMap '" + entityName + "' to file " + lruMapFile.getAbsolutePath(), Log.DEBUGLEVEL10);
 			objectOutputStream.writeObject(entityName);
 			objectOutputStream.writeObject(this.getObjectToWrite(lruMap));
 			objectOutputStream.flush();
