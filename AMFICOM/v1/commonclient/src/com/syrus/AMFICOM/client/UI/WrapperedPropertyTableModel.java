@@ -6,12 +6,11 @@ import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/12/14 12:28:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/12/16 12:30:42 $
+ * @author $Author: arseniy $
  * @module commonclient
  */
 public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
