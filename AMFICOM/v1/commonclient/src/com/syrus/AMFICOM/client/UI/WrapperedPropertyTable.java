@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedPropertyTable.java,v 1.17 2005/10/19 14:18:43 bob Exp $
+* $Id: WrapperedPropertyTable.java,v 1.18 2005/12/16 10:57:38 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import javax.swing.table.TableColumn;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/10/19 14:18:43 $
+ * @version $Revision: 1.18 $, $Date: 2005/12/16 10:57:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -63,10 +63,13 @@ public class WrapperedPropertyTable<T> extends ATable {
 	}
 
 	public void setDefaultTableCellRenderer() {
+		this.setDefaultTableCellRenderer(StubLabelCellRenderer.getInstance());
+	}
+	
+	public void setDefaultTableCellRenderer(final TableCellRenderer renderer) {
 		final WrapperedPropertyTableModel<T> model = this.getModel();
 
 		TableColumn col = this.getColumnModel().getColumn(0);
-		TableCellRenderer renderer = StubLabelCellRenderer.getInstance();
 		col.setCellRenderer(renderer);
 		for (int mColIndex = 1; mColIndex < model.getColumnCount(); mColIndex++) {
 			col = this.getColumnModel().getColumn(mColIndex);
