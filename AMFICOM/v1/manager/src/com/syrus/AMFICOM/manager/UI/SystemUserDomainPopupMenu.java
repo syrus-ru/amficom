@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserDomainPopupMenu.java,v 1.10 2005/12/14 15:08:30 bob Exp $
+* $Id: SystemUserDomainPopupMenu.java,v 1.11 2005/12/16 11:25:38 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Checker;
-import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -36,8 +35,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/12/14 15:08:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/12/16 11:25:38 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -125,12 +124,7 @@ public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu<DomainPerpe
 		@Override
 		protected void applyPassword(final char[] password) {
 			try {
-				final ClientSessionEnvironment instance = 
-					ClientSessionEnvironment.getInstance();
-				
-				LoginManager.setPassword(instance, 
-					this.systemUser.getId(), 
-					new String(password));				
+				LoginManager.setPassword(this.systemUser.getId(), new String(password));				
 			} catch (final CommunicationException e) {
 				Log.errorMessage(e);
 				JOptionPane.showMessageDialog(null, 
