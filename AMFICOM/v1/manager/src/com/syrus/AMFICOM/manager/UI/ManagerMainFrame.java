@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.33 2005/12/13 13:37:32 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.34 2005/12/16 15:25:45 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.33 $, $Date: 2005/12/13 13:37:32 $
+ * @version $Revision: 1.34 $, $Date: 2005/12/16 15:25:45 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -530,39 +530,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		final InputMap imap = component.getInputMap();
 		final ActionMap map = component.getActionMap();
 		
-		// Paste
-		final Icon pasteIcon = UIManager.getIcon("org.jgraph.example.resources.action.paste");
-		this.paste = new AbstractAction("", pasteIcon) {
-
-			@SuppressWarnings({"synthetic-access","unqualified-field-access"})
-			public void actionPerformed(final ActionEvent e) {				
-				final GraphLayoutCache cache = graph.getGraphLayoutCache();
-				arranging = true;
-				ManagerGraphCell managerGraphCell = buffer.getCell();
-				buffer.clear();
-				if (managerGraphCell != null) {
-					cache.setVisible(managerGraphCell, true);
-					managerGraphCell.setPerspective(perspective);
-					try {
-						perspective.putBean(managerGraphCell.getAbstractBean());
-					} catch (final ApplicationException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					perspective.firePropertyChangeEvent(new PropertyChangeEvent(this, "layoutBeans", null, null));
-				}
-				arranging = false;
-				updateBufferButtons();
-			}
-		};
-		graphToolBar.add(this.paste);
-		this.paste.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Paste"));
-		
-		imap.put(KeyStroke.getKeyStroke("ctrl V"), "paste");
-		map.put("paste", this.paste);
-
-		
-		// Cut
+//		 Cut
 		this.buffer = new CellBuffer(this);
 		
 		final Icon cutIcon = UIManager.getIcon("org.jgraph.example.resources.action.cut");
@@ -606,7 +574,38 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		this.cut.setEnabled(false);
 		
 		imap.put(KeyStroke.getKeyStroke("ctrl X"), "cut");
-		map.put("cut", this.cut);		
+		map.put("cut", this.cut);
+		
+		// Paste
+		final Icon pasteIcon = UIManager.getIcon("org.jgraph.example.resources.action.paste");
+		this.paste = new AbstractAction("", pasteIcon) {
+
+			@SuppressWarnings({"synthetic-access","unqualified-field-access"})
+			public void actionPerformed(final ActionEvent e) {				
+				final GraphLayoutCache cache = graph.getGraphLayoutCache();
+				arranging = true;
+				ManagerGraphCell managerGraphCell = buffer.getCell();
+				buffer.clear();
+				if (managerGraphCell != null) {
+					cache.setVisible(managerGraphCell, true);
+					managerGraphCell.setPerspective(perspective);
+					try {
+						perspective.putBean(managerGraphCell.getAbstractBean());
+					} catch (final ApplicationException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					perspective.firePropertyChangeEvent(new PropertyChangeEvent(this, "layoutBeans", null, null));
+				}
+				arranging = false;
+				updateBufferButtons();
+			}
+		};
+		graphToolBar.add(this.paste);
+		this.paste.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Paste"));
+		
+		imap.put(KeyStroke.getKeyStroke("ctrl V"), "paste");
+		map.put("paste", this.paste);				
 		
 		this.updateBufferButtons();
 
