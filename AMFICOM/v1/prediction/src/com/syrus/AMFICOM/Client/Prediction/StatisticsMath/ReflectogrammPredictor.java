@@ -14,7 +14,8 @@ public class ReflectogrammPredictor
 	private double []referenceArray;
 	private ReflectoEventContainer reference;
 
-	public ReflectoEventStatistics getStatistics()
+	// unused?
+	private ReflectoEventStatistics getStatistics()
 	{
 		return res;
 	}
