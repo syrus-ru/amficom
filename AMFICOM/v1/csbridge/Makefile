@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.27 2005/10/12 10:03:32 bass Exp $
+# $Id: Makefile,v 1.28 2005/12/16 11:58:46 bob Exp $
 #
 # vim:set ft=make:
 #
@@ -20,7 +20,8 @@ DEPENDENCIES = \
 util \
 general \
 administration \
-leserver_interface
+leserver_interface \
+bugs
 
 EXTCLASSPATH := $(TROVE4JCLASSPATH)
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
