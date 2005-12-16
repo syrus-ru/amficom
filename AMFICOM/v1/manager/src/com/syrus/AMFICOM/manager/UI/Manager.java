@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.27 2005/12/14 15:52:41 bob Exp $
+* $Id: Manager.java,v 1.28 2005/12/16 11:24:57 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.manager.UI;
 
-import java.util.Date;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
@@ -30,13 +29,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resources.ResourceHandler;
-import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/12/14 15:52:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.28 $, $Date: 2005/12/16 11:24:57 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -109,15 +107,11 @@ public class Manager extends AbstractApplication {
 				OperationSort.OPERATION_EQUALS, 
 				ObjectEntities.SYSTEMUSER_CODE, 
 				SystemUserWrapper.COLUMN_LOGIN), true);
-
 		assert !systemUserWithLoginSys.isEmpty() : "There is no sys user";
-		
-		LoginManager.setUserId(systemUserWithLoginSys.iterator().next().getId());
 
 		final Domain domain = StorableObjectPool.getStorableObject(new Identifier("Domain_0"), true);
-		LoginManager.setDomainId(domain.getId());
-		
-		LoginManager.setIdlSessionKey(new IdlSessionKey(new Date().toString()));		
+
+		LoginManager.loginXmlStub(systemUserWithLoginSys.iterator().next().getId(), domain.getId());
 	}
 	
 	public static void main(String[] args) {
