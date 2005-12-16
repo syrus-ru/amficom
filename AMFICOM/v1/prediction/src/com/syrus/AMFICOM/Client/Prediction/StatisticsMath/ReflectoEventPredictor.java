@@ -10,7 +10,6 @@ public class ReflectoEventPredictor
 	private ReflectogramEvent []prediction;
 	private ReflectoEventStatistics reflectoEventStatistics;
 	private long date;
-	private double delta_x;
 
 	public ReflectoEventPredictor(long date, ReflectoEventStatistics res)
 	{
@@ -27,7 +26,6 @@ public class ReflectoEventPredictor
 		long referenceDate = reflectoEventStatistics.getReference().date;
 		long timeShift = date - referenceDate;
 
-		delta_x = reflectoEventStatistics.delta_x;
 		prediction = new ReflectogramEvent[reference.length];
 		prediction[0] = reference[0].copy();
 
