@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModelListener.java,v 1.10 2005/12/16 11:23:13 bob Exp $
+* $Id: ManagerGraphModelListener.java,v 1.11 2005/12/16 14:43:21 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/12/16 11:23:13 $
+ * @version $Revision: 1.11 $, $Date: 2005/12/16 14:43:21 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -98,8 +98,18 @@ public class ManagerGraphModelListener implements GraphModelListener {
 			}
 			
 			if (changed != null && removed == null) {
+//				try {
+//					throw new Exception("ManagerGraphModelListener.graphChanged");
+//				} catch (final Exception e1) {
+//					e1.printStackTrace();
+//				}
 				for(Object changedObject : changed) {
-					Log.debugMessage("changedObject " + changedObject + '[' + changedObject.getClass().getName() + ']', Log.DEBUGLEVEL10);
+					assert Log.debugMessage("changedObject " 
+							+ changedObject 
+							+ '[' 
+							+ changedObject.getClass().getName() 
+							+ ']', 
+						Log.DEBUGLEVEL10);
 					if (model.isPort(changedObject)) {
 						final TreeNode treeNode = (TreeNode) changedObject;
 						final TreeNode[] pathToRoot = treeModel.getPathToRoot(treeNode);
@@ -238,13 +248,6 @@ public class ManagerGraphModelListener implements GraphModelListener {
 										+ " characteristics "
 										+ item.getCharacteristics(false), 
 									Log.DEBUGLEVEL10);
-								final TreeNode treeNode = (TreeNode) changedObject;
-								final TreeNode[] pathToRoot = treeModel.getPathToRoot(treeNode);
-								if (pathToRoot.length > 1) {
-									final TreeNode treeNodeParent = pathToRoot[pathToRoot.length - 2];
-									treeModel.nodesChanged(treeNodeParent, 
-										treeNode);
-								}
 								
 								for(final Characteristic characteristic : item.getCharacteristics(false)) {
 									final String codename = characteristic.getType().getCodename();
