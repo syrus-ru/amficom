@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.Histogramm;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.ShortReflectogramEvent;
-import com.syrus.AMFICOM.measurement.MonitoredElement;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.io.BellcoreStructure;
 // Author: Alexandre S. Levchenko
 
@@ -591,10 +591,11 @@ public class ReflectoEventStatistics
 	}
 
 
-	private void setData(int valueLength, Hashtable cache,
-											 ArrayList timeDependence,
-											 int nEvent,
-											 String dimension)
+	private void setData(int valueLength,
+			Hashtable cache,
+			ArrayList timeDependence,
+			int nEvent,
+			String dimension)
 	{
 		double min = values[0];
 		double max = values[0];
@@ -610,20 +611,14 @@ public class ReflectoEventStatistics
 		max = max+delta*.3;
 		min = min-delta*.3;
 
-
 		Histogramm histo = new Histogramm(min, max, nBins);
 		histo.init(values, 0, valueLength-1);
 
 		TimeDependenceData []tdd = (TimeDependenceData [])
-															 timeDependence.toArray(new TimeDependenceData [timeDependence.size()]);
+			timeDependence.toArray(new TimeDependenceData [timeDependence.size()]);
 		tdd = this.resortData(tdd);
 
 		LinearCoeffs lc = Fitting.performLinearFitting(tdd);
-
-		putTimeDependenceDataIntoPool(tdd);
-		putHistoIntoPool(histo);
-		putLinearCoeffsIntoPool(lc);
-		putDimensionIntoPool(dimension);
 
 		String s = String.valueOf(nEvent);
 
@@ -631,6 +626,8 @@ public class ReflectoEventStatistics
 		cache.put(s+this.histo, histo);
 		cache.put(s+this.tdd, tdd);
 		cache.put(s+this.linFit, lc);
+
+		setDataFromCache(cache, nEvent);
 	}
 
 	public MonitoredElement getMonitoredElement()
