@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.Histogramm;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.ShortReflectogramEvent;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.io.BellcoreStructure;
 // Author: Alexandre S. Levchenko
 
