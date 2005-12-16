@@ -1,5 +1,5 @@
 /*-
-* $Id: ProcessingDialog.java,v 1.19 2005/11/29 08:17:23 bob Exp $
+* $Id: ProcessingDialog.java,v 1.20 2005/12/16 08:06:48 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.WorkQueue;
  * 
  * Using as blocking (modal) dialog processing task 
  * 
- * @version $Revision: 1.19 $, $Date: 2005/11/29 08:17:23 $
+ * @version $Revision: 1.20 $, $Date: 2005/12/16 08:06:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -40,14 +40,14 @@ public final class ProcessingDialog {
 
 	final static Level LOGLEVEL = Log.DEBUGLEVEL08;
 	
-	volatile static Map<Runnable, String> runnableTaskNames = 
+	volatile static Map<Runnable, String> RUNNABLE_TASK_NAMES = 
 		new HashMap<Runnable, String>();	
 	
 	private static final DisplayQueue DISPLAY_QUEUE = new DisplayQueue();
 	
 	public ProcessingDialog(final Runnable runnable, final String title) {
-		DISPLAY_QUEUE.enqueue(runnable);
-		runnableTaskNames.put(runnable, title);
+		RUNNABLE_TASK_NAMES.put(runnable, title);
+		DISPLAY_QUEUE.enqueue(runnable);		
 	}
 	
 	private static class RunnableQueue extends WorkQueue<Runnable> {
@@ -73,7 +73,7 @@ public final class ProcessingDialog {
 		@Override
 		protected void processingItem(final Runnable workItem) 
 		throws InterruptedException {
-			final String title = runnableTaskNames.remove(workItem);
+			final String title = RUNNABLE_TASK_NAMES.remove(workItem);
 			Log.debugMessage("thread " 
 					+ title 
 					+ " in " 
@@ -122,8 +122,6 @@ public final class ProcessingDialog {
 			modalDialog.setVisible(true);
 			
 		}
-	}
-	
+	}	
 
 }
-
