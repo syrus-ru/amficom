@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModelListener.java,v 1.9 2005/12/09 12:20:23 bob Exp $
+* $Id: ManagerGraphModelListener.java,v 1.10 2005/12/16 11:23:13 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/12/09 12:20:23 $
+ * @version $Revision: 1.10 $, $Date: 2005/12/16 11:23:13 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -101,8 +101,9 @@ public class ManagerGraphModelListener implements GraphModelListener {
 				for(Object changedObject : changed) {
 					Log.debugMessage("changedObject " + changedObject + '[' + changedObject.getClass().getName() + ']', Log.DEBUGLEVEL10);
 					if (model.isPort(changedObject)) {
-						TreeNode[] pathToRoot = treeModel.getPathToRoot((TreeNode) changedObject);
-						if (pathToRoot != null) {
+						final TreeNode treeNode = (TreeNode) changedObject;
+						final TreeNode[] pathToRoot = treeModel.getPathToRoot(treeNode);
+						if (pathToRoot != null) {							
 							this.managerMainFrame.tree.scrollPathToVisible(new TreePath(pathToRoot));
 						}
 					} else  if (model.isEdge(changedObject)) {
@@ -237,7 +238,14 @@ public class ManagerGraphModelListener implements GraphModelListener {
 										+ " characteristics "
 										+ item.getCharacteristics(false), 
 									Log.DEBUGLEVEL10);
-
+								final TreeNode treeNode = (TreeNode) changedObject;
+								final TreeNode[] pathToRoot = treeModel.getPathToRoot(treeNode);
+								if (pathToRoot.length > 1) {
+									final TreeNode treeNodeParent = pathToRoot[pathToRoot.length - 2];
+									treeModel.nodesChanged(treeNodeParent, 
+										treeNode);
+								}
+								
 								for(final Characteristic characteristic : item.getCharacteristics(false)) {
 									final String codename = characteristic.getType().getCodename();
 									if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_X)) {
@@ -324,7 +332,7 @@ public class ManagerGraphModelListener implements GraphModelListener {
 //							+ '[' 
 //							+ changedObject.getClass().getName() 
 //							+ ']', 
-//						Log.DEBUGLEVEL03);						
+//						Log.DEBUGLEVEL10);						
 						this.disposePort(changedObject, model);
 					}
 				}
@@ -334,7 +342,7 @@ public class ManagerGraphModelListener implements GraphModelListener {
 							+ '[' 
 							+ removedObject.getClass().getName() 
 							+ ']', 
-						Log.DEBUGLEVEL03);
+						Log.DEBUGLEVEL10);
 					// First of all remove all edges
 					 if (model.isEdge(removedObject)) {
 						Edge edge = (Edge) removedObject;
@@ -344,7 +352,7 @@ public class ManagerGraphModelListener implements GraphModelListener {
 
 						AbstractBean bean = source.getUserObject();
 						bean.applyTargetPort(target, null);
-						assert Log.debugMessage(bean.getId(), Log.DEBUGLEVEL03);
+						assert Log.debugMessage(bean.getId(), Log.DEBUGLEVEL10);
 //						final LayoutItem layoutItem = this.getLayoutItem(bean.getId());
 //						assert Log.debugMessage("removedObject | layoutItem:" 
 //								+ layoutItem.getName() 
@@ -384,7 +392,7 @@ public class ManagerGraphModelListener implements GraphModelListener {
 				+ disposedObject.getClass().getName() 
 				+ ']'
 				+ (port ? " is a port" : " is not a port"), 
-			Log.DEBUGLEVEL03);
+			Log.DEBUGLEVEL10);
 		
 		if (port) {
 			final MPort source = (MPort) disposedObject;
