@@ -1,5 +1,5 @@
 /*-
-* $Id: PerspectiveTreeModel.java,v 1.10 2005/12/13 14:48:15 bob Exp $
+* $Id: PerspectiveTreeModel.java,v 1.11 2005/12/16 09:35:16 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 import javax.swing.event.TreeModelEvent;
@@ -41,7 +42,7 @@ import com.syrus.util.Log;
  * 
  * TODO rebuild moving methods to nodes (pattern visitor)
  * 
- * @version $Revision: 1.10 $, $Date: 2005/12/13 14:48:15 $
+ * @version $Revision: 1.11 $, $Date: 2005/12/16 09:35:16 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -318,7 +319,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 			LOGLEVEL);
 		if (parent == this.root) {
 			final int indexOf = this.rootItems.indexOf(child);
-			assert Log.debugMessage("1:" + indexOf, LOGLEVEL);
+			assert Log.debugMessage("1:" + "index of " + child + '@' + parent + " is " + indexOf, LOGLEVEL);
 			return indexOf;
 		}
 		if (parent instanceof PerspectiveMutableTreeNode) {
@@ -328,21 +329,25 @@ public final class PerspectiveTreeModel implements TreeModel {
 			
 			final int firstLevelIndex = firstLevel.indexOf(child);
 			if (firstLevelIndex >= 0) {
-				assert Log.debugMessage("2:" + firstLevelIndex, LOGLEVEL);
+				assert Log.debugMessage("2:"  + "index of " + child + '@' + parent + " is " + firstLevelIndex, LOGLEVEL);
 				return firstLevelIndex;
 			}
 			
 			final Perspective perspective = perspectiveNode.getPerspective();
 			final List<ActionMutableTreeNode> actions = this.getActions(perspective);
 			final int indexOf = actions.indexOf(child);
-			assert Log.debugMessage("3:" + indexOf, LOGLEVEL);
+			assert Log.debugMessage("3:"  + "index of " + child + '@' + parent + " is " +  indexOf, LOGLEVEL);
 			return indexOf;
 		}
 		if (parent instanceof ManagerGraphCell) {	
 			
 			final ManagerGraphCell cell = (ManagerGraphCell) parent;
 			final Perspective perspective = cell.getPerspective();
-			assert Log.debugMessage("parent:" + parent + " > " + cell.getPerspective(), LOGLEVEL);
+			assert Log.debugMessage("parent:" 
+						+ parent + " > " 
+						+ cell + ", perspective: " 
+						+ cell.getPerspective(), 
+					LOGLEVEL);
 			final List<AbstractBean> layoutBeans = 
 				perspective.getLayoutBeans();
 			final MPort port = (MPort) cell.getChildAt(0);
@@ -360,9 +365,9 @@ public final class PerspectiveTreeModel implements TreeModel {
 				}
 
 				final ManagerGraphCell node = (ManagerGraphCell) mport2.getParent();
-				assert Log.debugMessage(node + ", " + node.getPerspective(), LOGLEVEL);
+//				assert Log.debugMessage(node + ", " + node.getPerspective(), LOGLEVEL);
 				if (node == child) {
-					assert Log.debugMessage("4:" + count, LOGLEVEL);
+					assert Log.debugMessage("4:"  + "index of " + child + '@' + parent + " is " +  count, LOGLEVEL);
 					return count;
 				}
 				
@@ -371,7 +376,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 
 			if (child instanceof ManagerGraphCell) {
 				final ManagerGraphCell childCell = (ManagerGraphCell) child;
-				assert Log.debugMessage("child:" + child + " > "+ (childCell).getPerspective(), LOGLEVEL);
+//				assert Log.debugMessage("child:" + child + " > "+ (childCell).getPerspective(), LOGLEVEL);
 				
 				final Perspective subPerspective = childCell.getPerspective();
 				assert Log.debugMessage(childCell + ", " + subPerspective, LOGLEVEL);
@@ -381,11 +386,20 @@ public final class PerspectiveTreeModel implements TreeModel {
 						this.managerMainFrame.getGraphRoutines();
 					final ManagerGraphCell graphCell = 
 						graphRoutines.getDefaultGraphCell(parentLayoutItem, false);
+					assert Log.debugMessage("graphCell:" + graphCell, LOGLEVEL);
 					if (graphCell == childCell) {
+						assert Log.debugMessage("4,5: index of " + child + '@' + parent + " is 0" , LOGLEVEL);
+						// XXX
+						final Set<ManagerGraphCell> defaultGraphCells = 
+							graphRoutines.getDefaultGraphCells(childCell.getAbstractBean().getId());
+						for (final ManagerGraphCell cell2 : defaultGraphCells) {
+							if (cell2.getPerspective() == perspective) {
+								return this.getIndexOfChild(parent, cell2);
+							}
+						}
 						return 0;
 					}
-					final int index;
-	
+					final int index;					
 					// do not enter with the same parent 
 					if (parent == graphCell) {
 						index = count;
@@ -393,14 +407,14 @@ public final class PerspectiveTreeModel implements TreeModel {
 						index = this.getIndexOfChild(graphCell, child);
 					}
 					
-					assert Log.debugMessage(parent + "5:" + index, LOGLEVEL);
+					assert Log.debugMessage(" 5:"  + "index of " + child + '@' + parent + " is " +  index, LOGLEVEL);
 					return index;
 				}
 			}
 			
 			
 		}
-		assert Log.debugMessage(parent + "nothing, -1", LOGLEVEL);
+		assert Log.debugMessage("index of " + child + '@' + parent + " cannot calculate, -1", LOGLEVEL);
 		return -1;
 	}
 
