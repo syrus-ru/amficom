@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUser.java,v 1.39 2005/12/17 12:08:16 arseniy Exp $
+* $Id: SystemUser.java,v 1.40 2005/12/17 12:45:00 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/12/17 12:08:16 $
+ * @version $Revision: 1.40 $, $Date: 2005/12/17 12:45:00 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -374,4 +374,5 @@ public final class SystemUser extends StorableObject<SystemUser>
 			this.addCharacteristic(characteristic, usePool);
 		}
 	}
+
 }
