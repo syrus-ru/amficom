@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.85 2005/12/08 16:12:08 bass Exp $
+ * $Id: Characteristic.java,v 1.86 2005/12/17 12:04:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/12/08 16:12:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.86 $, $Date: 2005/12/17 12:04:07 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -561,7 +561,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);

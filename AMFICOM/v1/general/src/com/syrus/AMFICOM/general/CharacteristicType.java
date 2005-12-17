@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicType.java,v 1.68 2005/12/07 20:35:02 bass Exp $
+ * $Id: CharacteristicType.java,v 1.69 2005/12/17 12:04:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/12/07 20:35:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.69 $, $Date: 2005/12/17 12:04:07 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -420,7 +420,7 @@ public final class CharacteristicType
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
