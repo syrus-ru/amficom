@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.153 2005/12/07 17:17:20 bass Exp $
+ * $Id: SchemeElement.java,v 1.154 2005/12/17 12:11:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,8 +96,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.153 $, $Date: 2005/12/07 17:17:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.154 $, $Date: 2005/12/17 12:11:19 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
@@ -696,10 +696,10 @@ public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependenciesTmpl()
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.equipmentId != null && this.protoEquipmentId != null
 				&& this.kisId != null
 				&& this.parentSchemeElementId != null
@@ -707,7 +707,7 @@ public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
 				&& this.siteNodeId != null && this.symbolId != null
 				&& this.ugoCellId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.addAll(super.getDependencies());
+		dependencies.addAll(super.getDependenciesTmpl());
 		dependencies.add(this.equipmentId);
 		dependencies.add(this.protoEquipmentId);
 		dependencies.add(this.kisId);
@@ -716,9 +716,7 @@ public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
 		dependencies.add(this.siteNodeId);
 		dependencies.add(this.symbolId);
 		dependencies.add(this.ugoCellId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.92 2005/12/07 17:17:21 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.93 2005/12/17 12:11:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,8 +64,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #01 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.92 $, $Date: 2005/12/07 17:17:21 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.93 $, $Date: 2005/12/17 12:11:19 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject<SchemeProtoGroup>
@@ -246,18 +246,16 @@ public final class SchemeProtoGroup extends StorableObject<SchemeProtoGroup>
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependenciesTmpl()
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.symbolId != null
 				&& this.parentSchemeProtoGroupId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.symbolId);
 		dependencies.add(this.parentSchemeProtoGroupId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 
 	/**

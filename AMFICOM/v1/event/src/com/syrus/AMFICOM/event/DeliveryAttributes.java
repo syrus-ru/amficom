@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.10 2005/12/06 09:42:28 bass Exp $
+ * $Id: DeliveryAttributes.java,v 1.11 2005/12/17 12:09:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.event;
 import static com.syrus.AMFICOM.event.DeliveryAttributesWrapper.COLUMN_SEVERITY;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
-import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.DELIVERYATTRIBUTES_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
@@ -43,8 +42,8 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/12/06 09:42:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/12/17 12:09:00 $
  * @module event
  */
 public final class DeliveryAttributes extends StorableObject<DeliveryAttributes> {
@@ -81,16 +80,14 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependenciesTmpl()
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.getRoleIds0());
 		dependencies.addAll(this.getSystemUserIds0());
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 
 	/**

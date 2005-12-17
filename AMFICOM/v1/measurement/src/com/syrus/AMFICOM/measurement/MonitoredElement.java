@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.11 2005/12/07 17:17:16 bass Exp $
+ * $Id: MonitoredElement.java,v 1.12 2005/12/17 12:11:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/12/07 17:17:16 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/12/17 12:11:21 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -231,7 +231,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();

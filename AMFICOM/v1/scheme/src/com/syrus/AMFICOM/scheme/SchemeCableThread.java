@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.112 2005/12/08 16:12:55 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.113 2005/12/17 12:11:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,8 +75,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #14 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.112 $, $Date: 2005/12/08 16:12:55 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.113 $, $Date: 2005/12/17 12:11:19 $
  * @module scheme
  */
 public final class SchemeCableThread
@@ -360,10 +360,10 @@ public final class SchemeCableThread
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependenciesTmpl()
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.linkTypeId != null && this.linkId != null
 				&& this.sourceSchemePortId != null
 				&& this.targetSchemePortId != null
@@ -374,9 +374,7 @@ public final class SchemeCableThread
 		dependencies.add(this.sourceSchemePortId);
 		dependencies.add(this.targetSchemePortId);
 		dependencies.add(this.parentSchemeCableLinkId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 
 	/**

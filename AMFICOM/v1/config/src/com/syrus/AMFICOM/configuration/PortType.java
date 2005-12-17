@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.114 2005/12/08 16:58:09 bass Exp $
+ * $Id: PortType.java,v 1.115 2005/12/17 12:08:30 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.114 $, $Date: 2005/12/08 16:58:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.115 $, $Date: 2005/12/17 12:08:30 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -412,7 +412,7 @@ public final class PortType extends StorableObjectType<PortType>
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 
 		return Collections.emptySet();

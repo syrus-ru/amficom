@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.124 2005/12/09 11:38:59 arseniy Exp $
+ * $Id: Map.java,v 1.125 2005/12/17 12:09:00 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.124 $, $Date: 2005/12/09 11:38:59 $
+ * @version $Revision: 1.125 $, $Date: 2005/12/17 12:09:00 $
  * @module map
  */
 public final class Map extends DomainMember<Map>
@@ -293,7 +293,7 @@ public final class Map extends DomainMember<Map>
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();

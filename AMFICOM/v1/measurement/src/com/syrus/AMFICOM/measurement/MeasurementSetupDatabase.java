@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.110 2005/12/02 11:24:09 bass Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.111 2005/12/17 12:11:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,12 +33,14 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.110 $, $Date: 2005/12/02 11:24:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.111 $, $Date: 2005/12/17 12:11:21 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -129,24 +132,48 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 						null,
 						null)
 					: storableObject;	
-		ParameterSet parameterSet;
+		ParameterSet measurementParameterSet = null;
 		ParameterSet criteriaSet = null;
 		ParameterSet thresholdSet = null;
 		ParameterSet etalon = null;
 		try {
-			Identifier id = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_PARAMETER_SET_ID);
-			parameterSet = (ParameterSet) StorableObjectPool.getStorableObject(id, true);
-			id = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_CRITERIA_SET_ID);
-			if (id != VOID_IDENTIFIER) {
-				criteriaSet = StorableObjectPool.getStorableObject(id, true);
+			final Set<Identifier> parameterSetIds = new HashSet<Identifier>(4);
+			parameterSetIds.add(DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_PARAMETER_SET_ID));
+
+			Identifier psId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_CRITERIA_SET_ID);
+			if (!psId.isVoid()) {
+				parameterSetIds.add(psId);
 			}
-			id = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_THRESHOLD_SET_ID);
-			if (id != VOID_IDENTIFIER) {
-				thresholdSet = StorableObjectPool.getStorableObject(id, true);
-			}			
-			id = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_ETALON_ID);
-			if (id != VOID_IDENTIFIER) {
-				etalon = StorableObjectPool.getStorableObject(id, true);
+
+			psId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_THRESHOLD_SET_ID);
+			if (!psId.isVoid()) {
+				parameterSetIds.add(psId);
+			}
+
+			psId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_ETALON_ID);
+			if (!psId.isVoid()) {
+				parameterSetIds.add(psId);
+			}
+
+			final Set<ParameterSet> parameterSets = StorableObjectPool.getStorableObjects(parameterSetIds, true);
+			for (final ParameterSet parameterSet : parameterSets) {
+				switch (parameterSet.getSort().value()) {
+					case ParameterSetSort._SET_SORT_MEASUREMENT_PARAMETERS:
+						measurementParameterSet = parameterSet;
+						break;
+					case ParameterSetSort._SET_SORT_ANALYSIS_CRITERIA:
+						criteriaSet = parameterSet;
+						break;
+					case ParameterSetSort._SET_SORT_EVALUATION_THRESHOLDS:
+						thresholdSet = parameterSet;
+						break;
+					case ParameterSetSort._SET_SORT_ETALON:
+						etalon = parameterSet;
+						break;
+					default:
+						Log.errorMessage("Unknown sort: " + parameterSet.getSort().value() + " of ParameterSet '" + parameterSet.getId()
+								+ "' for MeasurementSetup '" + measurementSetup.getId() + "'");
+				}
 			}
 		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -158,7 +185,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				parameterSet,
+				measurementParameterSet,
 				criteriaSet,
 				thresholdSet,
 				etalon,

@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlock.java,v 1.15 2005/12/07 17:17:18 bass Exp $
+ * $Id: PipeBlock.java,v 1.16 2005/12/17 12:09:00 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,8 +47,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * включает всебя список кабелей, которые проходят по данному тоннелю,
  * и матрицу пролегания кабелей по трубам тоннеля.
  *
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/12/07 17:17:18 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/12/17 12:09:00 $
  * @module map
  */
 public final class PipeBlock 
@@ -472,7 +472,7 @@ public final class PipeBlock
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 		return Collections.emptySet();
 	}

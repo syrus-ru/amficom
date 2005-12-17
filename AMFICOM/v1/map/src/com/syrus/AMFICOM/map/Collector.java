@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.105 2005/12/07 17:17:18 bass Exp $
+ * $Id: Collector.java,v 1.106 2005/12/17 12:09:00 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: bass $
- * @version $Revision: 1.105 $, $Date: 2005/12/07 17:17:18 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.106 $, $Date: 2005/12/17 12:09:00 $
  * @module map
  */
 public final class Collector extends StorableObject<Collector>
@@ -133,7 +133,7 @@ public final class Collector extends StorableObject<Collector>
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();

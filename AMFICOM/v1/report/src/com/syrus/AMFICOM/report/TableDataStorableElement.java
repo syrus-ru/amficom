@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.17 2005/12/06 09:44:56 bass Exp $
+ * $Id: TableDataStorableElement.java,v 1.18 2005/12/17 12:11:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,22 +33,22 @@ import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 /**
  * Класс для отображения данных в табличном виде
- * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/12/06 09:44:56 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/12/17 12:11:23 $
  * @module report
  */
 public final class TableDataStorableElement extends AbstractDataStorableElement<TableDataStorableElement> {
 	private static final long serialVersionUID = -2699698026579054587L;
-	
+
 	public static Font DEFAULT_FONT = new Font("Times New Roman",Font.PLAIN,12);	
 	/**
 	 * Число вертикальных разбиений таблицы (применяется для длинных и узких
 	 * таблиц)
 	 */
 	private int verticalDivisionsCount;
-	
+
 	private Font font = DEFAULT_FONT;
-	
+
 	TableDataStorableElement (final Identifier id,
 			final Date created,
 			final Date modified,
@@ -64,7 +64,7 @@ public final class TableDataStorableElement extends AbstractDataStorableElement<
 		super(id, created, modified, creatorId, modifierId, version, location, size, reportTemplateId, reportName, modelClassName);
 		this.verticalDivisionsCount = verticalDivisionsCount;
 	}
-	
+
 	public static TableDataStorableElement createInstance (Identifier creatorId, String reportName, String modelClassName, int verticalDivisionsCount, IntPoint location) throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
 		assert reportName != null : NON_NULL_EXPECTED;
@@ -92,11 +92,11 @@ public final class TableDataStorableElement extends AbstractDataStorableElement<
 					"DataStorableElement.createInstance() | cannot generate identifier ", ige);
 		}
 	}
-	
+
 	public TableDataStorableElement(IdlTableData transferable) {
 		fromTransferable(transferable);		
 	}
-	
+
 	@Override
 	protected synchronized void fromTransferable(IdlStorableObject transferable) {
 		IdlTableData idlTableData = (IdlTableData) transferable;
@@ -108,12 +108,12 @@ public final class TableDataStorableElement extends AbstractDataStorableElement<
 		}
 		this.verticalDivisionsCount = idlTableData.verticalDivisionCount;
 	}
-	
+
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		return Collections.emptySet();
 	}
-	
+
 	synchronized void setAttributes(Date created, 
 			Date modified, 
 			Identifier creatorId, 
@@ -131,7 +131,7 @@ public final class TableDataStorableElement extends AbstractDataStorableElement<
 				locationX, locationY, width, height, reportTemplateId, reportName, moduleClassName);
 		this.verticalDivisionsCount = verticalDivisionCount;
 	}
-	
+
 	@Override
 	public IdlStorableObject getIdlTransferable(ORB orb) {
 		return IdlTableDataHelper.init(orb,
@@ -150,7 +150,7 @@ public final class TableDataStorableElement extends AbstractDataStorableElement<
 				this.modelClassName,
 				this.verticalDivisionsCount);
 	}
-	
+
 	public int getVerticalDivisionsCount() {
 		return this.verticalDivisionsCount;
 	}
@@ -173,7 +173,7 @@ public final class TableDataStorableElement extends AbstractDataStorableElement<
 	protected TableDataWrapper getWrapper() {
 		return TableDataWrapper.getInstance();
 	}
-	
+
 	@Override
 	protected TableDataStorableElement clone() throws CloneNotSupportedException {
 		TableDataStorableElement clone = super.clone();

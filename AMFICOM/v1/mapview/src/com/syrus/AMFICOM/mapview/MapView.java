@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.78 2005/12/07 17:17:16 bass Exp $
+* $Id: MapView.java,v 1.79 2005/12/17 12:11:35 arseniy Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -59,9 +59,9 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * 
- * @author $Author: bass $
+ * @author $Author: arseniy $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.78 $, $Date: 2005/12/07 17:17:16 $
+ * @version $Revision: 1.79 $, $Date: 2005/12/17 12:11:35 $
  * @module mapview
  */
 public final class MapView extends DomainMember<MapView> implements Describable {
@@ -216,7 +216,7 @@ public final class MapView extends DomainMember<MapView> implements Describable 
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();

@@ -1,5 +1,5 @@
 /*-
- * $Id: Alarm.java,v 1.5 2005/12/08 10:45:19 stas Exp $
+ * $Id: Alarm.java,v 1.6 2005/12/17 12:11:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,8 +33,8 @@ import com.syrus.util.Log;
 
 /**
  * @author krupenn
- * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/12/08 10:45:19 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/12/17 12:11:18 $
  * @module observer
  */
 public final class Alarm extends StorableObject<Alarm> {
@@ -102,7 +102,7 @@ public final class Alarm extends StorableObject<Alarm> {
 	}
 	
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		return Collections.emptySet();
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.155 2005/12/08 16:58:09 bass Exp $
+ * $Id: Equipment.java,v 1.156 2005/12/17 12:08:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,8 +60,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.155 $, $Date: 2005/12/08 16:58:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.156 $, $Date: 2005/12/17 12:08:30 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -532,7 +532,7 @@ public final class Equipment extends DomainMember<Equipment>
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies =  new HashSet<Identifiable>();

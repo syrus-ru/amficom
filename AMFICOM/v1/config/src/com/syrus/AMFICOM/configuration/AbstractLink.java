@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLink.java,v 1.18 2005/12/08 16:58:09 bass Exp $
+ * $Id: AbstractLink.java,v 1.19 2005/12/17 12:08:30 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -114,10 +114,10 @@ public abstract class AbstractLink<T extends AbstractLink<T>>
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependenciesTmpl()
 	 */
 	@Override
-	public final Set<Identifiable> getDependencies() {
+	public final Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		return Collections.singleton((Identifiable) this.type);
 	}

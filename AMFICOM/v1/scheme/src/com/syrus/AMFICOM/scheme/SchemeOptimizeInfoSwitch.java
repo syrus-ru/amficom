@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitch.java,v 1.38 2005/12/07 17:17:20 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitch.java,v 1.39 2005/12/17 12:11:19 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
-import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -50,8 +49,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #06 in hierarchy.
  *
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/12/07 17:17:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/12/17 12:11:19 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitch
@@ -151,14 +150,12 @@ public final class SchemeOptimizeInfoSwitch
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeOptimizeInfoId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.parentSchemeOptimizeInfoId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 
 	/**

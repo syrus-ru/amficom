@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThreadType.java,v 1.82 2005/12/07 17:16:25 bass Exp $
+ * $Id: CableThreadType.java,v 1.83 2005/12/17 12:08:30 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.WARNING;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -57,8 +56,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.82 $, $Date: 2005/12/07 17:16:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.83 $, $Date: 2005/12/17 12:08:30 $
+ * @author $Author: arseniy $
  * @module config
  */
 
@@ -440,13 +439,13 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
 		dependencies.add(this.linkTypeId);
 		dependencies.add(this.cableLinkTypeId);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 
 	/**

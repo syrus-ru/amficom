@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.39 2005/12/14 14:14:34 bob Exp $
+* $Id: PermissionAttributes.java,v 1.40 2005/12/17 12:08:16 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/12/14 14:14:34 $
- * @author $Author: bob $
+ * @version $Revision: 1.40 $, $Date: 2005/12/17 12:08:16 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module administration
  */
@@ -813,7 +813,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	 * </p>
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);

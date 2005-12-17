@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.106 2005/12/07 17:17:21 bass Exp $
+ * $Id: SchemeLink.java,v 1.107 2005/12/17 12:11:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,8 +74,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #12 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.106 $, $Date: 2005/12/07 17:17:21 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.107 $, $Date: 2005/12/17 12:11:19 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
@@ -531,21 +531,19 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependenciesTmpl()
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.siteNodeId != null
 				&& this.parentSchemeElementId != null
 				&& this.parentSchemeProtoElementId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.addAll(super.getDependencies());
+		dependencies.addAll(super.getDependenciesTmpl());
 		dependencies.add(this.siteNodeId);
 		dependencies.add(this.parentSchemeElementId);
 		dependencies.add(this.parentSchemeProtoElementId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 
 	/**

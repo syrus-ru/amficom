@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.40 2005/12/06 09:45:11 bass Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.41 2005/12/17 12:11:21 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/12/06 09:45:11 $
- * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/12/17 12:11:21 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
@@ -439,7 +439,7 @@ public final class IntervalsTemporalPattern
 	 * </p>
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();

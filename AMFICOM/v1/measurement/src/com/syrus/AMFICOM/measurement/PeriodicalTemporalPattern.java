@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.27 2005/12/06 09:45:11 bass Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.28 2005/12/17 12:11:21 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
 
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/12/06 09:45:11 $
- * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/12/17 12:11:21 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
@@ -143,7 +143,7 @@ public final class PeriodicalTemporalPattern
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}

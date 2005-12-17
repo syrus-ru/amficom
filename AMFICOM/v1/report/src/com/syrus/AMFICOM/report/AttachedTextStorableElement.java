@@ -7,7 +7,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.ATTACHEDTEXT_CODE;
 
 import java.awt.Font;
 import java.awt.Rectangle;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -190,13 +189,11 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 	}
 	
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.horizontalAttacherId);
 		dependencies.add(this.verticalAttacherId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 	
 	synchronized void setAttributes(final Date created,

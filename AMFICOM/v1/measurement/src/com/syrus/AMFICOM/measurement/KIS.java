@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.13 2005/12/07 17:17:16 bass Exp $
+ * $Id: KIS.java,v 1.14 2005/12/17 12:11:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlKISHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/12/07 17:17:16 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/12/17 12:11:21 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -227,7 +227,7 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();

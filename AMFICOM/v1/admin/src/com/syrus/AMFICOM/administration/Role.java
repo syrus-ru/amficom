@@ -1,5 +1,5 @@
 /*-
- * $Id: Role.java,v 1.12 2005/12/06 09:41:12 bass Exp $
+ * $Id: Role.java,v 1.13 2005/12/17 12:08:16 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/12/06 09:41:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/12/17 12:08:16 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module administration
  */
@@ -228,7 +228,7 @@ public final class Role extends StorableObject<Role>
 	 * </p>
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		return Collections.emptySet();

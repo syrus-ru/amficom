@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.117 2005/12/08 16:12:55 bass Exp $
+ * $Id: SchemeDevice.java,v 1.118 2005/12/17 12:11:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,8 +77,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #09 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.117 $, $Date: 2005/12/08 16:12:55 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.118 $, $Date: 2005/12/17 12:11:19 $
  * @module scheme
  */
 public final class SchemeDevice
@@ -383,18 +383,16 @@ public final class SchemeDevice
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependenciesTmpl()
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.parentSchemeElementId != null
 				&& this.parentSchemeProtoElementId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.parentSchemeElementId);
 		dependencies.add(this.parentSchemeProtoElementId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 
 	/**

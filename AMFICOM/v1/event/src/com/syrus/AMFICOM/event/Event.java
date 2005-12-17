@@ -1,5 +1,5 @@
 /*-
- * $Id: Event.java,v 1.48 2005/12/07 17:16:25 bass Exp $
+ * $Id: Event.java,v 1.49 2005/12/17 12:09:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.event;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
-import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.EVENT_CODE;
 
 import java.util.Collections;
@@ -37,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/12/07 17:16:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.49 $, $Date: 2005/12/17 12:09:00 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
@@ -279,7 +278,7 @@ public final class Event extends StorableObject<Event>
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
@@ -287,8 +286,6 @@ public final class Event extends StorableObject<Event>
 		for(EventParameter eventParameter: this.eventParameters) {
 			dependencies.add(eventParameter);
 		}
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
 
 		return dependencies;
 	}

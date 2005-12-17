@@ -1,5 +1,5 @@
 /*-
- * $Id: UnboundLink.java,v 1.34 2005/12/06 09:45:30 bass Exp $
+ * $Id: UnboundLink.java,v 1.35 2005/12/17 12:11:36 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,9 +30,9 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
  * 
- * @author $Author: bass $
+ * @author $Author: arseniy $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.34 $, $Date: 2005/12/06 09:45:30 $
+ * @version $Revision: 1.35 $, $Date: 2005/12/17 12:11:36 $
  * @module mapview
  */
 public final class UnboundLink extends PhysicalLink {
@@ -120,7 +120,7 @@ public final class UnboundLink extends PhysicalLink {
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		throw new UnsupportedOperationException();
 	}
 

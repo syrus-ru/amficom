@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.115 2005/12/07 17:17:18 bass Exp $
+ * $Id: NodeLink.java,v 1.116 2005/12/17 12:09:00 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: bass $
- * @version $Revision: 1.115 $, $Date: 2005/12/07 17:17:18 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.116 $, $Date: 2005/12/17 12:09:00 $
  * @module map
  */
 public final class NodeLink extends StorableObject<NodeLink>
@@ -425,7 +425,7 @@ public final class NodeLink extends StorableObject<NodeLink>
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();

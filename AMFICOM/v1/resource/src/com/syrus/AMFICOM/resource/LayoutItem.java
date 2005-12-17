@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItem.java,v 1.18 2005/12/06 09:44:56 bass Exp $
+* $Id: LayoutItem.java,v 1.19 2005/12/17 12:11:20 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.resource.corba.IdlLayoutItemHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $
+ * @author $Author: arseniy $
  * @module resource
  */
 
@@ -192,7 +192,7 @@ public final class LayoutItem extends StorableObject<LayoutItem>
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		if (!this.parentId.isVoid()) {
 			return Collections.singleton((Identifiable)this.parentId);

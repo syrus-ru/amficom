@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.90 2005/12/08 16:12:54 bass Exp $
+ * $Id: CableLinkType.java,v 1.91 2005/12/17 12:08:30 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/12/08 16:12:54 $
- * @author $Author: bass $
+ * @version $Revision: 1.91 $, $Date: 2005/12/17 12:08:30 $
+ * @author $Author: arseniy $
  * @module config
  */
 public final class CableLinkType extends AbstractLinkType<CableLinkType> implements XmlTransferableObject<XmlCableLinkType> {
@@ -501,7 +501,7 @@ public final class CableLinkType extends AbstractLinkType<CableLinkType> impleme
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 		return Collections.emptySet();
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkBinding.java,v 1.20 2005/10/25 07:46:27 krupenn Exp $
+ * $Id: PhysicalLinkBinding.java,v 1.21 2005/12/17 12:09:00 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import java.util.TreeSet;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
@@ -29,8 +28,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
  * включает всебя список кабелей, которые проходят по данному тоннелю,
  * и матрицу пролегания кабелей по трубам тоннеля.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/10/25 07:46:27 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/12/17 12:09:00 $
  * @module map
  */
 public final class PhysicalLinkBinding implements Serializable {

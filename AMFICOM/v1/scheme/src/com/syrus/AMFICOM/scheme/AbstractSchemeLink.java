@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.50 2005/12/07 17:17:20 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.51 2005/12/17 12:11:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,8 +46,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeLink}instead.
  *
- * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/12/07 17:17:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.51 $, $Date: 2005/12/17 12:11:19 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
@@ -475,22 +474,20 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependenciesTmpl()
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.abstractLinkTypeId != null && this.abstractLinkId != null
 				&& this.sourceAbstractSchemePortId != null
 				&& this.targetAbstractSchemePortId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.addAll(super.getDependencies());
+		dependencies.addAll(super.getDependenciesTmpl());
 		dependencies.add(this.abstractLinkTypeId);
 		dependencies.add(this.abstractLinkId);
 		dependencies.add(this.sourceAbstractSchemePortId);
 		dependencies.add(this.targetAbstractSchemePortId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 
 	/**

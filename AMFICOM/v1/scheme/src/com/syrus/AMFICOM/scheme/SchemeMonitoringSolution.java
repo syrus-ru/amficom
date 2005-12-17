@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.89 2005/12/07 17:17:20 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.90 2005/12/17 12:11:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #08 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.89 $, $Date: 2005/12/07 17:17:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.90 $, $Date: 2005/12/17 12:11:19 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -259,19 +259,17 @@ public final class SchemeMonitoringSolution
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependenciesTmpl()
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.parentSchemeId != null
 				&& this.parentSchemeOptimizeInfoId != null: OBJECT_NOT_INITIALIZED;
 		assert this.parentSchemeId.isVoid() ^ this.parentSchemeOptimizeInfoId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.parentSchemeId);
 		dependencies.add(this.parentSchemeOptimizeInfoId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 
 	/**

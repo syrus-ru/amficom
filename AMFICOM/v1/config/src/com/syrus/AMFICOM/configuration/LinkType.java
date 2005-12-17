@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.96 2005/12/08 16:12:54 bass Exp $
+ * $Id: LinkType.java,v 1.97 2005/12/17 12:08:30 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/12/08 16:12:54 $
- * @author $Author: bass $
+ * @version $Revision: 1.97 $, $Date: 2005/12/17 12:08:30 $
+ * @author $Author: arseniy $
  * @module config
  */
 
@@ -465,7 +465,7 @@ public final class LinkType extends AbstractLinkType<LinkType> implements XmlTra
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 		return Collections.emptySet();
 	}

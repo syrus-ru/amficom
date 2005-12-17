@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.98 2005/12/06 09:45:11 bass Exp $
+ * $Id: MeasurementSetup.java,v 1.99 2005/12/17 12:11:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import java.util.Collections;
 import java.util.Date;
@@ -32,10 +34,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetup;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
+import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/12/06 09:45:11 $
- * @author $Author: bass $
+ * @version $Revision: 1.99 $, $Date: 2005/12/17 12:11:21 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -158,19 +162,48 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 		final IdlMeasurementSetup mst = (IdlMeasurementSetup) transferable;
 		super.fromTransferable(mst);
 
-		this.parameterSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.parameterSetId), true);
 
-		Identifier setId = new Identifier(mst.criteriaSetId);
-		this.criteriaSet = (!setId.equals(Identifier.VOID_IDENTIFIER)) ? (ParameterSet) StorableObjectPool.getStorableObject(setId,
-				true) : null;
+		this.parameterSet = null;
+		this.criteriaSet = null;
+		this.thresholdSet = null;
+		this.etalon = null;
 
-		setId = new Identifier(mst.thresholdSetId);
-		this.thresholdSet = (!setId.equals(Identifier.VOID_IDENTIFIER)) ? (ParameterSet) StorableObjectPool.getStorableObject(setId,
-				true) : null;
+		final Set<Identifier> parameterSetIds = new HashSet<Identifier>(4);
+		parameterSetIds.add(new Identifier(mst.parameterSetId));
+		Identifier psId = new Identifier(mst.criteriaSetId);
+		if (!psId.isVoid()) {
+			parameterSetIds.add(psId);
+		}
+		psId = new Identifier(mst.thresholdSetId);
+		if (!psId.isVoid()) {
+			parameterSetIds.add(psId);
+		}
+		psId = new Identifier(mst.etalonId);
+		if (!psId.isVoid()) {
+			parameterSetIds.add(psId);
+		}
 
-		setId = new Identifier(mst.etalonId);
-		this.etalon = (!setId.equals(Identifier.VOID_IDENTIFIER)) ? (ParameterSet) StorableObjectPool.getStorableObject(setId,
-				true) : null;
+		final Set<ParameterSet> parameterSets = StorableObjectPool.getStorableObjects(parameterSetIds, true);
+		for (final ParameterSet ps : parameterSets) {
+			switch (ps.getSort().value()) {
+				case ParameterSetSort._SET_SORT_MEASUREMENT_PARAMETERS:
+					this.parameterSet = ps;
+					break;
+				case ParameterSetSort._SET_SORT_ANALYSIS_CRITERIA:
+					this.criteriaSet = ps;
+					break;
+				case ParameterSetSort._SET_SORT_EVALUATION_THRESHOLDS:
+					this.thresholdSet = ps;
+					break;
+				case ParameterSetSort._SET_SORT_ETALON:
+					this.etalon = ps;
+					break;
+				default:
+					Log.errorMessage("Unknown sort: " + ps.getSort().value() + " of ParameterSet '" + ps.getId()
+							+ "' for MeasurementSetup '" + this.id + "'");
+			}
+		}
+
 
 		this.description = mst.description;
 		this.measurementDuration = mst.measurementDuration;
@@ -191,7 +224,7 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 		final IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
 		final IdlMeasurementType[] mts = MeasurementType.createTransferables(this.measurementTypes, orb);
 
-		final IdlIdentifier voidIdlIdentifier = Identifier.VOID_IDENTIFIER.getIdlTransferable();
+		final IdlIdentifier voidIdlIdentifier = VOID_IDENTIFIER.getIdlTransferable();
 		return IdlMeasurementSetupHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -430,7 +463,7 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();

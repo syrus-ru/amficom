@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.90 2005/12/08 16:12:55 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.91 2005/12/17 12:11:19 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,8 +58,8 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.xml.XmlConversionException;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.90 $, $Date: 2005/12/08 16:12:55 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.91 $, $Date: 2005/12/17 12:11:19 $
  * @module scheme
  */
 public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
@@ -169,10 +169,10 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependenciesTmpl()
 	 */
 	@Override
-	public final Set<Identifiable> getDependencies() {
+	public final Set<Identifiable> getDependenciesTmpl() {
 		assert this.portTypeId != null && this.portId != null: OBJECT_NOT_INITIALIZED;
 		assert this.portTypeId.isVoid() ^ this.portId.isVoid(): OBJECT_BADLY_INITIALIZED;
 		assert this.measurementPortId != null: OBJECT_NOT_INITIALIZED;
@@ -183,9 +183,7 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 		dependencies.add(this.portId);
 		dependencies.add(this.measurementPortId);
 		dependencies.add(this.parentSchemeDeviceId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 
 	/**

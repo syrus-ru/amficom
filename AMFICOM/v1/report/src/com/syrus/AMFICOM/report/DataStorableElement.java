@@ -51,8 +51,11 @@ public class DataStorableElement extends AbstractDataStorableElement<DataStorabl
 			final String modelClassName) {
 		super(id, created, modified, creatorId, modifierId, version, location, size, reportTemplateId, reportName, modelClassName);
 	}
-	
-	public static DataStorableElement createInstance (Identifier creatorId, String reportName, String modelClassName, IntPoint location) throws CreateObjectException {
+
+	public static DataStorableElement createInstance(Identifier creatorId,
+			String reportName,
+			String modelClassName,
+			IntPoint location) throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
 		assert reportName != null : NON_NULL_EXPECTED;
 		assert modelClassName != null: NON_NULL_EXPECTED;
@@ -78,11 +81,11 @@ public class DataStorableElement extends AbstractDataStorableElement<DataStorabl
 					"DataStorableElement.createInstance() | cannot generate identifier ", ige);
 		}
 	}
-	
+
 	public DataStorableElement(IdlData transferable) {
 		fromTransferable(transferable);
 	}
-	
+
 	@Override
 	protected synchronized void fromTransferable(IdlStorableObject transferable) {
 		IdlData idlData = (IdlData) transferable;  
@@ -93,25 +96,34 @@ public class DataStorableElement extends AbstractDataStorableElement<DataStorabl
 			assert false;
 		}
 	}
-	
+
 	@Override
-	synchronized void setAttributes(Date created, 
-			Date modified, 
-			Identifier creatorId, 
-			Identifier modifierId, 
-			StorableObjectVersion version,
-			final int locationX, 
-			final int locationY, 
-			final int width, 
+	synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final int locationX,
+			final int locationY,
+			final int width,
 			final int height,
 			final Identifier reportTemplateId,
 			final String reportName,
 			final String moduleClassName) {
-		super.setAttributes(created, modified, creatorId, modifierId, version,
-				locationX, locationY, width, height, reportTemplateId, reportName, moduleClassName);
-		
+		super.setAttributes(created,
+				modified,
+				creatorId,
+				modifierId,
+				version,
+				locationX,
+				locationY,
+				width,
+				height,
+				reportTemplateId,
+				reportName,
+				moduleClassName);
 	}
-	
+
 	@Override
 	public IdlStorableObject getIdlTransferable(ORB orb) {
 		return IdlDataHelper.init(orb,
@@ -129,18 +141,17 @@ public class DataStorableElement extends AbstractDataStorableElement<DataStorabl
 				this.reportName,
 				this.modelClassName);
 	}
-	
+
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		return Collections.emptySet();
 	}
-	
-	
+
 	@Override
 	protected DataWrapper getWrapper() {
 		return DataWrapper.getInstance();
 	}
-	
+
 	@Override
 	protected DataStorableElement clone() throws CloneNotSupportedException {
 		DataStorableElement clone = super.clone();

@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUser.java,v 1.38 2005/12/06 09:41:12 bass Exp $
+* $Id: SystemUser.java,v 1.39 2005/12/17 12:08:16 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/12/06 09:41:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.39 $, $Date: 2005/12/17 12:08:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -234,28 +234,21 @@ public final class SystemUser extends StorableObject<SystemUser>
 	 * </p>
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
-		final HashSet<Identifiable> dependencies = 
-			new HashSet<Identifiable>(this.roleIds);
-
-		dependencies.remove(null);
-		dependencies.remove(Identifier.VOID_IDENTIFIER);
-		
-		return dependencies;
+		return new HashSet<Identifiable>(this.roleIds);
 	}
-	
+
 	public void setLogin(final String login) {
 		this.login = login;
 		super.markAsChanged();
 	}
-	
+
 	public void setName(final String name) {
 		this.name = name;
 		super.markAsChanged();
 	}
-	
+
 	public void setSort(final SystemUserSort sort) {
 		this.sort = sort.value();
 		super.markAsChanged();
@@ -276,12 +269,12 @@ public final class SystemUser extends StorableObject<SystemUser>
 	public Set<Identifier> getRoleIds() {
 		return Collections.unmodifiableSet(this.roleIds);
 	}
-	
+
 	public void setRoleIds(final Set<Identifier> roleIds) {
 		this.setRoleIds0(roleIds);
 		super.markAsChanged();
 	}
-	
+
 	/**
 	 * <p>
 	 * <b>Clients must never explicitly call this method.</b>
@@ -323,9 +316,7 @@ public final class SystemUser extends StorableObject<SystemUser>
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
 	 */
-	public void addCharacteristic(final Characteristic characteristic,
-			final boolean usePool)
-	throws ApplicationException {
+	public void addCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		characteristic.setParentCharacterizable(this, usePool);
 	}
@@ -334,12 +325,10 @@ public final class SystemUser extends StorableObject<SystemUser>
 	 * @param characteristic
 	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic,
+	 *      boolean)
 	 */
-	public void removeCharacteristic(
-			final Characteristic characteristic,
-			final boolean usePool)
-	throws ApplicationException {
+	public void removeCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		characteristic.setParentCharacterizable(this, usePool);
@@ -350,8 +339,7 @@ public final class SystemUser extends StorableObject<SystemUser>
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
 	 */
-	public Set<Characteristic> getCharacteristics(boolean usePool)
-	throws ApplicationException {
+	public Set<Characteristic> getCharacteristics(boolean usePool) throws ApplicationException {
 		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
 	}
 
@@ -359,8 +347,7 @@ public final class SystemUser extends StorableObject<SystemUser>
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	Set<Characteristic> getCharacteristics0(final boolean usePool)
-	throws ApplicationException {
+	Set<Characteristic> getCharacteristics0(final boolean usePool) throws ApplicationException {
 		return this.getCharacteristicContainerWrappee().getContainees(usePool);
 	}
 
@@ -370,9 +357,7 @@ public final class SystemUser extends StorableObject<SystemUser>
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
 	 */
-	public void setCharacteristics(final Set<Characteristic> characteristics,
-			final boolean usePool)
-	throws ApplicationException {
+	public void setCharacteristics(final Set<Characteristic> characteristics, final boolean usePool) throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;
 
 		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);

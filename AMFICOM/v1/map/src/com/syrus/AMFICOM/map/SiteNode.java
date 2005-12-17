@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.120 2005/12/07 17:17:18 bass Exp $
+ * $Id: SiteNode.java,v 1.121 2005/12/17 12:09:00 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,8 +66,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: bass $
- * @version $Revision: 1.120 $, $Date: 2005/12/07 17:17:18 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.121 $, $Date: 2005/12/17 12:09:00 $
  * @module map
  */
 public class SiteNode extends AbstractNode<SiteNode>
@@ -117,7 +117,7 @@ public class SiteNode extends AbstractNode<SiteNode>
 		this.city = city;
 		this.street = street;
 		this.building = building;
-		
+
 		this.selected = false;
 	}
 
@@ -190,16 +190,13 @@ public class SiteNode extends AbstractNode<SiteNode>
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.type);
 		dependencies.add(this.imageId);
 		dependencies.add(this.attachmentSiteNodeId);
-		
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
 
 		return dependencies;
 	}
@@ -228,7 +225,7 @@ public class SiteNode extends AbstractNode<SiteNode>
 				this.building,
 				this.attachmentSiteNodeId.getIdlTransferable());
 	}
-	
+
 	@Override
 	protected synchronized void fromTransferable(IdlStorableObject transferable) throws ApplicationException {
 		IdlSiteNode idlSiteNode = (IdlSiteNode) transferable; 
@@ -291,22 +288,20 @@ public class SiteNode extends AbstractNode<SiteNode>
 		this.attachmentSiteNodeId = Identifier.possiblyVoid(attachmentSiteNodeId);
 		super.markAsChanged();
 	}
-	
+
 	public void setAttachmentSiteNode(final SiteNode attachmentSiteNode) {
 		this.attachmentSiteNodeId = attachmentSiteNode.getId();
 		super.markAsChanged();
 	}
-	
+
 	public SiteNode getAttachmentSiteNode() {
 		try {
-			return StorableObjectPool.<SiteNode>getStorableObject(this.attachmentSiteNodeId, true);
-		} catch(ApplicationException e) {
+			return StorableObjectPool.<SiteNode> getStorableObject(this.attachmentSiteNodeId, true);
+		} catch (ApplicationException e) {
 			Log.errorMessage(e);
 			return null;
 		}
 	}
-	
-	
 
 	synchronized void setAttributes(final Date created,
 			final Date modified,
@@ -354,7 +349,7 @@ public class SiteNode extends AbstractNode<SiteNode>
 		this.setLocation(msnes.location);
 
 		try {
-			SiteNodeType siteNodeType = StorableObjectPool.getStorableObject(msnes.mapProtoId, true);
+			final SiteNodeType siteNodeType = StorableObjectPool.getStorableObject(msnes.mapProtoId, true);
 			this.setType(siteNodeType);
 		} catch (ApplicationException e) {
 			e.printStackTrace();
@@ -424,27 +419,27 @@ public class SiteNode extends AbstractNode<SiteNode>
 	throws XmlConversionException {
 		try {
 			this.name = xmlSiteNode.getName();
-			if(xmlSiteNode.isSetDescription()) {
+			if (xmlSiteNode.isSetDescription()) {
 				this.description = xmlSiteNode.getDescription();
 			} else {
 				this.description = "";
 			}
-			if(xmlSiteNode.isSetCity()) {
+			if (xmlSiteNode.isSetCity()) {
 				this.city = xmlSiteNode.getCity();
 			} else {
 				this.city = "";
 			}
-			if(xmlSiteNode.isSetStreet()) {
+			if (xmlSiteNode.isSetStreet()) {
 				this.street = xmlSiteNode.getStreet();
 			} else {
 				this.street = "";
 			}
-			if(xmlSiteNode.isSetBuilding()) {
+			if (xmlSiteNode.isSetBuilding()) {
 				this.building = xmlSiteNode.getBuilding();
 			} else {
 				this.building = "";
 			}
-	
+
 			super.location.setLocation(xmlSiteNode.getX(), xmlSiteNode.getY());
 			if (xmlSiteNode.isSetAttachmentSiteNodeId()) {
 				// NOTE: this call to Identifier.fromXmlTransferable may result in
@@ -458,26 +453,26 @@ public class SiteNode extends AbstractNode<SiteNode>
 			} else {
 				this.attachmentSiteNodeId = VOID_IDENTIFIER;
 			}
-	
+
 			final TypicalCondition condition = new TypicalCondition(xmlSiteNode.getSiteNodeTypeCodename(),
 					OperationSort.OPERATION_EQUALS,
 					SITENODE_TYPE_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
-	
+
 			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
 			Set<SiteNodeType> siteNodeTypes = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
 			if (siteNodeTypes.isEmpty()) {
 				condition.setValue(SiteNodeType.DEFAULT_BUILDING);
-	
+
 				//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
 				siteNodeTypes = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
 				if (siteNodeTypes.isEmpty()) {
 					throw new XmlConversionException("SiteNodeType \'" + SiteNodeType.DEFAULT_BUILDING + "\' not found");
 				}
 			}
-			
+
 			this.type = siteNodeTypes.iterator().next();
-	
+
 			this.imageId = this.type.getImageId();
 		} catch (final ApplicationException ae) {
 			throw new XmlConversionException(ae);

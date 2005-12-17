@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.125 2005/12/09 11:39:00 arseniy Exp $
+ * $Id: Scheme.java,v 1.126 2005/12/17 12:11:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,7 +87,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #03 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.125 $, $Date: 2005/12/09 11:39:00 $
+ * @version $Revision: 1.126 $, $Date: 2005/12/17 12:11:19 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -512,10 +512,10 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependenciesTmpl()
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.mapId != null
 				&& this.symbolId != null
 				&& this.ugoCellId != null
@@ -527,9 +527,7 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 		dependencies.add(this.ugoCellId);
 		dependencies.add(this.schemeCellId);
 		dependencies.add(this.parentSchemeElementId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 
 	/**

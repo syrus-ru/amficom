@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.42 2005/12/07 17:17:18 bass Exp $
+ * $Id: MapLibrary.java,v 1.43 2005/12/17 12:09:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,8 +61,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/12/07 17:17:18 $
- * @author $Author: bass $
+ * @version $Revision: 1.43 $, $Date: 2005/12/17 12:09:00 $
+ * @author $Author: arseniy $
  * @module map
  */
 public final class MapLibrary extends StorableObject<MapLibrary>
@@ -217,13 +217,13 @@ public final class MapLibrary extends StorableObject<MapLibrary>
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 		if (this.parentMapLibraryId != null && 
 				!this.parentMapLibraryId.isVoid()) {
 			final Set<Identifiable> dependencies = new HashSet<Identifiable>(1);
 			dependencies.add(this.parentMapLibraryId);
-			return Collections.unmodifiableSet(dependencies);
+			return dependencies;
 		}
 		return Collections.emptySet();
 	}

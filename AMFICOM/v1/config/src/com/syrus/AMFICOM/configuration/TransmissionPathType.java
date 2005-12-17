@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.83 2005/12/08 16:58:09 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.84 2005/12/17 12:08:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/12/08 16:58:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.84 $, $Date: 2005/12/17 12:08:30 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -158,7 +158,7 @@ public final class TransmissionPathType extends StorableObjectType<TransmissionP
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return Collections.emptySet();

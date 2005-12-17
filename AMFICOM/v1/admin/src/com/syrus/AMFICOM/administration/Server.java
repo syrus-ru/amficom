@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.61 2005/12/06 09:41:12 bass Exp $
+ * $Id: Server.java,v 1.62 2005/12/17 12:08:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/12/06 09:41:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.62 $, $Date: 2005/12/17 12:08:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -200,7 +200,7 @@ public final class Server extends DomainMember<Server>
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		return Collections.emptySet();

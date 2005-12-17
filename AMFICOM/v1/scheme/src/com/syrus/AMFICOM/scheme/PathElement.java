@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.97 2005/12/15 15:18:13 bass Exp $
+ * $Id: PathElement.java,v 1.98 2005/12/17 12:11:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
- * @author $Author: bass $
- * @version $Revision: 1.97 $, $Date: 2005/12/15 15:18:13 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.98 $, $Date: 2005/12/17 12:11:19 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -497,10 +497,10 @@ public final class PathElement extends StorableObject<PathElement>
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependenciesTmpl()
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.parentSchemePathId != null && !this.parentSchemePathId.isVoid()
 				&& this.sequentialNumber != -1
 				&& this.startAbstractSchemePortId != null
@@ -535,9 +535,7 @@ public final class PathElement extends StorableObject<PathElement>
 		dependencies.add(this.endAbstractSchemePortId);
 		dependencies.add(this.schemeCableThreadId);
 		dependencies.add(this.schemeLinkId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 
 	/**

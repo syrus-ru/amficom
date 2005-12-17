@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.72 2005/12/06 09:41:12 bass Exp $
+ * $Id: Domain.java,v 1.73 2005/12/17 12:08:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/12/06 09:41:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.73 $, $Date: 2005/12/17 12:08:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -240,7 +240,7 @@ public final class Domain extends DomainMember<Domain>
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(1);

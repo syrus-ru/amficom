@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.130 2005/12/08 16:12:55 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.131 2005/12/17 12:11:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -83,8 +83,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #02 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.130 $, $Date: 2005/12/08 16:12:55 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.131 $, $Date: 2005/12/17 12:11:19 $
  * @module scheme
  */
 public final class SchemeProtoElement
@@ -462,10 +462,10 @@ public final class SchemeProtoElement
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependenciesTmpl()
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.protoEquipmentId != null
 				&& this.symbolId != null
 				&& this.ugoCellId != null
@@ -481,9 +481,7 @@ public final class SchemeProtoElement
 		dependencies.add(this.schemeCellId);
 		dependencies.add(this.parentSchemeProtoGroupId);
 		dependencies.add(this.parentSchemeProtoElementId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 
 	/**

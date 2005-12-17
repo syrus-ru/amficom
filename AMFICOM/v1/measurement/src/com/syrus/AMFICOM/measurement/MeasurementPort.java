@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.18 2005/12/07 17:17:16 bass Exp $
+ * $Id: MeasurementPort.java,v 1.19 2005/12/17 12:11:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPort;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortHelper;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/12/07 17:17:16 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/12/17 12:11:21 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -219,7 +219,7 @@ public final class MeasurementPort extends StorableObject<MeasurementPort>
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();

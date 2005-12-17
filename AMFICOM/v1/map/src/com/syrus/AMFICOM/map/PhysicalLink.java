@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.150 2005/12/07 17:17:18 bass Exp $
+ * $Id: PhysicalLink.java,v 1.151 2005/12/17 12:09:00 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,8 +76,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.150 $, $Date: 2005/12/07 17:17:18 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.151 $, $Date: 2005/12/17 12:09:00 $
  * @module map
  */
 public class PhysicalLink extends StorableObject<PhysicalLink>
@@ -307,7 +307,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(3);
 		dependencies.add(this.physicalLinkType);

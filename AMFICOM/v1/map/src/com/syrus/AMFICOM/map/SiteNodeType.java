@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.113 2005/12/07 17:17:18 bass Exp $
+ * $Id: SiteNodeType.java,v 1.114 2005/12/17 12:09:00 arseniy Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,8 +79,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * ”злы специального типа CABLE_INLET должны быть прив€заны к какому-либо
  * узлу BUILDING или ATS и самосто€тельно не живут
  *  
- * @author $Author: bass $
- * @version $Revision: 1.113 $, $Date: 2005/12/07 17:17:18 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.114 $, $Date: 2005/12/17 12:09:00 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType<SiteNodeType>
@@ -194,7 +194,7 @@ public final class SiteNodeType extends StorableObjectType<SiteNodeType>
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.imageId);
 		dependencies.add(this.mapLibraryId);

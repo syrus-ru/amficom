@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.116 2005/12/07 17:17:20 bass Exp $
+ * $Id: SchemePath.java,v 1.117 2005/12/17 12:11:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #16 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.116 $, $Date: 2005/12/07 17:17:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.117 $, $Date: 2005/12/17 12:11:19 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject<SchemePath>
@@ -190,19 +190,17 @@ public final class SchemePath extends StorableObject<SchemePath>
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependenciesTmpl()
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.transmissionPathId != null
 				&& this.parentSchemeMonitoringSolutionId != null : OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeMonitoringSolutionId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.transmissionPathId);
 		dependencies.add(this.parentSchemeMonitoringSolutionId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 
 	/**

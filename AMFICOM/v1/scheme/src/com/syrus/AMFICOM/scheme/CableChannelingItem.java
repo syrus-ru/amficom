@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.87 2005/12/07 17:17:20 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.88 2005/12/17 12:11:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,8 +66,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #15 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.87 $, $Date: 2005/12/07 17:17:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.88 $, $Date: 2005/12/17 12:11:19 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -314,10 +314,10 @@ public final class CableChannelingItem
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.StorableObject#getDependenciesTmpl()
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {
+	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.physicalLinkId != null
 				&& this.pipeBlockId != null
 				&& this.startSiteNodeId != null
@@ -329,9 +329,7 @@ public final class CableChannelingItem
 		dependencies.add(this.startSiteNodeId);
 		dependencies.add(this.endSiteNodeId);
 		dependencies.add(this.parentSchemeCableLinkId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		return dependencies;
 	}
 
 	/**
