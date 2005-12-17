@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImpl.java,v 1.9 2005/11/28 12:35:30 arseniy Exp $
+ * $Id: MCMImpl.java,v 1.10 2005/12/17 12:12:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,13 +9,13 @@
 package com.syrus.AMFICOM.mcm;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ServerCore;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
@@ -23,12 +23,11 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlCompleti
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
 import com.syrus.AMFICOM.mcm.corba.MCMOperations;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/11/28 12:35:30 $
+ * @version $Revision: 1.10 $, $Date: 2005/12/17 12:12:46 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -42,27 +41,24 @@ final class MCMImpl extends ServerCore implements MCMOperations {
 	}
 
 
-	public void receiveTests(final IdlTest[] testsT, final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
-		assert testsT != null && sessionKeyT != null : ErrorMessages.NON_NULL_EXPECTED;
-		final int length = testsT.length;
+	public void startTests(final IdlIdentifier[] testIdsT, final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+		assert testIdsT != null && sessionKeyT != null : ErrorMessages.NON_NULL_EXPECTED;
+		final int length = testIdsT.length;
 		assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
 		final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 		final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
 		super.validateAccess(sessionKeyT, userId, domainId);
 
-		Log.debugMessage("Received " + testsT.length + " test(s)", Log.DEBUGLEVEL07);
-		final List<Test> tests = new LinkedList<Test>();
-		for (int i = 0; i < testsT.length; i++) {
-			try {
-				tests.add(new Test(testsT[i]));
-			} catch (CreateObjectException coe) {
-				Log.errorMessage(coe);
-				throw new AMFICOMRemoteException(IdlErrorCode.ERROR_SAVE, IdlCompletionStatus.COMPLETED_NO, coe.getMessage());
-			}
+		Log.debugMessage("Request to start " + testIdsT.length + " test(s)", Log.DEBUGLEVEL07);
+		final Set<Identifier> testIds = Identifier.fromTransferables(testIdsT);
+		try {
+			final Set<Test> tests = StorableObjectPool.getStorableObjects(testIds, true);
+			MeasurementControlModule.addTests(new LinkedList<Test>(tests));
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_SAVE, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
-
-		MeasurementControlModule.addTests(tests);
 	}
 
 	public void stopTests(final IdlIdentifier[] testIdsT, final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {

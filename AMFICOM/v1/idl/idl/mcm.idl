@@ -17,7 +17,7 @@ module corba {
 
 	interface MCM : general::corba::CommonServer {
 
-		void receiveTests(in measurement::corba::IdlTestSeq idlTests,
+		void startTests(in general::corba::IdlIdentifierSeq testIds,
 					in security::corba::IdlSessionKey sessionKey)
 					raises (general::corba::AMFICOMRemoteException);
 
