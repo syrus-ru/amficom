@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.145 2005/12/09 10:00:02 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146 2005/12/17 12:18:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -50,7 +49,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.145 $, $Date: 2005/12/09 10:00:02 $
+ * @version $Revision: 1.146 $, $Date: 2005/12/17 12:18:57 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -404,7 +403,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 				}
 				testIt.add(newTest);
 
-				prepareTestToExecute(newTest);
+				newTest.setStatus(TestStatus.TEST_STATUS_SCHEDULED);
 
 				newTest = newTestIt.hasNext() ? newTestIt.next() : null;
 			}
@@ -418,36 +417,15 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}	//synchronized (testList)
 	}
 
-	private static void prepareTestToExecute(final Test test) {
-		test.setStatus(TestStatus.TEST_STATUS_SCHEDULED);
+	static void stopTests(final Set<Identifier> testIds) {
 		try {
-			if (test.getTemporalType().value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL) {
-				StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
-			}
-
-			final Identifier groupTestId = test.getGroupTestId();
-			if (!groupTestId.isVoid() && !groupTestId.equals(test.getId())) {
-				StorableObjectPool.getStorableObject(groupTestId, true);
+			final Set<Test> tests = StorableObjectPool.getStorableObjects(testIds, true);
+			for (final Test test : tests) {
+				stopTest(test);
+				test.setStatus(TestStatus.TEST_STATUS_STOPPED);
 			}
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
-		}
-	}
-
-	static void stopTests(final Set<Identifier> testIds) {
-		for (final Iterator<Identifier> it = testIds.iterator(); it.hasNext();) {
-			final Identifier id = it.next();
-			try {
-				final Test test = (Test) StorableObjectPool.getStorableObject(id, true);
-				if (test != null) {
-					stopTest(test);
-					test.setStatus(TestStatus.TEST_STATUS_STOPPED);
-				} else {
-					Log.errorMessage("Test '" + id + "' not found");
-				}
-			} catch (ApplicationException ae) {
-				Log.errorMessage(ae);
-			}
 		}
 
 		try {
