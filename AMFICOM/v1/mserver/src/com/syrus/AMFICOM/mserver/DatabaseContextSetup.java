@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.41 2005/09/29 08:28:47 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.42 2005/12/17 12:19:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.mserver;
 
 import com.syrus.AMFICOM.administration.DomainDatabase;
 import com.syrus.AMFICOM.administration.MCMDatabase;
+import com.syrus.AMFICOM.administration.PermissionAttributesDatabase;
+import com.syrus.AMFICOM.administration.RoleDatabase;
 import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
@@ -42,7 +44,7 @@ import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/09/29 08:28:47 $
+ * @version $Revision: 1.42 $, $Date: 2005/12/17 12:19:27 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -58,6 +60,8 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new CharacteristicDatabase());
 
 		DatabaseContext.registerDatabase(new SystemUserDatabase());
+		DatabaseContext.registerDatabase(new PermissionAttributesDatabase());
+		DatabaseContext.registerDatabase(new RoleDatabase());
 		DatabaseContext.registerDatabase(new DomainDatabase());
 		DatabaseContext.registerDatabase(new ServerDatabase());
 		DatabaseContext.registerDatabase(new MCMDatabase());
