@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.137 2005/12/14 14:17:49 bass Exp $
+ * $Id: StorableObject.java,v 1.138 2005/12/17 12:03:12 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.137 $, $Date: 2005/12/14 14:17:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.138 $, $Date: 2005/12/17 12:03:12 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -167,11 +167,23 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	}
 
 	/**
-	 * Will be overridden by descendants.
-	 *
 	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * @return <code>Set</code> of {@link Identifiable} - dependencies of this object.
 	 */
-	public abstract Set<Identifiable> getDependencies();
+	public final Set<Identifiable> getDependencies() {
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.addAll(this.getDependenciesTmpl());
+		dependencies.add(this.creatorId);
+		dependencies.add(this.modifierId);
+		dependencies.remove(null);
+		dependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(dependencies);
+	}
+
+	/**
+	 * Must be overridden by descendants.
+	 */
+	protected abstract Set<Identifiable> getDependenciesTmpl();
 
 	/**
 	 * @param orb
@@ -632,8 +644,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.137 $, $Date: 2005/12/14 14:17:49 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.138 $, $Date: 2005/12/17 12:03:12 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -741,8 +753,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.137 $, $Date: 2005/12/14 14:17:49 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.138 $, $Date: 2005/12/17 12:03:12 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
