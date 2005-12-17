@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.138 2005/12/17 12:03:12 arseniy Exp $
+ * $Id: StorableObject.java,v 1.139 2005/12/17 12:46:06 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.138 $, $Date: 2005/12/17 12:03:12 $
+ * @version $Revision: 1.139 $, $Date: 2005/12/17 12:46:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -175,6 +175,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 		dependencies.addAll(this.getDependenciesTmpl());
 		dependencies.add(this.creatorId);
 		dependencies.add(this.modifierId);
+
+		dependencies.remove(this.id);
 		dependencies.remove(null);
 		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
@@ -645,7 +647,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.138 $, $Date: 2005/12/17 12:03:12 $
+	 * @version $Revision: 1.139 $, $Date: 2005/12/17 12:46:06 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -754,7 +756,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.138 $, $Date: 2005/12/17 12:03:12 $
+	 * @version $Revision: 1.139 $, $Date: 2005/12/17 12:46:06 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
