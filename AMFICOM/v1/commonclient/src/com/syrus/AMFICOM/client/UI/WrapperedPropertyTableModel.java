@@ -9,7 +9,7 @@ import javax.swing.table.AbstractTableModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/12/19 12:31:35 $
+ * @version $Revision: 1.24 $, $Date: 2005/12/19 12:35:56 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -176,14 +176,16 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 		if (columnIndex == 0) {
 			return;
 		}
+
+		final Object value;				
 		if (this.wrapper.getPropertyValue(this.keys[rowIndex]) instanceof Map) {
-			final Map map = (Map) this.wrapper.getPropertyValue(this.keys[rowIndex]);
-			this.values[rowIndex] = object;
-			this.wrapper.setValue(this.t, this.keys[rowIndex], map.get(object));			
+			final Map map = (Map) this.wrapper.getPropertyValue(this.keys[rowIndex]);		
+			value = map.get(object);
 		} else {
-			this.values[rowIndex] = object;
-			this.wrapper.setValue(this.t, this.keys[rowIndex], object);
+			value = object;
 		}
+		this.values[rowIndex] = object;
+		this.wrapper.setValue(this.t, this.keys[rowIndex], value);
 		super.fireTableRowsUpdated(rowIndex, rowIndex);
 	}
 
