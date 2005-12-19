@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.46 2005/11/29 08:17:23 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.47 2005/12/19 13:31:57 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,6 +33,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainWrapper;
+import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -40,6 +41,7 @@ import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -47,12 +49,13 @@ import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.Application;
 import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.46 $, $Date: 2005/11/29 08:17:23 $
+ * @version $Revision: 1.47 $, $Date: 2005/12/19 13:31:57 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -180,7 +183,7 @@ public class OpenSessionCommand extends AbstractCommand {
 				this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 						StatusMessageEvent.STATUS_MESSAGE,
 						I18N.getString("Common.StatusBar.Aborted")));
-				this.logged = false;
+				this.logginFailed();
 				return true;
 			}
 		}
@@ -192,8 +195,7 @@ public class OpenSessionCommand extends AbstractCommand {
 					I18N.getString("Error.SessionHasNotEstablish"),
 					JOptionPane.ERROR_MESSAGE,
 					null);
-			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
-			this.logged = false;
+			this.logginFailed();
 			return true;
 		}
 
@@ -215,8 +217,7 @@ public class OpenSessionCommand extends AbstractCommand {
 					I18N.getString("Error"),
 					JOptionPane.ERROR_MESSAGE,
 					null);
-			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
-			this.logged = false;
+			this.logginFailed();
 			return false;
 		} catch (CommunicationException ce) {
 			Log.errorMessage(ce);
@@ -225,11 +226,15 @@ public class OpenSessionCommand extends AbstractCommand {
 					I18N.getString("Error.OpenSession"),
 					JOptionPane.ERROR_MESSAGE,
 					null);
-			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
-			this.logged = false;
+			this.logginFailed();
 			return false;
 		} finally {
 			this.password = null;
+		}
+		
+		if (!checkEnter()) {
+			this.logginFailed();
+			return false;
 		}
 
 		this.disposeDialog();
@@ -240,6 +245,43 @@ public class OpenSessionCommand extends AbstractCommand {
 		return true;
 	}
 
+	private void logginFailed() {
+		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
+		this.logged = false;
+	}	
+	
+	private final boolean checkEnter() {
+		final String action;
+		if ((action = this.isEnterModuleEnable()) != null) {
+			AbstractMainFrame.showErrorMessage("<html>" 
+				+ I18N.getString("Common.Permission.DenyAccess") 
+				+ " : <br>" 
+				+ action
+				+ "</html>");
+			return false;
+		}
+		return true;
+	}
+	
+	private final String isEnterModuleEnable() {
+		final String codename = Application.getApplicationName().toUpperCase() + "_ENTER";		
+		final PermissionCodename permissionCodename = 
+			Enum.valueOf(PermissionCodename.class, codename);
+		
+		try {
+			if (Checker.isPermitted(permissionCodename)) {
+				return null;
+			}
+		} catch (final ApplicationException ae) {
+			Log.errorMessage(ae);
+			// and return problems
+		}
+		return permissionCodename.getDescription() 
+			+ " \"" 
+			+ permissionCodename.getModule().getDescription() 
+			+ "\".";
+	}
+	
 	protected void createUIItems() {
 		if (this.mainPanel == null) {
 			this.mainPanel = new JPanel(new GridBagLayout());

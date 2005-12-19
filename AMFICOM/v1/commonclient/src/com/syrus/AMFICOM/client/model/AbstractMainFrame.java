@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.35 2005/11/24 14:05:17 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.36 2005/12/19 13:31:57 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,6 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.SystemUser;
-import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.StatusBar;
@@ -45,16 +44,14 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.util.Application;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/11/24 14:05:17 $
+ * @version $Revision: 1.36 $, $Date: 2005/12/19 13:31:57 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -172,47 +169,45 @@ implements PropertyChangeListener {
 	}
 	
 	private final void loggedIn0() {
-		if (this.checkEnter()) {
-			final ApplicationModel aModel = this.aContext.getApplicationModel();
-			aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, false);
-			aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, true);
-			aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, true);
-			aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, true);
+		final ApplicationModel aModel = this.aContext.getApplicationModel();
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, true);
 
-			aModel.fireModelChanged();
+		aModel.fireModelChanged();
 
-			final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+		final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 
-			final Identifier domainId = LoginManager.getDomainId();
-			final Identifier userId = LoginManager.getUserId();
-			try {
-				Domain domain = StorableObjectPool.getStorableObject(
-						domainId, 
-						true);
-				this.statusBar.setText(StatusBar.FIELD_DOMAIN, domain.getName());
-				
-				final SystemUser user = StorableObjectPool.getStorableObject(userId, true);
-				this.statusBar.setText(StatusBar.FIELD_USER, user.getName());
-			} catch (final ApplicationException ae) {
-				Log.errorMessage(ae);
-				showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
-				return;
-			}
+		final Identifier domainId = LoginManager.getDomainId();
+		final Identifier userId = LoginManager.getUserId();
+		try {
+			Domain domain = StorableObjectPool.getStorableObject(
+					domainId, 
+					true);
+			this.statusBar.setText(StatusBar.FIELD_DOMAIN, domain.getName());
 			
-			this.statusBar.setText(StatusBar.FIELD_STATUS, 
-				I18N.getString("Common.StatusBar.Ready"));
-			
-			final ClientSessionEnvironment clientSessionEnvironment = 
-				ClientSessionEnvironment.getInstance();
-			this.statusBar.setText(StatusBar.FIELD_SESSION, 
-				sdf.format(clientSessionEnvironment.getSessionEstablishDate()));
-			this.statusBar.setText(StatusBar.FIELD_SERVER, 
-				clientSessionEnvironment.getServerName());
-			
-
-			this.windowArranger.arrange();
-			this.loggedIn();
+			final SystemUser user = StorableObjectPool.getStorableObject(userId, true);
+			this.statusBar.setText(StatusBar.FIELD_USER, user.getName());
+		} catch (final ApplicationException ae) {
+			Log.errorMessage(ae);
+			showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
+			return;
 		}
+		
+		this.statusBar.setText(StatusBar.FIELD_STATUS, 
+			I18N.getString("Common.StatusBar.Ready"));
+		
+		final ClientSessionEnvironment clientSessionEnvironment = 
+			ClientSessionEnvironment.getInstance();
+		this.statusBar.setText(StatusBar.FIELD_SESSION, 
+			sdf.format(clientSessionEnvironment.getSessionEstablishDate()));
+		this.statusBar.setText(StatusBar.FIELD_SERVER, 
+			clientSessionEnvironment.getServerName());
+		
+
+		this.windowArranger.arrange();
+		this.loggedIn();
 	}
 	
 	public abstract void loggedIn();
@@ -234,38 +229,6 @@ implements PropertyChangeListener {
 		this.aContext = aContext;
 		aContext.setDispatcher(this.dispatcher);
 		this.setModel(aContext.getApplicationModel());
-	}
-
-	private final boolean checkEnter() {
-		final String action;
-		if ((action = this.isEnterModuleEnable()) != null) {
-			showErrorMessage("<html>" 
-				+ I18N.getString("Common.Permission.DenyAccess") 
-				+ " : <br>" 
-				+ action
-				+ "</html>");
-			return false;
-		}
-		return true;
-	}
-	
-	private final String isEnterModuleEnable() {
-		final String codename = Application.getApplicationName().toUpperCase() + "_ENTER";		
-		final PermissionCodename permissionCodename = 
-			Enum.valueOf(PermissionCodename.class, codename);
-		
-		try {
-			if (Checker.isPermitted(permissionCodename)) {
-				return null;
-			}
-		} catch (final ApplicationException ae) {
-			Log.errorMessage(ae);
-			// and return problems
-		}
-		return permissionCodename.getDescription() 
-			+ " \"" 
-			+ permissionCodename.getModule().getDescription() 
-			+ "\".";
 	}
 
 	public void setModel(final ApplicationModel aModel) {
