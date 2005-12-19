@@ -1,5 +1,5 @@
 /*-
-* $Id: MessagePerpective.java,v 1.6 2005/12/07 14:08:02 bob Exp $
+* $Id: MessagePerpective.java,v 1.7 2005/12/19 10:31:52 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/12/07 14:08:02 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/19 10:31:52 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -172,6 +172,11 @@ public abstract class MessagePerpective extends AbstractPerspective {
 	
 	public final Perspective getSubPerspective(final AbstractBean bean) {
 		return null;
+	}
+	
+	@Override
+	public String toString() {
+		return "MessagePerpective for " + this.getCodename();
 	}
 	
 	private class RoleCheckable implements Checkable {
