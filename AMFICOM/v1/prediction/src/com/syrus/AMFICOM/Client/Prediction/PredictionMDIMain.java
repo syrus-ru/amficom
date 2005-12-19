@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager;
 import com.syrus.AMFICOM.Client.Prediction.UI.TimeDependence.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.configuration.*;
