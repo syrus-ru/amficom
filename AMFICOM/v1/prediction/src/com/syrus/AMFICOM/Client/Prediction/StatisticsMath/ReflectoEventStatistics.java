@@ -531,7 +531,7 @@ public class ReflectoEventStatistics
 
 		putDimensionIntoPool((String)h.get(s+dimensionName));
 		putHistoIntoPool((Histogramm)h.get(s+histo));
-//		putLinearCoeffsIntoPool((LinearCoeffs)h.get(s+linFit));
+		putLinearCoeffsIntoPool((LinearCoeffs)h.get(s+linFit));
 		putTimeDependenceDataIntoPool((TimeDependenceData [])h.get(s+tdd));
 	}
 
