@@ -1,5 +1,5 @@
 /*-
- * $Id: PredictionManager.java,v 1.3 2005/12/19 15:24:53 saa Exp $
+ * $Id: PredictionManager.java,v 1.4 2005/12/19 15:26:46 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
  * </p>
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/12/19 15:24:53 $
+ * @version $Revision: 1.4 $, $Date: 2005/12/19 15:26:46 $
  * @module prediction
  */
 public class PredictionManager {
@@ -64,7 +64,6 @@ public class PredictionManager {
 		}
 		return t2;
 	}
-
 	/**
 	 * @return LowerTime интервала "как он был выбран вначале".
 	 * ѕо-видимому, все getDate() будут не менее этой величины.
@@ -115,5 +114,12 @@ public class PredictionManager {
 	public double[] getPredictedReflectogram(long date) {
 		 return new ReflectogrammPredictor(date,
 				 this.res).getPredictedReflectogramm();
+	}
+
+	private int getNTraces() {
+        return this.res.statData.length;
+	}
+	private long getDate(int nTrace) {
+        return this.res.statData[nTrace].date;
 	}
 }

@@ -190,15 +190,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		}
 
 					double day = 1000.*60.*60.*24; //length of a day in millis;
-					long t1=Long.MAX_VALUE, t2=0;
-					int nTraces = pm.getNTraces();
-					for(int i = 0; i < nTraces; i++) {
-						if (t1 > pm.getDate(i))
-							t1 = pm.getDate(i);
-						if (t2 < pm.getDate(i))
-							t2 = pm.getDate(i);
-					}
-					int nDays = (int)((t2-t1)/day);
+					int nDays = (int)((pm.getMaxTime() - pm.getMinTime())/day);
 					if(nDays<=0)
 						nDays = 1;
 					if(nDays<10)
