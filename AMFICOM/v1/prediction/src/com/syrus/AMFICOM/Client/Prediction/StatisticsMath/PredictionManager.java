@@ -1,5 +1,5 @@
 /*-
- * $Id: PredictionManager.java,v 1.2 2005/12/19 14:53:48 saa Exp $
+ * $Id: PredictionManager.java,v 1.3 2005/12/19 15:24:53 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
  * </p>
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/12/19 14:53:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/19 15:24:53 $
  * @module prediction
  */
 public class PredictionManager {
@@ -36,18 +36,33 @@ public class PredictionManager {
 	}
 
 	/**
-	 * @return число рефлектограмм
+	 * @return дата/время первой рефлектограммы
+	 * либо Long.MAX_VALUE, если рефлектограмм нет.
+	 * Ожидается, что она будет в интервале от LowerTime до UpperTime
 	 */
-	public int getNTraces() {
-		return this.res.statData.length;
+	public long getMinTime() {
+		long t1=Long.MAX_VALUE;		
+		int nTraces = getNTraces();
+		for(int i = 0; i < nTraces; i++) {
+			if (t1 > getDate(i))
+				t1 = getDate(i);
+		}
+		return t1;
 	}
 
 	/**
-	 * @param nTrace номер рефлектограммы
-	 * @return дата/время рефлектограммы
+	 * @return дата/время последней рефлектограммы
+	 * либо 0, если рефлектограмм нет.
+	 * Ожидается, что она будет в интервале от LowerTime до UpperTime
 	 */
-	public long getDate(int nTrace) {
-		return this.res.statData[nTrace].date;
+	public long getMaxTime() {
+		long t2=0;		
+		int nTraces = getNTraces();
+		for(int i = 0; i < nTraces; i++) {
+			if (t2 < getDate(i))
+				t2 = getDate(i);
+		}
+		return t2;
 	}
 
 	/**
