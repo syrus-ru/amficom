@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.34 2005/12/16 15:25:45 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.35 2005/12/19 10:32:42 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.34 $, $Date: 2005/12/16 15:25:45 $
+ * @version $Revision: 1.35 $, $Date: 2005/12/19 10:32:42 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -758,19 +758,25 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 				final Object lastPathComponent = e.getPath().getLastPathComponent();
 				final GraphSelectionModel selectionModel = ManagerMainFrame.this.graph.getSelectionModel();
 				if (lastPathComponent instanceof ManagerGraphCell) {
-					final ManagerGraphCell cell = (ManagerGraphCell) lastPathComponent;
-					setPerspective(cell.getPerspective());
+					final ManagerGraphCell cell = (ManagerGraphCell) lastPathComponent;					
+					final Perspective perspective2 = cell.getPerspective();
+//					assert Log.debugMessage("1 set perspective " + perspective2, Log.DEBUGLEVEL03);
+					setPerspective(perspective2);
 					if (e.isAddedPath()) {
 						selectionModel.setSelectionCell(lastPathComponent);
 					} 
 				} else if (lastPathComponent instanceof ActionMutableTreeNode){
 					final ActionMutableTreeNode actionTreeNode = 
 						(ActionMutableTreeNode) lastPathComponent;
-					setPerspective(actionTreeNode.getPerspective());
+					final Perspective perspective2 = actionTreeNode.getPerspective();
+//					assert Log.debugMessage("2 set perspective " + perspective2, Log.DEBUGLEVEL03);
+					setPerspective(perspective2);
 				} else if (lastPathComponent instanceof PerspectiveTreeModel.PerspectiveMutableTreeNode) {
 					final PerspectiveTreeModel.PerspectiveMutableTreeNode cell = 
 						(PerspectiveMutableTreeNode) lastPathComponent;
-					setPerspective(cell.getPerspective());
+					final Perspective perspective2 = cell.getPerspective();
+//					assert Log.debugMessage("3 set perspective " + perspective2, Log.DEBUGLEVEL03);
+					setPerspective(perspective2);
 				}
 			}
 		});
@@ -809,9 +815,11 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 	
 	final void setPerspectiveTab(final Perspective perspective) {
 		try {		
+			final long time0 = System.currentTimeMillis();
 			this.perspective = perspective;
 			this.putPerspective(perspective);
-
+			final long time1 = System.currentTimeMillis();
+			
 			final JInternalFrame frame = 
 				(JInternalFrame) this.frames.get(GRAPH_FRAME);
 			frame.setTitle(I18N.getString(GRAPH_FRAME) 
@@ -819,10 +827,19 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 				+ this.perspective.getName());
 						
 			this.graphRoutines.arrangeLayoutItems(perspective);
+			final long time2 = System.currentTimeMillis();
 			this.graphRoutines.showLayerName(perspective.getCodename(), true);
-			this.graphRoutines.fixLayoutItemCharacteristics();
+			final long time3 = System.currentTimeMillis();
+//			this.graphRoutines.fixLayoutItemCharacteristics();
+			final long time4 = System.currentTimeMillis();
 			this.graph.getSelectionModel().clearSelection();
 			updateBufferButtons();
+			final long time5 = System.currentTimeMillis();
+			assert Log.debugMessage("1-0 takes " + (time1 - time0) + " ms", Log.DEBUGLEVEL03);
+			assert Log.debugMessage("2-1 takes " + (time2 - time1) + " ms", Log.DEBUGLEVEL03);
+			assert Log.debugMessage("3-2 takes " + (time3 - time2) + " ms", Log.DEBUGLEVEL03);
+			assert Log.debugMessage("4-3 takes " + (time4 - time3) + " ms", Log.DEBUGLEVEL03);
+			assert Log.debugMessage("5-4 takes " + (time5 - time4) + " ms", Log.DEBUGLEVEL03);			
 		} catch (final ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -862,15 +879,26 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 	}
 	
 	public final void setPerspective(final Perspective perspective) {
+		final long time0 = System.currentTimeMillis();
+//		assert Log.debugMessage(perspective, Log.DEBUGLEVEL03);
 		assert perspective != null;
 		if (this.perspective == perspective) {
+//			assert Log.debugMessage(" 1 " + perspective + " is takes " 
+//				+ (System.currentTimeMillis() - time0) 
+//				+ " ms", Log.DEBUGLEVEL03);
 			return;
 		}
 
 		if (!this.isPerspectiveValid()) {
+//			assert Log.debugMessage(" 2 " + perspective + " is takes " 
+//				+ (System.currentTimeMillis() - time0) 
+//				+ " ms", Log.DEBUGLEVEL03);
 			return;
 		}
 		this.setPerspectiveTab(perspective);
+		assert Log.debugMessage(perspective + " is takes " 
+			+ (System.currentTimeMillis() - time0) 
+			+ " ms", Log.DEBUGLEVEL03);
 	}	
 
 	public final ManagerHandler getManagerHandler() {
