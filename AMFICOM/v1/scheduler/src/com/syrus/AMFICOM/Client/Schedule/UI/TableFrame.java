@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.64 2005/10/25 12:02:22 bob Exp $
+ * $Id: TableFrame.java,v 1.65 2005/12/19 15:34:45 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,9 +51,10 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.AMFICOM.measurement.TestViewAdapter;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/10/25 12:02:22 $
+ * @version $Revision: 1.65 $, $Date: 2005/12/19 15:34:45 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -117,7 +118,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 		this.propertyChangeEvent = evt;
 		final String propertyName = evt.getPropertyName().intern();
 		if (propertyName == SchedulerModel.COMMAND_ADD_TEST) {
-			this.addTest((Set<Identifier>) evt.getNewValue());
+			this.addTest((Set<Identifier>) evt.getNewValue(), false);
 		} else if (propertyName == SchedulerModel.COMMAND_REFRESH_TESTS) {
 			this.updateTests((Set<Identifier>) evt.getNewValue());
 		} else if (propertyName == SchedulerModel.COMMAND_REFRESH_TEST) {
@@ -130,8 +131,12 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 		this.propertyChangeEvent = null;
 	}
 
-	private void addTest(final Set<Identifier> testIds) {
+	private void addTest(final Set<Identifier> testIds, boolean clear) {
+		assert Log.debugMessage(testIds, Log.DEBUGLEVEL03);
 		final WrapperedTableModel<TestView> model = this.listTable.getModel();
+		if (clear) {
+			model.clear();
+		}
 		for (final Identifier testId : testIds) {
 			final TestView testView = TestView.valueOf(testId);
 			final Test test = testView.getTest();
@@ -140,19 +145,16 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 				model.addObject(TestView.valueOf(test));
 			}
 		}
-		this.listTable.revalidate();
-		this.listTable.repaint();
 	}
 	
 	private void clearTests() {
+		assert Log.debugMessage(Log.DEBUGLEVEL03);
 		final WrapperedTableModel<TestView> model = this.listTable.getModel();
 		model.clear();
 	}
 	
 	private void setTests() {
-		final WrapperedTableModel<TestView> model = this.listTable.getModel();
-		model.clear();		
-		this.addTest(this.schedulerModel.getMainTestIds());
+		this.addTest(this.schedulerModel.getMainTestIds(), true);
 	}
 
 	private JPanel getPanel() {
