@@ -21,6 +21,13 @@ public class ReflectoEventStatistics
 	private static final int waveLength1550 = 1550;
 	private static final int waveLength1625 = 1625;
 
+	private static final int nBins = 70;
+
+	private static final String TDD = "tdd";
+	private static final String DIMENSION_NAME = "dimensionName";
+	private static final String LIN_FIT = "linFit";
+	private static final String HISTO = "histo";
+
 	public ReflectoEventContainer []statData;
 
 	double []referenceArray;
@@ -37,13 +44,6 @@ public class ReflectoEventStatistics
 	private long lowerTime;
 	private long upperTime;
 	private MonitoredElement me;
-
-	private static final int nBins = 70;
-
-	private final String tdd = "tdd";
-	private final String dimensionName = "dimensionName";
-	private final String linFit = "linFit";
-	private final String histo = "histo";
 
 	private Hashtable attenuationCache;
 	private Hashtable splashAmplitudeCache;
@@ -67,16 +67,6 @@ public class ReflectoEventStatistics
 		setRefArray(reference);
 
 //    setMeanReflectogramm();
-	}
-
-	// unused
-	private ReflectoEventStatistics(ReflectoEventContainer []statData,
-			ReflectoEventContainer reference,
-			long lowerTime, long upperTime, MonitoredElement me,
-			int waveLength)
-	{
-		this(statData, reference, lowerTime, upperTime, me);
-		this.waveLength = waveLength;
 	}
 
 	private void setMeanReflectogramm()
@@ -141,14 +131,6 @@ public class ReflectoEventStatistics
 		this.reflectionCache = new Hashtable();
 	}
 
-
-	// unused?
-	private ReflectoEventContainer []getStatData()
-	{
-		return this.statData;
-	}
-
-
 	private void setReference(ReflectoEventContainer reference)
 	{
 		if(reference == null) return;
@@ -173,25 +155,33 @@ public class ReflectoEventStatistics
 //-----------------------------------------------------------------------------------------------
 // Getting of the information about amplitude of the initial event point (defined for any event);
 //-----------------------------------------------------------------------------------------------
-	public void getAmplitudeInformation(int nEvent)
-	{
+
+	public void getAmplitudeInformation(int nEvent) {
+		if(reference.re == null || nEvent<0 || nEvent>reference.re.length-1)
+			return;
+		trueGetAmplitudeInformation(nEvent).putIntoPool();
+	}
+
+	public Statistics trueGetAmplitudeInformation(int nEvent) {
+		if(reference.re == null)
+			throw new IllegalStateException();
+		if (nEvent<0 || nEvent>reference.re.length-1)
+			throw new IllegalArgumentException();
+		calcAmplitudeInformation(nEvent);
+		return getStatisticsFromCache(amplitudeCache, nEvent);
+	}
+
+	private void calcAmplitudeInformation(int nEvent) {
 		if(reference.re == null || nEvent<0 || nEvent>reference.re.length-1)
 			return;
 
-		if(amplitudeCache.get(String.valueOf(nEvent)+tdd)!= null)
+		if(amplitudeCache.get(String.valueOf(nEvent)+TDD)!= null)
 		{
-			setDataFromCache(amplitudeCache, nEvent);
 			return;
 		}
 
-		ArrayList td = new ArrayList();
-		int counter = 0;
-		int n;
-
-		int coord = getEventCoord(reference.re[nEvent]);
-
-		int type = ReflectogramEvent.LINEAR;
-		String dim= "";
+		int type;
+		String dim;
 
 		if(reference.re[nEvent].getType() == ReflectogramEvent.CONNECTOR) //Connector
 		{
@@ -209,10 +199,15 @@ public class ReflectoEventStatistics
 			type = ReflectogramEvent.LINEAR;
 		}
 
-		double ampl;
+		int coord = getEventCoord(reference.re[nEvent]);
+
+		ArrayList td = new ArrayList();
+		int counter = 0;
+
 		for(int i=0; i<statData.length; i++)
 		{
-			n = this.getEventNumber(statData[i].sre, coord);
+			int n = this.getEventNumber(statData[i].sre, coord);
+			double ampl;
 
 			if(n>0 && statData[i].sre[n].getType() == type) // if not dead zone;
 			{
@@ -255,22 +250,30 @@ public class ReflectoEventStatistics
 			}
 		}
 
-		setData(counter, amplitudeCache, td, nEvent, dim);
+		setDataToCache(counter, amplitudeCache, td, nEvent, dim);
 	}
 
 
 //----------------------------------------------------------------
 // Getting information about attenuation (for linear events only);
 //----------------------------------------------------------------
-	public void getAttenuationInformation(int nEvent)
+	public Statistics trueGetAttenuationInformation(int nEvent) {
+		if(reference.re == null)
+			throw new IllegalStateException();
+		if (nEvent<0 || nEvent>reference.re.length-1)
+			throw new IllegalArgumentException();
+		calcAttenuationInformation(nEvent);
+		return getStatisticsFromCache(attenuationCache, nEvent);
+	}
+
+	private void calcAttenuationInformation(int nEvent)
 	{
 		if(reference.re == null || nEvent<0 || nEvent>reference.re.length-1)
 		{
 			return;
 		}
-		if(attenuationCache.get(String.valueOf(nEvent)+tdd)!= null)
+		if(attenuationCache.get(String.valueOf(nEvent)+TDD)!= null)
 		{
-			setDataFromCache(attenuationCache, nEvent);
 			return;
 		}
 
@@ -282,11 +285,9 @@ public class ReflectoEventStatistics
 
 		int type = ReflectogramEvent.LINEAR;
 		double C;
-		String dim = "";
 
 		if(reference.re[nEvent].getType() == ReflectogramEvent.LINEAR) //linear
 		{
-			dim = "linear_db/km";
 			C = -1000./this.delta_x;
 			type = ReflectogramEvent.LINEAR;
 		}
@@ -306,24 +307,28 @@ public class ReflectoEventStatistics
 			}
 		}
 
-		setData(counter, attenuationCache, td, nEvent, dim);
-
+		setDataToCache(counter, attenuationCache, td, nEvent, "linear_db/km");
 	}
-
 
 //-------------------------------------------------------------------------------------------------
 // Getting information about energy loss at the event (defined for any event);
 //-------------------------------------------------------------------------------------------------
-	public void getEnergyLossInformation(int nEvent)
+	public Statistics trueGetEnergyLossInformation(int nEvent) {
+		if(reference.re == null)
+			throw new IllegalStateException();
+		if (nEvent<0 || nEvent>reference.re.length-1)
+			throw new IllegalArgumentException();
+		calcEnergyLossInformation(nEvent);
+		return getStatisticsFromCache(energyLossCache, nEvent);
+	}
+
+	private void calcEnergyLossInformation(int nEvent)
 	{
 		if(reference.re == null || nEvent<0 || nEvent>reference.re.length-1)
-		{
 			return;
-		}
 
-		if(energyLossCache.get(String.valueOf(nEvent)+tdd)!= null)
+		if(energyLossCache.get(String.valueOf(nEvent)+TDD)!= null)
 		{
-			setDataFromCache(energyLossCache, nEvent);
 			return;
 		}
 
@@ -334,7 +339,7 @@ public class ReflectoEventStatistics
 		int coord = getEventCoord(reference.re[nEvent]);
 
 		int type = ReflectogramEvent.LINEAR;
-		String dim = "";
+		String dim;
 
 		int coeff = 1;
 		if(reference.re[nEvent].getType() == ReflectogramEvent.CONNECTOR) //Connector
@@ -387,23 +392,28 @@ public class ReflectoEventStatistics
 
 		}
 
-		setData(counter, energyLossCache, td, nEvent, dim);
-
+		setDataToCache(counter, energyLossCache, td, nEvent, dim);
 	}
 
 //---------------------------------------------------------------------------------------------------------
 // Getting of the information about reflectance (defined for reflecting events only, except for dead zone);
 //---------------------------------------------------------------------------------------------------------
-	public void getReflectanceInformation(int nEvent)
+	public Statistics trueGetReflectanceInformation(int nEvent) {
+		if(reference.re == null)
+			throw new IllegalStateException();
+		if (nEvent<0 || nEvent>reference.re.length-1)
+			throw new IllegalArgumentException();
+		calcReflectanceInformation(nEvent);
+		return getStatisticsFromCache(reflectionCache, nEvent);
+	}
+
+	private void calcReflectanceInformation(int nEvent)
 	{
 		if(reference.re == null || nEvent<=0 || nEvent>reference.re.length-1)
-		{
 			return;
-		}
 
-		if(reflectionCache.get(String.valueOf(nEvent)+tdd)!= null)
+		if(reflectionCache.get(String.valueOf(nEvent)+TDD)!= null)
 		{
-			setDataFromCache(reflectionCache, nEvent);
 			return;
 		}
 
@@ -413,11 +423,8 @@ public class ReflectoEventStatistics
 
 		int coord = getEventCoord(reference.re[nEvent]);
 
-		String dim = "";
-
 		if(reference.re[nEvent].getType() == ReflectogramEvent.CONNECTOR && nEvent>0) //Connector
 		{
-			dim = "connector_db";
 			for(int i=0; i<statData.length; i++)
 			{
 				n = this.getEventNumber(statData[i].sre, coord);
@@ -428,29 +435,29 @@ public class ReflectoEventStatistics
 					counter++;
 				}
 			}
+			setDataToCache(counter, reflectionCache, td, nEvent, "connector_db");
 		}
-		else
-		{
-			return;
-		}
-
-		setData(counter, reflectionCache, td, nEvent, dim);
-
 	}
 
 //------------------------------------------------------------------------------------------------
 // Getting information about the amplitude of the splash (defined for the reflecting events only);
 //------------------------------------------------------------------------------------------------
-	public void getSplashAmplitudeInformation(int nEvent)
+	public Statistics trueGetSplashAmplitudeInformation(int nEvent) {
+		if(reference.re == null)
+			throw new IllegalStateException();
+		if (nEvent<0 || nEvent>reference.re.length-1)
+			throw new IllegalArgumentException();
+		calcSplashAmplitudeInformation(nEvent);
+		return getStatisticsFromCache(splashAmplitudeCache, nEvent);
+	}
+
+	public void calcSplashAmplitudeInformation(int nEvent)
 	{
 		if(reference.re == null || nEvent<0 || nEvent>reference.re.length-1)
-		{
 			return;
-		}
 
-		if(splashAmplitudeCache.get(String.valueOf(nEvent)+tdd)!= null)
+		if(splashAmplitudeCache.get(String.valueOf(nEvent)+TDD)!= null)
 		{
-			setDataFromCache(splashAmplitudeCache, nEvent);
 			return;
 		}
 
@@ -460,11 +467,9 @@ public class ReflectoEventStatistics
 
 		int coord = getEventCoord(reference.re[nEvent]);
 
-		String dim = "";
 
 		if(reference.re[nEvent].getType() == ReflectogramEvent.CONNECTOR) //Connector
 		{
-			dim = "connector_db";
 			for(int i=0; i<statData.length; i++)
 			{
 				n = this.getEventNumber(statData[i].sre, coord);
@@ -482,16 +487,10 @@ public class ReflectoEventStatistics
 					counter++;
 				}
 			}
-		}
-		else
-		{
-			return;
-		}
 
-		setData(counter, splashAmplitudeCache, td, nEvent, dim);
+			setDataToCache(counter, splashAmplitudeCache, td, nEvent, "connector_db");
+		}
 	}
-
-
 
 	private int getEventNumber(ShortReflectogramEvent[]sre, int coord)
 	{
@@ -503,36 +502,6 @@ public class ReflectoEventStatistics
 			}
 		}
 		return -1;
-	}
-
-	private void putHistoIntoPool(Histogramm histo)
-	{
-		Pool.put("myHisto", "Histogramm", histo);
-	}
-
-	private void putTimeDependenceDataIntoPool(TimeDependenceData []tdd)
-	{
-		Pool.put("timeDependentDataId", "timeDependentDataId", tdd);
-	}
-
-	private void putLinearCoeffsIntoPool(LinearCoeffs linearCoeffs)
-	{
-		Pool.put("linearCoeffs", "MyLinearCoeffs", linearCoeffs);
-	}
-
-	private void putDimensionIntoPool(String dimension)
-	{
-		Pool.put("dimension", "dimension", dimension);
-	}
-
-	private void setDataFromCache(Hashtable h, int n)
-	{
-		String s = String.valueOf(n);
-
-		putDimensionIntoPool((String)h.get(s+dimensionName));
-		putHistoIntoPool((Histogramm)h.get(s+histo));
-		putLinearCoeffsIntoPool((LinearCoeffs)h.get(s+linFit));
-		putTimeDependenceDataIntoPool((TimeDependenceData [])h.get(s+tdd));
 	}
 
 	private TimeDependenceData[] resortData(TimeDependenceData []data)
@@ -558,7 +527,7 @@ public class ReflectoEventStatistics
 				}
 			}
 			newData[i] = new TimeDependenceData(data[minTimeIndex].date,
-																				 data[minTimeIndex].value);
+					data[minTimeIndex].value);
 			data[minTimeIndex].date = Long.MAX_VALUE;
 			data[minTimeIndex].value = 0.;
 		}
@@ -590,13 +559,16 @@ public class ReflectoEventStatistics
 		return ret;
 	}
 
+//	private void setDataFromCache(Hashtable h, int n) {
+//		Statistics stat = getStatisticsFromCache(h, n);
+//		putStatisticsIntoPool(stat);
+//	}
 
-	private void setData(int valueLength,
+	private Statistics groupDataToStatistics(int valueLength,
 			Hashtable cache,
 			ArrayList timeDependence,
 			int nEvent,
-			String dimension)
-	{
+			String dimension) {
 		double min = values[0];
 		double max = values[0];
 
@@ -620,14 +592,34 @@ public class ReflectoEventStatistics
 
 		LinearCoeffs lc = Fitting.performLinearFitting(tdd);
 
+		return new Statistics(tdd, dimension, histo, lc);
+	}
+
+	private void setStatisticsToCache(int nEvent, Statistics stat, Hashtable cache) {
 		String s = String.valueOf(nEvent);
 
-		cache.put(s+this.dimensionName, dimension);
-		cache.put(s+this.histo, histo);
-		cache.put(s+this.tdd, tdd);
-		cache.put(s+this.linFit, lc);
+		cache.put(s+this.DIMENSION_NAME, stat.getDimension());
+		cache.put(s+this.HISTO, stat.getHisto());
+		cache.put(s+this.TDD, stat.getTimeDependence());
+		cache.put(s+this.LIN_FIT, stat.getLc());
+	}
 
-		setDataFromCache(cache, nEvent);
+	private Statistics getStatisticsFromCache(Hashtable cache, int nEvent) {
+		return new Statistics(
+				(TimeDependenceData[])cache.get(String.valueOf(nEvent)+TDD),
+				(String)cache.get(String.valueOf(nEvent)+DIMENSION_NAME),
+				(Histogramm)cache.get(String.valueOf(nEvent)+HISTO),
+				(LinearCoeffs)cache.get(String.valueOf(nEvent)+LIN_FIT));
+	}
+
+	private void setDataToCache(int valueLength,
+			Hashtable cache,
+			ArrayList timeDependence,
+			int nEvent,
+			String dimension) {
+		Statistics stat = groupDataToStatistics(valueLength,
+				cache, timeDependence, nEvent, dimension);
+		setStatisticsToCache(nEvent, stat, cache);
 	}
 
 	public MonitoredElement getMonitoredElement()

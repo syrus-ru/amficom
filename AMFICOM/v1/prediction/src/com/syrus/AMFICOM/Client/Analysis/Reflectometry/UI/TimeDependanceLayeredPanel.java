@@ -209,19 +209,19 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements 
 		switch (type)
 		{
 			case ATTENUATION:
-				stats.poolizeAttenuationInformation(event);
+				stats.getAttenuationInfo(event).putIntoPool();
 				break;
 			case AMPLITUDE:
-				stats.poolizeSplashAmplitudeInformation(event);
+				stats.getSplashAmplitudeInfo(event).putIntoPool();
 				break;
 			case POWER_LEVEL:
-				stats.poolizeAmplitudeInformation(event);
+				stats.getAmplitudeInfo(event).putIntoPool();
 				break;
 			case LOSS:
-				stats.poolizeEnergyLossInformation(event);
+				stats.getEnergyLossInfo(event).putIntoPool();
 				break;
 			case REFLECTANCE:
-				stats.poolizeReflectanceInformation(event);
+				stats.getReflectanceInfo(event).putIntoPool();
 		}
 		TimeDependenceData[] tdd = (TimeDependenceData[])Pool.get("timeDependentDataId", "timeDependentDataId");
 		panel.type = type;

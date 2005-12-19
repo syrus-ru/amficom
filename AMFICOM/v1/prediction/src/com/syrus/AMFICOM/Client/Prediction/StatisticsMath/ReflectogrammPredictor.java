@@ -44,6 +44,18 @@ public class ReflectogrammPredictor
 			prediction[i] = reference.re[i].copy();
 		}
 
+		/*
+		 * Исходный код:
+		 * Судя по тому, что результаты RES.getXxxInformation()
+		 * кладутся в Pool многократно, затирая друг друга,
+		 * будем предполагать, что полученные здесь объекты в Pool
+		 * больше нигде не используются.
+		 * В связи с этим считаем, что новый код, ничего не сохраняющий
+		 * в Pool, также уложится в неписаный контракт этого метода.
+		 * 
+		 * Новый код:
+		 * Получает нужные данные напрямую, минуя Pool.
+		 */
 		ReflectogramEvent []etalon = reference.re;
 		LinearCoeffs linCoeffs;
 		double dA;
@@ -52,24 +64,21 @@ public class ReflectogrammPredictor
 			dA = 0.;
 			if(etalon[i].getType() == ReflectogramEvent.CONNECTOR && i == 0) //dead zone;
 			{
-				res.getSplashAmplitudeInformation(i);
-				linCoeffs = (LinearCoeffs)Pool.get("linearCoeffs", "MyLinearCoeffs");
+				linCoeffs = res.trueGetSplashAmplitudeInformation(i).getLc();
 				dA = -dT*linCoeffs.k;
 				prediction[0].a2_connector+=dA; //?
 				siewEvents(i, dA);
 			}
 			else if(etalon[i].getType() == ReflectogramEvent.CONNECTOR && i!=0 && i<prediction.length-1)
 			{
-				res.getEnergyLossInformation(i);
-				linCoeffs = (LinearCoeffs)Pool.get("linearCoeffs", "MyLinearCoeffs");
+				linCoeffs = res.trueGetEnergyLossInformation(i).getLc();
 				dA = -dT*linCoeffs.k;
 				prediction[i].a2_connector +=dA; //?
 				siewEvents(i, dA);
 			}
 			else if(etalon[i].getType() == ReflectogramEvent.WELD)
 			{
-				res.getEnergyLossInformation(i);
-				linCoeffs = (LinearCoeffs)Pool.get("linearCoeffs", "MyLinearCoeffs");
+				linCoeffs = res.trueGetEnergyLossInformation(i).getLc();
 				dA = -dT*linCoeffs.k;
 				prediction[i].boost_weld+=dA;
 				prediction[i].a_weld +=dA/2.;
@@ -77,13 +86,11 @@ public class ReflectogrammPredictor
 			}
 			else if(etalon[i].getType() == ReflectogramEvent.CONNECTOR && i == etalon.length-1)
 			{
-				res.getSplashAmplitudeInformation(i);
-				linCoeffs = (LinearCoeffs)Pool.get("linearCoeffs", "MyLinearCoeffs");
+				linCoeffs = res.trueGetSplashAmplitudeInformation(i).getLc();
 				dA = dT*linCoeffs.k;
 				prediction[i].aLet_connector += dA;
 			}
 		}
-
 
 		double []tmp =  ReflectogramMath.getReflectogrammFromEvents(prediction, prediction[prediction.length-1].end);
 

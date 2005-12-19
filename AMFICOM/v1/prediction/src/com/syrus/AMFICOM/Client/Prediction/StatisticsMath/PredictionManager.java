@@ -1,5 +1,5 @@
 /*-
- * $Id: PredictionManager.java,v 1.1 2005/12/19 11:42:24 saa Exp $
+ * $Id: PredictionManager.java,v 1.2 2005/12/19 14:53:48 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,14 +14,14 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
  * Отделяет математическую часть prediction от GUI и Pool'а.
  * Предназначен для обеспечения возможности перевода старого прогнозирования
  * одновременно на новую математику и новое GUI.
+ * Не обращется к Pool'у.
  * <p>
  * Формально заменяет ReflectoEventStatistics и его интерфейс, включая
  * в себя функции ReflectogrammPredictor.
- * Так же, как и ReflectoEventStatistics, хранится GUI'ми в Pool'е.
  * </p>
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/12/19 11:42:24 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/19 14:53:48 $
  * @module prediction
  */
 public class PredictionManager {
@@ -74,28 +74,24 @@ public class PredictionManager {
 	}
 
 	/**
-	 * Кладет в Pool AttenuationInformation
-	 * @todo отделить вычисление от помещения в Pool
-	 * @param nEvent
+	 * Определяет AttenuationInformation
+	 * @param nEvent номер события
+	 * @return AttenuationInformation
 	 */
-	public void poolizeAttenuationInformation(int nEvent) {
-		this.res.getAttenuationInformation(nEvent);
+	public Statistics getAttenuationInfo(int nEvent) {
+		return this.res.trueGetAttenuationInformation(nEvent);
 	}
-
-	public void poolizeSplashAmplitudeInformation(int nEvent) {
-		this.res.getSplashAmplitudeInformation(nEvent);
+	public Statistics getSplashAmplitudeInfo(int nEvent) {
+		return this.res.trueGetSplashAmplitudeInformation(nEvent);
 	}
-
-	public void poolizeAmplitudeInformation(int nEvent) {
-		this.res.getAmplitudeInformation(nEvent);
+	public Statistics getAmplitudeInfo(int nEvent) {
+		return this.res.trueGetAmplitudeInformation(nEvent);
 	}
-
-	public void poolizeEnergyLossInformation(int nEvent) {
-		this.res.getEnergyLossInformation(nEvent);
+	public Statistics getEnergyLossInfo(int nEvent) {
+		return this.res.trueGetEnergyLossInformation(nEvent);
 	}
-
-	public void poolizeReflectanceInformation(int nEvnts) {
-		this.res.getReflectanceInformation(nEvnts);
+	public Statistics getReflectanceInfo(int nEvent) {
+		return this.res.trueGetReflectanceInformation(nEvent);
 	}
 
 	/**
