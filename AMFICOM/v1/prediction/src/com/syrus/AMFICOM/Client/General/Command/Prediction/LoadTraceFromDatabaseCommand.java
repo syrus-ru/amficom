@@ -165,7 +165,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			return;
 		}
 
-		PredictionManager pm = new PredictionManager(refEvCont, statEtalon, from, to, me);
+		PredictionManager pm = new RESPredictionManager(refEvCont, statEtalon, from, to, me);
 		Pool.put("statData", "pmStatData", pm);
 
 		bs = statEtalon.bs; // FIXME

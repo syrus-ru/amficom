@@ -1,5 +1,5 @@
 /*-
- * $Id: PredictionManager.java,v 1.4 2005/12/19 15:26:46 saa Exp $
+ * $Id: PredictionManager.java,v 1.5 2005/12/19 15:36:15 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,105 +21,60 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
  * </p>
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/12/19 15:26:46 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/19 15:36:15 $
  * @module prediction
  */
-public class PredictionManager {
-	private ReflectoEventStatistics res;
-
-	public PredictionManager(ReflectoEventContainer []statData,
-			ReflectoEventContainer reference,
-			long lowerTime, long upperTime,
-			MonitoredElement me) {
-		this.res = new ReflectoEventStatistics(statData,
-				reference, lowerTime, upperTime, me);
-	}
+public interface PredictionManager {
 
 	/**
 	 * @return дата/время первой рефлектограммы
 	 * либо Long.MAX_VALUE, если рефлектограмм нет.
 	 * Ожидается, что она будет в интервале от LowerTime до UpperTime
 	 */
-	public long getMinTime() {
-		long t1=Long.MAX_VALUE;		
-		int nTraces = getNTraces();
-		for(int i = 0; i < nTraces; i++) {
-			if (t1 > getDate(i))
-				t1 = getDate(i);
-		}
-		return t1;
-	}
+	long getMinTime();
 
 	/**
 	 * @return дата/время последней рефлектограммы
 	 * либо 0, если рефлектограмм нет.
 	 * Ожидается, что она будет в интервале от LowerTime до UpperTime
 	 */
-	public long getMaxTime() {
-		long t2=0;		
-		int nTraces = getNTraces();
-		for(int i = 0; i < nTraces; i++) {
-			if (t2 < getDate(i))
-				t2 = getDate(i);
-		}
-		return t2;
-	}
+	long getMaxTime();
+
 	/**
 	 * @return LowerTime интервала "как он был выбран вначале".
 	 * По-видимому, все getDate() будут не менее этой величины.
 	 */
-	public long getLowerTime() {
-		return this.res.getLowerTime();
-	}
+	long getLowerTime();
 
 	/**
 	 * @return UpperTime интервала "как он был выбран вначале".
 	 * По-видимому, все getDate() будут не более этой величины.
 	 */
-	public long getUpperTime() {
-		return this.res.getUpperTime();
-	}
+	long getUpperTime();
 
 	/**
 	 * @return MonitoredElement прогнозируемого набора р/г
 	 */
-	public MonitoredElement getMonitoredElement() {
-		return this.res.getMonitoredElement();
-	}
+	MonitoredElement getMonitoredElement();
 
 	/**
 	 * Определяет AttenuationInformation
 	 * @param nEvent номер события
 	 * @return AttenuationInformation
 	 */
-	public Statistics getAttenuationInfo(int nEvent) {
-		return this.res.trueGetAttenuationInformation(nEvent);
-	}
-	public Statistics getSplashAmplitudeInfo(int nEvent) {
-		return this.res.trueGetSplashAmplitudeInformation(nEvent);
-	}
-	public Statistics getAmplitudeInfo(int nEvent) {
-		return this.res.trueGetAmplitudeInformation(nEvent);
-	}
-	public Statistics getEnergyLossInfo(int nEvent) {
-		return this.res.trueGetEnergyLossInformation(nEvent);
-	}
-	public Statistics getReflectanceInfo(int nEvent) {
-		return this.res.trueGetReflectanceInformation(nEvent);
-	}
+	Statistics getAttenuationInfo(int nEvent);
+
+	Statistics getSplashAmplitudeInfo(int nEvent);
+
+	Statistics getAmplitudeInfo(int nEvent);
+
+	Statistics getEnergyLossInfo(int nEvent);
+
+	Statistics getReflectanceInfo(int nEvent);
 
 	/**
 	 * Рассчитать предсказанную р/г на заданную дату
 	 */
-	public double[] getPredictedReflectogram(long date) {
-		 return new ReflectogrammPredictor(date,
-				 this.res).getPredictedReflectogramm();
-	}
+	double[] getPredictedReflectogram(long date);
 
-	private int getNTraces() {
-        return this.res.statData.length;
-	}
-	private long getDate(int nTrace) {
-        return this.res.statData[nTrace].date;
-	}
 }
