@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphRoutines.java,v 1.15 2005/12/16 15:28:14 bob Exp $
+* $Id: GraphRoutines.java,v 1.16 2005/12/19 10:31:21 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
@@ -61,7 +62,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/12/16 15:28:14 $
+ * @version $Revision: 1.16 $, $Date: 2005/12/19 10:31:21 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -271,6 +272,8 @@ public final class GraphRoutines {
 	}
 	
 	public void arrangeLayoutItems(final Perspective perspective) throws ApplicationException {
+		assert Log.debugMessage(perspective, Log.DEBUGLEVEL03);
+		final long time0 = System.currentTimeMillis();
 		this.managerMainFrame.arranging = true;
 		final String layoutName = perspective.getCodename();
 
@@ -338,6 +341,9 @@ public final class GraphRoutines {
 			this.arrangeAllVisibleParents();
 		}
 		
+		assert Log.debugMessage(perspective + " is takes " 
+				+ (System.currentTimeMillis() - time0) 
+				+ " ms", Log.DEBUGLEVEL03);
 	}
 
 	@SuppressWarnings({"unchecked", "hiding"})
@@ -553,20 +559,36 @@ public final class GraphRoutines {
 		this.move(width - visibleRectangle.getX(), height - visibleRectangle.getY());
 	}
 	
-	public void fixLayoutItemCharacteristics() {
-		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
-		final GraphModel model = this.graph.getModel();
-		final Map<GraphCell, AttributeMap> viewMap = new Hashtable<GraphCell, AttributeMap>();
-
-		for(int i = 0; i < model.getRootCount(); i++) {
-			final DefaultGraphCell cell = (DefaultGraphCell) model.getRootAt(i);
-			if (!model.isEdge(cell) && !model.isPort(cell) && graphLayoutCache.isVisible(cell)) {				
-				viewMap.put(cell, cell.getAttributes());
-			}
-		}
-		
-		model.edit(viewMap, null, null, null);
-	}
+//	/**
+//	 * Что-то невудпляю, нахера я этот метод писал и каково его предназначение ???
+//	 * I can't remember the reason of this method ? 
+//	 */
+//	public void fixLayoutItemCharacteristics() {
+////		final long time0 = System.currentTimeMillis();
+////		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
+////		final GraphModel model = this.graph.getModel();
+////		final Map<GraphCell, AttributeMap> viewMap = new Hashtable<GraphCell, AttributeMap>();
+////
+////		for(int i = 0; i < model.getRootCount(); i++) {
+////			final DefaultGraphCell cell = (DefaultGraphCell) model.getRootAt(i);
+////			if (!model.isEdge(cell) && !model.isPort(cell) && graphLayoutCache.isVisible(cell)) {				
+////				viewMap.put(cell, cell.getAttributes());
+////			}
+////		}		
+////		final long time1 = System.currentTimeMillis();
+////		
+//////		SwingUtilities.invokeLater(new Runnable() {
+//////			public void run() {
+////		assert Log.debugMessage(viewMap.keySet(), Log.DEBUGLEVEL03);
+//////			model.edit(viewMap, null, null, null);
+//////			}
+//////		});		
+////		
+////		final long time2 = System.currentTimeMillis();
+////		
+////		assert Log.debugMessage("1-0 takes " + (time1 - time0) + " ms", Log.DEBUGLEVEL03);
+////		assert Log.debugMessage("2-1 takes " + (time2 - time1) + " ms", Log.DEBUGLEVEL03);
+//	}
 	
 	private void verticalSeparation(final DefaultGraphCell parentCell, final int deep) {
 		
@@ -982,31 +1004,73 @@ public final class GraphRoutines {
 	
 	public void showLayerName(final String layerName, boolean show) 
 	throws ApplicationException {		
-		
+		final long time0 = System.currentTimeMillis();
 		final List<AbstractBean> layoutBeans = this.getLayoutBeans(layerName);
-		
+		final long time1 = System.currentTimeMillis();
 		if (show) {
-		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
-		final GraphModel model = this.graph.getModel();
-		final CellBuffer cellBuffer = this.managerMainFrame.getCellBuffer();
-		
-		for(int i = 0; i<model.getRootCount(); i++) {
-			final Object rootAt = model.getRootAt(i);
-			if (!model.isEdge(rootAt) && !model.isPort(rootAt)) {
-				MPort port = (MPort) ((TreeNode)rootAt).getChildAt(0);
-				AbstractBean bean = port.getBean();				
-				boolean visible = layoutBeans.contains(bean);
-				
-				assert Log.debugMessage("port:" + port + (visible ? " visible" : " hide"), 
-					Log.DEBUGLEVEL10);				
-				final ManagerGraphCell parent = (ManagerGraphCell) port.getParent();
-				if (!cellBuffer.isExists(parent)) {
-					graphLayoutCache.setVisible(parent, visible);
+			final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
+			final GraphModel model = this.graph.getModel();
+			final CellBuffer cellBuffer = this.managerMainFrame.getCellBuffer();
+			final long time2 = System.currentTimeMillis();
+			Map<Boolean, Set<ManagerGraphCell>> visibleCellsMap = null; 
+			for(int i = 0; i < model.getRootCount(); i++) {
+				final Object rootAt = model.getRootAt(i);
+				if (!model.isEdge(rootAt) && !model.isPort(rootAt)) {
+					MPort port = (MPort) ((TreeNode)rootAt).getChildAt(0);
+					AbstractBean bean = port.getBean();				
+					boolean visible = layoutBeans.contains(bean);
+					
+					assert Log.debugMessage("port:" + port + (visible ? " visible" : " hide"), 
+						Log.DEBUGLEVEL10);				
+					final ManagerGraphCell parent = (ManagerGraphCell) port.getParent();
+					if (!cellBuffer.isExists(parent)) {
+						if (visibleCellsMap == null) {
+							visibleCellsMap = new HashMap<Boolean, Set<ManagerGraphCell>>();
+						}
+						final Boolean visibleBoolean = Boolean.valueOf(visible);
+						Set<ManagerGraphCell> setOfCell = visibleCellsMap.get(visibleBoolean);
+						if (setOfCell == null) {
+							setOfCell = new HashSet<ManagerGraphCell>();
+							visibleCellsMap.put(visibleBoolean, setOfCell);
+						}
+						setOfCell.add(parent);
+					}
 				}
 			}
-		}
-		
-		this.graph.repaint();
+			final long time3 = System.currentTimeMillis();
+			if (visibleCellsMap != null) {
+				for (final Boolean visible : visibleCellsMap.keySet()) {
+					final long time31 = System.currentTimeMillis();
+					final Set<ManagerGraphCell> setOfCell = visibleCellsMap.get(visible);
+//					SwingUtilities.invokeLater(new Runnable() {
+//						public void run() {
+							graphLayoutCache.setVisible(setOfCell.toArray(), 
+								visible.booleanValue());
+//						}
+//					});
+					
+					final long time32 = System.currentTimeMillis();
+					assert Log.debugMessage("for " 
+							+ setOfCell 
+							+ " to make " 
+							+ visible  
+							+ " > " 
+							+ (time32 - time31) 
+							+ " ms", 
+						Log.DEBUGLEVEL03);
+				}
+			}
+			
+			final long time4 = System.currentTimeMillis();
+			
+			this.graph.repaint();
+			final long time5 = System.currentTimeMillis();
+			assert Log.debugMessage("1-0 takes " + (time1 - time0) + " ms", Log.DEBUGLEVEL10);
+			assert Log.debugMessage("2-1 takes " + (time2 - time1) + " ms", Log.DEBUGLEVEL10);
+			assert Log.debugMessage("3-2 takes " + (time3 - time2) + " ms", Log.DEBUGLEVEL10);
+			assert Log.debugMessage("4-3 takes " + (time4 - time3) + " ms", Log.DEBUGLEVEL10);
+			assert Log.debugMessage("5-4 takes " + (time5 - time4) + " ms", Log.DEBUGLEVEL10);			
+
 		}
 		this.managerMainFrame.undoManager.discardAllEdits();
 		this.managerMainFrame.updateHistoryButtons();
