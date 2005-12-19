@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.io.BellcoreStructure;
 // Author: Alexandre S. Levchenko
 
-
+@Deprecated
 public class ReflectoEventStatistics
 {
 	private static final int waveLength1310 = 1310;
@@ -531,7 +531,7 @@ public class ReflectoEventStatistics
 
 		putDimensionIntoPool((String)h.get(s+dimensionName));
 		putHistoIntoPool((Histogramm)h.get(s+histo));
-		putLinearCoeffsIntoPool((LinearCoeffs)h.get(s+linFit));
+//		putLinearCoeffsIntoPool((LinearCoeffs)h.get(s+linFit));
 		putTimeDependenceDataIntoPool((TimeDependenceData [])h.get(s+tdd));
 	}
 

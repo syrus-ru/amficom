@@ -205,23 +205,23 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements 
 
 	void setPanelParams (TimeDependencePanel panel, int type, int event)
 	{
-		ReflectoEventStatistics stats = (ReflectoEventStatistics)Pool.get("statData", "theStatData");
+		PredictionManager stats = (PredictionManager)Pool.get("statData", "pmStatData");
 		switch (type)
 		{
 			case ATTENUATION:
-				stats.getAttenuationInformation(event);
+				stats.poolizeAttenuationInformation(event);
 				break;
 			case AMPLITUDE:
-				stats.getSplashAmplitudeInformation(event);
+				stats.poolizeSplashAmplitudeInformation(event);
 				break;
 			case POWER_LEVEL:
-				stats.getAmplitudeInformation(event);
+				stats.poolizeAmplitudeInformation(event);
 				break;
 			case LOSS:
-				stats.getEnergyLossInformation(event);
+				stats.poolizeEnergyLossInformation(event);
 				break;
 			case REFLECTANCE:
-				stats.getReflectanceInformation(event);
+				stats.poolizeReflectanceInformation(event);
 		}
 		TimeDependenceData[] tdd = (TimeDependenceData[])Pool.get("timeDependentDataId", "timeDependentDataId");
 		panel.type = type;

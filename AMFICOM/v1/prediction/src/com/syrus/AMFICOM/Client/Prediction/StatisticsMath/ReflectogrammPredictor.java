@@ -4,6 +4,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 
+@Deprecated
 public class ReflectogrammPredictor
 {
 	private ReflectoEventStatistics res;

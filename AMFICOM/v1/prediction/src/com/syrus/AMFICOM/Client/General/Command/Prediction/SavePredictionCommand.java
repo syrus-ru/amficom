@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.ReflectoEventStatistics;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
@@ -56,7 +56,8 @@ public class SavePredictionCommand extends VoidCommand
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка при сохранении модели.", "Ошибка", JOptionPane.OK_OPTION);
 			return;
 		}
-		ReflectoEventStatistics refStat = (ReflectoEventStatistics)Pool.get("statData", "theStatData");
+		PredictionManager refStat =
+			(PredictionManager)Pool.get("statData", "pmStatData");
 		if(refStat == null)
 		{
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка при сохранении модели.", "Ошибка", JOptionPane.OK_OPTION);

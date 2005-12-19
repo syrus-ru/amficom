@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.ReflectoEventStatistics;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager;
 import com.syrus.AMFICOM.Client.Prediction.UI.TimeDependence.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.configuration.*;
@@ -45,7 +45,7 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 	HistogrammFrame histoFrame;
 
 // Levchenko Alexandre math;
-	ReflectoEventStatistics reflectoEventStatistics;
+//	ReflectoEventStatistics reflectoEventStatistics;
 
 	ArrayList tables = new ArrayList();
 	ArrayList graphs = new ArrayList();
@@ -323,7 +323,7 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 				if (id.equals("primarytrace"))
 				{
 					BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-					reflectoEventStatistics = (ReflectoEventStatistics)Pool.get("statData", "theStatData");
+//					pm = (PredictionManager)Pool.get("statData", "pmStatData");
 					if(bs == null)
 						return;
 

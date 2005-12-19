@@ -76,8 +76,8 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		AnalysisUtil.load_Etalon(ms);
 
 		BellcoreStructure bs = null;
-		ReflectogramEvent []re = null;
-		ShortReflectogramEvent []sre = null;
+		ReflectogramEvent []re = null; // FIXME
+		ShortReflectogramEvent []sre = null; // FIXME
 
 		SetParameter[] parameters = ms.getEtalon().getParameters();
 		for(int i = 0; i < parameters.length; i++)
@@ -107,7 +107,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy");
 
 		bs.title = "Состояние на " + sdf.format(ms.getCreated());
-		ReflectoEventContainer statEtalon =
+		ReflectoEventContainer statEtalon = // FIXME
 				new ReflectoEventContainer(sre, re, bs, me.getCreated().getTime()); //???
 
 		LinkedIdsCondition condition = new LinkedIdsCondition(me.getId(), ObjectEntities.RESULT_ENTITY_CODE);
@@ -165,10 +165,10 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			return;
 		}
 
-		ReflectoEventStatistics res = new ReflectoEventStatistics(refEvCont, statEtalon, from, to, me);
-		Pool.put("statData", "theStatData", res);
+		PredictionManager pm = new PredictionManager(refEvCont, statEtalon, from, to, me);
+		Pool.put("statData", "pmStatData", pm);
 
-		bs = statEtalon.bs;
+		bs = statEtalon.bs; // FIXME
 		if(bs == null)
 			return;
 
@@ -177,43 +177,26 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 
 		Pool.put("bellcorestructure", "primarytrace", bs);
 
-//    new MinuitAnalyseCommand(dispatcher, "primarytrace", aContext).execute();
 		{
 				double delta_x = bs.getResolution();
 				double[] y = bs.getTraceData();
 
-				//ReflectogramEvent[] ep = AnalysisManager.analyseTrace(y, delta_x, params);
 				RefAnalysis a = new RefAnalysis();
-				a.decode(y, statEtalon.re);
+				a.decode(y, statEtalon.re); // FIXME
 
-/*
-				AnalysResult anaresult = new AnalysResult(y, delta_x);
-				double[] result = anaresult.megaHalyava(y, delta_x, statEtalon.re);
-
-				EventReader reader = new EventReader();
-				reader.decode(result);
-
-				RefAnalysis a = new RefAnalysis();
-				a.events = reader.readEvents();
-				a.noise = reader.readNoise();
-				a.filtered = reader.readFiltered();
-				a.normalyzed = reader.readNormalyzed();
-				a.overallStats = reader.readOverallStats();
-				a.concavities = reader.readConcavities();*/
 				Pool.put("refanalysis", "primarytrace", a);
 
-				//ReflectogramEvent[] ep = anaresult.ep;
 				Pool.put("eventparams", "primarytrace", statEtalon.re);
 		}
 
 					double day = 1000.*60.*60.*24; //length of a day in millis;
 					long t1=Long.MAX_VALUE, t2=0;
-					for(int i=0; i<res.statData.length; i++)
-					{
-						if(t1>res.statData[i].date)
-							t1 = res.statData[i].date;
-						if(t2<res.statData[i].date)
-							t2=res.statData[i].date;
+					int nTraces = pm.getNTraces();
+					for(int i = 0; i < nTraces; i++) {
+						if (t1 > pm.getDate(i))
+							t1 = pm.getDate(i);
+						if (t2 < pm.getDate(i))
+							t2 = pm.getDate(i);
 					}
 					int nDays = (int)((t2-t1)/day);
 					if(nDays<=0)

@@ -10,8 +10,7 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.ReflectoEventStatistics;
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.ReflectogrammPredictor;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager;
 import com.syrus.AMFICOM.Client.Prediction.UI.Calendar.DateSelectionDialog;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -25,7 +24,7 @@ public class CountPredictedReflectogramm
 {
 	Dispatcher dispatcher;
 	ApplicationContext aContext;
-	ReflectoEventStatistics reflectoEventStatistics;
+	PredictionManager pm;
 	static SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy");
 
 	public CountPredictedReflectogramm(ApplicationContext aContext,
@@ -42,8 +41,8 @@ public class CountPredictedReflectogramm
 
 	public void execute()
 	{
-		reflectoEventStatistics = (ReflectoEventStatistics)Pool.get("statData", "theStatData");
-		if (reflectoEventStatistics == null) {
+		pm = (PredictionManager)Pool.get("statData", "pmStatData");
+		if (pm == null) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 					"Статистические данные не найдены",
 					"Ошибка",
@@ -57,14 +56,14 @@ public class CountPredictedReflectogramm
 
 		long date = dsd.getDate();
 
-		final double[] predictedReflectogramm = new ReflectogrammPredictor(
-				date, reflectoEventStatistics).getPredictedReflectogramm();
+		final double[] predictedReflectogramm =
+			pm.getPredictedReflectogram(date);
 
 		if (predictedReflectogramm == null)
 			return;
 
 		String title = "Ожидание на " + sdf.format(new Date(date));
-		MonitoredElement me = reflectoEventStatistics.getMonitoredElement();
+		MonitoredElement me = pm.getMonitoredElement();
 		title = title + ", трасса: " + me.getName();
 
 		BellcoreStructure main = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
