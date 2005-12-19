@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainsPerspective.java,v 1.7 2005/12/14 15:08:30 bob Exp $
+* $Id: DomainsPerspective.java,v 1.8 2005/12/19 10:32:15 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/12/14 15:08:30 $
+ * @version $Revision: 1.8 $, $Date: 2005/12/19 10:32:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -80,7 +80,7 @@ public final class DomainsPerspective extends AbstractPerspective {
 					final DomainsPerspective perspective = DomainsPerspective.this;
 					graphRoutines.arrangeLayoutItems();
 					graphRoutines.showLayerName(perspective.getCodename(), true);
-					graphRoutines.fixLayoutItemCharacteristics();
+//					graphRoutines.fixLayoutItemCharacteristics();
 				}
 			};
 		final AbstractAction addDomainAction = 

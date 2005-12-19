@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.10 2005/12/14 15:08:30 bob Exp $
+* $Id: DomainPerpective.java,v 1.11 2005/12/19 10:32:15 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/12/14 15:08:30 $
+ * @version $Revision: 1.11 $, $Date: 2005/12/19 10:32:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -95,7 +95,7 @@ public final class DomainPerpective extends AbstractPerspective {
 					final DomainPerpective perspective = DomainPerpective.this;
 					graphRoutines.arrangeLayoutItems();
 					graphRoutines.showLayerName(perspective.getCodename(), true);
-					graphRoutines.fixLayoutItemCharacteristics();
+//					graphRoutines.fixLayoutItemCharacteristics();
 				}
 			};
 		
