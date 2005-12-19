@@ -9,8 +9,8 @@ import javax.swing.table.AbstractTableModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/12/16 12:30:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/12/19 12:31:35 $
+ * @author $Author: bob $
  * @module commonclient
  */
 public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
@@ -68,21 +68,7 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 
 	@Override
 	public String getColumnName(final int columnIndex) {
-		final String name = "";
-
-//		switch(columnIndex) {
-//		case 0:
-//			name = I18N.getString("Common.WrapperedPropertyTable.Key");
-//			break;
-//		case 1:
-//			name = I18N.getString("Common.WrapperedPropertyTable.Value");
-//			break;
-//		default:
-//			name = "";
-//			break;
-//		}
-
-		return name;
+		return "";
 	}
 
 	public T getObject() {
@@ -192,8 +178,8 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 		}
 		if (this.wrapper.getPropertyValue(this.keys[rowIndex]) instanceof Map) {
 			final Map map = (Map) this.wrapper.getPropertyValue(this.keys[rowIndex]);
-			this.values[rowIndex] = map.get(object);
-			this.wrapper.setValue(this.t, this.keys[rowIndex], this.values[rowIndex]);			
+			this.values[rowIndex] = object;
+			this.wrapper.setValue(this.t, this.keys[rowIndex], map.get(object));			
 		} else {
 			this.values[rowIndex] = object;
 			this.wrapper.setValue(this.t, this.keys[rowIndex], object);
