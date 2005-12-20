@@ -1,5 +1,8 @@
 package com.syrus.AMFICOM.Client.Schedule;
 
+import javax.swing.ImageIcon;
+import javax.swing.UIManager;
+
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.launcher.Launcher;
 import com.syrus.AMFICOM.client.model.AbstractApplication;
@@ -14,8 +17,9 @@ public class Schedule extends AbstractApplication {
 	
 	@Override
 	protected void init() {
-		super.aContext.setApplicationModel(new SchedulerModel(super.aContext));				
-		super.startMainFrame(new ScheduleMainFrame(super.aContext), UIStorage.SCHEDULING_ICON_MINI);
+		super.aContext.setApplicationModel(new SchedulerModel(super.aContext));
+		final ImageIcon imageIcon = (ImageIcon) UIManager.getIcon(UIStorage.ICON_SCHEDULER_MINI);
+		super.startMainFrame(new ScheduleMainFrame(this.aContext), imageIcon.getImage());
 	}
 
 	public static void main(String[] args) {

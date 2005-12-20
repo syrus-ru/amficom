@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.141 2005/10/31 12:43:17 bass Exp $
+ * $Id: SchedulerModel.java,v 1.142 2005/12/20 09:02:23 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.extensions.ExtensionLauncher;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -68,12 +69,13 @@ import com.syrus.AMFICOM.measurement.TestViewAdapter;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
+import com.syrus.AMFICOM.resources.ResourceHandler;
 import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.141 $, $Date: 2005/10/31 12:43:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.142 $, $Date: 2005/12/20 09:02:23 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -220,6 +222,11 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 		this.setVisible(ApplicationModel.MENU_HELP, true);
 		this.setVisible(ApplicationModel.MENU_HELP_ABOUT, true);
+		
+		final ExtensionLauncher extensionLauncher = ExtensionLauncher.getInstance();
+		final ClassLoader classLoader = SchedulerModel.class.getClassLoader();
+		extensionLauncher.addExtensions(classLoader.getResource("xml/resources.xml"));
+		extensionLauncher.getExtensionHandler(ResourceHandler.class.getName()); 
 
 	}
 
