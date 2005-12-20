@@ -451,7 +451,7 @@ public class ReflectoEventStatistics
 		return getStatisticsFromCache(splashAmplitudeCache, nEvent);
 	}
 
-	public void calcSplashAmplitudeInformation(int nEvent)
+	private void calcSplashAmplitudeInformation(int nEvent)
 	{
 		if(reference.re == null || nEvent<0 || nEvent>reference.re.length-1)
 			return;
@@ -612,6 +612,10 @@ public class ReflectoEventStatistics
 				(LinearCoeffs)cache.get(String.valueOf(nEvent)+LIN_FIT));
 	}
 
+	/**
+	 * Сохраняет данные в кэш.
+	 * Входные данные - это параметры и {@link #values}
+	 */
 	private void setDataToCache(int valueLength,
 			Hashtable cache,
 			ArrayList timeDependence,
