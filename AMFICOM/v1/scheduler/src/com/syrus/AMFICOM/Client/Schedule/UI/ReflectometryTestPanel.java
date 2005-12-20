@@ -66,7 +66,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/11/09 08:17:19 $
+ * @version $Revision: 1.94 $, $Date: 2005/12/20 09:02:43 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -523,7 +523,6 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 
 	@Override
 	public void setMonitoredElement(final MonitoredElement me) {
-//		System.out.println("ReflectometryTestPanel.setMonitoredElement()");
 		synchronized (this) {
 			this.skip = true;
 			this.meId = me.getId();
@@ -534,11 +533,14 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	
 					this.refreshTitles();
 	
-					final MeasurementPort port = (MeasurementPort) StorableObjectPool.getStorableObject(measurementPortId1, true);
-					final LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(port.getType().getId(),
+					final MeasurementPort port = 
+						StorableObjectPool.getStorableObject(measurementPortId1, true);
+					final Identifier portTypeId = port.getType().getId();
+					final LinkedIdsCondition linkedIdsCondition = 
+						new LinkedIdsCondition(portTypeId,
 							ObjectEntities.CHARACTERISTIC_CODE);
-					final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
-	
+					final Set<Characteristic> characteristics = 
+						StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
 					if (this.traceLength == null) {
 						this.traceLength = new HashMap<BigDecimal, String>();
 					} else {
@@ -586,10 +588,10 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	
 					for (final Characteristic characteristic : characteristics) {
 						final StorableObjectType type = characteristic.getType();
-	//					 System.out.println("characteristicType is " +					 type.getId());
+						 System.out.println("characteristicType is " +					 type.getId());
 						final String codename = type.getCodename();
 						final String value = characteristic.getValue();
-	//					 System.out.println("codename is '" + codename + "', valueis: " + value);
+						 System.out.println("codename is '" + codename + "', valueis: " + value);
 	
 						if (codename.equals(CharacteristicTypeCodenames.TRACE_WAVELENGTH)) {
 							final String[] values = value.split("\\s+"); //$NON-NLS-1$
