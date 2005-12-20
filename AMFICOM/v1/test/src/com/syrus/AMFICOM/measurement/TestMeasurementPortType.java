@@ -1,5 +1,5 @@
 /*
- * $Id: TestMeasurementPortType.java,v 1.5 2005/12/15 14:52:27 arseniy Exp $
+ * $Id: TestMeasurementPortType.java,v 1.6 2005/12/20 08:48:23 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,10 +15,17 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CORBACommonTest;
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 public final class TestMeasurementPortType extends TestCase {
 
@@ -27,8 +34,9 @@ public final class TestMeasurementPortType extends TestCase {
 	}
 
 	public static Test suite() {
-		final DatabaseCommonTest commonTest = new DatabaseCommonTest();
-		commonTest.addTest(new TestMeasurementPortType("testAddParameterTypes"));
+		final CORBACommonTest commonTest = new CORBACommonTest();
+//		final DatabaseCommonTest commonTest = new DatabaseCommonTest();
+		commonTest.addTest(new TestMeasurementPortType("testRetrieveCharacteristics"));
 		return commonTest.createTestSetup();
 	}
 
@@ -52,4 +60,20 @@ public final class TestMeasurementPortType extends TestCase {
 		StorableObjectPool.flush(toFlushObjects, creatorId, false);
 	}
 
+	public void testRetrieveCharacteristics() throws ApplicationException {
+		final TypicalCondition tc = new TypicalCondition("reflectometry",
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.MEASUREMENTPORT_TYPE_CODE,
+				StorableObjectWrapper.COLUMN_CODENAME);
+		final Set<MeasurementPortType> mpts = StorableObjectPool.getStorableObjectsByCondition(tc, true);
+		assertTrue("Size: " + mpts.size(), mpts.size() == 1);
+		final MeasurementPortType measurementPortType = mpts.iterator().next();
+		System.out.println("MeasurementPortType: " + measurementPortType);
+
+		final LinkedIdsCondition lic = new LinkedIdsCondition(measurementPortType, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		for (final Characteristic characteristic : characteristics) {
+			System.out.println("Characteristic: " + characteristic.getType().getCodename() + ", value: " + characteristic.getValue());
+		}
+	}
 }
