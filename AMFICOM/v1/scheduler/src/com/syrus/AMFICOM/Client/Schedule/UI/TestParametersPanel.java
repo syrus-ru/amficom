@@ -113,7 +113,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			this.panels.put(codename, new UIDefaults.LazyValue() {
 
 				public Object createValue(UIDefaults table) {
-					return (ParametersTestPanel) Plugger.reflectClass(className,
+					return Plugger.reflectClass(className,
 						new Class[] { ApplicationContext.class, TestParametersPanel.class}, 
 						new Object[] { TestParametersPanel.this.aContext, TestParametersPanel.this});
 				}

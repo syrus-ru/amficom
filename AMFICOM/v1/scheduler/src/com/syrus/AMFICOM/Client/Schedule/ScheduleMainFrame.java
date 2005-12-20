@@ -1,5 +1,5 @@
 /*-
-* $Id: ScheduleMainFrame.java,v 1.49 2005/12/20 10:02:07 arseniy Exp $
+* $Id: ScheduleMainFrame.java,v 1.50 2005/12/20 10:47:30 bob Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -32,15 +32,14 @@ import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/12/20 10:02:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.50 $, $Date: 2005/12/20 10:47:30 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -150,7 +149,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 			public void windowClosing(WindowEvent e) {
 				dispatcher1.removePropertyChangeListener(ContextChangeEvent.TYPE,
 					ScheduleMainFrame.this);
-				Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE,
+				AbstractMainFrame.getGlobalDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE,
 					ScheduleMainFrame.this);
 				aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT)
 						.execute();

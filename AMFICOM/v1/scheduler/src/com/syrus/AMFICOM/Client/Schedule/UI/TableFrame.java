@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.66 2005/12/20 08:58:21 bob Exp $
+ * $Id: TableFrame.java,v 1.67 2005/12/20 10:47:30 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/12/20 08:58:21 $
+ * @version $Revision: 1.67 $, $Date: 2005/12/20 10:47:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -63,14 +63,9 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 	SchedulerModel schedulerModel;
 	WrapperedTable<TestView> listTable;
 	ApplicationContext aContext;
-	private JPanel panel;
-	
-	
-
 	PropertyChangeEvent propertyChangeEvent;
-//	Icon	deleteIcon;
-//	Icon	resumeIcon;
-//	Icon	pauseIcon;
+
+	private JPanel panel;
 
 	public TableFrame(final ApplicationContext aContext) {
 		this.aContext = aContext;

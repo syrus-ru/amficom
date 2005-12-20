@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.142 2005/12/20 09:02:23 bob Exp $
+ * $Id: SchedulerModel.java,v 1.143 2005/12/20 10:47:30 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.142 $, $Date: 2005/12/20 09:02:23 $
+ * @version $Revision: 1.143 $, $Date: 2005/12/20 10:47:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -1008,11 +1008,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					} catch (final CreateObjectException coe) {
 						throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest"));
 					}					
-				} else {
-					throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest") + ':'
-						+ "\n" 
-						+ reason);
 				}
+				throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest") + ':'
+					+ "\n" 
+					+ reason);
 			}
 			
 		}

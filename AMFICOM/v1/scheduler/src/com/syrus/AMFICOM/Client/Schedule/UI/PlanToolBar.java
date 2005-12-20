@@ -43,14 +43,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.filter.UI.CalendarUI;
@@ -216,7 +215,7 @@ final class PlanToolBar {
 				cal.setTime(date);
 
 				final JDialog calendarDialog = CalendarUI
-						.createDialogInstance(Environment.getActiveWindow(), cal, true, true);
+						.createDialogInstance(AbstractMainFrame.getActiveMainFrame(), cal, true, true);
 				calendarDialog.setLocation(new Point(PlanToolBar.this.dateSpinner.getLocationOnScreen().x - 35,
 														PlanToolBar.this.dateSpinner.getLocationOnScreen().y
 																+ PlanToolBar.this.w));
@@ -275,7 +274,7 @@ final class PlanToolBar {
 
 							button.setEnabled(true);
 						} catch (final ApplicationException e1) {
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+							JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 								I18N.getString("Scheduler.Error.CannotRefreshTests"),
 								I18N.getString("Error"),
 								JOptionPane.OK_OPTION);

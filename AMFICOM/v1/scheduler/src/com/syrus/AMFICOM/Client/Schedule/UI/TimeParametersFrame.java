@@ -38,7 +38,6 @@ import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.filter.UI.CalendarUI;
@@ -983,7 +982,7 @@ public class TimeParametersFrame extends JInternalFrame {
 					}
 				} catch (final ApplicationException e) {
 					this.schedulerModel.setBreakData();
-					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 						I18N.getString("Error.CannotAcquireObject"),
 						I18N.getString("Error"),
 						JOptionPane.OK_OPTION);
@@ -995,7 +994,7 @@ public class TimeParametersFrame extends JInternalFrame {
 						temporalPattern = PeriodicalTemporalPattern.createInstance(LoginManager.getUserId(), intervalLength);
 					} catch (CreateObjectException e) {
 						this.schedulerModel.setBreakData();
-						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+						JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 							I18N.getString("Scheduler.Error.CannotCreatePeriodicalPattern"),
 							I18N.getString("Error"),
 							JOptionPane.OK_OPTION);
@@ -1091,7 +1090,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			cal.setTime(date);
 
 			final JDialog calendarDialog = 
-				CalendarUI.createDialogInstance(Environment.getActiveWindow(),
+				CalendarUI.createDialogInstance(AbstractMainFrame.getActiveMainFrame(),
 					cal, 
 					true, 
 					true);
@@ -1107,7 +1106,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			cal.setTime(date);
 
 			final JDialog calendarDialog = 
-				CalendarUI.createDialogInstance(Environment.getActiveWindow(), 
+				CalendarUI.createDialogInstance(AbstractMainFrame.getActiveMainFrame(), 
 					cal, 
 					true, 
 					true);
