@@ -248,7 +248,7 @@ final class PlanToolBar {
 
 	@SuppressWarnings("serial")
 	private Action createApplyAction() {
-		final Action apply = new AbstractAction("", UIStorage.REFRESH_ICON) {
+		final Action apply = new AbstractAction("", UIManager.getIcon(ResourceKeys.ICON_REFRESH)) {
 			public void actionPerformed(final ActionEvent e) {
 				final JButton button = (JButton) e.getSource();
 				button.setEnabled(false);
@@ -298,7 +298,7 @@ final class PlanToolBar {
 	private Action[] createZoomActions() {
 		// Zoom actions 		
 		final Action[] zoomActions = new Action[3];
-		zoomActions[0] = new AbstractAction("", UIStorage.ZOOMIN_ICON){
+		zoomActions[0] = new AbstractAction("", UIManager.getIcon(ResourceKeys.ICON_ZOOM_IN)){
 			public void actionPerformed(ActionEvent e) {
 				PlanToolBar.this.panel.updateScale(1.25);				
 			}
@@ -310,7 +310,7 @@ final class PlanToolBar {
 		zoomActions[0].putValue(Action.ACCELERATOR_KEY, 
 			KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, ActionEvent.ALT_MASK));
 
-		zoomActions[1] = new AbstractAction("", UIStorage.ZOOMOUT_ICON){
+		zoomActions[1] = new AbstractAction("", UIManager.getIcon(ResourceKeys.ICON_ZOOM_OUT)){
 			public void actionPerformed(ActionEvent e) {
 				PlanToolBar.this.panel.updateScale(.8);				
 			}
@@ -322,7 +322,7 @@ final class PlanToolBar {
 		zoomActions[1].putValue(Action.ACCELERATOR_KEY, 
 			KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, ActionEvent.ALT_MASK));
 		
-		zoomActions[2] = new AbstractAction("", UIStorage.NOZOOM_ICON){
+		zoomActions[2] = new AbstractAction("", UIManager.getIcon(ResourceKeys.ICON_ZOOM_NONE)){
 			public void actionPerformed(ActionEvent e) {
 				PlanToolBar.this.panel.updateScale2Fit();				
 			}

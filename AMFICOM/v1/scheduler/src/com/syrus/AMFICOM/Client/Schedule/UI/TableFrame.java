@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.65 2005/12/19 15:34:45 bob Exp $
+ * $Id: TableFrame.java,v 1.66 2005/12/20 08:58:21 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -35,6 +32,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.UI.StubLabelCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
@@ -42,7 +40,6 @@ import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -54,7 +51,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/12/19 15:34:45 $
+ * @version $Revision: 1.66 $, $Date: 2005/12/20 08:58:21 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -71,9 +68,9 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 	
 
 	PropertyChangeEvent propertyChangeEvent;
-	Icon	deleteIcon;
-	Icon	resumeIcon;
-	Icon	pauseIcon;
+//	Icon	deleteIcon;
+//	Icon	resumeIcon;
+//	Icon	pauseIcon;
 
 	public TableFrame(final ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -262,14 +259,12 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 							final JMenuItem deleteTestMenuItem = new JMenuItem(I18N.getString(rowIndices.length == 1
 							? "Scheduler.Text.Table.DeleteTest"
 								: "Scheduler.Text.Table.DeleteTests"));
-							if (TableFrame.this.deleteIcon != null) {
-								deleteTestMenuItem.setIcon(TableFrame.this.deleteIcon);
-							}
+							deleteTestMenuItem.setIcon(UIManager.getIcon(UIStorage.ICON_DELETE));
 							
 							deleteTestMenuItem.addActionListener(new ActionListener() {
 
 								public void actionPerformed(final ActionEvent e) {
-									final int temp = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
+									final int temp = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(),
 											I18N.getString("Scheduler.Text.Table.DeleteTest.ConfirmMessage"),
 											I18N.getString("Scheduler.Text.Table.DeleteTest.ConfirmTitle"),
 											JOptionPane.YES_NO_OPTION);
@@ -302,9 +297,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 						
 						if (enableResuming) {
 							final JMenuItem resumeTestingMenuItem = new JMenuItem(I18N.getString("Scheduler.Text.Table.ResumeTesting"));
-							if (TableFrame.this.resumeIcon != null) {
-								resumeTestingMenuItem.setIcon(TableFrame.this.resumeIcon);
-							}
+							resumeTestingMenuItem.setIcon(UIManager.getIcon(UIStorage.ICON_RESUME));
 							resumeTestingMenuItem.addActionListener(new ActionListener() {
 
 								public void actionPerformed(final ActionEvent e) {
@@ -325,13 +318,11 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 
 						if (enableStopping) {
 							final JMenuItem stopTestMenuItem = new JMenuItem(I18N.getString("Scheduler.Text.Table.StopTesting"));
-							if (TableFrame.this.pauseIcon != null) {
-								stopTestMenuItem.setIcon(TableFrame.this.pauseIcon);
-							}
+							stopTestMenuItem.setIcon(UIManager.getIcon(UIStorage.ICON_PAUSE));
 							stopTestMenuItem.addActionListener(new ActionListener() {
 
 								public void actionPerformed(final ActionEvent e) {
-									final Object reason = JOptionPane.showInputDialog(Environment.getActiveWindow(),
+									final Object reason = JOptionPane.showInputDialog(AbstractMainFrame.getActiveMainFrame(),
 											I18N.getString("Scheduler.Text.Table.StopTesting.StoppingReason"),
 											I18N.getString("Scheduler.Text.Table.StopTesting.Title"),
 											JOptionPane.PLAIN_MESSAGE,
@@ -376,26 +367,14 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 
 	}
 
-	private Icon createIcons(final String iconUrl) {
-		URL resource = TableFrame.class.getClassLoader().getResource(iconUrl);
-		if (resource != null) {
-			return new ImageIcon(resource);
-		}
-		return null;
-	}
-	
 	private void init() {
 		super.setTitle(I18N.getString("Scheduler.Text.Table.Title")); //$NON-NLS-1$
-		super.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		super.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
 		super.setResizable(true);
 		super.setClosable(false);
 		super.setIconifiable(true);
 		this.panel = getPanel();
 		super.setContentPane(this.panel);
-		
-		this.deleteIcon = this.createIcons("com/syrus/AMFICOM/Client/Schedule/UI/delete.gif");
-		this.resumeIcon = this.createIcons("com/syrus/AMFICOM/Client/Schedule/UI/resume.gif");
-		this.pauseIcon = this.createIcons("com/syrus/AMFICOM/Client/Schedule/UI/pause.gif");
 	}
 
 }
