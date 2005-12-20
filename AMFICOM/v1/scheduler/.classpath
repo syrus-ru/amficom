@@ -14,5 +14,11 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/reflectometry"/>
 	<classpathentry kind="var" path="AMFICOM_LIB/generalxml.jar"/>
 	<classpathentry sourcepath="/EXTLIB/xml-xmlbeans-src.zip" kind="var" path="EXTLIB/xbean.jar"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.1.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/extensions_schemas.jar"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/resources_schemas.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/extensions"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
