@@ -1,5 +1,5 @@
 /*-
-* $Id: CommonClientResourcesCreator.java,v 1.2 2005/12/12 15:26:02 bob Exp $
+* $Id: CommonClientResourcesCreator.java,v 1.3 2005/12/20 09:15:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/12 15:26:02 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/20 09:15:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -275,6 +275,27 @@ public class CommonClientResourcesCreator extends TestCase {
 			final Image image = (Image) resource.changeType(Image.type);
 			image.setId(ResourceKeys.ICON_ADD);
 			image.setFilename("images/newprop.gif");
+	    }
+
+		{			
+			final Resource resource = resources.addNewResource();
+			final Image image = (Image) resource.changeType(Image.type);
+			image.setId(ResourceKeys.ICON_ZOOM_IN);
+			image.setFilename("images/zoom_in.gif");
+	    }
+		
+		{			
+			final Resource resource = resources.addNewResource();
+			final Image image = (Image) resource.changeType(Image.type);
+			image.setId(ResourceKeys.ICON_ZOOM_OUT);
+			image.setFilename("images/zoom_out.gif");
+	    }
+
+		{			
+			final Resource resource = resources.addNewResource();
+			final Image image = (Image) resource.changeType(Image.type);
+			image.setId(ResourceKeys.ICON_ZOOM_NONE);
+			image.setFilename("images/zoom_actual.gif");
 	    }
 		
 		{			

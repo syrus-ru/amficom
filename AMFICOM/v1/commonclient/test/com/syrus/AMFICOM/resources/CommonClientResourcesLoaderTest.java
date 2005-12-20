@@ -1,5 +1,5 @@
 /*-
-* $Id: CommonClientResourcesLoaderTest.java,v 1.2 2005/12/12 15:26:02 bob Exp $
+* $Id: CommonClientResourcesLoaderTest.java,v 1.3 2005/12/20 09:15:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.extensions.ExtensionLauncher;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/12 15:26:02 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/20 09:15:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -63,6 +63,9 @@ public class CommonClientResourcesLoaderTest extends TestCase {
                 ResourceKeys.ICON_ADD,
                 ResourceKeys.ICON_COMMIT,
                 ResourceKeys.ICON_ADD,
+                ResourceKeys.ICON_ZOOM_OUT,
+                ResourceKeys.ICON_ZOOM_IN,
+                ResourceKeys.ICON_ZOOM_NONE,
                 ResourceKeys.ICON_TIME_DATE,
                 ResourceKeys.IMAGE_LOGIN_LOGO,
                 ResourceKeys.INSETS_NULL,

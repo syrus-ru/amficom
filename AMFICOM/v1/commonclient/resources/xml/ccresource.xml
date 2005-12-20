@@ -74,6 +74,15 @@
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.general.add">
       <res:filename>images/newprop.gif</res:filename>
     </res:resource>
+    <res:resource xsi:type="res:image" id="com.surus.AMFICOM.icon.general.zoomin">
+      <res:filename>images/zoom_in.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.surus.AMFICOM.icon.general.zoomout">
+      <res:filename>images/zoom_out.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.surus.AMFICOM.icon.general.zoomnone">
+      <res:filename>images/zoom_actual.gif</res:filename>
+    </res:resource>
     <res:resource xsi:type="res:image" id="com.surus.AMFICOM.icon.general.timedate">
       <res:filename>images/timedate.gif</res:filename>
     </res:resource>

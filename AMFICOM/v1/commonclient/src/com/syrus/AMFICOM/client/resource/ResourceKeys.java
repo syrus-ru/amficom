@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceKeys.java,v 1.15 2005/12/12 14:09:16 bob Exp $
+ * $Id: ResourceKeys.java,v 1.16 2005/12/20 09:15:02 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/12/12 14:09:16 $
+ * @version $Revision: 1.16 $, $Date: 2005/12/20 09:15:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -47,6 +47,9 @@ public interface ResourceKeys {
 	String	ICON_COMMIT								= "com.syrus.AMFICOM.icon.general.commit";
 	String	ICON_SYNCHRONIZE						= "com.syrus.AMFICOM.icon.general.synchronize";
 	String	ICON_TIME_DATE							= "com.surus.AMFICOM.icon.general.timedate";
+	String	ICON_ZOOM_IN							= "com.surus.AMFICOM.icon.general.zoomin";
+	String	ICON_ZOOM_OUT							= "com.surus.AMFICOM.icon.general.zoomout";
+	String	ICON_ZOOM_NONE							= "com.surus.AMFICOM.icon.general.zoomnone";
 
 	/* Mini Icons */
 	String	ICON_MINI_FOLDER						= "com.syrus.AMFICOM.icon.mini.general.folder";
