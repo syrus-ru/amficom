@@ -33,7 +33,10 @@ $LIB/commonclient.jar:\
 $LIB/filterclient.jar:\
 $LIB/reportclient.jar:\
 $LIB/leserver_interface.jar:\
-$LIB/util.jar
+$LIB/util.jar:\
+$LIB/extensions.jar:\
+$LIB/extensions_schemas.jar:\
+$LIB/resources_schemas.jar
 
 $JAVA -Xmx256m -ea -client -classpath $APPCLASSPATH:$EXTCLASSPATH:$XMLCLASSPATH:$DEPRECATEDCLASSPATH com.syrus.AMFICOM.client_.scheme.SchemeEditor
 

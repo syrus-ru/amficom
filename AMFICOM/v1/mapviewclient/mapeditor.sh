@@ -63,7 +63,10 @@ $LIB/spatialfx.jar:\
 $LIB/schemeclient.jar:\
 $LIB/leserver_interface.jar:\
 $LIB/mscharserver_interface.jar:\
-$LIB/util.jar
+$LIB/util.jar:\
+$LIB/extensions.jar:\
+$LIB/extensions_schemas.jar:\
+$LIB/resources_schemas.jar
 
 $JAVA -Xmx256m -ea -client -classpath $APPCLASSPATH:$XMLCLASSPATH:$EXTCLASSPATH:$ORACLECLASSPATH:$MAPINFOCLASSPATH:$SPATIALFXCLASSPATH com.syrus.AMFICOM.client.map.editor.MapEditor
 
