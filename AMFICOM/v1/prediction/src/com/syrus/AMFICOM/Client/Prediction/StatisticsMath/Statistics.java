@@ -1,5 +1,5 @@
 /*-
- * $Id: Statistics.java,v 1.2 2005/12/20 10:52:25 saa Exp $
+ * $Id: Statistics.java,v 1.3 2005/12/20 15:41:10 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.analysis.dadara.Histogramm;
  * 
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/12/20 10:52:25 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/20 15:41:10 $
  * @module prediction
  */
 public class Statistics {
@@ -36,8 +36,8 @@ public class Statistics {
 	/**
 	 * Размерность, String.
 	 * Возможные значения:
-	 * "connector_db", "weld_db", "linear_db", "linear_db/km".
-	 * @todo заменить на "db" и "db/km".
+	 * "connector_db", "weld_db", "linear_db", "linear_db/km", "db", "db/km"
+	 * @todo оставить только "db" и "db/km".
 	 * @return размерность, String
 	 */
 	public String getDimension() {
