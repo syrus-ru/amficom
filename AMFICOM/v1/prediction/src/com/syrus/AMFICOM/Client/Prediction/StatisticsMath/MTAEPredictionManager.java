@@ -1,5 +1,5 @@
 /*-
- * $Id: MTAEPredictionManager.java,v 1.1 2005/12/20 15:34:06 saa Exp $
+ * $Id: MTAEPredictionManager.java,v 1.2 2005/12/20 15:38:20 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 /**
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/12/20 15:34:06 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/20 15:38:20 $
  * @module prediction
  */
 public class MTAEPredictionManager implements PredictionManager {
@@ -191,19 +191,11 @@ public class MTAEPredictionManager implements PredictionManager {
 	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#getPredictedReflectogram(long)
 	 */
 	public double[] getPredictedReflectogram(long target) {
-		// Определяем веса экстраполяции XXX: надо ли?
-		// date: force conversion to double (avoid wrapping over 2^32 when
-		// subtracting long from long)
-		final double minDate = getMinTime();
-		final double maxDate = getMaxTime();
-		assert (minDate <= maxDate);
-		if (minDate == maxDate) {
+		// проверяем, что интервал времени не нулевой,
+		// чтобы дисперсия времени не оказалась нулевой
+		if (getMinTime() == getMaxTime()) {
 			throw new IllegalStateException();
 		}
-
-//		final double baseDelta = (maxDate - minDate);
-//		final double w0 = (target - minDate) / baseDelta;
-//		final double w1 = (maxDate - target) / baseDelta;
 
 		// Если придумаете лучшее lowercase название для N, скажите мне.
 		// -- saa
