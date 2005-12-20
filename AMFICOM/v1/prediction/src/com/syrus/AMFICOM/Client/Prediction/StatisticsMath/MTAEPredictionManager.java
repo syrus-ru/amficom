@@ -1,5 +1,5 @@
 /*-
- * $Id: MTAEPredictionManager.java,v 1.2 2005/12/20 15:38:20 saa Exp $
+ * $Id: MTAEPredictionManager.java,v 1.3 2005/12/20 15:54:33 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 /**
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/12/20 15:38:20 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/20 15:54:33 $
  * @module prediction
  */
 public class MTAEPredictionManager implements PredictionManager {
@@ -166,14 +166,14 @@ public class MTAEPredictionManager implements PredictionManager {
 	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#getAttenuationInfo(int)
 	 */
 	public Statistics getAttenuationInfo(int nEvent) {
-		return getInfo(nEvent, attenuationExtractor, this.attenuationStatsCache);
+		return getInfo(nEvent, attenuationExtractor, this.attenuationStatsCache, "db/km");
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#getEnergyLossInfo(int)
 	 */
 	public Statistics getEnergyLossInfo(int nEvent) {
-		return getInfo(nEvent, lossExtractor, this.lossStatsCache);
+		return getInfo(nEvent, lossExtractor, this.lossStatsCache, "db");
 	}
 
 	/**
@@ -256,7 +256,8 @@ public class MTAEPredictionManager implements PredictionManager {
 
 	public Statistics getInfo(int nEvent,
 			InfoExtractor extractor,
-			Statistics[] statsCache) {
+			Statistics[] statsCache,
+			String dimension) {
 		if (nEvent < 0 || nEvent >= this.base.getNEvents()) {
 			throw new IllegalArgumentException(
 					"nEvent " + nEvent + " / " + this.base.getNEvents());
@@ -280,7 +281,7 @@ public class MTAEPredictionManager implements PredictionManager {
 					new TimeDependenceData[tdd.size()]);
 			LinearCoeffs lc = Fitting.performLinearFitting(tddArray);
 			statsCache[nEvent] = new Statistics(
-					tddArray, "db", null, lc);
+					tddArray, dimension, null, lc);
 		}
 		return statsCache[nEvent];
 	}
