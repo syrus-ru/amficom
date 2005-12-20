@@ -25,8 +25,8 @@
 	<classpathentry kind="var" path="AMFICOM_LIB/report.jar"/>
 	<classpathentry kind="var" path="AMFICOM_LIB/reportclient.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/extensions"/>
+	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="var" path="AMFICOM_LIB/extensions_schemas.jar"/>
 	<classpathentry kind="var" path="AMFICOM_LIB/resources_schemas.jar"/>
-	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
