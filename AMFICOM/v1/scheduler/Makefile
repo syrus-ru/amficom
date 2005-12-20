@@ -14,6 +14,7 @@ $(call checkenve,JAVA_HOME)
 
 DEPENDENCIES = \
 util \
+extensions \
 general \
 administration \
 configuration \
