@@ -39,7 +39,8 @@ $(LIBNAME): .mach
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/Client/General/lang/*.properties) \
 		$(CLASSDIR)/com/syrus/AMFICOM/Client/General/lang
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com
+		-C $(CLASSDIR) com \
+		-C $(CLASSDIR) xml
 
 .mach:	$(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
