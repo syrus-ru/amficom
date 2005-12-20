@@ -6,7 +6,6 @@ import java.util.Hashtable;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.Histogramm;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.ShortReflectogramEvent;
@@ -332,12 +331,6 @@ public class ReflectoEventStatistics
 			return;
 		}
 
-		ArrayList td = new ArrayList();
-		int counter = 0;
-		int n;
-
-		int coord = getEventCoord(reference.re[nEvent]);
-
 		int type = ReflectogramEvent.LINEAR;
 		String dim;
 
@@ -360,12 +353,16 @@ public class ReflectoEventStatistics
 			coeff = -1;
 		}
 
-		int C = 1;
+		int coord = getEventCoord(reference.re[nEvent]);
+		ArrayList td = new ArrayList();
+		int counter = 0;
+
 		for(int i=0; i<statData.length; i++)
 		{
-			n = this.getEventNumber(statData[i].sre, coord);
+			int n = this.getEventNumber(statData[i].sre, coord);
 			if(n>0 && statData[i].sre[n].getType() == type)
 			{
+				int C;
 				if(type == ReflectogramEvent.LINEAR)
 				{
 					C = statData[i].sre[n].end - statData[i].sre[n].begin;
