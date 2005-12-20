@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.46 2005/12/16 13:48:31 arseniy Exp $
+ * $Id: ServerCore.java,v 1.47 2005/12/20 09:20:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,13 +31,12 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.46 $, $Date: 2005/12/16 13:48:31 $
+ * @version $Revision: 1.47 $, $Date: 2005/12/20 09:20:51 $
  * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
  */
 public abstract class ServerCore implements CommonServerOperations {
-	private static final long serialVersionUID = 2873567194611284256L;
 
 	private LoginServerConnectionManager loginServerConnectionManager;
 	private ORB orb;

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImpl.java,v 1.10 2005/12/17 12:12:46 arseniy Exp $
+ * $Id: MCMImpl.java,v 1.11 2005/12/20 09:20:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,14 +27,13 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/12/17 12:12:46 $
+ * @version $Revision: 1.11 $, $Date: 2005/12/20 09:20:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 
 final class MCMImpl extends ServerCore implements MCMOperations {
-	private static final long serialVersionUID = -6484515008721159857L;
 
 	MCMImpl(final MCMServantManager mcmServantManager) {
 		super(mcmServantManager, mcmServantManager.getCORBAServer().getOrb());
