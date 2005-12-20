@@ -98,7 +98,11 @@ public class TimeDependenceTable extends ATableFrame implements OperationListene
 			dim = "ไม";
 		else if(dim.equals("linear_db"))
 			dim = "ไม";
+		else if(dim.equals("db"))
+			dim = "ไม";
 		else if(dim.equals("linear_db/km"))
+			dim = "ไม/๊์";
+		else if(dim.equals("db/km"))
 			dim = "ไม/๊์";
 		else dim = "";
 
