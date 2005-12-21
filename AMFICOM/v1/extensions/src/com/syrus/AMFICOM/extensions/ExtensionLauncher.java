@@ -1,5 +1,5 @@
 /*-
-* $Id: ExtensionLauncher.java,v 1.4 2005/12/13 09:20:31 bob Exp $
+* $Id: ExtensionLauncher.java,v 1.5 2005/12/21 10:39:54 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import org.apache.xmlbeans.XmlException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/13 09:20:31 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/21 10:39:54 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module resources
@@ -67,7 +67,7 @@ public final class ExtensionLauncher {
 				try {
 					document = this.parseXml(url);
 				} catch (final XmlException e) {
-					Log.errorException(e);
+					Log.errorMessage(e);
 					return;
 				}
 				final ExtensionPoint[] extensionArray = document.getRoot().getExtensionArray();
@@ -84,7 +84,7 @@ public final class ExtensionLauncher {
 					}					
 				}
 			} else {
-				Log.errorMessage("Extension file '" + url + "' isn't exist");
+				Log.errorMessage("Extension file '" + url + "' doesn't exist");
 			}
     	}
     }
