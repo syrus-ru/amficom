@@ -1,23 +1,46 @@
 package com.syrus.AMFICOM.Client.General.Command.Prediction;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileCloseCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.MTAEPredictionManager;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.RESPredictionManager;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.ReflectoEventContainer;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.MTAEPredictionManager.PredictionMtaeAndDate;
 import com.syrus.AMFICOM.Client.Prediction.UI.Calendar.DateDiapazonAndPathAndTestSetupSelectionDialog;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.analysis.dadara.*;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.measurement.*;
-import com.syrus.io.*;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
+import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
+import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.io.BellcoreReader;
+import com.syrus.io.BellcoreStructure;
 
 public class LoadTraceFromDatabaseCommand extends VoidCommand
 {
@@ -57,8 +80,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		return new LoadTraceFromDatabaseCommand(dispatcher, aContext);
 	}
 
-
-	public void execute()
+	/*public void executeOld()
 	{
 		DateDiapazonAndPathAndTestSetupSelectionDialog dialog =
 				new DateDiapazonAndPathAndTestSetupSelectionDialog(
@@ -73,7 +95,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		MonitoredElement me = dialog.me;
 		MeasurementSetup ms = dialog.ms;
 
-		AnalysisUtil.load_Etalon(ms);
+		AnalysisUtil.loadEtalon(ms);
 
 		BellcoreStructure bs = null;
 		ReflectogramEvent []re = null; // FIXME
@@ -149,8 +171,6 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			}
 		}
 
-//    v.add(statEtalon);
-
 		// Creating of the statistics container;
 		ReflectoEventContainer []refEvCont =
 				(ReflectoEventContainer[])v.toArray(new ReflectoEventContainer[v.size()]);
@@ -210,6 +230,61 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 				RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
 		dispatcher.notify(new RefUpdateEvent("primarytrace",
 				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
-	}
+	}*/
 
+	@Override
+	public void execute()
+	{
+		DateDiapazonAndPathAndTestSetupSelectionDialog dialog =
+				new DateDiapazonAndPathAndTestSetupSelectionDialog(
+						Environment.getActiveWindow(),
+						"Выбор статистических данных",
+						true, aContext);
+		if (dialog.retCode == 0)
+			return;
+
+		long from = dialog.from;
+		long to   = dialog.to;
+		MonitoredElement me = dialog.me;
+		MeasurementSetup ms = dialog.ms;
+
+		// Загружаем эталон в Heap как первичную р/г
+		AnalysisUtil.loadEtalonAsPrimary(ms);
+
+		// Загружаем выбранные рефлектограммы
+		LinkedIdsCondition mcond  = new LinkedIdsCondition(me.getId(), ObjectEntities.MEASUREMENT_ENTITY_CODE);
+		List measurements = null;
+		try {
+			measurements = MeasurementStorableObjectPool
+				.getStorableObjectsByCondition(mcond, true);
+		}
+		catch (ApplicationException ex) {
+			GUIUtil.processApplicationException(ex);
+			return;
+		}
+
+		Collection<PredictionMtaeAndDate> pmads =
+				new ArrayList<PredictionMtaeAndDate>();
+
+		for (Iterator it = measurements.iterator(); it.hasNext(); ) {
+			Measurement m = (Measurement)it.next();
+			if (m.getCreated().getTime() >= from && m.getCreated().getTime() <= to)
+			{
+				final AnalysisResult analysis =
+					AnalysisUtil.getAnalysisForMeasurementIfPresent(m);
+				if (analysis == null) {
+					continue; // У этого измерения не было анализа - пропускаем
+				}
+				final ModelTraceAndEventsImpl mtae = analysis.getMTAE();
+				final long date = m.getStartTime().getTime();
+				pmads.add(new PredictionMtaeAndDate(mtae, date));
+			}
+		}
+
+		PredictionManager pm = new MTAEPredictionManager(pmads,
+				Heap.getMTAEPrimary(),
+				from,
+				to,
+				me);
+	}
 }
