@@ -12,3 +12,4 @@ tools.jar
 .mach
 common.properties
 .settings
+.refactorings
