@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModelListener.java,v 1.12 2005/12/16 15:28:14 bob Exp $
+* $Id: ManagerGraphModelListener.java,v 1.13 2005/12/21 11:33:04 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.manager.UI;
 
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
-import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
@@ -50,7 +49,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/12/16 15:28:14 $
+ * @version $Revision: 1.13 $, $Date: 2005/12/21 11:33:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -73,7 +72,7 @@ public class ManagerGraphModelListener implements GraphModelListener {
 				return;
 			}
 			final GraphModelChange change = e.getChange();
-			
+			assert Log.debugMessage(e, Log.DEBUGLEVEL03);
 			final GraphModel model = this.managerMainFrame.graph.getModel();
 			
 			final Object[] inserted = change.getInserted();
