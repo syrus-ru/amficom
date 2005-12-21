@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphSelectionListener.java,v 1.8 2005/12/14 15:08:30 bob Exp $
+* $Id: ManagerGraphSelectionListener.java,v 1.9 2005/12/21 11:32:34 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/12/14 15:08:30 $
+ * @version $Revision: 1.9 $, $Date: 2005/12/21 11:32:34 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -52,7 +52,7 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 		if (managerMainFrame.arranging) {
 			return;
 		}
-		
+		assert Log.debugMessage(e, Log.DEBUGLEVEL03);
 		final JInternalFrame frame = 
 			(JInternalFrame) managerMainFrame.frames.get(ManagerMainFrame.PROPERTIES_FRAME);
 		frame.setTitle(I18N.getString(ManagerMainFrame.PROPERTIES_FRAME));
@@ -67,6 +67,10 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 		
 		final Object cell = e.getCell();
 		final TreeSelectionModel selectionModel = managerMainFrame.tree.getSelectionModel();
+		if (managerMainFrame.graph.getSelectionCell() == cell) {
+			assert Log.debugMessage("Yet selected.", Log.DEBUGLEVEL03);
+			return;
+		}
 		final GraphModel model = managerMainFrame.graph.getModel();
 		final PerspectiveTreeModel treeModel = managerMainFrame.getTreeModel();
 		
