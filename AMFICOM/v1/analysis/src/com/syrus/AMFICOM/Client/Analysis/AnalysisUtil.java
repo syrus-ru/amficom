@@ -12,6 +12,7 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.DadaraReflectometryAnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
@@ -257,12 +258,47 @@ public class AnalysisUtil
 	 * Load Etalon for certain MeasurementSetup to Heap.
 	 * If there is no Etalon attached to MeasurementSetup, do nothing.
 	 * @param ms MeasurementSetup to be loaded
+	 * @return true - загрузка удалась; false - загрузка не удалась, и
+	 *   сообщение об ошибке загрузки показано пользователю.
 	 * @throws DataFormatException Etalon object decoding failed
 	 * @throws ApplicationException Error while getting ME
 	 */
-	public static void loadEtalon(MeasurementSetup ms)
-	throws DataFormatException, ApplicationException
-	{
+	public static boolean loadEtalon(MeasurementSetup ms)
+	throws DataFormatException, ApplicationException {
+		return loadEtalonEx(ms, false);
+	}
+
+	/**
+	 * Load Etalon of certain MeasurementSetup <b>as a primary trace</b>.
+	 * If there is no Etalon attached to MeasurementSetup, do nothing.
+	 * @param ms MeasurementSetup to be loaded
+	 * @return true - загрузка удалась; false - загрузка не удалась, и
+	 *   сообщение об ошибке загрузки показано пользователю.
+	 * @throws DataFormatException Etalon object decoding failed
+	 * @throws ApplicationException Error while getting ME
+	 */
+	public static boolean loadEtalonAsPrimary(MeasurementSetup ms)
+	throws DataFormatException, ApplicationException {
+		return loadEtalonEx(ms, true);
+	}
+
+	/**
+	 * Загрузить в Heap эталон по данному MeasurementSetup.
+	 * Если загрузка удалась, возращает true.
+	 * Если загрузка не удалась, выводит пользователю сообщение об ошибке
+	 * и возвращает false.
+	 * @todo наверное, стоит не возвращать false, а бросать исключение
+	 * @param ms данный MeasurementSetup
+	 * @param asPrimary
+	 *   true, чтобы загрузить как первичную р/г (реализовано не совсем корректно),
+	 *   false, чтобы загрузить как эталон (корректно).
+	 * @return true - загрузка удалась; false - загрузка не удалась, и
+	 *   сообщение об ошибке загрузки показано пользователю.
+	 * @throws DataFormatException Etalon object decoding failed
+	 * @throws ApplicationException Error while getting ME
+	 */
+	private static boolean loadEtalonEx(MeasurementSetup ms, boolean asPrimary)
+	throws DataFormatException, ApplicationException {
 		ReflectometryMeasurementSetup rms = new ReflectometryMeasurementSetup(ms);
 
 		ReflectometryEtalon re = rms.getEtalon();
@@ -282,11 +318,25 @@ public class AnalysisUtil
 					+ (etalonObj == null ? "no etalonObj" : "")
 					+ (etalonBS == null ? "no etalonBS" : ""));
 			GUIUtil.showErrorMessage(GUIUtil.MSG_ERROR_MALFORMED_ETALON);
-			return;
+			return false;
 		}
 		etalonBS.title =  makeEtalonRefName(getMEbyMS(ms), ms.getModified());// XXX: ms.getCreated()?
-		Heap.setEtalonPair(new PFTrace(etalonBS), etalonObj, etalonBS.title);
-		//Heap.setEtalonEtalonMetas(metas);
+		if (asPrimary) {
+			// загружаем как первичную р/г (не совсем корректно)
+			ModelTraceAndEventsImpl mtae = etalonObj.getMTM().getMTAE();
+			int traceLen = mtae.getModelTrace().getLength();
+			Heap.openPrimaryTrace(new Trace(new PFTrace(etalonBS),
+					etalonBS.title,
+					new AnalysisResult(traceLen, traceLen, mtae) // XXX: не знаем длину исходной рефлектограмм и используем то, что можно получить из MTAE
+					));
+			// устанавливаем refAnalysis и рассылаем сообщения об открытии
+			// primary trace + ref analysis
+			Heap.updatePrimaryAnalysis();
+		} else {
+			Heap.setEtalonPair(new PFTrace(etalonBS), etalonObj, etalonBS.title);
+			//Heap.setEtalonEtalonMetas(metas);
+		}
+		return true;
 	}
 
 	public static ParameterSet createCriteriaSet(Identifier userId,
