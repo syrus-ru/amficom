@@ -1,5 +1,5 @@
 /*-
- * $Id: Trace.java,v 1.14 2005/11/16 15:54:04 saa Exp $
+ * $Id: Trace.java,v 1.15 2005/12/21 14:47:04 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
  *   </ul>
  * <li> Result (null, если это локальный файл) - по нему можно определить шаблон, с которым была снята р/г
  * @author $Author: saa $
- * @version $Revision: 1.14 $, $Date: 2005/11/16 15:54:04 $
+ * @version $Revision: 1.15 $, $Date: 2005/12/21 14:47:04 $
  * @module
  */
 public class Trace {
@@ -76,6 +76,18 @@ public class Trace {
 		this.result = null;
 		this.analysisLoaded = false;
 	}
+
+	public Trace(PFTrace trace, String key, AnalysisResult ar) {
+		assert(trace != null);
+		assert(ar != null);
+		assert(key != null);
+		this.pfTrace = trace;
+		this.key = key;
+		this.result = null;
+		this.ar = ar;
+		this.analysisLoaded = true;
+	}
+
 	/**
 	 * one of ap and mtae may be null
 	 */
