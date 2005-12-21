@@ -1,5 +1,5 @@
 /*-
-* $Id: PerspectiveTreeModel.java,v 1.12 2005/12/16 11:21:14 bob Exp $
+* $Id: PerspectiveTreeModel.java,v 1.13 2005/12/21 10:44:48 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.GraphSelectionModel;
 import org.jgraph.graph.Port;
 
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.manager.ManagerHandler;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
@@ -43,7 +44,7 @@ import com.syrus.util.Log;
  * 
  * TODO rebuild moving methods to nodes (pattern visitor)
  * 
- * @version $Revision: 1.12 $, $Date: 2005/12/16 11:21:14 $
+ * @version $Revision: 1.13 $, $Date: 2005/12/21 10:44:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -64,7 +65,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 	
 	public PerspectiveTreeModel(final ManagerMainFrame managerMainFrame) {
 		this.managerMainFrame = managerMainFrame;
-		this.root = new DefaultMutableTreeNode("Administration");
+		this.root = new DefaultMutableTreeNode(I18N.getString("Manager.Entity.Root"));
 		this.rootItems = new ArrayList<PerspectiveMutableTreeNode>();
 	}	
 	
