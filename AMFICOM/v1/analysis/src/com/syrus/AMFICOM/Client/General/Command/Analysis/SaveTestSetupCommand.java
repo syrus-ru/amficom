@@ -129,6 +129,12 @@ public class SaveTestSetupCommand extends AbstractCommand
 			GUIUtil.showErrorMessage(GUIUtil.MSG_ERROR_DATABASE_FLUSH_ERROR);
 		}
 
+		// Показываем юзеру, что его шаблон сохранен и здравствует
+		JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				LangModelAnalyse.getString("testSetupSaved"),
+				LangModelAnalyse.getString("ok"),
+				JOptionPane.INFORMATION_MESSAGE);
+
 		return true;
 	}
 
