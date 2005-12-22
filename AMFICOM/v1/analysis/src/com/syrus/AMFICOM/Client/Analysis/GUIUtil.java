@@ -1,5 +1,5 @@
 /*-
- * $Id: GUIUtil.java,v 1.18 2005/10/31 12:30:22 bass Exp $
+ * $Id: GUIUtil.java,v 1.19 2005/12/22 15:29:44 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/10/31 12:30:22 $
+ * @author $Author: saa $
+ * @version $Revision: 1.19 $, $Date: 2005/12/22 15:29:44 $
  * @module
  */
 public class GUIUtil {
@@ -85,14 +85,14 @@ public class GUIUtil {
 		JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 				LangModelAnalyse.getString(codestring),
 				LangModelAnalyse.getString("error"),
-				JOptionPane.OK_OPTION);
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 	public static void showWarningMessage(String codestring) {
 		JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 				LangModelAnalyse.getString(codestring),
 				LangModelAnalyse.getString("warning"),
-				JOptionPane.OK_OPTION);
+				JOptionPane.WARNING_MESSAGE);
 	}
 
 	public static Color getColor(final String id) {
