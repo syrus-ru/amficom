@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.15 2005/12/22 10:50:12 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.16 2005/12/22 11:49:52 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,6 +37,9 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.Thresh;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThreshEditor;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThreshEditorWithDefaultMark;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.io.BellcoreCreator;
@@ -151,15 +154,16 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		return v - 0.5;
 	}
 	private static double[] generateTestBellcoreYArray(
-			int len, int traceLength, int[] connPos) {
+			int len, int traceLength, int[] connPos,
+			int deltaConnId, double deltaConnAmpl) {
 		final int N = len;
 		double noise = 10.0;
 		double s2n = 5.0;
 		double resolution = 1.0; // m
 		double att = 0.22; // db/km
 		double y0 = noise + s2n + N * 0.5 * att / 1e3 * resolution;
-		double[] connAmpl = {15, 10, 15};
 		int connLen = 50;
+		double[] connAmpl = {15, 10, 15};
 		double[] ret = new double[N];
 		for (int i = 0; i < ret.length; i++) {
 			double levelC = y0 - i * att / 1e3 * resolution;
@@ -167,6 +171,9 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 			for (int j = 0; j < connPos.length; j++) {
 				if (i > connPos[j] && i < connPos[j] + connLen) {
 					aC += Math.pow(10.0, (connAmpl[j] + levelC) / 5.0);
+					if (j == deltaConnId) { // добавка к коннектору deltaConnId
+						aC *= Math.pow(10.0, deltaConnAmpl / 5.0);
+					}
 				}
 			}
 			double tmp = aC + Math.pow(10.0, noise / 5.0) * xRand(i);
@@ -185,8 +192,9 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 	}
 
 	static PFTrace generateTestTrace(int dataLength, int traceLength, int[] connPos,
-			boolean dumpToFile) {
-		double[] y = generateTestBellcoreYArray(dataLength, traceLength, connPos);
+			boolean dumpToFile, double deltaConnAmpl) {
+		double[] y = generateTestBellcoreYArray(
+				dataLength, traceLength, connPos, 1, deltaConnAmpl);
 		if (dumpToFile) {
 			PrintStream str;
 			try {
@@ -238,11 +246,11 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		private PFTrace trace1 = null;
 
 		private void ensureCcEtalon0() throws IncompatibleTracesException {
-			if (!hasEtalon0) {
+			if (!this.hasEtalon0) {
 				System.out.println("generating trace...");
 
 				this.trace0 = generateTestTrace(
-						this.N, this.N, this.connPos1, false);
+						this.N, this.N, this.connPos1, false, 0.0);
 				System.out.println("Analysing trace...");
 
 				Collection<PFTrace> trColl =
@@ -283,7 +291,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 
 		PFTrace getTrace1() {
 			if (this.trace1 == null) {
-				this.trace1 = generateTestTrace(N, N, connPos1m4, false); 
+				this.trace1 = generateTestTrace(N, N, connPos1m4, false, 0.0); 
 			}
 			return this.trace1;
 		}
@@ -340,7 +348,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		int etLength = cc.getEtLength0();
 		ReflectogramMismatchImpl res;
 
-		PFTrace trace2 = generateTestTrace(cc.N, cc.N, cc.connPos1m6, false);
+		PFTrace trace2 = generateTestTrace(cc.N, cc.N, cc.connPos1m6, false, 0.0);
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				trace2,
 				defaultAP, breakThresh, mtm, null));
@@ -359,7 +367,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		int etLength = cc.getEtLength0();
 		ReflectogramMismatchImpl res;
 
-		PFTrace trace3 = generateTestTrace(cc.N, cc.N, cc.connPos1m5, false);
+		PFTrace trace3 = generateTestTrace(cc.N, cc.N, cc.connPos1m5, false, 0.0);
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				trace3,
 				defaultAP, breakThresh, mtm, null));
@@ -379,7 +387,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		int etLength = cc.getEtLength0();
 		ReflectogramMismatchImpl res;
 
-		PFTrace traceReflBreak1 = generateTestTrace(cc.N, cc.dist1, cc.connPosOneOnly, false);
+		PFTrace traceReflBreak1 = generateTestTrace(cc.N, cc.dist1, cc.connPosOneOnly, false, 0.0);
 		{
 			// Тут мы еще проверим результат собственно анализа, что длина трассы получена правильно
 			AnalysisResult aResult =
@@ -406,7 +414,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		int etLength = cc.getEtLength0();
 		ReflectogramMismatchImpl res;
 
-		PFTrace traceLossBreak1 = generateTestTrace(cc.N, cc.dist1, cc.connPosDZOnly, false);
+		PFTrace traceLossBreak1 = generateTestTrace(cc.N, cc.dist1, cc.connPosDZOnly, false, 0.0);
 		{
 			// Тут мы еще проверим результат собственно анализа, что длина трассы получена правильно
 			AnalysisResult aResult =
@@ -434,7 +442,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		int etLength = cc.getEtLength0();
 		ReflectogramMismatchImpl res;
 
-		PFTrace traceReflBreak2 = generateTestTrace(cc.N, cc.distHalf, cc.connPos2Half, false);
+		PFTrace traceReflBreak2 = generateTestTrace(cc.N, cc.distHalf, cc.connPos2Half, false, 0.0);
 		{
 			// Тут мы еще проверим результат собственно анализа, что длина трассы получена правильно
 			AnalysisResult aResult =
@@ -463,7 +471,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		int etLength = cc.getEtLength0();
 		ReflectogramMismatchImpl res;
 
-		PFTrace traceLossBreak2 = generateTestTrace(cc.N, cc.distHalf, cc.connPosDZOnly, true);
+		PFTrace traceLossBreak2 = generateTestTrace(cc.N, cc.distHalf, cc.connPosDZOnly, false, 0.0);
 		{
 			// Тут мы еще проверим результат собственно анализа, что длина трассы получена правильно
 			AnalysisResult aResult =
@@ -483,6 +491,70 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 				res.getCoord(),
 				cc.distHalf,
 				cc.deltaLossyEotAtLinear); // Дистанция события, где произошел обрыв
+	}
+
+	public final void testMismatchRounding() throws IncompatibleTracesException {
+		ModelTraceManager mtm = cc.getMtm0();
+		double breakThresh = cc.getBreakThresh0();
+		int etLength = cc.getEtLength0();
+		ReflectogramMismatchImpl res;
+
+		int nEvent = mtm.getMTAE().getEventByCoord(cc.dist1);
+
+		// Получаем ThreshEditor только для считывания величины порога
+		final ThreshEditorWithDefaultMark[] threshEditors =
+			mtm.getThreshEditors(nEvent);
+		ThreshEditorWithDefaultMark defaultEditor = null;
+		for (ThreshEditorWithDefaultMark ted: threshEditors) {
+			if (ted.isMarked) {
+				assertNull(defaultEditor);
+				defaultEditor = ted;
+			}
+		}
+		// проверяем полученный порог
+		assertNotNull(defaultEditor);
+		assertEquals(defaultEditor.getType(), ThreshEditor.TYPE_L);
+
+		// Определяем величину изменения
+//		double value1 = (defaultEditor.getValue(Thresh.SOFT_UP) - defaultEditor.getValue(Thresh.SOFT_DOWN));
+//		double value2 = (defaultEditor.getValue(Thresh.HARD_UP) - defaultEditor.getValue(Thresh.HARD_DOWN));
+		double value1 = defaultEditor.getValue(Thresh.SOFT_UP);
+		double value2 = defaultEditor.getValue(Thresh.HARD_UP);
+		assertTrue(value2 >= value1);
+		assertTrue(value1 > 0);
+
+		// Проверяем, что mismatch растет монотонно, а его строковое представление не больше 7 символов
+		final int count = 7;
+		double prevMinMismatch = 0.0;
+		double prevMaxMismatch = 0.0;
+		for (int i = 1; i < count; i++) {
+			double delta = value1 + (value2 - value1) * i / count;
+			PFTrace traceTest = generateTestTrace(
+					cc.N, cc.N, cc.connPos1, false, delta);
+
+			res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
+					traceTest, defaultAP, breakThresh, mtm, null));
+			System.out.println("compare diff: " + res);
+			assertTrue("Expected alarm for i=" + i, res != null); // должен быть обнаружен аларм
+			assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
+			assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK); // тип аларма
+			assertTrue(res.getCoord() <= etLength);
+			assertEquals("Alarm coord",
+					res.getCoord(),
+					cc.dist1,
+					cc.deltaReflectiveEotAtLinear); // Дистанция события, где произошел обрыв
+			assertTrue(res.hasMismatch());
+			final double minMismatch = res.getMinMismatch();
+			final double maxMismatch = res.getMaxMismatch();
+			assertTrue(minMismatch >= prevMinMismatch);
+			assertTrue(maxMismatch >= prevMaxMismatch);
+			prevMinMismatch = minMismatch;
+			prevMaxMismatch = maxMismatch;
+			assertTrue("Poor mismatch level rounding: " + minMismatch,
+					Double.toString(minMismatch).length() < 7);
+			assertTrue("Poor mismatch level rounding" + maxMismatch,
+					Double.toString(maxMismatch).length() < 7);
+		}
 	}
 
 	// Проверка создания объектов эталона и результата анализа
