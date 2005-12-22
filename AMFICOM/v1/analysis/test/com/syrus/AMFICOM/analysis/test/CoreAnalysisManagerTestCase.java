@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.14 2005/11/24 11:59:12 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.15 2005/12/22 10:50:12 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		File file = new File(TEST_FNAME); // XXX
 		return new PFTrace(FileOpenCommand.readTraceFromFile(file));
 	}
-	private static final AnalysisParameters defaultAP;
+	static final AnalysisParameters defaultAP;
 
 	static {
 		try {
@@ -75,7 +75,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		//assertEquals(0, CoreAnalysisManager.getMedian(new double[] {}), 1e-15);
 	}
 
-	private static final void printEventList(SimpleReflectogramEvent[] re) {
+	static final void printEventList(SimpleReflectogramEvent[] re) {
 		System.out.println("NEvents=" + re.length);
 		for (int i = 0; i < re.length; i++) {
 			System.out.println(re[i].toString());
@@ -184,7 +184,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		return ret;
 	}
 
-	private static PFTrace generateTestTrace(int dataLength, int traceLength, int[] connPos,
+	static PFTrace generateTestTrace(int dataLength, int traceLength, int[] connPos,
 			boolean dumpToFile) {
 		double[] y = generateTestBellcoreYArray(dataLength, traceLength, connPos);
 		if (dumpToFile) {
@@ -209,62 +209,119 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 			return null;
 	}
 
-	// проверка сравнения масок и определения события, обусловившего аларм
-	public final void testTraceComparison()
-	throws IncompatibleTracesException, DataFormatException {
-
-		// Готовим рефлектограммы и эталон
-
-		System.out.println("testTraceComparison():");
+	private static class ComparisonConstants {
+		// general parameters
 		final int N = 10000;
-		int dist1 = N / 3;
-		int dist1m4 = N / 3 - 4;
-		int dist1m5 = N / 3 - 5;
-		int dist1m6 = N / 3 - 6;
-		int[] connPos1		= {0, dist1,   N / 3 * 2};
-		int[] connPos1m4	= {0, dist1m4, N / 3 * 2};
-		int[] connPos1m5	= {0, dist1m5, N / 3 * 2};
-		int[] connPos1m6	= {0, dist1m6, N / 3 * 2};
-		int[] connPosOneOnly= {0, dist1 };
-		int[] connPosDZOnly	= {0 };
-		int distHalf = N / 2;
-		int[] connPos2Half	= {0, dist1, distHalf};
-		double deltaReflectiveEotAtLinear = 0.0;
-		double deltaLossyEotAtLinear = 5.0;
+		final int dist1 = N / 3;
+		final int dist1m4 = N / 3 - 4;
+		final int dist1m5 = N / 3 - 5;
+		final int dist1m6 = N / 3 - 6;
+		final int[] connPos1	= {0, dist1,   N / 3 * 2};
+		final int[] connPos1m4	= {0, dist1m4, N / 3 * 2};
+		final int[] connPos1m5	= {0, dist1m5, N / 3 * 2};
+		final int[] connPos1m6	= {0, dist1m6, N / 3 * 2};
+		final int[] connPosOneOnly= {0, dist1 };
+		final int[] connPosDZOnly	= {0 };
+		final int distHalf = N / 2;
+		final int[] connPos2Half	= {0, dist1, distHalf};
+		final double deltaReflectiveEotAtLinear = 0.0;
+		final double deltaLossyEotAtLinear = 5.0;
 
-		System.out.println("generating trace...");
-		PFTrace trace = generateTestTrace(N, N, connPos1, false);
-		System.out.println("Analysing trace...");
-		Collection<PFTrace> trColl =
-			new ArrayList<PFTrace>();
-		trColl.add(trace);
-		ModelTraceManager mtm = CoreAnalysisManager.makeEtalon(trColl, defaultAP);
-		double breakThresh = ReflectogramMath.getArrayMin(trace.getFilteredTraceClone());
-		printEventList(mtm.getMTAE().getSimpleEvents());
+		// lazy initialized etalon 0
+		private boolean hasEtalon0 = false;
+		private ModelTraceManager mtm0 = null;
+		private double breakThresh0 = 0;
+		private PFTrace trace0 = null;
+		private int etLength0 = 0;
 
+		// lazy initialized trace 1
+		private PFTrace trace1 = null;
+
+		private void ensureCcEtalon0() throws IncompatibleTracesException {
+			if (!hasEtalon0) {
+				System.out.println("generating trace...");
+
+				this.trace0 = generateTestTrace(
+						this.N, this.N, this.connPos1, false);
+				System.out.println("Analysing trace...");
+
+				Collection<PFTrace> trColl =
+					new ArrayList<PFTrace>();
+				trColl.add(this.trace0);
+
+				this.mtm0 = CoreAnalysisManager.makeEtalon(trColl, defaultAP);
+
+				this.breakThresh0 = ReflectogramMath.getArrayMin(
+						this.trace0.getFilteredTraceClone());
+				printEventList(this.mtm0.getMTAE().getSimpleEvents());
+
+				this.etLength0 = this.mtm0.getMTAE().getNEvents() > 0
+					? this.mtm0.getMTAE().getSimpleEvent(
+						this.mtm0.getMTAE().getNEvents() - 1).getBegin()
+					: 0; // если в эталоне нет событий, считаем его длину нулевой
+
+				this.hasEtalon0 = true;
+			}
+		}
+		ModelTraceManager getMtm0() throws IncompatibleTracesException {
+			ensureCcEtalon0();
+			return this.mtm0;
+		}
+		double getBreakThresh0() throws IncompatibleTracesException {
+			ensureCcEtalon0();
+			return this.breakThresh0;
+		}
+		PFTrace getTrace0() throws IncompatibleTracesException {
+			ensureCcEtalon0();
+			return this.trace0;
+		}
+		int getEtLength0() throws IncompatibleTracesException {
+			// готовим длину волокна по эталону
+			ensureCcEtalon0();
+			return this.etLength0;
+		}
+
+		PFTrace getTrace1() {
+			if (this.trace1 == null) {
+				this.trace1 = generateTestTrace(N, N, connPos1m4, false); 
+			}
+			return this.trace1;
+		}
+	}
+
+	ComparisonConstants cc = new ComparisonConstants();
+
+	// проверка сравнения масок и определения события, обусловившего аларм
+
+	// Проверяем, что на исходной рефлектограмме эталона алармов нет
+	public final void testTraceComparisonOriginalNoAlarms()
+	throws IncompatibleTracesException {
+		// Готовим/получаем рефлектограммы и эталон
+		ModelTraceManager mtm = cc.getMtm0();
+		double breakThresh = cc.getBreakThresh0();
+		PFTrace trace = cc.getTrace0();
 		ReflectogramMismatchImpl res;
 
 		res = ModelTraceComparer.compareMTAEToMTM(mtm.getMTAE(), mtm);
 		System.out.println("compare mtae: " + res);
 		assertTrue(res == null);
 
-		// готовим длину волокна по эталону
-		int etLength = mtm.getMTAE().getNEvents() > 0
-		? mtm.getMTAE().getSimpleEvent(
-				mtm.getMTAE().getNEvents() - 1).getBegin()
-		: 0; // если в эталоне нет событий, считаем его длину нулевой
-
-		// Сверяем исходную р/г
-
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				trace,
 				defaultAP, breakThresh, mtm, null));
 		System.out.println("compare bs: " + res);
 		assertTrue(res == null); // аларма быть не должно
+	}
 
-		// Сверяем наличие привязки при уходе начала коннектора влево в пределах маски
+	// Проверяем наличие привязки при уходе начала коннектора влево в пределах маски
+	public final void testTraceComparisonAnchorActsInsideMasks()
+	throws IncompatibleTracesException {
+		ModelTraceManager mtm = cc.getMtm0();
+		double breakThresh = cc.getBreakThresh0();
+		int etLength = cc.getEtLength0();
+		ReflectogramMismatchImpl res;
 
-		PFTrace trace1 = generateTestTrace(N, N, connPos1m4, false); 
+		PFTrace trace1 = cc.getTrace1();
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				trace1,
 				defaultAP, breakThresh, mtm, null));
@@ -273,11 +330,17 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK); // тип аларма
 		assertTrue(res.getCoord() <= etLength);
-		assertTrue(res.getCoord() + "==" + dist1, res.getCoord() == dist1); // должна сработать привязка
+		assertTrue(res.getCoord() + "==" + cc.dist1, res.getCoord() == cc.dist1); // должна сработать привязка
+	}
+	// Проверяем наличие привязки при уходе начала коннектора влево за пределами маски
+	public final void testTraceComparisonAnchorActsOutsideMasks()
+	throws IncompatibleTracesException {
+		ModelTraceManager mtm = cc.getMtm0();
+		double breakThresh = cc.getBreakThresh0();
+		int etLength = cc.getEtLength0();
+		ReflectogramMismatchImpl res;
 
-		// Сверяем наличие привязки при уходе начала коннектора влево за пределами маски
-
-		PFTrace trace2 = generateTestTrace(N, N, connPos1m6, false);
+		PFTrace trace2 = generateTestTrace(cc.N, cc.N, cc.connPos1m6, false);
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				trace2,
 				defaultAP, breakThresh, mtm, null));
@@ -286,11 +349,17 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK); // тип аларма
 		assertTrue(res.getCoord() <= etLength);
-		assertTrue(res.getCoord() + "<" + dist1, res.getCoord() < dist1); // привязки уже быть не должно
+		assertTrue(res.getCoord() + "<" + cc.dist1, res.getCoord() < cc.dist1); // привязки уже быть не должно
+	}
+	// Проверяем наличие привязки при уходе начала коннектора влево в спорном случае
+	public final void testTraceComparisonAnchorUncertainOutOfMasks()
+	throws IncompatibleTracesException {
+		ModelTraceManager mtm = cc.getMtm0();
+		double breakThresh = cc.getBreakThresh0();
+		int etLength = cc.getEtLength0();
+		ReflectogramMismatchImpl res;
 
-		// Сверяем наличие привязки при уходе начала коннектора влево в спорном случае
-
-		PFTrace trace3 = generateTestTrace(N, N, connPos1m5, false);
+		PFTrace trace3 = generateTestTrace(cc.N, cc.N, cc.connPos1m5, false);
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				trace3,
 				defaultAP, breakThresh, mtm, null));
@@ -299,17 +368,24 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK); // тип аларма
 		assertTrue(res.getCoord() <= etLength);
-		assertTrue(res.getCoord() == dist1); // спорный случай. В текущей версии привязка быть должна
+		assertTrue(res.getCoord() == cc.dist1); // спорный случай. В текущей версии привязка быть должна
+	}
 
-		// Сверяем тип и дистанцию при обрыве с отражением, на участке коннектора
+	// Проверяем тип и дистанцию при обрыве с отражением, на участке коннектора
+	public final void testTraceComparisonReflectiveBreakAtConnector()
+	throws IncompatibleTracesException {
+		ModelTraceManager mtm = cc.getMtm0();
+		double breakThresh = cc.getBreakThresh0();
+		int etLength = cc.getEtLength0();
+		ReflectogramMismatchImpl res;
 
-		PFTrace traceReflBreak1 = generateTestTrace(N, dist1, connPosOneOnly, false);
+		PFTrace traceReflBreak1 = generateTestTrace(cc.N, cc.dist1, cc.connPosOneOnly, false);
 		{
 			// Тут мы еще проверим результат собственно анализа, что длина трассы получена правильно
 			AnalysisResult aResult =
 				CoreAnalysisManager.performAnalysis(traceReflBreak1, defaultAP);
 			int len = aResult.getMTAE().getModelTrace().getLength();
-			assertTrue("Too short trace length: " + len, len >= dist1);
+			assertTrue("Too short trace length: " + len, len >= cc.dist1);
 		}
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				traceReflBreak1,
@@ -319,18 +395,24 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_LINEBREAK); // тип аларма
 		assertTrue(res.getCoord() <= etLength);
-		assertTrue("" + res.getCoord() + " was expected to be " + dist1,
-				res.getCoord() == dist1); // Дистанция события, где произошел обрыв
+		assertTrue("" + res.getCoord() + " was expected to be " + cc.dist1,
+				res.getCoord() == cc.dist1); // Дистанция события, где произошел обрыв
+	}
+	// Проверяем тип и дистанцию при обрыве без отражения, на участке коннектора
+	public final void testTraceComparisonNonReflectiveBreakAtConnector()
+	throws IncompatibleTracesException {
+		ModelTraceManager mtm = cc.getMtm0();
+		double breakThresh = cc.getBreakThresh0();
+		int etLength = cc.getEtLength0();
+		ReflectogramMismatchImpl res;
 
-		// Сверяем тип и дистанцию при обрыве без отражения, на участке коннектора
-
-		PFTrace traceLossBreak1 = generateTestTrace(N, dist1, connPosDZOnly, false);
+		PFTrace traceLossBreak1 = generateTestTrace(cc.N, cc.dist1, cc.connPosDZOnly, false);
 		{
 			// Тут мы еще проверим результат собственно анализа, что длина трассы получена правильно
 			AnalysisResult aResult =
 				CoreAnalysisManager.performAnalysis(traceLossBreak1, defaultAP);
 			int len = aResult.getMTAE().getModelTrace().getLength();
-			assertTrue("Too short trace length: " + len, len >= dist1);
+			assertTrue("Too short trace length: " + len, len >= cc.dist1);
 		}
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				traceLossBreak1,
@@ -340,18 +422,25 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_LINEBREAK); // тип аларма
 		assertTrue(res.getCoord() <= etLength);
-		assertTrue("" + res.getCoord() + " was expected to be " + dist1,
-				res.getCoord() == dist1); // Дистанция события, где произошел обрыв
+		assertTrue("" + res.getCoord() + " was expected to be " + cc.dist1,
+				res.getCoord() == cc.dist1); // Дистанция события, где произошел обрыв
+	}
 
-		// Сверяем тип и дистанцию при обрыве с отражением, на лин. участке
+	// Проверяем тип и дистанцию при обрыве с отражением, на лин. участке
+	public final void testTraceComparisonReflectiveBreakAtLinear()
+	throws IncompatibleTracesException {
+		ModelTraceManager mtm = cc.getMtm0();
+		double breakThresh = cc.getBreakThresh0();
+		int etLength = cc.getEtLength0();
+		ReflectogramMismatchImpl res;
 
-		PFTrace traceReflBreak2 = generateTestTrace(N, distHalf, connPos2Half, false);
+		PFTrace traceReflBreak2 = generateTestTrace(cc.N, cc.distHalf, cc.connPos2Half, false);
 		{
 			// Тут мы еще проверим результат собственно анализа, что длина трассы получена правильно
 			AnalysisResult aResult =
 				CoreAnalysisManager.performAnalysis(traceReflBreak2, defaultAP);
 			int len = aResult.getMTAE().getModelTrace().getLength();
-			assertTrue("Too short trace length: " + len, len >= distHalf);
+			assertTrue("Too short trace length: " + len, len >= cc.distHalf);
 		}
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				traceReflBreak2,
@@ -363,18 +452,24 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res.getCoord() <= etLength);
 		assertEquals("Alarm coord",
 				res.getCoord(),
-				distHalf,
-				deltaReflectiveEotAtLinear); // Дистанция события, где произошел обрыв
+				cc.distHalf,
+				cc.deltaReflectiveEotAtLinear); // Дистанция события, где произошел обрыв
+	}
+	// Проверяем тип и дистанцию при обрыве без отражения, на лин. участке
+	public final void testTraceComparisonNonReflectiveBreakAtLinear()
+	throws IncompatibleTracesException {
+		ModelTraceManager mtm = cc.getMtm0();
+		double breakThresh = cc.getBreakThresh0();
+		int etLength = cc.getEtLength0();
+		ReflectogramMismatchImpl res;
 
-		// Сверяем тип и дистанцию при обрыве без отражения, на лин. участке
-
-		PFTrace traceLossBreak2 = generateTestTrace(N, distHalf, connPosDZOnly, true);
+		PFTrace traceLossBreak2 = generateTestTrace(cc.N, cc.distHalf, cc.connPosDZOnly, true);
 		{
 			// Тут мы еще проверим результат собственно анализа, что длина трассы получена правильно
 			AnalysisResult aResult =
 				CoreAnalysisManager.performAnalysis(traceLossBreak2, defaultAP);
 			int len = aResult.getMTAE().getModelTrace().getLength();
-			assertTrue("Too short trace length: " + len, len >= distHalf);
+			assertTrue("Too short trace length: " + len, len >= cc.distHalf);
 		}
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				traceLossBreak2,
@@ -386,17 +481,22 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res.getCoord() <= etLength);
 		assertEquals("Alarm coord",
 				res.getCoord(),
-				distHalf,
-				deltaLossyEotAtLinear); // Дистанция события, где произошел обрыв
+				cc.distHalf,
+				cc.deltaLossyEotAtLinear); // Дистанция события, где произошел обрыв
+	}
 
-
-		// проверка создания объектов эталона и результата анализа
+	// Проверка создания объектов эталона и результата анализа
+	public final void testCreateEtalonAndARObjects()
+	throws IncompatibleTracesException, DataFormatException {
+		ModelTraceManager mtm = cc.getMtm0();
+		double breakThresh = cc.getBreakThresh0();
+		ReflectogramMismatchImpl res;
 
 		Etalon etalon = new Etalon(mtm, breakThresh,
 				new EventAnchorer(mtm.getMTAE().getNEvents()));
 		assertNotNull(etalon);
 		AnalysisResult ar = CoreAnalysisManager.performAnalysis(
-				trace1, defaultAP);
+				cc.getTrace1(), defaultAP);
 		assertNotNull(ar);
 		res = getFirstMismatch(
 				CoreAnalysisManager.compareAndMakeAlarms(ar, etalon));
@@ -410,7 +510,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 					Etalon.getDSReader());
 
 		ar = CoreAnalysisManager.performAnalysis(
-				trace, defaultAP);
+				cc.getTrace0(), defaultAP);
 		assertNotNull(ar);
 		AnalysisResult arRest =
 			(AnalysisResult)DataStreamableUtil.readDataStreamableFromBA(
@@ -421,7 +521,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res == null); // аларма быть не должно
 
 		ar = CoreAnalysisManager.performAnalysis(
-				trace1, defaultAP);
+				cc.getTrace1(), defaultAP);
 		assertNotNull(ar);
 		arRest =
 				(AnalysisResult)DataStreamableUtil.readDataStreamableFromBA(
