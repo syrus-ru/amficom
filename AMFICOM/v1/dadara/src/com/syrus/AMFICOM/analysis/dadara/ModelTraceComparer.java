@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.49 2005/11/24 15:24:14 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.50 2005/12/22 11:51:48 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.49 $, $Date: 2005/11/24 15:24:14 $
+ * @version $Revision: 1.50 $, $Date: 2005/12/22 11:51:48 $
  * @module
  */
 public class ModelTraceComparer
@@ -257,26 +257,26 @@ public class ModelTraceComparer
 			ModelTraceManager mtm, ReflectogramMismatchImpl alarm) {
 		ReflectogramMismatchImpl tmpAlarm = new ReflectogramMismatchImpl();
 		final int N = 1000;
-		final double mult = 1.0 / N;
-		long t0 = System.nanoTime();
+		final double div = N;
+//		long t0 = System.nanoTime();
 		// бинарный поиск
 		int iMin = -1; // нач. приближение для мин. уровня
 		int iMax = N + 1; // нач. приближение для макс. уровня
 		while (iMax - iMin > 1) {
 			int iMid = (iMin + iMax) / 2;
 //			System.err.println("iMin " + iMin + " iMax " + iMax + " iMid " + iMid);
-			if (compareTraceToMTMAtLevel(y, mtm, iMid * mult, tmpAlarm)) {
+			if (compareTraceToMTMAtLevel(y, mtm, iMid / div, tmpAlarm)) {
 				iMin = iMid;
 			} else {
 				iMax = iMid;
 			}
 		}
-		long t1 = System.nanoTime();
+//		long t1 = System.nanoTime();
 //		System.err.println("binary search of mismatch: " + (t1 - t0) / 1e6 + " ms");
 		if (iMax > 0) {
 			if (iMax > N)
 				iMax = N;
-			alarm.setMismatch(iMin * mult, iMax * mult);
+			alarm.setMismatch(iMin / div, iMax / div);
 		}
 	}
 
