@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.8 2005/12/14 15:08:30 bob Exp $
+ * $Id: UserBean.java,v 1.9 2005/12/22 10:13:57 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/12/14 15:08:30 $
+ * @version $Revision: 1.9 $, $Date: 2005/12/22 10:13:57 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -212,22 +212,27 @@ public class UserBean extends Bean implements WorkstationItem {
 		return value;
 	}
 	
+	private final String getLimitedSting(final String string, final int limit) {
+		return string != null ? string.length() >= limit ? string.substring(0, limit) : string : null;
+	}
+	
 	private void setCharacteriscticValue(final String codename, 
 	                                     final String value,
 	                                     final String key) 
 	throws ApplicationException {
 		String value2 = this.getCharacteriscticValue(codename);
-		if (value2 != value &&
-				(value2 != null && !value2.equals(value) ||
-				!value.equals(value2))) {
+		final String value1 = this.getLimitedSting(value, 256);
+		if (value2 != value1 &&
+				(value2 != null && !value2.equals(value1) ||
+				!value1.equals(value2))) {
 			final String oldValue = value2;
 			final Characteristic characteristic = this.findCharacteristic(codename, 
-				value.length() > 0);
+				value1.length() > 0);
 			if (characteristic != null) {
-				characteristic.setValue(value);
+				characteristic.setValue(value1);
 			}
-			this.propertyName.put(codename, value);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, key, oldValue, value));
+			this.propertyName.put(codename, value1);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, key, oldValue, value1));
 		}
 	}
 	
@@ -248,17 +253,18 @@ public class UserBean extends Bean implements WorkstationItem {
 
 	@Override
 	public final void setName(final String name) {
+		final String name1 = this.getLimitedSting(name, 128);
 		String name2 = this.user.getName();
-		if (name2 != name &&
-				(name2 != null && !name2.equals(name) ||
-				!name.equals(name2))) {
+		if (name2 != name1 &&
+				(name2 != null && !name2.equals(name1) ||
+				!name1.equals(name2))) {
 			String oldValue = name2;
-			this.user.setName(name);
+			this.user.setName(name1);
 			final ManagerModel managerModel = (ManagerModel)this.managerMainFrame.getModel();
 			final Dispatcher dispatcher = managerModel.getDispatcher();
 			dispatcher.firePropertyChange(
 				new PropertyChangeEvent(this, ObjectEntities.SYSTEMUSER, null, this));
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.NAME, oldValue, name));
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.NAME, oldValue, name1));
 		}
 	}
 
@@ -268,21 +274,21 @@ public class UserBean extends Bean implements WorkstationItem {
 	}
 
 	public final void setLogin(final String login) {
-		
+		final String login1 = this.getLimitedSting(login, 32);
 		// only latin chars, digits and underscore allow
 		final String pattern = "[-A-Za-z0-9_]+";
-		if (!login.matches(pattern)) {
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.LOGIN, login, this.user.getLogin()));
+		if (!login1.matches(pattern)) {
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.LOGIN, login1, this.user.getLogin()));
 			return;
 		}
 		
 		String login2 = this.user.getLogin();
-		if (login2 != login &&
-				(login2 != null && !login2.equals(login) ||
-				!login.equals(login2))) {
+		if (login2 != login1 &&
+				(login2 != null && !login2.equals(login1) ||
+				!login1.equals(login2))) {
 			String oldValue = login2;
-			this.user.setLogin(login);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.LOGIN, oldValue, login));
+			this.user.setLogin(login1);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.LOGIN, oldValue, login1));
 		}
 	}
 	
