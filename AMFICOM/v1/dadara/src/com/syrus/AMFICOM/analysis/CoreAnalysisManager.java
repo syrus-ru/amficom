@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.139 2005/12/05 16:34:15 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.140 2005/12/22 10:42:34 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.139 $, $Date: 2005/12/05 16:34:15 $
+ * @version $Revision: 1.140 $, $Date: 2005/12/22 10:42:34 $
  * @module
  */
 
@@ -856,7 +856,6 @@ public class CoreAnalysisManager
 	 * @param anchorer
 	 * @return список алармов
 	 */
-	@Deprecated
 	public static List analyseCompareAndMakeAlarms(PFTrace trace,
 			AnalysisParameters ap,
 			double breakThresh,
