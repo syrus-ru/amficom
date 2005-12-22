@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersStorage.java,v 1.9 2005/10/04 14:09:44 saa Exp $
+ * $Id: AnalysisParametersStorage.java,v 1.10 2005/12/22 14:37:28 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.io.SignatureMismatchException;
  * а {@link AnalysisParametersStorage} использовать тогда, когда нужно изменить
  * сразу несколько параметров.
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/10/04 14:09:44 $
+ * @version $Revision: 1.10 $, $Date: 2005/12/22 14:37:28 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
@@ -72,6 +72,37 @@ implements DataStreamable, Cloneable
 		this.nrs2rsaBig = that.nrs2rsaBig;
 		this.l2rsaBig = that.l2rsaBig;
 		this.levelEot = that.levelEot;
+	}
+
+	private boolean doublesDiffer(double a, double b) {
+		return Double.doubleToLongBits(a) != Double.doubleToLongBits(b);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof AnalysisParametersStorage)) {
+			return false;
+		}
+		AnalysisParametersStorage that = (AnalysisParametersStorage)obj;
+		if (obj == this)
+			return true;
+		if (this.param.length != that.param.length)
+			return false;
+		for (int i = 0; i < this.param.length; i++) {
+			if (doublesDiffer(this.param[i], that.param[i])) {
+				return false;
+			}
+		}
+		if (doublesDiffer(this.tau2nrs, that.tau2nrs)
+				|| doublesDiffer(this.nrsMin, that.nrsMin)
+				|| doublesDiffer(this.rsaCrit, that.rsaCrit)
+				|| doublesDiffer(this.nrs2rsaSmall, that.nrs2rsaSmall)
+				|| doublesDiffer(this.nrs2rsaBig, that.nrs2rsaBig)
+				|| doublesDiffer(this.l2rsaBig, that.l2rsaBig)
+				|| doublesDiffer(this.levelEot, that.levelEot)) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.22 2005/10/06 13:34:02 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.23 2005/12/22 14:37:28 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.io.SignatureMismatchException;
  * Устанавливаемые параметры вовсе не обязаны иметь точность double,
  * и могут округляться при вызове modifier-методов без каких-либо уведомлений.
  * @author $Author: saa $
- * @version $Revision: 1.22 $, $Date: 2005/10/06 13:34:02 $
+ * @version $Revision: 1.23 $, $Date: 2005/12/22 14:37:28 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
@@ -345,5 +345,11 @@ implements DataStreamable, Cloneable
 		AnalysisParametersStorage test = getTestStorage();
 		test.setLevelEot(v, useLimit);
 		setAllFrom(test);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof AnalysisParameters &&
+			this.storage.equals(((AnalysisParameters)obj).storage);
 	}
 }
