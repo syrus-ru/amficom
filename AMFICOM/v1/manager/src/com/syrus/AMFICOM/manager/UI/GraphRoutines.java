@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphRoutines.java,v 1.16 2005/12/19 10:31:21 bob Exp $
+* $Id: GraphRoutines.java,v 1.17 2005/12/22 14:28:36 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/12/19 10:31:21 $
+ * @version $Revision: 1.17 $, $Date: 2005/12/22 14:28:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -1065,11 +1065,11 @@ public final class GraphRoutines {
 			
 			this.graph.repaint();
 			final long time5 = System.currentTimeMillis();
-			assert Log.debugMessage("1-0 takes " + (time1 - time0) + " ms", Log.DEBUGLEVEL10);
-			assert Log.debugMessage("2-1 takes " + (time2 - time1) + " ms", Log.DEBUGLEVEL10);
-			assert Log.debugMessage("3-2 takes " + (time3 - time2) + " ms", Log.DEBUGLEVEL10);
-			assert Log.debugMessage("4-3 takes " + (time4 - time3) + " ms", Log.DEBUGLEVEL10);
-			assert Log.debugMessage("5-4 takes " + (time5 - time4) + " ms", Log.DEBUGLEVEL10);			
+			assert Log.debugMessage("1-0 takes " + (time1 - time0) + " ms", Log.DEBUGLEVEL03);
+			assert Log.debugMessage("2-1 takes " + (time2 - time1) + " ms", Log.DEBUGLEVEL03);
+			assert Log.debugMessage("3-2 takes " + (time3 - time2) + " ms", Log.DEBUGLEVEL03);
+			assert Log.debugMessage("4-3 takes " + (time4 - time3) + " ms", Log.DEBUGLEVEL03);
+			assert Log.debugMessage("5-4 takes " + (time5 - time4) + " ms", Log.DEBUGLEVEL03);			
 
 		}
 		this.managerMainFrame.undoManager.discardAllEdits();

@@ -1,5 +1,5 @@
 /*-
-* $Id: PerspectiveTreeModel.java,v 1.13 2005/12/21 10:44:48 bob Exp $
+* $Id: PerspectiveTreeModel.java,v 1.14 2005/12/22 14:27:27 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
  * 
  * TODO rebuild moving methods to nodes (pattern visitor)
  * 
- * @version $Revision: 1.13 $, $Date: 2005/12/21 10:44:48 $
+ * @version $Revision: 1.14 $, $Date: 2005/12/22 14:27:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -489,6 +489,7 @@ public final class PerspectiveTreeModel implements TreeModel {
 	
     
     protected TreeNode[] getPathToRoot(final TreeNode aNode, int depth) {
+//    	final long time0 = System.currentTimeMillis();
         TreeNode[]              retNodes;
 	// This method recurses, traversing towards the root in order
 	// size the array. On the way back, it fills in the nodes,
@@ -510,6 +511,8 @@ public final class PerspectiveTreeModel implements TreeModel {
 			}
 			retNodes[retNodes.length - depth] = aNode;
 		}
+//        final long time1 = System.currentTimeMillis();
+//        assert Log.debugMessage("it takes " + (time1-time0) + " for " + aNode + ", " + depth, Log.DEBUGLEVEL03);
         return retNodes;
     }
     
@@ -546,15 +549,20 @@ public final class PerspectiveTreeModel implements TreeModel {
     }
     
     private TreeNode getParent(final Perspective perspective) {
+//    	final long time0 = System.currentTimeMillis();
     	final Perspective superPerspective = perspective.getSuperPerspective();
 		if (superPerspective == null) {
 			for (final PerspectiveMutableTreeNode treeNode : this.rootItems) {
 				if (treeNode.getPerspective() == perspective) {
 //					assert Log.debugMessage("/0" + perspective + ", " + treeNode, LOGLEVEL);
+//					final long time1 = System.currentTimeMillis();
+//					assert Log.debugMessage("1 it takes " + (time1-time0), Log.DEBUGLEVEL03);
 					return treeNode;
 				}
 			}
 //			assert Log.debugMessage("/1" + perspective + ", " + this.root, LOGLEVEL);
+//			final long time1 = System.currentTimeMillis();
+//			assert Log.debugMessage("2 it takes " + (time1-time0), Log.DEBUGLEVEL03);
 			return this.root;
 		}
 		final List<AbstractBean> layoutBeans = 
@@ -565,10 +573,14 @@ public final class PerspectiveTreeModel implements TreeModel {
 					this.managerMainFrame.getGraphRoutines();
 				final ManagerGraphCell defaultGraphCell = 
 					graphRoutines.getDefaultGraphCell(bean, superPerspective);
+//				final long time1 = System.currentTimeMillis();
+//				assert Log.debugMessage("3 it takes " + (time1-time0), Log.DEBUGLEVEL03);
 				return defaultGraphCell;
 			}
 		}
 //		assert Log.debugMessage("/3" + perspective + ", " + this.root, LOGLEVEL);
+//		final long time1 = System.currentTimeMillis();
+//		assert Log.debugMessage("4 it takes " + (time1-time0), Log.DEBUGLEVEL03);
 		return this.root;
     }
 	
