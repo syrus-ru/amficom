@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.35 2005/12/19 10:32:42 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.36 2005/12/22 14:24:08 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,7 @@ import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.UndoableEditEvent;
+import javax.swing.tree.TreePath;
 
 import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultCellViewFactory;
@@ -74,7 +75,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.35 $, $Date: 2005/12/19 10:32:42 $
+ * @version $Revision: 1.36 $, $Date: 2005/12/22 14:24:08 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -754,7 +755,12 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		this.graph.getSelectionModel().addGraphSelectionListener(new ManagerGraphSelectionListener(this));
 		
 		this.tree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-			public void valueChanged(final TreeSelectionEvent e) {
+			private boolean selected = false;
+			public void valueChanged(final TreeSelectionEvent e) {				
+				if (this.selected) {
+					return;
+				}
+				this.selected = true;				
 				final Object lastPathComponent = e.getPath().getLastPathComponent();
 				final GraphSelectionModel selectionModel = ManagerMainFrame.this.graph.getSelectionModel();
 				if (lastPathComponent instanceof ManagerGraphCell) {
@@ -778,6 +784,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 //					assert Log.debugMessage("3 set perspective " + perspective2, Log.DEBUGLEVEL03);
 					setPerspective(perspective2);
 				}
+				this.selected = false;
 			}
 		});
 		
