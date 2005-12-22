@@ -80,6 +80,7 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 		this.tModel.setColumnEditable(0, true);
 		this.jTable = new WrapperedTable<TraceResource>(this.tModel);
 		this.jTable.setAllowSorting(false);
+		this.jTable.setTableHeader(null);
 
 		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(20);
 		this.jTable.getColumnModel().getColumn(1).setPreferredWidth(250);
