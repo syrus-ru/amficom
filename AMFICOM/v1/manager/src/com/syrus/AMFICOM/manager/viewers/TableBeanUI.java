@@ -1,5 +1,5 @@
 /*-
-* $Id: TableBeanUI.java,v 1.8 2005/12/14 15:08:30 bob Exp $
+* $Id: TableBeanUI.java,v 1.9 2005/12/22 14:23:30 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,19 +8,14 @@
 
 package com.syrus.AMFICOM.manager.viewers;
 
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.image.ColorModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
 
 import com.syrus.AMFICOM.client.UI.StubLabelCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
@@ -31,7 +26,7 @@ import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/12/14 15:08:30 $
+ * @version $Revision: 1.9 $, $Date: 2005/12/22 14:23:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -60,15 +55,21 @@ public abstract class TableBeanUI<T extends Bean> extends AbstractBeanUI<T> {
 
 	@Override
 	public JPanel getPropertyPanel(final T bean) {
-		this.bean = bean;
-		this.editable = bean.isEditable();
-		this.model.setObject(bean);
+//		final long time0 = System.currentTimeMillis();
+		if (this.bean != bean) {
+			this.bean = bean;
+			this.editable = bean.isEditable();
+			this.model.setObject(bean);			
+		}
 		bean.addPropertyChangeListener(this.listener);
+//		final long time1 = System.currentTimeMillis();
+//		assert Log.debugMessage("It takes " + (time1 - time0) + " ms for " + bean, Log.DEBUGLEVEL03);
 		return this.panel;
 	}
 	
 	@Override
 	public void disposePropertyPanel() {
+//		assert Log.debugMessage(this.bean, Log.DEBUGLEVEL03);
 		this.bean.removePropertyChangeListener(this.listener);
 	}
 	
