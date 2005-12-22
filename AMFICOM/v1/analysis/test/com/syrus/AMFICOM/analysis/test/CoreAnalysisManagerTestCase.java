@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.16 2005/12/22 11:49:52 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.17 2005/12/22 14:37:57 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -611,5 +611,25 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 
 		assertTrue(soft.compareTo(none) > 0);
 		assertTrue(soft.compareTo(hard) < 0);
+	}
+
+	public final void testAPEquals() throws InvalidAnalysisParametersException {
+		AnalysisParameters ap1 = new AnalysisParameters(
+				"0.001;0.01;0.5;3.0;1.3;");
+		AnalysisParameters ap2 = new AnalysisParameters(
+				"0.001;0.01;0.5;3.1;1.3;");
+		assertTrue(ap1.equals(ap1));
+		assertFalse(ap1.equals(ap2));
+		assertFalse(ap2.equals(ap1));
+		AnalysisParameters ap3 = (AnalysisParameters) ap1.clone();
+		ap3.setConnectorTh(ap3.getConnectorTh() + 0.01);
+		assertFalse(ap3.equals(ap1));
+		assertFalse(ap1.equals(ap3));
+		ap3.setConnectorTh(ap1.getConnectorTh());
+		assertTrue(ap1.equals(ap3));
+		assertTrue(ap3.equals(ap1));
+		ap3.setRsaCrit(ap3.getRsaCrit() + 0.01);
+		assertFalse(ap3.equals(ap1));
+		assertFalse(ap1.equals(ap3));
 	}
 }
