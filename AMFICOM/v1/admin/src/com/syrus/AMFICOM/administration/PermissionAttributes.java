@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.40 2005/12/17 12:08:16 arseniy Exp $
+* $Id: PermissionAttributes.java,v 1.41 2005/12/23 10:11:48 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/12/17 12:08:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.41 $, $Date: 2005/12/23 10:11:48 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
  */
@@ -200,7 +200,8 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	private enum Scheme implements SwitchableGroupNumber {		
 		ENTER(true),
 		CREATE_AND_EDIT(true),
-		SAVING(true);
+		SAVING(true),
+		DELETE(true);
 
 		private final boolean enable;
 
@@ -230,7 +231,8 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		SAVE_TOPOLOGICAL_VIEW(true),
 
 		EDIT_BINDING(true),
-		SAVE_BINDING(true);
+		SAVE_BINDING(true),
+		DELETE(true);
 
 		private final boolean enable;
 
@@ -400,7 +402,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		OPEN_REFLECTOGRAM(true),
 		OPEN_REFLECTOGRAM_FILE(true),
 		OPEN_ETALON_REFLECTOGRAM(true),
-		SAVE_MEASUREMENT_SETUP(true),
+		SAVE_ETALON(true),
 		SAVE_REFLECTOGRAM_FILE(true),
 		EDIT_ETALON(true);
 
@@ -479,8 +481,11 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	private enum Report implements SwitchableGroupNumber {
 		ENTER(true),
 		CREATE_TEMPLATE(true),
-		SAVE_TEMPLATE(true);
+		SAVE_TEMPLATE(true),
+		CREATE_CONSOLIDATED_REPORT(true),
+		SAVE_CONSOLIDATED_REPORT(true);
 
+		
 		private final boolean enable;
 
 		private Report(final boolean enable) {
@@ -533,6 +538,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		SCHEME_ENTER(Scheme.ENTER),
 		SCHEME_CREATE_AND_EDIT(Scheme.CREATE_AND_EDIT),
 		SCHEME_SAVING(Scheme.SAVING),
+		SCHEME_DELETE(Scheme.DELETE),
 
 		// MapEditor		
 		MAP_EDITOR_ENTER(MapEditor.ENTER),
@@ -543,6 +549,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 
 		MAP_EDITOR_EDIT_BINDING(MapEditor.EDIT_BINDING),
 		MAP_EDITOR_SAVE_BINDING(MapEditor.SAVE_BINDING),
+		MAP_EDITOR_DELETE(MapEditor.DELETE),
 
 		// Optimization
 		OPTIMIZATION_ENTER(Optimization.ENTER),
@@ -589,7 +596,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		EVALUATION_OPEN_REFLECTOGRAM(Evaluation.OPEN_REFLECTOGRAM),
 		EVALUATION_OPEN_REFLECTOGRAM_FILE(Evaluation.OPEN_REFLECTOGRAM_FILE),
 		EVALUATION_OPEN_ETALON_REFLECTOGRAM(Evaluation.OPEN_ETALON_REFLECTOGRAM),
-		EVALUATION_SAVE_MEASUREMENT_SETUP(Evaluation.SAVE_MEASUREMENT_SETUP),
+		EVALUATION_ETALON(Evaluation.SAVE_ETALON),
 		EVALUATION_SAVE_REFLECTOGRAM_FILE(Evaluation.SAVE_REFLECTOGRAM_FILE),
 		EVALUATION_EDIT_ETALON(Evaluation.EDIT_ETALON),
 
@@ -608,7 +615,10 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		// Report
 		REPORT_ENTER(Report.ENTER),
 		REPORT_CREATE_TEMPLATE(Report.CREATE_TEMPLATE),
-		REPORT_SAVE_TEMPLATE(Report.SAVE_TEMPLATE);
+		REPORT_SAVE_TEMPLATE(Report.SAVE_TEMPLATE),
+		REPORT_CREATE_CONSOLIDATED_REPORT(Report.CREATE_CONSOLIDATED_REPORT),
+		REPORT_SAVE_CONSOLIDATED_REPORT(Report.SAVE_CONSOLIDATED_REPORT);
+
 
 		private final Enum e;		
 
