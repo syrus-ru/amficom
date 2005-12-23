@@ -1,5 +1,5 @@
 /*-
- * $Id: PermissionManager.java,v 1.13 2005/12/02 16:47:58 saa Exp $
+ * $Id: PermissionManager.java,v 1.14 2005/12/23 10:19:35 bob Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.util.Log;
  * Описывает права и обеспечивает их трансляцию в Checker.
  * Позволяет использовать кэширование прав.
  * @author saa
- * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/12/02 16:47:58 $
+ * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2005/12/23 10:19:35 $
  * @module analysis
  */
 public class PermissionManager {
@@ -154,7 +154,9 @@ public class PermissionManager {
 		evaluationTranslation.put(Operation.LOAD_TRACE, PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM);
 		evaluationTranslation.put(Operation.LOAD_ETALON, PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM);
 		evaluationTranslation.put(Operation.EDIT_ETALON, PermissionCodename.EVALUATION_EDIT_ETALON);
-		evaluationTranslation.put(Operation.SAVE_MEASUREMENT_SETUP, PermissionCodename.EVALUATION_SAVE_MEASUREMENT_SETUP);
+		
+		// TODO rename Operation.SAVE_MEASUREMENT_SETUP to Operation.SAVE_ETALON 
+		evaluationTranslation.put(Operation.SAVE_MEASUREMENT_SETUP, PermissionCodename.EVALUATION_SAVE_ETALON);
 
 		defaultTranslation = new HashMap<Operation, PermissionCodename>();
 
