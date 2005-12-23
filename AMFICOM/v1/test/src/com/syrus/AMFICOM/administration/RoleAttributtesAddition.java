@@ -1,5 +1,5 @@
 /*
- * $Id: RoleAttributtesAddition.java,v 1.2 2005/12/14 16:46:10 bass Exp $
+ * $Id: RoleAttributtesAddition.java,v 1.3 2005/12/23 12:35:32 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,8 +49,8 @@ import com.syrus.util.Log;
  * 
  * Sets Administration permission to Media Monitoring Administrator role added on 14/12/2005
  * 
- * @version $Revision: 1.2 $, $Date: 2005/12/14 16:46:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/12/23 12:35:32 $
+ * @author $Author: bob $
  * @module test
  */
 public class RoleAttributtesAddition extends TestCase {
@@ -88,9 +88,19 @@ public class RoleAttributtesAddition extends TestCase {
 
 		final int size = characteristics.size();
 		if (size == 0) {
-			final CharacteristicType characteristicType = StorableObjectPool.getStorableObject(getCharacteristicTypeId(), true);
-			Characteristic characteristic = Characteristic.createInstance(systemUserId, characteristicType, "name", "description", "amficom@cbr.ru", systemUser, true, true);
-			Log.debugMessage("Created e-mail address: " + characteristic.getValue(), SEVERE);
+			final CharacteristicType characteristicType = 
+				StorableObjectPool.getStorableObject(getCharacteristicTypeId(), true);
+			final Characteristic characteristic = 
+				Characteristic.createInstance(systemUserId, 
+					characteristicType, 
+					"name", 
+					"description", 
+					"amficom@cbr.ru", 
+					systemUser, 
+					true, 
+					true);
+			Log.debugMessage("Created e-mail address: " + characteristic.getValue(), 
+				SEVERE);
 			StorableObjectPool.flush(CHARACTERISTIC_CODE, systemUserId, true);
 		} else if (size == 1) {
 			Log.debugMessage("Loaded e-mail address: " + characteristics.iterator().next().getValue(), SEVERE);
@@ -103,61 +113,133 @@ public class RoleAttributtesAddition extends TestCase {
 		final SystemUser sysUser = DatabaseCommonTest.getSysUser();
 		final Identifier userId = sysUser.getId();
 
-		
-		final Set<Role> roles = 
-			StorableObjectPool.getStorableObjectsByCondition(
-				new TypicalCondition(RoleCodename.MEDIA_MONITORING_ADMINISTATOR.getCodename(), 
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.ROLE_CODE,
-					StorableObjectWrapper.COLUMN_CODENAME), true);
-		
-		assert !roles.isEmpty();
-		
-		final Role mediaMonitoringAdministrator = roles.iterator().next(); 
-		final Set<PermissionAttributes> attributes = 
-			StorableObjectPool.getStorableObjectsByCondition(
-				new CompoundCondition(
-					new TypicalCondition(Module.ADMINISTRATION,
+		{
+			final Set<Role> roles = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(RoleCodename.MEDIA_MONITORING_ADMINISTATOR.getCodename(), 
 						OperationSort.OPERATION_EQUALS,
-						ObjectEntities.PERMATTR_CODE,
-						PermissionAttributesWrapper.COLUMN_MODULE),
-					CompoundConditionSort.AND,
-					new LinkedIdsCondition(mediaMonitoringAdministrator, 
-						ObjectEntities.PERMATTR_CODE)), 
-				true);
-		
-		assert !attributes.isEmpty();
-
-		final PermissionAttributes permissionAttributes = attributes.iterator().next();		
-		
-		final PermissionAttributes.PermissionCodename[] codenames = new PermissionAttributes.PermissionCodename[]{		
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_ENTER,
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_DOMAIN,
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_USER,
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_MEASUREMENT_MODULE,
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_SERVER,
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_RTU,
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_WORKSTATION,
+						ObjectEntities.ROLE_CODE,
+						StorableObjectWrapper.COLUMN_CODENAME), true);
 			
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_DOMAIN,
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_USER,
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_MEASUREMENT_MODULE,
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_SERVER,
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_RTU,
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_WORKSTATION,
+			assert !roles.isEmpty();
+			
+			final Role mediaMonitoringAdministrator = roles.iterator().next(); 
+			final Set<PermissionAttributes> attributes = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new CompoundCondition(
+						new TypicalCondition(Module.ADMINISTRATION,
+							OperationSort.OPERATION_EQUALS,
+							ObjectEntities.PERMATTR_CODE,
+							PermissionAttributesWrapper.COLUMN_MODULE),
+						CompoundConditionSort.AND,
+						new LinkedIdsCondition(mediaMonitoringAdministrator, 
+							ObjectEntities.PERMATTR_CODE)), 
+					true);
+			
+			assert !attributes.isEmpty();
 	
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_DOMAIN,
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_USER,		
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_MEASUREMENT_MODULE,
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_SERVER,
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_RTU,
-			PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_WORKSTATION,
-		};
+			final PermissionAttributes permissionAttributes = attributes.iterator().next();		
+			
+			final PermissionAttributes.PermissionCodename[] codenames = new PermissionAttributes.PermissionCodename[]{		
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_ENTER,
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_DOMAIN,
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_USER,
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_MEASUREMENT_MODULE,
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_SERVER,
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_RTU,
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_CREATE_WORKSTATION,
+				
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_DOMAIN,
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_USER,
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_MEASUREMENT_MODULE,
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_SERVER,
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_RTU,
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_CHANGE_WORKSTATION,
 		
-		for (final PermissionAttributes.PermissionCodename codename : codenames) {
-			permissionAttributes.setPermissionEnable(codename, true);
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_DOMAIN,
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_USER,		
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_MEASUREMENT_MODULE,
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_SERVER,
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_RTU,
+				PermissionAttributes.PermissionCodename.ADMINISTRATION_DELETE_WORKSTATION,
+			};
+			
+			for (final PermissionAttributes.PermissionCodename codename : codenames) {
+				permissionAttributes.setPermissionEnable(codename, true);
+			}
 		}
 		
+		{
+			final Set<Role> roles = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(RoleCodename.PLANNER.getCodename(), 
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.ROLE_CODE,
+						StorableObjectWrapper.COLUMN_CODENAME), true);
+			
+			assert !roles.isEmpty();
+			
+			final Role planner = roles.iterator().next(); 
+			final Set<PermissionAttributes> attributes = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new CompoundCondition(
+						new TypicalCondition(Module.SCHEME,
+							OperationSort.OPERATION_EQUALS,
+							ObjectEntities.PERMATTR_CODE,
+							PermissionAttributesWrapper.COLUMN_MODULE),
+						CompoundConditionSort.AND,
+						new LinkedIdsCondition(planner, 
+							ObjectEntities.PERMATTR_CODE)), 
+					true);
+			
+			assert !attributes.isEmpty();
+
+			final PermissionAttributes permissionAttributes = attributes.iterator().next();		
+			
+			permissionAttributes.setPermissionEnable(PermissionAttributes.PermissionCodename.SCHEME_DELETE, 
+				true);
+			
+		}
+		
+		{
+			final Set<Role> roles = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(RoleCodename.OPERATOR.getCodename(), 
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.ROLE_CODE,
+						StorableObjectWrapper.COLUMN_CODENAME), true);
+			
+			assert !roles.isEmpty();
+			
+			final Role mediaMonitoringAdministrator = roles.iterator().next(); 
+			final Set<PermissionAttributes> attributes = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new CompoundCondition(
+						new TypicalCondition(Module.REPORT,
+							OperationSort.OPERATION_EQUALS,
+							ObjectEntities.PERMATTR_CODE,
+							PermissionAttributesWrapper.COLUMN_MODULE),
+						CompoundConditionSort.AND,
+						new LinkedIdsCondition(mediaMonitoringAdministrator, 
+							ObjectEntities.PERMATTR_CODE)), 
+					true);
+			
+			assert !attributes.isEmpty();
+	
+			final PermissionAttributes permissionAttributes = attributes.iterator().next();		
+			
+			final PermissionAttributes.PermissionCodename[] codenames = new PermissionAttributes.PermissionCodename[]{		
+				PermissionAttributes.PermissionCodename.REPORT_CREATE_CONSOLIDATED_REPORT ,
+				PermissionAttributes.PermissionCodename.REPORT_CREATE_TEMPLATE ,
+				PermissionAttributes.PermissionCodename.REPORT_ENTER ,
+				PermissionAttributes.PermissionCodename.REPORT_SAVE_CONSOLIDATED_REPORT ,
+				PermissionAttributes.PermissionCodename.REPORT_SAVE_TEMPLATE 
+			};
+			
+			for (final PermissionAttributes.PermissionCodename codename : codenames) {
+				permissionAttributes.setPermissionEnable(codename, true);
+			}
+		}
 		
 		StorableObjectPool.flush(ObjectEntities.PERMATTR_CODE, userId, true);
 		StorableObjectPool.flush(ObjectEntities.ROLE_CODE, userId, true);
