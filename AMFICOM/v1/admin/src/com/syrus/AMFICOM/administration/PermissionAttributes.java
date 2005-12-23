@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.41 2005/12/23 10:11:48 bob Exp $
+* $Id: PermissionAttributes.java,v 1.42 2005/12/23 10:16:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/12/23 10:11:48 $
+ * @version $Revision: 1.42 $, $Date: 2005/12/23 10:16:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -596,8 +596,8 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		EVALUATION_OPEN_REFLECTOGRAM(Evaluation.OPEN_REFLECTOGRAM),
 		EVALUATION_OPEN_REFLECTOGRAM_FILE(Evaluation.OPEN_REFLECTOGRAM_FILE),
 		EVALUATION_OPEN_ETALON_REFLECTOGRAM(Evaluation.OPEN_ETALON_REFLECTOGRAM),
-		EVALUATION_ETALON(Evaluation.SAVE_ETALON),
 		EVALUATION_SAVE_REFLECTOGRAM_FILE(Evaluation.SAVE_REFLECTOGRAM_FILE),
+		EVALUATION_SAVE_ETALON(Evaluation.SAVE_ETALON),
 		EVALUATION_EDIT_ETALON(Evaluation.EDIT_ETALON),
 
 		// Observe
