@@ -1,5 +1,5 @@
 /*
- * $Id: TestRoleAttributtes.java,v 1.4 2005/11/21 08:35:12 bob Exp $
+ * $Id: TestRoleAttributtes.java,v 1.5 2005/12/23 12:20:35 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/21 08:35:12 $
+ * @version $Revision: 1.5 $, $Date: 2005/12/23 12:20:35 $
  * @author $Author: bob $
  * @module test
  */
@@ -239,7 +239,7 @@ public class TestRoleAttributtes extends TestCase {
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM_FILE, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM, true);
-				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_MEASUREMENT_SETUP, true);
+				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_ETALON, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_REFLECTOGRAM_FILE, true);
 			}
 			
@@ -369,7 +369,7 @@ public class TestRoleAttributtes extends TestCase {
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM_FILE, true);
-				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_MEASUREMENT_SETUP, true);
+				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_ETALON, true);
 			}
 			
 			{
@@ -638,7 +638,7 @@ public class TestRoleAttributtes extends TestCase {
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM_FILE, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM, true);
-				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_MEASUREMENT_SETUP, true);
+				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_ETALON, true);
 			}
 			
 			{
