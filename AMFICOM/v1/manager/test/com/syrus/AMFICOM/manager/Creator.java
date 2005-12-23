@@ -1,5 +1,5 @@
 /*-
-* $Id: Creator.java,v 1.3 2005/12/06 11:52:22 bass Exp $
+* $Id: Creator.java,v 1.4 2005/12/23 12:41:48 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/06 11:52:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/12/23 12:41:48 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -243,7 +243,7 @@ public class Creator extends TestCase {
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM_FILE, true);
-				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_MEASUREMENT_SETUP, true);
+				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_ETALON, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_REFLECTOGRAM_FILE, true);
 			}
 			
@@ -373,7 +373,7 @@ public class Creator extends TestCase {
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM_FILE, true);
-				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_MEASUREMENT_SETUP, true);
+				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_ETALON, true);
 			}
 			
 			{
@@ -388,6 +388,21 @@ public class Creator extends TestCase {
 				attributes.setPermissionEnable(PermissionCodename.OBSERVER_ALARM_MANAGE, true);
 				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_MEASUREMENT_ARCHIVE, true);
 				attributes.setPermissionEnable(PermissionCodename.OBSERVER_QUICK_TASK, true);
+			}
+			
+			{
+				final PermissionAttributes attributes = 
+					PermissionAttributes.createInstance(userId, 
+						Identifier.VOID_IDENTIFIER, 
+						operator.getId(), 
+						Module.REPORT);
+				
+				attributes.setPermissionEnable(PermissionCodename.REPORT_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.REPORT_CREATE_TEMPLATE, true);
+				attributes.setPermissionEnable(PermissionCodename.REPORT_SAVE_TEMPLATE, true);
+				attributes.setPermissionEnable(PermissionCodename.REPORT_CREATE_CONSOLIDATED_REPORT, true);
+				attributes.setPermissionEnable(PermissionCodename.REPORT_SAVE_CONSOLIDATED_REPORT, true);
+
 			}
 			
 //			{
@@ -499,6 +514,7 @@ public class Creator extends TestCase {
 				attributes.setPermissionEnable(PermissionCodename.SCHEME_ENTER, true);
 				attributes.setPermissionEnable(PermissionCodename.SCHEME_CREATE_AND_EDIT, true);
 				attributes.setPermissionEnable(PermissionCodename.SCHEME_SAVING, true);
+				attributes.setPermissionEnable(PermissionCodename.SCHEME_DELETE, true);
 			}
 			
 			{
@@ -642,7 +658,7 @@ public class Creator extends TestCase {
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM_FILE, true);
-				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_MEASUREMENT_SETUP, true);
+				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_ETALON, true);
 			}
 			
 			{
