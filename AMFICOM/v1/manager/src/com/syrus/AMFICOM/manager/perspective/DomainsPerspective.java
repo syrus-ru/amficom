@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainsPerspective.java,v 1.8 2005/12/19 10:32:15 bob Exp $
+* $Id: DomainsPerspective.java,v 1.9 2005/12/26 13:19:36 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/12/19 10:32:15 $
+ * @version $Revision: 1.9 $, $Date: 2005/12/26 13:19:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -140,10 +140,6 @@ public final class DomainsPerspective extends AbstractPerspective {
 			for (final AbstractBean bean : this.getLayoutBeans()) {
 				if (bean instanceof DomainBean) {
 					this.addDomainPerspective((DomainBean) bean);
-//					DomainPerpective domainPerspective = 
-//						this.getDomainPerspective((DomainBean) bean);
-//					this.addSubPerspective(domainPerspective);
-//					this.managerMainFrame.putPerspective(domainPerspective);
 				}
 			}
 			
