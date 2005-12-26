@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphRoutines.java,v 1.17 2005/12/22 14:28:36 bob Exp $
+* $Id: GraphRoutines.java,v 1.18 2005/12/26 13:17:41 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/12/22 14:28:36 $
+ * @version $Revision: 1.18 $, $Date: 2005/12/26 13:17:41 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -193,7 +193,8 @@ public final class GraphRoutines {
 		cache.insert(cell);	
 		
  		if (parentCell != null) {
- 			final DefaultEdge edge = this.createEdge(cell, parentCell);
+// 			final DefaultEdge edge = 
+ 				this.createEdge(cell, parentCell);
  			assert Log.debugMessage("Create child "
  					+ cell
  					+ " for "
@@ -202,7 +203,7 @@ public final class GraphRoutines {
  					+ perspective, 
  				Log.DEBUGLEVEL10);
  			if (object instanceof AbstractBean) {
- 				final AbstractBean bean = (AbstractBean)object;
+// 				final AbstractBean bean = (AbstractBean)object;
 				// XXX
 //				bean.updateEdgeAttributes(edge, (MPort) parentCell.getChildAt(0));
 			}
@@ -1002,16 +1003,16 @@ public final class GraphRoutines {
 	
 	
 	
-	public void showLayerName(final String layerName, boolean show) 
+	public void showLayerName(final String layerName, final boolean show) 
 	throws ApplicationException {		
-		final long time0 = System.currentTimeMillis();
+//		final long time0 = System.currentTimeMillis();
 		final List<AbstractBean> layoutBeans = this.getLayoutBeans(layerName);
-		final long time1 = System.currentTimeMillis();
+//		final long time1 = System.currentTimeMillis();
 		if (show) {
 			final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
 			final GraphModel model = this.graph.getModel();
 			final CellBuffer cellBuffer = this.managerMainFrame.getCellBuffer();
-			final long time2 = System.currentTimeMillis();
+//			final long time2 = System.currentTimeMillis();
 			Map<Boolean, Set<ManagerGraphCell>> visibleCellsMap = null; 
 			for(int i = 0; i < model.getRootCount(); i++) {
 				final Object rootAt = model.getRootAt(i);
@@ -1037,7 +1038,7 @@ public final class GraphRoutines {
 					}
 				}
 			}
-			final long time3 = System.currentTimeMillis();
+//			final long time3 = System.currentTimeMillis();
 			if (visibleCellsMap != null) {
 				for (final Boolean visible : visibleCellsMap.keySet()) {
 					final long time31 = System.currentTimeMillis();
@@ -1061,15 +1062,15 @@ public final class GraphRoutines {
 				}
 			}
 			
-			final long time4 = System.currentTimeMillis();
+//			final long time4 = System.currentTimeMillis();
 			
 			this.graph.repaint();
-			final long time5 = System.currentTimeMillis();
-			assert Log.debugMessage("1-0 takes " + (time1 - time0) + " ms", Log.DEBUGLEVEL03);
-			assert Log.debugMessage("2-1 takes " + (time2 - time1) + " ms", Log.DEBUGLEVEL03);
-			assert Log.debugMessage("3-2 takes " + (time3 - time2) + " ms", Log.DEBUGLEVEL03);
-			assert Log.debugMessage("4-3 takes " + (time4 - time3) + " ms", Log.DEBUGLEVEL03);
-			assert Log.debugMessage("5-4 takes " + (time5 - time4) + " ms", Log.DEBUGLEVEL03);			
+//			final long time5 = System.currentTimeMillis();
+//			assert Log.debugMessage("1-0 takes " + (time1 - time0) + " ms", Log.DEBUGLEVEL03);
+//			assert Log.debugMessage("2-1 takes " + (time2 - time1) + " ms", Log.DEBUGLEVEL03);
+//			assert Log.debugMessage("3-2 takes " + (time3 - time2) + " ms", Log.DEBUGLEVEL03);
+//			assert Log.debugMessage("4-3 takes " + (time4 - time3) + " ms", Log.DEBUGLEVEL03);
+//			assert Log.debugMessage("5-4 takes " + (time5 - time4) + " ms", Log.DEBUGLEVEL03);			
 
 		}
 		this.managerMainFrame.undoManager.discardAllEdits();
