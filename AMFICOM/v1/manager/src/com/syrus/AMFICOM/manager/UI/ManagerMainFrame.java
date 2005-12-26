@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.36 2005/12/22 14:24:08 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.37 2005/12/26 13:16:18 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,6 @@ import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.UndoableEditEvent;
-import javax.swing.tree.TreePath;
 
 import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultCellViewFactory;
@@ -75,7 +74,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.36 $, $Date: 2005/12/22 14:24:08 $
+ * @version $Revision: 1.37 $, $Date: 2005/12/26 13:16:18 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -393,7 +392,10 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 	private void createPerspectives() {
 		final Collection<Perspective> perspectives = this.managerHandler.getPerspectives();
 		for (final Perspective perspective : perspectives) {
+			final long time1 = System.currentTimeMillis();
 			this.setPerspective(perspective);
+			final long time2 = System.currentTimeMillis();
+			assert Log.debugMessage("It takes " + (time2 - time1) + " ms for " + perspective, Log.DEBUGLEVEL03);
 		}		
 	}
 
@@ -420,6 +422,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		
 		new ProcessingDialog(new Runnable() {
 			public void run() {
+				final long time0 = System.currentTimeMillis();
 				graph.setVisible(false);
 
 				managerHandler.setManagerMainFrame(ManagerMainFrame.this);
@@ -429,12 +432,16 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+				final long time1 = System.currentTimeMillis();
 				createPerspectives();
-				
+				final long time2 = System.currentTimeMillis();
 				treeModel.fillRootItems();
-				
+				final long time3 = System.currentTimeMillis();
 				graph.setVisible(true);
+				
+				assert Log.debugMessage("It takes (time1 - time0) " + (time1 - time0) + " ms", Log.DEBUGLEVEL03);
+				assert Log.debugMessage("It takes (time2 - time1) " + (time2 - time1) + " ms", Log.DEBUGLEVEL03);
+				assert Log.debugMessage("It takes (time3 - time2) " + (time3 - time2) + " ms", Log.DEBUGLEVEL03);
 			}
 		}, I18N.getString("Common.ProcessingDialog.PlsWait"));
 		
@@ -842,11 +849,11 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			this.graph.getSelectionModel().clearSelection();
 			updateBufferButtons();
 			final long time5 = System.currentTimeMillis();
-			assert Log.debugMessage("1-0 takes " + (time1 - time0) + " ms", Log.DEBUGLEVEL03);
-			assert Log.debugMessage("2-1 takes " + (time2 - time1) + " ms", Log.DEBUGLEVEL03);
-			assert Log.debugMessage("3-2 takes " + (time3 - time2) + " ms", Log.DEBUGLEVEL03);
-			assert Log.debugMessage("4-3 takes " + (time4 - time3) + " ms", Log.DEBUGLEVEL03);
-			assert Log.debugMessage("5-4 takes " + (time5 - time4) + " ms", Log.DEBUGLEVEL03);			
+			assert Log.debugMessage("1-0 takes " + (time1 - time0) + " ms", Log.DEBUGLEVEL10);
+			assert Log.debugMessage("2-1 takes " + (time2 - time1) + " ms", Log.DEBUGLEVEL10);
+			assert Log.debugMessage("3-2 takes " + (time3 - time2) + " ms", Log.DEBUGLEVEL10);
+			assert Log.debugMessage("4-3 takes " + (time4 - time3) + " ms", Log.DEBUGLEVEL10);
+			assert Log.debugMessage("5-4 takes " + (time5 - time4) + " ms", Log.DEBUGLEVEL10);			
 		} catch (final ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -855,10 +862,14 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 	
 	public final void putPerspective(final Perspective perspective) 
 	throws ApplicationException {
+		final long time0 = System.currentTimeMillis();
 ////		 here items put into graphCache, when they can be used
 		this.graphRoutines.arrangeLayoutItems(perspective);
+		final long time1 = System.currentTimeMillis();
 		perspective.perspectiveApplied();
-//		this.graphRoutines.fixLayoutItemCharacteristics();
+		final long time2 = System.currentTimeMillis();
+		assert Log.debugMessage("1-0 takes " + (time1 - time0) + " ms for " + perspective, Log.DEBUGLEVEL03);
+		assert Log.debugMessage("2-1 takes " + (time2 - time1) + " ms for " + perspective, Log.DEBUGLEVEL03);
 	}
 	
 	public boolean isPerspectiveValid() {

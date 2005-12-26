@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractPerspective.java,v 1.11 2005/12/14 15:08:30 bob Exp $
+* $Id: AbstractPerspective.java,v 1.12 2005/12/26 13:19:54 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/12/14 15:08:30 $
+ * @version $Revision: 1.12 $, $Date: 2005/12/26 13:19:54 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -409,7 +409,14 @@ public abstract class AbstractPerspective implements Perspective {
 			this.perspectives = new HashSet<Perspective>();
 		}
 		final String codename = perspective.getCodename();
+		final long time0 = System.currentTimeMillis();
 		perspective.createNecessaryItems();
+		final long time1 = System.currentTimeMillis();
+		assert Log.debugMessage("createNecessaryItems " 
+				+ perspective 
+				+ " takes "
+				+ (time1 - time0), 
+			Log.DEBUGLEVEL03);
 		assert Log.debugMessage("add "
 				+ codename
 				+ " to "
