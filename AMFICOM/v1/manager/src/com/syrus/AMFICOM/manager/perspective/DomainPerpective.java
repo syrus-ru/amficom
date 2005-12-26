@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.11 2005/12/19 10:32:15 bob Exp $
+* $Id: DomainPerpective.java,v 1.12 2005/12/26 13:18:56 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/12/19 10:32:15 $
+ * @version $Revision: 1.12 $, $Date: 2005/12/26 13:18:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -283,6 +283,7 @@ public final class DomainPerpective extends AbstractPerspective {
 	
 	
 	public void createNecessaryItems() throws ApplicationException {
+		final long time0 = System.currentTimeMillis();
 		final Identifier domainId = this.domainBean.getIdentifier();
 
 		assert Log.debugMessage(domainId , Log.DEBUGLEVEL10);
@@ -304,7 +305,7 @@ public final class DomainPerpective extends AbstractPerspective {
 					CompoundConditionSort.AND,
 					layoutCondition), 
 				true);
-		
+		final long time1 = System.currentTimeMillis();
 		// create necessary network items
 		
 		final Map<Identifier, LayoutItem> existsNetworkLayoutItems = new HashMap<Identifier, LayoutItem>();
@@ -313,10 +314,11 @@ public final class DomainPerpective extends AbstractPerspective {
 			StorableObjectPool.getStorableObjectsByCondition(
 				new LinkedIdsCondition(domainId, ObjectEntities.KIS_CODE), 
 				true);
-
+		final long time2 = System.currentTimeMillis();
 		assert Log.debugMessage("kiss:" + kiss , Log.DEBUGLEVEL10);
 		
 		this.addItems(kiss, existsNetworkLayoutItems, domainLayoutItems);
+		final long time3 = System.currentTimeMillis();
 		//	create domain networks accorning to exist RTUs
 		for (final KIS kis : kiss) {
 			final Identifier domainId2 = kis.getDomainId();
@@ -331,7 +333,7 @@ public final class DomainPerpective extends AbstractPerspective {
 					existsNetworkLayoutItems);
 			}
 		}
-		
+		final long time4 = System.currentTimeMillis();
 		final Set<Server> servers = 
 			StorableObjectPool.getStorableObjectsByCondition(
 				new LinkedIdsCondition(domainId, ObjectEntities.SERVER_CODE), 
@@ -353,7 +355,7 @@ public final class DomainPerpective extends AbstractPerspective {
 					existsNetworkLayoutItems);
 			}
 		}
-		
+		final long time5 = System.currentTimeMillis();
 		final Set<MCM> mcms = 
 			StorableObjectPool.getStorableObjectsByCondition(
 				new LinkedIdsCondition(domainId, ObjectEntities.MCM_CODE), 
@@ -376,7 +378,7 @@ public final class DomainPerpective extends AbstractPerspective {
 					existsNetworkLayoutItems);
 			}
 		}
-		
+		final long time6 = System.currentTimeMillis();
 		final Set<PermissionAttributes> permissionAttributes =
 			StorableObjectPool.getStorableObjectsByCondition(				
 				new LinkedIdsCondition(domainId, ObjectEntities.PERMATTR_CODE),
@@ -387,21 +389,31 @@ public final class DomainPerpective extends AbstractPerspective {
 		
 		if (!permissionAttributes.isEmpty()) {
 			
-			Map<Identifier, Identifier> domainIdNetworkWorkstationItemIdMap = 
+			final Map<Identifier, Identifier> domainIdNetworkWorkstationItemIdMap = 
 				new HashMap<Identifier, Identifier>();
 			
+//			assert Log.debugMessage("size of " + permissionAttributes + " is " + permissionAttributes.size(), Log.DEBUGLEVEL03);
+			
+			final Set<Identifier> permissionAttributeDomainIds = new HashSet<Identifier>();
 			for (final PermissionAttributes attributes : permissionAttributes) {
 				final Identifier domainId2 = attributes.getDomainId();
+				permissionAttributeDomainIds.add(domainId2);
+			}
+			
+			for (final Identifier domainId2 : permissionAttributeDomainIds) {
+//				final long time601 = System.currentTimeMillis();
 				final LayoutItem domainNetworkItem2 = 
 					this.getDomainNetworkItem(domainNetLayoutItemMap, 
 						currentUserCondition, 
 						layoutCondition, 
 						domainId2);
+//				final long time602 = System.currentTimeMillis();
 				if (domainId.equals(domainId2)) {
 					final LayoutItem networkWorkstationItem = 
 						this.getNetworkWorkstationItem(domainNetworkItem2, 
 							currentUserCondition, 
 							layoutCondition);
+//					final long time603 = System.currentTimeMillis();
 					final Identifier networkWorkstationItemId = networkWorkstationItem.getId();
 					domainIdNetworkWorkstationItemIdMap.put(domainId2, 
 						networkWorkstationItemId);
@@ -413,17 +425,20 @@ public final class DomainPerpective extends AbstractPerspective {
 						+ networkWorkstationItem.getName()
 						+ '@'
 						+ networkWorkstationItem.getLayoutName(), 
-					Log.DEBUGLEVEL10);			
+					Log.DEBUGLEVEL10);
+//					assert Log.debugMessage("603-602 takes " + (time603 - time602) + " ms", Log.DEBUGLEVEL03);
 				}
+//				assert Log.debugMessage("602-601 takes " + (time602 - time601) + " ms", Log.DEBUGLEVEL03);
 			}
 			//	create workstation items accorning to exist permissionAttributes
-			
+			final long time61 = System.currentTimeMillis();
 			final Set<Identifier> userIds = 
 				new HashSet<Identifier>(permissionAttributes.size());
 			for (final PermissionAttributes attributes : permissionAttributes) {
 				userIds.add(attributes.getParentId());
 			}
 			this.addItems(userIds, existsNetworkLayoutItems, domainLayoutItems);
+			final long time62 = System.currentTimeMillis();
 			for (final PermissionAttributes attributes : permissionAttributes) {
 				final Identifier domainId2 = attributes.getDomainId();
 				if (domainId.equals(domainId2)) {
@@ -434,8 +449,12 @@ public final class DomainPerpective extends AbstractPerspective {
 						existsNetworkLayoutItems);
 				}
 			}
+			final long time63 = System.currentTimeMillis();
+//			assert Log.debugMessage("61-6 takes " + (time61 - time6) + " ms", Log.DEBUGLEVEL03);
+//			assert Log.debugMessage("62-61 takes " + (time62 - time61) + " ms", Log.DEBUGLEVEL03);
+//			assert Log.debugMessage("63-62 takes " + (time63 - time62) + " ms", Log.DEBUGLEVEL03);
 		}
-		
+		final long time7 = System.currentTimeMillis();
 		
 		// XXX bug due to cuncurrentmodification at lru map during search
 		final Set<Domain> domains = 
@@ -460,7 +479,7 @@ public final class DomainPerpective extends AbstractPerspective {
 						Log.DEBUGLEVEL10);
 			}
 		}
-		
+		final long time8 = System.currentTimeMillis();
 		this.domainNetworkItem = domainNetLayoutItemMap.get(domainId);		
 		// create network if domain is empty 
 		if (this.domainNetworkItem == null) {
@@ -469,6 +488,16 @@ public final class DomainPerpective extends AbstractPerspective {
 				layoutCondition, 
 				domainId);
 		}
+		final long time9 = System.currentTimeMillis();
+		assert Log.debugMessage("1-0 takes " + (time1 - time0) + " ms", Log.DEBUGLEVEL03);
+		assert Log.debugMessage("2-1 takes " + (time2 - time1) + " ms", Log.DEBUGLEVEL03);
+		assert Log.debugMessage("3-2 takes " + (time3 - time2) + " ms", Log.DEBUGLEVEL03);
+		assert Log.debugMessage("4-3 takes " + (time4 - time3) + " ms", Log.DEBUGLEVEL03);
+		assert Log.debugMessage("5-4 takes " + (time5 - time4) + " ms", Log.DEBUGLEVEL03);	
+		assert Log.debugMessage("6-5 takes " + (time6 - time5) + " ms", Log.DEBUGLEVEL03);
+		assert Log.debugMessage("7-6 takes " + (time7 - time6) + " ms", Log.DEBUGLEVEL03);
+		assert Log.debugMessage("8-7 takes " + (time8 - time7) + " ms", Log.DEBUGLEVEL03);
+		assert Log.debugMessage("9-8 takes " + (time9 - time8) + " ms", Log.DEBUGLEVEL03);
 	}
 	
 	public SystemUserPerpective getSystemUserPerspective(final UserBean userBean) {
