@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.12 2005/11/03 15:39:39 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.13 2005/12/26 15:50:25 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -18,8 +18,8 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
-import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
@@ -35,7 +35,7 @@ import com.syrus.util.HashCodeGenerator;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/11/03 15:39:39 $
+ * @version $Revision: 1.13 $, $Date: 2005/12/26 15:50:25 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -44,6 +44,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 	//final static String A_PARAMS = "0.001;0.01;0.5;1.5;1.0;";
 	//final static String A_PARAMS = "0.001;0.01;0.5;3.0;1.3;";
 	//final static String A_PARAMS = "0.001;0.01;0.5;3.0;1.5;";
+
 	final static String A_PARAMS = "0.001;0.01;0.5;3.5;1.3;"; // XXX: temp xxx mark
 
 	private static class FailCounter {
@@ -170,14 +171,15 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 		Application.init("test");
 		AnalysisParameters ap = new AnalysisParameters(
 				A_PARAMS,
-				ClientAnalysisManager.getDefaultAPClone());
+				Heap.getMinuitDefaultParams());
 		double res = evaluateAnalysisDB(ap, true, null);
 		System.out.println("evaluateAnalysisDB = " + res);
 	}
 
 	public final void xtestNotCrush1()
 	throws IOException, InvalidAnalysisParametersException {
-		AnalysisParameters ap = ClientAnalysisManager.getDefaultAPClone();
+		AnalysisParameters ap =
+			Heap.getMinuitDefaultParams();
 		double[] p = true
 			? new double[] {
 				0.0010,
