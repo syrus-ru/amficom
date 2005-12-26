@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.28 2005/12/16 11:24:57 arseniy Exp $
+* $Id: Manager.java,v 1.29 2005/12/26 13:16:53 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,23 +28,22 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resources.ResourceHandler;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/12/16 11:24:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/12/26 13:16:53 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class Manager extends AbstractApplication {
 	private static final String APPLICATION_NAME = "administration";
-
 	
 	public Manager() {
 		super(APPLICATION_NAME);
-
 	}
 	
 	@Override
@@ -67,6 +66,7 @@ public class Manager extends AbstractApplication {
 			try {
 				this.initUser();
 				this.loadDomainMembers();
+				this.loadAvailbeLayoutItems();
 			} catch (ApplicationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -97,9 +97,55 @@ public class Manager extends AbstractApplication {
 		StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(domainIds, ObjectEntities.MCM_CODE), true);
 		StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(domainIds, ObjectEntities.SERVER_CODE), true);
 		StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(domainIds, ObjectEntities.PERMATTR_CODE), true);
-		
 	}
 	
+	private void loadAvailbeLayoutItems() throws ApplicationException {
+		final Set<LayoutItem> layoutItems = 
+			StorableObjectPool.getStorableObjectsByCondition(
+				new LinkedIdsCondition(
+					LoginManager.getUserId(),
+					ObjectEntities.LAYOUT_ITEM_CODE), true);
+		if (!layoutItems.isEmpty()) {
+			StorableObjectPool.getStorableObjectsByCondition(
+				new LinkedIdsCondition(
+					layoutItems,
+					ObjectEntities.CHARACTERISTIC_CODE), true);
+		}
+	}
+	
+//	private void createOtherDomainMembers() 
+//	throws ApplicationException {
+//		final Identifier rootDomainId = new Identifier("Domain_0");
+//		
+//		final Identifier userId = LoginManager.getUserId();
+//		
+//		Domain domain = Domain.createInstance(userId, 
+//			rootDomainId, 
+//			"One more", 
+//			"One more domain");
+//		
+//		final Identifier serverId = new Identifier("Server_0");
+//		final MCM mcm1 = MCM.createInstance(userId, 
+//			rootDomainId, 
+//			"mcm", 
+//			"mcm", 
+//			"mcm.ru", 
+//			userId, 
+//			serverId);
+//		
+//		assert Log.debugMessage("mcm1:" + mcm1 + '@' + mcm1.getDomainId(), Log.DEBUGLEVEL03);
+//		
+//		final MCM mcm2 = MCM.createInstance(userId, 
+//			domain.getId(), 
+//			"one more mcm", 
+//			"one more mcm", 
+//			"mcm.qu", 
+//			userId, 
+//			serverId);
+//		
+//		assert Log.debugMessage("mcm2:" + mcm2 + '@' + mcm2.getDomainId(), Log.DEBUGLEVEL03);
+//	}
+
 	private void initUser() throws ApplicationException {
 		final Set<SystemUser> systemUserWithLoginSys = 
 			StorableObjectPool.getStorableObjectsByCondition(
