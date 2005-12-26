@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.130 2005/11/23 12:08:24 saa Exp $
+ * $Id: Heap.java,v 1.131 2005/12/26 15:42:31 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,6 +40,7 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.EvaluationPerEventResult;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
+import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
@@ -103,7 +104,7 @@ import com.syrus.util.Log;
  * 3. anchorer не может существовать без эталона
  * 
  * @author $Author: saa $
- * @version $Revision: 1.130 $, $Date: 2005/11/23 12:08:24 $
+ * @version $Revision: 1.131 $, $Date: 2005/12/26 15:42:31 $
  * @module analysis
  */
 public class Heap
@@ -158,6 +159,21 @@ public class Heap
 	private static LinkedList<RefMismatchListener> refMismatchListeners = new LinkedList<RefMismatchListener>();
 	private static LinkedList<EtalonComparisonListener> etalonComparisonListeners = new LinkedList<EtalonComparisonListener>();
 	private static LinkedList<AnchorerListener> anchorerListeners = new LinkedList<AnchorerListener>();
+
+	static {
+		try {
+			defaultAP = new AnalysisParameters (
+					0.005, //минимальный уровень событи€
+					0.02, //минимальный уровень сварки
+					0.5, //минимальный уровень коннектора
+					3,  //мин. уровень отражени€ конца волокна
+					1.3 //коэфф. запаса дл€ шума
+			);
+		} catch (InvalidAnalysisParametersException e) {
+			throw new InternalError("couldn't initialize defaultAP");
+		}
+		currentAP = getMinuitDefaultParams();
+	}
 
 	// constructor is not available
 	private Heap() {

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.26 2005/11/17 12:20:00 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.27 2005/12/26 15:42:31 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,43 +21,23 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.26 $, $Date: 2005/11/17 12:20:00 $
+ * @version $Revision: 1.27 $, $Date: 2005/12/26 15:42:31 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
 {
 	private static final String PROPERTIES_FILE_NAME = "analysis.ini";
 
-	private static AnalysisParameters defaultAP;
-
-	static {
-		try {
-			defaultAP = new AnalysisParameters (
-					0.005, //минимальный уровень события
-					0.02, //минимальный уровень сварки
-					0.5, //минимальный уровень коннектора
-					3,  //мин. уровень отражения конца волокна
-					1.3 //коэфф. запаса для шума
-			);
-		} catch (InvalidAnalysisParametersException e) {
-			throw new InternalError("couldn't initialize defaultAP");
-		}
-	}
-
-	public static AnalysisParameters getDefaultAPClone() {
-		return (AnalysisParameters)defaultAP.clone();
-	}
-
 	public ClientAnalysisManager() {
 		AnalysisParameters minuitParams = null;
-		Heap.setMinuitDefaultParams(getDefaultAPClone());
 
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileInputStream(PROPERTIES_FILE_NAME));
 			String temp = properties.getProperty("parameters");
 			if (temp != null)
-				minuitParams = new AnalysisParameters(temp, defaultAP);
+				minuitParams =
+					new AnalysisParameters(temp, Heap.getMinuitDefaultParams());
 		} catch (IOException ex) {
 			// write a error to log, then ignore
 			Log.errorMessage("IOException while reading minuitParams from INI file");
@@ -66,7 +46,7 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 			Log.errorMessage("InvalidAnalysisParametersException while reading minuitParams from INI file");
 		}
 		if (minuitParams == null)
-				minuitParams = (AnalysisParameters)defaultAP.clone();
+				minuitParams = Heap.getMinuitDefaultParams();
 
 		// сохраняем в Pool
 		Heap.setMinuitAnalysisParams(minuitParams);
