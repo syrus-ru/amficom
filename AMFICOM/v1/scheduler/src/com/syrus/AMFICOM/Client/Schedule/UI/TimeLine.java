@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeLine.java,v 1.21 2005/10/31 12:29:59 bass Exp $
+ * $Id: TimeLine.java,v 1.22 2005/12/27 14:42:37 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestLine.TestTimeItem;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/31 12:29:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/12/27 14:42:37 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -131,6 +131,10 @@ public abstract class TimeLine extends JComponent {
 		g.drawString(this.title, 5, this.titleHeight / 2 + 2);
 		g.drawLine(0, this.titleHeight / 2 + 3, width, this.titleHeight / 2 + 3);
 		g.drawLine(0, height - 1, width, height - 1);
+	}
+	
+	public final String getTitle() {
+		return this.title;
 	}
 	
 	protected final void drawItemRect(final Graphics g, 
