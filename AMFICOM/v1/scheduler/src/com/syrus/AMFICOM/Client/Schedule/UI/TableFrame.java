@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.67 2005/12/20 10:47:30 bob Exp $
+ * $Id: TableFrame.java,v 1.68 2005/12/27 12:26:52 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,7 +52,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/12/20 10:47:30 $
+ * @version $Revision: 1.68 $, $Date: 2005/12/27 12:26:52 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -141,8 +142,8 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 	
 	private void clearTests() {
 		assert Log.debugMessage(Log.DEBUGLEVEL03);
-		final WrapperedTableModel<TestView> model = this.listTable.getModel();
-		model.clear();
+		final Set<Identifier> emptySet = Collections.emptySet();
+		this.addTest(emptySet, true);
 	}
 	
 	private void setTests() {
