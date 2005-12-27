@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.62 2005/10/25 12:02:22 bob Exp $
+ * $Id: PlanPanel.java,v 1.63 2005/12/27 14:42:26 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +53,7 @@ import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/10/25 12:02:22 $
+ * @version $Revision: 1.63 $, $Date: 2005/12/27 14:42:26 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -159,6 +160,8 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	SchedulerModel	schedulerModel;
 
 	private SimpleDateFormat	sdf2;
+
+	private Comparator<TestLine>	comparator;
 	
 	public PlanPanel(JScrollPane parent, ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -183,6 +186,8 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		this.addMouseListener(this.createMouseListener());
 		this.addMouseMotionListener(this.createMouseMotionListener());
 
+		this.createComparator();
+		
 		this.timer.start();
 
 		this.setToolTipText("");
@@ -297,6 +302,32 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 
 		};
 	}	
+	
+	private void createComparator() {
+		this.comparator = new Comparator<TestLine>() {
+			public int compare(	final TestLine o1,
+			                   	final TestLine o2) {
+				return o1.getTitle().compareTo(o2.getTitle());
+			}
+		};
+	}
+	
+	private void add(final TestLine testLine) {
+		int index = 0;
+		for(int i = 0 ; i < this.getComponentCount(); i++) {
+			final Component component = this.getComponent(i);
+			if (component instanceof TestLine) {
+				final TestLine otherTestLine = (TestLine) component;
+				final int compare = this.comparator.compare(testLine, otherTestLine);
+				index = i;
+				if (compare <= 0) {					
+					break;
+				}
+				index++;
+			}
+		}
+		this.add(testLine, index);
+	}
 	
 	final Date getDateByMousePosition(final MouseEvent e) {
 		final long start = PlanPanel.this.scaleStart.getTime();
