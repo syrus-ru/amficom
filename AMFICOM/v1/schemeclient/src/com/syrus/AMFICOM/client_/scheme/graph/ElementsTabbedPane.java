@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.23 2005/12/01 09:42:31 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.24 2005/12/27 10:32:12 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2005/12/01 09:42:31 $
+ * @version $Revision: 1.24 $, $Date: 2005/12/27 10:32:12 $
  * @module schemeclient
  */
 
@@ -87,12 +87,12 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	@Override
 	protected JComponent createPanel() {
 		this.panel = new ElementsPanel(this.aContext);
-		SchemeGraph graph = this.panel.getGraph();
+		final SchemeGraph graph = this.panel.getGraph();
 		SchemeGraph.setMode(Constants.PROTO_MODE);
 		graph.setMarqueeHandler(this.marqueeHandler);
+		graph.addMouseWheelListener(this.marqueeHandler);
 		graph.addKeyListener(this.keyListener);
-		JScrollPane graphView = new JScrollPane(graph);
-		return graphView;
+		return new JScrollPane(graph);
 	}
 	
 	@Override
