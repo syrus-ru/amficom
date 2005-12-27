@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.17 2005/09/06 12:45:57 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.18 2005/12/27 10:25:20 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/09/06 12:45:57 $
+ * @version $Revision: 1.18 $, $Date: 2005/12/27 10:25:20 $
  * @module schemeclient
  */
 
@@ -60,6 +60,8 @@ public class UgoTabbedPane extends JPanel {
 		setLayout(new BorderLayout());
 		add(createPanel(), BorderLayout.CENTER);
 		add(createToolBar(), BorderLayout.NORTH);
+		
+		this.panel.getGraph().addMouseWheelListener(this.marqueeHandler);
 	}
 	
 	protected JComponent createToolBar() {

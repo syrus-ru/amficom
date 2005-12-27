@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.37 2005/12/01 15:24:41 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.38 2005/12/27 10:25:20 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,8 +43,11 @@ import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
+import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
@@ -70,7 +73,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.37 $, $Date: 2005/12/01 15:24:41 $
+ * @version $Revision: 1.38 $, $Date: 2005/12/27 10:25:20 $
  * @module schemeclient
  */
 
@@ -556,7 +559,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	}
 
 	static int counter = 0;
-	public Map<DefaultGraphCell, DefaultGraphCell> openScheme(Scheme sch) throws ApplicationException {
+	public Map<DefaultGraphCell, DefaultGraphCell> openScheme(final Scheme sch) throws ApplicationException {
 
 //		if (counter == 0 && sch.getName().startsWith("UCM")) {
 //			try {
@@ -596,8 +599,15 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		addPanel(panel1);
 		panel1.getSchemeResource().setScheme(sch);
 		updateTitle(sch.getName());
-		SchemeGraph graph = panel1.getGraph();
-		SchemeActions.openSchemeImageResource(graph, sch.getSchemeCell(), false);
+		final SchemeGraph graph = panel1.getGraph();
+		graph.addMouseWheelListener(this.marqueeHandler);
+		
+		new ProcessingDialog(new Runnable() {
+			public void run() {
+				SchemeActions.openSchemeImageResource(graph, sch.getSchemeCell(), false);		
+			}
+		}, "Open scheme");
+		
 		panel1.setGraphSize(new Dimension(sch.getWidth(), sch.getHeight()));
 		return clones;
 	}

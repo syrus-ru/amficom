@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.40 2005/11/02 17:21:40 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.41 2005/12/27 10:23:56 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,6 +46,8 @@ import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.PopupFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomInAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomOutAction;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
@@ -79,11 +83,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.40 $, $Date: 2005/11/02 17:21:40 $
+ * @version $Revision: 1.41 $, $Date: 2005/12/27 10:23:56 $
  * @module schemeclient
  */
 
-public class SchemeMarqueeHandler extends BasicMarqueeHandler {
+public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWheelListener {
 	UgoTabbedPane pane;
 	
 	public SchemeMarqueeHandler (UgoTabbedPane pane) {
@@ -799,6 +803,27 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 			}
 		}
 		super.mouseMoved(event);
+	}
+	
+	public void mouseWheelMoved(MouseWheelEvent event) {
+		final SchemeGraph graph = (SchemeGraph)event.getSource();
+		double scale = 1 + event.getWheelRotation() * 0.05;
+		if (scale <= 0) {
+			scale = 0.05;
+		}
+		GraphActions.zoomToCenter(graph, scale);
+	
+//		
+//		SchemeGraph graph = (SchemeGraph)event.getSource();
+//		graph.setScale(graph.getScale() * sc);
+//		Dimension size = graph.getPreferredSize();
+//		graph.setPreferredSize(new Dimension((int) (size.width * sc), (int) (size.height * sc)));
+//		Rectangle bounds2 = new Rectangle(this.bounds);
+//		graph.toScreen(bounds2);
+//		graph.setLocation(-bounds2.x, -bounds2.y);
+//		if (graph.getScale() >= .5)
+//			graph.setGridVisible(graph.isGridVisibleAtActualSize());
+		
 	}
 
 	public void overlay(SchemeGraph graph, Graphics g) {
