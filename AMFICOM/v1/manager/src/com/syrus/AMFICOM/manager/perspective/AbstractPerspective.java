@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractPerspective.java,v 1.12 2005/12/26 13:19:54 bob Exp $
+* $Id: AbstractPerspective.java,v 1.13 2005/12/27 10:52:32 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,6 +30,8 @@ import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphSelectionModel;
 
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -57,7 +59,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/12/26 13:19:54 $
+ * @version $Revision: 1.13 $, $Date: 2005/12/27 10:52:32 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -137,6 +139,14 @@ public abstract class AbstractPerspective implements Perspective {
 		return this.actionNodes;
 	}
 
+	protected final void sendCreatingItemsMessage() {
+		final Dispatcher internalDispatcher = this.managerMainFrame.getInternalDispatcher();
+		internalDispatcher.firePropertyChange(new StatusMessageEvent(this,
+			StatusMessageEvent.STATUS_MESSAGE,
+			I18N.getString("Manager.Dialog.CreatingPerspectiveElements") + ':' + this.getName() 
+			));
+	}
+	
 	@SuppressWarnings("unchecked")
 	protected final AbstractAction createGetTheSameOrCreateNewAction(final AbstractBeanFactory<?> factory,
 				final Checkable checkable,

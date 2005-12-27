@@ -1,5 +1,5 @@
 /*-
-* $Id: MessagePerpective.java,v 1.7 2005/12/19 10:31:52 bob Exp $
+* $Id: MessagePerpective.java,v 1.8 2005/12/27 10:52:31 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/12/19 10:31:52 $
+ * @version $Revision: 1.8 $, $Date: 2005/12/27 10:52:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -110,6 +110,7 @@ public abstract class MessagePerpective extends AbstractPerspective {
 	}
 
 	public final void createNecessaryItems() throws ApplicationException {
+		this.sendCreatingItemsMessage();
 		assert Log.debugMessage(this.getCodename(), Log.DEBUGLEVEL10);
 		Set<DeliveryAttributes> deliveryAttributes = 
 			StorableObjectPool.getStorableObjectsByCondition(

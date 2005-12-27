@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainsPerspective.java,v 1.9 2005/12/26 13:19:36 bob Exp $
+* $Id: DomainsPerspective.java,v 1.10 2005/12/27 10:52:32 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/12/26 13:19:36 $
+ * @version $Revision: 1.10 $, $Date: 2005/12/27 10:52:32 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -230,6 +230,7 @@ public final class DomainsPerspective extends AbstractPerspective {
 	
 	
 	public void createNecessaryItems() throws ApplicationException {
+		this.sendCreatingItemsMessage();
 		final Set<Domain> domains = StorableObjectPool.getStorableObjectsByCondition(
 			new EquivalentCondition(ObjectEntities.DOMAIN_CODE), 
 			true);				

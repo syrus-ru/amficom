@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.12 2005/12/26 13:18:56 bob Exp $
+* $Id: DomainPerpective.java,v 1.13 2005/12/27 10:52:32 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/12/26 13:18:56 $
+ * @version $Revision: 1.13 $, $Date: 2005/12/27 10:52:32 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -283,6 +283,7 @@ public final class DomainPerpective extends AbstractPerspective {
 	
 	
 	public void createNecessaryItems() throws ApplicationException {
+		this.sendCreatingItemsMessage();
 		final long time0 = System.currentTimeMillis();
 		final Identifier domainId = this.domainBean.getIdentifier();
 

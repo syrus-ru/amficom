@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserPerpective.java,v 1.7 2005/12/16 09:36:07 bob Exp $
+* $Id: SystemUserPerpective.java,v 1.8 2005/12/27 10:52:31 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,6 +24,9 @@ import org.jgraph.graph.Port;
 
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -49,7 +52,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/12/16 09:36:07 $
+ * @version $Revision: 1.8 $, $Date: 2005/12/27 10:52:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -221,6 +224,7 @@ public final class SystemUserPerpective extends AbstractPerspective {
 	}
 
 	public void createNecessaryItems() throws ApplicationException {
+		this.sendCreatingItemsMessage();
 		final Identifier userId = this.getUserId();
 
 		assert Log.debugMessage(userId , Log.DEBUGLEVEL10);
