@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultCableLink.java,v 1.23 2005/11/04 12:49:51 stas Exp $
+ * $Id: DefaultCableLink.java,v 1.24 2005/12/27 10:20:43 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2005/11/04 12:49:51 $
+ * @version $Revision: 1.24 $, $Date: 2005/12/27 10:20:43 $
  * @module schemeclient
  */
 
@@ -229,6 +229,7 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 					if (DefaultCableLink.this.routed == null) {
 						 DefaultCableLink.this.routed = createDefaultRouting(graph, from, to, DefaultCableLink.this.source1, DefaultCableLink.this.target1);
 					} else {
+						if (!SchemeActions.isIgnoreCheck()) {
 						Point[] p1 = createDefaultRouting(graph, from, to, DefaultCableLink.this.source1, DefaultCableLink.this.target1);
 						if (DefaultCableLink.this.routed.length != p1.length) {
 							DefaultCableLink.this.routed = p1;
@@ -408,6 +409,7 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 							DefaultCableLink.this._routed[i].y = DefaultCableLink.this.routed[i].y;
 						}
 					}
+					}
 				}
 				// Set/Add Points
 				for (int i = 0; i < DefaultCableLink.this.routed.length; i++)
@@ -429,10 +431,13 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 		}
 	}
 	
+	int counter = 0;
 	Point[] createDefaultRouting(SchemeGraph graph, Point from, Point to, DefaultPort sourcePort, DefaultPort targetPort) {
 		Point[] p = null;
 		int grid = graph.getGridSize();
 
+		long start = System.currentTimeMillis();
+		
 		if (sourcePort != null && targetPort != null) {
 			SchemeCablePort startPort = ((CablePortCell)sourcePort.getParent()).getSchemeCablePort();
 			SchemeCablePort endPort = ((CablePortCell)targetPort.getParent()).getSchemeCablePort();
@@ -484,6 +489,8 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 				p[3] = graph.snap(new Point(to.x - grid, to.y));
 			}
 		}
+		
+		System.out.println("(" + (counter++) + ") Routing for " + schemeCablelinkId + " takes " + (System.currentTimeMillis() - start) + " ms");
 		return p;
 	}
 

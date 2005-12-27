@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.53 2005/11/21 15:24:46 stas Exp $
+ * $Id: SchemeActions.java,v 1.54 2005/12/27 10:21:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import java.util.SortedSet;
 import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.tree.TreeNode;
@@ -102,12 +103,13 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.53 $, $Date: 2005/11/21 15:24:46 $
+ * @version $Revision: 1.54 $, $Date: 2005/12/27 10:21:06 $
  * @module schemeclient
  */
 
 public class SchemeActions {
 	private static final String EMPTY = ""; //$NON-NLS-1$
+	private static boolean ignore_port_check = false; 
 	
 	private SchemeActions () {
 		// empty
@@ -753,8 +755,10 @@ public class SchemeActions {
 		graph.setMakeNotifications(false);
 //		GraphActions.clearGraph(graph);
 		if (schemeImageResource != null) {
+			ignore_port_check = true;
 			clones = GraphActions.insertCell(graph, schemeImageResource.getData(), doClone, p, isCenterCell);
 			fixImages(graph);
+			ignore_port_check = false;
 		}
 		graph.setGraphChanged(false);
 		graph.setMakeNotifications(tmp);
@@ -1127,6 +1131,16 @@ public class SchemeActions {
 
 	public static boolean connectSchemeLink(SchemeGraph graph, DefaultLink link,
 			PortCell port, boolean is_source) {
+		if (ignore_port_check) {
+			return true;
+		}
+		
+		SchemeLink schemeLink = link.getSchemeLink();
+		
+		if (schemeLink.getSourceAbstractSchemePortId().equals(port.getSchemePortId())
+				||schemeLink.getTargetAbstractSchemePortId().equals(port.getSchemePortId())) {
+			return true;
+		}
 
 		SchemePort sp = port.getSchemePort();
 		if (sp == null) {
@@ -1135,16 +1149,16 @@ public class SchemeActions {
 		}
 		
 		AbstractSchemeLink connectedLink = sp.getAbstractSchemeLink();
-		if (connectedLink != null && link.getSchemeLinkId().equals(connectedLink.getId())) {
-			return true;
-		}
-		SchemeLink sl = link.getSchemeLink();
-
+//		if (connectedLink != null && link.getSchemeLinkId().equals(connectedLink.getId())) {
+//			return true;
+//		}
+		
 		if (connectedLink != null) {
 			Log.debugMessage("Port already has connected link", WARNING);
 			return false;
 		}
 
+		SchemeLink sl = link.getSchemeLink();
 		if (is_source) {
 			sl.setSourceAbstractSchemePort(sp);
 		} else {
@@ -1213,8 +1227,21 @@ public class SchemeActions {
 		return true;
 	}
 
+	public static boolean isIgnoreCheck() {
+		return ignore_port_check;
+	}
+	
 	public static boolean connectSchemeCableLink(SchemeGraph graph,
 			DefaultCableLink link, CablePortCell port, boolean is_source) {
+		if (ignore_port_check) {
+			return true;
+		}
+
+		SchemeCableLink schemeLink = link.getSchemeCableLink();
+		if (schemeLink.getSourceAbstractSchemePortId().equals(port.getSchemeCablePortId())
+				||schemeLink.getTargetAbstractSchemePortId().equals(port.getSchemeCablePortId())) {
+			return true;
+		}
 		
 		SchemeCablePort sp = port.getSchemeCablePort();
 		if (sp == null) {
@@ -1223,16 +1250,15 @@ public class SchemeActions {
 		}
 		
 		AbstractSchemeLink connectedLink = sp.getAbstractSchemeLink();
-		if (connectedLink != null && link.getSchemeCableLinkId().equals(connectedLink.getId())) {
-			return true;
-		}
-		SchemeCableLink sl = link.getSchemeCableLink();
-		
+//		if (connectedLink != null && link.getSchemeCableLinkId().equals(connectedLink.getId())) {
+//			return true;
+//		}
 		if (connectedLink != null) {
 			Log.debugMessage("CablePort already has connected cable", WARNING);
 			return false;
 		}
 
+		SchemeCableLink sl = link.getSchemeCableLink();
 		if (is_source) {
 			sl.setSourceAbstractSchemePort(sp);
 		} else {
