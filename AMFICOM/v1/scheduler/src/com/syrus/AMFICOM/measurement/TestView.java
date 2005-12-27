@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.9 2005/12/09 13:28:02 arseniy Exp $
+* $Id: TestView.java,v 1.10 2005/12/27 11:52:56 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -39,15 +40,13 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/12/09 13:28:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/12/27 11:52:56 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
 public final class TestView {
-	
-	private static final Map<Test, TestView> MAP = new HashMap<Test, TestView>();
-	private static final Map<Identifier, TestView> IDMAP = new HashMap<Identifier, TestView>();
+	private static final Map<Identifiable, TestView> MAP = new HashMap<Identifiable, TestView>();
 	
 	private final Test test;
 	
@@ -254,7 +253,7 @@ public final class TestView {
 	}
 	
 	public static final synchronized TestView valueOf(final Identifier testId) {
-		return IDMAP.get(testId);
+		return MAP.get(testId);
 	}
 	
 	public static final synchronized void addTest(final Test test,
@@ -263,12 +262,10 @@ public final class TestView {
 	throws ApplicationException {
 		final TestView testView = new TestView(test, start, end);
 		MAP.put(test, testView);
-		IDMAP.put(test.getId(), testView);
 	}
 	
 	public static final synchronized void clearCache(){
 		MAP.clear();
-		IDMAP.clear();
 	}
 	
 	public static final synchronized void refreshCache(final Set<Test> tests,
@@ -276,9 +273,7 @@ public final class TestView {
 		final Date end) 
 	throws ApplicationException{
 		for (final Test test : tests) {
-			final TestView testView = new TestView(test, start, end);
-			MAP.put(test, testView);
-			IDMAP.put(test.getId(), testView);
+			addTest(test, start, end);
 		}
 	}
 	
