@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.28 2005/10/31 12:30:29 bass Exp $
+ * $Id: SchemeGraphUI.java,v 1.29 2005/12/27 10:26:05 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,8 +59,8 @@ import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/10/31 12:30:29 $
+ * @author $Author: stas $
+ * @version $Revision: 1.29 $, $Date: 2005/12/27 10:26:05 $
  * @module schemeclient
  */
 
@@ -553,16 +553,16 @@ public class SchemeGraphUI extends GPGraphUI {
 			int w = this.graph.getPreferredSize().width;
 			int h = this.graph.getPreferredSize().height;
 
-			int gs = ((SchemeGraph)this.graph).toScreen((int) (this.graph.getGridSize() * this.graph.getScale()));
+			double gs = this.graph.getGridSize() * this.graph.getScale();
 			if (((SchemeGraph) this.graph).isBorderVisible()) {
 				if (gs > 0) {
 
 					g.setColor(Color.lightGray);
 					int x0, xe, y0, ye;
-					x0 = 10 * gs;
-					y0 = 2 * gs;
-					xe = (w / gs - 2) * gs;
-					ye = (h / gs - 2) * gs;
+					x0 = (int)Math.round(10 * gs);
+					y0 = (int)Math.round(2 * gs);
+					xe = (int)Math.round((w / gs - 2) * gs);
+					ye = (int)Math.round((h / gs - 2) * gs);
 
 					g.drawLine(x0, y0, x0, ye);
 					g.drawLine(x0, y0, xe, y0);
@@ -616,34 +616,34 @@ public class SchemeGraphUI extends GPGraphUI {
 		}
 	}
 
-	protected void paintGrid(int gs, Graphics g, Dimension r) {
+	protected void paintGrid(double gs, Graphics g, Dimension r) {
 		
 		if (gs > 0) {
 			int w = r.width;
 			int h = r.height;
 
 			Rectangle r1 = this.graph.getVisibleRect();
-			int x0 = (r1.x / gs + 1) * gs; // - r1.x
-			int y0 = (r1.y / gs + 1) * gs;
+			int x0 = (int)Math.round((r1.x / gs + 1) * gs); // - r1.x
+			int y0 = (int)Math.round((r1.y / gs + 1) * gs);
 			int xe = r1.x + r1.width;
 			int ye = r1.y + r1.height;
 			if (this.graph instanceof SchemeGraph) {
 //				gs = ((SchemeGraph)this.graph).toScreen(gs);
 				if (((SchemeGraph) this.graph).isBorderVisible()) {
-					x0 = Math.max(x0, 10 * gs);
-					y0 = Math.max(y0, 2 * gs);
-					xe = Math.min(xe, (w / gs - 2) * gs);
-					ye = Math.min(ye, (h / gs - 2) * gs);
+					x0 = (int)Math.round(Math.max(x0, 10 * gs));
+					y0 = (int)Math.round(Math.max(y0, 2 * gs));
+					xe = (int)Math.round(Math.min(xe, (w / gs - 2) * gs));
+					ye = (int)Math.round(Math.min(ye, (h / gs - 2) * gs));
 				}
 			} else {
-				gs = (int)(this.graph.getScale() * gs);
+				gs = this.graph.getScale() * gs;
 			}
 //			g.setColor(this.graph.getGridColor());
 			g.setColor(Color.lightGray);
 			
-			for (int x = x0; x <= xe; x += gs)
-				for (int y = y0; y <= ye; y += gs)
-					g.drawLine(x, y, x, y);
+			for (double x = x0; x <= xe; x += gs)
+				for (double y = y0; y <= ye; y += gs)
+					g.drawLine((int)Math.round(x), (int)Math.round(y), (int)Math.round(x), (int)Math.round(y));
 		}
 	} 
 }

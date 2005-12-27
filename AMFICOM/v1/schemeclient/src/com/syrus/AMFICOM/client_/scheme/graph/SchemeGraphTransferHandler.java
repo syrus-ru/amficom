@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphTransferHandler.java,v 1.6 2005/10/31 12:30:29 bass Exp $
+ * $Id: SchemeGraphTransferHandler.java,v 1.7 2005/12/27 10:26:05 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,17 +59,13 @@ public class SchemeGraphTransferHandler extends TransferHandler {
 				GraphActions.removeCells(graph, DefaultGraphModel.getDescendants(graph.getModel(), cells).toArray());
 				
 				final SchemeMarqueeHandler marquee = (SchemeMarqueeHandler)graph.getMarqueeHandler();
-				try {
-					if (marquee.pane instanceof SchemeTabbedPane) {
-						SchemeResource res = ((SchemeTabbedPane)marquee.pane).getCurrentPanel().getSchemeResource();
-						if (res.getCellContainerType() == SchemeResource.SCHEME) {
-							graph.aContext.getDispatcher().firePropertyChange(new SchemeEvent(graph, res.getScheme().getId(), SchemeEvent.UPDATE_OBJECT));
-						} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
-							graph.aContext.getDispatcher().firePropertyChange(new SchemeEvent(graph, res.getSchemeElement().getId(), SchemeEvent.UPDATE_OBJECT));
-						}
+				if (marquee.pane instanceof SchemeTabbedPane) {
+					SchemeResource res = ((SchemeTabbedPane)marquee.pane).getCurrentPanel().getSchemeResource();
+					if (res.getCellContainerType() == SchemeResource.SCHEME) {
+						graph.aContext.getDispatcher().firePropertyChange(new SchemeEvent(graph, res.getCellContainerId(), SchemeEvent.UPDATE_OBJECT));
+					} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
+						graph.aContext.getDispatcher().firePropertyChange(new SchemeEvent(graph, res.getCellContainerId(), SchemeEvent.UPDATE_OBJECT));
 					}
-				} catch (ApplicationException e) {
-					Log.errorMessage(e);
 				}
 			}
 			clipboard.setContents(new GraphCellTransferable(alist), null);
