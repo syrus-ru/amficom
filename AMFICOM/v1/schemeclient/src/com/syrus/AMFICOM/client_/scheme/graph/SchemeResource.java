@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.17 2005/10/31 12:30:29 bass Exp $
+ * $Id: SchemeResource.java,v 1.18 2005/12/27 10:22:42 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,8 +33,8 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/10/31 12:30:29 $
+ * @author $Author: stas $
+ * @version $Revision: 1.18 $, $Date: 2005/12/27 10:22:42 $
  * @module schemeclient
  */
 
@@ -97,6 +97,10 @@ public class SchemeResource {
 //	public static SortedSet<Identifier> getCashedPathElementIds() {
 //		return pmIds;
 //	}
+	
+	public Identifier getCellContainerId() {
+		return this.objectId;
+	}
 	
 	public SchemeCellContainer getCellContainer() throws ApplicationException {
 		if (this.objectType == SCHEME) {
