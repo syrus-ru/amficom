@@ -1,5 +1,5 @@
 /*
- * $Id: ZoomOutAction.java,v 1.6 2005/10/10 11:07:38 stas Exp $
+ * $Id: ZoomOutAction.java,v 1.7 2005/12/27 10:23:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/10/10 11:07:38 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/27 10:23:15 $
  * @module schemeclient
  */
 
@@ -35,17 +35,6 @@ public class ZoomOutAction extends AbstractAction {
 
 	public void actionPerformed(ActionEvent e) {
 		SchemeGraph graph = this.pane.getGraph();
-		
-		Point oldLocation = graph.getLocation();
-		Rectangle visibleRect = graph.getVisibleRect();
-		
-		graph.setScale(graph.getScale() * 0.8);
-		Dimension size = graph.getPreferredSize();
-		graph.setPreferredSize(new Dimension((int) (size.width * .8), (int) (size.height * .8)));
-		
-		graph.setLocation((int)(oldLocation.x * 0.8 + 0.1 * visibleRect.width), (int)(oldLocation.y * 0.8 + 0.1 * visibleRect.height));
-		
-		if (graph.getScale() < .5)
-			graph.setGridVisible(false);
+		GraphActions.zoomToCenter(graph, 0.8);
 	}
 }

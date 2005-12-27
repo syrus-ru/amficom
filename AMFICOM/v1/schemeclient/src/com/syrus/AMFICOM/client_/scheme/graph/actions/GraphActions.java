@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.23 2005/12/06 14:14:18 stas Exp $
+ * $Id: GraphActions.java,v 1.24 2005/12/27 10:23:14 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -53,7 +54,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2005/12/06 14:14:18 $
+ * @version $Revision: 1.24 $, $Date: 2005/12/27 10:23:14 $
  * @module schemeclient
  */
 
@@ -701,5 +702,19 @@ public class GraphActions {
 		viewMap.put(edge, GraphConstants.cloneMap(map));
 		ConnectionSet cs = new ConnectionSet();
 		graph.getModel().edit(viewMap, cs, null, null);
+	}
+	
+	public static void zoomToCenter(SchemeGraph graph, double k) {
+		Point oldLocation = graph.getLocation();
+		Rectangle visibleRect = graph.getVisibleRect();
+		
+		graph.setScale(graph.getScale() * k);
+		Dimension size = graph.getPreferredSize();
+		graph.setPreferredSize(new Dimension((int) (size.width * k), (int) (size.height * k)));
+		
+		graph.setLocation((int)(oldLocation.x * k + ((1 - k) / 2) * visibleRect.width), (int)(oldLocation.y * k + ((1 - k) / 2) * visibleRect.height));
+		
+		if (graph.getScale() < .5)
+			graph.setGridVisible(false);		
 	}
 }

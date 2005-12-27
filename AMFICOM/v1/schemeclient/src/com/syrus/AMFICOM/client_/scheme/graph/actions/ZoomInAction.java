@@ -1,5 +1,5 @@
 /*
- * $Id: ZoomInAction.java,v 1.6 2005/10/10 11:07:38 stas Exp $
+ * $Id: ZoomInAction.java,v 1.7 2005/12/27 10:23:14 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/10/10 11:07:38 $
+ * @version $Revision: 1.7 $, $Date: 2005/12/27 10:23:14 $
  * @module schemeclient
  */
 
@@ -36,18 +36,6 @@ public class ZoomInAction extends AbstractAction {
 
 	public void actionPerformed(ActionEvent e) {
 		SchemeGraph graph = this.pane.getGraph();
-		
-		Point oldLocation = graph.getLocation();
-		Rectangle visibleRect = graph.getVisibleRect();
-		
-		graph.setScale(graph.getScale() * 1.25);
-		Dimension size = graph.getPreferredSize();
-		
-		graph.setPreferredSize(new Dimension((int) (size.width * 1.25), (int) (size.height * 1.25)));
-		
-		graph.setLocation((int)(oldLocation.x * 1.25 - 0.1 * visibleRect.width), (int)(oldLocation.y * 1.25 - 0.1 * visibleRect.height));
-
-		if (graph.getScale() >= .5)
-			graph.setGridVisible(graph.isGridVisibleAtActualSize());
+		GraphActions.zoomToCenter(graph, 1.25);
 	}
 }
