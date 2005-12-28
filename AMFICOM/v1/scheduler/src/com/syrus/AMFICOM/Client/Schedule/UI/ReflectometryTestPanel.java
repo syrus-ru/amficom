@@ -66,7 +66,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/12/28 09:15:59 $
+ * @version $Revision: 1.96 $, $Date: 2005/12/28 13:11:59 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -285,75 +285,53 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	
 					ByteArray byteArray;
 	
-					Object wave = this.waveLengthComboBox.getSelectedItem();
-					if (wave == null) {
+					final String wave = this.getString(this.waveLengthComboBox.getSelectedItem());
+					if ((wave == null) || (wave.length() == 0)) {
 						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.WaveLengthIsNotSet")); //$NON-NLS-1$
 					}
 	
-					String waveStr = wave.toString();
-					if ((waveStr == null) || (waveStr.length() == 0)) {
-						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.WaveLengthIsNotSet")); //$NON-NLS-1$
-					}
-	
-					byteArray = this.getByteArray(waveStr, ParameterType.REF_WAVE_LENGTH);
+					byteArray = this.getByteArray(wave, ParameterType.REF_WAVE_LENGTH);
 	
 					params[0] = Parameter.createInstance(ParameterType.REF_WAVE_LENGTH, byteArray.getBytes());
 	
-					Object distance = this.maxDistanceComboBox.getSelectedItem();
-					if (distance == null) {
+					final String distance = this.getString(this.maxDistanceComboBox.getSelectedItem());
+					if ((distance == null) || (distance.length() == 0)) {
 						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.DistanceIsNotSet")); //$NON-NLS-1$
 					}
-	
-					String distanceStr = distance.toString();
-					if ((distanceStr == null) || (distanceStr.length() == 0)) {
-						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.DistanceIsNotSet")); //$NON-NLS-1$
-					}
-					byteArray = this.getByteArray(distanceStr, ParameterType.REF_TRACE_LENGTH);
+					byteArray = this.getByteArray(distance, ParameterType.REF_TRACE_LENGTH);
 	
 					params[1] = Parameter.createInstance(ParameterType.REF_TRACE_LENGTH, byteArray.getBytes());
 	
-					Object resolution = this.resolutionComboBox.getSelectedItem();
-					if (resolution == null) {
+					final String resolution = this.getString(this.resolutionComboBox.getSelectedItem());
+					if ((resolution == null) || (resolution.length() == 0)) {
 						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.ResolutionIsNotSet")); //$NON-NLS-1$
 					}
-					final String resolutionStr = resolution.toString();
-					if ((resolutionStr == null) || (resolutionStr.length() == 0)) {
-						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.ResolutionIsNotSet")); //$NON-NLS-1$
-					}
-					byteArray = this.getByteArray(resolutionStr, ParameterType.REF_RESOLUTION);
+					byteArray = this.getByteArray(resolution, ParameterType.REF_RESOLUTION);
 	
 					params[2] = Parameter.createInstance(ParameterType.REF_RESOLUTION, byteArray.getBytes());
 	
 					if (this.highResolutionCheckBox.isSelected()) {
-						final Object pulse = this.pulseWidthHiResComboBox.getSelectedItem();
-						if (pulse == null) {
-							throw new IllegalArgumentException(I18N.getString("Scheduler.Error.PulseWidthIsNotSet")); //$NON-NLS-1$
-						}
-						final String pulseStr = pulse.toString();
-						if ((pulseStr == null) || (pulseStr.length() == 0)) {
+						final String pulse = this.getString(this.pulseWidthHiResComboBox.getSelectedItem());
+						if ((pulse == null) || (pulse.length() == 0)) {
 							throw new IllegalArgumentException(I18N.getString("Scheduler.Error.PulseWidthIsNotSet")); //$NON-NLS-1$
 						}
 	
-						byteArray = this.getByteArray(pulseStr, ParameterType.REF_PULSE_WIDTH_HIGH_RES);
+						byteArray = this.getByteArray(pulse, ParameterType.REF_PULSE_WIDTH_HIGH_RES);
 	
 						params[3] = Parameter.createInstance(ParameterType.REF_PULSE_WIDTH_HIGH_RES, byteArray.getBytes());
 					} else {
-						final Object pulse = this.pulseWidthLowResComboBox.getSelectedItem();
-						if (pulse == null) {
-							throw new IllegalArgumentException(I18N.getString("Scheduler.Error.PulseWidthIsNotSet")); //$NON-NLS-1$
-						}
-						final String pulseStr = pulse.toString();
-						if ((pulseStr == null) || (pulseStr.length() == 0)) {
+						final String pulse = this.getString(this.pulseWidthLowResComboBox.getSelectedItem());
+						if ((pulse == null) || (pulse.length() == 0)) {
 							throw new IllegalArgumentException(I18N.getString("Scheduler.Error.PulseWidthIsNotSet")); //$NON-NLS-1$
 						}
 	
-						byteArray = this.getByteArray(pulseStr, ParameterType.REF_PULSE_WIDTH_LOW_RES);
+						byteArray = this.getByteArray(pulse, ParameterType.REF_PULSE_WIDTH_LOW_RES);
 	
 						params[3] = Parameter.createInstance(ParameterType.REF_PULSE_WIDTH_LOW_RES, byteArray.getBytes());
 					}
 	
 //					final String refract = this.refractTextField.getText();
-					final String refract = (String)this.refractComboBox.getSelectedItem();
+					final String refract = this.getString(this.refractComboBox.getSelectedItem());
 					if (refract == null || refract.length() == 0) {
 						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.IndexOfRefractionIsNotSet")); //$NON-NLS-1$
 					}
@@ -361,16 +339,12 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	
 					params[4] = Parameter.createInstance(ParameterType.REF_INDEX_OF_REFRACTION, byteArray.getBytes());
 	
-					final Object average = this.averageQuantityComboBox.getSelectedItem();
-					if (average == null) {
-						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.AverageQuantityIsNotSet")); //$NON-NLS-1$
-					}
-					final String averageStr = average.toString();
-					if (averageStr == null || averageStr.length() == 0) {
+					final String average = this.getString(this.averageQuantityComboBox.getSelectedItem());
+					if (average == null || average.length() == 0) {
 						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.AverageQuantityIsNotSet")); //$NON-NLS-1$
 					}
 	
-					byteArray = this.getByteArray(averageStr, ParameterType.REF_AVERAGE_COUNT);
+					byteArray = this.getByteArray(average, ParameterType.REF_AVERAGE_COUNT);
 	
 					params[5] = Parameter.createInstance(ParameterType.REF_AVERAGE_COUNT, byteArray.getBytes());
 	
@@ -404,6 +378,10 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		return parameterSet;
 	}
 
+	private final String getString(final Object object) {
+		return object != null ? object.toString() : null; 
+	}
+	
 	private void refreshUnchangedMap() {
 		if (this.unchangedObjects == null) {
 			this.unchangedObjects = new HashMap<ParameterType, String>();
