@@ -286,5 +286,6 @@ r6		hw/r6
 r7		hw/r7
 r8		hw/r8
 
+lamview		lamview
 tools		tools
 util		util
