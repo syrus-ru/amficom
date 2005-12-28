@@ -66,7 +66,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/12/20 09:02:43 $
+ * @version $Revision: 1.95 $, $Date: 2005/12/28 09:15:59 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -77,8 +77,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 
 	static final BigDecimal ONE_THOUSAND = new BigDecimal("1000");
 	
-	double					maxIndexOfRefraction			= 1.46820;
-	double					minIndexOfRefraction			= 1.46820;
+//	double					maxIndexOfRefraction			= 1.46820;
+//	double					minIndexOfRefraction			= 1.46820;
 
 	Map<BigDecimal, String> pulseWidthHiResMap;
 	Map<BigDecimal, String> pulseWidthLowResMap;
@@ -98,8 +98,9 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	private JLabel 			pulseWidthLabel;
 	
 	private JTextField		descriptionField;
-	private JTextField		refractTextField;
+//	private JTextField		refractTextField;
 	private JComboBox		waveLengthComboBox;
+	JComboBox				refractComboBox;
 	JComboBox				maxDistanceComboBox;
 	JCheckBox				highResolutionCheckBox;
 	JComboBox				pulseWidthHiResComboBox;
@@ -178,7 +179,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 									typeUnchanged = ParameterType.REF_PULSE_WIDTH_HIGH_RES;
 								}
 							} else if (type.equals(ParameterType.REF_INDEX_OF_REFRACTION)) {
-								value = this.refractTextField.getText();
+//								value = this.refractTextField.getText();
+								value = this.refractComboBox.getSelectedItem();
 							} else if (type.equals(ParameterType.REF_AVERAGE_COUNT)) {
 								value = this.averageQuantityComboBox.getSelectedItem();
 							} else if (type.equals(ParameterType.REF_FLAG_GAIN_SPLICE_ON)) {
@@ -240,7 +242,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 									}
 								}
 							} else if (type.equals(ParameterType.REF_INDEX_OF_REFRACTION)) {
-								value = this.refractTextField.getText();
+//								value = this.refractTextField.getText();
+								value = this.refractComboBox.getSelectedItem();
 							} else if (type.equals(ParameterType.REF_AVERAGE_COUNT)) {
 								value = this.averageQuantityComboBox.getSelectedItem();
 							} else if (type.equals(ParameterType.REF_FLAG_GAIN_SPLICE_ON)) {
@@ -349,8 +352,9 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 						params[3] = Parameter.createInstance(ParameterType.REF_PULSE_WIDTH_LOW_RES, byteArray.getBytes());
 					}
 	
-					final String refract = this.refractTextField.getText();
-					if ((refract == null) || (refract.length() == 0)) {
+//					final String refract = this.refractTextField.getText();
+					final String refract = (String)this.refractComboBox.getSelectedItem();
+					if (refract == null || refract.length() == 0) {
 						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.IndexOfRefractionIsNotSet")); //$NON-NLS-1$
 					}
 					byteArray = this.getByteArray(refract, ParameterType.REF_INDEX_OF_REFRACTION);
@@ -362,7 +366,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.AverageQuantityIsNotSet")); //$NON-NLS-1$
 					}
 					final String averageStr = average.toString();
-					if ((averageStr == null) || (averageStr.length() == 0)) {
+					if (averageStr == null || averageStr.length() == 0) {
 						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.AverageQuantityIsNotSet")); //$NON-NLS-1$
 					}
 	
@@ -424,7 +428,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 			this.unchangedObjects.put(ParameterType.REF_PULSE_WIDTH_LOW_RES, pulse != null ? pulse.toString() : null);
 		}
 
-		final String refract = this.refractTextField.getText();
+//		final String refract = this.refractTextField.getText();
+		final Object refract = this.refractComboBox.getSelectedItem();
 		this.unchangedObjects.put(ParameterType.REF_INDEX_OF_REFRACTION, refract != null ? refract.toString() : null);
 
 		final Object average = this.averageQuantityComboBox.getSelectedItem();
@@ -507,7 +512,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		this.pulseWidthLabel.setEnabled(enable);
 
 		this.descriptionField.setEnabled(enable);
-		this.refractTextField.setEnabled(enable);
+//		this.refractTextField.setEnabled(enable);
+		this.refractComboBox.setEnabled(enable);
 		this.waveLengthComboBox.setEnabled(enable);
 		this.maxDistanceComboBox.setEnabled(enable);
 		this.highResolutionCheckBox.setEnabled(enable);
@@ -751,7 +757,11 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 									bgValues[i] = new BigDecimal(values[i]);
 								}
 								Arrays.sort(bgValues);
-								this.refractTextField.setText(bgValues[0].toString());
+//								this.refractTextField.setText(bgValues[0].toString());
+								this.refractComboBox.removeAllItems();
+								for (int i = 0; i < bgValues.length; i++) {
+									this.refractComboBox.addItem(bgValues[i]);
+								}
 							} else {
 								// TODO throw exception
 							}
@@ -1024,7 +1034,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 			final String stringValue = setParameters[i].getStringValue();
 			Log.debugMessage(stringValue, Log.DEBUGLEVEL10);
 			if (parameterType.equals(ParameterType.REF_INDEX_OF_REFRACTION)) {
-				this.refractTextField.setText(stringValue);
+//				this.refractTextField.setText(stringValue);
+				this.selectCBValue(this.refractComboBox, new BigDecimal(stringValue));
 			} else if (parameterType.equals(ParameterType.REF_WAVE_LENGTH)) {
 				this.selectCBValue(this.waveLengthComboBox, new BigDecimal(stringValue));
 			} else if (parameterType.equals(ParameterType.REF_AVERAGE_COUNT)) {
@@ -1048,8 +1059,9 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	
 	private void createUIItems() {
 		this.descriptionField = new JTextField(128);
-		this.refractTextField = new JTextField(8);
+//		this.refractTextField = new JTextField(8);
 
+		this.refractComboBox = new JComboBox();
 		this.waveLengthComboBox = new JComboBox();
 		this.maxDistanceComboBox = new JComboBox();
 		this.highResolutionCheckBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.HighResolution"));
@@ -1072,34 +1084,34 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		this.bcOptionBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.BoxCar"));
 		this.lfdOptionBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.LiveFiberDetect"));
 
-		this.refractTextField.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				final JTextField textField = (JTextField) e.getSource();
-				final String value = textField.getText();
-				double refract = 0.0;
-				boolean isDouble = false;
-				try {
-					refract = Double.parseDouble(value);
-					isDouble = true;
-				} catch (final NumberFormatException nfe) {
-					isDouble = false;
-				}
-
-				if (!isDouble) {
-					textField.setText(Double.toString(ReflectometryTestPanel.this.minIndexOfRefraction));
-				} else {
-					if (refract < ReflectometryTestPanel.this.minIndexOfRefraction) {
-						textField.setText(Double.toString(ReflectometryTestPanel.this.minIndexOfRefraction));
-					} else {
-						if (refract > ReflectometryTestPanel.this.maxIndexOfRefraction) {
-							textField.setText(Double.toString(ReflectometryTestPanel.this.maxIndexOfRefraction));
-						}
-					}
-				}
-
-			}
-		});
+//		this.refractTextField.addActionListener(new ActionListener() {
+//
+//			public void actionPerformed(ActionEvent e) {
+//				final JTextField textField = (JTextField) e.getSource();
+//				final String value = textField.getText();
+//				double refract = 0.0;
+//				boolean isDouble = false;
+//				try {
+//					refract = Double.parseDouble(value);
+//					isDouble = true;
+//				} catch (final NumberFormatException nfe) {
+//					isDouble = false;
+//				}
+//
+//				if (!isDouble) {
+//					textField.setText(Double.toString(ReflectometryTestPanel.this.minIndexOfRefraction));
+//				} else {
+//					if (refract < ReflectometryTestPanel.this.minIndexOfRefraction) {
+//						textField.setText(Double.toString(ReflectometryTestPanel.this.minIndexOfRefraction));
+//					} else {
+//						if (refract > ReflectometryTestPanel.this.maxIndexOfRefraction) {
+//							textField.setText(Double.toString(ReflectometryTestPanel.this.maxIndexOfRefraction));
+//						}
+//					}
+//				}
+//
+//			}
+//		});
 
 		this.maxDistanceComboBox.addActionListener(new ActionListener() {
 
@@ -1189,10 +1201,11 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		};
 		
 		this.descriptionField.addFocusListener(textFieldFocusListener);
-		this.refractTextField.addFocusListener(textFieldFocusListener);
+//		this.refractTextField.addFocusListener(textFieldFocusListener);
 
 		this.descriptionField.addActionListener(changeActionListener);
-		this.refractTextField.addActionListener(changeActionListener);
+//		this.refractTextField.addActionListener(changeActionListener);
+		this.refractComboBox.addActionListener(changeActionListener);
 		this.waveLengthComboBox.addActionListener(changeActionListener);
 		this.averageQuantityComboBox.addActionListener(changeActionListener);
 		this.highResolutionCheckBox.addActionListener(changeActionListener);
@@ -1225,7 +1238,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		this.add(this.refractLabel, gbc);
 		gbc.weightx = 0.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		this.add(this.refractTextField, gbc);
+//		this.add(this.refractTextField, gbc);
+		this.add(this.refractComboBox, gbc);
 
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
