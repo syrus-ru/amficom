@@ -1,16 +1,37 @@
 #
-# $Id: Makefile,v 1.4 2005/10/09 12:58:12 bass Exp $
+# $Id: Makefile,v 1.1.1.1 2005/07/03 16:51:46 bass Exp $
 #
 # vim:set ft=make:
 #
 
 MODULE_NAME := cmserver_interface
-IDL_SOURCES = $(IDLDIR)/cmserver.idl
 
-include ../tools/Makefile.java.inc.mk
+IDLDIR = ../idl_v1/idl
+
+include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+$(call checkenve,IDLJ)
+
+.PHONY: idl
+idl: .idl
+
+.idl: $(SRCDIR)
+	$(IDLJ) $(IDLJFLAGS) \
+		-pkgPrefix general com.syrus.AMFICOM \
+		-pkgPrefix security com.syrus.AMFICOM \
+		-pkgPrefix administration com.syrus.AMFICOM \
+		-pkgPrefix configuration com.syrus.AMFICOM \
+		-pkgPrefix measurement com.syrus.AMFICOM \
+		-pkgPrefix cmserver com.syrus.AMFICOM \
+		$(IDLDIR)/cmserver.idl
+	touch $@
 
 .PHONY: idlclean
 idlclean:
 	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/cmserver/corba
 	$(RM) .idl
+
+$(SRCDIR):
+$(CLASSDIR):
+$(LIBDIR):
+	mkdir -p $@
