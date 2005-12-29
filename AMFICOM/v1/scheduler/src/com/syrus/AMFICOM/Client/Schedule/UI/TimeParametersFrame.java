@@ -168,75 +168,31 @@ public class TimeParametersFrame extends JInternalFrame {
 			{
 				this.startTimeSpinner = new TimeSpinner();
 				this.startDateSpinner = new DateSpinner();
-				ChangeListener changeListener = new ChangeListener() {
-					
-					//OperationEvent event;
-					boolean waiting = false;
-					long previousEventTime;		
-					boolean startedThread = false;
-					static final long TIMEOUT = 500;
-					
-					private Thread		thread			= new Thread() {
 
-															@SuppressWarnings("unqualified-field-access")
-															@Override
-															public void run() {
-																while (true) {
-																	if (waiting 
-																			&& (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
-
-																		final Date startDate = TimeParametersPanel.this
-																				.getStartDate();
-																		if (waiting) {
-																			try {
-																				TimeParametersPanel.this.schedulerModel
-																						.moveSelectedTests(startDate);
-																			} catch (final ApplicationException e) {
-																				waiting = false;
-																				AbstractMainFrame.showErrorMessage(e.getMessage());
-																				continue;
-																			}
-																		}
-																		waiting = false;
-																	}
-
-																	try {
-																		Thread.sleep(TIMEOUT);
-																	} catch (InterruptedException e) {
-																		// nothing
-																	}
-																}
-															}
-
-														};
-					
-
+				final ChangeListener aChangeListener = new ChangeListener() {
 					public void stateChanged(ChangeEvent e) {
-						if (!this.waiting) {
-							synchronized (this) {
-								if (!this.startedThread) {
-									synchronized (this) {
-										this.thread.start();
-										this.startedThread = true;
-									}
-								}
-							}
-							final Test selectedTest;
-							try {
-								selectedTest = TimeParametersPanel.this.schedulerModel.getSelectedTest();
-							} catch (final ApplicationException e1) {
-								AbstractMainFrame.showErrorMessage(e1.getMessage());
-								return;
-							}
-							this.waiting = TimeParametersPanel.this.propertyChangeEvent == null && 
-							TimeParametersPanel.this.isTestAgree(selectedTest);
-						}
-						this.previousEventTime = System.currentTimeMillis();						
-					}
-				};
+						try {
 
+						final Test selectedTest = TimeParametersPanel.this.schedulerModel.getSelectedTest();
+					if (TimeParametersPanel.this.propertyChangeEvent == null && 
+							TimeParametersPanel.this.isTestAgree(selectedTest)) {
+							final Date startDate = TimeParametersPanel.this
+							.getStartDate();
+							TimeParametersPanel.this.schedulerModel.moveSelectedTests(startDate);
+					}
+					} catch (ApplicationException e1) {
+						AbstractMainFrame.showErrorMessage(e1.getMessage());
+						return;
+					}
+
+				}};
+				
+				final LazyChangeListener changeListener = new LazyChangeListener(aChangeListener);
+				
 				this.startTimeSpinner.addChangeListener(changeListener);
 				this.startDateSpinner.addChangeListener(changeListener);
+				
+
 			}
 			
 			this.startDateButton = new JButton(UIManager.getIcon(ResourceKeys.ICON_TIME_DATE));
@@ -314,96 +270,48 @@ public class TimeParametersFrame extends JInternalFrame {
 					this.panel.add(box, gbc);
 					((SpinnerDateModel)this.periodTimeSpinner.getModel()).setValue(calendar.getTime());
 					
-					ChangeListener changeListener = new ChangeListener() {
-						
-						//OperationEvent event;
-						boolean waiting = false;
-						long previousEventTime;		
-						boolean startedThread = false;
-						static final long TIMEOUT = 500;
-						
-						private Thread		thread			= new Thread() {
-
-																@SuppressWarnings("unqualified-field-access")
-																@Override
-																public void run() {
-																	while (true) {
-																		if (waiting
-																				&& (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
-																			if (waiting) {
-																				final Test selectedTest;
-																				try {
-																					selectedTest = TimeParametersPanel.this.schedulerModel
-																							.getSelectedTest();
-																				} catch (ApplicationException e1) {
-																					waiting = false;
-																					AbstractMainFrame.showErrorMessage(e1.getMessage());
-																					continue;
-																				}
-																				if (selectedTest != null
-																						&& selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
-																					Identifier temporalPatternId = selectedTest
-																							.getTemporalPatternId();
-																					if (temporalPatternId != null
-																							&& temporalPatternId
-																									.getMajor() == ObjectEntities.PERIODICALTEMPORALPATTERN_CODE) {
-																						try {
-																							PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) StorableObjectPool
-																									.getStorableObject(
-																										temporalPatternId,
-																										true);
-																							long intervalLength = TimeParametersPanel.this.getIntervalLength();
-																							if (periodicalTemporalPattern.isChanged()) {
-																								periodicalTemporalPattern.setPeriod(intervalLength);
-																							} else {
-																								periodicalTemporalPattern = PeriodicalTemporalPattern.createInstance(LoginManager.getUserId(), intervalLength);
-																								selectedTest.setTemporalPatternId(periodicalTemporalPattern.getId());
-																							}
-																						} catch (ApplicationException e) {
-																							// TODO Auto-generated catch block
-																							e.printStackTrace();
-																						}
-																					}
-																				}
-
-																			}
-																			waiting = false;
-																		}
-
-																		try {
-																			Thread.sleep(TIMEOUT);
-																		} catch (InterruptedException e) {
-																			// nothing
-																		}
-																	}
-																}
-
-															};
-						
-
+					final ChangeListener aChangeListener = new ChangeListener() {
 						public void stateChanged(ChangeEvent e) {
-							
-							if (!this.waiting) {
-//								this.event = ;
-								if (!this.startedThread) {
-									synchronized (this.thread) {
-										this.thread.start();
-										this.startedThread = true;
+							try {
+								final Test selectedTest = TimeParametersPanel.this.schedulerModel
+									.getSelectedTest();
+								if (TimeParametersPanel.this.propertyChangeEvent == null && 
+										TimeParametersPanel.this.isTestAgree(selectedTest)) {
+									if (selectedTest != null && 
+											selectedTest.getVersion().equals(
+												StorableObjectVersion.INITIAL_VERSION)) {
+										final Identifier temporalPatternId = 
+											selectedTest.getTemporalPatternId();
+										if (temporalPatternId != null && 
+												temporalPatternId.getMajor() == 
+													ObjectEntities.PERIODICALTEMPORALPATTERN_CODE) {
+											PeriodicalTemporalPattern periodicalTemporalPattern = 
+												StorableObjectPool
+													.getStorableObject(
+														temporalPatternId,
+														true);
+											long intervalLength = TimeParametersPanel.this.getIntervalLength();
+											if (periodicalTemporalPattern.isChanged()) {
+												periodicalTemporalPattern.setPeriod(intervalLength);
+											} else {
+												periodicalTemporalPattern = 
+													PeriodicalTemporalPattern.createInstance(
+														LoginManager.getUserId(), 
+														intervalLength);
+												selectedTest.setTemporalPatternId(
+													periodicalTemporalPattern.getId());
+											}
+										}
 									}
 								}
-								try {
-									this.waiting = TimeParametersPanel.this.propertyChangeEvent == null &&  TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
-										.getSelectedTest());
-								} catch (ApplicationException e1) {
-									this.waiting = false;
-									AbstractMainFrame.showErrorMessage(e1.getMessage());
-									return;
-								}
+							} catch (ApplicationException e1) {
+								AbstractMainFrame.showErrorMessage(e1.getMessage());
+								return;
 							}
-							this.previousEventTime = System.currentTimeMillis();						
-						}
+						}						
 					};
 					
+					final LazyChangeListener changeListener = new LazyChangeListener(aChangeListener);
 					
 					this.periodDaySpinner.addChangeListener(changeListener);
 					this.periodTimeSpinner.addChangeListener(changeListener);
@@ -452,117 +360,47 @@ public class TimeParametersFrame extends JInternalFrame {
 			}
 			
 			{
-				ChangeListener changeListener = new ChangeListener() {
-					
-					//OperationEvent event;
-					boolean waiting = false;
-					long previousEventTime;		
-					boolean startedThread = false;
-					static final long TIMEOUT = 500;
-					
-					private Thread		thread			= new Thread() {
-
-															@SuppressWarnings("unqualified-field-access")
-															@Override
-															public void run() {
-																while (true) {
-																	if (waiting
-																			&& (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
-//																		Log.debugMessage(".run | 1 ", Log.FINEST);
-																		final Test selectedTest;
-																		try {
-																			selectedTest = TimeParametersPanel.this.schedulerModel
-																					.getSelectedTest();
-																		} catch (final ApplicationException e) {
-																			waiting = false;
-																			AbstractMainFrame.showErrorMessage(e.getMessage());
-																			continue;
-																		}
-																		if (selectedTest != null
-																				&& selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
-//																			Log.debugMessage(".run | 2 ", Log.FINEST);
-																			Date startDate = TimeParametersPanel.this
-																					.getStartDate();
-																			Date endDate = TimeParametersPanel.this
-																					.getEndDate();
-																			if (startDate.getTime() < endDate.getTime()) {
-//																				Log.debugMessage(".run | 3 ", Log.FINEST);
-																				final String valid2;
-																				try {
-																					if ((valid2 = TimeParametersPanel.this.schedulerModel.isValid(selectedTest, startDate, endDate)) != null) {
-																						waiting = false;
-																						AbstractMainFrame.showErrorMessage(valid2);
-																						continue;
-																					}
-																				} catch (ApplicationException e) {
-																					waiting = false;
-																					AbstractMainFrame.showErrorMessage(e.getMessage());
-																					continue;
-																				}
-																				{
-//																					Log.debugMessage(".run | 4 ", Log.FINEST);
-																					selectedTest.setEndTime(endDate);
-																				}
-//																				else {
-//																					JOptionPane
-//																							.showMessageDialog(
-//																								Environment
-//																										.getActiveWindow(),
-//																								I18N.getString("Cannot change end test"),
-//																								I18N.getString("Error"),
-//																								JOptionPane.OK_OPTION);
-//
-//																				}
-																			} else {
-//																				Log.debugMessage(".run | 5 ", Log.FINEST);
-																				waiting = false;
-																			}
-
-																			if (waiting) {
-//																				Log.debugMessage(".run | 6 ", Log.FINEST);
-																				TimeParametersPanel.this.dispatcher
-																						.firePropertyChange(new PropertyChangeEvent(
-																														TimeParametersPanel.this,
-
-																														SchedulerModel.COMMAND_REFRESH_TESTS,
-																														null,
-																														null));
-																			}
-																		}
-//																		Log.debugMessage(".run | 7 ", Log.FINEST);
-																		waiting = false;
-																	}
-
-																	try {
-																		Thread.sleep(TIMEOUT);
-																	} catch (InterruptedException e) {
-																		// nothing
-																	}
-																}
-															}
-
-														};
-					
-
+				final ChangeListener aChangeListener = new ChangeListener() {
 					public void stateChanged(ChangeEvent e) {
-						if (!this.waiting) {
-//							this.event = ;
-							if (!this.startedThread) {
-								this.thread.start();
-								this.startedThread = true;
-							}
-							try {
-								this.waiting = TimeParametersPanel.this.propertyChangeEvent == null && TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
-									.getSelectedTest());
-							} catch (ApplicationException e1) {
-								this.waiting = false;
-								AbstractMainFrame.showErrorMessage(e1.getMessage());
-								return;
+						try {
+
+						final Test selectedTest = TimeParametersPanel.this.schedulerModel.getSelectedTest();
+					if (TimeParametersPanel.this.propertyChangeEvent == null && 
+							TimeParametersPanel.this.isTestAgree(selectedTest)) {
+
+						if (selectedTest != null
+								&& selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+							Date startDate = TimeParametersPanel.this
+									.getStartDate();
+							Date endDate = TimeParametersPanel.this
+									.getEndDate();
+							if (startDate.getTime() < endDate.getTime()) {
+								final String valid2;
+								if ((valid2 = TimeParametersPanel.this.schedulerModel.isValid(
+										selectedTest, 
+										startDate, 
+										endDate)) != null) {										
+									AbstractMainFrame.showErrorMessage(valid2);
+									return;
+								}
+								selectedTest.setEndTime(endDate);
+								TimeParametersPanel.this.dispatcher.firePropertyChange(
+									new PropertyChangeEvent(TimeParametersPanel.this,
+										SchedulerModel.COMMAND_REFRESH_TESTS,
+										null,
+										null));
 							}
 						}
-						this.previousEventTime = System.currentTimeMillis();						
+					
 					}
-				};
+					} catch (ApplicationException e1) {
+						AbstractMainFrame.showErrorMessage(e1.getMessage());
+						return;
+					}
+
+				}};
+				
+				final LazyChangeListener changeListener = new LazyChangeListener(aChangeListener);
 
 				this.endTimeSpinner.addChangeListener(changeListener);
 				this.endDateSpinner.addChangeListener(changeListener);
@@ -1057,6 +895,57 @@ public class TimeParametersFrame extends JInternalFrame {
 		super.setIconifiable(true);
 		this.timeParametersPanel = new TimeParametersPanel(aContext);
 		this.getContentPane().add(this.timeParametersPanel.panel, BorderLayout.CENTER);
+	}
+	
+	private class LazyChangeListener implements ChangeListener {
+		
+		private Thread		thread;
+		
+		long previousEventTime;		
+		final long timeout;
+		ChangeEvent changeEvent;
+		
+		final ChangeListener changeListener;
+		
+		public LazyChangeListener(final ChangeListener changeListener) {
+			this(changeListener, 500);
+		}
+		
+		public LazyChangeListener(final ChangeListener changeListener,
+				final long timeout) {
+			this.changeListener = changeListener;
+			this.timeout = timeout;
+			
+			this.createThread();
+			this.thread.start();
+		}
+		
+		private void createThread() {
+			this.thread = new Thread() {
+
+				@SuppressWarnings("unqualified-field-access")
+				@Override
+				public void run() {
+					while (true) {
+						if (changeEvent != null && (System.currentTimeMillis() - previousEventTime) > timeout) {
+							changeListener.stateChanged(changeEvent);
+							changeEvent = null;			
+						}
+						try {
+							Thread.sleep(timeout);
+						} catch (final InterruptedException e) {
+							return;
+						}
+					}
+				}
+			};
+		}
+		
+		public void stateChanged(final ChangeEvent e) {			
+			this.changeEvent = e;
+			this.previousEventTime = System.currentTimeMillis();
+			
+		}
 	}
 	
 }
