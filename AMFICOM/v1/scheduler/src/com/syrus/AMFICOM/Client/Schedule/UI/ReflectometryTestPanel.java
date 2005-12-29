@@ -66,7 +66,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/12/28 13:11:59 $
+ * @version $Revision: 1.97 $, $Date: 2005/12/29 11:30:32 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -77,9 +77,6 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 
 	static final BigDecimal ONE_THOUSAND = new BigDecimal("1000");
 	
-//	double					maxIndexOfRefraction			= 1.46820;
-//	double					minIndexOfRefraction			= 1.46820;
-
 	Map<BigDecimal, String> pulseWidthHiResMap;
 	Map<BigDecimal, String> pulseWidthLowResMap;
 	List<BigDecimal> resolutionList;
@@ -98,7 +95,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	private JLabel 			pulseWidthLabel;
 	
 	private JTextField		descriptionField;
-//	private JTextField		refractTextField;
+
 	private JComboBox		waveLengthComboBox;
 	JComboBox				refractComboBox;
 	JComboBox				maxDistanceComboBox;
@@ -128,7 +125,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	
 	private String oldDescription;
 
-	private Map<ParameterType, String>				unchangedObjects;
+	private Map<ParameterType, BigDecimal>				unchangedObjects;
 	private final TestParametersPanel	testParametersPanel;
 	private MeasurementSetup	measurementSetup;
 
@@ -179,7 +176,6 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 									typeUnchanged = ParameterType.REF_PULSE_WIDTH_HIGH_RES;
 								}
 							} else if (type.equals(ParameterType.REF_INDEX_OF_REFRACTION)) {
-//								value = this.refractTextField.getText();
 								value = this.refractComboBox.getSelectedItem();
 							} else if (type.equals(ParameterType.REF_AVERAGE_COUNT)) {
 								value = this.averageQuantityComboBox.getSelectedItem();
@@ -199,21 +195,21 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 						this.lastParameters = parameters.clone();
 						for (int i = 0; i < parameters.length; i++) {
 							final ParameterType type = parameters[i].getType();
-							Object value = null;
+							BigDecimal value = null;
 							// = parameters[i].getStringValue();
 							if (type.equals(ParameterType.REF_WAVE_LENGTH)) {
-								value = this.waveLengthComboBox.getSelectedItem().toString();
+								value = (BigDecimal) this.waveLengthComboBox.getSelectedItem();
 							} else if (type.equals(ParameterType.REF_TRACE_LENGTH)) {
-								value = this.maxDistanceComboBox.getSelectedItem();
+								value = (BigDecimal) this.maxDistanceComboBox.getSelectedItem();
 							} else if (type.equals(ParameterType.REF_RESOLUTION)) {
-								value = this.resolutionComboBox.getSelectedItem();
+								value = (BigDecimal) this.resolutionComboBox.getSelectedItem();
 							} else if (type.equals(ParameterType.REF_PULSE_WIDTH_HIGH_RES)) {
 								if (this.highResolutionCheckBox.isSelected()) {
-									value = this.pulseWidthHiResComboBox.getSelectedItem();
+									value = (BigDecimal) this.pulseWidthHiResComboBox.getSelectedItem();
 								} else {
 									this.unchangedObjects.remove(type);
-									value = this.pulseWidthLowResComboBox.getSelectedItem();
-									final ByteArray byteArray = this.getByteArray(value.toString(), ParameterType.REF_PULSE_WIDTH_LOW_RES);
+									value = (BigDecimal) this.pulseWidthLowResComboBox.getSelectedItem();
+									final ByteArray byteArray = this.getByteArray(value, ParameterType.REF_PULSE_WIDTH_LOW_RES);
 									try {
 										final Parameter setParameter = Parameter.createInstance(ParameterType.REF_PULSE_WIDTH_LOW_RES,
 												byteArray.getBytes());
@@ -226,11 +222,11 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 								}
 							} else if (type.equals(ParameterType.REF_PULSE_WIDTH_LOW_RES)) {
 								if (!this.highResolutionCheckBox.isSelected()) {
-									value = this.pulseWidthLowResComboBox.getSelectedItem();
+									value = (BigDecimal) this.pulseWidthLowResComboBox.getSelectedItem();
 								} else {
 									this.unchangedObjects.remove(type);
-									value = this.pulseWidthHiResComboBox.getSelectedItem();
-									final ByteArray byteArray = this.getByteArray(value.toString(), ParameterType.REF_PULSE_WIDTH_HIGH_RES);
+									value = (BigDecimal) this.pulseWidthHiResComboBox.getSelectedItem();
+									final ByteArray byteArray = this.getByteArray(value, ParameterType.REF_PULSE_WIDTH_HIGH_RES);
 									try {
 										final Parameter setParameter = Parameter.createInstance(ParameterType.REF_PULSE_WIDTH_HIGH_RES,
 												byteArray.getBytes());
@@ -242,19 +238,18 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 									}
 								}
 							} else if (type.equals(ParameterType.REF_INDEX_OF_REFRACTION)) {
-//								value = this.refractTextField.getText();
-								value = this.refractComboBox.getSelectedItem();
+								value = (BigDecimal) this.refractComboBox.getSelectedItem();
 							} else if (type.equals(ParameterType.REF_AVERAGE_COUNT)) {
-								value = this.averageQuantityComboBox.getSelectedItem();
+								value = (BigDecimal) this.averageQuantityComboBox.getSelectedItem();
 							} else if (type.equals(ParameterType.REF_FLAG_GAIN_SPLICE_ON)) {
-								value = Boolean.toString(this.gsOptionBox.isSelected());
+								value = this.gsOptionBox.isSelected() ? BigDecimal.ONE : BigDecimal.ZERO;
 							} else if (type.equals(ParameterType.REF_FLAG_LIFE_FIBER_DETECT)) {
-								value = Boolean.toString(this.lfdOptionBox.isSelected());
+								value = this.lfdOptionBox.isSelected() ? BigDecimal.ONE : BigDecimal.ZERO;
 							}
 	
-							final String string = this.unchangedObjects.get(type);
-							if (value != null && (string == null || !string.equals(value))) {
-								final ByteArray byteArray = this.getByteArray(value.toString(), type);
+							final BigDecimal bigDecimal = this.unchangedObjects.get(type);
+							if (value != null && (bigDecimal == null || !bigDecimal.equals(value))) {
+								final ByteArray byteArray = this.getByteArray(value, type);
 								try {
 									parameters[i] = Parameter.createInstance(type, byteArray.getBytes());
 								} catch (CreateObjectException e) {
@@ -276,7 +271,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 					this.refreshTitles();
 	
 					if (this.unchangedObjects == null) {
-						this.unchangedObjects = new HashMap<ParameterType, String>();
+						this.unchangedObjects = new HashMap<ParameterType, BigDecimal>();
 					} else {
 						this.unchangedObjects.clear();
 					}
@@ -285,8 +280,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	
 					ByteArray byteArray;
 	
-					final String wave = this.getString(this.waveLengthComboBox.getSelectedItem());
-					if ((wave == null) || (wave.length() == 0)) {
+					final BigDecimal wave = (BigDecimal) this.waveLengthComboBox.getSelectedItem();
+					if (wave == null) {
 						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.WaveLengthIsNotSet")); //$NON-NLS-1$
 					}
 	
@@ -294,16 +289,16 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	
 					params[0] = Parameter.createInstance(ParameterType.REF_WAVE_LENGTH, byteArray.getBytes());
 	
-					final String distance = this.getString(this.maxDistanceComboBox.getSelectedItem());
-					if ((distance == null) || (distance.length() == 0)) {
+					final BigDecimal distance = (BigDecimal) this.maxDistanceComboBox.getSelectedItem();
+					if (distance == null) {
 						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.DistanceIsNotSet")); //$NON-NLS-1$
 					}
 					byteArray = this.getByteArray(distance, ParameterType.REF_TRACE_LENGTH);
 	
 					params[1] = Parameter.createInstance(ParameterType.REF_TRACE_LENGTH, byteArray.getBytes());
 	
-					final String resolution = this.getString(this.resolutionComboBox.getSelectedItem());
-					if ((resolution == null) || (resolution.length() == 0)) {
+					final BigDecimal resolution = (BigDecimal) this.resolutionComboBox.getSelectedItem();
+					if (resolution == null) {
 						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.ResolutionIsNotSet")); //$NON-NLS-1$
 					}
 					byteArray = this.getByteArray(resolution, ParameterType.REF_RESOLUTION);
@@ -311,8 +306,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 					params[2] = Parameter.createInstance(ParameterType.REF_RESOLUTION, byteArray.getBytes());
 	
 					if (this.highResolutionCheckBox.isSelected()) {
-						final String pulse = this.getString(this.pulseWidthHiResComboBox.getSelectedItem());
-						if ((pulse == null) || (pulse.length() == 0)) {
+						final BigDecimal pulse = (BigDecimal) this.pulseWidthHiResComboBox.getSelectedItem();
+						if (pulse == null) {
 							throw new IllegalArgumentException(I18N.getString("Scheduler.Error.PulseWidthIsNotSet")); //$NON-NLS-1$
 						}
 	
@@ -320,8 +315,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	
 						params[3] = Parameter.createInstance(ParameterType.REF_PULSE_WIDTH_HIGH_RES, byteArray.getBytes());
 					} else {
-						final String pulse = this.getString(this.pulseWidthLowResComboBox.getSelectedItem());
-						if ((pulse == null) || (pulse.length() == 0)) {
+						final BigDecimal pulse = (BigDecimal) this.pulseWidthLowResComboBox.getSelectedItem();
+						if (pulse == null) {
 							throw new IllegalArgumentException(I18N.getString("Scheduler.Error.PulseWidthIsNotSet")); //$NON-NLS-1$
 						}
 	
@@ -330,17 +325,16 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 						params[3] = Parameter.createInstance(ParameterType.REF_PULSE_WIDTH_LOW_RES, byteArray.getBytes());
 					}
 	
-//					final String refract = this.refractTextField.getText();
-					final String refract = this.getString(this.refractComboBox.getSelectedItem());
-					if (refract == null || refract.length() == 0) {
+					final BigDecimal refract = (BigDecimal) this.refractComboBox.getSelectedItem();
+					if (refract == null) {
 						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.IndexOfRefractionIsNotSet")); //$NON-NLS-1$
 					}
 					byteArray = this.getByteArray(refract, ParameterType.REF_INDEX_OF_REFRACTION);
 	
 					params[4] = Parameter.createInstance(ParameterType.REF_INDEX_OF_REFRACTION, byteArray.getBytes());
 	
-					final String average = this.getString(this.averageQuantityComboBox.getSelectedItem());
-					if (average == null || average.length() == 0) {
+					final BigDecimal average = (BigDecimal) this.averageQuantityComboBox.getSelectedItem();
+					if (average == null) {
 						throw new IllegalArgumentException(I18N.getString("Scheduler.Error.AverageQuantityIsNotSet")); //$NON-NLS-1$
 					}
 	
@@ -352,10 +346,10 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 						throw new IllegalArgumentException(I18N.getString(I18N.getString("Scheduler.Error.HaveNotChoosenMeasurementElement"))); //$NON-NLS-1$
 					}
 	
-					byteArray = this.getByteArray(Boolean.toString(this.gsOptionBox.isSelected()), ParameterType.REF_FLAG_GAIN_SPLICE_ON);
+					byteArray = this.getByteArray(this.gsOptionBox.isSelected() ? BigDecimal.ONE : BigDecimal.ZERO , ParameterType.REF_FLAG_GAIN_SPLICE_ON);
 					params[6] = Parameter.createInstance(ParameterType.REF_FLAG_GAIN_SPLICE_ON, byteArray.getBytes());
 					
-					byteArray = this.getByteArray(Boolean.toString(this.lfdOptionBox.isSelected()),
+					byteArray = this.getByteArray(this.lfdOptionBox.isSelected() ? BigDecimal.ONE : BigDecimal.ZERO,
 							ParameterType.REF_FLAG_LIFE_FIBER_DETECT);
 					params[7] = Parameter.createInstance(ParameterType.REF_FLAG_LIFE_FIBER_DETECT, byteArray.getBytes());
 	
@@ -378,45 +372,40 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		return parameterSet;
 	}
 
-	private final String getString(final Object object) {
-		return object != null ? object.toString() : null; 
-	}
-	
 	private void refreshUnchangedMap() {
 		if (this.unchangedObjects == null) {
-			this.unchangedObjects = new HashMap<ParameterType, String>();
+			this.unchangedObjects = new HashMap<ParameterType, BigDecimal>();
 		} else {
 			this.unchangedObjects.clear();
 		}
 
-		final Object wave = this.waveLengthComboBox.getSelectedItem();
-		this.unchangedObjects.put(ParameterType.REF_WAVE_LENGTH, wave != null ? wave.toString() : null);
+		final BigDecimal wave = (BigDecimal) this.waveLengthComboBox.getSelectedItem();
+		this.unchangedObjects.put(ParameterType.REF_WAVE_LENGTH, wave);
 
-		final Object distance = this.maxDistanceComboBox.getSelectedItem();
-		this.unchangedObjects.put(ParameterType.REF_TRACE_LENGTH, distance != null ? distance.toString() : null);
+		final BigDecimal distance = (BigDecimal) this.maxDistanceComboBox.getSelectedItem();
+		this.unchangedObjects.put(ParameterType.REF_TRACE_LENGTH, distance);
 
-		final Object resolution = this.resolutionComboBox.getSelectedItem();
-		this.unchangedObjects.put(ParameterType.REF_RESOLUTION, resolution != null ? resolution.toString() : null);
+		final BigDecimal resolution = (BigDecimal) this.resolutionComboBox.getSelectedItem();
+		this.unchangedObjects.put(ParameterType.REF_RESOLUTION, resolution);
 
 		if (this.highResolutionCheckBox.isSelected()) {
-			final Object pulse = this.pulseWidthHiResComboBox.getSelectedItem();
-			this.unchangedObjects.put(ParameterType.REF_PULSE_WIDTH_HIGH_RES, pulse != null ? pulse.toString() : null);
+			final BigDecimal pulse = (BigDecimal) this.pulseWidthHiResComboBox.getSelectedItem();
+			this.unchangedObjects.put(ParameterType.REF_PULSE_WIDTH_HIGH_RES, pulse);
 		} else {
-			final Object pulse = this.pulseWidthLowResComboBox.getSelectedItem();
-			this.unchangedObjects.put(ParameterType.REF_PULSE_WIDTH_LOW_RES, pulse != null ? pulse.toString() : null);
+			final BigDecimal pulse = (BigDecimal) this.pulseWidthLowResComboBox.getSelectedItem();
+			this.unchangedObjects.put(ParameterType.REF_PULSE_WIDTH_LOW_RES, pulse);
 		}
 
-//		final String refract = this.refractTextField.getText();
-		final Object refract = this.refractComboBox.getSelectedItem();
-		this.unchangedObjects.put(ParameterType.REF_INDEX_OF_REFRACTION, refract != null ? refract.toString() : null);
+		final BigDecimal refract = (BigDecimal) this.refractComboBox.getSelectedItem();
+		this.unchangedObjects.put(ParameterType.REF_INDEX_OF_REFRACTION, refract);
 
-		final Object average = this.averageQuantityComboBox.getSelectedItem();
-		this.unchangedObjects.put(ParameterType.REF_AVERAGE_COUNT, average != null ? average.toString() : null);
+		final BigDecimal average = (BigDecimal) this.averageQuantityComboBox.getSelectedItem();
+		this.unchangedObjects.put(ParameterType.REF_AVERAGE_COUNT, average);
 		
-		final String gs = Boolean.toString(this.gsOptionBox.isSelected());
+		final BigDecimal gs = this.gsOptionBox.isSelected() ? BigDecimal.ONE : BigDecimal.ZERO;
 		this.unchangedObjects.put(ParameterType.REF_FLAG_GAIN_SPLICE_ON, gs);
 		
-		final String lfd = Boolean.toString(this.lfdOptionBox.isSelected());
+		final BigDecimal lfd = this.lfdOptionBox.isSelected() ? BigDecimal.ONE : BigDecimal.ZERO;
 		this.unchangedObjects.put(ParameterType.REF_FLAG_LIFE_FIBER_DETECT, lfd);
 	}
 
@@ -449,7 +438,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		return name.trim().length() > 0 ? ',' + name : "";
 	}
 
-	private ByteArray getByteArray(final String value, final ParameterType parameterType) {
+	private ByteArray getByteArray(final BigDecimal value, final ParameterType parameterType) {
 
 		this.unchangedObjects.put(parameterType, value);
 
@@ -457,19 +446,16 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		final DataType dataType = parameterType.getDataType();
 		switch (dataType) {
 			case INTEGER:
-				byteArray = new ByteArray(Integer.parseInt(value));
+				byteArray = new ByteArray(value.intValue());
 				break;
 			case DOUBLE:
-				byteArray = new ByteArray(Double.parseDouble(value));
-				break;
-			case STRING:
-				byteArray = new ByteArray(value);
+				byteArray = new ByteArray(value.doubleValue());
 				break;
 			case LONG:
-				byteArray = new ByteArray(Long.parseLong(value));
+				byteArray = new ByteArray(value.longValue());
 				break;
 			case BOOLEAN:
-				byteArray = new ByteArray(Boolean.valueOf(value).booleanValue());
+				byteArray = new ByteArray(value.equals(BigDecimal.ONE));
 				break;
 			default:
 				Log.errorMessage("Illegal data type '" + dataType.getCodename() + "'/" + dataType.getCode()
@@ -490,7 +476,6 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		this.pulseWidthLabel.setEnabled(enable);
 
 		this.descriptionField.setEnabled(enable);
-//		this.refractTextField.setEnabled(enable);
 		this.refractComboBox.setEnabled(enable);
 		this.waveLengthComboBox.setEnabled(enable);
 		this.maxDistanceComboBox.setEnabled(enable);
@@ -958,7 +943,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		
 		this.skip = true;
 		if (this.unchangedObjects == null) {
-			this.unchangedObjects = new HashMap<ParameterType, String>();
+			this.unchangedObjects = new HashMap<ParameterType, BigDecimal>();
 		} else {
 			this.unchangedObjects.clear();
 		}
@@ -1012,7 +997,6 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 			final String stringValue = setParameters[i].getStringValue();
 			Log.debugMessage(stringValue, Log.DEBUGLEVEL10);
 			if (parameterType.equals(ParameterType.REF_INDEX_OF_REFRACTION)) {
-//				this.refractTextField.setText(stringValue);
 				this.selectCBValue(this.refractComboBox, new BigDecimal(stringValue));
 			} else if (parameterType.equals(ParameterType.REF_WAVE_LENGTH)) {
 				this.selectCBValue(this.waveLengthComboBox, new BigDecimal(stringValue));
@@ -1037,7 +1021,6 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	
 	private void createUIItems() {
 		this.descriptionField = new JTextField(128);
-//		this.refractTextField = new JTextField(8);
 
 		this.refractComboBox = new JComboBox();
 		this.waveLengthComboBox = new JComboBox();
@@ -1061,35 +1044,6 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		this.gsOptionBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.GainSplice"));
 		this.bcOptionBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.BoxCar"));
 		this.lfdOptionBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.LiveFiberDetect"));
-
-//		this.refractTextField.addActionListener(new ActionListener() {
-//
-//			public void actionPerformed(ActionEvent e) {
-//				final JTextField textField = (JTextField) e.getSource();
-//				final String value = textField.getText();
-//				double refract = 0.0;
-//				boolean isDouble = false;
-//				try {
-//					refract = Double.parseDouble(value);
-//					isDouble = true;
-//				} catch (final NumberFormatException nfe) {
-//					isDouble = false;
-//				}
-//
-//				if (!isDouble) {
-//					textField.setText(Double.toString(ReflectometryTestPanel.this.minIndexOfRefraction));
-//				} else {
-//					if (refract < ReflectometryTestPanel.this.minIndexOfRefraction) {
-//						textField.setText(Double.toString(ReflectometryTestPanel.this.minIndexOfRefraction));
-//					} else {
-//						if (refract > ReflectometryTestPanel.this.maxIndexOfRefraction) {
-//							textField.setText(Double.toString(ReflectometryTestPanel.this.maxIndexOfRefraction));
-//						}
-//					}
-//				}
-//
-//			}
-//		});
 
 		this.maxDistanceComboBox.addActionListener(new ActionListener() {
 
@@ -1179,10 +1133,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		};
 		
 		this.descriptionField.addFocusListener(textFieldFocusListener);
-//		this.refractTextField.addFocusListener(textFieldFocusListener);
 
 		this.descriptionField.addActionListener(changeActionListener);
-//		this.refractTextField.addActionListener(changeActionListener);
 		this.refractComboBox.addActionListener(changeActionListener);
 		this.waveLengthComboBox.addActionListener(changeActionListener);
 		this.averageQuantityComboBox.addActionListener(changeActionListener);
@@ -1216,7 +1168,6 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		this.add(this.refractLabel, gbc);
 		gbc.weightx = 0.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-//		this.add(this.refractTextField, gbc);
 		this.add(this.refractComboBox, gbc);
 
 		gbc.weightx = 1.0;
