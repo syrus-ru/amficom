@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerResourceCreator.java,v 1.1 2005/12/20 09:01:25 bob Exp $
+ * $Id: SchedulerResourceCreator.java,v 1.2 2005/12/29 08:48:09 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.resources;
 
+import java.awt.Color;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,9 +27,11 @@ import com.syrus.AMFICOM.extensions.resources.Handler;
 import com.syrus.AMFICOM.extensions.resources.Image;
 import com.syrus.AMFICOM.extensions.resources.Resource;
 import com.syrus.AMFICOM.extensions.resources.Resources;
+import com.syrus.AMFICOM.extensions.resources.Rgb;
+import com.syrus.AMFICOM.extensions.resources.Color.Name.Enum;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/12/20 09:01:25 $
+ * @version $Revision: 1.2 $, $Date: 2005/12/29 08:48:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -87,7 +90,75 @@ public class SchedulerResourceCreator extends TestCase {
 			image.setFilename(map.get(key));
 	    }
 		
+		{
+			final Resource resource = resources.addNewResource();
+			final com.syrus.AMFICOM.extensions.resources.Color color2 = 
+				(com.syrus.AMFICOM.extensions.resources.Color) resource.changeType(com.syrus.AMFICOM.extensions.resources.Color.type);
+			color2.setId(UIStorage.EDGE_COLOR);
+			final Rgb rgb = color2.addNewRgb();
+			rgb.setRed(240);
+			rgb.setGreen(240);
+			rgb.setBlue(240);
+		}
 		
+		final Map<String, Color> colors = new HashMap<String, Color>();
+		colors.put(UIStorage.EDGE_COLOR, new Color(240, 240, 240));
+		
+		colors.put(UIStorage.COLOR_STOPPED, Color.MAGENTA.darker());
+
+		colors.put(UIStorage.COLOR_STOPPED_SELECTED, Color.MAGENTA);
+		
+		colors.put(UIStorage.COLOR_ABORDED, Color.RED.darker());
+
+		colors.put(UIStorage.COLOR_ABORDED_SELECTED, Color.RED);
+
+		colors.put(UIStorage.COLOR_ALARM, Color.ORANGE.darker());
+
+		colors.put(UIStorage.COLOR_ALARM_SELECTED, Color.ORANGE);
+
+		colors.put(UIStorage.COLOR_COMPLETED, Color.GREEN.darker());
+
+		colors.put(UIStorage.COLOR_COMPLETED_SELECTED, Color.GREEN);
+
+		colors.put(UIStorage.COLOR_PROCCESSING, Color.CYAN.darker());
+
+		colors.put(UIStorage.COLOR_PROCCESSING_SELECTED, Color.CYAN);
+
+		colors.put(UIStorage.COLOR_SCHEDULED, Color.GRAY);
+
+		colors.put(UIStorage.COLOR_SCHEDULED_SELECTED, Color.LIGHT_GRAY.brighter());
+
+		colors.put(UIStorage.COLOR_UNRECOGNIZED, new Color(20, 20, 60));
+
+		colors.put(UIStorage.COLOR_WARNING, Color.YELLOW.darker());
+
+		colors.put(UIStorage.COLOR_WARNING_SELECTED, Color.YELLOW);
+
+		final Map<Enum, Color> colorMap = ColorResourceHandler.getColorMap();
+		for (final String key : colors.keySet()) {
+			
+			final Color color = colors.get(key);
+			
+			Enum name = null;
+			for (final Enum colorEnum : colorMap.keySet()) {
+				if (colorMap.get(colorEnum) == color) {
+					name = colorEnum;
+					break;
+				}
+			}
+			final Resource resource = resources.addNewResource();
+			final com.syrus.AMFICOM.extensions.resources.Color color2 = 
+				(com.syrus.AMFICOM.extensions.resources.Color) resource.changeType(com.syrus.AMFICOM.extensions.resources.Color.type);
+			color2.setId(key);
+			if (name != null) {
+				color2.setName(name);
+			} else {
+				final Rgb rgb = color2.addNewRgb();
+				rgb.setRed(color.getRed());
+				rgb.setGreen(color.getGreen());
+				rgb.setBlue(color.getBlue());
+			}
+	    }
 		
 		// Document contains two concrete resources and is valid
 		if (enableOutput) {
