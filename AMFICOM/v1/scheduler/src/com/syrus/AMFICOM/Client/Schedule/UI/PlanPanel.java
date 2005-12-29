@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.63 2005/12/27 14:42:26 bob Exp $
+ * $Id: PlanPanel.java,v 1.64 2005/12/29 08:52:11 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,6 +40,7 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -53,7 +54,7 @@ import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/12/27 14:42:26 $
+ * @version $Revision: 1.64 $, $Date: 2005/12/29 08:52:11 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -65,8 +66,6 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 
 	private Timer			timer		= new Timer(TIME_OUT, this);
 	
-	private static final Color EDGE_COLOR =  new Color(240, 240, 240);
-
 	@Shitlet
 	private final static class Step {
 
@@ -195,9 +194,6 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		this.updateRealScale();
 		this.setBackground(UIManager.getColor(ResourceKeys.COLOR_GRAPHICS_BACKGROUND));
 	}
-
-	// private static final int TIME_OUT = 500;
-
 
 	public PlanPanel(final JScrollPane parent, 
 	                 final ApplicationContext aContext, 
@@ -469,9 +465,10 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			return;
 		}
 		
+		final Color edgeColor = UIManager.getColor(UIStorage.EDGE_COLOR);
 		for (long calendarTime = start2; calendarTime <= end;) {			
 			final int currentX = (int)((w - MARGIN) * (calendarTime - start)/timeRegion) + MARGIN/2;
-			g.setColor(EDGE_COLOR);			
+			g.setColor(edgeColor);			
 			g.drawLine(currentX, 0, currentX, h);
 			
 			g.setColor(Color.BLACK);

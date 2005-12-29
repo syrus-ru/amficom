@@ -43,6 +43,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.ProcessingDialog;
@@ -83,7 +84,7 @@ final class PlanToolBar {
 		                      	final int y) {
 			final Graphics2D g2d = (Graphics2D) g;
 			final Color foregroundColor = g.getColor();
-			g2d.setColor(this.flash ? SchedulerModel.COLOR_SCHEDULED : SchedulerModel.COLOR_UNRECOGNIZED);
+			g2d.setColor(UIManager.getColor(this.flash ? UIStorage.COLOR_SCHEDULED : UIStorage.COLOR_UNRECOGNIZED));
 			g2d.fillRect(x + 2, y + 2, PlanToolBar.this.w - 3, PlanToolBar.this.w - 3);
 			g2d.draw3DRect(x, y, PlanToolBar.this.w, PlanToolBar.this.w, true);
 			g.setColor(foregroundColor);
@@ -379,21 +380,21 @@ final class PlanToolBar {
 
 		legendPanel.add(flashLabel);
 		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Scheduled"), this
-				.getColorIcon(SchedulerModel.COLOR_SCHEDULED), SwingConstants.LEFT));
+				.getColorIcon(UIManager.getColor(UIStorage.COLOR_SCHEDULED)), SwingConstants.LEFT));
 		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Completed"), this
-				.getColorIcon(SchedulerModel.COLOR_COMPLETED), SwingConstants.LEFT));
+				.getColorIcon(UIManager.getColor(UIStorage.COLOR_COMPLETED)), SwingConstants.LEFT));
 		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Processing"), this
-				.getColorIcon(SchedulerModel.COLOR_PROCCESSING), SwingConstants.LEFT));
+				.getColorIcon(UIManager.getColor(UIStorage.COLOR_PROCCESSING)), SwingConstants.LEFT));
 		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Aborted"), this
-				.getColorIcon(SchedulerModel.COLOR_ABORDED), SwingConstants.LEFT));
+				.getColorIcon(UIManager.getColor(UIStorage.COLOR_ABORTED)), SwingConstants.LEFT));
 		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Stopped"), this
-			.getColorIcon(SchedulerModel.COLOR_STOPPED), SwingConstants.LEFT));
+			.getColorIcon(UIManager.getColor(UIStorage.COLOR_STOPPED)), SwingConstants.LEFT));
 		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Alarm"), this
-				.getColorIcon(SchedulerModel.COLOR_ALARM), SwingConstants.LEFT));
+				.getColorIcon(UIManager.getColor(UIStorage.COLOR_ALARM)), SwingConstants.LEFT));
 		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Warning"), this
-				.getColorIcon(SchedulerModel.COLOR_WARNING), SwingConstants.LEFT));
+				.getColorIcon(UIManager.getColor(UIStorage.COLOR_WARNING)), SwingConstants.LEFT));
 		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Unrecognized"), this
-				.getColorIcon(SchedulerModel.COLOR_UNRECOGNIZED), SwingConstants.LEFT));
+				.getColorIcon(UIManager.getColor(UIStorage.COLOR_UNRECOGNIZED)), SwingConstants.LEFT));
 		dialog.addFocusListener(new FocusListener() {
 
 			public void focusGained(FocusEvent e) {

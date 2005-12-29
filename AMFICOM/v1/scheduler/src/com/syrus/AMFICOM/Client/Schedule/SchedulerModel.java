@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.143 2005/12/20 10:47:30 bob Exp $
+ * $Id: SchedulerModel.java,v 1.144 2005/12/29 08:52:11 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import java.util.logging.Level;
 
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -74,7 +75,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.143 $, $Date: 2005/12/20 10:47:30 $
+ * @version $Revision: 1.144 $, $Date: 2005/12/29 08:52:11 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -131,10 +132,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 	public static final String	COMMAND_DATE_OPERATION				= "DateOperation";
 
-	private MeasurementType				measurementType						= MeasurementType.UNKNOWN;
+	private MeasurementType				measurementType				= MeasurementType.UNKNOWN;
 
 	private String				name								= null;
-	private MonitoredElement			monitoredElement					= null;
+	private MonitoredElement	monitoredElement					= null;
 	private AnalysisType		analysisType						= AnalysisType.UNKNOWN;
 	private MeasurementSetup	measurementSetup					= null;
 	private TestTemporalStamps	testTimeStamps						= null;
@@ -146,36 +147,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 	private boolean				groupTest							= false;
 	private Test	selectedFirstTest;
-
-	public static final Color	COLOR_STOPPED						= Color.MAGENTA.darker();
-
-	public static final Color	COLOR_STOPPED_SELECTED				= Color.MAGENTA;
-	
-	public static final Color	COLOR_ABORDED						= Color.RED.darker();
-
-	public static final Color	COLOR_ABORDED_SELECTED				= Color.RED;
-
-	public static final Color	COLOR_ALARM							= Color.ORANGE.darker();
-
-	public static final Color	COLOR_ALARM_SELECTED				= Color.ORANGE;
-
-	public static final Color	COLOR_COMPLETED						= Color.GREEN.darker();
-
-	public static final Color	COLOR_COMPLETED_SELECTED			= Color.GREEN;
-
-	public static final Color	COLOR_PROCCESSING					= Color.CYAN.darker();
-
-	public static final Color	COLOR_PROCCESSING_SELECTED			= Color.CYAN;
-
-	public static final Color	COLOR_SCHEDULED						= Color.GRAY;
-
-	public static final Color	COLOR_SCHEDULED_SELECTED			= Color.LIGHT_GRAY.brighter();
-
-	public static final Color	COLOR_UNRECOGNIZED					= new Color(20, 20, 60);
-
-	public static final Color	COLOR_WARNING						= Color.YELLOW.darker();
-
-	public static final Color	COLOR_WARNING_SELECTED				= Color.YELLOW;
 
 	public SchedulerModel(final ApplicationContext aContext) {
 		this.dispatcher = aContext.getDispatcher();
@@ -464,9 +435,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			for (final Test test : tests) {
 				final Identifier testId = test.getId();
 				final StorableObjectVersion version = idVersion.get(testId);
-				if (test.getVersion().equals(version)) {
-					idVersion.remove(testId);
-				} else {
+				if (!test.getVersion().equals(version)) {
 					refreshTests.add(test);
 				}
 			}
@@ -475,10 +444,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			final long time3 = System.currentTimeMillis();
 
 			for (final Test test : refreshTests) {
-				TestView.addTest(test, startDate, endDate);
 				this.addTest(test);
 			}
-			Log.debugMessage(this.testIds 
+			assert Log.debugMessage(this.testIds 
 						+ ", " 
 						+ this.testIds.size(),
 				Log.DEBUGLEVEL03);
@@ -1489,26 +1457,26 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		Color color;
 		switch (testStatus.value()) {
 			case TestStatus._TEST_STATUS_COMPLETED:
-				color = selected ? COLOR_COMPLETED_SELECTED : COLOR_COMPLETED;
+				color = UIManager.getColor(selected ? UIStorage.COLOR_COMPLETED_SELECTED : UIStorage.COLOR_COMPLETED);
 				break;
 			case TestStatus._TEST_STATUS_SCHEDULED:
 			case TestStatus._TEST_STATUS_NEW:
-				color = selected ? COLOR_SCHEDULED_SELECTED : COLOR_SCHEDULED;
+				color = UIManager.getColor(selected ? UIStorage.COLOR_SCHEDULED_SELECTED : UIStorage.COLOR_SCHEDULED);
 				break;
 			case TestStatus._TEST_STATUS_PROCESSING:
-				color = selected ? COLOR_PROCCESSING_SELECTED : COLOR_PROCCESSING;
+				color = UIManager.getColor(selected ? UIStorage.COLOR_PROCCESSING_SELECTED : UIStorage.COLOR_PROCCESSING);
 				break;
 			case TestStatus._TEST_STATUS_STOPPING:
 			case TestStatus._TEST_STATUS_STOPPED:
-				color = selected ? COLOR_STOPPED_SELECTED : COLOR_STOPPED;
+				color = UIManager.getColor(selected ? UIStorage.COLOR_STOPPED_SELECTED : UIStorage.COLOR_STOPPED);
 				break;
 			case TestStatus._TEST_STATUS_ABORTED:
-				color = selected ? COLOR_ABORDED_SELECTED : COLOR_ABORDED;
+				color = UIManager.getColor(selected ? UIStorage.COLOR_ABORTED_SELECTED : UIStorage.COLOR_ABORTED);
 				break;
 			default:
 				// too unlike
 				Log.errorMessage(new Exception("SchedulerModel.getColor"));
-				color = COLOR_UNRECOGNIZED;
+				color = UIManager.getColor(UIStorage.COLOR_UNRECOGNIZED);
 				break;
 		}
 		return color;

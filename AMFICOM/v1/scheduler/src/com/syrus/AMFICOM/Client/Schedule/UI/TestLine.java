@@ -28,6 +28,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
@@ -274,10 +275,12 @@ final class TestLine extends TimeLine {
 			int h = this.getHeight() - y - 2;
 			synchronized (this) {
 			for (final TestTimeItem testTimeItem : this.unsavedTestTimeItems) {
-				this.drawItemRect(g, testTimeItem.x, y, testTimeItem.width, h, this.flash
+				this.drawItemRect(g, testTimeItem.x, y, testTimeItem.width, h,
+					UIManager.getColor(
+					this.flash
 						? (((this.selectedTestIds == null) || (!this.selectedTestIds.contains(testTimeItem.testTimeLine.testId)))
-								? SchedulerModel.COLOR_SCHEDULED : SchedulerModel.COLOR_SCHEDULED_SELECTED)
-						: SchedulerModel.COLOR_UNRECOGNIZED);
+								? UIStorage.COLOR_SCHEDULED : UIStorage.COLOR_SCHEDULED_SELECTED)
+						: UIStorage.COLOR_UNRECOGNIZED));
 			}
 			}
 		}

@@ -40,6 +40,40 @@ public final class UIStorage {
 
 	public static final SimpleDateFormat	HOUR_MINUTE_DATE_FORMAT	= new SimpleDateFormat(
 																							"HH:mm");
+	
+	public static final String EDGE_COLOR =  "scheduler.color.edge";
+
+	public static final String	COLOR_STOPPED						= "scheduler.color.stopped";
+
+	public static final String	COLOR_STOPPED_SELECTED				= "scheduler.color.stoppedSelected";
+	
+	public static final String	COLOR_ABORTED						= "scheduler.color.aborted";
+
+	public static final String	COLOR_ABORTED_SELECTED				= "scheduler.color.abortedSelected";
+
+	public static final String	COLOR_ALARM							= "scheduler.color.alarm";
+
+	public static final String	COLOR_ALARM_SELECTED				= "scheduler.color.alarmSelected";
+
+	public static final String	COLOR_COMPLETED						= "scheduler.color.complete";
+
+	public static final String	COLOR_COMPLETED_SELECTED			= "scheduler.color.completeSelected";
+
+	public static final String	COLOR_PROCCESSING					= "scheduler.color.processing";
+
+	public static final String	COLOR_PROCCESSING_SELECTED			= "scheduler.color.processingSelected";
+
+	public static final String	COLOR_SCHEDULED						= "scheduler.color.scheduled";
+
+	public static final String	COLOR_SCHEDULED_SELECTED			= "scheduler.color.scheduledSelected";
+
+	public static final String	COLOR_UNRECOGNIZED					= "scheduler.color.unrecognized";
+
+	public static final String	COLOR_WARNING						= "scheduler.color.warning";
+
+	public static final String	COLOR_WARNING_SELECTED				= "scheduler.color.warningSelected";
+
+	
 
 	private UIStorage() {
 		// nothing
