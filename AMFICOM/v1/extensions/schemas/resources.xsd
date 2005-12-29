@@ -8,7 +8,7 @@
 
 	<xs:annotation>
 		<xs:documentation xml:lang = "en">
-			$Id: resources.xsd,v 1.2 2005/12/13 09:02:01 bob Exp $
+			$Id: resources.xsd,v 1.3 2005/12/29 09:53:39 bob Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -46,7 +46,17 @@
 		<xs:complexContent>
 			<xs:extension base="f:resource">
 				<xs:sequence>
-					<xs:element name="filename" type="xs:string"/>
+					<xs:choice>					
+						<xs:element name="filename" type="xs:string"/>
+						<xs:element name = "char">
+							<xs:simpleType>
+								<xs:restriction base = "xs:string">
+									<xs:minLength value = "1"/>
+									<xs:maxLength value = "1"/>								
+								</xs:restriction>						
+							</xs:simpleType>
+						</xs:element>
+					</xs:choice>	
 					<xs:element name="size" type="f:size" minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 			</xs:extension>
