@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerResourceCreator.java,v 1.2 2005/12/29 08:48:09 bob Exp $
+ * $Id: SchedulerResourceCreator.java,v 1.3 2005/12/29 08:54:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.extensions.resources.Rgb;
 import com.syrus.AMFICOM.extensions.resources.Color.Name.Enum;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/29 08:48:09 $
+ * @version $Revision: 1.3 $, $Date: 2005/12/29 08:54:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -108,9 +108,9 @@ public class SchedulerResourceCreator extends TestCase {
 
 		colors.put(UIStorage.COLOR_STOPPED_SELECTED, Color.MAGENTA);
 		
-		colors.put(UIStorage.COLOR_ABORDED, Color.RED.darker());
+		colors.put(UIStorage.COLOR_ABORTED, Color.RED.darker());
 
-		colors.put(UIStorage.COLOR_ABORDED_SELECTED, Color.RED);
+		colors.put(UIStorage.COLOR_ABORTED_SELECTED, Color.RED);
 
 		colors.put(UIStorage.COLOR_ALARM, Color.ORANGE.darker());
 
