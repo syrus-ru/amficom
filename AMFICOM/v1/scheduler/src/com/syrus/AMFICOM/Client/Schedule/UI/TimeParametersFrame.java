@@ -185,90 +185,17 @@ public class TimeParametersFrame extends JInternalFrame {
 																	if (waiting 
 																			&& (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
 
-																		Date startDate = TimeParametersPanel.this
+																		final Date startDate = TimeParametersPanel.this
 																				.getStartDate();
-																		Date endDate = TimeParametersPanel.this
-																				.getEndDate();
-
 																		if (waiting) {
-																			final Set<Identifier> selectedTestIds = TimeParametersPanel.this.schedulerModel
-																					.getSelectedTestIds();
-																			if (!selectedTestIds.isEmpty()) {
-																				int size = selectedTestIds.size();
-																				boolean b = !TimeParametersPanel.this.oneRadioButton
-																						.isSelected()
-																						&& !TimeParametersPanel.this.groupRadioButton
-																								.isSelected();
-																				if (size == 1 || !b) {
-																					if (b) {
-																						final long startTime = startDate.getTime();
-																						if (startTime > endDate
-																								.getTime()) {
-																							waiting = false;
-
-																						} else {
-																							final Test selectedTest;
-																							try {
-																							selectedTest = TimeParametersPanel.this.schedulerModel
-																									.getSelectedTest();
-//																								canBeMoved = selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)
-//																										&& 
-//																										TimeParametersPanel.this.schedulerModel
-//																												.isValid(
-//																													selectedTest, 
-//																													startTime - selectedTest.getStartTime().getTime());
-//																										
-																							} catch (final ApplicationException e) {
-																								waiting = false;
-																								AbstractMainFrame.showErrorMessage(e.getMessage());
-																								continue;
-																							}
-//																							if (canBeMoved) 
-																							{
-																								selectedTest
-																										.setStartTime(startDate);
-
-																								if (selectedTest
-																										.getGroupTestId() == null) {
-																									TimeParametersPanel.this.dispatcher
-																											.firePropertyChange(new PropertyChangeEvent(
-																																						this,
-																																						SchedulerModel.COMMAND_REFRESH_TESTS,
-																																						null,
-																																						null));
-																								} else {
-																									TimeParametersPanel.this.dispatcher
-																											.firePropertyChange(new PropertyChangeEvent(
-																																						this,
-																																						SchedulerModel.COMMAND_SET_START_GROUP_TIME,
-																																						null,
-																																						selectedTest
-																																								.getStartTime()));
-																								}
-																							}
-																						}
-																					} else {
-																						try {
-																							TimeParametersPanel.this.schedulerModel
-																									.moveSelectedTests(startDate);
-																						} catch (final ApplicationException e) {
-																							waiting = false;
-																							AbstractMainFrame.showErrorMessage(e.getMessage());
-																							continue;
-																						}
-																					}
-																				} else {
-																					try {
-																						TimeParametersPanel.this.schedulerModel
-																								.moveSelectedTests(startDate);
-																					} catch (final ApplicationException e) {
-																						waiting = false;
-																						AbstractMainFrame.showErrorMessage(e.getMessage());
-																						continue;
-																					}
-																				}
+																			try {
+																				TimeParametersPanel.this.schedulerModel
+																						.moveSelectedTests(startDate);
+																			} catch (final ApplicationException e) {
+																				waiting = false;
+																				AbstractMainFrame.showErrorMessage(e.getMessage());
+																				continue;
 																			}
-
 																		}
 																		waiting = false;
 																	}
