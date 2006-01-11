@@ -289,9 +289,10 @@ public class ReflectogramMath
 		double x0 = (xBeg + xEnd) / 2.0; // это строго середина
 		double mxy = 0.0;
 		double mxx = 0.0;
+		double yA[] = mt.getYArray(xBeg, xEnd - xBeg + 1);
 		for (int i = xBeg; i <= xEnd; i++) {
 			final double vx = i - x0;
-			final double vy = mt.getY(i);
+			final double vy = yA[i - xBeg]; //vy = mt.getY(i);
 			mxx += vx * vx;
 			mxy += vy * vx;
 		}
