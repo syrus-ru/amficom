@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysModelGenerator.java,v 1.1 2005/12/07 14:31:49 stas Exp $
+ * $Id: PhysModelGenerator.java,v 1.2 2006/01/11 14:46:01 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
@@ -62,7 +61,6 @@ public class PhysModelGenerator {
 //		ObjectResourceSorter sorter = SchemePath.getSorter();
 //		sorter.setDataSet(pathelements);
 //		path.links = sorter.sort("num", ObjectResourceSorter.SORT_ASCENDING);
-		Pool.put("activecontext", "activepathid", path.getId());
 	}
 
 	public ReflectogramEvent[] model(

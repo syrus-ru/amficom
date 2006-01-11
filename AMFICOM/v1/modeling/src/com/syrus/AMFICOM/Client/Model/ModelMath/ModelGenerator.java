@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
@@ -55,7 +54,6 @@ public class ModelGenerator {
 //		ObjectResourceSorter sorter = SchemePath.getSorter();
 //		sorter.setDataSet(pathelements);
 //		path.links = sorter.sort("num", ObjectResourceSorter.SORT_ASCENDING);
-		Pool.put("activecontext", "activepathid", path.getId());
 	}
 
 	public ReflectogramEvent[] model(
