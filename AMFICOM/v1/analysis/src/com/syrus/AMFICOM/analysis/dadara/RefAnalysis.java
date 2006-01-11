@@ -32,17 +32,6 @@ public class RefAnalysis {
 		this.decode();
 	}
 
-	/**
-	 * Конструктор по trace.
-	 * При необходимости, проводит анализ средствами trace. 
-	 * @param trace
-	 */
-	public RefAnalysis(final Trace trace) {
-		this.pfTrace = trace.getPFTrace();
-		this.ar = trace.getAR();
-		this.decode();
-	}
-
 	public RefAnalysis(final PFTrace pfTrace, final AnalysisResult ar) {
 		this.pfTrace = pfTrace;
 		this.ar = ar;
@@ -115,7 +104,12 @@ public class RefAnalysis {
 
 		final double[] y = this.pfTrace.getFilteredTraceClone();
 		// ComplexReflectogramEvent[] re = mtae.getComplexEvents();
+//		System.out.println("Making detailed events...");
+//		long t0 = System.nanoTime();
 		final DetailedEvent[] de = getMTAE().getDetailedEvents();
+//		long t1 = System.nanoTime();
+//		System.out.println("Detailed events made in " + (t1 - t0) / 1e6 + " ms");
+
 		final ModelTrace mt = getMTAE().getModelTrace();
 
 		double maxY = y.length > 0 ? y[0] : 0;

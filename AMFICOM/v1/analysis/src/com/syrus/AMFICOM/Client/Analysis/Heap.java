@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.131 2005/12/26 15:42:31 saa Exp $
+ * $Id: Heap.java,v 1.132 2006/01/11 12:19:06 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -104,7 +104,7 @@ import com.syrus.util.Log;
  * 3. anchorer не может существовать без эталона
  * 
  * @author $Author: saa $
- * @version $Revision: 1.131 $, $Date: 2005/12/26 15:42:31 $
+ * @version $Revision: 1.132 $, $Date: 2006/01/11 12:19:06 $
  * @module analysis
  */
 public class Heap
@@ -317,7 +317,7 @@ public class Heap
 	 * Note: Объект RefAnalysis пока не создается, и caller должен
 	 * сделать это самостоятельно с помощью
 	 * последовательности { setRefAnalysisPrimary(); primaryTraceOpened(); }
-	 * либо makePrimaryAnalysis(). 
+	 * либо makePrimaryAnalysis().
 	 * @param traceColl
 	 */
 	public static void openManyTraces(Collection<Trace> traceColl) {
@@ -402,6 +402,19 @@ public class Heap
 		return getAnyTraceByKey(REFERENCE_TRACE_KEY);
 	}
 
+	/**
+	 * Возвращает Trace первичной загруженной рефлектограммы.
+	 * Клиент не должен использовать свойство AR полученного Trace,
+	 * вместо этого надо пользоваться AR у {@link #getRefAnalysisPrimary()}.
+	 * Такая специфика вызвана тем, что Trace - объект неизменный,
+	 * а результаты анализа первичной р/г должны изменяться при каждом новом
+	 * проведении анализа по команде пользователя.
+	 * Однако, при создании RefAnalysis AR primarytrace используется,
+	 * чтобы использовать AR, загруженные с сервера (если они есть).
+	 * @todo решить проблему со свойством AnalysisResult primarytrace.
+	 *  Быть может, надо сделать свойство AR primarytrace изменяемым,
+	 *  но как тогда уведомлять о его изменении?
+	 */
 	public static Trace getPrimaryTrace() {
 		return getAnyTraceByKey(PRIMARY_TRACE_KEY);
 	}
@@ -1259,7 +1272,7 @@ public class Heap
 		Trace trace = getPrimaryTrace();
 		if (trace != null)
 		{
-			RefAnalysis a = new RefAnalysis(trace);
+			RefAnalysis a = new RefAnalysis(trace.getPFTrace(), trace.getAR());
 			setRefAnalysisPrimary(a);
 		}
 		primaryTraceOpened();
