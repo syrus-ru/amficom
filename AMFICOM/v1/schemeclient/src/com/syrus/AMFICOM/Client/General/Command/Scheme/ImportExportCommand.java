@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportExportCommand.java,v 1.16 2005/11/05 13:43:20 stas Exp $
+ * $Id: ImportExportCommand.java,v 1.17 2006/01/11 14:40:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 
@@ -54,6 +54,7 @@ import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipment;
 import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment;
 import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment.XmlEquipmentType;
@@ -92,6 +93,9 @@ public abstract class ImportExportCommand extends AbstractCommand {
 	protected static final String UCM_STRAIGHT_MUFF = "UCM.codename.straight_muff";
 	protected static final String UCM_SCHEMED_EQT = "UCM_SCHEMED";
 	protected static final String UCM_ODF_EQT = "UCM_ODF";
+	
+	protected static final String UCM_SPLICE_PORT_TYPE = "splice";
+	protected static final String UCM_OPTICAL_PORT_TYPE = "optical";
 	
 	protected static final String ID_PREFIX = "id";
 	protected static File currentDirectory = new File("/export");
@@ -838,7 +842,23 @@ public abstract class ImportExportCommand extends AbstractCommand {
 		try {
 			final Set<PortType> portTypes = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 			if (!portTypes.isEmpty()) {
-				final PortType portType = portTypes.iterator().next(); 
+				
+				PortType portType = portTypes.iterator().next();
+				for (PortType temp : portTypes) {
+					if (temp.getSort() == PortTypeSort.PORTTYPESORT_THERMAL) {
+						portType = temp;
+						break;
+					}
+				}
+				final PortType splicePortType = portType;
+				for (PortType temp : portTypes) {
+					if (temp.getSort() == PortTypeSort.PORTTYPESORT_OPTICAL) {
+						portType = temp;
+						break;
+					}
+				}
+				final PortType opticalPortType = portType;
+				
 				XmlComplementorRegistry.registerComplementor(SCHEMEPORT_CODE, new XmlComplementor() {
 					public void complementStorableObject(
 							final XmlStorableObject storableObject,
@@ -849,10 +869,18 @@ public abstract class ImportExportCommand extends AbstractCommand {
 						case PRE_IMPORT:
 							if (importType.equals(UCM_IMPORT)) {
 								final XmlSchemePort schemePort = (XmlSchemePort) storableObject;
+								String xmlPortTypeId;  
 								if (schemePort.isSetPortTypeId()) {
+									xmlPortTypeId = schemePort.getPortTypeId().getStringValue(); 
 									schemePort.unsetPortTypeId();
+								} else {
+									xmlPortTypeId = "";
 								}
-								portType.getId().getXmlTransferable(schemePort.addNewPortTypeId(), importType);
+								if (UCM_SPLICE_PORT_TYPE.equals(xmlPortTypeId)) {
+									splicePortType.getId().getXmlTransferable(schemePort.addNewPortTypeId(), importType);
+								} else { // default is optical port
+									opticalPortType.getId().getXmlTransferable(schemePort.addNewPortTypeId(), importType);
+								}
 							}
 							break;
 						case POST_IMPORT:
