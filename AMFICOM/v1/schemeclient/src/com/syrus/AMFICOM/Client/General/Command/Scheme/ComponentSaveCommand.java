@@ -36,11 +36,6 @@ public class ComponentSaveCommand extends AbstractCommand {
 	}
 
 	@Override
-	public Object clone() {
-		return new ComponentSaveCommand(this.cellPane);
-	}
-
-	@Override
 	public void execute() {
 		SchemeGraph graph = this.cellPane.getGraph();
 

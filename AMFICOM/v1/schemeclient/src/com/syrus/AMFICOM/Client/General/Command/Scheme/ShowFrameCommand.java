@@ -19,12 +19,6 @@ public class ShowFrameCommand extends AbstractCommand
 	}
 
 	@Override
-	public Object clone()
-	{
-		return new ShowFrameCommand(this.desktop, this.frame);
-	}
-
-	@Override
 	public void execute()
 	{
 		if (this.frame != null)

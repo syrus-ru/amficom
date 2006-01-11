@@ -44,11 +44,6 @@ public class SchemeSaveCommand extends AbstractCommand {
 	}
 
 	@Override
-	public Object clone() {
-		return new SchemeSaveCommand(this.schemeTab);
-	}
-
-	@Override
 	public void execute() {
 		if (this.schemeTab.getCurrentPanel().isTopLevelSchemeMode()) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
