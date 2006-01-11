@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.56 2006/01/11 13:05:47 stas Exp $
+ * $Id: SchemeActions.java,v 1.57 2006/01/11 13:16:53 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -102,7 +102,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.56 $, $Date: 2006/01/11 13:05:47 $
+ * @version $Revision: 1.57 $, $Date: 2006/01/11 13:16:53 $
  * @module schemeclient
  */
 
@@ -1427,7 +1427,7 @@ public class SchemeActions {
 		// must be non-empty
 		Object[] objs = graph.getAll();
 		if (objs.length == 0) {
-			validationError = "Scheme is empty";
+			validationError = LangModelScheme.getString("Error.empty_scheme");
 			return false;
 		}
 		
@@ -1436,13 +1436,17 @@ public class SchemeActions {
 			if (obj instanceof DefaultCableLink) {
 				DefaultCableLink link = (DefaultCableLink)obj;
 				if (link.getSource() == null || link.getTarget() == null) {
-					validationError = "Cable " + link.getUserObject() + " has no source or target";
+					validationError = LangModelScheme.getString(SchemeResourceKeys.SCHEME_CABLELINK) 
+							+ " " + link.getUserObject() + " "
+							+ LangModelScheme.getString("Error.unattached_source_or_target"); 
 					return false; 
 				}
 			} else if (obj instanceof DefaultLink) {
 				DefaultLink link = (DefaultLink)obj;
 				if (link.getSource() == null || link.getTarget() == null) {
-					validationError = "Link " + link.getUserObject() + " has no source or target";
+					validationError = LangModelScheme.getString(SchemeResourceKeys.SCHEME_LINK) 
+							+ " " + link.getUserObject() + " "
+							+ LangModelScheme.getString("Error.unattached_source_or_target");
 					return false; 
 				}
 			}
