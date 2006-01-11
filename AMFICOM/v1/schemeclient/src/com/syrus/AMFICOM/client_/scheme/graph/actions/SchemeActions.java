@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.54 2005/12/27 10:21:06 stas Exp $
+ * $Id: SchemeActions.java,v 1.55 2006/01/11 12:41:42 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,6 @@ import java.util.SortedSet;
 import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.tree.TreeNode;
@@ -103,7 +102,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.54 $, $Date: 2005/12/27 10:21:06 $
+ * @version $Revision: 1.55 $, $Date: 2006/01/11 12:41:42 $
  * @module schemeclient
  */
 
@@ -1419,5 +1418,23 @@ public class SchemeActions {
 				ports.add(p);
 		}
 		return ports;
+	}
+	
+	public static boolean isValid(SchemeGraph graph) {
+		// must be no unanchored links 
+		for (Object obj : graph.getAll()) {
+			if (obj instanceof DefaultCableLink) {
+				DefaultCableLink link = (DefaultCableLink)obj;
+				if (link.getSource() == null || link.getTarget() == null) {
+					return false; 
+				}
+			} else if (obj instanceof DefaultLink) {
+				DefaultLink link = (DefaultLink)obj;
+				if (link.getSource() == null || link.getTarget() == null) {
+					return false; 
+				}
+			}
+		}
+		return true;
 	}
 }
