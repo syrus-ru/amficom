@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.57 2006/01/11 13:16:53 stas Exp $
+ * $Id: SchemeActions.java,v 1.58 2006/01/11 13:59:19 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -102,7 +102,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.57 $, $Date: 2006/01/11 13:16:53 $
+ * @version $Revision: 1.58 $, $Date: 2006/01/11 13:59:19 $
  * @module schemeclient
  */
 
@@ -1420,14 +1420,13 @@ public class SchemeActions {
 		return ports;
 	}
 	
-	private static String validationError;
-	private static final String NO_ERROR = "No error";
+	private static String validationMessage;
 	public static boolean isValid(SchemeGraph graph) {
-		validationError = NO_ERROR;
+		validationMessage = LangModelScheme.getString("Message.information.scheme_valid");
 		// must be non-empty
 		Object[] objs = graph.getAll();
 		if (objs.length == 0) {
-			validationError = LangModelScheme.getString("Error.empty_scheme");
+			validationMessage = LangModelScheme.getString("Message.error.empty_scheme");
 			return false;
 		}
 		
@@ -1436,17 +1435,17 @@ public class SchemeActions {
 			if (obj instanceof DefaultCableLink) {
 				DefaultCableLink link = (DefaultCableLink)obj;
 				if (link.getSource() == null || link.getTarget() == null) {
-					validationError = LangModelScheme.getString(SchemeResourceKeys.SCHEME_CABLELINK) 
-							+ " " + link.getUserObject() + " "
-							+ LangModelScheme.getString("Error.unattached_source_or_target"); 
+					validationMessage = LangModelScheme.getString(SchemeResourceKeys.SCHEME_CABLELINK) 
+							+ " '" + link.getUserObject() + "' "
+							+ LangModelScheme.getString("Message.error.unattached_source_or_target"); 
 					return false; 
 				}
 			} else if (obj instanceof DefaultLink) {
 				DefaultLink link = (DefaultLink)obj;
 				if (link.getSource() == null || link.getTarget() == null) {
-					validationError = LangModelScheme.getString(SchemeResourceKeys.SCHEME_LINK) 
-							+ " " + link.getUserObject() + " "
-							+ LangModelScheme.getString("Error.unattached_source_or_target");
+					validationMessage = LangModelScheme.getString(SchemeResourceKeys.SCHEME_LINK) 
+							+ " '" + link.getUserObject() + "' "
+							+ LangModelScheme.getString("Message.error.unattached_source_or_target");
 					return false; 
 				}
 			}
@@ -1454,7 +1453,7 @@ public class SchemeActions {
 		return true;
 	}
 	
-	public static String getValidationErrorString() {
-		return validationError;
+	public static String getValidationMessage() {
+		return validationMessage;
 	}
 }
