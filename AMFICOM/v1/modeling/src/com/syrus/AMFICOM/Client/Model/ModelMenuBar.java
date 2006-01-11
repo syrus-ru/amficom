@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.Model;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainMenuBar;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
 import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
