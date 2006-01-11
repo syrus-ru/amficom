@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.37 2005/11/05 13:43:20 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.38 2006/01/11 12:34:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +31,9 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -38,6 +42,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.AMFICOM.scheme.xml.SchemesDocument;
 import com.syrus.AMFICOM.scheme.xml.XmlScheme;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeSeq;
+import com.syrus.io.ConfigurationImporter;
 import com.syrus.util.Log;
 
 public class SchemeImportCommand extends ImportExportCommand {
@@ -53,6 +58,21 @@ public class SchemeImportCommand extends ImportExportCommand {
 	@Override
 	public void execute() {
 		super.execute();
+		
+		final String fileName1 = "F:/export/types";
+		try {
+			Set<StorableObject> objects = ConfigurationImporter.loadTypes(fileName1);
+			StorableObjectPool.putStorableObjects(objects);
+		} catch (CreateObjectException e1) {
+			Log.errorMessage(e1);
+		} catch (IllegalObjectEntityException e) {
+			Log.errorMessage(e);
+		}
+		
+		if (true) {
+			return;
+		}
+		
 //
 //		try {
 //			ImportUCMConverter converter = new ImportUCMConverter(this.pane.getContext(), this.pane);
