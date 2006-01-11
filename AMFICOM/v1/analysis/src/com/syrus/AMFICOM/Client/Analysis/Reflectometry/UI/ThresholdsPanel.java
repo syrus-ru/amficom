@@ -413,7 +413,7 @@ public class ThresholdsPanel extends MapMarkersPanel
 	 */
 	private void paintTraceMismatch(Graphics g) {
 		// ищем выход из масок
-		final ModelTraceAndEventsImpl mtae = Heap.getPrimaryTrace().getMTAE();
+		final ModelTraceAndEventsImpl mtae = Heap.getRefAnalysisPrimary().getMTAE();
 		if (mtae == null)
 			return;
 		final ModelTraceManager etalon = Heap.getMTMEtalon();
