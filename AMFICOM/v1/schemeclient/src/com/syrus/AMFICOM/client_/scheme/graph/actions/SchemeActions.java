@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.55 2006/01/11 12:41:42 stas Exp $
+ * $Id: SchemeActions.java,v 1.56 2006/01/11 13:05:47 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -102,7 +102,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.55 $, $Date: 2006/01/11 12:41:42 $
+ * @version $Revision: 1.56 $, $Date: 2006/01/11 13:05:47 $
  * @module schemeclient
  */
 
@@ -1420,21 +1420,37 @@ public class SchemeActions {
 		return ports;
 	}
 	
+	private static String validationError;
+	private static final String NO_ERROR = "No error";
 	public static boolean isValid(SchemeGraph graph) {
+		validationError = NO_ERROR;
+		// must be non-empty
+		Object[] objs = graph.getAll();
+		if (objs.length == 0) {
+			validationError = "Scheme is empty";
+			return false;
+		}
+		
 		// must be no unanchored links 
-		for (Object obj : graph.getAll()) {
+		for (Object obj : objs) {
 			if (obj instanceof DefaultCableLink) {
 				DefaultCableLink link = (DefaultCableLink)obj;
 				if (link.getSource() == null || link.getTarget() == null) {
+					validationError = "Cable " + link.getUserObject() + " has no source or target";
 					return false; 
 				}
 			} else if (obj instanceof DefaultLink) {
 				DefaultLink link = (DefaultLink)obj;
 				if (link.getSource() == null || link.getTarget() == null) {
+					validationError = "Link " + link.getUserObject() + " has no source or target";
 					return false; 
 				}
 			}
 		}
 		return true;
+	}
+	
+	public static String getValidationErrorString() {
+		return validationError;
 	}
 }
