@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.140 2005/12/22 10:42:34 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.141 2006/01/11 12:04:40 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.140 $, $Date: 2005/12/22 10:42:34 $
+ * @version $Revision: 1.141 $, $Date: 2006/01/11 12:04:40 $
  * @module
  */
 
@@ -438,8 +438,12 @@ public class CoreAnalysisManager
 				tpa.avNoise,
 				ap.getScaleFactor());
 
-		for (int i = 0; i < rse.length; i++) {
-			Log.debugMessage("rse[" + i + "]:" + " " + rse[i], FINEST);
+		if (rse.length < 100) {
+			for (int i = 0; i < rse.length; i++) {
+				Log.debugMessage("rse[" + i + "]:" + " " + rse[i], FINEST);
+			}
+		} else {
+			Log.debugMessage("rse dump suppressed; rse.length = " + rse.length, FINEST);
 		}
 
 		// теперь уточняем длину рефлектограммы по концу последнего события
