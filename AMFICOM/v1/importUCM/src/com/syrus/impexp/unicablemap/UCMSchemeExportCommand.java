@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.19 2005/11/05 13:42:44 stas Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.20 2006/01/11 12:34:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.impexp.unicablemap.objects.ThreadType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2005/11/05 13:42:44 $
+ * @version $Revision: 1.20 $, $Date: 2006/01/11 12:34:50 $
  * @module importUCM
  */
 
@@ -642,10 +642,10 @@ public class UCMSchemeExportCommand {
 								if(ucmLink3.mod.text.equals(UniCableMapLinkType.UCM_CONTAINS_INSIDE)) {
 									UniCableMapObject volokno = ucmLink3.child;
 									if (isSource) {
-										SimplePort p = vrm.addInputPort(Integer.toString(volokno.un) + "^" + vrm.getId());
+										SimplePort p = vrm.addInputPort(Integer.toString(volokno.un) + "^" + vrm.getId(), SimplePort.SPLICE_PORT_TYPE);
 										vol2portIn.put(volokno, p);
 									} else {
-										SimplePort p = vrm.addOutputPort(Integer.toString(volokno.un) + "^" + vrm.getId());
+										SimplePort p = vrm.addOutputPort(Integer.toString(volokno.un) + "^" + vrm.getId(), SimplePort.SPLICE_PORT_TYPE);
 										vol2portIn.put(volokno, p);
 //										vol2portOut.put(volokno, p);
 									}

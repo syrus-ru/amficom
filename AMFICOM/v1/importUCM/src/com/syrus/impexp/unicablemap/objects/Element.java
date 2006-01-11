@@ -1,5 +1,5 @@
 /*-
- * $Id: Element.java,v 1.11 2005/11/05 13:42:44 stas Exp $
+ * $Id: Element.java,v 1.12 2006/01/11 12:34:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,14 +77,14 @@ public class Element {
 		return port;
 	}
 	
-	public SimplePort addOutputPort(String endCableId) {
+	public SimplePort addOutputPort(String endCableId, String portTypeId) {
 		if (this.device == null) {
 			this.device = new Device("dev" + this.id);
 			this.device.setParentId(String.valueOf(this.id));
 			this.device.setName("dev"+this.id);
 		}
 		// XXX check id
-		SimplePort port = new SimplePort("o" + endCableId);
+		SimplePort port = new SimplePort("o" + endCableId, portTypeId);
 		port.setParentId(this.device.getId());
 		port.setDirectionType(DirectionType.OUT);
 		port.setName(Integer.toString(++this.counter));
@@ -122,13 +122,13 @@ public class Element {
 		return port;
 	}
 	
-	public SimplePort addInputPort(String startCableId) {
+	public SimplePort addInputPort(String startCableId, String portTypeId) {
 		if (this.device == null) {
 			this.device = new Device("device" + this.id);
 			this.device.setParentId(String.valueOf(this.id));
 			this.device.setName("device"+this.id);
 		}
-		SimplePort port = new SimplePort("i" + startCableId);
+		SimplePort port = new SimplePort("i" + startCableId, portTypeId);
 		port.setParentId(this.device.getId());
 		port.setDirectionType(DirectionType.IN);
 		port.setName(Integer.toString(++this.counter));
