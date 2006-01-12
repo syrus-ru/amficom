@@ -1,5 +1,5 @@
 /*-
- * $Id: DeadZoneDetailedEvent.java,v 1.6 2005/10/18 08:06:07 saa Exp $
+ * $Id: DeadZoneDetailedEvent.java,v 1.7 2006/01/12 14:06:29 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,9 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
  * po - экстраполированный (по смежному лин. участку) уровень для начала волокна (отрицательное значение)
  * adz - ширина ADZ, в точках
  * edz - ширина EDZ, в точках
+ * FIXME: как опознавать линию-обрыв? как DZ? тогда чему равны P0,Y1? как EOT? тогда каково Y0?
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/10/18 08:06:07 $
+ * @version $Revision: 1.7 $, $Date: 2006/01/12 14:06:29 $
  * @module
  */
 public class DeadZoneDetailedEvent extends DetailedEvent {
