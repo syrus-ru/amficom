@@ -5,7 +5,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ModelTrace или заданные в виде массива.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.25 $, $Date: 2005/08/18 12:59:48 $
+ * @version $Revision: 1.26 $, $Date: 2006/01/12 12:58:30 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -128,6 +128,22 @@ public class ReflectogramComparer
 		return getMeanDeviation(data, etalon, iFrom, iToEx);
 	}
 
+	/**
+	 * Возвращает разницу полных потерь в трассе
+	 * 
+	 * FIXME: алг. вычисления разницы полных потерь:
+	 * Вычисляет потери по разности уровня в конце 0-го события (DZ) и в начале
+	 * конца волокна. Поскольку при таком вычислении нет учета P0!=y1_0,
+	 * приходится брать уровень в конце 0-го события для эталона и тек. р/г
+	 * в одной и той же точке, чтобы скомпенсировать эту ошибку.
+	 * Эта точка берется по эталону.
+	 * В случае, если DZ тек. р/г шире, чем у эталона, возникнет ошибка. 
+	 * 
+	 * @param etalon
+	 * @param data
+	 * @return разница полных потерь в трассе между тек. трассой и эталоном,
+	 *   либо NaN, если такое вычисление невозможно.
+	 */
 	public static double getLossDifference(ModelTraceAndEvents etalon,
 			ModelTraceAndEvents data)
 	{
@@ -136,6 +152,10 @@ public class ReflectogramComparer
 
 		int length1 = ReflectogramMath.getEndOfTraceBegin(dataSRE);
 		int length2 = ReflectogramMath.getEndOfTraceBegin(etalonSRE);
+
+		if (length1 == 0 || length2 == 0) {
+			return Double.NaN;
+		}
 
 		int c = etalonSRE.length != 0 ? etalonSRE[0].getEnd() : 0;
 
