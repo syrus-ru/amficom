@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStats.java,v 1.14 2005/10/24 10:39:19 saa Exp $
+ * $Id: OverallStats.java,v 1.15 2006/01/12 13:00:09 saa Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.14 $, $Date: 2005/10/24 10:39:19 $
+ * @version $Revision: 1.15 $, $Date: 2006/01/12 13:00:09 $
  * @module analysis
  */
 
@@ -67,7 +67,16 @@ public class OverallStats {
 		setTotalNoiseDDRMS(MathRef.round_2(DDRMS) + " " + LangModelAnalyse.getString("dB"));
 		setTotalEvents(String.valueOf(evNum));
 	}
-	
+
+	/**
+	 * 
+	 * @param maxDeviation1
+	 * @param meanDeviation1
+	 * @param etalonLength1
+	 * @param lossDifference1 потери, may be NaN
+	 * @param alarm
+	 * @param evaluationOverall
+	 */
 	public void initCompareStatistics(double maxDeviation1,
 			double meanDeviation1,
 			double etalonLength1,
@@ -77,7 +86,12 @@ public class OverallStats {
 		setEtalonLength(String.valueOf(MathRef.round_3(etalonLength1)) + " " + LangModelAnalyse.getString("km"));
 		setMaxDeviation(String.valueOf(MathRef.round_4(maxDeviation1)) + " " + LangModelAnalyse.getString("dB"));
 		setMeanDeviation(String.valueOf(MathRef.round_4(meanDeviation1)) + " " + LangModelAnalyse.getString("dB"));
-		setDLoss(String.valueOf(MathRef.round_4(lossDifference1)) + " " + LangModelAnalyse.getString("dB"));
+		if (Double.isNaN(lossDifference1)) {
+			setDLoss("");
+		} else {
+			setDLoss(String.valueOf(MathRef.round_4(lossDifference1))
+					+ " " + LangModelAnalyse.getString("dB"));
+		}
 		if (alarm == null) {
 			setMismatch(LangModelAnalyse.getString(("mismatchNo")));
 		} else {
