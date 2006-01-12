@@ -1176,6 +1176,14 @@ T=8 B=25164 E=25481 N=0 L=0 # begin=100656.63416042883
 .
 }
 
+FILE: rg0206.sor
+ORIGIN: EXTERNAL:our,2006.11.12/14:10:00 # break at trace beginning: should find at least DZ
+RESULTS {
+EVENTS
+T=7 B=0 E=406 N=0 L=0 # begin=0.0
+.
+}
+
 FILE: rg0301.sor
 ORIGIN: EXTERNAL:CB:cli-2005-08/1-1.sor
 RESULTS {
