@@ -155,7 +155,7 @@ public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListen
 		final ReflectogramMismatchImpl mismatch = Heap.getRefMismatch();
 		final ModelTraceManager etalonMTM = Heap.getMTMEtalon();
 		final ModelTraceAndEvents dataMTAE = Heap.getMTAEPrimary();
-		if (etalonMTM == null || dataMTAE == null || dataMTAE.getNEvents() == 0) {
+		if (etalonMTM == null || dataMTAE == null) {
 			this.tabbedPane.setSelectedIndex(0);
 			this.tabbedPane.setEnabledAt(1, false);
 			return;
@@ -177,6 +177,7 @@ public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListen
 		this.stats.initCompareStatistics(maxDeviation, meanDeviation,
 				etalonLength, lossDifference, mismatch,
 				Heap.getEvaluationOverallResult());
+		this.tabbedPane.setEnabledAt(1, true);
 		this.jTableWholeComp.getModel().fireTableDataChanged();
 	}
 
@@ -195,7 +196,6 @@ public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListen
 	public void etalonMTMCUpdated() {
 		if (Heap.getRefAnalysisPrimary() != null) {
 			this.setWholeData();
-			this.tabbedPane.setEnabledAt(1, true);
 		}
 	}
 
@@ -209,7 +209,6 @@ public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListen
 		this.setVisible(true);
 		if (Heap.getMTMEtalon() != null) {
 			this.setWholeData();
-			this.tabbedPane.setEnabledAt(1, true);
 		}
 	}
 
