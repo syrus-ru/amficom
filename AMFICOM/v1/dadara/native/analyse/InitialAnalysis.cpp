@@ -356,6 +356,7 @@ return;}
 	// ====== ѕя“џ… Ё“јѕ јЌјЋ»«ј - ќЅ–јЅќ“ ј —ќЅџ“»… =======
 #ifdef DEBUG_INITIAL_ANALYSIS_STDERR
 	{
+		fprintf(stderr, "%d events found\n", events->getLength());
 		int i;
 		for (i = 0; i < events->getLength(); i++) {
 			fprintf(stderr, "event[%d]: type %d location %d - %d\n", i,
@@ -363,6 +364,7 @@ return;}
 				((EventParams*)(*events)[i])->begin,
 				((EventParams*)(*events)[i])->end);
 		}
+		fflush(stderr);
 	}
 #endif
 #ifdef SEARCH_EOT_BY_WLET
@@ -644,8 +646,6 @@ void InitialAnalysis::processMaskedSplashes(ArrList &accSpl) {
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::findEventsBySplashes(double *f_wletTEMP, ArrList& splashes, int dzMaxDist)
 {//* мЄртвую зону ищЄм  чуть иначе
-    if( splashes.getLength() <=2 ) // FIXME: вредный код
-return;
     int i0 = processDeadZone(splashes, dzMaxDist);// ищем мЄртвую зону
 	// ищем остальные коннекторы  и сварки
     for(int i = i0; i<splashes.getLength(); i++)
@@ -1282,6 +1282,10 @@ void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, int begi
 //------------------------------------------------------------------------------------------------------------
 // удалить все событи€ после последнего отражательного и переименовать отражательное в "конец волокна"
 void InitialAnalysis::processEndOfTrace(int softEotLength) {
+#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
+	fprintf(stderr, "processEndOfTrace(%d)\n", softEotLength);
+	fflush(stderr);
+#endif
 	int i;
 	for(i = events->getLength() - 1; i > 0; i--) {
 		EventParams* ev = (EventParams*)(*events)[i];
@@ -1292,6 +1296,11 @@ void InitialAnalysis::processEndOfTrace(int softEotLength) {
 		if (ev->begin < softEotLength) {
 	break;
 		}
+#endif
+#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
+		fprintf(stderr, "processEndOfTrace: removing event #=%d can_be_eot=%d begin=%d\n",
+			i, (int)(ev->can_be_endoftrace), (int)(ev->begin));
+		fflush(stderr);
 #endif
 		events->slowRemove(i);
 	}
