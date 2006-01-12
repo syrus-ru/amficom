@@ -41,6 +41,7 @@ public class AnalysisSelectionFrame extends JInternalFrame
 implements BsHashChangeListener, PrimaryMTAEListener,
 		AnalysisParametersListener, ReportTable {
 	private static final long serialVersionUID = -5866433900913468687L;
+	private static final String TITLE = LangModelAnalyse.getString("analysisSelectionTitle");
 
 	private WrapperedPropertyTable<AnalysisParameters> table;
 	private JPanel mainPanel;
@@ -87,7 +88,7 @@ implements BsHashChangeListener, PrimaryMTAEListener,
 	}
 
 	public String getReportTitle() {
-		return LangModelAnalyse.getString("analysisSelectionTitle");
+		return TITLE;
 	}
 
 	public TableModel getTableModel() {
@@ -101,13 +102,16 @@ implements BsHashChangeListener, PrimaryMTAEListener,
 	private void updColorModel() {
 	}
 
+	private void updateTitle() {
+	}
+
 	private void createUI() {
 		this.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
-		this.setTitle(LangModelAnalyse.getString("analysisSelectionTitle"));
+		this.setTitle(TITLE);
 
 		this.table = new WrapperedPropertyTable<AnalysisParameters>(
 				new WrapperedPropertyTableModel<AnalysisParameters>(AnalysisParametersWrapper.getInstance(),
@@ -218,23 +222,28 @@ implements BsHashChangeListener, PrimaryMTAEListener,
 		Heap.notifyAnalysisParametersUpdated();
 	}
 
-	public void bsHashAdded(final String key) {
-		final String id = key;
-		if (id.equals(Heap.PRIMARY_TRACE_KEY)) {
-			if (Heap.getPFTracePrimary().getBS().measurementId == null)
-				this.setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " ("
-						+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
-			else {
-				MeasurementSetup ms = Heap.getContextMeasurementSetup();
-				this.setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " ("
-						+ (ms == null
-								? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN)
-									: LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN) + ':' + ms.getDescription())
-						+ ')');
-			}
+	private void update() {
+		this.setValues(Heap.getMinuitAnalysisParams());
+		final PFTrace primaryTrace = Heap.getPFTracePrimary();
+		if (primaryTrace == null)
+			return; // not loaded
+		if (primaryTrace.getBS().measurementId == null)
+			this.setTitle(TITLE + " ("
+					+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
+		else {
+			MeasurementSetup ms = Heap.getContextMeasurementSetup();
+			this.setTitle(TITLE + " ("
+					+ (ms == null
+							? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN)
+								: LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN) + ": " + ms.getDescription())
+					+ ')');
+		}
 
-			final AnalysisParameters ap = Heap.getMinuitAnalysisParams();
-			this.setValues(ap);
+	}
+
+	public void bsHashAdded(final String key) {
+		if (key.equals(Heap.PRIMARY_TRACE_KEY)) {
+			update();
 			this.setVisible(true);
 		}
 	}
@@ -247,22 +256,7 @@ implements BsHashChangeListener, PrimaryMTAEListener,
 	}
 
 	public void primaryMTAECUpdated() {
-		final PFTrace pf = Heap.getPFTracePrimary();
-		if (pf.getBS().measurementId == null) {
-			this.setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " ("
-					+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
-		} else {
-			MeasurementSetup ms = Heap.getContextMeasurementSetup();
-			this.setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " ("
-					+ (ms == null
-							? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN)
-								: LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN) + ':' + ms.getDescription())
-					+ ')');
-
-			// вместе с первичной р/г может быть загружен и набор параметров
-			final AnalysisParameters ap = Heap.getMinuitAnalysisParams();
-			this.setValues(ap);
-		}
+		update();
 	}
 
 	/*
@@ -278,6 +272,6 @@ implements BsHashChangeListener, PrimaryMTAEListener,
 		if (this.analysisParametersUpdatedHere) {
 			return;
 		}
-		this.setValues(Heap.getMinuitAnalysisParams());
+		update();
 	}
 }
