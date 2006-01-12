@@ -98,6 +98,13 @@ public class ReflectogramMath
 		}
 		return null;
 	}
+	/**
+	 * Возвращает дистанцию начала события "конец волокна"
+	 *   либо 0, если такого события нет.
+	 * @param re список событий
+	 * @return дистанция начала события "конец волокна"
+	 *   либо 0, если такого события нет.
+	 */
 	public static int getEndOfTraceBegin(SimpleReflectogramEvent[] re)
 	{
 		// если есть событие "конец трассы", возвращаем его начало
