@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.141 2006/01/11 12:04:40 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.142 2006/01/12 12:56:36 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.141 $, $Date: 2006/01/11 12:04:40 $
+ * @version $Revision: 1.142 $, $Date: 2006/01/12 12:56:36 $
  * @module
  */
 
@@ -438,11 +438,13 @@ public class CoreAnalysisManager
 				tpa.avNoise,
 				ap.getScaleFactor());
 
-		if (rse.length < 100) {
+		if (rse.length == 0) {
+			Log.debugMessage("rse.length = " + rse.length, FINEST);
+		} else if (rse.length <= 100) {
 			for (int i = 0; i < rse.length; i++) {
 				Log.debugMessage("rse[" + i + "]:" + " " + rse[i], FINEST);
 			}
-		} else {
+		} else { // rse.legth > 100
 			Log.debugMessage("rse dump suppressed; rse.length = " + rse.length, FINEST);
 		}
 
