@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.42 2005/12/23 10:16:22 bob Exp $
+* $Id: PermissionAttributes.java,v 1.43 2006/01/13 13:53:07 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/12/23 10:16:22 $
+ * @version $Revision: 1.43 $, $Date: 2006/01/13 13:53:07 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -52,13 +52,13 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		ELEMENTS_EDITOR(true),
 		MAP_EDITOR(true),
 		OPTIMIZATION(false),
-		MODELING(true),
+		MODELING(false),
 		SCHEDULER(true),
 		ANALYSIS(true),
 		RESEARCH(true),
 		EVALUATION(true),
 		OBSERVER(true),
-		PREDICTION(false),
+		PREDICTION(true),
 		REPORT(true);
 
 		private static final String KEY_ROOT = "Module.Description.";
