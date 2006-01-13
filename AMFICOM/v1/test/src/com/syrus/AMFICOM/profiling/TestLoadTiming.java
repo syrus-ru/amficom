@@ -1,5 +1,5 @@
 /*
- * $Id: TestLoadTiming.java,v 1.2 2005/12/15 14:01:15 bass Exp $
+ * $Id: TestLoadTiming.java,v 1.3 2006/01/13 13:25:58 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.Result;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/15 14:01:15 $
+ * @version $Revision: 1.3 $, $Date: 2006/01/13 13:25:58 $
  * @author $Author: bass $
  * @module test
  */
@@ -212,7 +212,7 @@ public final class TestLoadTiming extends TestCase {
 					Double.valueOf(measured[i].getMin()),
 					Double.valueOf(measured[i].getMin() / expectations[i].expectation.getMin() * 100.0),
 					Double.valueOf(expectations[i].expectation.getMin()),
-					Double.valueOf(expectations[i].profiler.getClass().getSimpleName())
+					expectations[i].profiler.getClass().getSimpleName()
 					);
 		}
 	}
