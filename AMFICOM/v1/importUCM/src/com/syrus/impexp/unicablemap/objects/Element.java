@@ -1,5 +1,5 @@
 /*-
- * $Id: Element.java,v 1.13 2006/01/13 11:49:48 stas Exp $
+ * $Id: Element.java,v 1.14 2006/01/13 14:52:15 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,8 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeElement.Kind;
 
 public class Element {
 
+	public static final String KIND_SCHEMED = "SCHEMED";
+	
 	private int id;
 	private String name;
 //	private Integer eqtId;
@@ -194,23 +196,23 @@ public class Element {
 			eqid.setStringValue(this.equipment.getId());
 			xmlSE.setEquipmentId(eqid);
 		}
-		else if (this.equipmentTypeId != null) {
-			XmlIdentifier eqtid = xmlSE.addNewProtoEquipmentId();
-			eqtid.setStringValue(this.equipmentTypeId);
-			xmlSE.setProtoEquipmentId(eqtid);
-		} else {
-			this.equipmentTypeId = "VOID";
-			XmlIdentifier eqtid = xmlSE.addNewProtoEquipmentId();
-			eqtid.setStringValue(this.equipmentTypeId);
-			xmlSE.setProtoEquipmentId(eqtid);
-		}
 		
 		xmlSE.setLabel(this.label);
 		
-		if (this.kind.equals("SCHEMED")) {
+		if (this.kind.equals(KIND_SCHEMED)) {
 			xmlSE.setKind(Kind.SCHEME_CONTAINER);
 		} else {
 			xmlSE.setKind(Kind.SCHEME_ELEMENT_CONTAINER);
+			
+			if (this.equipment == null) {
+				if (this.equipmentTypeId != null) {
+					XmlIdentifier eqtid = xmlSE.addNewProtoEquipmentId();
+					eqtid.setStringValue(this.equipmentTypeId);
+					xmlSE.setProtoEquipmentId(eqtid);
+				} else {
+					System.err.println("Element is not SCHEME while eqt is not set");
+				}
+			}
 		}
 		
 		if (this.wellId == null) {
@@ -246,7 +248,7 @@ public class Element {
 			
 			Collection<XmlSchemeLink> ls = new ArrayList<XmlSchemeLink>(this.links.size());
 			for (Object link : this.links) {
-				ls.add(((Link)link).toXMLObject(uid, this.kind.equals("SCHEMED")));
+				ls.add(((Link)link).toXMLObject(uid, this.kind.equals(KIND_SCHEMED)));
 			}
 			xmlLinks.setSchemeLinkArray(ls.toArray(new XmlSchemeLink[ls.size()]));
 		}

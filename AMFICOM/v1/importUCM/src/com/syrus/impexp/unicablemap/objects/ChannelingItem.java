@@ -1,5 +1,5 @@
 /*-
- * $Id: ChannelingItem.java,v 1.9 2005/11/05 13:42:44 stas Exp $
+ * $Id: ChannelingItem.java,v 1.10 2006/01/13 14:52:15 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ public class ChannelingItem {
 	}
 
 	public void setEndSiteId(String endSiteId) {
+		assert endSiteId != null;
 		this.endSiteId = endSiteId;
 	}
 
@@ -49,10 +50,12 @@ public class ChannelingItem {
 	}
 
 	public void setStartSiteId(String startSiteId) {
+		assert startSiteId != null;
 		this.startSiteId = startSiteId;
 	}
 
 	public void setTunnelId(String tunnelId) {
+		assert tunnelId != null;
 		this.tunnelId = tunnelId;
 	}
 

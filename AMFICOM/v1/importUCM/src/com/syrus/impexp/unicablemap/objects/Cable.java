@@ -1,5 +1,5 @@
 /*-
- * $Id: Cable.java,v 1.13 2006/01/13 11:49:48 stas Exp $
+ * $Id: Cable.java,v 1.14 2006/01/13 14:52:15 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -315,6 +315,7 @@ public class Cable {
 	}
 
 	public void setEndSiteId(String endSiteId) {
+		assert endSiteId != null;
 		this.endSiteId = endSiteId;
 	}
 
@@ -323,6 +324,7 @@ public class Cable {
 	}
 
 	public void setStartSiteId(String startSiteId) {
+		assert startSiteId != null;
 		this.startSiteId = startSiteId;
 	}
 
