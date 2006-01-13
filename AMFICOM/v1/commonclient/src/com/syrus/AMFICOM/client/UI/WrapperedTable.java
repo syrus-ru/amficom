@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedTable.java,v 1.26 2005/10/31 12:30:01 bass Exp $
+* $Id: WrapperedTable.java,v 1.27 2006/01/13 09:56:45 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/10/31 12:30:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2006/01/13 09:56:45 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -357,44 +357,46 @@ public final class WrapperedTable<T> extends ATable {
 	}
 	
 	@Override
-	protected void resizeAndRepaint() {
+	public void tableChanged(final TableModelEvent e) {
+		super.tableChanged(e);		
 		if (this.allowAutoResize) {
-			final TableCellRenderer headerRenderer =
-	            this.tableHeader != null ? this.tableHeader.getDefaultRenderer() : null;
-			
-	            
-	            SwingUtilities.invokeLater(new Runnable() {
-	            	
-	            	public void run() {
-	            		final WrapperedTableModel<T> model = getModel();
-	        	        for (int columnIndex = 0; columnIndex < getColumnCount(); columnIndex++) {
-	        	        	final TableColumn column = getColumnModel().getColumn(columnIndex);
-	        	
-	        	        	Component comp = headerRenderer != null ?
-	        	        			headerRenderer.getTableCellRendererComponent(
-	        	                                 null, column.getHeaderValue(),
-	        	                                 false, false, 0, 0) : 
-	        	                    null;
-	        	            final int headerWidth = comp != null ? comp.getPreferredSize().width : 0;
-	        	            
-	        	            int cellWidth = 0;
-	        	            for(int rowIndex = 0; rowIndex < getRowCount(); rowIndex++) {
-	        		            final Object valueAt = model.getValueAt(rowIndex, columnIndex);
-	        					comp = getCellRenderer(rowIndex, columnIndex).
-	        		                             getTableCellRendererComponent(
-	        		                                 WrapperedTable.this, valueAt,
-	        		                                 false, false, rowIndex, columnIndex);
-	        		            cellWidth = Math.max(comp.getPreferredSize().width, cellWidth);
-	        	            }
-	        	
-	        	            column.setPreferredWidth(Math.max(headerWidth, cellWidth));
-	        	        }
-	            	}
-	            });
-		    
+			final int column = e.getColumn();
+			if (column == TableModelEvent.ALL_COLUMNS) {
+				final WrapperedTableModel<T> model = getModel();
+				for(int columnIndex = 0; columnIndex < model.getColumnCount(); columnIndex++) {
+					this.resizeColumn(columnIndex);
+				}
+			} else {
+				this.resizeColumn(column);
+			}
 		}
+	}
+
+	private void resizeColumn(final int columnIndex) {
+		final TableCellRenderer headerRenderer =
+            this.tableHeader != null ? this.tableHeader.getDefaultRenderer() : null;
+            
+		final WrapperedTableModel<T> model = getModel();
 		
-		super.resizeAndRepaint();
+		final TableColumn column = getColumnModel().getColumn(columnIndex);
+    	
+    	Component comp = headerRenderer != null ?
+    			headerRenderer.getTableCellRendererComponent(
+                             null, column.getHeaderValue(),
+                             false, false, 0, 0) : 
+                null;
+        final int headerWidth = comp != null ? comp.getPreferredSize().width : 0;
+        
+        int cellWidth = 0;
+        for(int rowIndex = 0; rowIndex < getRowCount(); rowIndex++) {
+            final Object valueAt = model.getValueAt(rowIndex, columnIndex);
+			comp = getCellRenderer(rowIndex, columnIndex).
+                             getTableCellRendererComponent(
+                                 WrapperedTable.this, valueAt,
+                                 false, false, rowIndex, columnIndex);
+            cellWidth = Math.max(comp.getPreferredSize().width, cellWidth);
+        }
+        column.setPreferredWidth(Math.max(headerWidth, cellWidth));
 	}
 	
 	@SuppressWarnings("unchecked")
