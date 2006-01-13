@@ -118,12 +118,9 @@ implements BsHashChangeListener, EtalonMTMListener,
 			);
 
 		this.addComponentListener(new ComponentAdapter() {
-			/* (non-Javadoc)
-			 * @see java.awt.event.ComponentAdapter#componentShown(java.awt.event.ComponentEvent)
-			 */
+
 			@Override
 			public void componentShown(ComponentEvent e) {
-				initModule();
 				ThresholdsMainFrame.this.desktopPane.setPreferredSize(ThresholdsMainFrame.this.desktopPane.getSize());
 				ThresholdsMainFrame.this.windowArranger.arrange();
 				ThresholdsMainFrame.this.analysisFrame.grabFocus();
