@@ -15,7 +15,7 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/21 13:33:26 $
+ * @version $Revision: 1.14 $, $Date: 2006/01/13 11:08:43 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -69,8 +69,10 @@ public class WrapperedTableModel<T> extends AbstractTableModel {
 	 * clear model
 	 */
 	public void clear() {
-		this.list.clear();
-		super.fireTableDataChanged();
+		synchronized (this.list) {
+			this.list.clear();
+			super.fireTableDataChanged();
+		}
 	}
 
 	/**
@@ -234,10 +236,24 @@ public class WrapperedTableModel<T> extends AbstractTableModel {
 		return this.addObject(this.list.size(), object);
 	}
 
+	public void addObjects(final List<T> objects) {
+		this.addObjects(this.list.size(), objects);
+	}
+	
+	public void addObjects(final int index, final List<T> objects) {
+		this.list.addAll(index, objects);
+		if (this.lastSortedModelIndex >= 0) {
+			// sortRows just does fireTableDataChanged self
+			this.sortRows(this.lastSortedModelIndex, this.ascendings[this.lastSortedModelIndex]);
+		} else {
+			super.fireTableDataChanged();
+		}
+	}
+	
 	public int addObject(final int index, final T object) {
 		this.list.add(index, object);
 		if (this.lastSortedModelIndex >= 0) {
-			// sortRows just do fireTableDataChanged self
+			// sortRows just does fireTableDataChanged self
 			this.sortRows(this.lastSortedModelIndex, this.ascendings[this.lastSortedModelIndex]);
 		} else {
 			super.fireTableDataChanged();
