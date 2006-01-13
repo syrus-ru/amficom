@@ -8,6 +8,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -485,6 +487,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 
 		model.clear();
 
+		List<DetailedEventResource> resources =
+			new ArrayList<DetailedEventResource>(nRows); // may be somewhat larger
 		for (int row = 0; row < nRows; row++, this.view.toNextRow(w)) {
 			// nPri или nEt может быть -1, но не оба одновременно
 			final int nPri = this.view.nPri1(eList, row);
@@ -505,8 +509,9 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 							nPri, nEt, Heap.getAnchorer());
 				}
 			}
-			model.addObject(res);
+			resources.add(res);
 		}
+		model.addObjects(resources);
 		this.updateTableModel();
 		this.table.getModel().fireTableDataChanged();
 	}
