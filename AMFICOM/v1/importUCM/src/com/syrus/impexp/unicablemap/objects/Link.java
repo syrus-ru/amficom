@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.1 2005/11/23 07:03:12 stas Exp $
+ * $Id: Link.java,v 1.2 2006/01/13 11:49:48 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ public class Link {
 		uid.setStringValue(String.valueOf(this.id));
 		
 		if (this.name.length() > 32) {
-			System.out.println("cable name (" + this.name + ") length greater then 32 symbols. cuting... ");
+			System.out.println("cable name (" + this.name + ") length greater then 32 symbols. cutting... ");
 			this.name = this.name.substring(0, 31);
 		}
 		

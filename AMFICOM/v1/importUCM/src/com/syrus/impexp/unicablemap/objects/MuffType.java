@@ -1,5 +1,5 @@
 /*-
- * $Id: MuffType.java,v 1.4 2005/09/30 08:33:18 stas Exp $
+ * $Id: MuffType.java,v 1.5 2006/01/13 11:49:48 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ public class MuffType {
 		XmlProtoEquipment xmlEQT = XmlProtoEquipment.Factory.newInstance();
 		
 		if (this.name.length() > 32) {
-			System.out.println("equipmenttype name (" + this.name + ") length greater then 32 symbols. cuting... ");
+			System.out.println("equipmenttype name (" + this.name + ") length greater then 32 symbols. cutting... ");
 			this.name = this.name.substring(0, 31);
 		}
 		

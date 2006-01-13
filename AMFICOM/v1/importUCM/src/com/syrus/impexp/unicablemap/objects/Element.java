@@ -1,5 +1,5 @@
 /*-
- * $Id: Element.java,v 1.12 2006/01/11 12:34:50 stas Exp $
+ * $Id: Element.java,v 1.13 2006/01/13 11:49:48 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.impexp.unicablemap.objects;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -148,6 +149,13 @@ public class Element {
 		return this.device;
 	}
 
+	public Collection<Port> getAllPorts() {
+		if (this.device != null) {
+			return this.device.getPorts();
+		}
+		return Collections.emptyList();
+	}
+			
 	public Collection<Port> getPorts(DirectionType.Enum directionType) {
 		Collection<Port> ports = new LinkedList<Port>();
 		if (this.device != null) {
@@ -174,7 +182,7 @@ public class Element {
 		uid.setStringValue(String.valueOf(this.id));
 		
 		if (this.name.length() > 32) {
-			System.out.println("element name (" + this.name + ") length greater then 32 symbols. cuting... ");
+			System.out.println("element name (" + this.name + ") length greater then 32 symbols. cutting... ");
 			this.name = this.name.substring(0, 31);
 		}
 		
@@ -206,7 +214,7 @@ public class Element {
 		}
 		
 		if (this.wellId == null) {
-			System.out.println("siteNodeIs is not set for " + this.name);
+			System.out.println("siteNodeId is not set for " + this.name);
 			this.wellId = "";
 		} else {
 			XmlIdentifier siteNodeUid = xmlSE.addNewSiteNodeId();

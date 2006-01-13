@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.6 2005/10/03 15:10:17 stas Exp $
+ * $Id: Port.java,v 1.7 2006/01/13 11:49:48 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ public class Port {
 	public Port(String id) {
 		this.id = id;
 		if (id.length() > 32) {
-			System.out.println("port" + id);
+			System.err.println("portId length greater then 32 for " + id);
 		}
 	}
 	
@@ -57,7 +57,7 @@ public class Port {
 		xmlPort.setId(uid);
 		
 		if (this.name.length() > 32) {
-			System.out.println("port name (" + this.name + ") length greater then 32 symbols. cuting... ");
+			System.out.println("port name (" + this.name + ") length greater then 32 symbols. cutting... ");
 			this.name = this.name.substring(0, 31);
 		}
 		
