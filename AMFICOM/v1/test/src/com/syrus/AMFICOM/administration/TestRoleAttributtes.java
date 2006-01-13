@@ -1,5 +1,5 @@
 /*
- * $Id: TestRoleAttributtes.java,v 1.5 2005/12/23 12:20:35 bob Exp $
+ * $Id: TestRoleAttributtes.java,v 1.6 2006/01/13 13:53:28 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/12/23 12:20:35 $
+ * @version $Revision: 1.6 $, $Date: 2006/01/13 13:53:28 $
  * @author $Author: bob $
  * @module test
  */
@@ -255,16 +255,16 @@ public class TestRoleAttributtes extends TestCase {
 				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_SCHEME, true);
 			}
 			
-//			{
-//				final PermissionAttributes attributes = 
-//					PermissionAttributes.createInstance(userId, 
-//						Identifier.VOID_IDENTIFIER, 
-//						analyst.getId(), 
-//						Module.PREDICTION);
-//				
-//				attributes.setPermissionEnable(PermissionCodename.PREDICTION_ENTER, true);
-//				attributes.setPermissionEnable(PermissionCodename.PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM, true);
-//			}
+			{
+				final PermissionAttributes attributes = 
+					PermissionAttributes.createInstance(userId, 
+						Identifier.VOID_IDENTIFIER, 
+						analyst.getId(), 
+						Module.PREDICTION);
+				
+				attributes.setPermissionEnable(PermissionCodename.PREDICTION_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM, true);
+			}
 		}
 		
 		{
@@ -386,16 +386,16 @@ public class TestRoleAttributtes extends TestCase {
 				attributes.setPermissionEnable(PermissionCodename.OBSERVER_QUICK_TASK, true);
 			}
 			
-//			{
-//				final PermissionAttributes attributes = 
-//					PermissionAttributes.createInstance(userId, 
-//						Identifier.VOID_IDENTIFIER, 
-//						operator.getId(), 
-//						Module.PREDICTION);
-//				
-//				attributes.setPermissionEnable(PermissionCodename.PREDICTION_ENTER, true);
-//				attributes.setPermissionEnable(PermissionCodename.PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM, true);
-//			}
+			{
+				final PermissionAttributes attributes = 
+					PermissionAttributes.createInstance(userId, 
+						Identifier.VOID_IDENTIFIER, 
+						operator.getId(), 
+						Module.PREDICTION);
+				
+				attributes.setPermissionEnable(PermissionCodename.PREDICTION_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM, true);
+			}
 		}
 		
 		{
@@ -656,15 +656,15 @@ public class TestRoleAttributtes extends TestCase {
 				attributes.setPermissionEnable(PermissionCodename.OBSERVER_QUICK_TASK, true);
 			}
 			
-//			{
-//				final PermissionAttributes attributes = 
-//					PermissionAttributes.createInstance(userId, 
-//						Identifier.VOID_IDENTIFIER, 
-//						specialist.getId(), 
-//						Module.PREDICTION);
-//				
-//				attributes.setPermissionEnable(PermissionCodename.PREDICTION_ENTER, true);				
-//			}
+			{
+				final PermissionAttributes attributes = 
+					PermissionAttributes.createInstance(userId, 
+						Identifier.VOID_IDENTIFIER, 
+						specialist.getId(), 
+						Module.PREDICTION);
+				
+				attributes.setPermissionEnable(PermissionCodename.PREDICTION_ENTER, true);				
+			}
 			
 			{
 				final PermissionAttributes attributes = 
@@ -687,7 +687,7 @@ public class TestRoleAttributtes extends TestCase {
 		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, userId, true);
 	}
 	
-	public void testCreateModelingPermissionForRoles() throws ApplicationException {
+	public void _testCreateModelingPermissionForRoles() throws ApplicationException {
 		final SystemUser sysUser = DatabaseCommonTest.getSysUser();
 		final Identifier userId = sysUser.getId();
 
@@ -832,5 +832,78 @@ public class TestRoleAttributtes extends TestCase {
 	
 		
 		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, userId, true);
+	}
+	
+	public void testCreateRolePermissionForPredition() throws Exception {
+		final SystemUser sysUser = DatabaseCommonTest.getSysUser();
+		final Identifier userId = sysUser.getId();
+
+		{
+			// Analyst
+			final Set<Role> roles = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(RoleCodename.ANALYST.getCodename(),
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.ROLE_CODE,
+						StorableObjectWrapper.COLUMN_CODENAME), 
+					true);
+			
+			final Role analyst = roles.iterator().next();
+			{
+				final PermissionAttributes attributes = 
+					PermissionAttributes.createInstance(userId, 
+						Identifier.VOID_IDENTIFIER, 
+						analyst.getId(), 
+						Module.PREDICTION);
+				
+				attributes.setPermissionEnable(PermissionCodename.PREDICTION_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM, true);
+			}
+		}
+		
+		{
+			// Operator
+			final Set<Role> roles = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(RoleCodename.OPERATOR.getCodename(),
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.ROLE_CODE,
+						StorableObjectWrapper.COLUMN_CODENAME), 
+					true);
+			
+			final Role operator = roles.iterator().next();
+			{
+				final PermissionAttributes attributes = 
+					PermissionAttributes.createInstance(userId, 
+						Identifier.VOID_IDENTIFIER, 
+						operator.getId(), 
+						Module.PREDICTION);
+				
+				attributes.setPermissionEnable(PermissionCodename.PREDICTION_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM, true);
+			}
+		}
+		
+		{
+			// Specialist
+			final Set<Role> roles = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(RoleCodename.SPECIALIST.getCodename(),
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.ROLE_CODE,
+						StorableObjectWrapper.COLUMN_CODENAME), 
+					true);
+			
+			final Role specialist = roles.iterator().next();
+			{
+				final PermissionAttributes attributes = 
+					PermissionAttributes.createInstance(userId, 
+						Identifier.VOID_IDENTIFIER, 
+						specialist.getId(), 
+						Module.PREDICTION);
+				
+				attributes.setPermissionEnable(PermissionCodename.PREDICTION_ENTER, true);				
+			}
+		}
 	}
 }
