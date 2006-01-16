@@ -1,5 +1,5 @@
 /*
- * $Id: TestViewAdapter.java,v 1.6 2005/10/31 12:30:00 bass Exp $
+ * $Id: TestViewAdapter.java,v 1.7 2006/01/16 12:15:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,25 +10,22 @@ package com.syrus.AMFICOM.measurement;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.UIManager;
-
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.UI.ComparableLabel;
 import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/31 12:30:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2006/01/16 12:15:33 $
+ * @author $Author: bob $
  * @module module
  */
 public class TestViewAdapter implements Wrapper<TestView> {
@@ -129,8 +126,10 @@ public class TestViewAdapter implements Wrapper<TestView> {
 	public Class getPropertyClass(String key) {
 		Class clazz = String.class;
 		key = key != null ? key.intern() : null;
-		if ((key == KEY_STATUS)) {
+		if (key == KEY_STATUS) {
 			clazz = Map.class;
+		} else if (key == KEY_START_TIME) {
+			clazz = Date.class;
 		}
 		return clazz;
 	}
@@ -168,11 +167,8 @@ public class TestViewAdapter implements Wrapper<TestView> {
 			} else if (key == KEY_MEASUREMENT_TYPE) {
 				return test.getMeasurementType().getDescription();
 			} else if (key == KEY_START_TIME) {
-				final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-				return sdf.format(test.getStartTime());
+				return test.getStartTime();
 			} else if (key == KEY_STATUS) {
-//				Log.debugMessage(test + " >> " + test.getStatus().value(),
-//					Log.DEBUGLEVEL09);
 				return test.getStatus();
 			} else if (key == KEY_D) {
 				return testView.getTestD();
