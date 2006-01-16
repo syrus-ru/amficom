@@ -1,5 +1,5 @@
 /*
- * $Id: ADefaultTableCellRenderer.java,v 1.8 2005/09/18 13:16:03 bob Exp $
+ * $Id: ADefaultTableCellRenderer.java,v 1.9 2006/01/16 12:06:03 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ErrorMessages;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/18 13:16:03 $
+ * @version $Revision: 1.9 $, $Date: 2006/01/16 12:06:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -277,17 +277,19 @@ public final class ADefaultTableCellRenderer implements TableCellRenderer {
 	public static class DateRenderer extends ObjectRenderer {
 
 		private static final long	serialVersionUID	= 3545516226924066360L;
-		DateFormat	formatter;
+		private final DateFormat	formatter;
 
 		public DateRenderer() {
-			super();
+			this(DateFormat.getDateInstance());
 		}
 
+		public DateRenderer(final DateFormat formatter) {
+			super();
+			this.formatter = formatter;
+		}
+		
 		@Override
 		public void setValue(Object value) {
-			if (this.formatter == null) {
-				this.formatter = DateFormat.getDateInstance();
-			} 
 			super.label.setText((value == null) ? "" : this.formatter.format(value));
 		}
 	}
