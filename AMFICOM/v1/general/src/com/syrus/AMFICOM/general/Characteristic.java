@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.86 2005/12/17 12:04:07 arseniy Exp $
+ * $Id: Characteristic.java,v 1.87 2006/01/16 09:11:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/12/17 12:04:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.87 $, $Date: 2006/01/16 09:11:51 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -47,12 +47,52 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 		XmlTransferableObject<XmlCharacteristic> {
 	private static final long serialVersionUID = -2746555753961778403L;
 
+	/**
+	 * Can&apos;t be {@code null}.
+	 *
+	 * @serial include
+	 */
 	private CharacteristicType type;
+
+	/**
+	 * Can be neither {@code null} nor empty. Minimum length for {@code name} is 1 character.
+	 * Maximum length for {@code name} is 128 characters.
+	 *
+	 * @serial include
+	 */
 	private String name;
+
+	/**
+	 * Can&apos;t be {@code null}; instead, for an empty {@code description}, empty string
+	 * should be supplied. Maximum length for {@code description} is 256 characters.
+	 *
+	 * @serial include
+	 */
 	private String description;
+
+	/**
+	 * Can&apos;t be {@code null}; instead, for an empty {@code value}, empty string should be
+	 * supplied. Maximum length for {@code value} is 256 characters.
+	 *
+	 * @serial include
+	 */
 	private String value;
+
+	/**
+	 * Can be neither {@code null} nor {@link Identifier#VOID_IDENTIFIER void}.
+	 *
+	 * @serial include
+	 */
 	private Identifier parentCharacterizableId;
+
+	/**
+	 * @serial include
+	 */
 	private boolean editable;
+
+	/**
+	 * @serial include
+	 */
 	private boolean visible;
 
 	/**
@@ -82,8 +122,8 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 			final boolean editable,
 			final boolean visible) {
 		super(id,
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
+				new Date(),
+				new Date(),
 				creatorId,
 				creatorId,
 				version);
@@ -114,19 +154,19 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 		super(id, importType, CHARACTERISTIC_CODE, created, creatorId);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
-	 */
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 *
+	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
 	 */
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
-				&& this.type != null
-				|| this.name != null
-				|| this.value != null
-				|| this.parentCharacterizableId != null;
+				&& this.isTypeValid()
+				&& this.isNameValid()
+				&& this.isDescriptionValid()
+				&& this.isValueValid()
+				&& this.isParentCaharacterizableIdValid();
 	}
 
 	/**
@@ -269,7 +309,9 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 			this.description = characteristic.isSetDescription()
 					? characteristic.getDescription()
 					: "";
-			this.value = characteristic.getDescription();
+			this.value = characteristic.isSetValue()
+					? characteristic.getValue()
+					: "";
 			this.editable = characteristic.getEditable();
 			this.visible = characteristic.getVisible();
 			this.parentCharacterizableId = Identifier.fromXmlTransferable(
@@ -281,6 +323,8 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 		} catch (final ApplicationException ae) {
 			throw new XmlConversionException(ae);
 		}
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -318,6 +362,8 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 			final String importType,
 			final boolean usePool)
 	throws XmlConversionException {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		try {
 			this.id.getXmlTransferable(characteristic.addNewId(), importType);
 			this.type.getId().getXmlTransferable(characteristic.addNewTypeId(), importType);
@@ -330,7 +376,13 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 				characteristic.setDescription(this.description);
 			}
 
-			characteristic.setValue(this.value);
+			if (characteristic.isSetValue()) {
+				characteristic.unsetValue();
+			}
+			if (this.value.length() != 0) {
+				characteristic.setValue(this.value);
+			}
+
 			characteristic.setEditable(this.editable);
 			characteristic.setVisible(this.visible);
 			this.parentCharacterizableId.getXmlTransferable(characteristic.addNewParentCharacterizableId(), importType);
@@ -378,6 +430,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	}
 
 	public CharacteristicType getType() {
+		assert this.isTypeValid();
 		return this.type;
 	}
 
@@ -385,6 +438,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void setType0(final CharacteristicType type) {
+		checkTypeValid(type);
 		this.type = type;
 	}
 
@@ -394,6 +448,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	}
 
 	public String getName() {
+		assert this.isNameValid();
 		return this.name;
 	}
 	
@@ -401,9 +456,10 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void setName0(final String name) {
+		checkNameValid(name);
 		this.name = name;
 	}
-	
+
 	protected void setName(final String name) {
 		this.setName0(name);
 		super.markAsChanged();
@@ -411,6 +467,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 
 
 	public String getDescription() {
+		assert this.isDescriptionValid();
 		return this.description;
 	}
 
@@ -418,6 +475,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void setDescription0(final String description) {
+		checkDescriptionValid(description);
 		this.description = description;
 	}
 
@@ -431,13 +489,19 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	 * way connected with {@link StorableObject#getValue(String)}. 
 	 */
 	public String getValue() {
+		assert this.isValueValid();
 		return this.value;
+	}
+
+	private void setValue0(final String value) {
+		checkValueValid(value);
+		this.value = value;
 	}
 
 	public void setValue(final String value) {
 		if (this.value.intern() != value.intern()) {
-			super.markAsChanged();
-			this.value = value;
+			this.setValue0(value);
+			this.markAsChanged();
 		}
 	}
 
@@ -445,7 +509,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	 * @todo add check whether parentCharacterizableId is non-void.
 	 */
 	public Identifier getParentCharacterizableId() {
-		assert this.parentCharacterizableId != null : NON_NULL_EXPECTED;
+		assert this.isParentCaharacterizableIdValid();
 
 		return this.parentCharacterizableId;
 	}
@@ -477,13 +541,12 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 			final Identifier parentCharacterizableId,
 			final boolean usePool)
 	throws ApplicationException {
-		assert parentCharacterizableId != null : NON_NULL_EXPECTED;
+		checkParentCaharacterizableIdValid(parentCharacterizableId);
 		/*
-		 * Further check for identifier validity (e. g.: either void or
-		 * major corresponds to some specific entity code) cannot be
-		 * performed since multiple StorableObject descendants may
-		 * implement Characterizable (in other words, we don't have a
-		 * special CHARACTERIZABLE_CODE).
+		 * Further check for identifier validity (e. g.: major corresponds to some specific
+		 * entity code) cannot be performed since multiple StorableObject descendants may
+		 * implement Characterizable (in other words, we don't have a special
+		 * CHARACTERIZABLE_CODE).
 		 */
 
 		if (this.parentCharacterizableId.equals(parentCharacterizableId)) {
@@ -492,6 +555,10 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 
 		@SuppressWarnings("unchecked")
 		final StorableObject storableObject = StorableObjectPool.getStorableObject(parentCharacterizableId, true);
+		/*
+		 * The situation when null StorableObject is returned is unusual, and must be
+		 * handled somehow. However, currently it is not.
+		 */
 		if (storableObject == null || storableObject instanceof Characterizable) {
 			this.setParentCharacterizable((Characterizable) storableObject, usePool);
 		} else {
@@ -538,7 +605,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 			final String name,
 			final String description,
 			final String value,
-			final Identifier characterizableId,
+			final Identifier parentCharacterizableId,
 			final boolean editable,
 			final boolean visible) {
 		synchronized (this) {
@@ -551,10 +618,12 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 			this.name = name;
 			this.description = description;
 			this.value = value;
-			this.parentCharacterizableId = characterizableId;
+			this.parentCharacterizableId = parentCharacterizableId;
 			this.editable = editable;
 			this.visible = visible;
 		}
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -602,5 +671,123 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	@Override
 	protected CharacteristicWrapper getWrapper() {
 		return CharacteristicWrapper.getInstance();
+	}
+
+	/*-****************************************************************************************
+	 * Contract.                                                                              *
+	 ******************************************************************************************/
+
+	/**
+	 * Should be used in property modifiers (public API).
+	 *
+	 * @param type
+	 * @throws RuntimeException if type doesn&apos;t meet its contract.
+	 */
+	private static void checkTypeValid(final CharacteristicType type) {
+		if (type == null) {
+			throw new NullPointerException("type is null");
+		}
+	}
+
+	/**
+	 * Self-consistency check that should be used in assertion chaining. This method itself
+	 * always returns {@code true}, but throws an {@link AssertionError} (with a meaningful
+	 * message), if (a) assertions are enabled and (b) {@link #type} doesn&apos;t meet its
+	 * contract.
+	 *
+	 * @return true
+	 * @throws AssertionError if assertions are enabled and {@link #type} doesn&apos;t meet its
+	 *         contract.
+	 */
+	private boolean isTypeValid() {
+		try {
+			checkTypeValid(this.type);
+		} catch (final RuntimeException re) {
+			assert false : re.getMessage();
+		}
+		return true;
+	}
+
+	private static void checkNameValid(final String name) {
+		if (name == null) {
+			throw new NullPointerException("name is null");
+		}
+		final int length = name.length();
+		if (length < 1 || length > 128) {
+			throw new IllegalArgumentException("expected name length: 1..128; actual: " + length);
+		}
+	}
+
+	private boolean isNameValid() {
+		try {
+			checkNameValid(this.name);
+		} catch (final RuntimeException re) {
+			assert false : re.getMessage();
+		}
+		return true;
+	}
+
+	private static void checkDescriptionValid(final String description) {
+		if (description == null) {
+			throw new NullPointerException("description is null");
+		}
+		final int length = description.length();
+		if (length > 256) {
+			throw new IllegalArgumentException("expected description length: 0..256; actual: " + length);
+		}
+	}
+
+	private boolean isDescriptionValid() {
+		try {
+			checkDescriptionValid(this.description);
+		} catch (final RuntimeException re) {
+			assert false : re.getMessage(); 
+		}
+		return true;
+	}
+
+	private static void checkValueValid(final String value) {
+		if (value == null) {
+			throw new NullPointerException("value is null");
+		}
+		final int length = value.length();
+		if (length > 256) {
+			throw new IllegalArgumentException("expected value length: 0..256; actual: " + length);
+		}
+	}
+
+	private boolean isValueValid() {
+		try {
+			checkValueValid(this.value);
+		} catch (final RuntimeException re) {
+			assert false : re.getMessage(); 
+		}
+		return true;
+	}
+
+	/**
+	 * Probably, this method should also check whether class of the {@code StorableObject}
+	 * identified by {@code parentCharacterizableId} is really assignable from
+	 * {@code Characterizable} interface. However, this can only be done via Reflection API, and
+	 * is not currently implemented.
+	 *
+	 * @param parentCharacterizableId
+	 */
+	private static void checkParentCaharacterizableIdValid(final Identifier parentCharacterizableId) {
+		if (parentCharacterizableId == null) {
+			throw new NullPointerException("parentCharacterizableId is null");
+		}
+		if (parentCharacterizableId.isVoid()) {
+			throw new IllegalArgumentException("parentCharacterizableId is void");
+		}
+	}
+
+	private boolean isParentCaharacterizableIdValid() {
+		try {
+			checkParentCaharacterizableIdValid(this.parentCharacterizableId);
+		} catch (final RuntimeException re) {
+			assert false : re.getMessage();
+		}
+		return true;
 	}
 }
