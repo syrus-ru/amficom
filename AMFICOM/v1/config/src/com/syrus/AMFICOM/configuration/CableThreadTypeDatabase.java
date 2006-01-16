@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.45 2005/12/02 11:24:19 bass Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.46 2006/01/16 16:05:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/12/02 11:24:19 $
+ * @version $Revision: 1.46 $, $Date: 2006/01/16 16:05:45 $
  * @author $Author: bass $
  * @module config
  */
@@ -69,7 +69,7 @@ public final class CableThreadTypeDatabase extends StorableObjectDatabase<CableT
 		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + storableObject.getColor() + APOSTROPHE + COMMA
+				+ storableObject.getColor() + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getLinkType().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getCableLinkType().getId());
 		return sql;
