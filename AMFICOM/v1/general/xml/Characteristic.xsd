@@ -7,7 +7,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: Characteristic.xsd,v 1.15 2005/12/07 20:50:53 bass Exp $
+			$Id: Characteristic.xsd,v 1.16 2006/01/16 09:10:16 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -40,7 +40,8 @@
 					</xsd:element>
 					<xsd:element ref = "general:description"
 						minOccurs = "0"/>
-					<xsd:element name = "value">
+					<xsd:element name = "value"
+						minOccurs = "0">
 						<xsd:simpleType>
 							<xsd:restriction base = "xsd:string">
 								<xsd:minLength value = "1"/>
