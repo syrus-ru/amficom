@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerObjectLoader.java,v 1.16 2005/11/30 14:56:07 bass Exp $
+ * $Id: CMServerObjectLoader.java,v 1.17 2006/01/16 18:58:19 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,15 +21,14 @@ import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectLoader;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/11/30 14:56:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2006/01/16 18:58:19 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  * @todo Implement refresh (i. e. - method {@link ObjectLoader#getRemoteVersions(Set)})
