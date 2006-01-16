@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.68 2005/12/27 12:26:52 bob Exp $
+ * $Id: TableFrame.java,v 1.69 2006/01/16 12:16:02 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,8 +35,10 @@ import javax.swing.table.JTableHeader;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.UI.StubLabelCellRenderer;
+import com.syrus.AMFICOM.client.UI.TestObjectWrapper;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -52,7 +55,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/12/27 12:26:52 $
+ * @version $Revision: 1.69 $, $Date: 2006/01/16 12:16:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -164,6 +167,10 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 					TestViewAdapter.KEY_D,
 					TestViewAdapter.KEY_Q});
 			this.listTable.setRenderer(StubLabelCellRenderer.getInstance(), TestViewAdapter.KEY_STATUS);
+			final SimpleDateFormat simpleDateFormat = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+			this.listTable.setRenderer(
+				new ADefaultTableCellRenderer.DateRenderer(simpleDateFormat), 
+				TestObjectWrapper.DATE);
 			this.listTable.setAllowAutoResize(true);
 			this.listTable.setAutoscrolls(true);
 			final ListSelectionModel rowSM = this.listTable.getSelectionModel();

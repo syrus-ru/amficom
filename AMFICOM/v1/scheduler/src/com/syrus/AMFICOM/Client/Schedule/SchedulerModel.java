@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.144 2005/12/29 08:52:11 bob Exp $
+ * $Id: SchedulerModel.java,v 1.145 2006/01/16 12:16:02 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.144 $, $Date: 2005/12/29 08:52:11 $
+ * @version $Revision: 1.145 $, $Date: 2006/01/16 12:16:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -890,6 +890,11 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					if (newEndDate != null) {
 						newEndDate = new Date(newEndDate.getTime() + offset);
 					}
+					assert Log.debugMessage("set newStartDate " 
+							+ newStartDate 
+							+ " to " 
+							+ selectedTest, 
+						Log.DEBUGLEVEL03);
 					selectedTest.setStartTime(newStartDate);
 					selectedTest.setEndTime(newEndDate);
 					final TestView testView = TestView.valueOf(selectedTest);
@@ -1436,10 +1441,11 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		
 		final TestViewAdapter testController = TestViewAdapter.getInstance();
 		final TestView view = TestView.valueOf(test);
+		final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 		return testController.getValue(view, TestViewAdapter.KEY_TEMPORAL_TYPE_NAME).toString()
 			+ "\n" + testController.getName(TestViewAdapter.KEY_START_TIME) 
 			+ " : " 
-			+ testController.getValue(view, TestViewAdapter.KEY_START_TIME)
+			+ sdf.format(testController.getValue(view, TestViewAdapter.KEY_START_TIME))
 			+ "\n"
 			+ testMonitoredElement.getName() 
 			+ "\n"

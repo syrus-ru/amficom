@@ -797,7 +797,7 @@ final class TestLine extends TimeLine {
 				return "<html>" + testController.getValue(view, TestViewAdapter.KEY_TEMPORAL_TYPE_NAME).toString()
 						+ "<br>" + testController.getName(TestViewAdapter.KEY_START_TIME) 
 						+ " : " 
-						+ testController.getValue(view, TestViewAdapter.KEY_START_TIME) 
+						+ sdf.format(testController.getValue(view, TestViewAdapter.KEY_START_TIME)) 
 						+ "<br><br>" 
 						+ sdf.format(testTimeItem.testTimeLine.date)
 						+ " : "
