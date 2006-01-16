@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.70 2006/01/16 12:36:05 bob Exp $
+ * $Id: TableFrame.java,v 1.71 2006/01/16 15:28:05 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,10 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.JInternalFrame;
@@ -54,7 +56,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2006/01/16 12:36:05 $
+ * @version $Revision: 1.71 $, $Date: 2006/01/16 15:28:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -128,18 +130,27 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 
 	private void addTest(final Set<Identifier> testIds, boolean clear) {
 		assert Log.debugMessage(testIds, Log.DEBUGLEVEL03);
+		final long time0 = System.currentTimeMillis();
 		final WrapperedTableModel<TestView> model = this.listTable.getModel();
 		if (clear) {
 			model.clear();
 		}
+		final long time01 = System.currentTimeMillis();
+		assert Log.debugMessage(testIds + ", 01 it takes " + (time01 - time0) + " ms", Log.DEBUGLEVEL03);
+		final List<TestView> testViews = new ArrayList<TestView>(testIds.size());
 		for (final Identifier testId : testIds) {
 			final TestView testView = TestView.valueOf(testId);
 			final Test test = testView.getTest();
 			final Identifier groupTestId = test.getGroupTestId();
 			if (groupTestId.isVoid() || test.getId().equals(groupTestId)) {
-				model.addObject(TestView.valueOf(test));
+				testViews.add(TestView.valueOf(test));				
 			}
 		}
+		final long time02 = System.currentTimeMillis();
+		assert Log.debugMessage(testIds + ", 02 it takes " + (time02 - time0) + " ms", Log.DEBUGLEVEL03);
+		model.addObjects(testViews);
+		final long time1 = System.currentTimeMillis();
+		assert Log.debugMessage(testIds + ", it takes " + (time1 - time0) + " ms", Log.DEBUGLEVEL03);
 	}
 	
 	private void clearTests() {
