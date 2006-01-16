@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.69 2006/01/16 12:16:02 bob Exp $
+ * $Id: TableFrame.java,v 1.70 2006/01/16 12:36:05 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,6 @@ import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.UI.StubLabelCellRenderer;
-import com.syrus.AMFICOM.client.UI.TestObjectWrapper;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -55,7 +54,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2006/01/16 12:16:02 $
+ * @version $Revision: 1.70 $, $Date: 2006/01/16 12:36:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -170,7 +169,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 			final SimpleDateFormat simpleDateFormat = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 			this.listTable.setRenderer(
 				new ADefaultTableCellRenderer.DateRenderer(simpleDateFormat), 
-				TestObjectWrapper.DATE);
+				TestViewAdapter.KEY_START_TIME);
 			this.listTable.setAllowAutoResize(true);
 			this.listTable.setAutoscrolls(true);
 			final ListSelectionModel rowSM = this.listTable.getSelectionModel();
