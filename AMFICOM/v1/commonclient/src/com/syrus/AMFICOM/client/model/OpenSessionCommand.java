@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.47 2005/12/19 13:31:57 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.48 2006/01/16 09:17:49 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.47 $, $Date: 2005/12/19 13:31:57 $
+ * @version $Revision: 1.48 $, $Date: 2006/01/16 09:17:49 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -206,10 +206,15 @@ public class OpenSessionCommand extends AbstractCommand {
 
 		try {
 			clientSessionEnvironment.login(this.login, this.password, this.domainId);
-		} catch (LoginException le) {
+		} catch (final LoginException le) {
 			Log.errorMessage(le);
 			if (le.isAlreadyLoggedIn()) {
 				this.logged = true;
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
+					le.getMessage(),
+					I18N.getString("Error"),
+					JOptionPane.ERROR_MESSAGE,
+					null);
 				return true;
 			}
 			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
@@ -219,7 +224,7 @@ public class OpenSessionCommand extends AbstractCommand {
 					null);
 			this.logginFailed();
 			return false;
-		} catch (CommunicationException ce) {
+		} catch (final CommunicationException ce) {
 			Log.errorMessage(ce);
 			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					I18N.getString("Error.ServerConnection"),
@@ -233,6 +238,13 @@ public class OpenSessionCommand extends AbstractCommand {
 		}
 		
 		if (!checkEnter()) {
+			try {
+				clientSessionEnvironment.logout();
+			} catch (final CommunicationException ce) {
+				Log.errorMessage(ce);
+			} catch (final LoginException le) {
+				Log.errorMessage(le);
+			}
 			this.logginFailed();
 			return false;
 		}
@@ -251,8 +263,8 @@ public class OpenSessionCommand extends AbstractCommand {
 	}	
 	
 	private final boolean checkEnter() {
-		final String action;
-		if ((action = this.isEnterModuleEnable()) != null) {
+		final String action = this.isEnterModuleEnable();
+		if (action != null) {
 			AbstractMainFrame.showErrorMessage("<html>" 
 				+ I18N.getString("Common.Permission.DenyAccess") 
 				+ " : <br>" 
