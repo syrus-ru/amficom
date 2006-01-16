@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThreadType.java,v 1.83 2005/12/17 12:08:30 arseniy Exp $
+ * $Id: CableThreadType.java,v 1.84 2006/01/16 16:04:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,22 +51,17 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * <code>CableThreadType</code>, among other fields, contain references to
+ * <code>CableThreadType</code>, among other fields, contains references to
  * {@link LinkType} and {@link CableLinkType}. While the former is a type of
- * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
- * cable (or an <i>abstract </i> cable containing this thread).
+ * optical fiber (or an <i>abstract</i> optical fiber), the latter is a type of
+ * cable (or an <i>abstract</i> cable containing this thread).
  *
- * @version $Revision: 1.83 $, $Date: 2005/12/17 12:08:30 $
- * @author $Author: arseniy $
- * @module config
+ * @version $Revision: 1.84 $, $Date: 2006/01/16 16:04:59 $
+ * @author $Author: bass $
+ * @module configuration
  */
-
 public final class CableThreadType extends StorableObjectType<CableThreadType>
 		implements Namable, XmlTransferableObject<XmlCableThreadType> {
-
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
 	private static final long  serialVersionUID	= 3689355429075628086L;
 
 	private String name;
