@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserDomainPopupMenu.java,v 1.11 2005/12/16 11:25:38 arseniy Exp $
+* $Id: SystemUserDomainPopupMenu.java,v 1.12 2006/01/16 11:04:27 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/12/16 11:25:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2006/01/16 11:04:27 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -124,7 +124,11 @@ public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu<DomainPerpe
 		@Override
 		protected void applyPassword(final char[] password) {
 			try {
-				LoginManager.setPassword(this.systemUser.getId(), new String(password));				
+				LoginManager.setPassword(this.systemUser.getId(), new String(password));	
+				JOptionPane.showMessageDialog(null, 
+					I18N.getString("Manager.Label.PasswordChangedSuccessful"), 
+					I18N.getString("Manager.Label.Info"), 
+					JOptionPane.INFORMATION_MESSAGE);
 			} catch (final CommunicationException e) {
 				Log.errorMessage(e);
 				JOptionPane.showMessageDialog(null, 
