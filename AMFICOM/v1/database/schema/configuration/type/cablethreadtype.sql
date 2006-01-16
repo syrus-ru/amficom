@@ -1,4 +1,4 @@
--- $Id: cablethreadtype.sql,v 1.14 2005/09/28 10:34:02 arseniy Exp $
+-- $Id: cablethreadtype.sql,v 1.15 2006/01/16 16:04:25 bass Exp $
 
 CREATE TABLE CableThreadType (
  id NUMBER(19),
@@ -12,8 +12,7 @@ CREATE TABLE CableThreadType (
  description VARCHAR2(256 CHAR),
 --
  name VARCHAR2(128 CHAR),
- mark VARCHAR2(64 CHAR),
- color VARCHAR2(32 CHAR),
+ color NUMBER(10) DEFAULT -1 NOT NULL,
  link_type_id,
  cable_link_type_id,
 --
