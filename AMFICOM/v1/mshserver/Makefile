@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.23 2005/10/12 10:03:31 bass Exp $
+# $Id: Makefile,v 1.24 2006/01/16 19:09:59 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -33,7 +33,7 @@ mapview \
 csbridge \
 leserver_interface
 
-EXTCLASSPATH := $(TROVE4JCLASSPATH):$(MAPINFO_LIBDIR)/jdom.jar:$(MAPINFO_LIBDIR)/micsys.jar:$(MAPINFO_LIBDIR)/miutil.jar:$(MAPINFO_LIBDIR)/mxj.jar:$(MAPINFO_LIBDIR)/mxjgeom.jar:$(EXTLIBDIR)/dom4j-1.6.jar
+EXTCLASSPATH := $(TROVE4JCLASSPATH):$(MAPINFO_LIBDIR)/jdom.jar:$(MAPINFO_LIBDIR)/micsys.jar:$(MAPINFO_LIBDIR)/miutil.jar:$(MAPINFO_LIBDIR)/mxj.jar:$(MAPINFO_LIBDIR)/mxjgeom.jar:$(EXTLIBDIR)/dom4j.jar
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mscharserver/*.java)
