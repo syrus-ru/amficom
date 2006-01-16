@@ -25,8 +25,8 @@ LD_OUTPUT_FLAG = "-o"
 LDLIBS = -lm -lstdc++
 
 CXX = g++
-CFLAGS = -O2 -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
-CXXFLAGS = -O2 -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
+CFLAGS = -O2 -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux -fPIC
+CXXFLAGS = -O2 -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux -fPIC
 CXX_NOLINK_FLAG = -c 
 CXX_OUTPUT_FLAG = -o 
 CPPFLAGS = -DDADARA_EXPORTS
