@@ -35,6 +35,7 @@ import javax.swing.event.ChangeListener;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
+import com.syrus.AMFICOM.client.UI.LazyChangeListener;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -895,57 +896,6 @@ public class TimeParametersFrame extends JInternalFrame {
 		super.setIconifiable(true);
 		this.timeParametersPanel = new TimeParametersPanel(aContext);
 		this.getContentPane().add(this.timeParametersPanel.panel, BorderLayout.CENTER);
-	}
-	
-	private class LazyChangeListener implements ChangeListener {
-		
-		private Thread		thread;
-		
-		long previousEventTime;		
-		final long timeout;
-		ChangeEvent changeEvent;
-		
-		final ChangeListener changeListener;
-		
-		public LazyChangeListener(final ChangeListener changeListener) {
-			this(changeListener, 500);
-		}
-		
-		public LazyChangeListener(final ChangeListener changeListener,
-				final long timeout) {
-			this.changeListener = changeListener;
-			this.timeout = timeout;
-			
-			this.createThread();
-			this.thread.start();
-		}
-		
-		private void createThread() {
-			this.thread = new Thread() {
-
-				@SuppressWarnings("unqualified-field-access")
-				@Override
-				public void run() {
-					while (true) {
-						if (changeEvent != null && (System.currentTimeMillis() - previousEventTime) > timeout) {
-							changeListener.stateChanged(changeEvent);
-							changeEvent = null;			
-						}
-						try {
-							Thread.sleep(timeout);
-						} catch (final InterruptedException e) {
-							return;
-						}
-					}
-				}
-			};
-		}
-		
-		public void stateChanged(final ChangeEvent e) {			
-			this.changeEvent = e;
-			this.previousEventTime = System.currentTimeMillis();
-			
-		}
 	}
 	
 }
