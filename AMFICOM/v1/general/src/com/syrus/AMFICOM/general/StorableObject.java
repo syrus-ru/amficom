@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.140 2005/12/17 12:58:48 arseniy Exp $
+ * $Id: StorableObject.java,v 1.141 2006/01/17 12:27:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.140 $, $Date: 2005/12/17 12:58:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.141 $, $Date: 2006/01/17 12:27:17 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -149,10 +149,22 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 		this.savedModifierId = null;
 		this.savedVersion = StorableObjectVersion.ILLEGAL_VERSION;		
 	}
-	
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 * @return <code>true</code> if storable object is valid, <code>false</code> otherwise
+	 *
+	 * <p>This method <em>may</em> return {@code true} even if the bean is invalid; however,
+	 * since it&apos;s being primarily used in assertions, its behaviour is quite correct when
+	 * assertions enabled: an {@link AssertionError} is thrown upon bean invalidity. Thus,
+	 * {@code boolean} return type better serves for assertion chaining opportunity, and the
+	 * value returned may not reflect bean&apos;s effective validity state (and implementation
+	 * may eventually be rewritten to <em>always</em> return {@code true}).</p>
+	 *
+	 * @return {@code true} if the bean is valid; otherwise, depending on the implementation,
+	 *         may <em>either</em> return {@code false} <em>or</em> throw an
+	 *         {@link AssertionError} (assertions enabled) or silently return {@code true}
+	 *         (assertions disabled).
+	 * @throws AssertionError if the bean is invalid (optional).
 	 */
 	protected boolean isValid() {
 		return !(this.id == null || this.created == null || this.modified == null || this.creatorId == null || this.modifierId == null);
@@ -648,8 +660,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.140 $, $Date: 2005/12/17 12:58:48 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.141 $, $Date: 2006/01/17 12:27:17 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -757,8 +769,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.140 $, $Date: 2005/12/17 12:58:48 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.141 $, $Date: 2006/01/17 12:27:17 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
