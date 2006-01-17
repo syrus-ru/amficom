@@ -1,5 +1,5 @@
 /*
- * $Id: TestLoadAnalysisResult.java,v 1.3 2006/01/17 10:43:56 bob Exp $
+ * $Id: TestLoadAnalysisResult.java,v 1.4 2006/01/17 11:03:07 saa Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.reflectometry.MeasurementReflectometryAnalysisResult;
 import com.syrus.io.DataFormatException;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2006/01/17 10:43:56 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2006/01/17 11:03:07 $
+ * @author $Author: saa $
  * @module test
  */
 public final class TestLoadAnalysisResult extends TestCase {
@@ -54,23 +54,32 @@ public final class TestLoadAnalysisResult extends TestCase {
 		
 		final Identifier measurementId = new Identifier("Measurement_8686");
 		
-		boolean tooLong = false;
+		boolean tooLongLoadMeasurement = false;
+		boolean tooLongCreateMRAR = false;
 		for (int i = 0; i < 20; i++) {
-			long t1 = System.nanoTime();
 			StorableObjectPool.clean();
 		
+			long t0 = System.nanoTime();
+
+			// load Measurement (by id)
 			final Measurement measurement = 
 				StorableObjectPool.getStorableObject(measurementId, true);
-			
+			long t1 = System.nanoTime();
+
+			// create MRAR by given Measurement and loaded Analysis (via SOP)
 			final MeasurementReflectometryAnalysisResult result =
 				new MeasurementReflectometryAnalysisResult(measurement);
-			
 			long t2 = System.nanoTime();
-			
-			final double timeMs = (t2 - t1) / 1e6;
-			System.out.println("test " + i + ": SO received in " + timeMs + " ms");
-			tooLong |= timeMs > expectedTime;
+
+			final double dt1 = (t1 - t0) / 1e6;
+			final double dt2 = (t2 - t1) / 1e6;
+			System.out.println("test " + i + ": "
+					+ "SO received in " + dt1 + " ms, "
+					+ "MRAR created in " + dt2 + " ms");
+			tooLongLoadMeasurement |= dt1 > expectedTime;
+			tooLongCreateMRAR |= dt2 > expectedTime;
 		}
-		assertFalse(tooLong);
+		assertFalse("MRAR max creation time is too high", tooLongCreateMRAR);
+		assertFalse("SO Measurement load time is too high", tooLongLoadMeasurement);
 	}
 }
