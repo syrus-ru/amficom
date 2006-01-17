@@ -1,5 +1,5 @@
 /*
- * $Id: TestLoadAnalysisResult.java,v 1.1 2006/01/17 10:40:09 bob Exp $
+ * $Id: TestLoadAnalysisResult.java,v 1.2 2006/01/17 10:40:31 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,16 +13,14 @@ import junit.framework.TestCase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBACommonTest;
 import com.syrus.AMFICOM.general.CommonTest;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.AMFICOM.reflectometry.MeasurementReflectometryAnalysisResult;
 import com.syrus.io.DataFormatException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2006/01/17 10:40:09 $
+ * @version $Revision: 1.2 $, $Date: 2006/01/17 10:40:31 $
  * @author $Author: bob $
  * @module test
  */
