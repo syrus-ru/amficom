@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.87 2006/01/16 09:11:51 bass Exp $
+ * $Id: Characteristic.java,v 1.88 2006/01/17 12:26:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2006/01/16 09:11:51 $
+ * @version $Revision: 1.88 $, $Date: 2006/01/17 12:26:06 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -155,8 +155,6 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 *
 	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
 	 */
 	@Override
