@@ -1,16 +1,16 @@
 /*-
- * $Id: CableThreadType.java,v 1.84 2006/01/16 16:04:59 bass Exp $
+ * $Id: CableThreadType.java,v 1.85 2006/01/17 16:24:10 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.configuration;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
@@ -20,6 +20,9 @@ import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.WARNING;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -38,15 +41,15 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
-import com.syrus.util.Shitlet;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -56,7 +59,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * optical fiber (or an <i>abstract</i> optical fiber), the latter is a type of
  * cable (or an <i>abstract</i> cable containing this thread).
  *
- * @version $Revision: 1.84 $, $Date: 2006/01/16 16:04:59 $
+ * @version $Revision: 1.85 $, $Date: 2006/01/17 16:24:10 $
  * @author $Author: bass $
  * @module configuration
  */
@@ -64,9 +67,41 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 		implements Namable, XmlTransferableObject<XmlCableThreadType> {
 	private static final long  serialVersionUID	= 3689355429075628086L;
 
+	/**
+	 * In hex representation, this is {@code 0xffffffff}, which corresponds to
+	 * {@link java.awt.Color#WHITE}.
+	 *
+	 * @see java.awt.Color#WHITE
+	 * @see java.awt.Color#Color(int)
+	 * @see java.awt.Color#getRGB()
+	 */
+	private static final int COLOR_WHITE = -1;
+
+	/**
+	 * Can&apos;t be {@code null}; instead, for an empty {@code name}, empty string
+	 * should be supplied. Maximum length for {@code name} is 128 characters.
+	 *
+	 * @serial include
+	 */
 	private String name;
+
+	/**
+	 * @serial include
+	 */
 	private int color;
+
+	/**
+	 * Can be neither {@code null} nor {@link Identifier#VOID_IDENTIFIER void}.
+	 *
+	 * @serial include
+	 */
 	private Identifier linkTypeId;
+
+	/**
+	 * Can be neither {@code null} nor {@link Identifier#VOID_IDENTIFIER void}.
+	 *
+	 * @serial include
+	 */
 	private Identifier cableLinkTypeId;
 
 	public CableThreadType(final IdlCableThreadType cttt) throws CreateObjectException {
@@ -220,7 +255,48 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 	}
 
 	/**
-	 * create new instance for client
+	 * @see com.syrus.AMFICOM.general.StorableObjectType#isValid()
+	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
+	 */
+	@Override
+	protected boolean isValid() {
+		return super.isValid()
+				&& this.isNameValid()
+				&& this.isLinkTypeIdValid()
+				&& this.isCableLinkTypeIdValid();
+	}
+
+	/**
+	 * A shorthand for {@link #createInstance(Identifier, String, String, String, int, LinkType, CableLinkType)}.
+	 *
+	 * @param creatorId
+	 * @param codename
+	 * @param description
+	 * @param name
+	 * @param linkType
+	 * @param cableLinkType
+	 * @throws CreateObjectException
+	 */
+	public static CableThreadType createInstance(final Identifier creatorId,
+			final String codename,
+			final String description,
+			final String name,
+			final LinkType linkType,
+			final CableLinkType cableLinkType)
+	throws CreateObjectException {
+		return createInstance(creatorId, codename, description, name, COLOR_WHITE, linkType, cableLinkType);
+	}
+
+	/**
+	 * Creates a new instance for client.
+	 *
+	 * @param creatorId
+	 * @param codename
+	 * @param description
+	 * @param name
+	 * @param color
+	 * @param linkType
+	 * @param cableLinkType
 	 * @throws CreateObjectException
 	 */
 	public static CableThreadType createInstance(final Identifier creatorId,
@@ -229,13 +305,19 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 			final String name,
 			final int color,
 			final LinkType linkType,
-			final CableLinkType cableLinkType) throws CreateObjectException {
+			final CableLinkType cableLinkType)
+	throws CreateObjectException {
 		assert creatorId != null
 				&& codename != null
-				&& description != null
-				&& name != null
-				&& linkType != null
-				&& cableLinkType != null;
+				&& description != null;
+
+		final Identifier linkTypeId = Identifier.possiblyVoid(linkType);
+		final Identifier cableLinkTypeId = Identifier.possiblyVoid(cableLinkType);
+
+		checkNameValid(name);
+		checkLinkTypeIdValid(linkTypeId);
+		checkCableLinkTypeIdValid(cableLinkTypeId);
+
 		try {
 			final CableThreadType cableThreadType = new CableThreadType(IdentifierPool.getGeneratedIdentifier(CABLETHREAD_TYPE_CODE),
 					creatorId,
@@ -244,8 +326,8 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 					description,
 					name,
 					color,
-					linkType.getId(),
-					cableLinkType.getId());
+					linkTypeId,
+					cableLinkTypeId);
 
 			assert cableThreadType.isValid() : OBJECT_BADLY_INITIALIZED;
 
@@ -262,11 +344,15 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 			final IdlStorableObject transferable)
 	throws ApplicationException {
 		final IdlCableThreadType idlCableThreadType = (IdlCableThreadType) transferable;
+
 		super.fromTransferable(idlCableThreadType, idlCableThreadType.codename, idlCableThreadType.description);
+
 		this.name = idlCableThreadType.name;
 		this.color = idlCableThreadType.color;
-		this.linkTypeId = new Identifier(idlCableThreadType.linkTypeId);
-		this.cableLinkTypeId = new Identifier(idlCableThreadType.cableLinkTypeId);
+		this.linkTypeId = Identifier.valueOf(idlCableThreadType.linkTypeId);
+		this.cableLinkTypeId = Identifier.valueOf(idlCableThreadType.cableLinkTypeId);
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -275,24 +361,36 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 	 * @throws XmlConversionException
 	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
-	@Shitlet
 	public void fromXmlTransferable(final XmlCableThreadType cableThreadType,
 			final String importType)
 	throws XmlConversionException {
 		try {
-			this.name = cableThreadType.getName();
+			XmlComplementorRegistry.complementStorableObject(cableThreadType, CABLETHREAD_TYPE_CODE, importType, PRE_IMPORT);
+
 			this.codename = cableThreadType.getCodename();
 			this.description = cableThreadType.isSetDescription()
 					? cableThreadType.getDescription()
 					: "";
-			this.color = cableThreadType.isSetColor()
-					? Integer.parseInt(cableThreadType.getColor())
-					: -1;
-			this.linkTypeId = Identifier.fromXmlTransferable(cableThreadType.getLinkTypeId(), importType, MODE_THROW_IF_ABSENT);
-			this.cableLinkTypeId = Identifier.fromXmlTransferable(cableThreadType.getCableLinkTypeId(), importType, MODE_THROW_IF_ABSENT);
-		} catch (final ObjectNotFoundException onfe) {
-			throw new XmlConversionException(onfe);
+
+			this.name = cableThreadType.isSetName()
+					? cableThreadType.getName()
+					: "";
+			this.color = cableThreadType.getColor();
+			this.linkTypeId = Identifier.fromXmlTransferable(
+					cableThreadType.getLinkTypeId(),
+					importType,
+					MODE_THROW_IF_ABSENT);
+			this.cableLinkTypeId = Identifier.fromXmlTransferable(
+					cableThreadType.getCableLinkTypeId(),
+					importType,
+					MODE_THROW_IF_ABSENT);
+			
+			XmlComplementorRegistry.complementStorableObject(cableThreadType, CABLETHREAD_TYPE_CODE, importType, POST_IMPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
 		}
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -301,19 +399,21 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 	 */
 	@Override
 	public IdlCableThreadType getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlCableThreadTypeHelper.init(orb,
-				super.id.getIdlTransferable(),
-				super.created.getTime(),
-				super.modified.getTime(),
-				super.creatorId.getIdlTransferable(),
-				super.modifierId.getIdlTransferable(),
-				super.version.longValue(),
-				super.codename,
-				super.description != null ? super.description : "",
+				this.id.getIdlTransferable(orb),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getIdlTransferable(orb),
+				this.modifierId.getIdlTransferable(orb),
+				this.version.longValue(),
+				this.codename,
+				this.description != null ? this.description : "",
 				this.name != null ? this.name : "",
 				this.color,
-				this.linkTypeId.getIdlTransferable(),
-				this.cableLinkTypeId.getIdlTransferable());
+				this.linkTypeId.getIdlTransferable(orb),
+				this.cableLinkTypeId.getIdlTransferable(orb));
 	}
 
 	/**
@@ -323,13 +423,39 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 	 * @throws XmlConversionException
 	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
-	@Shitlet
 	public void getXmlTransferable(
 			final XmlCableThreadType cableThreadType,
 			final String importType,
 			final boolean usePool)
 	throws XmlConversionException {
-		throw new UnsupportedOperationException();
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
+		try {
+			this.id.getXmlTransferable(cableThreadType.addNewId(), importType);
+			cableThreadType.setCodename(this.codename);
+
+			if (cableThreadType.isSetDescription()) {
+				cableThreadType.unsetDescription();
+			}
+			if (this.description.length() != 0) {
+				cableThreadType.setDescription(this.description);
+			}
+
+			if (cableThreadType.isSetName()) {
+				cableThreadType.unsetName();
+			}
+			if (this.name.length() != 0) {
+				cableThreadType.setName(this.name);
+			}
+
+			cableThreadType.setColor(this.color);
+			this.linkTypeId.getXmlTransferable(cableThreadType.addNewLinkTypeId(), importType);
+			this.cableLinkTypeId.getXmlTransferable(cableThreadType.addNewCableLinkTypeId(), importType);
+
+			XmlComplementorRegistry.complementStorableObject(cableThreadType, CABLETHREAD_TYPE_CODE, importType, EXPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
+		}
 	}
 
 	protected synchronized void setAttributes(final Date created,
@@ -343,43 +469,21 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 			final int color,
 			final Identifier linkTypeId,
 			final Identifier cableLinkTypeId) {
-		super.setAttributes(created,
-			modified,
-			creatorId,
-			modifierId,
-			version,
-			codename,
-			description);
-		this.name = name;
-		this.color = color;
-		this.linkTypeId = linkTypeId;
-		this.cableLinkTypeId = cableLinkTypeId;
-	}
-
-	protected Identifier getLinkTypeId() {
-		return this.linkTypeId;
-	}
-	
-	protected Identifier getCableLinkTypeId() {
-		return this.cableLinkTypeId;
-	}
-	
-	public LinkType getLinkType() {
-		try {
-			return StorableObjectPool.<LinkType>getStorableObject(this.linkTypeId, true);
-		} catch (ApplicationException e) {
-			Log.errorMessage(e);
-			return null;
+		synchronized (this) {
+			super.setAttributes(created,
+					modified,
+					creatorId,
+					modifierId,
+					version,
+					codename,
+					description);
+			this.name = name;
+			this.color = color;
+			this.linkTypeId = linkTypeId;
+			this.cableLinkTypeId = cableLinkTypeId;
 		}
-	}
 
-	public CableLinkType getCableLinkType() {
-		try {
-			return StorableObjectPool.<CableLinkType>getStorableObject(this.cableLinkTypeId, true);
-		} catch (ApplicationException e) {
-			Log.errorMessage(e);
-			return null;
-		}
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	public void setColor(final int color) {
@@ -391,47 +495,115 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 		return this.color;
 	}	
 
+	/*-****************************************************************************************
+	 * name property.                                                                         *
+	 ******************************************************************************************/
+
 	public String getName() {
+		assert this.isNameValid();
 		return this.name;
 	}
 
-	public void setName(final String name) {
-		assert name != null;
+	private void setName0(final String name) {
+		checkNameValid(name);
 		this.name = name;
-		super.markAsChanged();
 	}
 
-	/**
-	 * @param linkTypeId
-	 */
-	protected void setLinkTypeId(final Identifier linkTypeId) {
-		assert linkTypeId != null : NON_NULL_EXPECTED;
-		assert !linkTypeId.isVoid() : NON_VOID_EXPECTED;
-		assert linkTypeId.getMajor() == LINK_TYPE_CODE;
+	public void setName(final String name) {
+		this.setName0(name);
+		this.markAsChanged();
+	}
+
+	/*-****************************************************************************************
+	 * linkTypeId property.                                                                   *
+	 ******************************************************************************************/
+
+	public Identifier getLinkTypeId() {
+		assert this.isLinkTypeIdValid();
+		return this.linkTypeId;
+	}
+	
+	private void setLinkTypeId0(final Identifier linkTypeId) {
+		checkLinkTypeIdValid(linkTypeId);
 		this.linkTypeId = linkTypeId;
 	}
 
-	public void setLinkType(final LinkType linkType) {
-		assert linkType != null;
-		this.setLinkTypeId(linkType.getId());
-		super.markAsChanged();
+	public void setLinkTypeId(final Identifier linkTypeId) {
+		this.setLinkTypeId0(linkTypeId);
+		this.markAsChanged();
+	}
+
+	/*-****************************************************************************************
+	 * linkType virtual property.                                                             *
+	 ******************************************************************************************/
+
+	/**
+	 * A wrapper around {@link #getLinkTypeId()}.
+	 */
+	public LinkType getLinkType() {
+		try {
+			return StorableObjectPool.<LinkType>getStorableObject(this.getLinkTypeId(), true);
+		} catch (final ApplicationException ae) {
+			Log.errorMessage(ae);
+			return null;
+		}
 	}
 
 	/**
-	 * @param cableLinkTypeId
+	 * A wrapper around {@link #setLinkTypeId(Identifier)}.
+	 *
+	 * @param linkType
 	 */
-	protected void setCableLinkTypeId(final Identifier cableLinkTypeId) {
-		assert cableLinkTypeId != null : NON_NULL_EXPECTED;
-		assert !cableLinkTypeId.isVoid() : NON_VOID_EXPECTED;
-		assert cableLinkTypeId.getMajor() == CABLELINK_TYPE_CODE;
+	public void setLinkType(final LinkType linkType) {
+		assert linkType != null;
+		this.setLinkTypeId(linkType.getId());
+	}
+
+	/*-****************************************************************************************
+	 * cableLinkTypeId property.                                                              *
+	 ******************************************************************************************/
+
+	public Identifier getCableLinkTypeId() {
+		assert this.isCableLinkTypeIdValid();
+		return this.cableLinkTypeId;
+	}
+	
+	private void setCableLinkTypeId0(final Identifier cableLinkTypeId) {
+		checkCableLinkTypeIdValid(cableLinkTypeId);
 		this.cableLinkTypeId = cableLinkTypeId;
 	}
 
+	public void setCableLinkTypeId(final Identifier cableLinkTypeId) {
+		this.setCableLinkTypeId0(cableLinkTypeId);
+		this.markAsChanged();
+	}
+
+	/*-****************************************************************************************
+	 * cableLinkType virtual property.                                                        *
+	 ******************************************************************************************/
+
+	/**
+	 * A wrapper around {@link #getCableLinkTypeId()}.
+	 */
+	public CableLinkType getCableLinkType() {
+		try {
+			return StorableObjectPool.<CableLinkType>getStorableObject(this.getCableLinkTypeId(), true);
+		} catch (final ApplicationException ae) {
+			Log.errorMessage(ae);
+			return null;
+		}
+	}
+
+	/**
+	 * A wrapper around {@link #setCableLinkTypeId(Identifier)}.
+	 *
+	 * @param cableLinkType
+	 */
 	public void setCableLinkType(final CableLinkType cableLinkType) {
 		assert cableLinkType != null;
-		setCableLinkTypeId(cableLinkType.getId());
-		super.markAsChanged();
+		this.setCableLinkTypeId(cableLinkType.getId());
 	}
+
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
@@ -449,5 +621,77 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 	@Override
 	protected CableThreadTypeWrapper getWrapper() {
 		return CableThreadTypeWrapper.getInstance();
+	}
+
+	/*-****************************************************************************************
+	 * Contract.                                                                              *
+	 * For javadocs, see the section of the same name in Characteristic class.                *
+	 ******************************************************************************************/
+
+	private static void checkNameValid(final String name) {
+		if (name == null) {
+			throw new NullPointerException("name is null");
+		}
+		final int length = name.length();
+		if (length > 128) {
+			throw new IllegalArgumentException("expected name length: 0..128; actual: " + length);
+		}
+	}
+
+	private boolean isNameValid() {
+		try {
+			checkNameValid(this.name);
+		} catch (final RuntimeException re) {
+			assert false : re.getMessage();
+		}
+		return true;
+	}
+
+	private static void checkLinkTypeIdValid(final Identifier linkTypeId) {
+		if (linkTypeId == null) {
+			throw new NullPointerException("linkTypeId is null");
+		}
+		if (linkTypeId.isVoid()) {
+			throw new IllegalArgumentException("linkTypeId is void");
+		}
+		final short entityCode = linkTypeId.getMajor();
+		if (entityCode != LINK_TYPE_CODE) {
+			throw new IllegalArgumentException("expected entity code: "
+					+ ObjectEntities.codeToString(LINK_TYPE_CODE) + "; actual: "
+					+ ObjectEntities.codeToString(entityCode)); 
+		}
+	}
+
+	private boolean isLinkTypeIdValid() {
+		try {
+			checkLinkTypeIdValid(this.linkTypeId);
+		} catch (final RuntimeException re) {
+			assert false : re.getMessage();
+		}
+		return true;
+	}
+
+	private static void checkCableLinkTypeIdValid(final Identifier cableLinkTypeId) {
+		if (cableLinkTypeId == null) {
+			throw new NullPointerException("cableLinkTypeId is null");
+		}
+		if (cableLinkTypeId.isVoid()) {
+			throw new IllegalArgumentException("cableLinkTypeId is void");
+		}
+		final short entityCode = cableLinkTypeId.getMajor();
+		if (entityCode != CABLELINK_TYPE_CODE) {
+			throw new IllegalArgumentException("expected entity code: "
+					+ ObjectEntities.codeToString(CABLELINK_TYPE_CODE) + "; actual: "
+					+ ObjectEntities.codeToString(entityCode)); 
+		}
+	}
+
+	private boolean isCableLinkTypeIdValid() {
+		try {
+			checkCableLinkTypeIdValid(this.cableLinkTypeId);
+		} catch (final RuntimeException re) {
+			assert false : re.getMessage();
+		}
+		return true;
 	}
 }
