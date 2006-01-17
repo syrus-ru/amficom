@@ -1,9 +1,9 @@
-/*
- * $Id: StorableObjectType.java,v 1.32 2005/10/25 19:53:04 bass Exp $
+/*-
+ * $Id: StorableObjectType.java,v 1.33 2006/01/17 11:52:41 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2006 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.general;
@@ -14,12 +14,11 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/10/25 19:53:04 $
+ * @version $Revision: 1.33 $, $Date: 2006/01/17 11:52:41 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-
 public abstract class StorableObjectType<T extends StorableObjectType<T>>
 		extends StorableObject<T> {
 	static final long serialVersionUID = 6253817645176813979L;
@@ -77,11 +76,10 @@ public abstract class StorableObjectType<T extends StorableObjectType<T>>
 		this.description = description1;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
-	 */
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 *
+	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
 	 */
 	@Override
 	protected boolean isValid() {
