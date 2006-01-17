@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeLine.java,v 1.22 2005/12/27 14:42:37 bob Exp $
+ * $Id: TimeLine.java,v 1.23 2006/01/17 12:20:44 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.SortedSet;
@@ -23,7 +24,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestLine.TestTimeItem;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/12/27 14:42:37 $
+ * @version $Revision: 1.23 $, $Date: 2006/01/17 12:20:44 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -40,6 +41,7 @@ public abstract class TimeLine extends JComponent {
 	double		scale = 0.0;
 
 	protected SortedSet<TestTimeItem>	timeItems	= new TreeSet<TestTimeItem>();
+	private Rectangle	cachedVisibleRect;
 
 	public TimeLine() {
 		
@@ -128,9 +130,13 @@ public abstract class TimeLine extends JComponent {
 		FontMetrics fontMetrics = g.getFontMetrics();
 		g.clearRect(0, 0, fontMetrics.stringWidth(this.title), this.titleHeight / 2 + 3);
 		g.setColor(Color.BLACK);
-		g.drawString(this.title, 5, this.titleHeight / 2 + 2);
+		g.drawString(this.title, 5 + (this.cachedVisibleRect != null ? this.cachedVisibleRect.x : 0), this.titleHeight / 2 + 2);
 		g.drawLine(0, this.titleHeight / 2 + 3, width, this.titleHeight / 2 + 3);
 		g.drawLine(0, height - 1, width, height - 1);
+	}
+	
+	void updateCachedVisibleRect() {
+		this.cachedVisibleRect = this.getVisibleRect();
 	}
 	
 	public final String getTitle() {
