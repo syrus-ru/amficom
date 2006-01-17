@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.72 2006/01/17 09:12:26 bob Exp $
+ * $Id: TableFrame.java,v 1.73 2006/01/17 13:14:59 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2006/01/17 09:12:26 $
+ * @version $Revision: 1.73 $, $Date: 2006/01/17 13:14:59 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -204,8 +204,11 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 							public void run() {
 								TableFrame.this.schedulerModel.unselectTests(TableFrame.this);
 								try {
-									TableFrame.this.schedulerModel.addSelectedTest(TableFrame.this, 
-										TableFrame.this.listTable.getSelectedValue().getTest());
+									final TestView testView = TableFrame.this.listTable.getSelectedValue();
+									if (testView != null) {
+										TableFrame.this.schedulerModel.addSelectedTest(TableFrame.this, 
+											testView.getTest());
+									}
 								} catch (final ApplicationException ae) {
 									AbstractMainFrame.showErrorMessage(
 										I18N.getString("Scheduler.Error.CannotSelectTest"));
