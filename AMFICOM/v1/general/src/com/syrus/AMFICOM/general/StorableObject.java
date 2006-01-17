@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.141 2006/01/17 12:27:17 bass Exp $
+ * $Id: StorableObject.java,v 1.142 2006/01/17 12:43:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.141 $, $Date: 2006/01/17 12:27:17 $
+ * @version $Revision: 1.142 $, $Date: 2006/01/17 12:43:06 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -120,8 +120,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 			final Date created,
 			final Identifier creatorId) throws IdentifierGenerationException {
 		this(Identifier.fromXmlTransferable(id, importType, entityCode),
-				created,
-				created,
+				created, // Not a bug, though Date objects are mutable:
+				created, // two separate objects are created in underlying ctor.
 				creatorId,
 				creatorId,
 				StorableObjectVersion.INITIAL_VERSION);
@@ -136,11 +136,11 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 */
 	@SuppressWarnings("unused")
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		this.id = new Identifier(transferable.id);
+		this.id = Identifier.valueOf(transferable.id);
 		this.created = new Date(transferable.created);
 		this.modified = new Date(transferable.modified);
-		this.creatorId = new Identifier(transferable.creatorId);
-		this.modifierId = new Identifier(transferable.modifierId);
+		this.creatorId = Identifier.valueOf(transferable.creatorId);
+		this.modifierId = Identifier.valueOf(transferable.modifierId);
 		this.version = StorableObjectVersion.valueOf(transferable.version);
 
 		this.changed = false;
@@ -661,7 +661,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.141 $, $Date: 2006/01/17 12:27:17 $
+	 * @version $Revision: 1.142 $, $Date: 2006/01/17 12:43:06 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -770,7 +770,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.141 $, $Date: 2006/01/17 12:27:17 $
+	 * @version $Revision: 1.142 $, $Date: 2006/01/17 12:43:06 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
