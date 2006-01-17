@@ -3,6 +3,8 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.SystemColor;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 
 import javax.swing.Icon;
 import javax.swing.JInternalFrame;
@@ -10,6 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.client.UI.LazyAdjustmentListener;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
@@ -36,6 +39,13 @@ public final class PlanFrame extends JInternalFrame {
 		scroll.getViewport().add(this.mainPanel);
 		scroll.setAutoscrolls(true);
 
+		final AdjustmentListener adjustmentListener = new AdjustmentListener() {
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				mainPanel.updateVisibleRectOfTestLines();				
+			}
+		};
+		scroll.getHorizontalScrollBar().addAdjustmentListener(new LazyAdjustmentListener(adjustmentListener, 100));
+		
 		final Container contentPane = getContentPane();
 		contentPane.setBackground(SystemColor.window);
 		contentPane.setLayout(new BorderLayout());
