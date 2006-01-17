@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.71 2006/01/16 15:28:05 bob Exp $
+ * $Id: TableFrame.java,v 1.72 2006/01/17 09:12:26 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2006/01/16 15:28:05 $
+ * @version $Revision: 1.72 $, $Date: 2006/01/17 09:12:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -148,7 +148,14 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 		}
 		final long time02 = System.currentTimeMillis();
 		assert Log.debugMessage(testIds + ", 02 it takes " + (time02 - time0) + " ms", Log.DEBUGLEVEL03);
-		model.addObjects(testViews);
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			public void run() {
+				model.addObjects(testViews);
+			}
+		});
+		
 		final long time1 = System.currentTimeMillis();
 		assert Log.debugMessage(testIds + ", it takes " + (time1 - time0) + " ms", Log.DEBUGLEVEL03);
 	}
