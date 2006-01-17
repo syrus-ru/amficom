@@ -1,5 +1,5 @@
 /*-
- * $Id: TracePreAnalysis.java,v 1.6 2005/11/21 13:23:34 saa Exp $
+ * $Id: TracePreAnalysis.java,v 1.7 2006/01/17 12:22:28 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * чувствительностью, определяемой шумом одной рефлектограммы.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.6 $, $Date: 2005/11/21 13:23:34 $
+ * @version $Revision: 1.7 $, $Date: 2006/01/17 12:22:28 $
  * @module
  */
 public class TracePreAnalysis {
@@ -25,11 +25,33 @@ public class TracePreAnalysis {
 	public double ior = 0; // units = 1
 	public double pulseWidth = 0; // units = ns
 
-	// данные пре-анализа
-	public int traceLength; // для одной р/г - длина до ухода р/г у шум; для совокупности - может быть дополнительно уменьшена до длины модельной кривой
-	public double[] avNoise; // уровень шума (чувствительность) для анализа (<noise>)
-	public double[] noiseAv; // уровень шума (точность аппроксимации) для фитировки (noise<>), может указывать на тот же массив, что и avNoise
-	public double[] yCorr; // trace data to analyse, may be null
+	/*
+	 * данные пре-анализа.
+	 * для одной р/г - длина до ухода р/г у шум.
+	 * length <= yTrace.length
+	 */
+	public int traceLength;
+
+	/*
+	 * Уровень шума (чувствительность) для анализа (<noise>).
+	 * length == traceLength
+	 */
+	public double[] avNoise;
+
+	/*
+	 * Уровень шума (точность аппроксимации) для фитировки (noise<>),
+	 * может указывать на тот же массив, что и avNoise.
+	 * length == traceLength
+	 */
+	public double[] noiseAv; 
+
+	/*
+	 * trace data to analyse,
+	 * может быть null,
+	 * если not null, то length >= traceLength и обычно length = yTrace.length
+	 */
+	public double[] yCorr;
+	
 
 	public TracePreAnalysis() {
 		// just empty

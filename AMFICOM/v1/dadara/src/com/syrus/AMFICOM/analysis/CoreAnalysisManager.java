@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.143 2006/01/16 12:30:28 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.144 2006/01/17 12:22:28 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.143 $, $Date: 2006/01/16 12:30:28 $
+ * @version $Revision: 1.144 $, $Date: 2006/01/17 12:22:28 $
  * @module
  */
 
@@ -359,7 +359,7 @@ public class CoreAnalysisManager
 			double[][] both = calcNoiseArrayPair(yRaw, res.traceLength);
 			double[] absNoise = both[0];
 			double[] noise = both[1];
-			res.setNoise(noise);
+			res.setNoise(cutDoubleArray(noise, res.traceLength));
 			res.yCorr = calcYCorr(res.yTrace, absNoise, res.traceLength);
 		} else {
 			res.setNoise(null);
@@ -416,6 +416,10 @@ public class CoreAnalysisManager
 		int rsBig = (int) (tpa.traceLength * ap.getL2rsaBig());
 		if (rsBig < nReflSize * ap.getNrs2rsaBig())
 			rsBig = (int) (nReflSize * ap.getNrs2rsaBig());
+
+		assert tpa.avNoise.length == tpa.traceLength;
+		assert tpa.yCorr.length >= tpa.traceLength;
+		assert tpa.yCorr.length <= tpa.yTrace.length;
 
 		long t1 = System.nanoTime();
 
@@ -533,8 +537,8 @@ public class CoreAnalysisManager
 		if (N_TRACES == 0)
 			throw new IllegalArgumentException("No traces to analyse");
 
-		// усредняем входные р/г,
-		// определяем мин. длину и типичный шум.
+		// определяем мин. длины (yCorr, noise, mf),
+		// усредняем входные р/г и шум.
 
 		boolean isFirst = true;
 
@@ -543,17 +547,26 @@ public class CoreAnalysisManager
 
 		double[] noiseAcc = null; // needs no initialization
 
+		int minMfLength = 0; // мин. длина mf
+		int minYCorrLength = 0; // мин. длина yCorr
+
 		for (Iterator<PFTrace> it = trColl.iterator(); it.hasNext(); isFirst = false) {
 			TracePreAnalysis tpa =
 				makePreAnalysis(it.next(), needNoiseInfo);
 
 			if (isFirst) {
 				res.av = new TracePreAnalysis(tpa);
+				if (needNoiseInfo) {
+					minYCorrLength = res.av.yCorr.length;
+				}
 			} else {
 				res.av.setMinLength(tpa.traceLength);
 				addDoubleArray(res.av.yTrace, tpa.yTrace, res.av.traceLength);
-				if (needNoiseInfo)
-					addDoubleArray(res.av.yCorr, tpa.yCorr, res.av.traceLength);
+				if (needNoiseInfo) {
+					if (minYCorrLength > tpa.yCorr.length)
+						minYCorrLength = tpa.yCorr.length;
+					addDoubleArray(res.av.yCorr, tpa.yCorr, minYCorrLength);
+				}
 				res.av.checkTracesCompatibility(tpa);
 			}
 
@@ -569,14 +582,16 @@ public class CoreAnalysisManager
 				// проводим анализ и берем из него модельную кривую
 				ModelTrace mt = makeAnalysis(tpa, ap).getModelTrace();
 				double[] yMF = mt.getYArray();
-				res.av.setMinLength(mt.getLength()); // возможно, что длина модельной кривой будет меньше, чем начальное tracelength
 				if (isFirst) {
 					// need to make one more copy, so cloning once only
+					minMfLength = yMF.length;
 					res.minYMF = yMF;
 					res.maxYMF = yMF.clone();
 				} else {
 					// элементы массивов res.(min|max)YMF, выходящие за пределы
-					// res.av.tracelength, не будут обрабатываться (там останется мусор)
+					// minMfLength, не будут обрабатываться (там останется мусор)
+					if (minMfLength > yMF.length)
+						minMfLength = yMF.length;
 					ReflectogramMath.updateMinArray(res.minYMF, yMF);
 					ReflectogramMath.updateMaxArray(res.maxYMF, yMF);
 				}
@@ -592,6 +607,7 @@ public class CoreAnalysisManager
 			for (int i = 0; i < res.av.traceLength; i++) {
 				res.av.yCorr[i] /= N_TRACES;
 			}
+
 			// convert sum to average for avNoise
 			for (int i = 0; i < res.av.traceLength; i++) {
 				noiseAcc[i] /= N_TRACES;
@@ -605,14 +621,39 @@ public class CoreAnalysisManager
 				: calcNoiseArray(res.av.yTrace, res.av.traceLength);
 		}
 
-		// XXX: в принципе, здесь бы неплохо провести усечение тех массивов
-		// res, которые длиннее res.av.traceLength, для того, чтобы
-		// не сбивать с толку пользователя этих данных. Однако, поскольку
-		// это требует несколько лишних копирований, а
-		// использование этих данных предполагается только в этом модуле,
-		// мы этого не делаем.
+		// делаем усечение массивов до res.av.tracelength
+		// (для res.av.yCorr это необходимо, т.к. IA в dadara.dll
+		// может использовать все yCorr.length точек)
+		res.av.yTrace  = cutDoubleArray(res.av.yTrace, res.av.traceLength);
+		if (needNoiseInfo) {
+			res.av.yCorr   = cutDoubleArray(res.av.yCorr, res.av.traceLength);
+			res.av.avNoise = cutDoubleArray(res.av.avNoise, res.av.traceLength);
+			res.av.noiseAv = cutDoubleArray(res.av.noiseAv, res.av.traceLength);
+		}
+		if (needMFInfo) {
+			res.minYMF = cutDoubleArray(res.minYMF, minMfLength);
+			res.maxYMF = cutDoubleArray(res.maxYMF, minMfLength);
+		}
 
 		return res;
+	}
+
+	/**
+	 * Усекает массив double[] до заданной длины.
+	 * Если исходная длина совпадает с заданной, то возвращает
+	 * исходный массив.
+	 * Если исходная длина меньше заданной, assertion fails.
+	 * @param arr исходный массив double[]
+	 * @param size заданная длина (>=0)
+	 * @return массив заданной длины
+	 */
+	private static double[] cutDoubleArray(double[] arr, int size) {
+		assert arr.length >= size;
+		if (arr.length == size)
+			return arr;
+		double[] result = new double[size];
+		System.arraycopy(arr, 0, result, 0, size);
+		return result;
 	}
 
 	/**
