@@ -1,14 +1,13 @@
 /*-
- * $Id: Characteristic.java,v 1.88 2006/01/17 12:26:06 bass Exp $
+ * $Id: Characteristic.java,v 1.89 2006/01/17 16:19:34 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.general;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -36,7 +35,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2006/01/17 12:26:06 $
+ * @version $Revision: 1.89 $, $Date: 2006/01/17 16:19:34 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -190,7 +189,14 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 			final boolean visible) throws CreateObjectException {
 		final boolean usePool = false;
 
-		assert parentCharacterizable != null : NON_NULL_EXPECTED;
+		final Identifier parentCharacterizableId = Identifier.possiblyVoid(parentCharacterizable);
+
+		checkTypeValid(type);
+		checkNameValid(name);
+		checkDescriptionValid(description);
+		checkValueValid(value);
+		checkParentCaharacterizableIdValid(parentCharacterizableId);
+
 		try {
 			final Characteristic characteristic = new Characteristic(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_CODE),
 					creatorId,
@@ -199,7 +205,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 					name,
 					description,
 					value,
-					parentCharacterizable.getId(),
+					parentCharacterizableId,
 					editable,
 					visible);
 			if (parentCharacterizable != null) {
