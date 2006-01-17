@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.74 2006/01/17 13:15:38 bob Exp $
+ * $Id: TableFrame.java,v 1.75 2006/01/17 17:11:59 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,10 +53,9 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.AMFICOM.measurement.TestViewAdapter;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2006/01/17 13:15:38 $
+ * @version $Revision: 1.75 $, $Date: 2006/01/17 17:11:59 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -69,7 +68,8 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 	WrapperedTable<TestView> listTable;
 	ApplicationContext aContext;
 	PropertyChangeEvent propertyChangeEvent;
-
+	ListSelectionEvent	listSelectionEvent;
+	
 	private JPanel panel;
 
 	public TableFrame(final ApplicationContext aContext) {
@@ -112,31 +112,30 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 	}
 
 	public void propertyChange(final PropertyChangeEvent evt) {
+		if (this.listSelectionEvent != null) {
+			return;
+		}
 		this.propertyChangeEvent = evt;
 		final String propertyName = evt.getPropertyName().intern();
 		if (propertyName == SchedulerModel.COMMAND_ADD_TEST) {
 			this.addTest((Set<Identifier>) evt.getNewValue(), false);
 		} else if (propertyName == SchedulerModel.COMMAND_REFRESH_TESTS) {
-			this.updateTests((Set<Identifier>) evt.getNewValue());
+			final Set<Identifier> testIds = (Set<Identifier>)evt.getNewValue();
+			this.updateTests(testIds);		
 		} else if (propertyName == SchedulerModel.COMMAND_REFRESH_TEST) {
 			this.updateTest();
 		} else if (propertyName == SchedulerModel.COMMAND_REMOVE_TEST) {
-			this.updateTests(null);
+//			this.updateTests(null);
+			final Set<Identifier> testIds = (Set<Identifier>)evt.getNewValue();
+			final WrapperedTableModel<TestView> model = this.listTable.getModel();
+			model.removeObjects(this.getTestViews(testIds));
 		} else if (propertyName == SchedulerModel.COMMAND_CLEAN) {
 			this.clearTests();
 		}
 		this.propertyChangeEvent = null;
 	}
 
-	private void addTest(final Set<Identifier> testIds, boolean clear) {
-		assert Log.debugMessage(testIds, Log.DEBUGLEVEL03);
-		final long time0 = System.currentTimeMillis();
-		final WrapperedTableModel<TestView> model = this.listTable.getModel();
-		if (clear) {
-			model.clear();
-		}
-		final long time01 = System.currentTimeMillis();
-		assert Log.debugMessage(testIds + ", 01 it takes " + (time01 - time0) + " ms", Log.DEBUGLEVEL03);
+	private List<TestView> getTestViews(final Set<Identifier> testIds){
 		final List<TestView> testViews = new ArrayList<TestView>(testIds.size());
 		for (final Identifier testId : testIds) {
 			final TestView testView = TestView.valueOf(testId);
@@ -146,28 +145,53 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 				testViews.add(TestView.valueOf(test));				
 			}
 		}
-		final long time02 = System.currentTimeMillis();
-		assert Log.debugMessage(testIds + ", 02 it takes " + (time02 - time0) + " ms", Log.DEBUGLEVEL03);
+		return testViews;
+	}
+	
+	private void addTest(final Set<Identifier> testIds, boolean clear) {
+//		final long time0 = System.currentTimeMillis();
+		final WrapperedTableModel<TestView> model = this.listTable.getModel();
+		final Set<TestView> selectedValues = this.listTable.getSelectedValues();
+		if (clear) {
+			model.clear();
+		}
+//		final long time01 = System.currentTimeMillis();
+//		assert Log.debugMessage(testIds + ", 01 it takes " + (time01 - time0) + " ms", Log.DEBUGLEVEL03);
+		final List<TestView> testViews = this.getTestViews(testIds);
+//		final long time02 = System.currentTimeMillis();
+//		assert Log.debugMessage(testIds + ", 02 it takes " + (time02 - time0) + " ms", Log.DEBUGLEVEL03);
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			
 			public void run() {
-				model.addObjects(testViews);
+				model.addObjects(testViews);				
+				listTable.setSelectedValues(selectedValues);
 			}
 		});
 		
-		final long time1 = System.currentTimeMillis();
-		assert Log.debugMessage(testIds + ", it takes " + (time1 - time0) + " ms", Log.DEBUGLEVEL03);
+//		final long time1 = System.currentTimeMillis();
+//		assert Log.debugMessage(testIds + ", it takes " + (time1 - time0) + " ms", Log.DEBUGLEVEL03);
 	}
 	
 	private void clearTests() {
-		assert Log.debugMessage(Log.DEBUGLEVEL03);
 		final Set<Identifier> emptySet = Collections.emptySet();
 		this.addTest(emptySet, true);
 	}
 	
 	private void setTests() {
-		this.addTest(this.schedulerModel.getMainTestIds(), true);
+		final Set<Identifier> testIds = this.schedulerModel.getMainTestIds();
+		final WrapperedTableModel<TestView> model = this.listTable.getModel();
+		final List<TestView> values = model.getValues();
+		final List<TestView> testViews = this.getTestViews(testIds);
+		boolean contains = true;
+		for (final TestView view : testViews) {
+			contains &= values.contains(view);
+		}
+		if (!contains) {
+			this.addTest(testIds, true);
+		} else {
+			this.listTable.getModel().fireTableDataChanged();
+		}	
 	}
 
 	private JPanel getPanel() {
@@ -197,6 +221,9 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 					if (e.getValueIsAdjusting() || TableFrame.this.propertyChangeEvent != null) {
 						return;
 					}
+					
+					listSelectionEvent = e;
+					
 					final TestView selectedValue = TableFrame.this.listTable.getSelectedValue();
 					if (selectedValue != null) {
 						new ProcessingDialog(new Runnable() {
@@ -215,6 +242,8 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 					} else {
 						TableFrame.this.schedulerModel.unselectTests(TableFrame.this);
 					}
+					
+					listSelectionEvent = null;
 				}
 
 			});
