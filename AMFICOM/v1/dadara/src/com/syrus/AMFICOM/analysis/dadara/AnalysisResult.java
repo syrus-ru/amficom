@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisResult.java,v 1.7 2005/10/14 14:53:35 saa Exp $
+ * $Id: AnalysisResult.java,v 1.8 2006/01/17 12:17:26 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.io.SignatureMismatchException;
  * поле привязки модифицируемо и может быть null.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.7 $, $Date: 2005/10/14 14:53:35 $
+ * @version $Revision: 1.8 $, $Date: 2006/01/17 12:17:26 $
  * @module dadara
  */
 public class AnalysisResult implements DataStreamable {
@@ -43,8 +43,8 @@ public class AnalysisResult implements DataStreamable {
 
 	// результаты анализа
 	private int dataLength; // длина полученной рефлектограммы
-	private int traceLength; // длина рабочей области р/г (до ухода в ноль)
-	private ModelTraceAndEventsImpl mtae; // а/к, события и deltaX
+	private int traceLength; // длина рабочей области р/г (до ухода в шумы)
+	private ModelTraceAndEventsImpl mtae; // а/к, события и deltaX (здесь же и длина р/г до EOT)
 
 	// результаты сравнения (может быть null)
 	private EventAnchorer anchorer = null;
