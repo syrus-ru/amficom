@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.64 2005/12/29 08:52:11 bob Exp $
+ * $Id: PlanPanel.java,v 1.65 2006/01/17 12:21:03 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/12/29 08:52:11 $
+ * @version $Revision: 1.65 $, $Date: 2006/01/17 12:21:03 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -723,6 +723,16 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		}
 	}
 
+	void updateVisibleRectOfTestLines() {
+		for(int i = 0 ; i < this.getComponentCount(); i++) {
+			final Component component = this.getComponent(i);
+			if (component instanceof TimeLine) {
+				final TimeLine timeLine = (TimeLine) component;
+				timeLine.updateCachedVisibleRect();
+			}
+		}
+	}
+	
 	protected void updateTestLines() {
 		Set<Identifier> testIds = ((SchedulerModel) this.aContext.getApplicationModel()).getTestIds();
 		for (final Identifier testId : testIds) {
