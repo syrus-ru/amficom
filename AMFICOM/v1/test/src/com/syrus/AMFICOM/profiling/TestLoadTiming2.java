@@ -1,5 +1,5 @@
 /*
- * $Id: TestLoadTiming2.java,v 1.1 2005/12/27 15:46:22 saa Exp $
+ * $Id: TestLoadTiming2.java,v 1.2 2006/01/18 15:02:38 saa Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/12/27 15:46:22 $
+ * @version $Revision: 1.2 $, $Date: 2006/01/18 15:02:38 $
  * @author $Author: saa $
  * @module test
  */
@@ -95,7 +95,7 @@ public final class TestLoadTiming2 extends TestCase {
 			return this.total / this.count;
 		}
 		public double getButFirstAverage() {
-			return (this.total - this.first) / this.count;
+			return (this.total - this.first) / (this.count - 1);
 		}
 		public double getMin() {
 			return this.min;
@@ -176,10 +176,11 @@ public final class TestLoadTiming2 extends TestCase {
 						minTime = dt;
 					m0++;
 					m1 += dt;
+					break; // do not try 3rd object
 				}
 			}
 			System.out.println("sum of set.size(): " + sumSetSize);
-			return TimingStat.fromNs(m0, 1, firstTime + m1, firstTime, minTime);
+			return TimingStat.fromNs(m0 + 1, 1, firstTime + m1, firstTime, minTime);
 		}
 	}
 
@@ -212,10 +213,10 @@ public final class TestLoadTiming2 extends TestCase {
 		public TimingStat expectation;
 		protected ExpectationRecord(ProfiledMethod profiler,
 				int expectedCount, int expectedSize,
-				double expectedFirst, double expectedAvg, double expectedMin) {
+				double expectedFirst, double expectedBfAvg, double expectedMin) {
 			this.profiler = profiler;
 			this.expectation = new TimingStat(expectedCount, expectedSize,
-					expectedAvg * expectedCount + expectedFirst,
+					expectedBfAvg * (expectedCount - 1) + expectedFirst,
 					expectedFirst,
 					expectedMin);
 		}
@@ -248,14 +249,14 @@ public final class TestLoadTiming2 extends TestCase {
 		ExpectationRecord[] expectations = new ExpectationRecord[] {
 			// NB: the order does matter
 			// Values are based on suiteDb() results on saa's computer
-			new ExpectationRecord(new ProfiledGetTest(),        			1,   1,  40.0, 0, 0), // first=390.0?
-			new ExpectationRecord(new ProfiledGetTest(),        			1,   1, 0.033, 0, 0),
-			new ExpectationRecord(new ProfiledGetMeasurements(),			1, 118, 120.0, 0, 0),
-			new ExpectationRecord(new ProfiledGetMeasurements(), 			1, 118,   6.0, 0, 0),
-//			new ExpectationRecord(new ProfiledGetOneResultByMeasurement(),117,  1,	 75.0,75,62), // FIXME: only 31 resutls are loaded
-//			new ExpectationRecord(new ProfiledGetOneResultByMeasurement(),117,  1,	 75.0,72,62), // FIXME: only 31 resutls are loaded
-			new ExpectationRecord(new ProfiledGetManyResultsByMeasurement(),1, 236, 3700 , 0, 0), // FIXME: only 31 resutls are loaded
-			new ExpectationRecord(new ProfiledGetManyResultsByMeasurement(),1, 236, 340.0, 0, 0), // FIXME: only 31 resutls are loaded
+			new ExpectationRecord(new ProfiledGetTest(),        			1,   1,  40.0,	0, 0), // first=390.0?
+			new ExpectationRecord(new ProfiledGetTest(),        			1,   1, 0.033,	0, 0),
+			new ExpectationRecord(new ProfiledGetMeasurements(),			1, 118, 120.0,	0, 0),
+			new ExpectationRecord(new ProfiledGetMeasurements(), 			1, 118,   6.0,	0, 0),
+			new ExpectationRecord(new ProfiledGetOneResultByMeasurement(),	2,   1,	120.0,120,120),
+			new ExpectationRecord(new ProfiledGetOneResultByMeasurement(),	2,   1,	 85.0, 85,85),
+			new ExpectationRecord(new ProfiledGetManyResultsByMeasurement(),1, 236, 3700 ,	0, 0),
+			new ExpectationRecord(new ProfiledGetManyResultsByMeasurement(),1, 236, 340.0,	0, 0),
 		};
 		TimingStat[] measured = new TimingStat[expectations.length];
 		System.out.println(" --- starting measurments ---");
