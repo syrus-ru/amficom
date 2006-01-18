@@ -1,11 +1,13 @@
 /*
- * $Id: TestLoadAnalysis.java,v 1.1 2006/01/16 16:04:35 saa Exp $
+ * $Id: TestLoadAnalysis.java,v 1.2 2006/01/18 15:03:14 saa Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.measurement;
+
+import java.util.Set;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -17,10 +19,11 @@ import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2006/01/16 16:04:35 $
+ * @version $Revision: 1.2 $, $Date: 2006/01/18 15:03:14 $
  * @author $Author: saa $
  * @module test
  */
@@ -32,6 +35,7 @@ public final class TestLoadAnalysis extends TestCase {
 
 	public static Test suite() {
 		return suiteCorba();
+//		return suiteDb();
 	}
 
 	public static Test suiteDb() {
@@ -51,15 +55,22 @@ public final class TestLoadAnalysis extends TestCase {
 		LinkedIdsCondition lic =
 			new LinkedIdsCondition(mId, ObjectEntities.ANALYSIS_CODE);
 		boolean tooLong = false;
-		for (int i = 0; i < 20; i++) {
+		double dtSum = 0.0;
+		final int steps = 200;
+		for (int i = 0; i < steps; i++) {
 			StorableObjectPool.clean();
 			long t1 = System.nanoTime();
-			StorableObjectPool.getStorableObjectsByCondition(lic, true);
+			final Set<StorableObject> objects =
+				StorableObjectPool.getStorableObjectsByCondition(lic, true);
 			long t2 = System.nanoTime();
 			final double timeMs = (t2 - t1) / 1e6;
-			System.out.println("test " + i + ": SO received in " + timeMs + " ms"); // сюда не доходит
+			System.out.println("test " + i + ": " + objects.size()
+					+ " Storable Objects received in " + timeMs + " ms");
 			tooLong |= timeMs > 1000.0; // require every result loaded within 1000 ms
+			assertTrue(timeMs < 2500.0);
+			dtSum += timeMs;
 		}
+		System.out.println("average dt = " + dtSum / steps + " ms");
 		assertFalse(tooLong);
 	}
 }
