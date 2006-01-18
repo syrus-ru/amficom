@@ -148,6 +148,8 @@ final class TestLine extends TimeLine {
 	Point				startPoint;
 	Point				currentPoint;
 	Point				previousPoint;
+	
+	private int lastX = -1;
 
 	protected volatile boolean 	skip					= false;
 
@@ -213,12 +215,14 @@ final class TestLine extends TimeLine {
 
 						public void run() {
 							TestLine.this.skip = true;
+//							assert Log.debugMessage("set skip true | " + System.currentTimeMillis(), Log.DEBUGLEVEL03);							
 							try {
 								TestLine.this.schedulerModel.addSelectedTest(TestLine.this, test);
 							} catch (final ApplicationException e) {
 								AbstractMainFrame.showErrorMessage(
 									I18N.getString("Scheduler.Error.CannotSelectTest"));
 							}
+//							assert Log.debugMessage("set skip false | " + System.currentTimeMillis(), Log.DEBUGLEVEL03);
 							TestLine.this.skip = false;
 						}
 					}, I18N.getString("Common.ProcessingDialog.PlsWait"));
@@ -237,11 +241,21 @@ final class TestLine extends TimeLine {
 			}
 		}
 		}
+		this.lastX = x;
 		return selected;
 	}
 
 	public Rectangle getVisibleRectangle() {
 		Rectangle rectangle = null;
+		
+		if (this.lastX >= 0) {
+			return new Rectangle(this.lastX - PlanPanel.MARGIN / 2, 0, 10, this.getHeight()
+				- (this.titleHeight / 2 + 4)
+				- 2);
+			// TODO width instead of 10 
+		}
+		
+		assert Log.debugMessage(this.lastX, Log.DEBUGLEVEL03);
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
 			final Identifier testId = this.selectedTestIds.iterator().next();
 			for (final TestTimeItem element : this.timeItems) {
@@ -291,11 +305,29 @@ final class TestLine extends TimeLine {
 			return; 
 		}
 
+		final Set<Identifier> selectedTestIds2 = this.schedulerModel.getSelectedTestIds();
+		boolean theSame = (this.selectedTestIds != null ? this.selectedTestIds.size() : 0) == selectedTestIds2.size();
+		if (theSame) {
+			for (final Identifier identifier : selectedTestIds2) {
+				theSame &= this.selectedTestIds.contains(identifier);
+				if (!theSame) {
+					break;
+				}
+			}
+			if (theSame) {
+				return;
+			}
+		}
+		
+		
+		this.lastX = -1;
+
 		this.selectedItems.clear();
 		if (this.selectedTestIds != null) {
 			this.selectedTestIds.clear();
 		}
-		for (final Identifier testId : this.schedulerModel.getSelectedTestIds()) {
+		
+		for (final Identifier testId : selectedTestIds2) {
 			if (this.testIds.contains(testId)) {
 				if (this.selectedTestIds == null) {
 					this.selectedTestIds = new HashSet<Identifier>();
