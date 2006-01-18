@@ -66,7 +66,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/12/29 11:30:32 $
+ * @version $Revision: 1.98 $, $Date: 2006/01/18 11:49:34 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -557,10 +557,10 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	
 					for (final Characteristic characteristic : characteristics) {
 						final StorableObjectType type = characteristic.getType();
-						 System.out.println("characteristicType is " +					 type.getId());
+//						 System.out.println("characteristicType is " +					 type.getId());
 						final String codename = type.getCodename();
 						final String value = characteristic.getValue();
-						 System.out.println("codename is '" + codename + "', valueis: " + value);
+//						 System.out.println("codename is '" + codename + "', valueis: " + value);
 	
 						if (codename.equals(CharacteristicTypeCodenames.TRACE_WAVELENGTH)) {
 							final String[] values = value.split("\\s+"); //$NON-NLS-1$

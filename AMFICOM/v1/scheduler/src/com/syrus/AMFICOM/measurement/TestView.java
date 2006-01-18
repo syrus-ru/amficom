@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.10 2005/12/27 11:52:56 bob Exp $
+* $Id: TestView.java,v 1.11 2006/01/18 11:49:34 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/12/27 11:52:56 $
+ * @version $Revision: 1.11 $, $Date: 2006/01/18 11:49:34 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -203,15 +203,22 @@ public final class TestView {
 	
 	private final void createQuality() throws ApplicationException {
 		SortedSet<Measurement> set = this.measurements;
+		
+//		final long t0 = System.currentTimeMillis();
 		while (!set.isEmpty()) {
 			final Measurement measurement = set.last();
 			if (measurement.getStatus() == 
 				MeasurementStatus.MEASUREMENT_STATUS_COMPLETED) {
+				final long t01 = System.currentTimeMillis();
 				try {
 					final MeasurementReflectometryAnalysisResult result =
 						new MeasurementReflectometryAnalysisResult(measurement);
+//					final long t012 = System.currentTimeMillis();
 					final ReflectometryEvaluationOverallResult reflectometryEvaluationOverallResult = 
 						result.getReflectometryEvaluationOverallResult();
+//					final long t013 = System.currentTimeMillis();
+//					Log.debugMessage(this.test + ", " + measurement + ", (t012-t01) it takes " + (t012-t01), Log.DEBUGLEVEL03);
+//					Log.debugMessage(this.test + ", " + measurement + ", (t013-t012) it takes " + (t013-t012), Log.DEBUGLEVEL03);
 					if (reflectometryEvaluationOverallResult != null && 
 							reflectometryEvaluationOverallResult.hasDQ()) {
 						final NumberFormat numberFormat = NumberFormat.getInstance();
@@ -229,11 +236,14 @@ public final class TestView {
 				} catch (final DataFormatException e) {
 					throw new CreateObjectException(I18N.getString("Error.CannotAcquireObject"));
 				}
+//				final long t02 = System.currentTimeMillis();
+//				Log.debugMessage(this.test + ", " + measurement + ", it takes " + (t02-t01), Log.DEBUGLEVEL03);
 				break;
 			}
 			set = set.headSet(measurement);
 		}
-		
+//		final long t1 = System.currentTimeMillis();
+//		Log.debugMessage(this.test + ", it takes " + (t1-t0), Log.DEBUGLEVEL03);
 		if (this.testD == null) {
 			this.testD = "--";
 		}
