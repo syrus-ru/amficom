@@ -1,5 +1,5 @@
 /*
- * $Id: TestAnalysisResult.java,v 1.4 2005/12/15 14:52:27 arseniy Exp $
+ * $Id: TestAnalysisResult.java,v 1.5 2006/01/18 15:06:51 saa Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Set;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import com.syrus.io.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
@@ -24,8 +25,8 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 import com.syrus.io.DataFormatException;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/15 14:52:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2006/01/18 15:06:51 $
+ * @author $Author: saa $
  * @module test
  */
 public final class TestAnalysisResult extends TestCase {
@@ -40,25 +41,40 @@ public final class TestAnalysisResult extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
+//	public void testLoadAnalysisResult() {
+//		final Identifier
+//	}
+
 	public void testLoadResult() throws ApplicationException, DataFormatException {
-		final Identifier analysisId = new Identifier("Analysis_62");
+		long t0 = System.nanoTime();
+		Identifier analysisId = new Identifier("Analysis_63");
 		//Analysis analysis = (Analysis) StorableObjectPool.getStorableObject(analysisId, true);
-		final LinkedIdsCondition lic = new LinkedIdsCondition(analysisId, ObjectEntities.RESULT_CODE);
-		final Set<Result> results = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		final Result result = results.iterator().next();
+		LinkedIdsCondition lic =
+			new LinkedIdsCondition(analysisId, ObjectEntities.RESULT_CODE);
+		long t1 = System.nanoTime();
+		Set set = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		long t2 = System.nanoTime();
+		Result result = (Result) set.iterator().next();
+		long t3 = System.nanoTime();
 		System.out.println("Loaded: " + result.getId());
 
 		final Parameter[] parameters = result.getParameters();
 		System.out.println("Result has " + parameters.length + " parameters");
 		for (int i = 0; i < parameters.length; i++) {
 			final ParameterType parameterType = parameters[i].getType();
-			System.out.println("Parameter [" + i + "]: codename " + parameterType.getCodename());
-			if (parameterType == ParameterType.DADARA_ALARMS) {
-				final ReflectogramMismatch[] reflectogramMismatches = ReflectogramMismatchImpl.alarmsFromByteArray(parameters[i].getValue());
-				for (final ReflectogramMismatch reflectogramMismatch : reflectogramMismatches) {
-					System.out.println("\t" + "ReflectogramMismatch: " + reflectogramMismatch);
+			String codename = parameterType.getCodename();
+			System.out.println("Parameter [" + i + "]: codename " + codename);
+			if (parameterType.equals(ParameterType.DADARA_ALARMS)) {
+				ReflectogramMismatchImpl[] alarms =
+					ReflectogramMismatchImpl.alarmsFromByteArray(parameters[i].getValue());
+				System.out.println("\t" + "Number of alarms: " + alarms.length);
+				for (int j = 0 ; j < alarms.length; j++) {
+					System.out.println("\t\t" + "alarm [" + j + "] == " + alarms[j]);
 				}
 			}
 		}
+		System.out.println("id & lic: " + (t1 - t0) / 1e6 + " ms");
+		System.out.println("getSOByC: " + (t2 - t1) / 1e6 + " ms");
+		System.out.println("iterator: " + (t3 - t2) / 1e6 + " ms");
 	}
 }
