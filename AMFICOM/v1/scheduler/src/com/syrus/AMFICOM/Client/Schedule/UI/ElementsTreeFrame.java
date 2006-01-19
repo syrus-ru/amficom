@@ -255,6 +255,7 @@ public final class ElementsTreeFrame extends JInternalFrame implements PropertyC
 									SwingUtilities.invokeLater(new Runnable() {
 
 										public void run() {
+											schedulerModel.unselectTests(ElementsTreeFrame.this);
 											dispatcher1.firePropertyChange(new PropertyChangeEvent(ElementsTreeFrame.this,
 													SchedulerModel.COMMAND_CHANGE_ME_TYPE,
 													null,
