@@ -1,5 +1,5 @@
 /*-
-* $Id: LazyChangeListener.java,v 1.1 2006/01/17 12:19:07 bob Exp $
+* $Id: LazyChangeListener.java,v 1.2 2006/01/19 09:59:18 bob Exp $
 *
 * Copyright ¿ 2006 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,13 +13,16 @@ import javax.swing.event.ChangeListener;
 
 
 /**
- * Lazy ChangeListener
- * @version $Revision: 1.1 $, $Date: 2006/01/17 12:19:07 $
+ * extendable lazy change listener
+ * 
+ * change state only on last event within timeout
+ * 
+ * @version $Revision: 1.2 $, $Date: 2006/01/19 09:59:18 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
-public final class LazyChangeListener implements ChangeListener {
+public class LazyChangeListener implements ChangeListener {
 	
 	private Thread		thread;
 	
