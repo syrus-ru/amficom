@@ -179,16 +179,15 @@ public class TimeParametersFrame extends JInternalFrame {
 							TimeParametersPanel.this.isTestAgree(selectedTest)) {
 							final Date startDate = TimeParametersPanel.this
 							.getStartDate();
-							TimeParametersPanel.this.schedulerModel.moveSelectedTests(startDate);
+							TimeParametersPanel.this.schedulerModel.moveSelectedTests(startDate);							
 					}
 					} catch (ApplicationException e1) {
 						AbstractMainFrame.showErrorMessage(e1.getMessage());
 						return;
 					}
-
 				}};
 				
-				final LazyChangeListener changeListener = new LazyChangeListener(aChangeListener);
+				final LazyChangeListener changeListener = new TimeLazyChangeListener(aChangeListener);
 				
 				this.startTimeSpinner.addChangeListener(changeListener);
 				this.startDateSpinner.addChangeListener(changeListener);
@@ -312,7 +311,7 @@ public class TimeParametersFrame extends JInternalFrame {
 						}						
 					};
 					
-					final LazyChangeListener changeListener = new LazyChangeListener(aChangeListener);
+					final LazyChangeListener changeListener = new TimeLazyChangeListener(aChangeListener);
 					
 					this.periodDaySpinner.addChangeListener(changeListener);
 					this.periodTimeSpinner.addChangeListener(changeListener);
@@ -398,10 +397,9 @@ public class TimeParametersFrame extends JInternalFrame {
 						AbstractMainFrame.showErrorMessage(e1.getMessage());
 						return;
 					}
-
 				}};
 				
-				final LazyChangeListener changeListener = new LazyChangeListener(aChangeListener);
+				final LazyChangeListener changeListener = new TimeLazyChangeListener(aChangeListener);
 
 				this.endTimeSpinner.addChangeListener(changeListener);
 				this.endDateSpinner.addChangeListener(changeListener);
@@ -896,6 +894,21 @@ public class TimeParametersFrame extends JInternalFrame {
 		super.setIconifiable(true);
 		this.timeParametersPanel = new TimeParametersPanel(aContext);
 		this.getContentPane().add(this.timeParametersPanel.panel, BorderLayout.CENTER);
+	}
+	
+	private class TimeLazyChangeListener extends LazyChangeListener {
+		
+		public TimeLazyChangeListener(final ChangeListener changeListener) {
+			super(changeListener);
+		}
+
+		@SuppressWarnings("unqualified-field-access")
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			if (timeParametersPanel.propertyChangeEvent == null) {
+				super.stateChanged(e);
+			}
+		}
 	}
 	
 }
