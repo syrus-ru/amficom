@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.181 2005/12/17 12:11:21 arseniy Exp $
+ * $Id: Test.java,v 1.182 2006/01/19 13:41:59 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.181 $, $Date: 2005/12/17 12:11:21 $
+ * @version $Revision: 1.182 $, $Date: 2006/01/19 13:41:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -248,8 +248,22 @@ public final class Test extends StorableObject<Test> implements Describable {
 	 */
 	@Override
 	protected boolean isValid() {
-		return super.isValid()
-				&& this.timeStamps != null && this.timeStamps.isValid()
+		if (!super.isValid()) {
+			return false;
+		}
+		try {
+			final Set<MeasurementSetup> measurementSetups = StorableObjectPool.getStorableObjects(this.measurementSetupIds, true);
+			for (final MeasurementSetup measurementSetup : measurementSetups) {
+				if (!measurementSetup.isAttachedToMonitoredElement(this.monitoredElement.getId())) {
+					Log.errorMessage("MeasurementSetup: '" + measurementSetup.getId() + "' is not attached to MonitoredElement: '"
+							+ this.monitoredElement.getId() + "'");
+					return false;
+				}
+			}
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+		}
+		return this.timeStamps != null && this.timeStamps.isValid()
 				&& this.measurementType != null
 				&& this.analysisType != null
 				&& this.monitoredElement != null
