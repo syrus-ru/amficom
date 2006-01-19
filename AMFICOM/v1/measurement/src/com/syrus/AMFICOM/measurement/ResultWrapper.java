@@ -1,5 +1,5 @@
 /*
- * $Id: ResultWrapper.java,v 1.21 2005/10/25 19:53:05 bass Exp $
+ * $Id: ResultWrapper.java,v 1.22 2006/01/19 14:27:15 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/25 19:53:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2006/01/19 14:27:15 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -75,7 +75,7 @@ public final class ResultWrapper extends StorableObjectWrapper<Result> {
 		final Object value = super.getValue(result, key);
 		if (value == null && result != null) {
 			if (key.equals(COLUMN_ACTION_ID)) {
-				return result.getAction();
+				return result.getActionId();
 			}
 			if (key.equals(COLUMN_SORT)) {
 				return new Integer(result.getSort().value());
@@ -102,7 +102,7 @@ public final class ResultWrapper extends StorableObjectWrapper<Result> {
 	public void setValue(final Result result, final String key, final Object value) {
 		if (result != null) {
 			if (key.equals(COLUMN_ACTION_ID)) {
-				result.setAction((Action) value);
+				result.setActionId((Identifier) value);
 			} else if (key.equals(COLUMN_SORT)) {
 				result.setSort(ResultSort.from_int(((Integer) value).intValue()));
 			} else if (key.equals(LINK_FIELD_RESULT_PARAMETERS)) {

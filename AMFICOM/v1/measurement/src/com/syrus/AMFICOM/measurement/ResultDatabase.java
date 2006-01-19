@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.115 2005/12/02 11:24:09 bass Exp $
+ * $Id: ResultDatabase.java,v 1.116 2006/01/19 14:27:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -30,7 +29,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
@@ -40,8 +38,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.115 $, $Date: 2005/12/02 11:24:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.116 $, $Date: 2006/01/19 14:27:15 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -83,7 +81,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 		final int resultSort = storableObject.getSort().value();
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
-				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getAction().getId()));
+				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getActionId()));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
@@ -93,7 +91,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 			case ResultSort._RESULT_SORT_ANALYSIS:
 				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getAction().getId()));
+				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getActionId()));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
@@ -103,7 +101,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getAction().getId()));
+				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getActionId()));
 				buffer.append(COMMA);
 				break;
 			default:
@@ -120,19 +118,19 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 		final int resultSort = storableObject.getSort().value();
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:					
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAction().getId());
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getActionId());
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAction().getId());
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getActionId());
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);					
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAction().getId());
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getActionId());
 				break;
 			default:
 				Log.errorMessage("Illegal sort: " + resultSort + " of result '" + storableObject.getId().getIdentifierString() + "'");
@@ -153,31 +151,16 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 						null)
 					: storableObject;
 		final int resultSort = resultSet.getInt(ResultWrapper.COLUMN_SORT);
-		Action action = null;
+		Identifier actionId = null;
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
-				try {
-					final Identifier actionId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_MEASUREMENT_ID);
-					action = (Measurement) StorableObjectPool.getStorableObject(actionId, true);
-				} catch (ApplicationException ae) {
-					throw new RetrieveObjectException(ae);
-				}
+				actionId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_MEASUREMENT_ID);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				try {
-					final Identifier actionId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_ANALYSIS_ID);
-					action = (Analysis) StorableObjectPool.getStorableObject(actionId, true);
-				} catch (Exception e) {
-					throw new RetrieveObjectException(e);
-				}
+				actionId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_ANALYSIS_ID);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
-				try {
-					final Identifier actionId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_MODELING_ID);
-					action = (Modeling) StorableObjectPool.getStorableObject(actionId, true);
-				} catch (Exception e) {
-					throw new RetrieveObjectException(e);
-				}
+				actionId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_MODELING_ID);
 				break;
 			default:
 				Log.errorMessage("Unkown sort: " + resultSort + " of result " + result.getId().getIdentifierString());
@@ -187,7 +170,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				action,
+				actionId,
 				resultSort);
 
 		return result;

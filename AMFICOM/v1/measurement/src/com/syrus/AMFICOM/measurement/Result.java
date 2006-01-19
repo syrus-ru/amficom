@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.87 2005/12/17 12:11:21 arseniy Exp $
+ * $Id: Result.java,v 1.88 2006/01/19 14:27:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/12/17 12:11:21 $
+ * @version $Revision: 1.88 $, $Date: 2006/01/19 14:27:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -45,7 +45,7 @@ public final class Result extends StorableObject<Result> {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3256999964965286967L;
-	private Action<?> action;
+	private Identifier actionId;
 	private int sort;
 	private Parameter[] parameters;
 
@@ -66,7 +66,7 @@ public final class Result extends StorableObject<Result> {
 	Result(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
-			final Action<?> action,
+			final Identifier actionId,
 			final int sort,
 			final Parameter[] parameters) {
 		super(id,
@@ -75,7 +75,7 @@ public final class Result extends StorableObject<Result> {
 				creatorId,
 				creatorId,
 				version);
-		this.action = action;
+		this.actionId = actionId;
 		this.sort = sort;
 		this.parameters = parameters;
 	}
@@ -89,25 +89,24 @@ public final class Result extends StorableObject<Result> {
 		super.fromTransferable(rt);
 
 		this.sort = rt.sort.value();
-		Identifier actionId = null;
 		switch (this.sort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
-				actionId = new Identifier(rt.measurementId);
+				this.actionId = new Identifier(rt.measurementId);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				actionId = new Identifier(rt.analysisId);
+				this.actionId = new Identifier(rt.analysisId);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
-				actionId = new Identifier(rt.modelingId);
+				this.actionId = new Identifier(rt.modelingId);
 				break;
 			default:
 				Log.errorMessage("Illegal sort: " + this.sort + " of result '" + super.id + "'");
 		}
-		this.action = (Action) StorableObjectPool.getStorableObject(actionId, true);
 
 		this.parameters = new Parameter[rt.parameters.length];
-		for (int i = 0; i < this.parameters.length; i++)
+		for (int i = 0; i < this.parameters.length; i++) {
 			this.parameters[i] = new Parameter(rt.parameters[i]);
+		}
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -125,7 +124,7 @@ public final class Result extends StorableObject<Result> {
 		}
 
 		final IdlIdentifier voidIdlIdentifier = Identifier.VOID_IDENTIFIER.getIdlTransferable();
-		final IdlIdentifier nonVoidIdlIdentifier = this.action.getId().getIdlTransferable();
+		final IdlIdentifier nonVoidIdlIdentifier = this.actionId.getIdlTransferable();
 		return IdlResultHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -154,7 +153,7 @@ public final class Result extends StorableObject<Result> {
 	 */
 	@Override
 	protected boolean isValid() {
-		boolean valid = super.isValid() && this.action != null && this.parameters != null;
+		boolean valid = super.isValid() && this.actionId != null && this.parameters != null;
 		if (!valid) {
 			return valid;
 		}
@@ -172,19 +171,31 @@ public final class Result extends StorableObject<Result> {
 		return ObjectEntities.RESULT_CODE;
 	}
 
-	public Action<?> getAction() {
-		return this.action;
+	public Identifier getActionId() {
+		return this.actionId;
 	}
-	
-	public void setAction(final Action<?> action) {
-		this.action = action;
+
+	/**
+	 * A wrapper around {@link #getActionId()}.
+	 */
+	public Action<?> getAction() {
+		try {
+			return StorableObjectPool.getStorableObject(this.actionId, true);
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+			return null;
+		}
+	}
+
+	public void setActionId(final Identifier actionId) {
+		this.actionId = actionId;
 		super.markAsChanged();
 	}
 
 	public ResultSort getSort() {
 		return ResultSort.from_int(this.sort);
 	}
-	
+
 	public void setSort(final ResultSort sort) {
 		this.sort = sort.value();
 		super.markAsChanged();
@@ -202,14 +213,14 @@ public final class Result extends StorableObject<Result> {
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
-			final Action<?> action,
+			final Identifier actionId,
 			final int sort) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
 			modifierId,
 			version);
-		this.action = action;
+		this.actionId = actionId;
 		this.sort = sort;
 	}
 
@@ -217,14 +228,14 @@ public final class Result extends StorableObject<Result> {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected static Result createInstance(final Identifier creatorId,
-			final Action<?> action,
+			final Identifier actionId,
 			final ResultSort sort,
 			final Parameter[] parameters) throws CreateObjectException {
 		try {
 			final Result result = new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_CODE),
 				creatorId,
 				StorableObjectVersion.INITIAL_VERSION,
-				action,
+				actionId,
 				sort.value(),
 				parameters);
 
@@ -259,7 +270,7 @@ public final class Result extends StorableObject<Result> {
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 
-		dependencies.add(this.action);
+		dependencies.add(this.actionId);
 
 		return dependencies;
 	}
