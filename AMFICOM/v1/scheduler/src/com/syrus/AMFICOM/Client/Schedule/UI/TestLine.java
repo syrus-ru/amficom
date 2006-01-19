@@ -368,9 +368,9 @@ final class TestLine extends TimeLine {
 		}
 		
 		this.acquireTests(testIds);
-		
-		
-		this.updateTest();
+		if (testIds != null && !testIds.isEmpty()) {
+			this.updateTest();
+		}
 	}
 
 	@Override
