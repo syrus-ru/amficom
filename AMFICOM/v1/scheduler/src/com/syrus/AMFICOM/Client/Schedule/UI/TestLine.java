@@ -255,7 +255,6 @@ final class TestLine extends TimeLine {
 			// TODO width instead of 10 
 		}
 		
-		assert Log.debugMessage(this.lastX, Log.DEBUGLEVEL03);
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
 			final Identifier testId = this.selectedTestIds.iterator().next();
 			for (final TestTimeItem element : this.timeItems) {
