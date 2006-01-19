@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.65 2006/01/17 12:21:03 bob Exp $
+ * $Id: PlanPanel.java,v 1.66 2006/01/19 14:56:49 bob Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,10 +51,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
+import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2006/01/17 12:21:03 $
+ * @version $Revision: 1.66 $, $Date: 2006/01/19 14:56:49 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -354,8 +355,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		this.setStartDate(this.scaleStart);
 	}
 
-	public void setStartDate(Date start) {
-
+	public void setStartDate(final Date start) {
 		this.startDate = start;
 		if (start != null) {
 			this.cal.setTime(start);
@@ -364,12 +364,12 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			}
 			this.cal.set(Calendar.SECOND, 0);
 
-			// округляем до шага
-			int num = this.cal.get(STEPS[this.scale].scale);
-			while (num / STEPS[this.scale].align * STEPS[this.scale].align != num) {
-				this.cal.add(STEPS[this.scale].scale, -1);
-				num = this.cal.get(STEPS[this.scale].scale);
-			}
+//			// округляем до шага
+//			int num = this.cal.get(STEPS[this.scale].scale);
+//			while (num / STEPS[this.scale].align * STEPS[this.scale].align != num) {
+//				this.cal.add(STEPS[this.scale].scale, -1);
+//				num = this.cal.get(STEPS[this.scale].scale);
+//			}
 
 			this.scaleStart = this.cal.getTime();
 			// scroll calendar to end of period
