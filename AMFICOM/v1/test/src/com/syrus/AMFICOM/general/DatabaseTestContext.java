@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTestContext.java,v 1.2 2006/01/20 17:22:24 saa Exp $
+ * $Id: DatabaseTestContext.java,v 1.3 2006/01/20 17:39:04 saa Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -102,7 +102,7 @@ import com.syrus.util.database.DatabaseConnection;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2006/01/20 17:22:24 $
+ * @version $Revision: 1.3 $, $Date: 2006/01/20 17:39:04 $
  * @module
  */
 public class DatabaseTestContext implements TestContext {
@@ -232,26 +232,6 @@ public class DatabaseTestContext implements TestContext {
 		}
 	}
 
-	private static void login() {
-		try {
-			ClientSessionEnvironment.createInstance(SessionKind.ALL, null);
-			ClientSessionEnvironment.getInstance().login("sys", "sys", new Identifier("Domain_1"));
-		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
-			System.exit(0);
-		}
-	}
-
-	private static void logout() {
-		try {
-			ClientSessionEnvironment.getInstance().logout();
-		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
-			System.exit(0);
-		}
-	}
-
-
 	public static final void establishDatabaseConnection() {
 		final String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
 		final String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
@@ -276,11 +256,9 @@ public class DatabaseTestContext implements TestContext {
 		initIdentifierPool();
 		initStorableObjectPool();
 		setSysUser();
-		login();
 	}
 
 	public void tearDown() {
-		logout();
 		DatabaseConnection.closeConnection();
 	}
 }
