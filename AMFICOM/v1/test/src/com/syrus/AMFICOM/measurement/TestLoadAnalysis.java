@@ -1,5 +1,5 @@
 /*
- * $Id: TestLoadAnalysis.java,v 1.2 2006/01/18 15:03:14 saa Exp $
+ * $Id: TestLoadAnalysis.java,v 1.3 2006/01/20 10:35:52 saa Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2006/01/18 15:03:14 $
+ * @version $Revision: 1.3 $, $Date: 2006/01/20 10:35:52 $
  * @author $Author: saa $
  * @module test
  */
@@ -56,7 +56,7 @@ public final class TestLoadAnalysis extends TestCase {
 			new LinkedIdsCondition(mId, ObjectEntities.ANALYSIS_CODE);
 		boolean tooLong = false;
 		double dtSum = 0.0;
-		final int steps = 200;
+		final int steps = 20;
 		for (int i = 0; i < steps; i++) {
 			StorableObjectPool.clean();
 			long t1 = System.nanoTime();
