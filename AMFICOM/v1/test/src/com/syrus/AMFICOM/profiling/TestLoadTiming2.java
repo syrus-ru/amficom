@@ -1,5 +1,5 @@
 /*
- * $Id: TestLoadTiming2.java,v 1.2 2006/01/18 15:02:38 saa Exp $
+ * $Id: TestLoadTiming2.java,v 1.3 2006/01/20 17:08:24 saa Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,16 +18,19 @@ import junit.framework.TestCase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBACommonTest;
 import com.syrus.AMFICOM.general.CommonTest;
+import com.syrus.AMFICOM.general.CorbaTestContext;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
+import com.syrus.AMFICOM.general.DatabaseTestContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.UniCommonTest;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2006/01/18 15:02:38 $
+ * @version $Revision: 1.3 $, $Date: 2006/01/20 17:08:24 $
  * @author $Author: saa $
  * @module test
  */
@@ -35,6 +38,32 @@ public final class TestLoadTiming2 extends TestCase {
 
 	private static final long testIdLong = 146085512912831939L;
 
+	private final ExpectationRecord[] expectationsDb = new ExpectationRecord[] {
+			// NB: the order does matter
+			// Values are based on suiteDb() results on saa's computer
+			new ExpectationRecord(new ProfiledGetTest(),        			1,   1,  40.0,	0, 0), // first=390.0?
+			new ExpectationRecord(new ProfiledGetTest(),        			1,   1, 0.033,	0, 0),
+			new ExpectationRecord(new ProfiledGetMeasurements(),			1, 118, 120.0,	0, 0),
+			new ExpectationRecord(new ProfiledGetMeasurements(), 			1, 118,   6.0,	0, 0),
+			new ExpectationRecord(new ProfiledGetOneResultByMeasurement(),	2,   1,	120.0,120,120),
+			new ExpectationRecord(new ProfiledGetOneResultByMeasurement(),	2,   1,	 85.0, 85,85),
+			new ExpectationRecord(new ProfiledGetManyResultsByMeasurement(),1, 236, 3700 ,	0, 0),
+			new ExpectationRecord(new ProfiledGetManyResultsByMeasurement(),1, 236, 340.0,	0, 0),
+		};
+
+	private final ExpectationRecord[] expectationsCorba = new ExpectationRecord[] {
+			// NB: the order does matter
+			// Values are based on suiteDb() results on saa's computer
+			new ExpectationRecord(new ProfiledGetTest(),        			1,   1,  40.0,	0, 0), // first=390.0?
+			new ExpectationRecord(new ProfiledGetTest(),        			1,   1, 0.033,	0, 0),
+			new ExpectationRecord(new ProfiledGetMeasurements(),			1, 118, 120.0,	0, 0),
+			new ExpectationRecord(new ProfiledGetMeasurements(), 			1, 118,   6.0,	0, 0),
+			new ExpectationRecord(new ProfiledGetOneResultByMeasurement(),	2,   1,	120.0,120,120),
+			new ExpectationRecord(new ProfiledGetOneResultByMeasurement(),	2,   1,	 85.0, 85,85),
+			new ExpectationRecord(new ProfiledGetManyResultsByMeasurement(),1, 236, 3700 ,	0, 0),
+			new ExpectationRecord(new ProfiledGetManyResultsByMeasurement(),1, 236, 340.0,	0, 0),
+		};
+	
 	Measurement[] measurements = null;
 
 	public TestLoadTiming2(final String name) {
@@ -42,7 +71,13 @@ public final class TestLoadTiming2 extends TestCase {
 	}
 
 	public static Test suite() {
-		return suiteDb();
+		return suiteUni();
+	}
+
+	public static Test suiteUni() {
+		final CommonTest commonTest = new UniCommonTest();
+		commonTest.addTestSuite(TestLoadTiming2.class);
+		return commonTest.createTestSetup();
 	}
 
 	public static Test suiteDb() {
@@ -235,7 +270,7 @@ public final class TestLoadTiming2 extends TestCase {
 		}
 	}
 
-	public void test1() throws ApplicationException {
+	private void operation1() throws ApplicationException {
 		final LinkedIdsCondition condition = new LinkedIdsCondition(
 				Identifier.valueOf(145241087982705227L),
 				ObjectEntities.RESULT_CODE);
@@ -243,21 +278,20 @@ public final class TestLoadTiming2 extends TestCase {
 		System.out.println("test1()| set.size = " + set.size());
 	}
 
+	/**
+	 * Just an operability test
+	 */
+	public void test1() throws ApplicationException {
+		UniCommonTest.use(new DatabaseTestContext());
+		operation1();
+		UniCommonTest.use(new CorbaTestContext());
+		operation1();
+	}
+
 	@SuppressWarnings("boxing")
-	public void testLoadResult() throws ApplicationException {
+	private void operationLoadResult(ExpectationRecord[] expectations)
+	throws ApplicationException {
 		StorableObjectPool.clean();
-		ExpectationRecord[] expectations = new ExpectationRecord[] {
-			// NB: the order does matter
-			// Values are based on suiteDb() results on saa's computer
-			new ExpectationRecord(new ProfiledGetTest(),        			1,   1,  40.0,	0, 0), // first=390.0?
-			new ExpectationRecord(new ProfiledGetTest(),        			1,   1, 0.033,	0, 0),
-			new ExpectationRecord(new ProfiledGetMeasurements(),			1, 118, 120.0,	0, 0),
-			new ExpectationRecord(new ProfiledGetMeasurements(), 			1, 118,   6.0,	0, 0),
-			new ExpectationRecord(new ProfiledGetOneResultByMeasurement(),	2,   1,	120.0,120,120),
-			new ExpectationRecord(new ProfiledGetOneResultByMeasurement(),	2,   1,	 85.0, 85,85),
-			new ExpectationRecord(new ProfiledGetManyResultsByMeasurement(),1, 236, 3700 ,	0, 0),
-			new ExpectationRecord(new ProfiledGetManyResultsByMeasurement(),1, 236, 340.0,	0, 0),
-		};
 		TimingStat[] measured = new TimingStat[expectations.length];
 		System.out.println(" --- starting measurments ---");
 		System.gc();
@@ -289,5 +323,15 @@ public final class TestLoadTiming2 extends TestCase {
 			System.out.printf("%s\n",
 					expectations[i].profiler.getClass().getSimpleName());
 		}
+		System.out.flush();
+	}
+
+	public void testLoadResult() throws ApplicationException {
+		UniCommonTest.use(new DatabaseTestContext());
+		System.out.println("==== Using DB loader ====");
+		operationLoadResult(expectationsDb);
+		UniCommonTest.use(new CorbaTestContext());
+		System.out.println("==== Using Corba loader ====");
+		operationLoadResult(expectationsCorba);
 	}
 }
