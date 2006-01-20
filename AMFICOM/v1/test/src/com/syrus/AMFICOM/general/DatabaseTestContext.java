@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTestContext.java,v 1.1 2006/01/20 17:08:24 saa Exp $
+ * $Id: DatabaseTestContext.java,v 1.2 2006/01/20 17:22:24 saa Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -102,7 +102,7 @@ import com.syrus.util.database.DatabaseConnection;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2006/01/20 17:08:24 $
+ * @version $Revision: 1.2 $, $Date: 2006/01/20 17:22:24 $
  * @module
  */
 public class DatabaseTestContext implements TestContext {
@@ -118,6 +118,16 @@ public class DatabaseTestContext implements TestContext {
 	// @todo: add ctor or factory
 	private static SystemUser sysUser;
 
+	private static boolean oneTimeInitialized = false;
+
+	private static void ensureOneTimeInit() {
+		if (oneTimeInitialized)
+			return;
+		oneTimeInitialized = true;
+		initDatabaseContext();
+	}
+
+	// invoke this one time only
 	private static void initDatabaseContext() {
 		DatabaseContext.registerDatabase(new CharacteristicTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicDatabase());
@@ -261,9 +271,9 @@ public class DatabaseTestContext implements TestContext {
 	}
 
 	public void setUp() {
+		ensureOneTimeInit();
 		establishDatabaseConnection();
 		initIdentifierPool();
-		initDatabaseContext();
 		initStorableObjectPool();
 		setSysUser();
 		login();
