@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.logic.ServiceItem;
 import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
+import com.syrus.AMFICOM.measurement.Test;
 
 @SuppressWarnings("serial")
 public final class ElementsTreeFrame extends JInternalFrame implements PropertyChangeListener {
@@ -255,14 +256,20 @@ public final class ElementsTreeFrame extends JInternalFrame implements PropertyC
 									SwingUtilities.invokeLater(new Runnable() {
 
 										public void run() {
-											schedulerModel.unselectTests(ElementsTreeFrame.this);
-											dispatcher1.firePropertyChange(new PropertyChangeEvent(ElementsTreeFrame.this,
+											try {
+												final Test selectedTest = ElementsTreeFrame.this.schedulerModel.getSelectedTest();
+												final MonitoredElement monitoredElement = 
+													StorableObjectPool.getStorableObject(identifier,
+														true);
+												if (selectedTest != null && 
+														!selectedTest.getMonitoredElement().equals(monitoredElement)) {
+													schedulerModel.unselectTests(ElementsTreeFrame.this);
+												}
+												dispatcher1.firePropertyChange(new PropertyChangeEvent(ElementsTreeFrame.this,
 													SchedulerModel.COMMAND_CHANGE_ME_TYPE,
 													null,
 													identifier));
-											try {
-												ElementsTreeFrame.this.schedulerModel.setSelectedMonitoredElement((MonitoredElement) StorableObjectPool.getStorableObject(identifier,
-														true),
+												ElementsTreeFrame.this.schedulerModel.setSelectedMonitoredElement(monitoredElement,
 														parent != null ? (MeasurementType) parent.getObject() : null);
 											} catch (final ApplicationException e) {
 												AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
