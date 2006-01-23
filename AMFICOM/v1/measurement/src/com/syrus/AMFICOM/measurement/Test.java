@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.182 2006/01/19 13:41:59 arseniy Exp $
+ * $Id: Test.java,v 1.183 2006/01/23 16:03:01 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.182 $, $Date: 2006/01/19 13:41:59 $
+ * @version $Revision: 1.183 $, $Date: 2006/01/23 16:03:01 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -255,8 +255,9 @@ public final class Test extends StorableObject<Test> implements Describable {
 			final Set<MeasurementSetup> measurementSetups = StorableObjectPool.getStorableObjects(this.measurementSetupIds, true);
 			for (final MeasurementSetup measurementSetup : measurementSetups) {
 				if (!measurementSetup.isAttachedToMonitoredElement(this.monitoredElement.getId())) {
-					Log.errorMessage("MeasurementSetup: '" + measurementSetup.getId() + "' is not attached to MonitoredElement: '"
-							+ this.monitoredElement.getId() + "'");
+					Log.errorMessage("Test '" + this.id + "': "
+							+ "MeasurementSetup: '" + measurementSetup.getId()
+							+ "' is not attached to MonitoredElement: '" + this.monitoredElement.getId() + "'");
 					return false;
 				}
 			}
