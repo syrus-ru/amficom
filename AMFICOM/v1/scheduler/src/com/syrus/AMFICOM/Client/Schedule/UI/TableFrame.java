@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.75 2006/01/17 17:11:59 bob Exp $
+ * $Id: TableFrame.java,v 1.76 2006/01/23 12:39:13 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,9 +53,10 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.AMFICOM.measurement.TestViewAdapter;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2006/01/17 17:11:59 $
+ * @version $Revision: 1.76 $, $Date: 2006/01/23 12:39:13 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -187,6 +188,10 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 		for (final TestView view : testViews) {
 			contains &= values.contains(view);
 		}
+		for (final TestView view : values) {
+			contains &= testViews.contains(view);
+		}
+
 		if (!contains) {
 			this.addTest(testIds, true);
 		} else {

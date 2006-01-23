@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.145 2006/01/16 12:16:02 bob Exp $
+ * $Id: SchedulerModel.java,v 1.146 2006/01/23 12:39:13 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.145 $, $Date: 2006/01/16 12:16:02 $
+ * @version $Revision: 1.146 $, $Date: 2006/01/23 12:39:13 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -407,6 +407,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			final long time0 = System.currentTimeMillis();
 			StorableObjectPool.refresh();
 			final long time1 = System.currentTimeMillis();
+			Log.debugMessage("StorableObjectPool.refresh:" + (time1-time0),
+				Log.DEBUGLEVEL03);
 			final TypicalCondition startTypicalCondition = 
 				new TypicalCondition(endDate,
 					endDate,
@@ -430,7 +432,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					true, 
 					true);
 			final long time2 = System.currentTimeMillis();
-
+			Log.debugMessage("StorableObjectPool.getStorableObjectsByCondition:" + (time2-time1),
+				Log.DEBUGLEVEL03);
 			final Set<Test> refreshTests = new HashSet<Test>();
 			for (final Test test : tests) {
 				final Identifier testId = test.getId();
@@ -442,7 +445,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			TestView.refreshCache(refreshTests, startDate, endDate);
 			
 			final long time3 = System.currentTimeMillis();
-
+			Log.debugMessage("TestView.refreshCache:" + (time3-time2),
+				Log.DEBUGLEVEL03);
 			for (final Test test : refreshTests) {
 				this.addTest(test);
 			}
@@ -451,12 +455,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 						+ this.testIds.size(),
 				Log.DEBUGLEVEL03);
 			
-			Log.debugMessage("StorableObjectPool.refresh:" + (time1-time0),
-				Log.DEBUGLEVEL03);
-			Log.debugMessage("StorableObjectPool.getStorableObjectsByCondition:" + (time2-time1),
-				Log.DEBUGLEVEL03);
-			Log.debugMessage("TestView.refreshCache:" + (time3-time2),
-				Log.DEBUGLEVEL03);
+			
+			
+			
 		} catch (final ApplicationException e) {
 			throw new ApplicationException(I18N.getString("Scheduler.Error.CannotRefreshTests"));
 		}
@@ -470,6 +471,44 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		Log.debugMessage("refreshTests:" + (time1-time0),
 			Log.DEBUGLEVEL03);
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
+	}
+	
+	public void updateTestIds(final Date startDate,
+		final Date endDate) throws ApplicationException {
+		final TypicalCondition startTypicalCondition = 
+			new TypicalCondition(endDate,
+				endDate,
+				OperationSort.OPERATION_LESS_EQUALS,
+				ObjectEntities.TEST_CODE,
+				TestWrapper.COLUMN_START_TIME);
+		final TypicalCondition endTypicalCondition = 
+			new TypicalCondition(startDate,
+				startDate,
+				OperationSort.OPERATION_GREAT_EQUALS,
+				ObjectEntities.TEST_CODE,
+				TestWrapper.COLUMN_END_TIME);
+		
+		final CompoundCondition compoundCondition = 
+			new CompoundCondition(startTypicalCondition,
+				CompoundConditionSort.AND,
+				endTypicalCondition);
+		
+		final Set<Test> tests = 
+			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, 
+				false);
+
+		this.testIds.clear();
+		this.mainTestIds.clear();
+		
+		for (final Test test : tests) {
+			final Identifier testId = test.getId();
+			final TestView valueOf = TestView.valueOf(testId);
+
+			if (valueOf != null) {
+				this.addTest(test);
+			}
+		}
+		this.refreshTests();
 	}
 
 	public Set<Identifier> getSelectedTestIds() {
@@ -700,7 +739,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	throws ApplicationException {
 		final Set<Identifier> measurementSetupIdSet = Collections.singleton(measurementSetup.getId());
 		final Set<Test> tests = this.getSelectedTests();
-		
 		for (final Test test : tests) {
 			if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 				final String reason = this.isValid(test, measurementSetup);
@@ -722,7 +760,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				TestView.addTest(test, testView.getStart(), testView.getEnd());
 			}
 		}
-		
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_REFRESH_TESTS, null, changedTestId));
 	}
 

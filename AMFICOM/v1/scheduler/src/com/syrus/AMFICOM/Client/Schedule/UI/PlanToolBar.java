@@ -151,7 +151,8 @@ final class PlanToolBar {
 				timeDate.setTime((Date) PlanToolBar.this.timeSpinner.getModel().getValue());
 				calDate.set(Calendar.HOUR_OF_DAY, timeDate.get(Calendar.HOUR_OF_DAY));
 				calDate.set(Calendar.MINUTE, timeDate.get(Calendar.MINUTE));
-				panel.setStartDate(calDate.getTime());
+				final Date time = calDate.getTime();				
+				panel.setStartDate(time);
 				panel.updateTestLinesTimeRegion();
 			}
 		};

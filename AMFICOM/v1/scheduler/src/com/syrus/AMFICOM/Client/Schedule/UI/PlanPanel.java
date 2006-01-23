@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.66 2006/01/19 14:56:49 bob Exp $
+ * $Id: PlanPanel.java,v 1.67 2006/01/23 12:39:13 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2006/01/19 14:56:49 $
+ * @version $Revision: 1.67 $, $Date: 2006/01/23 12:39:13 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -166,6 +166,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	public PlanPanel(JScrollPane parent, ApplicationContext aContext) {
 		this.aContext = aContext;
 		
+		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		
 		this.sdf2 = new SimpleDateFormat("dd.MM.yyyy");
 		
@@ -178,10 +179,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_ADD_TEST, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REMOVE_TEST, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_CLEAN, this);
-		// 
-		
-		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
-		
+		//
 		this.addComponentListener(this.createComponentListener());
 		this.addMouseListener(this.createMouseListener());
 		this.addMouseMotionListener(this.createMouseMotionListener());
@@ -377,6 +375,14 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			this.scaleEnd = this.cal.getTime();
 			// scroll calendar to start point
 			this.cal.setTime(this.startDate);
+			
+			try {
+				this.schedulerModel.updateTestIds(this.startDate, this.scaleEnd);
+			} catch (final ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		
 	}
@@ -676,28 +682,28 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 
 	private void updateTest() throws ApplicationException {
 		
-		final Test selectedTest = this.schedulerModel.getSelectedTest();
-		if (selectedTest != null) {
-			final Date startTime = selectedTest.getStartTime();
-//			System.out.println("PlanPanel.updateTest() | startTime " + startTime);
-//			System.out.println("PlanPanel.updateTest() | this.scaleStart " + this.scaleStart);
-//			System.out.println("PlanPanel.updateTest() | this.scaleEnd " + this.scaleEnd);
-			
-			// if selected test is not in visible range			
-			if (!(this.scaleStart.before(startTime) && startTime.before(this.scaleEnd))) {
-				final Date time = new Date(startTime.getTime() - 30L * 60L * 1000);
-				this.toolBar.dateSpinner.setValue(time);
-				this.toolBar.timeSpinner.setValue(time);
-				
-//				System.out.println("PlanPanel.updateTest() || set " + startTime);
-				
-				for (final Identifier monitoredElementId : this.testLines.keySet()) {
-					final TestLine line = this.testLines.get(monitoredElementId);
-					line.refreshTimeItems();
-				}
-
-			}
-		}
+//		final Test selectedTest = this.schedulerModel.getSelectedTest();
+//		if (selectedTest != null) {
+//			final Date startTime = selectedTest.getStartTime();
+////			System.out.println("PlanPanel.updateTest() | startTime " + startTime);
+////			System.out.println("PlanPanel.updateTest() | this.scaleStart " + this.scaleStart);
+////			System.out.println("PlanPanel.updateTest() | this.scaleEnd " + this.scaleEnd);
+//			
+//			// if selected test is not in visible range			
+//			if (!(this.scaleStart.before(startTime) && startTime.before(this.scaleEnd))) {
+//				final Date time = new Date(startTime.getTime() - 30L * 60L * 1000);
+//				this.toolBar.dateSpinner.setValue(time);
+//				this.toolBar.timeSpinner.setValue(time);
+//				
+////				System.out.println("PlanPanel.updateTest() || set " + startTime);
+//				
+//				for (final Identifier monitoredElementId : this.testLines.keySet()) {
+//					final TestLine line = this.testLines.get(monitoredElementId);
+//					line.refreshTimeItems();
+//				}
+//
+//			}
+//		}
 
 		
 		for (final Identifier monitoredElementId : this.testLines.keySet()) {
@@ -734,7 +740,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	}
 	
 	protected void updateTestLines() {
-		Set<Identifier> testIds = ((SchedulerModel) this.aContext.getApplicationModel()).getTestIds();
+		final Set<Identifier> testIds = ((SchedulerModel) this.aContext.getApplicationModel()).getTestIds();
 		for (final Identifier testId : testIds) {
 			final Test test = TestView.valueOf(testId).getTest();
 			final MonitoredElement monitoredElement = test.getMonitoredElement();

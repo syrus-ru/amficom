@@ -247,7 +247,8 @@ final class TestLine extends TimeLine {
 
 	public Rectangle getVisibleRectangle() {
 		Rectangle rectangle = null;
-		
+//		Rectangle visibleRect = super.getVisibleRect();
+//		assert Log.debugMessage("visibleRect:" + visibleRect, Log.DEBUGLEVEL03);
 		if (this.lastX >= 0) {
 			return new Rectangle(this.lastX - PlanPanel.MARGIN / 2, 0, 10, this.getHeight()
 				- (this.titleHeight / 2 + 4)
@@ -257,27 +258,31 @@ final class TestLine extends TimeLine {
 		
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
 			final Identifier testId = this.selectedTestIds.iterator().next();
-			for (final TestTimeItem element : this.timeItems) {
-				if (element.testTimeLine.testId.equals(testId)) {
-					rectangle = new Rectangle(element.x - PlanPanel.MARGIN / 2, 0, element.width, this.getHeight()
-							- (this.titleHeight / 2 + 4)
-							- 2);
-					break;
-				}
-			}
-			
+			rectangle = this.getMinimalBounds(this.timeItems, testId);
 			if (rectangle == null) {
-				for (final TestTimeItem element : this.unsavedTestTimeItems) {
-					if (element.testTimeLine.testId.equals(testId)) {
-						rectangle = new Rectangle(element.x - PlanPanel.MARGIN / 2, 0, element.width, this.getHeight()
-								- (this.titleHeight / 2 + 4)
-								- 2);
-						break;
-					}
-				}
+				rectangle = this.getMinimalBounds(this.unsavedTestTimeItems, testId);				
 			}
 		}
+//		assert Log.debugMessage("rectangle:" + rectangle, Log.DEBUGLEVEL03);
 		return rectangle;
+	}
+	
+	private Rectangle getMinimalBounds(final SortedSet<TestTimeItem> sortedSet, 
+		final Identifier testId) {
+		TestTimeItem firstElement = null;
+		TestTimeItem lastElement = null;
+		for (final TestTimeItem element : sortedSet) {
+			if (element.testTimeLine.testId.equals(testId)) {
+				if (firstElement == null) {
+					firstElement = element;
+				}
+				lastElement = element;
+			}
+		}
+		if (firstElement != null) {
+			return new Rectangle(firstElement.x, 0, lastElement.x + lastElement.width - firstElement.x, this.getHeight());
+		}
+		return null;
 	}
 	
 	private void paintFlash(Graphics g) {
