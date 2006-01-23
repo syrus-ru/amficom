@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImpl.java,v 1.11 2005/12/20 09:20:58 arseniy Exp $
+ * $Id: MCMImpl.java,v 1.12 2006/01/23 16:18:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,16 +18,16 @@ import com.syrus.AMFICOM.general.ServerCore;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlCompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
 import com.syrus.AMFICOM.mcm.corba.MCMOperations;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/12/20 09:20:58 $
+ * @version $Revision: 1.12 $, $Date: 2006/01/23 16:18:37 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -40,14 +40,12 @@ final class MCMImpl extends ServerCore implements MCMOperations {
 	}
 
 
-	public void startTests(final IdlIdentifier[] testIdsT, final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
-		assert testIdsT != null && sessionKeyT != null : ErrorMessages.NON_NULL_EXPECTED;
+	public void startTests(final IdlIdentifier[] testIdsT, final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
+		assert testIdsT != null && idlSessionKey != null : ErrorMessages.NON_NULL_EXPECTED;
 		final int length = testIdsT.length;
 		assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
-		final IdlIdentifierHolder userId = new IdlIdentifierHolder();
-		final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-		super.validateAccess(sessionKeyT, userId, domainId);
+		super.validateLogin(new SessionKey(idlSessionKey));
 
 		Log.debugMessage("Request to start " + testIdsT.length + " test(s)", Log.DEBUGLEVEL07);
 		final Set<Identifier> testIds = Identifier.fromTransferables(testIdsT);
@@ -60,15 +58,13 @@ final class MCMImpl extends ServerCore implements MCMOperations {
 		}
 	}
 
-	public void stopTests(final IdlIdentifier[] testIdsT, final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
-		assert testIdsT != null && sessionKeyT != null : ErrorMessages.NON_NULL_EXPECTED;
+	public void stopTests(final IdlIdentifier[] testIdsT, final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
+		assert testIdsT != null && idlSessionKey != null : ErrorMessages.NON_NULL_EXPECTED;
 		final int length = testIdsT.length;
 		assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
 		try {
-			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
-			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			super.validateAccess(sessionKeyT, userId, domainId);
+			super.validateLogin(new SessionKey(idlSessionKey));
 
 			final Set<Identifier> ids = Identifier.fromTransferables(testIdsT);
 			Log.debugMessage("Request to stop " + testIdsT.length + " test(s): " + ids, Log.DEBUGLEVEL07);
