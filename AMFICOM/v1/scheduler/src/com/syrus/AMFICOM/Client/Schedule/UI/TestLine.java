@@ -202,13 +202,13 @@ final class TestLine extends TimeLine {
 				
 				this.selectedItems.add(testTimeItem);
 
-				Log.debugMessage("selectTheSameTest " + selectTheSameTest,
+				Log.debugMessage("selectTheSameTest " + selectTheSameTest + ", unselect:" + unselect,
 					Log.DEBUGLEVEL10);
 				
 				if (!selectTheSameTest) {
-					if (unselect) {
+//					if (unselect) {
 						this.unselect();
-					}
+//					}
 					
 					this.selectedTestIds.add(testTimeItem.testTimeLine.testId);
 					final Test test = TestView.valueOf(testTimeItem.testTimeLine.testId).getTest();
@@ -305,11 +305,10 @@ final class TestLine extends TimeLine {
 		}
 	}
 
-	public void updateTest() {
+	public void updateTest() {		
 		if (this.skip) { 
 			return; 
-		}
-
+		}		
 		final Set<Identifier> selectedTestIds2 = this.schedulerModel.getSelectedTestIds();
 		boolean theSame = (this.selectedTestIds != null ? this.selectedTestIds.size() : 0) == selectedTestIds2.size();
 		if (theSame) {
@@ -337,6 +336,7 @@ final class TestLine extends TimeLine {
 				if (this.selectedTestIds == null) {
 					this.selectedTestIds = new HashSet<Identifier>();
 				}
+				assert Log.debugMessage(this.title + ", " + testId, Log.DEBUGLEVEL03);
 				this.selectedTestIds.add(testId);
 			}
 		}
@@ -369,12 +369,15 @@ final class TestLine extends TimeLine {
 	}
 
 	public void updateTests(final Set<Identifier> testIds) {
+//		assert Log.debugMessage("1:" + this.title, Log.DEBUGLEVEL03);
 		if (this.skip) { 
 			return; 
 		}
-		
+//		assert Log.debugMessage("2:" + this.title, Log.DEBUGLEVEL03);
 		this.acquireTests(testIds);
-		if (testIds != null && !testIds.isEmpty()) {
+//		assert Log.debugMessage("3:" + this.title + "testIds:" + testIds, Log.DEBUGLEVEL03);
+//		if (testIds != null && !testIds.isEmpty()) 
+		{
 			this.updateTest();
 		}
 	}
