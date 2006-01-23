@@ -1,5 +1,5 @@
 /*-
- * $Id: leserver.idl,v 1.12 2005/11/28 12:12:59 arseniy Exp $
+ * $Id: leserver.idl,v 1.13 2006/01/23 16:05:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,9 +39,8 @@ module corba {
 		void logout(in security::corba::IdlSessionKey sessionKey)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void validateAccess(in security::corba::IdlSessionKey sessionKey,
-			out general::corba::IdlIdentifier userId,
-			out general::corba::IdlIdentifier domainId)
+		void validateLogin(in security::corba::IdlSessionKey sessionKey,
+			out long long loginValidationTimeout)
 			raises (general::corba::AMFICOMRemoteException);
 
 		void setPassword(in security::corba::IdlSessionKey sessionKey,
