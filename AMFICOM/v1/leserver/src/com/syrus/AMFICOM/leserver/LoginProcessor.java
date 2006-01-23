@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.30 2005/12/08 15:31:12 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.31 2006/01/23 16:06:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/12/08 15:31:12 $
+ * @version $Revision: 1.31 $, $Date: 2006/01/23 16:06:31 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -40,14 +40,17 @@ final class LoginProcessor extends SleepButWorkThread {
 	public static final String KEY_LOGIN_PROCESSOR_TICK_TIME = "LoginProcessorTickTime";
 	public static final String KEY_LOGIN_PROCESSOR_MAX_FALLS = "LoginProcessorMaxFalls";
 	public static final String KEY_MAX_USER_UNACTIVITY_PERIOD = "MaxUserUnactivityPeriod";
+	public static final String KEY_LOGIN_VALIDATION_TIMEOUT = "LoginValidationTimeout";
 
 	public static final int LOGIN_PROCESSOR_TICK_TIME = 5;	//sec
 	public static final int MAX_USER_UNACTIVITY_PERIOD = 1;	//minutes
+	public static final int LOGIN_VALIDATION_TIMEOUT = 5;	//minutes
 
 	private static final UserLoginDatabase userLoginDatabase = new UserLoginDatabase();
 
 	private static Map<SessionKey, UserLogin> loginMap;
-	private long maxUserUnactivityPeriod;
+	private static long maxUserUnactivityPeriod;
+	private static long loginValidationTimeout;
 	private boolean running;
 
 	public LoginProcessor() {
@@ -59,7 +62,8 @@ final class LoginProcessor extends SleepButWorkThread {
 			loginMap = Collections.synchronizedMap(new HashMap<SessionKey, UserLogin>());
 		}
 
-		this.maxUserUnactivityPeriod = ApplicationProperties.getInt(KEY_MAX_USER_UNACTIVITY_PERIOD, MAX_USER_UNACTIVITY_PERIOD) * 60 * 1000;
+		maxUserUnactivityPeriod = ApplicationProperties.getInt(KEY_MAX_USER_UNACTIVITY_PERIOD, MAX_USER_UNACTIVITY_PERIOD) * 60 * 1000;
+		loginValidationTimeout = ApplicationProperties.getInt(KEY_LOGIN_VALIDATION_TIMEOUT, LOGIN_VALIDATION_TIMEOUT) * 60 * 1000;
 		this.running = true;
 
 		this.restoreState();
@@ -94,9 +98,10 @@ final class LoginProcessor extends SleepButWorkThread {
 					final SessionKey sessionKey = it.next();
 					final UserLogin userLogin = loginMap.get(sessionKey);
 					final Date lastActivityDate = userLogin.getLastActivityDate();
-					if (System.currentTimeMillis() - lastActivityDate.getTime() >= this.maxUserUnactivityPeriod) {
-						Log.debugMessage("User '" + userLogin.getUserId() + "' unactive more, than "
-								+ (this.maxUserUnactivityPeriod / (60 * 1000)) + " minutes. Deleting login", Log.DEBUGLEVEL06);
+					if (System.currentTimeMillis() - lastActivityDate.getTime() >= maxUserUnactivityPeriod + loginValidationTimeout) {
+						Log.debugMessage("User '" + userLogin.getUserId() + "' unactive more, than ("
+								+ (maxUserUnactivityPeriod / (60 * 1000)) + (loginValidationTimeout / (60 * 1000))
+								+ ") minutes. Deleting login", Log.DEBUGLEVEL06);
 						userLoginDatabase.delete(userLogin);
 						it.remove();
 					}
@@ -145,6 +150,23 @@ final class LoginProcessor extends SleepButWorkThread {
 		userLoginDatabase.delete(userLogin);
 		printUserLogins();
 		return true;
+	}
+
+
+	static long getLoginValidationTimeout(final SessionKey sessionKey) {
+		final UserLogin userLogin = loginMap.get(sessionKey);
+		if (userLogin == null) {
+			return -1;
+		}
+
+		userLogin.updateLastActivityDate();
+		try {
+			userLoginDatabase.update(userLogin);
+		} catch (final UpdateObjectException uoe) {
+			Log.errorMessage(uoe);
+		}
+
+		return loginValidationTimeout;
 	}
 
 	static boolean isUserLoginPresent(final SessionKey sessionKey) {

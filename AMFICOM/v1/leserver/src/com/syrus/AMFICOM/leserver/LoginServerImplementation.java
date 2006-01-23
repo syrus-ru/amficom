@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.40 2005/12/06 09:43:07 bass Exp $
+ * $Id: LoginServerImplementation.java,v 1.41 2006/01/23 16:06:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NOT_LOGGED_IN;
 
 import java.util.Set;
 
+import org.omg.CORBA.LongHolder;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.Domain;
@@ -37,14 +38,13 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.leserver.corba.LoginServerPOA;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.ShadowDatabase;
-import com.syrus.AMFICOM.security.UserLogin;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/12/06 09:43:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2006/01/23 16:06:23 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -155,35 +155,19 @@ final class LoginServerImplementation extends LoginServerPOA {
 		}
 	}
 
-	/**
-	 * @param sessionKeyT an "in" parameter.
-	 * @param userIdTH an "out" parameter representing a user id.
-	 * @param domainIdTH an "out" parameter representing a domain id.
-	 * @throws AMFICOMRemoteException if user not logged in.
-	 * @see com.syrus.AMFICOM.leserver.corba.LoginServerOperations#validateAccess(com.syrus.AMFICOM.security.corba.IdlSessionKey, com.syrus.AMFICOM.general.corba.IdlIdentifierHolder, com.syrus.AMFICOM.general.corba.IdlIdentifierHolder)
-	 */
-	public void validateAccess(final IdlSessionKey sessionKeyT,
-			final IdlIdentifierHolder userIdTH,
-			final IdlIdentifierHolder domainIdTH) throws AMFICOMRemoteException {
-		final SessionKey sessionKey = new SessionKey(sessionKeyT);
-		if (!LoginProcessor.isUserLoginPresent(sessionKey)) {
+	public void validateLogin(final IdlSessionKey idlSessionKey, final LongHolder loginValidationTimeoutHolder) throws AMFICOMRemoteException {
+		final long loginValidationTimeout = LoginProcessor.getLoginValidationTimeout(new SessionKey(idlSessionKey));
+		if (loginValidationTimeout < 0) {
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_NOT_LOGGED_IN,
 					IdlCompletionStatus.COMPLETED_YES,
 					NOT_LOGGED_IN);
 		}
 
-		LoginProcessor.updateUserLoginLastActivityDate(sessionKey);
-
-		final UserLogin userLogin = LoginProcessor.getUserLogin(sessionKey);
-		userIdTH.value = userLogin.getUserId().getIdlTransferable();
-		final Identifier domainId = userLogin.getDomainId();
-		domainIdTH.value = (domainId == null ? Identifier.VOID_IDENTIFIER : domainId).getIdlTransferable();
+		loginValidationTimeoutHolder.value = loginValidationTimeout;
 	}
 
 	public void setPassword(final IdlSessionKey sessionKeyT, final IdlIdentifier userIdT, final String password)
 			throws AMFICOMRemoteException {
-		this.validateAccess(sessionKeyT, new IdlIdentifierHolder(), new IdlIdentifierHolder());
-
 		final Identifier userId = new Identifier(userIdT);
 		try {
 			final SystemUser systemUser = (SystemUser) StorableObjectPool.getStorableObject(userId, true);
