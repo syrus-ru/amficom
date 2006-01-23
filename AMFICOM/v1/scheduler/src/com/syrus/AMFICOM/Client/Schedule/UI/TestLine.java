@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -405,8 +406,20 @@ final class TestLine extends TimeLine {
 				super.mouseClicked(e);
 			}
 			
+			private void forwardMousePressedToParent(final MouseEvent e) {
+				for(final MouseListener mouseListener : TestLine.this.getParent().getMouseListeners()) {
+					mouseListener.mousePressed(e);
+				}
+			}
+			
+			private void forwardMouseReleasedToParent(final MouseEvent e) {
+				for(final MouseListener mouseListener : TestLine.this.getParent().getMouseListeners()) {
+					mouseListener.mouseReleased(e);
+				}
+			}
+			
 			@Override
-			public void mousePressed(MouseEvent e) {
+			public void mousePressed(MouseEvent e) {				
 				int x = e.getX();
 				if (SwingUtilities.isLeftMouseButton(e)) {
 					
@@ -420,15 +433,11 @@ final class TestLine extends TimeLine {
 						if (!(selected = selectTest(x, TestLine.this.timeItems, unselect))) {
 							if (!(selected = selectTest(x, TestLine.this.unsavedTestTimeItems, unselect))) {
 //								TestLine.this.schedulerModel.unselectTests(TestLine.this);
-								for(final MouseListener mouseListener : TestLine.this.getParent().getMouseListeners()) {
-									mouseListener.mousePressed(e);
-								}
+								this.forwardMousePressedToParent(e);
 							}
 						}
 					} else if (!(selected = selectTest(x, TestLine.this.unsavedTestTimeItems, unselect))) {
-						for(final MouseListener mouseListener : TestLine.this.getParent().getMouseListeners()) {
-							mouseListener.mousePressed(e);
-						}
+						this.forwardMousePressedToParent(e);
 					}
 					
 					if (unselect && !selected){
@@ -470,6 +479,8 @@ final class TestLine extends TimeLine {
 					TestLine.this.startPoint = null;
 					TestLine.this.previousPoint = null;
 					TestLine.this.currentPoint = null;
+				} else {
+					this.forwardMouseReleasedToParent(e);
 				}
 
 			}
@@ -477,6 +488,12 @@ final class TestLine extends TimeLine {
 
 		this.addMouseMotionListener(new MouseMotionAdapter() {
 
+			private void forwardmouseDraggedToParent(final MouseEvent e) {
+				for(final MouseMotionListener mouseListener : TestLine.this.getParent().getMouseMotionListeners()) {
+					mouseListener.mouseDragged(e);
+				}
+			}
+			
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				TestLine.this.currentPoint = e.getPoint();
@@ -523,6 +540,9 @@ final class TestLine extends TimeLine {
 					TestLine.this.repaint();
 					TestLine.this.revalidate();
 					TestLine.this.previousPoint = TestLine.this.currentPoint;
+				} else {					
+					TestLine.this.currentPoint = null;
+					forwardmouseDraggedToParent(e);
 				}
 			}
 		});
