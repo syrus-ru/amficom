@@ -55,6 +55,8 @@ public final class ElementsTreeFrame extends JInternalFrame implements PropertyC
 
 	private Dispatcher dispatcher;
 
+	private PropertyChangeEvent	propertyChangeEvent;
+
 	public ElementsTreeFrame(final ApplicationContext aContext) {
 		this.aContext = aContext;
 		super.setTitle(I18N.getString("Scheduler.Text.ElementsTree.Title")); //$NON-NLS-1$
@@ -194,6 +196,7 @@ public final class ElementsTreeFrame extends JInternalFrame implements PropertyC
 	}
 
 	public void propertyChange(final PropertyChangeEvent evt) {
+		this.propertyChangeEvent = evt;
 		final String propertyName = evt.getPropertyName();
 		final Object newValue = evt.getNewValue();
 		if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_TYPE)) {
@@ -219,6 +222,7 @@ public final class ElementsTreeFrame extends JInternalFrame implements PropertyC
 						monitoredElement));
 			}
 		}
+		this.propertyChangeEvent = null;
 	}
 
 	public void init() {
@@ -230,6 +234,10 @@ public final class ElementsTreeFrame extends JInternalFrame implements PropertyC
 			this.selectionListener = new SelectionListener() {
 
 				public void selectedItems(final Collection<Item> items) {
+					if (propertyChangeEvent != null) {
+						return;
+					}
+
 					for (final Item item : items) {
 						final Object object = item.getObject();
 						if (object instanceof Identifier) {
