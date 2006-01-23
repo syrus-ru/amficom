@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.48 2006/01/23 16:07:22 arseniy Exp $
+ * $Id: ServerCore.java,v 1.49 2006/01/23 16:18:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.48 $, $Date: 2006/01/23 16:07:22 $
+ * @version $Revision: 1.49 $, $Date: 2006/01/23 16:18:18 $
  * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -278,7 +278,7 @@ public abstract class ServerCore implements CommonServerOperations {
 
 	// ///////////////////////////// helper methods ///////////////////////////////////////////////
 
-	private void validateLogin(final SessionKey sessionKey) throws AMFICOMRemoteException {
+	protected final void validateLogin(final SessionKey sessionKey) throws AMFICOMRemoteException {
 		final Date comingDate = this.loginValidationComingDates.get(sessionKey);
 		if (comingDate == null || comingDate.getTime() <= System.currentTimeMillis()) {
 			final LongHolder loginValidationTimeoutHolder = new LongHolder();
