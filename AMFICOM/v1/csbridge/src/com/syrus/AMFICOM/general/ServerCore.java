@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.47 2005/12/20 09:20:51 arseniy Exp $
+ * $Id: ServerCore.java,v 1.48 2006/01/23 16:07:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,28 +10,31 @@ package com.syrus.AMFICOM.general;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.omg.CORBA.LongHolder;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServerOperations;
 import com.syrus.AMFICOM.general.corba.IdVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlCompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
+import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.47 $, $Date: 2005/12/20 09:20:51 $
+ * @version $Revision: 1.48 $, $Date: 2006/01/23 16:07:22 $
  * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -41,6 +44,8 @@ public abstract class ServerCore implements CommonServerOperations {
 	private LoginServerConnectionManager loginServerConnectionManager;
 	private ORB orb;
 	private String hostName;
+
+	private Map<SessionKey, Date> loginValidationComingDates;
 
 	protected ServerCore(final LoginServerConnectionManager loginServerConnectionManager, final ORB orb) {
 		this.loginServerConnectionManager = loginServerConnectionManager;
@@ -55,8 +60,9 @@ public abstract class ServerCore implements CommonServerOperations {
 			Log.errorMessage(uhe);
 		}
 		this.hostName = hostname;
-	}
 
+		this.loginValidationComingDates = new HashMap<SessionKey, Date>();
+	}
 
 
 	// ///////////////////////////// CommonUser ///////////////////////////////////////////////
@@ -76,9 +82,7 @@ public abstract class ServerCore implements CommonServerOperations {
 			assert length != 0: ErrorMessages.NON_EMPTY_EXPECTED;
 			assert StorableObject.hasSingleTypeEntities(idsT);
 
-			final IdlIdentifierHolder userIdH = new IdlIdentifierHolder();
-			final IdlIdentifierHolder domainIdH = new IdlIdentifierHolder();
-			this.validateAccess(sessionKeyT, userIdH, domainIdH);
+			this.validateLogin(new SessionKey(sessionKeyT));
 
 			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
 
@@ -110,9 +114,7 @@ public abstract class ServerCore implements CommonServerOperations {
 			assert idsT.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(idsT);
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
-			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
-			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			this.validateAccess(sessionKeyT, userId, domainId);
+			this.validateLogin(new SessionKey(sessionKeyT));
 
 			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
 
@@ -149,9 +151,7 @@ public abstract class ServerCore implements CommonServerOperations {
 			assert idsT.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(idsT);
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
-			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
-			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			this.validateAccess(sessionKeyT, userId, domainId);
+			this.validateLogin(new SessionKey(sessionKeyT));
 
 			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
 
@@ -180,9 +180,7 @@ public abstract class ServerCore implements CommonServerOperations {
 			final int length = idsT.length;
 			assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
-			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
-			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			this.validateAccess(sessionKeyT, userId, domainId);
+			this.validateLogin(new SessionKey(sessionKeyT));
 
 			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
@@ -219,9 +217,7 @@ public abstract class ServerCore implements CommonServerOperations {
 			final int length = storableObjectsT.length;
 			assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
-			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
-			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			this.validateAccess(sessionKeyT, userId, domainId);
+			this.validateLogin(new SessionKey(sessionKeyT));
 
 			final Set<? extends StorableObject<?>> storableObjects = StorableObjectPool.fromTransferables(storableObjectsT, true);
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
@@ -249,9 +245,7 @@ public abstract class ServerCore implements CommonServerOperations {
 			final int length = idsT.length;
 			assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
-			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
-			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			this.validateAccess(sessionKeyT, userId, domainId);
+			this.validateLogin(new SessionKey(sessionKeyT));
 
 			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
@@ -283,27 +277,24 @@ public abstract class ServerCore implements CommonServerOperations {
 
 
 	// ///////////////////////////// helper methods ///////////////////////////////////////////////
-	/**
-	 * @param sessionKeyT an "in" parameter.
-	 * @param userIdH an "out" parameter.
-	 * @param domainIdH an "out" parameter.
-	 * @throws AMFICOMRemoteException
-	 */
-	protected final void validateAccess(final IdlSessionKey sessionKeyT,
-			final IdlIdentifierHolder userIdH,
-			final IdlIdentifierHolder domainIdH)
-			throws AMFICOMRemoteException {
-		try {
-			this.loginServerConnectionManager.getLoginServerReference().validateAccess(sessionKeyT, userIdH, domainIdH);
-		}
-		catch (final CommunicationException ce) {
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ACCESS_VALIDATION, IdlCompletionStatus.COMPLETED_NO, ce.getMessage());
-		}
-		catch (AMFICOMRemoteException are) {
-			throw are;
-		}
-		catch (final Throwable throwable) {
-			throw this.processDefaultThrowable(throwable);
+
+	private void validateLogin(final SessionKey sessionKey) throws AMFICOMRemoteException {
+		final Date comingDate = this.loginValidationComingDates.get(sessionKey);
+		if (comingDate == null || comingDate.getTime() <= System.currentTimeMillis()) {
+			final LongHolder loginValidationTimeoutHolder = new LongHolder();
+			try {
+				this.loginServerConnectionManager.getLoginServerReference().validateLogin(sessionKey.getIdlTransferable(),
+						loginValidationTimeoutHolder);
+				this.loginValidationComingDates.put(sessionKey, new Date(System.currentTimeMillis() + loginValidationTimeoutHolder.value));
+			} catch (final CommunicationException ce) {
+				throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ACCESS_VALIDATION,
+						IdlCompletionStatus.COMPLETED_NO,
+						ce.getMessage());
+			} catch (AMFICOMRemoteException are) {
+				throw are;
+			} catch (final Throwable throwable) {
+				throw this.processDefaultThrowable(throwable);
+			}
 		}
 	}
 
