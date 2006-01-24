@@ -858,7 +858,8 @@ public class TimeParametersFrame extends JInternalFrame {
 					cal, 
 					true, 
 					true);
-			calendarDialog.setLocationRelativeTo(this.endDateButton);
+//			calendarDialog.setLocationRelativeTo(this.endDateButton);
+			CommonUIUtilities.setLocationRelativeTo(calendarDialog, this.endDateButton);
 			calendarDialog.setVisible(true);
 			if (((CalendarUI) calendarDialog.getContentPane()).getStatus() == CalendarUI.STATUS_OK)
 				this.endDateSpinner.getModel().setValue(cal.getTime());
@@ -875,7 +876,7 @@ public class TimeParametersFrame extends JInternalFrame {
 					true, 
 					true);
 
-			calendarDialog.setLocationRelativeTo(this.startDateButton);
+			CommonUIUtilities.setLocationRelativeTo(calendarDialog, this.startDateButton);
 			calendarDialog.setVisible(true);			
 			
 			if (((CalendarUI) calendarDialog.getContentPane()).getStatus() == CalendarUI.STATUS_OK)
