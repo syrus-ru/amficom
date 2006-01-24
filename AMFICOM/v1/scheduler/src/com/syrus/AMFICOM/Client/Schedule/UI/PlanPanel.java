@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.70 2006/01/24 12:43:30 bob Exp $
+ * $Id: PlanPanel.java,v 1.71 2006/01/24 14:33:26 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,11 +51,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
-import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2006/01/24 12:43:30 $
+ * @version $Revision: 1.71 $, $Date: 2006/01/24 14:33:26 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -252,10 +251,10 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 					final double k = (PlanPanel.this.parent.getVisibleRect().width - 2 * MARGIN)
 							/ Math.abs((double) (PlanPanel.this.startPosition.x - PlanPanel.this.currentPosition.x));
 					PlanPanel.this.updateScale(k, Math.min(PlanPanel.this.startPosition.x, PlanPanel.this.currentPosition.x));
-					PlanPanel.this.startPosition = null;
-					PlanPanel.this.currentPosition = null;
-					PlanPanel.this.repaint();
 				}
+				PlanPanel.this.startPosition = null;
+				PlanPanel.this.currentPosition = null;
+				PlanPanel.this.repaint();
 				
 			}
 		};
