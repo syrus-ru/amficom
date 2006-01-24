@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.68 2006/01/24 12:20:11 bob Exp $
+ * $Id: PlanPanel.java,v 1.69 2006/01/24 12:33:41 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2006/01/24 12:20:11 $
+ * @version $Revision: 1.69 $, $Date: 2006/01/24 12:33:41 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -687,38 +687,14 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 
 	private void updateTest() throws ApplicationException {
 		final Test selectedTest = this.schedulerModel.getSelectedTest();
-		if (selectedTest == null) {
-			return;
-		}
-//			final Date startTime = selectedTest.getStartTime();
-////			System.out.println("PlanPanel.updateTest() | startTime " + startTime);
-////			System.out.println("PlanPanel.updateTest() | this.scaleStart " + this.scaleStart);
-////			System.out.println("PlanPanel.updateTest() | this.scaleEnd " + this.scaleEnd);
-//			
-//			// if selected test is not in visible range			
-//			if (!(this.scaleStart.before(startTime) && startTime.before(this.scaleEnd))) {
-//				final Date time = new Date(startTime.getTime() - 30L * 60L * 1000);
-//				this.toolBar.dateSpinner.setValue(time);
-//				this.toolBar.timeSpinner.setValue(time);
-//				
-////				System.out.println("PlanPanel.updateTest() || set " + startTime);
-//				
-//				for (final Identifier monitoredElementId : this.testLines.keySet()) {
-//					final TestLine line = this.testLines.get(monitoredElementId);
-//					line.refreshTimeItems();
-//				}
-//
-//			}
-//		}
-
-		
 		for (final Identifier monitoredElementId : this.testLines.keySet()) {
 			final TestLine line = this.testLines.get(monitoredElementId);
 			line.updateTest();
-			final Rectangle visibleRectangle = line.getVisibleRectangle();
-//			System.out.println("PlanPanel.updateTest() | " + visibleRectangle);
-			if (visibleRectangle != null) {
-				this.scrollRectToVisible(visibleRectangle);
+			if (selectedTest != null) {
+				final Rectangle visibleRectangle = line.getVisibleRectangle();
+				if (visibleRectangle != null) {
+					this.scrollRectToVisible(visibleRectangle);
+				}
 			}
 		}
 	}
