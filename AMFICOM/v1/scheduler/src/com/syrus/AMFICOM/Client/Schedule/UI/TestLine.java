@@ -248,8 +248,7 @@ final class TestLine extends TimeLine {
 
 	public Rectangle getVisibleRectangle() {
 		Rectangle rectangle = null;
-		Rectangle visibleRect = super.getVisibleRect();
-//		assert Log.debugMessage("visibleRect:" + visibleRect, Log.DEBUGLEVEL03);
+		final Rectangle visibleRect = super.getVisibleRect();
 		if (this.lastX >= 0) {
 			return new Rectangle(this.lastX - PlanPanel.MARGIN / 2, 0, 10, this.getHeight()
 				- (this.titleHeight / 2 + 4)
@@ -264,8 +263,7 @@ final class TestLine extends TimeLine {
 				rectangle = this.getMinimalBounds(this.unsavedTestTimeItems, testId);				
 			}
 		}
-//		assert Log.debugMessage("rectangle:" + rectangle, Log.DEBUGLEVEL03);
-		if (rectangle != null && rectangle.x < visibleRect.x + visibleRect.width &&
+		if (rectangle == null || rectangle.x < visibleRect.x + visibleRect.width &&
 				rectangle.x + rectangle.width > visibleRect.x) {
 			return visibleRect;
 		}
@@ -386,11 +384,15 @@ final class TestLine extends TimeLine {
 		}
 	}
 
+	final int getItemY() {
+		return this.titleHeight / 2 + 4;
+	}
+	
 	@Override
 	protected void paintComponent(final Graphics g) {
 		super.paintComponent(g);
 
-		final int y = this.titleHeight / 2 + 4;
+		final int y = this.getItemY();
 		final int h = this.getHeight() - y - 2;
 
 		if (!this.timeItems.isEmpty() && super.scale > 0.0) {
@@ -427,7 +429,8 @@ final class TestLine extends TimeLine {
 			
 			@Override
 			public void mousePressed(MouseEvent e) {				
-				int x = e.getX();
+				final int x = e.getX();
+				final int y = e.getY();
 				if (SwingUtilities.isLeftMouseButton(e)) {
 					
 					boolean unselect = false;
@@ -436,7 +439,7 @@ final class TestLine extends TimeLine {
 					if (TestLine.this.selectedItems != null && !e.isShiftDown()) {
 						unselect = true;
 					}
-					if (!TestLine.this.timeItems.isEmpty()) {
+					if (!TestLine.this.timeItems.isEmpty() && y > getItemY()) {
 						if (!(selected = selectTest(x, TestLine.this.timeItems, unselect))) {
 							if (!(selected = selectTest(x, TestLine.this.unsavedTestTimeItems, unselect))) {
 //								TestLine.this.schedulerModel.unselectTests(TestLine.this);
