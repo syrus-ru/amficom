@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.69 2006/01/24 12:33:41 bob Exp $
+ * $Id: PlanPanel.java,v 1.70 2006/01/24 12:43:30 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2006/01/24 12:33:41 $
+ * @version $Revision: 1.70 $, $Date: 2006/01/24 12:43:30 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -345,7 +345,6 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	}
 
 	public void setScale(final int n) {
-		assert Log.debugMessage(Log.DEBUGLEVEL03);
 		if (n < 0 || n >= SCALES.length) {
 			throw new IllegalArgumentException("Unsupported scale: " //$NON-NLS-1$
 					+ n + ". Use setScale(n);" //$NON-NLS-1$
@@ -356,7 +355,6 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	}
 
 	public void setStartDate(final Date start) {
-		assert Log.debugMessage(Log.DEBUGLEVEL03);
 		this.startDate = start;
 		if (start != null) {
 			this.cal.setTime(start);
@@ -689,12 +687,14 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		final Test selectedTest = this.schedulerModel.getSelectedTest();
 		for (final Identifier monitoredElementId : this.testLines.keySet()) {
 			final TestLine line = this.testLines.get(monitoredElementId);
-			line.updateTest();
-			if (selectedTest != null) {
-				final Rectangle visibleRectangle = line.getVisibleRectangle();
-				if (visibleRectangle != null) {
-					this.scrollRectToVisible(visibleRectangle);
-				}
+			line.updateTest();			
+		}
+		
+		if (selectedTest != null) {
+			final TestLine line = this.testLines.get(selectedTest.getMonitoredElementId());
+			final Rectangle visibleRectangle = line.getVisibleRectangle();
+			if (visibleRectangle != null) {
+				this.scrollRectToVisible(visibleRectangle);
 			}
 		}
 	}
@@ -704,7 +704,6 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			final TestLine line = this.testLines.get(monitoredElementId);
 			line.addTest(testIds);
 			final Rectangle visibleRectangle = line.getVisibleRectangle();
-//			System.out.println("PlanPanel.updateTest() | " + visibleRectangle);
 			if (visibleRectangle != null) {
 				this.scrollRectToVisible(visibleRectangle);
 			}

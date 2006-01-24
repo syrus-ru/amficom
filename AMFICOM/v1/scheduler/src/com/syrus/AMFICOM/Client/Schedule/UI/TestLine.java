@@ -266,8 +266,10 @@ final class TestLine extends TimeLine {
 //		assert Log.debugMessage("rectangle:" + rectangle + ", visibleRect:" + visibleRect, Log.DEBUGLEVEL03);
 		if (rectangle == null || rectangle.x < visibleRect.x + visibleRect.width &&
 				rectangle.x + rectangle.width > visibleRect.x) {
+//			assert Log.debugMessage("visibleRect:" + visibleRect, Log.DEBUGLEVEL03);
 			return visibleRect;
 		}
+//		assert Log.debugMessage("rectangle:" + rectangle, Log.DEBUGLEVEL03);
 		return rectangle;
 	}
 	
