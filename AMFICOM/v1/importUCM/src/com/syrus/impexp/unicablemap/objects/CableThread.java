@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThread.java,v 1.6 2006/01/13 11:49:48 stas Exp $
+ * $Id: CableThread.java,v 1.7 2006/01/24 07:44:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ public class CableThread {
 	private String name;
 	private String linkTypeId;
 	private String parentId;
-	private Integer sourcePortId; // previous fiber
-	private Integer targetPortId; // next fiber
+//	private Integer sourcePortId; // previous fiber
+//	private Integer targetPortId; // next fiber
 
 	public CableThread(String id) {
 		this.id = id;
@@ -28,13 +28,17 @@ public class CableThread {
 		return this.id;
 	}
 
-	public void setSourcePortId(Integer sourcePortId) {
-		this.sourcePortId = sourcePortId;
-	}
-
-	public void setTargetPortId(Integer targetPortId) {
-		this.targetPortId = targetPortId;
-	}
+//	public void setSourcePortId(Integer sourcePortId) {
+//		System.out.println("sourcePortId is " + sourcePortId);
+//		if (sourcePortId.intValue() < 1) {
+//			System.err.println("!");
+//		}
+//		this.sourcePortId = sourcePortId;
+//	}
+//
+//	public void setTargetPortId(Integer targetPortId) {
+//		this.targetPortId = targetPortId;
+//	}
 
 	public void setLinkTypeId(String linkTypeId) {
 		this.linkTypeId = linkTypeId;

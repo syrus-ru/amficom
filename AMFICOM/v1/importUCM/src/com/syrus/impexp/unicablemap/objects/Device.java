@@ -1,5 +1,5 @@
 /*-
- * $Id: Device.java,v 1.5 2006/01/13 11:49:48 stas Exp $
+ * $Id: Device.java,v 1.6 2006/01/24 07:44:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,8 @@ public class Device {
 		xmlSD.setId(uid);
 		
 		if (this.name.length() > 32) {
-			System.out.println("device name (" + this.name + ") length greater then 32 symbols. cutting... ");
+			System.out.println("device name (" + this.name + ") length greater then 32 symbols. coping to description and cutting...");
+			xmlSD.setDescription(this.name);
 			this.name = this.name.substring(0, 31);
 		}
 		

@@ -1,5 +1,5 @@
 /*-
- * $Id: Element.java,v 1.14 2006/01/13 14:52:15 stas Exp $
+ * $Id: Element.java,v 1.15 2006/01/24 07:44:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeElement.Kind;
 public class Element {
 
 	public static final String KIND_SCHEMED = "SCHEMED";
+	public static final String KIND_EQUIPMENTED = "EQUIPMENTED";
 	
 	private int id;
 	private String name;
@@ -58,6 +59,10 @@ public class Element {
 		this.elements.add(element);
 	}
 	
+		public Collection<Element> getElements() {
+		return this.elements;
+	}
+
 	public void addLink(Link link) {
 		this.links.add(link);
 	}
@@ -184,7 +189,8 @@ public class Element {
 		uid.setStringValue(String.valueOf(this.id));
 		
 		if (this.name.length() > 32) {
-			System.out.println("element name (" + this.name + ") length greater then 32 symbols. cutting... ");
+			System.out.println("element name (" + this.name + ") length greater then 32 symbols. coping to description and cutting...");
+			xmlSE.setDescription(this.name);
 			this.name = this.name.substring(0, 31);
 		}
 		
@@ -248,7 +254,7 @@ public class Element {
 			
 			Collection<XmlSchemeLink> ls = new ArrayList<XmlSchemeLink>(this.links.size());
 			for (Object link : this.links) {
-				ls.add(((Link)link).toXMLObject(uid, this.kind.equals(KIND_SCHEMED)));
+				ls.add(((Link)link).toXMLObject(uid, false));//this.kind.equals(KIND_SCHEMED)
 			}
 			xmlLinks.setSchemeLinkArray(ls.toArray(new XmlSchemeLink[ls.size()]));
 		}

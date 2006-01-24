@@ -1,5 +1,5 @@
 /*-
- * $Id: ThreadType.java,v 1.5 2005/09/30 08:33:18 stas Exp $
+ * $Id: ThreadType.java,v 1.6 2006/01/24 07:44:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ public class ThreadType {
 		XmlIdentifier cltuid = xmlCTT.addNewCableLinkTypeId();
 		cltuid.setStringValue(this.cableTypeId.toString());
 		
-//		xmlCTT.setColor("-1");
+		xmlCTT.setColor(-1);
 		
 		return xmlCTT;
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: Cable.java,v 1.14 2006/01/13 14:52:15 stas Exp $
+ * $Id: Cable.java,v 1.15 2006/01/24 07:44:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -115,7 +115,8 @@ public class Cable {
 		uid.setStringValue(String.valueOf(this.id));
 		
 		if (this.name.length() > 32) {
-			System.out.println("cable name (" + this.name + ") length greater then 32 symbols. cutting... ");
+			System.out.println("cable name (" + this.name + ") length greater then 32 symbols. coping to description and cutting...");
+			xmlCL.setDescription(this.name);
 			this.name = this.name.substring(0, 31);
 		}
 		
