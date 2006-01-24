@@ -10,7 +10,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.Window;
 
 import javax.swing.JComponent;
 import javax.swing.JTable;
@@ -20,7 +22,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/28 12:28:00 $
+ * @version $Revision: 1.16 $, $Date: 2006/01/24 12:46:29 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -57,6 +59,30 @@ public final class CommonUIUtilities {
 			buffer.append(string);
 		}
 		return buffer.toString();
+	}
+	
+	public static void setLocationRelativeTo(final Window window, final Component component) {
+		window.setLocationRelativeTo(component);
+		
+		final GraphicsEnvironment localGraphicsEnvironment = 
+			GraphicsEnvironment.getLocalGraphicsEnvironment();
+		final Rectangle maximumWindowBounds = 
+			localGraphicsEnvironment.getMaximumWindowBounds();
+		int dx = 0;
+		final int mx2 = (int) (maximumWindowBounds.getX() + maximumWindowBounds.getWidth());
+		final int x2 = window.getX() + window.getWidth();
+		if (x2 > mx2) {
+			dx = mx2 - x2; 
+		}
+		int dy = 0;
+		final int my2 = (int) (maximumWindowBounds.getY() + maximumWindowBounds.getHeight());
+		final int y2 = window.getY() + window.getHeight();
+		if (y2 > my2) {
+			dy = my2 - y2; 
+		}
+		if (dx != 0 || dy != 0) {
+			window.setLocation(window.getX() + dx, window.getY() + dy);
+		}
 	}
 	
 	public static void arrangeTableColumns(JTable table) {
