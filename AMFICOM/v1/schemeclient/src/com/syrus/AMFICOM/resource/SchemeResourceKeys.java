@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResourceKeys.java,v 1.11 2005/09/29 05:59:38 stas Exp $
+ * $Id: SchemeResourceKeys.java,v 1.12 2006/01/24 07:47:19 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/09/29 05:59:38 $
+ * @version $Revision: 1.12 $, $Date: 2006/01/24 07:47:19 $
  * @module schemeclient
  */
 public interface SchemeResourceKeys extends ResourceKeys {
@@ -168,4 +168,6 @@ public interface SchemeResourceKeys extends ResourceKeys {
 	String SCHEME_TYPE_NETWORK = "scheme_type_network"; //$NON-NLS-1$
 	String SCHEME_TYPE_CABLE = "scheme_type_cable"; //$NON-NLS-1$
 	String SCHEME_TYPE_BUILDING = "scheme_type_building"; //$NON-NLS-1$
+	String SCHEME_TYPE_FLOOR = "scheme_type_floor"; //$NON-NLS-1$
+	
 }
