@@ -248,7 +248,7 @@ final class TestLine extends TimeLine {
 
 	public Rectangle getVisibleRectangle() {
 		Rectangle rectangle = null;
-		final Rectangle visibleRect = super.getVisibleRect();
+		final Rectangle visibleRect = super.cachedVisibleRect;
 		if (this.lastX >= 0) {
 			return new Rectangle(this.lastX - PlanPanel.MARGIN / 2, 0, 10, this.getHeight()
 				- (this.titleHeight / 2 + 4)
@@ -263,6 +263,7 @@ final class TestLine extends TimeLine {
 				rectangle = this.getMinimalBounds(this.unsavedTestTimeItems, testId);				
 			}
 		}
+//		assert Log.debugMessage("rectangle:" + rectangle + ", visibleRect:" + visibleRect, Log.DEBUGLEVEL03);
 		if (rectangle == null || rectangle.x < visibleRect.x + visibleRect.width &&
 				rectangle.x + rectangle.width > visibleRect.x) {
 			return visibleRect;
@@ -311,6 +312,9 @@ final class TestLine extends TimeLine {
 		if (this.skip) { 
 			return; 
 		}		
+		
+//		assert Log.debugMessage(this.title, Log.DEBUGLEVEL03);
+		
 		final Set<Identifier> selectedTestIds2 = this.schedulerModel.getSelectedTestIds();
 		boolean theSame = (this.selectedTestIds != null ? this.selectedTestIds.size() : 0) == selectedTestIds2.size();
 		if (theSame) {
@@ -324,7 +328,6 @@ final class TestLine extends TimeLine {
 				return;
 			}
 		}
-		
 		
 		this.lastX = -1;
 
@@ -557,7 +560,7 @@ final class TestLine extends TimeLine {
 			}
 		});
 	}
-
+	
 	private void acqureTest(final Test test) throws ApplicationException {
 		
 		Log.debugMessage(test, Log.DEBUGLEVEL09);
