@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeLine.java,v 1.23 2006/01/17 12:20:44 bob Exp $
+ * $Id: TimeLine.java,v 1.24 2006/01/24 12:20:44 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestLine.TestTimeItem;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2006/01/17 12:20:44 $
+ * @version $Revision: 1.24 $, $Date: 2006/01/24 12:20:44 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -41,7 +41,7 @@ public abstract class TimeLine extends JComponent {
 	double		scale = 0.0;
 
 	protected SortedSet<TestTimeItem>	timeItems	= new TreeSet<TestTimeItem>();
-	private Rectangle	cachedVisibleRect;
+	Rectangle	cachedVisibleRect;
 
 	public TimeLine() {
 		
