@@ -248,7 +248,7 @@ final class TestLine extends TimeLine {
 
 	public Rectangle getVisibleRectangle() {
 		Rectangle rectangle = null;
-//		Rectangle visibleRect = super.getVisibleRect();
+		Rectangle visibleRect = super.getVisibleRect();
 //		assert Log.debugMessage("visibleRect:" + visibleRect, Log.DEBUGLEVEL03);
 		if (this.lastX >= 0) {
 			return new Rectangle(this.lastX - PlanPanel.MARGIN / 2, 0, 10, this.getHeight()
@@ -265,6 +265,10 @@ final class TestLine extends TimeLine {
 			}
 		}
 //		assert Log.debugMessage("rectangle:" + rectangle, Log.DEBUGLEVEL03);
+		if (rectangle != null && rectangle.x < visibleRect.x + visibleRect.width &&
+				rectangle.x + rectangle.width > visibleRect.x) {
+			return visibleRect;
+		}
 		return rectangle;
 	}
 	
@@ -336,7 +340,7 @@ final class TestLine extends TimeLine {
 				if (this.selectedTestIds == null) {
 					this.selectedTestIds = new HashSet<Identifier>();
 				}
-				assert Log.debugMessage(this.title + ", " + testId, Log.DEBUGLEVEL03);
+//				assert Log.debugMessage(this.title + ", " + testId, Log.DEBUGLEVEL03);
 				this.selectedTestIds.add(testId);
 			}
 		}
