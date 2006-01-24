@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.67 2006/01/23 12:39:13 bob Exp $
+ * $Id: PlanPanel.java,v 1.68 2006/01/24 12:20:11 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2006/01/23 12:39:13 $
+ * @version $Revision: 1.68 $, $Date: 2006/01/24 12:20:11 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -252,10 +252,11 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 					final double k = (PlanPanel.this.parent.getVisibleRect().width - 2 * MARGIN)
 							/ Math.abs((double) (PlanPanel.this.startPosition.x - PlanPanel.this.currentPosition.x));
 					PlanPanel.this.updateScale(k, Math.min(PlanPanel.this.startPosition.x, PlanPanel.this.currentPosition.x));
+					PlanPanel.this.startPosition = null;
+					PlanPanel.this.currentPosition = null;
+					PlanPanel.this.repaint();
 				}
-				PlanPanel.this.startPosition = null;
-				PlanPanel.this.currentPosition = null;
-				PlanPanel.this.repaint();
+				
 			}
 		};
 		
@@ -344,6 +345,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	}
 
 	public void setScale(final int n) {
+		assert Log.debugMessage(Log.DEBUGLEVEL03);
 		if (n < 0 || n >= SCALES.length) {
 			throw new IllegalArgumentException("Unsupported scale: " //$NON-NLS-1$
 					+ n + ". Use setScale(n);" //$NON-NLS-1$
@@ -354,6 +356,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	}
 
 	public void setStartDate(final Date start) {
+		assert Log.debugMessage(Log.DEBUGLEVEL03);
 		this.startDate = start;
 		if (start != null) {
 			this.cal.setTime(start);
@@ -390,7 +393,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	@Override
 	public String getToolTipText(final MouseEvent event) {
 		final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-		return sdf.format(this.getDateByMousePosition(event));
+		return sdf.format(this.getDateByMousePosition(event)) + ", (" + event.getX() + ", " + event.getY()+")";
 	}
 
 	public void actionPerformed(final ActionEvent e) {
@@ -676,14 +679,17 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		for (final Identifier monitoredElementId : this.testLines.keySet()) {
 			final TestLine line = this.testLines.get(monitoredElementId);
 			line.updateTests(testIds);
-			line.refreshTimeItems();
+			if (testIds != null && !testIds.isEmpty()) {
+				line.refreshTimeItems();
+			}
 		}
 	}
 
 	private void updateTest() throws ApplicationException {
-		
-//		final Test selectedTest = this.schedulerModel.getSelectedTest();
-//		if (selectedTest != null) {
+		final Test selectedTest = this.schedulerModel.getSelectedTest();
+		if (selectedTest == null) {
+			return;
+		}
 //			final Date startTime = selectedTest.getStartTime();
 ////			System.out.println("PlanPanel.updateTest() | startTime " + startTime);
 ////			System.out.println("PlanPanel.updateTest() | this.scaleStart " + this.scaleStart);
