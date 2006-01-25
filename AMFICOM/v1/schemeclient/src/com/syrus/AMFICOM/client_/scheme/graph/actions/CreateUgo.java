@@ -1,5 +1,5 @@
 /*
- * $Id: CreateUgo.java,v 1.16 2005/10/31 12:30:28 bass Exp $
+ * $Id: CreateUgo.java,v 1.17 2006/01/25 13:01:05 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.17 $, $Date: 2006/01/25 13:01:05 $
  * @module schemeclient
  */
 
@@ -113,6 +113,10 @@ public class CreateUgo {
 			viewMap.put(text, map);
 			toInsert.add(text);
 		}
+		
+		// remove old
+		graph.setSelectionCells(new Object[0]);
+		graph.getModel().remove(graph.getDescendants(graph.getAll()));
 		
 		Object[] cells = toInsert.toArray();
 		graph.getModel().insert(cells, viewMap, cs, null, null);
