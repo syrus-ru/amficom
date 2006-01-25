@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUCMConverter.java,v 1.15 2005/12/06 11:52:22 bass Exp $
+ * $Id: ImportUCMConverter.java,v 1.16 2006/01/25 13:09:23 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,11 +75,11 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 public class ImportUCMConverter {
-	private Map<Integer, SchemeProtoElement> straightMuffs;
-	private Map<Integer, SchemeProtoElement> inVrms;
-	private Map<Integer, SchemeProtoElement> outVrms;
+//	private Map<Integer, SchemeProtoElement> straightMuffs;
+//	private Map<Integer, SchemeProtoElement> inVrms;
+//	private Map<Integer, SchemeProtoElement> outVrms;
 	private Set<Identifier> placedObjectIds;
-	private Set<ProtoEquipment> muffProtoTypes;
+//	private Set<ProtoEquipment> muffProtoTypes;
 	private Set<Identifiable> objectsToDelete;
 	
 	private Identifier userId;
@@ -166,21 +166,25 @@ public class ImportUCMConverter {
 	void parseSchemeElements(Scheme scheme) throws ApplicationException {
 		this.objectsToDelete = new HashSet<Identifiable>();
 //		initMuffs();
-		initVrms();
+//		initVrms();
 		initPlacedObjects(scheme);
 		
 		ApplicationContext internalContext =  new ApplicationContext();
 		internalContext.setDispatcher(new Dispatcher());
 		SchemeGraph invisibleGraph = new UgoTabbedPane(internalContext).getGraph();
 		invisibleGraph.setMakeNotifications(false);
-		Identifier domainId = LoginManager.getDomainId();
+//		Identifier domainId = LoginManager.getDomainId();
 	
 		for (SchemeElement schemeElement : scheme.getSchemeElements(false)) {
 			if (!this.placedObjectIds.contains(schemeElement.getId())) {
 			try{
 				if (schemeElement.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
-				// if no real Scheme associated create new scheme with internal VRM's
-					Scheme internalScheme = Scheme.createInstance(this.userId, schemeElement.getName(), IdlKind.BUILDING, domainId);
+
+					SchemeActions.generateImage(invisibleGraph, schemeElement);
+					
+					
+					// if no real Scheme associated create new scheme with internal VRM's
+/*					Scheme internalScheme = Scheme.createInstance(this.userId, schemeElement.getName(), IdlKind.BUILDING, domainId);
 					internalScheme.setDescription(schemeElement.getDescription());
 					internalScheme.setLabel(schemeElement.getLabel());
 					internalScheme.setSymbol(schemeElement.getSymbol());
@@ -196,6 +200,12 @@ public class ImportUCMConverter {
 						res = SchemeObjectsFactory.createSchemeImageResource();
 						internalScheme.setSchemeCell(res);
 					}
+					
+					// need to create internal schemes
+					
+					// need to create internal elements
+					
+					
 					
 					//	next create vrm for every cable port
 					Set<SchemeCablePort> existingCablePorts = schemeElement.getSchemeCablePortsRecursively(false);
@@ -249,7 +259,7 @@ public class ImportUCMConverter {
 					if (existingCablePorts.size() > 0) {
 						new CreateTopLevelSchemeAction(schemePane).execute();
 						schemeElement.setUgoCell(internalScheme.getUgoCell().clone());
-					}
+					}*/
 				} else if (schemeElement.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER) {
 					
 					SchemeActions.generateImage(invisibleGraph, schemeElement);
@@ -374,7 +384,7 @@ public class ImportUCMConverter {
 		}
 		
 	}
-	
+	/*
 	private SchemeProtoElement getSuitableProto(Map<Integer, SchemeProtoElement> mapping, Integer num) {
 		//  search for proto with corresponding number of ports, if nothing found search with larger number, 
 		//  if not again - get any
@@ -391,8 +401,8 @@ public class ImportUCMConverter {
 			}
 		}
 		return suitableProto;
-	}
-
+	}*/
+/*
 	private void substituteSchemeElement(Map<Identifier, Identifier>clonedIds, SchemeElement seToRemove, SchemeElement seToAdd) throws ApplicationException {
 		for (SchemeDevice dev : seToAdd.getSchemeDevices(false)) {
 			if (!dev.getSchemeCablePorts(false).isEmpty()) {
@@ -423,7 +433,7 @@ public class ImportUCMConverter {
 		
 		this.objectsToDelete.add(seToRemove);
 	}
-	
+	*//*
 	private void substituteIds(Map<Identifier, Identifier>clonedIds, SchemeElement seToRemove, SchemeElement seToAdd) {
 		for (Identifier id : clonedIds.keySet()) {
 			Identifier value = clonedIds.get(id);
@@ -436,8 +446,8 @@ public class ImportUCMConverter {
 				clonedIds.put(id, seToAdd.getId());
 			}
 		}
-	}
-	
+	}*/
+	/*
 	private void substituteExistingPorts(Map<Identifier, Identifier>clonedIds, Set<SchemeCablePort> existingCablePorts) throws ApplicationException {
 		Map<SchemeCablePort, Identifier> seCablePortReversedMap = new HashMap<SchemeCablePort, Identifier>();
 		for (Identifier id1 : clonedIds.keySet()) {
@@ -468,17 +478,17 @@ public class ImportUCMConverter {
 		}
 		
 		
-		/*Map<Identifier, SchemeCablePort>existingPortsMapping = new HashMap<Identifier, SchemeCablePort>(); // oldId to existing 
-		for (Identifier id1 : clonedIds.keySet()) {
-			if (id1.getMajor() == ObjectEntities.SCHEMECABLEPORT_CODE) {
-				SchemeCablePort cport = StorableObjectPool.getStorableObject(clonedIds.get(id1), false); // old port
-				for (SchemeCablePort existingPort : existingCablePorts) {
-					if (cport.getDirectionType() == existingPort.getDirectionType() && !existingPortsMapping.containsValue(existingPort)) {
-						existingPortsMapping.put(id1, existingPort);
-					}
-				}
-			}
-		}*/
+//		Map<Identifier, SchemeCablePort>existingPortsMapping = new HashMap<Identifier, SchemeCablePort>(); // oldId to existing 
+//		for (Identifier id1 : clonedIds.keySet()) {
+//			if (id1.getMajor() == ObjectEntities.SCHEMECABLEPORT_CODE) {
+//				SchemeCablePort cport = StorableObjectPool.getStorableObject(clonedIds.get(id1), false); // old port
+//				for (SchemeCablePort existingPort : existingCablePorts) {
+//					if (cport.getDirectionType() == existingPort.getDirectionType() && !existingPortsMapping.containsValue(existingPort)) {
+//						existingPortsMapping.put(id1, existingPort);
+//					}
+//				}
+//			}
+//		}
 		int counter = 0;
 		for (SchemeCablePort portToRemove : existingPortsMapping.keySet()) {
 			SchemeCablePort portToAdd = existingPortsMapping.get(portToRemove);
@@ -496,7 +506,7 @@ public class ImportUCMConverter {
 				Log.debugMessage("\tchild cablePort " + child.getId(), Level.FINE);
 			}
 		}
-	}
+	}*/
 	/*
 	private void substituteExistingPorts(Map<Identifier, Identifier>clonedIds, SchemeCablePort existingCablePort) throws ApplicationException {
 		Map<Identifier, SchemeCablePort>existingPortsMapping = new HashMap<Identifier, SchemeCablePort>();
@@ -566,6 +576,7 @@ public class ImportUCMConverter {
 		}
 	}*/
 	
+	/*
 	private void initVrms() throws ApplicationException {
 		final TypicalCondition condition1 = new TypicalCondition(EquipmentType.CABLE_PANEL, 
 				OperationSort.OPERATION_EQUALS, 
@@ -600,5 +611,5 @@ public class ImportUCMConverter {
 				}
 			}
 		}
-	}
+	}*/
 }
