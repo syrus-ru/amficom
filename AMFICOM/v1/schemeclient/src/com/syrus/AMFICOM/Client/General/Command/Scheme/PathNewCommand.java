@@ -73,12 +73,6 @@ public class PathNewCommand extends AbstractCommand {
 					SchemePathPropertiesManager.getInstance(aContext),
 					ObjectSelectedEvent.SCHEME_PATH));
 			SchemeResource.setSchemePath(path, true);
-			
-			ApplicationModel aModel = aContext.getApplicationModel();
-			aModel.setEnabled("menuPathNew", false);
-			aModel.setEnabled("menuPathSave", true);
-			aModel.setEnabled("menuPathCancel", true);
-			aModel.fireModelChanged();			
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
 		}

@@ -1,27 +1,34 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemePathPropertiesManager;
+import com.syrus.AMFICOM.scheme.SchemePath;
 
-public class PathEditCommand extends AbstractCommand
-{
-	/*ApplicationContext aContext;
+public class PathEditCommand extends AbstractCommand {
 	SchemeTabbedPane pane;
 
-	public PathEditCommand(ApplicationContext aContext, SchemeTabbedPane pane)
-	{
-		this.aContext = aContext;
+	public PathEditCommand(SchemeTabbedPane pane) {
 		this.pane = pane;
 	}
 
-	public Object clone()
-	{
-		return new PathEditCommand(aContext, pane);
+	@Override
+	public void execute() {
+		ApplicationContext aContext = this.pane.getContext();
+		
+		SchemePath path = SchemeResource.getSchemePath();
+		if (path != null) {
+			aContext.getDispatcher().firePropertyChange(
+					new ObjectSelectedEvent(this, path, 
+							SchemePathPropertiesManager.getInstance(aContext), 
+							ObjectSelectedEvent.SCHEME_PATH));
+			SchemeResource.setSchemePath(path, true);
+		}
 	}
-
-	public void execute()
-	{
-		aContext.getDispatcher().notify(new CreatePathEvent(pane, null, CreatePathEvent.EDIT_PATH_EVENT));
-	}*/
 }
 
 

@@ -32,17 +32,9 @@ public class PathSaveCommand extends AbstractCommand {
 					LangModelScheme.getString("Message.information"),  //$NON-NLS-1$
 					JOptionPane.INFORMATION_MESSAGE);
 			
-			SchemeResource.setSchemePath(null, false);
+			SchemeResource.setSchemePath(path, false);
 //			SchemeResource.setCashedPathStart(null);
 			SchemeResource.setCashedPathEnd(null);
-			
-			ApplicationContext aContext = this.pane.getContext();
-			ApplicationModel aModel = aContext.getApplicationModel();
-			aModel.setEnabled("menuPathNew", true);
-			aModel.setEnabled("menuPathSave", false);
-			aModel.setEnabled("menuPathCancel", false);
-			aModel.fireModelChanged();
-			
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
 		}
