@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportExportCommand.java,v 1.17 2006/01/11 14:40:50 stas Exp $
+ * $Id: ImportExportCommand.java,v 1.18 2006/01/25 13:07:45 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,8 +91,10 @@ public abstract class ImportExportCommand extends AbstractCommand {
 	protected static final String USER_DIR = "user.dir";
 	protected static final String UCM_SPLIT_MUFF = "UCM.codename.split_muff";
 	protected static final String UCM_STRAIGHT_MUFF = "UCM.codename.straight_muff";
+	
 	protected static final String UCM_SCHEMED_EQT = "UCM_SCHEMED";
 	protected static final String UCM_ODF_EQT = "UCM_ODF";
+	protected static final String UCM_RACK_EQT = "UCM_RACK";
 	
 	protected static final String UCM_SPLICE_PORT_TYPE = "splice";
 	protected static final String UCM_OPTICAL_PORT_TYPE = "optical";
@@ -396,6 +398,18 @@ public abstract class ImportExportCommand extends AbstractCommand {
 								
 								final TypicalCondition condition = new TypicalCondition(
 										EquipmentType.CABLE_PANEL, 
+										OperationSort.OPERATION_EQUALS, 
+										ObjectEntities.PROTOEQUIPMENT_CODE, 
+										StorableObjectWrapper.COLUMN_TYPE_CODE);
+								final Set<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+								if (!protoEquipments.isEmpty()) {
+									protoEquipments.iterator().next().getId().getXmlTransferable(xmlSchemeElement.addNewProtoEquipmentId(), importType);
+								}
+							} else if (protoEqId.getStringValue().equals(UCM_RACK_EQT)) {
+								xmlSchemeElement.unsetProtoEquipmentId();
+								
+								final TypicalCondition condition = new TypicalCondition(
+										EquipmentType.RACK, 
 										OperationSort.OPERATION_EQUALS, 
 										ObjectEntities.PROTOEQUIPMENT_CODE, 
 										StorableObjectWrapper.COLUMN_TYPE_CODE);
