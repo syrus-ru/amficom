@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.59 2006/01/25 13:03:59 stas Exp $
+ * $Id: SchemeActions.java,v 1.60 2006/01/25 13:19:54 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,6 +48,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.Notifier;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
@@ -102,7 +103,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.59 $, $Date: 2006/01/25 13:03:59 $
+ * @version $Revision: 1.60 $, $Date: 2006/01/25 13:19:54 $
  * @module schemeclient
  */
 
@@ -363,7 +364,9 @@ public class SchemeActions {
 			
 			GraphActions.setText(graph, cell1, cl1.getName());
 			GraphActions.setText(graph, cell2, cl2.getName());
-
+			
+			graph.clearSelection();
+			graph.selectionNotify();
 			return new DefaultCableLink[] { cell1, cell2 };
 		} catch (CreateObjectException e) {
 			Log.errorMessage(e);
