@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.19 2005/10/31 12:30:29 bass Exp $
+ * $Id: ElementsPanel.java,v 1.20 2006/01/25 12:58:22 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,9 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
@@ -29,8 +32,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/10/31 12:30:29 $
+ * @author $Author: stas $
+ * @version $Revision: 1.20 $, $Date: 2006/01/25 12:58:22 $
  * @module schemeclient
  */
 
@@ -111,25 +114,18 @@ public class ElementsPanel extends UgoPanel {
 		if (ae.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ev = (ObjectSelectedEvent) ae;
 			if (ev.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
-				SchemePath path = (SchemePath)ev.getSelectedObject();
-				this.graph.setSelectionCells(this.schemeResource.getPathElements(path));
-//				SchemeResource.setSchemePath(path, false);
+				try {
+					SchemePath path = StorableObjectPool.getStorableObject(((Identifiable)ev.getSelectedObject()).getId(), false);
+					this.graph.setSelectionCells(this.schemeResource.getPathElements(path));
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
+				}
 				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) {
 					this.graph.insureSelectionVisible();
 				}
-			}
-			// TODO разобраться с созданием пути 
-//			else {
-//				if (graph.path_creation_mode != Constants.CREATING_PATH_MODE)
-//					schemeResource.setSchemePath(null);
-//			}
-
-//			if (ev.SCHEME_ALL_DESELECTED) {
-//				getGraph().removeSelectionCells();
-//			} 
-			else if (ev.isSelected(ObjectSelectedEvent.SCHEME)) {
-				Scheme scheme = (Scheme)ev.getSelectedObject();
+			} else if (ev.isSelected(ObjectSelectedEvent.SCHEME)) {
 				try {
+					Scheme scheme = StorableObjectPool.getStorableObject(((Identifiable)ev.getSelectedObject()).getId(), false);
 					SchemeElement schemeElement = scheme.getParentSchemeElement();
 					if (schemeElement != null) {
 						this.graph.setSelectionCell(SchemeActions.findGroupById(this.graph, schemeElement.getId()));
@@ -141,48 +137,73 @@ public class ElementsPanel extends UgoPanel {
 					Log.errorMessage(e);
 				}
 			} else if (ev.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT)) {
-				SchemeElement element = (SchemeElement)ev.getSelectedObject();
-				this.graph.setSelectionCell(SchemeActions.findGroupById(this.graph, element.getId()));
+				try {
+					SchemeElement element = StorableObjectPool.getStorableObject(((Identifiable)ev.getSelectedObject()).getId(), false);
+					this.graph.setSelectionCell(SchemeActions.findGroupById(this.graph, element.getId()));
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
+				}
 				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
 					this.graph.insureSelectionVisible();
 				}
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_PROTOELEMENT)) {
-				SchemeProtoElement proto = (SchemeProtoElement)ev.getSelectedObject();
-				this.graph.setSelectionCell(SchemeActions.findGroupById(this.graph, proto.getId()));
+				try {
+					SchemeProtoElement proto = StorableObjectPool.getStorableObject(((Identifiable)ev.getSelectedObject()).getId(), false);
+					this.graph.setSelectionCell(SchemeActions.findGroupById(this.graph, proto.getId()));
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
+				}
 				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
 					this.graph.insureSelectionVisible();
 				}
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_PORT)) {
 				// TODO multiple selection
-				SchemePort port;
+				Identifier portId;
 				if (ev.getSelectedObject() instanceof Set) {
-					port = (SchemePort)((Set)ev.getSelectedObject()).iterator().next();
+					portId = ((Identifiable)((Set)ev.getSelectedObject()).iterator().next()).getId();
 				} else {
-					port = (SchemePort)ev.getSelectedObject();
+					portId = ((Identifiable)ev.getSelectedObject()).getId();
 				}
-				this.graph.setSelectionCell(SchemeActions.findPortCellById(this.graph, port.getId()));
+				try {
+					SchemePort port = StorableObjectPool.getStorableObject(portId, false);
+					this.graph.setSelectionCell(SchemeActions.findPortCellById(this.graph, port.getId()));
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
+				}
 				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
 					this.graph.insureSelectionVisible();
 				}
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_CABLEPORT)) {
-				SchemeCablePort port = (SchemeCablePort)ev.getSelectedObject();
-				this.graph.setSelectionCell(SchemeActions.findCablePortCellById(this.graph, port.getId()));
+				try {
+					SchemeCablePort port = StorableObjectPool.getStorableObject(((Identifiable)ev.getSelectedObject()).getId(), false);
+					this.graph.setSelectionCell(SchemeActions.findCablePortCellById(this.graph, port.getId()));
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
+				}
 				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
 					this.graph.insureSelectionVisible();
 				}
 			} else if (ev.isSelected(ObjectSelectedEvent.SCHEME_LINK)) {
-				SchemeLink link = (SchemeLink)ev.getSelectedObject();
-				this.graph.setSelectionCell(SchemeActions.findSchemeLinkById(this.graph, link.getId()));
+				try {
+					SchemeLink link = StorableObjectPool.getStorableObject(((Identifiable)ev.getSelectedObject()).getId(), false);
+					this.graph.setSelectionCell(SchemeActions.findSchemeLinkById(this.graph, link.getId()));
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
+				}
 				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
 					this.graph.insureSelectionVisible();
 				}
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_CABLELINK)) {
-				SchemeCableLink link = (SchemeCableLink)ev.getSelectedObject();
-				this.graph.setSelectionCell(SchemeActions.findSchemeCableLinkById(this.graph, link.getId()));
+				try {
+					SchemeCableLink link = StorableObjectPool.getStorableObject(((Identifiable)ev.getSelectedObject()).getId(), false);
+					this.graph.setSelectionCell(SchemeActions.findSchemeCableLinkById(this.graph, link.getId()));
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
+				}
 				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
 					this.graph.insureSelectionVisible();
 				}
@@ -193,24 +214,6 @@ public class ElementsPanel extends UgoPanel {
 				
 			}
 		}
-		// TODO разобраться с созданием пути 
-/*		
-		else if (ae.getActionCommand().equals(CreatePathEvent.typ)) {
-			CreatePathEvent cpe = (CreatePathEvent) ae;
-			if (cpe.DELETE_PATH) {
-			}
-			if (cpe.EDIT_PATH) {
-				if (graph.getCurrentPath() != null)
-					editing_path = (SchemePath) graph.getCurrentPath().clone();
-			}
-		}
-		if (ae.getActionCommand().equals(SchemeElementsEvent.type)) {
-			SchemeElementsEvent see = (SchemeElementsEvent) ae;
-			if (see.UGO_CREATE)
-				return;
-			if (see.SCHEME_UGO_CREATE)
-				return;
-		}*/
 		super.propertyChange(ae);
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.38 2005/12/27 10:25:20 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.39 2006/01/25 12:58:22 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,6 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
@@ -58,6 +56,7 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemePropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -68,12 +67,13 @@ import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.38 $, $Date: 2005/12/27 10:25:20 $
+ * @version $Revision: 1.39 $, $Date: 2006/01/25 12:58:22 $
  * @module schemeclient
  */
 
@@ -537,6 +537,12 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			ObjectSelectedEvent ose = (ObjectSelectedEvent) ae;
 			if (ose.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
 				setPathMode();
+				try {
+					SchemePath path = StorableObjectPool.getStorableObject(((Identifiable)ose.getSelectedObject()).getId(), false);
+					SchemeResource.setSchemePath(path, SchemeResource.isPathEditing());
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
+				}
 			}
 		}
 		super.propertyChange(ae);

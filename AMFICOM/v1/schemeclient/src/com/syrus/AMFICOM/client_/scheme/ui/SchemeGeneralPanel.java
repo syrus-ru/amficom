@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGeneralPanel.java,v 1.14 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemeGeneralPanel.java,v 1.15 2006/01/25 12:59:01 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.15 $, $Date: 2006/01/25 12:59:01 $
  * @module schemeclient
  */
 
@@ -67,6 +67,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 	private static final Item[] schemeKinds = new IconedNode[] { 
 		new IconedNode(IdlKind.NETWORK, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_NETWORK)),
 		new IconedNode(IdlKind.BUILDING, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_BUILDING)),
+		new IconedNode(IdlKind.FLOOR, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_FLOOR)),
 		new IconedNode(IdlKind.CABLE_SUBNETWORK, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_CABLE))
 	};
 	
