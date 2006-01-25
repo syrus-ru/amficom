@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.18 2005/12/27 10:22:42 stas Exp $
+ * $Id: SchemeResource.java,v 1.19 2006/01/25 12:57:14 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
 
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
@@ -34,7 +36,7 @@ import com.syrus.util.Log;
 /**
  * 
  * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2005/12/27 10:22:42 $
+ * @version $Revision: 1.19 $, $Date: 2006/01/25 12:57:14 $
  * @module schemeclient
  */
 
@@ -51,6 +53,7 @@ public class SchemeResource {
 	
 	private static SchemePath schemePath;
 	private static boolean isEditing = false;
+	private static ApplicationContext aContext = null;
 	/**
 	 * Set of AbstractSchemeElements Identifiers
 	 */
@@ -60,11 +63,33 @@ public class SchemeResource {
 
 	public SchemeResource(SchemeGraph graph) {
 		this.graph = graph;
+		aContext = graph.aContext;
 	}
 
 	public static void setSchemePath(SchemePath path, boolean forEdit) {
 		schemePath = path;
 		isEditing = forEdit;
+		
+		if (aContext != null) {
+			ApplicationModel aModel = aContext.getApplicationModel();
+			if (path == null) {
+				aModel.setEnabled("menuPathNew", true);
+				aModel.setEnabled("menuPathEdit", false);
+				aModel.setEnabled("menuPathSave", false);
+				aModel.setEnabled("menuPathCancel", false);
+			} else if (forEdit) {
+				aModel.setEnabled("menuPathNew", false);
+				aModel.setEnabled("menuPathEdit", false);
+				aModel.setEnabled("menuPathSave", true);
+				aModel.setEnabled("menuPathCancel", true);
+			} else {
+				aModel.setEnabled("menuPathNew", true);
+				aModel.setEnabled("menuPathEdit", true);
+				aModel.setEnabled("menuPathSave", false);
+				aModel.setEnabled("menuPathCancel", false);
+			}
+			aModel.fireModelChanged();
+		}
 	}
 	
 //	public static void setCashedPathStart(Identifier pathMemberId) {
