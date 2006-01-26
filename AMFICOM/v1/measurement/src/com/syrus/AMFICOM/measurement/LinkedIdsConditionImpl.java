@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.70 2005/12/09 11:36:13 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.71 2006/01/26 15:15:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/12/09 11:36:13 $
+ * @version $Revision: 1.71 $, $Date: 2006/01/26 15:15:34 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -100,7 +100,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				final Action action = (Action) storableObject;
 				switch (this.linkedEntityCode) {
 					case MEASUREMENT_CODE:
-						final Identifier parentActionId = action.getParentAction().getId();
+						final Identifier parentActionId = action.getParentActionId();
 						condition = super.conditionTest(parentActionId);
 						break;
 					default:
@@ -156,11 +156,15 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				if (this.linkedEntityCode == MEASUREMENT_CODE
 						|| this.linkedEntityCode == ANALYSIS_CODE
 						|| this.linkedEntityCode == MODELING_CODE) {
-					for (Action a = result.getAction(); a != null; a = a.getParentAction()) {
-						if (super.conditionTest(a.getId())) {
-							condition = true;
-							break;
+					try {
+						for (Action a = result.getAction(); a != null; a = a.getParentAction()) {
+							if (super.conditionTest(a.getId())) {
+								condition = true;
+								break;
+							}
 						}
+					} catch (ApplicationException ae) {
+						Log.errorMessage(ae);
 					}
 				} else {
 					throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode

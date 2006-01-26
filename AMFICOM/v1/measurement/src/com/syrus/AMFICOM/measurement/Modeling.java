@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.67 2006/01/19 14:27:15 arseniy Exp $
+ * $Id: Modeling.java,v 1.68 2006/01/26 15:15:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -31,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2006/01/19 14:27:15 $
+ * @version $Revision: 1.68 $, $Date: 2006/01/26 15:15:34 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -75,7 +77,7 @@ public final class Modeling extends Action<Modeling> {
 			version,
 			type,
 			monitoredElementId,
-			null);
+			VOID_IDENTIFIER);
 		this.name = name;
 		this.argumentSet = argumentSet;
 	}
@@ -86,7 +88,7 @@ public final class Modeling extends Action<Modeling> {
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlModeling mt = (IdlModeling) transferable;
-		super.fromTransferable(mt, ModelingType.fromTransferable(mt.type), new Identifier(mt.monitoredElementId), null);
+		super.fromTransferable(mt, ModelingType.fromTransferable(mt.type), new Identifier(mt.monitoredElementId), VOID_IDENTIFIER);
 
 		this.argumentSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mt.argumentSetId), true);
 
@@ -146,7 +148,7 @@ public final class Modeling extends Action<Modeling> {
 				version,
 				type,
 				monitoredElementId,
-				null);
+				VOID_IDENTIFIER);
 		this.name = name;
 		this.argumentSet = argumentSet;
 	}

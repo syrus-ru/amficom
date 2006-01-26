@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisWrapper.java,v 1.16 2005/10/25 19:53:05 bass Exp $
+ * $Id: AnalysisWrapper.java,v 1.17 2006/01/26 15:15:35 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/25 19:53:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2006/01/26 15:15:35 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -70,7 +70,7 @@ public final class AnalysisWrapper extends StorableObjectWrapper<Analysis> {
 				return analysis.getMonitoredElementId();
 			}
 			if (key.equals(COLUMN_MEASUREMENT_ID)) {
-				return analysis.getMeasurement();
+				return analysis.getMeasurementId();
 			}
 			if (key.equals(COLUMN_NAME)) {
 				return analysis.getName();
@@ -93,7 +93,7 @@ public final class AnalysisWrapper extends StorableObjectWrapper<Analysis> {
 				analysis.setMonitoredElementId((Identifier) value);
 			}
 			else if (key.equals(COLUMN_MEASUREMENT_ID)) {
-				analysis.setMeasurement((Measurement) value);
+				analysis.setMeasurementId((Identifier) value);
 			}
 			else if (key.equals(COLUMN_NAME)) {
 				analysis.setName((String) value);
@@ -126,7 +126,7 @@ public final class AnalysisWrapper extends StorableObjectWrapper<Analysis> {
 			return Identifier.class;
 		}
 		if (key.equals(COLUMN_MEASUREMENT_ID)) {
-			return Measurement.class;
+			return Identifier.class;
 		}
 		if (key.equals(COLUMN_NAME)) {
 			return String.class;

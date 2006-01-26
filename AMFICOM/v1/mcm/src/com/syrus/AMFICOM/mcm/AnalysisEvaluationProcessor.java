@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.56 2005/11/29 14:34:19 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.57 2006/01/26 15:15:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/11/29 14:34:19 $
+ * @version $Revision: 1.57 $, $Date: 2006/01/26 15:15:35 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -71,7 +71,7 @@ final class AnalysisEvaluationProcessor {
 
 		final AnalysisType analysisType = test.getAnalysisType();
 		if (!analysisType.equals(AnalysisType.UNKNOWN)) {
-			Analysis analysis = createAnalysis(analysisType, monitoredElementId, measurement, measurementSetup.getCriteriaSet());
+			final Analysis analysis = createAnalysis(analysisType, monitoredElementId, measurement.getId(), measurementSetup.getCriteriaSet());
 			return new Result[] { analyseAndEvaluate(measurementResult, analysis, measurementSetup.getEtalon()) };
 		}
 
@@ -81,7 +81,7 @@ final class AnalysisEvaluationProcessor {
 
 	private static Analysis createAnalysis(final AnalysisType analysisType,
 			final Identifier monitoredElementId,
-			final Measurement measurement,
+			final Identifier measurementId,
 			final ParameterSet criteriaSet) throws AnalysisException {
 		if (criteriaSet == null) {
 			throw new AnalysisException("Criteria set is NULL");
@@ -91,8 +91,8 @@ final class AnalysisEvaluationProcessor {
 			final Analysis analysis = Analysis.createInstance(LoginManager.getUserId(),
 					analysisType,
 					monitoredElementId,
-					measurement,
-					ANALYSIS_NAME + " " + measurement.getId(),
+					measurementId,
+					ANALYSIS_NAME + " " + measurementId,
 					criteriaSet);
 			StorableObjectPool.flush(analysis, LoginManager.getUserId(), false);
 			return analysis;

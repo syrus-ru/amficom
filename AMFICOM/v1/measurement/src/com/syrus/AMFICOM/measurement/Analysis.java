@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.89 2006/01/19 14:27:15 arseniy Exp $
+ * $Id: Analysis.java,v 1.90 2006/01/26 15:15:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2006/01/19 14:27:15 $
+ * @version $Revision: 1.90 $, $Date: 2006/01/26 15:15:34 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -65,7 +65,7 @@ public final class Analysis extends Action<Analysis> {
 			final StorableObjectVersion version,
 			final AnalysisType type,
 			final Identifier monitoredElementId,
-			final Measurement measurement,
+			final Identifier measurementId,
 			final String name,
 			final ParameterSet criteriaSet) {
 		super(id,
@@ -76,7 +76,7 @@ public final class Analysis extends Action<Analysis> {
 					version,
 					type,
 					monitoredElementId,
-					measurement);
+					measurementId);
 
 		this.name = name;
 		this.criteriaSet = criteriaSet;
@@ -91,10 +91,7 @@ public final class Analysis extends Action<Analysis> {
 		super.fromTransferable(at, AnalysisType.fromTransferable(at.type), new Identifier(at.monitoredElementId), null);
 
 		this.name = at.name;
-		final Identifier parentActionId = new Identifier(at.measurementId);
-		super.parentAction = (!parentActionId.equals(Identifier.VOID_IDENTIFIER))
-				? (Action) StorableObjectPool.getStorableObject(parentActionId, true)
-					: null;
+		super.parentActionId = new Identifier(at.measurementId);
 
 		this.criteriaSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(at.criteriaSetId), true);
 
@@ -118,7 +115,7 @@ public final class Analysis extends Action<Analysis> {
 				this.version.longValue(),
 				(IdlAnalysisType) super.type.getIdlTransferable(orb),
 				super.monitoredElementId.getIdlTransferable(),
-				((super.parentAction != null) ? super.parentAction.getId() : Identifier.VOID_IDENTIFIER).getIdlTransferable(),
+				super.parentActionId.getIdlTransferable(),
 				this.name != null ? this.name : "",
 				this.criteriaSet.getId().getIdlTransferable());
 	}
@@ -137,12 +134,18 @@ public final class Analysis extends Action<Analysis> {
 		return ObjectEntities.ANALYSIS_CODE;
 	}
 
-	public Measurement getMeasurement() {
-		return (Measurement) super.parentAction;
+	public Identifier getMeasurementId() {
+		return super.getParentActionId();
+	}
+	
+	public Measurement getMeasurement() throws ApplicationException {
+		return (Measurement) super.getParentAction();
 	}
 
-	public void setMeasurement(final Measurement measurement) {
-		super.parentAction = measurement;
+	public void setMeasurementId(final Identifier measurementId) {
+		assert measurementId.getMajor() == ObjectEntities.MEASUREMENT_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+
+		super.parentActionId = measurementId;
 		super.markAsChanged();
 	}
 
@@ -174,7 +177,7 @@ public final class Analysis extends Action<Analysis> {
 			final StorableObjectVersion version,
 			final AnalysisType type,
 			final Identifier monitoredElementId,
-			final Measurement measurement,
+			final Identifier measurementId,
 			final String name,
 			final ParameterSet criteriaSet) {
 		super.setAttributes(created,
@@ -184,7 +187,7 @@ public final class Analysis extends Action<Analysis> {
 				version,
 				type,
 				monitoredElementId,
-				measurement);
+				measurementId);
 		this.name = name;
 		this.criteriaSet = criteriaSet;
 	}
@@ -203,16 +206,18 @@ public final class Analysis extends Action<Analysis> {
 	public static Analysis createInstance(final Identifier creatorId,
 			final AnalysisType type,
 			final Identifier monitoredElementId,
-			final Measurement measurement,
+			final Identifier measurementId,
 			final String name,
 			final ParameterSet criteriaSet) throws CreateObjectException {
+		assert measurementId.getMajor() == ObjectEntities.MEASUREMENT_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+
 		try {
 			final Analysis analysis = new Analysis(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_CODE),
 				creatorId,
 				StorableObjectVersion.INITIAL_VERSION,
 				type,
 				monitoredElementId,
-				measurement,
+				measurementId,
 				name,
 				criteriaSet);
 
@@ -243,11 +248,7 @@ public final class Analysis extends Action<Analysis> {
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 
-		//	Measurement, if exists
-		if (super.parentAction != null) {
-			dependencies.add(super.parentAction);
-		}
-
+		dependencies.add(super.parentActionId);	//VOID_IDENTIFIER replaced in StorableObject#getDependencies()
 		dependencies.add(this.criteriaSet);
 		return dependencies;
 	}

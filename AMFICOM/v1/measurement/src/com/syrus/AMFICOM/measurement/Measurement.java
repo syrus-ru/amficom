@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.100 2006/01/19 14:27:15 arseniy Exp $
+ * $Id: Measurement.java,v 1.101 2006/01/26 15:15:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -33,7 +35,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStat
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.100 $, $Date: 2006/01/19 14:27:15 $
+ * @version $Revision: 1.101 $, $Date: 2006/01/26 15:15:35 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -89,7 +91,7 @@ public final class Measurement extends Action<Measurement> {
 				version,
 				type,
 				monitoredElementId,
-				null);
+				VOID_IDENTIFIER);
 		this.name = name;
 		this.setup = setup;
 		this.startTime = startTime;
@@ -107,7 +109,7 @@ public final class Measurement extends Action<Measurement> {
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlMeasurement mt = (IdlMeasurement) transferable;
-		super.fromTransferable(mt, MeasurementType.fromTransferable(mt.type), new Identifier(mt.monitoredElementId), null);
+		super.fromTransferable(mt, MeasurementType.fromTransferable(mt.type), new Identifier(mt.monitoredElementId), VOID_IDENTIFIER);
 
 		this.setup = (MeasurementSetup) StorableObjectPool.getStorableObject(new Identifier(mt.setupId), true);
 
@@ -217,7 +219,7 @@ public final class Measurement extends Action<Measurement> {
 			version,
 			type,
 			monitoredElementId,
-			null);
+			VOID_IDENTIFIER);
 		this.name = name;
 		this.setup = setup;
 		this.startTime = startTime;
