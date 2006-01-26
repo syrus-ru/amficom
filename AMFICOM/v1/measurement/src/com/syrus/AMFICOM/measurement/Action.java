@@ -1,11 +1,13 @@
 /*
- * $Id: Action.java,v 1.42 2005/10/25 19:53:05 bass Exp $
+ * $Id: Action.java,v 1.43 2006/01/26 15:15:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import java.util.Date;
 
@@ -19,8 +21,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/10/25 19:53:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.43 $, $Date: 2006/01/26 15:15:08 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -31,7 +33,7 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 	ActionType type;
 	Identifier monitoredElementId;
 
-	Action parentAction;
+	Identifier parentActionId;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -51,7 +53,7 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 			final StorableObjectVersion version,
 			final ActionType type,
 			final Identifier monitoredElementId,
-			final Action parentAction) {
+			final Identifier parentActionId) {
 		super(id,
 				created,
 				modified,
@@ -61,7 +63,7 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 		this.type = type;
 		this.monitoredElementId = monitoredElementId;
 
-		this.parentAction = parentAction;
+		this.parentActionId = parentActionId;
 	}
 
 	/**
@@ -70,12 +72,12 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 	protected synchronized void fromTransferable(final IdlStorableObject transferable,
 			final ActionType type1,
 			final Identifier monitoredElementId1,
-			final Action parentAction1) throws ApplicationException {
+			final Identifier parentActionId1) throws ApplicationException {
 		super.fromTransferable(transferable);
 		this.type = type1;
 		this.monitoredElementId = monitoredElementId1;
 
-		this.parentAction = parentAction1;
+		this.parentActionId = parentActionId1;
 	}
 	
 	/**
@@ -89,7 +91,8 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 		return super.isValid()
 				&& this.type != null
 				&& this.monitoredElementId != null
-				&& (entityCode == ObjectEntities.MEASUREMENT_CODE || entityCode == ObjectEntities.MODELING_CODE || this.parentAction != null);
+				&& this.parentActionId != null
+				&& (entityCode == ObjectEntities.MEASUREMENT_CODE || entityCode == ObjectEntities.MODELING_CODE || this.parentActionId != VOID_IDENTIFIER);
 	}
 
 	public ActionType<?> getType() {
@@ -108,8 +111,7 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 	 *         {@link Action}.
 	 * @throws ApplicationException
 	 */
-	public final MonitoredElement getMonitoredElement()
-	throws ApplicationException {
+	public final MonitoredElement getMonitoredElement() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.getMonitoredElementId(), true);
 	}
 
@@ -128,7 +130,7 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 			final StorableObjectVersion version,
 			final ActionType type,
 			final Identifier monitoredElementId,
-			final Action parentAction) {
+			final Identifier parentActionId) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -137,7 +139,7 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 		this.type = type;
 		this.monitoredElementId = monitoredElementId;
 
-		this.parentAction = parentAction;
+		this.parentActionId = parentActionId;
 	}
 
 	public abstract Result createResult(final Identifier resultCreatorId, final Parameter[] parameters)
@@ -146,7 +148,11 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 	/**
 	 * @return Returns the parentAction.
 	 */
-	protected final Action getParentAction() {
-		return this.parentAction;
+	protected final Action getParentAction() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getParentActionId(), true);
+	}
+
+	protected final Identifier getParentActionId() {
+		return this.parentActionId;
 	}
 }
