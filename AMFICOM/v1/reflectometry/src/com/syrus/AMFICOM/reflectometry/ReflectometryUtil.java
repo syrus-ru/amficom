@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryUtil.java,v 1.2 2005/10/10 09:51:22 saa Exp $
+ * $Id: ReflectometryUtil.java,v 1.3 2006/01/26 16:10:14 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.reflectometry;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/10/10 09:51:22 $
+ * @version $Revision: 1.3 $, $Date: 2006/01/26 16:10:14 $
  * @module
  */
 public final class ReflectometryUtil {
@@ -25,6 +25,12 @@ public final class ReflectometryUtil {
 	 * Секунды.
 	 */
 	private static final double UPPER_AGENT_TIME = 30.0;
+
+	/**
+	 * Время запаса.
+	 * Может компенсировать непредсказуемость времени переключения OTAU.
+	 */
+	private static final double SAFE_TIME = 20.0;
 
 	/**
 	 * Оценивает время проведения измерения на QP1640A.
@@ -76,6 +82,8 @@ public final class ReflectometryUtil {
 			final ReflectometryMeasurementParameters rmp) {
 		// складываем время собственно измерения
 		// и время программной обработки и сетевой передачи
-		return getEstimatedQP1640ATestTime(rmp, true) + UPPER_AGENT_TIME;
+		return getEstimatedQP1640ATestTime(rmp, true)
+				+ UPPER_AGENT_TIME
+				+ SAFE_TIME;
 	}
 }
