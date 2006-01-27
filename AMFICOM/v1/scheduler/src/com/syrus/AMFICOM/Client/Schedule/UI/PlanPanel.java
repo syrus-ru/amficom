@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.71 2006/01/24 14:33:26 bob Exp $
+ * $Id: PlanPanel.java,v 1.72 2006/01/27 14:44:49 bob Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,10 +51,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
+import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2006/01/24 14:33:26 $
+ * @version $Revision: 1.72 $, $Date: 2006/01/27 14:44:49 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -357,9 +358,9 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		this.startDate = start;
 		if (start != null) {
 			this.cal.setTime(start);
-			if (this.scale > 1) {
-				this.cal.set(Calendar.MINUTE, 0);
-			}
+//			if (this.scale > 1) {
+//				this.cal.set(Calendar.MINUTE, 0);
+//			}
 			this.cal.set(Calendar.SECOND, 0);
 
 //			// округляем до шага
@@ -390,7 +391,9 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	@Override
 	public String getToolTipText(final MouseEvent event) {
 		final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-		return sdf.format(this.getDateByMousePosition(event)) + ", (" + event.getX() + ", " + event.getY()+")";
+		return sdf.format(this.getDateByMousePosition(event))
+//			+ ", (" + event.getX() + ", " + event.getY()+")"
+			;
 	}
 
 	public void actionPerformed(final ActionEvent e) {
@@ -441,8 +444,8 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	private final void paintScale(final Graphics g,
 	                                final long diff,
 	                                final double subDelta) {
-		final int h = getHeight() - 1;
-		final int w = getWidth();
+		final int h = super.getHeight() - 1;
+		final int w = super.getWidth();
 
 		long tmpDiff = diff;
 		if (subDelta > 60) {
@@ -459,8 +462,8 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		final long end = PlanPanel.this.scaleEnd.getTime();
 		
 		this.cal.setTimeInMillis(start);
-		this.cal.set(Calendar.HOUR_OF_DAY, 0);
-		this.cal.set(Calendar.MINUTE, 0);
+//		this.cal.set(Calendar.HOUR_OF_DAY, 0);
+//		this.cal.set(Calendar.MINUTE, 0);
 
 		long start2 = this.cal.getTimeInMillis(); 
 		
@@ -542,7 +545,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			    w = this.startPosition.x - this.currentPosition.x;
 			}
 			
-			g.fillRect(x, 0, w, this.getHeight());
+			g.fillRect(x, 0, w, super.getHeight());
 			g.setColor(color);
 		}
 	}
@@ -639,12 +642,12 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			}
 			
 			this.cal.setTime(this.startDate);
-			if (this.actualScale > 3) {
-				this.cal.set(Calendar.HOUR_OF_DAY, 0);
-			} 
-			if (this.actualScale > 2) {
+//			if (this.actualScale > 3) {
+//				this.cal.set(Calendar.HOUR_OF_DAY, 0);
+//			} 
+//			if (this.actualScale > 2) {
 				this.cal.set(Calendar.MINUTE, 0);
-			}
+//			}
 			this.cal.set(Calendar.SECOND, 0);
 		}
 		
@@ -738,6 +741,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		for (final Identifier monitoredElementId : this.testLines.keySet()) {
 			final TestLine testLine = this.testLines.get(monitoredElementId);
 			this.add(testLine);
+			testLine.updateTest();
 		}
 
 		super.setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));

@@ -162,7 +162,6 @@ final class TestLine extends TimeLine {
 		this.title = title;
 		this.monitoredElementId = monitoredElementId;
 		this.testIds = new HashSet<Identifier>();
-		this.acquireTests(null);
 
 		this.dispatcher = aContext.getDispatcher();
 		this.setToolTipText("");
@@ -564,8 +563,9 @@ final class TestLine extends TimeLine {
 	}
 	
 	private void acqureTest(final Test test) throws ApplicationException {
-		
-		Log.debugMessage(test, Log.DEBUGLEVEL09);
+		final PlanPanel planPanel = (PlanPanel) this.getParent();
+		final Date start1 = planPanel.startDate;
+		final Date end1 = planPanel.scaleEnd;
 		
 		final Identifier testId = test.getId();
 		
@@ -575,7 +575,9 @@ final class TestLine extends TimeLine {
 		final long measurementDuration = measurementSetup.getMeasurementDuration();
 		final SortedMap<Date, String> stoppings = test.getStoppingMap();
 		final Date testTime = test.getStartTime();
-
+		if (testTime.compareTo(end1) > 0) {
+			return;
+		}
 		final TestStatus status = test.getStatus();
 		Color selectedColor = SchedulerModel.getColor(status, true);
 		Color color = SchedulerModel.getColor(status, false);
@@ -602,6 +604,11 @@ final class TestLine extends TimeLine {
 				final SortedSet<Date> times = temporalPattern.getTimes(testTime, test.getEndTime());
 				if (status != TestStatus.TEST_STATUS_COMPLETED) {
 					for(final Date date : times) {
+						
+						if (date.compareTo(start1) < 0 || date.compareTo(end1) > 0) {
+							continue;
+						}
+						
 						final TestTimeLine testTimeLine = new TestTimeLine();
 						testTimeLine.testId = testId;
 						final long time = date.getTime();
@@ -651,6 +658,9 @@ final class TestLine extends TimeLine {
 					}
 				} else {
 					for(final Date date : times) {
+						if (date.compareTo(start1) < 0 || date.compareTo(end1) > 0) {
+							continue;
+						}
 						final TestTimeLine testTimeLine = new TestTimeLine();
 						testTimeLine.testId = testId;
 						final long time = date.getTime();
@@ -688,6 +698,9 @@ final class TestLine extends TimeLine {
 			}
 				break;
 			default:
+				if (testTime.compareTo(start1) < 0) {
+					return;
+				}
 				TestTimeLine testTimeLine = new TestTimeLine();
 				testTimeLine.testId = testId;
 				
@@ -724,10 +737,10 @@ final class TestLine extends TimeLine {
 	
 	@SuppressWarnings("unchecked")
 	private void acquireTests(final Set<Identifier> testIds) {
-		
 		if (testIds != null && testIds.isEmpty()) {
 			return;
 		}
+
 		synchronized (this) {
 			if (testIds == null) {
 				this.testIds.clear();
