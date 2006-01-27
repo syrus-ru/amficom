@@ -109,7 +109,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 					+ codename 
 					+ ", className " 
 					+ className, 
-				Log.DEBUGLEVEL10);
+				Log.DEBUGLEVEL08);
 			this.panels.put(codename, new UIDefaults.LazyValue() {
 
 				public Object createValue(UIDefaults table) {
@@ -342,12 +342,22 @@ final class TestParametersPanel implements PropertyChangeListener {
 	
 	public void setMeasurementSetup(final MeasurementSetup measurementSetup, 
 	                                final boolean switchToSetups) {
+		
+
+		
 		this.testSetups.clearSelection();
 		this.measurementSetupId = measurementSetup != null ? measurementSetup.getId() : Identifier.VOID_IDENTIFIER;
 		if (measurementSetup == null || this.msList == null) {
 			return;
 		}
 
+		try {
+			this.changeMonitoredElement(measurementSetup.getMonitoredElementIds().iterator().next());
+		} catch (ApplicationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		if (switchToSetups && !this.useSetupsCheckBox.isSelected()) {
 			this.useSetupsCheckBox.doClick();
 		}
@@ -479,13 +489,16 @@ final class TestParametersPanel implements PropertyChangeListener {
 		final MeasurementPort port = StorableObjectPool.getStorableObject(me.getMeasurementPortId(), true);
 		this.switchPanel.removeAll();
 
-		this.parametersTestPanel = (ParametersTestPanel) this.panels.get(port.getType().getCodename());
+		final String codename = port.getType().getCodename();
+		this.parametersTestPanel = (ParametersTestPanel) this.panels.get(codename);
 		if (this.parametersTestPanel != null) {
 			this.parametersTestPanel.setMonitoredElement(me);
 			this.switchPanel.add(this.parametersTestPanel, "");
 			this.patternPanel.revalidate();
 			this.parametersTestPanel.setEnableEditing(!this.useSetupsCheckBox.isSelected());
 			this.setEnableEditing(this.useSetupsCheckBox.isSelected());
+		} else {
+			Log.errorMessage("Port type codename '" + codename + "' does not support");
 		}
 	}
 
