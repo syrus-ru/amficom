@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.32 2005/12/17 12:11:21 arseniy Exp $
+ * $Id: CronTemporalPattern.java,v 1.33 2006/01/30 11:20:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPatternHelper;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/12/17 12:11:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2006/01/30 11:20:49 $
+ * @author $Author: bob $
  * @module measurement
  */
 
@@ -921,6 +921,14 @@ public final class CronTemporalPattern extends AbstractTemporalPattern<CronTempo
 		return collection;
 	}
 
+	@Override
+	public final SortedSet<Date> getTimes(final Date start,
+		final Date end,
+		final Date startInterval,
+		final Date endInterval) {
+		throw new UnsupportedOperationException("CronTemporalPattern.getTimes() is unsupported");
+	}
+	
 	/**
 	 * fill times in ms that describes by temporal patterns and between start
 	 * and end

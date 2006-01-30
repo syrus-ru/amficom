@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractTemporalPattern.java,v 1.11 2005/10/25 19:53:05 bass Exp $
+ * $Id: AbstractTemporalPattern.java,v 1.12 2006/01/30 11:20:49 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/25 19:53:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2006/01/30 11:20:49 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
@@ -98,4 +98,16 @@ public abstract class AbstractTemporalPattern<T extends AbstractTemporalPattern<
 	}
 
 	protected abstract void fillTimes();
+	
+	/**
+	 * @param start 
+	 * @param end
+	 * @param startInterval
+	 * @param endInterval
+	 * @return subtimes of (start, end) interval of (startInterval, endInterval)
+	 */
+	public abstract SortedSet<Date> getTimes(final Date start, 
+		final Date end,
+		final Date startInterval, 
+		final Date endInterval); 
 }

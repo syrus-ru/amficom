@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.41 2005/12/17 12:11:21 arseniy Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.42 2006/01/30 11:20:49 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/12/17 12:11:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.42 $, $Date: 2006/01/30 11:20:49 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
@@ -158,6 +158,14 @@ public final class IntervalsTemporalPattern
 		return super.isValid() && this.intervalsAbstractTemporalPatternMap != null;
 	}
 
+	@Override
+	public final SortedSet<Date> getTimes(final Date start,
+		final Date end,
+		final Date startInterval,
+		final Date endInterval) {
+		throw new UnsupportedOperationException("IntervalsTemporalPattern.getTimes() is unsupported");
+	}
+	
 	@Override
 	protected void fillTimes() {
 		AbstractTemporalPattern previousTemporalPattern = null;

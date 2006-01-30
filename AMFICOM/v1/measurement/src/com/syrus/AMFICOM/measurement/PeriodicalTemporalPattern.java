@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.28 2005/12/17 12:11:21 arseniy Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.29 2006/01/30 11:20:49 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,6 +11,8 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
 
@@ -29,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
 
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/12/17 12:11:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2006/01/30 11:20:49 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
@@ -131,12 +133,51 @@ public final class PeriodicalTemporalPattern
 	 */
 	@Override
 	protected void fillTimes() {
+		try {
+			throw new Exception("PeriodicalTemporalPattern.fillTimes");
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+		
+
 		if (this.period > this.endTime - this.startTime) {
 			return;
 		}
 		for (long time = this.startTime; time <= this.endTime; time += this.period) {
 			this.times.add(new Date(time));
 		}
+	}
+	
+	@Override
+	public final SortedSet<Date> getTimes(final Date start,
+		final Date end,
+		final Date startInterval,
+		final Date endInterval) {
+		
+		if (start.compareTo(end) >= 0) {
+			throw new IllegalArgumentException("Start date later than end date");
+		}
+		
+		if (startInterval.compareTo(endInterval) >= 0) {
+			throw new IllegalArgumentException("Start interval date later than end interval date");
+		}
+		
+		final long start0 = start.getTime();
+		
+		final long end0 = endInterval.compareTo(end) < 0 ? 
+				endInterval.getTime() : 
+				end.getTime();
+		
+		final long startTime0 = start.compareTo(startInterval) < 0 ? 
+				start0 + this.period * (1 + (int)(startInterval.getTime() - start0) / this.period) :
+				start0;
+				
+		final SortedSet<Date> times1 = new TreeSet<Date>();
+		for(long time = startTime0; time <= end0; time += this.period) {
+			times1.add(new Date(time));
+		}
+		
+		return times1;
 	}
 	
 	/**
