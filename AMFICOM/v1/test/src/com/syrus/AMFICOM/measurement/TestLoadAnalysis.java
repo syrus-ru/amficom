@@ -1,5 +1,5 @@
 /*
- * $Id: TestLoadAnalysis.java,v 1.3 2006/01/20 10:35:52 saa Exp $
+ * $Id: TestLoadAnalysis.java,v 1.4 2006/01/30 10:04:25 saa Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2006/01/20 10:35:52 $
+ * @version $Revision: 1.4 $, $Date: 2006/01/30 10:04:25 $
  * @author $Author: saa $
  * @module test
  */
@@ -67,7 +67,7 @@ public final class TestLoadAnalysis extends TestCase {
 			System.out.println("test " + i + ": " + objects.size()
 					+ " Storable Objects received in " + timeMs + " ms");
 			tooLong |= timeMs > 1000.0; // require every result loaded within 1000 ms
-			assertTrue(timeMs < 2500.0);
+			assertTrue(timeMs < (i == 0 ? 7000.0 : 2500.0));
 			dtSum += timeMs;
 		}
 		System.out.println("average dt = " + dtSum / steps + " ms");
