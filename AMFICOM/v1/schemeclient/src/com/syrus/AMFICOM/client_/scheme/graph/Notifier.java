@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.23 2005/10/31 12:30:29 bass Exp $
+ * $Id: Notifier.java,v 1.24 2006/01/30 14:51:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,9 +22,7 @@ import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_
 import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_PROTOELEMENT;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -51,10 +49,6 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemePortPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemePropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeProtoElementPropertiesManager;
 import com.syrus.AMFICOM.general.Identifiable;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
@@ -68,8 +62,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKi
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/10/31 12:30:29 $
+ * @author $Author: stas $
+ * @version $Revision: 1.24 $, $Date: 2006/01/30 14:51:11 $
  * @module schemeclient
  */
 
@@ -79,7 +73,7 @@ public class Notifier {
 	}
 
 	public static void notify(SchemeGraph graph, ApplicationContext aContext, Object object) {
-		if (graph.getMode().equals(Constants.RACK_MODE)) {
+		if (SchemeGraph.getMode().equals(Constants.RACK_MODE)) {
 			Log.debugMessage("do not notify in rack mode", Level.FINEST);
 			return;
 		}
@@ -233,7 +227,7 @@ public class Notifier {
 				Log.debugMessage(message, Level.FINEST);
 				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object, null, OTHER_OBJECT));
 			} else {
-				if (graph.getMode().equals(Constants.RACK_MODE)) {
+				if (SchemeGraph.getMode().equals(Constants.RACK_MODE)) {
 					selectedType += ObjectSelectedEvent.INRACK;
 				}
 				Log.debugMessage(Notifier.class.getSimpleName() + " | selected object with id " + selectedObject.getId() , Level.FINEST); //$NON-NLS-1$
@@ -279,7 +273,7 @@ public class Notifier {
 				}
 			}
 			if (selectedType != 0) {
-				if (graph.getMode().equals(Constants.RACK_MODE)) {
+				if (SchemeGraph.getMode().equals(Constants.RACK_MODE)) {
 					selectedType += ObjectSelectedEvent.INRACK;
 				}
 				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, selectedObjects, 
@@ -288,7 +282,6 @@ public class Notifier {
 		}
 		} catch (Exception e) {
 			Log.errorMessage(e);
-			graph.clearSelection();
 		}
 	}
 }
