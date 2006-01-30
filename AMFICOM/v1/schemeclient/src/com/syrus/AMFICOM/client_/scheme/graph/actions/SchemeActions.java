@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.60 2006/01/25 13:19:54 stas Exp $
+ * $Id: SchemeActions.java,v 1.61 2006/01/30 14:49:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,6 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
-import com.syrus.AMFICOM.client_.scheme.graph.Notifier;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
@@ -103,7 +102,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.60 $, $Date: 2006/01/25 13:19:54 $
+ * @version $Revision: 1.61 $, $Date: 2006/01/30 14:49:11 $
  * @module schemeclient
  */
 
@@ -1294,13 +1293,14 @@ public class SchemeActions {
 		return true;
 	}
 
-	public static boolean disconnectSchemeLink(SchemeGraph graph, DefaultLink link,
+	public static void disconnectSchemeLink(SchemeGraph graph, DefaultLink link,
 			PortCell port, boolean is_source) {
 		
 		SchemeLink sl = link.getSchemeLink();
 		if (sl == null) {
-			Log.debugMessage("GraphActions.disconnectSchemeLink() link not found " + link.getSchemeLinkId(), Level.WARNING); //$NON-NLS-1$
-			return false;
+			Log.debugMessage("No link found with id " + link.getSchemeLinkId() 
+					+ "; skip disconnect", Level.FINER);
+			return;
 		}
 		
 		// check for valid SchemePath changes
@@ -1348,7 +1348,6 @@ public class SchemeActions {
 		if (sp != null) {
 			GraphActions.setObjectBackColor(graph, port, determinePortColor(sp, null));
 		}
-		return true;
 	}
 
 	public static boolean isIgnoreCheck() {
@@ -1439,6 +1438,12 @@ public class SchemeActions {
 	public static void disconnectSchemeCableLink(SchemeGraph graph,
 			DefaultCableLink link, CablePortCell port, boolean is_source) {
 		SchemeCableLink sl = link.getSchemeCableLink();
+		
+		if (sl == null) {
+			Log.debugMessage("No cable link found with id " + link.getSchemeCableLinkId() 
+					+ "; skip disconnect", Level.FINER);
+			return;
+		}
 
 		try {
 		PathElement pe = SchemeActions.getSelectedPathElement(link);

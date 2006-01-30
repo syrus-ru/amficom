@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.32 2005/10/31 12:30:28 bass Exp $
+ * $Id: DeleteAction.java,v 1.33 2006/01/30 14:49:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,12 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
-import static java.util.logging.Level.SEVERE;
-
 import java.awt.event.ActionEvent;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
@@ -32,7 +31,6 @@ import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.LangModelGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
-import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortEdge;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
@@ -58,8 +56,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKi
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.33 $, $Date: 2006/01/30 14:49:11 $
  * @module schemeclient
  */
 
@@ -226,6 +224,8 @@ public class DeleteAction extends AbstractAction {
 			scheme.setParentSchemeElement(null, false);
 			if (se != null) {
 				objectsToDelete.add(se.getId());
+			} else {
+				Log.debugMessage("DeleteAction.deleteScheme(): parent SchemeElement not found for scheme " + scheme.getName()+ "(" + scheme.getId() + ")" + "; only delete graph cell", Level.FINER);
 			}
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
@@ -236,8 +236,9 @@ public class DeleteAction extends AbstractAction {
 		objectsToDelete.add(element.getId());
 		if (element.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER) {
 			try {
-				if(element.getEquipment() != null)
+				if(element.getEquipment() != null) {
 					objectsToDelete.add(element.getEquipment().getId());
+				}
 				for (Iterator it = element.getSchemeLinks(false).iterator(); it.hasNext();) {
 					objectsToDelete.add(((SchemeLink)it.next()).getId());
 				}
@@ -297,22 +298,34 @@ public class DeleteAction extends AbstractAction {
 			if (group.getType() == DeviceGroup.SCHEME_ELEMENT) {
 				SchemeElement element = group.getSchemeElement();
 				
-				if (element.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
-					Scheme scheme = element.getScheme(false);
-					deleteScheme(scheme);
+				if (element != null) {
+					if (element.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
+						Scheme scheme = element.getScheme(false);
+						deleteScheme(scheme);
+					} else {
+						deleteSchemeElement(element);
+					}
 				} else {
-					deleteSchemeElement(element);
+					Log.debugMessage("DeleteAction.deleteDeviceGroup(): no SchemeElement found with id " + group.getElementId() + "; only delete graph cell", Level.FINER);
 				}
 			} else if (group.getType() == DeviceGroup.PROTO_ELEMENT) {
 				SchemeProtoElement element = group.getProtoElement();
-				deleteSchemeProtoElement(element);
+				if (element != null) {
+					deleteSchemeProtoElement(element);
+				} else {
+					Log.debugMessage("DeleteAction.deleteDeviceGroup(): no proto found with id " + group.getElementId() + "; only delete graph cell", Level.FINER);
+				}
 				// FIXME can't check childs while object itself not saved
 //				for (Iterator it = element.getSchemeProtoElements().iterator(); it.hasNext();) {
 //					this.objectsToDelete.add(((SchemeElement)it.next()).getId());
 //				}
 			} else if (group.getType() == DeviceGroup.SCHEME) {
 				Scheme scheme = group.getScheme();
-				deleteScheme(scheme);
+				if (scheme != null) {
+					deleteScheme(scheme);
+				} else {
+					Log.debugMessage("DeleteAction.deleteDeviceGroup(): no scheme found with id " + group.getElementId() + "; only delete graph cell", Level.FINER);
+				}
 			}
 		} catch (final Exception ae) {
 			Log.errorMessage(ae);
@@ -323,28 +336,33 @@ public class DeleteAction extends AbstractAction {
 		cellsToDelete.add(cell);
 		SchemeCableLink link = cell.getSchemeCableLink();
 		
-		if (cell.getSource() != null) {
-			DefaultPort p = (DefaultPort)cell.getSource();
-			if(p.getParent() instanceof CablePortCell) {
-				SchemeActions.disconnectSchemeCableLink(graph, cell, (CablePortCell)p.getParent(), true);		
+		if (link != null) {
+			if (cell.getSource() != null) {
+				DefaultPort p = (DefaultPort)cell.getSource();
+				if(p.getParent() instanceof CablePortCell) {
+					SchemeActions.disconnectSchemeCableLink(graph, cell, (CablePortCell)p.getParent(), true);		
+				}
 			}
-		}
-		if (cell.getTarget() != null) {
-			DefaultPort p = (DefaultPort)cell.getTarget();
-			if(p.getParent() instanceof CablePortCell) {
-				SchemeActions.disconnectSchemeCableLink(graph, cell, (CablePortCell)p.getParent(), false);		
+			if (cell.getTarget() != null) {
+				DefaultPort p = (DefaultPort)cell.getTarget();
+				if(p.getParent() instanceof CablePortCell) {
+					SchemeActions.disconnectSchemeCableLink(graph, cell, (CablePortCell)p.getParent(), false);		
+				}
 			}
-		}
-		if (link.getAbstractLink() != null) {
-			objectsToDelete.add(link.getAbstractLink().getId());
-		}
-		objectsToDelete.add(link.getId());
-		try {
-			for (SchemeCableThread thread : link.getSchemeCableThreads(false)) {
-				objectsToDelete.add(thread.getId());
+		
+			if (link.getAbstractLink() != null) {
+				objectsToDelete.add(link.getAbstractLink().getId());
 			}
-		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			objectsToDelete.add(link.getId());
+			try {
+				for (SchemeCableThread thread : link.getSchemeCableThreads(false)) {
+					objectsToDelete.add(thread.getId());
+				}
+			} catch (ApplicationException e) {
+				Log.errorMessage(e);
+			}
+		} else {
+			Log.debugMessage("DeleteAction.deleteCableLink(): no link found with id " + cell.getSchemeCableLinkId() + "; only delete graph cell", Level.FINER);
 		}
 	}
 	
@@ -352,23 +370,27 @@ public class DeleteAction extends AbstractAction {
 		cellsToDelete.add(cell);
 		SchemeLink link = cell.getSchemeLink();
 
-		if (cell.getSource() != null) {
-			DefaultPort p = (DefaultPort)cell.getSource();
-			if(p.getParent() instanceof PortCell) {
-				SchemeActions.disconnectSchemeLink(graph, cell, (PortCell)p.getParent(), true);		
+		if (link != null) {
+			if (cell.getSource() != null) {
+				DefaultPort p = (DefaultPort)cell.getSource();
+				if(p.getParent() instanceof PortCell) {
+					SchemeActions.disconnectSchemeLink(graph, cell, (PortCell)p.getParent(), true);		
+				}
 			}
-		}
-		if (cell.getTarget() != null) {
-			DefaultPort p = (DefaultPort)cell.getTarget();
-			if(p.getParent() instanceof PortCell) {
-				SchemeActions.disconnectSchemeLink(graph, cell, (PortCell)p.getParent(), false);		
+			if (cell.getTarget() != null) {
+				DefaultPort p = (DefaultPort)cell.getTarget();
+				if(p.getParent() instanceof PortCell) {
+					SchemeActions.disconnectSchemeLink(graph, cell, (PortCell)p.getParent(), false);		
+				}
 			}
+			
+			if (link.getAbstractLink() != null) {
+				objectsToDelete.add(link.getAbstractLink().getId());
+			}
+			objectsToDelete.add(link.getId());
+		} else {
+			Log.debugMessage("DeleteAction.deleteLink(): no link found with id " + cell.getSchemeLinkId() + "; only delete graph cell", Level.FINER);
 		}
-
-		if (link.getAbstractLink() != null) {
-			objectsToDelete.add(link.getAbstractLink().getId());
-		}
-		objectsToDelete.add(link.getId());
 	}
 	
 	static void deleteBlockPortCell(SchemeGraph graph, BlockPortCell cell) {
@@ -415,19 +437,27 @@ public class DeleteAction extends AbstractAction {
 	
 	static void deletePort(SchemeGraph graph, PortCell cell) {
 		SchemePort port = cell.getSchemePort();
-		if (port.getPort() != null) {
-			objectsToDelete.add(port.getPort().getId());
+		if (port != null) {
+			if (port.getPort() != null) {
+				objectsToDelete.add(port.getPort().getId());
+			}
+			objectsToDelete.add(port.getId());
+		} else {
+			Log.debugMessage("DeleteAction.deletePort(): no port found with id " + cell.getSchemePortId() + "; only delete graph cell", Level.FINER);
 		}
-		objectsToDelete.add(port.getId());
 		deletePort1(graph, cell);
 	}
 	
 	static void deleteCablePort(SchemeGraph graph, CablePortCell cell) {
 		SchemeCablePort port = cell.getSchemeCablePort();
-		if (port.getPort() != null) {
-			objectsToDelete.add(port.getPort().getId());
+		if (port != null) {
+			if (port.getPort() != null) {
+				objectsToDelete.add(port.getPort().getId());
+			}
+			objectsToDelete.add(port.getId());
+		} else {
+			Log.debugMessage("DeleteAction.deleteCablePort(): no port found with id " + cell.getSchemeCablePortId() + "; only delete graph cell", Level.FINER);
 		}
-		objectsToDelete.add(port.getId());
 		deletePort1(graph, cell);
 	}
 	
