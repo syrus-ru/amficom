@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.148 2006/01/30 11:21:10 bob Exp $
+ * $Id: SchedulerModel.java,v 1.149 2006/01/30 13:57:35 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.148 $, $Date: 2006/01/30 11:21:10 $
+ * @version $Revision: 1.149 $, $Date: 2006/01/30 13:57:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -1168,56 +1168,16 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		String result = null;
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.testIds, true);
-			for (final Test test : tests) {				
-				
-				// ignore sub group tests,   
+			for (final Test test : tests) {			
+//				 ignore sub group tests,   
 				// since they are taken into account in the main group test 
 				final Identifier groupTestId = test.getGroupTestId();
-				
 				if (test.getId().equals(testId) ||
 						!groupTestId.isVoid() && !test.getId().equals(groupTestId)) {
 					continue;
-				}			
+				}	
 				
-				{		
-					final MonitoredElement monitoredElement = 
-						StorableObjectPool.getStorableObject(monitoredElementId, true);
-					
-					final MeasurementPort measurementPort = 
-						StorableObjectPool.getStorableObject(monitoredElement.getMeasurementPortId(), true);
-					
-					if (!test.getKISId().equals(measurementPort.getKISId())) {
-						continue;
-					}
-				}
-				
-				final TestView view = TestView.valueOf(test);
-				
-				final Date firstDate = view.getFirstDate();
-				final Date lastDate = view.getLastDate();
-				
-				// rough estimation of intersection
-				final boolean before = times.last().before(firstDate);
-				final boolean after = times.first().after(lastDate);
-				if (before || after) {
-					Log.debugMessage("rough estimation of intersection that inspected time is "
-						+ (after ? "after" : "before") 
-						+ " test " + test.getId(),
-						Log.DEBUGLEVEL09);
-					continue;
-				}
-				
-				for(final Date stDate : times) {
-					Date enDate = localStartEndTimeMap.get(stDate);
-					if (enDate == null) {
-						enDate = new Date(stDate.getTime() + measurementDuration);
-						localStartEndTimeMap.put(stDate, enDate);
-					}
-
-					if ((result = this.isIntersect(test, stDate, enDate)) != null) {
-						break;
-					}
-				}
+				result = isValid0(monitoredElementId, test, times, localStartEndTimeMap, measurementDuration);
 				
 				if (result != null) {
 					break;
@@ -1229,6 +1189,53 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		}
 		Log.debugMessage("return " + result, Log.DEBUGLEVEL10);
 		return result;
+	}
+	
+	private String isValid0(final Identifier monitoredElementId,
+	                        final Test test,
+	                        final SortedSet<Date> times,
+	                        final Map<Date, Date> localStartEndTimeMap,
+	                        final long measurementDuration) throws ApplicationException {				
+		
+		final MonitoredElement monitoredElement1 = 
+			StorableObjectPool.getStorableObject(monitoredElementId, true);
+		
+		final MeasurementPort measurementPort = 
+			StorableObjectPool.getStorableObject(monitoredElement1.getMeasurementPortId(), true);
+		
+		if (!test.getKISId().equals(measurementPort.getKISId())) {
+			return null;
+		}
+		
+		final TestView view = TestView.valueOf(test);
+		
+		final Date firstDate = view.getFirstDate();
+		final Date lastDate = view.getLastDate();
+		
+		// rough estimation of intersection
+		final boolean before = times.last().before(firstDate);
+		final boolean after = times.first().after(lastDate);
+		if (before || after) {
+			Log.debugMessage("rough estimation of intersection that inspected time is "
+				+ (after ? "after" : "before") 
+				+ " test " + test.getId(),
+				Log.DEBUGLEVEL03);
+			return null;
+		}
+		
+		for(final Date stDate : times) {
+			Date enDate = localStartEndTimeMap.get(stDate);
+			if (enDate == null) {
+				enDate = new Date(stDate.getTime() + measurementDuration);
+				localStartEndTimeMap.put(stDate, enDate);
+			}
+			String result;
+			if ((result = this.isIntersect(test, stDate, enDate)) != null) {
+				return result;
+			}
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -1247,23 +1254,57 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	                       final MeasurementSetup measurementSetup) 
 	throws ApplicationException {
 		
-		final long interval = 30L * 24L * 60L * 60L * 1000L;
-		Date start = startDate;
-		while(start.compareTo(endDate) < 0) {
-			final Date end = new Date(start.getTime() + interval);
-			final SortedSet<Date> times = this.getTestTimes(temporalPattern, startDate, endDate, start, end, 0L); 
-			
-			final String result = this.isValid0(monitoredElementId, 
-				times, 
-				measurementSetup, 
-				Identifier.VOID_IDENTIFIER);
-			if (result != null) {
-				Log.debugMessage("return " + result, Log.DEBUGLEVEL10);
-				return result;
+		final TypicalCondition startTypicalCondition = 
+			new TypicalCondition(endDate,
+				endDate,
+				OperationSort.OPERATION_LESS_EQUALS,
+				ObjectEntities.TEST_CODE,
+				TestWrapper.COLUMN_START_TIME);
+		final TypicalCondition endTypicalCondition = 
+			new TypicalCondition(startDate,
+				startDate,
+				OperationSort.OPERATION_GREAT_EQUALS,
+				ObjectEntities.TEST_CODE,
+				TestWrapper.COLUMN_END_TIME);
+		
+		final LinkedIdsCondition monitoredElementCondition = 
+			new LinkedIdsCondition(monitoredElementId, ObjectEntities.TEST_CODE);
+		
+		final Set<StorableObjectCondition> conditions = 
+			new HashSet<StorableObjectCondition>(3);
+		conditions.add(startTypicalCondition);
+		conditions.add(endTypicalCondition);			
+		conditions.add(monitoredElementCondition);
+		
+		final CompoundCondition compoundCondition = 
+			new CompoundCondition(conditions,
+				CompoundConditionSort.AND);
+		
+		final Set<Test> tests = 
+			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, false);
+		
+		final Map<Date, Date> localStartEndTimeMap = new HashMap<Date, Date>();
+		final long measurementDuration = measurementSetup.getMeasurementDuration();
+		
+		for (final Test test : tests) {
+			final long interval = 30L * 24L * 60L * 60L * 1000L;
+			Date start = startDate.compareTo(test.getStartTime()) < 0 ? test.getStartTime() : startDate;
+			Date end2 = endDate.compareTo(test.getEndTime()) < 0 ? endDate : test.getEndTime();  
+//				assert Log.debugMessage(test + ", " + start + ", " + end2, Log.DEBUGLEVEL03);
+			while(start.compareTo(end2) < 0) {
+				final Date end = new Date(start.getTime() + interval);
+				final SortedSet<Date> times = this.getTestTimes(temporalPattern, startDate, end2, start, end, 0L);
+//					assert Log.debugMessage(times.first() + " .. " + times.last(), Log.DEBUGLEVEL03);
+				String result = isValid0(monitoredElementId, test, times, localStartEndTimeMap, measurementDuration);
+				if (result != null) {
+					return result;
+				}
+				start = end;
 			}
-//			assert Log.debugMessage(start + ".." + end, Log.DEBUGLEVEL03);
-			start = end;			
 		}
+		
+		
+		
 		return null;
 	}
 	
@@ -1443,8 +1484,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 		String intersect = null;
 		
-		final Set<Test> groupTests = StorableObjectPool.getStorableObjectsByCondition(
-			new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE), true, true);
+		final LinkedIdsCondition groupTestCondition = new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE);
+		final Set<Test> groupTests = 
+			StorableObjectPool.getStorableObjectsByCondition(groupTestCondition, true);
 		for(final Test groupTest : groupTests) {
 			if ((intersect = this.isIntersect0(groupTest, startDate0, endDate0)) != null) {
 				break;
@@ -1466,7 +1508,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	                            final Date endDate0) 
 	throws ApplicationException {
 		final SortedSet<Date> testTimes = this.getTestTimes(test, startDate0, endDate0, 0);
-		
 		Log.debugMessage(testTimes, Log.DEBUGLEVEL10);
 		
 		final SortedSet<Date> tailSet = testTimes.tailSet(startDate0);
