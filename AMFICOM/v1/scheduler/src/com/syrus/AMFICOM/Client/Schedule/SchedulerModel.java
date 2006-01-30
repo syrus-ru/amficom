@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.147 2006/01/24 08:51:33 bob Exp $
+ * $Id: SchedulerModel.java,v 1.148 2006/01/30 11:21:10 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.147 $, $Date: 2006/01/24 08:51:33 $
+ * @version $Revision: 1.148 $, $Date: 2006/01/30 11:21:10 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -1247,20 +1247,31 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	                       final MeasurementSetup measurementSetup) 
 	throws ApplicationException {
 		
-		final SortedSet<Date> times = this.getTestTimes(temporalPattern, startDate, endDate, 0L); 
-		
-		final String result = this.isValid0(monitoredElementId, 
-			times, 
-			measurementSetup, 
-			Identifier.VOID_IDENTIFIER);
-		
-		Log.debugMessage("return " + result, Log.DEBUGLEVEL10);
-		return result;
+		final long interval = 30L * 24L * 60L * 60L * 1000L;
+		Date start = startDate;
+		while(start.compareTo(endDate) < 0) {
+			final Date end = new Date(start.getTime() + interval);
+			final SortedSet<Date> times = this.getTestTimes(temporalPattern, startDate, endDate, start, end, 0L); 
+			
+			final String result = this.isValid0(monitoredElementId, 
+				times, 
+				measurementSetup, 
+				Identifier.VOID_IDENTIFIER);
+			if (result != null) {
+				Log.debugMessage("return " + result, Log.DEBUGLEVEL10);
+				return result;
+			}
+//			assert Log.debugMessage(start + ".." + end, Log.DEBUGLEVEL03);
+			start = end;			
+		}
+		return null;
 	}
 	
 	private SortedSet<Date> getTestTimes(final AbstractTemporalPattern temporalPattern,
 		final Date startDate,
 		final Date endDate,
+		final Date startInterval,
+		final Date endInterval,
 		final long offset) {
 		
 		final Date startTime0 = offset == 0 ? startDate : new Date(startDate.getTime() + offset);
@@ -1268,7 +1279,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		
 		final SortedSet<Date> times;
 		if (temporalPattern != null) {			
-			times = new TreeSet<Date>(temporalPattern.getTimes(startTime0, endTime0));
+			times = new TreeSet<Date>(temporalPattern.getTimes(startTime0, endTime0, startInterval, endInterval));
 		} else {
 			times = new TreeSet<Date>();
 			times.add(startTime0);
@@ -1279,26 +1290,32 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	private SortedSet<Date> getTestTimes(final Identifier temporalPatternId,
 		final Date startDate,
 		final Date endDate,
+		final Date startInterval,
+		final Date endInterval,
 		final long offset) throws ApplicationException{
 		
 		if (temporalPatternId != null && !temporalPatternId.isVoid()) {
 			final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(temporalPatternId, true);
-			return this.getTestTimes(temporalPattern, startDate, endDate, offset);
+			return this.getTestTimes(temporalPattern, startDate, endDate, startInterval, endInterval, offset);
 		}
-		return this.getTestTimes((AbstractTemporalPattern)null, startDate, endDate, offset);
+		return this.getTestTimes((AbstractTemporalPattern)null, startDate, endDate, startInterval, endInterval, offset);
 	}
 	
 	private SortedSet<Date> getTestTimes(final Test test,
+		final Date startInterval,
+		final Date endInterval,
 		final long offset) throws ApplicationException{
-		return this.getTestTimes(test, test.getStartTime(), test.getEndTime(), offset);
+		return this.getTestTimes(test, test.getStartTime(), test.getEndTime(), startInterval, endInterval, offset);
 	}
 	
 	private SortedSet<Date> getTestTimes(final Test test,
 		final Date startTime,
 		final Date endTime,
+		final Date startInterval,
+		final Date endInterval,
 		final long offset) throws ApplicationException{		
 		
-		final SortedSet<Date> testTimes = this.getTestTimes(test.getTemporalPatternId(), startTime, endTime, 0L);
+		final SortedSet<Date> testTimes = this.getTestTimes(test.getTemporalPatternId(), startTime, endTime, startInterval, endInterval, 0L);
 		
 		Log.debugMessage("testTimes:" + testTimes, Log.DEBUGLEVEL10);
 		
@@ -1338,14 +1355,24 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	                       final  MeasurementSetup measurementSetup) 
 	throws ApplicationException {
 		
-		final SortedSet<Date> times = this.getTestTimes(test, 0L);
-		
-		final String result = this.isValid0(test.getMonitoredElementId(), 
-			times, 
-			measurementSetup, 
-			test.getId());
-		Log.debugMessage("SchedulerModel.isValid (" + test + ", " + measurementSetup + ")  | return " + result, Log.DEBUGLEVEL10);
-		return result;
+		final long interval = 7L * 24L * 60L * 60L * 1000L;
+		Date start = test.getStartTime();
+		final Date endDate = test.getEndTime();
+		while(start.compareTo(endDate) < 0) {
+			final Date end = new Date(start.getTime() + interval);
+			final SortedSet<Date> times = this.getTestTimes(test, start, end, 0L);
+			
+			final String result = this.isValid0(test.getMonitoredElementId(), 
+				times, 
+				measurementSetup, 
+				test.getId());
+			if (result != null) {
+				Log.debugMessage("SchedulerModel.isValid (" + test + ", " + measurementSetup + ")  | return " + result, Log.DEBUGLEVEL10);
+				return result;
+			}
+			start = end;
+		}
+		return null;
 	}
 	
 	/**
@@ -1358,16 +1385,27 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	                       final long offset) 
 	throws ApplicationException {
 		
-		final SortedSet<Date> times = this.getTestTimes(test, offset);
-		
-		final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
-		
-		final String result = this.isValid0(test.getMonitoredElementId(), 
-			times, 
-			measurementSetup, 
-			test.getId());
-		Log.debugMessage("SchedulerModel.isValid (" + test + ", " + offset + ")  | return " + result, Log.DEBUGLEVEL10);
-		return result;
+		final long interval = 7L * 24L * 60L * 60L * 1000L;
+		Date start = test.getStartTime();
+		final Date endDate = test.getEndTime();
+		while(start.compareTo(endDate) < 0) {
+			final Date end = new Date(start.getTime() + interval);
+
+			final SortedSet<Date> times = this.getTestTimes(test, start, end, offset);
+			
+			final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
+			
+			final String result = this.isValid0(test.getMonitoredElementId(), 
+				times, 
+				measurementSetup, 
+				test.getId());
+			if (result != null) {
+				Log.debugMessage("SchedulerModel.isValid (" + test + ", " + offset + ")  | return " + result, Log.DEBUGLEVEL10);
+				return result;
+			}
+			start = end;
+		}
+		return null;
 	}
 	
 	/**
@@ -1427,7 +1465,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	                            final Date startDate0, 
 	                            final Date endDate0) 
 	throws ApplicationException {
-		final SortedSet<Date> testTimes = this.getTestTimes(test, 0);
+		final SortedSet<Date> testTimes = this.getTestTimes(test, startDate0, endDate0, 0);
 		
 		Log.debugMessage(testTimes, Log.DEBUGLEVEL10);
 		

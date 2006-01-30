@@ -263,7 +263,7 @@ final class TestLine extends TimeLine {
 			}
 		}
 //		assert Log.debugMessage("rectangle:" + rectangle + ", visibleRect:" + visibleRect, Log.DEBUGLEVEL03);
-		if (rectangle == null || rectangle.x < visibleRect.x + visibleRect.width &&
+		if (rectangle == null || visibleRect == null || rectangle.x < visibleRect.x + visibleRect.width &&
 				rectangle.x + rectangle.width > visibleRect.x) {
 //			assert Log.debugMessage("visibleRect:" + visibleRect, Log.DEBUGLEVEL03);
 			return visibleRect;
@@ -601,13 +601,13 @@ final class TestLine extends TimeLine {
 		switch (test.getTemporalType().value()) {
 			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL: {
 				final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
-				final SortedSet<Date> times = temporalPattern.getTimes(testTime, test.getEndTime());
+				final SortedSet<Date> times = temporalPattern.getTimes(testTime, test.getEndTime(), start1, end1);
 				if (status != TestStatus.TEST_STATUS_COMPLETED) {
 					for(final Date date : times) {
 						
-						if (date.compareTo(start1) < 0 || date.compareTo(end1) > 0) {
-							continue;
-						}
+//						if (date.compareTo(start1) < 0 || date.compareTo(end1) > 0) {
+//							continue;
+//						}
 						
 						final TestTimeLine testTimeLine = new TestTimeLine();
 						testTimeLine.testId = testId;
@@ -658,9 +658,9 @@ final class TestLine extends TimeLine {
 					}
 				} else {
 					for(final Date date : times) {
-						if (date.compareTo(start1) < 0 || date.compareTo(end1) > 0) {
-							continue;
-						}
+//						if (date.compareTo(start1) < 0 || date.compareTo(end1) > 0) {
+//							continue;
+//						}
 						final TestTimeLine testTimeLine = new TestTimeLine();
 						testTimeLine.testId = testId;
 						final long time = date.getTime();
