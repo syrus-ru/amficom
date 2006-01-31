@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.151 2006/01/31 12:18:41 bob Exp $
+ * $Id: SchedulerModel.java,v 1.152 2006/01/31 12:29:01 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.151 $, $Date: 2006/01/31 12:18:41 $
+ * @version $Revision: 1.152 $, $Date: 2006/01/31 12:29:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -1394,73 +1394,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	public String isValid(final Test test,
 		final  MeasurementSetup newTestMeasurementSetup) 
 	throws ApplicationException {
-		
-		final Identifier monitoredElementId = test.getMonitoredElementId();
-		final Date startDate = test.getStartTime();
-		final Date endDate = test.getEndTime();
-		final TypicalCondition startTypicalCondition = 
-			new TypicalCondition(endDate,
-				endDate,
-				OperationSort.OPERATION_LESS_EQUALS,
-				ObjectEntities.TEST_CODE,
-				TestWrapper.COLUMN_START_TIME);
-		final TypicalCondition endTypicalCondition = 
-			new TypicalCondition(startDate,
-				startDate,
-				OperationSort.OPERATION_GREAT_EQUALS,
-				ObjectEntities.TEST_CODE,
-				TestWrapper.COLUMN_END_TIME);
-		
-		final LinkedIdsCondition monitoredElementCondition = 
-			new LinkedIdsCondition(monitoredElementId, ObjectEntities.TEST_CODE);
-		
-		final Set<StorableObjectCondition> conditions = 
-			new HashSet<StorableObjectCondition>(3);
-		conditions.add(startTypicalCondition);
-		conditions.add(endTypicalCondition);			
-		conditions.add(monitoredElementCondition);
-		
-		final CompoundCondition compoundCondition = 
-			new CompoundCondition(conditions,
-				CompoundConditionSort.AND);
-		
-		final Set<Test> tests = 
-			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, false);
-		
-		Date start = null;
-		Date end = null;
-		for (final Test test1 : tests) {
-			if (test1.equals(test)) {
-				continue;
-			}
-			final Date testStart = test1.getStartTime();
-			final Date testEnd = test1.getEndTime();
-			start = start != null && start.compareTo(testStart) < 0 ? start : testStart; 
-			end = end != null && end.compareTo(testEnd) > 0 ? end : testEnd;
-		}
-		if (start == end && end == null) {
-			return null;
-		}
-		
-		start = start.compareTo(startDate) > 0 ? start : startDate;
-		end = end.compareTo(endDate) > 0 ? endDate : end;
-		
-		final long interval = 7L * 24L * 60L * 60L * 1000L;
-		while(start.compareTo(end) < 0) {
-			final Date end1 = start.getTime() + interval < end.getTime() ? new Date(start.getTime() + interval) : end;
-			final SortedSet<Date> times = this.getTestTimes(test, start, end1, 0L);
-			
-			final String result = this.isValid0(test.getMonitoredElementId(), 
-				times, 
-				newTestMeasurementSetup, 
-				test.getId());
-			if (result != null) {
-				Log.debugMessage("SchedulerModel.isValid (" + test + ", " + newTestMeasurementSetup + ")  | return " + result, Log.DEBUGLEVEL10);
-				return result;
-			}
-			start = end1;
-		}
-		return null;
+		return this.isValid(test, newTestMeasurementSetup, 0, true);
 	}
 	
 	/**
@@ -1472,78 +1406,106 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	public String isValid(final Test test,
 		final long offset) 
 	throws ApplicationException {
-		
-		final Identifier monitoredElementId = test.getMonitoredElementId();
-		final Date startDate = test.getStartTime();
-		final Date endDate = test.getEndTime();
-		final TypicalCondition startTypicalCondition = 
-			new TypicalCondition(endDate,
-				endDate,
-				OperationSort.OPERATION_LESS_EQUALS,
-				ObjectEntities.TEST_CODE,
-				TestWrapper.COLUMN_START_TIME);
-		final TypicalCondition endTypicalCondition = 
-			new TypicalCondition(startDate,
-				startDate,
-				OperationSort.OPERATION_GREAT_EQUALS,
-				ObjectEntities.TEST_CODE,
-				TestWrapper.COLUMN_END_TIME);
-		
-		final LinkedIdsCondition monitoredElementCondition = 
-			new LinkedIdsCondition(monitoredElementId, ObjectEntities.TEST_CODE);
-		
-		final Set<StorableObjectCondition> conditions = 
-			new HashSet<StorableObjectCondition>(3);
-		conditions.add(startTypicalCondition);
-		conditions.add(endTypicalCondition);			
-		conditions.add(monitoredElementCondition);
-		
-		final CompoundCondition compoundCondition = 
-			new CompoundCondition(conditions,
-				CompoundConditionSort.AND);
-		
-		final Set<Test> tests = 
-			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, false);
-		
-		Date start = null;
-		Date end = null;
-		for (final Test test1 : tests) {
-			if (test1.equals(test)) {
-				continue;
-			}
-			final Date testStart = test1.getStartTime();
-			final Date testEnd = test1.getEndTime();
-			start = start != null && start.compareTo(testStart) < 0 ? start : testStart; 
-			end = end != null && end.compareTo(testEnd) > 0 ? end : testEnd;
-		}
-		if (start == end && end == null) {
-			return null;
-		}
-		
-		start = start.compareTo(startDate) > 0 ? start : startDate;
-		end = end.compareTo(endDate) > 0 ? endDate : end;
-		
-		final long interval = 7L * 24L * 60L * 60L * 1000L;
-		final MeasurementSetup testMeasurementSetup = 
-			StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
-		while(start.compareTo(end) < 0) {
-			final Date end1 = start.getTime() + interval < end.getTime() ? new Date(start.getTime() + interval) : end;
-
-			final SortedSet<Date> times = this.getTestTimes(test, start, end1, offset);
-			if (!times.isEmpty()) {
-				final String result = this.isValid0(test.getMonitoredElementId(), 
-					times, 
-					testMeasurementSetup, 
-					test.getId());
-				if (result != null) {
-					Log.debugMessage("SchedulerModel.isValid (" + test + ", " + offset + ")  | return " + result, Log.DEBUGLEVEL10);
-					return result;
-				}
-			}
-			start = end1;
-		}
-		return null;
+		return this.isValid(test, null, offset, false);
 	}
+	
+	private String isValid(final Test test,
+      		final  MeasurementSetup newTestMeasurementSetup,
+      		final long offset,
+      		boolean ms) 
+      	throws ApplicationException {
+      		
+      		final Identifier monitoredElementId = test.getMonitoredElementId();
+      		final Date startDate = test.getStartTime();
+      		final Date endDate = test.getEndTime();
+      		final TypicalCondition startTypicalCondition = 
+      			new TypicalCondition(endDate,
+      				endDate,
+      				OperationSort.OPERATION_LESS_EQUALS,
+      				ObjectEntities.TEST_CODE,
+      				TestWrapper.COLUMN_START_TIME);
+      		final TypicalCondition endTypicalCondition = 
+      			new TypicalCondition(startDate,
+      				startDate,
+      				OperationSort.OPERATION_GREAT_EQUALS,
+      				ObjectEntities.TEST_CODE,
+      				TestWrapper.COLUMN_END_TIME);
+      		
+      		final LinkedIdsCondition monitoredElementCondition = 
+      			new LinkedIdsCondition(monitoredElementId, ObjectEntities.TEST_CODE);
+      		
+      		final Set<StorableObjectCondition> conditions = 
+      			new HashSet<StorableObjectCondition>(3);
+      		conditions.add(startTypicalCondition);
+      		conditions.add(endTypicalCondition);			
+      		conditions.add(monitoredElementCondition);
+      		
+      		final CompoundCondition compoundCondition = 
+      			new CompoundCondition(conditions,
+      				CompoundConditionSort.AND);
+      		
+      		final Set<Test> tests = 
+      			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, false);
+      		
+      		Date start = null;
+      		Date end = null;
+      		for (final Test test1 : tests) {
+      			if (test1.equals(test)) {
+      				continue;
+      			}
+      			final Date testStart = test1.getStartTime();
+      			final Date testEnd = test1.getEndTime();
+      			start = start != null && start.compareTo(testStart) < 0 ? start : testStart; 
+      			end = end != null && end.compareTo(testEnd) > 0 ? end : testEnd;
+      		}
+      		if (start == end && end == null) {
+      			return null;
+      		}
+      		
+      		start = start.compareTo(startDate) > 0 ? start : startDate;
+      		end = end.compareTo(endDate) > 0 ? endDate : end;
+      		
+      		final long interval = 7L * 24L * 60L * 60L * 1000L;
+      		
+      		final MeasurementSetup testMeasurementSetup;
+      		if (ms) {
+				testMeasurementSetup = newTestMeasurementSetup;
+			} else {
+				testMeasurementSetup = 
+      				StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
+			}
+      		
+      		while(start.compareTo(end) < 0) {
+      			final Date end1 = start.getTime() + interval < end.getTime() ? new Date(start.getTime() + interval) : end;
+      			final SortedSet<Date> times = this.getTestTimes(test, start, end1, offset);
+      			
+      			if (!times.isEmpty()) {
+	      			final String result;
+	      			if (ms) {
+						result = this.isValid0(test.getMonitoredElementId(), 
+							times, 
+							testMeasurementSetup, 
+							test.getId());
+					} else {
+	      				result = this.isValid0(test.getMonitoredElementId(), 
+	    					times, 
+	    					testMeasurementSetup, 
+	    					test.getId());
+	      			}
+	      			if (result != null) {
+	      				assert Log.debugMessage("SchedulerModel.isValid (" 
+	      						+ test 
+	      						+ ", " 
+	      						+ newTestMeasurementSetup 
+	      						+ ")  | return " 
+	      						+ result, Log.DEBUGLEVEL10);
+	      				return result;
+	      			}
+      			}
+      			start = end1;
+      		}
+      		return null;
+      	}
 	
 	/**
 	 * @param test
