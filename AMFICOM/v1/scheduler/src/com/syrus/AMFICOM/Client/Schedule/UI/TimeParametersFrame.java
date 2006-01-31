@@ -36,6 +36,7 @@ import javax.swing.event.ChangeListener;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.LazyChangeListener;
+import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -480,20 +481,25 @@ public class TimeParametersFrame extends JInternalFrame {
 				
 				public void actionPerformed(final ActionEvent event) {
 					TimeParametersPanel.this.choosedButton = (JButton)event.getSource();
-					try {
-						if (!TimeParametersPanel.this.groupRadioButton.isSelected()) { 
-								TimeParametersPanel.this.schedulerModel.createTest();
-						} else {
-							TimeParametersPanel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_GET_MONITORED_ELEMENT, null, null));
-							if (TimeParametersPanel.this.choosedButton == TimeParametersPanel.this.startTimeButton) {
-								TimeParametersPanel.this.schedulerModel.addGroupTest(TimeParametersPanel.this.getStartDate());
-							} else if (TimeParametersPanel.this.choosedButton == TimeParametersPanel.this.pediodTimeButton) {
-								TimeParametersPanel.this.schedulerModel.addGroupTests(TimeParametersPanel.this.getStartDate(), TimeParametersPanel.this.getIntervalLength());
+					new ProcessingDialog(new Runnable() {
+						public void run() {
+							try {
+								if (!TimeParametersPanel.this.groupRadioButton.isSelected()) { 
+										TimeParametersPanel.this.schedulerModel.createTest();
+								} else {
+									TimeParametersPanel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_GET_MONITORED_ELEMENT, null, null));
+									if (TimeParametersPanel.this.choosedButton == TimeParametersPanel.this.startTimeButton) {
+										TimeParametersPanel.this.schedulerModel.addGroupTest(TimeParametersPanel.this.getStartDate());
+									} else if (TimeParametersPanel.this.choosedButton == TimeParametersPanel.this.pediodTimeButton) {
+										TimeParametersPanel.this.schedulerModel.addGroupTests(TimeParametersPanel.this.getStartDate(), TimeParametersPanel.this.getIntervalLength());
+									}
+								}
+							} catch (final ApplicationException e) {
+								AbstractMainFrame.showErrorMessage(e.getMessage());
 							}
-						}
-					} catch (final ApplicationException e) {
-						AbstractMainFrame.showErrorMessage(e.getMessage());
-					}
+						};
+					}, I18N.getString("Scheduler.Text.CreatingTest"));
+					
 				}
 			};
 
