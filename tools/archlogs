@@ -174,7 +174,7 @@ do
 	esac
 done
 
-if [ x$LOGS_DIR = x ]
+if [ x$LOGS_DIR = "x" ]
 then
 	LOGS_DIR=.
 fi
