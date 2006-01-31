@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.31 2006/01/23 16:06:31 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.32 2006/01/31 13:14:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2006/01/23 16:06:31 $
+ * @version $Revision: 1.32 $, $Date: 2006/01/31 13:14:07 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -100,7 +100,7 @@ final class LoginProcessor extends SleepButWorkThread {
 					final Date lastActivityDate = userLogin.getLastActivityDate();
 					if (System.currentTimeMillis() - lastActivityDate.getTime() >= maxUserUnactivityPeriod + loginValidationTimeout) {
 						Log.debugMessage("User '" + userLogin.getUserId() + "' unactive more, than ("
-								+ (maxUserUnactivityPeriod / (60 * 1000)) + (loginValidationTimeout / (60 * 1000))
+								+ (maxUserUnactivityPeriod / (60 * 1000)) + " + " + (loginValidationTimeout / (60 * 1000))
 								+ ") minutes. Deleting login", Log.DEBUGLEVEL06);
 						userLoginDatabase.delete(userLogin);
 						it.remove();
