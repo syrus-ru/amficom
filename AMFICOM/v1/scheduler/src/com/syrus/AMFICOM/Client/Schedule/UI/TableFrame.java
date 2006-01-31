@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.77 2006/01/24 08:51:33 bob Exp $
+ * $Id: TableFrame.java,v 1.78 2006/01/31 14:14:42 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,9 +54,10 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.AMFICOM.measurement.TestViewAdapter;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2006/01/24 08:51:33 $
+ * @version $Revision: 1.78 $, $Date: 2006/01/31 14:14:42 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -356,8 +358,33 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 								public void actionPerformed(final ActionEvent e) {
 									for (int i = 0; i < rowIndices.length; i++) {
 										final TestView testView = model.getObject(rowIndices[i]);
-										testView.getTest().setStatus(TestStatus.TEST_STATUS_NEW);
+										// XXX add checking available place
+										final Test test = testView.getTest();
+										final String reason;
+										try {
+											reason = 
+												schedulerModel.isValid(testView.getTest(), 
+													new Date(), 
+													test.getEndTime());
+										} catch (final ApplicationException ae) {
+											AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.CannotResumeTest") 
+												+ " " + test.getDescription());
+											Log.errorMessage(ae);
+											return;
+										}
+										if (reason != null) {
+											AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.CannotResumeTest") 
+												+ " " + reason);
+											return;
+										}
 									}
+									
+									for (int i = 0; i < rowIndices.length; i++) {
+										final TestView testView = model.getObject(rowIndices[i]);
+										final Test test = testView.getTest();
+										test.setStatus(TestStatus.TEST_STATUS_NEW);
+									}
+									
 									TableFrame.this.dispatcher.firePropertyChange(new PropertyChangeEvent(TableFrame.this,
 										SchedulerModel.COMMAND_REFRESH_TESTS,
 										null,

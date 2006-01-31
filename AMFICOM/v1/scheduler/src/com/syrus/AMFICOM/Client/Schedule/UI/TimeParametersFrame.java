@@ -361,7 +361,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			}
 			
 			{
-				final ChangeListener aChangeListener = new ChangeListener() {
+				final ChangeListener endChangeListener = new ChangeListener() {
 					public void stateChanged(ChangeEvent e) {
 						try {
 
@@ -400,7 +400,7 @@ public class TimeParametersFrame extends JInternalFrame {
 					}
 				}};
 				
-				final LazyChangeListener changeListener = new TimeLazyChangeListener(aChangeListener);
+				final LazyChangeListener changeListener = new TimeLazyChangeListener(endChangeListener);
 
 				this.endTimeSpinner.addChangeListener(changeListener);
 				this.endDateSpinner.addChangeListener(changeListener);
