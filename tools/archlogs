@@ -23,7 +23,7 @@ archive() {
 	LOGS_DIR=$1
 	OVERRIDE=$2
 	TODAY=`date +%Y%m%d`
-	LOGS_SUB_DIRS=`ls -1 $LOGS_DIR | $EGREP -v $TODAY | $EGREP "^${DATE_REGEXP}$"`
+	LOGS_SUB_DIRS=`ls -1 $LOGS_DIR | $EGREP "^${DATE_REGEXP}$" | $EGREP -v $TODAY`
 	for log_sub_dir in $LOGS_SUB_DIRS
 	do
 		log_sub_dir_full=$LOGS_DIR/$log_sub_dir
@@ -43,7 +43,7 @@ archive() {
 
 		tar -cvf - -C $LOGS_DIR $log_sub_dir | bzip2 -9 > $LOGS_DIR/$arch_file
 		ret_code=$?
-		if [ ret_code != "0" ]
+		if [ $ret_code -eq 0 ]
 		then
 			echo "Удаляю каталог $log_sub_dir"
 			rm -rf $log_sub_dir_full
