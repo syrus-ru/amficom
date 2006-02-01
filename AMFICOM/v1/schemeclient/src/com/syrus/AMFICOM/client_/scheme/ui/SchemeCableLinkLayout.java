@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkLayout.java,v 1.18 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemeCableLinkLayout.java,v 1.19 2006/02/01 14:24:30 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.19 $, $Date: 2006/02/01 14:24:30 $
  * @module schemeclient
  */
 
@@ -97,11 +97,9 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		if (this.link != null) {
 			try {
 				List<SchemeCableThread> scts = ClientUtils.getSortedCableThreads(this.link);
-// TODO разобраться с числом модулей
-				int nModules = 8;
-				if (scts.size() == 6 || scts.size() == 12 || scts.size() == 18 || scts.size() == 24 || scts.size() == 30) {
-					nModules = 6;
-				}
+				// в модуле всегда по 4 волокна
+				// TODO ввести цвет модуля
+				int nModules = (int)((scts.size() - .5) / 4.0) + 1;
 				
 				int tmp = (int) (2 * FIBER_RADIUS * Math.sqrt(Math.round((double) 
 						scts.size() / (double) nModules + 0.499)));
