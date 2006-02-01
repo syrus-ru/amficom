@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.153 2006/01/31 14:14:42 bob Exp $
+ * $Id: SchedulerModel.java,v 1.154 2006/02/01 13:42:30 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.153 $, $Date: 2006/01/31 14:14:42 $
+ * @version $Revision: 1.154 $, $Date: 2006/02/01 13:42:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -1191,11 +1191,34 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 						ObjectEntities.TEST_CODE,
 						TestWrapper.COLUMN_END_TIME);
 				
+				final MonitoredElement monitoredElement1 = 
+					StorableObjectPool.getStorableObject(monitoredElementId, true);
+				
+				final MeasurementPort measurementPort = 
+					StorableObjectPool.getStorableObject(monitoredElement1.getMeasurementPortId(), true);
+				
+				final LinkedIdsCondition measurementPortCondition = 
+					new LinkedIdsCondition(measurementPort.getKISId(), ObjectEntities.MEASUREMENTPORT_CODE);
+				final Set<MeasurementPort> ports = 
+					StorableObjectPool.getStorableObjectsByCondition(measurementPortCondition, false);
+				final LinkedIdsCondition measurementElementCondition = 
+					new LinkedIdsCondition(ports, ObjectEntities.MONITOREDELEMENT_CODE);
+				final Set<MonitoredElement> monitoredElements = 
+					StorableObjectPool.getStorableObjectsByCondition(measurementElementCondition, false);
+				
+				final LinkedIdsCondition monitoredElementsCondition = 
+					new LinkedIdsCondition(monitoredElements, ObjectEntities.TEST_CODE);
+				
+				final Set<StorableObjectCondition> conditions = 
+					new HashSet<StorableObjectCondition>(3);
+				conditions.add(startTypicalCondition);
+				conditions.add(endTypicalCondition);				
+				conditions.add(monitoredElementsCondition);
+				
 				tests2 = 
 					StorableObjectPool.getStorableObjectsByCondition(
-						new CompoundCondition(startTypicalCondition,
-							CompoundConditionSort.AND,
-							endTypicalCondition), 
+						new CompoundCondition(conditions,
+							CompoundConditionSort.AND), 
 						false);
 			} else {
 				tests2 = tests;
@@ -1300,10 +1323,32 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				ObjectEntities.TEST_CODE,
 				TestWrapper.COLUMN_END_TIME);
 		
+		final MonitoredElement monitoredElement1 = 
+			StorableObjectPool.getStorableObject(monitoredElementId, true);
+		
+		final MeasurementPort measurementPort = 
+			StorableObjectPool.getStorableObject(monitoredElement1.getMeasurementPortId(), true);
+		
+		final LinkedIdsCondition measurementPortCondition = 
+			new LinkedIdsCondition(measurementPort.getKISId(), ObjectEntities.MEASUREMENTPORT_CODE);
+		final Set<MeasurementPort> ports = 
+			StorableObjectPool.getStorableObjectsByCondition(measurementPortCondition, false);
+		final LinkedIdsCondition measurementElementCondition = 
+			new LinkedIdsCondition(ports, ObjectEntities.MONITOREDELEMENT_CODE);
+		final Set<MonitoredElement> monitoredElements = 
+			StorableObjectPool.getStorableObjectsByCondition(measurementElementCondition, false);
+
+		final LinkedIdsCondition monitoredElementsCondition = 
+			new LinkedIdsCondition(monitoredElements, ObjectEntities.TEST_CODE);
+
+		final Set<StorableObjectCondition> conditions = new HashSet<StorableObjectCondition>(3);
+		conditions.add(startTypicalCondition);
+		conditions.add(endTypicalCondition);
+		conditions.add(monitoredElementsCondition);
+		
 		final CompoundCondition compoundCondition = 
-			new CompoundCondition(startTypicalCondition,
-				CompoundConditionSort.AND,
-				endTypicalCondition);
+			new CompoundCondition(conditions,
+					CompoundConditionSort.AND);
 		
 		final Set<Test> tests = 
 			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, false);
@@ -1467,8 +1512,23 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
       				ObjectEntities.TEST_CODE,
       				TestWrapper.COLUMN_END_TIME);
       		
+    		final MonitoredElement monitoredElement1 = 
+    			StorableObjectPool.getStorableObject(monitoredElementId, true);
+    		
+    		final MeasurementPort measurementPort = 
+    			StorableObjectPool.getStorableObject(monitoredElement1.getMeasurementPortId(), true);
+    		
+    		final LinkedIdsCondition measurementPortCondition = 
+    			new LinkedIdsCondition(measurementPort.getKISId(), ObjectEntities.MEASUREMENTPORT_CODE);
+    		final Set<MeasurementPort> ports = 
+    			StorableObjectPool.getStorableObjectsByCondition(measurementPortCondition, false);
+    		final LinkedIdsCondition measurementElementCondition = 
+    			new LinkedIdsCondition(ports, ObjectEntities.MONITOREDELEMENT_CODE);
+    		final Set<MonitoredElement> elements = 
+    			StorableObjectPool.getStorableObjectsByCondition(measurementElementCondition, false);
+    		
       		final LinkedIdsCondition monitoredElementCondition = 
-      			new LinkedIdsCondition(monitoredElementId, ObjectEntities.TEST_CODE);
+      			new LinkedIdsCondition(elements, ObjectEntities.TEST_CODE);
       		
       		final Set<StorableObjectCondition> conditions = 
       			new HashSet<StorableObjectCondition>(3);
@@ -1581,7 +1641,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 		String intersect = null;
 		
-		final LinkedIdsCondition groupTestCondition = new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE);
+		final LinkedIdsCondition groupTestCondition = 
+			new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE);
 		final Set<Test> groupTests = 
 			StorableObjectPool.getStorableObjectsByCondition(groupTestCondition, true);
 		for(final Test groupTest1 : groupTests) {
