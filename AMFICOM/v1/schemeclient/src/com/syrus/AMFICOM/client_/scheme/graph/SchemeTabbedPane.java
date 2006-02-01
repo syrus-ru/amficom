@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.39 2006/01/25 12:58:22 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.40 2006/02/01 14:23:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.39 $, $Date: 2006/01/25 12:58:22 $
+ * @version $Revision: 1.40 $, $Date: 2006/02/01 14:23:59 $
  * @module schemeclient
  */
 
@@ -612,7 +612,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			public void run() {
 				SchemeActions.openSchemeImageResource(graph, sch.getSchemeCell(), false);		
 			}
-		}, "Open scheme");
+		}, LangModelScheme.getString("Message.information.open_scheme"));
 		
 		panel1.setGraphSize(new Dimension(sch.getWidth(), sch.getHeight()));
 		return clones;
