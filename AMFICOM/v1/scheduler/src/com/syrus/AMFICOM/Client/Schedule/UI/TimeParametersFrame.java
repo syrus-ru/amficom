@@ -498,7 +498,7 @@ public class TimeParametersFrame extends JInternalFrame {
 								AbstractMainFrame.showErrorMessage(e.getMessage());
 							}
 						};
-					}, I18N.getString("Scheduler.Text.CreatingTest"));
+					}, I18N.getString("Scheduler.Text.Popup.CreatingTest"));
 					
 				}
 			};
