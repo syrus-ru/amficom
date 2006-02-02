@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.157 2006/02/02 11:36:48 bob Exp $
+ * $Id: SchedulerModel.java,v 1.158 2006/02/02 12:08:38 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,6 @@ import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.ParameterSet;
-import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
-import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternWrapper;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.TestView;
@@ -77,7 +75,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.157 $, $Date: 2006/02/02 11:36:48 $
+ * @version $Revision: 1.158 $, $Date: 2006/02/02 12:08:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
