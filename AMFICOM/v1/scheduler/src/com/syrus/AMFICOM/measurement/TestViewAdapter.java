@@ -1,5 +1,5 @@
 /*
- * $Id: TestViewAdapter.java,v 1.7 2006/01/16 12:15:33 bob Exp $
+ * $Id: TestViewAdapter.java,v 1.8 2006/02/02 15:49:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,13 +18,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.ComparableLabel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2006/01/16 12:15:33 $
+ * @version $Revision: 1.8 $, $Date: 2006/02/02 15:49:51 $
  * @author $Author: bob $
  * @module module
  */
@@ -37,6 +38,7 @@ public class TestViewAdapter implements Wrapper<TestView> {
 	public static final String KEY_PORT = "Port";
 	public static final String KEY_MEASUREMENT_TYPE = "MeasurementType";
 	public static final String KEY_START_TIME = "TestStartTime";
+	public static final String KEY_END_TIME = "TestEndTime";
 	public static final String KEY_STATUS = "Status";
 	public static final String KEY_Q = "Q";
 	public static final String KEY_D = "d";
@@ -52,8 +54,9 @@ public class TestViewAdapter implements Wrapper<TestView> {
 		final String[] keysArray = new String[] { KEY_TEMPORAL_TYPE, 
 				KEY_MONITORED_ELEMENT, 
 				KEY_PORT,
-				KEY_MEASUREMENT_TYPE, 
-				KEY_START_TIME, 
+				KEY_MEASUREMENT_TYPE,
+				KEY_START_TIME,
+				KEY_END_TIME,
 				KEY_STATUS,
 				KEY_D,
 				KEY_Q};
@@ -112,6 +115,8 @@ public class TestViewAdapter implements Wrapper<TestView> {
 			name = I18N.getString("Scheduler.Text.Test.Field.MeasurementType"); //$NON-NLS-1$
 		} else if (key == KEY_START_TIME) {
 			name = I18N.getString("Scheduler.Text.Test.Field.TimeOfTheFirstMeasurement"); //$NON-NLS-1$
+		} else if (key == KEY_END_TIME) {
+			name = I18N.getString("Scheduler.Text.Test.Field.TimeOfTheFinishMeasurement"); //$NON-NLS-1$
 		} else if (key == KEY_STATUS) {
 			name = I18N.getString("Scheduler.Text.Test.Field.Status"); //$NON-NLS-1$
 		} else if (key == KEY_D) {
@@ -120,7 +125,7 @@ public class TestViewAdapter implements Wrapper<TestView> {
 			name = key;
 		}
 
-		return name;
+		return CommonUIUtilities.convertToHTMLString(name);
 	}
 
 	public Class getPropertyClass(String key) {
@@ -128,7 +133,7 @@ public class TestViewAdapter implements Wrapper<TestView> {
 		key = key != null ? key.intern() : null;
 		if (key == KEY_STATUS) {
 			clazz = Map.class;
-		} else if (key == KEY_START_TIME) {
+		} else if (key == KEY_START_TIME || key == KEY_END_TIME) {
 			clazz = Date.class;
 		}
 		return clazz;
@@ -168,6 +173,8 @@ public class TestViewAdapter implements Wrapper<TestView> {
 				return test.getMeasurementType().getDescription();
 			} else if (key == KEY_START_TIME) {
 				return test.getStartTime();
+			} else if (key == KEY_END_TIME) {
+				return test.getEndTime();
 			} else if (key == KEY_STATUS) {
 				return test.getStatus();
 			} else if (key == KEY_D) {

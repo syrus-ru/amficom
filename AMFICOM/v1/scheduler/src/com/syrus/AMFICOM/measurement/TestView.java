@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.11 2006/01/18 11:49:34 bob Exp $
+* $Id: TestView.java,v 1.12 2006/02/02 15:49:51 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2006/01/18 11:49:34 $
+ * @version $Revision: 1.12 $, $Date: 2006/02/02 15:49:51 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -119,8 +119,23 @@ public final class TestView {
 		this.measurementSetup = 
 			StorableObjectPool.getStorableObject(mainMeasurementSetupId, true);
 		
-		this.lastDate = new Date(this.test.getEndTime().getTime() 
-			+ this.measurementSetup.getMeasurementDuration());
+		final Identifier groupTestId = this.test.getGroupTestId();
+		if (groupTestId.isVoid()) {
+			this.lastDate = this.test.getEndTime();
+		} else {
+			final LinkedIdsCondition groupTestCondition = 
+				new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE);
+			final Set<Test> tests = 
+				StorableObjectPool.getStorableObjectsByCondition(groupTestCondition, true);
+			for (final Test groupTest : tests) {
+				final Date endTime = groupTest.getEndTime();
+				if (this.lastDate != null || endTime.compareTo(this.lastDate) > 0){
+					this.lastDate = endTime;
+				}
+			} 
+		}
+		this.lastDate = new Date(this.lastDate.getTime()  
+				+ this.measurementSetup.getMeasurementDuration());
 	}
 	
 	private final void createKISName() throws ApplicationException {

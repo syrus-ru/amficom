@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.80 2006/02/02 12:43:53 bob Exp $
+ * $Id: TableFrame.java,v 1.81 2006/02/02 15:49:51 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2006/02/02 12:43:53 $
+ * @version $Revision: 1.81 $, $Date: 2006/02/02 15:49:51 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -210,14 +210,19 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 					TestViewAdapter.KEY_PORT, 
 					TestViewAdapter.KEY_MEASUREMENT_TYPE, 
 					TestViewAdapter.KEY_START_TIME,
+					TestViewAdapter.KEY_END_TIME,
 					TestViewAdapter.KEY_STATUS,
 					TestViewAdapter.KEY_D,
 					TestViewAdapter.KEY_Q});
 			this.listTable.setRenderer(StubLabelCellRenderer.getInstance(), TestViewAdapter.KEY_STATUS);
-			final SimpleDateFormat simpleDateFormat = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-			this.listTable.setRenderer(
-				new ADefaultTableCellRenderer.DateRenderer(simpleDateFormat), 
-				TestViewAdapter.KEY_START_TIME);
+			final SimpleDateFormat simpleDateFormat = 
+				(SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+			
+			final ADefaultTableCellRenderer.DateRenderer dateRenderer = 
+				new ADefaultTableCellRenderer.DateRenderer(simpleDateFormat);
+			this.listTable.setRenderer(dateRenderer, TestViewAdapter.KEY_START_TIME);
+			this.listTable.setRenderer(dateRenderer, TestViewAdapter.KEY_END_TIME);
+			
 			this.listTable.setAllowAutoResize(true);
 			this.listTable.setAutoscrolls(true);
 			final ListSelectionModel rowSM = this.listTable.getSelectionModel();
