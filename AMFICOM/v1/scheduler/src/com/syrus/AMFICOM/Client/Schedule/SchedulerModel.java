@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.155 2006/02/02 09:07:07 bob Exp $
+ * $Id: SchedulerModel.java,v 1.156 2006/02/02 09:16:44 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.155 $, $Date: 2006/02/02 09:07:07 $
+ * @version $Revision: 1.156 $, $Date: 2006/02/02 09:16:44 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -445,7 +445,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			}
 			TestView.refreshCache(refreshTests, startDate, endDate);
 			
-			this.finishingTests = this.getFinishingTests(tests);
+			this.getFinishingTests(tests);
 			
 			final long time3 = System.currentTimeMillis();
 			Log.debugMessage("TestView.refreshCache:" + (time3-time2),
@@ -478,25 +478,27 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		return this.finishingTests;
 	}
 	
-	private Set<Test> getFinishingTests(final Set<Test> updatedTests) throws ApplicationException {
-		Set<Test> finishingTests = null;
+	private void getFinishingTests(final Set<Test> updatedTests) throws ApplicationException {
+		if (this.finishingTests != null) {
+			this.finishingTests.clear();
+		} else {
+			this.finishingTests = new HashSet<Test>();
+		}
 		
 		final Date now = new Date();
-		
+		assert Log.debugMessage(updatedTests, Log.DEBUGLEVEL03);		
 		for (final Test test : updatedTests) {
-			// XXX возможно стоит проверять статус у основного родительского теста ? 
+			// XXX возможно стоит проверять статус у основного родительского теста ?
+			assert Log.debugMessage(test, Log.DEBUGLEVEL03);
 			if (test.getStatus() == TestStatus.TEST_STATUS_PROCESSING) {
 				final Identifier groupTestId = test.getGroupTestId();
 				if (groupTestId.isVoid()) {
 					if (this.isFinishing0(test, now, 1)) {
-						if (finishingTests == null) {
-							finishingTests = new HashSet<Test>();
-						}
-						finishingTests.add(test);
+						this.finishingTests.add(test);
 					}
 				} else {					
-					if (finishingTests != null && 
-							finishingTests.contains(groupTestId)) {
+					if (this.finishingTests != null && 
+							this.finishingTests.contains(groupTestId)) {
 						continue;						
 					}
 					
@@ -523,22 +525,15 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					 
 					for (final Test test2 : futureGroupTests) {
 						if (this.isFinishing0(test2, now, 1)) {
-							if (finishingTests == null) {
-								finishingTests = new HashSet<Test>();
-							}
 							final Test mainGroupTest = 
 								StorableObjectPool.getStorableObject(groupTestId, true);
-							finishingTests.add(mainGroupTest);
+							this.finishingTests.add(mainGroupTest);
 							break;
 						}
 					}
 				}
 			}
 		}
-		if (finishingTests == null) {
-			finishingTests = Collections.emptySet();
-		}
-		return finishingTests;
 	}
 	
 	private boolean isFinishing0(final Test test, final Date now, final int minTestTimesCount) 
