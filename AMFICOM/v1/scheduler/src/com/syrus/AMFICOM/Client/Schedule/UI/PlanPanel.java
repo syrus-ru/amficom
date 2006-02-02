@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.73 2006/02/02 09:06:45 bob Exp $
+ * $Id: PlanPanel.java,v 1.74 2006/02/02 11:36:47 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -61,7 +62,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2006/02/02 09:06:45 $
+ * @version $Revision: 1.74 $, $Date: 2006/02/02 11:36:47 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -456,10 +457,16 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			for (final Test test : finishingTests) {
 				listModel.addElement(test);
 			}
+			
 			final JList list = new JList(listModel);
 			list.setCellRenderer(new TestZebraRenderer());
-			JOptionPane.showMessageDialog(list, 
-				I18N.getString("Scheduler.Text.Popup.FinishingTests") + ":",
+			
+			final JPanel panel = new JPanel(new GridLayout(0, 1));
+			panel.add(new JLabel(I18N.getString("Scheduler.Text.Popup.FinishingTests") + ":"));			
+			panel.add(list);
+			
+			JOptionPane.showMessageDialog(this, 
+				panel,
 				I18N.getString("Scheduler.Text.Popup.FinishingTests"),
 				JOptionPane.INFORMATION_MESSAGE);
 

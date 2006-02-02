@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.156 2006/02/02 09:16:44 bob Exp $
+ * $Id: SchedulerModel.java,v 1.157 2006/02/02 11:36:48 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,6 +63,8 @@ import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.ParameterSet;
+import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
+import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternWrapper;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.TestView;
@@ -75,7 +77,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.156 $, $Date: 2006/02/02 09:16:44 $
+ * @version $Revision: 1.157 $, $Date: 2006/02/02 11:36:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -382,6 +384,39 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	public void setBreakData() {
 		this.flag = 0;
 	}
+
+//	private void createTestingTest() throws ApplicationException {
+//		long intervalLength = 60L * 60L * 1000L;
+//		final TypicalCondition periodicalTypicalCondition = new TypicalCondition(intervalLength, 
+//			intervalLength, 
+//			OperationSort.OPERATION_EQUALS, 
+//			ObjectEntities.PERIODICALTEMPORALPATTERN_CODE, 
+//			PeriodicalTemporalPatternWrapper.COLUMN_PERIOD); 
+//		final Set<PeriodicalTemporalPattern> periodicalTemporalPatterns = 
+//			StorableObjectPool.getStorableObjectsByCondition(periodicalTypicalCondition, true, true);
+//		PeriodicalTemporalPattern periodicalTemporalPattern = periodicalTemporalPatterns.iterator().next();
+//		
+//		final MonitoredElement me = 
+//			StorableObjectPool.getStorableObject(new Identifier("MonitoredElement_7"), true);
+//		
+//		Date now = new Date();
+//		final Date startTime = new Date(now.getTime() - intervalLength * 3L);
+//		final Date endTime = new Date(now.getTime() + intervalLength * 1L);
+//		
+//		final Test newTest = Test.createInstance(LoginManager.getUserId(), 
+//			startTime, 
+//			endTime, 
+//			periodicalTemporalPattern.getId(), 
+//			TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL, 
+//			MeasurementType.REFLECTOMETRY, 
+//			AnalysisType.UNKNOWN, 
+//			Identifier.VOID_IDENTIFIER, 
+//			me, 
+//			"Testing test",
+//			Collections.singleton(new Identifier("MeasurementSetup_243")));
+//		newTest.setStatus(TestStatus.TEST_STATUS_PROCESSING);
+//		assert Log.debugMessage("New test " + newTest.getId() + " created", Log.DEBUGLEVEL03);
+//	}
 	
 	public void updateTests(final Date startDate, 
 	                        final Date endDate) 
@@ -397,7 +432,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		}
 		
 		try {
-			final Map<Identifier, StorableObjectVersion> idVersion = new HashMap<Identifier, StorableObjectVersion>();
+			final Map<Identifier, StorableObjectVersion> idVersion = 
+				new HashMap<Identifier, StorableObjectVersion>();
 			{
 				for (final Identifier testId : this.testIds) {
 					final Test test = TestView.valueOf(testId).getTest();
@@ -408,6 +444,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			final long time0 = System.currentTimeMillis();
 			StorableObjectPool.refresh();
 			final long time1 = System.currentTimeMillis();
+			
+//			this.createTestingTest();
+			
 			Log.debugMessage("StorableObjectPool.refresh:" + (time1-time0),
 				Log.DEBUGLEVEL03);
 			final TypicalCondition startTypicalCondition = 

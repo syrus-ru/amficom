@@ -244,7 +244,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 				
 				final MeasurementSetup measurementSetup = 
 					(MeasurementSetup) TestParametersPanel.this.testSetups.getSelectedValue();
-				
+				assert Log.debugMessage(measurementSetup, Log.DEBUGLEVEL03);
 				if (TestParametersPanel.this.parametersTestPanel != null) {
 					SwingUtilities.invokeLater(new Runnable() {
 						

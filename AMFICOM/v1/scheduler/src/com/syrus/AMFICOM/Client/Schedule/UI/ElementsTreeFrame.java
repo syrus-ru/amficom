@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.util.Log;
 
 @SuppressWarnings("serial")
 public final class ElementsTreeFrame extends JInternalFrame implements PropertyChangeListener {
@@ -237,11 +238,11 @@ public final class ElementsTreeFrame extends JInternalFrame implements PropertyC
 					if (propertyChangeEvent != null) {
 						return;
 					}
-
 					for (final Item item : items) {
 						final Object object = item.getObject();
 						if (object instanceof Identifier) {
 							final Identifier identifier = (Identifier) object;
+							assert Log.debugMessage(identifier, Log.DEBUGLEVEL03);
 							final short major = identifier.getMajor();
 							switch (major) {
 								case ObjectEntities.MONITOREDELEMENT_CODE: {
