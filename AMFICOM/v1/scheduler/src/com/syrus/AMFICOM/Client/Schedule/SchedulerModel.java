@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.154 2006/02/01 13:42:30 bob Exp $
+ * $Id: SchedulerModel.java,v 1.155 2006/02/02 09:07:07 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.154 $, $Date: 2006/02/01 13:42:30 $
+ * @version $Revision: 1.155 $, $Date: 2006/02/02 09:07:07 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -97,6 +97,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	private Set<Identifier>		mainTestIds							= new HashSet<Identifier>();
 	private Identifier			selectedFirstTestId;
 	Set<Identifier>				selectedTestIds;
+	Set<Test> finishingTests;
 	Map<Set<Identifier>, Set<Identifier>>							measurementSetupIdMap;
 
 	public static final String	COMMAND_GET_NAME					= "GetName";
@@ -444,6 +445,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			}
 			TestView.refreshCache(refreshTests, startDate, endDate);
 			
+			this.finishingTests = this.getFinishingTests(tests);
+			
 			final long time3 = System.currentTimeMillis();
 			Log.debugMessage("TestView.refreshCache:" + (time3-time2),
 				Log.DEBUGLEVEL03);
@@ -454,9 +457,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 						+ ", " 
 						+ this.testIds.size(),
 				Log.DEBUGLEVEL03);
-			
-			
-			
 			
 		} catch (final ApplicationException e) {
 			Log.errorMessage(e);
@@ -472,6 +472,99 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		Log.debugMessage("refreshTests:" + (time1-time0),
 			Log.DEBUGLEVEL03);
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
+	}
+	
+	public final Set<Test> getFinishingTests(){
+		return this.finishingTests;
+	}
+	
+	private Set<Test> getFinishingTests(final Set<Test> updatedTests) throws ApplicationException {
+		Set<Test> finishingTests = null;
+		
+		final Date now = new Date();
+		
+		for (final Test test : updatedTests) {
+			// XXX возможно стоит проверять статус у основного родительского теста ? 
+			if (test.getStatus() == TestStatus.TEST_STATUS_PROCESSING) {
+				final Identifier groupTestId = test.getGroupTestId();
+				if (groupTestId.isVoid()) {
+					if (this.isFinishing0(test, now, 1)) {
+						if (finishingTests == null) {
+							finishingTests = new HashSet<Test>();
+						}
+						finishingTests.add(test);
+					}
+				} else {					
+					if (finishingTests != null && 
+							finishingTests.contains(groupTestId)) {
+						continue;						
+					}
+					
+					final LinkedIdsCondition groupTestCondition = 
+						new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE);
+					final TypicalCondition endTimeCondition = 
+						new TypicalCondition(now,
+							now,
+							OperationSort.OPERATION_GREAT_EQUALS,
+							ObjectEntities.TEST_CODE,
+							TestWrapper.COLUMN_END_TIME);
+					final CompoundCondition condition = 
+						new CompoundCondition(groupTestCondition, 
+							CompoundConditionSort.AND,
+							endTimeCondition);
+					final Set<Test> futureGroupTests = 
+						StorableObjectPool.getStorableObjectsByCondition(condition, true);
+					
+					if (futureGroupTests.size() != 1) {
+						// there is no reason to check tests, 
+						// when there are more than one future group tests
+						continue;
+					}					
+					 
+					for (final Test test2 : futureGroupTests) {
+						if (this.isFinishing0(test2, now, 1)) {
+							if (finishingTests == null) {
+								finishingTests = new HashSet<Test>();
+							}
+							final Test mainGroupTest = 
+								StorableObjectPool.getStorableObject(groupTestId, true);
+							finishingTests.add(mainGroupTest);
+							break;
+						}
+					}
+				}
+			}
+		}
+		if (finishingTests == null) {
+			finishingTests = Collections.emptySet();
+		}
+		return finishingTests;
+	}
+	
+	private boolean isFinishing0(final Test test, final Date now, final int minTestTimesCount) 
+	throws ApplicationException {
+		final Date endDate = test.getEndTime();
+		
+		final long interval = 30L * 24L * 60L * 60L * 1000L;
+		
+		final Date end2 = endDate.compareTo(test.getEndTime()) < 0 ? endDate : test.getEndTime();
+		Date start = now;
+		int count = 0;
+		while(start.compareTo(end2) < 0) {
+			final Date end = start.getTime() + interval < end2.getTime() ? new Date(start.getTime() + interval) : end2;
+			SortedSet<Date> testTimes = this.getTestTimes(test, start, end, 0);
+			count += testTimes.size();
+			if (count > minTestTimesCount) {
+				break;
+			}
+			start = end;
+		}
+	
+		if (count == 0) {
+			Log.errorMessage("Expect at least one scheduled measurement for " + test.getId());
+		}
+		
+		return count > 0 && count <= minTestTimesCount;
 	}
 	
 	public void updateTestIds(final Date startDate,
@@ -1293,6 +1386,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		
 		return null;
 	}
+
 	
 	/**
 	 * @param monitoredElementId
@@ -1439,8 +1533,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		final SortedSet<Date> testTimes = this.getTestTimes(test.getTemporalPatternId(), startTime, endTime, startInterval, endInterval, 0L);
 		
 		Log.debugMessage("testTimes:" + testTimes, Log.DEBUGLEVEL10);
-		
-		
 		
 		final TestStatus status = test.getStatus();
 		if (status == TestStatus.TEST_STATUS_STOPPED ||  
