@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeWrapper.java,v 1.7 2005/10/30 14:26:52 bass Exp $
+ * $Id: MeasurementPortTypeWrapper.java,v 1.8 2006/02/02 10:22:54 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/10/30 14:26:52 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2006/02/02 10:22:54 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -31,9 +31,7 @@ public final class MeasurementPortTypeWrapper extends StorableObjectWrapper<Meas
 	private List<String> keys;
 
 	private MeasurementPortTypeWrapper() {
-		// empty private constructor
 		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, LINK_COLUMN_MEASUREMENT_TYPE_CODE };
-
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
