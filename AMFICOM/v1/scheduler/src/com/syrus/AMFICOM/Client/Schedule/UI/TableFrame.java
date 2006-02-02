@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.79 2006/02/02 09:06:56 bob Exp $
+ * $Id: TableFrame.java,v 1.80 2006/02/02 12:43:53 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2006/02/02 09:06:56 $
+ * @version $Revision: 1.80 $, $Date: 2006/02/02 12:43:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -231,6 +231,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 					listSelectionEvent = e;
 					
 					final TestView selectedValue = TableFrame.this.listTable.getSelectedValue();
+					assert Log.debugMessage(selectedValue.getTest(), Log.DEBUGLEVEL03);
 					if (selectedValue != null) {
 						new ProcessingDialog(new Runnable() {
 

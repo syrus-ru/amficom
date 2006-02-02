@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.158 2006/02/02 12:08:38 bob Exp $
+ * $Id: SchedulerModel.java,v 1.159 2006/02/02 12:43:53 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.158 $, $Date: 2006/02/02 12:08:38 $
+ * @version $Revision: 1.159 $, $Date: 2006/02/02 12:43:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -148,6 +148,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 	private boolean				groupTest							= false;
 	private Test	selectedFirstTest;
+//	private boolean	yetUpdated = false;
 
 	public SchedulerModel(final ApplicationContext aContext) {
 		this.dispatcher = aContext.getDispatcher();
@@ -445,6 +446,16 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			
 //			this.createTestingTest();
 			
+//			if (this.yetUpdated) {
+//				final Test testingTest = 
+//					StorableObjectPool.getStorableObject(new Identifier("Test_326"), true);
+//				testingTest.setStatus(TestStatus.TEST_STATUS_ABORTED);
+//			}
+//			
+//			if (!this.yetUpdated) {
+//				this.yetUpdated = true;
+//			}
+			
 			Log.debugMessage("StorableObjectPool.refresh:" + (time1-time0),
 				Log.DEBUGLEVEL03);
 			final TypicalCondition startTypicalCondition = 
@@ -490,10 +501,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			for (final Test test : refreshTests) {
 				this.addTest(test);
 			}
-			assert Log.debugMessage(this.testIds 
-						+ ", " 
-						+ this.testIds.size(),
-				Log.DEBUGLEVEL03);
+//			assert Log.debugMessage(this.testIds 
+//						+ ", " 
+//						+ this.testIds.size(),
+//				Log.DEBUGLEVEL03);
 			
 		} catch (final ApplicationException e) {
 			Log.errorMessage(e);
@@ -523,10 +534,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		}
 		
 		final Date now = new Date();
-		assert Log.debugMessage(updatedTests, Log.DEBUGLEVEL03);		
+//		assert Log.debugMessage(updatedTests, Log.DEBUGLEVEL03);		
 		for (final Test test : updatedTests) {
 			// XXX возможно стоит проверять статус у основного родительского теста ?
-			assert Log.debugMessage(test, Log.DEBUGLEVEL03);
+//			assert Log.debugMessage(test, Log.DEBUGLEVEL03);
 			if (test.getStatus() == TestStatus.TEST_STATUS_PROCESSING) {
 				final Identifier groupTestId = test.getGroupTestId();
 				if (groupTestId.isVoid()) {
