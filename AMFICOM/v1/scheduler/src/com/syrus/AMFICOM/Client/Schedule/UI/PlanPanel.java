@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.75 2006/02/02 13:26:09 bob Exp $
+ * $Id: PlanPanel.java,v 1.76 2006/02/02 13:28:01 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,14 +7,12 @@
  */
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -36,7 +34,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -65,7 +62,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2006/02/02 13:26:09 $
+ * @version $Revision: 1.76 $, $Date: 2006/02/02 13:28:01 $
  * @author $Author: bob $
  * @module scheduler
  */
