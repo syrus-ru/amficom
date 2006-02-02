@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.72 2006/01/27 14:44:49 bob Exp $
+ * $Id: PlanPanel.java,v 1.73 2006/02/02 09:06:45 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.Timer;
@@ -41,6 +45,8 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
+import com.syrus.AMFICOM.client.UI.ZebraListCellRenderer;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -55,7 +61,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2006/01/27 14:44:49 $
+ * @version $Revision: 1.73 $, $Date: 2006/02/02 09:06:45 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -424,21 +430,40 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		}
 	}
 	
-	void setDate(	Date startDate,
+	void update(	Date startDate,
 					int scale) {
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		setScale(scale);
-		setStartDate(startDate);
+		this.setScale(scale);
+		this.setStartDate(startDate);
 		final SchedulerModel model = (SchedulerModel) this.aContext.getApplicationModel();
 		try {
 			model.updateTests(this.scaleStart, this.scaleEnd);
 			updateTestLines();
+			this.showFinishingTests();
 		} catch (final ApplicationException e) {
 			e.printStackTrace();
 			AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.CannotRefreshTests"));
 		}
 
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+	}
+	
+	private void showFinishingTests() {
+		final SchedulerModel model = (SchedulerModel) this.aContext.getApplicationModel();
+		final Set<Test> finishingTests = model.getFinishingTests();
+		if (!finishingTests.isEmpty()) {
+			final DefaultListModel listModel = new DefaultListModel();
+			for (final Test test : finishingTests) {
+				listModel.addElement(test);
+			}
+			final JList list = new JList(listModel);
+			list.setCellRenderer(new TestZebraRenderer());
+			JOptionPane.showMessageDialog(list, 
+				I18N.getString("Scheduler.Text.Popup.FinishingTests") + ":",
+				I18N.getString("Scheduler.Text.Popup.FinishingTests"),
+				JOptionPane.INFORMATION_MESSAGE);
+
+		}
 	}
 
 	private final void paintScale(final Graphics g,
@@ -749,5 +774,32 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		
 		this.revalidate();
 	}
+	
+	
+	private final class TestZebraRenderer extends ZebraListCellRenderer {
+		@Override
+		public Component getListCellRendererComponent(	JList list,
+														Object value,
+														int index,
+														boolean isSelected,
+														boolean cellHasFocus) {
+			
+			final JLabel label = (JLabel) super.getListCellRendererComponent(list, 
+				value, 
+				index, 
+				isSelected,
+				cellHasFocus);
+			final Test test = (Test) value;
+			try {
+				final String extendedTestDescription = schedulerModel.getExtendedTestDescription(test);
+				label.setText(CommonUIUtilities.convertToHTMLString(extendedTestDescription));
+			} catch (ApplicationException e) {
+				Log.errorMessage(e);
+				label.setText(test.getDescription());
+			}
+			return label;
+		}
+	}
+
 
 }
