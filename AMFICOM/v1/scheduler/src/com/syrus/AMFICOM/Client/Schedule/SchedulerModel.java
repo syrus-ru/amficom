@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.159 2006/02/02 12:43:53 bob Exp $
+ * $Id: SchedulerModel.java,v 1.160 2006/02/02 13:26:09 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,6 +63,8 @@ import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.ParameterSet;
+import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
+import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternWrapper;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.TestView;
@@ -75,7 +77,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.159 $, $Date: 2006/02/02 12:43:53 $
+ * @version $Revision: 1.160 $, $Date: 2006/02/02 13:26:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -395,14 +397,15 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 //			StorableObjectPool.getStorableObjectsByCondition(periodicalTypicalCondition, true, true);
 //		PeriodicalTemporalPattern periodicalTemporalPattern = periodicalTemporalPatterns.iterator().next();
 //		
-//		final MonitoredElement me = 
+//		final MonitoredElement me1 = 
 //			StorableObjectPool.getStorableObject(new Identifier("MonitoredElement_7"), true);
+//		final MonitoredElement me2 = 
+//			StorableObjectPool.getStorableObject(new Identifier("MonitoredElement_16"), true);
 //		
 //		Date now = new Date();
 //		final Date startTime = new Date(now.getTime() - intervalLength * 3L);
 //		final Date endTime = new Date(now.getTime() + intervalLength * 1L);
-//		
-//		final Test newTest = Test.createInstance(LoginManager.getUserId(), 
+//		final Test newTest1 = Test.createInstance(LoginManager.getUserId(), 
 //			startTime, 
 //			endTime, 
 //			periodicalTemporalPattern.getId(), 
@@ -410,11 +413,26 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 //			MeasurementType.REFLECTOMETRY, 
 //			AnalysisType.UNKNOWN, 
 //			Identifier.VOID_IDENTIFIER, 
-//			me, 
+//			me1, 
 //			"Testing test",
 //			Collections.singleton(new Identifier("MeasurementSetup_243")));
-//		newTest.setStatus(TestStatus.TEST_STATUS_PROCESSING);
-//		assert Log.debugMessage("New test " + newTest.getId() + " created", Log.DEBUGLEVEL03);
+//		newTest1.setStatus(TestStatus.TEST_STATUS_PROCESSING);
+//		assert Log.debugMessage("New test " + newTest1.getId() + " created", Log.DEBUGLEVEL03);
+//		
+//		final Test newTest2 = Test.createInstance(LoginManager.getUserId(), 
+//			startTime, 
+//			endTime, 
+//			periodicalTemporalPattern.getId(), 
+//			TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL, 
+//			MeasurementType.REFLECTOMETRY, 
+//			AnalysisType.UNKNOWN, 
+//			Identifier.VOID_IDENTIFIER, 
+//			me2, 
+//			"Testing test",
+//			Collections.singleton(new Identifier("MeasurementSetup_16")));
+//		newTest2.setStatus(TestStatus.TEST_STATUS_PROCESSING);
+//		assert Log.debugMessage("New test " + newTest2.getId() + " created", Log.DEBUGLEVEL03);
+//
 //	}
 	
 	public void updateTests(final Date startDate, 

@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.74 2006/02/02 11:36:47 bob Exp $
+ * $Id: PlanPanel.java,v 1.75 2006/02/02 13:26:09 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -34,6 +35,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -62,7 +65,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2006/02/02 11:36:47 $
+ * @version $Revision: 1.75 $, $Date: 2006/02/02 13:26:09 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -461,12 +464,16 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			final JList list = new JList(listModel);
 			list.setCellRenderer(new TestZebraRenderer());
 			
-			final JPanel panel = new JPanel(new GridLayout(0, 1));
-			panel.add(new JLabel(I18N.getString("Scheduler.Text.Popup.FinishingTests") + ":"));			
-			panel.add(list);
+			
+			final Box box = Box.createVerticalBox();
+			box.add(new JLabel(I18N.getString("Scheduler.Text.Popup.FinishingTests") + ":"));
+			
+			final JScrollPane scroll = new JScrollPane(list);
+			scroll.setAutoscrolls(true);
+			box.add(scroll);
 			
 			JOptionPane.showMessageDialog(this, 
-				panel,
+				box,
 				I18N.getString("Scheduler.Text.Popup.FinishingTests"),
 				JOptionPane.INFORMATION_MESSAGE);
 
