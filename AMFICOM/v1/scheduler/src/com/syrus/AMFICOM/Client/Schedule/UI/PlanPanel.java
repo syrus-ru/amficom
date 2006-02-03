@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.77 2006/02/03 11:13:31 bob Exp $
+ * $Id: PlanPanel.java,v 1.78 2006/02/03 12:54:47 bob Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2006/02/03 11:13:31 $
+ * @version $Revision: 1.78 $, $Date: 2006/02/03 12:54:47 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -368,7 +368,6 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 //				this.cal.set(Calendar.MINUTE, 0);
 //			}
 			this.cal.set(Calendar.SECOND, 0);
-
 //			// округляем до шага
 //			int num = this.cal.get(STEPS[this.scale].scale);
 //			while (num / STEPS[this.scale].align * STEPS[this.scale].align != num) {

@@ -581,10 +581,10 @@ final class TestLine extends TimeLine {
 		final TestStatus status = test.getStatus();
 		Color selectedColor = SchedulerModel.getColor(status, true);
 		Color color = SchedulerModel.getColor(status, false);
-		String title = SchedulerModel.getStatusName(status);
+		String testTitle = SchedulerModel.getStatusName(status);
 		
 		if (status == TestStatus.TEST_STATUS_PROCESSING) {
-			title = SchedulerModel.getStatusName(TestStatus.TEST_STATUS_SCHEDULED);
+			testTitle = SchedulerModel.getStatusName(TestStatus.TEST_STATUS_SCHEDULED);
 			selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_SCHEDULED, true);
 			color = SchedulerModel.getColor(TestStatus.TEST_STATUS_SCHEDULED, false);
 		}
@@ -640,7 +640,7 @@ final class TestLine extends TimeLine {
 									}
 								}
 								if (!foundMeasurementAfterThisSheduledTime) {
-									testTimeLine.title = title;
+									testTimeLine.title = testTitle;
 									testTimeLine.color = color;
 									testTimeLine.selectedColor = selectedColor;
 								} else {
@@ -687,7 +687,7 @@ final class TestLine extends TimeLine {
 								testTimeLine.color = SchedulerModel.getColor(TestStatus.TEST_STATUS_STOPPED, false);
 								testTimeLine.selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_STOPPED, true);
 							} else {
-								testTimeLine.title = title;
+								testTimeLine.title = testTitle;
 								testTimeLine.color = color;
 								testTimeLine.selectedColor = selectedColor;
 							}
@@ -698,7 +698,7 @@ final class TestLine extends TimeLine {
 			}
 				break;
 			default:
-				if (testTime.compareTo(start1) < 0) {
+				if (test.getEndTime().getTime() + measurementDuration < start1.getTime()) {
 					return;
 				}
 				TestTimeLine testTimeLine = new TestTimeLine();
@@ -721,7 +721,7 @@ final class TestLine extends TimeLine {
 				
 				if (!foundMeasurement) {
 					testTimeLine.date = testTime;
-					testTimeLine.title = title;
+					testTimeLine.title = testTitle;
 					testTimeLine.startTime = time;
 					testTimeLine.duration =  test.getEndTime().getTime() - testTimeLine.startTime +
 							measurementSetup.getMeasurementDuration();

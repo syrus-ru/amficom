@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.162 2006/02/03 11:04:31 bob Exp $
+ * $Id: SchedulerModel.java,v 1.163 2006/02/03 12:54:47 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.162 $, $Date: 2006/02/03 11:04:31 $
+ * @version $Revision: 1.163 $, $Date: 2006/02/03 12:54:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -515,6 +515,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			for (final Test test : refreshTests) {
 				this.addTest(test);
 			}
+			final long time4 = System.currentTimeMillis();
+			Log.debugMessage("update takes:" + (time4-time0),
+				Log.DEBUGLEVEL03);
 //			assert Log.debugMessage(this.testIds 
 //						+ ", " 
 //						+ this.testIds.size(),
@@ -647,7 +650,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		final Set<Test> tests = 
 			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, 
 				false);
-
 		this.testIds.clear();
 		this.mainTestIds.clear();
 		
