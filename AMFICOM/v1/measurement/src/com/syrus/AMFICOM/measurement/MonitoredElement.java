@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.12 2005/12/17 12:11:21 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.13 2006/02/03 07:43:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/12/17 12:11:21 $
+ * @version $Revision: 1.13 $, $Date: 2006/02/03 07:43:28 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -190,8 +190,9 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 
 	protected synchronized void setMonitoredDomainMemberIds0(final Set<Identifier> monitoredDomainMemberIds) {
 		this.monitoredDomainMemberIds.clear();
-		if (monitoredDomainMemberIds != null)
+		if (monitoredDomainMemberIds != null) {
 			this.monitoredDomainMemberIds.addAll(monitoredDomainMemberIds);
+		}
 	}
 
 	protected synchronized void setMonitoredDomainMemberIds(final Set<Identifier> monitoredDomainMemberIds) {
