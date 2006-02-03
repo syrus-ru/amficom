@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.81 2006/02/02 15:49:51 bob Exp $
+ * $Id: TableFrame.java,v 1.82 2006/02/03 11:13:31 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2006/02/02 15:49:51 $
+ * @version $Revision: 1.82 $, $Date: 2006/02/03 11:13:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -373,14 +373,10 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 													new Date(), 
 													test.getEndTime());
 										} catch (final ApplicationException ae) {
-											try {
-												AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.CannotResumeTest") 
-													+ " " + schedulerModel.getExtendedTestDescription(test));
-											} catch (ApplicationException e1) {
-												Log.errorMessage(e1);
-												AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.CannotResumeTest") 
-													+ " " + test.getDescription());
-											}
+											AbstractMainFrame.showErrorMessage(
+												I18N.getString("Scheduler.Error.CannotResumeTest") 
+												+ " " 
+												+ schedulerModel.getExtendedTestDescription(test));
 											Log.errorMessage(ae);
 											return;
 										}

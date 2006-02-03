@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.76 2006/02/02 13:28:01 bob Exp $
+ * $Id: PlanPanel.java,v 1.77 2006/02/03 11:13:31 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,11 +58,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
-import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2006/02/02 13:28:01 $
+ * @version $Revision: 1.77 $, $Date: 2006/02/03 11:13:31 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -801,13 +800,8 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 				isSelected,
 				cellHasFocus);
 			final Test test = (Test) value;
-			try {
-				final String extendedTestDescription = schedulerModel.getExtendedTestDescription(test);
-				label.setText(CommonUIUtilities.convertToHTMLString(extendedTestDescription));
-			} catch (ApplicationException e) {
-				Log.errorMessage(e);
-				label.setText(test.getDescription());
-			}
+			final String extendedTestDescription = schedulerModel.getExtendedTestDescription(test);
+			label.setText(CommonUIUtilities.convertToHTMLString(extendedTestDescription));
 			return label;
 		}
 	}
