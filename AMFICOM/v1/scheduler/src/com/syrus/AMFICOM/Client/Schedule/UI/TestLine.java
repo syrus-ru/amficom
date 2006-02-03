@@ -97,6 +97,9 @@ final class TestLine extends TimeLine {
 //				assert Log.debugMessage(this.testTimeLine.testId + " > " + item.testTimeLine.testId, Log.DEBUGLEVEL03);
 //				assert Log.debugMessage(this.testTimeLine.date + " > " + item.testTimeLine.date, Log.DEBUGLEVEL03);
 //				return -this.testTimeLine.date.compareTo(item.testTimeLine.date);
+				if (dx == 1 || dx == -1) {
+					return 0;
+				}
 				return dx;
 //			}
 //			
