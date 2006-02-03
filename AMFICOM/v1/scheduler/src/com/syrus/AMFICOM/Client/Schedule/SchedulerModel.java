@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.163 2006/02/03 12:54:47 bob Exp $
+ * $Id: SchedulerModel.java,v 1.164 2006/02/03 13:46:58 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.163 $, $Date: 2006/02/03 12:54:47 $
+ * @version $Revision: 1.164 $, $Date: 2006/02/03 13:46:58 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -454,9 +454,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				}
 			}
 			
-			final long time0 = System.currentTimeMillis();
-			StorableObjectPool.refresh();
-			final long time1 = System.currentTimeMillis();
 			
 //			this.createTestingTest();
 			
@@ -470,8 +467,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 //				this.yetUpdated = true;
 //			}
 			
-			Log.debugMessage("StorableObjectPool.refresh:" + (time1-time0),
-				Log.DEBUGLEVEL03);
+			
 			final TypicalCondition startTypicalCondition = 
 				new TypicalCondition(endDate,
 					endDate,
@@ -494,10 +490,17 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				StorableObjectPool.getStorableObjectsByCondition(compoundCondition, 
 					true, 
 					true);
+			
+			final long time0 = System.currentTimeMillis();
+			StorableObjectPool.refresh(Identifier.createIdentifiers(tests));
+			final long time1 = System.currentTimeMillis();
+			Log.debugMessage("StorableObjectPool.refresh:" + (time1-time0),	Log.DEBUGLEVEL03);
+			
 			final long time2 = System.currentTimeMillis();
 			Log.debugMessage("StorableObjectPool.getStorableObjectsByCondition:" + (time2-time1),
 				Log.DEBUGLEVEL03);
 			final Set<Test> refreshTests = new HashSet<Test>();
+			assert Log.debugMessage("tests:" + tests, Log.DEBUGLEVEL03);
 			for (final Test test : tests) {
 				final Identifier testId = test.getId();
 				final StorableObjectVersion version = idVersion.get(testId);
@@ -505,13 +508,17 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					refreshTests.add(test);
 				}
 			}
+			assert Log.debugMessage("refreshTests:" + refreshTests, Log.DEBUGLEVEL03);
 			TestView.refreshCache(refreshTests, startDate, endDate);
-			TestView.updateQuilityCache(refreshTests);
-			this.getFinishingTests(tests);
-			
 			final long time3 = System.currentTimeMillis();
 			Log.debugMessage("TestView.refreshCache:" + (time3-time2),
 				Log.DEBUGLEVEL03);
+			TestView.updateQualityCache(refreshTests);
+			final long time31 = System.currentTimeMillis();
+			Log.debugMessage("TestView.updateQualityCache:" + (time31-time3),
+				Log.DEBUGLEVEL03);
+			this.getFinishingTests(tests);
+			
 			for (final Test test : refreshTests) {
 				this.addTest(test);
 			}

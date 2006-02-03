@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.13 2006/02/03 11:04:01 bob Exp $
+* $Id: TestView.java,v 1.14 2006/02/03 13:46:58 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2006/02/03 11:04:01 $
+ * @version $Revision: 1.14 $, $Date: 2006/02/03 13:46:58 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -79,7 +79,7 @@ public final class TestView {
 
 	private TestStatus	status;
 
-	private boolean	processingMeasurement;	
+	private Measurement lastProcessingMeasurement;	
 	
 	private TestView(final Test test,
 	                 final Date start,
@@ -90,23 +90,23 @@ public final class TestView {
 		
 		this.createStartEndTimes();
 		
-//		final long t0 = System.currentTimeMillis();
+		final long t0 = System.currentTimeMillis();
 		this.createKISName();
-//		final long t1 = System.currentTimeMillis();
+		final long t1 = System.currentTimeMillis();
 		this.createMeasurementPortName();		
-//		final long t2 = System.currentTimeMillis();
+		final long t2 = System.currentTimeMillis();
 		this.createTemporalNames();
-//		final long t3 = System.currentTimeMillis();
+		final long t3 = System.currentTimeMillis();
 		this.createMeasurements();
-//		final long t4 = System.currentTimeMillis();
+		final long t4 = System.currentTimeMillis();
 		this.createQuality();
-//		final long t5 = System.currentTimeMillis();
+		final long t5 = System.currentTimeMillis();
 		
-//		Log.debugMessage(test + " createKISName " + (t1-t0), Log.DEBUGLEVEL03);
-//		Log.debugMessage(test + " createMeasurementPortName " + (t2-t1), Log.DEBUGLEVEL03);
-//		Log.debugMessage(test + " createTemporalNames " + (t3-t2), Log.DEBUGLEVEL03);
-//		Log.debugMessage(test + " createMeasurements " + (t4-t3), Log.DEBUGLEVEL03);
-//		Log.debugMessage(test + " createQuality " + (t5-t4), Log.DEBUGLEVEL03);
+		Log.debugMessage(test + " createKISName " + (t1-t0), Log.DEBUGLEVEL03);
+		Log.debugMessage(test + " createMeasurementPortName " + (t2-t1), Log.DEBUGLEVEL03);
+		Log.debugMessage(test + " createTemporalNames " + (t3-t2), Log.DEBUGLEVEL03);
+		Log.debugMessage(test + " createMeasurements " + (t4-t3), Log.DEBUGLEVEL03);
+		Log.debugMessage(test + " createQuality " + (t5-t4), Log.DEBUGLEVEL03);
 	}
 
 	@Override
@@ -195,9 +195,14 @@ public final class TestView {
 	}
 
 	private final void refreshQuality() throws ApplicationException {
-		if (this.processingMeasurement) {
-			this.createMeasurements();
-			this.createQuality();
+		if (this.lastProcessingMeasurement != null) {
+			final StorableObjectVersion beforeUpdateVersion = this.lastProcessingMeasurement.getVersion();			
+			StorableObjectPool.refresh(Collections.singleton(this.lastProcessingMeasurement.getId()));
+			final StorableObjectVersion afterUpdateVersion = this.lastProcessingMeasurement.getVersion();
+			if (!afterUpdateVersion.equals(beforeUpdateVersion)) {
+				this.createMeasurements();
+				this.createQuality();
+			}
 		}
 	}
 	
@@ -242,9 +247,9 @@ public final class TestView {
 		SortedSet<Measurement> set = this.measurements;
 		
 //		final long t0 = System.currentTimeMillis();
-		this.processingMeasurement = false;
+		this.lastProcessingMeasurement = null;
 		while (!set.isEmpty()) {
-			final Measurement measurement = set.last();
+			final Measurement measurement = set.last();			
 			if (measurement.getStatus() == 
 				MeasurementStatus.MEASUREMENT_STATUS_COMPLETED) {
 				final long t01 = System.currentTimeMillis();
@@ -278,7 +283,7 @@ public final class TestView {
 //				Log.debugMessage(this.test + ", " + measurement + ", it takes " + (t02-t01), Log.DEBUGLEVEL03);
 				break;
 			} 
-			this.processingMeasurement = true;
+			this.lastProcessingMeasurement = measurement;
 			set = set.headSet(measurement);
 		}
 //		final long t1 = System.currentTimeMillis();
@@ -322,7 +327,7 @@ public final class TestView {
 	 * @param butTests
 	 * @throws ApplicationException
 	 */
-	public static final synchronized void updateQuilityCache(final Set<Test> butTests) 
+	public static final synchronized void updateQualityCache(final Set<Test> butTests) 
 	throws ApplicationException {
 		for (final Identifiable testId : MAP.keySet()) {
 			if (butTests.contains(testId)) {
