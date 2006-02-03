@@ -13,6 +13,7 @@ import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -89,7 +90,14 @@ final class TestLine extends TimeLine {
 //			}
 //			
 //			if (!this.testTimeLine.testId.equals(item.testTimeLine.testId)) {			
-				return (this.x - item.x);
+				final int dx = (this.x - item.x);
+//				if (dx != 0) {
+//					return dx;
+//				}
+//				assert Log.debugMessage(this.testTimeLine.testId + " > " + item.testTimeLine.testId, Log.DEBUGLEVEL03);
+//				assert Log.debugMessage(this.testTimeLine.date + " > " + item.testTimeLine.date, Log.DEBUGLEVEL03);
+//				return -this.testTimeLine.date.compareTo(item.testTimeLine.date);
+				return dx;
 //			}
 //			
 //			return 0;
@@ -153,6 +161,8 @@ final class TestLine extends TimeLine {
 	private int lastX = -1;
 
 	protected volatile boolean 	skip					= false;
+
+	private Comparator<Test>	statusTestComparator;
 
 	public TestLine(final ApplicationContext aContext, 
 	                final String title, final 
@@ -820,9 +830,25 @@ final class TestLine extends TimeLine {
 			if (this.scale <= 0.0 || super.start == 0 || super.end == 0) {
 				super.scale = (double) (this.getWidth() - PlanPanel.MARGIN) / (double) (this.end - this.start);
 			}
-	
+
+			if (this.statusTestComparator == null) {
+				this.statusTestComparator = new Comparator<Test>(){
+					public final int compare(final Test t1,
+										final Test t2) {
+						final TestStatus status1 = t1.getStatus();
+						final TestStatus status2 = t2.getStatus();
+						return status1.value() - status2.value();
+					}
+				};
+			}
+			
+			final TreeSet<Test> tests = new TreeSet<Test>(this.statusTestComparator);
 			for (final Identifier testId : this.testIds) {
 				final Test test = TestView.valueOf(testId).getTest();
+				tests.add(test);
+			}
+			
+			for (final Test test : tests) {
 				final List<TestTimeLine> testTimeLineList = this.measurements.get(test.getId());
 				if (testTimeLineList == null || testTimeLineList.isEmpty()) {
 					System.err.println("TestLine.refreshTimeItems | List<TestTimeLine> for " + test.getId() + " is null or empty ");
