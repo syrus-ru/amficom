@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.20 2005/12/17 12:11:21 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.21 2006/02/03 13:24:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,17 +38,17 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortTypeHelper;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/12/17 12:11:21 $
+ * @version $Revision: 1.21 $, $Date: 2006/02/03 13:24:16 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class MeasurementPortType extends StorableObjectType<MeasurementPortType>
-		implements Characterizable, Namable {
+public final class MeasurementPortType extends StorableObjectType<MeasurementPortType> implements Characterizable, Namable {
 	private static final long serialVersionUID = 7733425194674608181L;
 
 	private String name;
+
 	private EnumSet<MeasurementType> measurementTypes;
 
 	public MeasurementPortType(final IdlMeasurementPortType mptt) throws CreateObjectException {
@@ -66,21 +66,22 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 			final String description,
 			final String name,
 			final EnumSet<MeasurementType> measurementTypes) {
-			super(id,
-				  new Date(System.currentTimeMillis()),
-				  new Date(System.currentTimeMillis()),
-				  creatorId,
-				  creatorId,
-				  version,
-				  codename,
-				  description);				
-			this.name = name;
-			this.measurementTypes = EnumSet.noneOf(MeasurementType.class);
-			this.setMeasurementTypes0(measurementTypes);
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				codename,
+				description);
+		this.name = name;
+		this.measurementTypes = EnumSet.noneOf(MeasurementType.class);
+		this.setMeasurementTypes0(measurementTypes);
 	}
 	
 	/**
 	 * create new instance for client
+	 * 
 	 * @param creatorId
 	 * @param codename
 	 * @param description
@@ -90,7 +91,7 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 			final String codename,
 			final String description,
 			final String name,
-			final EnumSet<MeasurementType> measurementTypes) throws CreateObjectException{
+			final EnumSet<MeasurementType> measurementTypes) throws CreateObjectException {
 		if (creatorId == null || codename == null || name == null || description == null || measurementTypes == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
 		}
