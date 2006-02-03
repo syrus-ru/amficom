@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.161 2006/02/02 13:28:01 bob Exp $
+ * $Id: SchedulerModel.java,v 1.162 2006/02/03 11:04:31 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,6 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.AnalysisType;
-import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
@@ -66,7 +65,6 @@ import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.TestView;
-import com.syrus.AMFICOM.measurement.TestViewAdapter;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
@@ -75,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.161 $, $Date: 2006/02/02 13:28:01 $
+ * @version $Revision: 1.162 $, $Date: 2006/02/03 11:04:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -508,7 +506,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				}
 			}
 			TestView.refreshCache(refreshTests, startDate, endDate);
-			
+			TestView.updateQuilityCache(refreshTests);
 			this.getFinishingTests(tests);
 			
 			final long time3 = System.currentTimeMillis();
@@ -1854,31 +1852,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		return null;
 	}	
 	
-	public final String getExtendedTestDescription(final Test test) 
-	throws ApplicationException {
-		
-		final MonitoredElement testMonitoredElement = 
-			StorableObjectPool.getStorableObject(test.getMonitoredElementId(), true);
-		
-		final MeasurementPort testMeasurementPort = 
-			StorableObjectPool.getStorableObject(testMonitoredElement.getMeasurementPortId(), true);
-		
-		final KIS kis = StorableObjectPool.getStorableObject(testMeasurementPort.getKISId(), true); 
-		
-		final TestViewAdapter testController = TestViewAdapter.getInstance();
+	public final String getExtendedTestDescription(final Test test) {		
 		final TestView view = TestView.valueOf(test);
-		final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-		return testController.getValue(view, TestViewAdapter.KEY_TEMPORAL_TYPE_NAME).toString()
-			+ "\n" + testController.getName(TestViewAdapter.KEY_START_TIME) 
-			+ " : " 
-			+ sdf.format(testController.getValue(view, TestViewAdapter.KEY_START_TIME))
-			+ "\n"
-			+ testMonitoredElement.getName() 
-			+ "\n"
-			+ kis.getDescription(); 
+		return view.getExtendedDescription();
 	}
-	
-
 	
 	public static Color getColor(final TestStatus testStatus) {
 		return getColor(testStatus, false);
