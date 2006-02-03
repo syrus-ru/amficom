@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.18 2006/02/03 16:03:14 bob Exp $
+* $Id: TestView.java,v 1.19 2006/02/03 16:37:36 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
@@ -45,7 +46,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/02/03 16:03:14 $
+ * @version $Revision: 1.19 $, $Date: 2006/02/03 16:37:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -197,17 +198,26 @@ public final class TestView {
 	private final void refreshQuality() throws ApplicationException {
 		if (this.lastProcessingMeasurement != null) {
 			final StorableObjectVersion beforeUpdateVersion = this.lastProcessingMeasurement.getVersion();			
-			StorableObjectPool.refresh(Collections.singleton(this.lastProcessingMeasurement.getId()));
+			this.refreshMeasurements();
 			final StorableObjectVersion afterUpdateVersion = this.lastProcessingMeasurement.getVersion();			
-			if (!afterUpdateVersion.equals(beforeUpdateVersion)) {
-				StorableObjectPool.refresh(Identifier.createIdentifiers(this.measurements));
-				this.createMeasurements();
+			if (!afterUpdateVersion.equals(beforeUpdateVersion)) {				
 				this.createQuality();
 			}
 		} else {
-			StorableObjectPool.refresh(Identifier.createIdentifiers(this.measurements));
-			this.createMeasurements();
+			this.refreshMeasurements();
 		}
+	}
+	
+	private void refreshMeasurements() throws ApplicationException {		
+		final Set<Identifier> measurementIds = new HashSet<Identifier>();
+		for (final Measurement measurement : this.measurements) {
+			if (measurement.getStatus() != 
+				MeasurementStatus.MEASUREMENT_STATUS_COMPLETED) {
+				measurementIds.add(measurement.getId());
+			}
+		}		
+		StorableObjectPool.refresh(measurementIds);
+		this.createMeasurements();
 	}
 	
 	private final void createMeasurements() throws ApplicationException {
@@ -290,8 +300,8 @@ public final class TestView {
 				} catch (final DataFormatException e) {
 					throw new CreateObjectException(I18N.getString("Error.CannotAcquireObject"));
 				}
-//				final long t02 = System.currentTimeMillis();
-//				Log.debugMessage(this.test + ", " + measurement + ", it takes " + (t02-t01), Log.DEBUGLEVEL03);
+				final long t02 = System.currentTimeMillis();
+				Log.debugMessage(this.test + ", " + measurement + ", it takes " + (t02-t01), Log.DEBUGLEVEL03);
 				break;
 			} 
 			this.lastProcessingMeasurement = measurement;
@@ -345,7 +355,9 @@ public final class TestView {
 				continue;
 			}
 			final TestView testView = MAP.get(testId);
-			testView.refreshQuality();
+			if (testView.status == TestStatus.TEST_STATUS_PROCESSING) {
+				testView.refreshQuality();
+			}
 		}
 	}
 	
