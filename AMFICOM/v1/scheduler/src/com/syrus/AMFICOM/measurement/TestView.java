@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.17 2006/02/03 15:59:37 bob Exp $
+* $Id: TestView.java,v 1.18 2006/02/03 16:03:14 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2006/02/03 15:59:37 $
+ * @version $Revision: 1.18 $, $Date: 2006/02/03 16:03:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -354,12 +354,12 @@ public final class TestView {
 		final Date end) 
 	throws ApplicationException{
 		for (final Test test : tests) {
-			final TestView testView = MAP.get(test.getId());
-			if (testView == null) {
+//			final TestView testView = MAP.get(test.getId());
+//			if (testView == null) {
 				addTest(test, start, end);
-			} else {
-				testView.refreshQuality();
-			}
+//			} else {
+//				testView.refreshQuality();
+//			}
 		}
 	}
 	
