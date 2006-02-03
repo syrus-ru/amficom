@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.15 2006/02/03 14:14:10 bob Exp $
+* $Id: TestView.java,v 1.16 2006/02/03 14:34:57 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2006/02/03 14:14:10 $
+ * @version $Revision: 1.16 $, $Date: 2006/02/03 14:34:57 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -204,7 +204,9 @@ public final class TestView {
 				this.createMeasurements();
 				this.createQuality();
 			}
-		} 
+		} else {
+			this.createMeasurements();
+		}
 	}
 	
 	private final void createMeasurements() throws ApplicationException {
