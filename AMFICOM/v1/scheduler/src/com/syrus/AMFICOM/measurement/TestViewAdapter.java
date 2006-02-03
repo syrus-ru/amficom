@@ -1,5 +1,5 @@
 /*
- * $Id: TestViewAdapter.java,v 1.8 2006/02/02 15:49:51 bob Exp $
+ * $Id: TestViewAdapter.java,v 1.9 2006/02/03 14:14:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2006/02/02 15:49:51 $
+ * @version $Revision: 1.9 $, $Date: 2006/02/03 14:14:09 $
  * @author $Author: bob $
  * @module module
  */
@@ -125,7 +125,7 @@ public class TestViewAdapter implements Wrapper<TestView> {
 			name = key;
 		}
 
-		return CommonUIUtilities.convertToHTMLString(name);
+		return name;
 	}
 
 	public Class getPropertyClass(String key) {

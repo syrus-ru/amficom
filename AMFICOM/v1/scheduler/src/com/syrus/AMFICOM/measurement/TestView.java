@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.14 2006/02/03 13:46:58 bob Exp $
+* $Id: TestView.java,v 1.15 2006/02/03 14:14:10 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2006/02/03 13:46:58 $
+ * @version $Revision: 1.15 $, $Date: 2006/02/03 14:14:10 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -198,12 +198,13 @@ public final class TestView {
 		if (this.lastProcessingMeasurement != null) {
 			final StorableObjectVersion beforeUpdateVersion = this.lastProcessingMeasurement.getVersion();			
 			StorableObjectPool.refresh(Collections.singleton(this.lastProcessingMeasurement.getId()));
-			final StorableObjectVersion afterUpdateVersion = this.lastProcessingMeasurement.getVersion();
+			final StorableObjectVersion afterUpdateVersion = this.lastProcessingMeasurement.getVersion();			
 			if (!afterUpdateVersion.equals(beforeUpdateVersion)) {
+//				StorableObjectPool.refresh(Identifier.createIdentifiers(this.measurements));
 				this.createMeasurements();
 				this.createQuality();
 			}
-		}
+		} 
 	}
 	
 	private final void createMeasurements() throws ApplicationException {
@@ -343,7 +344,12 @@ public final class TestView {
 		final Date end) 
 	throws ApplicationException{
 		for (final Test test : tests) {
-			addTest(test, start, end);
+			final TestView testView = MAP.get(test.getId());
+			if (testView == null) {
+				addTest(test, start, end);
+			} else {
+				testView.refreshQuality();
+			}
 		}
 	}
 	

@@ -875,10 +875,9 @@ final class TestLine extends TimeLine {
 		for (final TestTimeItem testTimeItem : testTimeItems) {
 			final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 			if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.width) {
-				
 				final Test test = TestView.valueOf(testTimeItem.testTimeLine.testId).getTest();
 				final TestView view = TestView.valueOf(test);
-				return "<html>" + testController.getValue(view, TestViewAdapter.KEY_TEMPORAL_TYPE_NAME).toString()
+				final String string = "<html>" + testController.getValue(view, TestViewAdapter.KEY_TEMPORAL_TYPE_NAME).toString()
 						+ "<br>" + testController.getName(TestViewAdapter.KEY_START_TIME) 
 						+ " : " 
 						+ sdf.format(testController.getValue(view, TestViewAdapter.KEY_START_TIME)) 
@@ -887,6 +886,7 @@ final class TestLine extends TimeLine {
 						+ " : "
 						+ testTimeItem.testTimeLine.title
 						+ "</html>";
+				return string;
 			}
 		}
 		return null;
