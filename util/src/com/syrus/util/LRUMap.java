@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMap.java,v 1.50 2006/01/19 15:17:54 arseniy Exp $
+ * $Id: LRUMap.java,v 1.51 2006/02/03 13:18:53 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import java.util.Set;
 
 
 /**
- * @version $Revision: 1.50 $, $Date: 2006/01/19 15:17:54 $
+ * @version $Revision: 1.51 $, $Date: 2006/02/03 13:18:53 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -58,6 +58,9 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 	}
 
 	public LRUMap(final int capacity, final long timeToLive) {
+		assert capacity >= 0 : "Negative capacity";
+		assert timeToLive >= 0 : "Negative time to live";
+
 		this.capacity = capacity;
 		this.timeToLive = timeToLive;
 
