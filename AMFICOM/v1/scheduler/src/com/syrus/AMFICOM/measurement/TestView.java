@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.16 2006/02/03 14:34:57 bob Exp $
+* $Id: TestView.java,v 1.17 2006/02/03 15:59:37 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2006/02/03 14:34:57 $
+ * @version $Revision: 1.17 $, $Date: 2006/02/03 15:59:37 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -200,11 +200,12 @@ public final class TestView {
 			StorableObjectPool.refresh(Collections.singleton(this.lastProcessingMeasurement.getId()));
 			final StorableObjectVersion afterUpdateVersion = this.lastProcessingMeasurement.getVersion();			
 			if (!afterUpdateVersion.equals(beforeUpdateVersion)) {
-//				StorableObjectPool.refresh(Identifier.createIdentifiers(this.measurements));
+				StorableObjectPool.refresh(Identifier.createIdentifiers(this.measurements));
 				this.createMeasurements();
 				this.createQuality();
 			}
 		} else {
+			StorableObjectPool.refresh(Identifier.createIdentifiers(this.measurements));
 			this.createMeasurements();
 		}
 	}
@@ -241,9 +242,16 @@ public final class TestView {
 					ObjectEntities.MEASUREMENT_CODE));
 			final Set<Measurement> measurements1 = 
 				StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
-			set.addAll(measurements1);			
+			set.addAll(measurements1);
 		}		
 		this.measurements  = Collections.unmodifiableSortedSet(set);
+		for (final Measurement measurement : set) {
+			assert Log.debugMessage(measurement 
+					+ " > " + this.test.getId() 
+					+ " > " + measurement.getStartTime()
+					+ " > " + measurement.getStatus().value(), 
+				Log.DEBUGLEVEL03);
+		}
 	}
 	
 	private final void createQuality() throws ApplicationException {
