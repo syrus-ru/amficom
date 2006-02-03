@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.12 2006/02/02 15:49:51 bob Exp $
+* $Id: TestView.java,v 1.13 2006/02/03 11:04:01 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,7 +18,10 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.swing.UIManager;
+
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -31,6 +35,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.AMFICOM.reflectometry.MeasurementReflectometryAnalysisResult;
 import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
@@ -40,7 +45,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2006/02/02 15:49:51 $
+ * @version $Revision: 1.13 $, $Date: 2006/02/03 11:04:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -56,6 +61,7 @@ public final class TestView {
 	private MeasurementSetup measurementSetup;
 	
 	private String kisName;
+	private String kisDescription;
 	private String portName;	
 	
 	private String temporalType;
@@ -68,6 +74,12 @@ public final class TestView {
 
 	private final Date	start;
 	private final Date	end;
+
+	private String	extendedDescription;
+
+	private TestStatus	status;
+
+	private boolean	processingMeasurement;	
 	
 	private TestView(final Test test,
 	                 final Date start,
@@ -122,6 +134,7 @@ public final class TestView {
 		final Identifier groupTestId = this.test.getGroupTestId();
 		if (groupTestId.isVoid()) {
 			this.lastDate = this.test.getEndTime();
+			this.status = this.test.getStatus();
 		} else {
 			final LinkedIdsCondition groupTestCondition = 
 				new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE);
@@ -133,6 +146,7 @@ public final class TestView {
 					this.lastDate = endTime;
 				}
 			} 
+			// TODO calculate status for group test
 		}
 		this.lastDate = new Date(this.lastDate.getTime()  
 				+ this.measurementSetup.getMeasurementDuration());
@@ -142,6 +156,7 @@ public final class TestView {
 		final KIS kis = 
 			StorableObjectPool.getStorableObject(this.test.getKISId(), true);
 		this.kisName = kis.getName();
+		this.kisDescription = kis.getDescription();
 	}
 
 	private final void createMeasurementPortName() throws ApplicationException {
@@ -179,6 +194,13 @@ public final class TestView {
 		}
 	}
 
+	private final void refreshQuality() throws ApplicationException {
+		if (this.processingMeasurement) {
+			this.createMeasurements();
+			this.createQuality();
+		}
+	}
+	
 	private final void createMeasurements() throws ApplicationException {
 		final boolean newerTest = this.isTestNewer();
 
@@ -220,6 +242,7 @@ public final class TestView {
 		SortedSet<Measurement> set = this.measurements;
 		
 //		final long t0 = System.currentTimeMillis();
+		this.processingMeasurement = false;
 		while (!set.isEmpty()) {
 			final Measurement measurement = set.last();
 			if (measurement.getStatus() == 
@@ -254,7 +277,8 @@ public final class TestView {
 //				final long t02 = System.currentTimeMillis();
 //				Log.debugMessage(this.test + ", " + measurement + ", it takes " + (t02-t01), Log.DEBUGLEVEL03);
 				break;
-			}
+			} 
+			this.processingMeasurement = true;
 			set = set.headSet(measurement);
 		}
 //		final long t1 = System.currentTimeMillis();
@@ -291,6 +315,22 @@ public final class TestView {
 	
 	public static final synchronized void clearCache(){
 		MAP.clear();
+	}
+	
+	/**
+	 * update quaility for cached test views but tests
+	 * @param butTests
+	 * @throws ApplicationException
+	 */
+	public static final synchronized void updateQuilityCache(final Set<Test> butTests) 
+	throws ApplicationException {
+		for (final Identifiable testId : MAP.keySet()) {
+			if (butTests.contains(testId)) {
+				continue;
+			}
+			final TestView testView = MAP.get(testId);
+			testView.refreshQuality();
+		}
 	}
 	
 	public static final synchronized void refreshCache(final Set<Test> tests,
@@ -369,10 +409,35 @@ public final class TestView {
 		return this.measurementSetup;
 	}
 	
+//	public final TestStatus getStatus() {
+//		return this.status;
+//	}
+	
+	public final String getExtendedDescription() {
+		if (this.extendedDescription == null) {
+			final MonitoredElement testMonitoredElement = 
+				this.test.getMonitoredElement();		
+			final TestViewAdapter adapter = TestViewAdapter.getInstance();
+			final SimpleDateFormat sdf = 
+				(SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+			this.extendedDescription = 
+				adapter.getValue(this, TestViewAdapter.KEY_TEMPORAL_TYPE_NAME).toString()
+					+ "\n" 
+					+ adapter.getName(TestViewAdapter.KEY_START_TIME) 
+					+ " : " 
+					+ sdf.format(adapter.getValue(this, TestViewAdapter.KEY_START_TIME))
+					+ "\n"
+					+ testMonitoredElement.getName() 
+					+ "\n"
+					+ this.kisDescription;
+		}
+		return this.extendedDescription;
+	}
+	
 	@Override
 	public String toString() {
 		return "TestView of <" + this.test + '>';
 	}
-
+	
 }
 
