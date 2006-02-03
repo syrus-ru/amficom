@@ -1,5 +1,5 @@
 /*
- * $Id: XMLPoolContext.java,v 1.11 2005/12/08 15:31:06 arseniy Exp $
+ * $Id: XMLPoolContext.java,v 1.12 2006/02/03 13:22:58 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.LRUMapSaver;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/12/08 15:31:06 $
+ * @version $Revision: 1.12 $, $Date: 2006/02/03 13:22:58 $
  * @author $Author: arseniy $
  * @module commonclient
  */
@@ -27,7 +27,7 @@ public final class XMLPoolContext extends PoolContext {
 	@Override
 	public void init() {
 		StorableObjectPool.init(super.objectLoader);
-		final long timeToLive = 120 * 60 * 1000 * 1000 * 1000;
+		final long timeToLive = 120 * 60000000000L;
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, 1000, timeToLive);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, 1000, timeToLive);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, 1000, timeToLive);
