@@ -1,5 +1,5 @@
 /*-
- * $Id: DataType.java,v 1.17.2.1 2006/02/06 14:46:30 arseniy Exp $
+ * $Id: DataType.java,v 1.17.2.2 2006/02/06 14:51:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.17.2.1 $, $Date: 2006/02/06 14:46:30 $
+ * @version $Revision: 1.17.2.2 $, $Date: 2006/02/06 14:51:27 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -32,9 +32,9 @@ public enum DataType {
 	RAW("raw"),
 	BOOLEAN("boolean");
 
-	private static final String KEY_ROOT = "DataType.Description.";
-
 	private static final DataType VALUES[] = values();
+
+	private static final String KEY_ROOT = "DataType.Description.";
 
 	private final String codename;
 	private final String description;
@@ -47,24 +47,18 @@ public enum DataType {
 
 	/**
 	 * @param code
-	 * @does_not_throw ArrayIndexOutOfBoundsException
 	 */
 	public static DataType valueOf(final int code) {
 		try {
 			return VALUES[code];
 		} catch (final ArrayIndexOutOfBoundsException aioobe) {
-			/*
-			 * Arseniy, if you want error handling here, the task
-			 * can be accomplished in a more convenient way:
-			 */
-			Log.errorMessage("Illegal IDL code: " + code + ", returning RAW");
+			Log.errorMessage("Illegal code: " + code + ", returning RAW");
 			return RAW;
 		}
 	}
 
 	/**
 	 * @param dataType
-	 * @does_not_throw ArrayIndexOutOfBoundsException
 	 */
 	public static DataType valueOf(final IdlDataType dataType) {
 		return valueOf(dataType.value());
@@ -72,7 +66,6 @@ public enum DataType {
 
 	/**
 	 * @param dataType
-	 * @does_not_throw ArrayIndexOutOfBoundsException
 	 */
 	public static DataType valueOf(final XmlDataType dataType) {
 		return valueOf(dataType.enumValue().intValue() - 1);
@@ -91,7 +84,7 @@ public enum DataType {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.17.2.1 $, $Date: 2006/02/06 14:46:30 $
+	 * @version $Revision: 1.17.2.2 $, $Date: 2006/02/06 14:51:27 $
 	 * @module general
 	 */
 	public static final class Proxy
