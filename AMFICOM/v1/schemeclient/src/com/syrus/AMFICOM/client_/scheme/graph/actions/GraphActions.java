@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.24 2005/12/27 10:23:14 stas Exp $
+ * $Id: GraphActions.java,v 1.25 2006/02/06 10:30:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultGraphModel;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.Edge;
+import com.jgraph.graph.EdgeView;
 import com.jgraph.graph.GraphCell;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.Port;
@@ -46,6 +47,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceView;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.LinkView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.Rack;
@@ -54,7 +56,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2005/12/27 10:23:14 $
+ * @version $Revision: 1.25 $, $Date: 2006/02/06 10:30:10 $
  * @module schemeclient
  */
 
@@ -254,10 +256,15 @@ public class GraphActions {
 			}
 		}
 		if (p != null) {
-			CellView view = graph.getGraphLayoutCache().getMapping(edge, true);
+			LinkView view = (LinkView)graph.getGraphLayoutCache().getMapping(edge, false);
+			if (view == null) {
+				view = (LinkView)graph.getGraphLayoutCache().getMapping(edge, true);
+			}
+			
 			Map nested = GraphConstants.createAttributes(new CellView[] { view }, null);
 			ConnectionSet cs = new ConnectionSet();
 			cs.connect(edge, p, isSource);
+			p.addEdge(edge);
 			if (isSource) {
 				edge.setSource(p);
 			} else {

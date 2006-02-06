@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.27 2005/10/31 12:30:28 bass Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.28 2006/02/06 10:30:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,6 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemePropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeProtoElementPropertiesManager;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
@@ -48,8 +47,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.28 $, $Date: 2006/02/06 10:30:10 $
  * @module schemeclient
  */
 
@@ -199,13 +198,13 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 				} else {
 					CreateUgo.createElementUgo(se, invisibleGraph, icon, label, blockports_in, blockports_out);
 				}
-				
 			} catch (ApplicationException e) {
 				Log.errorMessage(e);
 			}
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME) {
 			//FIXME когда создается УГО для схемы SchemeDevice никуда не добавляется ибо SE не создается, поэтому после выхода он пропадает
-			CreateUgo.createSchemeUgo((Scheme)cellContainer, invisibleGraph, icon, label, blockports_in, blockports_out);
+			Scheme scheme = (Scheme)cellContainer;
+			CreateUgo.createSchemeUgo(scheme, invisibleGraph, icon, label, blockports_in, blockports_out);
 		}
 		
 		SchemeImageResource sir = cellContainer.getUgoCell();

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.61 2006/01/30 14:49:11 stas Exp $
+ * $Id: SchemeActions.java,v 1.62 2006/02/06 10:30:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,10 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.tree.TreeNode;
 
+import com.jgraph.graph.CellView;
 import com.jgraph.graph.ConnectionSet;
 import com.jgraph.graph.DefaultGraphCell;
+import com.jgraph.graph.DefaultGraphModel;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.Edge;
 import com.jgraph.graph.EdgeView;
@@ -102,7 +104,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.61 $, $Date: 2006/01/30 14:49:11 $
+ * @version $Revision: 1.62 $, $Date: 2006/02/06 10:30:10 $
  * @module schemeclient
  */
 
@@ -840,6 +842,87 @@ public class SchemeActions {
 		}
 	}
 	
+	public static void updateImage(SchemeGraph graph, Identifier elementId, Identifier schemeId, SchemeImageResource updatedImage) {
+		// at first search for cell to update
+		DefaultGraphCell group = findGroupById(graph, elementId);
+		if (group == null) {
+			Log.debugMessage("SchemeActions.updateImage() | no image found for '" + elementId + "' Nothing to update" , Level.FINER);
+			return;
+		}
+
+		// insert updatedImage in the place of old image 
+		CellView view = graph.getGraphLayoutCache().getMapping(group, true);
+		Rectangle bounds = view.getBounds();
+		
+		Map<DefaultGraphCell, DefaultGraphCell> inserted =
+			openSchemeImageResource(graph, updatedImage, true, bounds.getLocation(), false);
+		Collection<DefaultGraphCell> insertedCells = inserted.values();
+		
+		// find all connected links and reconnect them to updated cells
+		ignore_port_check = true;
+		Set<Edge> edges = new HashSet<Edge>();
+		GraphActions.findAllVertexLinks(edges, group);
+		for (Edge edge : edges) {
+			if (edge instanceof DefaultCableLink) {
+				DefaultCableLink link = (DefaultCableLink)edge;
+				SchemeCableLink cable = link.getSchemeCableLink();
+				for (DefaultGraphCell cell : insertedCells) {
+					if (cell instanceof CablePortCell) {
+						CablePortCell port = (CablePortCell)cell;
+						if (port.getSchemeCablePortId().equals(cable.getSourceAbstractSchemePortId())) {
+							GraphActions.connect(graph, link, port, true);
+							GraphActions.setObjectBackColor(graph, port, determinePortColor(
+									port.getSchemeCablePort(), link)); // fix color
+							break;
+						} else if (port.getSchemeCablePortId().equals(cable.getTargetAbstractSchemePortId())) {
+							GraphActions.connect(graph, link, port, false);
+							GraphActions.setObjectBackColor(graph, port, determinePortColor(
+									port.getSchemeCablePort(), link)); // fix color
+							break;
+						}
+					}
+				}
+			} else if (edge instanceof DefaultLink) {
+				DefaultLink link = (DefaultLink)edge;
+				SchemeLink cable = link.getSchemeLink();
+				for (DefaultGraphCell cell : insertedCells) {
+					if (cell instanceof PortCell) {
+						PortCell port = (PortCell)cell;
+						if (port.getSchemePortId().equals(cable.getSourceAbstractSchemePortId())) {
+							GraphActions.connect(graph, link, port, true);
+							GraphActions.setObjectBackColor(graph, port, determinePortColor(
+									port.getSchemePort(), link)); // fix color
+							break;
+						} else if (port.getSchemePortId().equals(cable.getTargetAbstractSchemePortId())) {
+							GraphActions.connect(graph, link, port, false);
+							GraphActions.setObjectBackColor(graph, port, determinePortColor(
+									port.getSchemePort(), link)); // fix color
+							break;
+						}
+					}
+				}
+			}
+		}
+		// replace schemeId from old cell
+		for (DefaultGraphCell cell : insertedCells) {
+			if (cell instanceof DeviceGroup) {
+				DeviceGroup group2 = (DeviceGroup)cell;
+				if (group2.getElementId().equals(schemeId)) {
+					if (((DeviceGroup)group).getType() == DeviceGroup.SCHEME_ELEMENT) {
+						group2.setSchemeElementId(((DeviceGroup)group).getElementId());
+					}
+				}
+			}
+		}
+		
+		// remove old cells
+		Object[] cells = DefaultGraphModel.getDescendants(graph.getModel(), new Object[] {group}).toArray();
+		graph.clearSelection();
+		graph.getModel().remove(cells);
+		
+		ignore_port_check = false;
+	}
+	
 	public static Set<Identifier> getPlacedObjects(SchemeGraph graph) {
 		graph.setMakeNotifications(false);
 		
@@ -1295,6 +1378,9 @@ public class SchemeActions {
 
 	public static void disconnectSchemeLink(SchemeGraph graph, DefaultLink link,
 			PortCell port, boolean is_source) {
+		if (ignore_port_check) {
+			return;
+		}
 		
 		SchemeLink sl = link.getSchemeLink();
 		if (sl == null) {
@@ -1437,6 +1523,10 @@ public class SchemeActions {
 	
 	public static void disconnectSchemeCableLink(SchemeGraph graph,
 			DefaultCableLink link, CablePortCell port, boolean is_source) {
+		if (ignore_port_check) {
+			return;
+		}
+		
 		SchemeCableLink sl = link.getSchemeCableLink();
 		
 		if (sl == null) {

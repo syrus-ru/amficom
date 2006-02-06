@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.22 2005/12/08 10:43:49 stas Exp $
+ * $Id: PopupFactory.java,v 1.23 2006/02/06 10:30:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,6 +58,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -122,6 +123,10 @@ public class PopupFactory {
 				final SchemeElement se = group.getSchemeElement();
 				if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 					pop.add(createOpenSchemeMenuItem(aContext, se.getScheme(false)));
+					JMenuItem item2 = createRefreshSchemeElementMenuItem(pane.getGraph(), se);
+					if (item2 != null) {
+						pop.add(item2);
+					}
 					if (editable && e.isControlDown()) {
 						pop.addSeparator();
 						pop.add(createCutMenuItem(pane));
@@ -131,6 +136,10 @@ public class PopupFactory {
 					JMenuItem item = createOpenSchemeElementMenuItem(aContext, se);
 					if (item != null) {
 						pop.add(item);
+					}
+					JMenuItem item2 = createRefreshSchemeElementMenuItem(pane.getGraph(), se);
+					if (item2 != null) {
+						pop.add(item2);
 					}
 					if (editable && e.isControlDown()) {
 						pop.add(createCutMenuItem(pane));
@@ -582,6 +591,58 @@ public class PopupFactory {
 		});
 		menu.setText(LangModelGraph.getString("open_scheme")); //$NON-NLS-1$
 		return menu;
+	}
+	
+	private static JMenuItem createRefreshSchemeElementMenuItem(final SchemeGraph graph, final SchemeElement se) {
+		List v = null;
+		
+		final Identifier topId = se.getId();
+		Identifier innerId;
+		try {
+			if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
+				Scheme scheme = se.getScheme(true);
+				innerId = scheme.getId();
+				
+				if (scheme.getUgoCell() != null) {
+					v = se.getUgoCell().getData();
+				}
+			} else { // SchemeElement container
+				innerId = se.getId();
+				if (se.getUgoCell() != null) {
+					v = se.getUgoCell().getData();
+				}
+			}
+
+			if ((v != null && v.size() != 0 && ((Object[]) v.get(0)).length != 0) && 
+					(innerId.getMajor() == ObjectEntities.SCHEME_CODE || !se.getSchemeElements(false).isEmpty())) {
+				JMenuItem menu1 = new JMenuItem(new AbstractAction() {
+					private static final long serialVersionUID = 7612382099522511230L;
+					
+					public void actionPerformed(ActionEvent ev) {
+						try {
+							Identifier innerId1;
+							SchemeImageResource sir;
+							if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
+								Scheme scheme = se.getScheme(true);
+								innerId1 = scheme.getId();
+								sir = scheme.getUgoCell();
+							} else { // SchemeElement container
+								innerId1 = se.getId();
+								sir = se.getUgoCell();
+							}
+							SchemeActions.updateImage(graph, topId, innerId1,  sir);
+						} catch (ApplicationException e) {
+							Log.errorMessage(e);
+						}
+					}
+				});
+				menu1.setText(LangModelGraph.getString("refresh_component")); //$NON-NLS-1$
+				return menu1;
+			}
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
+		}
+		return null;
 	}
 	
 	private static JMenuItem createOpenSchemeElementMenuItem(final ApplicationContext aContext, final SchemeElement se) {
