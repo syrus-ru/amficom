@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.19 2005/12/01 14:16:49 stas Exp $
+ * $Id: ResultChildrenFactory.java,v 1.20 2006/02/06 12:18:31 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2005/12/01 14:16:49 $
+ * @version $Revision: 1.20 $, $Date: 2006/02/06 12:18:31 $
  * @module analysis
  */
 
@@ -185,7 +185,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 					startDate = this.calendar.getTime();
 					this.calendar.add(Calendar.DAY_OF_MONTH, 1);
 					this.calendar.add(Calendar.SECOND, -1);
-					endDate = new Date(System.currentTimeMillis());					
+					endDate = this.calendar.getTime();					
 					Item item2 = createDateItem(startDate, endDate, 
 							LangModelAnalyse.getString("today") + " (" + shortDate.format(startDate) + ")", 
 							condition, condition.getEntityCode().shortValue());
@@ -240,9 +240,15 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 					item6.setDefaultCondition(condition);
 					
 //					item6.setDefaultOperation(CompoundConditionSort.OR);
-					Filter f = new Filter(new TestConditionWrapper());
-					f.addCondition(timeCondition, TestConditionWrapper.START_TIME_CONDITION_KEY);
-					item6.setFilter(f);
+					if (condition.getEntityCode().shortValue() == ObjectEntities.TEST_CODE) {
+						Filter f = new Filter(new TestConditionWrapper());
+						f.addCondition(timeCondition, TestConditionWrapper.START_TIME_CONDITION_KEY);
+						item6.setFilter(f);
+					} else if (condition.getEntityCode().shortValue() == ObjectEntities.MEASUREMENT_CODE) {
+						Filter f = new Filter(new MeasurementConditionWrapper());
+						f.addCondition(timeCondition, MeasurementConditionWrapper.START_TIME_CONDITION_KEY);
+						item6.setFilter(f);
+					}
 					item.addChild(item6);
 				} catch (CreateObjectException e) {
 					Log.errorMessage(e);
@@ -404,9 +410,11 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 		} else if (nodeObject instanceof Date || 
 				nodeObject instanceof MeasurementSetup) {
 			try {
-				StorableObjectPool.refresh();
-				StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
+				if (nodeObject instanceof MeasurementSetup) {
+					StorableObjectPool.refresh(Collections.singleton(((MeasurementSetup)nodeObject).getId()));
+				}
 				
+				StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
 				Set<StorableObject> testSet = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 									
 				List<Item> toRemove = super.getItemsToRemove(testSet, items);
