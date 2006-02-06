@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.19 2006/02/03 16:37:36 bob Exp $
+* $Id: TestView.java,v 1.20 2006/02/06 10:49:24 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2006/02/03 16:37:36 $
+ * @version $Revision: 1.20 $, $Date: 2006/02/06 10:49:24 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -73,14 +73,14 @@ public final class TestView {
 	
 	private SortedSet<Measurement> measurements;
 
-	private final Date	start;
-	private final Date	end;
+	private Date	start;
+	private Date	end;
 
 	private String	extendedDescription;
 
 	private TestStatus	status;
 
-	private Measurement lastProcessingMeasurement;	
+	private Measurement	qualityMeasurement;	
 	
 	private TestView(final Test test,
 	                 final Date start,
@@ -102,6 +102,7 @@ public final class TestView {
 		final long t4 = System.currentTimeMillis();
 		this.createQuality();
 		final long t5 = System.currentTimeMillis();
+		this.createStatus();
 		
 		Log.debugMessage(test + " createKISName " + (t1-t0), Log.DEBUGLEVEL03);
 		Log.debugMessage(test + " createMeasurementPortName " + (t2-t1), Log.DEBUGLEVEL03);
@@ -135,7 +136,6 @@ public final class TestView {
 		final Identifier groupTestId = this.test.getGroupTestId();
 		if (groupTestId.isVoid()) {
 			this.lastDate = this.test.getEndTime();
-			this.status = this.test.getStatus();
 		} else {
 			final LinkedIdsCondition groupTestCondition = 
 				new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE);
@@ -151,6 +151,20 @@ public final class TestView {
 		}
 		this.lastDate = new Date(this.lastDate.getTime()  
 				+ this.measurementSetup.getMeasurementDuration());
+	}
+	
+	private final void createStatus() throws ApplicationException {
+		final Identifier groupTestId = this.test.getGroupTestId();
+		if (groupTestId.isVoid()) {
+			this.status = this.test.getStatus();
+		} else {
+			this.status = this.test.getStatus();
+			final LinkedIdsCondition groupTestCondition = 
+				new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE);
+			final Set<Test> tests = 
+				StorableObjectPool.getStorableObjectsByCondition(groupTestCondition, true);
+			// TODO calculate status for group test
+		}
 	}
 	
 	private final void createKISName() throws ApplicationException {
@@ -195,29 +209,28 @@ public final class TestView {
 		}
 	}
 
-	private final void refreshQuality() throws ApplicationException {
-		if (this.lastProcessingMeasurement != null) {
-			final StorableObjectVersion beforeUpdateVersion = this.lastProcessingMeasurement.getVersion();			
-			this.refreshMeasurements();
-			final StorableObjectVersion afterUpdateVersion = this.lastProcessingMeasurement.getVersion();			
-			if (!afterUpdateVersion.equals(beforeUpdateVersion)) {				
-				this.createQuality();
-			}
-		} else {
-			this.refreshMeasurements();
-		}
+	private final void refreshStatus() throws ApplicationException {
+		this.createStatus();
+		this.refreshMeasurements();
+		this.createQuality();
 	}
 	
 	private void refreshMeasurements() throws ApplicationException {		
+		final long time0 = System.currentTimeMillis();
 		final Set<Identifier> measurementIds = new HashSet<Identifier>();
 		for (final Measurement measurement : this.measurements) {
 			if (measurement.getStatus() != 
 				MeasurementStatus.MEASUREMENT_STATUS_COMPLETED) {
 				measurementIds.add(measurement.getId());
 			}
-		}		
-		StorableObjectPool.refresh(measurementIds);
+		}
+		if (!measurementIds.isEmpty()) {
+			assert Log.debugMessage("need to be updated:" + measurementIds, Log.DEBUGLEVEL03);
+			StorableObjectPool.refresh(measurementIds);			
+		}
 		this.createMeasurements();
+		final long time1 = System.currentTimeMillis();
+		assert Log.debugMessage("takes " + (time1 - time0), Log.DEBUGLEVEL03);
 	}
 	
 	private final void createMeasurements() throws ApplicationException {
@@ -227,8 +240,7 @@ public final class TestView {
 				new WrapperComparator<Measurement>(
 						MeasurementWrapper.getInstance(),
 						MeasurementWrapper.COLUMN_START_TIME)); 
-		if (!newerTest) {
-			
+		if (!newerTest) {			
 			final TypicalCondition startTypicalCondition = 
 				new TypicalCondition(this.end,
 					this.end,
@@ -250,39 +262,76 @@ public final class TestView {
 			compoundCondition.addCondition(
 				new LinkedIdsCondition(this.test.getId(), 
 					ObjectEntities.MEASUREMENT_CODE));
-			final Set<Measurement> measurements1 = 
-				StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
+			final Set<Measurement> measurements1;
+			
+			final long t0 = System.currentTimeMillis();
+			
+			if (this.measurements == null) {
+				measurements1 = StorableObjectPool.getStorableObjectsByCondition(compoundCondition, 
+					true);				
+				assert Log.debugMessage("getStorableObjectsByCondition", 
+					Log.DEBUGLEVEL03);
+			} else {
+				measurements1 = StorableObjectPool.getStorableObjectsButIdsByCondition(
+					Identifier.createIdentifiers(this.measurements), 
+					compoundCondition, 
+					true);
+				set.addAll(this.measurements);
+				assert Log.debugMessage("getStorableObjectsButIdsByCondition", 
+					Log.DEBUGLEVEL03);
+			}
+
 			set.addAll(measurements1);
+			final long t1 = System.currentTimeMillis();
+			assert Log.debugMessage("Update " 
+					+ measurements1 
+					+ " takes " 
+					+ (t1 - t0) 
+					+ " ms", 
+				Log.DEBUGLEVEL03);
 		}		
 		this.measurements  = Collections.unmodifiableSortedSet(set);
-		for (final Measurement measurement : set) {
-			assert Log.debugMessage(measurement 
-					+ " > " + this.test.getId() 
-					+ " > " + measurement.getStartTime()
-					+ " > " + measurement.getStatus().value(), 
-				Log.DEBUGLEVEL03);
-		}
+//		for (final Measurement measurement : set) {
+//			assert Log.debugMessage(measurement 
+//					+ " > " + this.test.getId() 
+//					+ " > " + measurement.getStartTime()
+//					+ " > " + measurement.getStatus().value(), 
+//				Log.DEBUGLEVEL03);
+//		}
 	}
 	
 	private final void createQuality() throws ApplicationException {
 		SortedSet<Measurement> set = this.measurements;
 		
-//		final long t0 = System.currentTimeMillis();
-		this.lastProcessingMeasurement = null;
+		final long t0 = System.currentTimeMillis();
 		while (!set.isEmpty()) {
 			final Measurement measurement = set.last();			
 			if (measurement.getStatus() == 
 				MeasurementStatus.MEASUREMENT_STATUS_COMPLETED) {
+				if (this.qualityMeasurement == measurement) {
+					return;
+				}
+				this.qualityMeasurement = measurement;
 				final long t01 = System.currentTimeMillis();
 				try {
 					final MeasurementReflectometryAnalysisResult result =
 						new MeasurementReflectometryAnalysisResult(measurement);
-//					final long t012 = System.currentTimeMillis();
+					final long t012 = System.currentTimeMillis();
 					final ReflectometryEvaluationOverallResult reflectometryEvaluationOverallResult = 
 						result.getReflectometryEvaluationOverallResult();
-//					final long t013 = System.currentTimeMillis();
-//					Log.debugMessage(this.test + ", " + measurement + ", (t012-t01) it takes " + (t012-t01), Log.DEBUGLEVEL03);
-//					Log.debugMessage(this.test + ", " + measurement + ", (t013-t012) it takes " + (t013-t012), Log.DEBUGLEVEL03);
+					final long t013 = System.currentTimeMillis();
+					Log.debugMessage(this.test 
+							+ ", new MeasurementReflectometryAnalysisResult(" 
+							+ measurement 
+							+ ") takes " 
+							+ (t012-t01), 
+						Log.DEBUGLEVEL03);
+					Log.debugMessage(this.test 
+							+ ", " 
+							+ measurement 
+							+ ", result.getReflectometryEvaluationOverallResult() takes " 
+							+ (t013-t012), 
+						Log.DEBUGLEVEL03);
 					if (reflectometryEvaluationOverallResult != null && 
 							reflectometryEvaluationOverallResult.hasDQ()) {
 						final NumberFormat numberFormat = NumberFormat.getInstance();
@@ -304,11 +353,10 @@ public final class TestView {
 				Log.debugMessage(this.test + ", " + measurement + ", it takes " + (t02-t01), Log.DEBUGLEVEL03);
 				break;
 			} 
-			this.lastProcessingMeasurement = measurement;
 			set = set.headSet(measurement);
 		}
-//		final long t1 = System.currentTimeMillis();
-//		Log.debugMessage(this.test + ", it takes " + (t1-t0), Log.DEBUGLEVEL03);
+		final long t1 = System.currentTimeMillis();
+		Log.debugMessage(this.test + ", it takes " + (t1-t0), Log.DEBUGLEVEL03);
 		if (this.testD == null) {
 			this.testD = "--";
 		}
@@ -348,15 +396,20 @@ public final class TestView {
 	 * @param butTests
 	 * @throws ApplicationException
 	 */
-	public static final synchronized void updateQualityCache(final Set<Test> butTests) 
+	private static final synchronized void updateQualityCache(final Set<Test> butTests,
+      		final Date start,
+    		final Date end) 
 	throws ApplicationException {
 		for (final Identifiable testId : MAP.keySet()) {
 			if (butTests.contains(testId)) {
 				continue;
 			}
 			final TestView testView = MAP.get(testId);
+			if (testView == null || testView.start.after(end) || testView.end.before(start)) {
+				continue;
+			}
 			if (testView.status == TestStatus.TEST_STATUS_PROCESSING) {
-				testView.refreshQuality();
+				testView.refreshStatus();
 			}
 		}
 	}
@@ -366,13 +419,14 @@ public final class TestView {
 		final Date end) 
 	throws ApplicationException{
 		for (final Test test : tests) {
-//			final TestView testView = MAP.get(test.getId());
-//			if (testView == null) {
+			final TestView testView = MAP.get(test.getId());
+			if (testView == null) {
 				addTest(test, start, end);
-//			} else {
-//				testView.refreshQuality();
-//			}
+			} else {
+				testView.refreshStatus();
+			}
 		}
+		updateQualityCache(tests, start, end);
 	}
 	
 	private String getTestTemporalTypeName(final TestTemporalType testTemporalType) {
@@ -416,7 +470,6 @@ public final class TestView {
 	public final String getTestD() {
 		return this.testD;
 	}
-
 	
 	public final String getTestQ() {
 		return this.testQ;
@@ -436,6 +489,14 @@ public final class TestView {
 	
 	public final Date getStart() {
 		return this.start;
+	}	
+
+	public final void setEnd(final Date end) {
+		this.end = end;
+	}
+	
+	public final void setStart(final Date start) {
+		this.start = start;
 	}
 	
 	public final MeasurementSetup getMeasurementSetup() {
@@ -470,7 +531,7 @@ public final class TestView {
 	@Override
 	public String toString() {
 		return "TestView of <" + this.test + '>';
-	}
+	}	
 	
 }
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.164 2006/02/03 13:46:58 bob Exp $
+ * $Id: SchedulerModel.java,v 1.165 2006/02/06 10:49:24 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.164 $, $Date: 2006/02/03 13:46:58 $
+ * @version $Revision: 1.165 $, $Date: 2006/02/06 10:49:24 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -513,10 +513,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			final long time3 = System.currentTimeMillis();
 			Log.debugMessage("TestView.refreshCache:" + (time3-time2),
 				Log.DEBUGLEVEL03);
-			TestView.updateQualityCache(refreshTests);
-			final long time31 = System.currentTimeMillis();
-			Log.debugMessage("TestView.updateQualityCache:" + (time31-time3),
-				Log.DEBUGLEVEL03);
 			this.getFinishingTests(tests);
 			
 			for (final Test test : refreshTests) {
@@ -525,11 +521,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			final long time4 = System.currentTimeMillis();
 			Log.debugMessage("update takes:" + (time4-time0),
 				Log.DEBUGLEVEL03);
-//			assert Log.debugMessage(this.testIds 
-//						+ ", " 
-//						+ this.testIds.size(),
-//				Log.DEBUGLEVEL03);
-			
 		} catch (final ApplicationException e) {
 			Log.errorMessage(e);
 			throw new ApplicationException(I18N.getString("Scheduler.Error.CannotRefreshTests"));
@@ -665,6 +656,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			final TestView valueOf = TestView.valueOf(testId);
 
 			if (valueOf != null) {
+				valueOf.setStart(startDate);
+				valueOf.setEnd(endDate);
 				this.addTest(test);
 			}
 		}
