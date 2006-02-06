@@ -1,52 +1,38 @@
+/*-
+ * $Id: OnetimeTestProcessor.java,v 1.34 2005/09/20 10:02:41 arseniy Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 package com.syrus.AMFICOM.mcm;
 
+import java.util.Date;
+
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.util.Log;
 
-import com.syrus.AMFICOM.util.Identifier;
+/**
+ * @version $Revision: 1.34 $, $Date: 2005/09/20 10:02:41 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
+ * @module mcm
+ */
+final class OnetimeTestProcessor extends TestProcessor {
+	private boolean first;
 
-public class OnetimeTestProcessor extends TestProcessor {
-
-	public OnetimeTestProcessor(Test test) {
+	public OnetimeTestProcessor(final Test test) {
 		super(test);
+
+		this.first = true;
 	}
 
-	public void run() {
-		Measurement measurement = null;
-		try {
-			/*Ordinary measurement with ordinary setup*/
-			Identifier id = MeasurementControlModule.createIdentifier("measurement");
-			Log.debugMessage("OnetimeTestProcessor | Measurement id: '" + id.toString() + "'", Log.DEBUGLEVEL06);
-			measurement = super.test.createMeasurement(id,
-																								 super.test.getStartTime());
-/*
-				MeasurementControlModule.measurementServer.ping(1);*/
+	@Override
+	Date getNextMeasurementStartTime(final Date fromDate, final boolean includeFromDate) {
+		if (this.first) {
+			this.first = false;
+			return (includeFromDate && System.currentTimeMillis() - fromDate.getTime() <= PAST_MEASUREMENT_TIMEOUT) ? fromDate : null;
 		}
-		catch (Exception e) {
-			Log.errorException(e);
-		}
-		if (measurement != null) {
-			super.transceiver.addMeasurement(measurement, this);
-			super.n_measurements ++;
+		return null;
+	}
 
-			while (super.running) {
-				try {
-					sleep(super.tick_time);
-				}
-				catch (InterruptedException ie) {
-					Log.errorException(ie);
-				}
-
-				if (super.n_reports < 1)
-					super.checkMeasurementResults();
-				else
-					break;
-			}//while
-
-		}//if (measurement != null)
-
-		super.cleanup();
-		
-	}//run
 }

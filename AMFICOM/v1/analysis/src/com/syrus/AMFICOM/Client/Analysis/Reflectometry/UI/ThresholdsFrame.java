@@ -1,26 +1,23 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.io.IOException;
-import java.util.Hashtable;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.Parameter;
-import com.syrus.AMFICOM.Client.Resource.Result.TestArgumentSet;
+import com.syrus.AMFICOM.analysis.PFTrace;
+import com.syrus.AMFICOM.analysis.TraceResource;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import com.syrus.io.BellcoreStructure;
-import com.syrus.util.ByteArray;
-
-public class ThresholdsFrame extends SimpleResizableFrame implements OperationListener
-{
+public class ThresholdsFrame extends SimpleResizableFrame
+implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener {
 	private Dispatcher dispatcher;
-	Hashtable traces = new Hashtable();
+	Map traces = new HashMap();
 
 	public ThresholdsFrame(Dispatcher dispatcher)
 	{
@@ -30,8 +27,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 		try
 		{
 			jbInit();
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -39,149 +35,63 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 
 	private void jbInit() throws Exception
 	{
-		setTitle(LangModelAnalyse.String("thresholdsTitle"));
+		setTitle(LangModelAnalyse.getString("thresholdsTitle"));
 	}
 
-	public Dispatcher getInternalDispatcher ()
+	void init_module(Dispatcher dispatcher1)
 	{
-		return dispatcher;
+		this.dispatcher = dispatcher1;
+		this.dispatcher.addPropertyChangeListener(RefUpdateEvent.typ, this);
+		Heap.addBsHashListener(this);
+		Heap.addEtalonMTMListener(this);
 	}
 
-	void init_module(Dispatcher dispatcher)
+	public void addEtalon()
 	{
-		this.dispatcher = dispatcher;
-		dispatcher.register(this, RefChangeEvent.typ);
-	}
-
-	public void operationPerformed(OperationEvent ae)
-	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.OPEN)
-			{
-				String id = (String)(rce.getSource());
-				addTrace (id);
-				setVisible(true);
-			}
-			if(rce.CLOSE)
-			{
-				String id = (String)(rce.getSource());
-				removeTrace(id);
-				if (id.equals("all"))
-					setVisible (false);
-			}
-			if (rce.OPEN_ETALON)
-			{
-				String et_id = (String)rce.getSource();
-				addEtalon(et_id);
-			}
-			if (rce.CLOSE_ETALON)
-			{
-				String et_id = (String)rce.getSource();
-				removeEtalon(et_id);
-			}
-		}
-	}
-
-	void addEtalon(String id)
-	{
-		if (traces.get(id) != null)
+		if (this.traces.get(Heap.ETALON_TRACE_KEY) != null)
 			return;
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-		if (bs != null)
-			addTrace (id);
-		else
-		{
-			int n = 0;
-			double delta_x = 0;
 
-			TestArgumentSet metas = (TestArgumentSet)Pool.get(TestArgumentSet.typ, id);
-			double len = 0;
-			try
-			{
-				for (int i = 0; i <metas.arguments.size(); i++)
-				{
-					Parameter p = (Parameter)metas.arguments.get(i);
-					if (p.codename.equals("ref_res"))
-					{
-						delta_x = new ByteArray(p.value).toDouble();
-					}
-					if (p.codename.equals("ref_trclen"))
-					{
-						len = new ByteArray(p.value).toDouble();
-					}
-				}
-				if (delta_x == 0 || len == 0)
-					return;
-				n = (int)(len * 1000 / delta_x);
-
-				SimpleGraphPanel oldpanel = (SimpleGraphPanel)traces.get(id);
-				if (oldpanel != null)
-				{
-					((ScalableLayeredPanel)panel).removeGraphPanel(oldpanel);
-					traces.remove(id);
-				}
-
-				SimpleGraphPanel epPanel;
-				ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", id);
-				if (ep != null)
-				{
-					double[] y = new double[n];
-					for (int i = 0; i < ep.length; i++)
-					{
-						for (int j = ep[i].begin; j <= ep[i].end && j < n; j++)
-							y[j] = ep[i].refAmpl(j)[0];
-					}
-					epPanel = new SimpleGraphPanel(y, delta_x);
-					epPanel.setColorModel("etalon");
-					((ScalableLayeredPanel)panel).addGraphPanel(epPanel);
-					panel.updScale2fit();
-					((ThresholdsLayeredPanel)panel).updScale2fitCurrentEv(.2, 1.);
-					traces.put(id, epPanel);
-				}
-			}
-			catch (IOException ex)
-			{
-				ex.printStackTrace();
-			}
-		}
+		PFTrace pf = Heap.getPFTraceEtalon();
+		if (pf != null)
+			addTrace (Heap.ETALON_TRACE_KEY);
 	}
 
-	void removeEtalon(String et_id)
+	void removeEtalon()
 	{
-		SimpleGraphPanel epPanel = (SimpleGraphPanel)traces.get(et_id);
-		panel.removeGraphPanel(epPanel);
+		SimpleGraphPanel epPanel = (SimpleGraphPanel)this.traces.get(Heap.ETALON_TRACE_KEY);
+		if (epPanel != null)
+			this.panel.removeGraphPanel(epPanel);
 	}
 
 	void addTrace (String id)
 	{
-		if (traces.get(id) != null)
+		if (this.traces.get(id) != null)
 			return;
 		SimpleGraphPanel p;
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+		PFTrace pf = Heap.getAnyPFTraceByKey(id);
 
-		double delta_x = bs.getDeltaX();
-		double[] y = bs.getTraceData();
+		double deltaX = pf.getResolution();
+		double[] y = pf.getFilteredTraceClone();
 
-		if (id.equals("primarytrace") || id.equals("modeledtrace"))
+		ThresholdsLayeredPanel ppp = (ThresholdsLayeredPanel)this.panel;
+		// XXX: MODELED_TRACE_KEY case check removed by saa: we don't know now how to handle MODELED_TRACE_KEY, so take a BS only 
+		if (id.equals(Heap.PRIMARY_TRACE_KEY))
 		{
-			p = new ThresholdsPanel((ThresholdsLayeredPanel)panel, dispatcher, y, delta_x);
-			ReflectogramEvent[] ep = ((ReflectogramEvent[])Pool.get("eventparams", id));
-			((ThresholdsPanel)p).updateEvents(ep);
-			((ThresholdsPanel)p).updEvents(id);
+			p = new ThresholdsPanel(ppp, this.dispatcher, y, deltaX);
+			((ThresholdsPanel)p).updEvents(Heap.PRIMARY_TRACE_KEY);
 			((ThresholdsPanel)p).updateNoiseLevel();
-			((ThresholdsPanel)p).draw_min_trace_level = true;
+			((ThresholdsPanel)p).minTraceLevel.setDrawed(true);
+		} else {
+			//p = new SimpleGraphPanel(y, deltaX);
+			p = new ReflectogramPanel(ppp, id, true);
 		}
-		else
-		{
-			p = new SimpleGraphPanel(y, delta_x);
-		}
-		((ThresholdsLayeredPanel)panel).addGraphPanel(p);
-		panel.updScale2fit();
-		((ThresholdsLayeredPanel)panel).updScale2fitCurrentEv(.2, 1.);
+//		p.setWeakColors(true);
+
+		ppp.addGraphPanel(p);
+		ppp.updScale2fit();
+		ppp.updScale2fitCurrentEv(.2, 1.);
 		p.setColorModel(id);
-		traces.put(id, p);
+		this.traces.put(id, p);
 
 		setVisible(true);
 	}
@@ -190,17 +100,57 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 	{
 		if (id.equals("all"))
 		{
-			((ThresholdsLayeredPanel)panel).removeAllGraphPanels();
-			traces = new Hashtable();
-		}
-		else
+			((ThresholdsLayeredPanel)this.panel).removeAllGraphPanels();
+			this.traces = new HashMap();
+		} else
 		{
-			SimpleGraphPanel p = (SimpleGraphPanel)traces.get(id);
+			SimpleGraphPanel p = (SimpleGraphPanel)this.traces.get(id);
 			if (p != null)
 			{
-				panel.removeGraphPanel(p);
-				traces.remove(id);
-				((ThresholdsLayeredPanel)panel).updScale2fitCurrentEv(.2, 1.);
+				this.panel.removeGraphPanel(p);
+				this.traces.remove(id);
+				((ThresholdsLayeredPanel)this.panel).updScale2fitCurrentEv(.2, 1.);
+			}
+		}
+	}
+
+	public void bsHashAdded(String key)
+	{
+		addTrace (key);
+		setVisible(true);
+	}
+
+	public void bsHashRemoved(String key)
+	{
+		removeTrace(key);
+	}
+
+	public void bsHashRemovedAll()
+	{
+		removeTrace("all");
+		setVisible (false);
+	}
+
+	public void etalonMTMCUpdated()
+	{
+		addEtalon();
+	}
+
+	public void etalonMTMRemoved()
+	{
+		removeEtalon();
+	}
+
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals(RefUpdateEvent.typ)) {
+			RefUpdateEvent ev = (RefUpdateEvent)evt;
+			if (ev.traceChanged()) {
+				TraceResource tr = (TraceResource)evt.getNewValue();
+				SimpleGraphPanel p = (SimpleGraphPanel)this.traces.get(tr.getId());
+				if (p != null) {
+					p.setShowAll(tr.isShown());
+					this.panel.repaint();
+				}
 			}
 		}
 	}

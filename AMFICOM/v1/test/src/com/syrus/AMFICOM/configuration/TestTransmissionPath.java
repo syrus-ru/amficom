@@ -1,5 +1,5 @@
 /*
- * $Id: TestTransmissionPath.java,v 1.1.1.1 2005/02/16 21:25:52 cvsadmin Exp $
+ * $Id: TestTransmissionPath.java,v 1.8 2005/12/15 14:16:36 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,70 +7,83 @@
  */
 package com.syrus.AMFICOM.configuration;
 
-import java.util.Collection;
+import static com.syrus.AMFICOM.general.Identifier.SEPARATOR;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH;
+
 import java.util.Iterator;
+import java.util.Set;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 
-import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
-import com.syrus.AMFICOM.general.AccessIdentity;
+import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.SessionContext;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.1.1.1 $, $Date: 2005/02/16 21:25:52 $
- * @author $Author: cvsadmin $
- * @module config_v1
+ * @version $Revision: 1.8 $, $Date: 2005/12/15 14:16:36 $
+ * @author $Author: arseniy $
+ * @module test
  */
-public class TestTransmissionPath extends CommonConfigurationTest {
+public class TestTransmissionPath extends TestCase {
 
-	public TestTransmissionPath(String name) {
+	public TestTransmissionPath(final String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestTransmissionPath.class);
+		final DatabaseCommonTest commonTest = new DatabaseCommonTest();
+		commonTest.addTestSuite(TestTransmissionPath.class);
+		return commonTest.createTestSetup();
 	}
 
-	public void testCreateInstance() throws ApplicationException {
-		AccessIdentity accessIdentity = SessionContext.getAccessIdentity();
+	public void testCreateAll() throws ApplicationException {
+		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.TRANSPATH_TYPE_CODE);
+		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
+		final TransmissionPathType transmissionPathType = (TransmissionPathType) it.next();
 
-		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
-		Iterator it = ConfigurationStorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
-		TransmissionPathType transmissionPathType = (TransmissionPathType) it.next();
+		ec = new EquivalentCondition(ObjectEntities.DOMAIN_CODE);
+		it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
+		final Domain domain = (Domain) it.next();
 
-		ec = new EquivalentCondition(ObjectEntities.PORT_ENTITY_CODE);
-		Collection ports = ConfigurationStorableObjectPool.getStorableObjectsByCondition(ec, true);
-		it = ports.iterator();
-		Port startPort = (Port) it.next();
-		Port finishPort = (Port) it.next();
-		
-		TransmissionPath transmissionPath = TransmissionPath.createInstance(accessIdentity.getUserId(),
-				accessIdentity.getDomainId(),
-				"A test transmission path",
-				"Created for tests",
-				transmissionPathType,
-				startPort.getId(),
-				finishPort.getId());
+		ec = new EquivalentCondition(ObjectEntities.PORT_CODE);
+		final Set<Port> ports = StorableObjectPool.getStorableObjectsByCondition(ec, true);
 
-		TransmissionPath_Transferable tpt = (TransmissionPath_Transferable) transmissionPath.getTransferable();
+		Port finishPort = null;
+		for (final Port port : ports) {
+			if (port.getDescription().equals("finish")) {
+				finishPort = port;
+				break;
+			}
+		}
+		if (finishPort == null) {
+			fail("Cannot find port 'finish'");
+		}
 
-		TransmissionPath transmissionPath1 = new TransmissionPath(tpt);
-		assertEquals(transmissionPath.getId(), transmissionPath1.getId());
-		assertEquals(transmissionPath.getCreated(), transmissionPath1.getCreated());
-		assertEquals(transmissionPath.getModified(), transmissionPath1.getModified());
-		assertEquals(transmissionPath.getCreatorId(), transmissionPath1.getCreatorId());
-		assertEquals(transmissionPath.getModifierId(), transmissionPath1.getModifierId());
-		assertEquals(transmissionPath.getVersion(), transmissionPath1.getVersion());
-		assertEquals(transmissionPath.getDomainId(), transmissionPath1.getDomainId());
-		assertEquals(transmissionPath.getName(), transmissionPath1.getName());
-		assertEquals(transmissionPath.getDescription(), transmissionPath1.getDescription());
-		assertEquals(transmissionPath.getStartPortId(), transmissionPath1.getStartPortId());
-		assertEquals(transmissionPath.getFinishPortId(), transmissionPath1.getFinishPortId());
+		for (final Port port : ports) {
+			final String portDescription = port.getDescription();
+			if (portDescription.equals("finish")) {
+				continue;
+			}
 
-		ConfigurationStorableObjectPool.putStorableObject(transmissionPath);
-		ConfigurationStorableObjectPool.flush(true);
+			final int p1 = portDescription.indexOf(SEPARATOR);
+			final int p2 = portDescription.indexOf(SEPARATOR, p1 + 1);
+			final int n = Integer.parseInt(portDescription.substring(p1 + 1, p2));
+			final String transmissionPathDescription = TRANSMISSIONPATH + SEPARATOR + n
+					+ SEPARATOR
+					+ portDescription;
+			TransmissionPath.createInstance(DatabaseCommonTest.getSysUser().getId(),
+					domain.getId(),
+					"Путь передачи данных " + n,
+					transmissionPathDescription,
+					transmissionPathType,
+					port.getId(),
+					finishPort.getId());
+		}
+
+		StorableObjectPool.flush(ObjectEntities.TRANSMISSIONPATH_CODE, DatabaseCommonTest.getSysUser().getId(), true);
 	}
 }

@@ -1,27 +1,26 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.*;
-import java.awt.SystemColor;
-import java.awt.event.ComponentEvent;
 import java.awt.Component;
-import java.util.*;
+import java.awt.Dimension;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
-import javax.swing.*;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.event.*;
+import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class ResizableLayeredPanel extends JPanel
 {
 	protected JPanel mainPanel = new JPanel();
 	protected JLayeredPane jLayeredPane = new JLayeredPane();
 	protected ToolBarPanel toolbar;
-	protected ColorManager cMan;
 
 	protected int _width;
 	protected int _height;
@@ -33,8 +32,7 @@ public class ResizableLayeredPanel extends JPanel
 		try
 		{
 			jbInit();
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}
@@ -42,8 +40,9 @@ public class ResizableLayeredPanel extends JPanel
 
 	private void jbInit() throws Exception
 	{
-		this.addComponentListener(new java.awt.event.ComponentAdapter()
+		this.addComponentListener(new ComponentAdapter()
 		{
+			@Override
 			public void componentShown(ComponentEvent e)
 			{
 				this_componentShown(e);
@@ -54,17 +53,18 @@ public class ResizableLayeredPanel extends JPanel
 		this.setBorder(BorderFactory.createLoweredBevelBorder());
 		this.setLayout (new BorderLayout());
 
-		Hashtable commands = new Hashtable();
 		toolbar = createToolBar();
-		commands.putAll(toolbar.createGraphButtons());
+		Map commands = toolbar.createGraphButtons();
 
 		String[] buttons = toolbar.getButtons();
 		for (int i = 0; i < buttons.length; i++)
 		{
-			if (buttons[i].equals(ToolBarPanel.separator))
-				toolbar.insert(new JToolBar.Separator());
-			else
-				toolbar.insert((Component)commands.get(buttons[i]));
+			if (buttons[i].equals(ToolBarPanel.SEPARATOR)) {
+				JToolBar.Separator s = new JToolBar.Separator();
+				s.setOrientation(toolbar.getOrientation() == SwingConstants.VERTICAL ? SwingConstants.HORIZONTAL : SwingConstants.VERTICAL);
+				toolbar.add(s);
+			} else
+				toolbar.add((Component)commands.get(buttons[i]));
 		}
 
 		mainPanel.setLayout(new BorderLayout());
@@ -72,10 +72,11 @@ public class ResizableLayeredPanel extends JPanel
 
 		this.add(toolbar, BorderLayout.NORTH);
 		this.add(mainPanel, BorderLayout.CENTER);
+		
+		this.mainPanel.setBackground(UIManager.getColor(ResourceKeys.COLOR_GRAPHICS_BACKGROUND));
 
 		toolbar.setVisible(false);
 
-		updColorModel();
 	}
 
 	public ScaledGraphPanel getTopPanel()
@@ -101,10 +102,6 @@ public class ResizableLayeredPanel extends JPanel
 		toolbar.setVisible(b);
 	}
 
-	protected void updColorModel()
-	{
-		mainPanel.setBackground(SystemColor.window);
-	}
 
 	public void setGraphPanel(SimpleGraphPanel panel)
 	{
@@ -113,7 +110,8 @@ public class ResizableLayeredPanel extends JPanel
 		updScale2fit();
 	}
 
-	public void setGraphPanel(SimpleGraphPanel panel, int start, int end)
+	// unused?
+	private void setGraphPanel(SimpleGraphPanel panel, int start, int end)
 	{
 		jLayeredPane.removeAll();
 		jLayeredPane.add(panel);
@@ -130,17 +128,21 @@ public class ResizableLayeredPanel extends JPanel
 		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 		{
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-			panel.scale_x *= kx;
-			panel.scale_y *= ky;
+			panel.scaleX *= kx;
+			panel.scaleY *= ky;
 			panel.setSize(new Dimension (jLayeredPane.getWidth(), jLayeredPane.getHeight()));
 		}
-		jLayeredPane.repaint();
+//		this.jLayeredPane.setSize(this.getSize());
+//		this.jLayeredPane.revalidate();
+//		this.jLayeredPane.repaint();
 	}
 
 	public void resize()
 	{
 		int width = jLayeredPane.getWidth();
 		int height = jLayeredPane.getHeight();
+		height = height > 1 ? height : 1;
+		width = width > 1 ? width : 1;
 
 		resize ((double)width/(double)_width, (double)height/(double)_height);
 
@@ -153,8 +155,8 @@ public class ResizableLayeredPanel extends JPanel
 		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 		{
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-			panel.scale_x = ((double)(jLayeredPane.getWidth()) / (double)(panel.y.length));
-			panel.scale_y = ((double)(jLayeredPane.getHeight()) / (panel.max_y - panel.min_y));
+			panel.scaleX = ((double)(jLayeredPane.getWidth()) / (double)(panel.y.length));
+			panel.scaleY = ((jLayeredPane.getHeight()) / (panel.maxY - panel.minY));
 			panel.setSize(new Dimension (jLayeredPane.getWidth(), jLayeredPane.getHeight()));
 		}
 		jLayeredPane.repaint();
@@ -187,20 +189,19 @@ public class ResizableLayeredPanel extends JPanel
 		int ix = (int)((end - start) * indent_x);
 		//double iy = (max - min) * indent_y;
 
-		panel.scale_x = ((double)(jLayeredPane.getWidth()) / (end - start + 2*ix));
-		panel.scale_y = ((double)(jLayeredPane.getHeight()) / (max - min + 2*iy));
+		panel.scaleX = ((double)(jLayeredPane.getWidth()) / (end - start + 2*ix));
+		panel.scaleY = ((jLayeredPane.getHeight()) / (max - min + 2*iy));
 		panel.setSize(new Dimension (jLayeredPane.getWidth(), jLayeredPane.getHeight()));
 
 		_width = jLayeredPane.getWidth();
 		_height = jLayeredPane.getHeight();
 
-		panel.start = start - ix;
-		if (panel.start < 0)
-			panel.end = end + ix - panel.start;
+		if (start - ix < 0)
+			panel.setGraphBounds(start - ix, end + ix - start + ix);
 		else
-			panel.end = end + ix;
-		panel.top = panel.max_y - max - iy;
-		panel.bottom = min - panel.min_y - iy;
+			panel.setGraphBounds(start - ix, end + ix);
+		panel.top = panel.maxY - max - iy;
+		panel.bottom = min - panel.minY - iy;
 
 		jLayeredPane.repaint();
 	}
@@ -220,7 +221,7 @@ public class ResizableLayeredPanel extends JPanel
 				((ScaledGraphPanel)panel).inversed_y = b;
 				jLayeredPane.repaint();
 				return;
-			};
+			}
 		}
 	}
 
@@ -235,7 +236,7 @@ public class ResizableLayeredPanel extends JPanel
 				((ScaledGraphPanel)panel).Ky = Ky;
 				jLayeredPane.repaint();
 				return;
-			};
+			}
 		}
 	}
 
@@ -243,78 +244,5 @@ public class ResizableLayeredPanel extends JPanel
 	{
 		return new ToolBarPanel(this);
 	}
-}
 
-class ToolBarPanel extends JToolBar
-{
-	protected ResizableLayeredPanel panel;
-	protected static final Dimension btn_size = new Dimension(24, 24);
-	protected int position = 0;
-
-	protected static final String separator = "separator";
-
-	protected static String[] buttons = new String[]
-	{
-	};
-
-	public ToolBarPanel(ResizableLayeredPanel panel)
-	{
-		this.panel = panel;
-
-		try
-		{
-			jbInit();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	private void jbInit() throws Exception
-	{
-		//setPreferredSize(new Dimension (1, btn_size.height + 5));
-		setBorder(BorderFactory.createEtchedBorder());
-		setLayout (new XYLayout());
-	}
-
-	protected String[] getButtons()
-	{
-		return buttons;
-	}
-
-	protected Hashtable createGraphButtons()
-	{
-		return new Hashtable();
-	}
-
-	AbstractButton createToolButton(
-			AbstractButton b,
-			Dimension preferred_size,
-			String text,
-			String tooltip,
-			Icon icon,
-			ActionListener actionListener,
-			boolean isEnabled)
-	{
-		if (preferred_size != null)
-			b.setPreferredSize(preferred_size);
-		if (text != null)
-			b.setText (text);
-		if (tooltip != null)
-			b.setToolTipText (tooltip);
-		if (icon != null)
-			b.setIcon(icon);
-		if (actionListener != null)
-			b.addActionListener(actionListener);
-		b.setEnabled(isEnabled);
-		b.setFocusable(false);
-		return b;
-	}
-
-	public void insert (Component c)
-	{
-		add (c, new XYConstraints(position, 0, -1, -1));
-		position += c.getPreferredSize().width;
-	}
 }

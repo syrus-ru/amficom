@@ -1,44 +1,37 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.Parameter;
-import com.syrus.AMFICOM.Client.Resource.Result.Result;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.syrus.AMFICOM.Client.Analysis.ReflectogrammLoadDialog;
-import com.syrus.io.BellcoreReader;
-import com.syrus.io.BellcoreStructure;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
-public class AddTraceFromDatabaseCommand extends VoidCommand
+import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.Trace;
+import com.syrus.AMFICOM.Client.Analysis.UI.TraceLoadDialog;
+import com.syrus.AMFICOM.analysis.SimpleApplicationException;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.io.DataFormatException;
+
+public class AddTraceFromDatabaseCommand extends AbstractCommand
 {
-	Dispatcher dispatcher;
-	ApplicationContext aContext;
-	private Checker checker;
+	private ApplicationContext aContext;
 
-
-	public AddTraceFromDatabaseCommand(Dispatcher dispatcher, ApplicationContext aContext)
+	public AddTraceFromDatabaseCommand(ApplicationContext aContext)
 	{
-		this.dispatcher = dispatcher;
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void setParameter(String field, Object value)
 	{
-		if(field.equals("dispatcher"))
-			setDispatcher((Dispatcher)value);
-		else
 		if(field.equals("aContext"))
 			setApplicationContext((ApplicationContext )value);
-	}
-
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
 	}
 
 	public void setApplicationContext(ApplicationContext aContext)
@@ -46,73 +39,119 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public Object clone()
 	{
-		return new AddTraceFromDatabaseCommand(dispatcher, aContext);
+		return new AddTraceFromDatabaseCommand(this.aContext);
 	}
 
-	public void execute()
-	{
-
-		try
-		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
-			if(!checker.checkCommand(checker.loadReflectogrammFromDB))
-			{
-				return;
+	/**
+	 * Получает набор Traces по набору результатов измерений.
+	 * Выводит все необходимые сообщения об ошибках.
+	 * При наличии, загружает результаты анализа.
+	 * Если нет результатов анализа, пытается загрузить и использовать
+	 * параметры анализа.
+	 * Если нет ни результатов, ни параметров анализа, использует
+	 * текущие параметры анализа из Heap.
+	 * @param results
+	 * @return набор Traces, возможно, пустой
+	 * (если пуст исходный набор результатов либо не удалось загрузить ни одну
+	 * рефлектограмму)
+	 * @throws ApplicationException 
+	 * @throws DataFormatException 
+	 */
+	public static Set<Trace> getTracesFromResults(Set<Result> results)
+	throws DataFormatException, ApplicationException {
+		Set<Trace> traces = new HashSet<Trace>(results.size());
+		int totalCounter = 0;
+		int loadProblemsCounter = 0;
+		for (Result result1: results) {
+			totalCounter++;
+			try {
+				// параметры анализа из Heap используются только в случае,
+				// если не удалось загрузить готовые результаты анализа.
+				traces.add(Trace.getTraceWithARIfPossible(result1,
+						Heap.getMinuitAnalysisParams()));
+			} catch (SimpleApplicationException e) {
+				// ошибка - в результатах анализа нет рефлектограммы
+				loadProblemsCounter++;
 			}
 		}
-		catch (NullPointerException ex)
-		{
-			System.out.println("Application context and/or user are not defined");
+
+		// обрабатываем ошибки загрузки
+		if (loadProblemsCounter != 0) {
+			if (loadProblemsCounter == totalCounter) {
+				// был запрошен один или несколько результатов, но ни в одном нет рефлектограммы
+				GUIUtil.showErrorMessage(GUIUtil.MSG_ERROR_NO_ONE_RESULT_HAS_TRACE);
+			} else {
+				// некоторые удалось загрузить, а некоторые - нет
+				GUIUtil.showWarningMessage(GUIUtil.MSG_WARNING_SOME_RESULTS_HAVE_NO_TRACE);
+			}
+		}
+
+		return traces;
+	}
+
+	@Override
+	public void execute()
+	{
+		// @todo: ReflectogramLoadDialog, Heap.setRLDialogByKey seem to be unused
+//		ReflectogrammLoadDialog dialog;
+//		JFrame parent = Environment.getActiveWindow();
+//		if(Heap.getRLDialogByKey(parent.getName()) != null)
+//		{
+//			dialog = Heap.getRLDialogByKey(parent.getName());
+//		} else
+//		{
+//			dialog = new ReflectogrammLoadDialog (this.aContext);
+//			Heap.setRLDialogByKey(parent.getName(), dialog);
+//		}
+//		
+//		if(dialog.showDialog() == JOptionPane.CANCEL_OPTION)
+//			return;
+//		
+//		Result result1 = dialog.getResult();
+//		if (result1 == null)
+//			return;
+
+		// Получаем набор результатов, которые надо загрузить
+		JFrame parent = Environment.getActiveWindow();
+		if(TraceLoadDialog.showDialog(parent) == JOptionPane.CANCEL_OPTION)
+			return;
+		Set<Result> results = TraceLoadDialog.getResults();
+
+		// пытаемся загрузить рефлектограммы
+		Set<Trace> traces;
+		try {
+			traces = getTracesFromResults(results);
+		} catch (DataFormatException e) {
+			// ошибка формата данных - отменяем загрузку
+			GUIUtil.showDataFormatError();
+			return;
+		} catch (ApplicationException e) {
+			GUIUtil.processApplicationException(e);
 			return;
 		}
 
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if(dataSource == null)
-			return;
-
-
-
-//    TraceLoadDialog dialog;
-		ReflectogrammLoadDialog dialog;
-		if(Pool.get("dialog", "TraceLoadDialog") == null)
-		{
-			dataSource.LoadISM();
-//      dialog = new TraceLoadDialog (this.aContext);
-			dialog = new ReflectogrammLoadDialog (this.aContext);
-			Pool.put("dialog", "TraceLoadDialog", dialog);
+		int alreadyLoadedCounter = 0;
+		for (Trace tr: traces) {
+			if (Heap.hasSecondaryBSKey(tr.getKey())
+					|| Heap.getPrimaryTrace().getKey().equals(tr.getKey())) {
+				alreadyLoadedCounter++;
+			} else {
+				Heap.putSecondaryTrace(tr);
+				Heap.setCurrentTrace(tr.getKey());
+			}
 		}
-		else
-		{
-//      dialog = (TraceLoadDialog)Pool.get("dialog", "TraceLoadDialog");
-			dialog = (ReflectogrammLoadDialog)Pool.get("dialog", "TraceLoadDialog");
 
+		if (alreadyLoadedCounter != 0) {
+			if (alreadyLoadedCounter == traces.size()) {
+				// все запрошенные рефлектограммы уже загружены
+				GUIUtil.showErrorMessage(GUIUtil.MSG_ERROR_TRACE_ALREADY_LOADED);
+			} else {
+				// некоторые запрошенные рефлектограммы уже загружены
+				GUIUtil.showWarningMessage(GUIUtil.MSG_WARNING_SOME_TRACES_ARE_ALREADY_LOADED);
+			}
 		}
-		dialog.show();
-
-		if(dialog.ret_code == 0)
-			return;
-		if (dialog.getResult() == null)
-			return;
-
-		BellcoreStructure bs = null;
-		Result res = dialog.getResult();
-
-		java.util.Enumeration enum = res.parameters.elements();
-		while (enum.hasMoreElements())
-		{
-			Parameter param = (Parameter)enum.nextElement();
-			if (param.gpt.id.equals("reflectogramm"))
-				bs = new BellcoreReader().getData(param.value);
-		}
-		if (bs == null)
-			return;
-
-		bs.title = res.getName();
-		Pool.put("bellcorestructure", bs.title, bs);
-
-		dispatcher.notify(new RefChangeEvent(bs.title,
-				RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
 	}
 }

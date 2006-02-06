@@ -1,44 +1,93 @@
-MODULE_NAME = commonclient_v1
+MODULE_NAME := commonclient
 
-LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
-ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
+LIBNAME := $(MODULE_NAME).jar
+ARCHFILE := $(MODULE_NAME).tar.gz
 
-IDLDIR = ../idl_v1/idl
-LOCALIDLDIR = ./idl
+IDL_SOURCES = $(IDLDIR)/commonclient.idl
 
-
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
 
-APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/util.jar
+LIBNAME_GENERALXML=generalxml.jar
+
+DEPENDENCIES = \
+general \
+administration \
+configuration \
+measurement \
+event \
+resource \
+map \
+mapview \
+scheme \
+csbridge \
+reflectometry \
+filter \
+leserver_interface \
+cmserver_interface \
+mscharserver_interface \
+util \
+extensions
+
+EXTCLASSPATH := $(EXTLIBDIR)/kunststoff.jar:$(TROVE4JCLASSPATH):$(XMLBEANSCLASSPATH)
+XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
 
-SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java)
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/event/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/model/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/resource/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/launcher/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/UI/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/UI/dialogs/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/UI/tree/*.java)
+
 
 all: $(LIBNAME)
 
 $(LIBNAME): .mach
+	$(CP) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/resource/*.properties) \
+		$(CLASSDIR)/com/syrus/AMFICOM/client/resource
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com
+		-C $(CLASSDIR) com \
+		-C $(CLASSDIR) images \
+		-C $(CLASSDIR) xml
 
-.mach:	$(CLASSDIR)
+.mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
-$(CLASSDIR):
-	mkdir -p $@
+.corba: $(CLASSDIR) .idl
+	$(JAVAC) \
+		$(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		-sourcepath $(SRCDIR) \
+		$(SRCDIR)/com/syrus/AMFICOM/general/corba/*.java
+	touch $@
+
+
 
 .PHONY:	clean
-clean:	cleanmach
+clean:	cleanmach cleancorba
 	$(RM) $(LIBNAME)
 
 .PHONY:	cleanmach
 cleanmach:
 	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
+
+.PHONY: cleancorba
+cleancorba: idlclean
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/general/corba
+	$(RM) .corba
+
+.PHONY: idlclean
+idlclean:
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/general/corba
+	$(RM) .idl
 
 #### Install ####
 .PHONY:	install
@@ -50,5 +99,7 @@ install: $(LIBNAME)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(SOURCES)
+		$(IDL_SOURCES) \
+		$(SOURCES) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/resource/*.properties)
 

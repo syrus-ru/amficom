@@ -1,7 +1,0 @@
-*.a
-*.so
-*.o
-*.swp
-*.tar
-*.gz
-com_syrus_util_TraceDataReader.h

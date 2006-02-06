@@ -1,0 +1,164 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xsd:schema 
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	xmlns:configuration = "http://syrus.com/AMFICOM/configuration/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/configuration/xml"
+	elementFormDefault = "qualified">
+
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: Equipment.xsd,v 1.2 2005/09/28 10:03:08 arseniy Exp $
+
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/StorableObject.xsd"/>
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/general.xsd"/>
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/Characteristic.xsd"/>
+
+	<xsd:element name = "equipments" type = "configuration:XmlEquipmentSeq">
+		<xsd:key name = "equipmentId">
+			<xsd:selector xpath = "configuration:equipments/configuration:equipment"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key>
+	</xsd:element>
+
+	<xsd:complexType name = "XmlEquipment" final = "#all">
+		<xsd:complexContent>
+			<xsd:extension base = "general:XmlStorableObject">
+				<xsd:sequence>
+					<xsd:element name = "name">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:string">
+								<xsd:minLength value = "1"/>
+								<xsd:maxLength value = "128"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element ref = "general:description"
+						minOccurs = "0"/>
+					<xsd:element name = "supplier"
+						minOccurs = "0">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:string">
+								<xsd:minLength value = "1"/>
+								<xsd:maxLength value = "128"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name = "supplierCode"
+						minOccurs = "0">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:string">
+								<xsd:minLength value = "1"/>
+								<xsd:maxLength value = "32"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name = "latitude" default = "0">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:float">
+								<xsd:minInclusive value = "-90"/>
+								<xsd:maxInclusive value = "90"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name = "longitude" default = "0">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:float">
+								<xsd:minInclusive value = "-180"/>
+								<xsd:maxInclusive value = "180"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name = "hwSerial"
+						minOccurs = "0">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:string">
+								<xsd:minLength value = "1"/>
+								<xsd:maxLength value = "64"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name = "hwVersion"
+						minOccurs = "0">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:string">
+								<xsd:minLength value = "1"/>
+								<xsd:maxLength value = "64"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name = "swSerial"
+						minOccurs = "0">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:string">
+								<xsd:minLength value = "1"/>
+								<xsd:maxLength value = "64"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name = "swVersion"
+						minOccurs = "0">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:string">
+								<xsd:minLength value = "1"/>
+								<xsd:maxLength value = "64"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name = "inventoryNumber"
+						minOccurs = "0">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:string">
+								<xsd:minLength value = "1"/>
+								<xsd:maxLength value = "64"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name = "domainId" type = "general:XmlIdentifier"
+						minOccurs = "0"/>
+					<xsd:element name = "protoEquipmentId" type = "general:XmlIdentifier"/>
+					<xsd:choice
+						minOccurs = "0">
+						<xsd:element name = "symbolId" type = "general:XmlIdentifier"/>
+						<xsd:element name = "symbolCodename">
+							<xsd:simpleType>
+								<xsd:restriction base = "xsd:string">
+									<xsd:minLength value = "1"/>
+									<xsd:maxLength value = "32"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name = "symbolFilename">
+							<xsd:simpleType>
+								<xsd:restriction base = "xsd:string">
+									<xsd:minLength value = "1"/>
+									<xsd:maxLength value = "256"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:choice>
+					<xsd:element ref = "general:characteristics"
+						minOccurs = "0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name = "XmlEquipmentSeq" final = "#all">
+		<xsd:sequence>
+			<xsd:element name = "equipment" type = "configuration:XmlEquipment" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

@@ -1,93 +1,57 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-
-import javax.swing.*;
-import javax.swing.JToggleButton;
-
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.AnalysisParametersListener;
+import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
+import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
+import com.syrus.AMFICOM.general.ObjectEntities;
 
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
-
-public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
+public class AnalysisLayeredPanel
+extends TraceEventsLayeredPanel
+implements CurrentEventChangeListener,
+		PrimaryRefAnalysisListener, RefMismatchListener,
+		AnalysisParametersListener
 {
 	public static final long LOSS_ANALYSIS = 0x00000001;
 	public static final long REFLECTION_ANALYSIS = 0x00000010;
 	public static final long NO_ANALYSIS = 0x00000100;
 
+	private static Identifier refMismatchMarkerId;
+	{
+		try {
+			refMismatchMarkerId = LocalIdentifierGenerator.generateIdentifier(ObjectEntities.MARK_CODE);
+		} catch (IllegalObjectEntityException e) {
+			throw new InternalError("generateIdentifier - IllegalObjectEntityException: " + e);
+		}
+	}
+
 	public AnalysisLayeredPanel(Dispatcher dispatcher)
 	{
 		super(dispatcher);
-
-		try
-		{
-			jbInit();
-		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
+		Heap.addCurrentEventChangeListener(this);
+		Heap.addPrimaryRefAnalysisListener(this);
+		Heap.addRefMismatchListener(this);
+		Heap.addAnalysisParametersListener(this);
 	}
 
-	private void jbInit() throws Exception
-	{
-	}
-
+	@Override
 	protected ToolBarPanel createToolBar()
 	{
 		return new AnalysisToolBar(this);
 	}
 
-	public void operationPerformed(OperationEvent ae)
-	{
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
-		{
-			RefUpdateEvent rue = (RefUpdateEvent)ae;
-
-			for(int i=0; i<jLayeredPane.getComponentCount(); i++)
-			{
-				SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-				if (panel instanceof AnalysisPanel)
-				{
-					if(rue.ANALYSIS_PERFORMED)
-					{
-						String id = (String)(rue.getSource());
-						if (id.equals("primarytrace"))
-						{
-							((AnalysisPanel)panel).updEvents(id);
-
-							ReflectogramEvent[] ep = ((ReflectogramEvent[])Pool.get("eventparams", id));
-							((AnalysisPanel)panel).updateEvents(ep);
-							((AnalysisPanel)panel).updMarkers();
-							jLayeredPane.repaint();
-						}
-					}
-					if(rue.EVENT_SELECTED)
-					{
-						int num = Integer.parseInt((String)rue.getSource());
-						((AnalysisPanel)panel).move_marker_to_ev(num);
-						((AnalysisPanel)panel).updAnalysisMarkerInfo();
-					}
-				}
-			}
-		}
-		super.operationPerformed(ae);
-	}
-
 	public void updMarkers()
 	{
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++)
 		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if (panel instanceof AnalysisPanel)
 			{
 				((AnalysisPanel)panel).updMarkers();
@@ -96,164 +60,140 @@ public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements Ope
 		}
 	}
 
+	void centerMarkerA()
+	{
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++)
+		{
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
+			if (panel instanceof AnalysisPanel)
+			{
+				AnalysisPanel p = (AnalysisPanel)panel;
+				p.scrollToMarkerVisible(p.markerA);
+			}
+		}
+	}
+
+	void centerMarkerB()
+	{
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++)
+		{
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
+			if (panel instanceof AnalysisPanel)
+			{
+				AnalysisPanel p = (AnalysisPanel)panel;
+				p.scrollToMarkerVisible(p.markerB);
+			}
+		}
+	}
+
+	@Override
 	public void updPaintingMode()
 	{
 		super.updPaintingMode();
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++)
 		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if (panel instanceof AnalysisPanel)
 			{
-				((AnalysisPanel)panel).loss_analysis = ((AnalysisToolBar)toolbar).lossTButton.isSelected();
-				((AnalysisPanel)panel).reflection_analysis = ((AnalysisToolBar)toolbar).reflectionTButton.isSelected();
+				((AnalysisPanel)panel).loss_analysis = ((AnalysisToolBar)this.toolbar).lossTButton.isSelected();
+				((AnalysisPanel)panel).reflection_analysis = ((AnalysisToolBar)this.toolbar).reflectionTButton.isSelected();
 			}
 		}
 	}
 
 	public void setAnalysisType (long type)
 	{
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++)
 		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if (panel instanceof AnalysisPanel)
 			{
 				((AnalysisPanel)panel).loss_analysis = ((type & LOSS_ANALYSIS) != 0);
 				((AnalysisPanel)panel).reflection_analysis = ((type & REFLECTION_ANALYSIS) != 0);
 				((AnalysisPanel)panel).updMarkers();
 				((AnalysisPanel)panel).updAnalysisMarkerInfo();
-				jLayeredPane.repaint();
+				this.jLayeredPane.repaint();
 				return;
-			};
+			}
 		}
 	}
-}
 
-class AnalysisToolBar extends TraceEventsToolBar
-{
-	protected static final String loss = "lossTButton";
-	protected static final String ref = "reflectionTButton";
-	protected static final String noana = "noAnalysisButton";
-
-	JToggleButton lossTButton = new JToggleButton();
-	JToggleButton reflectionTButton = new JToggleButton();
-	JToggleButton noAnalysisTButton = new JToggleButton();
-
-	protected static String[] buttons = new String[]
+	public void currentEventChanged()
 	{
-		ex, dx, ey, dy, fit, separator, loss, ref, noana, separator, events, modeled
-	};
-
-	public AnalysisToolBar (AnalysisLayeredPanel panel)
-	{
-		super(panel);
+		int num = Heap.getCurrentEvent2();
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++)
+		{
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
+			if (panel instanceof AnalysisPanel)
+			{
+				((AnalysisPanel)panel).move_marker_to_ev(num);
+				((AnalysisPanel)panel).updAnalysisMarkerInfo();
+			}
+		}
 	}
 
-	protected String[] getButtons()
-	{
-		return buttons;
-	}
-
-	protected Hashtable createGraphButtons()
-	{
-		Hashtable buttons = new Hashtable();
-
-		buttons.put(
-				loss,
-				createToolButton(
-				lossTButton,
-				btn_size,
-				null,
-				LangModelAnalyse.String("lossanalyse"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/loss.gif")),
-				new ActionListener()
+	public void primaryRefAnalysisCUpdated() {
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++)
+		{
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
+			if (panel instanceof AnalysisPanel)
+			{
 				{
-					public void actionPerformed(ActionEvent e)
-					{
-						lossTButton_actionPerformed(e);
-					}
-				},
-				true));
-		buttons.put(
-				ref,
-				createToolButton(
-				reflectionTButton,
-				btn_size,
-				null,
-				LangModelAnalyse.String("reflectionanalyse"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/reflect.gif")),
-				new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						reflectionTButton_actionPerformed(e);
-					}
-				},
-				true));
-		buttons.put(
-				noana,
-				createToolButton(
-				noAnalysisTButton,
-				btn_size,
-				null,
-				LangModelAnalyse.String("noanalyse"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/noanalyse.gif")),
-				new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						noAnalysisTButton_actionPerformed(e);
-					}
-				},
-				true));
-
-		ButtonGroup group = new ButtonGroup();
-		for (Enumeration enum = buttons.elements(); enum.hasMoreElements();)
-		{
-			AbstractButton button = (AbstractButton)enum.nextElement();
-			group.add(button);
+					((AnalysisPanel)panel).updEvents(Heap.PRIMARY_TRACE_KEY);
+					((AnalysisPanel)panel).updMarkers();
+					this.jLayeredPane.repaint();
+				}
+			}
 		}
-
-		lossTButton.doClick();
-		buttons.putAll(super.createGraphButtons());
-		return buttons;
 	}
 
-	void lossTButton_actionPerformed(ActionEvent e)
-	{
-		AnalysisLayeredPanel panel = (AnalysisLayeredPanel)super.panel;
-		if (!lossTButton.isSelected())
-		{
-			lossTButton.setSelected(true);
-			return;
-		}
-		panel.setAnalysisType (AnalysisLayeredPanel.LOSS_ANALYSIS);
-		reflectionTButton.setSelected(false);
-		noAnalysisTButton.setSelected(false);
+	public void primaryRefAnalysisRemoved() {
+		// do nothing. AnalysisPanel will be removed when bsHashRemoved comes
 	}
 
-	void reflectionTButton_actionPerformed(ActionEvent e)
-	{
-		AnalysisLayeredPanel panel = (AnalysisLayeredPanel)super.panel;
-		if(!reflectionTButton.isSelected())
+	private void updRefMismatch() {
+		ReflectogramMismatchImpl alarm = Heap.getRefMismatch();
+		for(int i = 0; i < this.jLayeredPane.getComponentCount(); i++)
 		{
-			reflectionTButton.setSelected(true);
-			return;
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
+			if (panel instanceof MapMarkersPanel)
+			{
+				// удаляем маркер (если он есть) и запоминаем, был ли он удален
+				boolean updated =
+						((MapMarkersPanel)panel).
+								deleteMarker(refMismatchMarkerId) != null;
+				// создаем новый маркер (если надо)
+				if (alarm != null) {
+					updated = true;
+					double dist = alarm.getDistance(); 
+					((MapMarkersPanel)panel).createAlarmMarker(
+							LangModelAnalyse.getString("mismatch"),
+							refMismatchMarkerId, dist);
+				}
+				if (updated)
+					this.jLayeredPane.repaint();
+			}
 		}
-		panel.setAnalysisType (AnalysisLayeredPanel.REFLECTION_ANALYSIS);
-		lossTButton.setSelected(false);
-		noAnalysisTButton.setSelected(false);
+	}
+	public void refMismatchCUpdated() {
+		updRefMismatch();
 	}
 
-	void noAnalysisTButton_actionPerformed(ActionEvent e)
-	{
-		AnalysisLayeredPanel panel = (AnalysisLayeredPanel)super.panel;
-		if (!noAnalysisTButton.isSelected())
-		{
-			noAnalysisTButton.setSelected(true);
-			return;
+	public void refMismatchRemoved() {
+		updRefMismatch();
+	}
+
+	public void analysisParametersUpdated() {
+		boolean updated = false;
+		for(int i = 0; i < this.jLayeredPane.getComponentCount(); i++) {
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
+			if (panel instanceof EnhancedReflectogramPanel) {
+				EnhancedReflectogramPanel p2 = (EnhancedReflectogramPanel)panel;
+				updated = p2.eotDetectionLevel.isDrawed();
+			}
 		}
-		panel.setAnalysisType (AnalysisLayeredPanel.NO_ANALYSIS);
-		lossTButton.setSelected(false);
-		reflectionTButton.setSelected(false);
+		if (updated) {
+			this.jLayeredPane.repaint();
+		}
 	}
 }

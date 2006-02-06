@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--JBuilder XML Project-->
 <project>
+  <property category="generalFormatting" name="tabSize" value="2"/>
+  <property category="generalFormatting" name="useTabChar" value="1"/>
+  <property category="javaFormatting" name="EventStyle" value="0"/>
+  <property category="javaFormatting" name="classBraceNextLine" value="1"/>
+  <property category="javaFormatting" name="extendsOnNewLine" value="0"/>
+  <property category="javaFormatting" name="implementsOnNewLine" value="0"/>
+  <property category="javaFormatting" name="methodBraceNextLine" value="1"/>
+  <property category="javaFormatting" name="packageThreshold" value="1"/>
+  <property category="javaFormatting" name="paramAlignThreshold" value="40"/>
+  <property category="javaFormatting" name="spaceAfterTypecast" value="0"/>
+  <property category="javaFormatting" name="spaceBeforeLparen" value="0"/>
+  <property category="javaFormatting" name="wrapAtColumn" value="100"/>
+  <property category="runtime" name="ConfigurationCount" value="1"/>
   <property category="runtime" name="DefaultConfiguration" value="-1"/>
-  <property category="runtime" name="ExcludeDefaultForZero" value="1"/>
+  <property category="runtime.0" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
+  <property category="runtime.0" name="ConfigurationName" value="AnalysisExt"/>
+  <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
+  <property category="runtime.0" name="application.class" value="com.syrus.AMFICOM.Client.Analysis.Reflectometry.AnalyseExtRun"/>
+  <property category="runtime.1" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
+  <property category="runtime.1" name="ConfigurationName" value="Evaluation"/>
+  <property category="runtime.1" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
+  <property category="runtime.1" name="application.class" value="com.syrus.AMFICOM.Client.Analysis.Reflectometry.EvaluationRun"/>
+  <property category="serverservices" name="disabled.services" value="connector;jdatastore"/>
   <property category="serverservices" name="single.server.name" value="Tomcat 4.0"/>
   <property category="sys" name="AuthorLabel" value="@author"/>
   <property category="sys" name="BackupPath" value="bak"/>
@@ -19,9 +40,9 @@
   <property category="sys" name="ExcludeClassEnabled" value="0"/>
   <property category="sys" name="IncludeTestPath" value="1"/>
   <property category="sys" name="InstanceVisibility" value="2"/>
-  <property category="sys" name="JDK" value="java 1.4.1_03-b02"/>
+  <property category="sys" name="JDK" value="java version 1.4.1_02-b06"/>
   <property category="sys" name="LastTag" value="0"/>
-  <property category="sys" name="Libraries" value="General;layout;Server_Interface;Configure;SurveyRes;Scheme;io;Report;Map;Adminisrtrate;util"/>
+  <property category="sys" name="Libraries" value="dadara;ConfigureV2;CorbaPortableV2;CorbaV2;External;Filter;GeneralV2;MapV2;SchemeV2;util;SurveyRes;MapView"/>
   <property category="sys" name="MakeStable" value="0"/>
   <property category="sys" name="OutPath" value="classes"/>
   <property category="sys" name="SourcePath" value="src;test"/>
@@ -33,4 +54,11 @@
   <property category="sys" name="WorkingDirectory" value="../work"/>
   <property category="team" name="ignorePath.0" value="bak"/>
   <property category="team" name="ignorePath.1" value="classes"/>
+  <node name="Analysis" type="Archive">
+    <property category="archiving" name="buildWithProject" value="0"/>
+    <property category="archiving" name="contentRules.1" value="I:**/*.*"/>
+    <property category="archiving" name="targetCompressed" value="1"/>
+    <property category="archiving" name="targetPath" value="F%|/libs/analysis.jar"/>
+    <property category="archiving" name="usingRules" value="1"/>
+  </node>
 </project>

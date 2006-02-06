@@ -1,60 +1,61 @@
+/*
+ * $Id: KISReport.java,v 1.56 2005/09/25 10:54:40 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.mcm;
 
-import com.syrus.AMFICOM.util.Identifier;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.AMFICOM.event.corba.AlarmLevel;
-import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.Parameter;
+import com.syrus.AMFICOM.measurement.Result;
 
-public class KISReport {
-	private Identifier measurement_id;
-	private Identifier[] parameter_type_ids;
-	private byte[][] parameter_values;
+/**
+ * @version $Revision: 1.56 $, $Date: 2005/09/25 10:54:40 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
+ * @module mcm
+ */
 
-	public KISReport(String measurement_id_str,
-									 String[] parameter_type_ids_str,
-									 byte[][] parameter_values) {
-		this.measurement_id = new Identifier(measurement_id_str);
-		this.parameter_type_ids = new Identifier[parameter_type_ids_str.length];
-		for (int i = 0; i < this.parameter_type_ids.length; i++)
-			this.parameter_type_ids[i] = new Identifier(parameter_type_ids_str[i]);
-		this.parameter_values = parameter_values;
+final class KISReport {
+	private Identifier measurementId;
+	private String[] parameterCodenames;
+	private byte[][] parameterValues;
+
+	private Result result;
+
+	public KISReport(final String measurementIdStr, final String[] parameterCodenames, final byte[][] parameterValues) {
+		this.measurementId = new Identifier(measurementIdStr);
+		this.parameterCodenames = parameterCodenames;
+		this.parameterValues = parameterValues;
+		
+		this.result = null;
 	}
 
-	public Result createResult(Measurement measurement) throws Exception {
-		if (!measurement.getId().equals(this.measurement_id))
-			throw new Exception("KISReport | Alien measurement: identifier '" + measurement.getId().toString() + "' != my '" + this.measurement_id.toString() + "'");
+	Result getResult() throws ApplicationException {
+		if (this.result != null) {
+			return this.result;
+		}
 
-		Identifier[] parameter_ids = new Identifier[this.parameter_type_ids.length];
-		for (int i = 0; i < parameter_ids.length; i++)
-			parameter_ids[i] = MeasurementControlModule.createIdentifier("parameter");
+		final Measurement measurement = StorableObjectPool.getStorableObject(this.measurementId, true);
 
-		Result result = measurement.createResult(MeasurementControlModule.createIdentifier("result"),
-																						 null,
-																						 AlarmLevel.ALARM_LEVEL_NONE,
-																						 parameter_ids,
-																						 this.parameter_type_ids,
-																						 this.parameter_values);
-		return result;
-	}
+		final Parameter[] parameters = new Parameter[this.parameterCodenames.length];
+		for (int i = 0; i < parameters.length; i++) {
+			parameters[i] = Parameter.createInstance(ParameterType.REFLECTOGRAMMA, this.parameterValues[i]);
+		}
 
-	public Result createResult() throws Exception {
-		Measurement measurement = new Measurement(this.measurement_id);
-
-		Identifier[] parameter_ids = new Identifier[this.parameter_type_ids.length];
-		for (int i = 0; i < parameter_ids.length; i++)
-			parameter_ids[i] = MeasurementControlModule.createIdentifier("parameter");
-
-		Result result = measurement.createResult(MeasurementControlModule.createIdentifier("result"),
-																						 null,
-																						 AlarmLevel.ALARM_LEVEL_NONE,
-																						 parameter_ids,
-																						 this.parameter_type_ids,
-																						 this.parameter_values);
-		return result;
+		this.result = measurement.createResult(LoginManager.getUserId(), parameters);
+		return this.result;
 	}
 
 	public Identifier getMeasurementId() {
-		return this.measurement_id;
+		return this.measurementId;
 	}
 }

@@ -1,47 +1,29 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry;
 
-import java.awt.Toolkit;
-
+import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Model.ReflectometryAnalyseApplicationModelFactory;
-
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.General.Model.ReflectometryAnalyseApplicationModelFactory;
+import com.syrus.AMFICOM.client.model.AbstractApplication;
 
-public class Analyse
+public class Analyse extends AbstractApplication
 {
-	ApplicationContext aContext = new ApplicationContext();
+	public static final String APPLICATION_NAME = "analysis";
 
-	public Analyse(AnalyseApplicationModelFactory factory)
-	{
-		if(!Environment.canRun(Environment.MODULE_ANALYSE))
-			return;
-
-		aContext.setApplicationModel(factory.create());
-		AnalyseMainFrameSimplified frame = new AnalyseMainFrameSimplified(aContext);
-
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("images/main/analyse_mini.gif"));
-		frame.setVisible(true);
+	public Analyse() {
+		super(Analyse.APPLICATION_NAME);
+	}
+	
+	@Override
+	protected void init() {
+		super.aContext.setApplicationModel(new ReflectometryAnalyseApplicationModelFactory().create());
+		final ImageIcon imageIcon = (ImageIcon) UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_MINI);
+		super.startMainFrame(new AnalyseMainFrameSimplified(this.aContext), imageIcon.getImage());
 	}
 
-	public static void main(String[] args)
-	{
-		Environment.initialize();
-		LangModelAnalyse.initialize();
-		LangModelReport.initialize();
-
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-
-		new Analyse(new ReflectometryAnalyseApplicationModelFactory());
+	public static void main(String[] args) {
+		new Analyse();
 	}
 }

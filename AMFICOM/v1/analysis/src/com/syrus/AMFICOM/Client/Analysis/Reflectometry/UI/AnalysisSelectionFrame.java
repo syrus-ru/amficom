@@ -1,560 +1,277 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
-import javax.swing.JTable;
-import javax.swing.ListCellRenderer;
 import javax.swing.BorderFactory;
-import javax.swing.DefaultCellEditor;
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.JViewport;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.table.TableModel;
 
-import com.syrus.AMFICOM.Client.General.UI.ATable;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.MinuitAnalyseCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.AnalysisCommand;
+import com.syrus.AMFICOM.Client.General.Event.AnalysisParametersListener;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.CriteriaSet;
-import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.analysis.AnalysisParametersWrapper;
+import com.syrus.AMFICOM.analysis.PFTrace;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
+import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
+import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer.NumberRenderer;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
 
-import com.syrus.io.BellcoreStructure;
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+public class AnalysisSelectionFrame extends JInternalFrame
+implements BsHashChangeListener, PrimaryMTAEListener,
+		AnalysisParametersListener, ReportTable {
+	private static final long serialVersionUID = -5866433900913468687L;
+	private static final String TITLE = LangModelAnalyse.getString("analysisSelectionTitle");
 
-public class AnalysisSelectionFrame extends ATableFrame
-																		implements OperationListener
-{
-	public static final Dimension btn_size = new Dimension(24, 24);
-	private Dispatcher dispatcher;
-	private ParamTableModel tModelMinuit;
-	private ATable jTable;
-	private ColorManager cManager;
-	CriteriaSet criteria;
-
-	BorderLayout borderLayout = new BorderLayout();
-	JPanel mainPanel = new JPanel();
+	private WrapperedPropertyTable<AnalysisParameters> table;
+	private JPanel mainPanel;
 	JScrollPane scrollPane = new JScrollPane();
 	JViewport viewport = new JViewport();
-	JToolBar jToolBar1 = new JToolBar();
-	JButton jButton1 = new JButton();
-	JButton jButton2 = new JButton();
-	JButton jButton3 = new JButton();
 	ApplicationContext aContext;
-
-	public AnalysisSelectionFrame(ApplicationContext aContext)
-	{
-		super();
-
-		try
-		{
-			jbInit();
+	private boolean analysisParametersUpdatedHere = false;
+	private NumberRenderer numberRenderer =
+			new ADefaultTableCellRenderer.NumberRenderer () {
+		private NumberFormat formatter;
+		@Override
+		public void setValue(Object value) {
+			if (this.formatter == null) {
+				this.formatter = NumberFormat.getInstance();
+				// Значения min/max fraction digits
+				// выбраны из следующих соображений:
+				// 1. обеспечивать достаточную точность отображения
+				//   (для этого надо maximumFractionDigits >= 4)
+				// 2. отображать так же, как это будет делать редактор
+				//   (min=1, max - достаточно велико)
+				this.formatter.setMaximumFractionDigits(5);
+				this.formatter.setMinimumFractionDigits(1);
+			}
+//			super.label.setText((value == null) ? "" : this.formatter.format(value));
+			if (value instanceof Double) {
+				super.label.setText(this.formatter.format(value));
+			} else {
+				super.setValue(value);
+			}
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+	};
+
+	public AnalysisSelectionFrame(final ApplicationContext aContext) {
+		this.createUI();
 		this.aContext = aContext;
 
-		init_module(aContext.getDispatcher());
+		this.initModule();
 	}
 
-	void init_module(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-		dispatcher.register(this, RefChangeEvent.typ);
+	void initModule() {
+		Heap.addBsHashListener(this);
+		Heap.addPrimaryMTMListener(this);
+		Heap.addAnalysisParametersListener(this);
 	}
 
-	public void operationPerformed(OperationEvent ae)
-	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.OPEN)
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
-				{
-					BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-					if (bs.test_setup_id.equals(""))
-						setTitle(LangModelAnalyse.String("analysisSelectionTitle") + " (шаблона нет)");
-					else
-					{
-						TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
-						setTitle(LangModelAnalyse.String("analysisSelectionTitle") + " (шаблон: " +
-										 (ts.getName().equals("") ? "(без имени)" : ts.getName()) + ")");
-					}
-
-					double[] minuitParams = (double[])Pool.get("analysisparameters", "minuitanalysis");
-					setDefaults(minuitParams);
-					setVisible(true);
-				}
-			}
-			if(rce.THRESHOLDS_CALC)
-			{
-				String id = (String)(rce.getSource());
-
-				BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-				if (bs.test_setup_id.equals(""))
-					setTitle(LangModelAnalyse.String("analysisSelectionTitle") + " (шаблона нет)");
-				else
-				{
-					TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
-					setTitle(LangModelAnalyse.String("analysisSelectionTitle") + " (шаблон: " +
-									 (ts.getName().equals("") ? ts.getId() : ts.getName()) + ")");
-
-					if (!ts.criteria_set_id.equals(""))
-					{
-						double[] minuitParams = (double[])Pool.get("analysisparameters", "minuitanalysis");
-						setDefaults(minuitParams);
-					}
-				}
-			}
-			if(rce.CLOSE)
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("all"))
-				{
-					jTable.setModel(new FixedSizeEditableTableModel(
-							new String[] { "" },
-							new String[] { "" },
-							new String[] { "" },
-							new int[] { }));
-					setVisible(false);
-				}
-			}
-		}
+	public String getReportTitle() {
+		return TITLE;
 	}
 
-	public String getReportTitle()
-	{
-		return LangModelAnalyse.String("analysisSelectionTitle");
+	public TableModel getTableModel() {
+		return this.table.getModel();
 	}
 
-	public TableModel getTableModel()
-	{
-		return tModelMinuit;
+	void setValues(final AnalysisParameters ap) {
+		this.table.getModel().setObject(ap);
 	}
 
-	void setDefaults(double[] minuitParams)
-	{
-		tModelMinuit.updateData(new Object[]{
-			 new Double(minuitParams[2]),
-			 new Double(minuitParams[1]),
-			 new Double(minuitParams[3]),
-			 new Double(minuitParams[0]),
-			 new Double(minuitParams[4]),
-			 new Double(minuitParams[5]),
-			 new Integer((int)minuitParams[6]),
-			 new Integer((int)minuitParams[7])
-		});
-		/*
-		tModelMinuit.updateData(new Double[][]{
-			{ new Double(minuitParams[2])},
-			{ new Double(minuitParams[1])},
-			{ new Double(minuitParams[3])},
-			{ new Double(minuitParams[0])},
-			{ new Double(minuitParams[4])},
-			{ new Double(minuitParams[5])},
-			{ new Double(minuitParams[6])},
-			{ new Double(minuitParams[7]) }
-		});*/
-
-		jTable.setModel(tModelMinuit);
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
+	private void updColorModel() {
 	}
 
-	private void updColorModel()
-	{
-		scrollPane.getViewport().setBackground(SystemColor.window);
-		jTable.setBackground(SystemColor.window);
-		jTable.setForeground(cManager.getColor("textColor"));
-		jTable.setGridColor(cManager.getColor("tableGridColor"));
+	private void updateTitle() {
 	}
 
-	private void jbInit() throws Exception
-	{
-		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+	private void createUI() {
+		this.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
-		this.setTitle(LangModelAnalyse.String("analysisSelectionTitle"));
+		this.setTitle(TITLE);
 
-		tModelMinuit = new ParamTableModel();
-		/*tModelMinuit = new FixedSizeEditableTableModel (
-				new String[] { LangModelAnalyse.String("analysisSelectionKey"),
-											 LangModelAnalyse.String("analysisSelectionValue")},
-				new Double[] { new Double(1), new Double(1) },
-				new String[] { LangModelAnalyse.String("analysisMinConnector"),
-											 LangModelAnalyse.String("analysisMinWeld"),
-											 LangModelAnalyse.String("analysisMinEnd"),
-											 LangModelAnalyse.String("analysisMinEvent"),
-											 LangModelAnalyse.String("analysisNSigma"),
-											 LangModelAnalyse.String("analysisFormFactor"),
-											 LangModelAnalyse.String("analysisStrategy"),
-											 LangModelAnalyse.String("analysisWavelet")},
-				new int[] { 1 });
-*/
-		jTable = new ATable (tModelMinuit);
-		jTable.setDefaultRenderer(Object.class, new ModelParamsTableRenderer(tModelMinuit));
-		jTable.setDefaultEditor(Object.class, new ModelParamsTableEditor(tModelMinuit));
+		this.table = new WrapperedPropertyTable<AnalysisParameters>(
+				new WrapperedPropertyTableModel<AnalysisParameters>(AnalysisParametersWrapper.getInstance(),
+					null,
+					new String[] { AnalysisParametersWrapper.KEY_SENSITIVITY,
+							AnalysisParametersWrapper.KEY_MIN_CONNECTOR,
+							AnalysisParametersWrapper.KEY_MIN_END,
+							AnalysisParametersWrapper.KEY_NOISE_FACTOR,
+							AnalysisParametersWrapper.KEY_EOT_LEVEL}));
+		
+		this.table.setRenderer(numberRenderer, AnalysisParametersWrapper.KEY_SENSITIVITY);
+		this.table.setRenderer(numberRenderer, AnalysisParametersWrapper.KEY_MIN_CONNECTOR);
+		this.table.setRenderer(numberRenderer, AnalysisParametersWrapper.KEY_MIN_END);
 
-		jButton1.setMaximumSize(btn_size);
-		jButton1.setMinimumSize(btn_size);
-		jButton1.setPreferredSize(btn_size);
-		jButton1.setToolTipText(LangModelAnalyse.String("analysisStart"));
-		jButton1.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/perform_analysis.gif")));
-		jButton1.addActionListener(new java.awt.event.ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				jButton1_actionPerformed(e);
+		
+//		{
+//			public Class getColumnClass(int columnIndex) {
+//			
+//				Class clazz;
+//				if (columnIndex == 0) {
+//					clazz = String.class;
+//				} else {
+//					// TODO really ?
+//					clazz = Double.class;
+//				}
+//				return clazz;
+//			}
+//		};
+//		JFormattedTextField editor = new JFormattedTextField(NumberFormat.getInstance());
+//		editor.setHorizontalAlignment(SwingConstants.RIGHT);
+//		table.setDefaultEditor(String.class, new DefaultCellEditor(editor));
+//		table.setDefaultRenderer(Object.class, new ModelParamsTableRenderer(
+//				tModelMinuit));
+//		table.setDefaultEditor(Object.class, new ModelParamsTableEditor(
+//				tModelMinuit));
+
+		final JButton analysisStartButton = new JButton();
+		final JButton analysisInitialButton = new JButton();
+		final JButton analysisDefaultsButton = new JButton();
+
+		analysisStartButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		analysisStartButton.setToolTipText(LangModelAnalyse.getString("analysisStart"));
+		analysisStartButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_PERFORM_ANALYSIS));
+		analysisStartButton.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				AnalysisSelectionFrame.this.analysisStartButton_actionPerformed(e);
 			}
 		});
 
-		jButton2.setMaximumSize(btn_size);
-		jButton2.setMinimumSize(btn_size);
-		jButton2.setPreferredSize(btn_size);
-		jButton2.setToolTipText(LangModelAnalyse.String("analysisInitial"));
-		jButton2.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/cs_initial.gif")));
-		jButton2.addActionListener(new java.awt.event.ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				jButton2_actionPerformed(e);
+		analysisInitialButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		analysisInitialButton.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
+		analysisInitialButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_INITIAL_ANALYSIS));
+		analysisInitialButton.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				AnalysisSelectionFrame.this.analysisInitialButton_actionPerformed(e);
 			}
 		});
 
-
-		jButton3.setMaximumSize(btn_size);
-		jButton3.setMinimumSize(btn_size);
-		jButton3.setPreferredSize(btn_size);
-		jButton3.setToolTipText(LangModelAnalyse.String("analysisDefaults"));
-		jButton3.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/cs_default.gif")));
-		jButton3.addActionListener(new java.awt.event.ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				jButton3_actionPerformed(e);
+		analysisDefaultsButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		analysisDefaultsButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		analysisDefaultsButton.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
+		analysisDefaultsButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DEFAULT_ANALYSIS));
+		analysisDefaultsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				AnalysisSelectionFrame.this.analysisDefaultsButton_actionPerformed(e);
 			}
 		});
 
-		this.setContentPane(mainPanel);
+		this.mainPanel = new JPanel(new BorderLayout());
+		this.setContentPane(this.mainPanel);
 
-//		jToolBar1.setBorderPainted(true);
-		jToolBar1.setFloatable(false);
-		jToolBar1.setLayout(new XYLayout());
-		jToolBar1.add(jButton1, new XYConstraints(0, 0, -1, -1));
-		jToolBar1.add(jButton2, new XYConstraints(btn_size.width*2, 0, -1, -1));
-		jToolBar1.add(jButton3, new XYConstraints(btn_size.width*3, 0, -1, -1));
+		final JToolBar jToolBar = new JToolBar();
+		jToolBar.setFloatable(false);
+		jToolBar.add(analysisDefaultsButton);
+		jToolBar.add(analysisInitialButton);
+		jToolBar.addSeparator();
+		jToolBar.add(analysisStartButton);
 
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
-		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-		jTable.setMinimumSize(new Dimension(200, 213));
-		jTable.setSelectionMode(jTable.getSelectionModel().SINGLE_SELECTION);
+		this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.table.getColumnModel().getColumn(0).setPreferredWidth(300);
+		this.table.getColumnModel().getColumn(1).setPreferredWidth(60);
 
-		scrollPane.setViewport(viewport);
-		scrollPane.getViewport().add(jTable);
-		scrollPane.setAutoscrolls(true);
+		this.scrollPane.setViewport(this.viewport);
+		this.scrollPane.getViewport().add(this.table);
+		this.scrollPane.setAutoscrolls(true);
 
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
-		mainPanel.add(scrollPane, BorderLayout.CENTER);
-		mainPanel.add(jToolBar1,  BorderLayout.NORTH);
+		// mainPanel.setLayout();
+		this.mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
+		this.mainPanel.add(this.scrollPane, BorderLayout.CENTER);
+		this.mainPanel.add(jToolBar, BorderLayout.NORTH);
 
-		updColorModel();
+		this.updColorModel();
 	}
 
-	public Object getDoubleValueAt(Object obj, int row)
-	{
-		return obj;
-		/*if (row < 5)
-			return obj;
-		if (row == 5)
-			return ((JComboBox)obj).getSelectedItem();
-		if (row == 6)
-			return new Double(((JComboBox)obj).getSelectedIndex()-1);
-		return ((JComboBox)obj).getSelectedItem();*/
-	 }
-
-	void jButton1_actionPerformed(ActionEvent e)
-	{
-		setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		double[] minuitParams = new double[8];
-		minuitParams[2] = ((Double)getDoubleValueAt(jTable.getValueAt(0, 1), 0)).doubleValue();
-		minuitParams[1] = ((Double)getDoubleValueAt(jTable.getValueAt(1, 1), 1)).doubleValue();
-		minuitParams[3] = ((Double)getDoubleValueAt(jTable.getValueAt(2, 1), 2)).doubleValue();
-		minuitParams[0] = ((Double)getDoubleValueAt(jTable.getValueAt(3, 1), 3)).doubleValue();
-		minuitParams[4] = ((Double)getDoubleValueAt(jTable.getValueAt(4, 1), 4)).doubleValue();
-		minuitParams[5] = ((Double)getDoubleValueAt(jTable.getValueAt(5, 1), 5)).doubleValue();
-		minuitParams[6] = ((Double)getDoubleValueAt(jTable.getValueAt(6, 1), 6)).doubleValue();
-		minuitParams[7] = ((Integer)getDoubleValueAt(jTable.getValueAt(7, 1), 7)).doubleValue();
-
-		Pool.put("analysisparameters", "minuitanalysis", minuitParams);
-		new MinuitAnalyseCommand(dispatcher, "primarytrace", aContext).execute();
-		dispatcher.notify(new RefUpdateEvent("primarytrace", RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
-		dispatcher.notify(new RefUpdateEvent("primarytrace", RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
-		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+	void analysisStartButton_actionPerformed(final ActionEvent e) {
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		new AnalysisCommand().execute();
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
-	void jButton2_actionPerformed(ActionEvent e)
-	{
-		double[] defaults = (double[])Pool.get("analysisparameters", "minuitinitials");
-		setDefaults(defaults);
+	void analysisInitialButton_actionPerformed(final ActionEvent e) {
+		Heap.setMinuitAnalysisParams(Heap.getMinuitInitialParams());
+		Heap.notifyAnalysisParametersUpdated();
 	}
 
-	void jButton3_actionPerformed(ActionEvent e)
-	{
-		double[] defaults = (double[])Pool.get("analysisparameters", "minuitdefaults");
-		setDefaults(defaults);
+	void analysisDefaultsButton_actionPerformed(final ActionEvent e) {
+		Heap.setMinuitAnalysisParams(Heap.getMinuitDefaultParams());
+		Heap.notifyAnalysisParametersUpdated();
 	}
-}
 
-
-class ParamTableModel extends AbstractTableModel
- {
-
-	 public static final Double[] ff =
-	 {
-		 new Double(0.0), new Double(0.05), new Double(0.1), new Double(0.15),
-		 new Double(0.2), new Double(0.25), new Double(0.3), new Double(0.35),
-		 new Double(0.4), new Double(0.45), new Double(0.5)
-	 };
-
-	 public static final String[] strategy =
-	 {
-		 LangModelAnalyse.String("strategy-1"),
-		 LangModelAnalyse.String("strategy0"),
-		 LangModelAnalyse.String("strategy1"),
-		 LangModelAnalyse.String("strategy2"),
-		 LangModelAnalyse.String("strategy3"),
-		 LangModelAnalyse.String("strategy4")
-	 };
-
-	 public static final Integer[] tactics =
-	 {
-		 new Integer(0), new Integer(1), new Integer(2), new Integer(3),
-		 new Integer(4), new Integer(5), new Integer(6), new Integer(7), new Integer(8)
-	 };
-
-	 AComboBox ffComboBox = new AComboBox(AComboBox.SMALL_FONT);
-	 AComboBox strComboBox = new AComboBox(AComboBox.SMALL_FONT);
-	 AComboBox tactComboBox = new AComboBox(AComboBox.SMALL_FONT);
-
-	 String[] columnNames = {"", "" };
-
-	 Object[][] data =
-	 {
-		 { LangModelAnalyse.String("analysisMinConnector"), new Double(0) },
-		 { LangModelAnalyse.String("analysisMinWeld"), new Double(0) },
-		 { LangModelAnalyse.String("analysisMinEnd"), new Double(0) },
-		 { LangModelAnalyse.String("analysisMinEvent"), new Double(0) },
-		 { LangModelAnalyse.String("analysisNSigma"), new Double(0) },
-		 { LangModelAnalyse.String("analysisFormFactor"), ffComboBox },
-		 { LangModelAnalyse.String("analysisStrategy"), strComboBox },
-		 { LangModelAnalyse.String("analysisWavelet"), tactComboBox }
-	 };
-
-	 ParamTableModel()
-	 {
-		 for(int i=0; i<ff.length; i++)
-			 ffComboBox.addItem(ff[i]);
-
-		 for(int i=0; i<strategy.length; i++)
-			 strComboBox.addItem(strategy[i]);
-
-		 for(int i=0; i<tactics.length; i++)
-			 tactComboBox.addItem(tactics[i]);
-	 }
-
-	 void updateData(Object[] d)
-	 {
-		 for (int i = 0; i < d.length; i++)
-		 {
-			 if (i < 5)
-				 data[i][1] = d[i];
-			 else if (i == 5)
-				 ffComboBox.setSelectedItem(d[i]);
-			 else if (i == 6)
-				 strComboBox.setSelectedItem(strategy[((Integer)d[i]).intValue()+1]);
-			 else if (i == 7)
-				 tactComboBox.setSelectedItem(d[i]);
-
-		 }
-		 super.fireTableDataChanged();
-	 }
-
-	 public void clearTable()
-	 {
-		 data = new Object[][]{};
-		 super.fireTableDataChanged();
-	 }
-
-	 public int getColumnCount() {
-		 return columnNames.length;
-	 }
-
-	 public int getRowCount() {
-		 return data.length;
-	 }
-
-	 public String getColumnName(int col) {
-		 return columnNames[col];
-	 }
-
-	 public Object getValueAt(int row, int col) {
-			 return getDoubleValueAt(row, col);//data[row][col];
-	 }
-
-	 public Object getDoubleValueAt(int row, int col)
-	 {
-		 if (col < 1)
-			 return data[row][col];
-		 if (row < 5)
-			 return data[row][col];
-		 if (row == 5)
-			 return ffComboBox.getSelectedItem();
-		 if (row == 6)
-			 return new Double(strComboBox.getSelectedIndex()-1);
-		 return tactComboBox.getSelectedItem();
-	 }
-
-	 public Class getColumnClass(int p_col)
-	 {
-		 return Object.class;
-	 }
-
-	 public boolean isCellEditable(int row, int col)
-	 {
-		 if (col < 1)
-			 return false;
-		 else
-			 return true;
-	 }
-
-	 public void setValueAt(Object value, int row, int col)
-	 {
-		 data[row][col] = value;
-		 fireTableCellUpdated(row, col);
-	 }
-
-	 public void setValueAt(double value, int row, int col)
-	 {
-		 data[row][col] = new Double(value);
-		 fireTableCellUpdated(row, col);
-	 }
- }
-
- class ModelParamsTableEditor extends DefaultCellEditor
- {
-	 Object editor;
-	 ParamTableModel model;
-
-	 public ModelParamsTableEditor(ParamTableModel model)
-	 {
-		 super(new JTextField());
-		 this.model = model;
-	 }
-
-	 public Component getTableCellEditorComponent(JTable table, Object value,
-						 boolean isSelected,
-						 int row, int column)
-	 {
-		 editor = value;
-		 if(row == 5 && column == 1)
-		 {
-			 model.ffComboBox.setBackground(SystemColor.window);
-			 return (Component)model.ffComboBox;
-		 }
-		 if(row == 6 && column == 1)
-		 {
-			 model.strComboBox.setBackground(SystemColor.window);
-			 return (Component)model.strComboBox;
-		 }
-		 if(row == 7 && column == 1)
-		 {
-			 model.tactComboBox.setBackground(SystemColor.window);
-			 return (Component)model.tactComboBox;
-		 }
-		 return super.getTableCellEditorComponent (table, value, isSelected, row,  column);
+	private void update() {
+		this.setValues(Heap.getMinuitAnalysisParams());
+		final PFTrace primaryTrace = Heap.getPFTracePrimary();
+		if (primaryTrace == null)
+			return; // not loaded
+		if (primaryTrace.getBS().measurementId == null)
+			this.setTitle(TITLE + " ("
+					+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
+		else {
+			MeasurementSetup ms = Heap.getContextMeasurementSetup();
+			this.setTitle(TITLE + " ("
+					+ (ms == null
+							? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN)
+								: LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN) + ": " + ms.getDescription())
+					+ ')');
 		}
 
-	 public Object getCellEditorValue()
-	 {
-		 if(editor instanceof JComboBox)
-			 return editor;
-		 Object obj = super.getCellEditorValue();
-		 if (obj instanceof String)
-		 {
-			 String str = (String)obj;
-			 while (str.length() > 0)
-			 {
-				 try
-				 {
-					 return Double.valueOf(str);
-				 }
-				 catch (NumberFormatException ex)
-				 {
-					 str = str.substring(0, str.length() - 1);
-				 }
-			 }
-			 return new Double (0);
-		 }
-		 else
-			 return obj;
-	 }
-
-	 public int getClickCountToStart()
-	 {
-		 return 1;
-	 }
-}
-
-class ModelParamsTableRenderer extends DefaultTableCellRenderer
-{
-	ParamTableModel model;
-	public ModelParamsTableRenderer(ParamTableModel model)
-	{
-		this.model = model;
 	}
 
-	public Component getTableCellRendererComponent(JTable table, Object value,
-			boolean isSelected, boolean hasFocus, int row, int column)
-	{
-		if(column == 1 && row == 5)
-		{
-			//Component c = (Component)value;
-			return model.ffComboBox;
+	public void bsHashAdded(final String key) {
+		if (key.equals(Heap.PRIMARY_TRACE_KEY)) {
+			update();
+			this.setVisible(true);
 		}
-		if(column == 1 && row == 6)
-			return model.strComboBox;
-		if(column == 1 && row == 7)
-			return model.tactComboBox;
+	}
 
-		return  super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+	public void bsHashRemoved(final String key) { // ignore: we expect bsHashRemovedAll() being called when primary trace removed
+	}
+
+	public void bsHashRemovedAll() {
+		this.setVisible(false);
+	}
+
+	public void primaryMTAECUpdated() {
+		update();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener#primaryMTMRemoved()
+	 */
+	public void primaryMTAERemoved() {
+		// @todo Auto-generated method stub
+	}
+
+	public void analysisParametersUpdated() {
+		if (this.analysisParametersUpdatedHere) {
+			return;
+		}
+		update();
 	}
 }

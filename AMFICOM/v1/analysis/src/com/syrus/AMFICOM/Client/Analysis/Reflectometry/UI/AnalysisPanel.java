@@ -6,35 +6,35 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
-import java.awt.SystemColor;
 import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
-
-public class AnalysisPanel extends ReflectogramEventsPanel
+public class AnalysisPanel extends MapMarkersPanel
 {
-	private final static boolean DEBUG = false;
-
 	public boolean show_markers = true;
-	public boolean loss_analysis = true;
-	public boolean reflection_analysis = false;
-	public boolean useXORMode = false;
+
+	protected boolean loss_analysis = true;
+	protected boolean reflection_analysis = false;
 
 	protected Marker markerA;
 	protected Marker markerB;
 	protected AnaLine[] lines = new AnaLine[2];
 	protected MarkersInfo mInfo = new MarkersInfo();
 	protected Marker moving_marker;
-	private boolean moved_here = true;
-
+	private boolean moved_here = false;
+	
 	private static float marker_w = 1.6f; // width of marker in pixels
 	private static float ana_line_w = 1.6f; // width of analysis lines in pixels
-	public static Stroke MARKER_STROKE = new BasicStroke(marker_w);
 	public static Stroke ANA_LINE_STROKE = new BasicStroke(ana_line_w);
 
 	private int moving_point = 0;
@@ -44,48 +44,46 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 	private int activeEvent = -1;
 
 	protected Color markerColor;
+	protected Color markerColorXOR;
 
-	protected boolean paintMarkerXOR = false;
-
-	public AnalysisPanel(AnalysisLayeredPanel panel, Dispatcher dispatcher, double y[], double delta_x)
+	public AnalysisPanel(AnalysisLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
-		super (panel, dispatcher, y, delta_x);
+		super (panel, dispatcher, y, deltaX);
 
-		start_y = MathRef.getLinearStartPoint(y);
+		this.start_y = MathRef.getLinearStartPoint(y);
 
-		markerA = new Marker("A", (int)(y.length*.2));
-		markerA.id = "A";
+		this.markerA = new Marker("A", (int)(y.length*.2));
+//		markerA.id = "A";
 		lines[0] = new AnaLine();
 		lines[1] = new AnaLine();
-		lines[0].point[0] = markerA.pos - (int)(y.length*.05);
-		lines[0].point[1] = markerA.pos-8-(int)ana_line_w;
-		lines[1].point[0] = markerA.pos+8+(int)ana_line_w;
-		lines[1].point[1] = markerA.pos + (int)(y.length*.05);
-		lines[0].factor = MathRef.LSA(y, lines[0].point[0], lines[0].point[1]);
-		lines[1].factor = MathRef.LSA(y, lines[1].point[0], lines[1].point[1]);
+		lines[0].point[0] = markerA.pos -16 -(int)(y.length*.02);
+		lines[0].point[1] = markerA.pos -8  -(int)ana_line_w;
+		lines[1].point[0] = markerA.pos +8  +(int)ana_line_w;
+		lines[1].point[1] = markerA.pos +16 +(int)(y.length*.02);
+		lines[0].factor = MathRef.calcLSA(y, lines[0].point[0], lines[0].point[1]);
+		lines[1].factor = MathRef.calcLSA(y, lines[1].point[0], lines[1].point[1]);
 
-		markerB = new Marker ("B", (int)(y.length * .8));
-		markerB.id = "B";
+		this.markerB = new Marker ("B", (int)(y.length * .8));
+//		markerB.id = "B";
+		
+		this.markerColor = UIManager.getColor(AnalysisResourceKeys.COLOR_MARKER);
+		this.markerA.setColor(markerColor);
+		this.markerB.setColor(markerColor);
 
-		try
-		{
-			jbInit();
-		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
+		this.markerColorXOR = new Color(this.markerColor.getRGB() ^ UIManager.getColor(ResourceKeys.COLOR_GRAPHICS_BACKGROUND).getRGB());
+
+		MARKER_STROKE = new BasicStroke(marker_w);
+		this.useXORMode = false;
+
+		Heap.setMarkerObject(markerA);
 	}
 
-	private void jbInit() throws Exception
-	{
-	}
-
+	@Override
 	public void updEvents(String id)
 	{
 		super.updEvents(id);
-		if (activeEvent >= events.length)
-			activeEvent = events.length - 1;
+		if (activeEvent >= sevents.length)
+			activeEvent = sevents.length - 1;
 	}
 
 	public void updMarkers()
@@ -97,6 +95,7 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 		}
 	}
 
+	@Override
 	protected void this_mousePressed(MouseEvent e)
 	{
 		startpos = e.getPoint();
@@ -115,68 +114,68 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 				moving_point = 0;
 				if (loss_analysis)
 				{
-					if(Math.abs(currpos.x-index2coord(lines[1].point[1])) < mouse_coupling &&
-						 Math.abs(currpos.y-lindraw(lines[1].factor[0], lines[1].factor[1], lines[1].point[1])) < mouse_coupling)
+					if(Math.abs(currpos.x-index2coord(lines[1].point[1])) < MOUSE_COUPLING &&
+						 Math.abs(currpos.y-lindraw(lines[1].factor[0], lines[1].factor[1], lines[1].point[1])) < MOUSE_COUPLING)
 					{
 						moving_point = 4;
-						setCursor(new Cursor(Cursor.HAND_CURSOR));
+						setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 						setPaintMode(useXORMode);
 						return;
 					}
-					if(Math.abs(currpos.x-index2coord(lines[1].point[0])) < mouse_coupling &&
-						 Math.abs(currpos.y-lindraw(lines[1].factor[0], lines[1].factor[1], lines[1].point[0])) < mouse_coupling)
+					if(Math.abs(currpos.x-index2coord(lines[1].point[0])) < MOUSE_COUPLING &&
+						 Math.abs(currpos.y-lindraw(lines[1].factor[0], lines[1].factor[1], lines[1].point[0])) < MOUSE_COUPLING)
 					{
 						moving_point = 3;
-						setCursor(new Cursor(Cursor.HAND_CURSOR));
+						setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 						setPaintMode(useXORMode);
 						return;
 					}
 				}
 				if (reflection_analysis)
 				{
-					if(Math.abs(currpos.x-index2coord(lines[1].point[0])) < mouse_coupling &&
-						 Math.abs(currpos.y-(int)((max_y - y[lines[1].point[0]] - top)*scale_y)) < mouse_coupling)
+					if(Math.abs(currpos.x-index2coord(lines[1].point[0])) < MOUSE_COUPLING &&
+						 Math.abs(currpos.y-(int)((maxY - y[lines[1].point[0]] - top)*scaleY)) < MOUSE_COUPLING)
 					{
 						moving_point = 3;
-						setCursor(new Cursor(Cursor.HAND_CURSOR));
+						setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 						setPaintMode(useXORMode);
 						return;
 					}
 				}
 				for(int i=0; i<=1; i++)
 				{
-					if(Math.abs(currpos.x-index2coord(lines[0].point[i])) < mouse_coupling &&
-						 Math.abs(currpos.y-lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[i])) < mouse_coupling)
+					if(Math.abs(currpos.x-index2coord(lines[0].point[i])) < MOUSE_COUPLING &&
+						 Math.abs(currpos.y-lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[i])) < MOUSE_COUPLING)
 					{
 						moving_point = i + 1;
-						setCursor(new Cursor(Cursor.HAND_CURSOR));
+						setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 						setPaintMode(useXORMode);
 						return;
 					}
 				}
 			}
 			// если ткнули в маркер
-			if (Math.abs(index2coord(markerA.pos)-currpos.x) < mouse_coupling)
+			if (Math.abs(index2coord(markerA.pos)-currpos.x) < MOUSE_COUPLING)
 			{
 				moving_marker = markerA;
-				setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));
+				setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
 				updMarker (markerA);
 				setPaintMode(useXORMode);
 				return;
 			}
-			if (Math.abs(index2coord(markerB.pos)-currpos.x) < mouse_coupling)
+			if (Math.abs(index2coord(markerB.pos)-currpos.x) < MOUSE_COUPLING)
 			{
 				moving_marker = markerB;
-				setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));
+				setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
 				updMarker (markerB);
 				setPaintMode(useXORMode);
 				return;
 			}
 		}
-
 		super.this_mousePressed(e);
 	}
 
+	@Override
 	protected void this_mouseDragged(MouseEvent e)
 	{
 		// если двигаем курсор
@@ -188,7 +187,7 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 			Graphics g = getGraphics();
 			if (paintMarkerXOR)
 			{
-				g.setXORMode(new Color(markerColor.getRGB() ^ SystemColor.window.getRGB()));
+				g.setXORMode(this.markerColorXOR);
 				paint_marker(g, moving_marker);
 				if (moving_marker.equals(markerA))
 				{
@@ -198,6 +197,7 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 						paint_reflection_ana(g);
 				}
 			}
+			int prev_pos = moving_marker.pos;
 			moveMarker (moving_marker, pos);
 
 			if (paintMarkerXOR)
@@ -210,11 +210,60 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 					if(reflection_analysis)
 						paint_reflection_ana(g);
 				}
-			}
-			else
-				parent.repaint();
+			} else
+			{
+				//repaint old marker place
+				int x = index2coord(prev_pos - 1) - 1;
+				int x2 = index2coord(prev_pos + 1) + 1;
+				parent.repaint(x, 0, x2 - x, parent.getHeight());
+				//repaint marker label
+				int width = g.getFontMetrics().stringWidth(moving_marker.name) + 5;
+				int height = g.getFontMetrics().getHeight() + 2;
+				parent.repaint(x + 2, 10, x2 - x + width, height);
 
+				//repaint new marker place
+				int n_x = index2coord(moving_marker.pos - 1) - 1;
+				int n_x2 = index2coord(moving_marker.pos + 1) + 1;
+				parent.repaint(n_x, 0, n_x2 - n_x, parent.getHeight());
+				parent.repaint(n_x + 2, 10, n_x2 - n_x + width, height);
+
+				if (moving_marker.equals(markerA))
+				{
+					if (loss_analysis)
+					{
+						int delta_left = currpos.x - index2coord(lines[0].point[0]) + 6;
+						x = Math.min(x, n_x) - delta_left;
+						int delta_right = index2coord(lines[1].point[1]) - currpos.x + 6;
+						x2 = Math.max(x2, n_x2) + delta_right;
+
+						int y1 = lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[0]);
+						int y2 = lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[1]);
+						int y3 = lindraw(lines[1].factor[0], lines[1].factor[1], lines[1].point[0]);
+						int y4 = lindraw(lines[1].factor[0], lines[1].factor[1], lines[1].point[1]);
+
+						parent.repaint(x, Math.min(Math.min(y1, y2), Math.min(y3, y4)),
+													 x2 - x, Math.max(Math.max(y1, y2), Math.max(y3, y4)));
+					} else if (reflection_analysis)
+					{
+						int delta_left = currpos.x - index2coord(lines[0].point[0]) + 5;
+						x = Math.min(x, n_x) - delta_left;
+						int delta_right = index2coord(lines[1].point[1]) - currpos.x + 5;
+						x2 = Math.max(x2, n_x2) + delta_right;
+
+						int y1 = lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[0]);
+						int y2 = lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[1]);
+						int y3 = (int)((maxY - y[lines[1].point[0]] - top)*scaleY);
+
+						parent.repaint(x, Math.min(Math.min(y1, y2), y3),
+													 x2 - x, Math.max(Math.max(y1, y2), y3));
+					}
+				}
+			}
+
+			// We send messages to update numerical info in windows.
+			// Note: Histogram will update only on mouse release. 
 			updAnalysisMarkerInfo();
+			
 /*		if (markers_pair_moving)
 			{
 				if (active_marker == 0)
@@ -235,7 +284,7 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 				Graphics g = getGraphics();
 				if (paintMarkerXOR)
 				{
-					g.setXORMode(new Color(markerColor.getRGB() ^ SystemColor.window.getRGB()));
+					g.setXORMode(this.markerColorXOR);
 					if (loss_analysis)
 						paint_loss_ana(g);
 					else
@@ -244,16 +293,28 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 				move_ana_point (moving_point, coord2index(currpos.x));
 				if (paintMarkerXOR)
 				{
-					g.setXORMode(new Color(markerColor.getRGB() ^ SystemColor.window.getRGB()));
+					g.setXORMode(this.markerColorXOR);
 					if (loss_analysis)
 						paint_loss_ana(g);
 					else
 						paint_reflection_ana(g);
+				} else
+				{
+					//parent.repaint();
+					if (loss_analysis)
+					{
+						int x = Math.min(index2coord(lines[0].point[0]), tmppos.x) - 5;
+						int x2 = Math.max(index2coord(lines[1].point[1]), tmppos.x) + 8;
+						parent.repaint(x, 0, x2 - x, parent.getHeight());
+					}
+					if (reflection_analysis)
+					{
+						int x = Math.min(index2coord(lines[0].point[0]), tmppos.x) - 5;
+						int x2 = Math.max(index2coord(lines[1].point[0]), tmppos.x) + 8;
+						parent.repaint(x, 0, x2 - x, parent.getHeight());
+					}
+					return;
 				}
-				else
-					parent.repaint();
-
-				return;
 			}
 		}//else if
 
@@ -263,7 +324,7 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 
 	protected void this_mouseReleased(MouseEvent e)
 	{
-		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		// если рисовали маркеры - ничего не делаем
 		if(moving_marker != null)
 		{
@@ -274,11 +335,11 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 			if (_activeEvent != activeEvent)
 			{
 				_activeEvent = activeEvent;
-				moved_here = true;
-				dispatcher.notify(new RefUpdateEvent(String.valueOf(activeEvent), RefUpdateEvent.EVENT_SELECTED_EVENT));
-				moved_here = false;
-				return;
+				Heap.setCurrentEvent(activeEvent);
 			}
+			moved_here = true;
+			dispatcher.firePropertyChange(new RefUpdateEvent(mInfo, RefUpdateEvent.MARKER_LOCATED_EVENT), false);
+			moved_here = false;
 			return;
 		}
 
@@ -293,7 +354,9 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 			}
 
 			// если был сделан клик < 2 пикселов - двигаем туда маркер А для левой мыши и маркер Б для правой
-			if (coord2index(currpos.x) < y.length && !moving_level)
+			if (coord2index(currpos.x) < y.length
+					&& !minTraceLevel.isMoving()
+					&& !eotDetectionLevel.isMoving())
 			{
 				if (((Math.abs(currpos.x - startpos.x)) < 2) && ((Math.abs(currpos.y - startpos.y)) < 2 ))
 				{
@@ -301,24 +364,23 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 					{
 						moveMarker (markerB, coord2index(currpos.x));
 						updAnalysisMarkerInfo();
-//					if (markers_pair_moving)
-//							move_marker_B (db);
 						activeEvent = marker_to_event();
 						if (_activeEvent != activeEvent)
 						{
 							_activeEvent = activeEvent;
 							moved_here = true;
-							dispatcher.notify(new RefUpdateEvent(String.valueOf(activeEvent), RefUpdateEvent.EVENT_SELECTED_EVENT));
+							Heap.setCurrentEvent(activeEvent);
 							moved_here = false;
-							return;
 						}
-					}
-					if (SwingUtilities.isLeftMouseButton(e))
+					} else if (SwingUtilities.isLeftMouseButton(e))
 					{
 						int pos = coord2index(currpos.x);
 						moveMarker (markerA, pos);
 						updAnalysisMarkerInfo();
 					}
+					moved_here = true;
+					dispatcher.firePropertyChange(new RefUpdateEvent(mInfo, RefUpdateEvent.MARKER_LOCATED_EVENT), false);
+					moved_here = false;
 					parent.repaint();
 					return;
 				}
@@ -341,37 +403,34 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 			{
 				mInfo.a_type = MarkersInfo.NONREFLECTIVE;
 				mInfo.a_loss = ( (lines[0].factor[0]*m.pos + lines[0].factor[1]) - (lines[1].factor[0]*m.pos + lines[1].factor[1]) );
-			}
-			else if (reflection_analysis)
+			} else if (reflection_analysis)
 			{
 				mInfo.a_type = MarkersInfo.REFLECTIVE;
 				mInfo.a_reflectance = ( y[lines[1].point[0]] - (lines[0].factor[0]*m.pos + lines[0].factor[1]) );
 			}
 			if (loss_analysis || reflection_analysis)
 			{
-				mInfo.a_attfactor = -(1000d * lines[0].factor[0] / delta_x);
+				mInfo.a_attfactor = -(1000d * lines[0].factor[0] / deltaX);
 				mInfo.a_cumulative_loss = start_y - y[mInfo.a_pos];
-			}
-			else
+			} else
 				mInfo.a_type = MarkersInfo.NOANALYSIS;
 
 			mInfo.a_pos = m.pos;
-			mInfo.a_pos_m = m.pos * delta_x;
-		}
-		else if (m.equals(markerB)) // update marker B
+			mInfo.a_pos_m = m.pos * deltaX;
+		} else if (m.equals(markerB)) // update marker B
 		{
 			mInfo.b_activeEvent = marker_to_event();
 			mInfo.b_pos = m.pos;
-			mInfo.b_pos_m = m.pos * delta_x;
+			mInfo.b_pos_m = m.pos * deltaX;
 		}
 	}
 
 	int marker_to_event()
 	{
-		if (events == null)
+		if (sevents == null)
 			return -1;
-		for(int j=0; j<events.length; j++)
-			if(markerB.pos > events[j].first_point && markerB.pos <= events[j].last_point)
+		for(int j=0; j<sevents.length; j++)
+			if(markerB.pos > sevents[j].getBegin() && markerB.pos <= sevents[j].getEnd())
 				return j;
 		return -1;
 	}
@@ -390,10 +449,10 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 		{
 			lines[0].move(moved);
 			lines[0].checkBounds(0, m.pos - 1, 1);
-			lines[0].factor = MathRef.LSA(y, lines[0].point[0], lines[0].point[1]);
+			lines[0].factor = MathRef.calcLSA(y, lines[0].point[0], lines[0].point[1]);
 			lines[1].move(moved);
 			lines[1].checkBounds(m.pos + 1, y.length-1, 1);
-			lines[1].factor = MathRef.LSA(y, lines[1].point[0], lines[1].point[1]);
+			lines[1].factor = MathRef.calcLSA(y, lines[1].point[0], lines[1].point[1]);
 		}
 
 		updMarker(m);
@@ -402,26 +461,32 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 
 	void move_marker_to_ev (int event)
 	{
-		if (events == null)
+		if (sevents == null)
 			return;
+		if (event < 0 || event >= sevents.length)
+				return;
 		if (!moved_here)
 		{
 			_activeEvent = activeEvent;
 			activeEvent = event;
-			moveMarker(markerB, (events[event].first_point + events[event].last_point)/2);
+			if (markerB.pos < sevents[event].getBegin() || markerB.pos >= sevents[event].getEnd())
+				if (sevents[event].getEventType() == SimpleReflectogramEvent.ENDOFTRACE)
+					moveMarker(markerB, sevents[event].getBegin());
+				else
+					moveMarker(markerB, (sevents[event].getBegin() + sevents[event].getEnd()) / 2);
 		}
 		parent.repaint();
 	}
 
-	void move_ana_point(int moving_point, int new_pos)
+	void move_ana_point(int movingPoint1, int newPos)
 	{
-		int i = (moving_point - 1) / 2;
-		int j = (moving_point - 1) - 2 * i;
+		int i = (movingPoint1 - 1) / 2;
+		int j = (movingPoint1 - 1) - 2 * i;
 
-		lines[i].move(j, new_pos);
+		lines[i].move(j, newPos);
 		lines[0].checkBounds(0, markerA.pos - 1, 1);
 		lines[1].checkBounds(markerA.pos + 1, y.length-1, 1);
-		lines[i].factor = MathRef.LSA(y, lines[i].point[0], lines[i].point[1]);
+		lines[i].factor = MathRef.calcLSA(y, lines[i].point[0], lines[i].point[1]);
 
 		updMarker(markerA);
 		updAnalysisMarkerInfo();
@@ -432,57 +497,43 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 		int l = Math.min(mInfo.a_pos, mInfo.b_pos);
 		int r = Math.max(mInfo.a_pos, mInfo.b_pos);
 		mInfo.a_b_distance = r - l;
-		mInfo.a_b_distance_m = mInfo.a_b_distance * delta_x;
+		mInfo.a_b_distance_m = mInfo.a_b_distance * deltaX;
 		mInfo.a_b_loss = y[l] - y[r];
 		mInfo.a_b_attenuation = 1000d * (mInfo.a_b_loss) / mInfo.a_b_distance_m;
-		double lsa[] = MathRef.LSA(y, l, r);
-		mInfo.lsa_attenuation = -1000d * lsa[0] / delta_x;
-		mInfo.a_b_orl = MathRef.ORL(y, l, r);
+		double lsa[] = MathRef.calcLSA(y, l, r);
+		mInfo.lsa_attenuation = -1000d * lsa[0] / deltaX;
+		mInfo.a_b_orl = MathRef.calcORL(y[l], y[r]);
 		moved_here = true;
-		dispatcher.notify(new RefUpdateEvent(mInfo, RefUpdateEvent.MARKER_MOVED_EVENT));
+		dispatcher.firePropertyChange(new RefUpdateEvent(this, mInfo, RefUpdateEvent.MARKER_MOVED_EVENT));
 		moved_here = false;
 	}
 
 	protected void updColorModel()
 	{
 		super.updColorModel();
-
-		markerColor = ColorManager.getColor("analysisMarkerColor");
 	}
 
 	public void paint(Graphics g)
 	{
+
 		super.paint(g);
 
 		if (show_markers)
 		{
 			paint_analysis_markers(g);
-			if(loss_analysis)
-				paint_loss_ana(g);
-			if(reflection_analysis)
-				paint_reflection_ana(g);
+			if (showAll) {
+				if(loss_analysis)
+					paint_loss_ana(g);
+				if(reflection_analysis)
+					paint_reflection_ana(g);
+			}
 		}
-	}
-
-	protected void setPaintMode(boolean useXOR)
-	{
-		if (useXOR)
-		{
-			paintMarkerXOR = true;
-			parent.repaint();
-		}
-	}
-
-	protected void removePaintMode(boolean useXOR)
-	{
-		paintMarkerXOR = false;
-		parent.repaint();
 	}
 
 	protected void paint_analysis_markers (Graphics g)
 	{
 		if (paintMarkerXOR)
-			g.setXORMode(new Color(markerColor.getRGB() ^ SystemColor.window.getRGB()));
+			g.setXORMode(this.markerColorXOR);
 		else
 			g.setColor(markerColor);
 
@@ -492,21 +543,10 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 			paint_marker(g, markerB);
 	}
 
-	protected void paint_marker (Graphics g, Marker m)
-	{
-		int jh =  getHeight();
-		((Graphics2D) g).setStroke(MARKER_STROKE);
-		g.drawLine(index2coord(m.pos), 0, index2coord(m.pos), jh);
-		((Graphics2D) g).setStroke(DEFAULT_STROKE);
-		g.drawString(m.name, index2coord(m.pos)+2+(int)marker_w,10);
-
-		if (DEBUG)
-			g.drawString(String.valueOf(m.pos), index2coord(m.pos)+2+(int)marker_w,20);
-
-	}
-
 	protected void paint_loss_ana(Graphics g)
 	{
+//		if (!isShowGraph())
+//			return;
 		((Graphics2D) g).setStroke(ANA_LINE_STROKE);
 		for (int i = 0; i < 2; i++)
 		{
@@ -527,6 +567,8 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 
 	protected void paint_reflection_ana(Graphics g)
 	{
+//		if (!isShowGraph())
+//			return;
 		((Graphics2D) g).setStroke(ANA_LINE_STROKE);
 
 		if ((lines[0].point[1] > start) && (lines[0].point[0] < end))
@@ -542,14 +584,14 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 		}
 
 		if ((lines[1].point[0] > start) && (lines[1].point[0] < end))
-			g.drawOval(index2coord(lines[1].point[0])-4, (int)((max_y - y[lines[1].point[0]] - top)*scale_y)-5, 8, 8);
+			g.drawOval(index2coord(lines[1].point[0])-4, (int)((maxY - y[lines[1].point[0]] - top)*scaleY)-5, 8, 8);
 
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 	}
 
 	int lindraw(double a, double b, int x)
 	{
-		return (int)((max_y - a*x-b - top)*scale_y - 1);
+		return (int)((maxY - a*x-b - top)*scaleY - 1);
 	}
 }
 
@@ -588,8 +630,7 @@ class AnaLine
 			{
 				point[1] = Math.min(point[0] + min_dist, max);
 				point[0] = Math.max(point[1] - min_dist, min);
-			}
-			else
+			} else
 			{
 				point[0] = Math.max(point[1] - min_dist, min);
 				point[1] = Math.min(point[0] + min_dist, max);
@@ -605,29 +646,4 @@ class AnaLine
 		if (point[1] > max)
 			move (1, max);
 	}
-}
-class MarkersInfo
-{
-	static final int NOANALYSIS = 0;
-	static final int REFLECTIVE = 1;
-	static final int NONREFLECTIVE = 2;
-
-	int a_type;
-	int a_pos;
-	double a_pos_m;
-	double a_loss;
-	double a_reflectance;
-	double a_attfactor;
-	double a_cumulative_loss;
-
-	int b_pos;
-	double b_pos_m;
-	int b_activeEvent;
-
-	int a_b_distance;
-	double a_b_distance_m;
-	double a_b_loss;
-	double a_b_attenuation = 11.;
-	double lsa_attenuation = 22.;
-	double a_b_orl = 33.;
 }

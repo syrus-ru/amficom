@@ -1,0 +1,67 @@
+/*-
+ * $Id: mapview.idl,v 1.3 2005/07/24 17:17:46 arseniy Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+#ifndef MAPVIEW_IDL
+#define MAPVIEW_IDL
+
+#include "administration.idl"
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+module com {
+module syrus {
+module AMFICOM {
+#else // MY_COMPILER_IS_NOT_BRAINDEAD
+#pragma prefix "AMFICOM.syrus.com"
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
+
+module mapview {
+	module corba {
+
+
+/////////////////////// MapView ////////////////////////
+
+		valuetype IdlMapView : administration::corba::IdlDomainMember {
+			public wstring name;
+			public wstring description;
+
+			public double longitude;
+			public double latitude;
+			public double scale;
+			public double defaultScale;
+
+			public general::corba::IdlIdentifier mapId;
+			public general::corba::IdlIdentifierSeq schemeIds;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::IdlIdentifier domainId,
+					in wstring name,
+					in wstring description,
+					in double longitude,
+					in double latitude,
+					in double scale,
+					in double defaultScale,
+					in general::corba::IdlIdentifier mapId,
+					in general::corba::IdlIdentifierSeq schemeIds);
+		};
+
+
+	};
+};
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+};
+};
+};
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
+
+#endif // MAPVIEW_IDL

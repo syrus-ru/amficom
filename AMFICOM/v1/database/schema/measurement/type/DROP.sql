@@ -1,13 +1,6 @@
-DROP TABLE mnttypanatypevatyp;
-DROP TABLE evatyppartyplink;
-DROP TABLE anatyppartyplink;
-DROP TABLE mnttyppartyplink;
-DROP TABLE evaluationtype;
-DROP TABLE analysistype;
-DROP TABLE measurementtype;
-DROP TABLE parametertype;
+-- $Id: DROP.sql,v 1.7 2005/08/28 14:29:24 arseniy Exp $
 
-DROP SEQUENCE evaluationtype_seq;
-DROP SEQUENCE analysistype_seq;
-DROP SEQUENCE measurementtype_seq;
-DROP SEQUENCE parametertype_seq;
+DROP TABLE MntPortTypMntTypLink;
+DROP TABLE MeasurementPortType;
+
+DROP SEQUENCE MeasurementPortType_seq;

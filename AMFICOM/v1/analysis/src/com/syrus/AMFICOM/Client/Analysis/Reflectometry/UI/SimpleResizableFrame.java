@@ -1,58 +1,53 @@
+
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.BorderLayout;
-import java.awt.Toolkit;
-import java.awt.event.MouseEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JInternalFrame;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 
-public class SimpleResizableFrame extends JInternalFrame
-{
-	public ResizableLayeredPanel panel;
-	public ColorManager cMan;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-	public SimpleResizableFrame()
-	{
-		this (new ResizableLayeredPanel());
+public class SimpleResizableFrame extends JInternalFrame {
+
+	public ResizableLayeredPanel	panel;
+
+	public SimpleResizableFrame() {
+		this(new ResizableLayeredPanel());
 	}
 
-	public SimpleResizableFrame(ResizableLayeredPanel panel)
-	{
+	public SimpleResizableFrame(ResizableLayeredPanel panel) {
 		this.panel = panel;
 
-		try
-		{
-			jbInit();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+		this.createGUI();
 	}
 
-	private void jbInit() throws Exception
-	{
-		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+	private void createGUI() {
+		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setMaximizable(true);
 		this.setIconifiable(true);
 		this.setDoubleBuffered(true);
 
-		this.addPropertyChangeListener(JInternalFrame.IS_MAXIMUM_PROPERTY, new java.beans.PropertyChangeListener()
-		{
-			public void propertyChange(java.beans.PropertyChangeEvent evt)
-			{
-				this_propertyChanged(evt);
+		this.addPropertyChangeListener(JInternalFrame.IS_MAXIMUM_PROPERTY, new java.beans.PropertyChangeListener() {
+
+			public void propertyChange(java.beans.PropertyChangeEvent evt) {
+				if (evt.getPropertyName().equals(JInternalFrame.IS_MAXIMUM_PROPERTY)) {
+					panel.resize();
+				}
 			}
 		});
-		this.addMouseMotionListener(new java.awt.event.MouseMotionAdapter()
-		{
-			public void mouseDragged(MouseEvent e)
-			{
-				this_mouseDragged(e);
+		this.addComponentListener(new ComponentAdapter() {
+
+			@Override
+			public void componentResized(ComponentEvent e) {
+				panel.resize();
 			}
 		});
 
@@ -60,67 +55,47 @@ public class SimpleResizableFrame extends JInternalFrame
 		this.getContentPane().add(panel, BorderLayout.CENTER);
 	}
 
-	public ScaledGraphPanel getTopGraphPanel()
-	{
+	public ScaledGraphPanel getTopGraphPanel() {
 		return panel.getTopPanel();
 	}
 
-	public String getReportTitle()
-	{
+	public String getReportTitle() {
 		return getTitle();
 	}
 
-	public void setGraph (double[] y, double delta_x, boolean is_reversed_y, double Kx, double Ky, String id)
-	{
-		setGraph (y, delta_x, is_reversed_y, id);
-		panel.setScalesCoeffs(Kx, Ky);
-	}
-
-	public void setGraph (double[] y, double delta_x, boolean is_reversed_y, String id)
-	{
-		ScaledGraphPanel p = new ScaledGraphPanel (panel, y, delta_x);
+	public void setGraph(	double[] y,
+							double deltaX,
+							boolean isReversedY,
+							String id) {
+		ScaledGraphPanel p = new ScaledGraphPanel(panel, y, deltaX);
 		p.setColorModel(id);
-		p.inversed_y = is_reversed_y;
+		p.inversed_y = isReversedY;
 
 		panel.setGraphPanel(p);
 		repaint();
 	}
 
-	public void setGraph (SimpleGraphPanel p, boolean is_reversed_y, String id)
-	{
+	public void setGraph(	SimpleGraphPanel p,
+							boolean isReversedY,
+							String id) {
 		p.setColorModel(id);
 		panel.setGraphPanel(p);
-		panel.setInversedY(is_reversed_y);
+		panel.setInversedY(isReversedY);
 		repaint();
 	}
 
-	public void updScales ()
-	{
+	public void updScales() {
 		panel.updScale2fit();
 	}
 
-	void this_mouseDragged(MouseEvent e)
-	{
-		panel.resize();
-	}
-
-	void this_propertyChanged(java.beans.PropertyChangeEvent evt)
-	{
-		if (evt.getPropertyName().equals(JInternalFrame.IS_MAXIMUM_PROPERTY))
-			panel.resize();
-	}
-
-	public void doDefaultCloseAction()
-	{
+	@Override
+	public void doDefaultCloseAction() {
 		if (isMaximum())
-			try
-		{
-			setMaximum(false);
-		}
-		catch (java.beans.PropertyVetoException ex)
-		{
-			ex.printStackTrace();
-		}
+			try {
+				setMaximum(false);
+			} catch (java.beans.PropertyVetoException ex) {
+				ex.printStackTrace();
+			}
 		super.doDefaultCloseAction();
 	}
 }

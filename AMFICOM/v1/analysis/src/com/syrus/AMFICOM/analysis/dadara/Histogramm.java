@@ -1,61 +1,54 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
-public class Histogramm
-{
-	private double up_limit;
-	private double down_limit;
+public class Histogramm {
+	private double upLimit;
+	private double downLimit;
 	private int nBins;
 	private double[] histo;
 
-	public Histogramm(double down_limit, double up_limit, int nBins)
-	{
-		if (down_limit > up_limit)
-		{
-			double tmp = down_limit;
-			down_limit = up_limit;
-			up_limit = tmp;
+	public Histogramm(double downLimit, double upLimit, int nBins) {
+		if (downLimit > upLimit) {
+			double tmp = downLimit;
+			downLimit = upLimit;
+			upLimit = tmp;
 		}
-		this.up_limit = up_limit;
-		this.down_limit = down_limit;
-		this.nBins	= nBins;
+		this.upLimit = upLimit;
+		this.downLimit = downLimit;
+		this.nBins = nBins;
 	}
 
-	public double[] init(double[] data, int start, int end)
-	{
-		histo = new double[nBins];
-		double deriv_delta = (up_limit - down_limit) / (double)nBins;
+	public double[] init(double[] data, int start, int end) {
+		this.histo = new double[this.nBins];
+		double derivDelta = (this.upLimit - this.downLimit) / this.nBins;
 
-		int N;
-		for (int i = Math.max(0, start); i <= Math.min (end, data.length-1); i++)
-		{
-			N = (int)Math.round((data[i] - down_limit) / deriv_delta);
-			if (N >= 0 && N < nBins)
-				histo[N]++;
+		int n;
+		for (int i = Math.max(0, start); i <= Math.min(end, data.length - 1); i++) {
+			n = (int) Math.round((data[i] - this.downLimit) / derivDelta);
+			if (n >= 0 && n < this.nBins) {
+				this.histo[n]++;
+			}
 		}
-		return histo;
+		return this.histo;
 	}
 
-	public int getMaximumIndex()
-	{
+	public int getMaximumIndex() {
 		int center = 0;
-		double max = histo[0];
-		for (int i = 1; i < histo.length; i++)
-			if (histo[i] > max)
-			{
-				max = histo[i];
+		double max = this.histo[0];
+		for (int i = 1; i < this.histo.length; i++) {
+			if (this.histo[i] > max) {
+				max = this.histo[i];
 				center = i;
 			}
-			return center;
+		}
+		return center;
 	}
 
-	public double getMaximumValue()
-	{
+	public double getMaximumValue() {
 		int max = getMaximumIndex();
-		return down_limit + (double)(up_limit - down_limit) / (double)nBins * max;
+		return this.downLimit + (this.upLimit - this.downLimit) / this.nBins * max;
 	}
 
-	public double[] getHistogramm()
-	{
-		return histo;
+	public double[] getHistogramm() {
+		return this.histo;
 	}
 }

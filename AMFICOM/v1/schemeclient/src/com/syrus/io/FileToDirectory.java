@@ -1,17 +1,15 @@
 package com.syrus.io;
 
-import java.io.*;
-import java.util.*;
-
+/*
 public class FileToDirectory
 {
 	FileInputStream fis;
 	IntelStreamReader isr;
 
 	String type;
-	Vector elements;
+	List elements;
 	private int counter = 0;
-	Hashtable currentHash;
+	Map currentHash;
 
 	static String[] hash_arguments = new String[]
 	{
@@ -48,7 +46,7 @@ public class FileToDirectory
 		elements = readFromFile();
 	}
 
-	public Object read(String key) throws IOException
+	public Object read(String key)
 	{
 		return currentHash.get(key);
 	}
@@ -60,7 +58,7 @@ public class FileToDirectory
 
 	public void nextElement()
 	{
-		currentHash = (Hashtable)elements.get(counter);
+		currentHash = (Map)elements.get(counter);
 		counter++;
 	}
 
@@ -69,11 +67,11 @@ public class FileToDirectory
 		return type;
 	}
 
-	protected Vector readFromFile() throws IOException
+	protected List readFromFile() throws IOException
 	{
 		boolean continue_analyse = true;
-		Vector vec = new Vector();
-		Hashtable h = new Hashtable();
+		List vec = new ArrayList();
+		Map h = new HashMap();
 		while (isr.ready())
 		{
 			continue_analyse = true;
@@ -83,7 +81,7 @@ public class FileToDirectory
 				if (s[0].startsWith(hash_arguments[i]))
 				{
 					s = analyseString(isr.readASCIIString());
-					Hashtable ch = new Hashtable();
+					Map ch = new HashMap();
 					while (!s[0].startsWith("@end"))
 					{
 						ch.put(s[0], s[1]);
@@ -104,7 +102,7 @@ public class FileToDirectory
 					if (!h.isEmpty())
 					{
 						vec.add(h);
-						h = new Hashtable();
+						h = new HashMap();
 					}
 				}
 			}
@@ -119,8 +117,7 @@ public class FileToDirectory
 		String[] s = analyseString (isr.readASCIIString());
 		if (s[0].equals("@type"))
 			return s[1];
-		else
-			return "";
+		return "";
 	}
 
 	protected String[] analyseString (String s)
@@ -134,3 +131,4 @@ public class FileToDirectory
 	}
 
 }
+*/

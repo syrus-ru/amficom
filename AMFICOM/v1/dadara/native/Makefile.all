@@ -1,7 +1,0 @@
-all: $(OBJS)
-
-%.$(OBJ_EXT): %.cpp
-	@$(CXX) $(CXX_NOLINK_FLAG) $(CXXFLAGS) $(CPPFLAGS) $(CXX_OUTPUT_FLAG)$@ $<
-
-clean:
-	$(RM) $(OBJS)

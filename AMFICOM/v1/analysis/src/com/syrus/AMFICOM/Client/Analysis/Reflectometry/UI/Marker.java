@@ -1,13 +1,15 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.Color;
+import com.syrus.AMFICOM.general.*;
 
-class Marker
+public class Marker
 {
 	int pos;
-	String id;
+	private Identifier id;
 	String name;
 	SimpleGraphPanel parent;
+	Color color = Color.BLACK;
 
 	public Marker(String name)
 	{
@@ -18,7 +20,25 @@ class Marker
 	{
 		pos = initial_position;
 		this.name = name;
-		id = "marker"+String.valueOf(System.currentTimeMillis());
+		try {
+			id = LocalIdentifierGenerator.generateIdentifier(ObjectEntities.MARK_CODE);
+		} catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public int getPos()
+	{
+		return pos;
+	}
+	public Identifier getId()
+	{
+		return id;
+	}
+
+	public void setId(Identifier id)
+	{
+		this.id = id;
 	}
 
 	void move (int new_position)
@@ -41,6 +61,11 @@ class Marker
 
 	public Color getColor()
 	{
-		return Color.black;
+		return color;
+	}
+
+	public void setColor(Color color)
+	{
+		this.color = color;
 	}
 }

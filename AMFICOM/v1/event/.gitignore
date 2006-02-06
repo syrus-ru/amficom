@@ -1,6 +1,6 @@
 classes
+doc
 nbproject
-test
 build.xml
 *.deploy
 *.jar
@@ -10,9 +10,16 @@ build.xml
 *.tar
 *.gz
 .corba
-.ora
 .mach
 .classpath
 .project
 .settings
+.idl
 .#*
+cache
+logs
+docs
+.pmd
+.javadocs
+.refactorings
+*.jardesc

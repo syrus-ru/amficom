@@ -1,5 +1,5 @@
 /*
- * $Id: TestTransmissionPathType.java,v 1.1.1.1 2005/02/28 09:48:12 cvsadmin Exp $
+ * $Id: TestTransmissionPathType.java,v 1.7 2005/12/15 14:16:36 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,56 +8,36 @@
 package com.syrus.AMFICOM.configuration;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 
-import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.SessionContext;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.1.1.1 $, $Date: 2005/02/28 09:48:12 $
- * @author $Author: cvsadmin $
- * @module config_v1
+ * @version $Revision: 1.7 $, $Date: 2005/12/15 14:16:36 $
+ * @author $Author: arseniy $
+ * @module test
  */
-public class TestTransmissionPathType extends CommonConfigurationTest {
+public class TestTransmissionPathType extends TestCase {
 
-	public TestTransmissionPathType(String name) {
+	public TestTransmissionPathType(final String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestTransmissionPathType.class);
+		final DatabaseCommonTest commonTest = new DatabaseCommonTest();
+		commonTest.addTestSuite(TestTransmissionPathType.class);
+		return commonTest.createTestSetup();
 	}
 
 	public void testCreateInstance() throws ApplicationException {
-		TransmissionPathType transmissionPathType = TransmissionPathType.createInstance(SessionContext.getAccessIdentity().getUserId(),
-				"tptyp", "For tests", "tptyp");
+		TransmissionPathType transmissionPathType = TransmissionPathType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				"reflectometry",
+				"For tests",
+				"tptyp");
 
-		TransmissionPathType_Transferable tptt = (TransmissionPathType_Transferable) transmissionPathType.getTransferable();
-
-		TransmissionPathType transmissionPathType1 = new TransmissionPathType(tptt);
-		assertEquals(transmissionPathType.getId(), transmissionPathType1.getId());
-		assertEquals(transmissionPathType.getCreated(), transmissionPathType1.getCreated());
-		assertEquals(transmissionPathType.getModified(), transmissionPathType1.getModified());
-		assertEquals(transmissionPathType.getCreatorId(), transmissionPathType1.getCreatorId());
-		assertEquals(transmissionPathType.getModifierId(), transmissionPathType1.getModifierId());
-		assertEquals(transmissionPathType.getVersion(), transmissionPathType1.getVersion());
-		assertEquals(transmissionPathType.getCodename(), transmissionPathType1.getCodename());
-		assertEquals(transmissionPathType.getDescription(), transmissionPathType1.getDescription());
-		assertEquals(transmissionPathType.getName(), transmissionPathType1.getName());
-
-		ConfigurationStorableObjectPool.putStorableObject(transmissionPathType);
-		ConfigurationStorableObjectPool.flush(true);
+		StorableObjectPool.flush(transmissionPathType, DatabaseCommonTest.getSysUser().getId(), true);
 	}
 
-//	public void testDelete() throws ApplicationException {
-//		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
-//		Collection transmissionPathTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(ec, true);
-//		TransmissionPathType transmissionPathType;
-//		for (Iterator it = transmissionPathTypes.iterator(); it.hasNext();) {
-//			transmissionPathType = (TransmissionPathType) it.next();
-//			System.out.println("Event source: " + transmissionPathType.getId());
-//		}
-//		ConfigurationStorableObjectPool.delete(transmissionPathTypes);
-//		ConfigurationStorableObjectPool.flush(true);
-//	}
 }

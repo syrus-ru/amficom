@@ -2,85 +2,72 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
-
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.io.BellcoreStructure;
 
-public class CreateTestSetupCommand extends VoidCommand
+public class CreateTestSetupCommand extends AbstractCommand
 {
-	ApplicationContext aContext;
-	String traceid;
+	private ApplicationContext aContext;
 
-	public CreateTestSetupCommand(ApplicationContext aContext, String id)
+	public CreateTestSetupCommand(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
-		this.traceid = id;
 	}
 
+	@Override
 	public Object clone()
 	{
-		return new CreateTestSetupCommand(aContext, traceid);
+		return new CreateTestSetupCommand(this.aContext);
 	}
 
+	public static String getNewMSNameFromDialog()
+	{
+		BellcoreStructure bs = Heap.getPFTracePrimary().getBS();
+		if (bs == null) {
+			// странная ситуация - нет primarytrace
+			return null;
+		}
+
+		if (bs.monitoredElementId == null) {
+			GUIUtil.showErrorMessage("noMonitoredElementError");
+			return null;
+		}
+
+		if (Heap.getContextMeasurementSetup() == null) {
+			GUIUtil.showErrorMessage("noContextMeasurementSetupError");
+			return null;
+		}
+
+		String name = JOptionPane.showInputDialog(
+				Environment.getActiveWindow(),
+				LangModelAnalyse.getString("newname"),
+				LangModelAnalyse.getString("testsetup"),
+				JOptionPane.QUESTION_MESSAGE);
+
+		// если ввод отменен
+		if (name == null)
+			return null;
+
+		// если введен пустое имя
+		if (name.equals("")) {
+			GUIUtil.showErrorMessage(GUIUtil.MSG_ERROR_EMPTY_NAME_ENTERED);
+			return null; // и ничего не делаем
+		}
+
+		// если введено непустое имя - задаем имя для нового шаблона
+		return name;
+
+	}
+
+	@Override
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if(dataSource == null)
-			return;
-
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", traceid);
-		if (bs == null)
-			return;
-
-		if (bs.monitored_element_id.equals(""))
-		{
-			JOptionPane.showMessageDialog (
-					Environment.getActiveWindow(),
-					LangModelAnalyse.String("noMonitoredElementError"),
-					LangModelAnalyse.String("error"),
-					JOptionPane.OK_OPTION);
-			return;
-		}
-
-		TestSetup _ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
-		if (_ts == null)
-		{
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					LangModelAnalyse.String("unkError"),
-					LangModelAnalyse.String("error"),
-					JOptionPane.OK_OPTION);
-			return;
-		}
-
-		String ret = JOptionPane.showInputDialog(
-				Environment.getActiveWindow(),
-				LangModelAnalyse.String("newname"),
-				LangModelAnalyse.String("testsetup"),
-				JOptionPane.QUESTION_MESSAGE);
-		if (ret == null || ret.equals(""))
-			return;
-
-		TestSetup ts = new TestSetup();
-		ts.name = ret;
-		ts.test_type_id = _ts.test_type_id;
-		ts.id = dataSource.GetUId(TestSetup.typ);
-		ts.test_argument_set_id = _ts.test_argument_set_id;
-
-		bs.test_setup_id = ts.getId();
-		Pool.put(TestSetup.typ, ts.getId(), ts);
-
-		bs.test_setup_id = ts.getId();
-
-		aContext.getDispatcher().notify(new RefChangeEvent(traceid,
-				RefChangeEvent.THRESHOLDS_CALC_EVENT));
+		String name = getNewMSNameFromDialog();
+		if (name != null)
+			Heap.setNewMSName(name);
 	}
 }
-

@@ -1,46 +1,28 @@
+
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry;
 
-import java.awt.Toolkit;
-
+import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Model.ReflectometryAnalyseApplicationModelFactory;
-
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ThresholdsMainFrame;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.General.Model.ReflectometryAnalyseApplicationModelFactory;
+import com.syrus.AMFICOM.client.model.AbstractApplication;
 
-public class Evaluation
-{
-	ApplicationContext aContext = new ApplicationContext();
+public class Evaluation extends AbstractApplication {
 
-	public Evaluation(AnalyseApplicationModelFactory factory)
-	{
-		if(!Environment.canRun(Environment.MODULE_EVALUATE))
-			return;
-
-		aContext.setApplicationModel(factory.create());
-		ThresholdsMainFrame frame = new ThresholdsMainFrame(aContext);
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("images/main/evaluate_mini.gif"));
-		frame.setVisible(true);
+	public Evaluation() {
+		super(Analyse.APPLICATION_NAME);
 	}
 
-	public static void main(String[] args)
-	{
-		Environment.initialize();
-		LangModelAnalyse.initialize();
-		LangModelReport.initialize();
+	@Override
+	protected void init() {
+		super.aContext.setApplicationModel(new ReflectometryAnalyseApplicationModelFactory().create());
+		final ImageIcon imageIcon = (ImageIcon) UIManager.getIcon(AnalysisResourceKeys.ICON_EVALUATE_MINI);
+		super.startMainFrame(new ThresholdsMainFrame(this.aContext), imageIcon.getImage());
+	}
 
-		try {
-			UIManager.setLookAndFeel(Environment.getLookAndFeel());
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-
-		new Evaluation(new ReflectometryAnalyseApplicationModelFactory());
+	public static void main(String[] args) {
+		new Evaluation();
 	}
 }

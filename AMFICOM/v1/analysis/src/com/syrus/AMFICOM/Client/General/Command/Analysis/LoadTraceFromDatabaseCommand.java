@@ -1,32 +1,33 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.awt.Cursor;
+import java.util.Collection;
+import java.util.Set;
 
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.Parameter;
-import com.syrus.AMFICOM.Client.Resource.Result.Result;
-import com.syrus.AMFICOM.Client.Resource.Result.Test;
-import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
-import com.syrus.AMFICOM.Client.Analysis.ReflectogrammLoadDialog;
-import com.syrus.io.BellcoreReader;
-import com.syrus.io.BellcoreStructure;
+import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.PermissionManager;
+import com.syrus.AMFICOM.Client.Analysis.Trace;
+import com.syrus.AMFICOM.Client.Analysis.UI.TraceLoadDialog;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.io.DataFormatException;
 
-public class LoadTraceFromDatabaseCommand extends VoidCommand
+public class LoadTraceFromDatabaseCommand extends AbstractCommand
 {
-	Dispatcher dispatcher;
-	ApplicationContext aContext;
-	private Checker checker;
+	private Dispatcher dispatcher;
+	private ApplicationContext aContext;
 
 	public LoadTraceFromDatabaseCommand(Dispatcher dispatcher, ApplicationContext aContext)
 	{
@@ -34,18 +35,11 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void setParameter(String field, Object value)
 	{
-		if(field.equals("dispatcher"))
-			setDispatcher((Dispatcher)value);
-		else
-			if(field.equals("aContext"))
-				setApplicationContext((ApplicationContext )value);
-	}
-
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
+		if(field.equals("aContext"))
+			setApplicationContext((ApplicationContext )value);
 	}
 
 	public void setApplicationContext(ApplicationContext aContext)
@@ -53,169 +47,102 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public Object clone()
 	{
-		return new LoadTraceFromDatabaseCommand(dispatcher, aContext);
+		return new LoadTraceFromDatabaseCommand(this.dispatcher, this.aContext);
 	}
 
+	@Override
 	public void execute()
 	{
-		try
-		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
-			if(!checker.checkCommand(checker.loadReflectogrammFromDB))
-			{
-				return;
-			}
-		}
-		catch (NullPointerException ex)
-		{
-			System.out.println("Application context and/or user are not defined");
+		// Получаем набор результатов, которые надо загрузить
+		// XXX: performance: загружаем - иногда долго
+		JFrame parent = Environment.getActiveWindow();
+		if(TraceLoadDialog.showDialog(parent) == JOptionPane.CANCEL_OPTION) {
 			return;
 		}
+		Set<Result> results = TraceLoadDialog.getResults();
 
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if(dataSource == null)
+		// XXX: Если набор результатов пуст, ничего не делаем
+		if (results.isEmpty())
 			return;
 
-
-		ReflectogrammLoadDialog dialog;
-		if(Pool.get("dialog", "TraceLoadDialog") == null)
-		{
-			dialog = new ReflectogrammLoadDialog (this.aContext);
-			Pool.put("dialog", "TraceLoadDialog", dialog);
-		}
-		else
-		{
-			dialog = (ReflectogrammLoadDialog)Pool.get("dialog", "TraceLoadDialog");
-		}
-
-		//Environment.getActiveWindow()
-		dialog.show();
-
-		if(dialog.ret_code == 0)
+		// преобразуем выбранный набор результатов в набор рефлектограмм
+		// Рефлектограммы загружаются по возможности вместе с результатами
+		// анализа. Если нет результатов анализа, то по возможности
+		// загружает параметры анализа.
+		// XXX: performance: 40-80% time, because of waiting for empty set of analysis for each measurement
+		Collection<Trace> traces;
+		try {
+			traces = AddTraceFromDatabaseCommand.getTracesFromResults(results);
+		} catch (DataFormatException e) {
+			// ошибка формата данных - отменяем загрузку
+			GUIUtil.showDataFormatError();
 			return;
-		if (dialog.getResult() == null)
+		} catch (ApplicationException e) {
+			GUIUtil.processApplicationException(e);
 			return;
-
-		BellcoreStructure bs = null;
-		Result res = dialog.getResult();
-
-		java.util.Enumeration enum = res.parameters.elements();
-		while (enum.hasMoreElements())
-		{
-			Parameter param = (Parameter)enum.nextElement();
-			if (param.gpt.id.equals("reflectogramm"))
-				bs = new BellcoreReader().getData(param.value);
 		}
-		if (bs == null)
-			return;
+		// открываем выбранный набор рефлектограмм - самую типичную как
+		// primary, остальные как secondary.
+		// Объект RefAnalysis пока не создаем.
+		// XXX: performance: 20-50% time?
+		Heap.openManyTraces(traces);
+		// Создаем RefAnalysis; XXX: объединить openManyTraces и updatePrimaryAnalysis
+		Heap.updatePrimaryAnalysis();
 
-		if (Pool.getHash("bellcorestructure") != null )
-		{
-			if ((BellcoreStructure)Pool.get("bellcorestructure", "primarytrace") != null)
-				new FileCloseCommand(dispatcher, aContext).execute();
-		}
-		Pool.put("bellcorestructure", "primarytrace", bs);
+		// если результат выбранного primaryTrace получен в результате измерения,
+		// то устанавливаем ms и, если есть, эталон
+		// согласно этому измерению
+		// XXX: так, как сделано сейчас, позволяет пользователю загрузить
+		// одновременно рефлектограммы с разными MS или даже путями тестирования
+		// (при этом одна из них будет выбрана первичной, и в качестве MS
+		// будет выбран ее MS), затем переназначить первичной р/грамму
+		// с другого пути (при этом MS останется от старой первичной),
+		// а затем сохранить шаблон. При этом будет создан шаблон с
+		// MS старой первичной р/г, но на основе новой первичной р/г.
+		// Видимо, это надо исправить, например, одним из таких способов:
+		// 1. Проверять все загружаемые р/г (как в OPEN, так и в ADD).
+		//    Если они от разных MS,
+		//    то ставить MS:=null (с предупреждением либо без него);
+		// 2. При смене первичной р/г обнулять MS (самое простое и надежное?);
+		// 3. Использовать MS первичной р/г, а не сохраненный отдельно MS
+		//    первой загруженной;
+		// 4. При создании (или сохранении) шаблона предупреждать пользователя,
+		//    что есть несколько MS, и предупреждать,
+		//    что будет взят MS первичной.
+		Result primaryTraceResult = Heap.getPrimaryTrace().getResult();
+		if (primaryTraceResult != null
+				&& AnalysisUtil.hasMeasurementByResult(primaryTraceResult)) {
+			Measurement m = AnalysisUtil.getMeasurementByResult(primaryTraceResult);
+			MeasurementSetup ms = m.getSetup();
+			Heap.setContextMeasurementSetup(ms);
 
-		Test test = (Test)Pool.get(Test.typ, res.action_id);
-		bs.title = res.getName();
-
-		TestSetup ts;
-		if(test != null)
-		{
-			bs.monitored_element_id = test.monitored_element_id;
-
-			//Если нет тестсетапа создаем его
-
-			if (test.test_setup_id.equals(""))
-			{
-				ts = new TestSetup();
-				ts.test_type_id = test.test_type_id;
-				ts.id = dataSource.GetUId(TestSetup.typ);
-				ts.test_argument_set_id = test.test_argument_set_id;
-
-				bs.test_setup_id = ts.getId();
-				Pool.put(TestSetup.typ, ts.getId(), ts);
-			}
-			else
-			{
-				dataSource.loadTestSetup(test.test_setup_id);
-				bs.test_setup_id = test.test_setup_id;
-				ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
-			}
-
-			AnalysisUtil.load_CriteriaSet(dataSource, ts);
-
-			if (!ts.etalon_id.equals(""))
-				AnalysisUtil.load_Etalon(dataSource, ts);
-			else
-				Pool.remove("bellcorestructure", "etalon");
-
-			AnalysisUtil.load_Thresholds(dataSource, ts);
-
-			new InitialAnalysisCommand().execute();
-			//new MinuitAnalyseCommand(aContext.getDispatcher(), "primarytrace", aContext).execute();
-
-			ReflectogramEvent[] etalon = (ReflectogramEvent[])Pool.get("eventparams", "etalon");
-			ReflectogramEvent[] revents = (ReflectogramEvent[])Pool.get("eventparams", "primarytrace");
-
-/*
-			Threshold[] thresholds = new Threshold[etalon.length];
-			for (int i = 0; i < thresholds.length; i++)
-				thresholds[i] = etalon[i].getThreshold();
-
-			ReflectogramComparer comp = new ReflectogramComparer(revents, etalon, thresholds, false);
-			ReflectogramAlarm[] alarms = comp.getAlarms();
-*/
-
-			if (etalon != null && revents != null)
-			{
-				int delta = 5;
-				//correct end of trace
-				if (revents.length > etalon.length)
-				{
-					ReflectogramEvent endEvent = etalon[etalon.length-1];
-					for (int i = revents.length - 1; i >= 0; i--)
-					{
-						if (revents[i].getType() == ReflectogramEvent.CONNECTOR &&
-								Math.abs(revents[i].begin - endEvent.begin) < delta &&
-								Math.abs(revents[i].end - endEvent.end) < delta)
-							{
-								ReflectogramEvent[] new_revents = new ReflectogramEvent[i+1];
-								for (int j = 0; j < i+1; j++)
-									new_revents[j] = revents[j];
-								revents = new_revents;
-								break;
-							}
-					}
+			try {
+				// пытаемся загрузить параметры анализа
+				// (в принципе, если они были, то они уже были загружены
+				// во время загрузки primary trace)
+				AnalysisUtil.loadCriteriaSet(LoginManager.getUserId(), ms);
+				// пытаемся загрузить эталон
+				if (ms.getEtalon() != null &&
+						PermissionManager.isPermitted(PermissionManager.Operation.LOAD_ETALON)) {
+					AnalysisUtil.loadEtalon(ms);
+				} else {
+					Heap.unSetEtalonPair();
 				}
-
-				//correct event types
-				if (revents.length == etalon.length)
-				{
-					for (int i = 0; i < etalon.length; i++)
-					{
-						if (Math.abs(revents[i].begin - etalon[i].begin) < delta &&
-								Math.abs(revents[i].end - etalon[i].end) < delta)
-						{
-							revents[i].setType(etalon[i].getType());
-						}
-					}
-				}
+				// загружаем результаты сравнения с эталоном (если есть)
+				// NB: при загрузке всех р/г уже были загружены
+				// результаты анализа. Теперь мы повторно загружаем
+				// результаты анализа + результаты оценки,
+				// но уже только для одной р/г - той, что выбрана как первичная.
+				AnalysisUtil.loadEtalonComparison(m);
+			} catch (DataFormatException e) {
+				GUIUtil.showDataFormatError();
+			} catch (ApplicationException e) {
+				GUIUtil.processApplicationException(e);
 			}
-
-			dispatcher.notify(new RefChangeEvent("primarytrace",
-					RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
-
-			dispatcher.notify(new RefUpdateEvent("primarytrace",
-					RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
-
-			dispatcher.notify(new RefUpdateEvent("etalon",
-					RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
-
-			Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
+		Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
-
 }

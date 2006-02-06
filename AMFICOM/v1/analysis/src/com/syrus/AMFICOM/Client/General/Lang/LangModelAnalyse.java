@@ -1,126 +1,71 @@
 package com.syrus.AMFICOM.Client.General.Lang;
+ 
+import java.util.*;
 
-import java.text.DateFormatSymbols;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Vector;
-
-public class LangModelAnalyse extends LangModel
+public class LangModelAnalyse
 {
-	static public Locale locale;
-	static public String language;
-	static public String country;
-	static public ResourceBundle lang;
-	static public DateFormatSymbols symbols;
-	static public String resourceBundle;
+	private static final String BUNDLE_NAME =
+		"com.syrus.AMFICOM.Client.General.Lang.analysis";
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
+		.getBundle(BUNDLE_NAME);
+
+//	static public Locale locale;
+//	static public String language;
+//	static public String country;
+//	static public ResourceBundle lang;
+//	static public DateFormatSymbols symbols;
+//	static public String resourceBundle;
 
 	public LangModelAnalyse()
 	{
-		symbols = new DateFormatSymbols(locale);
+		//symbols = new DateFormatSymbols(locale);
 	}
 
-	static public void initialize()
+	public static String getString(String keyName)
 	{
-		initialize("com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse");
-	}
-
-	static public void initialize(String rb)
-	{
-		System.out.println("initialize lang - " + rb);
-		resourceBundle = new String(rb);
-		setLangModel("ru", "");
-	}
-
-	static public Vector getLangModels()
-	{
-
-		Vector vec = new Vector();
-		return vec;
-	}
-
-	static public boolean setLangModel(String l, String c)
-	{
-		language = l;
-		country = c;
+		//System.out.println("keyName:" + keyName);
+		String keyName1 = keyName.replaceAll(" ", "_");
+		String string = null;
 		try
 		{
-			locale = new Locale(language, country);
-			lang = ResourceBundle.getBundle(
-					resourceBundle,
-					locale);
-			System.out.println("initialize locale - " + locale.toString());
-			symbols = new DateFormatSymbols(locale);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
-
-	static public String Text(String componentName)
-	{
-		return getComponentText(lang, componentName);
-	}
-
-	static public String ToolTip(String componentName)
-	{
-		return getComponentToolTip(lang, componentName);
-	}
-
-	static public String getComponentText(
-			ResourceBundle lang,
-			String componentName)
-	{
-		return String(componentName + "Text");
-	}
-
-	static public String getComponentToolTip(
-			ResourceBundle lang,
-			String componentName)
-	{
-		return String(componentName + "ToolTip");
-	}
-
-	static public String String(String keyName)
-	{
-		return String(lang, keyName);
-	}
-
-	static public String String(ResourceBundle lang, String keyName)
-	{
-		try
-		{
-			return lang.getString(keyName);
-		}
-		catch(java.util.MissingResourceException mre)
+			string = RESOURCE_BUNDLE.getString(keyName1);
+		} catch (MissingResourceException e)
 		{
 			try
 			{
-				Locale loc2 = lang.getLocale();
-				Locale loc;
-				if(loc2.getCountry() != null && !(loc2.getCountry().equals("")))
-					loc = new Locale(loc2.getLanguage(), "");
-				else
-				if(loc2.getLanguage() != null && !(loc2.getLanguage().equals("")))
-					loc = new Locale("", "");
-				else
-					throw mre;
-				ResourceBundle lang2 =
-						ResourceBundle.getBundle(resourceBundle, loc);
-				return String(lang2, keyName);
-			}
-			catch(Exception e)
+				string = RESOURCE_BUNDLE.getString(keyName1 + "Text");
+			} catch (MissingResourceException mre)
 			{
-				System.out.println(e);
-				return "ERROR key!" + keyName;
+				string = keyName;
+				try
+				{
+					throw new Exception("key '"
+						+ keyName1 + "Text"
+						+ "' "
+						+ "not found");
+				} catch (Exception exc)
+				{
+					exc.printStackTrace();
+				}
+			} catch (Exception exc)
+			{
+				exc.printStackTrace();
 			}
 		}
-		catch(Exception e)
-		{
-			System.out.println(e);
-			return "ERROR key!" + keyName;
-		}
+		// workaround:
+		// Редактор свойств для Eclipse от Долженко не
+		// умеет сохранять пустые строки, но без них
+		// наследие анализа не работает.
+		// Пришлось заменить их все
+		// ключевым словом __EMPTY__, и вот здесь
+		// они переводятся обратно в пустые.
+		// TODO: Исправить код GUI анализа так, чтобы
+		// он не пользовался пустыми строками,
+		// ЛИБО исправить редактор свойств,
+		// чтобы умел сохранять ключи с пустыми строками.
+		// //saa, 2004-12
+		if (string.equals("__EMPTY__"))
+			string = "";
+		return string;
 	}
 }

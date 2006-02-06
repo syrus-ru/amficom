@@ -1,5 +1,5 @@
-/*
- * $Id: ImageResourceDataTestCase.java,v 1.1.1.1 2004/12/15 14:35:45 cvsadmin Exp $
+/*-
+ * $Id: ImageResourceDataTestCase.java,v 1.2 2005/12/15 14:19:42 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,17 @@
 
 package com.syrus.AMFICOM.resource.corba;
 
-import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceData;
-import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 import junit.framework.TestCase;
+
 import org.omg.CORBA.BAD_OPERATION;
 
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceData;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.IdlFileImageResourceData;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
+
 /**
- * @author $Author: cvsadmin $
- * @version $Revision: 1.1.1.1 $, $Date: 2004/12/15 14:35:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/12/15 14:19:42 $
  * @module idl_v1
  */
 public final class ImageResourceDataTestCase extends TestCase {
@@ -28,21 +31,21 @@ public final class ImageResourceDataTestCase extends TestCase {
 	}
 
 	public void testFileName() {
-		final ImageResourceData imageResourceData = new ImageResourceData();
+		final IdlImageResourceData imageResourceData = new IdlImageResourceData();
 		imageResourceData.image(ImageResourceSort.SCHEME, new byte[0]);
 		try {
-			imageResourceData.fileName();
+			imageResourceData.fileImageResourceData();
 			fail(ERROR_MESSAGE);
-		} catch (BAD_OPERATION bo) {
+		} catch (final BAD_OPERATION bo) {
 			assertTrue(true);
 		}
 		try {
-			imageResourceData.fileName(imageResourceData.discriminator(), FILE_NAME);
+			imageResourceData.fileImageResourceData(imageResourceData.discriminator(), new IdlFileImageResourceData("codename", FILE_NAME));
 			fail(ERROR_MESSAGE);
-		} catch (BAD_OPERATION bo) {
+		} catch (final BAD_OPERATION bo) {
 			assertTrue(true);
 		}
-		imageResourceData.fileName(FILE_NAME);
-		imageResourceData.fileName();
+		imageResourceData.fileImageResourceData(new IdlFileImageResourceData("codename", FILE_NAME));
+		imageResourceData.fileImageResourceData();
 	}
 }

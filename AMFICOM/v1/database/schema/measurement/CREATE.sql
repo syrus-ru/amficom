@@ -1,9 +1,10 @@
+-- $Id: CREATE.sql,v 1.5 2005/08/28 14:29:24 arseniy Exp $
+
+REM dictionaries
+@@measurement/dictionary/CREATE;
 
 REM types
-
-@@./type/CREATE.sql
+@@measurement/type/CREATE;
 
 REM objects
-
-@@./object/CREATE.sql
-
+@@measurement/object/CREATE;

@@ -1,436 +1,229 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JViewport;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.table.TableModel;
 
-import com.syrus.AMFICOM.Client.General.UI.ATable;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
+import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.UI.GeneralTableModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
+import com.syrus.AMFICOM.analysis.OverallStats;
+import com.syrus.AMFICOM.analysis.OverallStatsWrapper;
+import com.syrus.AMFICOM.analysis.PFTrace;
+import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
-import com.syrus.io.BellcoreStructure;
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-public class OverallStatsFrame extends ATableFrame
-																		implements OperationListener
-{
-	private Dispatcher dispatcher;
-	private GeneralTableModel tModel;
-	private ATable jTable;
+public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
+		RefMismatchListener {
+	private static final long serialVersionUID = 2992484290509149167L;
 
-	BorderLayout borderLayout = new BorderLayout();
-	JPanel mainPanel = new JPanel();
-	JScrollPane scrollPane = new JScrollPane();
-	JViewport viewport = new JViewport();
+	private WrapperedPropertyTableModel<OverallStats> tModel;
+	private WrapperedPropertyTable<OverallStats> jTable;
+	private OverallStats stats;
+
+	private JPanel mainPanel = new JPanel();
+	private JScrollPane scrollPane = new JScrollPane();
+	private JViewport viewport = new JViewport();
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
-	boolean analysis_performed = false;
-	boolean etalon_loaded = false;
+	private WrapperedPropertyTableModel<OverallStats> wctModel;
+	private WrapperedPropertyTable<OverallStats> jTableWholeComp;
 
-	private WholeCompareTableModel wctModel;
-	private ATable jTableWholeComp;
+	private JPanel mainPanelWholeComp = new JPanel();
+	private JScrollPane scrollPaneWholeComp = new JScrollPane();
+	private JViewport viewportWholeComp = new JViewport();
 
-	BorderLayout borderLayoutWholeComp = new BorderLayout();
-	JPanel mainPanelWholeComp = new JPanel();
-	JScrollPane scrollPaneWholeComp = new JScrollPane();
-	JViewport viewportWholeComp = new JViewport();
-
-
-	public OverallStatsFrame()
-	{
+	public OverallStatsFrame() {
 		this(new Dispatcher());
 	}
 
-	public OverallStatsFrame(Dispatcher dispatcher)
-	{
+	public OverallStatsFrame(final Dispatcher dispatcher) {
 		super();
 
-		try
-		{
-			jbInit();
-		}
-		catch (Exception e)
-		{
+		try {
+			this.jbInit();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		init_module(dispatcher);
+		this.initModule(dispatcher);
 	}
 
-	void init_module(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-		dispatcher.register(this, RefChangeEvent.typ);
-		dispatcher.register(this, RefUpdateEvent.typ);
+	void initModule(final Dispatcher dispatcher) {
+		Heap.addEtalonMTMListener(this);
+		Heap.addPrimaryRefAnalysisListener(this);
+		Heap.addRefMismatchListener(this);
 	}
 
-	public void operationPerformed(OperationEvent ae)
-	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.OPEN)
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
-				{
-					setTableModel();
-					updTableModel(id);
-					setVisible(true);
-					wctModel.clearTable();
-					tabbedPane.setSelectedIndex(0);
-					tabbedPane.setEnabledAt(1, false);
-				}
-			}
-			if(rce.CLOSE)
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("all"))
-				{
-					tModel.clearTable();
-					wctModel.clearTable();
-					tabbedPane.setSelectedIndex(0);
-					analysis_performed = false;
-					tabbedPane.setEnabledAt(1, false);
-					setVisible(false);
-				}
-				else if(id.equals("etalon"))
-				{
-					wctModel.clearTable();
-					tabbedPane.setSelectedIndex(0);
-					etalon_loaded = false;
-					tabbedPane.setEnabledAt(1, false);
-				}
-			}
-
-			if(rce.OPEN_ETALON)
-			{
-				wctModel.clearTable();
-				tabbedPane.setSelectedIndex(0);
-				etalon_loaded = true;
-				if(analysis_performed)
-				{
-					setWholeData();
-					tabbedPane.setEnabledAt(1, true);
-				}
-			}
-			if(rce.CLOSE_ETALON)
-			{
-				wctModel.clearTable();
-				tabbedPane.setSelectedIndex(0);
-				etalon_loaded = false;
-				tabbedPane.setEnabledAt(1, false);
-			}
-
-		}
-
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
-		{
-			RefUpdateEvent rue = (RefUpdateEvent)ae;
-			if(rue.ANALYSIS_PERFORMED)
-			{
-				String id = (String)(rue.getSource());
-				if (id.equals("primarytrace"))
-					updTableModel(id);
-
-				if (Pool.get("eventparams", "primarytrace") != null)
-					analysis_performed = true;
-				if(etalon_loaded)
-				{
-					setWholeData();
-					tabbedPane.setEnabledAt(1, true);
-				}
-			}
-		}
+	public String getReportTitle() {
+		return LangModelAnalyse.getString("overallTitle");
 	}
 
-	public String getReportTitle()
-	{
-		return LangModelAnalyse.String("overallTitle");
+	public TableModel getTableModel() {
+		return this.tModel;
 	}
 
-	public TableModel getTableModel()
-	{
-		return tModel;
-	}
+	private void jbInit() throws Exception {
+		this.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
-	private void jbInit() throws Exception
-	{
-		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-		tModel = new GeneralTableModel(
-					new String[] {LangModelAnalyse.String("overallKey"),
-												LangModelAnalyse.String("overallValue")},
-					new String[] {"1", "2"},
-					0);
-		jTable = new ATable(tModel);
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(130);
+		this.stats = new OverallStats();
+		this.tModel = new WrapperedPropertyTableModel<OverallStats>(OverallStatsWrapper.getInstance(),
+				this.stats,
+				new String[] { OverallStatsWrapper.KEY_LENGTH,
+						OverallStatsWrapper.KEY_LOSS,
+						OverallStatsWrapper.KEY_ATTENUATION,
+						OverallStatsWrapper.KEY_RETURN_LOSS,
+						OverallStatsWrapper.KEY_NOISE_LEVEL,
+						OverallStatsWrapper.KEY_NOISE_DD,
+						OverallStatsWrapper.KEY_NOISE_DDRMS,
+						OverallStatsWrapper.KEY_EVENTS });
 
-		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		this.jTable = new WrapperedPropertyTable<OverallStats>(this.tModel);
+		this.jTable.setTableHeader(null);
+		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(130);
 
-		this.setSize(new Dimension(200, 213));
+		this.getContentPane().add(this.tabbedPane, BorderLayout.CENTER);
+
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
-		this.setTitle(LangModelAnalyse.String("overallTitle"));
+		this.setTitle(LangModelAnalyse.getString("overallTitle"));
 
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
-		scrollPane.setViewport(viewport);
-		scrollPane.setAutoscrolls(true);
+		this.mainPanel.setLayout(new BorderLayout());
+		this.mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
+		this.scrollPane.setViewport(this.viewport);
+		this.scrollPane.setAutoscrolls(true);
 
-		tabbedPane.add("Основная", mainPanel);
+		this.tabbedPane.add(LangModelAnalyse.getString("Title.main"), this.mainPanel);
 
-		jTable.setSelectionMode(jTable.getSelectionModel().SINGLE_SELECTION);
-		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-		jTable.setMaximumSize(new Dimension(200, 213));
-		jTable.setMinimumSize(new Dimension(200, 213));
-		mainPanel.add(scrollPane, BorderLayout.CENTER);
-		scrollPane.getViewport().add(jTable);
-		tabbedPane.setEnabledAt(0, true);
+		this.jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.mainPanel.add(this.scrollPane, BorderLayout.CENTER);
+		this.scrollPane.getViewport().add(this.jTable);
+		this.tabbedPane.setEnabledAt(0, true);
 
+		this.tabbedPane.add(LangModelAnalyse.getString("Title.comparative"), this.mainPanelWholeComp);
+		this.wctModel = new WrapperedPropertyTableModel<OverallStats>(OverallStatsWrapper.getInstance(),
+				this.stats,
+				new String[] { OverallStatsWrapper.KEY_LENGTH,
+						OverallStatsWrapper.KEY_ETALON_LENGTH,
+						OverallStatsWrapper.KEY_MAX_DEVIATION,
+						OverallStatsWrapper.KEY_MEAN_DEVIATION,
+						//OverallStatsWrapper.KEY_D_LOSS,
+						OverallStatsWrapper.KEY_MISMATCH,
+						OverallStatsWrapper.KEY_QUALITY_D,
+						OverallStatsWrapper.KEY_QUALITY_Q});
 
-		tabbedPane.add("Сравнительная", mainPanelWholeComp);
-		wctModel = new WholeCompareTableModel();
-		jTableWholeComp = new ATable (wctModel);
-		jTableWholeComp.getColumnModel().getColumn(0).setPreferredWidth(150);
-		jTableWholeComp.getColumnModel().getColumn(1).setPreferredWidth(70);
+		this.jTableWholeComp = new WrapperedPropertyTable<OverallStats>(this.wctModel);
+		this.jTableWholeComp.setTableHeader(null);
+		this.jTableWholeComp.getColumnModel().getColumn(0).setPreferredWidth(130);
 
-		mainPanelWholeComp.setLayout(new BorderLayout());
-		mainPanelWholeComp.setBorder(BorderFactory.createLoweredBevelBorder());
-		scrollPaneWholeComp.setViewport(viewportWholeComp);
-		scrollPaneWholeComp.setAutoscrolls(true);
-		jTableWholeComp.setPreferredScrollableViewportSize(new Dimension(200, 213));
-		jTableWholeComp.setMinimumSize(new Dimension(200, 213));
+		this.mainPanelWholeComp.setLayout(new BorderLayout());
+		this.mainPanelWholeComp.setBorder(BorderFactory.createLoweredBevelBorder());
+		this.scrollPaneWholeComp.setViewport(this.viewportWholeComp);
+		this.scrollPaneWholeComp.setAutoscrolls(true);
 
-		mainPanelWholeComp.add(scrollPaneWholeComp, BorderLayout.CENTER);
-		scrollPaneWholeComp.getViewport().add(jTableWholeComp);
-		tabbedPane.setEnabledAt(1, false);
-
-		updColorModel();
+		this.jTableWholeComp.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.mainPanelWholeComp.add(this.scrollPaneWholeComp, BorderLayout.CENTER);
+		this.scrollPaneWholeComp.getViewport().add(this.jTableWholeComp);
+		this.tabbedPane.setEnabledAt(1, false);
 	}
 
-
-	private void setWholeData()
-	{
-		ReflectogramEvent []data =  (ReflectogramEvent [])Pool.get("eventparams", "primarytrace");
-		ReflectogramEvent []etalon = (ReflectogramEvent[])Pool.get("eventparams", "etalon");
-		if(etalon == null || data == null)
-		{
-			tabbedPane.setSelectedIndex(0);
-			tabbedPane.setEnabledAt(1, false);
+	private void setWholeData() {
+		final ReflectogramMismatchImpl mismatch = Heap.getRefMismatch();
+		final ModelTraceManager etalonMTM = Heap.getMTMEtalon();
+		final ModelTraceAndEvents dataMTAE = Heap.getMTAEPrimary();
+		if (etalonMTM == null || dataMTAE == null) {
+			this.tabbedPane.setSelectedIndex(0);
+			this.tabbedPane.setEnabledAt(1, false);
 			return;
 		}
-		if(data.length==0)
-		{
-			tabbedPane.setSelectedIndex(0);
-			tabbedPane.setEnabledAt(1, false);
+		final double deltaX = dataMTAE.getDeltaX() / 1000.;
+
+		final ModelTrace etalonMTrace = etalonMTM.getMTAE().getModelTrace();
+		final ModelTrace dataMTrace = dataMTAE.getModelTrace();
+		final SimpleReflectogramEvent[] etalonSRE = etalonMTM.getMTAE().getSimpleEvents();
+		// SimpleReflectogramEvent []dataSRE = dataMTAE.getSimpleEvents();
+
+		final double maxDeviation = ReflectogramComparer.getMaxDeviation(etalonMTrace, dataMTrace);
+		final double meanDeviation = ReflectogramComparer.getMeanDeviation(etalonMTrace, dataMTrace);
+		final double etalonLength = ReflectogramMath.getEndOfTraceBegin(etalonSRE) * deltaX;
+		// double dataLength = ReflectogramMath.getEndOfTraceBegin(dataSRE) *
+		// deltaX;
+		final double lossDifference = ReflectogramComparer.getLossDifference(etalonMTM.getMTAE(), dataMTAE);
+
+		this.stats.initCompareStatistics(maxDeviation, meanDeviation,
+				etalonLength, lossDifference, mismatch,
+				Heap.getEvaluationOverallResult());
+		this.tabbedPane.setEnabledAt(1, true);
+		this.jTableWholeComp.getModel().fireTableDataChanged();
+	}
+
+	void updTableModel() {
+		final PFTrace pf = Heap.getPFTracePrimary();
+
+		final TraceEvent ev = Heap.getRefAnalysisPrimary().overallStats;
+		if (ev == null) {
 			return;
 		}
-		double delta_x = data[0].getDeltaX()/1000.;
 
-		ReflectogramEvent []data_ = ReflectogramMath.alignClone(data, etalon);
-
-		double maximalDeviation = ReflectogramComparer.getMaximalDeviation(etalon, data_);
-		double meanDeviation = ReflectogramComparer.getMeanDeviation(etalon, data_);
-		double etalonLength = ReflectogramMath.getLastSplash(etalon)*delta_x;
-		double dataLength = ReflectogramMath.getLastSplash(data_)*delta_x;
-		double lossDifference = ReflectogramComparer.getLossDifference(etalon, data_);
-
-		wctModel.setValueAt(String.valueOf(MathRef.round_3(dataLength))+ " " + LangModelAnalyse.String("km"), 0, 1);
-		wctModel.setValueAt(String.valueOf(MathRef.round_3(etalonLength)) + " " + LangModelAnalyse.String("km"), 1, 1);
-		wctModel.setValueAt(String.valueOf(MathRef.round_4(maximalDeviation)) + " " + LangModelAnalyse.String("dB"), 2, 1);
-		wctModel.setValueAt(String.valueOf(MathRef.round_4(meanDeviation)) + " " + LangModelAnalyse.String("dB"), 3, 1);
-		wctModel.setValueAt(String.valueOf(MathRef.round_4(lossDifference)) + " " + LangModelAnalyse.String("dB"), 4, 1);
+		this.stats.initGeneralStatistics(ev, pf);
+		this.jTable.getModel().fireTableDataChanged();
 	}
 
-	private void updColorModel()
-	{
-		scrollPane.getViewport().setBackground(SystemColor.window);
-		jTable.setBackground(SystemColor.window);
-		jTable.setForeground(ColorManager.getColor("textColor"));
-		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
-
-		scrollPaneWholeComp.getViewport().setBackground(SystemColor.window);
-		jTableWholeComp.setBackground(SystemColor.window);
-		jTableWholeComp.setForeground(ColorManager.getColor("textColor"));
-		jTableWholeComp.setGridColor(ColorManager.getColor("tableGridColor"));
-	}
-
-	void updTableModel(String id)
-	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-		double alpha;
-
-		switch ((int)bs.fxdParams.AW)
-		{
-			case 13100: alpha = .063; break;
-			case 15500: alpha = .032; break;
-			case 16250: alpha = .0265; break;
-			default: alpha = .032;
+	public void etalonMTMCUpdated() {
+		if (Heap.getRefAnalysisPrimary() != null) {
+			this.setWholeData();
 		}
-
-		TraceEvent ev = ((RefAnalysis)Pool.get("refanalysis", id)).overallStats;
-		if (ev == null)
-			return;
-
-		double range = (ev.last_point) * (double)(3 * bs.fxdParams.DS[0]) / (double)(bs.fxdParams.GI * 10000);
-		tModel.setValueAt(String.valueOf(MathRef.round_3(range)) + " " + LangModelAnalyse.String("km"), 0, 1);
-		double loss = Math.abs(ev.data[0] -  ev.data[1]);
-		tModel.setValueAt(String.valueOf(MathRef.round_2(loss))+ " " + LangModelAnalyse.String("dB"), 1, 1);
-		double attenuation = loss / range;
-		tModel.setValueAt(String.valueOf(MathRef.round_4(attenuation))+ " " + LangModelAnalyse.String("dB")+ "/" + LangModelAnalyse.String("km"), 2, 1);
-		double orl = MathRef.ORL(ev.data[0], ev.data[1]);
-		tModel.setValueAt(String.valueOf(MathRef.round_2(orl)) + " " + LangModelAnalyse.String("dB"), 3, 1);
-		double noise = ev.data[2];
-		tModel.setValueAt(String.valueOf(MathRef.round_2(noise)) + " " + LangModelAnalyse.String("dB"), 4, 1);
-		double DD = ev.data[2] - ev.data[3];
-		tModel.setValueAt(String.valueOf(MathRef.round_2(DD)) + " " + LangModelAnalyse.String("dB"), 5, 1);
-		int evNum = (int)ev.data[4];
-		tModel.setValueAt(String.valueOf(evNum), 6, 1);
-		jTable.updateUI();
 	}
 
-	void setTableModel()
-	{
-		tModel.clearTable();
-
-		Vector length = new Vector(2);
-		length.add(LangModelAnalyse.String("totalLength"));
-		length.add("");
-		tModel.insertRow(length);
-
-		Vector loss = new Vector(2);
-		loss.add(LangModelAnalyse.String("totalLoss"));
-		loss.add("");
-		tModel.insertRow(loss);
-
-		Vector attenuation = new Vector(2);
-		attenuation.add(LangModelAnalyse.String("totalAttenuation"));
-		attenuation.add("");
-		tModel.insertRow(attenuation);
-
-		Vector orl = new Vector(2);
-		orl.add(LangModelAnalyse.String("totalReturnLoss"));
-		orl.add("");
-		tModel.insertRow(orl);
-
-		Vector noise = new Vector(2);
-		noise.add(LangModelAnalyse.String("totalNoiseLevel"));
-		noise.add("");
-		tModel.insertRow(noise);
-
-		Vector dd = new Vector(2);
-		dd.add(LangModelAnalyse.String("totalNoiseDD"));
-		dd.add("");
-		tModel.insertRow(dd);
-
-		Vector evNum = new Vector(2);
-		evNum.add(LangModelAnalyse.String("totalEvents"));
-		evNum.add("");
-		tModel.insertRow(evNum);
-	}
-}
-
-
-
-class WholeCompareTableModel extends AbstractTableModel
-{
-
-//  String[] columnNames = {LangModelModel.String("parameter") ,
-//    LangModelModel.String("value")};
-
-	String[] columnNames = {null ,
-		null};
-
-	Object[][] data = {
-		{LangModelAnalyse.String("traceLength"), "--"},
-		{LangModelAnalyse.String("etLength"), "--"},
-		{LangModelAnalyse.String("maxDeviation"), "--"},
-		{LangModelAnalyse.String("meanDeviation"), "--"},
-		{LangModelAnalyse.String("delta"), "--"},
-	};
-
-	WholeCompareTableModel()
-	{
-		super();
+	public void etalonMTMRemoved() {
+		this.tabbedPane.setSelectedIndex(0);
+		this.tabbedPane.setEnabledAt(1, false);
 	}
 
-	public void clearTable()
-	{
-		setValueAt("--", 0, 1);
-		setValueAt("--", 1, 1);
-		setValueAt("--", 2, 1);
-		setValueAt("--", 3, 1);
-		setValueAt("--", 4, 1);
-
-		super.fireTableDataChanged();
+	public void primaryRefAnalysisCUpdated() {
+		this.updTableModel();
+		this.setVisible(true);
+		if (Heap.getMTMEtalon() != null) {
+			this.setWholeData();
+		}
 	}
 
-	public int getColumnCount() {
-		return columnNames.length;
+	public void primaryRefAnalysisRemoved() {
+		this.tabbedPane.setSelectedIndex(0);
+		this.tabbedPane.setEnabledAt(1, false);
+		this.setVisible(false);
 	}
 
-	public int getRowCount() {
-		return data.length;
+	public void refMismatchCUpdated() {
+		this.setWholeData();
 	}
 
-	public String getColumnName(int col) {
-		return columnNames[col];
-	}
-
-	public Object getValueAt(int row, int col) {
-		return data[row][col];
-	}
-
-	public double getvalueat(int row, int col) {
-		return ((Double)(data[row][col])).doubleValue();
-	}
-
-	public Class getColumnClass(int c) {
-		return getValueAt(0, c).getClass();
-	}
-
-	public boolean isCellEditable(int row, int col)
-	{
-		return false;
-	}
-
-	public void setValueAt(Object value, int row, int col)
-	{
-		data[row][col] = value;
-		fireTableCellUpdated(row, col);
-	}
-
-
-	public void setInicialValueAt(Object value, int row, int col)
-	{
-		data[row][col] = value;
-		fireTableCellUpdated(row, col);
+	public void refMismatchRemoved() {
+		this.setWholeData();
 	}
 }
 

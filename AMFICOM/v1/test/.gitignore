@@ -1,0 +1,15 @@
+classes
+logs
+cache
+tools.jar
+.classpath
+.project
+*.jpr
+*.jpx*
+*.swp
+*.tar
+*.gz
+.mach
+common.properties
+.settings
+.refactorings

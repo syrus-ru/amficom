@@ -1,27 +1,18 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.Toolkit;
-import java.awt.event.*;
-import java.util.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JToggleButton;
-
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import com.syrus.AMFICOM.analysis.dadara.Threshold;
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
-
-public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
+public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel
+implements PropertyChangeListener,
+	CurrentEventChangeListener, EtalonMTMListener, PrimaryRefAnalysisListener
 {
 	public ThresholdsLayeredPanel(Dispatcher dispatcher)
 	{
@@ -30,8 +21,7 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 		try
 		{
 			jbInit();
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}
@@ -39,100 +29,44 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 	}
 
 	private void jbInit() throws Exception
-	{
+	{ // empty
 	}
 
+	@Override
 	protected ToolBarPanel createToolBar()
 	{
 		return new ThresholdsToolBar(this);
 	}
 
-	void init_module(Dispatcher dispatcher)
+	@Override void init_module(Dispatcher dispatcher)
 	{
 		super.init_module(dispatcher);
-		dispatcher.register(this, RefChangeEvent.typ);
+		// на RefUpdateEvent подписывается суперкласс - нам подписываться не надо
+		Heap.addCurrentEventChangeListener(this);
+		Heap.addEtalonMTMListener(this);
+		Heap.addPrimaryRefAnalysisListener(this);
 	}
 
-	public void operationPerformed(OperationEvent ae)
+	@Override
+	public void propertyChange(PropertyChangeEvent ae)
 	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if (rce.CLOSE)
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("all"))
-				{
-					for(int i=0; i<jLayeredPane.getComponentCount(); i++)
-					{
-						SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-						if (panel instanceof ThresholdsPanel)
-							((ThresholdsPanel)panel).et_ep = null;
-					}
-				}
-			}
-		}
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
+		if(ae.getPropertyName().equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 
-			for(int i=0; i<jLayeredPane.getComponentCount(); i++)
-			{
-				SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-				if (panel instanceof ThresholdsPanel)
+			if(rue.thresholdChanged()) {
+				for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 				{
-					if(rue.ANALYSIS_PERFORMED)
+					SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+					if (panel instanceof ThresholdsPanel)
 					{
-						String id = (String)(rue.getSource());
-						//if (id.equals("primarytrace"))
-						{
-							ReflectogramEvent[] ep = ((ReflectogramEvent[])Pool.get("eventparams", id));
-							((ThresholdsPanel)panel).updEvents(id);
-							((ThresholdsPanel)panel).updateEvents(ep);
-							updScale2fitCurrentEv(.2, 1.);
-							jLayeredPane.repaint();
-						}
-					}
-					if(rue.EVENT_SELECTED)
-					{
-						int num = Integer.parseInt((String)rue.getSource());
-						((ThresholdsPanel)panel).showEvent(num);
-						updScale2fitCurrentEv (.2, 1.);
-					}
-					if(rue.THRESHOLD_CHANGED)
-					{
-						jLayeredPane.repaint();
-					}
-					if(rue.THRESHOLDS_UPDATED)
-					{
-						String id = (String)(rue.getSource());
-						ReflectogramEvent[] ep = ((ReflectogramEvent[])Pool.get("eventparams", id));
-						((ThresholdsPanel)panel).updateThresholds(ep);
-						updScale2fitCurrentEv(.2, 1.);
 						jLayeredPane.repaint();
 					}
 				}
 			}
+			
 		}
-		super.operationPerformed(ae);
-	}
-
-
-	public void changeThreshold(double dx, double dl, double da, double dc, int key)
-	{
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
-		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-			if (panel instanceof ThresholdsPanel)
-			{
-				if (((ThresholdsPanel)panel).et_ep != null)
-				{
-					((ThresholdsPanel)panel).et_ep[((ThresholdsPanel)panel).c_event].getThreshold().changeThreshold(da, dc, dx, dl, key);
-					jLayeredPane.repaint();
-					return;
-				}
-			}
-		}
+		super.propertyChange(ae);
 	}
 
 	public void updScale2fitCurrentEv (double indent_x, double iy)
@@ -142,212 +76,98 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 			if (panel instanceof ThresholdsPanel)
 			{
-				if (((ThresholdsPanel)panel).c_event > ((ThresholdsPanel)panel).events.length)
-					((ThresholdsPanel)panel).c_event = ((ThresholdsPanel)panel).events.length - 1;
-				int start = ((ThresholdsPanel)panel).events[((ThresholdsPanel)panel).c_event].first_point;
-				if (((ThresholdsPanel)panel).c_event == 0)
-					start = 2;
-				int end = ((ThresholdsPanel)panel).events[((ThresholdsPanel)panel).c_event].last_point;
-				updScale2fit(start, end, indent_x, iy);
-				jLayeredPane.repaint();
+				if (((ThresholdsPanel)panel).sevents.length > 0)
+				{
+					int[] startAndEnd = ((ThresholdsPanel)panel).getStartAndEndOfCurrentEvent();
+					int start = startAndEnd[0];
+					int end = startAndEnd[1];
+					updScale2fit(start, end, indent_x, iy);
+					jLayeredPane.repaint();
+				}
 				return;
 			}
 		}
 	}
-}
-
-class ThresholdsToolBar extends TraceEventsToolBar
-{
-	protected static final String eA = "encreaseAmpl";
-	protected static final String dA = "decreaseAmpl";
-	protected static final String eW = "encreaseWidth";
-	protected static final String dW = "decreaseWidth";
-	protected static final String fitEv = "fit2event";
-	protected static final String allTresh = "allTresholds";
-
-	JButton fitEvButton = new JButton();
-	JButton eAButton = new JButton();
-	JButton dAButton = new JButton();
-	JButton eXButton = new JButton();
-	JButton dXButton = new JButton();
-	JToggleButton showThresholdButton = new JToggleButton();
-
-	protected static String[] buttons = new String[]
+	
+	@Override
+	protected void updScale2fit(int start, int end, double indent_x, double iy)
 	{
-		eA, dA, eW, dW, separator, fitEv, allTresh, separator, ex, dx, ey, dy, fit, separator, modeled
-	};
+		SimpleGraphPanel activePanel = (SimpleGraphPanel)jLayeredPane.getComponent(0);
+		if (activePanel instanceof ThresholdsPanel) {
+			ThresholdsPanel p = (ThresholdsPanel)activePanel;
+			SimpleGraphPanel.GraphRange range = new SimpleGraphPanel.GraphRange();
+			p.updateGraphRangeByThresholds(range);
+			if (!range.isEmpty()) {
+				int ix = (int)((range.getXMax() - range.getXMin()) * indent_x);
 
-	public ThresholdsToolBar (ThresholdsLayeredPanel panel)
-	{
-		super(panel);
-	}
+				double _scale_x = activePanel.scaleX;
+				double _scale_y = activePanel.scaleY;
+				double sc_x = ((double)(jLayeredPane.getWidth()) / (double)(range.getXMax() - range.getXMin() + 2*ix));
+				double sc_y = (jLayeredPane.getHeight() / (range.getYMax() - range.getYMin() + 2*iy));
 
-	protected String[] getButtons()
-	{
-		return buttons;
-	}
-
-	protected Hashtable createGraphButtons()
-	{
-		Hashtable buttons = new Hashtable();
-
-		buttons.put(
-				eW,
-				createToolButton(
-				eXButton,
-				btn_size,
-				null,
-				LangModelAnalyse.String("encreasetx"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/enlargetx.gif")),
-				new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						eXButton_actionPerformed(e);
-					}
-				},
-				true));
-		buttons.put(
-				eA,
-				createToolButton(
-				eAButton,
-				btn_size,
-				null,
-				LangModelAnalyse.String("encreasety"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/enlargety.gif")),
-				new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						eAButton_actionPerformed(e);
-					}
-				},
-				true));
-		buttons.put(
-				dW,
-				createToolButton(
-				dXButton,
-				btn_size,
-				null,
-				LangModelAnalyse.String("decreasetx"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/reducetx.gif")),
-				new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						dXButton_actionPerformed(e);
-					}
-				},
-				true));
-		buttons.put(
-				dA,
-				createToolButton(
-				dAButton,
-				btn_size,
-				null,
-				LangModelAnalyse.String("decreasety"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/reducety.gif")),
-				new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						dAButton_actionPerformed(e);
-					}
-				},
-				true));
-		buttons.put(
-				fitEv,
-				createToolButton(
-				fitEvButton,
-				btn_size,
-				null,
-				LangModelAnalyse.String("fittoevent"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_box.gif")),
-				new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						fitEvButton_actionPerformed(e);
-					}
-				},
-				true));
-		buttons.put(
-				allTresh,
-				createToolButton(
-				showThresholdButton,
-				btn_size,
-				null,
-				LangModelAnalyse.String("allThresholds"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/threshold.gif")),
-				new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						showThresholdButton_actionPerformed(e);
-					}
-				},
-				true));
-
-		buttons.putAll(super.createGraphButtons());
-		return buttons;
-	}
-
-	void fitEvButton_actionPerformed(ActionEvent e)
-	{
-		((ThresholdsLayeredPanel)panel).updScale2fitCurrentEv (.2, 1.);
-	}
-
-	void eAButton_actionPerformed(ActionEvent e)
-	{
-		ThresholdsLayeredPanel panel = (ThresholdsLayeredPanel)super.panel;
-		panel.changeThreshold(0, 0, .1, 0, Threshold.UP1);
-		panel.changeThreshold(0, 0, .2, 0, Threshold.UP2);
-		panel.changeThreshold(0, 0, -.1, 0, Threshold.DOWN1);
-		panel.changeThreshold(0, 0, -.2, 0, Threshold.DOWN2);
-		panel.dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-	}
-
-	void dAButton_actionPerformed(ActionEvent e)
-	{
-		ThresholdsLayeredPanel panel = (ThresholdsLayeredPanel)super.panel;
-		panel.changeThreshold(0, 0, -.1, 0, Threshold.UP1);
-		panel.changeThreshold(0, 0, -.2, 0, Threshold.UP2);
-		panel.changeThreshold(0, 0, .1, 0, Threshold.DOWN1);
-		panel.changeThreshold(0, 0, .2, 0, Threshold.DOWN2);
-		panel.dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-	}
-
-	void eXButton_actionPerformed(ActionEvent e)
-	{
-		ThresholdsLayeredPanel panel = (ThresholdsLayeredPanel)super.panel;
-		panel.changeThreshold(1, 0, 0, 0, Threshold.UP1);
-		panel.changeThreshold(2, 0, 0, 0, Threshold.UP2);
-		panel.changeThreshold(-1, 0, 0, 0, Threshold.DOWN1);
-		panel.changeThreshold(-2, 0, 0, 0, Threshold.DOWN2);
-		panel.dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-	}
-
-	void dXButton_actionPerformed(ActionEvent e)
-	{
-		ThresholdsLayeredPanel panel = (ThresholdsLayeredPanel)super.panel;
-		panel.changeThreshold(-1, 0, 0, 0, Threshold.UP1);
-		panel.changeThreshold(-2, 0, 0, 0, Threshold.UP2);
-		panel.changeThreshold(1, 0, 0, 0, Threshold.DOWN1);
-		panel.changeThreshold(2, 0, 0, 0, Threshold.DOWN2);
-		panel.dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-	}
-
-	void showThresholdButton_actionPerformed(ActionEvent e)
-	{
-		for(int i=0; i<panel.jLayeredPane.getComponentCount(); i++)
-		{
-			SimpleGraphPanel sgp = (SimpleGraphPanel)(panel.jLayeredPane.getComponent(i));
-
-			if (sgp instanceof ThresholdsPanel)
-			{
-				((ThresholdsPanel)sgp).paint_all_thresholds = showThresholdButton.isSelected();
+				updScale (sc_x/_scale_x, sc_y/_scale_y, 0.5, 0.5);
+			
+				horizontalBar.setMinimum(-5);
+				horizontalBar.setValue((int)(horizontalMax * ((range.getXMin() - ix)  * activePanel.deltaX) / (maxLength*maxDeltaX/scale_x)));
+				verticalBar.setMinimum(-5);
+				verticalBar.setValue((int)(verticalMax * ((activePanel.maxY - range.getYMax() - iy) / (maxY/scale_y))));
+				return;
 			}
 		}
-		panel.jLayeredPane.repaint();
+		super.updScale2fit(start, end, indent_x, iy);
+	}
+
+	boolean hasShowThresholdButtonSelected()
+	{
+		return ((ThresholdsToolBar )toolbar).showThresholdButton.isSelected();
+	}
+
+	public void currentEventChanged()
+	{
+		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		{
+			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			if (panel instanceof ThresholdsPanel)
+				((ThresholdsPanel)panel).updateCurrentEvent();
+		}
+		updScale2fitCurrentEv (.2, 1.);
+	}
+
+	private void etalonUpdated()
+	{
+		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		{
+			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			if (panel instanceof ThresholdsPanel)
+			{
+					((ThresholdsPanel)panel).updateEtalon();
+
+					updScale2fitCurrentEv(.2, 1.);
+					jLayeredPane.repaint();
+			}
+		}
+	}
+	public void etalonMTMCUpdated()
+	{
+		etalonUpdated();
+	}
+
+	public void etalonMTMRemoved()
+	{
+		etalonUpdated();
+	}
+
+	public void primaryRefAnalysisCUpdated() {
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++) {
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
+			if (panel instanceof ThresholdsPanel) {
+				((ThresholdsPanel)panel).updEvents(Heap.PRIMARY_TRACE_KEY);
+				this.jLayeredPane.repaint();
+			}
+		}
+	}
+
+	public void primaryRefAnalysisRemoved() {
+		// do nothing. Panel will be removed when bsHashRemoved comes
 	}
 }

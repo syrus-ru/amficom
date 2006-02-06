@@ -1,133 +1,263 @@
+/*
+ * $Id: Analysis.java,v 1.90 2006/01/26 15:15:34 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
-import com.syrus.AMFICOM.general.Identifier;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.omg.CORBA.ORB;
+
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.AMFICOM.event.corba.AlarmLevel;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
+import com.syrus.AMFICOM.measurement.corba.IdlAnalysisHelper;
+import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
-public class Analysis extends Action {
-	private Set criteria_set;
+/**
+ * @version $Revision: 1.90 $, $Date: 2006/01/26 15:15:34 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
+ * @module measurement
+ */
 
-	private StorableObject_Database analysisDatabase;
+public final class Analysis extends Action<Analysis> {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3979266967062721849L;
 
-	public Analysis(Identifier id) throws RetrieveObjectException {
-		super(id);
+	private String name;
+	private ParameterSet criteriaSet;
 
-		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	public Analysis(final IdlAnalysis at) throws CreateObjectException {
 		try {
-			this.analysisDatabase.retrieve(this);
-		}
-		catch (Exception e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
+			this.fromTransferable(at);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
-	public Analysis(Analysis_Transferable at) throws CreateObjectException, RetrieveObjectException {
-		super(new Identifier(at.id),
-					new Date(at.created),
-					new Date(at.modified),
-					new Identifier(at.creator_id),
-					new Identifier(at.modifier_id),
-					new Identifier(at.type_id),
-					new Identifier(at.monitored_element_id));
-		this.criteria_set = new Set(new Identifier(at.criteria_set_id));
-
-		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
-		try {
-			this.analysisDatabase.insert(this);
-		}
-		catch (Exception e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
-	}
-
-	private Analysis(Identifier id,
-									 Identifier creator_id,
-									 Identifier type_id,
-									 Set criteria_set,
-									 Identifier monitored_element_id) throws CreateObjectException {
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	Analysis(final Identifier id,
+			final Identifier creatorId,
+			final StorableObjectVersion version,
+			final AnalysisType type,
+			final Identifier monitoredElementId,
+			final Identifier measurementId,
+			final String name,
+			final ParameterSet criteriaSet) {
 		super(id,
 					new Date(System.currentTimeMillis()),
 					new Date(System.currentTimeMillis()),
-					creator_id,
-					creator_id,
-					type_id,
-					monitored_element_id);
-		this.criteria_set = criteria_set;
+					creatorId,
+					creatorId,
+					version,
+					type,
+					monitoredElementId,
+					measurementId);
 
-		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
-		try {
-			this.analysisDatabase.insert(this);
-		}
-		catch (Exception e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
+		this.name = name;
+		this.criteriaSet = criteriaSet;
+	}
+	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+		final IdlAnalysis at = (IdlAnalysis) transferable;
+		super.fromTransferable(at, AnalysisType.fromTransferable(at.type), new Identifier(at.monitoredElementId), null);
+
+		this.name = at.name;
+		super.parentActionId = new Identifier(at.measurementId);
+
+		this.criteriaSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(at.criteriaSetId), true);
+
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	public Object getTransferable() {
-		return new Analysis_Transferable((Identifier_Transferable)super.getId().getTransferable(),
-																			super.created.getTime(),
-																			super.modified.getTime(),
-																			(Identifier_Transferable)super.creator_id.getTransferable(),
-																			(Identifier_Transferable)super.modifier_id.getTransferable(),
-																			(Identifier_Transferable)super.type_id.getTransferable(),
-																			(Identifier_Transferable)super.monitored_element_id.getTransferable(),
-																			(Identifier_Transferable)this.criteria_set.getId().getTransferable());
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	public IdlAnalysis getIdlTransferable(final ORB orb) {
+
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+		return IdlAnalysisHelper.init(orb,
+				this.id.getIdlTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
+				this.version.longValue(),
+				(IdlAnalysisType) super.type.getIdlTransferable(orb),
+				super.monitoredElementId.getIdlTransferable(),
+				super.parentActionId.getIdlTransferable(),
+				this.name != null ? this.name : "",
+				this.criteriaSet.getId().getIdlTransferable());
 	}
 
-	public Set getCriteriaSet() {
-		return this.criteria_set;
+	/**
+	 * <p>
+	 * <b>Clients must never explicitly call this method. </b>
+	 * </p>
+	 */
+	@Override
+	protected boolean isValid() {
+		return super.isValid() && this.name != null && this.criteriaSet != null;
 	}
 
-	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
-																						Identifier type_id,
-																						Identifier monitored_element_id,
-																						Set criteria_set) {
+	public short getEntityCode() {
+		return ObjectEntities.ANALYSIS_CODE;
+	}
+
+	public Identifier getMeasurementId() {
+		return super.getParentActionId();
+	}
+	
+	public Measurement getMeasurement() throws ApplicationException {
+		return (Measurement) super.getParentAction();
+	}
+
+	public void setMeasurementId(final Identifier measurementId) {
+		assert measurementId.getMajor() == ObjectEntities.MEASUREMENT_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+
+		super.parentActionId = measurementId;
+		super.markAsChanged();
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(final String name) {
+		this.name = name;
+		super.markAsChanged();
+	}
+
+	public void setCriteriaSet(final ParameterSet criteriaSet) {
+		this.criteriaSet = criteriaSet;
+		super.markAsChanged();
+	}
+
+	public ParameterSet getCriteriaSet() {
+		return this.criteriaSet;
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final AnalysisType type,
+			final Identifier monitoredElementId,
+			final Identifier measurementId,
+			final String name,
+			final ParameterSet criteriaSet) {
 		super.setAttributes(created,
-												modified,
-												creator_id,
-												modifier_id,
-												type_id,
-												monitored_element_id);
-		this.criteria_set = criteria_set;
+				modified,
+				creatorId,
+				modifierId,
+				version,
+				type,
+				monitoredElementId,
+				measurementId);
+		this.name = name;
+		this.criteriaSet = criteriaSet;
 	}
 
-	public Result createResult(Identifier id,
-														 Identifier creator_id,
-														 Measurement measurement,
-														 AlarmLevel alarm_level,
-														 Identifier[] parameter_ids,
-														 Identifier[] parameter_type_ids,
-														 byte[][] parameter_values) throws CreateObjectException {
-		return Result.create(id,
-												 creator_id,
-												 measurement,
-												 this,
-												 ResultSort.RESULT_SORT_ANALYSIS,
-												 alarm_level,
-												 parameter_ids,
-												 parameter_type_ids,
-												 parameter_values);
+	/**
+	 * Create a new instance for client
+	 *
+	 * @param creatorId
+	 * @param type
+	 * @param monitoredElementId
+	 * @param measurement
+	 * @param criteriaSet
+	 * @return a newly generated instance
+	 * @throws CreateObjectException
+	 */
+	public static Analysis createInstance(final Identifier creatorId,
+			final AnalysisType type,
+			final Identifier monitoredElementId,
+			final Identifier measurementId,
+			final String name,
+			final ParameterSet criteriaSet) throws CreateObjectException {
+		assert measurementId.getMajor() == ObjectEntities.MEASUREMENT_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+
+		try {
+			final Analysis analysis = new Analysis(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_CODE),
+				creatorId,
+				StorableObjectVersion.INITIAL_VERSION,
+				type,
+				monitoredElementId,
+				measurementId,
+				name,
+				criteriaSet);
+
+			assert analysis.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+			analysis.markAsChanged();
+
+			return analysis;
+		} catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
+		}
 	}
 
-	public static Analysis create(Identifier id,
-																Identifier creator_id,
-																Identifier type_id,
-																Set criteria_set,
-																Identifier monitored_element_id) throws CreateObjectException {
-		return new Analysis(id,
-												creator_id,
-												type_id,
-												criteria_set,
-												monitored_element_id);
+	@Override
+	public Result createResult(final Identifier resultCreatorId, final Parameter[] resultParameters)
+			throws CreateObjectException {
+		return Result.createInstance(resultCreatorId, this.id, ResultSort.RESULT_SORT_ANALYSIS, resultParameters);
+	}
+
+	/**
+	 * <p>
+	 * <b>Clients must never explicitly call this method. </b>
+	 * </p>
+	 */
+	@Override
+	protected Set<Identifiable> getDependenciesTmpl() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+
+		dependencies.add(super.parentActionId);	//VOID_IDENTIFIER replaced in StorableObject#getDependencies()
+		dependencies.add(this.criteriaSet);
+		return dependencies;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected AnalysisWrapper getWrapper() {
+		return AnalysisWrapper.getInstance();
 	}
 }

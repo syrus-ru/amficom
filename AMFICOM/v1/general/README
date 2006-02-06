@@ -1,0 +1,2 @@
+When compiling general_v1 aling with idl_v1, omit local idl compilation as
+general.idl is compiled during idl_v1 assembly.

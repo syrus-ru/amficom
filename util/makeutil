@@ -1,0 +1,34 @@
+HOME=.
+LIB=$(HOME)\..\AMFICOMCommon
+LIBSRC=$(HOME)\..\AMFICOMCommon\src
+EXTLIB=d:\lib91
+ORACLE_HOME=d:\oracle\ora91
+SRC=$(HOME)\src
+CLASSES=$(HOME)\classes
+
+JAVAC=D:\java\j2sdk_nb\j2sdk1.4.2\bin\javac -source 1.4 -target 1.4 -nowarn
+JAR=jar
+
+TARGET=$(LIB)\util.jar
+TARGET_CLASS_LIST=src_util.txt
+TARGET_SRC=$(LIBSRC)\utilsource.jar
+
+.PHONY:	$(TARGET)
+
+$(TARGET):	clean impl jar
+
+jar:
+	$(JAR) -cf $(TARGET) -C $(CLASSES) com
+	$(JAR) -cf $(TARGET_SRC) -C $(SRC) com
+
+impl:
+	$(JAVAC) \
+		-deprecation \
+		-classpath $(EXTLIB)\runtime12ee.jar \
+		-d $(CLASSES) \
+		-sourcepath $(SRC) \
+		@$(TARGET_CLASS_LIST)
+
+clean:
+	rm -rf $(CLASSES)\com
+	rm -f $(TARGET) $(TARGET_SRC)

@@ -1,29 +1,29 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
+import java.awt.Cursor;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
+import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.io.BellcoreStructure;
-import com.syrus.io.IniFile;
 import com.syrus.io.WavetekReader;
 
-public class FileOpenAsWavetekCommand extends VoidCommand
+public class FileOpenAsWavetekCommand extends AbstractCommand
 {
 	private Dispatcher dispatcher;
-	private BellcoreStructure bs;
 	private ApplicationContext aContext;
-	private Checker checker;
+	private String propertiesFileName = "analysis.properties";
 
 	public FileOpenAsWavetekCommand(Dispatcher dispatcher, ApplicationContext aContext)
 	{
@@ -31,74 +31,55 @@ public class FileOpenAsWavetekCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("dispatcher"))
-			setDispatcher((Dispatcher )value);
-	}
-
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-	}
-
+	@Override
 	public Object clone()
 	{
-		return new FileOpenAsWavetekCommand(dispatcher, aContext);
+		return new FileOpenAsWavetekCommand(this.dispatcher, this.aContext);
 	}
 
+	@Override
 	public void execute()
 	{
+		Properties properties = new Properties();
+		String lastDir = "";
 		try
 		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
-			if(!checker.checkCommand(checker.openReflectogrammFile))
-			{
-				return;
-			}
-		}
-		catch (NullPointerException ex)
+			properties.load(new FileInputStream(this.propertiesFileName));
+			lastDir = properties.getProperty("lastdir");
+		} catch (IOException ex)
 		{
-			System.out.println("Application context and/or user are not defined");
-			return;
 		}
 
-		IniFile ini = (IniFile)Pool.get("inifile", "analyse");
-
-		JFileChooser chooser = new JFileChooser(ini.getValue("lastdir"));
+		JFileChooser chooser = new JFileChooser(lastDir);
 		chooser.addChoosableFileFilter(new ChoosableFileFilter("tfw", "Wavetek"));
 		String[] traces = {"tfw"};
 		chooser.addChoosableFileFilter(new ChoosableFileFilter(traces, "Wavetek Traces"));
 		int returnVal = chooser.showOpenDialog(Environment.getActiveWindow());
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
+			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			WavetekReader wr = new WavetekReader();
-			bs = wr.getData(chooser.getSelectedFile());
+			BellcoreStructure bs = wr.getData(chooser.getSelectedFile());
 			if (bs == null)
 			{
 				JOptionPane.showMessageDialog (Environment.getActiveWindow(),
-																			 LangModelAnalyse.String("messageReadError") + ": " + chooser.getSelectedFile().getAbsolutePath(),
-																			 LangModelAnalyse.String("messageError"),
-																				JOptionPane.OK_OPTION);
+						LangModelAnalyse.getString("messageReadError") + ": " + chooser.getSelectedFile().getAbsolutePath(),
+						LangModelAnalyse.getString("messageError"),
+						JOptionPane.OK_OPTION);
 				return;
 			}
-			if (Pool.getHash("bellcorestructure") != null )
-			{
-				if ((BellcoreStructure)Pool.get("bellcorestructure", "primarytrace") != null)
-					new FileCloseCommand(dispatcher, aContext).execute();
-			}
-
-			String activeRefId = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
 			bs.title = chooser.getSelectedFile().getName();
-			Pool.put("bellcorestructure", "primarytrace", bs);
-			Pool.put("activecontext", "activepathid", bs.supParams.OT);
+			Heap.openPrimaryTraceFromBS(bs, bs.title);
+			Heap.makePrimaryAnalysis();
 
-			new InitialAnalysisCommand().execute();
-
-			dispatcher.notify(new RefChangeEvent("primarytrace",
-											RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
-			dispatcher.notify(new RefUpdateEvent("primarytrace", RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
-			ini.setValue("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
+			try
+			{
+				properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
+				properties.store(new FileOutputStream(this.propertiesFileName), null);
+			} catch (IOException ex)
+			{
+			}
+			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
 }

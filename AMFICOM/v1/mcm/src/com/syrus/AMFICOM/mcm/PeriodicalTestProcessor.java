@@ -1,119 +1,100 @@
+/*-
+ * $Id: PeriodicalTestProcessor.java,v 1.54 2005/10/31 10:47:23 arseniy Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Date;
-import java.util.ArrayList;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.PTTemporalTemplate;
-import com.syrus.AMFICOM.util.RetrieveObjectException;
 import com.syrus.util.Log;
 
-public class PeriodicalTestProcessor extends TestProcessor {
+/**
+ * @version $Revision: 1.54 $, $Date: 2005/10/31 10:47:23 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
+ * @module mcm
+ */
+final class PeriodicalTestProcessor extends TestProcessor {
 	private static final long FRAME = 24*60*60*1000;//ms
-	private static final int STATUS_NEW_MEASUREMENT = 0;
-	private static final int STATUS_MEASUREMENT_IS_WAITING = 1;
-	private static final int STATUS_NEW_FRAME = 2;
-	private static final int STATUS_LAST_MEASUREMENT_GONE = 3;
 
-	private PTTemporalTemplate pt_template;
-	private int status;
+	private static final String ABORT_REASON_TEMPORAL_PATTERN = "Failed to load temporal pattern";
+
+	private Date endTime;
+	private AbstractTemporalPattern<? extends AbstractTemporalPattern> temporalPattern;
+	private SortedSet<Date> timeStampsList;
 
 	public PeriodicalTestProcessor(Test test) {
 		super(test);
+
+		this.endTime = test.getEndTime();
 		try {
-			this.pt_template = new PTTemporalTemplate(test.getPTTemplateId());
+			this.temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
+		} catch (ApplicationException ae) {
+			Log.errorMessage("Cannot load temporal pattern '" + test.getTemporalPatternId() + "' for test '" + test.getId() + "'");
+			this.abort(ABORT_REASON_TEMPORAL_PATTERN);
 		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			super.abort();
-		}
-		this.status = STATUS_NEW_FRAME;
+		this.timeStampsList = new TreeSet<Date>();
 	}
 
-	public void run() {
-		long start_time_l = super.test.getStartTime().getTime();
-		long end_time_l = super.test.getEndTime().getTime();
-		ArrayList tt_frame = null;
-		long cur_time;
-		Date cur_start_time = null;
-		Measurement measurement = null;
-		while (super.running) {
-			try {
-				sleep(super.tick_time);
+	@Override
+	Date getNextMeasurementStartTime(final Date startDate, final boolean includeFromDate) {
+		if (this.timeStampsList.isEmpty()) {
+			if (startDate.before(this.endTime)) {
+				final long currentDateLong = System.currentTimeMillis();
+				long fromDateLong = startDate.getTime();
+				while (fromDateLong + FRAME < currentDateLong) {
+					fromDateLong += FRAME;
+				}
+				final long toDateLong = Math.min(fromDateLong + FRAME, this.endTime.getTime());
+				final SortedSet<Date> timeStamps = this.temporalPattern.getTimes(fromDateLong, toDateLong);
+				if (!includeFromDate) {
+					if (timeStamps.remove(startDate)) {
+						Log.debugMessage("Removed from set of time stamps date: " + startDate, Log.DEBUGLEVEL10);
+					} else {
+						Log.debugMessage("Date: " + startDate + " not found in set of time stamps", Log.DEBUGLEVEL10);
+					}
+				}
+
+				//--------
+				final StringBuffer stringBuffer = new StringBuffer();
+				stringBuffer.append("From ");
+				stringBuffer.append(startDate);
+				stringBuffer.append(" to ");
+				stringBuffer.append(new Date(toDateLong));
+				stringBuffer.append(", include fromDate: ");
+				stringBuffer.append(includeFromDate);
+				stringBuffer.append("\n");
+				for (final Date date : timeStamps) {
+					stringBuffer.append("\t date: ");
+					stringBuffer.append(date);
+					stringBuffer.append("\n");
+				}
+				Log.debugMessage(stringBuffer.toString(), Log.DEBUGLEVEL09);
+				//--------
+
+				if (!timeStamps.isEmpty()) {
+					final Date pastExcludeDate = new Date(System.currentTimeMillis() - PAST_MEASUREMENT_TIMEOUT);
+					this.timeStampsList.addAll(timeStamps.tailSet(pastExcludeDate));
+				}
+
 			}
-			catch (InterruptedException ie) {
-				Log.errorException(ie);
-			}
+		}
 
-			switch (this.status) {
-				case STATUS_NEW_FRAME:
-					cur_time = System.currentTimeMillis();
-					if (cur_time <= end_time_l) {
-						tt_frame = this.pt_template.getTimeStamps(start_time_l, cur_time, Math.min(end_time_l, cur_time + FRAME));
-						this.status = STATUS_NEW_MEASUREMENT;
-					}
-					else
-						this.status = STATUS_LAST_MEASUREMENT_GONE;
-					break;
-				case STATUS_NEW_MEASUREMENT:
-					if (tt_frame != null && ! tt_frame.isEmpty()) {
-						cur_start_time = (Date)tt_frame.remove(0);
-						measurement = null;
-						try {
-							measurement = super.test.createMeasurement(MeasurementControlModule.createIdentifier("measurement"),
-																												 cur_start_time);
-						}
-						catch (Exception e) {
-							Log.errorException(e);
-						}
-						if (measurement != null)
-							this.status = STATUS_MEASUREMENT_IS_WAITING;
-					}
-					else
-						this.status = STATUS_NEW_FRAME;
-					break;
-				case STATUS_MEASUREMENT_IS_WAITING:
-					if (measurement != null && cur_start_time.getTime() <= System.currentTimeMillis()) {
-						super.transceiver.addMeasurement(measurement, this);
-						super.n_measurements ++;
-						this.status = STATUS_NEW_MEASUREMENT;
-					}
-					break;
-				case STATUS_LAST_MEASUREMENT_GONE:
-					break;
-			}//switch
-
-			if (this.status != STATUS_LAST_MEASUREMENT_GONE || super.n_measurements < super.n_reports)
-				super.checkMeasurementResults();
-			else
-				break;
-		}//while
-
-		super.cleanup();
-	}//run
-
-/*
-	private int calculateTotalMeasurementsNumber() {
-		int n_cycles = (int)((this.end_time - this.start_times[0])/this.period);
-		int n1 = n_cycles * this.start_times.length;
-		long offset = n_cycles * this.period;
-		int n2 = 0;
-		while (n2 < this.start_times.length
-					 && this.start_times[n2] + offset <= this.end_time)
-			n2 ++;
-
-		return (n1 + n2);
+		if (!this.timeStampsList.isEmpty()) {
+			final Date measurementStartTime = this.timeStampsList.first();
+			this.timeStampsList.remove(measurementStartTime);
+			return measurementStartTime;
+		}
+		return null;
 	}
 
-	private long calculateNextTime() {
-		long tc = System.currentTimeMillis();
-		int n_cycles = (int)((tc - this.start_times[0])/this.period);
-		long offset = n_cycles * this.period;
-		int n = 0;
-		while (n < this.start_times.length
-					 && this.start_times[n] + offset < tc)
-			n ++;
-
-		return (this.start_times[n] + offset);
-	}*/
 }

@@ -1,3 +1,4 @@
+.idl
 .corba
 .mach
 *.jar
@@ -12,5 +13,9 @@ classes
 logs
 cache
 orb.db
-.project
+docs
+.refactorings
+.settings
 .classpath
+.project
+common.properties

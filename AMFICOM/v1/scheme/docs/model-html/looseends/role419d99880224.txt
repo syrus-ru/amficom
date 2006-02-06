@@ -1,0 +1,3 @@
+*
+						 * Getter returns an array of this node's child nodes.
+						 * @see #protoElementIds

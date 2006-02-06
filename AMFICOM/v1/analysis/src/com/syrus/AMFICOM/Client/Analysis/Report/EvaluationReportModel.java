@@ -1,51 +1,72 @@
 package com.syrus.AMFICOM.Client.Analysis.Report;
 
-import java.util.Vector;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.report.DestinationModules;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: </p>
- * @author not attributable
- * @version 1.0
+ * Модель отчётов для модуля "Оценка"
+ * @author $Author: stas $
+ * @version $Revision: 1.7 $, $Date: 2005/10/14 12:00:48 $
+ * @module reportother
  */
-
-public class EvaluationReportModel extends ESAPEReportModel
+public class EvaluationReportModel extends AnalysisReportModel
 {
-	public EvaluationReportModel()
-	{
+	// Названия таблиц для измерений (дополнительно к анализу)
+	/**
+	 * Тип и параметры маски
+	 */
+	public static String MASK_TYPE_AND_PARAMETERS = "thresholdsSelectionFrame";
+	/**
+	 * Вид маски
+	 */
+	public static String MASK_VIEW = "thresholdsFrame";
+	//TODO Здесь тоже есть дополнительная информация по event'ам.
+	
+	public EvaluationReportModel() {
 	}
 
-	public String getName()
-	{
-		return "evaluationreportmodel";
+	@Override
+	public String getName() {
+		return DestinationModules.EVALUATION;
 	}
 
-	public String getObjectsName()
-	{
-		return LangModelReport.String("label_repEvaluationResults");
+	@Override
+	public ReportType getReportKind(String reportName){
+		ReportType result = super.getReportKind(reportName);
+		if (reportName.equals(EvaluationReportModel.MASK_VIEW))
+			result = ReportType.GRAPH;
+		return result;
 	}
-
-	public String getLangForField(String field)
-	{
-		return LangModelAnalyse.String(field);
-	}
-
-	public Vector getAvailableReports()
-	{
-		Vector result = new Vector();
-
-		result.add(ESAPEReportModel.testParams);
-		result.add(ESAPEReportModel.commonInfo);
-		result.add(ESAPEReportModel.reflectogram);
-		result.add(ESAPEReportModel.analysisParams);
-		result.add(ESAPEReportModel.commonChars);
-		result.add(ESAPEReportModel.mask_type);
-		result.add(ESAPEReportModel.mask_view);
+	
+	@Override
+	public Collection<String> getTemplateElementNames() {
+		Collection<String> result = new ArrayList<String>();
+		
+		result.add(AESMPReportModel.COMMON_INFO);
+		result.add(AESMPReportModel.REFLECTOGRAMM);
+		result.add(AESMPReportModel.GENERAL_CHARACTERISTICS);
+		
+		result.add(AnalysisReportModel.TEST_PARAMETERS);
+		result.add(AnalysisReportModel.ANALYSIS_PARAMETERS);
+		result.add(AnalysisReportModel.MARKER_DATA);		
+		
+		result.add(EvaluationReportModel.MASK_TYPE_AND_PARAMETERS);
+		result.add(EvaluationReportModel.MASK_VIEW);
 
 		return result;
+	}
+
+	@Override
+	public String getReportElementName(String reportName) {
+		String langReportName = super.getReportElementName(reportName);
+		if (langReportName == null){
+			if (	reportName.equals(MASK_TYPE_AND_PARAMETERS)
+				||	reportName.equals(MASK_VIEW))
+				langReportName = I18N.getString("report.Modules.Evaluation." + reportName);
+		}
+		return langReportName;
 	}
 }

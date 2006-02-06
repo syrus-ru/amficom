@@ -1,0 +1,109 @@
+<ext:root xmlns:ext="http://syrus.com/AMFICOM/extensions">
+  <ext:extension xsi:type="res:resources" id="com.syrus.AMFICOM.resources.ResourceHandler" xmlns:res="http://syrus.com/AMFICOM/extensions/resources" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <res:resource xsi:type="res:handler" id="image" handlerClass="com.syrus.AMFICOM.resources.ImageResourceHandler"/>
+    <res:resource xsi:type="res:handler" id="color" handlerClass="com.syrus.AMFICOM.resources.ColorResourceHandler"/>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.scheduler.pause">
+      <res:filename>com/syrus/AMFICOM/resources/scheduler/pause.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.scheduler.delete">
+      <res:filename>com/syrus/AMFICOM/resources/scheduler/delete.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.scheduler.mainmini">
+      <res:filename>images/main/scheduling_mini.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.scheduler.resume">
+      <res:filename>com/syrus/AMFICOM/resources/scheduler/resume.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.edge">
+      <res:rgb>
+        <res:red>240</res:red>
+        <res:green>240</res:green>
+        <res:blue>240</res:blue>
+      </res:rgb>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.alarmSelected">
+      <res:name>orange</res:name>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.scheduledSelected">
+      <res:rgb>
+        <res:red>255</res:red>
+        <res:green>255</res:green>
+        <res:blue>255</res:blue>
+      </res:rgb>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.processingSelected">
+      <res:name>cyan</res:name>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.unrecognized">
+      <res:rgb>
+        <res:red>20</res:red>
+        <res:green>20</res:green>
+        <res:blue>60</res:blue>
+      </res:rgb>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.edge">
+      <res:rgb>
+        <res:red>240</res:red>
+        <res:green>240</res:green>
+        <res:blue>240</res:blue>
+      </res:rgb>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.aborted">
+      <res:rgb>
+        <res:red>178</res:red>
+        <res:green>0</res:green>
+        <res:blue>0</res:blue>
+      </res:rgb>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.alarm">
+      <res:rgb>
+        <res:red>178</res:red>
+        <res:green>140</res:green>
+        <res:blue>0</res:blue>
+      </res:rgb>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.abortedSelected">
+      <res:name>red</res:name>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.stopped">
+      <res:rgb>
+        <res:red>178</res:red>
+        <res:green>0</res:green>
+        <res:blue>178</res:blue>
+      </res:rgb>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.completeSelected">
+      <res:name>green</res:name>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.complete">
+      <res:rgb>
+        <res:red>0</res:red>
+        <res:green>178</res:green>
+        <res:blue>0</res:blue>
+      </res:rgb>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.scheduled">
+      <res:name>gray</res:name>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.stoppedSelected">
+      <res:name>magenta</res:name>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.warningSelected">
+      <res:name>yellow</res:name>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.processing">
+      <res:rgb>
+        <res:red>0</res:red>
+        <res:green>178</res:green>
+        <res:blue>178</res:blue>
+      </res:rgb>
+    </res:resource>
+    <res:resource xsi:type="res:color" id="scheduler.color.warning">
+      <res:rgb>
+        <res:red>178</res:red>
+        <res:green>178</res:green>
+        <res:blue>0</res:blue>
+      </res:rgb>
+    </res:resource>
+  </ext:extension>
+</ext:root>

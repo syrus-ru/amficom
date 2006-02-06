@@ -1,82 +1,168 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.awt.Cursor;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
+import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.io.BellcoreCreator;
 import com.syrus.io.BellcoreStructure;
-import com.syrus.io.IniFile;
 import com.syrus.io.TraceReader;
 
-import com.syrus.AMFICOM.analysis.dadara.*;
-import java.io.*;
-import com.syrus.io.*;
-import com.syrus.util.*;
-
-public class FileOpenCommand extends VoidCommand
+public class FileOpenCommand extends AbstractCommand
 {
 	private Dispatcher dispatcher;
-	private BellcoreStructure bs;
 	private ApplicationContext aContext;
-	private Checker checker;
+	private String propertiesFileName = "analysis.properties";
 
-
-	public FileOpenCommand(Dispatcher dispatcher, ApplicationContext aContext)
-	{
+	public FileOpenCommand(Dispatcher dispatcher, ApplicationContext aContext) {
 		this.dispatcher = dispatcher;
 		this.aContext = aContext;
 	}
 
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("dispatcher"))
-			setDispatcher((Dispatcher )value);
-	}
-
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-	}
-
-	public Object clone()
-	{
+	@Override
+	public Object clone() {
 		return new FileOpenCommand(dispatcher, aContext);
 	}
 
-	public void execute()
-	{
-		try
-		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
-			if(!checker.checkCommand(checker.openReflectogrammFile))
-			{
-				return;
+	/**
+	 * —читать рефлектограмму из файла. ѕоддержка отладочных форматов файла
+	 * включаетс€ в зависимости от AnalyseMainFrameSimplified.DEBUG
+	 * @param file файл
+	 * @return BellcoreStructure либо null при ошибке
+	 */
+	public static BellcoreStructure readTraceFromFile(File file) {
+		return readTraceFromFileEx(file,
+				true && AnalyseMainFrameSimplified.DEBUG);
+	}
+
+	/**
+	 * —читать рефлектограмму из файла с возможностью разбора бќльшего числа
+	 * форматов (включа€ текстовый)
+	 * @param file файл
+	 * @param moreFormats true, чтобы разбирать бќльшее число форматов
+	 *   (режим дл€ отладки), false дл€ работы
+	 * @return BellcoreStructure либо null при ошибке
+	 */
+	public static BellcoreStructure readTraceFromFileEx(File file,
+			boolean moreFormats) {
+		TraceReader tr = new TraceReader();
+		BellcoreStructure bs = null;
+		//System.out.println("FileName: " + file.getName());
+
+		if (!moreFormats || !file.getName().matches(".*\\.(dat|DAT)")) {
+			// note: UnsatisfiedLinkError is possible if no DLL loaded. Stas says that this needs not be catched
+			bs = tr.getData(file);
+			if (bs != null) {
+				return bs;
 			}
 		}
-		catch (NullPointerException ex)
-		{
-			System.out.println("Application context and/or user are not defined");
-			return;
+		if (moreFormats) {
+			// FIXME: debug-only code
+			// этот код написан дл€ отладочных целей и предназначен дл€
+			// считывани€ рефлектограммы из текстового файла,
+			// если не удаетс€ считать с помощью известного формата
+			try {
+				FileReader fr = new FileReader(file);
+				BufferedReader br = new BufferedReader(fr);
+				ArrayList al = new ArrayList();
+				String s;
+				while ((s = br.readLine()) != null)
+					al.add(s);
+				final int N = al.size();
+				//System.out.println("reading file: N=" + N);
+				double[] dl = new double[N];
+				String ln = "";
+				for (int i = 0; i < N; i++) {
+					ln = (String) al.get(i);
+					dl[i] = Double.parseDouble(
+							ln.replaceFirst("\\S+\\s+", "")); // cut first column if present
+				}
+				// try to find resolution
+				double resolution;
+				try {
+					double distance = Double.parseDouble(
+							ln.replaceFirst("\\S+$", ""));
+					resolution = distance / (N - 1);
+				} catch (NumberFormatException e) {
+					resolution = 1.0; // default resolution
+				}
+				// try to find pulse width using file name
+				Pattern pat = Pattern.compile("\\b(\\d+)ns");
+				Matcher m = pat.matcher(file.getName());
+				int pulseWidth;
+				if (m.find()) {
+					String g = m.group(1);
+					pulseWidth = Integer.parseInt(g);
+					//System.out.println("File " + file.getName() + " group " + g + " pulse " + pulseWidth);
+				} else {
+					pulseWidth = 0; // undefined
+					//System.out.println("File " + file.getName() + " pulse not detected");
+				}
+				
+				bs = new BellcoreCreator(dl, resolution, pulseWidth).getBS();
+				br.close();
+			} catch (IOException e1) {
+				// FIXME: exceptions: (debug only) could not load text mode trace
+				e1.printStackTrace();
+			}
+		} else {
+			bs = tr.getData(file); // second attempt
+		}
+		return bs;
+	}
+
+	private static BellcoreStructure loadBS(File selectedFile) {
+		//System.out.println("DEBUG: the user is opening file " + selectedFile.getAbsolutePath()); // FIX//ME: debugging purpose only
+		Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		BellcoreStructure bs = readTraceFromFile(selectedFile);
+		if (bs != null) {
+			bs.title = selectedFile.getName();
+		}
+		return bs;
+	}
+
+	private void processBS(BellcoreStructure bs) {
+		boolean testBehaviour = false && AnalyseMainFrameSimplified.DEBUG; // FIXME: debug only: for local comparison; should be false
+		Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		Heap.openPrimaryTraceFromBS(bs, bs.title);
+		Heap.makePrimaryAnalysis();
+
+		// FIXME: debug-only code
+		if (testBehaviour && Heap.getMTMEtalon() != null) // XXX: наличие необходимости такого кода (пусть даже при отладке) говорит о неправильной подписке или обработке событий
+			Heap.setMTMEtalon(Heap.getMTMEtalon());
+	}
+
+	@Override
+	public void execute() {
+		Properties properties = new Properties();
+		String lastDir = "";
+		try {
+			properties.load(new FileInputStream(propertiesFileName));
+			lastDir = properties.getProperty("lastdir");
+		} catch (IOException ex) {
 		}
 
-		IniFile ini = (IniFile)Pool.get("inifile", "analyse");
-		JFileChooser chooser;
-		if (ini != null)
-			chooser = new JFileChooser(ini.getValue("lastdir"));
-		else
-			chooser = new JFileChooser();
+		JFileChooser chooser = new JFileChooser(lastDir); // XXX: при подмонтированных сетевых дисках с drive Letter-ами тут может тормозить
+
 		chooser.addChoosableFileFilter(new ChoosableFileFilter("sor", "Bellcore GR-196-CORE "));
 		chooser.addChoosableFileFilter(new ChoosableFileFilter(new String[] {"dat", "ref", "trc"}, "NetTest / Laser Precision "));
 		chooser.addChoosableFileFilter(new ChoosableFileFilter("tfw", "Acterna / Wavetek "));
@@ -89,104 +175,28 @@ public class FileOpenCommand extends VoidCommand
 		chooser.addChoosableFileFilter(all);
 		int returnVal = chooser.showOpenDialog(Environment.getActiveWindow());
 		if(returnVal == JFileChooser.APPROVE_OPTION)
-		{
-			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			TraceReader tr = new TraceReader();
-			bs = tr.getData(chooser.getSelectedFile());
-			if (bs == null)
-			{
-				bs = tr.getData(chooser.getSelectedFile());
-				if (bs == null)
-				{
-					JOptionPane.showMessageDialog (Environment.getActiveWindow(),
-							LangModelAnalyse.String("messageReadError") + ":\n" + chooser.getSelectedFile().getAbsolutePath(),
-							LangModelAnalyse.String("messageError"),
-							JOptionPane.OK_OPTION);
-					Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-					return;
-				}
-			}
-			if (Pool.getHash("bellcorestructure") != null )
-			{
-				if ((BellcoreStructure)Pool.get("bellcorestructure", "primarytrace") != null)
-					new FileCloseCommand(dispatcher, aContext).execute();
+		try {
+			File selectedFile = chooser.getSelectedFile();
+			BellcoreStructure bs = loadBS(selectedFile);
+
+			if (bs == null) {
+				JOptionPane.showMessageDialog (Environment.getActiveWindow(),
+						LangModelAnalyse.getString("messageReadError") + ":\n" + selectedFile.getAbsolutePath(),
+						LangModelAnalyse.getString("messageError"),
+						JOptionPane.OK_OPTION);
+				Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				return;
 			}
 
-			String activeRefId = chooser.getSelectedFile().getName();
-			bs.title = activeRefId;
-			Pool.put("bellcorestructure", "primarytrace", bs);
-			Pool.put("activecontext", "activepathid", bs.supParams.OT);
+			processBS(bs);
 
-			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
-
-			new InitialAnalysisCommand().execute();
-
-/*
-
-			File f = new File("E:\\Incoming\\Arseniy\\20040517 134015-revents");
-			byte[] buf = new byte[(int)f.length()];
-			try
-			{
-				FileInputStream in = new FileInputStream(f);
-				in.read(buf);
+			try {
+				properties.setProperty("lastdir", selectedFile.getParent().toLowerCase());
+				properties.store(new FileOutputStream(propertiesFileName), null);
+			} catch (IOException ex) {
 			}
-			catch (IOException ex)
-			{
-				ex.printStackTrace();
-			}
-
-			ReflectogramEvent[] re = ReflectogramEvent.fromByteArray(buf);
-			Pool.put("eventparams", "primarytrace", re);
-
-			f = new File("E:\\Incoming\\Arseniy\\20040517 134015-thresholds");
-			buf = new byte[(int)f.length()];
-			try
-			{
-				FileInputStream in = new FileInputStream(f);
-				in.read(buf);
-			}
-			catch (IOException ex)
-			{
-				ex.printStackTrace();
-			}
-
-			Threshold[] threshs = Threshold.fromByteArray(buf);
-			for (int i = 0; i < re.length; i++)
-				re[i].setThreshold(threshs[i]);
-
-			f = new File("E:\\Incoming\\Arseniy\\20040517 134015-etalon");
-			buf = new byte[(int)f.length()];
-			try
-			{
-				FileInputStream in = new FileInputStream(f);
-				in.read(buf);
-			}
-			catch (IOException ex)
-			{
-				ex.printStackTrace();
-			}
-
-			ReflectogramEvent[] etalon = ReflectogramEvent.fromByteArray(buf);
-			for (int i = 0; i < re.length; i++)
-				etalon[i].setThreshold(threshs[i]);
-			Pool.put("eventparams", "etalon", etalon);
-
-			ReflectogramComparer comp = new ReflectogramComparer(re, etalon, threshs, false);
-			ReflectogramAlarm[] alarms = comp.getAlarms();
-*/
-
-			dispatcher.notify(new RefChangeEvent("primarytrace",
-											RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
-			dispatcher.notify(new RefUpdateEvent("primarytrace", RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
-
-
-//			dispatcher.notify(new RefUpdateEvent("etalon",
-//											RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
-
-			ini.setValue("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
-
-			Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		} finally {
+			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
 }
-

@@ -1,25 +1,17 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.io.*;
+import java.util.*;
+import java.util.List;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.Vector;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import com.syrus.AMFICOM.Client.General.UI.ATable;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.UI.ATable;
+import com.syrus.AMFICOM.client.model.Environment;
+
 
 public class WeightsDialog extends JDialog
 {
@@ -57,8 +49,7 @@ public class WeightsDialog extends JDialog
 		try
 		{
 			jbInit();
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -175,19 +166,19 @@ public class WeightsDialog extends JDialog
 		int []netArchitecture = getArchitecture(s[8]);
 
 		System.out.println("Выполнение...");
-		setCursor(new Cursor(Cursor.WAIT_CURSOR));
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
 		// Call of the dll' function;
 		double res = getWeights(nEpochs, nEvents, netArchitecture.length, eventSize, netArchitecture, minWeld, maxWeld, minLet, maxLet, maxNoise);
 		System.out.println("res = " + res);
-		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
 		System.out.println("Вычисление весов для заданной архитектуры завершено");
 	}
 
 	private int []getArchitecture(String s)
 	{
-		Vector v = new Vector();
+		List v = new ArrayList();
 		int from = 0;
 		for(int i=0; i<s.length(); i++)
 		{
@@ -211,7 +202,7 @@ public class WeightsDialog extends JDialog
 
 	private String canBeArchitecture(String s)
 	{
-		Vector v = new Vector();
+		List v = new ArrayList();
 		String ret = "";
 		int from = 0;
 		for(int i=0; i<s.length(); i++)
@@ -227,13 +218,12 @@ public class WeightsDialog extends JDialog
 
 		for(int i=0; i<v.size(); i++)
 		{
-			if(!canBeInteger((String)(v.elementAt(i))))
+			if(!canBeInteger((String)(v.get(i))))
 			{
 				return "false";
-			}
-			else
+			} else
 			{
-				ret = ret + (String)v.elementAt(i) + " ";
+				ret = ret + (String)v.get(i) + " ";
 			}
 		}
 //    System.out.println(ret);
@@ -285,8 +275,7 @@ public class WeightsDialog extends JDialog
 				return true;
 			else
 				return false;
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			return false;
 		}
@@ -302,8 +291,7 @@ public class WeightsDialog extends JDialog
 				return true;
 			else
 				return false;
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			return false;
 		}
@@ -376,20 +364,15 @@ class ParametersTable extends AbstractTableModel
 	}
 }
 
-
-
-
 	class SystemExec
 	{
 		public static void executeCommand(String command)
 		{
 			Runtime r = Runtime.getRuntime();
-			Process p = null;
 			try
 			{
-				p = r.exec(command);
-			}
-			catch(Exception e)
+				r.exec(command);
+			} catch(Exception e)
 			{
 				System.out.println("Ошибка выполнения команды  <"+command+">.");
 			}

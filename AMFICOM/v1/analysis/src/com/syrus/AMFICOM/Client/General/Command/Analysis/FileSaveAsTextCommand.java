@@ -1,93 +1,71 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 import javax.swing.JFileChooser;
 
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.io.BellcoreStructure;
-import com.syrus.io.IniFile;
 import com.syrus.io.TextWriter;
 
-public class FileSaveAsTextCommand extends VoidCommand
+public class FileSaveAsTextCommand extends AbstractCommand
 {
-	private Dispatcher dispatcher;
-	private BellcoreStructure bs;
 	private ApplicationContext aContext;
-	private Checker checker;
+	private String propertiesFileName = "analysis.properties";
 
-	public FileSaveAsTextCommand(Dispatcher dispatcher, ApplicationContext aContext)
+	public FileSaveAsTextCommand(ApplicationContext aContext)
 	{
-		this.dispatcher = dispatcher;
 		this.aContext = aContext;
 	}
 
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-	}
-
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("dispatcher"))
-			setDispatcher((Dispatcher )value);
-	}
-
+	@Override
 	public Object clone()
 	{
-		return new FileSaveAsTextCommand(dispatcher, aContext);
+		return new FileSaveAsTextCommand(this.aContext);
 	}
 
+	@Override
 	public void execute()
 	{
+		Properties properties = new Properties();
+		String lastDir = "";
 		try
 		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
-			if(!checker.checkCommand(checker.saveReflectogrammFile))
-			{
-				return;
-			}
-		}
-		catch (NullPointerException ex)
+			properties.load(new FileInputStream(this.propertiesFileName));
+			lastDir = properties.getProperty("lastdir");
+		} catch (IOException ex)
 		{
-			System.out.println("Application context and/or user are not defined");
-			return;
 		}
 
-
-		String dir;
-		IniFile ini = null;
-		try
-		{
-			ini = new IniFile("analyse.ini");
-			dir = (String)ini.getValue("lastdir");
-		}
-		catch (java.io.IOException ex)
-		{
-			System.out.println("Error reading ini file: analyse.ini");
-			dir = "c:\\";
-		}
-
-		JFileChooser chooser = new JFileChooser(dir);
+		JFileChooser chooser = new JFileChooser(lastDir);
 		chooser.addChoosableFileFilter(new ChoosableFileFilter("txt", "Text Files"));
 		int returnVal = chooser.showSaveDialog(null);
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
-			bs = (BellcoreStructure)(Pool.get("bellcorestructure", "primarytrace"));
+			BellcoreStructure bs = Heap.getPFTracePrimary().getBS();
 			try
 			{
 				FileOutputStream fos = new FileOutputStream(chooser.getSelectedFile());
 				TextWriter tw = new TextWriter();
 				fos.write(tw.write(bs));
 				fos.close();
+				try
+				{
+					properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
+					properties.store(new FileOutputStream(this.propertiesFileName), null);
+				} catch (IOException ex)
+				{
+				}
+			} catch (IOException ex)
+			{
+				ex.printStackTrace();
 			}
-			catch (Exception x){x.printStackTrace();}
 		}
 	}
 }

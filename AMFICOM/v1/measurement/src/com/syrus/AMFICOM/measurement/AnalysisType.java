@@ -1,124 +1,141 @@
+/*-
+ * $Id: AnalysisType.java,v 1.107.2.1 2006/02/06 14:46:30 arseniy Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.Iterator;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
+import java.util.EnumSet;
 
-public class AnalysisType extends ActionType {
-	private ArrayList in_parameter_types;
-	private ArrayList criteria_parameter_types;
-	private ArrayList out_parameter_types;
+import org.omg.CORBA.BAD_PARAM;
+import org.omg.CORBA.ORB;
 
-	private StorableObject_Database analysisTypeDatabase;
+import com.syrus.AMFICOM.general.Describable;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
+import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 
-	public AnalysisType(Identifier id) throws RetrieveObjectException {
-		super(id);
+/**
+ * @version $Revision: 1.107.2.1 $, $Date: 2006/02/06 14:46:30 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
+ * @module measurement
+ */
+public enum AnalysisType implements IdlTransferableObject<IdlAnalysisType>,
+		ActionType<IdlAnalysisType>, Describable {
+	DADARA("dadara",
+			EnumSet.of(ParameterType.REFLECTOGRAMMA),
+			EnumSet.of(ParameterType.DADARA_CRITERIA),
+			EnumSet.of(ParameterType.DADARA_ETALON),
+			EnumSet.of(ParameterType.DADARA_ANALYSIS_RESULT, ParameterType.DADARA_ALARMS),
+			EnumSet.of(MeasurementType.REFLECTOMETRY)),
+	UNKNOWN("unknown",
+			EnumSet.noneOf(ParameterType.class),
+			EnumSet.noneOf(ParameterType.class),
+			EnumSet.noneOf(ParameterType.class),
+			EnumSet.noneOf(ParameterType.class),
+			EnumSet.noneOf(MeasurementType.class));
 
-		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
+	private static final String KEY_ROOT = "AnalysisType.Description.";
+
+	private String codename;
+	private EnumSet<ParameterType> inParameterTypes;
+	private EnumSet<ParameterType> criteriaParameterTypes;
+	private EnumSet<ParameterType> etalonParameterTypes;
+	private EnumSet<ParameterType> outParameterTypes;
+	private EnumSet<MeasurementType> measurementTypes;
+	private String description;
+
+
+	private AnalysisType(final String codename,
+			final EnumSet<ParameterType> inParameterTypes,
+			final EnumSet<ParameterType> criParameterTypes,
+			final EnumSet<ParameterType> etaParameterTypes,
+			final EnumSet<ParameterType> outParameterTypes,
+			final EnumSet<MeasurementType> measurementTypes) {
+		this.codename = codename;
+		this.inParameterTypes = inParameterTypes;
+		this.criteriaParameterTypes = criParameterTypes;
+		this.etalonParameterTypes = etaParameterTypes;
+		this.outParameterTypes = outParameterTypes;
+		this.measurementTypes = measurementTypes;
+		this.description = LangModelMeasurement.getString(KEY_ROOT + this.codename);
+	}
+
+	public static AnalysisType valueOf(final int code) {
+		switch (code) {
+			case IdlAnalysisType._DADARA:
+				return DADARA;
+			case IdlAnalysisType._UNKNOWN_ANALYSISTYPE:
+				return UNKNOWN;
+			default:
+				Log.errorMessage("Illegal IDL code: " + code + ", returning UNKNOWN");
+				return UNKNOWN;
+		}
+	}
+
+	public static AnalysisType fromTransferable(final IdlAnalysisType idlAnalysisType) {
+		return valueOf(idlAnalysisType.value());
+	}
+
+	public String getCodename() {
+		return this.codename;
+	}
+
+	public EnumSet<ParameterType> getInParameterTypes() {
+		return this.inParameterTypes.clone();
+	}
+
+	public EnumSet<ParameterType> getCriteriaParameterTypes() {
+		return this.criteriaParameterTypes.clone();
+	}
+
+	public EnumSet<ParameterType> getEtalonParameterTypes() {
+		return this.etalonParameterTypes.clone();
+	}
+
+	public EnumSet<ParameterType> getOutParameterTypes() {
+		return this.outParameterTypes.clone();
+	}
+
+	public EnumSet<MeasurementType> getMeasurementTypes() {
+		return this.measurementTypes.clone();
+	}
+
+	public String getDescription() {
+		return this.description;
+	}	
+
+	@Deprecated
+	public String getName() {
+		return this.description;
+	}	
+	
+	public void setDescription(String description) {
+		throw new UnsupportedOperationException(
+				"AnalysisType.setDescription() is unsupported");		
+	}
+	
+	public void setName(String name) {
+		throw new UnsupportedOperationException(
+				"AnalysisType.setName() is unsupported");		
+	}
+
+	public IdlAnalysisType getIdlTransferable(final ORB orb) {
 		try {
-			this.analysisTypeDatabase.retrieve(this);
-		}
-		catch (Exception e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-	}
-
-	public AnalysisType(AnalysisType_Transferable att) throws CreateObjectException {
-		super(new Identifier(att.id),
-					new Date(att.created),
-					new Date(att.modified),
-					new Identifier(att.creator_id),
-					new Identifier(att.modifier_id),
-					new String(att.codename),
-					new String(att.description));
-
-		this.in_parameter_types = new ArrayList(att.in_parameter_types.length);
-		for (int i = 0; i < att.in_parameter_types.length; i++)
-			this.in_parameter_types.add(new Identifier(att.in_parameter_types[i]));
-
-		this.criteria_parameter_types = new ArrayList(att.criteria_parameter_types.length);
-		for (int i = 0; i < att.criteria_parameter_types.length; i++)
-			this.criteria_parameter_types.add(new Identifier(att.criteria_parameter_types[i]));
-
-		this.out_parameter_types = new ArrayList(att.out_parameter_types.length);
-		for (int i = 0; i < att.out_parameter_types.length; i++)
-			this.out_parameter_types.add(new Identifier(att.out_parameter_types[i]));
-
-		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
-		try {
-			this.analysisTypeDatabase.insert(this);
-		}
-		catch (Exception e) {
-			throw new CreateObjectException(e.getMessage(), e);
+			return IdlAnalysisType.from_int(this.ordinal());
+		} catch (final BAD_PARAM bp) {
+			Log.errorMessage("Illegal code: " + this.ordinal() + ", returning UNKNOWN");
+			return IdlAnalysisType.UNKNOWN_ANALYSISTYPE;
 		}
 	}
 
-	public Object getTransferable() {
-		Identifier_Transferable[] in_par_types = new Identifier_Transferable[this.in_parameter_types.size()];
-		int i = 0;
-		for (Iterator iterator = this.in_parameter_types.iterator(); iterator.hasNext();)
-			in_par_types[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-
-		Identifier_Transferable[] criteria_par_types = new Identifier_Transferable[this.criteria_parameter_types.size()];
-		i = 0;
-		for (Iterator iterator = this.criteria_parameter_types.iterator(); iterator.hasNext();)
-			criteria_par_types[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-
-		Identifier_Transferable[] out_par_types = new Identifier_Transferable[this.out_parameter_types.size()];
-		i = 0;
-		for (Iterator iterator = this.in_parameter_types.iterator(); iterator.hasNext();)
-			in_par_types[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-
-		return new AnalysisType_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																				 super.created.getTime(),
-																				 super.modified.getTime(),
-																				 (Identifier_Transferable)super.creator_id.getTransferable(),
-																				 (Identifier_Transferable)super.modifier_id.getTransferable(),
-																				 new String(super.codename),
-																				 new String(super.description),
-																				 in_par_types,
-																				 criteria_par_types,
-																				 out_par_types);
-	}
-
-	public ArrayList getInParameterTypes() {
-		return this.in_parameter_types;
-	}
-
-	public ArrayList getCriteriaParameterTypes() {
-		return this.criteria_parameter_types;
-	}
-
-	public ArrayList getOutParameterTypes() {
-		return this.out_parameter_types;
-	}
-
-	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
-																						String codename,
-																						String description) {
-		super.setAttributes(created,
-												modified,
-												creator_id,
-												modifier_id,
-												codename,
-												description);
-	}
-
-	protected synchronized void setParameterTypes(ArrayList in_parameter_types,
-																								ArrayList criteria_parameter_types,
-																								ArrayList out_parameter_types) {
-		this.in_parameter_types = in_parameter_types;
-		this.criteria_parameter_types = criteria_parameter_types;
-		this.out_parameter_types = out_parameter_types;
+	@Override
+	public String toString() {
+		return this.getCodename();
 	}
 }

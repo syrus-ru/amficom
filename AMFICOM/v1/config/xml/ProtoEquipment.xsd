@@ -1,0 +1,91 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xsd:schema 
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	xmlns:configuration = "http://syrus.com/AMFICOM/configuration/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/configuration/xml"
+	elementFormDefault = "qualified">
+
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: ProtoEquipment.xsd,v 1.7 2005/10/11 09:28:08 arseniy Exp $
+
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/Characteristic.xsd"/>
+
+	<xsd:element name = "protoEquipments" type = "configuration:XmlProtoEquipmentSeq">
+		<xsd:key name = "protoEquipmentId">
+			<xsd:selector xpath = "configuration:protoEquipments/configuration:protoEquipment"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key>
+	</xsd:element>
+
+	<xsd:complexType name = "XmlProtoEquipment" final = "#all">
+		<xsd:complexContent>
+			<xsd:extension base = "general:XmlStorableObject">
+				<xsd:sequence>
+					<xsd:element name = "xmlEquipmentType">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:string">
+								<xsd:enumeration value = "reflectometer"/>
+								<xsd:enumeration value = "optical_switch"/>
+								<xsd:enumeration value = "muff"/>
+								<xsd:enumeration value = "cable_panel"/>
+								<xsd:enumeration value = "transmitter"/>
+								<xsd:enumeration value = "receiver"/>
+								<xsd:enumeration value = "multiplexor"/>
+								<xsd:enumeration value = "cross"/>
+								<xsd:enumeration value = "filter"/>
+								<xsd:enumeration value = "other"/>
+								<xsd:enumeration value = "unknown"/>
+								<xsd:enumeration value = "rack"/>
+								<xsd:enumeration value = "bug136"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name = "name">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:string">
+								<xsd:minLength value = "1"/>
+								<xsd:maxLength value = "128"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element ref = "general:description" minOccurs = "0"/>
+					<xsd:element name = "manufacturer"
+						minOccurs = "0">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:string">
+								<xsd:minLength value = "1"/>
+								<xsd:maxLength value = "64"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name = "manufacturerCode"
+						minOccurs = "0">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:string">
+								<xsd:minLength value = "1"/>
+								<xsd:maxLength value = "64"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element ref = "general:characteristics" minOccurs = "0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name = "XmlProtoEquipmentSeq" final = "#all">
+		<xsd:sequence>
+			<xsd:element name = "protoEquipment" type = "configuration:XmlProtoEquipment" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

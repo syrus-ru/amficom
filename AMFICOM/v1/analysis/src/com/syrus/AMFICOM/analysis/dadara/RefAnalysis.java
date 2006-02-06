@@ -1,172 +1,208 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
+import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.PFTrace;
+import com.syrus.AMFICOM.analysis.dadara.events.ConnectorDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.DeadZoneDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.EndOfTraceDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
+public class RefAnalysis {
+	public double[] noise; // hope nobody will change it
+	public TraceEvent overallStats; // hope nobody will change it
 
-public class RefAnalysis
-{
-	public TraceEvent[] events;
-	public TraceEvent[] concavities;
-	public double[] noise;
-	public double[] filtered;
-	public TraceEvent overallStats;
+	private PFTrace pfTrace;
+	private AnalysisResult ar;
 
-	public RefAnalysis()
-	{
+	/**
+	 * use this ctor to replace mtae of the existing RefAnalysis
+	 * 
+	 * @param that
+	 * @param mtae
+	 */
+	public RefAnalysis(final RefAnalysis that, final ModelTraceAndEventsImpl mtae) {
+		this.pfTrace = that.pfTrace;
+		this.ar = new AnalysisResult(that.ar.getDataLength(), that.ar.getTraceLength(), mtae);
+		this.decode();
 	}
 
-	public void decode (double[] y, ReflectogramEvent[] re)
-	{
-		double max_y = 0;
-		double min_y = 0;
-		for (int i = 0; i < y.length; i++)
-		{
-			if (max_y < y[i])
-				max_y = y[i];
-			if (min_y > y[i])
-				min_y = y[i];
+	public RefAnalysis(final PFTrace pfTrace, final AnalysisResult ar) {
+		this.pfTrace = pfTrace;
+		this.ar = ar;
+		this.decode();
+	}
+
+	public RefAnalysis(final PFTrace pfTrace) {
+		this.pfTrace = pfTrace;
+		AnalysisParameters ap = Heap.getMinuitAnalysisParams();
+		if (ap == null) {
+			new ClientAnalysisManager();
+			ap = Heap.getMinuitAnalysisParams();
 		}
-		double top = max_y - min_y;
+		this.ar = CoreAnalysisManager.performAnalysis(pfTrace, ap);
+		this.decode();
+	}
 
-		int type;
-		int last_point = re[re.length-1].end;
-		double Po = 0;
-
-		events = new TraceEvent[re.length];
-
-		for (int i = 0; i < re.length; i++)
-		{
-			if (i == 0)
-				type = TraceEvent.INITIATE;
-			else if (i == re.length - 1)
-				type = TraceEvent.TERMINATE;
-			else if (re[i].getType() == ReflectogramEvent.LINEAR)
-				type = TraceEvent.LINEAR;
-			else if (re[i].getType() == ReflectogramEvent.CONNECTOR)
-				type = TraceEvent.CONNECTOR;
-			else if (re[i].getType() == ReflectogramEvent.WELD)
-				type = TraceEvent.WELD;
-			else
-				type = TraceEvent.NON_IDENTIFIED;
-
-			events[i] = new TraceEvent(type, re[i].begin, re[i].end);
-
-			if (type == TraceEvent.LINEAR)
-			{
-				events[i].data = new double[5];
-				events[i].data[0] = top - re[i].refAmpl(re[i].begin)[0];
-				events[i].data[1] = top - re[i].refAmpl(re[i].end)[0];
-				events[i].data[2] = -re[i].b_linear;
-				events[i].data[3] = re[i].a_linearError; // ср кв отклонение
-				events[i].data[4] = re[i].a_linearError * (re[i].chi2Linear + 3.); // макс откл
+	private void decode() {
+		if (false) { // FIXME: just a debug code
+			final SimpleReflectogramEvent[] se = getMTAE().getSimpleEvents();
+			System.out.println("NEvents=" + se.length);
+			System.out.println("EVENTS");
+			for (int i = 0; i < se.length; i++) {
+				final ReliabilitySimpleReflectogramEvent re = (ReliabilitySimpleReflectogramEventImpl) se[i];
+				String line = "T=" + re.getEventType() + " B=" + re.getBegin() + " E=" + re.getEnd();
+				int tloss = 0;
+				if (re.getEventType() == SimpleReflectogramEvent.LINEAR) {
+					tloss = 2;
+				}
+				else if (re.hasReliability() && re.getReliability() < ReliabilitySimpleReflectogramEvent.RELIABLE) {
+					tloss = 1;
+				}
+				line += " N=0 L=" + tloss;
+				line += " # begin=" + re.getBegin() * getMTAE().getDeltaX();
+				System.out.println(line);
 			}
-			else if (type == TraceEvent.CONNECTOR)
-			{
-				events[i].data = new double[4];
-				events[i].data[0] = top - re[i].a1_connector;
-				events[i].data[1] = top - re[i].a2_connector;
-				events[i].data[2] = top - re[i].a1_connector - re[i].aLet_connector;
-				events[i].data[3] = re[i].k_connector;
-			}
-			else if (type == TraceEvent.WELD)
-			{
-				events[i].data = new double[3];
-				events[i].data[0] = top - re[i].refAmpl(re[i].begin)[0];
-				events[i].data[1] = top - re[i].refAmpl(re[i].end)[0];
-				events[i].data[2] = events[i].data[1] - events[i].data[0];
-			}
-			else if (type == TraceEvent.TERMINATE)
-			{
-				events[i].data = new double[3];
-				events[i].data[0] = top - re[i].a1_connector;
-				events[i].data[1] = top - re[i].a1_connector - re[i].aLet_connector;
-				events[i].data[2] = re[i].k_connector;
-			}
-			else if (type == TraceEvent.INITIATE)
-			{
-				for (int j = 1; j < re.length; j++)
-					if (re[j].getType() == ReflectogramEvent.LINEAR)
-					{
-						Po = re[j].refAmpl(0)[0];
+		}
+
+		if (false) { // FIXME: just another debug
+			final double sigma = MathRef.calcSigma(this.pfTrace.getWavelength(), this.pfTrace.getPulsewidth());
+			final double dx = getMTAE().getDeltaX();
+			final DetailedEvent de[] = getMTAE().getDetailedEvents();
+			System.out.println("detailed events (for modelling):");
+			for (DetailedEvent ev : de) {
+				final double len = (ev.getEnd() - ev.getBegin()) * getMTAE().getDeltaX();
+				switch (ev.getEventType()) {
+					case SimpleReflectogramEvent.LINEAR: // fall thru
+						System.out.println("L " + len + " " + ((LinearDetailedEvent) ev).getAttenuation() / dx);
 						break;
-					}
-
-				int adz=0;
-				int edz=0;
-				for(int k = re[i].begin; k < re[i].end; k++)
-				{
-					if(re[i].refAmpl(k)[0] > re[i].aLet_connector + re[i].a1_connector - 1.5)
-						edz++;
-					if(re[i].refAmpl(k)[0] > Po + .5)
-						adz++;
+					case SimpleReflectogramEvent.NOTIDENTIFIED:
+						System.out.println("U " + len + " " + ((NotIdentifiedDetailedEvent) ev).getLoss() / len);
+						break;
+					case SimpleReflectogramEvent.GAIN: // fall throu
+					case SimpleReflectogramEvent.LOSS:
+						System.out.println("S " + len + " " + ((SpliceDetailedEvent) ev).getLoss());
+						break;
+					case SimpleReflectogramEvent.DEADZONE:
+						System.out.println("C " + len + " 0" + " " + -10); // XXX
+						break;
+					case SimpleReflectogramEvent.ENDOFTRACE:
+						System.out.println("C " + 0 + " 0" + " " + MathRef.calcReflectance(sigma, ((EndOfTraceDetailedEvent) ev).getAmpl()));
+						break;
+					case SimpleReflectogramEvent.CONNECTOR:
+						System.out.println("C " + len + " " + ((ConnectorDetailedEvent) ev).getLoss() + " "
+								+ MathRef.calcReflectance(sigma, ((ConnectorDetailedEvent) ev).getAmpl()));
+						break;
 				}
-
-				events[i].data = new double[4];
-				events[i].data[0] = top - (Po + re[i].a2_connector) / 2; //amplitude
-				events[i].data[1] = top - Po; // Po
-				events[i].data[2] = edz;
-				events[i].data[3] = adz;
-			}
-			else if (type == TraceEvent.NON_IDENTIFIED)
-			{
-				events[i].data = new double[3];
-				events[i].data[0] = top - re[i].refAmpl(re[i].begin)[0];
-				events[i].data[1] = top - re[i].refAmpl(re[i].end)[0];
-				events[i].data[2] = events[i].data[1] - events[i].data[0]; //eventMaxDeviation
-
 			}
 		}
 
-		double max_noise = 0.;
+		final double[] y = this.pfTrace.getFilteredTraceClone();
+		// ComplexReflectogramEvent[] re = mtae.getComplexEvents();
+//		System.out.println("Making detailed events...");
+//		long t0 = System.nanoTime();
+		final DetailedEvent[] de = getMTAE().getDetailedEvents();
+//		long t1 = System.nanoTime();
+//		System.out.println("Detailed events made in " + (t1 - t0) / 1e6 + " ms");
+
+		final ModelTrace mt = getMTAE().getModelTrace();
+
+		double maxY = y.length > 0 ? y[0] : 0;
+		double minY = maxY;
+		for (int i = 0; i < y.length; i++) {
+			if (maxY < y[i]) {
+				maxY = y[i];
+			}
+			if (minY > y[i]) {
+				minY = y[i];
+			}
+		}
+
+		final int lastPoint = de.length > 0 ? de[de.length - 1].getBegin() : 0;
+
+		final int veryLastPoint = de.length > 0 ? de[de.length - 1].getEnd() : 0;
+
+		final int noiseStart = this.ar.getTraceLength();
+
+		double maxNoise = 0.;
 		boolean b = false;
-		for(int i = re[re.length - 1].end; i < y.length; i++)
-		{
-			if (y[i] == min_y)
+		for (int i = veryLastPoint; i < y.length; i++) {
+			if (y[i] == minY) {
 				b = true;
-			if(b && max_noise < y[i])
-				max_noise = y[i];
+			}
+			if (b && maxNoise < y[i]){
+				maxNoise = y[i];
+			}
 		}
-		overallStats = new TraceEvent(TraceEvent.OVERALL_STATS, 0, re[re.length-1].begin);
-		overallStats.data = new double[5];
-		overallStats.data[0] = max_y - Po;
-		overallStats.data[1] = max_y - y[last_point];
-		overallStats.data[2] = (max_y - max_noise * 0.98);
-		overallStats.data[3] = (max_y - Po);
-		overallStats.data[4] = re.length;
-
-		filtered = new double[y.length];
-		noise = new double[y.length];
-		max_noise = 0;
-
-
-//		noise = (double[])Pool.get("doublearray", "noise");
-//		//noise = ReflectogramMath.getDerivative(noise, 3, 0);
-//				//MathRef.getDerivative(y);
-//		for (int i = 0; i < noise.length; i++)
-//			noise[i] = Math.abs(noise[i]);
-//
-//		for (int i = 1; i < noise.length - 1; i++)
-//			filtered[i] = y[i] - noise[i - 1];
-//
-
-		for(int i = 0; i < re.length; i++)
+		//overallStats = new TraceEvent(TraceEvent.OVERALL_STATS, 0, lastPoint);
+		this.overallStats = new TraceEvent(lastPoint);
 		{
-			for(int j = re[i].begin; j < y.length; j++)
-			{
-				if(j < last_point)
-				{
-					filtered[j] = Math.max(0, re[i].refAmpl(j)[0]);
-					noise[j] = Math.abs(y[j] - filtered[j]);
-					if (noise[j] > max_noise)
-						max_noise = noise[j];
-				}
-				else
-				{
-					filtered[j] = y[j];
-					noise[j] = max_noise;
+			final double[] data = new double[5];
+
+			// Po (отрицательна) - относительно maxY
+			double po;
+			if (de.length > 0 && de[0] instanceof DeadZoneDetailedEvent) {
+				po = ((DeadZoneDetailedEvent) de[0]).getPo();
+			}
+			else {
+				po = 0; // мертвой зоны нет - берем ноль
+			}
+			// ур. шума по уровню 98% (отрицателен) - относительно maxY
+			double noise98;
+			double noiseRMS;
+			if (y.length > noiseStart) {
+				noise98 = CoreAnalysisManager.getMedian(y, noiseStart, y.length, 0.98) - maxY;
+				// ур. шума по RMS (отрицателен) - относительно maxY
+				noiseRMS = ReflectogramMath.getRMSValue(y, noiseStart, y.length, minY) - maxY;
+			} else {
+				noise98 = minY - maxY;
+				noiseRMS = minY - maxY;
+			}
+
+			data[0] = -po; // y0 (ось вниз)
+			data[1] = maxY - y[lastPoint]; // y1 (ось вниз)
+			data[2] = de.length; // число событий
+			data[3] = -noise98; // ур. ш. по 98%
+			data[4] = -noiseRMS; // ур. ш. по RMS
+
+			this.overallStats.setData(data);
+		}
+
+		this.noise = new double[lastPoint];
+
+		// long t0 = System.currentTimeMillis();
+		for (int i = 0; i < de.length; i++) {
+			int posFrom = de[i].getBegin(); // incl.
+			int posTo = de[i].getEnd(); // excl.
+			double[] yArrMT = mt.getYArrayZeroPad(posFrom, posTo - posFrom);
+			for (int j = posFrom; j < posTo && j < veryLastPoint; j++) {
+				if (j < lastPoint) {
+					this.noise[j] = Math.abs(y[j] - yArrMT[j - posFrom]);
 				}
 			}
 		}
+		// XXX: workaround:
+		// из-за того, что м.ф. ограничена уровнем шума,
+		// а м.з. начинается ниже, чем на уровне шума,
+		// в разности y и yMT в начале м.з. получается очень
+		// большой всплеск, который на графике "затмевает"
+		// всю остальную кривую (из-за авт. масштабирования).
+		// Поэтому, в качестве WORKAROUND,
+		// уровень шума в первой точке не вычисляем.
+		if (this.noise.length > 0) {
+			this.noise[0] = 0.0;
+		}
+	}
+
+	public ModelTraceAndEventsImpl getMTAE() {
+		return this.ar.getMTAE();
+	}
+
+	public AnalysisResult getAR() {
+		return this.ar;
 	}
 }

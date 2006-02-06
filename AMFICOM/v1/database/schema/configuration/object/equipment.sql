@@ -1,44 +1,43 @@
+-- $Id: equipment.sql,v 1.18 2005/09/29 09:04:00 arseniy Exp $
+
 CREATE TABLE Equipment (
- id VARCHAR2(32),
+ id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id NOT NULL,
+ modifier_id NOT NULL,
+ version NUMBER(19) NOT NULL,
 --
- domain_id VARCHAR2(32),
+ domain_id,
 --
- type_id VARCHAR2(32) NOT NULL,
- name VARCHAR2(64) NOT NULL,
- description VARCHAR2(256),
- latitude VARCHAR2(10),
- longitude VARCHAR2(10),
- hw_serial VARCHAR2(256),
- sw_serial VARCHAR2(256),
- hw_version VARCHAR2(32),
- sw_version VARCHAR2(32),
- inventory_number VARCHAR2(64),
- manufacturer VARCHAR2(64),
- manufacturer_code VARCHAR2(64),
- supplier VARCHAR2(64),
- supplier_code VARCHAR2(64),
- image_id VARCHAR2(32),
+ proto_equipment_id NUMBER(19) NOT NULL,
+ name VARCHAR2(128 CHAR) NOT NULL,
+ description VARCHAR2(256 CHAR),
 --
- mcm_id VARCHAR2(32) NOT NULL,
+ image_id,
+ supplier VARCHAR2(128 CHAR),
+ supplier_code VARCHAR2(32 CHAR),
+ latitude NUMBER,
+ longitude NUMBER,
+ hw_serial VARCHAR2(64 CHAR),
+ hw_version VARCHAR2(64 CHAR),
+ sw_serial VARCHAR2(64 CHAR),
+ sw_version VARCHAR2(64 CHAR),
+ inventory_number VARCHAR2(64 CHAR),
 --
  CONSTRAINT eqp_pk PRIMARY KEY (id),
  CONSTRAINT eqp_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT eqp_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
 --
  CONSTRAINT eqp_domain_fk FOREIGN KEY (domain_id)
   REFERENCES Domain (id) ON DELETE CASCADE,
 --
- CONSTRAINT eqp_epqtype_fk FOREIGN KEY (type_id)
-  REFERENCES EquipmentType (id) ON DELETE CASCADE,
---
- CONSTRAINT eqp_mcm_fk FOREIGN KEY (mcm_id)
-  REFERENCES Mcm (id) ON DELETE CASCADE
+ CONSTRAINT eqp_peq_fk FOREIGN KEY (proto_equipment_id)
+  REFERENCES ProtoEquipment (id) ON DELETE CASCADE,
+ CONSTRAINT eqp_image_fk FOREIGN KEY (image_id)
+  REFERENCES ImageResource (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE equipment_seq ORDER;
+CREATE SEQUENCE Equipment_seq ORDER;
