@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementUnit.java,v 1.13.2.1 2006/02/06 14:46:30 arseniy Exp $
+ * $Id: MeasurementUnit.java,v 1.13.2.2 2006/02/06 14:51:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.13.2.1 $, $Date: 2006/02/06 14:46:30 $
+ * @version $Revision: 1.13.2.2 $, $Date: 2006/02/06 14:51:55 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -32,6 +32,8 @@ public enum MeasurementUnit implements IdlTransferableObject<IdlMeasurementUnit>
 
 	UNKNOWN("unknown");
 
+	private static final MeasurementUnit VALUES[] = values();
+
 	private static final String KEY_ROOT = "MeasurementUnit.Name.";
 
 	private final String codename;
@@ -44,27 +46,11 @@ public enum MeasurementUnit implements IdlTransferableObject<IdlMeasurementUnit>
 	}
 
 	public static MeasurementUnit valueOf(final int code) {
-		switch (code) {
-			case IdlMeasurementUnit._NONDIMENSIONAL:
-				return NONDIMENSIONAL;
-
-			case IdlMeasurementUnit._KILOMETER:
-				return KILOMETER;
-			case IdlMeasurementUnit._METER:
-				return METER;
-			case IdlMeasurementUnit._NANOMETER:
-				return NANOMETER;
-
-			case IdlMeasurementUnit._SECOND:
-				return SECOND;
-			case IdlMeasurementUnit._NANOSECOND:
-				return NANOSECOND;
-
-			case IdlMeasurementUnit._UNKNOWN_MEASUREMENTUNIT:
-				return UNKNOWN;
-			default:
-				Log.errorMessage("Illegal IDL code: " + code + ", returning RAW");
-				return UNKNOWN;
+		try {
+			return VALUES[code];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			Log.errorMessage("Illegal code: " + code + ", returning UNKNOWN");
+			return UNKNOWN;
 		}
 	}
 
