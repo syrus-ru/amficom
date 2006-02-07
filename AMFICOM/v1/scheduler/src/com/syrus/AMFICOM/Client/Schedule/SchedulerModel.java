@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.166 2006/02/06 13:46:17 bob Exp $
+ * $Id: SchedulerModel.java,v 1.167 2006/02/07 12:36:01 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.166 $, $Date: 2006/02/06 13:46:17 $
+ * @version $Revision: 1.167 $, $Date: 2006/02/07 12:36:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -765,6 +765,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			this.refreshMeasurementSetups();
 		}
 	}
+	
+	public MeasurementType getSelectedMeasurementType() {
+		return this.measurementType;
+	}
 
 	public void setSelectedMonitoredElement(final MonitoredElement monitoredElement) {
 		Log.debugMessage(this.monitoredElement + " > " + monitoredElement,
@@ -797,6 +801,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			this.refreshMeasurementSetups();
 		}
 	}
+	
+	public MonitoredElement getSelectedMonitoredElement() {
+		return this.monitoredElement;
+	}
 
 	public void refreshMeasurementSetups() {
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
@@ -805,7 +813,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			null));
 	}
 	
-	public Set<MeasurementSetup> getMeasurementSetups() throws ApplicationException{
+	public Set<MeasurementSetup> getMeasurementSetups() throws ApplicationException {
 		StorableObjectCondition condition = null;
 
 		TypicalCondition measurementTypeCondition = null;
