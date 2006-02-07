@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.91 2006/01/16 18:47:27 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.92 2006/02/07 14:22:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.mserver;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -51,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2006/01/16 18:47:27 $
+ * @version $Revision: 1.92 $, $Date: 2006/02/07 14:22:01 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -312,7 +311,6 @@ final class MeasurementServer extends SleepButWorkThread {
 				}	//for (final Identifier mcmId : startTestIdMap.keySet())
 			}	//synchronized (startTestIdMap)
 
-			System.out.println(new Date(System.currentTimeMillis()));
 			try {
 				sleep(super.initialTimeToSleep);
 			} catch (InterruptedException ie) {
