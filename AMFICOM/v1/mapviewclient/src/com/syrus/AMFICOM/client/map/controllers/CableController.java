@@ -1,5 +1,5 @@
 /*-
- * $$Id: CableController.java,v 1.42 2005/11/22 15:04:49 bass Exp $$
+ * $$Id: CableController.java,v 1.43 2006/02/07 15:27:11 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.client.map.controllers;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -44,8 +45,8 @@ import com.syrus.util.Log;
 /**
  * Контроллер кабеля.
  * 
- * @version $Revision: 1.42 $, $Date: 2005/11/22 15:04:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.43 $, $Date: 2006/02/07 15:27:11 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -351,7 +352,6 @@ public final class CableController extends AbstractLinkController {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getStyle(final Characterizable characterizable) {
 		return MapPropertiesManager.getStyle();
 	}
@@ -360,7 +360,7 @@ public final class CableController extends AbstractLinkController {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Stroke getStroke(final Characterizable characterizable) {
+	public BasicStroke getStroke(final Characterizable characterizable) {
 		return MapPropertiesManager.getStroke();
 	}
 
@@ -383,10 +383,10 @@ public final class CableController extends AbstractLinkController {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	/*@Override
 	public int getAlarmedLineSize(final Characterizable characterizable) {
 		return MapPropertiesManager.getAlarmedThickness();
-	}
+	}*/
 
 	public Rectangle2D getBoundingRectangle(MapElement mapElement) throws MapConnectionException, MapDataException {
 		final CablePath cablePath = (CablePath) mapElement;

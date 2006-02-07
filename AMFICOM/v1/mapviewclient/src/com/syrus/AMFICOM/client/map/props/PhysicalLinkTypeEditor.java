@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkTypeEditor.java,v 1.12 2005/10/31 15:29:31 krupenn Exp $$
+ * $$Id: PhysicalLinkTypeEditor.java,v 1.13 2006/02/07 15:27:11 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSo
 import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/31 15:29:31 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2006/02/07 15:27:11 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -462,7 +462,7 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 			
 			Color color = linkTypeController.getColor(this.type);
 			this.colorComboBox.addItem(color);
-			this.thicknessComboBox.setSelectedValue(linkTypeController.getLineSize(this.type));
+			this.thicknessComboBox.setSelectedValue((int)linkTypeController.getStroke(this.type).getLineWidth());
 //			this.styleComboBox.setSelectedItem(physicalLinkController.getStyle(this.link);
 		}
 	}
@@ -510,7 +510,7 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 				if(! color.equals(linkTypeController.getColor(this.type)))
 					linkTypeController.setColor(this.type, color);
 				int size = this.thicknessComboBox.getSelectedValue();
-				if(size != linkTypeController.getLineSize(this.type))
+				if(size != (int)linkTypeController.getStroke(this.type).getLineWidth())
 					linkTypeController.setLineSize(this.type, size);
 
 				int m = Integer.parseInt(this.mTextField.getText());

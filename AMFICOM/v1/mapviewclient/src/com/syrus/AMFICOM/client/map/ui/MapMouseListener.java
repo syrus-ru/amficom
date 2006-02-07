@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMouseListener.java,v 1.73 2005/10/31 12:30:09 bass Exp $$
+ * $$Id: MapMouseListener.java,v 1.74 2006/02/07 15:27:11 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.util.Log;
  * события передается текущему активному элементу карты (посредством объекта
  * MapStrategy)
  * 
- * @version $Revision: 1.73 $, $Date: 2005/10/31 12:30:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.74 $, $Date: 2006/02/07 15:27:11 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -483,7 +483,7 @@ public final class MapMouseListener implements MouseListener {
 					case MapState.NODELINK_SIZE_EDIT:
 					// fall throuth
 					case MapState.NO_OPERATION:
-						finishDefaultAction(me);
+						finishDefaultAction(me, mapState);
 						break;
 					default:
 						try {
@@ -521,11 +521,16 @@ public final class MapMouseListener implements MouseListener {
 	 * @throws MapConnectionException
 	 * @throws MapDataException
 	 */
-	private void finishDefaultAction(MouseEvent me)
+	private void finishDefaultAction(MouseEvent me, MapState mapState)
 			throws MapConnectionException, MapDataException {
 		if(!this.netMapViewer.isMenuShown()) {
 			LogicalNetLayer logicalNetLayer = this.netMapViewer
 					.getLogicalNetLayer();
+
+			// эти поля почему-то меняются в strategy.doContextChanges(me) - поэтому запомним их здесь
+			int actionMode = mapState.getActionMode();
+			int operationMode = mapState.getOperationMode();
+			
 			// Контекстное меню показывать не надо и передаём управление
 			// стратегии текущего объекта
 			MapElement mapElement = logicalNetLayer.getCurrentMapElement();
@@ -535,8 +540,12 @@ public final class MapMouseListener implements MouseListener {
 				strategy.setNetMapViewer(this.netMapViewer);
 				strategy.doContextChanges(me);
 			}
-
-			logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
+			// MAP_CHANGED now sends only for map changing events // Stas
+			if (actionMode == MapState.ALT_LINK_ACTION_MODE
+					|| actionMode == MapState.DRAW_ACTION_MODE
+					|| actionMode == MapState.DRAW_LINES_ACTION_MODE){
+				logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
+			}
 		}
 		// mapState.setActionMode(MapState.NULL_ACTION_MODE);
 		// this.netMapViewer.repaint(false);

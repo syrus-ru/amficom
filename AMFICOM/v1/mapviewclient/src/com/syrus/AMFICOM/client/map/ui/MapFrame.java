@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapFrame.java,v 1.86 2005/10/31 15:29:31 krupenn Exp $$
+ * $$Id: MapFrame.java,v 1.87 2006/02/07 15:27:11 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -207,8 +207,8 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * окна карты хранится в пуле с ключом "environment", идентификатор 
  * "mapmainframe". существует только один объект 
  * 
- * @version $Revision: 1.86 $, $Date: 2005/10/31 15:29:31 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.87 $, $Date: 2006/02/07 15:27:11 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -597,14 +597,20 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 		StorableObjectPool.cleanChangedStorableObjects(
 				Collections.singleton(mapView));
 
-		final Set<Scheme> schemes = mapView.getSchemes();
-		for(Scheme scheme : schemes) {
-			try {
-				StorableObjectPool.cleanChangedStorableObjects(scheme.getReverseDependencies(false));
-			} catch(ApplicationException e) {
-				e.printStackTrace();
-			}
-		}
+		// it's work faster
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.SCHEME_CODE);
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.SCHEMEELEMENT_CODE);
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.SCHEMECABLELINK_CODE);
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.CABLECHANNELINGITEM_CODE);
+		
+//		final Set<Scheme> schemes = mapView.getSchemes();
+//		for(Scheme scheme : schemes) {
+//			try {
+//				StorableObjectPool.cleanChangedStorableObjects(scheme.getReverseDependencies(false));
+//			} catch(ApplicationException e) {
+//				e.printStackTrace();
+//			}
+//		}
 	}
 
 	public Map getMap() {

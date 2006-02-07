@@ -1,5 +1,5 @@
 /*-
- * $$Id: LinkTypeController.java,v 1.62 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: LinkTypeController.java,v 1.63 2006/02/07 15:27:11 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.resource.IntDimension;
 /**
  * Контроллер типа линейного элемента карты.
  * 
- * @version $Revision: 1.62 $, $Date: 2005/10/11 08:56:11 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.63 $, $Date: 2006/02/07 15:27:11 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -58,14 +58,14 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * {@link #getColor(PhysicalLinkType)}, созданный объект помещается в
 	 * хэш-таблицу и при последующих обращениях используется повторно.
 	 */
-	private static java.util.Map<Identifier, Color> colorsHolder = new HashMap<Identifier, Color>();
+//	private static java.util.Map<Identifier, Color> colorsHolder = new HashMap<Identifier, Color>();
 	/**
 	 * Хэш-таблица цветов сигнала тревоги для типов линий. Для того, чтобы объект
 	 * {@link Color} не создавался каждый раз из атрибута при вызове
 	 * {@link #getAlarmedColor(PhysicalLinkType)}, созданный объект помещается в
 	 * хэш-таблицу и при последующих обращениях используется повторно.
 	 */
-	private static java.util.Map<Identifier, Color> alarmedColorsHolder = new HashMap<Identifier, Color>();
+//	private static java.util.Map<Identifier, Color> alarmedColorsHolder = new HashMap<Identifier, Color>();
 
 	/** Хэш-таблица цветов для предустановленных типов линии. */
 	private static java.util.Map<String, Color> defaultLineColors = new HashMap<String, Color>();
@@ -198,9 +198,10 @@ public final class LinkTypeController extends AbstractLinkController {
 	}
 
 	@Override
+	@Deprecated
 	public void setColor(final Characterizable characterizable, final Color color) {
 		super.setColor(characterizable, color);
-		colorsHolder.put(characterizable.getId(), color);
+//		colorsHolder.put(characterizable.getId(), color);
 	}
 
 	/**
@@ -215,28 +216,30 @@ public final class LinkTypeController extends AbstractLinkController {
 	 *        тип линии
 	 * @return цвет
 	 */
-	@Override
-	public Color getColor(final Characterizable characterizable) {
-		Color color = colorsHolder.get(characterizable.getId());
-		if (color == null) {
-			final Characteristic ea = getCharacteristic(characterizable, this.colorCharType);
-
-			if (ea == null) {
-				color = MapPropertiesManager.getColor();
-			}
-			else {
-				color = this.colors.get(ea.getValue());
-				if (color == null) {
-					color = new Color(Integer.parseInt(ea.getValue()));
-					this.colors.put(ea.getValue(), color);
-				}
-				color = new Color(Integer.parseInt(ea.getValue()));
-			}
-
-			colorsHolder.put(characterizable.getId(), color);
-		}
-		return color;
-	}
+//	@Override
+//	@Deprecated
+//	public Color getColor(final Characterizable characterizable) {
+//		return super.getColor(characterizable);
+//		Color color = colorsHolder.get(characterizable.getId());
+//		if (color == null) {
+//			final Characteristic ea = getCharacteristic(characterizable, this.colorCharType);
+//
+//			if (ea == null) {
+//				color = MapPropertiesManager.getColor();
+//			}
+//			else {
+//				color = this.colors.get(ea.getValue());
+//				if (color == null) {
+//					color = new Color(Integer.parseInt(ea.getValue()));
+//					this.colors.put(ea.getValue(), color);
+//				}
+//				color = new Color(Integer.parseInt(ea.getValue()));
+//			}
+//
+//			colorsHolder.put(characterizable.getId(), color);
+//		}
+//		return color;
+//	}
 
 	/**
 	 * Установить цвет типа линии при наличии сигнала тревоги. Цает определяется
@@ -244,9 +247,10 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * случае, если такого атрибута у элемента нет, создается новый.
 	 */
 	@Override
+	@Deprecated
 	public void setAlarmedColor(final Characterizable characterizable, final Color color) {
 		super.setAlarmedColor(characterizable, color);
-		alarmedColorsHolder.put(characterizable.getId(), color);
+//		alarmedColorsHolder.put(characterizable.getId(), color);
 	}
 
 	/**
@@ -258,25 +262,28 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * вызовах берется из нее.
 	 */
 	@Override
+	@Deprecated
 	public Color getAlarmedColor(final Characterizable characterizable) {
-		Color color = alarmedColorsHolder.get(characterizable.getId());
-		if (color == null) {
-			Characteristic ea = getCharacteristic(characterizable, this.alarmedColorCharType);
-			if (ea == null) {
-				color = MapPropertiesManager.getAlarmedColor();
-			}
-			else {
-				color = this.colors.get(ea.getValue());
-				if (color == null) {
-					color = new Color(Integer.parseInt(ea.getValue()));
-					this.colors.put(ea.getValue(), color);
-				}
-				color = new Color(Integer.parseInt(ea.getValue()));
-			}
-
-			alarmedColorsHolder.put(characterizable.getId(), color);
-		}
-		return color;
+		return super.getAlarmedColor(characterizable);
+		
+//		Color color = alarmedColorsHolder.get(characterizable.getId());
+//		if (color == null) {
+//			Characteristic ea = getCharacteristic(characterizable, this.alarmedColorCharType);
+//			if (ea == null) {
+//				color = MapPropertiesManager.getAlarmedColor();
+//			}
+//			else {
+//				color = this.colors.get(ea.getValue());
+//				if (color == null) {
+//					color = new Color(Integer.parseInt(ea.getValue()));
+//					this.colors.put(ea.getValue(), color);
+//				}
+//				color = new Color(Integer.parseInt(ea.getValue()));
+//			}
+//
+//			alarmedColorsHolder.put(characterizable.getId(), color);
+//		}
+//		return color;
 	}
 
 	/**

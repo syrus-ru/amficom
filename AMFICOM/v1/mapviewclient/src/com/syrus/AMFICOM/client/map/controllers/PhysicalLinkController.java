@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkController.java,v 1.37 2005/11/22 15:04:49 bass Exp $$
+ * $$Id: PhysicalLinkController.java,v 1.38 2006/02/07 15:27:11 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -35,12 +34,14 @@ import com.syrus.util.Log;
 /**
  * Контроллер линейного элемента карты.
  * 
- * @version $Revision: 1.37 $, $Date: 2005/11/22 15:04:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2006/02/07 15:27:11 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class PhysicalLinkController extends AbstractLinkController {
+	
+	private static PhysicalLinkController instance;
 	
 	/**
 	 * Private constructor.
@@ -49,8 +50,16 @@ public class PhysicalLinkController extends AbstractLinkController {
 		super(netMapViewer);
 	}
 
-	public static MapElementController createInstance(final NetMapViewer netMapViewer) {
-		return new PhysicalLinkController(netMapViewer);
+	public static PhysicalLinkController createInstance(final NetMapViewer netMapViewer) {
+		if (instance == null) {
+			instance = new PhysicalLinkController(netMapViewer);
+		}
+		return instance;
+	}
+	
+	public static PhysicalLinkController getInstance() {
+		assert instance != null : "PhysicalLinkController not initialyzed"; //$NON-NLS-1$
+		return instance;
 	}
 
 	/**
@@ -277,8 +286,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public String getStyle(final Characterizable characterizable) {
+	protected String getStyle(final Characterizable characterizable) {
 		if (!(characterizable instanceof PhysicalLink)) {
 			return MapPropertiesManager.getStyle();
 		}
@@ -299,23 +307,27 @@ public class PhysicalLinkController extends AbstractLinkController {
 	 */
 	@Override
 	public Color getColor(final Characterizable characterizable) {
+//		return super.getColor(characterizable);
 		if (!(characterizable instanceof PhysicalLink)) {
 			return MapPropertiesManager.getColor();
 		}
-
-		final PhysicalLink physicalLink = (PhysicalLink) characterizable;
-
-		final Characteristic ea = getCharacteristic(characterizable, this.colorCharType);
-		if (ea != null) {
-			Color color = this.colors.get(ea.getValue());
-			if (color == null) {
-				color = new Color(Integer.parseInt(ea.getValue()));
-				this.colors.put(ea.getValue(), color);
-			}
+		
+		Color color = this.colors.get(characterizable.getId());
+		if (color != null) {
 			return color;
 		}
+		final Characteristic ea = getCharacteristic(characterizable, this.colorCharType);
+		if (ea != null) {
+			color = new Color(Integer.parseInt(ea.getValue()));
+			this.colors.put(characterizable.getId(), color);
+			return color;
+		}
+
+		final PhysicalLink physicalLink = (PhysicalLink) characterizable;
 		final LinkTypeController ltc = (LinkTypeController) LinkTypeController.getInstance();
-		return ltc.getColor(physicalLink.getType());
+		color = ltc.getColor(physicalLink.getType());
+		this.colors.put(characterizable.getId(), color);
+		return color;
 	}
 
 	/**
@@ -341,7 +353,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	/*@Override
 	public int getAlarmedLineSize(final Characterizable characterizable) {
 		if (!(characterizable instanceof PhysicalLink)) {
 			return MapPropertiesManager.getAlarmedThickness();
@@ -356,7 +368,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 
 		final LinkTypeController ltc = (LinkTypeController) LinkTypeController.getInstance();
 		return ltc.getAlarmedLineSize(physicalLink.getType());
-	}
+	}*/
 
 	public Rectangle2D getBoundingRectangle(MapElement mapElement) throws MapConnectionException, MapDataException {
 		final PhysicalLink physicalLink = (PhysicalLink) mapElement;

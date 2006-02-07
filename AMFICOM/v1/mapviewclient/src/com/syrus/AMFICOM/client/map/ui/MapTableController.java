@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapTableController.java,v 1.16 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: MapTableController.java,v 1.17 2006/02/07 15:27:11 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/11 08:56:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.17 $, $Date: 2006/02/07 15:27:11 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -94,7 +94,7 @@ public final class MapTableController implements Wrapper {
 		else
 		if(key.equals(KEY_USER)) {
 			try {
-				SystemUser user = StorableObjectPool.getStorableObject(map.getCreatorId(), false);
+				SystemUser user = StorableObjectPool.getStorableObject(map.getCreatorId(), true);
 				result = user.getName();
 			} catch(ApplicationException e) {
 				result = ""; //$NON-NLS-1$

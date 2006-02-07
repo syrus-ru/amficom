@@ -1,5 +1,5 @@
 /*-
- * $$Id: AbstractLinkController.java,v 1.51 2005/12/06 11:52:21 bass Exp $$
+ * $$Id: AbstractLinkController.java,v 1.52 2006/02/07 15:27:11 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DataType;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -45,8 +46,8 @@ import com.syrus.util.Shitlet;
 /**
  * Контроллер линейного элемента карты.
  * 
- * @version $Revision: 1.51 $, $Date: 2005/12/06 11:52:21 $
- * @author $Author: bass $
+ * @version $Revision: 1.52 $, $Date: 2006/02/07 15:27:11 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -54,13 +55,16 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	/**
 	 * Карта объектов Color - локальный кэш (инициализируется при первом использовании)
 	 */
-	Map<String, Color> colors = new HashMap<String, Color>();
+	Map<Identifiable, Color> colors = new HashMap<Identifiable, Color>();
+	Map<Identifiable, Color> alarmedColors = new HashMap<Identifiable, Color>();
 
 	/**
 	 * Карта объектов Stroke - локальный кэш (инициализируется при первом использовании)
 	 */
-	Map<String, BasicStroke> strokes = new HashMap<String, BasicStroke>();	
+	Map<Identifiable, BasicStroke> alarmedStrokes = new HashMap<Identifiable, BasicStroke>();
+	Map<Identifiable, BasicStroke> strokes = new HashMap<Identifiable, BasicStroke>();	
 
+	
 	/** Кодовое имя атрибута "Толщина линии". */
 	public static final String ATTRIBUTE_THICKNESS = "thickness"; //$NON-NLS-1$
 	/** Кодовое имя атрибута "Цвет". */
@@ -188,6 +192,8 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @param size толщина линии
 	 */
 	public void setLineSize(final Characterizable characterizable, final int size) {
+		this.strokes.remove(characterizable.getId());
+		
 		Characteristic attribute = getCharacteristic(characterizable, this.thicknessCharType);
 		if (attribute == null) {
 			try {
@@ -220,7 +226,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * {@link #ATTRIBUTE_THICKNESS}. В случае, если такого атрибута у элемента
 	 * нет, берется значение по умолчанию ({@link MapPropertiesManager#getThickness()}).
 	 */
-	public int getLineSize(final Characterizable characterizable) {
+	protected int getLineSize(final Characterizable characterizable) {
 		final Characteristic ea = getCharacteristic(characterizable, this.thicknessCharType);
 		if (ea == null) {
 			return MapPropertiesManager.getThickness();
@@ -233,34 +239,11 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * атрибутом {@link #ATTRIBUTE_STYLE}. В случае, если
 	 * такого атрибута у элемента нет, создается новый.
 	 * @param characterizable элемент карты
-	 * @param style стиль
 	 */
-	public void setStyle(final Characterizable characterizable, final String style) {
-		Characteristic attribute = getCharacteristic(characterizable, this.styleCharType);
-		if (attribute == null) {
-			try {
-				attribute = Characteristic.createInstance(LoginManager.getUserId(),
-						this.styleCharType,
-						I18N.getString(MapEditorResourceKeys.NONAME),
-						"1", //$NON-NLS-1$
-						style,
-						characterizable,
-						true,
-						true);
-				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
-				characterizable.addCharacteristic(attribute, false);
-			} catch (CreateObjectException e) {
-				e.printStackTrace();
-				return;
-			} catch (IllegalObjectEntityException e) {
-				e.printStackTrace();
-				return;
-			} catch (ApplicationException e) {
-				e.printStackTrace();
-				return;
-			}
-		}
-		attribute.setValue(style);
+	public void clearCachedElement(final Characterizable characterizable) {
+		this.strokes.remove(characterizable.getId());
+		this.colors.remove(characterizable.getId());
+		this.alarmedColors.remove(characterizable.getId());
 	}
 
 	/**
@@ -272,7 +255,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 *        элемент карты
 	 * @return стиль
 	 */
-	public String getStyle(final Characterizable characterizable) {
+	protected String getStyle(final Characterizable characterizable) {
 		final Characteristic ea = getCharacteristic(characterizable, this.styleCharType);
 		if (ea == null) {
 			return MapPropertiesManager.getStyle();
@@ -288,12 +271,12 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @param characterizable элемент карты
 	 * @return стиль
 	 */
-	public Stroke getStroke(final Characterizable characterizable) {
-		final int thickness = getLineSize(characterizable);
-		final String style = getStyle(characterizable);
-		final String key = style + " " + thickness; //$NON-NLS-1$
-		BasicStroke strokeForLink = this.strokes.get(key);
+	public BasicStroke getStroke(final Characterizable characterizable) {
+		BasicStroke strokeForLink = this.strokes.get(characterizable.getId());
+		
 		if (strokeForLink == null) {
+			final int thickness = getLineSize(characterizable);
+			final String style = getStyle(characterizable);
 			strokeForLink = LineComboBox.getStrokeByType(style);
 			final int defaultThickness = (int) strokeForLink.getLineWidth();
 
@@ -305,7 +288,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						strokeForLink.getDashArray(),
 						strokeForLink.getDashPhase());
 
-			this.strokes.put(key, strokeForLink);
+			this.strokes.put(characterizable.getId(), strokeForLink);
 		}
 
 		return strokeForLink;
@@ -321,6 +304,8 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 *        цвет
 	 */
 	public void setColor(final Characterizable characterizable, final Color color) {
+		this.colors.put(characterizable.getId(), color);
+		
 		Characteristic attribute = getCharacteristic(characterizable, this.colorCharType);
 		if(attribute == null) {
 			try {
@@ -358,15 +343,14 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @return цвет
 	 */
 	public Color getColor(final Characterizable characterizable) {
-		final Characteristic ea = getCharacteristic(characterizable, this.colorCharType);
-		if (ea == null) {
-			return MapPropertiesManager.getColor();
-		}
-
-		Color color = this.colors.get(ea.getValue());
+		Color color = this.colors.get(characterizable);
 		if (color == null) {
+			final Characteristic ea = getCharacteristic(characterizable, this.colorCharType);
+			if (ea == null) {
+				return MapPropertiesManager.getColor();
+			}
 			color = new Color(Integer.parseInt(ea.getValue()));
-			this.colors.put(ea.getValue(), color);
+			this.colors.put(characterizable, color);
 		}
 		return color;
 	}
@@ -404,6 +388,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			}
 		}
 		attribute.setValue(String.valueOf(color.getRGB()));
+		this.alarmedColors.put(characterizable.getId(), color);
 	}
 
 	/**
@@ -415,14 +400,15 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @return цвет
 	 */
 	public Color getAlarmedColor(final Characterizable characterizable) {
-		final Characteristic ea = getCharacteristic(characterizable, this.alarmedColorCharType);
-		if (ea == null) {
-			return MapPropertiesManager.getAlarmedColor();
-		}
-		Color color = this.colors.get(ea.getValue());
+		Color color = this.alarmedColors.get(characterizable.getId());
 		if (color == null) {
+			
+			final Characteristic ea = getCharacteristic(characterizable, this.alarmedColorCharType);
+			if (ea == null) {
+				return MapPropertiesManager.getAlarmedColor();
+			}
 			color = new Color(Integer.parseInt(ea.getValue()));
-			this.colors.put(ea.getValue(), color);
+			this.colors.put(characterizable.getId(), color);
 		}
 		return color;
 	}
@@ -434,7 +420,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @param characterizable элемент карты
 	 * @param size толщина линии
 	 */
-	public void setAlarmedLineSize(final Characterizable characterizable, final int size) {
+	/*public void setAlarmedLineSize(final Characterizable characterizable, final int size) {
 		Characteristic attribute = getCharacteristic(characterizable, this.alarmedThicknessCharType);
 		if (attribute == null) {
 			try {
@@ -460,7 +446,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			}
 		}
 		attribute.setValue(String.valueOf(size));
-	}
+	}*/
 
 	/**
 	 * Получить толщину линии при наличи сигнала тревоги. Толщина определяется
@@ -471,11 +457,11 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 *        элемент карты
 	 * @return толщина линии
 	 */
-	public int getAlarmedLineSize(final Characterizable characterizable) {
+	/*public int getAlarmedLineSize(final Characterizable characterizable) {
 		final Characteristic ea = getCharacteristic(characterizable, this.alarmedThicknessCharType);
 		if (ea == null) {
 			return MapPropertiesManager.getAlarmedThickness();
 		}
 		return Integer.parseInt(ea.getValue());
-	}
+	}*/
 }

@@ -1,5 +1,5 @@
 /*-
- * $$Id: UnboundLinkController.java,v 1.12 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: UnboundLinkController.java,v 1.13 2006/02/07 15:27:11 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 /**
  *  онтроллер элемента неприв€занной линии (участка неприв€занного кабел€).
  *  
- * @version $Revision: 1.12 $, $Date: 2005/09/30 16:08:39 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2006/02/07 15:27:11 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -37,7 +37,7 @@ public final class UnboundLinkController extends PhysicalLinkController {
 		super(netMapViewer);
 	}
 
-	public static MapElementController createInstance(final NetMapViewer netMapViewer) {
+	public static UnboundLinkController createInstance(final NetMapViewer netMapViewer) {
 		return new UnboundLinkController(netMapViewer);
 	}
 
