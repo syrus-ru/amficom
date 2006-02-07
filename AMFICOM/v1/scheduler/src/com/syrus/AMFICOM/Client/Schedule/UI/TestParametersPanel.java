@@ -52,6 +52,7 @@ import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
+import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
@@ -70,6 +71,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 	private JCheckBox useSetupsCheckBox;
 	private JLabel analysisLabel;
 	private JCheckBox useAnalysisSetupsCheckBox;
+	private JCheckBox singleCheckBox;
+	
 	WrapperedComboBox<Describable> analysisComboBox;
 	private JLabel patternsLabel;
 	WrapperedList<MeasurementSetup> testSetups;
@@ -86,7 +89,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 	PropertyChangeEvent propertyChangeEvent;
 	
 	private JPanel	patternPanel;	
-
+	
 	public TestParametersPanel(final ApplicationContext aContext) {
 		this.aContext = aContext;
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
@@ -231,6 +234,27 @@ final class TestParametersPanel implements PropertyChangeListener {
 				}
 			}
 		});
+		
+		this.singleCheckBox = new JCheckBox(
+			I18N.getString("Scheduler.Text.MeasurementParameter.AllAvailableSetups"),
+			false);
+		
+		this.singleCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				final JCheckBox checkBox = (JCheckBox) e.getSource();
+				if (checkBox.isSelected()) {
+					refreshMeasurementSetups();
+				} else {
+					try {
+						refreshMeasurementSetup();
+					} catch (ApplicationException e1) {
+						AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
+					}
+				}
+			}
+		});
+		
+		this.patternPanel.add(this.singleCheckBox, gbc);
 
 		this.measurementSetupId = Identifier.VOID_IDENTIFIER;
 		this.testSetups = new WrapperedList<MeasurementSetup>(MeasurementSetupWrapper.getInstance(),
@@ -343,12 +367,21 @@ final class TestParametersPanel implements PropertyChangeListener {
 	public void setMeasurementSetup(final MeasurementSetup measurementSetup, 
 	                                final boolean switchToSetups) {
 		
-
+		final boolean single = !this.singleCheckBox.isSelected();
 		
 		this.testSetups.clearSelection();
 		this.measurementSetupId = measurementSetup != null ? measurementSetup.getId() : Identifier.VOID_IDENTIFIER;
-		if (measurementSetup == null || this.msList == null) {
+		if (measurementSetup == null || this.msList == null && !single) {
 			return;
+		}
+		
+		if (single) {
+			if (this.msList == null) {
+				this.msList = new LinkedList<MeasurementSetup>();
+			} else {
+				this.msList.clear();
+			}
+			this.msList.add(measurementSetup);
 		}
 
 		try {
@@ -381,7 +414,9 @@ final class TestParametersPanel implements PropertyChangeListener {
 		final WrapperedListModel<MeasurementSetup> wrapperedListModel = 
 			this.testSetups.getModel();
 		
-		if (!this.msList.contains(measurementSetup)) {
+		if (single) {
+			wrapperedListModel.setElements(this.msList);
+		} else if (!this.msList.contains(measurementSetup)) {
 			this.msList.add(measurementSetup);
 			// if total list doesn't contains ms, and ms with analysis - add to analysis ms list
 			if(measurementSetupWithAnalysis) {
@@ -407,7 +442,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 		|| measurementSetup.getThresholdSet() != null;
 	}
 	
-	void setMeasurementSetups(final Set<MeasurementSetup> measurementSetups) {
+	void setMeasurementSetups0(final Set<MeasurementSetup> measurementSetups) {
 		Log.debugMessage(measurementSetups,
 			Log.DEBUGLEVEL10);
 		if (this.msList == null) {
@@ -439,6 +474,10 @@ final class TestParametersPanel implements PropertyChangeListener {
 		} else {
 			wrapperedListModel.setElements(this.msList);
 		}
+	}
+	
+	void setMeasurementSetups(final Set<MeasurementSetup> measurementSetups) {
+		this.setMeasurementSetups0(measurementSetups);
 
 //		this.testSetups.setEnabled(true);
 //		this.useAnalysisSetupsCheckBox.setEnabled(true);
@@ -454,21 +493,27 @@ final class TestParametersPanel implements PropertyChangeListener {
 		}		
 	}
 
-	private void refreshMeasurementSetups() {
-		new ProcessingDialog(new Runnable() {
+	void refreshMeasurementSetups() {
+		if (this.singleCheckBox.isSelected()) {
+			if (this.schedulerModel.getSelectedMeasurementType() != MeasurementType.UNKNOWN
+					|| this.schedulerModel.getSelectedMonitoredElement() != null) {
+				new ProcessingDialog(new Runnable() {
 
-			public void run() {
-				try {
-					TestParametersPanel.this.setMeasurementSetups(TestParametersPanel.this.schedulerModel.getMeasurementSetups());
-				} catch (final ApplicationException e) {
-					AbstractMainFrame.showErrorMessage(e.getMessage());
-				}
+					@SuppressWarnings("unqualified-field-access")
+					public void run() {
+						try {
+							setMeasurementSetups(schedulerModel.getMeasurementSetups());
+						} catch (final ApplicationException e) {
+							AbstractMainFrame.showErrorMessage(e.getMessage());
+						}
+					}
+					
+				}, I18N.getString("Common.ProcessingDialog.PlsWait"));
 			}
-			
-		}, I18N.getString("Common.ProcessingDialog.PlsWait"));
+		}
 	}
 	
-	private void refreshMeasurementSetup() throws ApplicationException {
+	void refreshMeasurementSetup() throws ApplicationException {
 		final Test selectedTest = this.schedulerModel.getSelectedTest();
 		if (selectedTest != null) {
 			final Set<Identifier> measurementSetupIds = selectedTest.getMeasurementSetupIds();
