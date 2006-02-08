@@ -136,6 +136,7 @@ final class PlanToolBar {
 					panel.setStartDate(calDate.getTime());
 					panel.setScale(comboBox.getSelectedIndex());
 					panel.updateTestLinesTimeRegion();
+					panel.updateScale2Fit();
 				}
 			}
 		});
