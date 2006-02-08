@@ -251,6 +251,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			false);
 		
 		this.allAvailableCheckBox.addActionListener(new ActionListener() {
+			@SuppressWarnings("unqualified-field-access")
 			public void actionPerformed(final ActionEvent e) {
 				final JCheckBox checkBox = (JCheckBox) e.getSource();
 				if (checkBox.isSelected()) {
