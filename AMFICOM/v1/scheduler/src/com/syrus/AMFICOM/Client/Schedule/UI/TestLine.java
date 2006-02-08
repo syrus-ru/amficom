@@ -862,7 +862,7 @@ final class TestLine extends TimeLine {
 			
 			for (final Test test : tests) {
 				final List<TestTimeLine> testTimeLineList = this.measurements.get(test.getId());
-				assert Log.debugMessage("Test:" + test.getId() + ", " + test.getStartTime(), Log.DEBUGLEVEL03);
+//				assert Log.debugMessage("Test:" + test.getId() + ", " + test.getStartTime(), Log.DEBUGLEVEL03);
 				if (testTimeLineList == null || testTimeLineList.isEmpty()) {
 					System.err.println("TestLine.refreshTimeItems | List<TestTimeLine> for " + test.getId() + " is null or empty ");
 					continue;
