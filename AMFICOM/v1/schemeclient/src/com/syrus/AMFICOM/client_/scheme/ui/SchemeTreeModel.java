@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.50 2005/10/31 12:30:29 bass Exp $
+ * $Id: SchemeTreeModel.java,v 1.51 2006/02/08 14:09:48 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,15 +9,18 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/10/31 12:30:29 $
+ * @author $Author: stas $
+ * @version $Revision: 1.51 $, $Date: 2006/02/08 14:09:48 $
  * @module schemeclient
  */
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.UIManager;
@@ -61,7 +64,9 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 	ApplicationContext aContext;
 	
 	PopulatableIconedNode root;
-
+	
+	private boolean forceSorting = false;
+	
 	private static IdlKind[] schemeTypes = new IdlKind[] { IdlKind.NETWORK, IdlKind.BUILDING,
 			IdlKind.CABLE_SUBNETWORK };
 
@@ -127,12 +132,17 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 					StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
 					Set<StorableObject> schemeElements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					
-					Collection toAdd = super.getObjectsToAdd(schemeElements, contents);
+					Collection<StorableObject> toAdd = super.getObjectsToAdd(schemeElements, contents);
 					Collection<Item> toRemove = super.getItemsToRemove(schemeElements, node.getChildren());
 									
 					for (Item child : toRemove) {
 						child.setParent(null);
-					}			
+					}	
+					if (this.forceSorting) {
+						List<StorableObject> list = new ArrayList<StorableObject>(toAdd); 
+						Collections.sort(list, StorableObjectComparator.getInstance());
+						toAdd = list;
+					}
 					for (Iterator it = toAdd.iterator(); it.hasNext();) {
 						SchemeElement sc = (SchemeElement) it.next();
 						if (sc.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
@@ -149,12 +159,17 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 					StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
 					Set<StorableObject> schemeElements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					
-					Collection toAdd = super.getObjectsToAdd(schemeElements, contents);
+					Collection<StorableObject> toAdd = super.getObjectsToAdd(schemeElements, contents);
 					Collection<Item> toRemove = super.getItemsToRemove(schemeElements, node.getChildren());
 									
 					for (Item child : toRemove) {
 						child.setParent(null);
-					}			
+					}
+					if (this.forceSorting) {
+						List<StorableObject> list = new ArrayList<StorableObject>(toAdd); 
+						Collections.sort(list, StorableObjectComparator.getInstance());
+						toAdd = list;
+					}
 					for (Iterator it = toAdd.iterator(); it.hasNext();) {
 						SchemeElement sc = (SchemeElement) it.next();
 						if (sc.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER) {
@@ -170,12 +185,17 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 					StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
 					Set<StorableObject> schemeLinks = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					
-					Collection toAdd = super.getObjectsToAdd(schemeLinks, contents);
+					Collection<StorableObject> toAdd = super.getObjectsToAdd(schemeLinks, contents);
 					Collection<Item> toRemove = super.getItemsToRemove(schemeLinks, node.getChildren());
 									
 					for (Item child : toRemove) {
 						child.setParent(null);
-					}			
+					}
+					if (this.forceSorting) {
+						List<StorableObject> list = new ArrayList<StorableObject>(toAdd); 
+						Collections.sort(list, StorableObjectComparator.getInstance());
+						toAdd = list;
+					}
 					for (Iterator it = toAdd.iterator(); it.hasNext();) {
 						Namable so = (Namable) it.next();
 						node.addChild(new PopulatableIconedNode(this, so, false));
@@ -189,12 +209,17 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 					StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
 					Set<StorableObject> schemeMonitoringSolutions = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					
-					Collection toAdd = super.getObjectsToAdd(schemeMonitoringSolutions, contents);
+					Collection<StorableObject> toAdd = super.getObjectsToAdd(schemeMonitoringSolutions, contents);
 					Collection<Item> toRemove = super.getItemsToRemove(schemeMonitoringSolutions, node.getChildren());
 									
 					for (Item child : toRemove) {
 						child.setParent(null);
-					}			
+					}
+					if (this.forceSorting) {
+						List<StorableObject> list = new ArrayList<StorableObject>(toAdd); 
+						Collections.sort(list, StorableObjectComparator.getInstance());
+						toAdd = list;
+					}
 					for (Iterator it = toAdd.iterator(); it.hasNext();) {
 						SchemeMonitoringSolution sms = (SchemeMonitoringSolution) it.next();
 						LinkedIdsCondition condition1 = new LinkedIdsCondition(sms.getId(), ObjectEntities.SCHEMEPATH_CODE);
@@ -319,11 +344,16 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 						node.addChild(child);
 					}
 					if (!contents.contains(SchemeResourceKeys.SCHEME_CABLE_PORT)) {
-						Set<SchemeCablePort> cablePorts = Collections.emptySet();
+						Collection<SchemeCablePort> cablePorts = Collections.emptySet();
 						try {
 							cablePorts = se.getSchemeCablePortsRecursively(false);
 						} catch (ApplicationException e) {
 							Log.errorMessage(e);
+						}
+						if (this.forceSorting) {
+							List<SchemeCablePort> list = new ArrayList<SchemeCablePort>(cablePorts); 
+							Collections.sort(list, StorableObjectComparator.getInstance());
+							cablePorts = list;
 						}
 						if (!cablePorts.isEmpty()) {
 							PopulatableIconedNode child = new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_CABLE_PORT, LangModelScheme.getString(SchemeResourceKeys.SCHEME_CABLE_PORT));
@@ -334,11 +364,16 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 						}
 					}
 					if (!contents.contains(SchemeResourceKeys.SCHEME_PORT)) {
-						Set<SchemePort> ports = Collections.emptySet();
+						Collection<SchemePort> ports = Collections.emptySet();
 						try {
 							ports = se.getSchemePortsRecursively(false);
 						} catch (ApplicationException e) {
 							Log.errorMessage(e);
+						}
+						if (this.forceSorting) {
+							List<SchemePort> list = new ArrayList<SchemePort>(ports); 
+							Collections.sort(list, StorableObjectComparator.getInstance());
+							ports = list;
 						}
 						if (!ports.isEmpty()) {
 							PopulatableIconedNode child = new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_PORT, LangModelScheme.getString(SchemeResourceKeys.SCHEME_PORT));
@@ -357,12 +392,17 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 					StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
 					Set<StorableObject> schemePaths = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					
-					Collection toAdd = super.getObjectsToAdd(schemePaths, contents);
+					Collection<StorableObject> toAdd = super.getObjectsToAdd(schemePaths, contents);
 					Collection<Item> toRemove = super.getItemsToRemove(schemePaths, node.getChildren());
 									
 					for (Item child : toRemove) {
 						child.setParent(null);
-					}			
+					}
+					if (this.forceSorting) {
+						List<StorableObject> list = new ArrayList<StorableObject>(toAdd); 
+						Collections.sort(list, StorableObjectComparator.getInstance());
+						toAdd = list;
+					}
 					for (Iterator it = toAdd.iterator(); it.hasNext();) {
 						SchemePath sp = (SchemePath) it.next();
 						node.addChild(new PopulatableIconedNode(this, sp, false));
@@ -417,11 +457,16 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 				}
 			}
 			
-			Collection toAdd = super.getObjectsToAdd(schemes, contents);
+			Collection<StorableObject> toAdd = super.getObjectsToAdd(schemes, contents);
 			Collection<Item> toRemove = super.getItemsToRemove(schemes, node.getChildren());
 
 			for (Item child : toRemove) {
 				child.setParent(null);
+			}
+			if (this.forceSorting) {
+				List<StorableObject> list = new ArrayList<StorableObject>(toAdd); 
+				Collections.sort(list, StorableObjectComparator.getInstance());
+				toAdd = list;
 			}
 			for (Iterator it = toAdd.iterator(); it.hasNext();) {
 				Scheme sc = (Scheme) it.next();
@@ -432,4 +477,27 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 			ex1.printStackTrace();
 		}
 	}
+		
+	public void setForceSorting(boolean forceSorting) {
+		this.forceSorting = forceSorting;
+	}
 }
+
+class StorableObjectComparator implements Comparator<StorableObject> {
+	private static StorableObjectComparator instance;
+	
+	static StorableObjectComparator getInstance() {
+		if (instance == null) {
+			instance = new StorableObjectComparator();
+		}
+		return instance;
+	}
+	
+	public int compare(final StorableObject object1, 
+			final StorableObject object2) {
+		final String string1 = object1 instanceof Namable ? ((Namable)object1).getName() : object1.getId().getIdentifierString();
+		final String string2 = object2 instanceof Namable ? ((Namable)object2).getName() : object2.getId().getIdentifierString();
+		return string1.compareTo(string2);
+	}
+}
+
