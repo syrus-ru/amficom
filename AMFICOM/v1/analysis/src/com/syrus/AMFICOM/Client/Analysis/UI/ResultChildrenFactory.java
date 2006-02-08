@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.20 2006/02/06 12:18:31 stas Exp $
+ * $Id: ResultChildrenFactory.java,v 1.21 2006/02/08 09:37:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2006/02/06 12:18:31 $
+ * @version $Revision: 1.21 $, $Date: 2006/02/08 09:37:51 $
  * @module analysis
  */
 
@@ -232,7 +232,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 
 					TypicalCondition timeCondition = new TypicalCondition(startDate,
 							endDate, OperationSort.OPERATION_IN_RANGE,
-							ObjectEntities.TEST_CODE, TestWrapper.COLUMN_START_TIME);
+							condition.getEntityCode().shortValue(), TestWrapper.COLUMN_START_TIME);
 					FiltrableIconedNode item6 = new FiltrableIconedNode();
 					item6.setObject(startDate);
 					item6.setName(LangModelAnalyse.getString("by_filter"));
