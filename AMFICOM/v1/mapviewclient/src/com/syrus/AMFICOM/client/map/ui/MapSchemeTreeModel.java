@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapSchemeTreeModel.java,v 1.44 2005/10/31 12:30:09 bass Exp $$
+ * $$Id: MapSchemeTreeModel.java,v 1.45 2006/02/08 12:17:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,11 +87,14 @@ import com.syrus.util.WrapperComparator;
  *             		|____ (*) "path2"
  * </pre>
  * 
- * @version $Revision: 1.44 $, $Date: 2005/10/31 12:30:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2006/02/08 12:17:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
+ * @deprecated use SchemeTreeModel
  */
+
+@Deprecated
 public class MapSchemeTreeModel 
 		implements ChildrenFactory {
 
