@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorTreeModel.java,v 1.11 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: MapEditorTreeModel.java,v 1.12 2006/02/08 12:11:07 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.logic.AbstractChildrenFactory;
@@ -23,8 +24,8 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/11 08:56:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.12 $, $Date: 2006/02/08 12:11:07 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -35,12 +36,14 @@ public final class MapEditorTreeModel extends AbstractChildrenFactory {
 	private MapView mapView;
 	private PopulatableIconedNode root;
 	private PopulatableIconedNode topologyNode;
+	private ApplicationContext aContext;
 
-	public MapEditorTreeModel() {
-		// empty
+	public MapEditorTreeModel(ApplicationContext aContext) {
+		this.aContext = aContext;
 	}
 
-	public MapEditorTreeModel(MapView mapView) {
+	public MapEditorTreeModel(MapView mapView, ApplicationContext aContext) {
+		this(aContext);
 		this.mapView = mapView;
 	}
 
@@ -72,7 +75,7 @@ public final class MapEditorTreeModel extends AbstractChildrenFactory {
 
 		Collection contents = super.getChildObjects(node);
 		if (!contents.contains(this.mapView)) {
-			PopulatableIconedNode item = MapViewTreeModel.createSingleMapViewRoot(this.mapView);
+			PopulatableIconedNode item = MapViewTreeModel.createSingleMapViewRoot(this.mapView, this.aContext);
 			item.getChildrenFactory().populate(item);
 			node.addChild(item);
 //			System.out.println("add " + this.mapView.getName() + " to " + node.getObject().toString());

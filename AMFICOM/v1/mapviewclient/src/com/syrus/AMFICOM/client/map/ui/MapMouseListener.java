@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMouseListener.java,v 1.74 2006/02/07 15:27:11 stas Exp $$
+ * $$Id: MapMouseListener.java,v 1.75 2006/02/08 12:11:07 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * события передается текущему активному элементу карты (посредством объекта
  * MapStrategy)
  * 
- * @version $Revision: 1.74 $, $Date: 2006/02/07 15:27:11 $
+ * @version $Revision: 1.75 $, $Date: 2006/02/08 12:11:07 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -544,6 +544,8 @@ public final class MapMouseListener implements MouseListener {
 			if (actionMode == MapState.ALT_LINK_ACTION_MODE
 					|| actionMode == MapState.DRAW_ACTION_MODE
 					|| actionMode == MapState.DRAW_LINES_ACTION_MODE){
+				logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
+			} else if (actionMode == MapState.SELECT_MARKER_ACTION_MODE) {
 				logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			}
 		}

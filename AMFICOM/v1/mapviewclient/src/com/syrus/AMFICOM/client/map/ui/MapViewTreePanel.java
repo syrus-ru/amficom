@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewTreePanel.java,v 1.32 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: MapViewTreePanel.java,v 1.33 2006/02/08 12:11:07 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/09/30 16:08:42 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.33 $, $Date: 2006/02/08 12:11:07 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -40,7 +40,7 @@ public final class MapViewTreePanel extends JPanel {
 	private void jbInit() {
 		this.setLayout(this.borderLayout1);
 
-		MapEditorTreeModel model = new MapEditorTreeModel();
+		MapEditorTreeModel model = new MapEditorTreeModel(this.aContext);
 
 		IconedTreeUI iconedTreeUI = new IconedTreeUI(model.getRoot());
 		TreeFilterUI flterTreeUI = new TreeFilterUI(iconedTreeUI, new FilterPanel());

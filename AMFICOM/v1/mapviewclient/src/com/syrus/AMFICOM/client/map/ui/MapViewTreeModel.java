@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewTreeModel.java,v 1.32 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: MapViewTreeModel.java,v 1.33 2006/02/08 12:11:07 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,10 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -37,11 +39,12 @@ import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/10/11 08:56:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.33 $, $Date: 2006/02/08 12:11:07 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -66,20 +69,23 @@ public class MapViewTreeModel implements ChildrenFactory {
 	public static MapViewComparator mapViewComparator = new MapViewComparator();
 	
 	private static MapViewTreeModel instance;
+	private static SchemeTreeModel schemeTreeModel;
 
 	protected MapViewTreeModel() {
 		// empty
 	}
 
-	public static MapViewTreeModel getInstance() {
-		if(instance == null)
+	public static MapViewTreeModel getInstance(ApplicationContext aContext) {
+		if(instance == null) {
 			instance = new MapViewTreeModel();
+			schemeTreeModel = new SchemeTreeModel(aContext);
+		}
 		return instance;
 	}
 
-	public static PopulatableIconedNode createAllMapViewsRoot() {
+	public static PopulatableIconedNode createAllMapViewsRoot(ApplicationContext aContext) {
 		PopulatableIconedNode root = new PopulatableIconedNode(
-				MapViewTreeModel.getInstance(),
+				MapViewTreeModel.getInstance(aContext),
 				MapViewTreeModel.ALL_MAP_VIEWS_BRANCH,
 				I18N.getString(MapViewTreeModel.ALL_MAP_VIEWS_BRANCH),
 				mapViewIcon, 
@@ -87,9 +93,9 @@ public class MapViewTreeModel implements ChildrenFactory {
 		return root;
 	}
 
-	public static PopulatableIconedNode createSingleMapViewRoot(MapView mapView) {
+	public static PopulatableIconedNode createSingleMapViewRoot(MapView mapView, ApplicationContext aContext) {
 		PopulatableIconedNode root = new PopulatableIconedNode(
-				MapViewTreeModel.getInstance(),
+				MapViewTreeModel.getInstance(aContext),
 				mapView,
 				mapViewIcon, 
 				true);
@@ -288,14 +294,17 @@ public class MapViewTreeModel implements ChildrenFactory {
 			Scheme scheme = (Scheme )it.next();
 			Item childNode = (Item )nodePresense.get(scheme);
 			if(childNode == null) {
-				MapSchemeTreeNode newItem = new MapSchemeTreeNode(
-						MapSchemeTreeModel.getInstance(),
-						scheme,
-						MapSchemeTreeModel.schemeIcon, 
-						true);
-				newItem.setTopological(true);
-//				newItem.populate();
-				node.addChild(newItem);
+				
+				node.addChild(new PopulatableIconedNode(schemeTreeModel, scheme, UIManager.getIcon(SchemeResourceKeys.ICON_SCHEME)));
+				
+//				MapSchemeTreeNode newItem = new MapSchemeTreeNode(
+//						MapSchemeTreeModel.getInstance(),
+//						scheme,
+//						MapSchemeTreeModel.schemeIcon, 
+//						true);
+//				newItem.setTopological(true);
+////				newItem.populate();
+//				node.addChild(newItem);
 			}
 		}
 	}
