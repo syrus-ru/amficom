@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewTreeModel.java,v 1.33 2006/02/08 12:11:07 stas Exp $$
+ * $$Id: MapViewTreeModel.java,v 1.34 2006/02/08 14:10:19 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2006/02/08 12:11:07 $
+ * @version $Revision: 1.34 $, $Date: 2006/02/08 14:10:19 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -79,6 +79,7 @@ public class MapViewTreeModel implements ChildrenFactory {
 		if(instance == null) {
 			instance = new MapViewTreeModel();
 			schemeTreeModel = new SchemeTreeModel(aContext);
+			schemeTreeModel.setForceSorting(true);
 		}
 		return instance;
 	}
