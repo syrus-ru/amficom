@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.167 2006/02/07 12:36:01 bob Exp $
+ * $Id: SchedulerModel.java,v 1.168 2006/02/08 10:27:01 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.167 $, $Date: 2006/02/07 12:36:01 $
+ * @version $Revision: 1.168 $, $Date: 2006/02/08 10:27:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -622,7 +622,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		final Date end2 = endDate.compareTo(test.getEndTime()) < 0 ? endDate : test.getEndTime();
 		Date start = now;
 		int count = 0;
-		while(start.compareTo(end2) < 0) {
+		while(start.compareTo(end2) <= 0) {
 			final Date end = start.getTime() + interval < end2.getTime() ? new Date(start.getTime() + interval) : end2;
 			SortedSet<Date> testTimes = this.getTestTimes(test, start, end, 0);
 			count += testTimes.size();
@@ -1534,12 +1534,23 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		final long interval = 30L * 24L * 60L * 60L * 1000L;
 
 		for (final Test test : tests) {
+//			assert Log.debugMessage("Test:" 
+//					+ test.getId() 
+//					+  ", (" 
+//					+ test.getStartTime()
+//					+ ", " 
+//					+ test.getEndTime() 
+//					+ ")", 
+//				Log.DEBUGLEVEL03);
 			Date start = startDate.compareTo(test.getStartTime()) < 0 ? test.getStartTime() : startDate;
-			final Date end2 = endDate.compareTo(test.getEndTime()) < 0 ? endDate : test.getEndTime();  
-			while(start.compareTo(end2) < 0) {
+			final Date end2 = endDate.compareTo(test.getEndTime()) < 0 ? endDate : test.getEndTime();
+//			assert Log.debugMessage("Start: " + start + ", end2: " + end2, Log.DEBUGLEVEL03);
+			while(start.compareTo(end2) <= 0) {
 				final Date end = start.getTime() + interval < end2.getTime() ? new Date(start.getTime() + interval) : end2;
 				final SortedSet<Date> times = this.getTestTimes(temporalPattern, startDate, end2, start, end, 0L);
-				String result = this.isValid0(monitoredElementId, test, times, localStartEndTimeMap, measurementDuration);
+//				assert Log.debugMessage("Times: " + times, Log.DEBUGLEVEL03);
+				final String result = this.isValid0(monitoredElementId, test, times, localStartEndTimeMap, measurementDuration);
+//				assert Log.debugMessage("Result: " + result, Log.DEBUGLEVEL03);
 				if (result != null) {
 					return result;
 				}
@@ -1744,7 +1755,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
       				StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
 			}
       		
-      		while(start.compareTo(end) < 0) {
+      		while(start.compareTo(end) <= 0) {
       			final Date end1 = start.getTime() + interval < end.getTime() ? new Date(start.getTime() + interval) : end;
       			final SortedSet<Date> times = this.getTestTimes(test, start, end1, offset);
       			
