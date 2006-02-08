@@ -10,6 +10,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -255,6 +256,10 @@ final class TestParametersPanel implements PropertyChangeListener {
 				if (checkBox.isSelected()) {
 					refreshMeasurementSetups();
 				} else {
+					final WrapperedListModel<MeasurementSetup> wrapperedListModel = 
+						testSetups.getModel();
+					final Set<MeasurementSetup> emptySet = Collections.emptySet();
+					wrapperedListModel.setElements(emptySet);
 					try {
 						refreshMeasurementSetup();
 					} catch (ApplicationException e1) {
