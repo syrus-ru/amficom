@@ -1,5 +1,5 @@
 /*-
- * $$Id: WrapperedComboChooserDialog.java,v 1.8 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: WrapperedComboChooserDialog.java,v 1.9 2006/02/08 14:35:46 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,14 +17,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.UI.WrapperedListModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/11 08:56:11 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.9 $, $Date: 2006/02/08 14:35:46 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -70,9 +71,12 @@ public class WrapperedComboChooserDialog {
 		JLabel jLabel = new JLabel(I18N.getString("Element")); //$NON-NLS-1$
 		WrapperedComboBox comboBox = new WrapperedComboBox(
 				wrapper, 
-				new ArrayList(contents),
 				key, 
 				compareKey);
+		
+		comboBox.addElements(contents);
+		((WrapperedListModel)comboBox.getModel()).sort();
+		
 		if(object != null)
 			comboBox.setSelectedItem(object);
 		
