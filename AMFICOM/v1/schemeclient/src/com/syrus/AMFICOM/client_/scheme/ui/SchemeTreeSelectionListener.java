@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeSelectionListener.java,v 1.18 2005/12/08 10:43:49 stas Exp $
+ * $Id: SchemeTreeSelectionListener.java,v 1.19 2006/02/08 14:08:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2005/12/08 10:43:49 $
+ * @version $Revision: 1.19 $, $Date: 2006/02/08 14:08:41 $
  * @module schemeclient
  */
 
@@ -179,7 +179,7 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 			}
 		} else if (e.getPropertyName().equals(SchemeEvent.TYPE)) {
 			SchemeEvent ev = (SchemeEvent)e;
-			if (ev.isType(SchemeEvent.CREATE_OBJECT) || ev.isType(SchemeEvent.DELETE_OBJECT)) {
+			if ((ev.isType(SchemeEvent.CREATE_OBJECT) || ev.isType(SchemeEvent.DELETE_OBJECT)) && this.treeUI.isLinkObjects()) {
 				ItemTreeModel model = this.treeUI.getTreeUI().getTreeModel();
 				this.treeUI.updateRecursively((Item)model.getRoot());
 			}
