@@ -1,5 +1,5 @@
 /*-
- * $Id: FifoSaver.java,v 1.3 2005/12/02 13:55:00 arseniy Exp $
+ * $Id: FifoSaver.java,v 1.4 2006/02/08 12:27:07 saa Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/02 13:55:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2006/02/08 12:27:07 $
+ * @author $Author: saa $
  * @module util
  */
 public final class FifoSaver {
@@ -75,8 +75,11 @@ public final class FifoSaver {
 
 		Log.debugMessage("Loading Fifo '" + entityName + "'", Log.DEBUGLEVEL10);
 
+		FileInputStream fileInputStream = null;
+		ObjectInputStream objectInputStream = null;
 		try {
-			final ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(fifoFile));
+			fileInputStream = new FileInputStream(fifoFile);
+			objectInputStream = new ObjectInputStream(fileInputStream);
 			final String fileEntityName = (String) objectInputStream.readObject();
 			if (fileEntityName == null || !fileEntityName.equals(entityName)) {
 				Log.errorMessage("Wrong input file " + fifoFile.getAbsolutePath()
@@ -99,7 +102,18 @@ public final class FifoSaver {
 			Log.errorMessage(cnfe);
 			return;
 		} finally {
-			fifoFile.delete();
+			try {
+				if (objectInputStream != null) {
+					objectInputStream.close();
+				} else if (fileInputStream != null) {
+					fileInputStream.close();
+				}
+			} catch (IOException e) {
+				// Hm... something strange. Should I handle Java problems?
+			}
+			if (!fifoFile.delete()) {
+				throw new InternalError("Failed to delete fifo file " + fifoFileName);
+			}
 		}
 	}
 
