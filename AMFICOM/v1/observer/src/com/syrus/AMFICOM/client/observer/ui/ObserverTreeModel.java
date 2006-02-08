@@ -1,5 +1,5 @@
 /*-
- * $Id: ObserverTreeModel.java,v 1.1 2005/10/26 13:51:56 bass Exp $
+ * $Id: ObserverTreeModel.java,v 1.2 2006/02/08 13:08:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.resource.ObserverResourceKeys;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/10/26 13:51:56 $
+ * @author $Author: stas $
+ * @version $Revision: 1.2 $, $Date: 2006/02/08 13:08:18 $
  * @module surveyclient_v1
  */
 
@@ -62,7 +62,7 @@ public class ObserverTreeModel extends AbstractChildrenFactory {
 	
 	private void createRootItems(Item node, Collection contents) {
 		if (!contents.contains(MapEditorTreeModel.MAP_EDITOR_TREE_ROOT)) {
-			MapEditorTreeModel mapEditorTreeModel = new MapEditorTreeModel();
+			MapEditorTreeModel mapEditorTreeModel = new MapEditorTreeModel(this.aContext);
 			node.addChild(mapEditorTreeModel.getRoot());
 		}
 		if (!contents.contains(SchemeTreeModel.getRootObject())) {
