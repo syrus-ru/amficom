@@ -12,6 +12,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -588,7 +589,12 @@ final class TestLine extends TimeLine {
 		final long measurementDuration = measurementSetup.getMeasurementDuration();
 		final SortedMap<Date, String> stoppings = test.getStoppingMap();
 		final Date testTime = test.getStartTime();
+		
+//		assert Log.debugMessage(test.getId() + " > " + testTime, Log.DEBUGLEVEL03);
+
+		
 		if (testTime.compareTo(end1) > 0) {
+//			assert Log.debugMessage("1", Log.DEBUGLEVEL03);
 			return;
 		}
 		final TestStatus status = test.getStatus();
@@ -712,6 +718,7 @@ final class TestLine extends TimeLine {
 				break;
 			default:
 				if (test.getEndTime().getTime() + measurementDuration < start1.getTime()) {
+//					assert Log.debugMessage("2", Log.DEBUGLEVEL03);
 					return;
 				}
 				TestTimeLine testTimeLine = new TestTimeLine();
@@ -845,14 +852,17 @@ final class TestLine extends TimeLine {
 				};
 			}
 			
-			final TreeSet<Test> tests = new TreeSet<Test>(this.statusTestComparator);
+			final List<Test> tests = new ArrayList<Test>(this.testIds.size());
 			for (final Identifier testId : this.testIds) {
 				final Test test = TestView.valueOf(testId).getTest();
 				tests.add(test);
 			}
 			
+			Collections.sort(tests, this.statusTestComparator);
+			
 			for (final Test test : tests) {
 				final List<TestTimeLine> testTimeLineList = this.measurements.get(test.getId());
+				assert Log.debugMessage("Test:" + test.getId() + ", " + test.getStartTime(), Log.DEBUGLEVEL03);
 				if (testTimeLineList == null || testTimeLineList.isEmpty()) {
 					System.err.println("TestLine.refreshTimeItems | List<TestTimeLine> for " + test.getId() + " is null or empty ");
 					continue;
