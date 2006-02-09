@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLogger.java,v 1.14 2006/02/09 13:23:29 saa Exp $
+ * $Id: AbstractLogger.java,v 1.15 2006/02/09 14:36:30 saa Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import java.util.logging.Level;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.14 $, $Date: 2006/02/09 13:23:29 $
+ * @version $Revision: 1.15 $, $Date: 2006/02/09 14:36:30 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
@@ -120,41 +120,45 @@ abstract class AbstractLogger implements Logger {
 
 	abstract void initSpec();
 
-	public synchronized void debugMessage(final String message, final Level debugLevel) {
-		try {
-			if (this.isLoggable(debugLevel)) {
-				this.checkLogRollover();
-				if (this.debugLog == null) {
-					this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
+	public void debugMessage(final String message, final Level debugLevel) {
+		if (this.isLoggable(debugLevel)) {
+			try {
+				synchronized (this) {
+					this.checkLogRollover();
+					if (this.debugLog == null) {
+						this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
+					}
+					this.logMessage(this.debugLog, message);
+					this.debugLog.flush();
+					if (this.echoDebug) {
+						this.logMessage(System.out, message);
+					}
 				}
-				this.logMessage(this.debugLog, message);
-				this.debugLog.flush();
-				if (this.echoDebug) {
-					this.logMessage(System.out, message);
-				}
+			} catch (Exception e) {
+				System.out.println("Exception in debug logging: " + e.getMessage());
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			System.out.println("Exception in debug logging: " + e.getMessage());
-			e.printStackTrace();
 		}
 	}
 
-	public synchronized void debugException(final Throwable t, final Level debugLevel) {
-		try {
-			if (this.isLoggable(debugLevel)) {
-				this.checkLogRollover();
-				if (this.debugLog == null) {
-					this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
+	public void debugException(final Throwable t, final Level debugLevel) {
+		if (this.isLoggable(debugLevel)) {
+			try {
+				synchronized(this) {
+					this.checkLogRollover();
+					if (this.debugLog == null) {
+						this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
+					}
+					this.logThrowable(this.debugLog, t);
+					this.debugLog.flush();
+					if (this.echoDebug) {
+						this.logThrowable(System.out, t);
+					}
 				}
-				this.logThrowable(this.debugLog, t);
-				this.debugLog.flush();
-				if (this.echoDebug) {
-					this.logThrowable(System.out, t);
-				}
+			} catch (Exception e) {
+				System.out.println("Exception in debug logging: " + e.getMessage());
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			System.out.println("Exception in debug logging: " + e.getMessage());
-			e.printStackTrace();
 		}
 	}
 
