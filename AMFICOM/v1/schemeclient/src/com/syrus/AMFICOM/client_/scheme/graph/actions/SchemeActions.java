@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.63 2006/02/09 15:00:10 stas Exp $
+ * $Id: SchemeActions.java,v 1.64 2006/02/09 15:22:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,6 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.Rack;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 import com.syrus.AMFICOM.client_.scheme.utils.NumberedComparator;
-import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.PortType;
@@ -105,7 +104,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.63 $, $Date: 2006/02/09 15:00:10 $
+ * @version $Revision: 1.64 $, $Date: 2006/02/09 15:22:59 $
  * @module schemeclient
  */
 
@@ -435,7 +434,8 @@ public class SchemeActions {
 			ugoRes.setData((List)invisibleGraph.getArchiveableState());
 		}
 		// fanally open ugo to current graph
-		openSchemeImageResource(graph, ugoRes, doClone, p, true); 
+		Map<DefaultGraphCell, DefaultGraphCell> mapping = openSchemeImageResource(graph, ugoRes, doClone, p, true);
+		graph.setSelectionCells(GraphActions.getTopLevelCells(mapping.values().toArray()));
 	}
 	
 	public static void putToGraph(Scheme scheme, SchemeTabbedPane pane) throws ApplicationException {
@@ -956,6 +956,7 @@ public class SchemeActions {
 	
 	public static Map<DefaultGraphCell, DefaultGraphCell> openSchemeImageResource(SchemeGraph graph, SchemeImageResource schemeImageResource, boolean doClone, Point p, boolean isCenterCell) {
 		Map<DefaultGraphCell, DefaultGraphCell> clones = Collections.emptyMap();
+		boolean changed = graph.isGraphChanged();
 		boolean tmp = graph.isMakeNotifications();
 		graph.setMakeNotifications(false);
 //		GraphActions.clearGraph(graph);
@@ -965,7 +966,7 @@ public class SchemeActions {
 			fixImages(graph);
 			ignore_port_check = false;
 		}
-		graph.setGraphChanged(false);
+		graph.setGraphChanged(changed);
 		graph.setMakeNotifications(tmp);
 		return clones;
 	}
