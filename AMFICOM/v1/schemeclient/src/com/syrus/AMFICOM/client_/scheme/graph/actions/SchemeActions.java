@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.62 2006/02/06 10:30:10 stas Exp $
+ * $Id: SchemeActions.java,v 1.63 2006/02/09 15:00:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,6 +66,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.Rack;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 import com.syrus.AMFICOM.client_.scheme.utils.NumberedComparator;
+import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.PortType;
@@ -104,7 +105,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.62 $, $Date: 2006/02/06 10:30:10 $
+ * @version $Revision: 1.63 $, $Date: 2006/02/09 15:00:10 $
  * @module schemeclient
  */
 
@@ -320,12 +321,10 @@ public class SchemeActions {
 		try {
 			// TODO create 2 SchemeCableLinks and init them with cableLink properties and characteristics
 			// FIXME clone!
-			SchemeCableLink cl1 = SchemeObjectsFactory.createSchemeCableLink(cableLink.getName(), cableLink.getParentScheme());
-			SchemeCableLink cl2 = SchemeObjectsFactory.createSchemeCableLink(cableLink.getName(), cableLink.getParentScheme());
+			final Identifier abstractLinkTypeId = cableLink.getAbstractLinkTypeId();
+			SchemeCableLink cl1 = SchemeObjectsFactory.createSchemeCableLink(cableLink.getName(), cableLink.getParentScheme(), abstractLinkTypeId);
+			SchemeCableLink cl2 = SchemeObjectsFactory.createSchemeCableLink(cableLink.getName(), cableLink.getParentScheme(), abstractLinkTypeId);
 
-			cl1.setAbstractLinkTypeExt(cableLink.getAbstractLinkType(), LoginManager.getUserId(), false);
-			cl2.setAbstractLinkTypeExt(cableLink.getAbstractLinkType(), LoginManager.getUserId(), false);
-			
 			cl1.setDescription(cableLink.getDescription());
 			cl1.setOpticalLength(cableLink.getOpticalLength() / 2);
 			cl1.setPhysicalLength(cableLink.getPhysicalLength() / 2);
@@ -369,7 +368,7 @@ public class SchemeActions {
 			graph.clearSelection();
 			graph.selectionNotify();
 			return new DefaultCableLink[] { cell1, cell2 };
-		} catch (CreateObjectException e) {
+		} catch (ApplicationException e) {
 			Log.errorMessage(e);
 			return null;
 		}
