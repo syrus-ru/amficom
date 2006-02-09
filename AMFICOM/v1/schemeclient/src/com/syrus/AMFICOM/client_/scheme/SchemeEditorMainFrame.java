@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.34 2006/01/25 12:56:43 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.35 2006/02/09 13:47:25 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.34 $, $Date: 2006/01/25 12:56:43 $
+ * @version $Revision: 1.35 $, $Date: 2006/02/09 13:47:25 $
  * @module schemeclient
  */
 
@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeImportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeImportCommitCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeNewCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeOpenCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveAllCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveAsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveCommand;
 import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
@@ -226,7 +227,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 
 		aModel.setCommand("menuSchemeNew", new SchemeNewCommand(this.aContext));
 		aModel.setCommand("menuSchemeLoad", new SchemeOpenCommand(this.aContext));
-		aModel.setCommand("menuSchemeSave", new SchemeSaveCommand(this.schemeTab));
+		aModel.setCommand("menuSchemeSave", new SchemeSaveAllCommand(this.schemeTab));
 		aModel.setCommand("menuSchemeSaveAs", new SchemeSaveAsCommand(this.aContext, this.schemeTab));
 
 		
