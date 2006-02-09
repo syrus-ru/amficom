@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLogger.java,v 1.12 2005/11/10 15:47:46 bass Exp $
+ * $Id: AbstractLogger.java,v 1.13 2006/02/09 12:20:49 saa Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import java.util.Date;
 import java.util.logging.Level;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/11/10 15:47:46 $
+ * @author $Author: saa $
+ * @version $Revision: 1.13 $, $Date: 2006/02/09 12:20:49 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
@@ -122,9 +122,9 @@ abstract class AbstractLogger implements Logger {
 	abstract void initSpec();
 
 	public synchronized void debugMessage(final String message, final Level debugLevel) {
-		this.checkLogRollover();
 		try {
 			if (this.isLoggable(debugLevel)) {
+				this.checkLogRollover();
 				if (this.debugLog == null) {
 					this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
 				}
@@ -141,9 +141,9 @@ abstract class AbstractLogger implements Logger {
 	}
 
 	public synchronized void debugException(final Throwable t, final Level debugLevel) {
-		this.checkLogRollover();
 		try {
 			if (this.isLoggable(debugLevel)) {
+				this.checkLogRollover();
 				if (this.debugLog == null) {
 					this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
 				}
