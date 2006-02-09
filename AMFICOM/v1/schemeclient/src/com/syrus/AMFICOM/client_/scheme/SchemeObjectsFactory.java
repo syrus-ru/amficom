@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.54 2005/12/06 11:52:22 bass Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.55 2006/02/09 14:57:45 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,17 +8,20 @@
 
 package com.syrus.AMFICOM.client_.scheme;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.logging.Level;
 
 import com.jgraph.graph.DefaultGraphCell;
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client_.scheme.graph.LangModelGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
@@ -35,6 +38,7 @@ import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.PortTypeWrapper;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.configuration.TransmissionPathType;
@@ -48,11 +52,15 @@ import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
@@ -81,8 +89,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.54 $, $Date: 2005/12/06 11:52:22 $
+ * @author $Author: stas $
+ * @version $Revision: 1.55 $, $Date: 2006/02/09 14:57:45 $
  * @module schemeclient
  */
 
@@ -95,10 +103,16 @@ public class SchemeObjectsFactory {
 	public static SchemeProtoGroup stubProtoGroup;
 	private static String stubName = "should not see me";
 	
+	// caching of types of creating objects
+	static Identifier cachedCableLinkTypeId = null;
+	static Identifier cachedLinkTypeId = null;
+	static Identifier cachedCablePortTypeId = null;
+	static Identifier cachedPortTypeId = null;
+	
 	private static ApplicationContext aContext;
 	
 	// TODO add objects here when deleted and flush on exit
-	Set<Identifier> deletedObjects = new HashSet<Identifier>();
+//	Set<Identifier> deletedObjects = new HashSet<Identifier>();
 	
 	public static void init(final ApplicationContext aContext1) {
 		aContext = aContext1;
@@ -111,6 +125,49 @@ public class SchemeObjectsFactory {
 				Log.errorMessage(e);
 			}
 		}
+		aContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, 
+				new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent evt) {
+						ObjectSelectedEvent ose = (ObjectSelectedEvent)evt;
+						if (ose.isSelected(ObjectSelectedEvent.CABLELINK_TYPE)) {
+							cachedCableLinkTypeId = ((Identifiable)ose.getSelectedObject()).getId();	
+						} else if (ose.isSelected(ObjectSelectedEvent.LINK_TYPE)) {
+							cachedLinkTypeId = ((Identifiable)ose.getSelectedObject()).getId();	
+						} else if (ose.isSelected(ObjectSelectedEvent.CABLEPORT_TYPE)) {
+							cachedCablePortTypeId = ((Identifiable)ose.getSelectedObject()).getId();	
+						} else if (ose.isSelected(ObjectSelectedEvent.PORT_TYPE)) {
+							cachedPortTypeId = ((Identifiable)ose.getSelectedObject()).getId();	
+						}
+					}
+		});
+		
+		aContext.getDispatcher().addPropertyChangeListener(SchemeEvent.TYPE, 
+				new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent evt) {
+						SchemeEvent ev = (SchemeEvent)evt;
+						if (ev.isType(SchemeEvent.UPDATE_OBJECT)) {
+							Identifier id = ev.getIdentifier();
+							try {
+								if (id.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE) {
+									SchemeCableLink link = (SchemeCableLink)ev.getStorableObject();
+									cachedCableLinkTypeId = link.getAbstractLinkTypeId();
+								} else if (id.getMajor() == ObjectEntities.SCHEMELINK_CODE) {
+									SchemeLink link = (SchemeLink)ev.getStorableObject();
+									cachedLinkTypeId = link.getAbstractLinkType().getId();
+								} else if (id.getMajor() == ObjectEntities.SCHEMECABLEPORT_CODE) {
+									SchemeCablePort port = (SchemeCablePort)ev.getStorableObject();
+									cachedCablePortTypeId = port.getPortType().getId();
+								} else if (id.getMajor() == ObjectEntities.SCHEMEPORT_CODE) {
+									SchemePort port = (SchemePort)ev.getStorableObject();
+									cachedPortTypeId = port.getPortType().getId();
+								}
+							} catch (ApplicationException e) {
+								Log.errorMessage(e);
+							}
+						}
+					}
+				}
+		);
 	}
 	
 	public static CharacteristicType createCharacteristicType(String name, IdlCharacteristicTypeSort sort) throws CreateObjectException {
@@ -427,31 +484,89 @@ public class SchemeObjectsFactory {
 		return schemeDevice;
 	}
 	
-	public static SchemePort createSchemePort(String name, IdlDirectionType directionType, SchemeDevice parent) throws CreateObjectException {
+	public static SchemePort createSchemePort(String name, IdlDirectionType directionType, SchemeDevice parent) throws ApplicationException {
+		PortType type = null;
+		if (cachedPortTypeId != null) {
+			type = StorableObjectPool.getStorableObject(cachedPortTypeId, true);
+		}
+		
+		if (type == null) {
+			StorableObjectCondition condition = new TypicalCondition(
+					PortTypeKind._PORT_KIND_SIMPLE,
+					0, OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PORT_TYPE_CODE, PortTypeWrapper.COLUMN_KIND);
+			Set types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (types.isEmpty()) {
+				throw new CreateObjectException(LangModelGraph.getString("error_porttype_not_found")); 
+			}
+			type = (PortType)types.iterator().next();
+			cachedPortTypeId = type.getId();
+		}
+
 		SchemePort schemePort = SchemePort.createInstance(LoginManager.getUserId(), name, directionType, parent);
+		schemePort.setPortType(type);
 		if (aContext != null) {
 			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, schemePort.getId(), SchemeEvent.CREATE_OBJECT));
 		}
 		return schemePort;
 	}
 	
-	public static SchemeCablePort createSchemeCablePort(String name, IdlDirectionType directionType, SchemeDevice parent) throws CreateObjectException {
+	public static SchemeCablePort createSchemeCablePort(String name, IdlDirectionType directionType, SchemeDevice parent) throws ApplicationException {
+		PortType type = null;
+		if (cachedCablePortTypeId != null) {
+			type = StorableObjectPool.getStorableObject(cachedCablePortTypeId, true);
+		}
+		
+		if (type == null) {
+			StorableObjectCondition condition = new TypicalCondition(
+					PortTypeKind._PORT_KIND_CABLE,
+					0, OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PORT_TYPE_CODE, PortTypeWrapper.COLUMN_KIND);
+			Set types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (types.isEmpty()) {
+				throw new CreateObjectException(LangModelGraph.getString("error_porttype_not_found")); 
+			}
+			type = (PortType)types.iterator().next();
+			cachedCablePortTypeId = type.getId();
+		}
+
 		SchemeCablePort schemePort = SchemeCablePort.createInstance(LoginManager.getUserId(), name, directionType, parent);
+		schemePort.setPortType(type);
 		if (aContext != null) {
 			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, schemePort.getId(), SchemeEvent.CREATE_OBJECT));
 		}
 		return schemePort;
 	}
 	
-	public static SchemeLink createSchemeLink(String name) throws CreateObjectException {
+	public static SchemeLink createSchemeLink(String name) throws ApplicationException {
+		LinkType type = null;
+		if (cachedLinkTypeId != null) {
+			type = StorableObjectPool.getStorableObject(cachedLinkTypeId, true);
+		}
+		
+		if (type == null) {
+			StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
+			Set types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (types.isEmpty()) {
+				throw new CreateObjectException(LangModelGraph.getString("error_linktype_not_found"));
+			}
+			type = (LinkType)types.iterator().next();
+			cachedLinkTypeId = type.getId();
+		}
+		
 		Identifier userId = LoginManager.getUserId();
 		SchemeLink schemeLink = SchemeLink.createInstance(userId, name, stubProtoElement);
+		schemeLink.setAbstractLinkType(type);
+		
 		if (aContext != null) {
 			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, schemeLink.getId(), SchemeEvent.CREATE_OBJECT));
 		}
-		return schemeLink;
+		return schemeLink;	
 	}
-	
+
+	/*
+	 * unused 
+	 *
 	public static SchemeLink createSchemeLink(String name, SchemeElement schemeElement) throws CreateObjectException {
 		assert schemeElement != null;
 		Identifier userId = LoginManager.getUserId();
@@ -471,10 +586,32 @@ public class SchemeObjectsFactory {
 		}
 		return schemeLink;
 	}
+*/
+	public static SchemeCableLink createSchemeCableLink(String name, Scheme parent, Identifier typeId) throws ApplicationException {
+		cachedCableLinkTypeId = typeId;
+		return createSchemeCableLink(name, parent);
+	}
 	
-	public static SchemeCableLink createSchemeCableLink(String name, Scheme parent) throws CreateObjectException {
+	public static SchemeCableLink createSchemeCableLink(String name, Scheme parent) throws ApplicationException {
+		CableLinkType type = null;
+		if (cachedCableLinkTypeId != null) {
+			type = StorableObjectPool.getStorableObject(cachedCableLinkTypeId, true);
+		}
+		
+		if (type == null) {
+			StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.CABLELINK_TYPE_CODE);
+			Set types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (types.isEmpty()) {
+				throw new CreateObjectException(LangModelGraph.getString("error_cablelinktype_not_found"));
+			}
+			type = (CableLinkType)types.iterator().next();
+			cachedCableLinkTypeId = type.getId();
+		}
+		
 		Identifier userId = LoginManager.getUserId();
 		SchemeCableLink schemeLink = SchemeCableLink.createInstance(userId, name, parent);
+		schemeLink.setAbstractLinkTypeExt(type, userId, false);
+		
 		if (aContext != null) {
 			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, schemeLink.getId(), SchemeEvent.CREATE_OBJECT));
 		}
