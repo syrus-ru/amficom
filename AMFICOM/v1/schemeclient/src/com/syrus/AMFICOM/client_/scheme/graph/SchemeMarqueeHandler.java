@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.41 2005/12/27 10:23:56 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.42 2006/02/09 14:59:07 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,11 +19,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -46,8 +44,6 @@ import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.PopupFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomInAction;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomOutAction;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
@@ -55,20 +51,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.Rack;
-import com.syrus.AMFICOM.configuration.CableLinkType;
-import com.syrus.AMFICOM.configuration.LinkType;
-import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.PortTypeWrapper;
-import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -83,7 +67,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.41 $, $Date: 2005/12/27 10:23:56 $
+ * @version $Revision: 1.42 $, $Date: 2006/02/09 14:59:07 $
  * @module schemeclient
  */
 
@@ -436,25 +420,6 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 				return;
 			
 			boolean isCable = !this.p1.isSelected();
-			
-			StorableObjectCondition condition = new TypicalCondition(
-					isCable ? PortTypeKind._PORT_KIND_CABLE : PortTypeKind._PORT_KIND_SIMPLE,
-					0, OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PORT_TYPE_CODE, PortTypeWrapper.COLUMN_KIND);
-			Set types = Collections.EMPTY_SET;
-			try {
-				types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-			} catch (ApplicationException e1) {
-				Log.errorMessage(e1);
-			}
-			if (types.isEmpty()) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-						LangModelGraph.getString("error_porttype_not_found"),  //$NON-NLS-1$
-						LangModelGraph.getString("error"), //$NON-NLS-1$
-						JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			PortType type = (PortType)types.iterator().next();
 		
 			String name = String.valueOf(deviceCell.getChildCount());
 			
@@ -465,8 +430,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 				} else {
 					schemePort = SchemeObjectsFactory.createSchemeCablePort(name, directionType, deviceCell.getSchemeDevice());
 				}
-				schemePort.setPortType(type);
-				
+								
 				Color color = SchemeActions.determinePortColor(schemePort, null);
 
 				if (!isCable) { //port
@@ -476,6 +440,11 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 					SchemeActions.createCablePort(graph, deviceCell, 
 							graph.snap(graph.fromScreen(p)), name, directionType, color, schemePort.getId());
 				}
+			} catch (CreateObjectException e1) {
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+						e1.getMessage(), //$NON-NLS-1$
+						LangModelGraph.getString("error"), //$NON-NLS-1$
+						JOptionPane.ERROR_MESSAGE);
 			} catch (ApplicationException e1) {
 				Log.errorMessage(e1);
 			}
@@ -539,22 +508,6 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 					if (this.start == null || this.current == null) {
 						event.consume();
 					} else {
-						StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.CABLELINK_TYPE_CODE);
-						Set types = Collections.EMPTY_SET;
-						try {
-							types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-						} catch (ApplicationException e1) {
-							Log.errorMessage(e1);
-						}
-						if (types.isEmpty()) {
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-									LangModelGraph.getString("error_cablelinktype_not_found"), //$NON-NLS-1$
-									LangModelGraph.getString("error"), //$NON-NLS-1$
-									JOptionPane.ERROR_MESSAGE);
-							return;
-						}
-						CableLinkType type = (CableLinkType)types.iterator().next();
-						
 						Scheme scheme = null;
 						UgoPanel panel = this.pane.getCurrentPanel();
 						if (panel instanceof SchemePanel) {
@@ -567,7 +520,6 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 						if (scheme != null) {
 							try {
 								SchemeCableLink link = SchemeObjectsFactory.createSchemeCableLink("TEMPORARY", scheme);
-								link.setAbstractLinkTypeExt(type, LoginManager.getUserId(), false);
 								try {
 									DefaultCableLink cell = SchemeActions.createCableLink(graph,
 											this.firstPort, this.port, graph.snap(graph.fromScreen(new Point(this.start))), 
@@ -583,6 +535,11 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 											LangModelGraph.getString("error"), //$NON-NLS-1$
 											JOptionPane.ERROR_MESSAGE);
 								}
+							} catch (CreateObjectException e1) {
+								JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+										e1.getMessage(), //$NON-NLS-1$
+										LangModelGraph.getString("error"), //$NON-NLS-1$
+										JOptionPane.ERROR_MESSAGE);
 							} catch (ApplicationException e1) {
 								Log.errorMessage(e1);
 							}
@@ -592,33 +549,14 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 					if (this.start == null || this.current == null) {
 						event.consume();
 					} else {
-						StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
-						Set types = Collections.EMPTY_SET;
 						try {
-							types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-						} catch (ApplicationException e1) {
-							Log.errorMessage(e1);
-						}
-						if (types.isEmpty()) {
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-									LangModelGraph.getString("error_linktype_not_found"), //$NON-NLS-1$
-									LangModelGraph.getString("error"), //$NON-NLS-1$
-									JOptionPane.ERROR_MESSAGE);
-							return;
-						}
-						LinkType type = (LinkType)types.iterator().next();
-						
-						SchemeLink link;
-						try {
-							link = SchemeObjectsFactory.createSchemeLink("TEMPORARY");
-							
+							SchemeLink link = SchemeObjectsFactory.createSchemeLink("TEMPORARY");
 							try {
 								DefaultLink cell = SchemeActions.createLink(graph,
 										this.firstPort, this.port, graph.snap(graph.fromScreen(new Point(this.start))), 
 										graph.snap(graph.fromScreen(new Point(this.current))), link.getId(), false);
 								
 								link.setName((String)cell.getUserObject());
-								link.setAbstractLinkType(type);
 								
 								UgoPanel panel = this.pane.getCurrentPanel();
 								if (panel instanceof ElementsPanel) {
@@ -650,6 +588,11 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 										LangModelGraph.getString("error"), //$NON-NLS-1$
 										JOptionPane.ERROR_MESSAGE);
 							}
+						} catch (CreateObjectException e1) {
+							JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+									e1.getMessage(), //$NON-NLS-1$
+									LangModelGraph.getString("error"), //$NON-NLS-1$
+									JOptionPane.ERROR_MESSAGE);
 						} catch (ApplicationException e1) {
 							Log.errorMessage(e1);
 							return;
