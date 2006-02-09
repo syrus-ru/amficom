@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.awt.HeadlessException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +20,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
 import com.syrus.util.Log;
 
 public class SchemeSaveCommand extends AbstractCommand {
@@ -149,23 +150,39 @@ public class SchemeSaveCommand extends AbstractCommand {
 					schemeIr = SchemeObjectsFactory.createSchemeImageResource();
 				}
 
-				long start = System.currentTimeMillis();
+				long t = System.currentTimeMillis();
 				schemeIr.setData((List) graph.getArchiveableState());
 				scheme.setSchemeCell(schemeIr);
-				Log.debugMessage("Scheme cell created for : " + (System.currentTimeMillis() - start) + "ms (" + schemeIr.getImage().length + " bytes)", Level.FINER);
-				Identifier userId = LoginManager.getUserId();
+				Log.debugMessage("Scheme cell created for : " + (System.currentTimeMillis() - t) + "ms (" + schemeIr.getImage().length + " bytes)", Level.FINEST);
 				
+				Identifier userId = LoginManager.getUserId();
+				long startSaving = System.currentTimeMillis();
+				t = System.currentTimeMillis();
 				Set<Scheme> internalSchemes = new HashSet<Scheme>();
 				for (SchemeElement se : scheme.getSchemeElements(false)) {
-					Scheme internal = se.getScheme(false);
-					if (internal != null && internal.isChanged()) {
-						internalSchemes.add(internal);
+					if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
+						Scheme internal = se.getScheme(false);
+						if (internal != null && internal.isChanged()) {
+							internalSchemes.add(internal);
+						}
 					}
 				}
-				StorableObjectPool.flush(scheme.getReverseDependencies(false), userId, false);
+				Log.debugMessage("Internal schemes search took : " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);
+				
+				t = System.currentTimeMillis();
+				final Set<Identifiable> reverseDependencies = scheme.getReverseDependencies(false);
+				Log.debugMessage("Top scheme reversed dependencies search took : " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);
+				
+				t = System.currentTimeMillis();
+				StorableObjectPool.flush(reverseDependencies, userId, false);
+				Log.debugMessage("Top scheme flush took : " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);
+				
+				t = System.currentTimeMillis();
 				for (Scheme changed : internalSchemes) {
 					StorableObjectPool.flush(changed.getReverseDependencies(false), userId, false);
 				}
+				Log.debugMessage("Internal schemes took " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);
+				Log.debugMessage("Total save took " + (System.currentTimeMillis() - startSaving) + "ms", Level.FINEST);
 				
 				LocalXmlIdentifierPool.flush();
 				

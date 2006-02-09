@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.24 2005/12/27 10:32:12 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.25 2006/02/09 13:47:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2005/12/27 10:32:12 $
+ * @version $Revision: 1.25 $, $Date: 2006/02/09 13:47:59 $
  * @module schemeclient
  */
 
@@ -171,15 +171,19 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 				boolean b = false;
 				if (res.getCellContainerType() == SchemeResource.SCHEME) {
 					Scheme scheme = res.getScheme(); 
-					if (scheme != null && scheme.isChanged()) {
-						b = true;
+					if (scheme != null) {
+						if (scheme.isChanged()) {
+							b = true;
+						}
 					} else {
 						Log.debugMessage("CellContainerType is scheme, while scheme is null", Level.FINE);
 					}
 				} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
 					SchemeElement schemeElement = res.getSchemeElement(); 
-					if (schemeElement != null && schemeElement.isChanged()) {
-						b = true;
+					if (schemeElement != null) {
+						if (schemeElement.isChanged()) {
+							b = true;
+						}
 					} else {
 						Log.debugMessage("CellContainerType is schemeElement, while schemeElement is null", Level.FINE);
 					}
