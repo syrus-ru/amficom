@@ -1,5 +1,5 @@
 /*-
- * $Id: FifoSaver.java,v 1.5 2006/02/09 08:55:13 arseniy Exp $
+ * $Id: FifoSaver.java,v 1.6 2006/02/09 14:27:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2006/02/09 08:55:13 $
+ * @version $Revision: 1.6 $, $Date: 2006/02/09 14:27:42 $
  * @author $Author: arseniy $
  * @module util
  */
@@ -111,7 +111,7 @@ public final class FifoSaver {
 			} catch (IOException ioe) {
 				// Hm... something strange. Should I handle Java problems?
 			}
-			if (!fifoFile.delete()) {
+			if (fifoFile.exists() && !fifoFile.delete()) {
 				throw new InternalError("Failed to delete fifo file " + fifoFileName);
 			}
 		}
