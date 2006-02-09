@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultCableLink.java,v 1.24 2005/12/27 10:20:43 stas Exp $
+ * $Id: DefaultCableLink.java,v 1.25 2006/02/09 15:24:54 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2005/12/27 10:20:43 $
+ * @version $Revision: 1.25 $, $Date: 2006/02/09 15:24:54 $
  * @module schemeclient
  */
 
@@ -431,7 +431,6 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 		}
 	}
 	
-	int counter = 0;
 	Point[] createDefaultRouting(SchemeGraph graph, Point from, Point to, DefaultPort sourcePort, DefaultPort targetPort) {
 		Point[] p = null;
 		int grid = graph.getGridSize();
@@ -489,8 +488,6 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 				p[3] = graph.snap(new Point(to.x - grid, to.y));
 			}
 		}
-		
-		System.out.println("(" + (counter++) + ") Routing for " + schemeCablelinkId + " takes " + (System.currentTimeMillis() - start) + " ms");
 		return p;
 	}
 
