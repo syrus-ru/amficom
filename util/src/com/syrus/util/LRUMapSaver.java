@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMapSaver.java,v 1.3 2005/12/16 13:41:39 arseniy Exp $
+ * $Id: LRUMapSaver.java,v 1.4 2006/02/09 08:55:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.io.ObjectOutputStream;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/16 13:41:39 $
+ * @version $Revision: 1.4 $, $Date: 2006/02/09 08:55:13 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -47,8 +47,12 @@ public abstract class LRUMapSaver<K, V extends LRUMap.Retainable> {
 	public void load(final String entityName, final LRUMap<K, V> lruMap) {
 		Log.debugMessage("Loading LRUMap '" + entityName + "'", Log.DEBUGLEVEL10);
 		final File lruMapFile = new File(this.cacheDir.getPath() + File.separator + entityName + this.fileSuffix);
+
+		ObjectInputStream objectInputStream = null;
+		FileInputStream fileInputStream = null;
 		try {
-			final ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(lruMapFile));
+			fileInputStream = new FileInputStream(lruMapFile);
+			objectInputStream = new ObjectInputStream(fileInputStream);
 			final String fileEntityName = (String) objectInputStream.readObject();
 			if (fileEntityName == null || !fileEntityName.equals(entityName)) {
 				Log.errorMessage("Wrong input file " + lruMapFile.getAbsolutePath()
@@ -57,7 +61,6 @@ public abstract class LRUMapSaver<K, V extends LRUMap.Retainable> {
 				return;
 			}
 			final Object readObject = objectInputStream.readObject();
-			objectInputStream.close();
 			final Map<K, V> map = this.getMap(readObject);
 			lruMap.putAll(map);
 		} catch (FileNotFoundException fnfe) {
@@ -67,7 +70,18 @@ public abstract class LRUMapSaver<K, V extends LRUMap.Retainable> {
 		} catch (ClassNotFoundException cnfe) {
 			Log.errorMessage(cnfe);
 		} finally {
-			lruMapFile.delete();
+			try {
+				if (objectInputStream != null) {
+					objectInputStream.close();
+				} else if (fileInputStream != null) {
+					fileInputStream.close();
+				}
+			} catch (IOException ioe) {
+				//Nicho
+			}
+			if (!lruMapFile.delete()) {
+				throw new InternalError("Failed to delete LRUMap file " + lruMapFile.getName());
+			}
 		}
 	}
 
@@ -81,13 +95,15 @@ public abstract class LRUMapSaver<K, V extends LRUMap.Retainable> {
 		final String path = this.cacheDir.getPath() + File.separator + entityName + this.fileSuffix;
 		final File lruMapFile = new File(path);
 		final File tmpLruMapFile = new File(path + ".swp");
+		FileOutputStream fileOutputStream = null;
+		ObjectOutputStream objectOutputStream = null;
 		try {
-			final ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(tmpLruMapFile));
+			fileOutputStream = new FileOutputStream(tmpLruMapFile);
+			objectOutputStream = new ObjectOutputStream(fileOutputStream);
 			Log.debugMessage("Saving LRUMap '" + entityName + "' to file " + lruMapFile.getAbsolutePath(), Log.DEBUGLEVEL10);
 			objectOutputStream.writeObject(entityName);
 			objectOutputStream.writeObject(this.getObjectToWrite(lruMap));
 			objectOutputStream.flush();
-			objectOutputStream.close();
 
 			lruMapFile.delete();
 			tmpLruMapFile.renameTo(lruMapFile);
@@ -98,6 +114,15 @@ public abstract class LRUMapSaver<K, V extends LRUMap.Retainable> {
 		} catch (IOException ioe) {
 			Log.errorMessage(ioe);
 		} finally {
+			try {
+				if (objectOutputStream != null) {
+					objectOutputStream.close();
+				} else {
+					fileOutputStream.close();
+				}
+			} catch (IOException ioe) {
+				// Nicho
+			}
 			tmpLruMapFile.delete();
 		}
 	}

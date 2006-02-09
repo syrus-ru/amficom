@@ -1,5 +1,5 @@
 /*-
- * $Id: FifoSaver.java,v 1.4 2006/02/08 12:27:07 saa Exp $
+ * $Id: FifoSaver.java,v 1.5 2006/02/09 08:55:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2006/02/08 12:27:07 $
- * @author $Author: saa $
+ * @version $Revision: 1.5 $, $Date: 2006/02/09 08:55:13 $
+ * @author $Author: arseniy $
  * @module util
  */
 public final class FifoSaver {
@@ -108,7 +108,7 @@ public final class FifoSaver {
 				} else if (fileInputStream != null) {
 					fileInputStream.close();
 				}
-			} catch (IOException e) {
+			} catch (IOException ioe) {
 				// Hm... something strange. Should I handle Java problems?
 			}
 			if (!fifoFile.delete()) {
@@ -121,18 +121,31 @@ public final class FifoSaver {
 		final String path = cacheDir.getPath() + File.separator + entityName + FILE_SUFFIX;
 		final File fifoFile = new File(path);
 		final File tmpFifoFile = new File(path + ".swp");
+
+		ObjectOutputStream objectOutputStream = null;
+		FileOutputStream fileOutputStream = null;
 		try {
-			final ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(tmpFifoFile));
+			fileOutputStream = new FileOutputStream(tmpFifoFile);
+			objectOutputStream = new ObjectOutputStream(fileOutputStream);
 			Log.debugMessage("Saving Fifo '" + entityName + "' to file " + fifoFile.getAbsolutePath(), Log.DEBUGLEVEL10);
 			objectOutputStream.writeObject(entityName);
 			objectOutputStream.writeObject(fifo.getObjects());
 			objectOutputStream.flush();
-			objectOutputStream.close();
+
 			fifoFile.delete();
 			tmpFifoFile.renameTo(fifoFile);
 		} catch (IOException ioe) {
 			Log.errorMessage(ioe);
 		} finally {
+			try {
+				if (objectOutputStream != null) {
+					objectOutputStream.close();
+				} else {
+					fileOutputStream.close();
+				}
+			} catch (IOException ioe) {
+				// Nicho
+			}
 			tmpFifoFile.delete();
 		}
 	}
