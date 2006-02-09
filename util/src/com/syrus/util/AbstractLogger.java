@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLogger.java,v 1.13 2006/02/09 12:20:49 saa Exp $
+ * $Id: AbstractLogger.java,v 1.14 2006/02/09 13:23:29 saa Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import java.util.logging.Level;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2006/02/09 12:20:49 $
+ * @version $Revision: 1.14 $, $Date: 2006/02/09 13:23:29 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
@@ -47,7 +47,6 @@ abstract class AbstractLogger implements Logger {
 	static final String DEFAULT_LOG_PATH = System.getProperty("user.home") + File.separatorChar + "logs";
 	static final boolean DEFAULT_FULL_STE = false;
 
-
 	private String appName;
 	private String hostName;
 	boolean echoDebug;
@@ -70,7 +69,7 @@ abstract class AbstractLogger implements Logger {
 	private static final int offValue = OFF.intValue();
 
 	String baseLogPath;
-	private Date logDate;
+	private long logMillis; // current milliseconds
 	private String debugLogFileName;
 	private String errorLogFileName;
 	private PrintWriter errorLog;
@@ -114,7 +113,7 @@ abstract class AbstractLogger implements Logger {
 
 	private void init() {
 		this.initSpec();
-		this.logDate = new Date();
+		this.logMillis = System.currentTimeMillis();
 		this.debugLogFileName = this.createLogFileName(DEBUG);
 		this.errorLogFileName = this.createLogFileName(ERROR);
 	}
@@ -195,17 +194,29 @@ abstract class AbstractLogger implements Logger {
 		}
 	}
 
+	/**
+	 * should be invoked from synchronized methods only
+	 */
 	private void checkLogRollover() {
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		final String currd = sdf.format(this.logDate);
-		final String d = sdf.format(new Date());
-		if(!currd.equals(d)) {
-			this.logDate = new Date();
-			this.errorLogFileName = this.createLogFileName(ERROR);
-			this.debugLogFileName = this.createLogFileName(DEBUG);
-			this.debugLog = null;
-			this.errorLog = null;
+		// Check rollover once per minute only
+		final long MINUTE = 60000;
+		final long currentTimeMillis = System.currentTimeMillis();
+		if (this.logMillis / MINUTE == currentTimeMillis / MINUTE) {
+			return;
 		}
+		// There is no crime to create 3 objects (2 of them are unnecessary) per minute 
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		final String currd = sdf.format(new Date(this.logMillis));
+		final String d = sdf.format(new Date(currentTimeMillis));
+		if (currd.equals(d)) {
+			return;
+		}
+		// Date changed. Create new files
+		this.logMillis = currentTimeMillis;
+		this.errorLogFileName = this.createLogFileName(ERROR);
+		this.debugLogFileName = this.createLogFileName(DEBUG);
+		this.debugLog = null;
+		this.errorLog = null;
 	}
 
 	private void logMessage(final PrintWriter out, final String message) {
@@ -295,7 +306,7 @@ abstract class AbstractLogger implements Logger {
 	private String getLogPath(final String logType) {
 		String logPath = this.baseLogPath;
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		logPath += File.separator + sdf.format(this.logDate) + File.separator + logType;
+		logPath += File.separator + sdf.format(new Date(this.logMillis)) + File.separator + logType;
 		final File file = new File(logPath);
 		if (!file.exists()) {
 			file.mkdirs();
