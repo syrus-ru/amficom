@@ -1,5 +1,5 @@
 /*
- * $Id: TestViewAdapter.java,v 1.9 2006/02/03 14:14:09 bob Exp $
+ * $Id: TestViewAdapter.java,v 1.10 2006/02/10 11:21:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,14 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.ComparableLabel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2006/02/03 14:14:09 $
+ * @version $Revision: 1.10 $, $Date: 2006/02/10 11:21:10 $
  * @author $Author: bob $
  * @module module
  */
@@ -122,7 +121,7 @@ public class TestViewAdapter implements Wrapper<TestView> {
 		} else if (key == KEY_D) {
 			name = key + ", " + I18N.getString("Scheduler.Text.Table.dMeasurementUnit");
 		} else if (key == KEY_Q) {
-			name = key;
+			name = I18N.getString("Scheduler.Text.Test.Field.LineQuality");
 		}
 
 		return name;

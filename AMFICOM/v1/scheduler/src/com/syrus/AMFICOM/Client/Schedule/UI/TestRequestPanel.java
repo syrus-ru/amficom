@@ -80,24 +80,24 @@ final class TestRequestPanel extends JPanel implements PropertyChangeListener {
 				}
 			}
 		});
-		JLabel ownerLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.Owner") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		final JLabel ownerLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.Owner") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(ownerLabel);
 		this.ownerTextField = new JTextField();
 		this.ownerTextField.setEditable(false);
 		panel.add(this.ownerTextField);
 
-		JLabel typeLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.MeasurementType") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
-		panel.add(typeLabel);
-		this.typeTextField = new JTextField();
-		this.typeTextField.setEditable(false);
-		panel.add(this.typeTextField);
-
-		JLabel objectLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.Port") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		final JLabel objectLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.TestingLine") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(objectLabel);
 		this.portTextField = new JTextField();
 		this.portTextField.setEditable(false);
 		panel.add(this.portTextField);
 		this.add(panel);
+
+		final JLabel typeLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.MeasurementType") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		panel.add(typeLabel);
+		this.typeTextField = new JTextField();
+		this.typeTextField.setEditable(false);
+		panel.add(this.typeTextField);
 
 		this.add(Box.createVerticalGlue());
 

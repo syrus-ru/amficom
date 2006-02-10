@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JInternalFrame;
+import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -298,7 +299,12 @@ public final class ElementsTreeFrame extends JInternalFrame implements PropertyC
 				}
 			};
 			this.treePanel.addSelectionListener(this.selectionListener);
-			setContentPane(this.treePanel.getTree());
+			//*/
+			final JScrollPane scrollPane = new JScrollPane(this.treePanel.getTree());
+			this.setContentPane(scrollPane);
+			/*/
+			this.setContentPane(this.treePanel.getTree());
+			//*/
 		}
 
 		// final Dispatcher dispatcher = this.aContext.getDispatcher();

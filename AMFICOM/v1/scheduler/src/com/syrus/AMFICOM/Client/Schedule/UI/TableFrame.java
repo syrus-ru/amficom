@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.83 2006/02/03 14:40:19 bob Exp $
+ * $Id: TableFrame.java,v 1.84 2006/02/10 11:21:10 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2006/02/03 14:40:19 $
+ * @version $Revision: 1.84 $, $Date: 2006/02/10 11:21:10 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -205,14 +205,14 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 			this.panel = new JPanel(new BorderLayout());
 
 			this.listTable = new WrapperedTable<TestView>(TestViewAdapter.getInstance(), new String[] {
-					TestViewAdapter.KEY_TEMPORAL_TYPE, 
 					TestViewAdapter.KEY_MONITORED_ELEMENT,
-					TestViewAdapter.KEY_PORT, 
-					TestViewAdapter.KEY_MEASUREMENT_TYPE, 
+//					TestViewAdapter.KEY_PORT, 
+					TestViewAdapter.KEY_MEASUREMENT_TYPE,
+					TestViewAdapter.KEY_TEMPORAL_TYPE,
 					TestViewAdapter.KEY_START_TIME,
 					TestViewAdapter.KEY_END_TIME,
 					TestViewAdapter.KEY_STATUS,
-					TestViewAdapter.KEY_D,
+//					TestViewAdapter.KEY_D,
 					TestViewAdapter.KEY_Q});
 			this.listTable.setRenderer(StubLabelCellRenderer.getInstance(), TestViewAdapter.KEY_STATUS);
 			final SimpleDateFormat simpleDateFormat = 
@@ -443,7 +443,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 
 			final JTableHeader header = this.listTable.getTableHeader();
 
-			this.listTable.sortColumn(4);
+			this.listTable.sortColumn(3);
 
 			this.panel.add(header, BorderLayout.NORTH);
 			this.panel.add(new JScrollPane(this.listTable,

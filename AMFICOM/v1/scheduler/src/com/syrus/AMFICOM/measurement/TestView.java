@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.20 2006/02/06 10:49:24 bob Exp $
+* $Id: TestView.java,v 1.21 2006/02/10 11:21:10 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2006/02/06 10:49:24 $
+ * @version $Revision: 1.21 $, $Date: 2006/02/10 11:21:10 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -143,6 +143,7 @@ public final class TestView {
 				StorableObjectPool.getStorableObjectsByCondition(groupTestCondition, true);
 			for (final Test groupTest : tests) {
 				final Date endTime = groupTest.getEndTime();
+				assert endTime != null;
 				if (this.lastDate != null || endTime.compareTo(this.lastDate) > 0){
 					this.lastDate = endTime;
 				}
