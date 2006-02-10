@@ -20,12 +20,12 @@ public class PathCancelCommand extends AbstractCommand {
 
 	@Override
 	public void execute() {
-		SchemePath path = SchemeResource.getSchemePath();
-		try {
-			path.setParentSchemeMonitoringSolution(null, false);
-		} catch (ApplicationException e) {
-			Log.errorMessage(e);
-		}
+//		SchemePath path = SchemeResource.getSchemePath();
+//		try {
+//			path.setParentSchemeMonitoringSolution(null, false);
+//		} catch (ApplicationException e) {
+//			Log.errorMessage(e);
+//		}
 		SchemeResource.setSchemePath(null, false);
 //		SchemeResource.setCashedPathStart(null);
 		SchemeResource.setCashedPathEnd(null);
