@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.142 2006/01/17 12:43:06 bass Exp $
+ * $Id: StorableObject.java,v 1.143 2006/02/10 14:07:18 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.142 $, $Date: 2006/01/17 12:43:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.143 $, $Date: 2006/02/10 14:07:18 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -446,7 +446,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 		 */
 		assert identifiables != null;
 
-		if (identifiables.isEmpty()) {
+		if (identifiables.size() <= 1) {
 			return true;
 		}
 
@@ -481,7 +481,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 		assert ids != null;
 
 		final int length = ids.length;
-		if (length == 0) {
+		if (length <= 1) {
 			return true;
 		}
 
@@ -521,7 +521,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 		 */
 		assert identifiables != null;
 
-		if (identifiables.isEmpty()) {
+		if (identifiables.size() <= 1) {
 			return true;
 		}
 
@@ -660,8 +660,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.142 $, $Date: 2006/01/17 12:43:06 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.143 $, $Date: 2006/02/10 14:07:18 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -769,8 +769,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.142 $, $Date: 2006/01/17 12:43:06 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.143 $, $Date: 2006/02/10 14:07:18 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
