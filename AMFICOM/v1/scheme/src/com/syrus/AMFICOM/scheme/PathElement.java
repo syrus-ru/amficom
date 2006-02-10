@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.98 2005/12/17 12:11:19 arseniy Exp $
+ * $Id: PathElement.java,v 1.99 2006/02/10 13:05:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.98 $, $Date: 2005/12/17 12:11:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.99 $, $Date: 2006/02/10 13:05:12 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -509,8 +509,14 @@ public final class PathElement extends StorableObject<PathElement>
 				&& this.schemeLinkId != null : OBJECT_NOT_INITIALIZED;
 		switch (this.getKind().value()) {
 			case _SCHEME_ELEMENT:
+				/*-
+				 * Check for
+				 * (isLast() || !this.endAbstractSchemePortId.isVoid())
+				 * is disabled due to
+				 * a ConcurrentModificationException in LRUMap. 
+				 */
 				assert (isFirst() || !this.startAbstractSchemePortId.isVoid())
-						&& (isLast() || !this.endAbstractSchemePortId.isVoid())
+//						&& (isLast() || !this.endAbstractSchemePortId.isVoid())
 						&& this.schemeCableThreadId.isVoid()
 						&& this.schemeLinkId.isVoid(): OBJECT_BADLY_INITIALIZED;
 				break;
