@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeSaveAllCommand.java,v 1.1 2006/02/09 13:45:35 stas Exp $
+ * $Id: SchemeSaveAllCommand.java,v 1.2 2006/02/10 12:38:00 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -106,7 +106,10 @@ public class SchemeSaveAllCommand extends AbstractCommand {
 				}
 			}
 		}
-		
+		saveEntities();
+	}
+	
+	public static void saveEntities() {
 		short[] entities = new short[] {
 				ObjectEntities.SCHEME_CODE,
 				ObjectEntities.SCHEMECABLELINK_CODE,
@@ -163,7 +166,7 @@ public class SchemeSaveAllCommand extends AbstractCommand {
 		}
 	}
 	
-	private void saveEntity(Identifier modifierId, short entityCode) throws ApplicationException {
+	private static void saveEntity(Identifier modifierId, short entityCode) throws ApplicationException {
 		long t = System.currentTimeMillis();
 		StorableObjectPool.flush(entityCode, modifierId, false);
 		long t1 = System.currentTimeMillis();
