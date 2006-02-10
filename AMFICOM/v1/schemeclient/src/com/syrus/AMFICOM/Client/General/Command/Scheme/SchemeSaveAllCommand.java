@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeSaveAllCommand.java,v 1.2 2006/02/10 12:38:00 stas Exp $
+ * $Id: SchemeSaveAllCommand.java,v 1.3 2006/02/10 12:39:36 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,6 +38,40 @@ public class SchemeSaveAllCommand extends AbstractCommand {
 	public int ret_code = CANCEL;
 	
 	SchemeTabbedPane schemeTab;
+	
+	private static short[] entities = new short[] {
+			ObjectEntities.SCHEME_CODE,
+			ObjectEntities.SCHEMECABLELINK_CODE,
+			ObjectEntities.SCHEMECABLEPORT_CODE,
+			ObjectEntities.SCHEMECABLETHREAD_CODE,
+			ObjectEntities.SCHEMEDEVICE_CODE,
+			ObjectEntities.SCHEMEELEMENT_CODE,
+			ObjectEntities.SCHEMELINK_CODE,
+			ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE,
+			ObjectEntities.SCHEMEOPTIMIZEINFO_CODE,
+			ObjectEntities.SCHEMEPATH_CODE,
+			ObjectEntities.SCHEMEPORT_CODE,
+			ObjectEntities.CABLECHANNELINGITEM_CODE,
+			ObjectEntities.CABLELINK_CODE,
+			ObjectEntities.CABLELINK_TYPE_CODE,
+			ObjectEntities.CABLETHREAD_CODE,
+			ObjectEntities.CABLETHREAD_TYPE_CODE,
+			ObjectEntities.CHARACTERISTIC_CODE,
+			ObjectEntities.CHARACTERISTIC_TYPE_CODE,
+			ObjectEntities.EQUIPMENT_CODE,
+			ObjectEntities.IMAGERESOURCE_CODE,
+			ObjectEntities.KIS_CODE,
+			ObjectEntities.LINK_CODE,
+			ObjectEntities.LINK_TYPE_CODE,
+			ObjectEntities.MEASUREMENTPORT_CODE,
+			ObjectEntities.MEASUREMENTPORT_TYPE_CODE,
+			ObjectEntities.MONITOREDELEMENT_CODE,
+			ObjectEntities.PATHELEMENT_CODE,
+			ObjectEntities.PORT_CODE,
+			ObjectEntities.PORT_TYPE_CODE,
+			ObjectEntities.TRANSMISSIONPATH_CODE,
+			ObjectEntities.TRANSPATH_TYPE_CODE
+	};
 
 	public SchemeSaveAllCommand(SchemeTabbedPane schemeTab) {
 		this.schemeTab = schemeTab;
@@ -110,40 +144,6 @@ public class SchemeSaveAllCommand extends AbstractCommand {
 	}
 	
 	public static void saveEntities() {
-		short[] entities = new short[] {
-				ObjectEntities.SCHEME_CODE,
-				ObjectEntities.SCHEMECABLELINK_CODE,
-				ObjectEntities.SCHEMECABLEPORT_CODE,
-				ObjectEntities.SCHEMECABLETHREAD_CODE,
-				ObjectEntities.SCHEMEDEVICE_CODE,
-				ObjectEntities.SCHEMEELEMENT_CODE,
-				ObjectEntities.SCHEMELINK_CODE,
-				ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE,
-				ObjectEntities.SCHEMEOPTIMIZEINFO_CODE,
-				ObjectEntities.SCHEMEPATH_CODE,
-				ObjectEntities.SCHEMEPORT_CODE,
-				ObjectEntities.CABLECHANNELINGITEM_CODE,
-				ObjectEntities.CABLELINK_CODE,
-				ObjectEntities.CABLELINK_TYPE_CODE,
-				ObjectEntities.CABLETHREAD_CODE,
-				ObjectEntities.CABLETHREAD_TYPE_CODE,
-				ObjectEntities.CHARACTERISTIC_CODE,
-				ObjectEntities.CHARACTERISTIC_TYPE_CODE,
-				ObjectEntities.EQUIPMENT_CODE,
-				ObjectEntities.IMAGERESOURCE_CODE,
-				ObjectEntities.KIS_CODE,
-				ObjectEntities.LINK_CODE,
-				ObjectEntities.LINK_TYPE_CODE,
-				ObjectEntities.MEASUREMENTPORT_CODE,
-				ObjectEntities.MEASUREMENTPORT_TYPE_CODE,
-				ObjectEntities.MONITOREDELEMENT_CODE,
-				ObjectEntities.PATHELEMENT_CODE,
-				ObjectEntities.PORT_CODE,
-				ObjectEntities.PORT_TYPE_CODE,
-				ObjectEntities.TRANSMISSIONPATH_CODE,
-				ObjectEntities.TRANSPATH_TYPE_CODE
-		};
-		
 		// save all scheme deals entities
 		Identifier userId = LoginManager.getUserId();
 		
