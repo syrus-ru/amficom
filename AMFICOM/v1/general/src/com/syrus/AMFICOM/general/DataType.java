@@ -1,5 +1,5 @@
 /*-
- * $Id: DataType.java,v 1.17.2.2 2006/02/06 14:51:27 arseniy Exp $
+ * $Id: DataType.java,v 1.17.2.3 2006/02/11 18:54:53 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,17 +13,18 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.corba.IdlDataType;
 import com.syrus.AMFICOM.general.xml.XmlDataType;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.17.2.2 $, $Date: 2006/02/06 14:51:27 $
+ * @version $Revision: 1.17.2.3 $, $Date: 2006/02/11 18:54:53 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public enum DataType {
+public enum DataType implements IdlTransferableObject<IdlDataType> {
 	INTEGER("integer"),
 	DOUBLE("double"),
 	STRING("string"),
@@ -79,12 +80,21 @@ public enum DataType {
 		return this.description;
 	}
 
+	public IdlDataType getIdlTransferable(final ORB orb) {
+		return this.getIdlTransferable();
+	}
+
+	public IdlDataType getIdlTransferable() {
+		return IdlDataType.from_int(this.ordinal());
+	}
+
+
 	/**
 	 * A mutable holder for immutable enum instances.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.17.2.2 $, $Date: 2006/02/06 14:51:27 $
+	 * @version $Revision: 1.17.2.3 $, $Date: 2006/02/11 18:54:53 $
 	 * @module general
 	 */
 	public static final class Proxy
@@ -118,7 +128,7 @@ public enum DataType {
 		 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
 		 */
 		public IdlDataType getIdlTransferable(final ORB orb) {
-			return IdlDataType.from_int(this.value.ordinal());
+			return this.value.getIdlTransferable(orb);
 		}
 
 		/**

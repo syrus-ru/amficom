@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementUnit.java,v 1.13.2.3 2006/02/06 14:52:33 arseniy Exp $
+ * $Id: MeasurementUnit.java,v 1.13.2.4 2006/02/11 18:54:53 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.13.2.3 $, $Date: 2006/02/06 14:52:33 $
+ * @version $Revision: 1.13.2.4 $, $Date: 2006/02/11 18:54:53 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -54,7 +54,7 @@ public enum MeasurementUnit implements IdlTransferableObject<IdlMeasurementUnit>
 		}
 	}
 
-	public static MeasurementUnit fromTransferable(final IdlMeasurementUnit idlMeasurementUnit) {
+	public static MeasurementUnit valueOf(final IdlMeasurementUnit idlMeasurementUnit) {
 		return valueOf(idlMeasurementUnit.value());
 	}
 
