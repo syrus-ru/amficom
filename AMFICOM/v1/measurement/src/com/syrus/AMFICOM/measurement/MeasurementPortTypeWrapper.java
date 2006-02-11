@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeWrapper.java,v 1.8 2006/02/02 10:22:54 arseniy Exp $
+ * $Id: MeasurementPortTypeWrapper.java,v 1.8.2.1 2006/02/11 18:40:46 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,28 +10,24 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2006/02/02 10:22:54 $
+ * @version $Revision: 1.8.2.1 $, $Date: 2006/02/11 18:40:46 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class MeasurementPortTypeWrapper extends StorableObjectWrapper<MeasurementPortType> {
 
-	public static final String LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID = "measurement_port_type_id";
-	public static final String LINK_COLUMN_MEASUREMENT_TYPE_CODE = "measurement_type_code";
-
 	private static MeasurementPortTypeWrapper instance;
 
 	private List<String> keys;
 
 	private MeasurementPortTypeWrapper() {
-		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, LINK_COLUMN_MEASUREMENT_TYPE_CODE };
+		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME };
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
@@ -52,20 +48,17 @@ public final class MeasurementPortTypeWrapper extends StorableObjectWrapper<Meas
 	}
 
 	@Override
-	public Object getValue(final MeasurementPortType measurementPortType, final String key) {
-		final Object value = super.getValue(measurementPortType, key);
-		if (value == null && measurementPortType != null) {
+	public Object getValue(final MeasurementPortType object, final String key) {
+		final Object value = super.getValue(object, key);
+		if (value == null && object != null) {
 			if (key.equals(COLUMN_CODENAME)) {
-				return measurementPortType.getCodename();
+				return object.getCodename();
 			}
 			if (key.equals(COLUMN_DESCRIPTION)) {
-				return measurementPortType.getDescription();
+				return object.getDescription();
 			}
 			if (key.equals(COLUMN_NAME)) {
-				return measurementPortType.getName();
-			}
-			if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_CODE)) {
-				return measurementPortType.getMeasurementTypes();
+				return object.getName();
 			}
 		}
 		return value;
@@ -80,11 +73,9 @@ public final class MeasurementPortTypeWrapper extends StorableObjectWrapper<Meas
 		if (object != null) {
 			if (key.equals(COLUMN_NAME)) {
 				object.setName((String) value);
-			}
-			else if (key.equals(COLUMN_DESCRIPTION)) {
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				object.setDescription((String) value);
-			}
-			else if (key.equals(COLUMN_CODENAME)) {
+			} else if (key.equals(COLUMN_CODENAME)) {
 				object.setCodename((String) value);
 			}
 		}
@@ -105,17 +96,12 @@ public final class MeasurementPortTypeWrapper extends StorableObjectWrapper<Meas
 
 	@Override
 	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key); 
+		final Class clazz = super.getPropertyClass(key);
 		if (clazz != null) {
 			return clazz;
 		}
-		if (key.equals(COLUMN_NAME) 
-				|| key.equals(COLUMN_DESCRIPTION)
-				|| key.equals(COLUMN_CODENAME)) {
+		if (key.equals(COLUMN_NAME) || key.equals(COLUMN_DESCRIPTION) || key.equals(COLUMN_CODENAME)) {
 			return String.class;
-		}
-		if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_CODE)) {
-			return EnumSet.class;
 		}
 		return null;
 	}

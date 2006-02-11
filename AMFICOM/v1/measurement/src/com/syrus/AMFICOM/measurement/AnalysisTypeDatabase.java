@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisTypeDatabase.java,v 1.110.2.1 2006/02/06 14:46:30 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.110.2.2 2006/02/11 18:40:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,74 +7,57 @@
  */
 package com.syrus.AMFICOM.measurement;
 
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.COMMA;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.QUESTION;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_INSERT_INTO;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_VALUES;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.TableNames;
-import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseConnection;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.110.2.1 $, $Date: 2006/02/06 14:46:30 $
+ * @version $Revision: 1.110.2.2 $, $Date: 2006/02/11 18:40:45 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class AnalysisTypeDatabase {
+public final class AnalysisTypeDatabase extends ActionTypeDatabase<AnalysisType> {
 
-	private AnalysisTypeDatabase() {
-		//Empty
+	@Override
+	protected short getEntityCode() {
+		return ObjectEntities.ANALYSIS_TYPE_CODE;
 	}
 
-	public static void insertAll() throws CreateObjectException {
-		final String sql = SQL_INSERT_INTO + TableNames.ANALYSIS_TYPE + OPEN_BRACKET
-				+ StorableObjectWrapper.COLUMN_CODE + COMMA
-				+ StorableObjectWrapper.COLUMN_CODENAME
-				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-				+ QUESTION + COMMA
-				+ QUESTION
-				+ CLOSE_BRACKET;
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		try {
-			connection = DatabaseConnection.getConnection();
-			preparedStatement = connection.prepareStatement(sql);
-			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
-			for (final AnalysisType analysisType : AnalysisType.values()) {
-				preparedStatement.setInt(1, analysisType.ordinal());
-				preparedStatement.setString(2, analysisType.getCodename());
-				Log.debugMessage("Inserting analysis type '" + analysisType.getCodename() + "'", Log.DEBUGLEVEL09);
-				preparedStatement.executeUpdate();
-			}
-			connection.commit();
-		} catch (SQLException sqle) {
-			throw new CreateObjectException(sqle.getMessage(), sqle);
-		} finally {
-			try {
-				try {
-					if (preparedStatement != null) {
-						preparedStatement.close();
-						preparedStatement = null;
-					}
-				} finally {
-					if (connection != null) {
-						DatabaseConnection.releaseConnection(connection);
-						connection = null;
-					}
-				}
-			} catch (SQLException sqle1) {
-				Log.errorMessage(sqle1);
-			}
-		}
+	@Override
+	protected AnalysisType updateEntityFromResultSet(final AnalysisType storableObject, final ResultSet resultSet)
+			throws IllegalDataException, SQLException {
+		final AnalysisType analysisType = (storableObject == null)
+				? new AnalysisType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+						null,
+						ILLEGAL_VERSION,
+						null,
+						null)
+				: storableObject;
+		analysisType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
+		return analysisType;
 	}
+
 }

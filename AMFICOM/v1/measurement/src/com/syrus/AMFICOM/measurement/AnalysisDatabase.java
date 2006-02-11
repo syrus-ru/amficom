@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.76.2.1 2006/02/06 14:46:30 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.76.2.2 2006/02/11 18:40:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,33 +8,43 @@
 
 package com.syrus.AMFICOM.measurement;
 
+
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_TYPE_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_ACTION_TEMPLATE_ID;
+import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_DURATION;
+import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_MONITORED_ELEMENT_ID;
+import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_START_TIME;
+import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_STATUS;
+import static com.syrus.AMFICOM.measurement.AnalysisWrapper.COLUMN_MEASUREMENT_ID;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.measurement.Action.ActionStatus;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.76.2.1 $, $Date: 2006/02/06 14:46:30 $
+ * @version $Revision: 1.76.2.2 $, $Date: 2006/02/11 18:40:45 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class AnalysisDatabase extends StorableObjectDatabase<Analysis> {
-	private static String columns;
-	private static String updateMultipleSQLValues;
+public final class AnalysisDatabase extends ActionDatabase<Analysis> {
 
 	@Override
 	protected short getEntityCode() {		
@@ -44,11 +54,8 @@ public final class AnalysisDatabase extends StorableObjectDatabase<Analysis> {
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_TYPE_CODE + COMMA
-					+ AnalysisWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
-					+ AnalysisWrapper.COLUMN_MEASUREMENT_ID + COMMA
-					+ StorableObjectWrapper.COLUMN_NAME + COMMA
-					+ AnalysisWrapper.COLUMN_CRITERIA_SET_ID;
+			columns = super.getColumnsTmpl() + COMMA
+				+ COLUMN_MEASUREMENT_ID;
 		}
 		return columns;
 	}
@@ -56,10 +63,7 @@ public final class AnalysisDatabase extends StorableObjectDatabase<Analysis> {
 	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValuesTmpl() + COMMA
 				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -67,22 +71,16 @@ public final class AnalysisDatabase extends StorableObjectDatabase<Analysis> {
 
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final Analysis storableObject) throws IllegalDataException {
-		final String values = Integer.toString(((Enum) storableObject.getType()).ordinal()) + COMMA
-			+ DatabaseIdentifier.toSQLString(storableObject.getMonitoredElementId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(storableObject.getMeasurementId()) + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(storableObject.getCriteriaSet().getId());
-		return values;
+		final String sql = super.getUpdateSingleSQLValuesTmpl(storableObject) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getMeasurementId());
+		return sql;
 	}
 
 	@Override
 	protected int setEntityForPreparedStatementTmpl(final Analysis storableObject, final PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
-		preparedStatement.setInt(++startParameterNumber, ((Enum) storableObject.getType()).ordinal());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMonitoredElementId());
+		startParameterNumber = super.setEntityForPreparedStatementTmpl(storableObject, preparedStatement, startParameterNumber);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMeasurementId());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getCriteriaSet().getId());
 		return startParameterNumber;
 	}
 
@@ -90,32 +88,32 @@ public final class AnalysisDatabase extends StorableObjectDatabase<Analysis> {
 	protected Analysis updateEntityFromResultSet(final Analysis storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		final Analysis analysis = (storableObject == null)
-				? new Analysis(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				? new Analysis(DatabaseIdentifier.getIdentifier(resultSet,
+						COLUMN_ID),
 						null,
 						StorableObjectVersion.ILLEGAL_VERSION,
 						null,
 						null,
 						null,
 						null,
+						null,
+						0,
+						null,
 						null)
 					: storableObject;
-		ParameterSet criteriaSet;
-		try {
-			final Identifier criteriaSetId = DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_CRITERIA_SET_ID);
-			criteriaSet = (ParameterSet) StorableObjectPool.getStorableObject(criteriaSetId, true);
-		} catch (ApplicationException ae) {
-			throw new RetrieveObjectException(ae);
-		}
-		analysis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				AnalysisType.valueOf(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE)),
-				DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_MONITORED_ELEMENT_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_MEASUREMENT_ID),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-				criteriaSet);
+		analysis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MONITORED_ELEMENT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ACTION_TEMPLATE_ID),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_START_TIME),
+				resultSet.getLong(COLUMN_DURATION),
+				ActionStatus.valueOf(resultSet.getInt(COLUMN_STATUS)),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_ID));
 		return analysis;
 	}
 

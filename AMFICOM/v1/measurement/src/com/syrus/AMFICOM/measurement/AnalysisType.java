@@ -1,141 +1,97 @@
 /*-
- * $Id: AnalysisType.java,v 1.107.2.1 2006/02/06 14:46:30 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.107.2.2 2006/02/11 18:40:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-
 package com.syrus.AMFICOM.measurement;
 
-import java.util.EnumSet;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 
-import org.omg.CORBA.BAD_PARAM;
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.Describable;
-import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
-import com.syrus.util.Log;
-import com.syrus.util.transport.idl.IdlTransferableObject;
+import com.syrus.AMFICOM.measurement.corba.IdlAnalysisTypeHelper;
 
 /**
- * @version $Revision: 1.107.2.1 $, $Date: 2006/02/06 14:46:30 $
+ * @version $Revision: 1.107.2.2 $, $Date: 2006/02/11 18:40:45 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public enum AnalysisType implements IdlTransferableObject<IdlAnalysisType>,
-		ActionType<IdlAnalysisType>, Describable {
-	DADARA("dadara",
-			EnumSet.of(ParameterType.REFLECTOGRAMMA),
-			EnumSet.of(ParameterType.DADARA_CRITERIA),
-			EnumSet.of(ParameterType.DADARA_ETALON),
-			EnumSet.of(ParameterType.DADARA_ANALYSIS_RESULT, ParameterType.DADARA_ALARMS),
-			EnumSet.of(MeasurementType.REFLECTOMETRY)),
-	UNKNOWN("unknown",
-			EnumSet.noneOf(ParameterType.class),
-			EnumSet.noneOf(ParameterType.class),
-			EnumSet.noneOf(ParameterType.class),
-			EnumSet.noneOf(ParameterType.class),
-			EnumSet.noneOf(MeasurementType.class));
+public final class AnalysisType extends ActionType<AnalysisType> {
 
-	private static final String KEY_ROOT = "AnalysisType.Description.";
-
-	private String codename;
-	private EnumSet<ParameterType> inParameterTypes;
-	private EnumSet<ParameterType> criteriaParameterTypes;
-	private EnumSet<ParameterType> etalonParameterTypes;
-	private EnumSet<ParameterType> outParameterTypes;
-	private EnumSet<MeasurementType> measurementTypes;
-	private String description;
-
-
-	private AnalysisType(final String codename,
-			final EnumSet<ParameterType> inParameterTypes,
-			final EnumSet<ParameterType> criParameterTypes,
-			final EnumSet<ParameterType> etaParameterTypes,
-			final EnumSet<ParameterType> outParameterTypes,
-			final EnumSet<MeasurementType> measurementTypes) {
-		this.codename = codename;
-		this.inParameterTypes = inParameterTypes;
-		this.criteriaParameterTypes = criParameterTypes;
-		this.etalonParameterTypes = etaParameterTypes;
-		this.outParameterTypes = outParameterTypes;
-		this.measurementTypes = measurementTypes;
-		this.description = LangModelMeasurement.getString(KEY_ROOT + this.codename);
+	AnalysisType(final Identifier id,
+			final Identifier creatorId,
+			final StorableObjectVersion version,
+			final String codename,
+			final String description) {
+		super(id, creatorId, version, codename, description);
 	}
 
-	public static AnalysisType valueOf(final int code) {
-		switch (code) {
-			case IdlAnalysisType._DADARA:
-				return DADARA;
-			case IdlAnalysisType._UNKNOWN_ANALYSISTYPE:
-				return UNKNOWN;
-			default:
-				Log.errorMessage("Illegal IDL code: " + code + ", returning UNKNOWN");
-				return UNKNOWN;
+	public AnalysisType(final IdlAnalysisType idlAnalysisType) throws CreateObjectException {
+		super(idlAnalysisType);
+	}
+
+	public static AnalysisType createInstance(final Identifier creatorId,
+			final String codename,
+			final String description) throws ApplicationException {
+		if (creatorId == null || codename == null || description == null) {
+			throw new IllegalArgumentException(NON_NULL_EXPECTED);
 		}
-	}
 
-	public static AnalysisType fromTransferable(final IdlAnalysisType idlAnalysisType) {
-		return valueOf(idlAnalysisType.value());
-	}
-
-	public String getCodename() {
-		return this.codename;
-	}
-
-	public EnumSet<ParameterType> getInParameterTypes() {
-		return this.inParameterTypes.clone();
-	}
-
-	public EnumSet<ParameterType> getCriteriaParameterTypes() {
-		return this.criteriaParameterTypes.clone();
-	}
-
-	public EnumSet<ParameterType> getEtalonParameterTypes() {
-		return this.etalonParameterTypes.clone();
-	}
-
-	public EnumSet<ParameterType> getOutParameterTypes() {
-		return this.outParameterTypes.clone();
-	}
-
-	public EnumSet<MeasurementType> getMeasurementTypes() {
-		return this.measurementTypes.clone();
-	}
-
-	public String getDescription() {
-		return this.description;
-	}	
-
-	@Deprecated
-	public String getName() {
-		return this.description;
-	}	
-	
-	public void setDescription(String description) {
-		throw new UnsupportedOperationException(
-				"AnalysisType.setDescription() is unsupported");		
-	}
-	
-	public void setName(String name) {
-		throw new UnsupportedOperationException(
-				"AnalysisType.setName() is unsupported");		
-	}
-
-	public IdlAnalysisType getIdlTransferable(final ORB orb) {
 		try {
-			return IdlAnalysisType.from_int(this.ordinal());
-		} catch (final BAD_PARAM bp) {
-			Log.errorMessage("Illegal code: " + this.ordinal() + ", returning UNKNOWN");
-			return IdlAnalysisType.UNKNOWN_ANALYSISTYPE;
+			final AnalysisType analysisType = new AnalysisType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_TYPE_CODE),
+					creatorId,
+					StorableObjectVersion.INITIAL_VERSION,
+					codename,
+					description);
+
+			assert analysisType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+			analysisType.markAsChanged();
+
+			return analysisType;
+		} catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
 	@Override
-	public String toString() {
-		return this.getCodename();
+	public IdlAnalysisType getIdlTransferable(final ORB orb) {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+		return IdlAnalysisTypeHelper.init(orb,
+				super.id.getIdlTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
+				super.version.longValue(),
+				super.codename,
+				super.description != null ? super.description : "");
+	}
+
+	@Override
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+		final IdlAnalysisType idlAnalysisType = (IdlAnalysisType) transferable;
+		super.fromTransferable(idlAnalysisType, idlAnalysisType.codename, idlAnalysisType.description);
+
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+	}
+
+	@Override
+	public AnalysisTypeWrapper getWrapper() {
+		return AnalysisTypeWrapper.getInstance();
 	}
 }

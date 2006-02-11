@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.11 2005/12/02 11:24:09 bass Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.11.2.1 2006/02/11 18:40:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,34 +8,22 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import static com.syrus.AMFICOM.general.TableNames.MNTPORTTYPMNTTYPLINK;
-import static com.syrus.AMFICOM.measurement.MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID;
-import static com.syrus.AMFICOM.measurement.MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/12/02 11:24:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.11.2.1 $, $Date: 2006/02/11 18:40:46 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -95,7 +83,6 @@ public final class MeasurementPortTypeDatabase extends StorableObjectDatabase<Me
 						StorableObjectVersion.ILLEGAL_VERSION,
 						null,
 						null,
-						null,
 						null)
 				: storableObject;
 		measurementPortType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
@@ -108,63 +95,4 @@ public final class MeasurementPortTypeDatabase extends StorableObjectDatabase<Me
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)));
 		return measurementPortType;
 	}
-
-	private void retrieveMeasurementTypesByOneQuery(final Set<MeasurementPortType> measurementPortTypes) throws RetrieveObjectException {
-		if (measurementPortTypes == null || measurementPortTypes.isEmpty()) {
-			return;
-		}
-
-		final Map<Identifier, EnumSet<MeasurementType>> dbMeasurementTypesMap = super.retrieveLinkedEnums(measurementPortTypes,
-				MeasurementType.class,
-				MNTPORTTYPMNTTYPLINK,
-				LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID,
-				LINK_COLUMN_MEASUREMENT_TYPE_CODE);
-		for (final MeasurementPortType measurementPortType : measurementPortTypes) {
-			final Identifier measurementPortTypeId = measurementPortType.getId();
-			final EnumSet<MeasurementType> measurementTypes = dbMeasurementTypesMap.get(measurementPortTypeId);
-
-			measurementPortType.setMeasurementTypes0(measurementTypes);
-		}
-	}
-
-	@Override
-	protected void insert(final Set<MeasurementPortType> storableObjects) throws CreateObjectException, IllegalDataException {
-		super.insert(storableObjects);
-
-		final Map<Identifier, EnumSet<MeasurementType>> measurementTypesMap = createMeasurementTypesMap(storableObjects);
-		super.insertLinkedEnums(measurementTypesMap,
-				MNTPORTTYPMNTTYPLINK,
-				LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID,
-				LINK_COLUMN_MEASUREMENT_TYPE_CODE);
-	}
-
-	@Override
-	protected void update(final Set<MeasurementPortType> storableObjects) throws UpdateObjectException {
-		super.update(storableObjects);
-
-		final Map<Identifier, EnumSet<MeasurementType>> measurementTypesMap = createMeasurementTypesMap(storableObjects);
-		super.updateLinkedEnums(measurementTypesMap,
-				MeasurementType.class,
-				MNTPORTTYPMNTTYPLINK,
-				LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID,
-				LINK_COLUMN_MEASUREMENT_TYPE_CODE);
-	}
-
-	private static Map<Identifier, EnumSet<MeasurementType>> createMeasurementTypesMap(final Set<MeasurementPortType> measurementPortTypes) {
-		final Map<Identifier, EnumSet<MeasurementType>> measurementTypesMap = new HashMap<Identifier, EnumSet<MeasurementType>>();
-		for (final MeasurementPortType measurementPortType : measurementPortTypes) {
-			measurementTypesMap.put(measurementPortType.getId(), measurementPortType.getMeasurementTypes());
-		}
-		return measurementTypesMap;
-	}
-
-	@Override
-	protected Set<MeasurementPortType> retrieveByCondition(final String conditionQuery)
-			throws RetrieveObjectException,
-				IllegalDataException {
-		final Set<MeasurementPortType> objects = super.retrieveByCondition(conditionQuery);
-		this.retrieveMeasurementTypesByOneQuery(objects);
-		return objects;
-	}
-
 }

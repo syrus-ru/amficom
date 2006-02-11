@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingType.java,v 1.65.2.1 2006/02/06 14:46:30 arseniy Exp $
+ * $Id: ModelingType.java,v 1.65.2.2 2006/02/11 18:40:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,91 +7,91 @@
  */
 package com.syrus.AMFICOM.measurement;
 
-import java.util.EnumSet;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 
-import org.omg.CORBA.BAD_PARAM;
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
-import com.syrus.util.Log;
-import com.syrus.util.transport.idl.IdlTransferableObject;
+import com.syrus.AMFICOM.measurement.corba.IdlModelingTypeHelper;
 
 /**
- * @version $Revision: 1.65.2.1 $, $Date: 2006/02/06 14:46:30 $
+ * @version $Revision: 1.65.2.2 $, $Date: 2006/02/11 18:40:46 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public enum ModelingType implements IdlTransferableObject<IdlModelingType>,
-		ActionType<IdlModelingType> {
-	DADARA_MODELING("dadara_modeling",
-			EnumSet.noneOf(ParameterType.class),
-			EnumSet.noneOf(ParameterType.class)),
-	UNKNOWN("unknown",
-			EnumSet.noneOf(ParameterType.class),
-			EnumSet.noneOf(ParameterType.class));
+public final class ModelingType extends ActionType<ModelingType> {
 
-	private static final String KEY_ROOT = "ModelingType.Description.";
-
-	private String codename;
-	private EnumSet<ParameterType> inParameterTypes;
-	private EnumSet<ParameterType> outParameterTypes;
-	private String description;
-
-
-	private ModelingType(final String codename,
-			final EnumSet<ParameterType> inParameterTypes,
-			final EnumSet<ParameterType> outParameterTypes) {
-		this.codename = codename;
-		this.inParameterTypes = inParameterTypes;
-		this.outParameterTypes = outParameterTypes;
-		this.description = LangModelMeasurement.getString(KEY_ROOT + this.codename);
+	ModelingType(final Identifier id,
+			final Identifier creatorId,
+			final StorableObjectVersion version,
+			final String codename,
+			final String description) {
+		super(id, creatorId, version, codename, description);
 	}
 
-	public static ModelingType valueOf(final int code) {
-		switch (code) {
-			case IdlModelingType._DADARA_MODELING:
-				return DADARA_MODELING;
-			case IdlModelingType._UNKNOWN_MODELINGTYPE:
-				return UNKNOWN;
-			default:
-				Log.errorMessage("Illegal IDL code: " + code + ", returning UNKNOWN");
-				return UNKNOWN;
+	public ModelingType(final IdlModelingType idlModelingType) throws CreateObjectException {
+		super(idlModelingType);
+	}
+
+	public static ModelingType createInstance(final Identifier creatorId,
+			final String codename,
+			final String description) throws ApplicationException {
+		if (creatorId == null || codename == null || description == null) {
+			throw new IllegalArgumentException(NON_NULL_EXPECTED);
 		}
-	}
 
-	public static ModelingType fromTransferable(final IdlModelingType idlModelingType) {
-		return valueOf(idlModelingType.value());
-	}
-
-	public String getCodename() {
-		return this.codename;
-	}
-
-	public EnumSet<ParameterType> getInParameterTypes() {
-		return this.inParameterTypes.clone();
-	}
-
-	public EnumSet<ParameterType> getOutParameterTypes() {
-		return this.outParameterTypes.clone();
-	}
-
-	public String getDescription() {
-		return this.description;
-	}
-
-	public IdlModelingType getIdlTransferable(final ORB orb) {
 		try {
-			return IdlModelingType.from_int(this.ordinal());
-		} catch (final BAD_PARAM bp) {
-			Log.errorMessage("Illegal code: " + this.ordinal() + ", returning UNKNOWN");
-			return IdlModelingType.UNKNOWN_MODELINGTYPE;
+			final ModelingType modelingType = new ModelingType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_TYPE_CODE),
+					creatorId,
+					StorableObjectVersion.INITIAL_VERSION,
+					codename,
+					description);
+
+			assert modelingType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+			modelingType.markAsChanged();
+
+			return modelingType;
+		} catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
 	@Override
-	public String toString() {
-		return this.getCodename();
+	public IdlModelingType getIdlTransferable(final ORB orb) {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+		return IdlModelingTypeHelper.init(orb,
+				super.id.getIdlTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
+				super.version.longValue(),
+				super.codename,
+				super.description != null ? super.description : "");
+	}
+
+	@Override
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+		final IdlModelingType idlModelingType = (IdlModelingType) transferable;
+		super.fromTransferable(idlModelingType, idlModelingType.codename, idlModelingType.description);
+
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+	}
+
+	@Override
+	public ModelingTypeWrapper getWrapper() {
+		return ModelingTypeWrapper.getInstance();
 	}
 }

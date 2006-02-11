@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMeasurementImpl.java,v 1.7 2005/10/31 12:30:15 bass Exp $
+ * $Id: IdlMeasurementImpl.java,v 1.7.2.1 2006/02/11 18:40:47 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,17 +14,15 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/10/31 12:30:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7.2.1 $, $Date: 2006/02/11 18:40:47 $
  * @module measurement
  */
 final class IdlMeasurementImpl extends IdlMeasurement {
-	private static final long serialVersionUID = 4762899720517063763L;
 
 	IdlMeasurementImpl() {
 		// empty
@@ -36,14 +34,13 @@ final class IdlMeasurementImpl extends IdlMeasurement {
 			final IdlIdentifier creatorId,
 			final IdlIdentifier modifierId,
 			final long version,
-			final IdlMeasurementType type,
+			final IdlIdentifier actionTypeId,
 			final IdlIdentifier monitoredElementId,
+			final IdlIdentifier actionTemplateId,
 			final String name,
-			final IdlIdentifier setupId,
 			final long startTime,
 			final long duration,
-			final MeasurementStatus status,
-			final String localAddress,
+			final IdlActionStatus status,
 			final IdlIdentifier testId) {
 		this.id = id;
 		this.created = created;
@@ -51,14 +48,13 @@ final class IdlMeasurementImpl extends IdlMeasurement {
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 		this.version = version;
-		this.type = type;
+		this.actionTypeId = actionTypeId;
 		this.monitoredElementId = monitoredElementId;
+		this.actionTemplateId = actionTemplateId;
 		this.name = name;
-		this.setupId = setupId;
 		this.startTime = startTime;
 		this.duration = duration;
 		this.status = status;
-		this.localAddress = localAddress;
 		this.testId = testId;
 	}
 

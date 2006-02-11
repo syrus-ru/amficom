@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.28 2005/11/15 10:49:29 max Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.28.2.1 2006/02/11 18:40:45 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,11 +9,10 @@
 package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PERIODICALTEMPORALPATTERN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 
 import com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -24,8 +23,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/11/15 10:49:29 $
- * @author $Author: max $
+ * @version $Revision: 1.28.2.1 $, $Date: 2006/02/11 18:40:45 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */

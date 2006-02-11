@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.55.2.1 2006/02/06 14:46:30 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.55.2.2 2006/02/11 18:40:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,110 +8,76 @@
 package com.syrus.AMFICOM.measurement;
 
 
-import java.sql.PreparedStatement;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_TYPE_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_ACTION_TEMPLATE_ID;
+import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_DURATION;
+import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_MONITORED_ELEMENT_ID;
+import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_START_TIME;
+import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_STATUS;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.measurement.Action.ActionStatus;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.55.2.1 $, $Date: 2006/02/06 14:46:30 $
+ * @version $Revision: 1.55.2.2 $, $Date: 2006/02/11 18:40:46 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class ModelingDatabase extends StorableObjectDatabase<Modeling> {
-	private static String columns;
-	private static String updateMultipleSQLValues;
+public final class ModelingDatabase extends ActionDatabase<Modeling> {
 
 	@Override
-	protected short getEntityCode() {		
+	protected short getEntityCode() {
 		return ObjectEntities.MODELING_CODE;
 	}
 
 	@Override
-	protected String getColumnsTmpl() {
-		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_TYPE_CODE + COMMA
-				+ ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
-				+ ModelingWrapper.COLUMN_ARGUMENT_SET_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_NAME;
-		}
-		return columns;
-	}
-
-	@Override
-	protected String getUpdateMultipleSQLValuesTmpl() {
-		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION;
-		}
-		return updateMultipleSQLValues;
-	}
-
-	@Override
-  protected String getUpdateSingleSQLValuesTmpl(final Modeling storableObject) throws IllegalDataException {
-  	final String values = Integer.toString(((Enum) storableObject.getType()).ordinal()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getMonitoredElementId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getArgumentSet().getId()) + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE;
-		return values;
-	}
-
-	@Override
-	protected int setEntityForPreparedStatementTmpl(final Modeling storableObject,
-			final PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException, SQLException {
-		preparedStatement.setInt(++startParameterNumber, ((Enum) storableObject.getType()).ordinal());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMonitoredElementId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getArgumentSet().getId());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
-		return startParameterNumber;
-	}
-
-	@Override
-  protected Modeling updateEntityFromResultSet(final Modeling storableObject, final ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException, SQLException {
-  	final Modeling modeling = (storableObject == null)
-				? new Modeling(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+	protected Modeling updateEntityFromResultSet(final Modeling storableObject, final ResultSet resultSet)
+			throws IllegalDataException,
+				RetrieveObjectException,
+				SQLException {
+		final Modeling modeling = (storableObject == null)
+				? new Modeling(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						null,
 						StorableObjectVersion.ILLEGAL_VERSION,
 						null,
 						null,
 						null,
+						null,
+						null,
+						0,
 						null)
 					: storableObject;
-		ParameterSet argumentSet;
-		try {
-			final Identifier argumentSetId = DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_ARGUMENT_SET_ID);
-			argumentSet = (ParameterSet) StorableObjectPool.getStorableObject(argumentSetId, true);
-		} catch (ApplicationException ae) {
-			throw new RetrieveObjectException(ae);
-		}
 
-    modeling.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				ModelingType.valueOf(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE)),
-				DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-				argumentSet);
+		modeling.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MONITORED_ELEMENT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ACTION_TEMPLATE_ID),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_START_TIME),
+				resultSet.getLong(COLUMN_DURATION),
+				ActionStatus.valueOf(resultSet.getInt(COLUMN_STATUS)));
 		return modeling;
 	}
 

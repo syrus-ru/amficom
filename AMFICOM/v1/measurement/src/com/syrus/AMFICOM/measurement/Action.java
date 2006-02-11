@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.43 2006/01/26 15:15:08 arseniy Exp $
+ * $Id: Action.java,v 1.43.2.1 2006/02/11 18:40:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,96 +7,106 @@
  */
 package com.syrus.AMFICOM.measurement;
 
-import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
-
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.measurement.corba.IdlAction;
+import com.syrus.AMFICOM.measurement.corba.IdlActionStatus;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2006/01/26 15:15:08 $
+ * @version $Revision: 1.43.2.1 $, $Date: 2006/02/11 18:40:44 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
 public abstract class Action<T extends Action<T>> extends StorableObject<T> {
-	private static final long serialVersionUID = 8504255613322384909L;
 
-	ActionType type;
-	Identifier monitoredElementId;
+	static enum ActionStatus {
+		ACTION_STATUS_NEW,
+		ACTION_STATUS_RUNNING,
+		ACTION_STATUS_COMPLETE;
 
-	Identifier parentActionId;
+		private static final ActionStatus[] VALUES = values();
 
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	Action() {
-		// super();
+		IdlActionStatus getIdlTransferable() {
+			return IdlActionStatus.from_int(this.ordinal());
+		}
+
+		static ActionStatus valueOf(final int code) {
+			return VALUES[code];
+		}
+
+		static ActionStatus valueOf(final IdlActionStatus idlActionStatus) {
+			return valueOf(idlActionStatus);
+		}
 	}
 
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
+	private Identifier typeId;
+	private Identifier monitoredElementId;
+	private Identifier actionTemplateId;
+	private String name;
+	private Date startTime;
+	private long duration;
+	private ActionStatus status;
+
 	Action(final Identifier id,
-			final Date created,
-			final Date modified,
 			final Identifier creatorId,
-			final Identifier modifierId,
 			final StorableObjectVersion version,
-			final ActionType type,
+			final Identifier typeId,
 			final Identifier monitoredElementId,
-			final Identifier parentActionId) {
+			final Identifier actionTemplateId,
+			final String name,
+			final Date startTime,
+			final long duration,
+			final ActionStatus status) {
 		super(id,
-				created,
-				modified,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
 				creatorId,
-				modifierId,
+				creatorId,
 				version);
-		this.type = type;
+		this.typeId = typeId;
 		this.monitoredElementId = monitoredElementId;
-
-		this.parentActionId = parentActionId;
+		this.actionTemplateId = actionTemplateId;
+		this.name = name;
+		this.startTime = startTime;
+		this.duration = duration;
+		this.status = status;
 	}
 
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	protected synchronized void fromTransferable(final IdlStorableObject transferable,
-			final ActionType type1,
-			final Identifier monitoredElementId1,
-			final Identifier parentActionId1) throws ApplicationException {
-		super.fromTransferable(transferable);
-		this.type = type1;
-		this.monitoredElementId = monitoredElementId1;
-
-		this.parentActionId = parentActionId1;
-	}
-	
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	@Override
-	protected boolean isValid() {
-		/* XXX : fix checking parentAction w/o check id for concrete impementation as measurement or modeling
-		 * which have null parent action */	
-		short entityCode = this.id.getMajor();
-		return super.isValid()
-				&& this.type != null
-				&& this.monitoredElementId != null
-				&& this.parentActionId != null
-				&& (entityCode == ObjectEntities.MEASUREMENT_CODE || entityCode == ObjectEntities.MODELING_CODE || this.parentActionId != VOID_IDENTIFIER);
+	Action(final IdlStorableObject idlStorableObject) throws CreateObjectException {
+		try {
+			this.fromTransferable(idlStorableObject);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
-	public ActionType<?> getType() {
-		return this.type;
+	void fromTransferable(final IdlAction idlAction) throws ApplicationException {
+		super.fromTransferable(idlAction);
+		this.typeId = new Identifier(idlAction.actionTypeId);
+		this.monitoredElementId = new Identifier(idlAction.monitoredElementId);
+		this.actionTemplateId = new Identifier(idlAction.actionTemplateId);
+		this.name = idlAction.name;
+		this.startTime = new Date(idlAction.startTime);
+		this.duration = idlAction.duration;
+		this.status = ActionStatus.valueOf(idlAction.status);
+	}
+
+	public final Identifier getTypeId() {
+		return this.typeId;
 	}
 
 	public final Identifier getMonitoredElementId() {
@@ -120,6 +130,31 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 		super.markAsChanged();
 	}
 
+	public final Identifier getActionTemplateId() {
+		return this.actionTemplateId;
+	}
+
+	public final String getName() {
+		return this.name;
+	}
+
+	public final Date getStartTime() {
+		return this.startTime;
+	}
+
+	public final long getDuration() {
+		return this.duration;
+	}
+
+	public final ActionStatus getStatus() {
+		return this.status;
+	}
+
+	public final void setStatus(final ActionStatus status) {
+		this.status = status;
+		super.markAsChanged();
+	}
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -128,31 +163,44 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
-			final ActionType type,
+			final Identifier typeId,
 			final Identifier monitoredElementId,
-			final Identifier parentActionId) {
+			final Identifier actionTemplateId,
+			final String name,
+			final Date startTime,
+			final long duration,
+			final ActionStatus status) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
 			modifierId,
 			version);
-		this.type = type;
+		this.typeId = typeId;
 		this.monitoredElementId = monitoredElementId;
-
-		this.parentActionId = parentActionId;
+		this.actionTemplateId = actionTemplateId;
+		this.name = name;
+		this.startTime = startTime;
+		this.duration = duration;
+		this.status = status;
 	}
 
-	public abstract Result createResult(final Identifier resultCreatorId, final Parameter[] parameters)
-			throws CreateObjectException;
-
-	/**
-	 * @return Returns the parentAction.
-	 */
-	protected final Action getParentAction() throws ApplicationException {
-		return StorableObjectPool.getStorableObject(this.getParentActionId(), true);
+	@Override
+	protected boolean isValid() {
+		return super.isValid()
+				&& this.typeId != null
+				&& this.monitoredElementId != null && this.monitoredElementId.getMajor() == ObjectEntities.MONITOREDELEMENT_CODE
+				&& this.actionTemplateId != null && this.actionTemplateId.getMajor() == ObjectEntities.ACTIONTEMPLATE_CODE
+				&& this.startTime != null
+				&& this.status != null;
 	}
 
-	protected final Identifier getParentActionId() {
-		return this.parentActionId;
+	@Override
+	protected Set<Identifiable> getDependenciesTmpl() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.typeId);
+		dependencies.add(this.monitoredElementId);
+		dependencies.add(this.actionTemplateId);
+		return dependencies;
 	}
 }

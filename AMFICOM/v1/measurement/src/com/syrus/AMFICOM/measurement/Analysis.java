@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.90 2006/01/26 15:15:34 arseniy Exp $
+ * $Id: Analysis.java,v 1.90.2.1 2006/02/11 18:40:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -27,199 +26,70 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisHelper;
-import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
-import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2006/01/26 15:15:34 $
+ * @version $Revision: 1.90.2.1 $, $Date: 2006/02/11 18:40:45 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
 public final class Analysis extends Action<Analysis> {
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long	serialVersionUID	= 3979266967062721849L;
+	private Identifier measurementId;
 
-	private String name;
-	private ParameterSet criteriaSet;
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	public Analysis(final IdlAnalysis at) throws CreateObjectException {
-		try {
-			this.fromTransferable(at);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-	}
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
 	Analysis(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
-			final AnalysisType type,
+			final Identifier typeId,
 			final Identifier monitoredElementId,
-			final Identifier measurementId,
+			final Identifier actionTemplateId,
 			final String name,
-			final ParameterSet criteriaSet) {
+			final Date startTime,
+			final long duration,
+			final ActionStatus status,
+			final Identifier measurementId) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					version,
-					type,
-					monitoredElementId,
-					measurementId);
-
-		this.name = name;
-		this.criteriaSet = criteriaSet;
-	}
-	
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		final IdlAnalysis at = (IdlAnalysis) transferable;
-		super.fromTransferable(at, AnalysisType.fromTransferable(at.type), new Identifier(at.monitoredElementId), null);
-
-		this.name = at.name;
-		super.parentActionId = new Identifier(at.measurementId);
-
-		this.criteriaSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(at.criteriaSetId), true);
-
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-	}
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	@Override
-	public IdlAnalysis getIdlTransferable(final ORB orb) {
-
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
-		return IdlAnalysisHelper.init(orb,
-				this.id.getIdlTransferable(),
-				this.created.getTime(),
-				this.modified.getTime(),
-				this.creatorId.getIdlTransferable(),
-				this.modifierId.getIdlTransferable(),
-				this.version.longValue(),
-				(IdlAnalysisType) super.type.getIdlTransferable(orb),
-				super.monitoredElementId.getIdlTransferable(),
-				super.parentActionId.getIdlTransferable(),
-				this.name != null ? this.name : "",
-				this.criteriaSet.getId().getIdlTransferable());
-	}
-
-	/**
-	 * <p>
-	 * <b>Clients must never explicitly call this method. </b>
-	 * </p>
-	 */
-	@Override
-	protected boolean isValid() {
-		return super.isValid() && this.name != null && this.criteriaSet != null;
-	}
-
-	public short getEntityCode() {
-		return ObjectEntities.ANALYSIS_CODE;
-	}
-
-	public Identifier getMeasurementId() {
-		return super.getParentActionId();
-	}
-	
-	public Measurement getMeasurement() throws ApplicationException {
-		return (Measurement) super.getParentAction();
-	}
-
-	public void setMeasurementId(final Identifier measurementId) {
-		assert measurementId.getMajor() == ObjectEntities.MEASUREMENT_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
-
-		super.parentActionId = measurementId;
-		super.markAsChanged();
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(final String name) {
-		this.name = name;
-		super.markAsChanged();
-	}
-
-	public void setCriteriaSet(final ParameterSet criteriaSet) {
-		this.criteriaSet = criteriaSet;
-		super.markAsChanged();
-	}
-
-	public ParameterSet getCriteriaSet() {
-		return this.criteriaSet;
-	}
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	protected synchronized void setAttributes(final Date created,
-			final Date modified,
-			final Identifier creatorId,
-			final Identifier modifierId,
-			final StorableObjectVersion version,
-			final AnalysisType type,
-			final Identifier monitoredElementId,
-			final Identifier measurementId,
-			final String name,
-			final ParameterSet criteriaSet) {
-		super.setAttributes(created,
-				modified,
 				creatorId,
-				modifierId,
 				version,
-				type,
+				typeId,
 				monitoredElementId,
-				measurementId);
-		this.name = name;
-		this.criteriaSet = criteriaSet;
+				actionTemplateId,
+				name,
+				startTime,
+				duration,
+				status);
+		this.measurementId = measurementId;
 	}
 
 	/**
-	 * Create a new instance for client
-	 *
-	 * @param creatorId
-	 * @param type
-	 * @param monitoredElementId
-	 * @param measurement
-	 * @param criteriaSet
-	 * @return a newly generated instance
-	 * @throws CreateObjectException
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	public Analysis(final IdlAnalysis idlAnalysis) throws CreateObjectException {
+		super(idlAnalysis);
+	}
+
 	public static Analysis createInstance(final Identifier creatorId,
-			final AnalysisType type,
+			final Identifier typeId,
 			final Identifier monitoredElementId,
-			final Identifier measurementId,
+			final Identifier actionTemplateId,
 			final String name,
-			final ParameterSet criteriaSet) throws CreateObjectException {
-		assert measurementId.getMajor() == ObjectEntities.MEASUREMENT_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+			final Date startTime,
+			final long duration,
+			final ActionStatus status,
+			final Identifier measurementId) throws CreateObjectException {
 
 		try {
 			final Analysis analysis = new Analysis(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_CODE),
-				creatorId,
-				StorableObjectVersion.INITIAL_VERSION,
-				type,
-				monitoredElementId,
-				measurementId,
-				name,
-				criteriaSet);
+					creatorId,
+					StorableObjectVersion.INITIAL_VERSION,
+					typeId,
+					monitoredElementId,
+					actionTemplateId,
+					name,
+					startTime,
+					duration,
+					status,
+					measurementId);
 
 			assert analysis.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -231,10 +101,89 @@ public final class Analysis extends Action<Analysis> {
 		}
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
 	@Override
-	public Result createResult(final Identifier resultCreatorId, final Parameter[] resultParameters)
-			throws CreateObjectException {
-		return Result.createInstance(resultCreatorId, this.id, ResultSort.RESULT_SORT_ANALYSIS, resultParameters);
+	public IdlAnalysis getIdlTransferable(final ORB orb) {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+		return IdlAnalysisHelper.init(orb,
+				this.id.getIdlTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getIdlTransferable(),
+				this.modifierId.getIdlTransferable(),
+				this.version.longValue(),
+				super.getTypeId().getIdlTransferable(orb),
+				super.getMonitoredElementId().getIdlTransferable(orb),
+				super.getActionTemplateId().getIdlTransferable(orb),
+				super.getName(),
+				super.getStartTime().getTime(),
+				super.getDuration(),
+				super.getStatus().getIdlTransferable(),
+				this.measurementId.getIdlTransferable(orb));
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+		final IdlAnalysis idlAnalysis = (IdlAnalysis) transferable;
+		super.fromTransferable(idlAnalysis);
+		this.measurementId = new Identifier(idlAnalysis.measurementId);
+
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	protected boolean isValid() {
+		return super.isValid()
+				&& this.getTypeId().getMajor() == ObjectEntities.ANALYSIS_TYPE_CODE
+				&& (this.measurementId == null || this.measurementId.getMajor() == ObjectEntities.MEASUREMENT_CODE);
+	}
+
+	public Identifier getMeasurementId() {
+		return this.measurementId;
+	}
+
+	public Measurement getMeasurement() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.measurementId, true);
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final Identifier typeId,
+			final Identifier monitoredElementId,
+			final Identifier actionTemplateId,
+			final String name,
+			final Date startTime,
+			final long duration,
+			final ActionStatus status,
+			final Identifier measurementId) {
+		super.setAttributes(created,
+				modified,
+				creatorId,
+				modifierId,
+				version,
+				typeId,
+				monitoredElementId,
+				actionTemplateId,
+				name,
+				startTime,
+				duration,
+				status);
+		this.measurementId = measurementId;
 	}
 
 	/**
@@ -246,10 +195,8 @@ public final class Analysis extends Action<Analysis> {
 	protected Set<Identifiable> getDependenciesTmpl() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-
-		dependencies.add(super.parentActionId);	//VOID_IDENTIFIER replaced in StorableObject#getDependencies()
-		dependencies.add(this.criteriaSet);
+		final Set<Identifiable> dependencies = super.getDependenciesTmpl();
+		dependencies.add(this.measurementId);
 		return dependencies;
 	}
 
