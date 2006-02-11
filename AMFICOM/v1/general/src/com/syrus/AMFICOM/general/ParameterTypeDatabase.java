@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterTypeDatabase.java,v 1.42.2.1 2006/02/06 14:46:29 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.42.2.2 2006/02/11 18:54:53 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,119 +7,104 @@
  */
 package com.syrus.AMFICOM.general;
 
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.COMMA;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.QUESTION;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SIZE_CODENAME_COLUMN;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SIZE_DESCRIPTION_COLUMN;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_INSERT_INTO;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_VALUES;
-import static com.syrus.AMFICOM.general.TableNames.PARAMETER_TYPE;
+import static com.syrus.AMFICOM.general.ParameterTypeWrapper.COLUMN_DATA_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ParameterTypeWrapper.COLUMN_MEASUREMENT_UNIT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseConnection;
+import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.42.2.1 $, $Date: 2006/02/06 14:46:29 $
+ * @version $Revision: 1.42.2.2 $, $Date: 2006/02/11 18:54:53 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public final class ParameterTypeDatabase {
-	private static final String COLUMN_CODE = "code";
-	private static final String COLUMN_CODENAME = "codename";
-	private static final String COLUMN_DATA_TYPE_CODE = "data_type_code";
-	private static final String COLUMN_MEASUREMENT_UNIT_CODE = "measurement_unit_code";
-	private static final String COLUMN_DESCRIPTION = "description";
+public final class ParameterTypeDatabase extends StorableObjectDatabase<ParameterType> {
+	private static String columns;
+	private static String updateMultipleSQLValues;
 
-	private ParameterTypeDatabase() {
-		//Empty
+	@Override
+	protected short getEntityCode() {
+		return ObjectEntities.PARAMETER_TYPE_CODE;
 	}
 
-	public static void insertAll() throws CreateObjectException {
-		final String sql = SQL_INSERT_INTO + PARAMETER_TYPE + OPEN_BRACKET
-		+ COLUMN_CODE + COMMA
-		+ COLUMN_CODENAME + COMMA
-		+ COLUMN_DATA_TYPE_CODE + COMMA
-		+ COLUMN_MEASUREMENT_UNIT_CODE + COMMA
-		+ COLUMN_DESCRIPTION
-		+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-		+ QUESTION + COMMA
-		+ QUESTION + COMMA
-		+ QUESTION + COMMA
-		+ QUESTION + COMMA
-		+ QUESTION
-		+ CLOSE_BRACKET;
-
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		int code = 0;
-		String codename = null;
-		DataType dataType = null;
-		MeasurementUnit measurementUnit = null;
-		String description = null;
-		try {
-			connection = DatabaseConnection.getConnection();
-			preparedStatement = connection.prepareStatement(sql);
-
-			for (final ParameterType parameterType : ParameterType.values()) {
-				code = parameterType.ordinal();
-				codename = parameterType.getCodename();
-				dataType = parameterType.getDataType();
-				measurementUnit = parameterType.getMeasurementUnit();
-				description = parameterType.getDescription();
-
-				Log.debugMessage("Inserting parameter type of code: " + code
-						+ ", codename: '" + codename
-						+ ", data type: '" + dataType.getCodename()
-						+ ", measurement unit: '" + measurementUnit.getCodename()
-						+ "', description: '" + description
-						+ "'", Log.DEBUGLEVEL09);
-
-				preparedStatement.setInt(1, code);
-				DatabaseString.setString(preparedStatement, 2, codename, SIZE_CODENAME_COLUMN);
-				preparedStatement.setInt(3, dataType.ordinal());
-				preparedStatement.setInt(4, measurementUnit.ordinal());
-				DatabaseString.setString(preparedStatement, 5, description, SIZE_DESCRIPTION_COLUMN);
-
-				try {
-					preparedStatement.executeUpdate();
-				} catch (SQLException sqle) {
-					Log.errorMessage(sqle);
-					continue;
-				}
-				connection.commit();
-			}
-		} catch (SQLException sqle) {
-			final String mesg = "Cannot insert parameter type; code: " + code
-					+ ", codename: '" + codename
-					+ ", data type: '" + dataType.getCodename()
-					+ ", measurement unit: '" + measurementUnit.getCodename()
-					+ "', description: '" + description
-					+ "' -- " + sqle.getMessage();
-			throw new CreateObjectException(mesg, sqle);
-		} finally {
-			try {
-				try {
-					if (preparedStatement != null) {
-						preparedStatement.close();
-						preparedStatement = null;
-					}
-				} finally {
-					if (connection != null) {
-						DatabaseConnection.releaseConnection(connection);
-						connection = null;
-					}
-				}
-			} catch (SQLException sqle1) {
-				Log.errorMessage(sqle1);
-			}
+	@Override
+	protected String getColumnsTmpl() {
+		if (columns == null) {
+			columns = COLUMN_CODENAME + COMMA
+				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_DATA_TYPE_CODE + COMMA
+				+ COLUMN_MEASUREMENT_UNIT_CODE;
 		}
+		return columns;
 	}
+
+	@Override
+	protected String getUpdateMultipleSQLValuesTmpl() {
+		if (updateMultipleSQLValues == null) {
+    	updateMultipleSQLValues = QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION;
+    	}
+		return updateMultipleSQLValues;
+	}
+
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final ParameterType storableObject) throws IllegalDataException {
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ Integer.toString(storableObject.getDataType().ordinal()) + COMMA
+			+ Integer.toString(storableObject.getMeasurementUnit().ordinal());
+		return sql;
+	}
+
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final ParameterType storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCodename(), SIZE_CODENAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, storableObject.getDataType().ordinal());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getMeasurementUnit().ordinal());
+		return startParameterNumber;
+	}
+
+	@Override
+	protected ParameterType updateEntityFromResultSet(final ParameterType storableObject, final ResultSet resultSet)
+			throws IllegalDataException, SQLException {
+		final ParameterType parameterType = (storableObject == null)
+				? new ParameterType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+						null,
+						ILLEGAL_VERSION,
+						null,
+						null,
+						null,
+						null)
+				: storableObject;
+		parameterType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+				DataType.valueOf(resultSet.getInt(COLUMN_DATA_TYPE_CODE)),
+				MeasurementUnit.valueOf(resultSet.getInt(COLUMN_MEASUREMENT_UNIT_CODE)));
+		return parameterType;
+	}
+
 }

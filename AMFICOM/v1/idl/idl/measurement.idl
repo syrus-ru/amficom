@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.91 2005/10/30 14:26:52 bass Exp $
+ * $Id: measurement.idl,v 1.91.2.1 2006/02/11 18:53:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,52 +25,147 @@ module measurement {
 
 
 ////////////////////////// MeasurementType ///////////////////////////	
+
 		/*\u002a\u002f@SuppressWarnings("all")/**/
-		enum IdlMeasurementType {
-			REFLECTOMETRY,
-			UNKNOWN_MEASUREMENTTYPE
+		valuetype IdlMeasurementType : general::corba::IdlStorableObject {
+			public general::corba::WString32 codename;
+			public general::corba::WString256 description;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 codename,
+					in general::corba::WString256 description);
 		};
+
 		typedef sequence <IdlMeasurementType> IdlMeasurementTypeSeq;
 
 
 ////////////////////////// AnalysisType ///////////////////////////
+
 		/*\u002a\u002f@SuppressWarnings("all")/**/
-		enum IdlAnalysisType {
-			DADARA,
-			UNKNOWN_ANALYSISTYPE
+		valuetype IdlAnalysisType : general::corba::IdlStorableObject {
+			public general::corba::WString32 codename;
+			public general::corba::WString256 description;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 codename,
+					in general::corba::WString256 description);
 		};
 
 
 ////////////////////////// ModelingType ///////////////////////////
+
 		/*\u002a\u002f@SuppressWarnings("all")/**/
-		enum IdlModelingType {
-			DADARA_MODELING,
-			UNKNOWN_MODELINGTYPE
+		valuetype IdlModelingType : general::corba::IdlStorableObject {
+			public general::corba::WString32 codename;
+			public general::corba::WString256 description;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 codename,
+					in general::corba::WString256 description);
 		};
 
 
-/////////////////// Measurement /////////////////////
+////////////////////////// ActionParameterTypeBinding ///////////////////////////
+
 		/*\u002a\u002f@SuppressWarnings("all")/**/
-		valuetype IdlMeasurement : general::corba::IdlStorableObject {
+		valuetype IdlActionParameterTypeBinding : general::corba::IdlStorableObject {
 			/*\u002a\u002f@SuppressWarnings("all")/**/
-			enum MeasurementStatus {
-				MEASUREMENT_STATUS_SCHEDULED,
-				MEASUREMENT_STATUS_ACQUIRING,
-				MEASUREMENT_STATUS_ACQUIRED,
-				MEASUREMENT_STATUS_COMPLETED,
-				MEASUREMENT_STATUS_ABORTED
+			enum IdlParameterValueKind {
+				VALUE_ENUMERATED,
+				VALUE_CONTINUOUS
 			};
 
-			public IdlMeasurementType type;
+			public IdlParameterValueKind parameterValueKind;
+			public general::corba::IdlIdentifier parameterTypeId;
+			public general::corba::IdlIdentifier actionTypeId;
+			public general::corba::IdlIdentifier measurementPortTypeId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in IdlParameterValueKind parameterValueKind,
+					in general::corba::IdlIdentifier parameterTypeId,
+					in general::corba::IdlIdentifier actionTypeId,
+					in general::corba::IdlIdentifier measurementPortTypeId);
+		};
+
+
+/////////////////// ActionParameter /////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlActionParameter : general::corba::IdlStorableObject {
+			public general::corba::IdlIdentifier bindingId;
+			public ::CORBA::OctetSeq value;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::IdlIdentifier bindingId,
+					in ::CORBA::OctetSeq value);
+		};
+
+
+/////////////////// ActionTemplate /////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlActionTemplate : general::corba::IdlStorableObject {
+			public general::corba::WString256 description;
+			public general::corba::IdlIdentifierSeq actionParameterIds;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString256 description,
+					in general::corba::IdlIdentifierSeq actionParameterIds);
+		};
+
+
+/////////////////// Action /////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		enum IdlActionStatus {
+			ACTION_STATUS_NEW,
+			ACTION_STATUS_RUNNING,
+			ACTION_STATUS_COMPLETE
+		};
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlAction : general::corba::IdlStorableObject {
+			public general::corba::IdlIdentifier actionTypeId;
 			public general::corba::IdlIdentifier monitoredElementId;
-
+			public general::corba::IdlIdentifier actionTemplateId;
 			public general::corba::WString128 name;
-
-			public general::corba::IdlIdentifier setupId;
 			public long long startTime;
 			public long long duration;
-			public MeasurementStatus status;
-			public general::corba::WString64 localAddress;
+			public IdlActionStatus status;
+		};
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlMeasurement : IdlAction {
 			public general::corba::IdlIdentifier testId;
 
 			factory init(in general::corba::IdlIdentifier id,
@@ -79,52 +174,38 @@ module measurement {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in IdlMeasurementType type,
+					in general::corba::IdlIdentifier actionTypeId,
 					in general::corba::IdlIdentifier monitoredElementId,
+					in general::corba::IdlIdentifier actionTemplateId,
 					in general::corba::WString128 name,
-					in general::corba::IdlIdentifier setupId,
 					in long long startTime,
 					in long long duration,
-					in MeasurementStatus status,
-					in general::corba::WString64 localAddress,
+					in IdlActionStatus status,
 					in general::corba::IdlIdentifier testId);
 		};
 
-
-//////////////////// Analysis ///////////////////////
 		/*\u002a\u002f@SuppressWarnings("all")/**/
-		valuetype IdlAnalysis : general::corba::IdlStorableObject {
-			public IdlAnalysisType type;
-			public general::corba::IdlIdentifier monitoredElementId;
+		valuetype IdlAnalysis : IdlAction {
 			public general::corba::IdlIdentifier measurementId;
 
-			public general::corba::WString128 name;
-
-			public general::corba::IdlIdentifier criteriaSetId;
-
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in IdlAnalysisType type,
+					in general::corba::IdlIdentifier actionTypeId,
 					in general::corba::IdlIdentifier monitoredElementId,
-					in general::corba::IdlIdentifier measurementId,
+					in general::corba::IdlIdentifier actionTemplateId,
 					in general::corba::WString128 name,
-					in general::corba::IdlIdentifier criteriaSetId);
+					in long long startTime,
+					in long long duration,
+					in IdlActionStatus status,
+					in general::corba::IdlIdentifier measurementId);
 		};
 
-
-/////////////////// Modeling /////////////////////
 		/*\u002a\u002f@SuppressWarnings("all")/**/
-		valuetype IdlModeling : general::corba::IdlStorableObject {
-			public IdlModelingType type;
-			public general::corba::IdlIdentifier monitoredElementId;
-
-			public general::corba::WString128 name;
-
-			public general::corba::IdlIdentifier argumentSetId;
+		valuetype IdlModeling : IdlAction {
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -132,115 +213,67 @@ module measurement {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in IdlModelingType type,
+					in general::corba::IdlIdentifier actionTypeId,
 					in general::corba::IdlIdentifier monitoredElementId,
+					in general::corba::IdlIdentifier actionTemplateId,
 					in general::corba::WString128 name,
-					in general::corba::IdlIdentifier argumentSetId);
+					in long long startTime,
+					in long long duration,
+					in IdlActionStatus status);
 		};
 
 
-/////////////////// MeasurementSetup /////////////////////
-		/*\u002a\u002f@SuppressWarnings("all")/**/
-		valuetype IdlMeasurementSetup : general::corba::IdlStorableObject {
-			public general::corba::IdlIdentifier parameterSetId;
-			public general::corba::IdlIdentifier criteriaSetId;
-			public general::corba::IdlIdentifier thresholdSetId;
-			public general::corba::IdlIdentifier etalonId;
-			public general::corba::WString256 description;
-			public long long measurementDuration;
-			public general::corba::IdlIdentifierSeq monitoredElementIds;
-			public IdlMeasurementTypeSeq measurementTypes;
+////////////////////// ActionResultParameter ///////////////////////
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlActionResultParameter : general::corba::IdlStorableObject {
+			public general::corba::IdlIdentifier parameterTypeId;
+			public general::corba::IdlIdentifier actionId;
+			public ::CORBA::OctetSeq value;
+		};
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlMeasurementResultParameter : IdlActionResultParameter {
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in general::corba::IdlIdentifier parameterSetId,
-					in general::corba::IdlIdentifier criteriaSetId,
-					in general::corba::IdlIdentifier thresholdSetId,
-					in general::corba::IdlIdentifier etalonId,
-					in general::corba::WString256 description,
-					in long long measurementDuration,
-					in general::corba::IdlIdentifierSeq monitoredElementIds,
-					in IdlMeasurementTypeSeq measurementTypes);
+					in general::corba::IdlIdentifier parameterTypeId,
+					in general::corba::IdlIdentifier actiontId,
+					in ::CORBA::OctetSeq value);
 		};
 
-
-/////////////////// Parameter /////////////////////
 		/*\u002a\u002f@SuppressWarnings("all")/**/
-		struct IdlParameter {
-			general::corba::IdlIdentifier id;
-			general::corba::IdlParameterType type;
-			::CORBA::OctetSeq value;
-		};
-		/*\u002a\u002f@SuppressWarnings("all")/**/
-		typedef sequence<IdlParameter> IdlParameterSeq;
-
-
-////////////////////// Result ///////////////////////
-		/*\u002a\u002f@SuppressWarnings("all")/**/
-		valuetype IdlResult : general::corba::IdlStorableObject {
-			/*\u002a\u002f@SuppressWarnings("all")/**/
-			enum ResultSort {
-				RESULT_SORT_MEASUREMENT,
-				RESULT_SORT_ANALYSIS,
-				RESULT_SORT_MODELING
-			};
-
-			public general::corba::IdlIdentifier measurementId;
-			public general::corba::IdlIdentifier analysisId;
-			public general::corba::IdlIdentifier modelingId;
-			public ResultSort sort;
-			public IdlParameterSeq parameters;
-
+		valuetype IdlAnalysisResultParameter : IdlActionResultParameter {
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in general::corba::IdlIdentifier measurementId,
-					in general::corba::IdlIdentifier analysisId,
-					in general::corba::IdlIdentifier modelingId,
-					in ResultSort sort,
-					in IdlParameterSeq parameters);
+					in general::corba::IdlIdentifier parameterTypeId,
+					in general::corba::IdlIdentifier actiontId,
+					in ::CORBA::OctetSeq value);
 		};
 
-
-/////////////////// ParameterSet /////////////////////
 		/*\u002a\u002f@SuppressWarnings("all")/**/
-		valuetype IdlParameterSet : general::corba::IdlStorableObject {
-			/*\u002a\u002f@SuppressWarnings("all")/**/
-			enum ParameterSetSort {
-				SET_SORT_MEASUREMENT_PARAMETERS,
-				SET_SORT_ANALYSIS_CRITERIA,
-				SET_SORT_EVALUATION_THRESHOLDS,
-				SET_SORT_ETALON,
-				SET_SORT_MODELING_PARAMETERS,
-				SET_SORT_PREDICTION_PARAMETERS
-			};
-
-			public ParameterSetSort sort;
-			public general::corba::WString256 description;
-			public IdlParameterSeq parameters;
-			public general::corba::IdlIdentifierSeq monitoredElementIds;
-
+		valuetype IdlModelingResultParameter : IdlActionResultParameter {
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in ParameterSetSort sort,
-					in general::corba::WString256 description,
-					in IdlParameterSeq parameters,
-					in general::corba::IdlIdentifierSeq monitoredElementIds);
+					in general::corba::IdlIdentifier parameterTypeId,
+					in general::corba::IdlIdentifier actiontId,
+					in ::CORBA::OctetSeq value);
 		};
 
 
 /////////////////////// Test ////////////////////////
+
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlTest : general::corba::IdlStorableObject {
 			/*\u002a\u002f@SuppressWarnings("all")/**/
@@ -308,6 +341,7 @@ module measurement {
 
 
 /////////////////////// Temporal Pattern ////////////////////////
+
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlCronTemporalPattern : general::corba::IdlStorableObject {
 			public general::corba::WString256 description;
@@ -368,12 +402,12 @@ module measurement {
 
 
 /////////////////////// MeasurementPortType /////////////////////
+
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlMeasurementPortType : general::corba::IdlStorableObject {
 			public general::corba::WString32 codename;
 			public general::corba::WString256 description;
 			public general::corba::WString128 name;
-			public IdlMeasurementTypeSeq measurementTypes;
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -383,12 +417,12 @@ module measurement {
 					in long long version,
 					in general::corba::WString32 codename,
 					in general::corba::WString256 description,
-					in general::corba::WString128 name,
-					in IdlMeasurementTypeSeq measurementTypes);
+					in general::corba::WString128 name);
 		};
 
 
 ////////////////////////// MeasurementPort ///////////////////////////
+
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlMeasurementPort : general::corba::IdlStorableObject {
 			public general::corba::IdlIdentifier _typeId;
@@ -412,6 +446,7 @@ module measurement {
 
 
 //////////////////////////////// KIS ////////////////////////////////
+
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlKIS : administration::corba::IdlDomainMember {
 			public general::corba::WString128 name;
@@ -438,6 +473,7 @@ module measurement {
 
 
 ///////////////////// Monitored Element ///////////////////
+
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlMonitoredElement : administration::corba::IdlDomainMember {
 			/*\u002a\u002f@SuppressWarnings("all")/**/

@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.96 2005/11/10 15:47:05 bass Exp $
+ * $Id: ObjectEntities.java,v 1.96.2.1 2006/02/11 18:54:53 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import gnu.trove.TShortObjectHashMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/11/10 15:47:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.96.2.1 $, $Date: 2006/02/11 18:54:53 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -25,6 +25,7 @@ public final class ObjectEntities {
 	/*	##################################### General ##################################### */
 
 	/*	Type */
+	public static final String PARAMETER_TYPE = "ParameterType";
 	public static final String CHARACTERISTIC_TYPE = "CharacteristicType";
 
 	/*	Object */
@@ -65,17 +66,20 @@ public final class ObjectEntities {
 	/*	##################################### Measurement ##################################### */
 
 	/*	Type */
+	public static final String MEASUREMENT_TYPE = "MeasurementType";
+	public static final String ANALYSIS_TYPE = "AnalysisType";
+	public static final String MODELING_TYPE = "ModelingType";
 	public static final String MEASUREMENTPORT_TYPE = "MeasurementPortType";
+	public static final String ACTIONPARAMETERTYPEBINDING = "ActionParameterTypeBinding";
 
 	/*	Object */
 	public static final String PARAMETERSET = "ParameterSet";
-	public static final String PARAMETER = "Parameter";
-	public static final String MEASUREMENTSETUP = "MeasurementSetup";
+	public static final String ACTIONPARAMETER = "ActionParameter";
+	public static final String ACTIONTEMPLATE = "ActionTemplate";
 	public static final String MEASUREMENT = "Measurement";
 	public static final String ANALYSIS = "Analysis";
 	public static final String MODELING = "Modeling";
 	public static final String TEST = "Test";
-	public static final String RESULT = "Result";
 	public static final String RESULTPARAMETER = "ResultParameter";
 	public static final String CRONTEMPORALPATTERN = "CronTemporalPattern";
 	public static final String INTERVALSTEMPORALPATTERN = "ITempPattern";
@@ -83,6 +87,9 @@ public final class ObjectEntities {
 	public static final String MEASUREMENTPORT = "MeasurementPort";
 	public static final String KIS = "KIS";
 	public static final String MONITOREDELEMENT = "MonitoredElement";
+	public static final String MEASUREMENTRESULTPARAMETER = "MeasurementResultParameter";
+	public static final String ANALYSISRESULTPARAMETER = "AnalysisResultParameter";
+	public static final String MODELINGRESULTPARAMETER = "ModelingResultParameter";
 
 
 	/*	##################################### Event ##################################### */
@@ -178,6 +185,7 @@ public final class ObjectEntities {
 
 	public static final short CHARACTERISTIC_CODE = GENERAL_MIN_CODE;
 
+	public static final short PARAMETER_TYPE_CODE = 0x0061;
 	public static final short CHARACTERISTIC_TYPE_CODE = 0x0062;
 
 	public static final short GENERAL_MAX_CODE = 0x0080;
@@ -242,12 +250,11 @@ public final class ObjectEntities {
 	public static final short MEASUREMENT_MIN_CODE = 0x0201;
 
 	public static final short PARAMETERSET_CODE = MEASUREMENT_MIN_CODE;
-	public static final short PARAMETER_CODE = 0x0202;
-	public static final short MEASUREMENTSETUP_CODE = 0x0203;
+	public static final short ACTIONPARAMETER_CODE = 0x0202;
+	public static final short ACTIONTEMPLATE_CODE = 0x0203;
 	public static final short MEASUREMENT_CODE = 0x0204;
 	public static final short ANALYSIS_CODE = 0x0205;
 	public static final short TEST_CODE = 0x0207;
-	public static final short RESULT_CODE = 0x0208;
 	public static final short RESULTPARAMETER_CODE = 0x0209;
 	public static final short MODELING_CODE = 0x020A;
 	public static final short CRONTEMPORALPATTERN_CODE = 0x020B;
@@ -256,8 +263,15 @@ public final class ObjectEntities {
 	public static final short MEASUREMENTPORT_CODE = 0x020E;
 	public static final short KIS_CODE = 0x020F;
 	public static final short MONITOREDELEMENT_CODE = 0x0210;
+	public static final short MEASUREMENTRESULTPARAMETER_CODE = 0x0211;
+	public static final short ANALYSISRESULTPARAMETER_CODE = 0x0212;
+	public static final short MODELINGRESULTPARAMETER_CODE = 0x0213;
 
+	public static final short MEASUREMENT_TYPE_CODE = 0x0241;
+	public static final short ANALYSIS_TYPE_CODE = 0x0242;
+	public static final short MODELING_TYPE_CODE = 0x0243;
 	public static final short MEASUREMENTPORT_TYPE_CODE = 0x0245;
+	public static final short ACTIONPARAMETERTYPEBINDING_CODE = 0x0245;
 
 	public static final short MEASUREMENT_MAX_CODE = 0x0280;
 
@@ -381,6 +395,7 @@ public final class ObjectEntities {
 			return;
 		}
 
+		registerEntity(PARAMETER_TYPE_CODE, PARAMETER_TYPE);
 		registerEntity(CHARACTERISTIC_TYPE_CODE, CHARACTERISTIC_TYPE);
 
 		registerEntity(EVENT_TYPE_CODE, EVENT_TYPE);
@@ -390,7 +405,11 @@ public final class ObjectEntities {
 		registerEntity(CABLETHREAD_TYPE_CODE, CABLETHREAD_TYPE);
 		registerEntity(CABLELINK_TYPE_CODE, CABLELINK_TYPE);
 
+		registerEntity(MEASUREMENT_TYPE_CODE, MEASUREMENT_TYPE);
+		registerEntity(ANALYSIS_TYPE_CODE, ANALYSIS_TYPE);
+		registerEntity(MODELING_TYPE_CODE, MODELING_TYPE);
 		registerEntity(MEASUREMENTPORT_TYPE_CODE, MEASUREMENTPORT_TYPE);
+		registerEntity(ACTIONPARAMETERTYPEBINDING_CODE, ACTIONPARAMETERTYPEBINDING);
 
 		registerEntity(SITENODE_TYPE_CODE, SITENODE_TYPE);
 		registerEntity(PHYSICALLINK_TYPE_CODE, PHYSICALLINK_TYPE);
@@ -420,12 +439,11 @@ public final class ObjectEntities {
 		registerEntity(CABLELINK_CODE, CABLELINK);
 
 		registerEntity(PARAMETERSET_CODE, PARAMETERSET);
-		registerEntity(PARAMETER_CODE, PARAMETER);
-		registerEntity(MEASUREMENTSETUP_CODE, MEASUREMENTSETUP);
+		registerEntity(ACTIONPARAMETER_CODE, ACTIONPARAMETER);
+		registerEntity(ACTIONTEMPLATE_CODE, ACTIONTEMPLATE);
 		registerEntity(MEASUREMENT_CODE, MEASUREMENT);
 		registerEntity(ANALYSIS_CODE, ANALYSIS);
 		registerEntity(TEST_CODE, TEST);
-		registerEntity(RESULT_CODE, RESULT);
 		registerEntity(RESULTPARAMETER_CODE, RESULTPARAMETER);
 		registerEntity(CRONTEMPORALPATTERN_CODE, CRONTEMPORALPATTERN);
 		registerEntity(INTERVALSTEMPORALPATTERN_CODE, INTERVALSTEMPORALPATTERN);
@@ -434,6 +452,9 @@ public final class ObjectEntities {
 		registerEntity(KIS_CODE, KIS);
 		registerEntity(MEASUREMENTPORT_CODE, MEASUREMENTPORT);
 		registerEntity(MONITOREDELEMENT_CODE, MONITOREDELEMENT);
+		registerEntity(MEASUREMENTRESULTPARAMETER_CODE, MEASUREMENTRESULTPARAMETER);
+		registerEntity(ANALYSISRESULTPARAMETER_CODE, ANALYSISRESULTPARAMETER);
+		registerEntity(MODELINGRESULTPARAMETER_CODE, MODELINGRESULTPARAMETER);
 
 		registerEntity(CABLECHANNELINGITEM_CODE, CABLECHANNELINGITEM);
 		registerEntity(PATHELEMENT_CODE, PATHELEMENT);

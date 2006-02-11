@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.74.2.1 2006/02/06 14:46:30 arseniy Exp $
+ * $Id: ParameterType.java,v 1.74.2.2 2006/02/11 18:54:53 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,77 +9,81 @@ package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlParameterType;
-import com.syrus.util.Log;
-import com.syrus.util.transport.idl.IdlTransferableObject;
+import com.syrus.AMFICOM.general.corba.IdlParameterTypeHelper;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.74.2.1 $, $Date: 2006/02/06 14:46:30 $
+ * @version $Revision: 1.74.2.2 $, $Date: 2006/02/11 18:54:53 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public enum ParameterType implements IdlTransferableObject<IdlParameterType> {
-	REF_WAVE_LENGTH("ref_wvlen", DataType.INTEGER, MeasurementUnit.NANOMETER),
-	REF_TRACE_LENGTH("ref_trclen", DataType.DOUBLE, MeasurementUnit.KILOMETER),
-	REF_RESOLUTION("ref_res", DataType.DOUBLE, MeasurementUnit.METER),
-	REF_PULSE_WIDTH_LOW_RES("ref_pulswd_low_res", DataType.INTEGER, MeasurementUnit.NANOSECOND),
-	REF_PULSE_WIDTH_HIGH_RES("ref_pulswd_high_res", DataType.INTEGER, MeasurementUnit.NANOSECOND),
-	REF_INDEX_OF_REFRACTION("ref_ior", DataType.DOUBLE, MeasurementUnit.NONDIMENSIONAL),
-	REF_AVERAGE_COUNT("ref_scans", DataType.DOUBLE, MeasurementUnit.NONDIMENSIONAL),
-	REF_FLAG_GAIN_SPLICE_ON("ref_flag_gain_splice_on", DataType.BOOLEAN, MeasurementUnit.NONDIMENSIONAL),
-	REF_FLAG_LIFE_FIBER_DETECT("ref_flag_life_fiber_detect", DataType.BOOLEAN, MeasurementUnit.NONDIMENSIONAL),
+public final class ParameterType extends StorableObjectType<ParameterType> {
+	private static final long serialVersionUID = 2495470569913138317L;
 
-	REFLECTOGRAMMA("reflectogramma", DataType.RAW, MeasurementUnit.NONDIMENSIONAL),
-	REFLECTOGRAMMA_ETALON("reflectogramma_etalon", DataType.RAW, MeasurementUnit.NONDIMENSIONAL),
-	DADARA_ETALON("dadara_etalon", DataType.RAW, MeasurementUnit.NONDIMENSIONAL), // Raw, com.syrus.AMFICOM.analysis.Etalon
-	DADARA_CRITERIA("dadara_criteria", DataType.RAW, MeasurementUnit.NONDIMENSIONAL), // Raw
-	DADARA_ANALYSIS_RESULT("dadara_analysis_result", DataType.RAW, MeasurementUnit.NONDIMENSIONAL), // Raw com.syrus.AMFICOM.analysis.dadara.AnalysisResult
-	DADARA_ALARMS("dadara_alarm_array", DataType.RAW, MeasurementUnit.NONDIMENSIONAL),
-	DADARA_QUALITY_PER_EVENT("dadara_quality_per_event", DataType.RAW, MeasurementUnit.NONDIMENSIONAL),
-	DADARA_QUALITY_OVERALL_D("dadara_quality_overall_d", DataType.DOUBLE, MeasurementUnit.NONDIMENSIONAL),
-	DADARA_QUALITY_OVERALL_Q("dadara_quality_overall_q", DataType.DOUBLE, MeasurementUnit.NONDIMENSIONAL),
-
-	// Prediction
-	PREDICTION_TIME("prediction_time", DataType.DATE, MeasurementUnit.SECOND),
-	PREDICTION_TIME_START("prediction_time_start", DataType.DATE, MeasurementUnit.SECOND),
-	PREDICTION_TIME_END("prediction_time_end", DataType.DATE, MeasurementUnit.SECOND),
-
-	// Other useful things
-	UNKNOWN("unknown", DataType.RAW, MeasurementUnit.UNKNOWN);
-
-	private static final String KEY_ROOT = "ParameterType.Description.";
-
-	private String codename;
 	private DataType dataType;
 	private MeasurementUnit measurementUnit;
-	private String description;
 
-
-	private ParameterType(final String codename, final DataType dataType, final MeasurementUnit measurementUnit) {
-		this.codename = codename;
+	ParameterType(final Identifier id,
+			final Identifier creatorId,
+			final StorableObjectVersion version,
+			final String codename,
+			final String description,
+			final DataType dataType,
+			final MeasurementUnit measurementUnit) {
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				codename,
+				description);
 		this.dataType = dataType;
 		this.measurementUnit = measurementUnit;
-		this.description = LangModelGeneral.getString(KEY_ROOT + this.codename);
 	}
 
-	public static ParameterType valueOf(final int code) {
-		final ParameterType[] types = ParameterType.values();
-		return types[code];
+	public ParameterType(final IdlParameterType idlParameterType) throws CreateObjectException {
+		try {
+			this.fromTransferable(idlParameterType);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
-	public static ParameterType fromTransferable(final IdlParameterType idlParameterType) {
-		return valueOf(idlParameterType.value());
-	}
+	public static ParameterType createInstance(final Identifier creatorId,
+			final String codename,
+			final String description,
+			final DataType dataType,
+			final MeasurementUnit measurementUnit) throws ApplicationException {
+		if (creatorId == null || codename == null || description == null || dataType == null || measurementUnit == null) {
+			throw new IllegalArgumentException(NON_NULL_EXPECTED);
+		}
 
-	public String getCodename() {
-		return this.codename;
+		try {
+			final ParameterType parameterType = new ParameterType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETER_TYPE_CODE),
+					creatorId,
+					StorableObjectVersion.INITIAL_VERSION,
+					codename,
+					description,
+					dataType,
+					measurementUnit);
+
+			assert parameterType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+			parameterType.markAsChanged();
+
+			return parameterType;
+		} catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
+		}
 	}
 
 	public DataType getDataType() {
@@ -90,40 +94,51 @@ public enum ParameterType implements IdlTransferableObject<IdlParameterType> {
 		return this.measurementUnit;
 	}
 
-	public String getDescription() {
-		return this.description;
-	}
-
-	@SuppressWarnings("unused")
+	@Override
 	public IdlParameterType getIdlTransferable(final ORB orb) {
-		try {
-			return IdlParameterType.from_int(this.ordinal());
-		} catch (org.omg.CORBA.BAD_PARAM bp) {
-			Log.errorMessage("Illegal code: " + this.ordinal() + ", returning UNKNOWN");
-			return IdlParameterType.UNKNOWN_PARAMETERTYPE;
-		}
+		return IdlParameterTypeHelper.init(orb,
+				super.id.getIdlTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
+				super.version.longValue(),
+				super.codename,
+				super.description != null ? super.description : "",
+				this.dataType.getIdlTransferable(orb),
+				this.measurementUnit.getIdlTransferable(orb));
 	}
 
-	public static IdlParameterType[] createTransferables(final EnumSet<ParameterType> parameterTypes, final ORB orb) {
-		assert parameterTypes != null: NON_NULL_EXPECTED;
-
-		final IdlParameterType[] idlParameterTypes = new IdlParameterType[parameterTypes.size()];
-		int i = 0;
-		synchronized (parameterTypes) {
-			for (final ParameterType parameterType : parameterTypes) {
-				idlParameterTypes[i++] = parameterType.getIdlTransferable(orb);
-			}
-		}
-		return idlParameterTypes;
+	@Override
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+		final IdlParameterType idlParameterType = (IdlParameterType) transferable;
+		super.fromTransferable(idlParameterType, idlParameterType.codename, idlParameterType.description);
+		this.dataType = DataType.valueOf(idlParameterType.idlDataType);
+		this.measurementUnit = MeasurementUnit.valueOf(idlParameterType.idlMeasurementUnit);
 	}
 
-	public static EnumSet<ParameterType> fromTransferables(final IdlParameterType[] idlParameterTypes) {
-		assert idlParameterTypes != null: NON_NULL_EXPECTED;
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String codename,
+			final String description,
+			final DataType dataType,
+			final MeasurementUnit measurementUnit) {
+		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
+		this.dataType = dataType;
+		this.measurementUnit = measurementUnit;
+	}
 
-		final Collection<ParameterType> parameterTypes = new HashSet<ParameterType>(idlParameterTypes.length);
-		for (final IdlParameterType idlParameterType : idlParameterTypes) {
-			parameterTypes.add(ParameterType.fromTransferable(idlParameterType));
-		}
-		return EnumSet.copyOf(parameterTypes);
+	@Override
+	protected Set<Identifiable> getDependenciesTmpl() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		return Collections.emptySet();
+	}
+
+	@Override
+	public ParameterTypeWrapper getWrapper() {
+		return ParameterTypeWrapper.getInstance();
 	}
 }
