@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewSaveCommand.java,v 1.38 2005/10/22 13:49:59 krupenn Exp $$
+ * $$Id: MapViewSaveCommand.java,v 1.39 2006/02/13 08:39:53 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,9 @@
 
 package com.syrus.AMFICOM.client.map.command.map;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveAllCommand;
 import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.props.MapViewVisualManager;
@@ -24,23 +21,17 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeElement;
 
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * 
- * @version $Revision: 1.38 $, $Date: 2005/10/22 13:49:59 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.39 $, $Date: 2006/02/13 08:39:53 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -91,6 +82,7 @@ public class MapViewSaveCommand extends AbstractCommand {
 
 			Identifier userId = LoginManager.getUserId();
 
+			/*
 			for(Iterator it = this.mapView.getSchemes().iterator(); it.hasNext();) {
 				Scheme scheme = (Scheme) it.next();
 				scheme.setMap(this.mapView.getMap());
@@ -117,10 +109,12 @@ public class MapViewSaveCommand extends AbstractCommand {
 				} catch(ApplicationException e) {
 					e.printStackTrace();
 				}
-			}
+			}*/
 
 			// MapStorableObjectPool.putStorableObject(mapView);
 			try {
+				// save schemes
+				SchemeSaveAllCommand.saveEntities();
 				// save mapview
 				StorableObjectPool.flush(this.mapView, userId, true);
 				LocalXmlIdentifierPool.flush();
