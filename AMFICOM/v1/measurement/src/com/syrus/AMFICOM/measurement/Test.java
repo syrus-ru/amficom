@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183 2006/01/23 16:03:01 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.1 2006/02/13 19:32:08 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -27,163 +27,132 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.measurement.corba.IdlTestHelper;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestStops;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStamps;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStops;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.PeriodicalTestTimeStamps;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.IdlPeriodicalTestTimeStamps;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.IdlTestTemporalType;
 import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.183 $, $Date: 2006/01/23 16:03:01 $
+ * @version $Revision: 1.183.2.1 $, $Date: 2006/02/13 19:32:08 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Test extends StorableObject<Test> implements Describable {	
-	private static final long	serialVersionUID	= 3688785890592241972L;
-
-	private int temporalType;
-	private TestTimeStamps timeStamps;
-	private MeasurementType measurementType;
-	private AnalysisType analysisType;
-	private int status;
-	private MonitoredElement monitoredElement;
+public final class Test extends StorableObject<Test> implements Describable {
 	private String description;
-	private int numberOfMeasurements;
-	private Set<Identifier> measurementSetupIds;
-
-	private MeasurementSetup mainMeasurementSetup;
-
 	private Identifier groupTestId;
-	private Identifier kisId;
-	private Identifier mcmId;
-	
+	private Identifier monitoredElementId;
+	private TestStatus status;
+	private TestTemporalType temporalType;
+	private TestTimeStamps timeStamps;
+	private Identifier measurementTypeId;
+	private Set<Identifier> measurementTemplateIds;
+	private int numberOfMeasurements;
+	private Identifier analysisTypeId;
+	private Identifier analysisTemplateId;
+
 	private SortedMap<Date, String> stoppingMap;  
 
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	public Measurement createMeasurement(final Identifier measurementCreatorId, final Date startTime) throws CreateObjectException {
-		if (this.status != TestStatus._TEST_STATUS_PROCESSING) {
-			throw new CreateObjectException("Status of test '" + this.id + "' is " + this.status
-					+ ", not " + TestStatus._TEST_STATUS_PROCESSING + " (PROCESSING)");
-		}
+	private Identifier kisId;
+	private Identifier mcmId;
 
-		Measurement measurement;
-		try {
-			measurement = Measurement.createInstance(measurementCreatorId,
-					this.measurementType,
-					this.monitoredElement.getId(),
-					LangModelMeasurement.getString("RR") + "-"
-							+ this.monitoredElement.getName() + "-"
-							+ EasyDateFormatter.formatDate(startTime),
-					this.mainMeasurementSetup,
-					startTime,
-					this.monitoredElement.getLocalAddress(),
-					this.id);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException("Cannot create measurement for test '" + this.id + "' -- " + ae.getMessage(), ae);
-		}
-		super.modified = new Date(System.currentTimeMillis());
-		super.modifierId = measurementCreatorId;
-		this.numberOfMeasurements++;
-
-		super.markAsChanged();
-
-		return measurement;
-	}	
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
 	Test(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
+			final String description,
+			final Identifier groupTestId,
+			final Identifier monitoredElementId,
+			final TestStatus status,
+			final TestTemporalType temporalType,
 			final Date startTime,
 			final Date endTime,
 			final Identifier temporalPatternId,
-			final int temporalType,
-			final MeasurementType measurementType,
-			final AnalysisType analysisType,
-			final Identifier groupTestId,
-			final MonitoredElement monitoredElement,
-			final String description,
-			final Set<Identifier> measurementSetupIds) {
+			final Identifier measurementTypeId,
+			final Set<Identifier> measurementTemplateIds,
+			final int numberOfMeasurements,
+			final Identifier analysisTypeId,
+			final Identifier analysisTemplateId,
+			final SortedMap<Date, String> stoppingMap) {
 		super(id,
-			new Date(System.currentTimeMillis()),
-			new Date(System.currentTimeMillis()),
-			creatorId,
-			creatorId,
-			version);
-
-		this.temporalType = temporalType;
-		if (startTime != null) {
-			this.timeStamps = new TestTimeStamps(this.temporalType, startTime, endTime, temporalPatternId);
-		}
-		this.measurementType = measurementType;
-		this.analysisType = analysisType;
-		this.groupTestId = groupTestId;
-		this.monitoredElement = monitoredElement;
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version);
 		this.description = description;
-		this.measurementSetupIds = new HashSet<Identifier>();
-		this.setMeasurementSetupIds0(measurementSetupIds);
-		this.status = TestStatus._TEST_STATUS_NEW;
-		this.numberOfMeasurements = 0;
+		this.groupTestId = groupTestId;
+		this.monitoredElementId = monitoredElementId;
+		this.status = status;
+		this.temporalType = temporalType;
+		this.timeStamps = new TestTimeStamps(startTime, endTime, temporalPatternId);
+		this.measurementTypeId = measurementTypeId;
+		this.measurementTemplateIds = new HashSet<Identifier>();
+		this.setMeasurementTemplateIds0(measurementTemplateIds);
+		this.numberOfMeasurements = numberOfMeasurements;
+		this.analysisTypeId = analysisTypeId;
+		this.analysisTemplateId = analysisTemplateId;
 		this.stoppingMap = new TreeMap<Date, String>();
+		this.setStoppingMap0(stoppingMap);
+	}
+
+	public Test(final IdlTest idlTest) throws CreateObjectException {
+		try {
+			this.fromTransferable(idlTest);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	/**
-	 * create new instance for client
+	 * Create new instance for client.
+	 * Creates onetime test without analysis.
 	 * @param creatorId
-	 * @param startTime
-	 * @param endTime
-	 * @param temporalPatternId
-	 * @param temporalType
-	 * @param measurementType
-	 * @param analysisType
-	 * @param monitoredElement
 	 * @param description
-	 * @param measurementSetupIds
+	 * @param groupTestId
+	 * @param monitoredElementId
+	 * @param startTime
+	 * @param measurementTypeId
+	 * @param measurementTemplateIds
+	 * @return New instance of onetime test.
 	 * @throws CreateObjectException
 	 */
 	public static Test createInstance(final Identifier creatorId,
-			final Date startTime,
-			final Date endTime,
-			final Identifier temporalPatternId,
-			final TestTemporalType temporalType,
-			final MeasurementType measurementType,
-			final AnalysisType analysisType,
-			final Identifier groupTestId,
-			final MonitoredElement monitoredElement,
 			final String description,
-			final Set<Identifier> measurementSetupIds) throws CreateObjectException {
+			final Identifier groupTestId,
+			final Identifier monitoredElementId,
+			final Date startTime,
+			final Identifier measurementTypeId,
+			final Set<Identifier> measurementTemplateIds) throws CreateObjectException {
 		try {
 			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_CODE),
 					creatorId,
 					StorableObjectVersion.INITIAL_VERSION,
-					startTime,
-					endTime,
-					temporalPatternId,
-					temporalType.value(),
-					measurementType,
-					analysisType,
-					groupTestId,
-					monitoredElement,
 					description,
-					measurementSetupIds);
+					groupTestId,
+					monitoredElementId,
+					TestStatus.TEST_STATUS_NEW,
+					TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME,
+					startTime,
+					startTime,
+					VOID_IDENTIFIER,
+					measurementTypeId,
+					measurementTemplateIds,
+					0,
+					VOID_IDENTIFIER,
+					VOID_IDENTIFIER,
+					null);
 
 			assert test.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -193,158 +162,169 @@ public final class Test extends StorableObject<Test> implements Describable {
 		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
-
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * Create new instance for client.
+	 * Creates onetime test with analysis.
+	 * @param creatorId
+	 * @param description
+	 * @param groupTestId
+	 * @param monitoredElementId
+	 * @param startTime
+	 * @param measurementTypeId
+	 * @param measurementTemplateIds
+	 * @param analysisTypeId
+	 * @param analysisTemplateId
+	 * @return New instance of onetime test.
+	 * @throws CreateObjectException
 	 */
-	public Test(final IdlTest tt) throws CreateObjectException {
+	public static Test createInstance(final Identifier creatorId,
+			final String description,
+			final Identifier groupTestId,
+			final Identifier monitoredElementId,
+			final Date startTime,
+			final Identifier measurementTypeId,
+			final Set<Identifier> measurementTemplateIds,
+			final Identifier analysisTypeId,
+			final Identifier analysisTemplateId) throws CreateObjectException {
 		try {
-			this.fromTransferable(tt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_CODE),
+					creatorId,
+					StorableObjectVersion.INITIAL_VERSION,
+					description,
+					groupTestId,
+					monitoredElementId,
+					TestStatus.TEST_STATUS_NEW,
+					TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME,
+					startTime,
+					startTime,
+					VOID_IDENTIFIER,
+					measurementTypeId,
+					measurementTemplateIds,
+					0,
+					analysisTypeId,
+					analysisTemplateId,
+					null);
+
+			assert test.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+			test.markAsChanged();
+
+			return test;
+		} catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * Create new instance for client.
+	 * Creates periodical test without analysis.
+	 * @param creatorId
+	 * @param description
+	 * @param groupTestId
+	 * @param monitoredElementId
+	 * @param startTime
+	 * @param endTime
+	 * @param temporalPatternId
+	 * @param measurementTypeId
+	 * @param measurementTemplateIds
+	 * @return New instance of periodical test.
+	 * @throws CreateObjectException
 	 */
-	@Override
-	public void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		final IdlTest tt = (IdlTest)transferable;
-		super.fromTransferable(tt);
-		this.temporalType = tt.timeStamps.discriminator().value();
-		this.timeStamps = new TestTimeStamps(tt.timeStamps);
-		this.measurementType = MeasurementType.fromTransferable(tt.measurementType);
-		this.analysisType = AnalysisType.fromTransferable(tt.analysisType);
-
-		this.status = tt.status.value();
-		this.groupTestId = new Identifier(tt.groupTestId);
-
-		this.monitoredElement = (MonitoredElement) StorableObjectPool.getStorableObject(new Identifier(tt.monitoredElementId), true);
-
-		this.description = tt.description;
-		this.numberOfMeasurements = tt.numberOfMeasurements;
-
-		this.measurementSetupIds = Identifier.fromTransferables(tt.measurementSetupIds);
-		if (!this.measurementSetupIds.isEmpty()) {
-			final Identifier msId = this.measurementSetupIds.iterator().next();
-			this.mainMeasurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject(msId, true);
-		} else {
-			throw new IllegalDataException("Cannot find measurement setup for test '" + this.id + '\'');
-		}
-		
-		this.stoppingMap = new TreeMap<Date, String>();
-		for(int index = 0; index < tt.stoppings.length; index++) {
-			this.stoppingMap.put(new Date(tt.stoppings[index].time), tt.stoppings[index].reason);
-		}
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-	}
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	@Override
-	protected boolean isValid() {
-		if (!super.isValid()) {
-			return false;
-		}
+	public static Test createInstance(final Identifier creatorId,
+			final String description,
+			final Identifier groupTestId,
+			final Identifier monitoredElementId,
+			final Date startTime,
+			final Date endTime,
+			final Identifier temporalPatternId,
+			final Identifier measurementTypeId,
+			final Set<Identifier> measurementTemplateIds) throws CreateObjectException {
 		try {
-			final Set<MeasurementSetup> measurementSetups = StorableObjectPool.getStorableObjects(this.measurementSetupIds, true);
-			for (final MeasurementSetup measurementSetup : measurementSetups) {
-				if (!measurementSetup.isAttachedToMonitoredElement(this.monitoredElement.getId())) {
-					Log.errorMessage("Test '" + this.id + "': "
-							+ "MeasurementSetup: '" + measurementSetup.getId()
-							+ "' is not attached to MonitoredElement: '" + this.monitoredElement.getId() + "'");
-					return false;
-				}
-			}
-		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
+			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_CODE),
+					creatorId,
+					StorableObjectVersion.INITIAL_VERSION,
+					description,
+					groupTestId,
+					monitoredElementId,
+					TestStatus.TEST_STATUS_NEW,
+					TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL,
+					startTime,
+					endTime,
+					temporalPatternId,
+					measurementTypeId,
+					measurementTemplateIds,
+					0,
+					VOID_IDENTIFIER,
+					VOID_IDENTIFIER,
+					null);
+
+			assert test.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+			test.markAsChanged();
+
+			return test;
+		} catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
-		return this.timeStamps != null && this.timeStamps.isValid()
-				&& this.measurementType != null
-				&& this.analysisType != null
-				&& this.monitoredElement != null
-				&& this.description != null
-				&& this.measurementSetupIds != null
-				&& this.groupTestId != null
-				&& this.stoppingMap != null
-			//&& !this.measurementSetupIds.isEmpty() && this.mainMeasurementSetup != null
-			;
-	}
-	
-	public short getEntityCode() {
-		return ObjectEntities.TEST_CODE;
 	}
 
-	public MeasurementType getMeasurementType() {
-		return this.measurementType;
-	}
-
-	public AnalysisType getAnalysisType() {
-		return this.analysisType;
-	}
-
-	public String getDescription() {
-		return this.description;
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.Namable#getName()
+	/**
+	 * Create new instance for client.
+	 * Creates periodical test with analysis.
+	 * @param creatorId
+	 * @param description
+	 * @param groupTestId
+	 * @param monitoredElementId
+	 * @param startTime
+	 * @param endTime
+	 * @param temporalPatternId
+	 * @param measurementTypeId
+	 * @param measurementTemplateIds
+	 * @param analysisTypeId
+	 * @param analysisTemplateId
+	 * @return New instance of periodical test.
+	 * @throws CreateObjectException
 	 */
-	public String getName() {
-		return this.description;
-	}
+	public static Test createInstance(final Identifier creatorId,
+			final String description,
+			final Identifier groupTestId,
+			final Identifier monitoredElementId,
+			final Date startTime,
+			final Date endTime,
+			final Identifier temporalPatternId,
+			final Identifier measurementTypeId,
+			final Set<Identifier> measurementTemplateIds,
+			final Identifier analysisTypeId,
+			final Identifier analysisTemplateId) throws CreateObjectException {
+		try {
+			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_CODE),
+					creatorId,
+					StorableObjectVersion.INITIAL_VERSION,
+					description,
+					groupTestId,
+					monitoredElementId,
+					TestStatus.TEST_STATUS_NEW,
+					TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL,
+					startTime,
+					endTime,
+					temporalPatternId,
+					measurementTypeId,
+					measurementTemplateIds,
+					0,
+					analysisTypeId,
+					analysisTemplateId,
+					null);
 
-	public Date getEndTime() {
-		return this.timeStamps.endTime;
-	}
-	
-	public void setEndTime(final Date endTime) {
-		this.timeStamps.endTime = endTime;
-		super.markAsChanged();
-	}
+			assert test.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-	public Set<Identifier> getMeasurementSetupIds() {
-		return Collections.unmodifiableSet(this.measurementSetupIds);
-	}
+			test.markAsChanged();
 
-	public Identifier getMainMeasurementSetupId() {
-		return this.mainMeasurementSetup.getId();
-	}
-
-	public MonitoredElement getMonitoredElement() {
-		return this.monitoredElement;
-	}
-
-	public Identifier getMonitoredElementId() {
-		return this.monitoredElement == null
-				? VOID_IDENTIFIER
-				: this.monitoredElement.getId();
-	}
-
-	public Identifier getTemporalPatternId() {
-		return this.timeStamps.temporalPatternId;
-	}
-
-	public Date getStartTime() {
-		return this.timeStamps.startTime;
-	}
-	
-	public void setStartTime(final Date startTime) {
-		this.timeStamps.startTime = startTime;
-		super.markAsChanged();
-	}
-
-	public TestStatus getStatus() {
-		return TestStatus.from_int(this.status);
-	}
-
-	public TestTemporalType getTemporalType() {
-		return TestTemporalType.from_int(this.temporalType);
+			return test;
+		} catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
+		}
 	}
 
 	/**
@@ -355,63 +335,77 @@ public final class Test extends StorableObject<Test> implements Describable {
 	public IdlTest getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		final IdlIdentifier[] msIdsT = Identifier.createTransferables(this.measurementSetupIds);
-
-		final TestStops[] testStops = new TestStops[this.stoppingMap.size()];
-		
-		int index = 0;
-		for(final Date stopDate : this.stoppingMap.keySet()) {
-			testStops[index++] = new TestStops(stopDate.getTime(), this.stoppingMap.get(stopDate));
+		final IdlTestStops[] idlTestStops = new IdlTestStops[this.stoppingMap.size()];
+		int i = 0;
+		for (final Date stopDate : this.stoppingMap.keySet()) {
+			idlTestStops[i++] = new IdlTestStops(stopDate.getTime(), this.stoppingMap.get(stopDate));
 		}
-		
+
 		return IdlTestHelper.init(orb,
-				this.id.getIdlTransferable(),
+				this.id.getIdlTransferable(orb),
 				this.created.getTime(),
 				this.modified.getTime(),
-				this.creatorId.getIdlTransferable(),
-				this.modifierId.getIdlTransferable(),
+				this.creatorId.getIdlTransferable(orb),
+				this.modifierId.getIdlTransferable(orb),
 				this.version.longValue(),
-				this.timeStamps.getIdlTransferable(orb),
-				this.measurementType.getIdlTransferable(orb),
-				this.analysisType.getIdlTransferable(orb),
-				this.groupTestId.getIdlTransferable(),
-				TestStatus.from_int(this.status),
-				this.monitoredElement.getId().getIdlTransferable(),
 				this.description,
+				this.groupTestId.getIdlTransferable(orb),
+				this.monitoredElementId.getIdlTransferable(orb),
+				this.status.getIdlTransferable(),
+				this.timeStamps.getIdlTransferable(orb),
+				this.measurementTypeId.getIdlTransferable(orb),
+				Identifier.createTransferables(this.measurementTemplateIds),
 				this.numberOfMeasurements,
-				testStops,
-				msIdsT);
+				this.analysisTypeId.getIdlTransferable(orb),
+				this.analysisTemplateId.getIdlTransferable(orb),
+				idlTestStops);
 	}
 
 	/**
-	 * @param measurementType The measurementType to set.
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public void setMeasurementType(final MeasurementType measurementType) {
-		
-		assert measurementType != null : ErrorMessages.NON_NULL_EXPECTED;
-		
-		this.measurementType = measurementType;
-		super.markAsChanged();
+	@Override
+	public void fromTransferable(final IdlStorableObject idlStorableObject) throws ApplicationException {
+		final IdlTest idlTest = (IdlTest) idlStorableObject;
+		super.fromTransferable(idlTest);
+		this.description = idlTest.description;
+		this.groupTestId = Identifier.valueOf(idlTest.groupTestId);
+		this.monitoredElementId = Identifier.valueOf(idlTest.monitoredElementId);
+		this.status = TestStatus.valueOf(idlTest.status);
+		this.temporalType = TestTemporalType.valueOf(idlTest.timeStamps.discriminator());
+		this.timeStamps = new TestTimeStamps(idlTest.timeStamps);
+		this.measurementTypeId = Identifier.valueOf(idlTest.measurementTypeId);
+		this.measurementTemplateIds = new HashSet<Identifier>();
+		this.setMeasurementTemplateIds0(Identifier.fromTransferables(idlTest.measurementTemplateIds));
+		this.numberOfMeasurements = idlTest.numberOfMeasurements;
+		this.analysisTypeId = Identifier.valueOf(idlTest.analysisTypeId);
+		this.analysisTemplateId = Identifier.valueOf(idlTest.analysisTemplateId);
+		this.stoppingMap = new TreeMap<Date, String>();
+		for (int i = 0; i < idlTest.stops.length; i++) {
+			final IdlTestStops idlTestStops = idlTest.stops[i];
+			this.stoppingMap.put(new Date(idlTestStops.time), idlTestStops.reason);
+		}
+
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	/**
-	 * @param analysisType The analysisType to set.
-	 */
-	public void setAnalysisType(final AnalysisType analysisType) {
-		
-		assert analysisType != null : ErrorMessages.NON_NULL_EXPECTED;
-		
-		this.analysisType = analysisType;
-		super.markAsChanged();
+	public String getDescription() {
+		return this.description;
 	}
+
 	/**
 	 * @param description The description to set.
 	 */
 	public void setDescription(final String description) {
+		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
 		this.description = description;
 		super.markAsChanged();
 	}
-	
+
+	public String getName() {
+		return this.description;
+	}
+
 	/**
 	 * <p>Never call this method ! </p>  
 	 * @throws UnsupportedOperationException
@@ -420,87 +414,185 @@ public final class Test extends StorableObject<Test> implements Describable {
 		throw new UnsupportedOperationException("Test.setName() is unsupported");		
 	}	
 
+	public Identifier getGroupTestId() {
+		return this.groupTestId;
+	}
+
+	public void setGroupTestId(final Identifier groupTestId) {
+		assert groupTestId != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert (groupTestId.isVoid() || groupTestId.getMajor() == ObjectEntities.TEST_CODE) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		this.groupTestId = groupTestId;
+		this.markAsChanged();
+	}
+
+	public Identifier getMonitoredElementId() {
+		return this.monitoredElementId;
+	}
+
+	public MonitoredElement getMonitoredElement() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.monitoredElementId, true);
+	}
+
 	/**
 	 * @param monitoredElement The monitoredElement to set.
 	 */
-	public void setMonitoredElement(final MonitoredElement monitoredElement) {
-		this.monitoredElement = monitoredElement;
+	public void setMonitoredElementId(final Identifier monitoredElementId) {
+		assert monitoredElementId != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert monitoredElementId.getMajor() == ObjectEntities.MONITOREDELEMENT_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		this.monitoredElementId = monitoredElementId;
 		super.markAsChanged();
+	}
+
+	public TestStatus getStatus() {
+		return this.status;
 	}
 
 	/**
 	 * @param status The status to set.
 	 */
 	public void setStatus(final TestStatus status) {
-		this.status = status.value();
+		assert status != null : ErrorMessages.NON_NULL_EXPECTED;
+		this.status = status;
 		super.markAsChanged();
 	}
 
-	public Identifier getGroupTestId() {
-		return this.groupTestId;
+	public TestTemporalType getTemporalType() {
+		return this.temporalType;
 	}
-	
-	public void setGroupTestId(final Identifier groupTestId) {
-		this.groupTestId = groupTestId;
-		this.markAsChanged();
-	}
-	
-	/**
-	 * @param temporalPatternId The temporalPatternId to set.
-	 */
-	public void setTemporalPatternId(final Identifier temporalPatternId) {
-		this.timeStamps.temporalPatternId = temporalPatternId;
-		super.markAsChanged();
-	}
+
 	/**
 	 * @param temporalType The temporalType to set.
 	 */
 	public void setTemporalType(final TestTemporalType temporalType) {
-		this.temporalType = temporalType.value();
+		assert temporalType != null : ErrorMessages.NON_NULL_EXPECTED;
+		this.temporalType = temporalType;
 		super.markAsChanged();
+	}
+
+	public Date getStartTime() {
+		return this.timeStamps.getStartTime();
+	}
+	
+	public void setStartTime(final Date startTime) {
+		this.timeStamps.setStartTime(startTime);
+		super.markAsChanged();
+	}
+
+	public Date getEndTime() {
+		return this.timeStamps.getEndTime();
+	}
+	
+	public void setEndTime(final Date endTime) {
+		this.timeStamps.setEndTime(endTime);
+		super.markAsChanged();
+	}
+
+	public Identifier getTemporalPatternId() {
+		return this.timeStamps.getTemporalPatternId();
+	}
+
+	/**
+	 * @param temporalPatternId The temporalPatternId to set.
+	 */
+	public void setTemporalPatternId(final Identifier temporalPatternId) {
+		this.timeStamps.setTemporalPatternId(temporalPatternId);
+		super.markAsChanged();
+	}
+
+	public Identifier getMeasurementTypeId() {
+		return this.measurementTypeId;
+	}
+
+	/**
+	 * @param measurementType The measurementType to set.
+	 */
+	public void setMeasurementType(final Identifier measurementTypeId) {
+		assert measurementTypeId != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert measurementTypeId.getMajor() == ObjectEntities.MEASUREMENT_TYPE_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		this.measurementTypeId = measurementTypeId;
+		super.markAsChanged();
+	}
+
+	public Set<Identifier> getMeasurementTemplateIds() {
+		return Collections.unmodifiableSet(this.measurementTemplateIds);
+	}
+
+	public void setMeasurementTemplateIds(final Set<Identifier> measurementTemplateIds) {
+		assert measurementTemplateIds != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert measurementTemplateIds.size() > 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert StorableObject.getEntityCodeOfIdentifiables(measurementTemplateIds) == ObjectEntities.ACTIONTEMPLATE_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		this.setMeasurementTemplateIds0(measurementTemplateIds);
+		super.markAsChanged();
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	synchronized void setMeasurementTemplateIds0(final Set<Identifier> measurementTemplateIds) {
+		this.measurementTemplateIds.clear();
+		if (measurementTemplateIds != null) {
+			this.measurementTemplateIds.addAll(measurementTemplateIds);
+		}
 	}
 
 	public int getNumberOfMeasurements() {
 		return this.numberOfMeasurements;
 	}
 
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	public synchronized void setAttributes(final Date created,
-			final Date modified,
-			final Identifier creatorId,
-			final Identifier modifierId,
-			final StorableObjectVersion version,
-			final int temporalType,
-			final Date startTime,
-			final Date endTime,
-			final Identifier temporalPatternId,
-			final MeasurementType measurementType,
-			final AnalysisType analysisType,
-			final Identifier groupTestId,
-			final int status,
-			final MonitoredElement monitoredElement,
-			final String description,
-			final int numberOfMeasurements) {
-		super.setAttributes(created,
-			modified,
-			creatorId,
-			modifierId,
-			version);
-		this.temporalType = temporalType;
-		this.timeStamps = new TestTimeStamps(temporalType,
-			startTime,
-			endTime,
-			temporalPatternId);
+	public Identifier getAnalysisTypeId() {
+		return this.analysisTypeId;
+	}
 
-		this.measurementType = measurementType;
-		this.analysisType = analysisType;
-		this.groupTestId = groupTestId;
-		this.status = status;
-		this.monitoredElement = monitoredElement;
-		this.description = description;
-		this.numberOfMeasurements = numberOfMeasurements;
+	/**
+	 * @param analysisType The analysisType to set.
+	 */
+	public void setAnalysisTypeId(final Identifier analysisTypeId) {
+		assert analysisTypeId != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert (analysisTypeId.isVoid() || analysisTypeId.getMajor() == ObjectEntities.ANALYSIS_TYPE_CODE) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		this.analysisTypeId = analysisTypeId;
+		super.markAsChanged();
+	}
+
+	public Identifier getAnalysisTemplateId() {
+		return this.analysisTemplateId;
+	}
+
+	/**
+	 * @param analysisType The analysisType to set.
+	 */
+	public void setAnalysisTemplateId(final Identifier analysisTemplateId) {
+		assert analysisTemplateId != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert (analysisTemplateId.isVoid() || analysisTemplateId.getMajor() == ObjectEntities.ACTIONTEMPLATE_CODE) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		this.analysisTemplateId = analysisTemplateId;
+		super.markAsChanged();
+	}
+
+	/**
+	 * @return map of test stop time and reason to stop
+	 */
+	public SortedMap<Date, String> getStoppingMap() {
+		return Collections.unmodifiableSortedMap(this.stoppingMap);
+	}
+
+	/**
+	 * stop test now. 
+	 * @param reason reason to stop test
+	 * @see #addStopping(Date, String)
+	 */
+	public void addStopping(final String reason) {
+		this.addStopping(new Date(), reason);
+	}
+
+	/**
+	 * add test stopping 
+	 * @param stoppingTime time, when stop test
+	 * @param reason reason to stop test
+	 */
+	public void addStopping(final Date stoppingTime, final String reason) {
+		assert stoppingTime != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert reason != null : ErrorMessages.NON_NULL_EXPECTED;
+		this.stoppingMap.put(new Date(stoppingTime.getTime()), reason);
+		super.markAsChanged();
 	}
 
 	/**
@@ -512,80 +604,143 @@ public final class Test extends StorableObject<Test> implements Describable {
 			this.stoppingMap.putAll(stoppingMap);
 		}
 	}
-	
-	/**
-	 * add test stopping 
-	 * @param stoppingTime time, when stop test
-	 * @param reason reason to stop test
-	 */
-	public void addStopping(final Date stoppingTime, final String reason) {
-		this.stoppingMap.put(new Date(stoppingTime.getTime()), reason);
-		super.markAsChanged();
-	}
-	
-	/**
-	 * stop test now. 
-	 * @param reason reason to stop test
-	 * @see #addStopping(Date, String)
-	 */
-	public void addStopping(final String reason) {
-		this.addStopping(new Date(), reason);
-	}
-	
-	/**
-	 * @return map of test stop time and reason to stop
-	 */
-	public SortedMap<Date, String> getStoppingMap() {
-		return Collections.unmodifiableSortedMap(this.stoppingMap);
-	}
-	
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	synchronized void setMeasurementSetupIds0(final Set<Identifier> measurementSetupIds) {
-		this.measurementSetupIds.clear();
-		if (measurementSetupIds != null) {
-			this.measurementSetupIds.addAll(measurementSetupIds);
-		}
 
-		if (!this.measurementSetupIds.isEmpty()) {
-			try {
-				this.mainMeasurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject(this.measurementSetupIds.iterator().next(),
-						true);
-			} catch (ApplicationException ae) {
-				Log.errorMessage(ae);
-			}
-		}
-	}
-
-	public void setMeasurementSetupIds(final Set<Identifier> measurementSetupIds) {
-		this.setMeasurementSetupIds0(measurementSetupIds);
-		super.markAsChanged();
-	}
-
-	public Identifier getKISId() {
+	public Identifier getKISId() throws ApplicationException {
 		if (this.kisId == null) {
-			try {
-				final MeasurementPort measurementPort = (MeasurementPort) StorableObjectPool.getStorableObject(this.getMonitoredElement().getMeasurementPortId(),
-						true);
-				this.kisId = measurementPort.getKISId();
-			} catch (ApplicationException ae) {
-				Log.errorMessage(ae);
-			}
+			final Identifier measurementPortId = this.getMonitoredElement().getMeasurementPortId();
+			final MeasurementPort measurementPort = StorableObjectPool.getStorableObject(measurementPortId, true);
+			this.kisId = measurementPort.getKISId();
 		}
 		return this.kisId;
 	}
 
-	public Identifier getMCMId() {
+	public Identifier getMCMId() throws ApplicationException {
 		if (this.mcmId == null) {
-			try {
-				final KIS kis = (KIS) StorableObjectPool.getStorableObject(this.getKISId(), true);
-				this.mcmId = kis.getMCMId();
-			} catch (ApplicationException ae) {
-				Log.errorMessage(ae);
-			}
+			final KIS kis = StorableObjectPool.getStorableObject(this.getKISId(), true);
+			this.mcmId = kis.getMCMId();
 		}
 		return this.mcmId;
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	protected boolean isValid() {
+		final boolean valid = super.isValid()
+				&& this.description != null
+				&& this.groupTestId != null
+					&& (this.groupTestId.isVoid() || this.groupTestId.getMajor() == ObjectEntities.TEST_CODE)
+				&& this.monitoredElementId != null
+					&& this.monitoredElementId.getMajor() == ObjectEntities.MONITOREDELEMENT_CODE
+				&& this.status != null
+				&& this.temporalType != null
+				&& this.timeStamps.isValid()
+				&& this.measurementTypeId != null
+					&& this.measurementTypeId.getMajor() == ObjectEntities.MEASUREMENT_TYPE_CODE
+				&& this.measurementTemplateIds != null
+					&& this.measurementTemplateIds.size() > 0
+					&& StorableObject.getEntityCodeOfIdentifiables(this.measurementTemplateIds) == ObjectEntities.ACTIONTEMPLATE_CODE
+				&& this.numberOfMeasurements >= 0
+				&& this.analysisTypeId != null
+					&& (this.analysisTypeId.isVoid() || this.analysisTypeId.getMajor() == ObjectEntities.ANALYSIS_TYPE_CODE)
+				&& this.analysisTemplateId != null
+					&& (this.analysisTemplateId.isVoid() || this.analysisTemplateId.getMajor() == ObjectEntities.ACTIONTEMPLATE_CODE)
+				&& this.stoppingMap != null;
+		if (!valid) {
+			return false;
+		}
+
+		try {
+			final Set<ActionTemplate> measurementTemplates = StorableObjectPool.getStorableObjects(this.measurementTemplateIds, true);
+			for (final ActionTemplate actionTemplate : measurementTemplates) {
+				if (!actionTemplate.isAttachedToMonitoredElement(this.monitoredElementId.getId())) {
+					Log.errorMessage("Test '" + this.id + "': "
+							+ "ActionTemplate: '" + actionTemplate.getId()
+							+ "' is not attached to MonitoredElement: '" + this.monitoredElementId.getId() + "'");
+					return false;
+				}
+			}
+			return true;
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+			return true;
+		}
+	}
+
+	/**
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
+	 */
+	public Measurement createMeasurement(final Identifier measurementCreatorId, final Date startTime) throws CreateObjectException {
+		if (this.status != TestStatus.TEST_STATUS_PROCESSING) {
+			throw new CreateObjectException("Status of test '" + this.id + "' is " + this.status + ", not PROCESSING");
+		}
+
+		MonitoredElement monitoredElement = null;
+		try {
+			monitoredElement = StorableObjectPool.getStorableObject(this.monitoredElementId, true);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+		if (monitoredElement == null) {
+			throw new CreateObjectException("Cannot find monitored element '" + this.monitoredElementId + "'");
+		}
+		final Measurement measurement = Measurement.createInstance(measurementCreatorId,
+				this.measurementTypeId,
+				this.monitoredElementId,
+				this.measurementTemplateIds.iterator().next(),
+				LangModelMeasurement.getString("RR")
+						+ "-" + monitoredElement.getName()
+						+ "-" + EasyDateFormatter.formatDate(startTime),
+				startTime,
+				0,
+				this.id);
+		super.modified = new Date(System.currentTimeMillis());
+		super.modifierId = measurementCreatorId;
+		this.numberOfMeasurements++;
+
+		super.markAsChanged();
+
+		return measurement;
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	public synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String description,
+			final Identifier groupTestId,
+			final Identifier monitoredElementId,
+			final TestStatus status,
+			final TestTemporalType temporalType,
+			final Date startTime,
+			final Date endTime,
+			final Identifier temporalPatternId,
+			final Identifier measurementTypeId,
+			final int numberOfMeasurements,
+			final Identifier analysisTypeId,
+			final Identifier analysisTemplateId) {
+		super.setAttributes(created,
+			modified,
+			creatorId,
+			modifierId,
+			version);
+		this.description = description;
+		this.groupTestId = groupTestId;
+		this.monitoredElementId = monitoredElementId;
+		this.status = status;
+		this.temporalType = temporalType;
+		this.timeStamps = new TestTimeStamps(startTime, endTime, temporalPatternId);
+		this.measurementTypeId = measurementTypeId;
+		this.numberOfMeasurements = numberOfMeasurements;
+		this.analysisTypeId = analysisTypeId;
+		this.analysisTemplateId = analysisTemplateId;
 	}
 
 	/**
@@ -597,15 +752,23 @@ public final class Test extends StorableObject<Test> implements Describable {
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 
-		if (this.temporalType == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL && !this.timeStamps.temporalPatternId.isVoid()) {
-			dependencies.add(this.timeStamps.temporalPatternId);
-		}
-
 		if (!this.groupTestId.isVoid() && !this.id.equals(this.groupTestId)) {
 			dependencies.add(this.groupTestId);
 		}
 
-		dependencies.addAll(this.measurementSetupIds);
+		dependencies.add(this.monitoredElementId);
+
+		final Identifier temporalPatternId = this.timeStamps.getTemporalPatternId();
+		if (this.temporalType == TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL && !temporalPatternId.isVoid()) {
+			dependencies.add(temporalPatternId);
+		}
+
+		dependencies.add(this.measurementTypeId);
+		dependencies.addAll(this.measurementTemplateIds);
+		if (!this.analysisTypeId.isVoid()) {
+			dependencies.add(this.analysisTypeId);
+			dependencies.add(this.analysisTemplateId);
+		}
 
 		return dependencies;
 	}
@@ -631,28 +794,66 @@ public final class Test extends StorableObject<Test> implements Describable {
 		return transferables;
 	}
 
-	public final class TestTimeStamps
-			implements IdlTransferableObject<IdlTestTimeStamps> {
+
+
+	static enum TestStatus {
+		TEST_STATUS_NEW,		//Сохранён в БД на сервере
+		TEST_STATUS_SCHEDULED,	//Передан на МУИ и сохранён в БД
+		TEST_STATUS_PROCESSING,	//Извлечён из очереди; первое измерение начинает выполняться
+		TEST_STATUS_COMPLETED,	//Последнее измерение завершено
+		TEST_STATUS_STOPPING,	//Остановливается по запросу
+		TEST_STATUS_STOPPED,	//Остановлен по запросу
+		TEST_STATUS_ABORTED;	//Прерван
+
+		private static final TestStatus[] VALUES = values();
+
+		IdlTestStatus getIdlTransferable() {
+			return IdlTestStatus.from_int(this.ordinal());
+		}
+
+		static TestStatus valueOf(final int code) {
+			return VALUES[code];
+		}
+
+		static TestStatus valueOf(final IdlTestStatus idlTestStatus) {
+			return valueOf(idlTestStatus.value());
+		}
+	}
+
+	static enum TestTemporalType {
+		TEST_TEMPORAL_TYPE_ONETIME,
+		TEST_TEMPORAL_TYPE_PERIODICAL;
+
+		private static final TestTemporalType[] VALUES = values();
+
+		IdlTestTemporalType getIdlTransferable() {
+			return IdlTestTemporalType.from_int(this.ordinal());
+		}
+
+		static TestTemporalType valueOf(final int code) {
+			return VALUES[code];
+		}
+
+		static TestTemporalType valueOf(final IdlTestTemporalType idlTestTemporalType) {
+			return valueOf(idlTestTemporalType.value());
+		}
+	}
+
+	private final class TestTimeStamps implements IdlTransferableObject<IdlTestTimeStamps> {
 		private static final long serialVersionUID = -3560328752462377043L;
 
-		Date startTime;
-		Date endTime;
-		Identifier temporalPatternId;
+		private Date startTime;
+		private Date endTime;
+		private Identifier temporalPatternId;
 
-		private int	discriminator;		
-
-		TestTimeStamps(final int temporalType,
-				final Date startTime,
-				final Date endTime,
-				final Identifier temporalPatternId) {
-			this.discriminator = temporalType;
-			switch (temporalType) {
-				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
+		TestTimeStamps(final Date startTime, final Date endTime, final Identifier temporalPatternId) {
+			switch (this.getTestTemporalType()) {
+				case TEST_TEMPORAL_TYPE_ONETIME:
 					this.startTime = startTime;
 					this.endTime = this.startTime;
 					this.temporalPatternId = VOID_IDENTIFIER;
 					break;
-				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+				case TEST_TEMPORAL_TYPE_PERIODICAL:
 					this.startTime = startTime;
 					this.endTime = endTime;
 					this.temporalPatternId = temporalPatternId;
@@ -666,27 +867,26 @@ public final class Test extends StorableObject<Test> implements Describable {
 					}
 					break;
 				default:
-					Log.errorMessage("TestTimeStamps | Illegal temporal type: " + temporalType + " of test");
+					Log.errorMessage("TestTimeStamps | Illegal temporal type: " + this.getTestTemporalType() + " of test");
 			}
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		}
 
-		TestTimeStamps(final IdlTestTimeStamps ttst) {
-			this.discriminator = ttst.discriminator().value();
-			switch (this.discriminator) {
-				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-					this.startTime = new Date(ttst.startTime());
+		TestTimeStamps(final IdlTestTimeStamps idlTestTimeStamps) {
+			switch (this.getTestTemporalType()) {
+				case TEST_TEMPORAL_TYPE_ONETIME:
+					this.startTime = new Date(idlTestTimeStamps.startTime());
 					this.endTime = this.startTime;
 					this.temporalPatternId = VOID_IDENTIFIER;
 					break;
-				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-					PeriodicalTestTimeStamps ptts = ttst.ptts();
-					this.startTime = new Date(ptts.startTime);
-					this.endTime = new Date(ptts.endTime);
-					this.temporalPatternId = new Identifier(ptts.temporalPatternId);
+				case TEST_TEMPORAL_TYPE_PERIODICAL:
+					final IdlPeriodicalTestTimeStamps idlPeriodicalTestTimeStamps = idlTestTimeStamps.ptts();
+					this.startTime = new Date(idlPeriodicalTestTimeStamps.startTime);
+					this.endTime = new Date(idlPeriodicalTestTimeStamps.endTime);
+					this.temporalPatternId = Identifier.valueOf(idlPeriodicalTestTimeStamps.temporalPatternId);
 					break;
 				default:
-					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
+					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.getTestTemporalType());
 			}
 
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -698,29 +898,39 @@ public final class Test extends StorableObject<Test> implements Describable {
 		 */
 		public IdlTestTimeStamps getIdlTransferable(final ORB orb) {
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			final IdlTestTimeStamps ttst = new IdlTestTimeStamps();
-			switch (this.discriminator) {
-				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-					ttst.startTime(this.startTime.getTime());
+
+			final IdlTestTimeStamps idlTestTimeStamps = new IdlTestTimeStamps();
+			switch (this.getTestTemporalType()) {
+				case TEST_TEMPORAL_TYPE_ONETIME:
+					idlTestTimeStamps.startTime(this.startTime.getTime());
 					break;
-				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-					ttst.ptts(new PeriodicalTestTimeStamps(this.startTime.getTime(),
+				case TEST_TEMPORAL_TYPE_PERIODICAL:
+					idlTestTimeStamps.ptts(new IdlPeriodicalTestTimeStamps(this.startTime.getTime(),
 							this.endTime.getTime(),
 							this.temporalPatternId.getIdlTransferable()));
 					break;
 				default:
-					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
+					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.getTestTemporalType());
 			}
-			return ttst;
+			return idlTestTimeStamps;
 		}
 
 		protected boolean isValid() {
-			boolean valid = (this.startTime != null) && (this.endTime != null);
-			switch (this.discriminator) {
-				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-					return valid;
-				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-					return valid && (this.temporalPatternId != null) && (this.startTime.before(this.endTime));
+			if (this.startTime == null || this.endTime == null) {
+				return false;
+			}
+			switch (this.getTestTemporalType()) {
+				case TEST_TEMPORAL_TYPE_ONETIME:
+					return this.startTime == this.endTime;
+				case TEST_TEMPORAL_TYPE_PERIODICAL:
+					if (this.temporalPatternId == null) {
+						return false;
+					}
+					final short temporalPatternIdMajor = this.temporalPatternId.getMajor();
+					return (temporalPatternIdMajor == ObjectEntities.CRONTEMPORALPATTERN_CODE
+									|| temporalPatternIdMajor == ObjectEntities.INTERVALSTEMPORALPATTERN_CODE
+									|| temporalPatternIdMajor == ObjectEntities.PERIODICALTEMPORALPATTERN_CODE)
+							&& this.startTime.before(this.endTime);
 				default:
 					return false;
 			}
@@ -729,7 +939,6 @@ public final class Test extends StorableObject<Test> implements Describable {
 		@Override
 		public int hashCode() {
 			int result = 17;
-			result = 37 * result + this.discriminator;
 			result = 37 * result + this.startTime.hashCode();
 			result = 37 * result + this.endTime.hashCode();
 			result = 37 * result + this.temporalPatternId.hashCode();
@@ -742,8 +951,8 @@ public final class Test extends StorableObject<Test> implements Describable {
 				return true;
 			}
 			if (obj instanceof TestTimeStamps) {
-				TestTimeStamps that = (TestTimeStamps) obj;
-				if (that.discriminator == this.discriminator
+				final TestTimeStamps that = (TestTimeStamps) obj;
+				if (that.getTestTemporalType() == this.getTestTemporalType()
 						&& (this.startTime == that.startTime || 
 								this.startTime != null && this.startTime.equals(that.startTime))
 						&& (this.endTime == that.endTime || 
@@ -754,6 +963,10 @@ public final class Test extends StorableObject<Test> implements Describable {
 				}
 			}
 			return false;
+		}
+
+		public TestTemporalType getTestTemporalType() {
+			return Test.this.getTemporalType();
 		}
 
 		public Date getEndTime() {
@@ -768,24 +981,25 @@ public final class Test extends StorableObject<Test> implements Describable {
 			return this.temporalPatternId;
 		}
 
-		public TestTemporalType getTestTemporalType() {
-			return TestTemporalType.from_int(this.discriminator);
-		}
-
-		public void setEndTime(final Date endTime) {
-			this.endTime = endTime;
-		}
-
 		public void setStartTime(final Date startTime) {
+			assert startTime != null : ErrorMessages.NON_NULL_EXPECTED;
 			this.startTime = startTime;
 		}
 
-		public void setTemporalPatternId(final Identifier temporalPatternId) {
-			this.temporalPatternId = temporalPatternId;
+		public void setEndTime(final Date endTime) {
+			assert endTime != null : ErrorMessages.NON_NULL_EXPECTED;
+			this.endTime = endTime;
 		}
 
-		public void setTestTemporalType(final TestTemporalType temporalType) {
-			this.discriminator = temporalType.value();
+		public void setTemporalPatternId(final Identifier temporalPatternId) {
+			assert temporalPatternId != null : ErrorMessages.NON_NULL_EXPECTED;
+			final short temporalPatternIdMajor = temporalPatternId.getMajor();
+			assert temporalPatternId.isVoid()
+					|| temporalPatternIdMajor == ObjectEntities.CRONTEMPORALPATTERN_CODE
+					|| temporalPatternIdMajor == ObjectEntities.INTERVALSTEMPORALPATTERN_CODE
+					|| temporalPatternIdMajor == ObjectEntities.PERIODICALTEMPORALPATTERN_CODE
+				: ErrorMessages.ILLEGAL_ENTITY_CODE;
+			this.temporalPatternId = temporalPatternId;
 		}
 	}
 

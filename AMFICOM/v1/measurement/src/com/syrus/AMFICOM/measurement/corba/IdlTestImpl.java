@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlTestImpl.java,v 1.12 2005/10/31 12:30:15 bass Exp $
+ * $Id: IdlTestImpl.java,v 1.12.2.1 2006/02/13 19:36:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,15 +14,15 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestStops;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStamps;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStops;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/10/31 12:30:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12.2.1 $, $Date: 2006/02/13 19:36:25 $
  * @module measurement
  */
 final class IdlTestImpl extends IdlTest {
@@ -38,32 +38,34 @@ final class IdlTestImpl extends IdlTest {
 			final IdlIdentifier creatorId,
 			final IdlIdentifier modifierId,
 			final long version,
-			final IdlTestTimeStamps timeStamps,
-			final IdlMeasurementType measurementType,
-			final IdlAnalysisType analysisType,
-			final IdlIdentifier groupTestId,
-			final TestStatus status,
-			final IdlIdentifier monitoredElementId,
 			final String description,
+			final IdlIdentifier groupTestId,
+			final IdlIdentifier monitoredElementId,
+			final IdlTestStatus status,
+			final IdlTestTimeStamps timeStamps,
+			final IdlIdentifier measurementTypeId,
+			final IdlIdentifier[] measurementTemplateIds,
 			final int numberOfMeasurements,
-			final TestStops[] stoppings, 
-			final IdlIdentifier measurementSetupIds[]) {
+			final IdlIdentifier analysisTypeId,
+			final IdlIdentifier analysisTemplateId,
+			final IdlTestStops[] stops) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 		this.version = version;
-		this.timeStamps = timeStamps;
-		this.measurementType = measurementType;
-		this.analysisType = analysisType;
-		this.groupTestId = groupTestId;
-		this.status = status;
-		this.monitoredElementId = monitoredElementId;
 		this.description = description;
+		this.groupTestId = groupTestId;
+		this.monitoredElementId = monitoredElementId;
+		this.status = status;
+		this.timeStamps = timeStamps;
+		this.measurementTypeId = measurementTypeId;
+		this.measurementTemplateIds = measurementTemplateIds;
 		this.numberOfMeasurements = numberOfMeasurements;
-		this.stoppings = stoppings;
-		this.measurementSetupIds = measurementSetupIds;
+		this.analysisTypeId = analysisTypeId;
+		this.analysisTemplateId = analysisTemplateId;
+		this.stops = stops;
 	}
 
 	/**
