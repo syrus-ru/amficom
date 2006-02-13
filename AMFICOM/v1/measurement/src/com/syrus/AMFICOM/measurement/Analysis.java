@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.90.2.1 2006/02/11 18:40:45 arseniy Exp $
+ * $Id: Analysis.java,v 1.90.2.2 2006/02/13 19:37:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisHelper;
 
 /**
- * @version $Revision: 1.90.2.1 $, $Date: 2006/02/11 18:40:45 $
+ * @version $Revision: 1.90.2.2 $, $Date: 2006/02/13 19:37:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -75,7 +75,6 @@ public final class Analysis extends Action<Analysis> {
 			final String name,
 			final Date startTime,
 			final long duration,
-			final ActionStatus status,
 			final Identifier measurementId) throws CreateObjectException {
 
 		try {
@@ -88,7 +87,7 @@ public final class Analysis extends Action<Analysis> {
 					name,
 					startTime,
 					duration,
-					status,
+					ActionStatus.ACTION_STATUS_NEW,
 					measurementId);
 
 			assert analysis.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -132,19 +131,9 @@ public final class Analysis extends Action<Analysis> {
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlAnalysis idlAnalysis = (IdlAnalysis) transferable;
 		super.fromTransferable(idlAnalysis);
-		this.measurementId = new Identifier(idlAnalysis.measurementId);
+		this.measurementId = Identifier.valueOf(idlAnalysis.measurementId);
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-	}
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	@Override
-	protected boolean isValid() {
-		return super.isValid()
-				&& this.getTypeId().getMajor() == ObjectEntities.ANALYSIS_TYPE_CODE
-				&& (this.measurementId == null || this.measurementId.getMajor() == ObjectEntities.MEASUREMENT_CODE);
 	}
 
 	public Identifier getMeasurementId() {
@@ -184,6 +173,16 @@ public final class Analysis extends Action<Analysis> {
 				duration,
 				status);
 		this.measurementId = measurementId;
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	protected boolean isValid() {
+		return super.isValid()
+				&& this.getTypeId().getMajor() == ObjectEntities.ANALYSIS_TYPE_CODE
+				&& (this.measurementId == null || this.measurementId.getMajor() == ObjectEntities.MEASUREMENT_CODE);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.101.2.1 2006/02/11 18:40:45 arseniy Exp $
+ * $Id: Measurement.java,v 1.101.2.2 2006/02/13 19:37:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurement;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementHelper;
 
 /**
- * @version $Revision: 1.101.2.1 $, $Date: 2006/02/11 18:40:45 $
+ * @version $Revision: 1.101.2.2 $, $Date: 2006/02/13 19:37:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -74,7 +74,6 @@ public final class Measurement extends Action<Measurement> {
 			final String name,
 			final Date startTime,
 			final long duration,
-			final ActionStatus status,
 			final Identifier testId) throws CreateObjectException {
 
 		try {
@@ -87,7 +86,7 @@ public final class Measurement extends Action<Measurement> {
 					name,
 					startTime,
 					duration,
-					status,
+					ActionStatus.ACTION_STATUS_NEW,
 					testId);
 
 			assert measurement.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -131,23 +130,9 @@ public final class Measurement extends Action<Measurement> {
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlMeasurement idlMeasurement = (IdlMeasurement) transferable;
 		super.fromTransferable(idlMeasurement);
-		this.testId = new Identifier(idlMeasurement.testId);
+		this.testId = Identifier.valueOf(idlMeasurement.testId);
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-	}
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	@Override
-	protected boolean isValid() {
-		return super.isValid()
-				&& this.getTypeId().getMajor() == ObjectEntities.MEASUREMENT_TYPE_CODE
-				&& this.testId != null && this.testId.getMajor() == ObjectEntities.TEST_CODE;
-	}
-
-	public Identifier getTestId() {
-		return this.testId;
 	}
 
 	/**
@@ -179,6 +164,20 @@ public final class Measurement extends Action<Measurement> {
 			duration,
 			status);
 		this.testId = testId;
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	protected boolean isValid() {
+		return super.isValid()
+				&& this.getTypeId().getMajor() == ObjectEntities.MEASUREMENT_TYPE_CODE
+				&& this.testId != null && this.testId.getMajor() == ObjectEntities.TEST_CODE;
+	}
+
+	public Identifier getTestId() {
+		return this.testId;
 	}
 
 	/**
