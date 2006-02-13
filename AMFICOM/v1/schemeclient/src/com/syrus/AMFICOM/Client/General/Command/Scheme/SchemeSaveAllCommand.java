@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeSaveAllCommand.java,v 1.3 2006/02/10 12:39:36 stas Exp $
+ * $Id: SchemeSaveAllCommand.java,v 1.4 2006/02/13 08:35:28 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -140,19 +140,8 @@ public class SchemeSaveAllCommand extends AbstractCommand {
 				}
 			}
 		}
-		saveEntities();
-	}
-	
-	public static void saveEntities() {
-		// save all scheme deals entities
-		Identifier userId = LoginManager.getUserId();
-		
 		try {
-			long t = System.currentTimeMillis();
-			for (short entityCode : entities) {
-				saveEntity(userId, entityCode);
-			}
-			Log.debugMessage("Total save took " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);			
+			saveEntities();
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 					LangModelScheme.getString("Message.information.all_schemes_saved"),  //$NON-NLS-1$ //$NON-NLS-2$
 					LangModelScheme.getString("Message.information"), //$NON-NLS-1$
@@ -164,6 +153,17 @@ public class SchemeSaveAllCommand extends AbstractCommand {
 					JOptionPane.OK_OPTION);
 			Log.errorMessage(e);
 		}
+	}
+	
+	public static void saveEntities() throws ApplicationException {
+		// save all scheme deals entities
+		Identifier userId = LoginManager.getUserId();
+		
+		long t = System.currentTimeMillis();
+		for (short entityCode : entities) {
+			saveEntity(userId, entityCode);
+		}
+		Log.debugMessage("Total save took " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);			
 	}
 	
 	private static void saveEntity(Identifier modifierId, short entityCode) throws ApplicationException {
