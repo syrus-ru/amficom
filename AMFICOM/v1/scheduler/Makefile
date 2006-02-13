@@ -5,12 +5,22 @@ ARCHFILE := $(MODULE_NAME).tar.gz
 HOST=mongol
 SERVICE_NAME=mongol
 
+XMLDIR = schemas
+XMLSRCDIR = schemas/src
+XMLCLASSSRCDIR = schemas/classes
+
 #ECLIPSE_CLASSPATH=$(shell for line in `cat .classpath | grep classpathentry | grep kind=\"var\" | cut -d '"' -f 4 | sed -r 's/([A-Z0-9]+_[A-Z0-9]+)/\$$\1/'`; do c="$$c:$$line";done;echo $$c)
 
 #ECLIPSE_PROJECT=$(shell  for line in `cat .classpath | grep classpathentry | grep kind=\"src\" | cut -d '"' -f 4 `; do c="$$c:..$$line/bin"; done; echo $$c)
 
 include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
+$(call checkenve,XMLBEANSCLASSPATH)
+$(call checkenve,SCOMP)
+$(call checkenve,SCOMPFLAGS)
+
+LIBNAME_EXTENSIONS_SCHEMAS = $(AMFICOM_HOME)/lib/extensions_schemas.jar
+LIBNAME_SCHEDULER_SCHEMAS = $(MODULE_NAME)_schemas.jar
 
 DEPENDENCIES = \
 util \
@@ -54,12 +64,43 @@ cleanmach:
 	$(RM) -r $(CLASSDIR)/com
 	$(RM) .mach
 
+.PHONY: xml
+xml: $(LIBNAME_SCHEDULER_SCHEMAS)
 
+$(LIBNAME_EXTENSIONS_SCHEMAS):
+	$(error $(LOGNAME), you forgot to build $@)
+
+$(LIBNAME_SCHEDULER_SCHEMAS): $(LIBNAME_EXTENSIONS_SCHEMAS)
+	$(RM) -r $(XMLCLASSDIR)/*
+	$(SCOMP) $(SCOMPFLAGS) \
+		-cp $(XMLBEANSCLASSPATH):$(LIBNAME_EXTENSIONS_SCHEMAS) \
+		-out $@ \
+		$(XMLDIR)/$(MODULE_NAME).xsd \
+		$(XMLDIR)/$(MODULE_NAME).xsdconfig
+
+.PHONY: xmlclean
+xmlclean:
+	$(RM) $(LIBNAME_SCHEDULER_SCHEMAS)
+	if [ -f $(XMLSRCDIR)/com/syrus/AMFICOM/extensions/.cvsignore ]; \
+	then \
+		cd $(XMLSRCDIR)/com/syrus/AMFICOM/extensions && $(RM) -r `cat .cvsignore`; \
+	else \
+		$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/extensions; \
+	fi
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/extensions
+
+.PHONY: xmlinstall
+xmlinstall: $(LIBDIR) $(LIBDIR)/$(LIBNAME_MANAGER_SCHEMAS)
 
 #### Install ####
-.PHONY:	install
-install: $(LIBNAME) $(LIBDIR)
-	$(CP) $^
+.PHONY: install
+install: $(LIBDIR) $(LIBDIR)/$(LIBNAME) xmlinstall
+
+$(LIBDIR)/$(LIBNAME_MANAGER_SCHEMAS): $(LIBNAME_MANAGER_SCHEMAS)
+	install -m 0644 -p $(LIBNAME_MANAGER_SCHEMAS) $(LIBDIR)
+
+$(LIBDIR)/$(LIBNAME): $(LIBNAME)
+	install -m 0644 -p $(LIBNAME) $(LIBDIR)
 
 #### Archive ####
 .PHONY: arch
