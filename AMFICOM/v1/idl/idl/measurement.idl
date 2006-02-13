@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.91.2.2 2006/02/13 12:10:07 arseniy Exp $
+ * $Id: measurement.idl,v 1.91.2.3 2006/02/13 19:23:50 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -127,6 +127,7 @@ module measurement {
 		valuetype IdlActionTemplate : general::corba::IdlStorableObject {
 			public general::corba::WString256 description;
 			public general::corba::IdlIdentifierSeq actionParameterIds;
+			public general::corba::IdlIdentifierSeq monitoredElementIds;
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -135,7 +136,8 @@ module measurement {
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in general::corba::WString256 description,
-					in general::corba::IdlIdentifierSeq actionParameterIds);
+					in general::corba::IdlIdentifierSeq actionParameterIds,
+					in general::corba::IdlIdentifierSeq monitoredElementIds);
 		};
 
 
@@ -272,20 +274,20 @@ module measurement {
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlTest : general::corba::IdlStorableObject {
 			/*\u002a\u002f@SuppressWarnings("all")/**/
-			union IdlTestTimeStamps switch (enum TestTemporalType {
+			union IdlTestTimeStamps switch (enum IdlTestTemporalType {
 					TEST_TEMPORAL_TYPE_ONETIME,
 					TEST_TEMPORAL_TYPE_PERIODICAL}) {
 				case TEST_TEMPORAL_TYPE_ONETIME:
 					long long startTime;
 				case TEST_TEMPORAL_TYPE_PERIODICAL:
-					struct PeriodicalTestTimeStamps {
+					struct IdlPeriodicalTestTimeStamps {
 						long long startTime;
 						long long endTime;
 						general::corba::IdlIdentifier temporalPatternId;
 					} ptts;
 			};
 			/*\u002a\u002f@SuppressWarnings("all")/**/
-			enum TestStatus {
+			enum IdlTestStatus {
 				TEST_STATUS_NEW,		//Сохранён в БД на сервере
 				TEST_STATUS_SCHEDULED,	//Передан на МУИ и сохранён в БД
 				TEST_STATUS_PROCESSING,	//Извлечён из очереди; первое измерение начинает выполняться
@@ -295,24 +297,25 @@ module measurement {
 				TEST_STATUS_ABORTED		//Прерван
 			};
 			/*\u002a\u002f@SuppressWarnings("all")/**/
-			struct TestStops {
+			struct IdlTestStops {
 				long long time;
 				general::corba::WString256 reason;
 			};
 			/*\u002a\u002f@SuppressWarnings("all")/**/
-			typedef sequence<TestStops> TestStopsSeq;
+			typedef sequence<IdlTestStops> IdlTestStopsSeq;
 
 
-			public IdlTestTimeStamps timeStamps;
-			public IdlMeasurementType measurementType;
-			public IdlAnalysisType analysisType;
-			public general::corba::IdlIdentifier groupTestId;
-			public TestStatus status;
-			public general::corba::IdlIdentifier monitoredElementId;
 			public general::corba::WString256 description;
+			public general::corba::IdlIdentifier groupTestId;
+			public general::corba::IdlIdentifier monitoredElementId;
+			public IdlTestStatus status;
+			public IdlTestTimeStamps timeStamps;
+			public general::corba::IdlIdentifier measurementTypeId;
+			public general::corba::IdlIdentifierSeq measurementTemplateIds;
 			public long numberOfMeasurements;
-			public TestStopsSeq stoppings;
-			public general::corba::IdlIdentifierSeq measurementSetupIds;
+			public general::corba::IdlIdentifier analysisTypeId;
+			public general::corba::IdlIdentifier analysisTemplateId;
+			public IdlTestStopsSeq stops;
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -320,19 +323,18 @@ module measurement {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in IdlTestTimeStamps timeStamps,
-					in IdlMeasurementType measurementType,
-					in IdlAnalysisType analysisType,
-					in general::corba::IdlIdentifier groupTestId,
-					in TestStatus status,
-					in general::corba::IdlIdentifier monitoredElementId,
 					in general::corba::WString256 description,
+					in general::corba::IdlIdentifier groupTestId,
+					in general::corba::IdlIdentifier monitoredElementId,
+					in IdlTestStatus status,
+					in IdlTestTimeStamps timeStamps,
+					in general::corba::IdlIdentifier measurementTypeId,
+					in general::corba::IdlIdentifierSeq measurementTemplateIds,
 					in long numberOfMeasurements,
-					in TestStopsSeq stoppings,
-					in general::corba::IdlIdentifierSeq measurementSetupIds);
+					in general::corba::IdlIdentifier analysisTypeId,
+					in general::corba::IdlIdentifier analysisTemplateId,
+					in IdlTestStopsSeq stops);
 		};
-		/*\u002a\u002f@SuppressWarnings("all")/**/
-		typedef sequence<IdlTest> IdlTestSeq;
 
 
 /////////////////////// Temporal Pattern ////////////////////////
