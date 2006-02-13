@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.68.2.1 2006/02/11 18:40:46 arseniy Exp $
+ * $Id: Modeling.java,v 1.68.2.2 2006/02/13 19:37:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlModeling;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingHelper;
 
 /**
- * @version $Revision: 1.68.2.1 $, $Date: 2006/02/11 18:40:46 $
+ * @version $Revision: 1.68.2.2 $, $Date: 2006/02/13 19:37:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -67,8 +67,7 @@ public final class Modeling extends Action<Modeling> {
 			final Identifier actionTemplateId,
 			final String name,
 			final Date startTime,
-			final long duration,
-			final ActionStatus status) throws CreateObjectException{
+			final long duration) throws CreateObjectException{
 		try {
 			final Modeling modeling = new Modeling(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_CODE),
 					creatorId,
@@ -79,7 +78,7 @@ public final class Modeling extends Action<Modeling> {
 					name,
 					startTime,
 					duration,
-					status);
+					ActionStatus.ACTION_STATUS_NEW);
 
 			assert modeling.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
