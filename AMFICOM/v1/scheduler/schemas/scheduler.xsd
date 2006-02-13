@@ -1,0 +1,53 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xs:schema 
+	xmlns:xs = "http://www.w3.org/2001/XMLSchema"
+	xmlns:f = "http://syrus.com/AMFICOM/extensions/scheduler"
+	xmlns:e = "http://syrus.com/AMFICOM/extensions"
+	targetNamespace = "http://syrus.com/AMFICOM/extensions/scheduler"
+	elementFormDefault = "qualified">
+
+	<xs:annotation>
+		<xs:documentation xml:lang = "en">
+			$Id: scheduler.xsd,v 1.1 2006/02/13 12:22:55 bob Exp $
+
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xs:documentation>
+	</xs:annotation>
+
+	<xs:import
+		namespace = "http://syrus.com/AMFICOM/extensions"
+		schemaLocation = "../../extensions/schemas/extensions.xsd"/>
+
+	<xs:complexType name="schedulerResource" abstract="true">
+		<xs:attribute name="id" type="xs:string"/>
+	</xs:complexType>	
+
+	<xs:complexType name="parameterHandler">
+		<xs:attribute name="id" type="xs:string"/>
+		<xs:attribute name="handlerClass" type="xs:string"/>
+	</xs:complexType>
+
+
+	<xs:complexType name="parametersHandler">
+		<xs:complexContent>
+			<xs:extension base="f:schedulerResource">
+				<xs:sequence>
+				<xs:element name="parameterHandler" type="f:parameterHandler"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>	
+
+		
+	<xs:complexType name="schedulerExtensions">
+		<xs:complexContent>
+			<xs:extension base="e:extension-point">
+				<xs:sequence>
+					<xs:element name="schedulerResource" type="f:schedulerResource" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

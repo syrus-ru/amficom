@@ -7,6 +7,7 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import javax.swing.JPanel;
 
+import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 
@@ -15,10 +16,18 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
  */
 public abstract class ParametersTestPanel extends JPanel implements
 		ParametersTest {
-	protected final ApplicationContext	aContext;
+	protected ApplicationContext	aContext;
+	protected TestParametersPanel	testParametersPanel;
+	protected SchedulerModel		schedulerModel;
+
 	
-	public ParametersTestPanel(final ApplicationContext aContext) {
-		this.aContext = aContext;
+	protected final void setApplicationContext(final ApplicationContext applicationContext) {
+		this.aContext = applicationContext;
+		this.schedulerModel = (SchedulerModel) this.aContext.getApplicationModel();
+	}
+	
+	protected final void setTestParametersPanel(final TestParametersPanel testParametersPanel) {
+		this.testParametersPanel = testParametersPanel;
 	}
 	
 	public abstract void setMonitoredElement(final MonitoredElement me);

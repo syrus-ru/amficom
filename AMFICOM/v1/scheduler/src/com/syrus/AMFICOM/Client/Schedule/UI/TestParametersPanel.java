@@ -11,10 +11,8 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -26,7 +24,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
-import javax.swing.UIDefaults;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -45,7 +42,6 @@ import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.DescribableWrapper;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.Plugger;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -85,7 +81,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 
 	Identifier		measurementSetupId;
 
-	private final UIDefaults panels = new UIDefaults();
+//	private final UIDefaults panels = new UIDefaults();
 	
 	PropertyChangeEvent propertyChangeEvent;
 	
@@ -100,31 +96,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 		}
 
 		this.createGUI();
-		this.preparePanels();
 	}
 
-	private void preparePanels() {
-		ResourceBundle bundle = ResourceBundle.getBundle("com.syrus.AMFICOM.Client.Schedule.UI.parametersPanel");
-		Enumeration keys = bundle.getKeys();
-		while (keys.hasMoreElements()) {
-			String codename = (String) keys.nextElement();
-			final String className = (String) bundle.getObject(codename);
-			Log.debugMessage("codename " 
-					+ codename 
-					+ ", className " 
-					+ className, 
-				Log.DEBUGLEVEL08);
-			this.panels.put(codename, new UIDefaults.LazyValue() {
-
-				public Object createValue(UIDefaults table) {
-					return Plugger.reflectClass(className,
-						new Class[] { ApplicationContext.class, TestParametersPanel.class}, 
-						new Object[] { TestParametersPanel.this.aContext, TestParametersPanel.this});
-				}
-			});
-
-		}
-	}
 
 	@SuppressWarnings("serial")
 	private void createGUI() {
@@ -551,7 +524,9 @@ final class TestParametersPanel implements PropertyChangeListener {
 		this.switchPanel.removeAll();
 
 		final String codename = port.getType().getCodename();
-		this.parametersTestPanel = (ParametersTestPanel) this.panels.get(codename);
+		this.parametersTestPanel = this.schedulerModel.getSchedulerHandler().getParametersTestPanel(codename);
+		this.parametersTestPanel.setApplicationContext(this.aContext);
+		this.parametersTestPanel.setTestParametersPanel(this);
 		if (this.parametersTestPanel != null) {
 			this.parametersTestPanel.setMonitoredElement(me);
 			this.switchPanel.add(this.parametersTestPanel, "");

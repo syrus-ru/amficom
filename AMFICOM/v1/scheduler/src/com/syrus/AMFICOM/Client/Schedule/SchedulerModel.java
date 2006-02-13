@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.168 2006/02/08 10:27:01 bob Exp $
+ * $Id: SchedulerModel.java,v 1.169 2006/02/13 12:22:55 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.168 $, $Date: 2006/02/08 10:27:01 $
+ * @version $Revision: 1.169 $, $Date: 2006/02/13 12:22:55 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -147,6 +147,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	private boolean				groupTest							= false;
 	private Test	selectedFirstTest;
 //	private boolean	yetUpdated = false;
+	private SchedulerHandler	schedulerHandler;
 
 	public SchedulerModel(final ApplicationContext aContext) {
 		this.dispatcher = aContext.getDispatcher();
@@ -198,9 +199,15 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		final ClassLoader classLoader = SchedulerModel.class.getClassLoader();
 		extensionLauncher.addExtensions(classLoader.getResource("xml/resources.xml"));
 		extensionLauncher.getExtensionHandler(ResourceHandler.class.getName()); 
-
+		extensionLauncher.addExtensions(classLoader.getResource("xml/scheduler.xml"));
+		
+		this.schedulerHandler = extensionLauncher.getExtensionHandler(SchedulerHandler.class.getName());		
 	}
 
+	public SchedulerHandler getSchedulerHandler() {
+		return this.schedulerHandler;
+	}
+	
 	/**
 	 * @return tests
 	 */

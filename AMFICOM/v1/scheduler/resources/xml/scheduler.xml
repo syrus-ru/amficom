@@ -1,0 +1,7 @@
+<ext:root xmlns:ext="http://syrus.com/AMFICOM/extensions">
+  <ext:extension xsi:type="sch:schedulerExtensions" id="com.syrus.AMFICOM.Client.Schedule.SchedulerHandler" xmlns:sch="http://syrus.com/AMFICOM/extensions/scheduler" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <sch:schedulerResource id="parametersHandler" xsi:type="sch:parametersHandler">
+      <sch:parameterHandler id="reflectometry" handlerClass="com.syrus.AMFICOM.Client.Schedule.UI.ReflectometryTestPanel"/>
+    </sch:schedulerResource>
+  </ext:extension>
+</ext:root>

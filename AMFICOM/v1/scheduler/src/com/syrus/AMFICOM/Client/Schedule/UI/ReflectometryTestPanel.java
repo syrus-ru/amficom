@@ -32,9 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -66,7 +64,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2006/01/18 11:49:34 $
+ * @version $Revision: 1.99 $, $Date: 2006/02/13 12:22:55 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -110,8 +108,6 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	private JCheckBox		lfdOptionBox;
 	//	UI items end
 	
-	SchedulerModel			schedulerModel;
-
 	boolean					skip;
 
 	private Identifier		measurementPortId;
@@ -126,17 +122,12 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	private String oldDescription;
 
 	private Map<ParameterType, BigDecimal>				unchangedObjects;
-	private final TestParametersPanel	testParametersPanel;
 	private MeasurementSetup	measurementSetup;
 
 	private Parameter[]	lastParameters;
 	
 
-	public ReflectometryTestPanel(final ApplicationContext aContext,
-	                              final TestParametersPanel testParametersPanel) {
-		super(aContext);
-		this.testParametersPanel = testParametersPanel;
-		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
+	public ReflectometryTestPanel() {
 		this.createGUI();
 	}
 

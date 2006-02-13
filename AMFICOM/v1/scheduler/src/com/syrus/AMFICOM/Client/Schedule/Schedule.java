@@ -16,7 +16,7 @@ public class Schedule extends AbstractApplication {
 	}
 	
 	@Override
-	protected void init() {
+	protected void init() {		
 		super.aContext.setApplicationModel(new SchedulerModel(super.aContext));
 		final ImageIcon imageIcon = (ImageIcon) UIManager.getIcon(UIStorage.ICON_SCHEDULER_MINI);
 		super.startMainFrame(new ScheduleMainFrame(this.aContext), imageIcon.getImage());
