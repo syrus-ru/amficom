@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.91.2.1 2006/02/11 18:53:24 arseniy Exp $
+ * $Id: measurement.idl,v 1.91.2.2 2006/02/13 12:10:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,32 +24,17 @@ module measurement {
 	module corba {
 
 
-////////////////////////// MeasurementType ///////////////////////////	
+////////////////////////// ActionType ///////////////////////////	
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
-		valuetype IdlMeasurementType : general::corba::IdlStorableObject {
+		valuetype IdlActionType : general::corba::IdlStorableObject {
 			public general::corba::WString32 codename;
 			public general::corba::WString256 description;
-
-			factory init(in general::corba::IdlIdentifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::IdlIdentifier creatorId,
-					in general::corba::IdlIdentifier modifierId,
-					in long long version,
-					in general::corba::WString32 codename,
-					in general::corba::WString256 description);
 		};
 
-		typedef sequence <IdlMeasurementType> IdlMeasurementTypeSeq;
-
-
-////////////////////////// AnalysisType ///////////////////////////
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
-		valuetype IdlAnalysisType : general::corba::IdlStorableObject {
-			public general::corba::WString32 codename;
-			public general::corba::WString256 description;
+		valuetype IdlMeasurementType : IdlActionType {
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -62,12 +47,22 @@ module measurement {
 		};
 
 
-////////////////////////// ModelingType ///////////////////////////
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlAnalysisType : IdlActionType {
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 codename,
+					in general::corba::WString256 description);
+		};
+
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
-		valuetype IdlModelingType : general::corba::IdlStorableObject {
-			public general::corba::WString32 codename;
-			public general::corba::WString256 description;
+		valuetype IdlModelingType : IdlActionType {
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
