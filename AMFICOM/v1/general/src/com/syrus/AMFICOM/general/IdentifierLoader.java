@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierLoader.java,v 1.16 2005/10/31 12:30:19 bass Exp $
+ * $Id: IdentifierLoader.java,v 1.16.2.1 2006/02/13 19:25:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/31 12:30:19 $
- * @author $Author: bass $
+ * @version $Revision: 1.16.2.1 $, $Date: 2006/02/13 19:25:38 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -47,7 +47,7 @@ final class IdentifierLoader extends SleepButWorkThread {
 			try {
 				final IdlIdentifier[] identifiersT = this.igServer.getGeneratedIdentifierRange(this.entityCode, numberToLoad);
 				for (int i = 0; i < identifiersT.length; i++) {
-					Identifier id = new Identifier(identifiersT[i]);
+					final Identifier id = Identifier.valueOf(identifiersT[i]);
 					this.idPool.push(id);
 				}
 				numberToLoad -= identifiersT.length;
