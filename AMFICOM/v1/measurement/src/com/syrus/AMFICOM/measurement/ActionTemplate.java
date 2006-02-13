@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplate.java,v 1.1.2.1 2006/02/11 18:40:45 arseniy Exp $
+ * $Id: ActionTemplate.java,v 1.1.2.2 2006/02/13 19:31:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionTemplate;
 import com.syrus.AMFICOM.measurement.corba.IdlActionTemplateHelper;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/11 18:40:45 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/02/13 19:31:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -39,12 +39,14 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionTemplateHelper;
 public final class ActionTemplate extends StorableObject<ActionTemplate> {
 	private String description;
 	private Set<Identifier> actionParameterIds;
+	private Set<Identifier> monitoredElementIds;
 
 	ActionTemplate(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
 			final String description,
-			final Set<Identifier> actionParameterIds) {
+			final Set<Identifier> actionParameterIds,
+			final Set<Identifier> monitoredElementIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -54,6 +56,8 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 		this.description = description;
 		this.actionParameterIds = new HashSet<Identifier>();
 		this.setActionParameterIds0(actionParameterIds);
+		this.monitoredElementIds = new HashSet<Identifier>();
+		this.setMonitoredElementIds0(monitoredElementIds);
 	}
 
 	public ActionTemplate(final IdlActionTemplate idlActionTemplate) throws CreateObjectException {
@@ -66,10 +70,12 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 
 	public static ActionTemplate createInstance(final Identifier creatorId,
 			final String description,
-			final Set<Identifier> actionParameterIds) throws CreateObjectException {
+			final Set<Identifier> actionParameterIds,
+			final Set<Identifier> monitoredElementIds) throws CreateObjectException {
 		if (creatorId == null
 				|| description == null
-				|| actionParameterIds == null) {
+				|| actionParameterIds == null
+				|| monitoredElementIds == null) {
 			throw new IllegalArgumentException(NON_NULL_EXPECTED);
 		}
 
@@ -78,7 +84,8 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 					creatorId,
 					StorableObjectVersion.INITIAL_VERSION,
 					description,
-					actionParameterIds);
+					actionParameterIds,
+					monitoredElementIds);
 
 			assert actionTemplate.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -102,7 +109,8 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
 				this.description,
-				Identifier.createTransferables(this.actionParameterIds));
+				Identifier.createTransferables(this.actionParameterIds),
+				Identifier.createTransferables(this.monitoredElementIds));
 	}
 
 	@Override
@@ -111,6 +119,7 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 		super.fromTransferable(idlActionTemplate);
 		this.description = idlActionTemplate.description;
 		this.setActionParameterIds0(Identifier.fromTransferables(idlActionTemplate.actionParameterIds));
+		this.setMonitoredElementIds0(Identifier.fromTransferables(idlActionTemplate.monitoredElementIds));
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -135,6 +144,22 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 		}
 	}
 
+	public boolean isAttachedToMonitoredElement(final Identifier monitoredElementId) {
+		assert monitoredElementId.getMajor() == ObjectEntities.MONITOREDELEMENT_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		return this.monitoredElementIds.contains(monitoredElementId);
+	}
+
+	public Set<Identifier> getMonitoredElementIds() {
+		return Collections.unmodifiableSet(this.monitoredElementIds);
+	}
+
+	protected synchronized void setMonitoredElementIds0(final Set<Identifier> monitoredElementIds) {
+		this.monitoredElementIds.clear();
+		if (monitoredElementIds != null) {
+			this.monitoredElementIds.addAll(monitoredElementIds);
+		}
+	}
+
 	protected synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
@@ -149,7 +174,9 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.actionParameterIds != null
-				&& StorableObject.getEntityCodeOfIdentifiables(this.actionParameterIds) == ObjectEntities.ACTIONPARAMETER_CODE;
+				&& StorableObject.getEntityCodeOfIdentifiables(this.actionParameterIds) == ObjectEntities.ACTIONPARAMETER_CODE
+				&& this.monitoredElementIds != null
+				&& StorableObject.getEntityCodeOfIdentifiables(this.monitoredElementIds) == ObjectEntities.MONITOREDELEMENT_CODE;
 	}
 
 	@Override
@@ -157,6 +184,7 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.actionParameterIds);
+		dependencies.addAll(this.monitoredElementIds);
 		return dependencies;
 	}
 

@@ -22,7 +22,8 @@ final class IdlActionTemplateImpl extends IdlActionTemplate {
 			final IdlIdentifier modifierId,
 			final long version,
 			final String description,
-			final IdlIdentifier[] actionParameterIds) {
+			final IdlIdentifier[] actionParameterIds,
+			final IdlIdentifier[] monitoredElementIds) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -31,6 +32,7 @@ final class IdlActionTemplateImpl extends IdlActionTemplate {
 		this.version = version;
 		this.description = description;
 		this.actionParameterIds = actionParameterIds;
+		this.monitoredElementIds = monitoredElementIds;
 	}
 
 	@Override
