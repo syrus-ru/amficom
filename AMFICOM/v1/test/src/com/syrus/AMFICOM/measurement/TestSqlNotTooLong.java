@@ -1,5 +1,5 @@
 /*
- * $Id: TestSqlNotTooLong.java,v 1.1 2006/02/13 16:26:00 saa Exp $
+ * $Id: TestSqlNotTooLong.java,v 1.2 2006/02/13 16:38:48 saa Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2006/02/13 16:26:00 $
+ * @version $Revision: 1.2 $, $Date: 2006/02/13 16:38:48 $
  * @author $Author: saa $
  * @module test
  */
@@ -59,7 +59,8 @@ public final class TestSqlNotTooLong extends TestCase {
 
 		long sleepTime = 100; // this is important
 		double maxDelay = 500.0;
-		int count = 500;
+		int count = 1000;
+		int firstGlanceCount = 100;
 
 		System.out.println("Please be patient, I need up to " +
 				Math.max(maxDelay, sleepTime) * count / 1000 + " sec");
@@ -84,6 +85,10 @@ public final class TestSqlNotTooLong extends TestCase {
 						+ ": Load time " + dt
 						+ " ms is too long (expected no more than "
 						+ maxDelay + " ms )", dt < maxDelay);
+			}
+
+			if (i == firstGlanceCount) {
+				System.out.println("Hm... at first glance, it seems ok... Please keep waiting.");
 			}
 
 			if (dt < sleepTime) {
