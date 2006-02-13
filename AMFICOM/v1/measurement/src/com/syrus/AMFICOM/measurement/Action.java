@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.43.2.1 2006/02/11 18:40:44 arseniy Exp $
+ * $Id: Action.java,v 1.43.2.2 2006/02/13 19:33:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAction;
 import com.syrus.AMFICOM.measurement.corba.IdlActionStatus;
 
 /**
- * @version $Revision: 1.43.2.1 $, $Date: 2006/02/11 18:40:44 $
+ * @version $Revision: 1.43.2.2 $, $Date: 2006/02/13 19:33:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -49,7 +49,7 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 		}
 
 		static ActionStatus valueOf(final IdlActionStatus idlActionStatus) {
-			return valueOf(idlActionStatus);
+			return valueOf(idlActionStatus.value());
 		}
 	}
 
@@ -96,9 +96,9 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 
 	void fromTransferable(final IdlAction idlAction) throws ApplicationException {
 		super.fromTransferable(idlAction);
-		this.typeId = new Identifier(idlAction.actionTypeId);
-		this.monitoredElementId = new Identifier(idlAction.monitoredElementId);
-		this.actionTemplateId = new Identifier(idlAction.actionTemplateId);
+		this.typeId = Identifier.valueOf(idlAction.actionTypeId);
+		this.monitoredElementId = Identifier.valueOf(idlAction.monitoredElementId);
+		this.actionTemplateId = Identifier.valueOf(idlAction.actionTemplateId);
 		this.name = idlAction.name;
 		this.startTime = new Date(idlAction.startTime);
 		this.duration = idlAction.duration;
