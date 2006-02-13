@@ -1,5 +1,5 @@
 /*
- * $Id: MCMSetup.java,v 1.21 2005/12/06 09:45:58 bass Exp $
+ * $Id: MCMSetup.java,v 1.22 2006/02/13 19:26:43 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/12/06 09:45:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2006/02/13 19:26:43 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -101,22 +101,22 @@ final class MCMSetup {
 		final IdlMCM idlMCM = retrieveIdlMCM();
 
 		/*Init database loader with retrieved from server identifier of the user, corresponding to this MCM.*/
-		Identifier id = new Identifier(idlMCM.creatorId);
+		Identifier id = Identifier.valueOf(idlMCM.creatorId);
 		StorableObjectPool.getStorableObject(id, true);
 
-		id = new Identifier(idlMCM.modifierId);
+		id = Identifier.valueOf(idlMCM.modifierId);
 		StorableObjectPool.getStorableObject(id, true);
 
-		id = new Identifier(idlMCM.domainId);
+		id = Identifier.valueOf(idlMCM.domainId);
 		StorableObjectPool.getStorableObject(id, true);
 
-		id = new Identifier(idlMCM.serverId);
+		id = Identifier.valueOf(idlMCM.serverId);
 		StorableObjectPool.getStorableObject(id, true);
 
-		id = new Identifier(idlMCM.userId);
+		id = Identifier.valueOf(idlMCM.userId);
 		StorableObjectPool.getStorableObject(id, true);
 
-		id = new Identifier(idlMCM.id);
+		id = Identifier.valueOf(idlMCM.id);
 		StorableObjectPool.getStorableObject(id, true);
 	}
 

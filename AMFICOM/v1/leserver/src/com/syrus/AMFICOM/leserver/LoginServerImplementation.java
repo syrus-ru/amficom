@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.41 2006/01/23 16:06:23 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.42 2006/02/13 19:29:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2006/01/23 16:06:23 $
+ * @version $Revision: 1.42 $, $Date: 2006/02/13 19:29:25 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -123,7 +123,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_PASSWORD, IdlCompletionStatus.COMPLETED_YES, "Illegal password");
 		}
 
-		final Identifier domainId = new Identifier(idlDomainId);
+		final Identifier domainId = Identifier.valueOf(idlDomainId);
 		if (!this.validateDomainAccess(userId, domainId)) {
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ACCESS_VALIDATION, IdlCompletionStatus.COMPLETED_YES, "Access to domain denied");
 		}
@@ -168,7 +168,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 
 	public void setPassword(final IdlSessionKey sessionKeyT, final IdlIdentifier userIdT, final String password)
 			throws AMFICOMRemoteException {
-		final Identifier userId = new Identifier(userIdT);
+		final Identifier userId = Identifier.valueOf(userIdT);
 		try {
 			final SystemUser systemUser = (SystemUser) StorableObjectPool.getStorableObject(userId, true);
 			Log.debugMessage("Setting password to user '" + systemUser.getLogin() + "'/'" + userId + "'", Log.DEBUGLEVEL08);

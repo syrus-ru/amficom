@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginManager.java,v 1.40 2005/12/16 11:21:12 arseniy Exp $
+ * $Id: LoginManager.java,v 1.41 2006/02/13 19:28:41 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/12/16 11:21:12 $
+ * @version $Revision: 1.41 $, $Date: 2006/02/13 19:28:41 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -118,7 +118,7 @@ public final class LoginManager {
 
 			idlSessionKey = idlSessionKeyHolder.value;
 			sessionKey = new SessionKey(idlSessionKey);
-			userId = new Identifier(userIdHolder.value);
+			userId = Identifier.valueOf(userIdHolder.value);
 			domainId = loginDomainId;
 		} catch (final AMFICOMRemoteException are) {
 			switch (are.errorCode.value()) {
