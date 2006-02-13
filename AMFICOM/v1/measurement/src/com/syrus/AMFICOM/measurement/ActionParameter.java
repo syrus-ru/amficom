@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameter.java,v 1.1.2.1 2006/02/11 18:40:45 arseniy Exp $
+ * $Id: ActionParameter.java,v 1.1.2.2 2006/02/13 19:33:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterHelper;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/11 18:40:45 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/02/13 19:33:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -108,7 +108,7 @@ public final class ActionParameter extends StorableObject<ActionParameter> {
 		final IdlActionParameter idlActionParameter = (IdlActionParameter) transferable;
 		super.fromTransferable(transferable);
 
-		this.bindingId = new Identifier(idlActionParameter.bindingId);
+		this.bindingId = Identifier.valueOf(idlActionParameter.bindingId);
 		this.value = idlActionParameter.value;
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;

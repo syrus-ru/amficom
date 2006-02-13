@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.13 2006/02/03 07:43:28 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.13.2.1 2006/02/13 19:36:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2006/02/03 07:43:28 $
+ * @version $Revision: 1.13.2.1 $, $Date: 2006/02/13 19:36:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -127,8 +127,8 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
 		IdlMonitoredElement met = (IdlMonitoredElement) transferable;
-		super.fromTransferable(met, new Identifier(met.domainId));
-		this.measurementPortId = new Identifier(met.measurementPortId);
+		super.fromTransferable(met, Identifier.valueOf(met.domainId));
+		this.measurementPortId = Identifier.valueOf(met.measurementPortId);
 		this.sort = met.sort.value();
 		this.localAddress = met.localAddress;
 

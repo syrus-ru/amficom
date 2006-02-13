@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.1 2006/02/11 18:40:45 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.2 2006/02/13 19:33:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBindingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBindingPackage.IdlParameterValueKind;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/11 18:40:45 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/02/13 19:33:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -145,9 +145,9 @@ public final class ActionParameterTypeBinding extends StorableObject<ActionParam
 		super.fromTransferable(idlActionParameterTypeBinding);
 
 		this.parameterValueKind = ParameterValueKind.valueOf(idlActionParameterTypeBinding.parameterValueKind);
-		this.parameterTypeId = new Identifier(idlActionParameterTypeBinding.parameterTypeId);
-		this.actionTypeId = new Identifier(idlActionParameterTypeBinding.actionTypeId);
-		this.measurementPortTypeId = new Identifier(idlActionParameterTypeBinding.measurementPortTypeId);
+		this.parameterTypeId = Identifier.valueOf(idlActionParameterTypeBinding.parameterTypeId);
+		this.actionTypeId = Identifier.valueOf(idlActionParameterTypeBinding.actionTypeId);
+		this.measurementPortTypeId = Identifier.valueOf(idlActionParameterTypeBinding.measurementPortTypeId);
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}

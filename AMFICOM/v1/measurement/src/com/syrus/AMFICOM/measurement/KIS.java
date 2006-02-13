@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.14 2005/12/17 12:11:21 arseniy Exp $
+ * $Id: KIS.java,v 1.14.2.1 2006/02/13 19:34:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlKISHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/12/17 12:11:21 $
+ * @version $Revision: 1.14.2.1 $, $Date: 2006/02/13 19:34:32 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -133,10 +133,10 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlKIS kt = (IdlKIS) transferable;
-		super.fromTransferable(kt, new Identifier(kt.domainId));
+		super.fromTransferable(kt, Identifier.valueOf(kt.domainId));
 
-		this.equipmentId = new Identifier(kt.equipmentId);
-		this.mcmId = new Identifier(kt.mcmId);
+		this.equipmentId = Identifier.valueOf(kt.equipmentId);
+		this.mcmId = Identifier.valueOf(kt.mcmId);
 		this.name = kt.name;
 		this.description = kt.description;
 		this.hostname = kt.hostname;

@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.42 2006/01/30 11:20:49 bob Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.42.2.1 2006/02/13 19:34:32 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.42 $, $Date: 2006/01/30 11:20:49 $
- * @author $Author: bob $
+ * @version $Revision: 1.42.2.1 $, $Date: 2006/02/13 19:34:32 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
@@ -138,7 +138,7 @@ public final class IntervalsTemporalPattern
 			final SortedMap<Long, Identifier> map = new TreeMap<Long, Identifier>();
 			for (int i = 0; i < itpt.intervalsTemporalPatternId.length; i++) {
 				map.put(new Long(itpt.intervalsTemporalPatternId[i].ms),
-						new Identifier(itpt.intervalsTemporalPatternId[i].temporalPatternId));
+						Identifier.valueOf(itpt.intervalsTemporalPatternId[i].temporalPatternId));
 			}
 			this.setIntervalsAbstractTemporalPatternMap0(map);
 		}

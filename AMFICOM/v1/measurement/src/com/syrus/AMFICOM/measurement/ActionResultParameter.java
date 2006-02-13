@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionResultParameter.java,v 1.1.2.1 2006/02/11 18:40:45 arseniy Exp $
+ * $Id: ActionResultParameter.java,v 1.1.2.2 2006/02/13 19:33:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlActionResultParameter;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/11 18:40:45 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/02/13 19:33:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -62,8 +62,8 @@ public abstract class ActionResultParameter<T extends ActionResultParameter<T>> 
 	protected final void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlActionResultParameter idlActionResultParameter = (IdlActionResultParameter) transferable;
 		super.fromTransferable(transferable);
-		this.typeId = new Identifier(idlActionResultParameter.parameterTypeId);
-		this.actionId = new Identifier(idlActionResultParameter.actionId);
+		this.typeId = Identifier.valueOf(idlActionResultParameter.parameterTypeId);
+		this.actionId = Identifier.valueOf(idlActionResultParameter.actionId);
 		this.value = idlActionResultParameter.value;
 	}
 

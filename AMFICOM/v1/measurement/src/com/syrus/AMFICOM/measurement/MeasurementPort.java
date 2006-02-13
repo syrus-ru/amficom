@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.19 2005/12/17 12:11:21 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.19.2.1 2006/02/13 19:36:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPort;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortHelper;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/12/17 12:11:21 $
+ * @version $Revision: 1.19.2.1 $, $Date: 2006/02/13 19:36:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -131,13 +131,13 @@ public final class MeasurementPort extends StorableObject<MeasurementPort>
 		IdlMeasurementPort mpt = (IdlMeasurementPort) transferable;
 		super.fromTransferable(mpt);
 
-		this.type = (MeasurementPortType) StorableObjectPool.getStorableObject(new Identifier(mpt._typeId), true);
+		this.type = StorableObjectPool.getStorableObject(Identifier.valueOf(mpt._typeId), true);
 
 		this.name = mpt.name;
 		this.description = mpt.description;
 
-		this.kisId = new Identifier(mpt.kisId);
-		this.portId = new Identifier(mpt.portId);
+		this.kisId = Identifier.valueOf(mpt.kisId);
+		this.portId = Identifier.valueOf(mpt.portId);
 	}
 
 	/**
