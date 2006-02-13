@@ -1,5 +1,5 @@
 /*-
- * $Id: VerifiedConnectionManager.java,v 1.22 2005/10/31 12:29:53 bass Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.23 2006/02/13 11:39:37 arseniy Exp $
  *
  * Copyright Ώ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,24 +27,36 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/31 12:29:53 $
- * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2006/02/13 11:39:37 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
 public class VerifiedConnectionManager {
+	private static final short VERIFY_TIMEOUT_SECONDS = 5;
+
 	private CORBAServer corbaServer;
 
 	Map<String, Verifiable> referencesMap;
+	private Map<String, Long> referencesLastVerifyMillisMap;
+	private short verifyTimeoutSeconds;
 	private Set<String> disconnectedServants;
 	
 	private List<PropertyChangeListener> connectionListeners;
 
 	public VerifiedConnectionManager(final CORBAServer corbaServer, final String[] servantNames) {
-		this(corbaServer, new HashSet<String>(Arrays.asList(servantNames)));
+		this(corbaServer, new HashSet<String>(Arrays.asList(servantNames)), VERIFY_TIMEOUT_SECONDS);
+	}
+
+	public VerifiedConnectionManager(final CORBAServer corbaServer, final String[] servantNames, final short verifyTimeoutSeconds) {
+		this(corbaServer, new HashSet<String>(Arrays.asList(servantNames)), verifyTimeoutSeconds);
 	}
 
 	public VerifiedConnectionManager(final CORBAServer corbaServer, final Set<String> servantNames) {
+		this(corbaServer, servantNames, VERIFY_TIMEOUT_SECONDS);
+	}
+
+	public VerifiedConnectionManager(final CORBAServer corbaServer, final Set<String> servantNames, final short verifyTimeoutSeconds) {
 		assert corbaServer != null: "corbaServer is NULL";
 		assert servantNames != null: "Servant names is NULL";
 		assert !servantNames.isEmpty(): ErrorMessages.θυμι_πυστοκ;
@@ -56,6 +68,9 @@ public class VerifiedConnectionManager {
 			final String servantName = it.next();
 			this.referencesMap.put(servantName, null);
 		}
+
+		this.referencesLastVerifyMillisMap = new HashMap<String, Long>(servantNames.size());
+		this.verifyTimeoutSeconds = verifyTimeoutSeconds;
 		this.disconnectedServants = Collections.synchronizedSet(new HashSet<String>(servantNames));
 	}
 
@@ -69,14 +84,21 @@ public class VerifiedConnectionManager {
 
 		Verifiable reference = this.referencesMap.get(servantName);
 
-		if (reference == null) {
+		final long currentTimeMillis = System.currentTimeMillis();
+		if (reference != null) {
+			final Long referenceLastVerifyMillis = this.referencesLastVerifyMillisMap.get(servantName);
+			if (referenceLastVerifyMillis == null
+					|| (currentTimeMillis - referenceLastVerifyMillis.longValue()) / 1000 >= this.verifyTimeoutSeconds) {
+				try {
+					reference.verify((byte) 1);
+				} catch (final SystemException se) {
+					reference = this.activateAndGet(servantName);
+				}
+				this.referencesLastVerifyMillisMap.put(servantName, new Long(currentTimeMillis));
+			}
+		} else {
 			reference = this.activateAndGet(servantName);
-		}
-
-		try {
-			reference.verify((byte) 1);
-		} catch (final SystemException se) {
-			reference = this.activateAndGet(servantName);
+			this.referencesLastVerifyMillisMap.put(servantName, new Long(currentTimeMillis));
 		}
 
 		return reference;
