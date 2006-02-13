@@ -218,29 +218,38 @@ public class PathBuilder {
 				SchemeElement seBeforeLast = beforeLastPE.getSchemeElement();
 
 				SchemeElement seToAdd = null;
+				boolean possiblyLoop = false;
 				if (lastPE.getKind() == IdlKind.SCHEME_LINK) {
 					SchemeLink link = lastPE.getSchemeLink();
 					if (link.getTargetAbstractSchemePort() != null) {
 						SchemeElement endSE = link.getTargetAbstractSchemePort().getParentSchemeDevice().getParentSchemeElement();
-						if (!endSE.equals(seBeforeLast))
+						if (!endSE.equals(seBeforeLast)) {
 							seToAdd = endSE;
+						} else {
+							possiblyLoop = true;
+						}
 					}
 					if (seToAdd == null && link.getSourceAbstractSchemePort() != null) {
 						SchemeElement startSE = link.getSourceAbstractSchemePort().getParentSchemeDevice().getParentSchemeElement();
-						if (!startSE.equals(seBeforeLast))
+						if (!startSE.equals(seBeforeLast) || possiblyLoop) {
 							seToAdd = startSE;
+						}
 					}
 				} else if (lastPE.getKind() == IdlKind.SCHEME_CABLE_LINK) {
 					SchemeCableLink link = lastPE.getSchemeCableLink();
 					if (link.getTargetAbstractSchemePort() != null) {
 						SchemeElement endSE = link.getTargetAbstractSchemePort().getParentSchemeDevice().getParentSchemeElement();
-						if (!endSE.equals(seBeforeLast))
+						if (!endSE.equals(seBeforeLast)) {
 							seToAdd = endSE;
+						} else {
+							possiblyLoop = true;
+						}
 					}
 					if (seToAdd == null && link.getSourceAbstractSchemePort() != null) {
 						SchemeElement startSE = link.getSourceAbstractSchemePort().getParentSchemeDevice().getParentSchemeElement();
-						if (!startSE.equals(seBeforeLast))
+						if (!startSE.equals(seBeforeLast) || possiblyLoop) {
 							seToAdd = startSE;
+						}
 					}
 				}
 				if (seToAdd == null) {
