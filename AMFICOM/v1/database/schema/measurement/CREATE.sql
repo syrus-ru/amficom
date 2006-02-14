@@ -1,7 +1,4 @@
--- $Id: CREATE.sql,v 1.5 2005/08/28 14:29:24 arseniy Exp $
-
-REM dictionaries
-@@measurement/dictionary/CREATE;
+-- $Id: CREATE.sql,v 1.5.2.1 2006/02/14 10:02:40 arseniy Exp $
 
 REM types
 @@measurement/type/CREATE;
