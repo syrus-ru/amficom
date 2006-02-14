@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.96.2.2 2006/02/14 00:23:29 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.96.2.3 2006/02/14 15:44:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import gnu.trove.TShortObjectHashMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.96.2.2 $, $Date: 2006/02/14 00:23:29 $
+ * @version $Revision: 1.96.2.3 $, $Date: 2006/02/14 15:44:07 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -272,7 +272,7 @@ public final class ObjectEntities {
 	public static final short MEASUREMENT_TYPE_CODE = 0x0241;
 	public static final short ANALYSIS_TYPE_CODE = 0x0242;
 	public static final short MODELING_TYPE_CODE = 0x0243;
-	public static final short MEASUREMENTPORT_TYPE_CODE = 0x0245;
+	public static final short MEASUREMENTPORT_TYPE_CODE = 0x0244;
 	public static final short ACTIONPARAMETERTYPEBINDING_CODE = 0x0245;
 
 	public static final short MEASUREMENT_MAX_CODE = 0x0280;
