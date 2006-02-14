@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.27.2.1 2006/02/13 19:32:08 arseniy Exp $
+ * $Id: TestWrapper.java,v 1.27.2.2 2006/02/14 00:27:50 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.measurement.Test.TestStatus;
 import com.syrus.AMFICOM.measurement.Test.TestTemporalType;
 
 /**
- * @version $Revision: 1.27.2.1 $, $Date: 2006/02/13 19:32:08 $
+ * @version $Revision: 1.27.2.2 $, $Date: 2006/02/14 00:27:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -37,7 +37,7 @@ public final class TestWrapper extends StorableObjectWrapper<Test> {
 	public static final String LINK_COLUMN_MEASUREMENT_TEMPLATE_ID = "measurement_template_id";
 	public static final String COLUMN_NUMBER_OF_MEASUREMENTS = "number_of_measurements";
 	public static final String COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
-	public static final String COLUMN_ANALYSIS_TEMPLATE_ID = "analysis_template_id";
+	public static final String LINK_COLUMN_ANALYSIS_TEMPLATE_ID = "analysis_template_id";
 
 	public static final String LINK_COLUMN_TEST_ID = "test_id";
 
@@ -58,7 +58,7 @@ public final class TestWrapper extends StorableObjectWrapper<Test> {
 				LINK_COLUMN_MEASUREMENT_TEMPLATE_ID,
 				COLUMN_NUMBER_OF_MEASUREMENTS,
 				COLUMN_ANALYSIS_TYPE_ID,
-				COLUMN_ANALYSIS_TEMPLATE_ID };
+				LINK_COLUMN_ANALYSIS_TEMPLATE_ID };
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
@@ -118,8 +118,8 @@ public final class TestWrapper extends StorableObjectWrapper<Test> {
 			if (key.equals(COLUMN_ANALYSIS_TYPE_ID)) {
 				return test.getAnalysisTypeId();
 			}
-			if (key.equals(COLUMN_ANALYSIS_TEMPLATE_ID)) {
-				return test.getAnalysisTemplateId();
+			if (key.equals(LINK_COLUMN_ANALYSIS_TEMPLATE_ID)) {
+				return test.getAnalysisTemplateIds();
 			}
 		}
 		return value;
@@ -154,8 +154,8 @@ public final class TestWrapper extends StorableObjectWrapper<Test> {
 				test.setMeasurementTemplateIds((Set) value);
 			} else if (key.equals(COLUMN_ANALYSIS_TYPE_ID)) {
 				test.setAnalysisTypeId((Identifier) value);
-			} else if (key.equals(COLUMN_ANALYSIS_TEMPLATE_ID)) {
-				test.setAnalysisTemplateId((Identifier) value);
+			} else if (key.equals(LINK_COLUMN_ANALYSIS_TEMPLATE_ID)) {
+				test.setAnalysisTemplateIds((Set) value);
 			}
 		}
 	}
@@ -186,10 +186,11 @@ public final class TestWrapper extends StorableObjectWrapper<Test> {
 				|| key.equals(COLUMN_MONITORED_ELEMENT_ID)
 				|| key.equals(COLUMN_TEMPORAL_PATTERN_ID)
 				|| key.equals(COLUMN_MEASUREMENT_TYPE_ID)
-				|| key.equals(LINK_COLUMN_MEASUREMENT_TEMPLATE_ID)
-				|| key.equals(COLUMN_ANALYSIS_TYPE_ID)
-				|| key.equals(COLUMN_ANALYSIS_TEMPLATE_ID)) {
+				|| key.equals(COLUMN_ANALYSIS_TYPE_ID)) {
 			return Identifier.class;
+		}
+		if (key.equals(LINK_COLUMN_MEASUREMENT_TEMPLATE_ID) || key.equals(LINK_COLUMN_ANALYSIS_TEMPLATE_ID)) {
+			return Set.class;
 		}
 		if (key.equals(COLUMN_STATUS)) {
 			return TestStatus.class;

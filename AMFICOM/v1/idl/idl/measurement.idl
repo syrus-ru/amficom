@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.91.2.3 2006/02/13 19:23:50 arseniy Exp $
+ * $Id: measurement.idl,v 1.91.2.4 2006/02/14 00:25:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -314,7 +314,7 @@ module measurement {
 			public general::corba::IdlIdentifierSeq measurementTemplateIds;
 			public long numberOfMeasurements;
 			public general::corba::IdlIdentifier analysisTypeId;
-			public general::corba::IdlIdentifier analysisTemplateId;
+			public general::corba::IdlIdentifierSeq analysisTemplateIds;
 			public IdlTestStopsSeq stops;
 
 			factory init(in general::corba::IdlIdentifier id,
@@ -332,7 +332,7 @@ module measurement {
 					in general::corba::IdlIdentifierSeq measurementTemplateIds,
 					in long numberOfMeasurements,
 					in general::corba::IdlIdentifier analysisTypeId,
-					in general::corba::IdlIdentifier analysisTemplateId,
+					in general::corba::IdlIdentifierSeq analysisTemplateIds,
 					in IdlTestStopsSeq stops);
 		};
 

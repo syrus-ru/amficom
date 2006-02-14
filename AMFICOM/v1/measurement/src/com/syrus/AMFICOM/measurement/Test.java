@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.1 2006/02/13 19:32:08 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.2 2006/02/14 00:27:50 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.183.2.1 $, $Date: 2006/02/13 19:32:08 $
+ * @version $Revision: 1.183.2.2 $, $Date: 2006/02/14 00:27:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -61,9 +61,9 @@ public final class Test extends StorableObject<Test> implements Describable {
 	private Set<Identifier> measurementTemplateIds;
 	private int numberOfMeasurements;
 	private Identifier analysisTypeId;
-	private Identifier analysisTemplateId;
+	private Set<Identifier> analysisTemplateIds;
 
-	private SortedMap<Date, String> stoppingMap;  
+	private SortedMap<Date, String> stopMap;  
 
 	private Identifier kisId;
 	private Identifier mcmId;
@@ -83,8 +83,8 @@ public final class Test extends StorableObject<Test> implements Describable {
 			final Set<Identifier> measurementTemplateIds,
 			final int numberOfMeasurements,
 			final Identifier analysisTypeId,
-			final Identifier analysisTemplateId,
-			final SortedMap<Date, String> stoppingMap) {
+			final Set<Identifier> analysisTemplateIds,
+			final SortedMap<Date, String> stopMap) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -102,9 +102,10 @@ public final class Test extends StorableObject<Test> implements Describable {
 		this.setMeasurementTemplateIds0(measurementTemplateIds);
 		this.numberOfMeasurements = numberOfMeasurements;
 		this.analysisTypeId = analysisTypeId;
-		this.analysisTemplateId = analysisTemplateId;
-		this.stoppingMap = new TreeMap<Date, String>();
-		this.setStoppingMap0(stoppingMap);
+		this.analysisTemplateIds = new HashSet<Identifier>();
+		this.setAnalysisTemplateIds0(analysisTemplateIds);
+		this.stopMap = new TreeMap<Date, String>();
+		this.setStopMap0(stopMap);
 	}
 
 	public Test(final IdlTest idlTest) throws CreateObjectException {
@@ -151,7 +152,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 					measurementTemplateIds,
 					0,
 					VOID_IDENTIFIER,
-					VOID_IDENTIFIER,
+					Collections.<Identifier>emptySet(),
 					null);
 
 			assert test.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -175,7 +176,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 	 * @param measurementTypeId
 	 * @param measurementTemplateIds
 	 * @param analysisTypeId
-	 * @param analysisTemplateId
+	 * @param analysisTemplateIds
 	 * @return New instance of onetime test.
 	 * @throws CreateObjectException
 	 */
@@ -187,7 +188,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 			final Identifier measurementTypeId,
 			final Set<Identifier> measurementTemplateIds,
 			final Identifier analysisTypeId,
-			final Identifier analysisTemplateId) throws CreateObjectException {
+			final Set<Identifier> analysisTemplateIds) throws CreateObjectException {
 		try {
 			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_CODE),
 					creatorId,
@@ -204,7 +205,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 					measurementTemplateIds,
 					0,
 					analysisTypeId,
-					analysisTemplateId,
+					analysisTemplateIds,
 					null);
 
 			assert test.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -257,7 +258,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 					measurementTemplateIds,
 					0,
 					VOID_IDENTIFIER,
-					VOID_IDENTIFIER,
+					Collections.<Identifier>emptySet(),
 					null);
 
 			assert test.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -283,7 +284,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 	 * @param measurementTypeId
 	 * @param measurementTemplateIds
 	 * @param analysisTypeId
-	 * @param analysisTemplateId
+	 * @param analysisTemplateIds
 	 * @return New instance of periodical test.
 	 * @throws CreateObjectException
 	 */
@@ -297,7 +298,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 			final Identifier measurementTypeId,
 			final Set<Identifier> measurementTemplateIds,
 			final Identifier analysisTypeId,
-			final Identifier analysisTemplateId) throws CreateObjectException {
+			final Set<Identifier> analysisTemplateIds) throws CreateObjectException {
 		try {
 			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_CODE),
 					creatorId,
@@ -314,7 +315,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 					measurementTemplateIds,
 					0,
 					analysisTypeId,
-					analysisTemplateId,
+					analysisTemplateIds,
 					null);
 
 			assert test.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -335,10 +336,10 @@ public final class Test extends StorableObject<Test> implements Describable {
 	public IdlTest getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		final IdlTestStops[] idlTestStops = new IdlTestStops[this.stoppingMap.size()];
+		final IdlTestStops[] idlTestStops = new IdlTestStops[this.stopMap.size()];
 		int i = 0;
-		for (final Date stopDate : this.stoppingMap.keySet()) {
-			idlTestStops[i++] = new IdlTestStops(stopDate.getTime(), this.stoppingMap.get(stopDate));
+		for (final Date stopDate : this.stopMap.keySet()) {
+			idlTestStops[i++] = new IdlTestStops(stopDate.getTime(), this.stopMap.get(stopDate));
 		}
 
 		return IdlTestHelper.init(orb,
@@ -357,7 +358,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 				Identifier.createTransferables(this.measurementTemplateIds),
 				this.numberOfMeasurements,
 				this.analysisTypeId.getIdlTransferable(orb),
-				this.analysisTemplateId.getIdlTransferable(orb),
+				Identifier.createTransferables(this.analysisTemplateIds),
 				idlTestStops);
 	}
 
@@ -379,11 +380,12 @@ public final class Test extends StorableObject<Test> implements Describable {
 		this.setMeasurementTemplateIds0(Identifier.fromTransferables(idlTest.measurementTemplateIds));
 		this.numberOfMeasurements = idlTest.numberOfMeasurements;
 		this.analysisTypeId = Identifier.valueOf(idlTest.analysisTypeId);
-		this.analysisTemplateId = Identifier.valueOf(idlTest.analysisTemplateId);
-		this.stoppingMap = new TreeMap<Date, String>();
+		this.analysisTemplateIds = new HashSet<Identifier>();
+		this.setAnalysisTemplateIds0(Identifier.fromTransferables(idlTest.analysisTemplateIds));
+		this.stopMap = new TreeMap<Date, String>();
 		for (int i = 0; i < idlTest.stops.length; i++) {
 			final IdlTestStops idlTestStops = idlTest.stops[i];
-			this.stoppingMap.put(new Date(idlTestStops.time), idlTestStops.reason);
+			this.stopMap.put(new Date(idlTestStops.time), idlTestStops.reason);
 		}
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -553,55 +555,63 @@ public final class Test extends StorableObject<Test> implements Describable {
 		super.markAsChanged();
 	}
 
-	public Identifier getAnalysisTemplateId() {
-		return this.analysisTemplateId;
+	public Set<Identifier> getAnalysisTemplateIds() {
+		return Collections.unmodifiableSet(this.analysisTemplateIds);
 	}
 
-	/**
-	 * @param analysisType The analysisType to set.
-	 */
-	public void setAnalysisTemplateId(final Identifier analysisTemplateId) {
-		assert analysisTemplateId != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert (analysisTemplateId.isVoid() || analysisTemplateId.getMajor() == ObjectEntities.ACTIONTEMPLATE_CODE) : ErrorMessages.ILLEGAL_ENTITY_CODE;
-		this.analysisTemplateId = analysisTemplateId;
-		super.markAsChanged();
-	}
-
-	/**
-	 * @return map of test stop time and reason to stop
-	 */
-	public SortedMap<Date, String> getStoppingMap() {
-		return Collections.unmodifiableSortedMap(this.stoppingMap);
-	}
-
-	/**
-	 * stop test now. 
-	 * @param reason reason to stop test
-	 * @see #addStopping(Date, String)
-	 */
-	public void addStopping(final String reason) {
-		this.addStopping(new Date(), reason);
-	}
-
-	/**
-	 * add test stopping 
-	 * @param stoppingTime time, when stop test
-	 * @param reason reason to stop test
-	 */
-	public void addStopping(final Date stoppingTime, final String reason) {
-		assert stoppingTime != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert reason != null : ErrorMessages.NON_NULL_EXPECTED;
-		this.stoppingMap.put(new Date(stoppingTime.getTime()), reason);
+	public void setAnalysisTemplateIds(final Set<Identifier> analysisTemplateIds) {
+		assert analysisTemplateIds != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert analysisTemplateIds.size() > 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert StorableObject.getEntityCodeOfIdentifiables(analysisTemplateIds) == ObjectEntities.ACTIONTEMPLATE_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		this.setAnalysisTemplateIds0(analysisTemplateIds);
 		super.markAsChanged();
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	synchronized void setStoppingMap0(final SortedMap<Date, String> stoppingMap) {
-		this.stoppingMap.clear();
-		if (stoppingMap != null) {
-			this.stoppingMap.putAll(stoppingMap);
+	synchronized void setAnalysisTemplateIds0(final Set<Identifier> analysisTemplateIds) {
+		this.analysisTemplateIds.clear();
+		if (analysisTemplateIds != null) {
+			this.analysisTemplateIds.addAll(analysisTemplateIds);
+		}
+	}
+
+	/**
+	 * @return map of test stop time and reason to stop
+	 */
+	public SortedMap<Date, String> getStopMap() {
+		return Collections.unmodifiableSortedMap(this.stopMap);
+	}
+
+	/**
+	 * stop test now. 
+	 * @param reason reason to stop test
+	 * @see #addStop(Date, String)
+	 */
+	public void addStop(final String reason) {
+		this.addStop(new Date(), reason);
+	}
+
+	/**
+	 * add test stop 
+	 * @param stopTime time, when stop test
+	 * @param reason reason to stop test
+	 */
+	public void addStop(final Date stopTime, final String reason) {
+		assert stopTime != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert reason != null : ErrorMessages.NON_NULL_EXPECTED;
+		this.stopMap.put(new Date(stopTime.getTime()), reason);
+		super.markAsChanged();
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	synchronized void setStopMap0(final SortedMap<Date, String> stopMap) {
+		this.stopMap.clear();
+		if (stopMap != null) {
+			this.stopMap.putAll(stopMap);
 		}
 	}
 
@@ -643,10 +653,13 @@ public final class Test extends StorableObject<Test> implements Describable {
 					&& StorableObject.getEntityCodeOfIdentifiables(this.measurementTemplateIds) == ObjectEntities.ACTIONTEMPLATE_CODE
 				&& this.numberOfMeasurements >= 0
 				&& this.analysisTypeId != null
-					&& (this.analysisTypeId.isVoid() || this.analysisTypeId.getMajor() == ObjectEntities.ANALYSIS_TYPE_CODE)
-				&& this.analysisTemplateId != null
-					&& (this.analysisTemplateId.isVoid() || this.analysisTemplateId.getMajor() == ObjectEntities.ACTIONTEMPLATE_CODE)
-				&& this.stoppingMap != null;
+				&& this.analysisTemplateIds != null
+				&& ((this.analysisTypeId.isVoid() && this.analysisTemplateIds.isEmpty())
+						|| (!this.analysisTypeId.isVoid()
+								&& this.analysisTypeId.getMajor() == ObjectEntities.ANALYSIS_TYPE_CODE
+								&& this.analysisTemplateIds.size() > 0
+								&& StorableObject.getEntityCodeOfIdentifiables(this.analysisTemplateIds) == ObjectEntities.ACTIONTEMPLATE_CODE))
+				&& this.stopMap != null;
 		if (!valid) {
 			return false;
 		}
@@ -724,8 +737,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 			final Identifier temporalPatternId,
 			final Identifier measurementTypeId,
 			final int numberOfMeasurements,
-			final Identifier analysisTypeId,
-			final Identifier analysisTemplateId) {
+			final Identifier analysisTypeId) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -740,7 +752,6 @@ public final class Test extends StorableObject<Test> implements Describable {
 		this.measurementTypeId = measurementTypeId;
 		this.numberOfMeasurements = numberOfMeasurements;
 		this.analysisTypeId = analysisTypeId;
-		this.analysisTemplateId = analysisTemplateId;
 	}
 
 	/**
@@ -767,7 +778,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 		dependencies.addAll(this.measurementTemplateIds);
 		if (!this.analysisTypeId.isVoid()) {
 			dependencies.add(this.analysisTypeId);
-			dependencies.add(this.analysisTemplateId);
+			dependencies.addAll(this.analysisTemplateIds);
 		}
 
 		return dependencies;

@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlTestImpl.java,v 1.12.2.1 2006/02/13 19:36:25 arseniy Exp $
+ * $Id: IdlTestImpl.java,v 1.12.2.2 2006/02/14 00:27:50 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.12.2.1 $, $Date: 2006/02/13 19:36:25 $
+ * @version $Revision: 1.12.2.2 $, $Date: 2006/02/14 00:27:50 $
  * @module measurement
  */
 final class IdlTestImpl extends IdlTest {
@@ -47,7 +47,7 @@ final class IdlTestImpl extends IdlTest {
 			final IdlIdentifier[] measurementTemplateIds,
 			final int numberOfMeasurements,
 			final IdlIdentifier analysisTypeId,
-			final IdlIdentifier analysisTemplateId,
+			final IdlIdentifier[] analysisTemplateIds,
 			final IdlTestStops[] stops) {
 		this.id = id;
 		this.created = created;
@@ -64,7 +64,7 @@ final class IdlTestImpl extends IdlTest {
 		this.measurementTemplateIds = measurementTemplateIds;
 		this.numberOfMeasurements = numberOfMeasurements;
 		this.analysisTypeId = analysisTypeId;
-		this.analysisTemplateId = analysisTemplateId;
+		this.analysisTemplateIds = analysisTemplateIds;
 		this.stops = stops;
 	}
 
