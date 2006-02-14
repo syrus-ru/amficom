@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeReport.java,v 1.6 2005/10/31 12:30:08 bass Exp $
+ * $Id: SiteNodeReport.java,v 1.7 2006/02/14 10:20:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -226,6 +226,7 @@ class SiteNodeInfoTableModel extends AbstractTableModel {
 		return this.columnCount;
 	}
 
+	@Override
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex % SiteNodeReport.COLUMNS_COUNT) {
 		case 0:

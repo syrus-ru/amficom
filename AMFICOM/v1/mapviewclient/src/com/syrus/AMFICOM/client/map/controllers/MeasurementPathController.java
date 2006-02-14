@@ -1,5 +1,5 @@
 /*-
- * $$Id: MeasurementPathController.java,v 1.46 2005/11/22 15:04:49 bass Exp $$
+ * $$Id: MeasurementPathController.java,v 1.47 2006/02/14 10:20:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,6 @@ import java.util.logging.Level;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
@@ -44,8 +43,8 @@ import com.syrus.util.Log;
 /**
  * Контроллер топологическиго пути.
  * 
- * @version $Revision: 1.46 $, $Date: 2005/11/22 15:04:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.47 $, $Date: 2006/02/14 10:20:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */

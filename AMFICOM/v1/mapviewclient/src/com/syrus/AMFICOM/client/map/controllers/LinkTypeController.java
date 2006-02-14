@@ -1,5 +1,5 @@
 /*-
- * $$Id: LinkTypeController.java,v 1.63 2006/02/07 15:27:11 stas Exp $$
+ * $$Id: LinkTypeController.java,v 1.64 2006/02/14 10:20:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -46,7 +45,7 @@ import com.syrus.AMFICOM.resource.IntDimension;
 /**
  * Контроллер типа линейного элемента карты.
  * 
- * @version $Revision: 1.63 $, $Date: 2006/02/07 15:27:11 $
+ * @version $Revision: 1.64 $, $Date: 2006/02/14 10:20:06 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient

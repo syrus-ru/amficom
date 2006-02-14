@@ -1,5 +1,5 @@
 /*-
- * $$Id: MoveMarkCommand.java,v 1.25 2005/10/31 12:30:07 bass Exp $$
+ * $$Id: MoveMarkCommand.java,v 1.26 2006/02/14 10:20:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.Log;
  * Команда перемещения метки. вызывает только функцию "обновить состояние
  * местоположения"
  * 
- * @version $Revision: 1.25 $, $Date: 2005/10/31 12:30:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2006/02/14 10:20:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -72,7 +72,7 @@ public class MoveMarkCommand extends MapActionCommand {
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			Log.debugMessage(e, Level.SEVERE);
+			Log.errorMessage(e);
 		}
 	}
 
@@ -82,7 +82,7 @@ public class MoveMarkCommand extends MapActionCommand {
 			this.markController.moveToFromStartLt(this.mark, this.distance);
 		} catch(MapException e) {
 			// TODO Auto-generated catch block
-			Log.debugMessage(e, Level.SEVERE);
+			Log.errorMessage(e);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class MoveMarkCommand extends MapActionCommand {
 					this.initialDistance);
 		} catch(MapException e) {
 			// TODO Auto-generated catch block
-			Log.debugMessage(e, Level.SEVERE);
+			Log.errorMessage(e);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapExportCommand.java,v 1.37 2005/12/07 17:17:15 bass Exp $$
+ * $$Id: MapExportCommand.java,v 1.38 2006/02/14 10:20:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.client.map.command.map;
 
 import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
 import java.io.File;
@@ -33,7 +32,6 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.xml.MapsDocument;
 import com.syrus.util.Log;
@@ -45,8 +43,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @version $Revision: 1.37 $, $Date: 2005/12/07 17:17:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2006/02/14 10:20:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -134,7 +132,7 @@ public class MapExportCommand extends ExportCommand {
 				Log.debugMessage("\nXML Instance Document saved at : " + f.getPath(), INFO); //$NON-NLS-1$
 			}
 		} catch (final XmlConversionException xce) {
-			Log.debugMessage(xce, SEVERE);
+			Log.errorMessage(xce);
 		}
 	}
 

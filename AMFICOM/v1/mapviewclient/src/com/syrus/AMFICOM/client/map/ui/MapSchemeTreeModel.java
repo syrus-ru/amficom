@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapSchemeTreeModel.java,v 1.45 2006/02/08 12:17:06 stas Exp $$
+ * $$Id: MapSchemeTreeModel.java,v 1.46 2006/02/14 10:20:07 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,8 +7,6 @@
  */
 
 package com.syrus.AMFICOM.client.map.ui;
-
-import static java.util.logging.Level.SEVERE;
 
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -87,7 +85,7 @@ import com.syrus.util.WrapperComparator;
  *             		|____ (*) "path2"
  * </pre>
  * 
- * @version $Revision: 1.45 $, $Date: 2006/02/08 12:17:06 $
+ * @version $Revision: 1.46 $, $Date: 2006/02/14 10:20:07 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -270,7 +268,7 @@ public class MapSchemeTreeModel
 		
 			return treeNode;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			Log.errorMessage(ae);
 			return null;
 		}
 	}
@@ -308,7 +306,7 @@ public class MapSchemeTreeModel
 	
 			return treeNode;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			Log.errorMessage(ae);
 			return null;
 		}
 	}
@@ -368,7 +366,7 @@ public class MapSchemeTreeModel
 
 			return treeNode;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			Log.errorMessage(ae);
 			return null;
 		}
 	}
@@ -388,7 +386,7 @@ public class MapSchemeTreeModel
 			
 			return treeNode;
 		} catch(ApplicationException e) {
-			Log.debugMessage(e, SEVERE);
+			Log.errorMessage(e);
 			return null;
 		}
 	}

@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreatePhysicalNodeCommandBundle.java,v 1.34 2005/10/31 12:30:08 bass Exp $$
+ * $$Id: CreatePhysicalNodeCommandBundle.java,v 1.35 2006/02/14 10:20:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.util.Log;
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.34 $, $Date: 2005/10/31 12:30:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2006/02/14 10:20:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -87,7 +87,7 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle {
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			Log.debugMessage(e, Level.SEVERE);
+			Log.errorMessage(e);
 		}
 
 	}

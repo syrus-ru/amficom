@@ -1,5 +1,5 @@
 /*-
- * $$Id: NodeLinkPopupMenu.java,v 1.19 2006/02/08 15:15:43 stas Exp $$
+ * $$Id: NodeLinkPopupMenu.java,v 1.20 2006/02/14 10:20:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalNodeCommandBundle;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
@@ -28,7 +27,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2006/02/08 15:15:43 $
+ * @version $Revision: 1.20 $, $Date: 2006/02/14 10:20:06 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient

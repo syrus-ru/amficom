@@ -26,8 +26,8 @@ import com.syrus.util.Log;
 
 /**
  * Отчёт "Прокладка кабеля"
- * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/10/31 12:30:08 $
+ * @author $Author: stas $
+ * @version $Revision: 1.26 $, $Date: 2006/02/14 10:20:06 $
  * @module reportother
  */
 public class CableLayoutReport {
@@ -196,6 +196,7 @@ class CableLayoutReportTableModel extends AbstractTableModel {
 		return this.columnCount;
 	}
 
+	@Override
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex % CableLayoutReport.COLUMNS_COUNT) {
 		case 0:

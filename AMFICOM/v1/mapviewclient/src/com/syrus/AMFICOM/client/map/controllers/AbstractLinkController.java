@@ -1,5 +1,5 @@
 /*-
- * $$Id: AbstractLinkController.java,v 1.52 2006/02/07 15:27:11 stas Exp $$
+ * $$Id: AbstractLinkController.java,v 1.53 2006/02/14 10:20:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.client.map.controllers;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Stroke;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +45,7 @@ import com.syrus.util.Shitlet;
 /**
  * Контроллер линейного элемента карты.
  * 
- * @version $Revision: 1.52 $, $Date: 2006/02/07 15:27:11 $
+ * @version $Revision: 1.53 $, $Date: 2006/02/14 10:20:06 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient

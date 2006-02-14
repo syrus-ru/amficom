@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapFrame.java,v 1.87 2006/02/07 15:27:11 stas Exp $$
+ * $$Id: MapFrame.java,v 1.88 2006/02/14 10:20:07 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
-import java.util.Set;
 import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
@@ -81,7 +80,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.resource.DoublePoint;
-import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeSampleData;
 import com.syrus.util.Log;
 
@@ -207,7 +205,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * окна карты хранится в пуле с ключом "environment", идентификатор 
  * "mapmainframe". существует только один объект 
  * 
- * @version $Revision: 1.87 $, $Date: 2006/02/07 15:27:11 $
+ * @version $Revision: 1.88 $, $Date: 2006/02/14 10:20:07 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient

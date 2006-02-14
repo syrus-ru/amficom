@@ -1,5 +1,5 @@
 /*-
- * $$Id: UnPlaceSchemePathCommand.java,v 1.27 2005/10/31 12:30:07 bass Exp $$
+ * $$Id: UnPlaceSchemePathCommand.java,v 1.28 2006/02/14 10:20:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,6 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
-import java.util.logging.Level;
-
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.util.Log;
@@ -17,8 +15,8 @@ import com.syrus.util.Log;
 /**
  * убрать привязку измерительного пути с карты
  * 
- * @version $Revision: 1.27 $, $Date: 2005/10/31 12:30:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2006/02/14 10:20:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -38,7 +36,7 @@ public class UnPlaceSchemePathCommand extends MapActionCommandBundle {
 		Log.debugMessage("unplace measurement path " //$NON-NLS-1$
 					+ this.path.getName()
 					+ " (" + this.path.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
-				Level.FINEST);
+				Log.DEBUGLEVEL09);
 
 		try {
 			super.removeMeasurementPath(this.path);
@@ -47,7 +45,7 @@ public class UnPlaceSchemePathCommand extends MapActionCommandBundle {
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);
-			Log.debugMessage(e, Level.SEVERE);
+			Log.errorMessage(e);
 		}
 	}
 }

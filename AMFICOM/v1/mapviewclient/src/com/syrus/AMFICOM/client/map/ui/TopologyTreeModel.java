@@ -1,5 +1,5 @@
 /*-
- * $$Id: TopologyTreeModel.java,v 1.19 2005/10/31 12:30:09 bass Exp $$
+ * $$Id: TopologyTreeModel.java,v 1.20 2006/02/14 10:20:07 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -41,8 +39,8 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/10/31 12:30:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2006/02/14 10:20:07 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -152,7 +150,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 				}
 			}
 		} catch(Exception e) {
-			Log.debugMessage(e, Level.SEVERE);
+			Log.errorMessage(e);
 		}
 	}
 
@@ -239,7 +237,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 						}
 					}
 				} catch (Exception e) {
-					Log.debugMessage(e, Level.SEVERE);
+					Log.errorMessage(e);
 					this.running = false;
 					finalAction();
 					return;
@@ -267,7 +265,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 					this.node.addChild(newItem);
 				}
 			} catch(Exception e) {
-				Log.debugMessage(e, Level.SEVERE);
+				Log.errorMessage(e);
 //				System.out.println("processing \'" + this.initialName + "\' terminated by " + e.getMessage());
 			}
 			finally {

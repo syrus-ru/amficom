@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryExportCommand.java,v 1.21 2005/12/07 17:17:15 bass Exp $$
+ * $$Id: MapLibraryExportCommand.java,v 1.22 2006/02/14 10:20:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.client.map.command.map;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
 import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
 import java.io.File;
@@ -52,8 +51,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @version $Revision: 1.21 $, $Date: 2005/12/07 17:17:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2006/02/14 10:20:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -163,7 +162,7 @@ public class MapLibraryExportCommand extends ExportCommand {
 						+ f.getPath(), INFO);
 			}
 		} catch (final XmlConversionException xce) {
-			Log.debugMessage(xce, SEVERE);
+			Log.errorMessage(xce);
 		}
 	}
 

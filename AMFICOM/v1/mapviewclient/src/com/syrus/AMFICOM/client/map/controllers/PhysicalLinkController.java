@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkController.java,v 1.38 2006/02/07 15:27:11 stas Exp $$
+ * $$Id: PhysicalLinkController.java,v 1.39 2006/02/14 10:20:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер линейного элемента карты.
  * 
- * @version $Revision: 1.38 $, $Date: 2006/02/07 15:27:11 $
+ * @version $Revision: 1.39 $, $Date: 2006/02/14 10:20:06 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -286,6 +286,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected String getStyle(final Characterizable characterizable) {
 		if (!(characterizable instanceof PhysicalLink)) {
 			return MapPropertiesManager.getStyle();

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MeasurementPathEditor.java,v 1.18 2005/10/31 12:30:09 bass Exp $$
+ * $$Id: MeasurementPathEditor.java,v 1.19 2006/02/14 10:20:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Level;
-
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -34,8 +32,8 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/31 12:30:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2006/02/14 10:20:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -346,7 +344,7 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 						.valueOf(this.measurementPath.getLengthLo()));
 				this.descTextArea.setEnabled(true);
 			} catch(Exception e) {
-				Log.debugMessage(e, Level.SEVERE);
+				Log.errorMessage(e);
 			}
 			this.descTextArea.setText(this.measurementPath.getDescription());
 			this.startComboBox.addItem(this.measurementPath.getStartNode());

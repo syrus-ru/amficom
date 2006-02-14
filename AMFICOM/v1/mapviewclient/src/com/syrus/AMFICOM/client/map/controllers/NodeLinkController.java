@@ -1,5 +1,5 @@
 /*-
- * $$Id: NodeLinkController.java,v 1.29 2005/11/22 15:04:49 bass Exp $$
+ * $$Id: NodeLinkController.java,v 1.30 2006/02/14 10:20:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.Identifier;
@@ -38,8 +37,8 @@ import com.syrus.util.Log;
 /**
  * Контроллер фрагмента линии.
  * 
- * @version $Revision: 1.29 $, $Date: 2005/11/22 15:04:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2006/02/14 10:20:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */

@@ -1,5 +1,5 @@
 /*-
- * $$Id: AlarmIndicationTimer.java,v 1.8 2005/10/31 12:30:07 bass Exp $$
+ * $$Id: AlarmIndicationTimer.java,v 1.9 2006/02/14 10:20:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,6 @@ package com.syrus.AMFICOM.client.map;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
-import java.util.logging.Level;
-
 import javax.swing.Timer;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -23,8 +21,8 @@ import com.syrus.AMFICOM.mapview.MapTypedElementsContainer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/31 12:30:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2006/02/14 10:20:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -57,8 +55,7 @@ public class AlarmIndicationTimer {
 							new MapEvent(this, MapEvent.NEED_REPAINT));
 				}
 			} catch(MapException ex) {
-				Log.debugMessage(ex, Level.SEVERE);
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 	};

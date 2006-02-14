@@ -1,5 +1,5 @@
 /*-
- * $$Id: CableController.java,v 1.43 2006/02/07 15:27:11 stas Exp $$
+ * $$Id: CableController.java,v 1.44 2006/02/14 10:20:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -45,7 +44,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер кабеля.
  * 
- * @version $Revision: 1.43 $, $Date: 2006/02/07 15:27:11 $
+ * @version $Revision: 1.44 $, $Date: 2006/02/14 10:20:06 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -352,6 +351,7 @@ public final class CableController extends AbstractLinkController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getStyle(final Characterizable characterizable) {
 		return MapPropertiesManager.getStyle();
 	}

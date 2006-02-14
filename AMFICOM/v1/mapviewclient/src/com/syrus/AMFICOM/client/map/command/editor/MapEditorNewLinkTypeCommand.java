@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorNewLinkTypeCommand.java,v 1.19 2005/10/31 12:30:09 bass Exp $$
+ * $$Id: MapEditorNewLinkTypeCommand.java,v 1.20 2006/02/14 10:20:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,8 +7,6 @@
  */
 
 package com.syrus.AMFICOM.client.map.command.editor;
-
-import java.util.logging.Level;
 
 import javax.swing.JDesktopPane;
 
@@ -34,8 +32,8 @@ import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/10/31 12:30:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2006/02/14 10:20:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -89,10 +87,10 @@ public class MapEditorNewLinkTypeCommand extends AbstractCommand {
 				setResult(Command.RESULT_CANCEL);
 			}
 		} catch(CreateObjectException e) {
-			Log.debugMessage(e, Level.SEVERE);
+			Log.errorMessage(e);
 			setResult(Command.RESULT_NO);
 		} catch(ApplicationException e) {
-			Log.debugMessage(e, Level.SEVERE);
+			Log.errorMessage(e);
 			setResult(Command.RESULT_NO);
 		}
 	}

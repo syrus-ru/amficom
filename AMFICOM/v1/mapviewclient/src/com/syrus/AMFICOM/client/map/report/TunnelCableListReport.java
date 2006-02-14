@@ -219,6 +219,7 @@ class TunnelCableListTableModel extends AbstractTableModel {
 		return this.columnCount;
 	}
 
+	@Override
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex % TunnelCableListReport.COLUMNS_COUNT) {
 		case 0:

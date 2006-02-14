@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorInfoReport.java,v 1.3 2005/10/26 10:12:32 bass Exp $
+ * $Id: CollectorInfoReport.java,v 1.4 2006/02/14 10:20:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -158,6 +158,7 @@ class CollectorInfoReportTableModel extends AbstractTableModel {
 		return this.columnCount;
 	}
 
+	@Override
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex % CollectorInfoReport.COLUMNS_COUNT) {
 		case 0:
