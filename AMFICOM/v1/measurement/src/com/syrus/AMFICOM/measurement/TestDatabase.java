@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.137.2.1 2006/02/06 14:46:30 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.137.2.2 2006/02/14 00:26:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,29 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import static com.syrus.AMFICOM.general.TableNames.MEASUREMENTSETUP_TEST_LINK;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.general.TableNames.TEST_ANATMPL_LINK;
+import static com.syrus.AMFICOM.general.TableNames.TEST_MEASTMPL_LINK;
 import static com.syrus.AMFICOM.general.TableNames.TEST_STOP_LINK;
+import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_ANALYSIS_TYPE_ID;
+import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_END_TIME;
+import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_GROUP_TEST_ID;
+import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_MEASUREMENT_TYPE_ID;
+import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_MONITORED_ELEMENT_ID;
+import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_NUMBER_OF_MEASUREMENTS;
+import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_START_TIME;
+import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_STATUS;
+import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_TEMPORAL_PATTERN_ID;
+import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_TEMPORAL_TYPE;
+import static com.syrus.AMFICOM.measurement.TestWrapper.LINK_COLUMN_ANALYSIS_TEMPLATE_ID;
+import static com.syrus.AMFICOM.measurement.TestWrapper.LINK_COLUMN_MEASUREMENT_TEMPLATE_ID;
+import static com.syrus.AMFICOM.measurement.TestWrapper.LINK_COLUMN_TEST_ID;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,7 +47,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -35,25 +55,23 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
+import com.syrus.AMFICOM.measurement.Test.TestStatus;
+import com.syrus.AMFICOM.measurement.Test.TestTemporalType;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.137.2.1 $, $Date: 2006/02/06 14:46:30 $
+ * @version $Revision: 1.137.2.2 $, $Date: 2006/02/14 00:26:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
 public final class TestDatabase extends StorableObjectDatabase<Test> {
-	private static final String LINK_COLUMN_TEST_ID = "test_id";
 	private static final String LINK_COLUMN_STOP_TIME = "stop_time";
 	private static final String LINK_COLUMN_STOP_REASON = "stop_reason";
 
@@ -68,17 +86,17 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = TestWrapper.COLUMN_TEMPORAL_TYPE + COMMA
-				+ TestWrapper.COLUMN_START_TIME + COMMA
-				+ TestWrapper.COLUMN_END_TIME + COMMA
-				+ TestWrapper.COLUMN_TEMPORAL_PATTERN_ID + COMMA
-				+ TestWrapper.COLUMN_MEASUREMENT_TYPE_CODE + COMMA
-				+ TestWrapper.COLUMN_ANALYSIS_TYPE_CODE + COMMA
-				+ TestWrapper.COLUMN_GROUP_TEST_ID + COMMA
-				+ TestWrapper.COLUMN_STATUS + COMMA
-				+ TestWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-				+ TestWrapper.COLUMN_NUMBER_OF_MEASUREMENTS;
+			columns = COLUMN_DESCRIPTION + COMMA
+					+ COLUMN_GROUP_TEST_ID + COMMA
+					+ COLUMN_MONITORED_ELEMENT_ID + COMMA
+					+ COLUMN_STATUS + COMMA
+					+ COLUMN_TEMPORAL_TYPE + COMMA
+					+ COLUMN_START_TIME + COMMA
+					+ COLUMN_END_TIME + COMMA
+					+ COLUMN_TEMPORAL_PATTERN_ID + COMMA
+					+ COLUMN_MEASUREMENT_TYPE_ID + COMMA
+					+ COLUMN_NUMBER_OF_MEASUREMENTS + COMMA
+					+ COLUMN_ANALYSIS_TYPE_ID;
 		}
 		return columns;
 	}
@@ -103,117 +121,125 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final Test storableObject) throws IllegalDataException {
-		final Test test = storableObject;
-		final Date startTime = test.getStartTime();
-		final Date endTime = test.getEndTime();
-		return test.getTemporalType().value() + COMMA
-			+ ((startTime != null) ? DatabaseDate.toUpdateSubString(startTime) : SQL_NULL ) + COMMA
-			+ ((endTime != null) ? DatabaseDate.toUpdateSubString(endTime) : SQL_NULL ) + COMMA
-			+ DatabaseIdentifier.toSQLString(test.getTemporalPatternId()) + COMMA
-			+ Integer.toString(test.getMeasurementType().ordinal()) + COMMA
-			+ Integer.toString(test.getAnalysisType().ordinal()) + COMMA
-			+ DatabaseIdentifier.toSQLString(test.getGroupTestId()) + COMMA
-			+ test.getStatus().value() + COMMA
-			+ DatabaseIdentifier.toSQLString(test.getMonitoredElement().getId()) + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(test.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ test.getNumberOfMeasurements();
-	}
-
-	@Override
-	protected String retrieveQuery(final String condition) {
-		String query = super.retrieveQuery(condition);
-		query = query.replaceFirst(TestWrapper.COLUMN_START_TIME, DatabaseDate.toQuerySubString(TestWrapper.COLUMN_START_TIME));
-		query = query.replaceFirst(TestWrapper.COLUMN_END_TIME, DatabaseDate.toQuerySubString(TestWrapper.COLUMN_END_TIME));
-		return query;
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getGroupTestId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getMonitoredElementId()) + COMMA
+				+ Integer.toString(storableObject.getStatus().ordinal()) + COMMA
+				+ Integer.toString(storableObject.getTemporalType().ordinal()) + COMMA
+				+ DatabaseDate.toUpdateSubString(storableObject.getStartTime()) + COMMA
+				+ DatabaseDate.toUpdateSubString(storableObject.getEndTime()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getTemporalPatternId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getMeasurementTypeId()) + COMMA
+				+ Integer.toString(storableObject.getNumberOfMeasurements()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getAnalysisTypeId());
+		return sql;
 	}
 
 	@Override
 	protected int setEntityForPreparedStatementTmpl(final Test storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-
-		final Date startTime = storableObject.getStartTime();
-		final Date endTime = storableObject.getEndTime();
-		preparedStatement.setInt(++startParameterNumber, storableObject.getTemporalType().value());
-		preparedStatement.setTimestamp(++startParameterNumber, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
-		preparedStatement.setTimestamp(++startParameterNumber, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getTemporalPatternId());
-		preparedStatement.setInt(++startParameterNumber, storableObject.getMeasurementType().ordinal());
-		preparedStatement.setInt(++startParameterNumber, storableObject.getAnalysisType().ordinal());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getGroupTestId());
-		preparedStatement.setInt(++startParameterNumber, storableObject.getStatus().value());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMonitoredElement().getId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getGroupTestId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMonitoredElementId());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getStatus().ordinal());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getTemporalType().ordinal());
+		preparedStatement.setTimestamp(++startParameterNumber, new Timestamp(storableObject.getStartTime().getTime()));
+		preparedStatement.setTimestamp(++startParameterNumber, new Timestamp(storableObject.getEndTime().getTime()));
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getTemporalPatternId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMeasurementTypeId());
 		preparedStatement.setInt(++startParameterNumber, storableObject.getNumberOfMeasurements());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAnalysisTypeId());
 		return startParameterNumber;
 	}
 
 	@Override
 	protected Test updateEntityFromResultSet(final Test storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		final Test test = (storableObject == null) ? new Test(DatabaseIdentifier.getIdentifier(resultSet,
-				StorableObjectWrapper.COLUMN_ID),
-				null,
-				StorableObjectVersion.ILLEGAL_VERSION,
-				null,
-				null,
-				null,
-				TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null) : storableObject;
-
-		MonitoredElement monitoredElement;
-		try {			
-			final Identifier monitoredElementId = DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_MONITORED_ELEMENT_ID);
-			monitoredElement = (MonitoredElement) StorableObjectPool.getStorableObject(monitoredElementId, true);
-		} catch (ApplicationException ae) {
-			throw new RetrieveObjectException(ae);
-		}
-		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
-		test.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				resultSet.getInt(TestWrapper.COLUMN_TEMPORAL_TYPE),
-				DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_START_TIME),
-				DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_END_TIME),
-				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_TEMPORAL_PATTERN_ID),
-				MeasurementType.valueOf(resultSet.getInt(TestWrapper.COLUMN_MEASUREMENT_TYPE_CODE)),
-				AnalysisType.valueOf(resultSet.getInt(TestWrapper.COLUMN_ANALYSIS_TYPE_CODE)),
-				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_GROUP_TEST_ID),
-				resultSet.getInt(TestWrapper.COLUMN_STATUS),
-				monitoredElement,
+		final Test test = (storableObject == null)
+				? new Test(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						0,
+						null,
+						null,
+						null)
+					: storableObject;
+		final String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
+		test.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
 				(description != null) ? description : "",
-				resultSet.getInt(TestWrapper.COLUMN_NUMBER_OF_MEASUREMENTS));
-
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_GROUP_TEST_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MONITORED_ELEMENT_ID),
+				TestStatus.valueOf(resultSet.getInt(COLUMN_STATUS)),
+				TestTemporalType.valueOf(resultSet.getInt(COLUMN_TEMPORAL_TYPE)),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_START_TIME),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_END_TIME),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TEMPORAL_PATTERN_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_TYPE_ID),
+				resultSet.getInt(COLUMN_NUMBER_OF_MEASUREMENTS),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ANALYSIS_TYPE_ID));
 		return test;
 	}
-	
+
+	@Override
+	protected String retrieveQuery(final String condition) {
+		String query = super.retrieveQuery(condition);
+		query = query.replaceFirst(COLUMN_START_TIME, DatabaseDate.toQuerySubString(COLUMN_START_TIME));
+		query = query.replaceFirst(COLUMN_END_TIME, DatabaseDate.toQuerySubString(COLUMN_END_TIME));
+		return query;
+	}
+
+	@Override
+	protected Set<Test> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set<Test> tests = super.retrieveByCondition(conditionQuery);
+
+		this.retrieveLinksByOneQuery(tests);
+
+		return tests;
+	}
+
 	private void retrieveLinksByOneQuery(final Set<Test> tests) throws RetrieveObjectException {
 		if ((tests == null) || (tests.isEmpty())) {
 			return;
 		}
 
-		final Map<Identifier, Set<Identifier>> msIdsMap = this.retrieveLinkedEntityIds(tests,
-				MEASUREMENTSETUP_TEST_LINK,
+		final Map<Identifier, Set<Identifier>> measurementTemplateIdsMap = this.retrieveLinkedEntityIds(tests,
+				TEST_MEASTMPL_LINK,
 				LINK_COLUMN_TEST_ID,
-				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
+				LINK_COLUMN_MEASUREMENT_TEMPLATE_ID);
+
+		final Map<Identifier, Set<Identifier>> analysisTemplateIdsMap = this.retrieveLinkedEntityIds(tests,
+				TEST_ANATMPL_LINK,
+				LINK_COLUMN_TEST_ID,
+				LINK_COLUMN_ANALYSIS_TEMPLATE_ID);
 
 		final Map<Identifier, SortedMap<Date, String>> stops = this.retrieveStops(tests);
 		
 		for (final Test test : tests) {
 			final Identifier testId = test.getId();
-			
-			final Set<Identifier> msIds = msIdsMap.get(testId);			
-			test.setMeasurementSetupIds0(msIds);
+
+			final Set<Identifier> measurementTemplateIds = measurementTemplateIdsMap.get(testId);
+			test.setMeasurementTemplateIds0(measurementTemplateIds);
+
+			final Set<Identifier> analysisTemplateIds = analysisTemplateIdsMap.get(testId);
+			test.setAnalysisTemplateIds0(analysisTemplateIds);
 			
 			final SortedMap<Date, String> stopMap = stops.get(testId);
-			test.setStoppingMap0(stopMap);
+			test.setStopMap0(stopMap);
 
 		}
 	}
@@ -287,12 +313,18 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 	protected void insert(final Set<Test> tests) throws IllegalDataException, CreateObjectException {
 		super.insert(tests);
 
-		final Map<Identifier, Set<Identifier>> measurementSetupIdsMap = this.createMeasurementSetupIdsMap(tests);
-		super.insertLinkedEntityIds(measurementSetupIdsMap,
-				MEASUREMENTSETUP_TEST_LINK,
-				TestWrapper.LINK_COLUMN_TEST_ID,
-				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);		
-		
+		final Map<Identifier, Set<Identifier>> measurementTemplateIdsMap = this.createMeasurementTemplateIdsMap(tests);
+		super.insertLinkedEntityIds(measurementTemplateIdsMap,
+				TEST_MEASTMPL_LINK,
+				LINK_COLUMN_TEST_ID,
+				LINK_COLUMN_MEASUREMENT_TEMPLATE_ID);		
+
+		final Map<Identifier, Set<Identifier>> analysisTemplateIdsMap = this.createAnalysisTemplateIdsMap(tests);
+		super.insertLinkedEntityIds(analysisTemplateIdsMap,
+				TEST_ANATMPL_LINK,
+				LINK_COLUMN_TEST_ID,
+				LINK_COLUMN_ANALYSIS_TEMPLATE_ID);		
+
 		final Map<Identifier, SortedMap<Date, String>> idsStopsMap = this.createStopsMap(tests);
 		this.insertStops(idsStopsMap);
 	}
@@ -363,11 +395,17 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 	protected void update(final Set<Test> tests) throws UpdateObjectException {
 		super.update(tests);
 
-		final Map<Identifier, Set<Identifier>> measurementSetupIdsMap = this.createMeasurementSetupIdsMap(tests);
-		super.updateLinkedEntityIds(measurementSetupIdsMap,
-				MEASUREMENTSETUP_TEST_LINK,
-				TestWrapper.LINK_COLUMN_TEST_ID,
-				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
+		final Map<Identifier, Set<Identifier>> measurementTemplateIdsMap = this.createMeasurementTemplateIdsMap(tests);
+		super.updateLinkedEntityIds(measurementTemplateIdsMap,
+				TEST_MEASTMPL_LINK,
+				LINK_COLUMN_TEST_ID,
+				LINK_COLUMN_MEASUREMENT_TEMPLATE_ID);		
+
+		final Map<Identifier, Set<Identifier>> analysisTemplateIdsMap = this.createAnalysisTemplateIdsMap(tests);
+		super.updateLinkedEntityIds(analysisTemplateIdsMap,
+				TEST_ANATMPL_LINK,
+				LINK_COLUMN_TEST_ID,
+				LINK_COLUMN_ANALYSIS_TEMPLATE_ID);		
 
 		this.updateStops(tests);
 	}
@@ -414,29 +452,28 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 		}
 	}
 
-	private Map<Identifier, Set<Identifier>> createMeasurementSetupIdsMap(final Set<Test> tests) {
-		final Map<Identifier, Set<Identifier>> measurementSetupIdsMap = new HashMap<Identifier, Set<Identifier>>();
+	private Map<Identifier, Set<Identifier>> createMeasurementTemplateIdsMap(final Set<Test> tests) {
+		final Map<Identifier, Set<Identifier>> measurementTemplateIdsMap = new HashMap<Identifier, Set<Identifier>>();
 		for (final Test test : tests) {
-			measurementSetupIdsMap.put(test.getId(), test.getMeasurementSetupIds());
+			measurementTemplateIdsMap.put(test.getId(), test.getMeasurementTemplateIds());
 		}
-		return measurementSetupIdsMap;
+		return measurementTemplateIdsMap;
+	}
+
+	private Map<Identifier, Set<Identifier>> createAnalysisTemplateIdsMap(final Set<Test> tests) {
+		final Map<Identifier, Set<Identifier>> analysisTemplateIdsMap = new HashMap<Identifier, Set<Identifier>>();
+		for (final Test test : tests) {
+			analysisTemplateIdsMap.put(test.getId(), test.getAnalysisTemplateIds());
+		}
+		return analysisTemplateIdsMap;
 	}
 
 	private Map<Identifier, SortedMap<Date, String>> createStopsMap(final Set<Test> tests) {
 		final Map<Identifier, SortedMap<Date, String>> stopsMap = new HashMap<Identifier, SortedMap<Date, String>>();
 		for (final Test test : tests) {
-			stopsMap.put(test.getId(), test.getStoppingMap());
+			stopsMap.put(test.getId(), test.getStopMap());
 		}
 		return stopsMap;
-	}
-
-	@Override
-	protected Set<Test> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		final Set<Test> tests = super.retrieveByCondition(conditionQuery);
-		
-		this.retrieveLinksByOneQuery(tests);
-		
-		return tests;
 	}
 
 }
