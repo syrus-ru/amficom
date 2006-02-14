@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.78 2006/02/03 12:54:47 bob Exp $
+ * $Id: PlanPanel.java,v 1.79 2006/02/14 12:57:21 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,10 +58,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
+import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2006/02/03 12:54:47 $
+ * @version $Revision: 1.79 $, $Date: 2006/02/14 12:57:21 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -134,7 +135,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 
 	
 
-	protected final static int		MARGIN				= 14;
+	protected final static int		MARGIN				= 0;
 	protected JScrollPane			parent;
 	protected int					scale				= 0;
 	protected Date					scaleEnd;
@@ -335,7 +336,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		final long start = PlanPanel.this.scaleStart.getTime();
 		final long end = PlanPanel.this.scaleEnd.getTime();
 		
-		return new Date((start + ((e.getX() - PlanPanel.MARGIN / 2) *  (end - start) / ((PlanPanel.this.getWidth() - PlanPanel.MARGIN)))));
+		return new Date((start + (e.getX() - PlanPanel.MARGIN / 2) *  (end - start) / (PlanPanel.this.getWidth() - PlanPanel.MARGIN)));
 	}
 
 	public int getScale() {
@@ -361,6 +362,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	}
 
 	public void setStartDate(final Date start) {
+		assert Log.debugMessage(start, Log.DEBUGLEVEL03);
 		this.startDate = start;
 		if (start != null) {
 			this.cal.setTime(start);
@@ -376,6 +378,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 //			}
 
 			this.scaleStart = this.cal.getTime();
+			assert Log.debugMessage("scaleStart:" + scaleStart, Log.DEBUGLEVEL03);
 			// scroll calendar to end of period
 			this.cal.add(STEPS[this.scale].scale, STEPS[this.scale].total);
 			this.scaleEnd = this.cal.getTime();
@@ -499,7 +502,8 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 //		this.cal.set(Calendar.HOUR_OF_DAY, 0);
 //		this.cal.set(Calendar.MINUTE, 0);
 
-		long start2 = this.cal.getTimeInMillis(); 
+//		long start2 = this.cal.getTimeInMillis();
+		long start2 = start;
 		
 		final long timeRegion = end - start;
 		
