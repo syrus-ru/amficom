@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.91.2.4 2006/02/14 00:25:20 arseniy Exp $
+ * $Id: measurement.idl,v 1.91.2.5 2006/02/14 00:43:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -152,7 +152,7 @@ module measurement {
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlAction : general::corba::IdlStorableObject {
-			public general::corba::IdlIdentifier actionTypeId;
+			public general::corba::IdlIdentifier _typeId;
 			public general::corba::IdlIdentifier monitoredElementId;
 			public general::corba::IdlIdentifier actionTemplateId;
 			public general::corba::WString128 name;
@@ -171,7 +171,7 @@ module measurement {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in general::corba::IdlIdentifier actionTypeId,
+					in general::corba::IdlIdentifier _typeId,
 					in general::corba::IdlIdentifier monitoredElementId,
 					in general::corba::IdlIdentifier actionTemplateId,
 					in general::corba::WString128 name,
@@ -191,7 +191,7 @@ module measurement {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in general::corba::IdlIdentifier actionTypeId,
+					in general::corba::IdlIdentifier _typeId,
 					in general::corba::IdlIdentifier monitoredElementId,
 					in general::corba::IdlIdentifier actionTemplateId,
 					in general::corba::WString128 name,
@@ -210,7 +210,7 @@ module measurement {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in general::corba::IdlIdentifier actionTypeId,
+					in general::corba::IdlIdentifier _typeId,
 					in general::corba::IdlIdentifier monitoredElementId,
 					in general::corba::IdlIdentifier actionTemplateId,
 					in general::corba::WString128 name,
@@ -224,7 +224,7 @@ module measurement {
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlActionResultParameter : general::corba::IdlStorableObject {
-			public general::corba::IdlIdentifier parameterTypeId;
+			public general::corba::IdlIdentifier _typeId;
 			public general::corba::IdlIdentifier actionId;
 			public ::CORBA::OctetSeq value;
 		};
@@ -237,7 +237,7 @@ module measurement {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in general::corba::IdlIdentifier parameterTypeId,
+					in general::corba::IdlIdentifier _typeId,
 					in general::corba::IdlIdentifier actiontId,
 					in ::CORBA::OctetSeq value);
 		};
@@ -250,7 +250,7 @@ module measurement {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in general::corba::IdlIdentifier parameterTypeId,
+					in general::corba::IdlIdentifier _typeId,
 					in general::corba::IdlIdentifier actiontId,
 					in ::CORBA::OctetSeq value);
 		};
@@ -263,7 +263,7 @@ module measurement {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in general::corba::IdlIdentifier parameterTypeId,
+					in general::corba::IdlIdentifier _typeId,
 					in general::corba::IdlIdentifier actiontId,
 					in ::CORBA::OctetSeq value);
 		};

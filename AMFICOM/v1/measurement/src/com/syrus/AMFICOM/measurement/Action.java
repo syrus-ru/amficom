@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.43.2.2 2006/02/13 19:33:09 arseniy Exp $
+ * $Id: Action.java,v 1.43.2.3 2006/02/14 00:43:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAction;
 import com.syrus.AMFICOM.measurement.corba.IdlActionStatus;
 
 /**
- * @version $Revision: 1.43.2.2 $, $Date: 2006/02/13 19:33:09 $
+ * @version $Revision: 1.43.2.3 $, $Date: 2006/02/14 00:43:51 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -96,7 +96,7 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 
 	void fromTransferable(final IdlAction idlAction) throws ApplicationException {
 		super.fromTransferable(idlAction);
-		this.typeId = Identifier.valueOf(idlAction.actionTypeId);
+		this.typeId = Identifier.valueOf(idlAction._typeId);
 		this.monitoredElementId = Identifier.valueOf(idlAction.monitoredElementId);
 		this.actionTemplateId = Identifier.valueOf(idlAction.actionTemplateId);
 		this.name = idlAction.name;

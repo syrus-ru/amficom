@@ -21,7 +21,7 @@ final class IdlModelingResultParameterImpl extends IdlModelingResultParameter {
 			final IdlIdentifier creatorId,
 			final IdlIdentifier modifierId,
 			final long version,
-			final IdlIdentifier parameterTypeId,
+			final IdlIdentifier _typeId,
 			final IdlIdentifier analysisId,
 			final byte[] value) {
 		this.id = id;
@@ -30,7 +30,7 @@ final class IdlModelingResultParameterImpl extends IdlModelingResultParameter {
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 		this.version = version;
-		this.parameterTypeId = parameterTypeId;
+		this._typeId = _typeId;
 		this.actionId = analysisId;
 		this.value = value;
 	}

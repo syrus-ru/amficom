@@ -21,7 +21,7 @@ final class IdlMeasurementResultParameterImpl extends IdlMeasurementResultParame
 			final IdlIdentifier creatorId,
 			final IdlIdentifier modifierId,
 			final long version,
-			final IdlIdentifier parameterTypeId,
+			final IdlIdentifier _typeId,
 			final IdlIdentifier measurementId,
 			final byte[] value) {
 		this.id = id;
@@ -30,7 +30,7 @@ final class IdlMeasurementResultParameterImpl extends IdlMeasurementResultParame
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 		this.version = version;
-		this.parameterTypeId = parameterTypeId;
+		this._typeId = _typeId;
 		this.actionId = measurementId;
 		this.value = value;
 	}
