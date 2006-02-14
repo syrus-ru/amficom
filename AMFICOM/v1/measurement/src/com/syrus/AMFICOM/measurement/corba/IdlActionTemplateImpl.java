@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.measurement.ActionTemplate;
 import com.syrus.util.Log;
 
 final class IdlActionTemplateImpl extends IdlActionTemplate {
+	private static final long serialVersionUID = 6699536162233339418L;
 
 	IdlActionTemplateImpl() {
 		// empty

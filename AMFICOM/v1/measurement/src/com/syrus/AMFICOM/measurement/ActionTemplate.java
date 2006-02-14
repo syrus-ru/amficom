@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplate.java,v 1.1.2.2 2006/02/13 19:31:15 arseniy Exp $
+ * $Id: ActionTemplate.java,v 1.1.2.3 2006/02/14 01:26:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,12 +31,14 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionTemplate;
 import com.syrus.AMFICOM.measurement.corba.IdlActionTemplateHelper;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/13 19:31:15 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/02/14 01:26:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class ActionTemplate extends StorableObject<ActionTemplate> {
+	private static final long serialVersionUID = -5149637348075291059L;
+
 	private String description;
 	private Set<Identifier> actionParameterIds;
 	private Set<Identifier> monitoredElementIds;

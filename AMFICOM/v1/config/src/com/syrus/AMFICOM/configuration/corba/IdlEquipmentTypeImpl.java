@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 final class IdlEquipmentTypeImpl extends IdlEquipmentType {
+	private static final long serialVersionUID = 5892321215108731474L;
 
 	IdlEquipmentTypeImpl() {
 		// empty

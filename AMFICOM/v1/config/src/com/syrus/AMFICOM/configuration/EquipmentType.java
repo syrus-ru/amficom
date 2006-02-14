@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.110.2.2 2006/02/14 00:23:00 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.110.2.3 2006/02/14 01:26:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,12 +25,12 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.110.2.2 $, $Date: 2006/02/14 00:23:00 $
+ * @version $Revision: 1.110.2.3 $, $Date: 2006/02/14 01:26:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
-
- * 	REFLECTOMETER("reflectometer"),
+*/
+ /* 	REFLECTOMETER("reflectometer"),
 	OPTICAL_SWITCH("optical_switch"),
 	MUFF("muff"),
 	CABLE_PANEL("cable_panel"),
@@ -48,6 +48,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
  */
 public final class EquipmentType extends StorableObjectType<EquipmentType> {
+	private static final long serialVersionUID = 361767579292639873L;
 
 	EquipmentType(final Identifier id,
 			final Identifier creatorId,

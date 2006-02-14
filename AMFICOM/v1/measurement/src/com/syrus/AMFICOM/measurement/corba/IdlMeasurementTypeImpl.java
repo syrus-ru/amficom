@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMeasurementTypeImpl.java,v 1.6.2.1 2006/02/11 18:40:47 arseniy Exp $
+ * $Id: IdlMeasurementTypeImpl.java,v 1.6.2.2 2006/02/14 01:26:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,13 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6.2.1 $, $Date: 2006/02/11 18:40:47 $
+ * @version $Revision: 1.6.2.2 $, $Date: 2006/02/14 01:26:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 final class IdlMeasurementTypeImpl extends IdlMeasurementType {
+	private static final long serialVersionUID = 8668456098137824783L;
 
 	IdlMeasurementTypeImpl() {
 		// empty

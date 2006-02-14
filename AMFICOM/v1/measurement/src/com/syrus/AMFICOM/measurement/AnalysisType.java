@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisType.java,v 1.107.2.2 2006/02/11 18:40:45 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.107.2.3 2006/02/14 01:26:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,12 +24,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisTypeHelper;
 
 /**
- * @version $Revision: 1.107.2.2 $, $Date: 2006/02/11 18:40:45 $
+ * @version $Revision: 1.107.2.3 $, $Date: 2006/02/14 01:26:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class AnalysisType extends ActionType<AnalysisType> {
+	private static final long serialVersionUID = -852425306818650355L;
 
 	AnalysisType(final Identifier id,
 			final Identifier creatorId,

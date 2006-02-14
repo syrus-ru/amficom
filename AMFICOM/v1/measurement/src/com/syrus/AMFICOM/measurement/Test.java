@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.2 2006/02/14 00:27:50 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.3 2006/02/14 01:26:43 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -44,13 +44,15 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.183.2.2 $, $Date: 2006/02/14 00:27:50 $
+ * @version $Revision: 1.183.2.3 $, $Date: 2006/02/14 01:26:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
 public final class Test extends StorableObject<Test> implements Describable {
+	private static final long serialVersionUID = 4262860650069224503L;
+
 	private String description;
 	private Identifier groupTestId;
 	private Identifier monitoredElementId;

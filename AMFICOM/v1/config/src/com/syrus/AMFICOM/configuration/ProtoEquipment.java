@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.26.2.1 2006/02/14 00:23:00 arseniy Exp $
+ * $Id: ProtoEquipment.java,v 1.26.2.2 2006/02/14 01:26:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.26.2.1 $, $Date: 2006/02/14 00:23:00 $
+ * @version $Revision: 1.26.2.2 $, $Date: 2006/02/14 01:26:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -63,7 +63,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 		implements Characterizable, Namable,
 		XmlTransferableObject<XmlProtoEquipment>, ReverseDependencyContainer {
-	private static final long serialVersionUID = 7066410483749919904L;
+	private static final long serialVersionUID = 6439194616441623786L;
 
 	private Identifier typeId;
 

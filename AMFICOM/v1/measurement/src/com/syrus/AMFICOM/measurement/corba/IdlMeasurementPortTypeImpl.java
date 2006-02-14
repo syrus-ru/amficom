@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMeasurementPortTypeImpl.java,v 1.8.2.1 2006/02/11 18:40:47 arseniy Exp $
+ * $Id: IdlMeasurementPortTypeImpl.java,v 1.8.2.2 2006/02/14 01:26:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,10 +20,11 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.8.2.1 $, $Date: 2006/02/11 18:40:47 $
+ * @version $Revision: 1.8.2.2 $, $Date: 2006/02/14 01:26:42 $
  * @module measurement
  */
 final class IdlMeasurementPortTypeImpl extends IdlMeasurementPortType {
+	private static final long serialVersionUID = -2566486649673289418L;
 
 	IdlMeasurementPortTypeImpl() {
 		// empty

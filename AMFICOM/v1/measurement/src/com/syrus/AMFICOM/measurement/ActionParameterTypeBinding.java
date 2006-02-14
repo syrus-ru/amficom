@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.2 2006/02/13 19:33:49 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.3 2006/02/14 01:26:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,13 +31,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBindingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBindingPackage.IdlParameterValueKind;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/13 19:33:49 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/02/14 01:26:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class ActionParameterTypeBinding extends StorableObject<ActionParameterTypeBinding> {
-	private static final long serialVersionUID = -5086530158193569493L;
+	private static final long serialVersionUID = -8573213586761059060L;
 
 	static enum ParameterValueKind {
 		ENUMERATED,

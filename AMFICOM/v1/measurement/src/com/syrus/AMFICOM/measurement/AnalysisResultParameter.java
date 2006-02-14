@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisResultParameter.java,v 1.1.2.1 2006/02/11 18:40:45 arseniy Exp $
+ * $Id: AnalysisResultParameter.java,v 1.1.2.2 2006/02/14 01:26:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,12 +20,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisResultParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisResultParameterHelper;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/11 18:40:45 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/02/14 01:26:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class AnalysisResultParameter extends ActionResultParameter<AnalysisResultParameter> {
+	private static final long serialVersionUID = 4357715613876354961L;
 
 	AnalysisResultParameter(final Identifier id,
 			final Identifier creatorId,

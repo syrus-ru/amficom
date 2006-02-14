@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlTestImpl.java,v 1.12.2.2 2006/02/14 00:27:50 arseniy Exp $
+ * $Id: IdlTestImpl.java,v 1.12.2.3 2006/02/14 01:26:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,11 +22,11 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.12.2.2 $, $Date: 2006/02/14 00:27:50 $
+ * @version $Revision: 1.12.2.3 $, $Date: 2006/02/14 01:26:42 $
  * @module measurement
  */
 final class IdlTestImpl extends IdlTest {
-	private static final long serialVersionUID = 8900736807034094131L;
+	private static final long serialVersionUID = -3721286093919419058L;
 
 	IdlTestImpl() {
 		// empty

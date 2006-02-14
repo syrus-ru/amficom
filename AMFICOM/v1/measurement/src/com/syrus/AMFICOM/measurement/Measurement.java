@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.101.2.2 2006/02/13 19:37:42 arseniy Exp $
+ * $Id: Measurement.java,v 1.101.2.3 2006/02/14 01:26:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,13 +27,15 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurement;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementHelper;
 
 /**
- * @version $Revision: 1.101.2.2 $, $Date: 2006/02/13 19:37:42 $
+ * @version $Revision: 1.101.2.3 $, $Date: 2006/02/14 01:26:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
 public final class Measurement extends Action<Measurement> {
+	private static final long serialVersionUID = -1217428566443489958L;
+
 	private Identifier testId;
 
 	Measurement(final Identifier id,

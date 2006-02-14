@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingResultParameter.java,v 1.1.2.1 2006/02/11 18:40:46 arseniy Exp $
+ * $Id: ModelingResultParameter.java,v 1.1.2.2 2006/02/14 01:26:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,12 +20,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingResultParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingResultParameterHelper;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/11 18:40:46 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/02/14 01:26:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class ModelingResultParameter extends ActionResultParameter<ModelingResultParameter> {
+	private static final long serialVersionUID = -5514937939025109447L;
 
 	ModelingResultParameter(final Identifier id,
 			final Identifier creatorId,

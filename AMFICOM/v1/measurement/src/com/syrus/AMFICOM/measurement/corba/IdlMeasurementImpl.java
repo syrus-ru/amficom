@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMeasurementImpl.java,v 1.7.2.2 2006/02/14 00:43:51 arseniy Exp $
+ * $Id: IdlMeasurementImpl.java,v 1.7.2.3 2006/02/14 01:26:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,10 +19,11 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.7.2.2 $, $Date: 2006/02/14 00:43:51 $
+ * @version $Revision: 1.7.2.3 $, $Date: 2006/02/14 01:26:42 $
  * @module measurement
  */
 final class IdlMeasurementImpl extends IdlMeasurement {
+	private static final long serialVersionUID = 5424791828299142935L;
 
 	IdlMeasurementImpl() {
 		// empty

@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBindingPackage.
 import com.syrus.util.Log;
 
 final class IdlActionParameterTypeBindingImpl extends IdlActionParameterTypeBinding {
+	private static final long serialVersionUID = -7387483051059416297L;
 
 	IdlActionParameterTypeBindingImpl() {
 		// empty

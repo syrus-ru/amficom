@@ -1,5 +1,5 @@
 /*-
- * $Id: AveragingMode.java,v 1.1 2005/12/09 13:28:03 saa Exp $
+ * $Id: AveragingMode.java,v 1.1.2.1 2006/02/14 01:26:43 arseniy Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.Date;
  * Описывает режимы усреднения рефлектограмм на агенте и взаимную зависимость
  * ({@link #getBaseAveragingMode()} этих режимов.
  * @author saa
- * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/12/09 13:28:03 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.1.2.1 $, $Date: 2006/02/14 01:26:43 $
  * @module measurement
  */
 public enum AveragingMode {
@@ -42,10 +42,10 @@ public enum AveragingMode {
 			calendar.set(Calendar.SECOND, 0);
 			calendar.set(Calendar.MILLISECOND, 0);
 		} else {
-			base.shiftToRangeBegin();
+			this.base.shiftToRangeBegin();
 		}
 		// FIXME: it seems setting of day of week will not give desired result
-		calendar.set(resetField, resetFieldValue);
+		calendar.set(this.resetField, this.resetFieldValue);
 	}
 
 	public Date getRangeStart(final Date date) {
