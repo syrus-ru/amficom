@@ -1,5 +1,5 @@
 /*
- * $Id: TestCreateSysUser.java,v 1.8 2006/02/14 14:05:09 arseniy Exp $
+ * $Id: TestCreateSysUser.java,v 1.9 2006/02/14 14:07:50 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,12 +7,12 @@
  */
 package com.syrus.AMFICOM.administration;
 
+import static com.syrus.AMFICOM.administration.SystemUserDatabase.SIZE_LOGIN_COLUMN;
 import static com.syrus.AMFICOM.administration.SystemUserWrapper.COLUMN_LOGIN;
 import static com.syrus.AMFICOM.administration.SystemUserWrapper.COLUMN_SORT;
 import static com.syrus.AMFICOM.administration.SystemUserWrapper.SYS_LOGIN;
 import static com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort._USER_SORT_SYSADMIN;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER;
-import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.APOSTROPHE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.COMMA;
@@ -38,9 +38,6 @@ import java.util.Date;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import com.syrus.AMFICOM.administration.SystemUser;
-import com.syrus.AMFICOM.administration.SystemUserDatabase;
-import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
@@ -54,11 +51,14 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2006/02/14 14:05:09 $
+ * @version $Revision: 1.9 $, $Date: 2006/02/14 14:07:50 $
  * @author $Author: arseniy $
  * @module test
  */
 public final class TestCreateSysUser extends TestCase {
+	private static final String TABLE_SHADOW = "Shadow";
+	private static final String COLUMN_USER_ID = "user_id";
+	private static final String COLUMN_PASSWORD = "password";
 	private static final String SYS_PASSWORD = SYS_LOGIN;
 
 	public TestCreateSysUser(final String name) {
