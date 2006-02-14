@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.170 2006/02/14 10:24:28 bob Exp $
+ * $Id: SchedulerModel.java,v 1.171 2006/02/14 10:33:21 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.170 $, $Date: 2006/02/14 10:24:28 $
+ * @version $Revision: 1.171 $, $Date: 2006/02/14 10:33:21 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -636,6 +636,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			if (count > minTestTimesCount) {
 				break;
 			}
+			if (start.equals(end)) {
+  				break;
+  			}
 			start = end;
 		}
 	
@@ -1805,7 +1808,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	      				return result;
 	      			}
       			}
-      			start = end1;
+      			if (start.equals(end1)) {
+      				break;
+      			}
+      			start = end1;      			
       		}
       		return null;
       	}
