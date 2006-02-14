@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.30 2006/01/31 13:08:15 arseniy Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.31 2006/02/14 10:25:45 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
 
 
 /**
- * @version $Revision: 1.30 $, $Date: 2006/01/31 13:08:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2006/02/14 10:25:45 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
@@ -147,11 +147,11 @@ public final class PeriodicalTemporalPattern
 		final Date startInterval,
 		final Date endInterval) {
 		
-		if (start.compareTo(end) >= 0) {
+		if (start.compareTo(end) > 0) {
 			throw new IllegalArgumentException("Start date later than end date");
 		}
 		
-		if (startInterval.compareTo(endInterval) >= 0) {
+		if (startInterval.compareTo(endInterval) > 0) {
 			throw new IllegalArgumentException("Start interval date later than end interval date");
 		}
 		

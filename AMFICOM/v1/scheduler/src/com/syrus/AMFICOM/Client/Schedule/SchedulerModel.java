@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.169 2006/02/13 12:22:55 bob Exp $
+ * $Id: SchedulerModel.java,v 1.170 2006/02/14 10:24:28 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.169 $, $Date: 2006/02/13 12:22:55 $
+ * @version $Revision: 1.170 $, $Date: 2006/02/14 10:24:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -1551,15 +1551,22 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 //				Log.DEBUGLEVEL03);
 			Date start = startDate.compareTo(test.getStartTime()) < 0 ? test.getStartTime() : startDate;
 			final Date end2 = endDate.compareTo(test.getEndTime()) < 0 ? endDate : test.getEndTime();
-//			assert Log.debugMessage("Start: " + start + ", end2: " + end2, Log.DEBUGLEVEL03);
+			assert Log.debugMessage("Start: " + start + ", end2: " + end2, Log.DEBUGLEVEL03);
 			while(start.compareTo(end2) <= 0) {
 				final Date end = start.getTime() + interval < end2.getTime() ? new Date(start.getTime() + interval) : end2;
+				assert Log.debugMessage("Start:" + start + ", end:" + end, Log.DEBUGLEVEL03);
+				assert Log.debugMessage(new Date(start.getTime() + interval) + " < " + end2 + " ? " + new Date(start.getTime() + interval) + " : " + end2, Log.DEBUGLEVEL03);
 				final SortedSet<Date> times = this.getTestTimes(temporalPattern, startDate, end2, start, end, 0L);
 //				assert Log.debugMessage("Times: " + times, Log.DEBUGLEVEL03);
-				final String result = this.isValid0(monitoredElementId, test, times, localStartEndTimeMap, measurementDuration);
-//				assert Log.debugMessage("Result: " + result, Log.DEBUGLEVEL03);
-				if (result != null) {
-					return result;
+				if (!times.isEmpty()) {
+					final String result = this.isValid0(monitoredElementId, test, times, localStartEndTimeMap, measurementDuration);
+	//				assert Log.debugMessage("Result: " + result, Log.DEBUGLEVEL03);
+					if (result != null) {
+						return result;
+					}
+				}
+				if (start.equals(end)) {
+					break;
 				}
 				start = end;
 			}
@@ -1577,6 +1584,13 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		final Date startTime0 = offset == 0 ? startDate : new Date(startDate.getTime() + offset);
 		final Date endTime0 = offset == 0 ? endDate : new Date(endDate.getTime() + offset);
 		
+//		assert Log.debugMessage("startDate:" + startDate 
+//				+ ", endDate:" + endDate
+//				+ ", startTime0:" + startTime0
+//				+ ", endTime0:" + endTime0
+//				+ ", startInterval: " + startInterval
+//				+ ", endInterval:" + endInterval, 
+//				Log.DEBUGLEVEL03);
 		final SortedSet<Date> times;
 		if (temporalPattern != null) {
 			times = temporalPattern.getTimes(startTime0,
