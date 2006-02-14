@@ -1,4 +1,4 @@
--- $Id: kis.sql,v 1.2 2005/09/28 05:32:51 arseniy Exp $
+-- $Id: kis.sql,v 1.2.2.1 2006/02/14 09:59:19 arseniy Exp $
 
 CREATE TABLE KIS (
  id NUMBER(19),
@@ -8,12 +8,12 @@ CREATE TABLE KIS (
  modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- domain_id,
+ domain_id NOT NULL,
  name VARCHAR2(128 CHAR) NOT NULL,
  description VARCHAR2(256 CHAR),
- hostname VARCHAR2(64 CHAR),
- tcp_port NUMBER(5,0),
- equipment_id,
+ hostname VARCHAR2(64 CHAR) NOT NULL,
+ tcp_port NUMBER(5,0) NOT NULL,
+ equipment_id NOT NULL,
  mcm_id NOT NULL,
 --
  CONSTRAINT kis_pk PRIMARY KEY (id),
