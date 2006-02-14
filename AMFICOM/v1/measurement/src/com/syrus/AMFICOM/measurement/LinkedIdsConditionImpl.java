@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.71 2006/01/26 15:15:34 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.71.2.1 2006/02/14 01:09:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,14 @@ import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTRESULTPARAMETER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSISRESULTPARAMETER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MODELINGRESULTPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 
 import java.util.HashSet;
@@ -37,7 +39,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2006/01/26 15:15:34 $
+ * @version $Revision: 1.71.2.1 $, $Date: 2006/02/14 01:09:56 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -97,11 +99,11 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
 			case ANALYSIS_CODE:
-				final Action action = (Action) storableObject;
+				final Analysis analysis = (Analysis) storableObject;
 				switch (this.linkedEntityCode) {
 					case MEASUREMENT_CODE:
-						final Identifier parentActionId = action.getParentActionId();
-						condition = super.conditionTest(parentActionId);
+						final Identifier measurementId = analysis.getMeasurementId();
+						condition = super.conditionTest(measurementId);
 						break;
 					default:
 						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
@@ -137,12 +139,12 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
-			case MEASUREMENTSETUP_CODE:
-				final MeasurementSetup measurementSetup = (MeasurementSetup) storableObject;
+			case ACTIONTEMPLATE_CODE:
+				final ActionTemplate actionTemplate = (ActionTemplate) storableObject;
 				switch (this.linkedEntityCode) {
 					case MONITOREDELEMENT_CODE:
 						final Set<Identifier> params = new HashSet<Identifier>();
-						params.addAll(measurementSetup.getMonitoredElementIds());
+						params.addAll(actionTemplate.getMonitoredElementIds());
 						condition = super.conditionTest(params);
 						break;
 					default:
@@ -151,41 +153,54 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
-			case RESULT_CODE:
-				final Result result = (Result) storableObject;
-				if (this.linkedEntityCode == MEASUREMENT_CODE
-						|| this.linkedEntityCode == ANALYSIS_CODE
-						|| this.linkedEntityCode == MODELING_CODE) {
-					try {
-						for (Action a = result.getAction(); a != null; a = a.getParentAction()) {
-							if (super.conditionTest(a.getId())) {
-								condition = true;
-								break;
-							}
-						}
-					} catch (ApplicationException ae) {
-						Log.errorMessage(ae);
-					}
-				} else {
-					throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
-							+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
-							IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+			case MEASUREMENTRESULTPARAMETER_CODE:
+				final MeasurementResultParameter measurementResultParameter = (MeasurementResultParameter) storableObject;
+				switch (this.linkedEntityCode) {
+					case MEASUREMENT_CODE:
+						condition = super.conditionTest(measurementResultParameter.getMeasurementId());
+						break;
+				}
+				break;
+			case ANALYSISRESULTPARAMETER_CODE:
+				final AnalysisResultParameter analysisResultParameter = (AnalysisResultParameter) storableObject;
+				switch (this.linkedEntityCode) {
+					case ANALYSIS_CODE:
+						condition = super.conditionTest(analysisResultParameter.getAnalysisId());
+						break;
+				}
+				break;
+			case MODELINGRESULTPARAMETER_CODE:
+				final ModelingResultParameter modelingResultParameter = (ModelingResultParameter) storableObject;
+				switch (this.linkedEntityCode) {
+					case ANALYSIS_CODE:
+						condition = super.conditionTest(modelingResultParameter.getModelingId());
+						break;
 				}
 				break;
 			case TEST_CODE:
 				final Test test = (Test) storableObject;
 				switch (this.linkedEntityCode) {
 					case MONITOREDELEMENT_CODE:
-						condition = super.conditionTest(test.getMonitoredElement().getId());
+						condition = super.conditionTest(test.getMonitoredElementId());
 						break;
 					case MEASUREMENTPORT_CODE:
-						condition = super.conditionTest(test.getMonitoredElement().getMeasurementPortId());
+						try {
+							condition = super.conditionTest(test.getMonitoredElement().getMeasurementPortId());
+						} catch (ApplicationException ae) {
+							Log.errorMessage(ae);
+							condition = false;
+						}
 						break;
 					case MCM_CODE:
-						condition = super.conditionTest(test.getMCMId());
+						try {
+							condition = super.conditionTest(test.getMCMId());
+						} catch (ApplicationException ae) {
+							Log.errorMessage(ae);
+							condition = false;
+						}
 						break;
-					case MEASUREMENTSETUP_CODE:
-						condition = super.conditionTest(test.getMeasurementSetupIds());
+					case ACTIONTEMPLATE_CODE:
+						condition = super.conditionTest(test.getMeasurementTemplateIds());
 						break;
 					case TEST_CODE:
 						condition = super.conditionTest(test.getGroupTestId());
@@ -270,8 +285,10 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		switch (entityCode.shortValue()) {
 			case ANALYSIS_CODE:
 			case MEASUREMENT_CODE:
-			case MEASUREMENTSETUP_CODE:
-			case RESULT_CODE:
+			case ACTIONTEMPLATE_CODE:
+			case MEASUREMENTRESULTPARAMETER_CODE:
+			case ANALYSISRESULTPARAMETER_CODE:
+			case MODELINGRESULTPARAMETER_CODE:
 			case TEST_CODE:
 			case KIS_CODE:
 			case MONITOREDELEMENT_CODE:

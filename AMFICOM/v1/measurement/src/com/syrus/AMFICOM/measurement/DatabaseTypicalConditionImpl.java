@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.28.2.1 2006/02/11 18:40:45 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.28.2.2 2006/02/14 01:09:56 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
@@ -18,12 +19,11 @@ import com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.TableNames;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.28.2.1 $, $Date: 2006/02/11 18:40:45 $
+ * @version $Revision: 1.28.2.2 $, $Date: 2006/02/14 01:09:56 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -37,49 +37,28 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 
 	@Override
 	protected String getLinkedThisColumnName() throws IllegalObjectEntityException {
-		switch (super.condition.getEntityCode().shortValue()) {
-			case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
-				return MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID;
-			case ObjectEntities.MEASUREMENTSETUP_CODE:
-				return MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID;
-			default:
-				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
-						+ "' is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
-		}
+		throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
+				+ "' is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 	
 	@Override
 	protected String getLinkedColumnName() throws IllegalObjectEntityException {
-		switch (super.condition.getEntityCode().shortValue()) {
-			case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
-				return MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
-			case ObjectEntities.MEASUREMENTSETUP_CODE:
-				return MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
-			default:
-				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
-						+ "' is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
-		}
+		throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
+				+ "' is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
 	@Override
 	protected String getLinkedTableName() throws IllegalObjectEntityException {
-		switch (super.condition.getEntityCode().shortValue()) {
-			case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
-				return TableNames.MNTPORTTYPMNTTYPLINK;
-			case ObjectEntities.MEASUREMENTSETUP_CODE:
-				return TableNames.MEASUREMENTSETUP_MT_LINK;
-			default:
-				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
-						+ "' is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
-		}
+		throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
+				+ "' is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
 	@Override
 	protected boolean isKeySupported(final String key) {
 		switch (this.condition.getEntityCode().shortValue()) {
 		case MEASUREMENT_CODE:
-			return key == MeasurementWrapper.COLUMN_STATUS
-					|| key == MeasurementWrapper.COLUMN_START_TIME
+			return key == ActionWrapper.COLUMN_STATUS
+					|| key == ActionWrapper.COLUMN_START_TIME
 					|| key == StorableObjectWrapper.COLUMN_NAME;
 		case TEST_CODE:
 			return key == TestWrapper.COLUMN_START_TIME
@@ -89,11 +68,9 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 		case PERIODICALTEMPORALPATTERN_CODE:
 			return key == PeriodicalTemporalPatternWrapper.COLUMN_PERIOD;
 		case MEASUREMENTPORT_TYPE_CODE:
-			return key == StorableObjectWrapper.COLUMN_CODENAME
-						|| key == MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
-		case MEASUREMENTSETUP_CODE:
-			return key == MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE
-						|| key == StorableObjectWrapper.COLUMN_DESCRIPTION;
+			return key == StorableObjectWrapper.COLUMN_CODENAME;
+		case ACTIONTEMPLATE_CODE:
+			return key == StorableObjectWrapper.COLUMN_DESCRIPTION;
 		case MONITOREDELEMENT_CODE:
 			return key == StorableObjectWrapper.COLUMN_NAME;
 		default:
