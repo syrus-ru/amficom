@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapState.java,v 1.17 2005/10/31 12:30:07 bass Exp $$
+ * $$Id: MapState.java,v 1.18 2006/02/14 10:28:10 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.client.map;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 import com.syrus.util.Log;
 
@@ -19,8 +18,8 @@ import com.syrus.util.Log;
  * (mouseMode) - включенный режим (operationMode) - действие над элементами в
  * нулевом режиме (actionMode) -режим отображения линий (showMode)
  * 
- * @version $Revision: 1.17 $, $Date: 2005/10/31 12:30:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2006/02/14 10:28:10 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -148,7 +147,7 @@ public final class MapState {
 	 */
 	public void setMouseMode(int mode) {
 		this.mouseMode = mode;
-		Log.debugMessage("Set mouse mode " + mouseModeToString(), Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage("Set mouse mode " + mouseModeToString(), Log.DEBUGLEVEL08); //$NON-NLS-1$
 	}
 
 	/**
@@ -167,7 +166,7 @@ public final class MapState {
 	 */
 	public void setActionMode(int mode) {
 		this.actionMode = mode;
-		Log.debugMessage("Set action mode " + actionModeToString(), Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage("Set action mode " + actionModeToString(), Log.DEBUGLEVEL08); //$NON-NLS-1$
 	}
 
 	/**
@@ -186,7 +185,7 @@ public final class MapState {
 	 */
 	public void setOperationMode(int mode) {
 		this.operationMode = mode;
-		Log.debugMessage("Set operation mode " + operationModeToString(), Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage("Set operation mode " + operationModeToString(), Log.DEBUGLEVEL08); //$NON-NLS-1$
 	}
 
 	/**
@@ -205,7 +204,7 @@ public final class MapState {
 	 */
 	public void setShowMode(int mode) {
 		this.showMode = mode;
-		Log.debugMessage("Set show mode " + showModeToString(), Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage("Set show mode " + showModeToString(), Log.DEBUGLEVEL08); //$NON-NLS-1$
 	}
 
 	public String actionModeToString() {
