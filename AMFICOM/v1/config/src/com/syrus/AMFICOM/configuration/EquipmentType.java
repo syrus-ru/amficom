@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.110.2.1 2006/02/06 14:46:30 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.110.2.2 2006/02/14 00:23:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,29 +7,30 @@
  */
 package com.syrus.AMFICOM.configuration;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
-
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.bugs.Crutch136;
 import com.syrus.AMFICOM.configuration.corba.IdlEquipmentType;
-import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment.XmlEquipmentType;
+import com.syrus.AMFICOM.configuration.corba.IdlEquipmentTypeHelper;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.Namable;
-import com.syrus.util.transport.idl.IdlTransferableObject;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.110.2.1 $, $Date: 2006/02/06 14:46:30 $
+ * @version $Revision: 1.110.2.2 $, $Date: 2006/02/14 00:23:00 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
- */
-public enum EquipmentType implements Namable, IdlTransferableObject<IdlEquipmentType> {
-	REFLECTOMETER("reflectometer"),
+
+ * 	REFLECTOMETER("reflectometer"),
 	OPTICAL_SWITCH("optical_switch"),
 	MUFF("muff"),
 	CABLE_PANEL("cable_panel"),
@@ -45,111 +46,86 @@ public enum EquipmentType implements Namable, IdlTransferableObject<IdlEquipment
 	@Crutch136(notes = "Stub for SchemeElement without Equipment")
 	BUG_136("bug136");
 
-	private static final String KEY_ROOT = "EquipmentType.Description.";
+ */
+public final class EquipmentType extends StorableObjectType<EquipmentType> {
 
-	private String codename;
-	private String description;
-
-	private EquipmentType(final String codename) {
-		this.codename = codename;
-		this.description = LangModelConfiguration.getString(KEY_ROOT + this.codename);
+	EquipmentType(final Identifier id,
+			final Identifier creatorId,
+			final StorableObjectVersion version,
+			final String codename,
+			final String description) {
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				codename,
+				description);
 	}
 
-	public static EquipmentType valueOf(final int code) {
-		switch (code) {
-			case IdlEquipmentType._REFLECTOMETER:
-				return REFLECTOMETER;
-			case IdlEquipmentType._OPTICAL_SWITCH:
-				return OPTICAL_SWITCH;
-			case IdlEquipmentType._MUFF:
-				return MUFF;
-			case IdlEquipmentType._CABLE_PANEL:
-				return CABLE_PANEL;
-			case IdlEquipmentType._TRANSMITTER:
-				return TRANSMITTER;
-			case IdlEquipmentType._RECEIVER:
-				return RECEIVER;
-			case IdlEquipmentType._MULTIPLEXOR:
-				return MULTIPLEXOR;
-			case IdlEquipmentType._CROSS:
-				return CROSS;
-			case IdlEquipmentType._FILTER:
-				return FILTER;
-			case IdlEquipmentType._OTHER:
-				return OTHER;
-			case IdlEquipmentType._UNKNOWN:
-				return UNKNOWN;
-			case IdlEquipmentType._RACK:
-				return RACK;
-
-			case IdlEquipmentType._BUG_136:
-				return BUG_136;
-			default:
-				throw new IllegalArgumentException("Illegal code: " + code);
+	public EquipmentType(final IdlEquipmentType idlEquipmentType) throws CreateObjectException {
+		try {
+			this.fromTransferable(idlEquipmentType);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
-	public static EquipmentType fromTransferable(final IdlEquipmentType idlEquipmentType) {
-		return valueOf(idlEquipmentType.value());
+	@Override
+	public IdlEquipmentType getIdlTransferable(final ORB orb) {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+		return IdlEquipmentTypeHelper.init(orb,
+				super.id.getIdlTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getIdlTransferable(),
+				super.modifierId.getIdlTransferable(),
+				super.version.longValue(),
+				super.codename,
+				super.description != null ? super.description : "");
 	}
 
-	public static EquipmentType fromXmlTransferable(final XmlEquipmentType.Enum xmlEquipmentType) {
-		return valueOf(xmlEquipmentType.intValue() - 1);
-	}
+	@Override
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+		final IdlEquipmentType idlEquipmentType = (IdlEquipmentType) transferable;
+		super.fromTransferable(idlEquipmentType, idlEquipmentType.codename, idlEquipmentType.description);
 
-	public String getCodename() {
-		return this.codename;
-	}
-
-	public String getDescription() {
-		return this.description;
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	public String getName() {
-		return this.description;
+		return super.getDescription();
 	}
 
 	public void setName(final String name) {
 		throw new UnsupportedOperationException(ErrorMessages.METHOD_NOT_NEEDED);
 	}
 
-	public IdlEquipmentType getIdlTransferable(final ORB orb) {
-		try {
-			return IdlEquipmentType.from_int(this.ordinal());
-		} catch (org.omg.CORBA.BAD_PARAM bp) {
-			throw new IllegalArgumentException("Illegal code: " + this.ordinal());
-		}
-	}
-	
-	public XmlEquipmentType.Enum getXmlTransferable() {
-		return XmlEquipmentType.Enum.forInt(this.ordinal() + 1);
-	}
-
-	public static IdlEquipmentType[] createTransferables(final EnumSet<EquipmentType> equipmentTypes, final ORB orb) {
-		assert equipmentTypes != null : ErrorMessages.NON_NULL_EXPECTED;
-
-		final IdlEquipmentType[] idlEquipmentTypes = new IdlEquipmentType[equipmentTypes.size()];
-		int i = 0;
-		synchronized (equipmentTypes) {
-			for (final EquipmentType equipmentType : equipmentTypes) {
-				idlEquipmentTypes[i++] = equipmentType.getIdlTransferable(orb);
-			}
-		}
-		return idlEquipmentTypes;
-	}
-
-	public static EnumSet<EquipmentType> fromTransferables(final IdlEquipmentType[] idlEquipmentTypes) {
-		assert idlEquipmentTypes != null: NON_NULL_EXPECTED;
-
-		final Collection<EquipmentType> equipmentTypes = new HashSet<EquipmentType>(idlEquipmentTypes.length);
-		for (final IdlEquipmentType idlEquipmentType : idlEquipmentTypes) {
-			equipmentTypes.add(EquipmentType.fromTransferable(idlEquipmentType));
-		}
-		return EnumSet.copyOf(equipmentTypes);
+	/**
+	 * If add additional fields to class,
+	 * remove Override annotation.
+	 */
+	@Override
+	protected synchronized final void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String codename,
+			final String description) {
+		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 	}
 
 	@Override
-	public String toString() {
-		return this.getCodename() + " " + this.ordinal();
+	protected Set<Identifiable> getDependenciesTmpl() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		return Collections.emptySet();
+	}
+
+	@Override
+	public EquipmentTypeWrapper getWrapper() {
+		return EquipmentTypeWrapper.getInstance();
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: IdlProtoEquipmentImpl.java,v 1.5 2005/10/31 12:29:56 bass Exp $
+ * $Id: IdlProtoEquipmentImpl.java,v 1.5.2.1 2006/02/14 00:23:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/10/31 12:29:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.5.2.1 $, $Date: 2006/02/14 00:23:00 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -34,7 +34,7 @@ final class IdlProtoEquipmentImpl extends IdlProtoEquipment {
 			final IdlIdentifier creatorId,
 			final IdlIdentifier modifierId,
 			final long version,
-			final IdlEquipmentType type,
+			final IdlIdentifier _typeId,
 			final String name,
 			final String description,
 			final String manufacturer,
@@ -45,7 +45,7 @@ final class IdlProtoEquipmentImpl extends IdlProtoEquipment {
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 		this.version = version;
-		this.type = type;
+		this._typeId = _typeId;
 		this.name = name;
 		this.description = description;
 		this.manufacturer = manufacturer;
