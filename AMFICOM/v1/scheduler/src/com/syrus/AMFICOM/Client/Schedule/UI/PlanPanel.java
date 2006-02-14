@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.79 2006/02/14 12:57:21 bob Exp $
+ * $Id: PlanPanel.java,v 1.80 2006/02/14 14:05:19 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2006/02/14 12:57:21 $
+ * @version $Revision: 1.80 $, $Date: 2006/02/14 14:05:19 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -499,11 +499,11 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		final long end = PlanPanel.this.scaleEnd.getTime();
 		
 		this.cal.setTimeInMillis(start);
-//		this.cal.set(Calendar.HOUR_OF_DAY, 0);
-//		this.cal.set(Calendar.MINUTE, 0);
+		this.cal.set(Calendar.HOUR_OF_DAY, 0);
+		this.cal.set(Calendar.MINUTE, 0);
 
-//		long start2 = this.cal.getTimeInMillis();
-		long start2 = start;
+		long start2 = this.cal.getTimeInMillis();
+//		long start2 = start;
 		
 		final long timeRegion = end - start;
 		
