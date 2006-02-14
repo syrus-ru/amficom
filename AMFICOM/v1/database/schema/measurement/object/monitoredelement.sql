@@ -1,4 +1,4 @@
--- $Id: monitoredelement.sql,v 1.1 2005/08/21 16:40:32 arseniy Exp $
+-- $Id: monitoredelement.sql,v 1.1.2.1 2006/02/14 10:01:07 arseniy Exp $
 
 CREATE TABLE MonitoredElement (
  id NUMBER(19),
@@ -8,13 +8,13 @@ CREATE TABLE MonitoredElement (
  modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- domain_id,
+ domain_id NOT NULL,
 --
- name  VARCHAR2(128 CHAR),
+ name VARCHAR2(128 CHAR),
 --
  measurement_port_id NOT NULL,
 --
- sort NUMBER(2) NOT NULL,
+ kind NUMBER(2) NOT NULL,
  local_address VARCHAR2(64 CHAR) NOT NULL, 
 --
  CONSTRAINT me_pk PRIMARY KEY (id),
@@ -26,9 +26,9 @@ CREATE TABLE MonitoredElement (
  CONSTRAINT me_domain_fk FOREIGN KEY (domain_id)
   REFERENCES Domain (id) ON DELETE CASCADE,
 --
- CONSTRAINT me_meport_fk FOREIGN KEY (measurement_port_id)
+ CONSTRAINT me_mp_fk FOREIGN KEY (measurement_port_id)
   REFERENCES MeasurementPort (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE monitoredelement_seq ORDER;
+CREATE SEQUENCE MonitoredElement_seq ORDER;
 
