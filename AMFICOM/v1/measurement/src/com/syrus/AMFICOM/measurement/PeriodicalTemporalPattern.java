@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.31 2006/02/14 10:25:45 bob Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.32 2006/02/14 12:39:41 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
 
 
 /**
- * @version $Revision: 1.31 $, $Date: 2006/02/14 10:25:45 $
+ * @version $Revision: 1.32 $, $Date: 2006/02/14 12:39:41 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement
@@ -161,10 +161,10 @@ public final class PeriodicalTemporalPattern
 				endInterval.getTime() : 
 				end.getTime();
 		
+		final long d = startInterval.getTime() - start0;
 		final long startTime0 = start.compareTo(startInterval) < 0 ? 
-				start0 + this.period * (1 + (int)(startInterval.getTime() - start0) / this.period) :
+				start0 + this.period * ((d % this.period == 0 ? 0 : 1) + d / this.period) :
 				start0;
-				
 		final SortedSet<Date> times1 = new TreeSet<Date>();
 		for(long time = startTime0; time <= end0; time += this.period) {
 			times1.add(new Date(time));
