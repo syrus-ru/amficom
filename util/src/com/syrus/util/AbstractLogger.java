@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLogger.java,v 1.15 2006/02/09 14:36:30 saa Exp $
+ * $Id: AbstractLogger.java,v 1.16 2006/02/14 11:08:20 saa Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import java.util.logging.Level;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.15 $, $Date: 2006/02/09 14:36:30 $
+ * @version $Revision: 1.16 $, $Date: 2006/02/14 11:08:20 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
@@ -249,7 +249,8 @@ abstract class AbstractLogger implements Logger {
 		t.printStackTrace(out);
 	}
 
-	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("HH:mm:ss");
+	private static final SimpleDateFormat SIMPLE_DATE_FORMAT =
+		new SimpleDateFormat("HH:mm:ss.SSS");
 
 	private static void logTimestamp(final PrintWriter out) {
 		out.print(SIMPLE_DATE_FORMAT.format(new Date()) + "| ");
