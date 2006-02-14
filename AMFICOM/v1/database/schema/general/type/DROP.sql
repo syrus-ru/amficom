@@ -1,5 +1,9 @@
--- $Id: DROP.sql,v 1.6 2005/08/21 15:11:08 arseniy Exp $
+-- $Id: DROP.sql,v 1.6.2.1 2006/02/14 09:43:29 arseniy Exp $
 
-DROP TABLE characteristictype;
+PROMPT 02. Dropping table ParameterType...;
+DROP TABLE ParameterType;
+DROP SEQUENCE ParameterType_seq;
 
-DROP SEQUENCE characteristictype_seq;
+PROMPT 01. Dropping table CharacteristicType...;
+DROP TABLE CharacteristicType;
+DROP SEQUENCE CharacteristicType_seq;
