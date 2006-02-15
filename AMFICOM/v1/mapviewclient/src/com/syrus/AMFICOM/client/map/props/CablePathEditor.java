@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathEditor.java,v 1.18 2005/10/18 07:21:13 krupenn Exp $$
+ * $$Id: CablePathEditor.java,v 1.19 2006/02/15 11:55:14 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,10 +31,11 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/18 07:21:13 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.19 $, $Date: 2006/02/15 11:55:14 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -68,7 +69,7 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 		try {
 			jbInit();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 
@@ -340,7 +341,7 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 			try {
 				this.topologicalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.cablePath.getLengthLt()));
 			} catch(ApplicationException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 				return;
 			}
 			this.physicalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.cablePath.getLengthLf()));
@@ -374,7 +375,7 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 			System.out.println(ex.getMessage());
 		} 
 		catch(Exception ex) {
-			ex.printStackTrace();
+			Log.errorMessage(ex);
 		}
 		super.commitChanges();
 	}

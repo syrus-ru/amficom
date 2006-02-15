@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathAddEditor.java,v 1.36 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: CablePathAddEditor.java,v 1.37 2006/02/15 11:55:14 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -65,7 +66,7 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.37 $, $Date: 2006/02/15 11:55:14 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -150,7 +151,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 	}
@@ -272,8 +273,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					try {
 						addBinding();
 					} catch(ApplicationException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						Log.errorMessage(e1);
 					}
 				}
 			});
@@ -289,8 +289,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					try {
 						addChainBinding();
 					} catch(ApplicationException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						Log.errorMessage(e1);
 					}
 				}
 			});
@@ -306,8 +305,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					try {
 						removeBinding();
 					} catch(ApplicationException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						Log.errorMessage(e1);
 					}
 				}
 			});
@@ -669,7 +667,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		try {
 			unboundType = LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_UNBOUND);
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return;
 		}
 
@@ -904,9 +902,9 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 	}
 	
 	void clearBinding() throws ApplicationException {
-		this.cablePath.clearLinks();
-		final CableChannelingItem firstCCI = this.cablePath.getSchemeCableLink().getPathMembers().iterator().next();
+		final CableChannelingItem firstCCI = this.cablePath.getCachedCCIs().iterator().next();
 		firstCCI.setParentPathOwner(null, true);
+		this.cablePath.clearLinks();
 
 		AbstractNode cableStart = this.cablePath.getStartNode();
 		AbstractNode cableEnd = this.cablePath.getEndNode();
@@ -950,9 +948,15 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					toSite);
 
 		if(insertBefore) {
+			Log.debugMessage("CablePathAddEditor | addLinkBinding : try to insert " + 
+					newCableChannelingItem + " with seqNum '" + newCableChannelingItem.getSequentialNumber() + 
+					"' before " + unboundCableChannelingItem + " with seqNum '" + unboundCableChannelingItem.getSequentialNumber() + "'", Level.FINER);
 			newCableChannelingItem.insertSelfBefore(unboundCableChannelingItem);
 		}
 		else {
+			Log.debugMessage("CablePathAddEditor | addLinkBinding : try to insert " + 
+					newCableChannelingItem + " with seqNum '" + newCableChannelingItem.getSequentialNumber() + 
+					"' after " + unboundCableChannelingItem + " with seqNum '" + unboundCableChannelingItem.getSequentialNumber() + "'", Level.FINER);
 			newCableChannelingItem.insertSelfAfter(unboundCableChannelingItem);
 		}
 
