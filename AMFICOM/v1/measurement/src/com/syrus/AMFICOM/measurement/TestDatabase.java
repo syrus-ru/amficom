@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.137.2.2 2006/02/14 00:26:59 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.137.2.3 2006/02/15 19:37:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,7 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
-import static com.syrus.AMFICOM.general.TableNames.TEST_ANATMPL_LINK;
-import static com.syrus.AMFICOM.general.TableNames.TEST_MEASTMPL_LINK;
+import static com.syrus.AMFICOM.general.TableNames.TEST_MS_LINK;
 import static com.syrus.AMFICOM.general.TableNames.TEST_STOP_LINK;
 import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_ANALYSIS_TYPE_ID;
 import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_END_TIME;
@@ -28,8 +27,7 @@ import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_START_TIME;
 import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_STATUS;
 import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_TEMPORAL_PATTERN_ID;
 import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_TEMPORAL_TYPE;
-import static com.syrus.AMFICOM.measurement.TestWrapper.LINK_COLUMN_ANALYSIS_TEMPLATE_ID;
-import static com.syrus.AMFICOM.measurement.TestWrapper.LINK_COLUMN_MEASUREMENT_TEMPLATE_ID;
+import static com.syrus.AMFICOM.measurement.TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID;
 import static com.syrus.AMFICOM.measurement.TestWrapper.LINK_COLUMN_TEST_ID;
 
 import java.sql.Connection;
@@ -65,7 +63,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.137.2.2 $, $Date: 2006/02/14 00:26:59 $
+ * @version $Revision: 1.137.2.3 $, $Date: 2006/02/15 19:37:18 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -172,7 +170,6 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 						null,
 						0,
 						null,
-						null,
 						null)
 					: storableObject;
 		final String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
@@ -218,14 +215,9 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 		}
 
 		final Map<Identifier, Set<Identifier>> measurementTemplateIdsMap = this.retrieveLinkedEntityIds(tests,
-				TEST_MEASTMPL_LINK,
+				TEST_MS_LINK,
 				LINK_COLUMN_TEST_ID,
-				LINK_COLUMN_MEASUREMENT_TEMPLATE_ID);
-
-		final Map<Identifier, Set<Identifier>> analysisTemplateIdsMap = this.retrieveLinkedEntityIds(tests,
-				TEST_ANATMPL_LINK,
-				LINK_COLUMN_TEST_ID,
-				LINK_COLUMN_ANALYSIS_TEMPLATE_ID);
+				LINK_COLUMN_MEASUREMENT_SETUP_ID);
 
 		final Map<Identifier, SortedMap<Date, String>> stops = this.retrieveStops(tests);
 		
@@ -233,10 +225,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 			final Identifier testId = test.getId();
 
 			final Set<Identifier> measurementTemplateIds = measurementTemplateIdsMap.get(testId);
-			test.setMeasurementTemplateIds0(measurementTemplateIds);
-
-			final Set<Identifier> analysisTemplateIds = analysisTemplateIdsMap.get(testId);
-			test.setAnalysisTemplateIds0(analysisTemplateIds);
+			test.setMeasurementSetupIds0(measurementTemplateIds);
 			
 			final SortedMap<Date, String> stopMap = stops.get(testId);
 			test.setStopMap0(stopMap);
@@ -313,17 +302,11 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 	protected void insert(final Set<Test> tests) throws IllegalDataException, CreateObjectException {
 		super.insert(tests);
 
-		final Map<Identifier, Set<Identifier>> measurementTemplateIdsMap = this.createMeasurementTemplateIdsMap(tests);
+		final Map<Identifier, Set<Identifier>> measurementTemplateIdsMap = this.createMeasurementSetupIdsMap(tests);
 		super.insertLinkedEntityIds(measurementTemplateIdsMap,
-				TEST_MEASTMPL_LINK,
+				TEST_MS_LINK,
 				LINK_COLUMN_TEST_ID,
-				LINK_COLUMN_MEASUREMENT_TEMPLATE_ID);		
-
-		final Map<Identifier, Set<Identifier>> analysisTemplateIdsMap = this.createAnalysisTemplateIdsMap(tests);
-		super.insertLinkedEntityIds(analysisTemplateIdsMap,
-				TEST_ANATMPL_LINK,
-				LINK_COLUMN_TEST_ID,
-				LINK_COLUMN_ANALYSIS_TEMPLATE_ID);		
+				LINK_COLUMN_MEASUREMENT_SETUP_ID);		
 
 		final Map<Identifier, SortedMap<Date, String>> idsStopsMap = this.createStopsMap(tests);
 		this.insertStops(idsStopsMap);
@@ -395,17 +378,11 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 	protected void update(final Set<Test> tests) throws UpdateObjectException {
 		super.update(tests);
 
-		final Map<Identifier, Set<Identifier>> measurementTemplateIdsMap = this.createMeasurementTemplateIdsMap(tests);
+		final Map<Identifier, Set<Identifier>> measurementTemplateIdsMap = this.createMeasurementSetupIdsMap(tests);
 		super.updateLinkedEntityIds(measurementTemplateIdsMap,
-				TEST_MEASTMPL_LINK,
+				TEST_MS_LINK,
 				LINK_COLUMN_TEST_ID,
-				LINK_COLUMN_MEASUREMENT_TEMPLATE_ID);		
-
-		final Map<Identifier, Set<Identifier>> analysisTemplateIdsMap = this.createAnalysisTemplateIdsMap(tests);
-		super.updateLinkedEntityIds(analysisTemplateIdsMap,
-				TEST_ANATMPL_LINK,
-				LINK_COLUMN_TEST_ID,
-				LINK_COLUMN_ANALYSIS_TEMPLATE_ID);		
+				LINK_COLUMN_MEASUREMENT_SETUP_ID);		
 
 		this.updateStops(tests);
 	}
@@ -452,20 +429,12 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 		}
 	}
 
-	private Map<Identifier, Set<Identifier>> createMeasurementTemplateIdsMap(final Set<Test> tests) {
+	private Map<Identifier, Set<Identifier>> createMeasurementSetupIdsMap(final Set<Test> tests) {
 		final Map<Identifier, Set<Identifier>> measurementTemplateIdsMap = new HashMap<Identifier, Set<Identifier>>();
 		for (final Test test : tests) {
-			measurementTemplateIdsMap.put(test.getId(), test.getMeasurementTemplateIds());
+			measurementTemplateIdsMap.put(test.getId(), test.getMeasurementSetupIds());
 		}
 		return measurementTemplateIdsMap;
-	}
-
-	private Map<Identifier, Set<Identifier>> createAnalysisTemplateIdsMap(final Set<Test> tests) {
-		final Map<Identifier, Set<Identifier>> analysisTemplateIdsMap = new HashMap<Identifier, Set<Identifier>>();
-		for (final Test test : tests) {
-			analysisTemplateIdsMap.put(test.getId(), test.getAnalysisTemplateIds());
-		}
-		return analysisTemplateIdsMap;
 	}
 
 	private Map<Identifier, SortedMap<Date, String>> createStopsMap(final Set<Test> tests) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlTestImpl.java,v 1.12.2.3 2006/02/14 01:26:42 arseniy Exp $
+ * $Id: IdlTestImpl.java,v 1.12.2.4 2006/02/15 19:37:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,11 +22,11 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.12.2.3 $, $Date: 2006/02/14 01:26:42 $
+ * @version $Revision: 1.12.2.4 $, $Date: 2006/02/15 19:37:55 $
  * @module measurement
  */
 final class IdlTestImpl extends IdlTest {
-	private static final long serialVersionUID = -3721286093919419058L;
+	private static final long serialVersionUID = 4694177549880713460L;
 
 	IdlTestImpl() {
 		// empty
@@ -43,11 +43,10 @@ final class IdlTestImpl extends IdlTest {
 			final IdlIdentifier monitoredElementId,
 			final IdlTestStatus status,
 			final IdlTestTimeStamps timeStamps,
+			final IdlIdentifier[] measurementSetupIds,
 			final IdlIdentifier measurementTypeId,
-			final IdlIdentifier[] measurementTemplateIds,
 			final int numberOfMeasurements,
 			final IdlIdentifier analysisTypeId,
-			final IdlIdentifier[] analysisTemplateIds,
 			final IdlTestStops[] stops) {
 		this.id = id;
 		this.created = created;
@@ -60,11 +59,10 @@ final class IdlTestImpl extends IdlTest {
 		this.monitoredElementId = monitoredElementId;
 		this.status = status;
 		this.timeStamps = timeStamps;
+		this.measurementSetupIds = measurementSetupIds;
 		this.measurementTypeId = measurementTypeId;
-		this.measurementTemplateIds = measurementTemplateIds;
 		this.numberOfMeasurements = numberOfMeasurements;
 		this.analysisTypeId = analysisTypeId;
-		this.analysisTemplateIds = analysisTemplateIds;
 		this.stops = stops;
 	}
 
