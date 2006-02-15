@@ -5,6 +5,8 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import com.syrus.util.Log;
+
 public class LangModelSchematics
 {
 	private static final String BUNDLE_NAME =
@@ -47,11 +49,11 @@ public class LangModelSchematics
 												+ "not found");
 				} catch (Exception exc)
 				{
-					exc.printStackTrace();
+					Log.errorMessage(exc);
 				}
 			} catch (Exception exc)
 			{
-				exc.printStackTrace();
+				Log.errorMessage(exc);
 			}
 		}
 		return string;

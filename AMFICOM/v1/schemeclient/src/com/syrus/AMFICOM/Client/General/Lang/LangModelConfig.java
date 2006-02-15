@@ -39,6 +39,8 @@ package com.syrus.AMFICOM.Client.General.Lang;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import com.syrus.util.Log;
+
 public class LangModelConfig {
 
 	private static final String			BUNDLE_NAME			= "com.syrus.AMFICOM.Client.General.Lang.config";
@@ -74,11 +76,11 @@ public class LangModelConfig {
 												+ "not found");
 				} catch (Exception exc)
 				{
-					exc.printStackTrace();
+					Log.errorMessage(exc);
 				}
 			} catch (Exception exc)
 			{
-				exc.printStackTrace();
+				Log.errorMessage(exc);
 			}
 		}
 		return string;
