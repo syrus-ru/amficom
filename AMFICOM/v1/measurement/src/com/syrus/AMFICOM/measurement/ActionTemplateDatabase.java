@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplateDatabase.java,v 1.1.2.2 2006/02/13 19:31:15 arseniy Exp $
+ * $Id: ActionTemplateDatabase.java,v 1.1.2.3 2006/02/15 19:36:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,8 +7,6 @@
  */
 package com.syrus.AMFICOM.measurement;
 
-import static com.syrus.AMFICOM.general.TableNames.ACT_PAR_TMPL_LINK;
-import static com.syrus.AMFICOM.general.TableNames.ME_TMPL_LINK;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
@@ -17,6 +15,9 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.general.TableNames.ACTMPL_ME_LINK;
+import static com.syrus.AMFICOM.general.TableNames.ACTMPL_PAR_LINK;
+import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.COLUMN_APPROXIMATE_ACTION_DURATION;
 import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.LINK_COLUMN_ACTION_PARAMETER_ID;
 import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.LINK_COLUMN_ACTION_TEMPLATE_ID;
 import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID;
@@ -41,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/13 19:31:15 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/02/15 19:36:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -58,7 +59,8 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COLUMN_DESCRIPTION;
+			columns = COLUMN_DESCRIPTION + COMMA
+					+ COLUMN_APPROXIMATE_ACTION_DURATION;
 		}
 		return columns;
 	}
@@ -66,14 +68,16 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = QUESTION;
+			updateMultipleSQLValues = QUESTION + COMMA
+					+ QUESTION;
 		}
 		return updateMultipleSQLValues;
 	}
 
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final ActionTemplate storableObject) throws IllegalDataException {
-		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ Long.toString(storableObject.getApproximateActionDuration());
 		return sql;
 	}
 
@@ -82,6 +86,7 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setLong(++startParameterNumber, storableObject.getApproximateActionDuration());
 		return startParameterNumber;
 	}
 
@@ -95,6 +100,7 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 						null,
 						ILLEGAL_VERSION,
 						null,
+						0,
 						null,
 						null)
 					: storableObject;
@@ -103,7 +109,8 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+				resultSet.getLong(COLUMN_APPROXIMATE_ACTION_DURATION));
 		return actionTemplate;
 	}
 
@@ -122,11 +129,11 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 		}
 
 		final Map<Identifier, Set<Identifier>> apIdsMap = super.retrieveLinkedEntityIds(actionTemplates,
-				ACT_PAR_TMPL_LINK,
+				ACTMPL_PAR_LINK,
 				LINK_COLUMN_ACTION_TEMPLATE_ID,
 				LINK_COLUMN_ACTION_PARAMETER_ID);
 		final Map<Identifier, Set<Identifier>> meIdsMap = super.retrieveLinkedEntityIds(actionTemplates,
-				ME_TMPL_LINK,
+				ACTMPL_ME_LINK,
 				LINK_COLUMN_ACTION_TEMPLATE_ID,
 				LINK_COLUMN_MONITORED_ELEMENT_ID);
 		for (final ActionTemplate actionTemplate : actionTemplates) {
@@ -146,13 +153,13 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 
 		final Map<Identifier, Set<Identifier>> actionParameterIdsMap = this.createActionParameterIdsMap(actionTemplates);
 		super.insertLinkedEntityIds(actionParameterIdsMap,
-				ACT_PAR_TMPL_LINK,
+				ACTMPL_PAR_LINK,
 				LINK_COLUMN_ACTION_TEMPLATE_ID,
 				LINK_COLUMN_ACTION_PARAMETER_ID);
 
 		final Map<Identifier, Set<Identifier>> monitoredElementIdsMap = this.createMonitoredElementIdsMap(actionTemplates);
 		super.insertLinkedEntityIds(monitoredElementIdsMap,
-				ME_TMPL_LINK,
+				ACTMPL_ME_LINK,
 				LINK_COLUMN_ACTION_TEMPLATE_ID,
 				LINK_COLUMN_MONITORED_ELEMENT_ID);
 	}
@@ -163,13 +170,13 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 
 		final Map<Identifier, Set<Identifier>> actionParameterIdsMap = this.createActionParameterIdsMap(actionTemplates);
 		super.updateLinkedEntityIds(actionParameterIdsMap,
-				ACT_PAR_TMPL_LINK,
+				ACTMPL_PAR_LINK,
 				LINK_COLUMN_ACTION_TEMPLATE_ID,
 				LINK_COLUMN_ACTION_PARAMETER_ID);
 
 		final Map<Identifier, Set<Identifier>> monitoredElementIdsMap = this.createMonitoredElementIdsMap(actionTemplates);
 		super.updateLinkedEntityIds(monitoredElementIdsMap,
-				ME_TMPL_LINK,
+				ACTMPL_ME_LINK,
 				LINK_COLUMN_ACTION_TEMPLATE_ID,
 				LINK_COLUMN_MONITORED_ELEMENT_ID);
 	}

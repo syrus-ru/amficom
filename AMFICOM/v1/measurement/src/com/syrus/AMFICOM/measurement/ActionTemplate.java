@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplate.java,v 1.1.2.3 2006/02/14 01:26:43 arseniy Exp $
+ * $Id: ActionTemplate.java,v 1.1.2.4 2006/02/15 19:36:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,21 +25,23 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlActionTemplate;
 import com.syrus.AMFICOM.measurement.corba.IdlActionTemplateHelper;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/02/14 01:26:43 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/02/15 19:36:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class ActionTemplate extends StorableObject<ActionTemplate> {
-	private static final long serialVersionUID = -5149637348075291059L;
+	private static final long serialVersionUID = 725853453958152504L;
 
 	private String description;
+	private long approximateActionDuration;
 	private Set<Identifier> actionParameterIds;
 	private Set<Identifier> monitoredElementIds;
 
@@ -47,6 +49,7 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 			final Identifier creatorId,
 			final StorableObjectVersion version,
 			final String description,
+			final long approximateActionDuration,
 			final Set<Identifier> actionParameterIds,
 			final Set<Identifier> monitoredElementIds) {
 		super(id,
@@ -56,6 +59,7 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 				creatorId,
 				version);
 		this.description = description;
+		this.approximateActionDuration = approximateActionDuration;
 		this.actionParameterIds = new HashSet<Identifier>();
 		this.setActionParameterIds0(actionParameterIds);
 		this.monitoredElementIds = new HashSet<Identifier>();
@@ -72,6 +76,7 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 
 	public static ActionTemplate createInstance(final Identifier creatorId,
 			final String description,
+			final long approximateActionDuration,
 			final Set<Identifier> actionParameterIds,
 			final Set<Identifier> monitoredElementIds) throws CreateObjectException {
 		if (creatorId == null
@@ -86,6 +91,7 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 					creatorId,
 					StorableObjectVersion.INITIAL_VERSION,
 					description,
+					approximateActionDuration,
 					actionParameterIds,
 					monitoredElementIds);
 
@@ -107,10 +113,11 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 				super.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
-				super.creatorId.getIdlTransferable(),
-				super.modifierId.getIdlTransferable(),
+				super.creatorId.getIdlTransferable(orb),
+				super.modifierId.getIdlTransferable(orb),
 				super.version.longValue(),
 				this.description,
+				this.approximateActionDuration,
 				Identifier.createTransferables(this.actionParameterIds),
 				Identifier.createTransferables(this.monitoredElementIds));
 	}
@@ -120,6 +127,7 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 		final IdlActionTemplate idlActionTemplate = (IdlActionTemplate) transferable;
 		super.fromTransferable(idlActionTemplate);
 		this.description = idlActionTemplate.description;
+		this.approximateActionDuration = idlActionTemplate.approximateActionDuration;
 		this.setActionParameterIds0(Identifier.fromTransferables(idlActionTemplate.actionParameterIds));
 		this.setMonitoredElementIds0(Identifier.fromTransferables(idlActionTemplate.monitoredElementIds));
 
@@ -135,8 +143,21 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 		super.markAsChanged();
 	}
 
+	public long getApproximateActionDuration() {
+		return this.approximateActionDuration;
+	}
+
+	public void setApproximateActionDuration(final long approximateActionDuration) {
+		this.approximateActionDuration = approximateActionDuration;
+		super.markAsChanged();
+	}
+
 	public Set<Identifier> getActionParameterIds() {
 		return Collections.unmodifiableSet(this.actionParameterIds);
+	}
+
+	public Set<ActionParameter> getActionParameters() throws ApplicationException {
+		return StorableObjectPool.getStorableObjects(this.actionParameterIds, true);
 	}
 
 	protected synchronized void setActionParameterIds0(final Set<Identifier> actionParameterIds) {
@@ -167,9 +188,11 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
-			final String description) {
+			final String description,
+			final long approximateActionDuration) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.description = description;
+		this.approximateActionDuration = approximateActionDuration;
 	}
 
 	@Override
