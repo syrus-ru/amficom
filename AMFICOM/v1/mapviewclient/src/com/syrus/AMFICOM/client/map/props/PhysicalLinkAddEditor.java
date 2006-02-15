@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkAddEditor.java,v 1.42 2006/02/15 11:15:42 stas Exp $$
+ * $$Id: PhysicalLinkAddEditor.java,v 1.43 2006/02/15 11:27:23 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,7 +70,7 @@ import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2006/02/15 11:15:42 $
+ * @version $Revision: 1.43 $, $Date: 2006/02/15 11:27:23 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -201,8 +201,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 				try {
 					unbind(or);
 				} catch(ApplicationException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					Log.errorMessage(e1);
 				}
 			}
 		});
@@ -269,7 +268,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 					PhysicalLinkAddEditor.this.pipeBlockComboBox.addItem(newPipeBlock);
 					PhysicalLinkAddEditor.this.pipeBlockComboBox.setSelectedItem(newPipeBlock);
 				} catch(CreateObjectException e1) {
-					e1.printStackTrace();
+					Log.errorMessage(e1);
 				}
 			}
 		});

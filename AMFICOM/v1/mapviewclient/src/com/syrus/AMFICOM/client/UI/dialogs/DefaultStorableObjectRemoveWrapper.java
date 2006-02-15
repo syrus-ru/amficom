@@ -1,5 +1,5 @@
 /**
- * $Id: DefaultStorableObjectRemoveWrapper.java,v 1.1 2005/10/17 13:57:36 krupenn Exp $
+ * $Id: DefaultStorableObjectRemoveWrapper.java,v 1.2 2006/02/15 11:27:49 stas Exp $
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,10 +12,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/17 13:57:36 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2006/02/15 11:27:49 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -41,7 +42,7 @@ public class DefaultStorableObjectRemoveWrapper implements RemoveWrapper {
 			StorableObjectPool.flush(id, LoginManager.getUserId(), true);
 			return true;
 		} catch(ApplicationException e1) {
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		return false;
 	}

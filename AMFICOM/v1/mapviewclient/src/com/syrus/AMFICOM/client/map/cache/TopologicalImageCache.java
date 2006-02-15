@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalImageCache.java,v 1.27 2006/02/15 11:16:23 stas Exp $
+ * $Id: TopologicalImageCache.java,v 1.28 2006/02/15 11:26:42 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2006/02/15 11:16:23 $
+ * @version $Revision: 1.28 $, $Date: 2006/02/15 11:26:42 $
  * @author $Author: stas $
  * @author Peter Peskovsky
  * @module mapviewclient
@@ -179,7 +179,6 @@ public class TopologicalImageCache implements MapImageRenderer {
 					TopologicalImageCache.this.setScale(
 							TopologicalImageCache.this.mapContext.getScale());
 				} catch(MapDataException e) {
-					// TODO Auto-generated catch block
 					Log.errorMessage(e);
 				}
 			}
@@ -667,7 +666,6 @@ public class TopologicalImageCache implements MapImageRenderer {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				Log.errorMessage(e);
 			}
 		}

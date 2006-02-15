@@ -1,5 +1,5 @@
 /*-
- * $$Id: SelectionPopupMenu.java,v 1.35 2006/02/15 11:12:25 stas Exp $$
+ * $$Id: SelectionPopupMenu.java,v 1.36 2006/02/15 11:27:13 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2006/02/15 11:12:25 $
+ * @version $Revision: 1.36 $, $Date: 2006/02/15 11:27:13 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -109,14 +109,14 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 				try {
 					newCollector();
 				} catch(MapException e1) {
-					e1.printStackTrace();
+					Log.errorMessage(e1);
 					SelectionPopupMenu.this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
 							new StatusMessageEvent(
 									this, 
 									StatusMessageEvent.STATUS_MESSAGE, 
 									MapException.DEFAULT_STRING));
 				} catch(ApplicationException e1) {
-					e1.printStackTrace();
+					Log.errorMessage(e1);
 				}
 			}
 		});
@@ -126,14 +126,14 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 				try {
 					removeCollector();
 				} catch(MapException e1) {
-					e1.printStackTrace();
+					Log.errorMessage(e1);
 					SelectionPopupMenu.this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
 							new StatusMessageEvent(
 									this, 
 									StatusMessageEvent.STATUS_MESSAGE, 
 									MapException.DEFAULT_STRING));
 				} catch(ApplicationException e1) {
-					e1.printStackTrace();
+					Log.errorMessage(e1);
 				}
 			}
 		});
@@ -143,14 +143,14 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 				try {
 					addToCollector();
 				} catch(MapException e1) {
-					e1.printStackTrace();
+					Log.errorMessage(e1);
 					SelectionPopupMenu.this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
 							new StatusMessageEvent(
 									this, 
 									StatusMessageEvent.STATUS_MESSAGE, 
 									MapException.DEFAULT_STRING));
 				} catch(ApplicationException e1) {
-					e1.printStackTrace();
+					Log.errorMessage(e1);
 				}
 			}
 		});
@@ -161,14 +161,14 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 						try {
 							removeFromCollector();
 						} catch(MapException e1) {
-							e1.printStackTrace();
+							Log.errorMessage(e1);
 							SelectionPopupMenu.this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
 									new StatusMessageEvent(
 											this, 
 											StatusMessageEvent.STATUS_MESSAGE, 
 											MapException.DEFAULT_STRING));
 						} catch(ApplicationException e1) {
-							e1.printStackTrace();
+							Log.errorMessage(e1);
 						}
 					}
 				});

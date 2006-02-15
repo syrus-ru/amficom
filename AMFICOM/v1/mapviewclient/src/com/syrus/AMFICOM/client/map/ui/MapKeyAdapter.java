@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapKeyAdapter.java,v 1.19 2006/02/15 11:13:06 stas Exp $$
+ * $$Id: MapKeyAdapter.java,v 1.20 2006/02/15 11:27:56 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * обработки действий (SHIFT, ALT, CTRL) и для удаления выбранных элементов
  * (DEL)
  * 
- * @version $Revision: 1.19 $, $Date: 2006/02/15 11:13:06 $
+ * @version $Revision: 1.20 $, $Date: 2006/02/15 11:27:56 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -128,10 +128,8 @@ public final class MapKeyAdapter extends KeyAdapter {
 						.println("node links::isVisible performed in " + String.valueOf(d - f) + " ms (total) with average of " + String.valueOf((d - f) / nodeLinks.size() + " ms")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 	}

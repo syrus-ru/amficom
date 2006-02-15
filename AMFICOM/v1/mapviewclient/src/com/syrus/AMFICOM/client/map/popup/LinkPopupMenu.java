@@ -1,5 +1,5 @@
 /*-
- * $$Id: LinkPopupMenu.java,v 1.31 2006/02/15 11:12:25 stas Exp $$
+ * $$Id: LinkPopupMenu.java,v 1.32 2006/02/15 11:27:13 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2006/02/15 11:12:25 $
+ * @version $Revision: 1.32 $, $Date: 2006/02/15 11:27:13 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -108,7 +108,7 @@ public final class LinkPopupMenu extends MapPopupMenu {
 				try {
 					newCollector();
 				} catch(ApplicationException e1) {
-					e1.printStackTrace();
+					Log.errorMessage(e1);
 				}
 			}
 		});
@@ -119,7 +119,7 @@ public final class LinkPopupMenu extends MapPopupMenu {
 				try {
 					removeCollector();
 				} catch(ApplicationException e1) {
-					e1.printStackTrace();
+					Log.errorMessage(e1);
 				}
 			}
 		});
@@ -131,7 +131,7 @@ public final class LinkPopupMenu extends MapPopupMenu {
 				try {
 					addToCollector();
 				} catch(ApplicationException e1) {
-					e1.printStackTrace();
+					Log.errorMessage(e1);
 				}
 			}
 		});
@@ -143,7 +143,7 @@ public final class LinkPopupMenu extends MapPopupMenu {
 						try {
 							removeFromCollector();
 						} catch(ApplicationException e1) {
-							e1.printStackTrace();
+							Log.errorMessage(e1);
 						}
 					}
 				});

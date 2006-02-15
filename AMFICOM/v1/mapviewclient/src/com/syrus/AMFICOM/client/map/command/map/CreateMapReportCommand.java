@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateMapReportCommand.java,v 1.15 2006/02/15 11:12:43 stas Exp $$
+ * $$Id: CreateMapReportCommand.java,v 1.16 2006/02/15 11:26:49 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2006/02/15 11:12:43 $
+ * @version $Revision: 1.16 $, $Date: 2006/02/15 11:26:49 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -86,8 +86,7 @@ public class CreateMapReportCommand extends AbstractCommand {
 					MapReportModel.MAPFRAME_SIZE,
 					mapFrame.getSize());
 		} catch (MapException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		reportData.put(MapReportModel.TOPOLOGY_IMAGE, topologyImageReportData);

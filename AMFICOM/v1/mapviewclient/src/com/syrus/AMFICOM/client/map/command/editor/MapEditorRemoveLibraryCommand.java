@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorRemoveLibraryCommand.java,v 1.14 2006/02/15 11:12:43 stas Exp $$
+ * $$Id: MapEditorRemoveLibraryCommand.java,v 1.15 2006/02/15 11:26:49 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2006/02/15 11:12:43 $
+ * @version $Revision: 1.15 $, $Date: 2006/02/15 11:26:49 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -72,7 +72,7 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 		try {
 			libraries = StorableObjectPool.getStorableObjectsByCondition(libcondition, true);
 		} catch(ApplicationException e1) {
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 			return;
 		}
 

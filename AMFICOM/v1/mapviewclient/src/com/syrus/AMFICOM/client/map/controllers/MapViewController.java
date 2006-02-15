@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewController.java,v 1.65 2006/02/15 11:12:33 stas Exp $$
+ * $$Id: MapViewController.java,v 1.66 2006/02/15 11:26:57 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * 
- * @version $Revision: 1.65 $, $Date: 2006/02/15 11:12:33 $
+ * @version $Revision: 1.66 $, $Date: 2006/02/15 11:26:57 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -394,7 +394,6 @@ public final class MapViewController {
 			}
 			scanCables(scheme);
 		} catch(ApplicationException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 	}
@@ -453,7 +452,6 @@ public final class MapViewController {
 			Log.debugMessage("scanCables :: scanCable(scl) : topologicalCableLinks " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 			Log.debugMessage("scanCables :: scanPaths(scheme); " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch(ApplicationException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 	}
@@ -507,7 +505,6 @@ public final class MapViewController {
 			Log.debugMessage("scanPaths :: scheme.getTopologicalPaths() " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 			Log.debugMessage("scanPaths :: scanPath(schemePath) : topologicalPaths " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch(ApplicationException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 	}
@@ -525,7 +522,6 @@ public final class MapViewController {
 				}
 			}
 		} catch(ApplicationException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 	}
@@ -546,7 +542,6 @@ public final class MapViewController {
 				}
 			}
 		} catch(ApplicationException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 	}
@@ -571,7 +566,6 @@ public final class MapViewController {
 				}
 			}
 		} catch(ApplicationException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 	}

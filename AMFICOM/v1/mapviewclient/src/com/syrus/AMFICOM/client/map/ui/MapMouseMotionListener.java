@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMouseMotionListener.java,v 1.41 2006/02/15 11:13:06 stas Exp $$
+ * $$Id: MapMouseMotionListener.java,v 1.42 2006/02/15 11:27:56 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * обработка события передается текущему активному элементу карты (посредством
  * объекта MapStrategy)
  * 
- * @version $Revision: 1.41 $, $Date: 2006/02/15 11:13:06 $
+ * @version $Revision: 1.42 $, $Date: 2006/02/15 11:27:56 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -86,11 +86,9 @@ public final class MapMouseMotionListener implements MouseMotionListener {
 			try {
 				this.netMapViewer.showLatLong(me.getPoint());
 			} catch(MapConnectionException e3) {
-				// TODO Auto-generated catch block
-				e3.printStackTrace();
+				Log.errorMessage(e3);
 			} catch(MapDataException e3) {
-				// TODO Auto-generated catch block
-				e3.printStackTrace();
+				Log.errorMessage(e3);
 			}
 
 			// Обрабатывает события на панели инстрементов
@@ -103,11 +101,9 @@ public final class MapMouseMotionListener implements MouseMotionListener {
 						// Если перемещают карту лапкой
 						this.netMapViewer.handDragged(me);
 					} catch(MapConnectionException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
+						Log.errorMessage(e2);
 					} catch(MapDataException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
+						Log.errorMessage(e2);
 					}
 					break;
 				case MapState.MOVE_TO_CENTER:
@@ -135,11 +131,9 @@ public final class MapMouseMotionListener implements MouseMotionListener {
 						}
 						logicalNetLayer.sendMapEvent(MapEvent.NEED_REPAINT);
 					} catch(MapConnectionException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						Log.errorMessage(e1);
 					} catch(MapDataException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						Log.errorMessage(e1);
 					}
 					break;
 				default:
@@ -172,10 +166,8 @@ public final class MapMouseMotionListener implements MouseMotionListener {
 			// Выводим значения широты и долготы
 			this.netMapViewer.showLatLong(me.getPoint());
 		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 
@@ -185,11 +177,9 @@ public final class MapMouseMotionListener implements MouseMotionListener {
 				// Если перемещают карту лапкой
 				this.netMapViewer.handMoved(me);
 			} catch(MapConnectionException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
+				Log.errorMessage(e2);
 			} catch(MapDataException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
+				Log.errorMessage(e2);
 			}
 		}
 		if(mapState.getActionMode() == MapState.NULL_ACTION_MODE)
@@ -198,11 +188,9 @@ public final class MapMouseMotionListener implements MouseMotionListener {
 					// Если перемещают карту лапкой
 					this.netMapViewer.mouseMoved(me);
 				} catch(MapConnectionException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
+					Log.errorMessage(e2);
 				} catch(MapDataException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
+					Log.errorMessage(e2);
 				}
 			}
 

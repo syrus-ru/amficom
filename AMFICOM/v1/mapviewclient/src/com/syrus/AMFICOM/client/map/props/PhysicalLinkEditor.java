@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkEditor.java,v 1.37 2006/02/07 15:27:11 stas Exp $$
+ * $$Id: PhysicalLinkEditor.java,v 1.38 2006/02/15 11:27:23 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSo
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2006/02/07 15:27:11 $
+ * @version $Revision: 1.38 $, $Date: 2006/02/15 11:27:23 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -684,7 +684,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 	//				physicalLinkController.setStyle(this.link, style);
 				this.link.setType((PhysicalLinkType )this.typeComboBox.getSelectedItem());
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 		super.commitChanges();

@@ -1,5 +1,5 @@
 /*-
- * $$Id: SitePopupMenu.java,v 1.24 2006/02/15 11:12:25 stas Exp $$
+ * $$Id: SitePopupMenu.java,v 1.25 2006/02/15 11:27:13 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2006/02/15 11:12:25 $
+ * @version $Revision: 1.25 $, $Date: 2006/02/15 11:27:13 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -72,7 +72,7 @@ public final class SitePopupMenu extends MapPopupMenu {
 				try {
 					attachCableInlet();
 				} catch(MapException ex) {
-					ex.printStackTrace();
+					Log.errorMessage(ex);
 				}
 			}
 		});

@@ -1,5 +1,5 @@
 /*-
- * $$Id: LogicalNetLayer.java,v 1.142 2006/02/15 11:14:00 stas Exp $$
+ * $$Id: LogicalNetLayer.java,v 1.143 2006/02/15 11:27:31 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
 /**
  * Управляет отображением логической структуры сети.
  * 
- * @version $Revision: 1.142 $, $Date: 2006/02/15 11:14:00 $
+ * @version $Revision: 1.143 $, $Date: 2006/02/15 11:27:31 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -200,7 +200,6 @@ public final class LogicalNetLayer {
 			try {
 				calculateVisualElements();
 			} catch(ApplicationException e) {
-				// TODO Auto-generated catch block
 				Log.errorMessage(e);
 			}
 		}
@@ -412,7 +411,6 @@ public final class LogicalNetLayer {
 			try {
 				drawLines(p, visibleBounds);
 			} catch(ApplicationException e) {
-				// TODO Auto-generated catch block
 				Log.errorMessage(e);
 			}
 			drawNodes(p, visibleBounds);
@@ -1090,7 +1088,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: stas $
-	 * @version $Revision: 1.142 $, $Date: 2006/02/15 11:14:00 $
+	 * @version $Revision: 1.143 $, $Date: 2006/02/15 11:27:31 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {

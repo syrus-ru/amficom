@@ -1,5 +1,5 @@
 /*-
- * $$Id: TopologicalNodeEditor.java,v 1.17 2006/02/15 11:15:42 stas Exp $$
+ * $$Id: TopologicalNodeEditor.java,v 1.18 2006/02/15 11:27:23 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2006/02/15 11:15:42 $
+ * @version $Revision: 1.18 $, $Date: 2006/02/15 11:27:23 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -245,7 +245,7 @@ public class TopologicalNodeEditor extends DefaultStorableObjectEditor {
 		} catch(NumberFormatException ex) {
 			System.out.println(ex.getMessage());
 		} catch(Exception ex) {
-			ex.printStackTrace();
+			Log.errorMessage(ex);
 		}
 		super.commitChanges();
 	}

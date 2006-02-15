@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeAddEditor.java,v 1.38 2006/02/15 11:15:42 stas Exp $$
+ * $$Id: SiteNodeAddEditor.java,v 1.39 2006/02/15 11:27:23 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2006/02/15 11:15:42 $
+ * @version $Revision: 1.39 $, $Date: 2006/02/15 11:27:23 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -150,7 +150,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 						SiteNodeAddEditor.this.selectButton
 								.setEnabled(node != null);
 					} catch(Exception e1) {
-						e1.printStackTrace();
+						Log.errorMessage(e1);
 					}
 				}
 			});
@@ -178,8 +178,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 					try {
 						unbindElement(node.getUserObject());
 					} catch(ApplicationException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						Log.errorMessage(e1);
 					}
 				}
 			});
@@ -643,7 +642,6 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 					}
 				}
 			} catch(ApplicationException e) {
-				// TODO Auto-generated catch block
 				Log.errorMessage(e);
 			}
 		}

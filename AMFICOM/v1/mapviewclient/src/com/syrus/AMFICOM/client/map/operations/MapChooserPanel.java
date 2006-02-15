@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapChooserPanel.java,v 1.24 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: MapChooserPanel.java,v 1.25 2006/02/15 11:27:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 /**
  * панель выбора вида карты
  * 
- * @version $Revision: 1.24 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.25 $, $Date: 2006/02/15 11:27:06 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -156,7 +156,7 @@ public class MapChooserPanel extends JPanel
 			try {
 				this.connection.connect();
 			} catch(MapConnectionException e1) {
-				e1.printStackTrace();
+				Log.errorMessage(e1);
 			}
 		}
 	}

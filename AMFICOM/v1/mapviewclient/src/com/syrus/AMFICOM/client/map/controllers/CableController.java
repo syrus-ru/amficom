@@ -1,5 +1,5 @@
 /*-
- * $$Id: CableController.java,v 1.45 2006/02/15 11:12:33 stas Exp $$
+ * $$Id: CableController.java,v 1.46 2006/02/15 11:26:57 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер кабеля.
  * 
- * @version $Revision: 1.45 $, $Date: 2006/02/15 11:12:33 $
+ * @version $Revision: 1.46 $, $Date: 2006/02/15 11:26:57 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -208,7 +208,6 @@ public final class CableController extends AbstractLinkController {
 				plc.paint(link, g, visibleBounds, stroke, color, selectionVisible);
 			}
 		} catch(ApplicationException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 	}
@@ -235,7 +234,6 @@ public final class CableController extends AbstractLinkController {
 				}
 			}
 		} catch(ApplicationException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 		return false;
@@ -397,7 +395,6 @@ public final class CableController extends AbstractLinkController {
 				rectangle = rectangle.createUnion(controller.getBoundingRectangle(physicalLink));
 			}
 		} catch(ApplicationException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 		return rectangle;

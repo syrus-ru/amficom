@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkTypeEditor.java,v 1.13 2006/02/07 15:27:11 stas Exp $$
+ * $$Id: PhysicalLinkTypeEditor.java,v 1.14 2006/02/15 11:27:23 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,9 +50,10 @@ import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 import com.syrus.AMFICOM.resource.IntDimension;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2006/02/07 15:27:11 $
+ * @version $Revision: 1.14 $, $Date: 2006/02/15 11:27:23 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -520,7 +521,7 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 				}
 				StorableObjectPool.flush(this.type, LoginManager.getUserId(), true);
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 		

@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeTypeEditor.java,v 1.22 2006/02/15 11:15:42 stas Exp $$
+ * $$Id: SiteNodeTypeEditor.java,v 1.23 2006/02/15 11:27:23 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2006/02/15 11:15:42 $
+ * @version $Revision: 1.23 $, $Date: 2006/02/15 11:27:23 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -178,8 +178,7 @@ public final class SiteNodeTypeEditor
 					try {
 						changeImage();
 					} catch(ApplicationException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						Log.errorMessage(e1);
 					}
 				}
 			});
@@ -487,7 +486,7 @@ public final class SiteNodeTypeEditor
 				this.type.setImageId(this.imageId);
 				StorableObjectPool.flush(this.type, LoginManager.getUserId(), true);
 			} catch(Exception ex) {
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 		super.commitChanges();

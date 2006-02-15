@@ -1,5 +1,5 @@
 /*-
- * $$Id: NetMapViewer.java,v 1.66 2006/02/15 11:14:01 stas Exp $$
+ * $$Id: NetMapViewer.java,v 1.67 2006/02/15 11:27:31 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -82,7 +82,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * 
- * @version $Revision: 1.66 $, $Date: 2006/02/15 11:14:01 $
+ * @version $Revision: 1.67 $, $Date: 2006/02/15 11:27:31 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -673,10 +673,8 @@ public abstract class NetMapViewer {
 				repaint(false);
 			}
 		} catch(MapException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		} catch(ApplicationException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 	}

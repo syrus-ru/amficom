@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMouseListener.java,v 1.77 2006/02/15 11:13:06 stas Exp $$
+ * $$Id: MapMouseListener.java,v 1.78 2006/02/15 11:27:56 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * события передается текущему активному элементу карты (посредством объекта
  * MapStrategy)
  * 
- * @version $Revision: 1.77 $, $Date: 2006/02/15 11:13:06 $
+ * @version $Revision: 1.78 $, $Date: 2006/02/15 11:27:56 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -80,7 +80,6 @@ public final class MapMouseListener implements MouseListener {
 		try {
 			this.robot = new Robot();
 		} catch(AWTException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 			throw new MapDataException(
 					"MapMouseListener - Constructor - Can't create robot"); //$NON-NLS-1$
@@ -128,11 +127,9 @@ public final class MapMouseListener implements MouseListener {
 				try {
 					moveFixedDistance(point);
 				} catch(MapConnectionException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					Log.errorMessage(e1);
 				} catch(MapDataException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					Log.errorMessage(e1);
 				}
 				break;
 			case MapState.NODELINK_SIZE_EDIT:
@@ -160,11 +157,9 @@ public final class MapMouseListener implements MouseListener {
 							.debugMessage(
 									"defaultAction -------- " + (f - d) + " ms ---------", Log.DEBUGLEVEL09); //$NON-NLS-1$ //$NON-NLS-2$
 				} catch(MapConnectionException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
+					Log.errorMessage(e2);
 				} catch(MapDataException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
+					Log.errorMessage(e2);
 				}
 				break;
 			default:
@@ -185,10 +180,8 @@ public final class MapMouseListener implements MouseListener {
 			if(proceed)
 				this.netMapViewer.repaint(false);
 		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 		// mapState.setMouseMode(MapState.MOUSE_NONE);
@@ -500,10 +493,8 @@ public final class MapMouseListener implements MouseListener {
 						break;
 				}// switch (mapState.getOperationMode()
 			} catch(MapConnectionException e) {
-				// TODO Auto-generated catch block
 				Log.errorMessage(e);
 			} catch(MapDataException e) {
-				// TODO Auto-generated catch block
 				Log.errorMessage(e);
 			}
 			if(mapState.getOperationMode() != MapState.MOVE_HAND

@@ -1,5 +1,5 @@
 /*-
- * $$Id: ImagesPanel.java,v 1.16 2006/02/15 11:16:16 stas Exp $$
+ * $$Id: ImagesPanel.java,v 1.17 2006/02/15 11:27:49 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2006/02/15 11:16:16 $
+ * @version $Revision: 1.17 $, $Date: 2006/02/15 11:27:49 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -135,7 +135,7 @@ public class ImagesPanel extends JPanel
 				}
 		}
 		catch (ApplicationException ex) {
-			ex.printStackTrace();
+			Log.errorMessage(ex);
 		}
 	}
 

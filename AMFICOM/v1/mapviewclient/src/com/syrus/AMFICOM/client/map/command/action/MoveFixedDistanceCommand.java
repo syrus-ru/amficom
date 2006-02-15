@@ -1,5 +1,5 @@
 /*-
- * $$Id: MoveFixedDistanceCommand.java,v 1.21 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: MoveFixedDistanceCommand.java,v 1.22 2006/02/15 11:26:49 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
  * топологического узла, связанного с ним фрагментом линии, при сохранении
  * длины фрагмента
  * 
- * @version $Revision: 1.21 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.22 $, $Date: 2006/02/15 11:26:49 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -64,7 +64,6 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle {
 					+ (movedScreenPoint.y - this.fixedScreenPoint.y) 
 						* (movedScreenPoint.y - this.fixedScreenPoint.y));
 		} catch(MapException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 	}
@@ -103,7 +102,6 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle {
 			super.deltaX = targetMapPoint.getX() - startMapPoint.getX();
 			super.deltaY = targetMapPoint.getY() - startMapPoint.getY();
 		} catch(MapException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 	}

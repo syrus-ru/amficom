@@ -1,5 +1,5 @@
 /*-
- * $$Id: CollectorEditor.java,v 1.24 2006/02/15 11:15:41 stas Exp $$
+ * $$Id: CollectorEditor.java,v 1.25 2006/02/15 11:27:23 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2006/02/15 11:15:41 $
+ * @version $Revision: 1.25 $, $Date: 2006/02/15 11:27:23 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -317,7 +317,7 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 		} 
 		catch (Exception ex) 
 		{
-			ex.printStackTrace();
+			Log.errorMessage(ex);
 		} 
 		super.commitChanges();
 	}

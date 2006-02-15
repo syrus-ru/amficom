@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapDropTargetListener.java,v 1.48 2006/02/15 11:13:06 stas Exp $$
+ * $$Id: MapDropTargetListener.java,v 1.49 2006/02/15 11:27:56 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 /**
  * Обработчик событий drag/drop в окне карты
  * 
- * @version $Revision: 1.48 $, $Date: 2006/02/15 11:13:06 $
+ * @version $Revision: 1.49 $, $Date: 2006/02/15 11:27:56 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -213,10 +213,8 @@ public final class MapDropTargetListener implements DropTargetListener {
 					logicalNetLayer.getCommandList().execute();
 					logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 				} catch(MapConnectionException e) {
-					// TODO Auto-generated catch block
 					Log.errorMessage(e);
 				} catch(MapDataException e) {
-					// TODO Auto-generated catch block
 					Log.errorMessage(e);
 				}
 			} else {

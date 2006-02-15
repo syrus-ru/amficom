@@ -1,5 +1,5 @@
 /*-
- * $$Id: NodeSizePanel.java,v 1.18 2006/02/15 11:13:06 stas Exp $$
+ * $$Id: NodeSizePanel.java,v 1.19 2006/02/15 11:27:56 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * Панель, на которой располагаются две кнопки увеличения и уменьшения
  * коэффициента масштабирования изображений элементов карты
  * 
- * @version $Revision: 1.18 $, $Date: 2006/02/15 11:13:06 $
+ * @version $Revision: 1.19 $, $Date: 2006/02/15 11:27:56 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -113,10 +113,8 @@ public final class NodeSizePanel extends JPanel
 		try {
 			this.logicalNetLayer.setDefaultScale(this.logicalNetLayer.getDefaultScale() * COEF);
 		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.NEED_REPAINT));
@@ -129,10 +127,8 @@ public final class NodeSizePanel extends JPanel
 		try {
 			this.logicalNetLayer.setDefaultScale(this.logicalNetLayer.getDefaultScale() / COEF);
 		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
 			Log.errorMessage(e);
 		}
 		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.NEED_REPAINT));

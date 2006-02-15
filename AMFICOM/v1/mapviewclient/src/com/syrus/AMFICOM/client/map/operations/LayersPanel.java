@@ -1,5 +1,5 @@
 /*-
- * $$Id: LayersPanel.java,v 1.25 2006/02/15 11:16:45 stas Exp $$
+ * $$Id: LayersPanel.java,v 1.26 2006/02/15 11:27:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 /**
  * панель управления отображением слоев
  * 
- * @version $Revision: 1.25 $, $Date: 2006/02/15 11:16:45 $
+ * @version $Revision: 1.26 $, $Date: 2006/02/15 11:27:06 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -88,7 +88,7 @@ public class LayersPanel extends JPanel {
 				}
 			} catch (MapException e1) {
 				LayersPanel.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, I18N.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
-				e1.printStackTrace();
+				Log.errorMessage(e1);
 			}
 		}
 	};

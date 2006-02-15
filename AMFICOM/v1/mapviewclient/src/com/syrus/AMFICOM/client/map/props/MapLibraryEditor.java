@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryEditor.java,v 1.10 2006/02/15 11:15:41 stas Exp $$
+ * $$Id: MapLibraryEditor.java,v 1.11 2006/02/15 11:27:23 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2006/02/15 11:15:41 $
+ * @version $Revision: 1.11 $, $Date: 2006/02/15 11:27:23 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -249,7 +249,7 @@ public class MapLibraryEditor extends DefaultStorableObjectEditor {
 				this.mapLibrary.setDescription(this.descTextArea.getText());
 				StorableObjectPool.flush(this.mapLibrary, LoginManager.getUserId(), true);
 			} catch(Exception ex) {
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 		super.commitChanges();
