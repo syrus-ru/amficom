@@ -1,5 +1,5 @@
 /*-
- * $$Id: MarkEditor.java,v 1.17 2006/02/15 11:27:23 stas Exp $$
+ * $$Id: MarkEditor.java,v 1.18 2006/02/15 12:54:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.map.Mark;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2006/02/15 11:27:23 $
+ * @version $Revision: 1.18 $, $Date: 2006/02/15 12:54:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -267,8 +267,6 @@ public class MarkEditor extends DefaultStorableObjectEditor {
 		if(MiscUtil.validName(name)) {
 			try {
 				this.mark.setName(name);
-			} catch(NumberFormatException ex) {
-				System.out.println(ex.getMessage());
 			} catch(Exception ex) {
 				Log.errorMessage(ex);
 			}

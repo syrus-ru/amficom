@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewEditor.java,v 1.24 2006/02/15 11:27:23 stas Exp $$
+ * $$Id: MapViewEditor.java,v 1.25 2006/02/15 12:54:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2006/02/15 11:27:23 $
+ * @version $Revision: 1.25 $, $Date: 2006/02/15 12:54:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -471,7 +471,7 @@ public class MapViewEditor extends DefaultStorableObjectEditor {
 
 					this.mapView.setScale(s);
 				} catch(NumberFormatException ex) {
-					System.out.println(ex.getMessage());
+					Log.errorMessage(ex);
 				}
 			} catch(Exception ex) {
 				Log.errorMessage(ex);

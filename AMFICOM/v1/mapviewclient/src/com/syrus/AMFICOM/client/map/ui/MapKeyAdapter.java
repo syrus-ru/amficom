@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapKeyAdapter.java,v 1.20 2006/02/15 11:27:56 stas Exp $$
+ * $$Id: MapKeyAdapter.java,v 1.21 2006/02/15 12:54:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * обработки действий (SHIFT, ALT, CTRL) и для удаления выбранных элементов
  * (DEL)
  * 
- * @version $Revision: 1.20 $, $Date: 2006/02/15 11:27:56 $
+ * @version $Revision: 1.21 $, $Date: 2006/02/15 12:54:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -85,8 +85,8 @@ public final class MapKeyAdapter extends KeyAdapter {
 					MapElement mapElement = selectedElements.iterator().next();
 					XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance(); 
 					mapElement.getId().getXmlTransferable(xmlId, "ucm");
-					System.out.println("un for '" + mapElement.getName() 
-							+ "' is '" + xmlId.getStringValue() + "'");
+					Log.debugMessage("un for '" + mapElement.getName() 
+							+ "' is '" + xmlId.getStringValue() + "'", Log.DEBUGLEVEL09);
 				}
 			}
 		}

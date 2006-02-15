@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapDropTargetListener.java,v 1.49 2006/02/15 11:27:56 stas Exp $$
+ * $$Id: MapDropTargetListener.java,v 1.50 2006/02/15 12:54:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 /**
  * Обработчик событий drag/drop в окне карты
  * 
- * @version $Revision: 1.49 $, $Date: 2006/02/15 11:27:56 $
+ * @version $Revision: 1.50 $, $Date: 2006/02/15 12:54:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -76,16 +76,16 @@ public final class MapDropTargetListener implements DropTargetListener {
 
 		Point point = dtde.getLocation();
 
-		System.out.println("drop at point " + point.getX() + ", " + point.getY());
+		Log.debugMessage("drop at point " + point.getX() + ", " + point.getY(), Log.DEBUGLEVEL09);
 
 		if(logicalNetLayer.getMapView() != null) {
 			DataFlavor[] df = dtde.getCurrentDataFlavors();
 			Transferable transferable = dtde.getTransferable();
 			for(int i = 0; i < df.length; i++) {
 				try {
-					System.out.println("drop name - " + df[i].getHumanPresentableName());
-					System.out.println("transferable is " + transferable);
-					System.out.println("dropped element is " + transferable.getTransferData(df[(i)]));
+					Log.debugMessage("drop name - " + df[i].getHumanPresentableName(), Log.DEBUGLEVEL09);
+					Log.debugMessage("transferable is " + transferable, Log.DEBUGLEVEL09);
+					Log.debugMessage("dropped element is " + transferable.getTransferData(df[(i)]), Log.DEBUGLEVEL09);
 					if(df[i].getHumanPresentableName().equals("ElementLabel")) //$NON-NLS-1$
 					{
 						Identifier id = (Identifier) transferable
@@ -93,7 +93,7 @@ public final class MapDropTargetListener implements DropTargetListener {
 						SiteNodeType mpe = StorableObjectPool
 								.getStorableObject(id, false);
 
-						System.out.println("dropped site node type " + mpe.getName());
+						Log.debugMessage("dropped site node type " + mpe.getName(), Log.DEBUGLEVEL09);
 						mapElementDropped(mpe, point);
 					} else if(df[i].getHumanPresentableName().equals(
 							LogicalTreeUI.TRANSFERABLE_OBJECTS)) //$NON-NLS-1$
@@ -110,20 +110,20 @@ public final class MapDropTargetListener implements DropTargetListener {
 							
 								if(storableObject instanceof SiteNodeType) {
 									SiteNodeType snt = (SiteNodeType) storableObject;
-									System.out.println("dropped site node type " + snt.getName());
+									Log.debugMessage("dropped site node type " + snt.getName(), Log.DEBUGLEVEL09);
 									mapElementDropped(snt, point);
 								}
 								if(storableObject instanceof SchemeElement) {
 									SchemeElement se = (SchemeElement) storableObject;
-									System.out.println("dropped scheme element " + se.getName());
+									Log.debugMessage("dropped scheme element " + se.getName(), Log.DEBUGLEVEL09);
 									schemeElementDropped(se, point);
 								} else if(storableObject instanceof SchemeCableLink) {
 									SchemeCableLink scl = (SchemeCableLink) storableObject;
-									System.out.println("dropped scheme cable link " + scl.getName());
+									Log.debugMessage("dropped scheme cable link " + scl.getName(), Log.DEBUGLEVEL09);
 									schemeCableLinkDropped(scl);
 								} else if(storableObject instanceof SchemePath) {
 									SchemePath sp = (SchemePath) storableObject;
-									System.out.println("dropped scheme path " + sp.getName());
+									Log.debugMessage("dropped scheme path " + sp.getName(), Log.DEBUGLEVEL09);
 									schemePathDropped(sp);
 								} else if(storableObject instanceof Scheme) {
 									Scheme sc = (Scheme) storableObject;

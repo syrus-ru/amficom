@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPropertiesManager.java,v 1.59 2006/02/15 11:14:00 stas Exp $$
+ * $$Id: MapPropertiesManager.java,v 1.60 2006/02/15 12:54:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
  * <li>center
  * <li>zoom
  * 
- * @version $Revision: 1.59 $, $Date: 2006/02/15 11:14:00 $
+ * @version $Revision: 1.60 $, $Date: 2006/02/15 12:54:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -911,7 +911,7 @@ public final class MapPropertiesManager {
 			try {
 				tracker.waitForID(id, 0);
 			} catch(InterruptedException e) {
-				System.out.println("INTERRUPTED while loading Image"); //$NON-NLS-1$
+				Log.errorMessage("INTERRUPTED while loading Image"); //$NON-NLS-1$
 			}
 			tracker.removeImage(image, id);
 		}

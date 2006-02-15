@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMouseMotionListener.java,v 1.42 2006/02/15 11:27:56 stas Exp $$
+ * $$Id: MapMouseMotionListener.java,v 1.43 2006/02/15 12:54:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * обработка события передается текущему активному элементу карты (посредством
  * объекта MapStrategy)
  * 
- * @version $Revision: 1.42 $, $Date: 2006/02/15 11:27:56 $
+ * @version $Revision: 1.43 $, $Date: 2006/02/15 12:54:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -74,7 +74,7 @@ public final class MapMouseMotionListener implements MouseMotionListener {
 		LogicalNetLayer logicalNetLayer = this.netMapViewer
 				.getLogicalNetLayer();
 
-		// System.out.println("Dragged to (" + me.getPoint().x + ", " +
+		// Log.debugMessage("Dragged to (" + me.getPoint().x + ", " +
 		// me.getPoint().y + ")");
 
 		logicalNetLayer.setCurrentPoint(me.getPoint());

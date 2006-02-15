@@ -1,5 +1,5 @@
 /*-
- * $$Id: SelectionEditor.java,v 1.18 2006/02/15 11:15:42 stas Exp $$
+ * $$Id: SelectionEditor.java,v 1.19 2006/02/15 12:54:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/02/15 11:15:42 $
+ * @version $Revision: 1.19 $, $Date: 2006/02/15 12:54:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -282,7 +282,7 @@ public class SelectionEditor extends DefaultStorableObjectEditor {
 			this.origX = x;
 			this.origY = y;
 		} catch(NumberFormatException ex) {
-			System.out.println(ex.getMessage());
+			Log.errorMessage(ex);
 		}
 		super.commitChanges();
 	}

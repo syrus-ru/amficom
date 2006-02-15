@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapTreeModel.java,v 1.29 2006/02/15 11:13:06 stas Exp $$
+ * $$Id: MapTreeModel.java,v 1.30 2006/02/15 12:54:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2006/02/15 11:13:06 $
+ * @version $Revision: 1.30 $, $Date: 2006/02/15 12:54:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -454,7 +454,7 @@ public class MapTreeModel extends AbstractChildrenFactory {
 			node.addChild(item);
 		}
 		long c = System.currentTimeMillis();
-//		System.out.println("count " + toAdd.size() + ", create children " + (b - a) + " ms, add children " + (c - b) + " ms");
+//		Log.debugMessage("count " + toAdd.size() + ", create children " + (b - a) + " ms, add children " + (c - b) + " ms");
 	}
 
 	void populateTypeNode(PopulatableIconedNode node) {
@@ -530,7 +530,7 @@ public class MapTreeModel extends AbstractChildrenFactory {
 			node.addChild(item);
 		}
 		long c = System.currentTimeMillis();
-//		System.out.println("count " + toAdd.size() + ", create children " + (b - a) + " ms, add children " + (c - b) + " ms");
+//		Log.debugMessage("count " + toAdd.size() + ", create children " + (b - a) + " ms, add children " + (c - b) + " ms");
 	}
 
 	void populateExternalNodesNode(PopulatableIconedNode node) {

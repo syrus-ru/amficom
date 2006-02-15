@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapStatusBar.java,v 1.24 2006/02/15 11:13:06 stas Exp $$
+ * $$Id: MapStatusBar.java,v 1.25 2006/02/15 12:54:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2006/02/15 11:13:06 $
+ * @version $Revision: 1.25 $, $Date: 2006/02/15 12:54:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -117,7 +117,7 @@ public final class MapStatusBar extends JPanel {
 							MapStatusBar.this.netMapViewer.setScale(scale);
 						}
 					} catch(Exception ex) {
-						System.out.println(I18N.getString(MapEditorResourceKeys.ERROR_NUMBER_FORMAT));
+						Log.errorMessage(I18N.getString(MapEditorResourceKeys.ERROR_NUMBER_FORMAT));
 					}
 				}
 			}
@@ -135,7 +135,7 @@ public final class MapStatusBar extends JPanel {
 						MapStatusBar.this.netMapViewer.setCenter(
 							new DoublePoint(lon, lat));
 					} catch(Exception ex) {
-						System.out.println(ex.getMessage());
+						Log.errorMessage(ex);
 					}
 				}
 			}

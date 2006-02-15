@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapFrame.java,v 1.90 2006/02/15 11:27:56 stas Exp $$
+ * $$Id: MapFrame.java,v 1.91 2006/02/15 12:54:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -135,7 +135,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
 				new ProcessingDialog(new Runnable() {
 				
 					public void run() {
-						System.out.print("waiting for SchemeSampleData..."); //$NON-NLS-1$
+						Log.debugMessage("waiting for SchemeSampleData...", Log.DEBUGLEVEL09); //$NON-NLS-1$
 						while(!SchemeSampleData.loaded) {
 							try {
 								Thread.sleep(100);
@@ -143,7 +143,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
 								//nothing
 							}
 						}
-						System.out.print(" placing elements..."); //$NON-NLS-1$
+						Log.debugMessage(" placing elements...", Log.DEBUGLEVEL09); //$NON-NLS-1$
 						TestSliderListener.this.notInitialized = false;
 						NetMapViewer netMapViewer = TestSliderListener.this.mapFrame.getMapViewer();
 
@@ -164,7 +164,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
 						PlaceSchemeElementCommand endcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element3, new Point(300, 250));
 						endcommand.setNetMapViewer(netMapViewer);
 						endcommand.execute();
-						System.out.println("OK!"); //$NON-NLS-1$
+						Log.debugMessage("OK!", Log.DEBUGLEVEL09); //$NON-NLS-1$
 					}
 				
 				}, "ўа наху€рю ху€риков..."); //$NON-NLS-1$
@@ -205,7 +205,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * окна карты хранитс€ в пуле с ключом "environment", идентификатор 
  * "mapmainframe". существует только один объект 
  * 
- * @version $Revision: 1.90 $, $Date: 2006/02/15 11:27:56 $
+ * @version $Revision: 1.91 $, $Date: 2006/02/15 12:54:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient

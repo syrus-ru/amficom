@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeCableLinkCommand.java,v 1.62 2006/02/15 11:12:43 stas Exp $$
+ * $$Id: PlaceSchemeCableLinkCommand.java,v 1.63 2006/02/15 12:54:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 /**
  * –азместить кабель на карте.
  * 
- * @version $Revision: 1.62 $, $Date: 2006/02/15 11:12:43 $
+ * @version $Revision: 1.63 $, $Date: 2006/02/15 12:54:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -106,7 +106,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			}
 			final Set<AbstractNode> siteNodesPresent = this.mapView.getAllNodes();
 			final SortedSet<CableChannelingItem> pathMembers = this.schemeCableLink.getPathMembers();
-//			System.out.println("SchemeCableLink " + xmlId1.getStringValue() + " has " + pathMembers.size() + " cci's");
+//			Log.debugMessage("SchemeCableLink " + xmlId1.getStringValue() + " has " + pathMembers.size() + " cci's");
 			for(Iterator iter = new LinkedList(pathMembers).iterator(); iter.hasNext();) {
 				CableChannelingItem cci = (CableChannelingItem )iter.next();
 				SiteNode currentStartNode = cci.getStartSiteNode();
@@ -148,7 +148,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 				// создать на месте разрыва непроложенную линию из одного фрагмента
 				if(!exists) {
 					UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, currentStartNode);
-					System.out.println("Unbound fragment for Cable " + xmlId1.getStringValue() + " between nodes  '" + bufferStartSite.getName() + "' and '" + currentStartNode.getName() + "'");
+					Log.debugMessage("Unbound fragment for Cable " + xmlId1.getStringValue() + " between nodes  '" + bufferStartSite.getName() + "' and '" + currentStartNode.getName() + "'", Log.DEBUGLEVEL09);
 					CableChannelingItem newCableChannelingItem = 
 						CableController.generateCCI(
 								this.cablePath, 
@@ -176,7 +176,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 					// если лини€ не существует, опустить данный элемент прив€зки
 					if(link == null) {
 						UnboundLink unbound = super.createUnboundLinkWithNodeLink(currentStartNode, currentEndNode);
-						System.out.println("Unbound fragment for Cable " + xmlId1.getStringValue() + " between nodes  '" + currentStartNode.getName() + "' and '" + currentEndNode.getName() + "'");
+						Log.debugMessage("Unbound fragment for Cable " + xmlId1.getStringValue() + " between nodes  '" + currentStartNode.getName() + "' and '" + currentEndNode.getName() + "'", Log.DEBUGLEVEL09);
 						this.cablePath.addLink(unbound, cci);
 						unbound.setCablePath(this.cablePath);
 					}
@@ -193,7 +193,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 									String linkUn = xmlId.getStringValue();
 									cci.getId().getXmlTransferable(xmlId, "ucm");
 									String cciUn = xmlId.getStringValue();
-									System.out.println(
+									Log.errorMessage(
 											"link '" + link.getName() 
 											+ "' (un " + linkUn 
 											+ ") cci '" + cciUn 
@@ -209,7 +209,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 								cci.getId().getXmlTransferable(xmlId, "ucm");
 								String cciUn = xmlId.getStringValue();
 								final IntDimension dimension = block.getDimension();
-								System.out.println(
+								Log.errorMessage(
 										"link '" + link.getName() 
 										+ "' (un " + linkUn 
 										+ ") block '" + block.getNumber() 
@@ -231,7 +231,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			// линию от текущего до конечного узла
 			if(this.endNode != bufferStartSite) {
 				UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, this.endNode);
-				System.out.println("Unbound fragment for Cable " + xmlId1.getStringValue() + " between nodes  '" + bufferStartSite.getName() + "' and '" + this.endNode.getName() + "'");
+				Log.debugMessage("Unbound fragment for Cable " + xmlId1.getStringValue() + " between nodes  '" + bufferStartSite.getName() + "' and '" + this.endNode.getName() + "'", Log.DEBUGLEVEL09);
 				CableChannelingItem newCableChannelingItem = 
 					CableController.generateCCI(
 							this.cablePath, 

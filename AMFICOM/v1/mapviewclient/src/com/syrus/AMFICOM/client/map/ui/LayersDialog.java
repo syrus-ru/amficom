@@ -1,5 +1,5 @@
 /*-
- * $$Id: LayersDialog.java,v 1.15 2006/02/15 11:13:06 stas Exp $$
+ * $$Id: LayersDialog.java,v 1.16 2006/02/15 12:54:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2006/02/15 11:13:06 $
+ * @version $Revision: 1.16 $, $Date: 2006/02/15 12:54:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -305,7 +305,7 @@ public class LayersDialog extends JDialog {
 		LayersTableCellEditor.getInstance().addCellEditorListener( new CellEditorListener() {
 		
 			public void editingStopped(ChangeEvent e) {
-//				System.out.println("editing stopped. repaint!");
+//				Log.debugMessage("editing stopped. repaint!");
 				LayersDialog.this.repaint();
 			}
 

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapOptionsDialog.java,v 1.18 2006/02/15 11:13:06 stas Exp $$
+ * $$Id: MapOptionsDialog.java,v 1.19 2006/02/15 12:54:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/02/15 11:13:06 $
+ * @version $Revision: 1.19 $, $Date: 2006/02/15 12:54:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -1128,9 +1128,8 @@ public class MapOptionsDialog extends JDialog
 		{
 			MapPropertiesManager.setSpareLength(Double.parseDouble(this.spareTextField.getText()));
 		}
-		catch(Exception e)
-		{
-			System.out.println(I18N.getString(MapEditorResourceKeys.ERROR_NUMBER_FORMAT));
+		catch(Exception e) {
+			Log.errorMessage(I18N.getString(MapEditorResourceKeys.ERROR_NUMBER_FORMAT));
 			// cannot parse
 		}
 

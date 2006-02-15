@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorTreeModel.java,v 1.12 2006/02/08 12:11:07 stas Exp $$
+ * $$Id: MapEditorTreeModel.java,v 1.13 2006/02/15 12:54:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2006/02/08 12:11:07 $
+ * @version $Revision: 1.13 $, $Date: 2006/02/15 12:54:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -78,18 +78,18 @@ public final class MapEditorTreeModel extends AbstractChildrenFactory {
 			PopulatableIconedNode item = MapViewTreeModel.createSingleMapViewRoot(this.mapView, this.aContext);
 			item.getChildrenFactory().populate(item);
 			node.addChild(item);
-//			System.out.println("add " + this.mapView.getName() + " to " + node.getObject().toString());
+//			Log.debugMessage("add " + this.mapView.getName() + " to " + node.getObject().toString());
 		}
 		if(this.topologyNode == null) {
 			TopologyTreeModel topologyTreeModel = new TopologyTreeModel();
 			this.topologyNode = topologyTreeModel.getRoot();
 			node.addChild(this.topologyNode);
 			this.topologyNode.getChildrenFactory().populate(this.topologyNode);
-//			System.out.println("add " + this.topologyNode.getObject().toString() + " to " + node.getObject().toString());
+//			Log.debugMessage("add " + this.topologyNode.getObject().toString() + " to " + node.getObject().toString());
 		}
 		for(Item item : node.getChildren()) {
 			((PopulatableIconedNode) item).getChildrenFactory().populate(item);
-//			System.out.println("populate " + item.getObject().toString() + " at " + node.getObject().toString());
+//			Log.debugMessage("populate " + item.getObject().toString() + " at " + node.getObject().toString());
 		}
 	}
 
@@ -102,11 +102,11 @@ public final class MapEditorTreeModel extends AbstractChildrenFactory {
 				|| (this.mapView != null
 						&& !mapView.equals(this.mapView)) ) {
 			List<Item> children = new LinkedList<Item>(this.getRoot().getChildren());
-//			System.out.println("remove " + children.size() + " children");
+//			Log.debugMessage("remove " + children.size() + " children");
 			for(Item item : children) {
-//				System.out.println("remove " + item.getObject().toString() + "...");
+//				Log.debugMessage("remove " + item.getObject().toString() + "...");
 				item.setParent(null);
-//				System.out.println("removed " + item.getObject().toString());
+//				Log.debugMessage("removed " + item.getObject().toString());
 			}
 			this.topologyNode = null;
 		}
@@ -119,13 +119,13 @@ public final class MapEditorTreeModel extends AbstractChildrenFactory {
 	public void updateTopologyTree(NetMapViewer netMapViewer) {
 		if(this.topologyNode != null) {
 			this.topologyNode.setParent(null);
-//			System.out.println("remove topologyNode");
+//			Log.debugMessage("remove topologyNode");
 		}
 		TopologyTreeModel topologyTreeModel = new TopologyTreeModel();
 		this.topologyNode = topologyTreeModel.getRoot();
 		topologyTreeModel.setNetMapViewer(netMapViewer);
 		this.getRoot().addChild(this.topologyNode);
-//		System.out.println("add " + this.topologyNode.getObject().toString() + " to " + this.getRoot().getObject().toString());
+//		Log.debugMessage("add " + this.topologyNode.getObject().toString() + " to " + this.getRoot().getObject().toString());
 	}
 
 }

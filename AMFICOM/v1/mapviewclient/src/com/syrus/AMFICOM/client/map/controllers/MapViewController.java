@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewController.java,v 1.66 2006/02/15 11:26:57 stas Exp $$
+ * $$Id: MapViewController.java,v 1.67 2006/02/15 12:54:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * 
- * @version $Revision: 1.66 $, $Date: 2006/02/15 11:26:57 $
+ * @version $Revision: 1.67 $, $Date: 2006/02/15 12:54:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -763,7 +763,7 @@ public final class MapViewController {
 						(SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.linkId);
 				if(schemeCableLink == null)
 				{
-					System.out.println("Something wrong... - schemeCableLink == null");
+					Log.debugMessage("Something wrong... - schemeCableLink == null");
 					return pe;
 				}
 				if(!vec.contains(schemeCableLink))
@@ -776,7 +776,7 @@ public final class MapViewController {
 						(SchemeLink )Pool.get(SchemeLink.typ, pe.linkId);
 				if(schemeLink == null)
 				{
-					System.out.println("Something wrong... - schemeLink == null");
+					Log.debugMessage("Something wrong... - schemeLink == null");
 					return pe;
 				}
 				if(!vec.contains(schemeLink))

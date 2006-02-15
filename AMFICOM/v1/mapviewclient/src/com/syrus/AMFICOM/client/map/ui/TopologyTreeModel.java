@@ -1,5 +1,5 @@
 /*-
- * $$Id: TopologyTreeModel.java,v 1.20 2006/02/14 10:20:07 stas Exp $$
+ * $$Id: TopologyTreeModel.java,v 1.21 2006/02/15 12:54:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2006/02/14 10:20:07 $
+ * @version $Revision: 1.21 $, $Date: 2006/02/15 12:54:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -179,7 +179,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 		}
 
 		public void stopRunning() {
-//			System.out.println("stop populating \'" + this.node.getName() + "\'");
+//			Log.debugMessage("stop populating \'" + this.node.getName() + "\'");
 			this.running = false;
 			finalAction();
 		}
@@ -189,7 +189,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 			try {
 				this.running = true;
 
-//				System.out.println("start poplating \'" + this.node.getName() + "\'");
+//				Log.debugMessage("start poplating \'" + this.node.getName() + "\'");
 
 				initialAction();
 
@@ -212,7 +212,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 					return;
 				}
 
-//				System.out.println("children of \'" + this.initialName + "\' are removed");
+//				Log.debugMessage("children of \'" + this.initialName + "\' are removed");
 
 				List<SpatialObject> objects;
 				SpatialLayer spatialLayer = (SpatialLayer )this.node.getObject();
@@ -247,7 +247,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 					return;
 				}
 				
-//				System.out.println("found " + objects.size() + " entities of \'" + this.initialName + "\'");
+//				Log.debugMessage("found " + objects.size() + " entities of \'" + this.initialName + "\'");
 
 				for(SpatialObject spatialObject : objects) {
 					if(!this.running) {
@@ -266,11 +266,11 @@ public class TopologyTreeModel implements ChildrenFactory {
 				}
 			} catch(Exception e) {
 				Log.errorMessage(e);
-//				System.out.println("processing \'" + this.initialName + "\' terminated by " + e.getMessage());
+//				Log.debugMessage("processing \'" + this.initialName + "\' terminated by " + e.getMessage());
 			}
 			finally {
 				finalAction();
-//				System.out.println("finish processing \'" + this.initialName + "\'");
+//				Log.debugMessage("finish processing \'" + this.initialName + "\'");
 				this.running = false;
 			}
 		}
@@ -278,7 +278,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 		void finalAction() {
 			if(this.initialName != null) {
 				this.node.setName(this.initialName);
-//				System.out.println("Set initial name \'" + this.initialName + "\'");
+//				Log.debugMessage("Set initial name \'" + this.initialName + "\'");
 			}
 		}
 
@@ -286,7 +286,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 			this.initialName = this.node.getName();
 			String updatingName = this.initialName + " " + I18N.getString(UPDATE_STRUNG); //$NON-NLS-1$
 			this.node.setName(updatingName);
-//			System.out.println("Set temporal name \'" + updatingName + "\'");
+//			Log.debugMessage("Set temporal name \'" + updatingName + "\'");
 		}
 
 		public boolean isRunning() {
