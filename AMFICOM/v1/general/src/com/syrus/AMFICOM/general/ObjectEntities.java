@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.96.2.3 2006/02/14 15:44:07 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.96.2.4 2006/02/15 19:33:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import gnu.trove.TShortObjectHashMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.96.2.3 $, $Date: 2006/02/14 15:44:07 $
+ * @version $Revision: 1.96.2.4 $, $Date: 2006/02/15 19:33:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -81,6 +81,7 @@ public final class ObjectEntities {
 	public static final String ANALYSIS = "Analysis";
 	public static final String MODELING = "Modeling";
 	public static final String TEST = "Test";
+	public static final String MEASUREMENTSETUP = "MeasurementSetup";
 	public static final String RESULTPARAMETER = "ResultParameter";
 	public static final String CRONTEMPORALPATTERN = "CronTemporalPattern";
 	public static final String INTERVALSTEMPORALPATTERN = "ITempPattern";
@@ -256,9 +257,9 @@ public final class ObjectEntities {
 	public static final short ACTIONTEMPLATE_CODE = 0x0203;
 	public static final short MEASUREMENT_CODE = 0x0204;
 	public static final short ANALYSIS_CODE = 0x0205;
+	public static final short MODELING_CODE = 0x0206;
 	public static final short TEST_CODE = 0x0207;
-	public static final short RESULTPARAMETER_CODE = 0x0209;
-	public static final short MODELING_CODE = 0x020A;
+	public static final short MEASUREMENTSETUP_CODE = 0x0208;
 	public static final short CRONTEMPORALPATTERN_CODE = 0x020B;
 	public static final short INTERVALSTEMPORALPATTERN_CODE = 0x020C;
 	public static final short PERIODICALTEMPORALPATTERN_CODE = 0x020D;
@@ -447,7 +448,7 @@ public final class ObjectEntities {
 		registerEntity(MEASUREMENT_CODE, MEASUREMENT);
 		registerEntity(ANALYSIS_CODE, ANALYSIS);
 		registerEntity(TEST_CODE, TEST);
-		registerEntity(RESULTPARAMETER_CODE, RESULTPARAMETER);
+		registerEntity(MEASUREMENTSETUP_CODE, MEASUREMENTSETUP);
 		registerEntity(CRONTEMPORALPATTERN_CODE, CRONTEMPORALPATTERN);
 		registerEntity(INTERVALSTEMPORALPATTERN_CODE, INTERVALSTEMPORALPATTERN);
 		registerEntity(PERIODICALTEMPORALPATTERN_CODE, PERIODICALTEMPORALPATTERN);
