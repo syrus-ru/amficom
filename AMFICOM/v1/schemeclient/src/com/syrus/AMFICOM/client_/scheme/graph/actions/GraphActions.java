@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.26 2006/02/15 12:18:11 stas Exp $
+ * $Id: GraphActions.java,v 1.27 2006/02/15 12:58:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.26 $, $Date: 2006/02/15 12:18:11 $
+ * @version $Revision: 1.27 $, $Date: 2006/02/15 12:58:34 $
  * @module schemeclient
  */
 
@@ -369,13 +369,10 @@ public class GraphActions {
 		GraphConstants.setForeground(map, graph.getForeground());
 		Map<GraphCell, Map> viewMap = new HashMap<GraphCell, Map>();
 
-		System.out.println("Edge: " + edgeCount++);
 		for (int i = 0; i < edges.length; i++) {
-			System.out.print(edges.toString() + ";\t");
 			viewMap.put(edges[i], GraphConstants.cloneMap(map));
 		}
 		graph.getGraphLayoutCache().edit(viewMap, null, null, null);
-		System.out.println("\n done!");
 	}
 
 	public static void setEdgeColor(SchemeGraph graph, GraphCell edge, Color color) {
@@ -395,13 +392,10 @@ public class GraphActions {
 		GraphConstants.setForeground(map, graph.getForeground());
 		Map<GraphCell, Map> viewMap = new HashMap<GraphCell, Map>();
 
-		System.out.println("Obj: " + objCount++);
 		for (int i = 0; i < objs.length; i++) {
-			System.out.print(objs[i].toString() + ";\t");
 			viewMap.put(objs[i], GraphConstants.cloneMap(map));
 		}
 		graph.getGraphLayoutCache().edit(viewMap, null, null, null);
-		System.out.println("\n done!");
 	}
 
 	public static void setObjectForeColor(SchemeGraph graph, GraphCell obj,

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.65 2006/02/15 12:18:11 stas Exp $
+ * $Id: SchemeActions.java,v 1.66 2006/02/15 12:58:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -103,7 +103,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.65 $, $Date: 2006/02/15 12:18:11 $
+ * @version $Revision: 1.66 $, $Date: 2006/02/15 12:58:34 $
  * @module schemeclient
  */
 
@@ -216,20 +216,18 @@ public class SchemeActions {
 			for (DeviceGroup group : oldToNewMap.keySet()) {
 				Set<Edge> edges = new HashSet<Edge>();
 				GraphActions.findAllVertexLinks(edges, group);
-				System.out.println(edges.size());
 				
 				Set<DeviceGroup> groups = new HashSet<DeviceGroup>();
 				for (Edge edge : edges) {
 					DeviceGroup opposite = getOppositeSchemeNode(edge, groups);
 					if (opposite != null) {
-					System.out.println(group.getScheme() + " to " + opposite.getScheme());
-					Scheme scheme1 = group.getScheme();
-					Scheme scheme2 = opposite.getScheme();
-					if (!scheme1.equals(scheme2)) {
-						TopLevelElement top1 = oldToNewMap.get(group);
-						TopLevelElement top2 = oldToNewMap.get(opposite);
-						createTopLevelCableLink(graph, (Port)top1.getChildren().iterator().next(), (Port)top2.getChildren().iterator().next(), null, null);						
-					}
+						Scheme scheme1 = group.getScheme();
+						Scheme scheme2 = opposite.getScheme();
+						if (!scheme1.equals(scheme2)) {
+							TopLevelElement top1 = oldToNewMap.get(group);
+							TopLevelElement top2 = oldToNewMap.get(opposite);
+							createTopLevelCableLink(graph, (Port)top1.getChildren().iterator().next(), (Port)top2.getChildren().iterator().next(), null, null);						
+						}
 					}
 				}
 			}

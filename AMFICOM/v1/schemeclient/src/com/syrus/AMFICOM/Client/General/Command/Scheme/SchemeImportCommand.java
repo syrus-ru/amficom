@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.38 2006/01/11 12:34:10 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.39 2006/02/15 12:58:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,29 +11,22 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 
 import org.apache.xmlbeans.XmlException;
 
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
-import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -42,7 +35,6 @@ import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.AMFICOM.scheme.xml.SchemesDocument;
 import com.syrus.AMFICOM.scheme.xml.XmlScheme;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeSeq;
-import com.syrus.io.ConfigurationImporter;
 import com.syrus.util.Log;
 
 public class SchemeImportCommand extends ImportExportCommand {
@@ -59,19 +51,19 @@ public class SchemeImportCommand extends ImportExportCommand {
 	public void execute() {
 		super.execute();
 		
-		final String fileName1 = "F:/export/types";
-		try {
-			Set<StorableObject> objects = ConfigurationImporter.loadTypes(fileName1);
-			StorableObjectPool.putStorableObjects(objects);
-		} catch (CreateObjectException e1) {
-			Log.errorMessage(e1);
-		} catch (IllegalObjectEntityException e) {
-			Log.errorMessage(e);
-		}
-		
-		if (true) {
-			return;
-		}
+//		final String fileName1 = "F:/export/types";
+//		try {
+//			Set<StorableObject> objects = ConfigurationImporter.loadTypes(fileName1);
+//			StorableObjectPool.putStorableObjects(objects);
+//		} catch (CreateObjectException e1) {
+//			Log.errorMessage(e1);
+//		} catch (IllegalObjectEntityException e) {
+//			Log.errorMessage(e);
+//		}
+//		
+//		if (true) {
+//			return;
+//		}
 		
 //
 //		try {
@@ -94,14 +86,14 @@ public class SchemeImportCommand extends ImportExportCommand {
 			aModel.fireModelChanged();
 		} catch (CreateObjectException e) {
 			Log.errorMessage(e.getMessage());
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.error.scheme_import"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		} catch (XmlException e) {
 			Log.errorMessage(e);
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.error.xml_format_incorrect"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 					JOptionPane.ERROR_MESSAGE);
