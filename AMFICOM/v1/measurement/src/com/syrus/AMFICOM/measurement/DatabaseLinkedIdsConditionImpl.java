@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41.2.2 2006/02/14 01:26:43 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41.2.3 2006/02/15 19:36:50 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TableNames;
 
 /**
- * @version $Revision: 1.41.2.2 $, $Date: 2006/02/14 01:26:43 $
+ * @version $Revision: 1.41.2.3 $, $Date: 2006/02/15 19:36:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -81,7 +81,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					case MONITOREDELEMENT_CODE:
 						return super.getLinkedQuery(ActionTemplateWrapper.LINK_COLUMN_ACTION_TEMPLATE_ID,
 								ActionTemplateWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID,
-								TableNames.ME_TMPL_LINK);
+								TableNames.ACTMPL_ME_LINK);
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}
@@ -142,8 +142,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 						return stringBuffer.toString();
 					case ACTIONTEMPLATE_CODE:
 						return super.getLinkedQuery(TestWrapper.LINK_COLUMN_TEST_ID, 
-								TestWrapper.LINK_COLUMN_MEASUREMENT_TEMPLATE_ID, 
-								TableNames.TEST_MEASTMPL_LINK);
+								TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID, 
+								TableNames.TEST_MS_LINK);
 					case TEST_CODE:
 						return super.getQuery(TestWrapper.COLUMN_GROUP_TEST_ID);
 					default:
