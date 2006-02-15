@@ -1,5 +1,5 @@
 /*
- * $Id: LoadingThreadTest.java,v 1.5 2005/09/16 14:53:38 krupenn Exp $
+ * $Id: LoadingThreadTest.java,v 1.6 2006/02/15 12:42:12 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.client.map.cache.TopologicalImageCache;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/09/16 14:53:38 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2006/02/15 12:42:12 $
  * @module mapviewclient_modifying
  */
 public class LoadingThreadTest extends TestCase {
@@ -74,40 +74,40 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq2);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		//Очищаем очередь подгрузки
@@ -115,17 +115,17 @@ public class LoadingThreadTest extends TestCase {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		
@@ -137,7 +137,7 @@ public class LoadingThreadTest extends TestCase {
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
 	
-				e1.printStackTrace();
+				Log.errorMessage(e1);
 			}
 			
 			if (tiq2.getImage() != null)
@@ -170,10 +170,10 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		} catch (MapDataException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		}
 		
   		boolean[] layerVis = {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true};
@@ -191,10 +191,10 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		long startTime = System.currentTimeMillis();
@@ -205,7 +205,7 @@ public class LoadingThreadTest extends TestCase {
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
 	
-				e1.printStackTrace();
+				Log.errorMessage(e1);
 			}
 			
 			if (tiq.getImage() != null)
@@ -238,10 +238,10 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		} catch (MapDataException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		}
 		
   		boolean[] layerVis = {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true};
@@ -271,27 +271,27 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		long startTime = System.currentTimeMillis();
@@ -302,7 +302,7 @@ public class LoadingThreadTest extends TestCase {
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
 	
-				e1.printStackTrace();
+				Log.errorMessage(e1);
 			}
 			
 			if (tiq1.getImage() != null)
@@ -335,10 +335,10 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		} catch (MapDataException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		}
 		
   		boolean[] layerVis = {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true};
@@ -368,27 +368,27 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		long startTime = System.currentTimeMillis();
@@ -399,7 +399,7 @@ public class LoadingThreadTest extends TestCase {
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
 	
-				e1.printStackTrace();
+				Log.errorMessage(e1);
 			}
 			
 			if (tiq1.getImage() != null)
@@ -431,10 +431,10 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		} catch (MapDataException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		}
 		
   		boolean[] layerVis = {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true};
@@ -464,27 +464,27 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		long startTime = System.currentTimeMillis();
@@ -495,7 +495,7 @@ public class LoadingThreadTest extends TestCase {
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
 	
-				e1.printStackTrace();
+				Log.errorMessage(e1);
 			}
 			
 			if (tiq.getImage() != null)
@@ -530,10 +530,10 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		} catch (MapDataException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		}
 		
   		boolean[] layerVis = {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true};
@@ -574,44 +574,44 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq2);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		long startTime = System.currentTimeMillis();
@@ -622,7 +622,7 @@ public class LoadingThreadTest extends TestCase {
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
 	
-				e1.printStackTrace();
+				Log.errorMessage(e1);
 			}
 			
 			if (tiq1.getImage() != null)
@@ -656,10 +656,10 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		} catch (MapDataException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		}
 		
   		boolean[] layerVis = {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true};
@@ -700,44 +700,44 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq2);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		long startTime = System.currentTimeMillis();
@@ -748,7 +748,7 @@ public class LoadingThreadTest extends TestCase {
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
 	
-				e1.printStackTrace();
+				Log.errorMessage(e1);
 			}
 			
 			if (tiq2.getImage() != null)
@@ -782,10 +782,10 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		} catch (MapDataException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		}
 		
   		boolean[] layerVis = {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true};
@@ -826,44 +826,44 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq2);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 		//Меняем приоритет второго запроса на более низкий чем у третьего		
@@ -871,17 +871,17 @@ public class LoadingThreadTest extends TestCase {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.changeRequestPriority(tiq1,TopologicalImageQuery.PRIORITY_BACKGROUND_LOW);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		
@@ -893,7 +893,7 @@ public class LoadingThreadTest extends TestCase {
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
 	
-				e1.printStackTrace();
+				Log.errorMessage(e1);
 			}
 			
 			if (tiq1.getImage() != null)
@@ -926,10 +926,10 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		} catch (MapDataException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		}
 		
   		boolean[] layerVis = {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true};
@@ -970,44 +970,44 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq2);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 		//Меняем приоритет последнего запроса на более высокий чем у первого в очереди,
@@ -1017,17 +1017,17 @@ public class LoadingThreadTest extends TestCase {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.changeRequestPriority(tiq2,TopologicalImageQuery.PRIORITY_EXPRESS);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		
@@ -1039,7 +1039,7 @@ public class LoadingThreadTest extends TestCase {
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
 	
-				e1.printStackTrace();
+				Log.errorMessage(e1);
 			}
 			
 			if (tiq1.getImage() != null)
@@ -1072,10 +1072,10 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		} catch (MapDataException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		}
 		
   		boolean[] layerVis = {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true};
@@ -1116,44 +1116,44 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq2);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 		//Меняем приоритет обрабатываемого запроса на более низкий чем первого в очереди		
@@ -1161,17 +1161,17 @@ public class LoadingThreadTest extends TestCase {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.changeRequestPriority(tiq,TopologicalImageQuery.PRIORITY_BACKGROUND_MIDDLE);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		
@@ -1183,7 +1183,7 @@ public class LoadingThreadTest extends TestCase {
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
 	
-				e1.printStackTrace();
+				Log.errorMessage(e1);
 			}
 			
 			if (tiq2.getImage() != null)
@@ -1213,10 +1213,10 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		} catch (MapDataException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		}
 		
   		boolean[] layerVis = {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true};
@@ -1257,44 +1257,44 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq2);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 		//Меняем обрабатываемого запроса на ещё более высокий		
@@ -1302,17 +1302,17 @@ public class LoadingThreadTest extends TestCase {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.changeRequestPriority(tiq,TopologicalImageQuery.PRIORITY_EXPRESS);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		
@@ -1324,7 +1324,7 @@ public class LoadingThreadTest extends TestCase {
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
 	
-				e1.printStackTrace();
+				Log.errorMessage(e1);
 			}
 			
 			if (tiq2.getImage() != null)
@@ -1355,10 +1355,10 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		} catch (MapDataException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		}
 		
   		boolean[] layerVis = {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true};
@@ -1388,27 +1388,27 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 		//Удаляем первый запрос		
@@ -1416,17 +1416,17 @@ public class LoadingThreadTest extends TestCase {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.removeRequest(tiq);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		
@@ -1438,7 +1438,7 @@ public class LoadingThreadTest extends TestCase {
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
 	
-				e1.printStackTrace();
+				Log.errorMessage(e1);
 			}
 			
 			if (tiq.getImage() != null)
@@ -1470,10 +1470,10 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		} catch (MapDataException e2) {
 
-			e2.printStackTrace();
+			Log.errorMessage(e2);
 		}
 		
   		boolean[] layerVis = {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true};
@@ -1514,44 +1514,44 @@ public class LoadingThreadTest extends TestCase {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.addRequest(tiq2);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		//Удаляем второй запрос (первый в очереди)		
@@ -1559,17 +1559,17 @@ public class LoadingThreadTest extends TestCase {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
 
-			e1.printStackTrace();
+			Log.errorMessage(e1);
 		}
 		
 		try {
 			loadingThread.removeRequest(tiq1);
 		} catch (MapConnectionException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
 
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		long startTime = System.currentTimeMillis();
@@ -1580,7 +1580,7 @@ public class LoadingThreadTest extends TestCase {
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
 	
-				e1.printStackTrace();
+				Log.errorMessage(e1);
 			}
 			
 			if (tiq1.getImage() != null)

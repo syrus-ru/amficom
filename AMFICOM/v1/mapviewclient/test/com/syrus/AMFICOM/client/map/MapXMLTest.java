@@ -1,5 +1,5 @@
 /**
- * $Id: MapXMLTest.java,v 1.7 2005/12/08 16:12:54 bass Exp $
+ * $Id: MapXMLTest.java,v 1.8 2006/02/15 12:42:12 stas Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -74,10 +74,10 @@ public class MapXMLTest {
 	           doc = MapLibraryDocument.Factory.parse(xmlfile);
 	       }
 	       catch(XmlException e){
-	           e.printStackTrace();
+	           Log.errorMessage(e);
 	       }
 	       catch(IOException e){
-	           e.printStackTrace();
+	           Log.errorMessage(e);
 	       }
 	       return doc;
 	   }
@@ -165,7 +165,7 @@ public class MapXMLTest {
 	               doc.save(f,xmlOptions);
 	           }
 	           catch(IOException e){
-	               e.printStackTrace();
+	               Log.errorMessage(e);
 	           }
 	           System.out.println("\nXML Instance Document saved at : " + f.getPath()); //$NON-NLS-1$
 	       }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorTests.java,v 1.9 2005/09/16 14:53:38 krupenn Exp $
+ * $Id: MapEditorTests.java,v 1.10 2006/02/15 12:42:12 stas Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,7 +52,7 @@ public class MapEditorTests {
 				try {
 					METS.setUp();
 				} catch(Exception e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 					fail(e.getMessage());
 				}
 			}
