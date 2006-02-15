@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.91.2.5 2006/02/14 00:43:51 arseniy Exp $
+ * $Id: measurement.idl,v 1.91.2.6 2006/02/15 19:31:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,15 +76,14 @@ module measurement {
 
 
 ////////////////////////// ActionParameterTypeBinding ///////////////////////////
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		enum IdlParameterValueKind {
+			VALUE_ENUMERATED,
+			VALUE_CONTINUOUS
+		};
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlActionParameterTypeBinding : general::corba::IdlStorableObject {
-			/*\u002a\u002f@SuppressWarnings("all")/**/
-			enum IdlParameterValueKind {
-				VALUE_ENUMERATED,
-				VALUE_CONTINUOUS
-			};
-
 			public IdlParameterValueKind parameterValueKind;
 			public general::corba::IdlIdentifier parameterTypeId;
 			public general::corba::IdlIdentifier actionTypeId;
@@ -109,6 +108,8 @@ module measurement {
 		valuetype IdlActionParameter : general::corba::IdlStorableObject {
 			public general::corba::IdlIdentifier bindingId;
 			public ::CORBA::OctetSeq value;
+			public IdlParameterValueKind valueKind;
+			public general::corba::WString32 typeCodename;
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -117,7 +118,9 @@ module measurement {
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in general::corba::IdlIdentifier bindingId,
-					in ::CORBA::OctetSeq value);
+					in ::CORBA::OctetSeq value,
+					in IdlParameterValueKind valueKind,
+					in general::corba::WString32 typeCodename);
 		};
 
 
@@ -126,6 +129,7 @@ module measurement {
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlActionTemplate : general::corba::IdlStorableObject {
 			public general::corba::WString256 description;
+			public long long approximateActionDuration;
 			public general::corba::IdlIdentifierSeq actionParameterIds;
 			public general::corba::IdlIdentifierSeq monitoredElementIds;
 
@@ -136,6 +140,7 @@ module measurement {
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in general::corba::WString256 description,
+					in long long approximateActionDuration,
 					in general::corba::IdlIdentifierSeq actionParameterIds,
 					in general::corba::IdlIdentifierSeq monitoredElementIds);
 		};
@@ -269,6 +274,30 @@ module measurement {
 		};
 
 
+/////////////////////// MeasurementSetup ////////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlMeasurementSetup : general::corba::IdlStorableObject {
+			public general::corba::IdlIdentifier measurementTemplateId;
+			public general::corba::IdlIdentifier analysisTemplateId;
+			public general::corba::IdlIdentifier etalonTemplateId;
+			public general::corba::WString256 description;
+			public general::corba::IdlIdentifierSeq monitoredElementIds;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::IdlIdentifier measurementTemplateId,
+					in general::corba::IdlIdentifier analysisTemplateId,
+					in general::corba::IdlIdentifier etalonTemplateId,
+					in general::corba::WString256 description,
+					in general::corba::IdlIdentifierSeq monitoredElementIds);
+		};
+
+
 /////////////////////// Test ////////////////////////
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
@@ -310,11 +339,10 @@ module measurement {
 			public general::corba::IdlIdentifier monitoredElementId;
 			public IdlTestStatus status;
 			public IdlTestTimeStamps timeStamps;
+			public general::corba::IdlIdentifierSeq measurementSetupIds;
 			public general::corba::IdlIdentifier measurementTypeId;
-			public general::corba::IdlIdentifierSeq measurementTemplateIds;
 			public long numberOfMeasurements;
 			public general::corba::IdlIdentifier analysisTypeId;
-			public general::corba::IdlIdentifierSeq analysisTemplateIds;
 			public IdlTestStopsSeq stops;
 
 			factory init(in general::corba::IdlIdentifier id,
@@ -328,11 +356,10 @@ module measurement {
 					in general::corba::IdlIdentifier monitoredElementId,
 					in IdlTestStatus status,
 					in IdlTestTimeStamps timeStamps,
+					in general::corba::IdlIdentifierSeq measurementSetupIds,
 					in general::corba::IdlIdentifier measurementTypeId,
-					in general::corba::IdlIdentifierSeq measurementTemplateIds,
 					in long numberOfMeasurements,
 					in general::corba::IdlIdentifier analysisTypeId,
-					in general::corba::IdlIdentifierSeq analysisTemplateIds,
 					in IdlTestStopsSeq stops);
 		};
 
