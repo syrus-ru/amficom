@@ -1,5 +1,5 @@
 /*-
- * $Id: CreateRack.java,v 1.7 2005/10/31 12:30:28 bass Exp $
+ * $Id: CreateRack.java,v 1.8 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import javax.swing.JOptionPane;
 
 import com.jgraph.graph.ParentMap;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
@@ -70,7 +70,7 @@ public class CreateRack extends AbstractAction {
 				DeviceGroup group = (DeviceGroup)cell;
 				if (group.getType() == DeviceGroup.SCHEME) {
 					Log.debugMessage(LangModelGraph.getString("Error.rack.scheme"), Level.WARNING); //$NON-NLS-1$
-					JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+					JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 							LangModelGraph.getString("Error.group.scheme"), //$NON-NLS-1$
 							LangModelGraph.getString("error"), //$NON-NLS-1$
 							JOptionPane.OK_OPTION);
@@ -80,7 +80,7 @@ public class CreateRack extends AbstractAction {
 			else if (cell instanceof Rack) {
 				oldRack = (Rack)cell;
 //				Log.debugMessage(LangModelGraph.getString("Error.rack.rack"), Level.WARNING); //$NON-NLS-1$
-//				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+//				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 //						LangModelGraph.getString("Error.group.rack"), //$NON-NLS-1$
 //						LangModelGraph.getString("error"), //$NON-NLS-1$
 //						JOptionPane.OK_OPTION);

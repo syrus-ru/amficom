@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGeneralPanel.java,v 1.15 2006/01/25 12:59:01 stas Exp $
+ * $Id: SchemeGeneralPanel.java,v 1.16 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2006/01/25 12:59:01 $
+ * @version $Revision: 1.16 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -95,11 +95,246 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 	
 	protected SchemeGeneralPanel() {
 		super();
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
+
+		GridBagLayout gbPanel0 = new GridBagLayout();
+		GridBagConstraints gbcPanel0 = new GridBagConstraints();
+		this.pnPanel0.setLayout( gbPanel0 );
+		
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 6;
+		gbcPanel0.gridwidth = 4;
+		gbcPanel0.gridheight = 1;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 0;
+		gbcPanel0.weighty = 0;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints( this.lbDescrLabel, gbcPanel0 );
+		this.pnPanel0.add( this.lbDescrLabel );
+		
+		JScrollPane scpDescrArea = new JScrollPane( this.taDescrArea );
+		gbcPanel0.gridx = 1;
+		gbcPanel0.gridy = 7;
+		gbcPanel0.gridwidth = 11;
+		gbcPanel0.gridheight = 5;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 1;
+		gbcPanel0.weighty = 1;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints( scpDescrArea, gbcPanel0 );
+		this.pnPanel0.add( scpDescrArea );
+		
+		this.pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( "" ) );
+		GridBagLayout gbGeneralPanel = new GridBagLayout();
+		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
+		this.pnGeneralPanel.setLayout( gbGeneralPanel );
+		
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( this.lbNameLabel, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.lbNameLabel );
+		
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 7;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( this.tfNameText, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.tfNameText );
+		
+		gbcGeneralPanel.gridx = 9;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 1;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( this.btCommitBut, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.btCommitBut );
+		
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 1;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( this.lbSymbolLabel, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.lbSymbolLabel );
+		
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 1;
+		gbcGeneralPanel.gridwidth = 7;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( this.tfSymbolText, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.tfSymbolText );
+		
+		gbcGeneralPanel.gridx = 9;
+		gbcGeneralPanel.gridy = 1;
+		gbcGeneralPanel.gridwidth = 1;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( this.btSymbolBut, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.btSymbolBut );
+		
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 2;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( this.lbKindLabel, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.lbKindLabel );
+		
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 2;
+		gbcGeneralPanel.gridwidth = 8;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( this.cmbKindCombo, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.cmbKindCombo );
+		
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 3;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( this.lbDimensionLabel, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.lbDimensionLabel );
+		
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 3;
+		gbcGeneralPanel.gridwidth = 8;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( this.cmbSizeCombo, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.cmbSizeCombo );
+		
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 4;
+		gbcGeneralPanel.gridwidth = 1;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( this.lbWidthLabel, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.lbWidthLabel );
+		
+		gbcGeneralPanel.gridx = 3;
+		gbcGeneralPanel.gridy = 4;
+		gbcGeneralPanel.gridwidth = 3;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0.5;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( this.tfWidthText, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.tfWidthText );
+		
+		gbcGeneralPanel.gridx = 6;
+		gbcGeneralPanel.gridy = 4;
+		gbcGeneralPanel.gridwidth = 1;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( this.lbHeightLabel, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.lbHeightLabel );
+		
+		gbcGeneralPanel.gridx = 7;
+		gbcGeneralPanel.gridy = 4;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0.5;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( this.tfHeightText, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.tfHeightText );
+		
+		gbcGeneralPanel.gridx = 9;
+		gbcGeneralPanel.gridy = 4;
+		gbcGeneralPanel.gridwidth = 1;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( this.lbMMLabel, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.lbMMLabel );
+		
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 0;
+		gbcPanel0.gridwidth = 12;
+		gbcPanel0.gridheight = 6;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 1;
+		gbcPanel0.weighty = 0;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints( this.pnGeneralPanel, gbcPanel0 );
+		this.pnPanel0.add( this.pnGeneralPanel );
+		
+		for (int i = 0; i < SchemeResourceKeys.SIZES.length; i++) {
+			this.cmbSizeCombo.addItem(SchemeResourceKeys.SIZES[i]);			
 		}
+		this.cmbSizeCombo.setRenderer(new SchemeExternedObjectRenderer());
+		for (int i = 0; i < schemeKinds.length; i++) {
+			this.cmbKindCombo.addItem(schemeKinds[i]);			
+		}
+		this.pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
+		this.cmbSizeCombo.addItemListener(new java.awt.event.ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				cmbSizeCombo_itemStateChanged(e.getItem());
+			}
+		});
+		
+		addToUndoableListener(this.tfNameText);
+		addToUndoableListener(this.tfSymbolText);
+		addToUndoableListener(this.btSymbolBut);
+		addToUndoableListener(this.cmbKindCombo);
+		addToUndoableListener(this.cmbSizeCombo);
+		addToUndoableListener(this.tfHeightText);
+		addToUndoableListener(this.tfWidthText);
+		
+		this.btCommitBut.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
+		this.btCommitBut.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.btCommitBut.setFocusPainted(false);
+		this.btCommitBut.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.btCommitBut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				commitChanges();
+			}
+		});
 	}
 	
 	public void setContext(ApplicationContext aContext) {
@@ -111,249 +346,6 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		setObject(scheme);
 	}
 
-	@SuppressWarnings("unqualified-field-access")
-	private void jbInit() throws Exception {
-		GridBagLayout gbPanel0 = new GridBagLayout();
-		GridBagConstraints gbcPanel0 = new GridBagConstraints();
-		pnPanel0.setLayout( gbPanel0 );
-
-		gbcPanel0.gridx = 0;
-		gbcPanel0.gridy = 6;
-		gbcPanel0.gridwidth = 4;
-		gbcPanel0.gridheight = 1;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 0;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( lbDescrLabel, gbcPanel0 );
-		pnPanel0.add( lbDescrLabel );
-
-		JScrollPane scpDescrArea = new JScrollPane( taDescrArea );
-		gbcPanel0.gridx = 1;
-		gbcPanel0.gridy = 7;
-		gbcPanel0.gridwidth = 11;
-		gbcPanel0.gridheight = 5;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 1;
-		gbcPanel0.weighty = 1;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( scpDescrArea, gbcPanel0 );
-		pnPanel0.add( scpDescrArea );
-
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( "" ) );
-		GridBagLayout gbGeneralPanel = new GridBagLayout();
-		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
-		pnGeneralPanel.setLayout( gbGeneralPanel );
-
-		gbcGeneralPanel.gridx = 0;
-		gbcGeneralPanel.gridy = 0;
-		gbcGeneralPanel.gridwidth = 2;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbNameLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbNameLabel );
-
-		gbcGeneralPanel.gridx = 2;
-		gbcGeneralPanel.gridy = 0;
-		gbcGeneralPanel.gridwidth = 7;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 1;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( tfNameText, gbcGeneralPanel );
-		pnGeneralPanel.add( tfNameText );
-
-		gbcGeneralPanel.gridx = 9;
-		gbcGeneralPanel.gridy = 0;
-		gbcGeneralPanel.gridwidth = 1;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( btCommitBut, gbcGeneralPanel );
-		pnGeneralPanel.add( btCommitBut );
-
-		gbcGeneralPanel.gridx = 0;
-		gbcGeneralPanel.gridy = 1;
-		gbcGeneralPanel.gridwidth = 2;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbSymbolLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbSymbolLabel );
-
-		gbcGeneralPanel.gridx = 2;
-		gbcGeneralPanel.gridy = 1;
-		gbcGeneralPanel.gridwidth = 7;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 1;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( tfSymbolText, gbcGeneralPanel );
-		pnGeneralPanel.add( tfSymbolText );
-
-		gbcGeneralPanel.gridx = 9;
-		gbcGeneralPanel.gridy = 1;
-		gbcGeneralPanel.gridwidth = 1;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( btSymbolBut, gbcGeneralPanel );
-		pnGeneralPanel.add( btSymbolBut );
-
-		gbcGeneralPanel.gridx = 0;
-		gbcGeneralPanel.gridy = 2;
-		gbcGeneralPanel.gridwidth = 2;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbKindLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbKindLabel );
-
-		gbcGeneralPanel.gridx = 2;
-		gbcGeneralPanel.gridy = 2;
-		gbcGeneralPanel.gridwidth = 8;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 1;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( cmbKindCombo, gbcGeneralPanel );
-		pnGeneralPanel.add( cmbKindCombo );
-
-		gbcGeneralPanel.gridx = 0;
-		gbcGeneralPanel.gridy = 3;
-		gbcGeneralPanel.gridwidth = 2;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbDimensionLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbDimensionLabel );
-
-		gbcGeneralPanel.gridx = 2;
-		gbcGeneralPanel.gridy = 3;
-		gbcGeneralPanel.gridwidth = 8;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 1;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( cmbSizeCombo, gbcGeneralPanel );
-		pnGeneralPanel.add( cmbSizeCombo );
-
-		gbcGeneralPanel.gridx = 2;
-		gbcGeneralPanel.gridy = 4;
-		gbcGeneralPanel.gridwidth = 1;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbWidthLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbWidthLabel );
-
-		gbcGeneralPanel.gridx = 3;
-		gbcGeneralPanel.gridy = 4;
-		gbcGeneralPanel.gridwidth = 3;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0.5;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( tfWidthText, gbcGeneralPanel );
-		pnGeneralPanel.add( tfWidthText );
-
-		gbcGeneralPanel.gridx = 6;
-		gbcGeneralPanel.gridy = 4;
-		gbcGeneralPanel.gridwidth = 1;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbHeightLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbHeightLabel );
-
-		gbcGeneralPanel.gridx = 7;
-		gbcGeneralPanel.gridy = 4;
-		gbcGeneralPanel.gridwidth = 2;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0.5;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( tfHeightText, gbcGeneralPanel );
-		pnGeneralPanel.add( tfHeightText );
-		
-		gbcGeneralPanel.gridx = 9;
-		gbcGeneralPanel.gridy = 4;
-		gbcGeneralPanel.gridwidth = 1;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbMMLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbMMLabel );
-		
-		gbcPanel0.gridx = 0;
-		gbcPanel0.gridy = 0;
-		gbcPanel0.gridwidth = 12;
-		gbcPanel0.gridheight = 6;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 1;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
-		pnPanel0.add( pnGeneralPanel );
-		
-		for (int i = 0; i < SchemeResourceKeys.SIZES.length; i++) {
-			cmbSizeCombo.addItem(SchemeResourceKeys.SIZES[i]);			
-		}
-		cmbSizeCombo.setRenderer(new SchemeExternedObjectRenderer());
-		for (int i = 0; i < schemeKinds.length; i++) {
-			cmbKindCombo.addItem(schemeKinds[i]);			
-		}
-		pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
-		cmbSizeCombo.addItemListener(new java.awt.event.ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				cmbSizeCombo_itemStateChanged(e.getItem());
-			}
-		});
-		
-		addToUndoableListener(tfNameText);
-		addToUndoableListener(tfSymbolText);
-		addToUndoableListener(btSymbolBut);
-		addToUndoableListener(cmbKindCombo);
-		addToUndoableListener(cmbSizeCombo);
-		addToUndoableListener(tfHeightText);
-		addToUndoableListener(tfWidthText);
-		
-		this.btCommitBut.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
-		this.btCommitBut.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
-		this.btCommitBut.setFocusPainted(false);
-		this.btCommitBut.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
-		this.btCommitBut.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				commitChanges();
-			}
-		});
-	}
-	
 	private static class SchemeExternedObjectRenderer extends JLabel implements ListCellRenderer {
 		private static final long serialVersionUID = -1316715209536756611L;
 
@@ -432,6 +424,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		return this.scheme;
 	}
 
+	@Override
 	public void commitChanges() {
 		super.commitChanges();
 		if (this.scheme != null && MiscUtil.validName(this.tfNameText.getText())) {

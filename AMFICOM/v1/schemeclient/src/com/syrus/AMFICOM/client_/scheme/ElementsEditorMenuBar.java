@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMenuBar.java,v 1.8 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: ElementsEditorMenuBar.java,v 1.9 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/08/08 11:58:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -58,7 +58,7 @@ public class ElementsEditorMenuBar extends AbstractMainMenuBar {
 
 		menuWindow.setText(LangModelSchematics.getString("menuWindow"));
 		menuWindow.setName("menuWindow");
-		menuWindowArrange.setText(LangModelGeneral.getString("Menu.View.WindowArrange"));
+		menuWindowArrange.setText(I18N.getString("Menu.View.WindowArrange"));
 		menuWindowArrange.setName(ApplicationModel.MENU_VIEW_ARRANGE);
 		menuWindowArrange.addActionListener(this.actionAdapter);
 		menuWindowTree.setText(LangModelSchematics.getString("menuWindowTree"));

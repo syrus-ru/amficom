@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.23 2006/02/06 10:30:10 stas Exp $
+ * $Id: PopupFactory.java,v 1.24 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.jgraph.graph.PortView;
 import com.jgraph.plaf.basic.TransferHandler;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.PathBuilder;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.LangModelGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
@@ -561,7 +561,7 @@ public class PopupFactory {
 					PathBuilder.explore(path, SchemeResource.getCashedPathEnd());
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
-					JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+					JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 							e.getMessage(), 
 							LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 							JOptionPane.ERROR_MESSAGE);

@@ -1,5 +1,5 @@
 /*-
- * $Id: WrapperedTableChooserDialog.java,v 1.1 2005/11/21 15:22:37 stas Exp $
+ * $Id: WrapperedTableChooserDialog.java,v 1.2 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import javax.swing.event.ListSelectionListener;
 
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.util.Wrapper;
@@ -38,7 +38,7 @@ import com.syrus.util.Wrapper;
  * В окне выбора объекта можно включить функцию удаления выбранного объекта.
  * Для того, чтобы включить эту возможность, используется параметр canDelete
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author $Author: stas $
  * @module commonclient_v1
  */
@@ -120,7 +120,7 @@ public class WrapperedTableChooserDialog extends JDialog {
 				options);
 
 		final JDialog dialog = optionPane.createDialog(
-				Environment.getActiveWindow(), title);
+				AbstractMainFrame.getActiveMainFrame(), title);
 		Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = Math.min(screenDim.width / 2, 590);
 		int height = Math.min(screenDim.height / 2, 400);

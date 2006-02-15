@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathGeneralPanel.java,v 1.14 2005/11/18 10:31:08 stas Exp $
+ * $Id: SchemePathGeneralPanel.java,v 1.15 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -78,32 +78,15 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 
 	protected SchemePathGeneralPanel() {
 		super();
-		try {
-			this.jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void setContext(final ApplicationContext aContext) {
-		this.aContext = aContext;
-	}
-
-	protected SchemePathGeneralPanel(final SchemePath schemePath) {
-		this();
-		this.setObject(schemePath);
-	}
-
-	private void jbInit() throws Exception {
 		final GridBagLayout gbPanel0 = new GridBagLayout();
 		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
 		this.pnPanel0.setLayout(gbPanel0);
-
+		
 		this.pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(""));
 		final GridBagLayout gbGeneralPanel = new GridBagLayout();
 		final GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
 		this.pnGeneralPanel.setLayout(gbGeneralPanel);
-
+		
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 0;
 		gbcGeneralPanel.gridwidth = 2;
@@ -114,7 +97,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(this.lbNameLabel, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.lbNameLabel);
-
+		
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 0;
 		gbcGeneralPanel.gridwidth = 7;
@@ -125,7 +108,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(this.tfNameText, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.tfNameText);
-
+		
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 1;
 		gbcGeneralPanel.gridwidth = 2;
@@ -136,7 +119,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(this.lbSolutionLabel, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.lbSolutionLabel);
-
+		
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 1;
 		gbcGeneralPanel.gridwidth = 8;
@@ -147,7 +130,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(this.cmbSolutionCombo, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.cmbSolutionCombo);
-
+		
 		gbcGeneralPanel.gridx = 9;
 		gbcGeneralPanel.gridy = 0;
 		gbcGeneralPanel.gridwidth = 1;
@@ -158,7 +141,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(this.btCommitBut, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.btCommitBut);
-
+		
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 2;
 		gbcGeneralPanel.gridwidth = 2;
@@ -169,7 +152,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(this.lbStartLabel, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.lbStartLabel);
-
+		
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 2;
 		gbcGeneralPanel.gridwidth = 8;
@@ -180,7 +163,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(this.tfStartText, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.tfStartText);
-
+		
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 3;
 		gbcGeneralPanel.gridwidth = 2;
@@ -191,7 +174,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(this.lbEndLabel, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.lbEndLabel);
-
+		
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 3;
 		gbcGeneralPanel.gridwidth = 8;
@@ -202,7 +185,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(this.tfEndText, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.tfEndText);
-
+		
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 4;
 		gbcGeneralPanel.gridwidth = 7;
@@ -213,7 +196,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(this.lbPesLabel, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.lbPesLabel);
-
+		
 		JScrollPane scpPesList = new JScrollPane(this.lsPesList);
 		gbcGeneralPanel.gridx = 1;
 		gbcGeneralPanel.gridy = 5;
@@ -225,7 +208,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(scpPesList, gbcGeneralPanel);
 		this.pnGeneralPanel.add(scpPesList);
-
+		
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 0;
 		gbcPanel0.gridwidth = 10;
@@ -236,7 +219,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints(this.pnGeneralPanel, gbcPanel0);
 		this.pnPanel0.add(this.pnGeneralPanel);
-
+		
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 10;
 		gbcPanel0.gridwidth = 8;
@@ -247,7 +230,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints(this.lbDescriptionLabel, gbcPanel0);
 		this.pnPanel0.add(this.lbDescriptionLabel);
-
+		
 		this.taDescriptionArea = new JTextArea(2, 10);
 		JScrollPane scpDescriptionArea = new JScrollPane(this.taDescriptionArea);
 		gbcPanel0.gridx = 1;
@@ -260,11 +243,11 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints(scpDescriptionArea, gbcPanel0);
 		this.pnPanel0.add(scpDescriptionArea);
-
+		
 		super.addToUndoableListener(this.tfNameText);
 		super.addToUndoableListener(this.cmbSolutionCombo);
-
-		this.btCommitBut.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		
+		this.btCommitBut.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 		this.btCommitBut.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.btCommitBut.setFocusPainted(false);
 		this.btCommitBut.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
@@ -273,6 +256,15 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 				SchemePathGeneralPanel.this.commitChanges();
 			}
 		});
+	}
+
+	public void setContext(final ApplicationContext aContext) {
+		this.aContext = aContext;
+	}
+
+	protected SchemePathGeneralPanel(final SchemePath schemePath) {
+		this();
+		this.setObject(schemePath);
 	}
 
 	public void setObject(final Object or) {

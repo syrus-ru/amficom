@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.20 2006/01/25 12:58:22 stas Exp $
+ * $Id: ElementsPanel.java,v 1.21 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2006/01/25 12:58:22 $
+ * @version $Revision: 1.21 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -44,11 +44,20 @@ public class ElementsPanel extends UgoPanel {
 	protected ElementsPanel(ApplicationContext aContext) {
 		super(aContext);
 
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		GraphModel model = this.graph.getModel();
+		model.addUndoableEditListener(this.undoManager);
+		
+		this.graph.setEditable(true);
+		
+		this.graph.setGridEnabled(true);
+		this.graph.setGridVisible(true);
+		this.graph.setGridVisibleAtActualSize(true);
+		this.graph.setRequestFocusEnabled(true);
+		this.graph.setBendable(true);
+		this.graph.setEditable(true);
+		this.graph.setEnabled(true);
+		this.graph.setAntiAliased(false);
+		this.graph.make_notifications = true;
 		this.schemeResource = new SchemeResource(this.graph);
 	}
 
@@ -65,23 +74,6 @@ public class ElementsPanel extends UgoPanel {
 		}
 	}
 
-	private void jbInit() throws Exception {
-		GraphModel model = this.graph.getModel();
-		model.addUndoableEditListener(this.undoManager);
-
-		this.graph.setEditable(true);
-		
-		this.graph.setGridEnabled(true);
-		this.graph.setGridVisible(true);
-		this.graph.setGridVisibleAtActualSize(true);
-		this.graph.setRequestFocusEnabled(true);
-		this.graph.setBendable(true);
-		this.graph.setEditable(true);
-		this.graph.setEnabled(true);
-		this.graph.setAntiAliased(false);
-		this.graph.make_notifications = true;
-	}
-	
 	public SchemeResource getSchemeResource() {
 		return this.schemeResource;
 	}

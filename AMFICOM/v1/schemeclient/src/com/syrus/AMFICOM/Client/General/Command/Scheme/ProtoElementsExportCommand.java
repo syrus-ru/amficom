@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoElementsExportCommand.java,v 1.7 2005/12/07 17:17:36 bass Exp $
+ * $Id: ProtoElementsExportCommand.java,v 1.8 2006/02/15 12:19:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ public class ProtoElementsExportCommand extends ImportExportCommand {
 			doc.save(f, xmlOptions);
 			Log.debugMessage("XML Instance Document saved at : " + f.getPath(), Level.FINER);
 		} catch(IOException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		Log.debugMessage("Check if XML valid...", Level.FINER);
 		boolean isXmlValid = validateXml(doc);

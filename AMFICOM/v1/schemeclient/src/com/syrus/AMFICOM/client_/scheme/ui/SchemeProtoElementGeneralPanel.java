@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.27 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.28 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.NameableListCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
@@ -62,8 +62,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.28 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -99,31 +99,15 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 
 	protected SchemeProtoElementGeneralPanel() {
 		super();
-		try {
-			this.jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
-	public void setContext(final ApplicationContext aContext) {
-		this.aContext = aContext;
-	}
-
-	protected SchemeProtoElementGeneralPanel(final SchemeProtoElement schemeProtoElement) {
-		this();
-		this.setObject(schemeProtoElement);
-	}
-
-	private void jbInit() throws Exception {
 		final GridBagLayout gbpanel0 = new GridBagLayout();
 		final GridBagConstraints gbcpanel0 = new GridBagConstraints();
 		this.panel0.setLayout(gbpanel0);
-
+		
 		final GridBagLayout gbgeneralPanel = new GridBagLayout();
 		final GridBagConstraints gbcgeneralPanel = new GridBagConstraints();
 		this.generalPanel.setLayout(gbgeneralPanel);
-
+		
 		gbcgeneralPanel.gridx = 0;
 		gbcgeneralPanel.gridy = 0;
 		gbcgeneralPanel.gridwidth = 2;
@@ -135,7 +119,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.nameLabel, gbcgeneralPanel);
 		this.generalPanel.add(this.nameLabel);
-
+		
 		gbcgeneralPanel.gridx = 2;
 		gbcgeneralPanel.gridy = 0;
 		gbcgeneralPanel.gridwidth = 4;
@@ -146,7 +130,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.nameText, gbcgeneralPanel);
 		this.generalPanel.add(this.nameText);
-
+		
 		gbcgeneralPanel.gridx = 6;
 		gbcgeneralPanel.gridy = 0;
 		gbcgeneralPanel.gridwidth = 1;
@@ -157,7 +141,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.commitButton, gbcgeneralPanel);
 		this.generalPanel.add(this.commitButton);
-
+		
 		gbcgeneralPanel.gridx = 0;
 		gbcgeneralPanel.gridy = 1;
 		gbcgeneralPanel.gridwidth = 2;
@@ -168,7 +152,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.symbolLabel, gbcgeneralPanel);
 		this.generalPanel.add(this.symbolLabel);
-
+		
 		gbcgeneralPanel.gridx = 2;
 		gbcgeneralPanel.gridy = 1;
 		gbcgeneralPanel.gridwidth = 4;
@@ -179,7 +163,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.labelText, gbcgeneralPanel);
 		this.generalPanel.add(this.labelText);
-
+		
 		gbcgeneralPanel.gridx = 6;
 		gbcgeneralPanel.gridy = 1;
 		gbcgeneralPanel.gridwidth = 1;
@@ -190,7 +174,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.symbolBut, gbcgeneralPanel);
 		this.generalPanel.add(this.symbolBut);
-
+		
 		gbcgeneralPanel.gridx = 0;
 		gbcgeneralPanel.gridy = 2;
 		gbcgeneralPanel.gridwidth = 2;
@@ -201,7 +185,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.lbCodenameLabel, gbcgeneralPanel);
 		this.generalPanel.add(this.lbCodenameLabel);
-
+		
 		gbcgeneralPanel.gridx = 2;
 		gbcgeneralPanel.gridy = 2;
 		gbcgeneralPanel.gridwidth = 5;
@@ -212,7 +196,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.eqtCombo, gbcgeneralPanel);
 		this.generalPanel.add(this.eqtCombo);
-
+		
 		gbcgeneralPanel.gridx = 0;
 		gbcgeneralPanel.gridy = 3;
 		gbcgeneralPanel.gridwidth = 2;
@@ -223,7 +207,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.typeLabel, gbcgeneralPanel);
 		this.generalPanel.add(this.typeLabel);
-
+		
 		gbcgeneralPanel.gridx = 2;
 		gbcgeneralPanel.gridy = 3;
 		gbcgeneralPanel.gridwidth = 5;
@@ -234,7 +218,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.typeCombo, gbcgeneralPanel);
 		this.generalPanel.add(this.typeCombo);
-
+		
 		gbcgeneralPanel.gridx = 0;
 		gbcgeneralPanel.gridy = 4;
 		gbcgeneralPanel.gridwidth = 2;
@@ -245,7 +229,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.manufacturerLabel, gbcgeneralPanel);
 		this.generalPanel.add(this.manufacturerLabel);
-
+		
 		gbcgeneralPanel.gridx = 2;
 		gbcgeneralPanel.gridy = 4;
 		gbcgeneralPanel.gridwidth = 5;
@@ -256,7 +240,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.manufacturerText, gbcgeneralPanel);
 		this.generalPanel.add(this.manufacturerText);
-
+		
 		gbcgeneralPanel.gridx = 0;
 		gbcgeneralPanel.gridy = 5;
 		gbcgeneralPanel.gridwidth = 2;
@@ -267,7 +251,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.manufacturerCodeLabel, gbcgeneralPanel);
 		this.generalPanel.add(this.manufacturerCodeLabel);
-
+		
 		gbcgeneralPanel.gridx = 2;
 		gbcgeneralPanel.gridy = 5;
 		gbcgeneralPanel.gridwidth = 5;
@@ -278,7 +262,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.manufacturerCodeText, gbcgeneralPanel);
 		this.generalPanel.add(this.manufacturerCodeText);
-
+		
 		gbcgeneralPanel.gridx = 0;
 		gbcgeneralPanel.gridy = 6;
 		gbcgeneralPanel.gridwidth = 2;
@@ -289,7 +273,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.lbParentLabel, gbcgeneralPanel);
 		this.generalPanel.add(this.lbParentLabel);
-
+		
 		gbcgeneralPanel.gridx = 2;
 		gbcgeneralPanel.gridy = 6;
 		gbcgeneralPanel.gridwidth = 5;
@@ -300,7 +284,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.parentCombo, gbcgeneralPanel);
 		this.generalPanel.add(this.parentCombo);
-
+		
 		gbcpanel0.gridx = 0;
 		gbcpanel0.gridy = 0;
 		gbcpanel0.gridwidth = 8;
@@ -311,7 +295,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcpanel0.anchor = GridBagConstraints.NORTH;
 		gbpanel0.setConstraints(this.generalPanel, gbcpanel0);
 		this.panel0.add(this.generalPanel);
-
+		
 		gbcpanel0.gridx = 0;
 		gbcpanel0.gridy = 7;
 		gbcpanel0.gridwidth = 3;
@@ -322,7 +306,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcpanel0.anchor = GridBagConstraints.NORTH;
 		gbpanel0.setConstraints(this.descrLabel, gbcpanel0);
 		this.panel0.add(this.descrLabel);
-
+		
 		JScrollPane scpdescrArea = new JScrollPane(this.descrArea);
 		gbcpanel0.gridx = 0;
 		gbcpanel0.gridy = 8;
@@ -334,7 +318,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcpanel0.anchor = GridBagConstraints.NORTH;
 		gbpanel0.setConstraints(scpdescrArea, gbcpanel0);
 		this.panel0.add(scpdescrArea);
-
+		
 		// typeCombo.setEnabled(false);
 		// manufacturerText.setEnabled(false);
 		// manufacturerCodeText.setEnabled(false);
@@ -352,7 +336,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		});
 		this.generalPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
 		this.descrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
-
+		
 		super.addToUndoableListener(this.nameText);
 		super.addToUndoableListener(this.labelText);
 		super.addToUndoableListener(this.symbolBut);
@@ -362,10 +346,10 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		super.addToUndoableListener(this.manufacturerCodeText);
 		super.addToUndoableListener(this.parentCombo);
 		super.addToUndoableListener(this.descrArea);
-
+		
 		this.eqtCombo.setRenderer(new NameableListCellRenderer());
-
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		
+		this.commitButton.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
@@ -374,6 +358,15 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 				SchemeProtoElementGeneralPanel.this.commitChanges();
 			}
 		});
+	}
+
+	public void setContext(final ApplicationContext aContext) {
+		this.aContext = aContext;
+	}
+
+	protected SchemeProtoElementGeneralPanel(final SchemeProtoElement schemeProtoElement) {
+		this();
+		this.setObject(schemeProtoElement);
 	}
 
 	void eqtCombo_stateChanged(final EquipmentType eqt) {
@@ -525,7 +518,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			// StorableObjectPool.flush(schemeProtoElement.getId(), true);
 			// } catch (ApplicationException e) {
 			// // TODO Auto-generated catch block
-			// e.printStackTrace();
+			// Log.errorMessage(e);
 			//			}
 		}
 	}

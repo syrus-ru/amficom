@@ -1,5 +1,5 @@
 /*-
- * $Id: CreateSchemeReportCommand.java,v 1.12 2005/10/31 12:30:25 bass Exp $
+ * $Id: CreateSchemeReportCommand.java,v 1.13 2006/02/15 12:19:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -129,7 +129,7 @@ public class CreateSchemeReportCommand extends AbstractCommand {
 					reportData);
 			dialog.setVisible(true);
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 }

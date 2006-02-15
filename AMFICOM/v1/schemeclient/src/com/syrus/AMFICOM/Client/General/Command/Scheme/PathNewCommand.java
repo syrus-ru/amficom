@@ -7,7 +7,6 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;

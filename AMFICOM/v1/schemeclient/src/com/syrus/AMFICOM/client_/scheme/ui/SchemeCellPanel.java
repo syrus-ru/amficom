@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCellPanel.java,v 1.10 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemeCellPanel.java,v 1.11 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.scheme.SchemeCellContainer;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.11 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -43,21 +43,15 @@ public class SchemeCellPanel extends DefaultStorableObjectEditor {
 	JButton commitButton = new JButton();
 		
 	protected SchemeCellPanel() {
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void jbInit() throws Exception {
+
 		this.pane = new UgoTabbedPane() {
 			private static final long serialVersionUID = 6725936773878805596L;
-
+		
+			@Override
 			protected JComponent createToolBar() {
 				JComponent toolBar1 = super.createToolBar();
 				
-				SchemeCellPanel.this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+				SchemeCellPanel.this.commitButton.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 				SchemeCellPanel.this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 				SchemeCellPanel.this.commitButton.setFocusPainted(false);
 				SchemeCellPanel.this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));

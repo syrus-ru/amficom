@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.26 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.27 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
@@ -59,8 +59,8 @@ import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.27 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -105,26 +105,15 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 
 	protected SchemeCableLinkGeneralPanel() {
 		super();
-		try {
-			this.jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
-	public void setContext(final ApplicationContext aContext) {
-		this.aContext = aContext;
-	}
-
-	private void jbInit() throws Exception {
 		this.nf.setValueClass(Double.class);
 		this.nf.setMinimum(new Double(0));
 		this.nf.setCommitsOnValidEdit(true);
-
+		
 		final GridBagLayout gbPanel0 = new GridBagLayout();
 		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
 		this.pnPanel0.setLayout(gbPanel0);
-
+		
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 11;
 		gbcPanel0.gridwidth = 3;
@@ -135,7 +124,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints(this.lbDescrLabel, gbcPanel0);
 		this.pnPanel0.add(this.lbDescrLabel);
-
+		
 		final JScrollPane scpDescrArea = new JScrollPane(this.taDescrArea);
 		gbcPanel0.gridx = 1;
 		gbcPanel0.gridy = 12;
@@ -147,11 +136,11 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints(scpDescrArea, gbcPanel0);
 		this.pnPanel0.add(scpDescrArea);
-
+		
 		final GridBagLayout gbPanel2 = new GridBagLayout();
 		final GridBagConstraints gbcPanel2 = new GridBagConstraints();
 		this.pnGeneralPanel.setLayout(gbPanel2);
-
+		
 		gbcPanel2.gridx = 0;
 		gbcPanel2.gridy = 0;
 		gbcPanel2.gridwidth = 2;
@@ -162,7 +151,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel2.anchor = GridBagConstraints.NORTH;
 		gbPanel2.setConstraints(this.lbNameLabel, gbcPanel2);
 		this.pnGeneralPanel.add(this.lbNameLabel);
-
+		
 		gbcPanel2.gridx = 2;
 		gbcPanel2.gridy = 0;
 		gbcPanel2.gridwidth = 8;
@@ -173,7 +162,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel2.anchor = GridBagConstraints.NORTH;
 		gbPanel2.setConstraints(this.tfNameText, gbcPanel2);
 		this.pnGeneralPanel.add(this.tfNameText);
-
+		
 		gbcPanel2.gridx = 10;
 		gbcPanel2.gridy = 0;
 		gbcPanel2.gridwidth = 1;
@@ -184,7 +173,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel2.anchor = GridBagConstraints.NORTH;
 		gbPanel2.setConstraints(this.btCommitBut, gbcPanel2);
 		this.pnGeneralPanel.add(this.btCommitBut);
-
+		
 		gbcPanel2.gridx = 0;
 		gbcPanel2.gridy = 1;
 		gbcPanel2.gridwidth = 2;
@@ -195,7 +184,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel2.anchor = GridBagConstraints.NORTH;
 		gbPanel2.setConstraints(this.lbTypeLabel, gbcPanel2);
 		this.pnGeneralPanel.add(this.lbTypeLabel);
-
+		
 		gbcPanel2.gridx = 2;
 		gbcPanel2.gridy = 1;
 		gbcPanel2.gridwidth = 9;
@@ -206,7 +195,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel2.anchor = GridBagConstraints.NORTH;
 		gbPanel2.setConstraints(this.cmbTypeCombo, gbcPanel2);
 		this.pnGeneralPanel.add(this.cmbTypeCombo);
-
+		
 		gbcPanel2.gridx = 0;
 		gbcPanel2.gridy = 2;
 		gbcPanel2.gridwidth = 2;
@@ -217,7 +206,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel2.anchor = GridBagConstraints.NORTH;
 		gbPanel2.setConstraints(this.lbLengthLabel, gbcPanel2);
 		this.pnGeneralPanel.add(this.lbLengthLabel);
-
+		
 		gbcPanel2.gridx = 2;
 		gbcPanel2.gridy = 2;
 		gbcPanel2.gridwidth = 3;
@@ -228,7 +217,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel2.anchor = GridBagConstraints.NORTH;
 		gbPanel2.setConstraints(this.lbOpticalLabel, gbcPanel2);
 		this.pnGeneralPanel.add(this.lbOpticalLabel);
-
+		
 		gbcPanel2.gridx = 5;
 		gbcPanel2.gridy = 2;
 		gbcPanel2.gridwidth = 6;
@@ -239,7 +228,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel2.anchor = GridBagConstraints.NORTH;
 		gbPanel2.setConstraints(this.tfOpticalText, gbcPanel2);
 		this.pnGeneralPanel.add(this.tfOpticalText);
-
+		
 		gbcPanel2.gridx = 2;
 		gbcPanel2.gridy = 3;
 		gbcPanel2.gridwidth = 3;
@@ -250,7 +239,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel2.anchor = GridBagConstraints.NORTH;
 		gbPanel2.setConstraints(this.lbPhysicalLabel, gbcPanel2);
 		this.pnGeneralPanel.add(this.lbPhysicalLabel);
-
+		
 		gbcPanel2.gridx = 5;
 		gbcPanel2.gridy = 3;
 		gbcPanel2.gridwidth = 6;
@@ -261,7 +250,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel2.anchor = GridBagConstraints.NORTH;
 		gbPanel2.setConstraints(this.tfPhysicalText, gbcPanel2);
 		this.pnGeneralPanel.add(this.tfPhysicalText);
-
+		
 		gbcPanel2.gridx = 0;
 		gbcPanel2.gridy = 4;
 		gbcPanel2.gridwidth = 10;
@@ -272,12 +261,12 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel2.anchor = GridBagConstraints.NORTH;
 		gbPanel2.setConstraints(this.cbLinkBox, gbcPanel2);
 		this.pnGeneralPanel.add(this.cbLinkBox);
-
+		
 		this.pnLinkPanel.setBorder(BorderFactory.createTitledBorder(""));
 		final GridBagLayout gbLinkPanel = new GridBagLayout();
 		final GridBagConstraints gbcLinkPanel = new GridBagConstraints();
 		this.pnLinkPanel.setLayout(gbLinkPanel);
-
+		
 		gbcLinkPanel.gridx = 0;
 		gbcLinkPanel.gridy = 0;
 		gbcLinkPanel.gridwidth = 2;
@@ -288,7 +277,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
 		gbLinkPanel.setConstraints(this.lbInvNumberLabel, gbcLinkPanel);
 		this.pnLinkPanel.add(this.lbInvNumberLabel);
-
+		
 		gbcLinkPanel.gridx = 2;
 		gbcLinkPanel.gridy = 0;
 		gbcLinkPanel.gridwidth = 9;
@@ -299,7 +288,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
 		gbLinkPanel.setConstraints(this.tfInvNumberText, gbcLinkPanel);
 		this.pnLinkPanel.add(this.tfInvNumberText);
-
+		
 		gbcLinkPanel.gridx = 0;
 		gbcLinkPanel.gridy = 1;
 		gbcLinkPanel.gridwidth = 2;
@@ -310,7 +299,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
 		gbLinkPanel.setConstraints(this.lbSupplierLabel, gbcLinkPanel);
 		this.pnLinkPanel.add(this.lbSupplierLabel);
-
+		
 		gbcLinkPanel.gridx = 2;
 		gbcLinkPanel.gridy = 1;
 		gbcLinkPanel.gridwidth = 9;
@@ -321,7 +310,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
 		gbLinkPanel.setConstraints(this.tfSupplierText, gbcLinkPanel);
 		this.pnLinkPanel.add(this.tfSupplierText);
-
+		
 		gbcLinkPanel.gridx = 0;
 		gbcLinkPanel.gridy = 2;
 		gbcLinkPanel.gridwidth = 2;
@@ -332,7 +321,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
 		gbLinkPanel.setConstraints(this.lbSupplierCodeLabel, gbcLinkPanel);
 		this.pnLinkPanel.add(this.lbSupplierCodeLabel);
-
+		
 		gbcLinkPanel.gridx = 2;
 		gbcLinkPanel.gridy = 2;
 		gbcLinkPanel.gridwidth = 9;
@@ -343,7 +332,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
 		gbLinkPanel.setConstraints(this.tfSupplierCodeText, gbcLinkPanel);
 		this.pnLinkPanel.add(this.tfSupplierCodeText);
-
+		
 		gbcLinkPanel.gridx = 0;
 		gbcLinkPanel.gridy = 3;
 		gbcLinkPanel.gridwidth = 2;
@@ -354,7 +343,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
 		gbLinkPanel.setConstraints(this.lbMarkLabel, gbcLinkPanel);
 		this.pnLinkPanel.add(this.lbMarkLabel);
-
+		
 		gbcLinkPanel.gridx = 2;
 		gbcLinkPanel.gridy = 3;
 		gbcLinkPanel.gridwidth = 9;
@@ -365,7 +354,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
 		gbLinkPanel.setConstraints(this.tfMarkText, gbcLinkPanel);
 		this.pnLinkPanel.add(this.tfMarkText);
-
+		
 		gbcLinkPanel.gridx = 0;
 		gbcLinkPanel.gridy = 4;
 		gbcLinkPanel.gridwidth = 2;
@@ -376,7 +365,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
 		gbLinkPanel.setConstraints(this.lbColorLabel, gbcLinkPanel);
 		this.pnLinkPanel.add(this.lbColorLabel);
-
+		
 		gbcLinkPanel.gridx = 2;
 		gbcLinkPanel.gridy = 4;
 		gbcLinkPanel.gridwidth = 9;
@@ -407,16 +396,16 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints(this.pnGeneralPanel, gbcPanel0);
 		this.pnPanel0.add(this.pnGeneralPanel);
-
+		
 		this.cbLinkBox.addChangeListener(new ChangeListener() {
 			public void stateChanged(final ChangeEvent e) {
 				SchemeCableLinkGeneralPanel.this.setLinkEnabled(SchemeCableLinkGeneralPanel.this.cbLinkBox.isSelected());
 			}
 		});
-
+		
 		this.pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
 		this.taDescrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
-
+		
 		super.addToUndoableListener(this.tfNameText);
 		super.addToUndoableListener(this.cmbTypeCombo);
 		super.addToUndoableListener(this.tfOpticalText);
@@ -428,8 +417,8 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		super.addToUndoableListener(this.tfMarkText);
 		super.addToUndoableListener(this.cmbColorCombo);
 		super.addToUndoableListener(this.taDescrArea);
-
-		this.btCommitBut.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		
+		this.btCommitBut.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 		this.btCommitBut.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.btCommitBut.setFocusPainted(false);
 		this.btCommitBut.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
@@ -438,6 +427,10 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 				SchemeCableLinkGeneralPanel.this.commitChanges();
 			}
 		});
+	}
+
+	public void setContext(final ApplicationContext aContext) {
+		this.aContext = aContext;
 	}
 
 	public JComponent getGUI() {

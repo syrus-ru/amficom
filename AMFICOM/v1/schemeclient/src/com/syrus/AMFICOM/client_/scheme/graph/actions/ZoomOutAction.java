@@ -1,5 +1,5 @@
 /*
- * $Id: ZoomOutAction.java,v 1.7 2005/12/27 10:23:15 stas Exp $
+ * $Id: ZoomOutAction.java,v 1.8 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,6 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -20,7 +17,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/12/27 10:23:15 $
+ * @version $Revision: 1.8 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 

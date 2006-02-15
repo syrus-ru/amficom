@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.55 2006/02/09 14:57:45 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.56 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.55 $, $Date: 2006/02/09 14:57:45 $
+ * @version $Revision: 1.56 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -468,7 +468,7 @@ public class SchemeObjectsFactory {
 	
 	public static Scheme createScheme() throws CreateObjectException {
 		Scheme scheme = Scheme.createInstance(LoginManager.getUserId(), 
-				LangModelScheme.getString(SchemeResourceKeys.NEW_SCHEME) + (schemeCounter == 1 ? EMPTY : " (" + schemeCounter + ")"),  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				LangModelScheme.getString(SchemeResourceKeys.NEW_SCHEME) + (schemeCounter == 1 ? EMPTY : " (" + schemeCounter + ")"),  //$NON-NLS-1$ //$NON-NLS-2$ 
 				IdlKind.NETWORK, LoginManager.getDomainId());
 		schemeCounter++;
 		if (aContext != null) {

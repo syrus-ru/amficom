@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.42 2006/02/09 14:59:07 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.43 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.GraphUndoManager;
 import com.jgraph.graph.PortView;
 import com.jgraph.plaf.GraphUI;
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.PopupFactory;
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.42 $, $Date: 2006/02/09 14:59:07 $
+ * @version $Revision: 1.43 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -401,7 +401,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 			 * @todo possibility to add ports to grouped element
 			 */
 			if (GraphActions.hasGroupedParent(deviceCell)) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 						LangModelGraph.getString("error_grouped_device"),  //$NON-NLS-1$
 						LangModelGraph.getString("error"), //$NON-NLS-1$
 						JOptionPane.ERROR_MESSAGE);
@@ -441,8 +441,8 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 							graph.snap(graph.fromScreen(p)), name, directionType, color, schemePort.getId());
 				}
 			} catch (CreateObjectException e1) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-						e1.getMessage(), //$NON-NLS-1$
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+						e1.getMessage(), 
 						LangModelGraph.getString("error"), //$NON-NLS-1$
 						JOptionPane.ERROR_MESSAGE);
 			} catch (ApplicationException e1) {
@@ -530,14 +530,14 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 								} catch (CreateObjectException e1) {
 									Log.errorMessage(e1.getMessage());
 									link.setParentScheme(null, false);
-									JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+									JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 											LangModelGraph.getString("Error.create_cablelink"), //$NON-NLS-1$
 											LangModelGraph.getString("error"), //$NON-NLS-1$
 											JOptionPane.ERROR_MESSAGE);
 								}
 							} catch (CreateObjectException e1) {
-								JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-										e1.getMessage(), //$NON-NLS-1$
+								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+										e1.getMessage(), 
 										LangModelGraph.getString("error"), //$NON-NLS-1$
 										JOptionPane.ERROR_MESSAGE);
 							} catch (ApplicationException e1) {
@@ -583,14 +583,14 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 							} catch (CreateObjectException e1) {
 								Log.errorMessage(e1.getMessage());
 								link.setParentSchemeProtoElement(null, false);
-								JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 										LangModelGraph.getString("Error.create_link"), //$NON-NLS-1$
 										LangModelGraph.getString("error"), //$NON-NLS-1$
 										JOptionPane.ERROR_MESSAGE);
 							}
 						} catch (CreateObjectException e1) {
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-									e1.getMessage(), //$NON-NLS-1$
+							JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+									e1.getMessage(), 
 									LangModelGraph.getString("error"), //$NON-NLS-1$
 									JOptionPane.ERROR_MESSAGE);
 						} catch (ApplicationException e1) {
@@ -692,7 +692,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 		
 		graph.repaint();
 		graph.setCursor(DEFAULT_CURSOR);
-		if (!graph.getMode().equals(Constants.PATH_MODE) && notify) {
+		if (!SchemeGraph.getMode().equals(Constants.PATH_MODE) && notify) {
 			graph.selectionNotify();
 		}
 	}

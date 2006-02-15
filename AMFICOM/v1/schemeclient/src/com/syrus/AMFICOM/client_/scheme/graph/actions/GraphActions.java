@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.25 2006/02/06 10:30:10 stas Exp $
+ * $Id: GraphActions.java,v 1.26 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,6 @@ import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultGraphModel;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.Edge;
-import com.jgraph.graph.EdgeView;
 import com.jgraph.graph.GraphCell;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.Port;
@@ -56,7 +55,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.25 $, $Date: 2006/02/06 10:30:10 $
+ * @version $Revision: 1.26 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 

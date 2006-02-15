@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportExportCommand.java,v 1.18 2006/01/25 13:07:45 stas Exp $
+ * $Id: ImportExportCommand.java,v 1.19 2006/02/15 12:19:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.jgraph.graph.DefaultGraphCell;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
@@ -923,7 +923,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 		fileChooser.setDialogTitle(title);
 		fileChooser.setMultiSelectionEnabled(false);
 
-		int option = fileChooser.showOpenDialog(Environment.getActiveWindow());
+		int option = fileChooser.showOpenDialog(AbstractMainFrame.getActiveMainFrame());
 		currentDirectory = fileChooser.getCurrentDirectory();
 		if(option == JFileChooser.APPROVE_OPTION) {
 			fileName = fileChooser.getSelectedFile().getPath();
@@ -953,7 +953,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 		fileChooser.setDialogTitle(title);
 		fileChooser.setMultiSelectionEnabled(false);
 
-		int option = fileChooser.showSaveDialog(Environment.getActiveWindow());
+		int option = fileChooser.showSaveDialog(AbstractMainFrame.getActiveMainFrame());
 		currentDirectory = fileChooser.getCurrentDirectory();
 		if(option == JFileChooser.APPROVE_OPTION) {
 			fileName = fileChooser.getSelectedFile().getPath();

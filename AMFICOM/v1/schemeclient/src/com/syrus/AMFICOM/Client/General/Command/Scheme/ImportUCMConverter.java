@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUCMConverter.java,v 1.16 2006/01/25 13:09:23 stas Exp $
+ * $Id: ImportUCMConverter.java,v 1.17 2006/02/15 12:19:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 
-import java.awt.Point;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,26 +20,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
-import com.jgraph.graph.DefaultGraphCell;
-
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateBlockPortAction;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateTopLevelSchemeAction;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
-import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -51,27 +39,17 @@ import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeCableThread;
-import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemeLink;
-import com.syrus.AMFICOM.scheme.SchemePort;
-import com.syrus.AMFICOM.scheme.SchemeProtoElement;
-import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 public class ImportUCMConverter {
@@ -376,7 +354,7 @@ public class ImportUCMConverter {
 					}*/ 
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 			}
 			StorableObjectPool.flush(this.objectsToDelete, this.userId, true);

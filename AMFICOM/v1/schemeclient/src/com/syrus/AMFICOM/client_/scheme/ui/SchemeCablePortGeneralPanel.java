@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortGeneralPanel.java,v 1.21 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemeCablePortGeneralPanel.java,v 1.22 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
@@ -51,8 +51,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.22 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -86,22 +86,10 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 
 	protected SchemeCablePortGeneralPanel() {
 		super();
-		try {
-			this.jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void setContext(final ApplicationContext aContext) {
-		this.aContext = aContext;
-	}
-
-	private void jbInit() throws Exception {
 		final GridBagLayout gbPanel0 = new GridBagLayout();
 		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
 		this.pnPanel0.setLayout(gbPanel0);
-
+		
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 8;
 		gbcPanel0.gridwidth = 3;
@@ -112,7 +100,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints(this.lbDescrLabel, gbcPanel0);
 		this.pnPanel0.add(this.lbDescrLabel);
-
+		
 		final JScrollPane scpDescrArea = new JScrollPane(this.taDescrArea);
 		gbcPanel0.gridx = 1;
 		gbcPanel0.gridy = 9;
@@ -124,11 +112,11 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints(scpDescrArea, gbcPanel0);
 		this.pnPanel0.add(scpDescrArea);
-
+		
 		final GridBagLayout gbGeneralPanel = new GridBagLayout();
 		final GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
 		this.pnGeneralPanel.setLayout(gbGeneralPanel);
-
+		
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 0;
 		gbcGeneralPanel.gridwidth = 2;
@@ -139,7 +127,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(this.lbNameLabel, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.lbNameLabel);
-
+		
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 0;
 		gbcGeneralPanel.gridwidth = 7;
@@ -150,7 +138,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(this.tfNameText, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.tfNameText);
-
+		
 		gbcGeneralPanel.gridx = 9;
 		gbcGeneralPanel.gridy = 0;
 		gbcGeneralPanel.gridwidth = 1;
@@ -161,7 +149,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(this.btCommitBut, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.btCommitBut);
-
+		
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 1;
 		gbcGeneralPanel.gridwidth = 2;
@@ -172,7 +160,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(this.lbTypeLabel, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.lbTypeLabel);
-
+		
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 1;
 		gbcGeneralPanel.gridwidth = 8;
@@ -183,7 +171,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(this.cmbTypeCombo, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.cmbTypeCombo);
-
+		
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 2;
 		gbcGeneralPanel.gridwidth = 9;
@@ -194,12 +182,12 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints(this.lbPortLabel, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.lbPortLabel);
-
+		
 		this.pnPortPanel.setBorder(BorderFactory.createTitledBorder(""));
 		final GridBagLayout gbPortPanel = new GridBagLayout();
 		final GridBagConstraints gbcPortPanel = new GridBagConstraints();
 		this.pnPortPanel.setLayout(gbPortPanel);
-
+		
 		gbcPortPanel.gridx = 0;
 		gbcPortPanel.gridy = 0;
 		gbcPortPanel.gridwidth = 2;
@@ -210,7 +198,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPortPanel.anchor = GridBagConstraints.NORTH;
 		gbPortPanel.setConstraints(this.lbMarkLabel, gbcPortPanel);
 		this.pnPortPanel.add(this.lbMarkLabel);
-
+		
 		gbcPortPanel.gridx = 2;
 		gbcPortPanel.gridy = 0;
 		gbcPortPanel.gridwidth = 8;
@@ -221,7 +209,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPortPanel.anchor = GridBagConstraints.NORTH;
 		gbPortPanel.setConstraints(this.tfMarkText, gbcPortPanel);
 		this.pnPortPanel.add(this.tfMarkText);
-
+		
 		gbcPortPanel.gridx = 0;
 		gbcPortPanel.gridy = 1;
 		gbcPortPanel.gridwidth = 2;
@@ -232,7 +220,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPortPanel.anchor = GridBagConstraints.NORTH;
 		gbPortPanel.setConstraints(this.lbColorLabel, gbcPortPanel);
 		this.pnPortPanel.add(this.lbColorLabel);
-
+		
 		gbcPortPanel.gridx = 2;
 		gbcPortPanel.gridy = 1;
 		gbcPortPanel.gridwidth = 8;
@@ -243,7 +231,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPortPanel.anchor = GridBagConstraints.NORTH;
 		gbPortPanel.setConstraints(this.cmbColorCombo, gbcPortPanel);
 		this.pnPortPanel.add(this.cmbColorCombo);
-
+		
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 3;
 		gbcGeneralPanel.gridwidth = 10;
@@ -264,21 +252,21 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints(this.pnGeneralPanel, gbcPanel0);
 		this.pnPanel0.add(this.pnGeneralPanel);
-
+		
 		this.pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
 		this.taDescrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
-
+		
 		this.pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
 		this.taDescrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
-
+		
 		super.addToUndoableListener(this.tfNameText);
 		super.addToUndoableListener(this.cmbTypeCombo);
 		super.addToUndoableListener(this.lbPortLabel);
 		super.addToUndoableListener(this.tfMarkText);
 		super.addToUndoableListener(this.cmbColorCombo);
 		super.addToUndoableListener(this.taDescrArea);
-
-		this.btCommitBut.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		
+		this.btCommitBut.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 		this.btCommitBut.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.btCommitBut.setFocusPainted(false);
 		this.btCommitBut.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
@@ -287,6 +275,10 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 				SchemeCablePortGeneralPanel.this.commitChanges();
 			}
 		});
+	}
+
+	public void setContext(final ApplicationContext aContext) {
+		this.aContext = aContext;
 	}
 
 	void setPortEnabled(final boolean b) {

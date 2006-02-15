@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeEllipseView.java,v 1.1 2005/08/19 15:43:06 stas Exp $
+ * $Id: SchemeEllipseView.java,v 1.2 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/08/19 15:43:06 $
+ * @version $Revision: 1.2 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -34,10 +34,12 @@ public class SchemeEllipseView extends EllipseView {
 		super(cell, jgraph, mapper);
 	}
 
+	@Override
 	public CellViewRenderer getRenderer() {
 		return schemerenderer;
 	}
 
+	@Override
 	protected void updateAllAttributes() {
 		this.allAttributes = getModel().getAttributes(this.cell);
 		if (this.allAttributes != null) {
@@ -51,6 +53,7 @@ public class SchemeEllipseView extends EllipseView {
 	static class SchemeEllipseRenderer extends EllipseView.EllipseRenderer {
 		private static final long serialVersionUID = -5509316073878497199L;
 
+		@Override
 		protected void paintSelectionBorder(Graphics g) {
 			((Graphics2D) g).setStroke(GraphConstants.SELECTION_STROKE);
 			if (this.childrenSelected)

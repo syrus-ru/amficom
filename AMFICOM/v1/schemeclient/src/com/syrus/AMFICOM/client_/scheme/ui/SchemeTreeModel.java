@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.51 2006/02/08 14:09:48 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.52 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.51 $, $Date: 2006/02/08 14:09:48 $
+ * @version $Revision: 1.52 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -474,7 +474,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 			}
 		} 
 		catch (ApplicationException ex1) {
-			ex1.printStackTrace();
+			Log.errorMessage(ex1);
 		}
 	}
 		

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.35 2005/11/30 08:14:05 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.36 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,9 +10,6 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -21,16 +18,14 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
@@ -59,7 +54,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.35 $, $Date: 2005/11/30 08:14:05 $
+ * @version $Revision: 1.36 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -84,7 +79,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 			this.toolBar = super.getToolBar();
 			final JButton deleteButton = new JButton();
 			deleteButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_DELETE));
-			deleteButton.setToolTipText(LangModelGeneral.getString("Delete"));
+			deleteButton.setToolTipText(I18N.getString("Delete"));
 			deleteButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 			deleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -92,8 +87,8 @@ public class SchemeTreeUI extends IconedTreeUI {
 					TreePath selectedPath1 = SchemeTreeUI.this.treeUI.getTree().getSelectionModel().getSelectionPath();
 					
 					if (selectedPath1 != null) {
-						int res = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), 
-								LangModelScheme.getString("Message.confirmation.sure_delete"),  //$NON-NLS-1$ //$NON-NLS-2$
+						int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), 
+								LangModelScheme.getString("Message.confirmation.sure_delete"),  //$NON-NLS-1$ 
 								LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$
 								JOptionPane.OK_CANCEL_OPTION);
 						if (res == JOptionPane.CANCEL_OPTION) {
@@ -131,7 +126,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 									Identifier userId = LoginManager.getUserId();
 									StorableObjectPool.flush(ids, userId, false);
 								} else {
-									JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+									JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 											LangModelScheme.getString("Message.error.delete.scheme"),
 											LangModelScheme.getString("Message.error"),
 											JOptionPane.OK_OPTION);
@@ -194,14 +189,14 @@ public class SchemeTreeUI extends IconedTreeUI {
 										StorableObjectPool.delete(protoEq.getId());
 										StorableObjectPool.flush(protoEq, LoginManager.getUserId(), false);
 									} else {
-										JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+										JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 												LangModelScheme.getString("Message.error.delete.proto_equipment"),
 												LangModelScheme.getString("Message.error"),
 												JOptionPane.OK_OPTION);
 										Log.debugMessage("Can not delete ProtoEquipmet as there are PropoElements with such type", Level.WARNING);
 									}
 								} else {
-									JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+									JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 											LangModelScheme.getString("Message.error.delete.proto_equipment"),
 											LangModelScheme.getString("Message.error"),
 											JOptionPane.OK_OPTION);
@@ -219,7 +214,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 									StorableObjectPool.delete(type.getId());
 									StorableObjectPool.flush(type, LoginManager.getUserId(), false);
 								} else {
-									JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+									JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 											LangModelScheme.getString("Message.error.delete.link_type"),
 											LangModelScheme.getString("Message.error"),
 											JOptionPane.OK_OPTION);
@@ -244,7 +239,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 									StorableObjectPool.delete(ids);
 									StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
 								} else {
-									JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+									JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 											LangModelScheme.getString("Message.error.delete.cable_link_type"),
 											LangModelScheme.getString("Message.error"),
 											JOptionPane.OK_OPTION);
@@ -262,7 +257,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 									StorableObjectPool.delete(type.getId());
 									StorableObjectPool.flush(type, LoginManager.getUserId(), false);
 								} else {
-									JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+									JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 											LangModelScheme.getString("Message.error.delete.port_type"),
 											LangModelScheme.getString("Message.error"),
 											JOptionPane.OK_OPTION);

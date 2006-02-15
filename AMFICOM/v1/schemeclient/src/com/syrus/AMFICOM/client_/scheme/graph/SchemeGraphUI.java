@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.29 2005/12/27 10:26:05 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.30 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,6 @@ import java.util.TooManyListenersException;
 import java.util.logging.Level;
 
 import javax.swing.JPopupMenu;
-import javax.swing.MenuElement;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -60,7 +59,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.29 $, $Date: 2005/12/27 10:26:05 $
+ * @version $Revision: 1.30 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -273,33 +272,33 @@ public class SchemeGraphUI extends GPGraphUI {
 		public void mouseReleased(MouseEvent e) {
 			try {
 				if (e != null && !e.isConsumed()) {
-					if (handler == marquee) {
+					if (this.handler == SchemeGraphUI.this.marquee) {
 //						marquee.mouseReleased(e);
 					}
-					else if (handler == handle && handle != null)
-						handle.mouseReleased(e);
-					if (isDescendant(cell, focus) && e.getModifiers() != 0) {
+					else if (this.handler == SchemeGraphUI.this.handle && SchemeGraphUI.this.handle != null)
+						SchemeGraphUI.this.handle.mouseReleased(e);
+					if (isDescendant(this.cell, SchemeGraphUI.this.focus) && e.getModifiers() != 0) {
 						// Do not switch to parent if Special Selection
-						cell = focus;
+						this.cell = SchemeGraphUI.this.focus;
 					}
-					if (!e.isConsumed() && cell != null) {
-						Object tmp = cell.getCell();
-						boolean wasSelected = graph.isCellSelected(tmp);
+					if (!e.isConsumed() && this.cell != null) {
+						Object tmp = this.cell.getCell();
+						boolean wasSelected = SchemeGraphUI.this.graph.isCellSelected(tmp);
 						selectCellForEvent(tmp, e);
-						focus = cell;
-						if (wasSelected && graph.isCellSelected(tmp)) {
+						SchemeGraphUI.this.focus = this.cell;
+						if (wasSelected && SchemeGraphUI.this.graph.isCellSelected(tmp)) {
 							Object root =
 								((DefaultMutableTreeNode) tmp).getRoot();
 							selectCellForEvent(root, e);
-							focus = graphLayoutCache.getMapping(root, false);
+							SchemeGraphUI.this.focus = SchemeGraphUI.this.graphLayoutCache.getMapping(root, false);
 						}
 					}
 //					if (handler != marquee)
-						marquee.mouseReleased(e);
+						SchemeGraphUI.this.marquee.mouseReleased(e);
 				}
 			} finally {
-				handler = null;
-				cell = null;
+				this.handler = null;
+				this.cell = null;
 			}
 		}
 		
@@ -509,7 +508,7 @@ public class SchemeGraphUI extends GPGraphUI {
 						if (this.cachedBounds != null) {
 							int dx = event.getX() - this.start.x;
 							int dy = event.getY() - this.start.y;
-							Point tmp = graph.snap(SchemeGraphUI.this.graph.fromScreen(new Point(dx, dy)));
+							Point tmp = SchemeGraphUI.this.graph.snap(SchemeGraphUI.this.graph.fromScreen(new Point(dx, dy)));
 							GraphLayoutCache.translateViews(this.views, tmp.x, tmp.y);
 						}
 						CellView[] all = SchemeGraphUI.this.graphLayoutCache.getAllDescendants(this.views);
@@ -532,7 +531,7 @@ public class SchemeGraphUI extends GPGraphUI {
 					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 			} finally {
 				this.isDragging = false;
 				this.disconnect = null;

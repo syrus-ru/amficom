@@ -7,7 +7,7 @@ import java.util.logging.Level;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -65,7 +65,7 @@ public class PathBuilder {
 				}
 				if (lastPE.getEndAbstractSchemePort() == null) {
 					if (state == PathBuilder.MULTIPLE_PORTS)
-						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+						JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 								LangModelScheme.getString("Message.error.path.unambigous")  //$NON-NLS-1$
 								+ "\n'" + lastPE.getName() + "'\n" +  //$NON-NLS-1$//$NON-NLS-2$
 								LangModelScheme.getString("Message.error.path.next_manually"), //$NON-NLS-1$
@@ -102,7 +102,7 @@ public class PathBuilder {
 				
 				if (lastPE.getEndAbstractSchemePort() == null) {
 					if (state == PathBuilder.MULTIPLE_PORTS)
-						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+						JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 								LangModelScheme.getString("Message.error.path.unambigous")  //$NON-NLS-1$
 								+ "\n'" + lastPE.getName() + "'\n" +  //$NON-NLS-1$//$NON-NLS-2$
 								LangModelScheme.getString("Message.error.path.next_manually"), //$NON-NLS-1$
@@ -118,7 +118,7 @@ public class PathBuilder {
 	public static boolean explore(SchemePath path, Identifier endId) throws ApplicationException {
 //		if (path.getPathMembers().isEmpty()) {
 //			if (startId.getMajor() != ObjectEntities.SCHEMEELEMENT_CODE) {
-//				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+//				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 //						"Путь должен начинаться с компонента", "Ошибка", JOptionPane.OK_OPTION);
 //				return false;
 //			}
@@ -136,7 +136,7 @@ public class PathBuilder {
 		while(true) {
 			PathElement lastPE = path.getPathMembers().last();
 			if (lastPE.getAbstractSchemeElement().equals(endId)) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 						LangModelScheme.getString("Message.information.path_created"),  //$NON-NLS-1$
 						LangModelScheme.getString("Message.information"), //$NON-NLS-1$
 						JOptionPane.INFORMATION_MESSAGE);
@@ -145,7 +145,7 @@ public class PathBuilder {
 
 			if (lastPE.getKind() == IdlKind.SCHEME_ELEMENT && lastPE.getEndAbstractSchemePort() == null) {
 				if (state == PathBuilder.MULTIPLE_PORTS)
-					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 							LangModelScheme.getString("Message.error.path.unambigous")  //$NON-NLS-1$
 							+ "\n'" + lastPE.getName() + "'\n" +  //$NON-NLS-1$//$NON-NLS-2$
 							LangModelScheme.getString("Message.error.path.next_manually"), //$NON-NLS-1$
@@ -181,7 +181,7 @@ public class PathBuilder {
 							se = se.getParentSchemeElement();
 						}
 					}
-					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 							LangModelScheme.getString("Message.error.path.next_element_1")  //$NON-NLS-1$
 							+ " '" + port.getName() + "' "  //$NON-NLS-1$//$NON-NLS-2$
 							+ LangModelScheme.getString("Message.error.path.next_element_2") //$NON-NLS-1$
@@ -198,7 +198,7 @@ public class PathBuilder {
 				SchemeCablePort cport = (SchemeCablePort)port;
 				SchemeCableLink clink = cport.getAbstractSchemeLink();
 				if (clink == null) {
-					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 							LangModelScheme.getString("Message.error.path.next_element_1")  //$NON-NLS-1$
 							+ " '" + port.getName() + "' "  //$NON-NLS-1$//$NON-NLS-2$
 							+ LangModelScheme.getString("Message.error.path.next_element_2") //$NON-NLS-1$
@@ -371,7 +371,7 @@ public class PathBuilder {
 		} else {//first element
 			// must be non scheme element
 			if (se.getScheme(false) != null) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 				LangModelScheme.getString("Message.error.path.starting_scheme"), 
 				LangModelScheme.getString("Message.error"), 
 				JOptionPane.OK_OPTION);
@@ -390,7 +390,7 @@ public class PathBuilder {
 				}
 			}
 			if (accessPorts == 0) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "У начального устройства должен быть тестовый порт\nс которого должен начинаться маршрут тестирования", "Ошибка", JOptionPane.OK_OPTION);
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), "У начального устройства должен быть тестовый порт\nс которого должен начинаться маршрут тестирования", "Ошибка", JOptionPane.OK_OPTION);
 				return null;
 			}
 			if (accessPorts == 1) {
@@ -405,7 +405,7 @@ public class PathBuilder {
 			else {
 				// create with any port
 				newPE = PathElement.createInstance(LoginManager.getUserId(), path, null, port);
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 						LangModelScheme.getString("Message.information.path_addnext"),
 						LangModelScheme.getString("Message.information"),
 						JOptionPane.INFORMATION_MESSAGE);
@@ -480,7 +480,7 @@ public class PathBuilder {
 					if (lastStartPort instanceof SchemePort) {
 						SchemeCableThread thread = ((SchemePort)lastStartPort).getSchemeCableThread();
 						if (thread == null) {
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+							JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 									LangModelScheme.getString("Message.error.path.commutation") //$NON-NLS-1$
 									+ "\n'" + se.getName() + "'",   //$NON-NLS-1$//$NON-NLS-2$
 									LangModelScheme.getString("Message.error"), //$NON-NLS-1$
@@ -504,7 +504,7 @@ public class PathBuilder {
 			PathElement pe;
 			try {
 				pe = path.getPathMembers().last();
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 				LangModelScheme.getString("Message.error.path.commutation") //$NON-NLS-1$
 							+ "\n'" + pe.getName() + "'",   //$NON-NLS-1$//$NON-NLS-2$
 							LangModelScheme.getString("Message.error"), //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.19 2005/12/06 11:40:35 bass Exp $
+ * $Id: AddPropFrame.java,v 1.20 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/12/06 11:40:35 $
+ * @author $Author: stas $
+ * @version $Revision: 1.20 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -77,14 +77,6 @@ public class AddPropFrame extends JDialog {
 	public AddPropFrame(final Frame parent, final String title) {
 		super(parent, title);
 
-		try {
-			this.jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void jbInit() throws Exception {
 		this.buttonGroup.add(this.existingRadioButton);
 		this.buttonGroup.add(this.newRadioButton);
 		this.existingRadioButton.addActionListener(new ActionListener() {
@@ -97,23 +89,23 @@ public class AddPropFrame extends JDialog {
 				radioButtonStateChanged();
 			}
 		});
-
+		
 		final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		final Dimension frameSize = new Dimension(350, 250);
-
+		
 		super.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
 		super.setSize(frameSize);
 		super.setTitle(LangModelScheme.getString(SchemeResourceKeys.CHARACTERISTIC));
-
+		
 		final JScrollPane scrollPane = new JScrollPane();
 		scrollPane.getViewport().add(this.descrArea);
 		this.descrArea.setAutoscrolls(true);
 		scrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
-
+		
 		final GridBagLayout gridbag = new GridBagLayout();
 		final GridBagConstraints c = new GridBagConstraints();
 		this.panel.setLayout(gridbag);
-
+		
 		c.fill = GridBagConstraints.BOTH;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		this.addToPanel(this.existingRadioButton, gridbag, c);
@@ -135,11 +127,11 @@ public class AddPropFrame extends JDialog {
 		c.weightx = 0.0;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		this.addToPanel(this.buttonPanel, gridbag, c);
-
+		
 		this.buttonPanel.setLayout(new FlowLayout());
 		this.buttonPanel.add(this.okButton);
 		this.buttonPanel.add(this.cancelButton);
-
+		
 		this.okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				okButton_actionPerformed(e);
@@ -152,6 +144,7 @@ public class AddPropFrame extends JDialog {
 		});
 		this.getContentPane().setLayout(new BorderLayout());
 		this.getContentPane().add(this.panel, BorderLayout.CENTER);
+
 	}
 
 	private void addToPanel(final Component comp, final GridBagLayout gridbag, final GridBagConstraints c) {
@@ -205,7 +198,7 @@ public class AddPropFrame extends JDialog {
 				}
 			}
 		} catch (ApplicationException ex) {
-			ex.printStackTrace();
+			Log.errorMessage(ex);
 		}
 
 		if (this.characteristicTypeComboBox.getModel().getSize() == 0) {

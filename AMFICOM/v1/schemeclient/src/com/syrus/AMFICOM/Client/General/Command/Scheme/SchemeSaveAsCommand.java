@@ -10,8 +10,8 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
@@ -46,7 +46,7 @@ public class SchemeSaveAsCommand extends AbstractCommand {
 	@Override
 	public void execute() {
 		if (this.schemeTab.getCurrentPanel().isTopLevelSchemeMode()) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.error.save_top_level"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 					JOptionPane.OK_OPTION);
@@ -57,21 +57,21 @@ public class SchemeSaveAsCommand extends AbstractCommand {
 
 		long status = SchemeActions.getGraphState(graph);
 		if ((status & SchemeActions.SCHEME_EMPTY) != 0) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.error.empty_scheme"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 					JOptionPane.OK_OPTION);
 			return;
 		}
 		if ((status & SchemeActions.SCHEME_HAS_UNGROUPED_DEVICE) != 0) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.error.ungrouped_device"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 					JOptionPane.OK_OPTION);
 			return;
 		}
 		if ((status & SchemeActions.SCHEME_HAS_DEVICE_GROUP) == 0) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.error.component_not_found"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 					JOptionPane.OK_OPTION);
@@ -82,7 +82,7 @@ public class SchemeSaveAsCommand extends AbstractCommand {
 		
 		 // сохраняем только схему 
 		if (res.getCellContainerType() == SchemeResource.SCHEME) {
-			String name = JOptionPane.showInputDialog(Environment.getActiveWindow(),
+			String name = JOptionPane.showInputDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.input.scheme_name"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.input"), //$NON-NLS-1$
 					JOptionPane.OK_CANCEL_OPTION);
@@ -131,24 +131,24 @@ public class SchemeSaveAsCommand extends AbstractCommand {
 				this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.CREATE_OBJECT));
 				
 				if (scheme.getUgoCell() == null) {
-					JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+					JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 							scheme.getName() + " " + LangModelScheme.getString("Message.information.no_ugo"),  //$NON-NLS-1$ //$NON-NLS-2$
 							LangModelScheme.getString("Message.information"), //$NON-NLS-1$
 							JOptionPane.INFORMATION_MESSAGE);					
 				} else {
-					JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+					JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 							scheme.getName() + " " + LangModelScheme.getString("Message.information.scheme_saved"),  //$NON-NLS-1$ //$NON-NLS-2$
 							LangModelScheme.getString("Message.information"), //$NON-NLS-1$
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (CloneNotSupportedException e) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 						LangModelScheme.getString("Message.error.create_scheme_clone"), //$NON-NLS-1$
 						LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 						JOptionPane.OK_OPTION);
 				Log.errorMessage(e);
 			} catch (ApplicationException e) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 						LangModelScheme.getString("Message.error.save_scheme") + ": " + e.getMessage(), //$NON-NLS-1$ //$NON-NLS-2$
 						LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 						JOptionPane.OK_OPTION);
@@ -156,7 +156,7 @@ public class SchemeSaveAsCommand extends AbstractCommand {
 			}
 			
 		} else {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.error.save_copy_nonscheme"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 					JOptionPane.OK_OPTION);

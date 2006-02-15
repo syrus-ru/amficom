@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeGeneralPanel.java,v 1.21 2005/10/31 12:30:25 bass Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.22 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,9 +48,9 @@ import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
@@ -73,8 +73,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/10/31 12:30:25 $
+ * @author $Author: stas $
+ * @version $Revision: 1.22 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -131,11 +131,361 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 
 	protected CableLinkTypeGeneralPanel() {
 		super();
-		try {
-			this.jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		final GridBagLayout gbPanel0 = new GridBagLayout();
+				final GridBagConstraints gbcPanel0 = new GridBagConstraints();
+				this.pnPanel0.setLayout(gbPanel0);
+		
+				final GridBagLayout gbGeneralPanel = new GridBagLayout();
+				final GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
+				this.pnGeneralPanel.setLayout(gbGeneralPanel);
+		
+				this.lbNameLabel.setFocusable(false);
+				gbcGeneralPanel.gridx = 0;
+				gbcGeneralPanel.gridy = 0;
+				gbcGeneralPanel.gridwidth = 2;
+				gbcGeneralPanel.gridheight = 1;
+				gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+				gbcGeneralPanel.weightx = 0;
+				gbcGeneralPanel.weighty = 0;
+				gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+				gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
+				gbGeneralPanel.setConstraints(this.lbNameLabel, gbcGeneralPanel);
+				this.pnGeneralPanel.add(this.lbNameLabel);
+		
+				gbcGeneralPanel.gridx = 2;
+				gbcGeneralPanel.gridy = 0;
+				gbcGeneralPanel.gridwidth = 3;
+				gbcGeneralPanel.gridheight = 1;
+				gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+				gbcGeneralPanel.weightx = 1;
+				gbcGeneralPanel.weighty = 0;
+				gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+				gbcPanel0.insets = new Insets(0, 0, 0, 0);
+				gbGeneralPanel.setConstraints(this.tfNameText, gbcGeneralPanel);
+				this.pnGeneralPanel.add(this.tfNameText);
+				
+				gbcGeneralPanel.gridx = 5;
+				gbcGeneralPanel.gridy = 0;
+				gbcGeneralPanel.gridwidth = 1;
+				gbcGeneralPanel.gridheight = 1;
+				gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+				gbcGeneralPanel.weightx = 0;
+				gbcGeneralPanel.weighty = 0;
+				gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+				gbcPanel0.insets = new Insets(0, 0, 0, 0);
+				gbGeneralPanel.setConstraints(this.commitButton, gbcGeneralPanel);
+				this.pnGeneralPanel.add(this.commitButton);
+		
+				this.lbManufacturerLabel.setFocusable(false);
+				gbcGeneralPanel.gridx = 0;
+				gbcGeneralPanel.gridy = 2;
+				gbcGeneralPanel.gridwidth = 2;
+				gbcGeneralPanel.gridheight = 1;
+				gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+				gbcGeneralPanel.weightx = 0;
+				gbcGeneralPanel.weighty = 0;
+				gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+				gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
+				gbGeneralPanel.setConstraints(this.lbManufacturerLabel, gbcGeneralPanel);
+				this.pnGeneralPanel.add(this.lbManufacturerLabel);
+		
+				gbcGeneralPanel.gridx = 2;
+				gbcGeneralPanel.gridy = 2;
+				gbcGeneralPanel.gridwidth = 4;
+				gbcGeneralPanel.gridheight = 1;
+				gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+				gbcGeneralPanel.weightx = 1;
+				gbcGeneralPanel.weighty = 0;
+				gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+				gbcPanel0.insets = new Insets(0, 0, 0, 0);
+				gbGeneralPanel.setConstraints(this.tfManufacturerText, gbcGeneralPanel);
+				this.pnGeneralPanel.add(this.tfManufacturerText);
+		
+				this.lbManufacturerCodeLabel.setFocusable(false);
+				gbcGeneralPanel.gridx = 0;
+				gbcGeneralPanel.gridy = 4;
+				gbcGeneralPanel.gridwidth = 2;
+				gbcGeneralPanel.gridheight = 1;
+				gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+				gbcGeneralPanel.weightx = 0;
+				gbcGeneralPanel.weighty = 0;
+				gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+				gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
+				gbGeneralPanel.setConstraints(this.lbManufacturerCodeLabel, gbcGeneralPanel);
+				this.pnGeneralPanel.add(this.lbManufacturerCodeLabel);
+		
+				gbcGeneralPanel.gridx = 2;
+				gbcGeneralPanel.gridy = 4;
+				gbcGeneralPanel.gridwidth = 4;
+				gbcGeneralPanel.gridheight = 1;
+				gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+				gbcGeneralPanel.weightx = 1;
+				gbcGeneralPanel.weighty = 0;
+				gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+				gbcPanel0.insets = new Insets(0, 0, 0, 0);
+				gbGeneralPanel.setConstraints(this.tfManufacturerCodeText, gbcGeneralPanel);
+				this.pnGeneralPanel.add(this.tfManufacturerCodeText);
+				
+				gbcGeneralPanel.gridx = 0;
+				gbcGeneralPanel.gridy = 6;
+				gbcGeneralPanel.gridwidth = 2;
+				gbcGeneralPanel.gridheight = 1;
+				gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+				gbcGeneralPanel.weightx = 0;
+				gbcGeneralPanel.weighty = 0;
+				gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+				gbGeneralPanel.setConstraints( this.lbThreadNumLabel, gbcGeneralPanel );
+				this.pnGeneralPanel.add(this.lbThreadNumLabel);
+		
+				gbcGeneralPanel.gridx = 2;
+				gbcGeneralPanel.gridy = 6;
+				gbcGeneralPanel.gridwidth = 4;
+				gbcGeneralPanel.gridheight = 1;
+				gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+				gbcGeneralPanel.weightx = 1;
+				gbcGeneralPanel.weighty = 0;
+				gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+				gbGeneralPanel.setConstraints(this.tfThreadNumText, gbcGeneralPanel);
+				this.pnGeneralPanel.add(this.tfThreadNumText);
+				gbcPanel0.gridx = 0;
+				gbcPanel0.gridy = 0;
+				gbcPanel0.gridwidth = 6;
+				gbcPanel0.gridheight = 6;
+				gbcPanel0.fill = GridBagConstraints.BOTH;
+				gbcPanel0.weightx = 1;
+				gbcPanel0.weighty = 0;
+				gbcPanel0.anchor = GridBagConstraints.NORTH;
+				gbPanel0.setConstraints(this.pnGeneralPanel, gbcPanel0);
+				this.pnPanel0.add(this.pnGeneralPanel);
+		
+				this.lbDescriptionLabel.setFocusable( false );
+				gbcPanel0.gridx = 0;
+				gbcPanel0.gridy = 6;
+				gbcPanel0.gridwidth = 2;
+				gbcPanel0.gridheight = 1;
+				gbcPanel0.fill = GridBagConstraints.BOTH;
+				gbcPanel0.weightx = 0;
+				gbcPanel0.weighty = 0;
+				gbcPanel0.anchor = GridBagConstraints.NORTH;
+				gbcPanel0.insets = new Insets(0, 2, 0, 2);
+				gbPanel0.setConstraints(this.lbDescriptionLabel, gbcPanel0);
+				this.pnPanel0.add(this.lbDescriptionLabel);
+		
+				final JScrollPane scpDescriptionArea = new JScrollPane(this.taDescriptionArea);
+				gbcPanel0.gridx = 1;
+				gbcPanel0.gridy = 7;
+				gbcPanel0.gridwidth = 5;
+				gbcPanel0.gridheight = 2;
+				gbcPanel0.fill = GridBagConstraints.BOTH;
+				gbcPanel0.weightx = 1;
+				gbcPanel0.weighty = 1;
+				gbcPanel0.anchor = GridBagConstraints.NORTH;
+				gbcPanel0.insets = new Insets(0, 2, 0, 2);
+				gbPanel0.setConstraints(scpDescriptionArea, gbcPanel0);
+				this.pnPanel0.add(scpDescriptionArea);
+		
+				this.pnThreadPanel.setBorder(BorderFactory.createTitledBorder(""));
+				final GridBagLayout gbThreadPanel = new GridBagLayout();
+				final GridBagConstraints gbcThreadPanel = new GridBagConstraints();
+				this.pnThreadPanel.setLayout(gbThreadPanel);
+		
+				gbcThreadPanel.gridx = 0;
+				gbcThreadPanel.gridy = 0;
+				gbcThreadPanel.gridwidth = 2;
+				gbcThreadPanel.gridheight = 1;
+				gbcThreadPanel.fill = GridBagConstraints.BOTH;
+				gbcThreadPanel.weightx = 0;
+				gbcThreadPanel.weighty = 0;
+				gbcThreadPanel.insets = new Insets(0, 0, 0, 2);
+				gbcThreadPanel.anchor = GridBagConstraints.NORTH;
+				gbThreadPanel.setConstraints(this.lbTNameLabel, gbcThreadPanel);
+				this.pnThreadPanel.add(this.lbTNameLabel);
+				
+				gbcThreadPanel.gridx = 2;
+				gbcThreadPanel.gridy = 0;
+				gbcThreadPanel.gridwidth = 4;
+				gbcThreadPanel.gridheight = 1;
+				gbcThreadPanel.fill = GridBagConstraints.BOTH;
+				gbcThreadPanel.weightx = 1;
+				gbcThreadPanel.weighty = 0;
+				gbcThreadPanel.anchor = GridBagConstraints.NORTH;
+				gbThreadPanel.setConstraints(this.cmbTNameCombo, gbcThreadPanel);
+				this.pnThreadPanel.add(this.cmbTNameCombo);
+		
+				gbcThreadPanel.gridx = 0;
+				gbcThreadPanel.gridy = 1;
+				gbcThreadPanel.gridwidth = 2;
+				gbcThreadPanel.gridheight = 1;
+				gbcThreadPanel.fill = GridBagConstraints.BOTH;
+				gbcThreadPanel.weightx = 0;
+				gbcThreadPanel.weighty = 0;
+				gbcThreadPanel.anchor = GridBagConstraints.NORTH;
+				gbThreadPanel.setConstraints(this.lbTTypeLabel, gbcThreadPanel);
+				this.pnThreadPanel.add(this.lbTTypeLabel);
+		
+				gbcThreadPanel.gridx = 2;
+				gbcThreadPanel.gridy = 1;
+				gbcThreadPanel.gridwidth = 4;
+				gbcThreadPanel.gridheight = 1;
+				gbcThreadPanel.fill = GridBagConstraints.BOTH;
+				gbcThreadPanel.weightx = 1;
+				gbcThreadPanel.weighty = 0;
+				gbcThreadPanel.anchor = GridBagConstraints.NORTH;
+				gbThreadPanel.setConstraints(this.cmbTTypeCombo, gbcThreadPanel);
+				this.pnThreadPanel.add(this.cmbTTypeCombo);
+		
+				gbcThreadPanel.gridx = 0;
+				gbcThreadPanel.gridy = 2;
+				gbcThreadPanel.gridwidth = 2;
+				gbcThreadPanel.gridheight = 1;
+				gbcThreadPanel.fill = GridBagConstraints.BOTH;
+				gbcThreadPanel.weightx = 0;
+				gbcThreadPanel.weighty = 0;
+				gbcThreadPanel.anchor = GridBagConstraints.NORTH;
+				gbThreadPanel.setConstraints(this.lbTColorLabel, gbcThreadPanel);
+				this.pnThreadPanel.add(this.lbTColorLabel);
+		
+				gbcThreadPanel.gridx = 2;
+				gbcThreadPanel.gridy = 2;
+				gbcThreadPanel.gridwidth = 4;
+				gbcThreadPanel.gridheight = 1;
+				gbcThreadPanel.fill = GridBagConstraints.BOTH;
+				gbcThreadPanel.weightx = 1;
+				gbcThreadPanel.weighty = 0;
+				gbcThreadPanel.anchor = GridBagConstraints.NORTH;
+				gbThreadPanel.setConstraints(this.cmbTColorCombo, gbcThreadPanel);
+				this.pnThreadPanel.add(this.cmbTColorCombo);
+		/*
+				gbcThreadPanel.gridx = 0;
+				gbcThreadPanel.gridy = 3;
+				gbcThreadPanel.gridwidth = 2;
+				gbcThreadPanel.gridheight = 1;
+				gbcThreadPanel.fill = GridBagConstraints.BOTH;
+				gbcThreadPanel.weightx = 0;
+				gbcThreadPanel.weighty = 0;
+				gbcThreadPanel.anchor = GridBagConstraints.NORTH;
+				gbThreadPanel.setConstraints(this.lbTMarkLabel, gbcThreadPanel);
+				this.pnThreadPanel.add(this.lbTMarkLabel);
+		
+				gbcThreadPanel.gridx = 2;
+				gbcThreadPanel.gridy = 3;
+				gbcThreadPanel.gridwidth = 4;
+				gbcThreadPanel.gridheight = 1;
+				gbcThreadPanel.fill = GridBagConstraints.BOTH;
+				gbcThreadPanel.weightx = 1;
+				gbcThreadPanel.weighty = 0;
+				gbcThreadPanel.anchor = GridBagConstraints.NORTH;
+				gbThreadPanel.setConstraints(this.tfTMarkText, gbcThreadPanel);
+				this.pnThreadPanel.add(this.tfTMarkText);
+				*/
+				gbcThreadPanel.gridx = 0;
+				gbcThreadPanel.gridy = 4;
+				gbcThreadPanel.gridwidth = 4;
+				gbcThreadPanel.gridheight = 1;
+				gbcThreadPanel.fill = GridBagConstraints.BOTH;
+				gbcThreadPanel.weightx = 0;
+				gbcThreadPanel.weighty = 0;
+				gbcThreadPanel.anchor = GridBagConstraints.NORTH;
+				gbThreadPanel.setConstraints(this.lbTDescrLabel, gbcThreadPanel);
+				this.pnThreadPanel.add(this.lbTDescrLabel);
+		
+				JScrollPane scpTDescrArea = new JScrollPane(this.taTDescrArea);
+				gbcThreadPanel.gridx = 1;
+				gbcThreadPanel.gridy = 5;
+				gbcThreadPanel.gridwidth = 5;
+				gbcThreadPanel.gridheight = 2;
+				gbcThreadPanel.fill = GridBagConstraints.BOTH;
+				gbcThreadPanel.weightx = 1;
+				gbcThreadPanel.weighty = 0.5;
+				gbcThreadPanel.insets = new Insets(0, 0, 0, 0);
+				gbcThreadPanel.anchor = GridBagConstraints.NORTH;
+				gbThreadPanel.setConstraints(scpTDescrArea, gbcThreadPanel);
+				this.pnThreadPanel.add(scpTDescrArea);
+		
+				gbcPanel0.gridx = 0;
+				gbcPanel0.gridy = 9;
+				gbcPanel0.gridwidth = 6;
+				gbcPanel0.gridheight = 5;
+				gbcPanel0.fill = GridBagConstraints.BOTH;
+				gbcPanel0.weightx = 1;
+				gbcPanel0.weighty = 0.5;
+				gbcPanel0.insets = new Insets(0, 0, 0, 0);
+				gbcPanel0.anchor = GridBagConstraints.NORTH;
+				gbPanel0.setConstraints(this.pnThreadPanel, gbcPanel0);
+				this.pnPanel0.add(this.pnThreadPanel);
+		
+				this.pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
+		//		pnGeneralPanel.setBackground(Color.WHITE);
+		//		pnPanel0.setBackground(Color.WHITE);
+				scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
+				
+				this.cmbTNameCombo.addItemListener(new ItemListener() {
+					public void itemStateChanged(ItemEvent e) {
+						final CableThreadType ctt = (CableThreadType)e.getItem();
+						CableLinkTypeGeneralPanel.this.currentCash = CableLinkTypeGeneralPanel.this.cashedFields.get(ctt);
+						final boolean b = (CableLinkTypeGeneralPanel.this.currentCash != null); 
+						CableLinkTypeGeneralPanel.this.tfTMarkText.setEnabled(b);
+						CableLinkTypeGeneralPanel.this.cmbTColorCombo.setEnabled(b);
+						CableLinkTypeGeneralPanel.this.cmbTTypeCombo.setEnabled(b);
+						CableLinkTypeGeneralPanel.this.taTDescrArea.setEnabled(b);
+		
+						CableLinkTypeGeneralPanel.this.tfTMarkText.setText(b ? CableLinkTypeGeneralPanel.this.currentCash.mark : "");
+						CableLinkTypeGeneralPanel.this.taTDescrArea.setText(b ? CableLinkTypeGeneralPanel.this.currentCash.description : "");
+						if (b) {
+							CableLinkTypeGeneralPanel.this.cmbTColorCombo.addItem(new Color(CableLinkTypeGeneralPanel.this.currentCash.color));
+							CableLinkTypeGeneralPanel.this.cmbTTypeCombo.setSelectedItem(CableLinkTypeGeneralPanel.this.currentCash.type);
+						}
+					}
+				});
+				
+				this.tfTMarkText.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(final KeyEvent e) {
+						if (CableLinkTypeGeneralPanel.this.currentCash != null) {
+							CableLinkTypeGeneralPanel.this.currentCash.mark = CableLinkTypeGeneralPanel.this.tfTMarkText.getText();
+						}
+					}
+				});
+		
+				this.cmbTColorCombo.addItemListener(new ItemListener() {
+					public void itemStateChanged(final ItemEvent e) {
+						if (CableLinkTypeGeneralPanel.this.currentCash != null && e.getItem() instanceof Color) {
+							CableLinkTypeGeneralPanel.this.currentCash.color = ((Color) e.getItem()).getRGB();
+						}
+					}
+				});
+		
+				this.cmbTTypeCombo.addItemListener(new ItemListener() {
+					public void itemStateChanged(final ItemEvent e) {
+						if (CableLinkTypeGeneralPanel.this.currentCash != null) {
+							CableLinkTypeGeneralPanel.this.currentCash.type = (LinkType) e.getItem();
+						}
+					}
+				});
+		
+				this.taTDescrArea.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(final KeyEvent e) {
+						if (CableLinkTypeGeneralPanel.this.currentCash != null) {
+							CableLinkTypeGeneralPanel.this.currentCash.description = CableLinkTypeGeneralPanel.this.taTDescrArea.getText();
+						}
+					}
+				});
+		
+				super.addToUndoableListener(this.tfNameText);
+				super.addToUndoableListener(this.tfManufacturerText);
+				super.addToUndoableListener(this.tfManufacturerCodeText);
+				super.addToUndoableListener(this.taDescriptionArea);
+		
+				this.commitButton.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
+				this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+				this.commitButton.setFocusPainted(false);
+				this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+				this.commitButton.addActionListener(new ActionListener() {
+					public void actionPerformed(final ActionEvent e) {
+						CableLinkTypeGeneralPanel.this.commitChanges();
+					}
+				});
 	}
 
 	public void setContext(final ApplicationContext aContext) {
@@ -145,364 +495,6 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 	protected CableLinkTypeGeneralPanel(final CableLinkType linkType) {
 		this();
 		this.setObject(linkType);
-	}
-
-	private void jbInit() throws Exception {
-		final GridBagLayout gbPanel0 = new GridBagLayout();
-		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
-		this.pnPanel0.setLayout(gbPanel0);
-
-		final GridBagLayout gbGeneralPanel = new GridBagLayout();
-		final GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
-		this.pnGeneralPanel.setLayout(gbGeneralPanel);
-
-		this.lbNameLabel.setFocusable(false);
-		gbcGeneralPanel.gridx = 0;
-		gbcGeneralPanel.gridy = 0;
-		gbcGeneralPanel.gridwidth = 2;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
-		gbGeneralPanel.setConstraints(this.lbNameLabel, gbcGeneralPanel);
-		this.pnGeneralPanel.add(this.lbNameLabel);
-
-		gbcGeneralPanel.gridx = 2;
-		gbcGeneralPanel.gridy = 0;
-		gbcGeneralPanel.gridwidth = 3;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 1;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcPanel0.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(this.tfNameText, gbcGeneralPanel);
-		this.pnGeneralPanel.add(this.tfNameText);
-		
-		gbcGeneralPanel.gridx = 5;
-		gbcGeneralPanel.gridy = 0;
-		gbcGeneralPanel.gridwidth = 1;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcPanel0.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(this.commitButton, gbcGeneralPanel);
-		this.pnGeneralPanel.add(this.commitButton);
-
-		this.lbManufacturerLabel.setFocusable(false);
-		gbcGeneralPanel.gridx = 0;
-		gbcGeneralPanel.gridy = 2;
-		gbcGeneralPanel.gridwidth = 2;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
-		gbGeneralPanel.setConstraints(this.lbManufacturerLabel, gbcGeneralPanel);
-		this.pnGeneralPanel.add(this.lbManufacturerLabel);
-
-		gbcGeneralPanel.gridx = 2;
-		gbcGeneralPanel.gridy = 2;
-		gbcGeneralPanel.gridwidth = 4;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 1;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcPanel0.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(this.tfManufacturerText, gbcGeneralPanel);
-		this.pnGeneralPanel.add(this.tfManufacturerText);
-
-		this.lbManufacturerCodeLabel.setFocusable(false);
-		gbcGeneralPanel.gridx = 0;
-		gbcGeneralPanel.gridy = 4;
-		gbcGeneralPanel.gridwidth = 2;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
-		gbGeneralPanel.setConstraints(this.lbManufacturerCodeLabel, gbcGeneralPanel);
-		this.pnGeneralPanel.add(this.lbManufacturerCodeLabel);
-
-		gbcGeneralPanel.gridx = 2;
-		gbcGeneralPanel.gridy = 4;
-		gbcGeneralPanel.gridwidth = 4;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 1;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcPanel0.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(this.tfManufacturerCodeText, gbcGeneralPanel);
-		this.pnGeneralPanel.add(this.tfManufacturerCodeText);
-		
-		gbcGeneralPanel.gridx = 0;
-		gbcGeneralPanel.gridy = 6;
-		gbcGeneralPanel.gridwidth = 2;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( this.lbThreadNumLabel, gbcGeneralPanel );
-		this.pnGeneralPanel.add(this.lbThreadNumLabel);
-
-		gbcGeneralPanel.gridx = 2;
-		gbcGeneralPanel.gridy = 6;
-		gbcGeneralPanel.gridwidth = 4;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 1;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints(this.tfThreadNumText, gbcGeneralPanel);
-		this.pnGeneralPanel.add(this.tfThreadNumText);
-		gbcPanel0.gridx = 0;
-		gbcPanel0.gridy = 0;
-		gbcPanel0.gridwidth = 6;
-		gbcPanel0.gridheight = 6;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 1;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints(this.pnGeneralPanel, gbcPanel0);
-		this.pnPanel0.add(this.pnGeneralPanel);
-
-		this.lbDescriptionLabel.setFocusable( false );
-		gbcPanel0.gridx = 0;
-		gbcPanel0.gridy = 6;
-		gbcPanel0.gridwidth = 2;
-		gbcPanel0.gridheight = 1;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 0;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbcPanel0.insets = new Insets(0, 2, 0, 2);
-		gbPanel0.setConstraints(this.lbDescriptionLabel, gbcPanel0);
-		this.pnPanel0.add(this.lbDescriptionLabel);
-
-		final JScrollPane scpDescriptionArea = new JScrollPane(this.taDescriptionArea);
-		gbcPanel0.gridx = 1;
-		gbcPanel0.gridy = 7;
-		gbcPanel0.gridwidth = 5;
-		gbcPanel0.gridheight = 2;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 1;
-		gbcPanel0.weighty = 1;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbcPanel0.insets = new Insets(0, 2, 0, 2);
-		gbPanel0.setConstraints(scpDescriptionArea, gbcPanel0);
-		this.pnPanel0.add(scpDescriptionArea);
-
-		this.pnThreadPanel.setBorder(BorderFactory.createTitledBorder(""));
-		final GridBagLayout gbThreadPanel = new GridBagLayout();
-		final GridBagConstraints gbcThreadPanel = new GridBagConstraints();
-		this.pnThreadPanel.setLayout(gbThreadPanel);
-
-		gbcThreadPanel.gridx = 0;
-		gbcThreadPanel.gridy = 0;
-		gbcThreadPanel.gridwidth = 2;
-		gbcThreadPanel.gridheight = 1;
-		gbcThreadPanel.fill = GridBagConstraints.BOTH;
-		gbcThreadPanel.weightx = 0;
-		gbcThreadPanel.weighty = 0;
-		gbcThreadPanel.insets = new Insets(0, 0, 0, 2);
-		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints(this.lbTNameLabel, gbcThreadPanel);
-		this.pnThreadPanel.add(this.lbTNameLabel);
-		
-		gbcThreadPanel.gridx = 2;
-		gbcThreadPanel.gridy = 0;
-		gbcThreadPanel.gridwidth = 4;
-		gbcThreadPanel.gridheight = 1;
-		gbcThreadPanel.fill = GridBagConstraints.BOTH;
-		gbcThreadPanel.weightx = 1;
-		gbcThreadPanel.weighty = 0;
-		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints(this.cmbTNameCombo, gbcThreadPanel);
-		this.pnThreadPanel.add(this.cmbTNameCombo);
-
-		gbcThreadPanel.gridx = 0;
-		gbcThreadPanel.gridy = 1;
-		gbcThreadPanel.gridwidth = 2;
-		gbcThreadPanel.gridheight = 1;
-		gbcThreadPanel.fill = GridBagConstraints.BOTH;
-		gbcThreadPanel.weightx = 0;
-		gbcThreadPanel.weighty = 0;
-		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints(this.lbTTypeLabel, gbcThreadPanel);
-		this.pnThreadPanel.add(this.lbTTypeLabel);
-
-		gbcThreadPanel.gridx = 2;
-		gbcThreadPanel.gridy = 1;
-		gbcThreadPanel.gridwidth = 4;
-		gbcThreadPanel.gridheight = 1;
-		gbcThreadPanel.fill = GridBagConstraints.BOTH;
-		gbcThreadPanel.weightx = 1;
-		gbcThreadPanel.weighty = 0;
-		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints(this.cmbTTypeCombo, gbcThreadPanel);
-		this.pnThreadPanel.add(this.cmbTTypeCombo);
-
-		gbcThreadPanel.gridx = 0;
-		gbcThreadPanel.gridy = 2;
-		gbcThreadPanel.gridwidth = 2;
-		gbcThreadPanel.gridheight = 1;
-		gbcThreadPanel.fill = GridBagConstraints.BOTH;
-		gbcThreadPanel.weightx = 0;
-		gbcThreadPanel.weighty = 0;
-		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints(this.lbTColorLabel, gbcThreadPanel);
-		this.pnThreadPanel.add(this.lbTColorLabel);
-
-		gbcThreadPanel.gridx = 2;
-		gbcThreadPanel.gridy = 2;
-		gbcThreadPanel.gridwidth = 4;
-		gbcThreadPanel.gridheight = 1;
-		gbcThreadPanel.fill = GridBagConstraints.BOTH;
-		gbcThreadPanel.weightx = 1;
-		gbcThreadPanel.weighty = 0;
-		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints(this.cmbTColorCombo, gbcThreadPanel);
-		this.pnThreadPanel.add(this.cmbTColorCombo);
-/*
-		gbcThreadPanel.gridx = 0;
-		gbcThreadPanel.gridy = 3;
-		gbcThreadPanel.gridwidth = 2;
-		gbcThreadPanel.gridheight = 1;
-		gbcThreadPanel.fill = GridBagConstraints.BOTH;
-		gbcThreadPanel.weightx = 0;
-		gbcThreadPanel.weighty = 0;
-		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints(this.lbTMarkLabel, gbcThreadPanel);
-		this.pnThreadPanel.add(this.lbTMarkLabel);
-
-		gbcThreadPanel.gridx = 2;
-		gbcThreadPanel.gridy = 3;
-		gbcThreadPanel.gridwidth = 4;
-		gbcThreadPanel.gridheight = 1;
-		gbcThreadPanel.fill = GridBagConstraints.BOTH;
-		gbcThreadPanel.weightx = 1;
-		gbcThreadPanel.weighty = 0;
-		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints(this.tfTMarkText, gbcThreadPanel);
-		this.pnThreadPanel.add(this.tfTMarkText);
-		*/
-		gbcThreadPanel.gridx = 0;
-		gbcThreadPanel.gridy = 4;
-		gbcThreadPanel.gridwidth = 4;
-		gbcThreadPanel.gridheight = 1;
-		gbcThreadPanel.fill = GridBagConstraints.BOTH;
-		gbcThreadPanel.weightx = 0;
-		gbcThreadPanel.weighty = 0;
-		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints(this.lbTDescrLabel, gbcThreadPanel);
-		this.pnThreadPanel.add(this.lbTDescrLabel);
-
-		JScrollPane scpTDescrArea = new JScrollPane(this.taTDescrArea);
-		gbcThreadPanel.gridx = 1;
-		gbcThreadPanel.gridy = 5;
-		gbcThreadPanel.gridwidth = 5;
-		gbcThreadPanel.gridheight = 2;
-		gbcThreadPanel.fill = GridBagConstraints.BOTH;
-		gbcThreadPanel.weightx = 1;
-		gbcThreadPanel.weighty = 0.5;
-		gbcThreadPanel.insets = new Insets(0, 0, 0, 0);
-		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints(scpTDescrArea, gbcThreadPanel);
-		this.pnThreadPanel.add(scpTDescrArea);
-
-		gbcPanel0.gridx = 0;
-		gbcPanel0.gridy = 9;
-		gbcPanel0.gridwidth = 6;
-		gbcPanel0.gridheight = 5;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 1;
-		gbcPanel0.weighty = 0.5;
-		gbcPanel0.insets = new Insets(0, 0, 0, 0);
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints(this.pnThreadPanel, gbcPanel0);
-		this.pnPanel0.add(this.pnThreadPanel);
-
-		this.pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
-//		pnGeneralPanel.setBackground(Color.WHITE);
-//		pnPanel0.setBackground(Color.WHITE);
-		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
-		
-		this.cmbTNameCombo.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				final CableThreadType ctt = (CableThreadType)e.getItem();
-				CableLinkTypeGeneralPanel.this.currentCash = CableLinkTypeGeneralPanel.this.cashedFields.get(ctt);
-				final boolean b = (CableLinkTypeGeneralPanel.this.currentCash != null); 
-				CableLinkTypeGeneralPanel.this.tfTMarkText.setEnabled(b);
-				CableLinkTypeGeneralPanel.this.cmbTColorCombo.setEnabled(b);
-				CableLinkTypeGeneralPanel.this.cmbTTypeCombo.setEnabled(b);
-				CableLinkTypeGeneralPanel.this.taTDescrArea.setEnabled(b);
-
-				CableLinkTypeGeneralPanel.this.tfTMarkText.setText(b ? CableLinkTypeGeneralPanel.this.currentCash.mark : "");
-				CableLinkTypeGeneralPanel.this.taTDescrArea.setText(b ? CableLinkTypeGeneralPanel.this.currentCash.description : "");
-				if (b) {
-					CableLinkTypeGeneralPanel.this.cmbTColorCombo.addItem(new Color(CableLinkTypeGeneralPanel.this.currentCash.color));
-					CableLinkTypeGeneralPanel.this.cmbTTypeCombo.setSelectedItem(CableLinkTypeGeneralPanel.this.currentCash.type);
-				}
-			}
-		});
-		
-		this.tfTMarkText.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(final KeyEvent e) {
-				if (CableLinkTypeGeneralPanel.this.currentCash != null) {
-					CableLinkTypeGeneralPanel.this.currentCash.mark = CableLinkTypeGeneralPanel.this.tfTMarkText.getText();
-				}
-			}
-		});
-
-		this.cmbTColorCombo.addItemListener(new ItemListener() {
-			public void itemStateChanged(final ItemEvent e) {
-				if (CableLinkTypeGeneralPanel.this.currentCash != null && e.getItem() instanceof Color) {
-					CableLinkTypeGeneralPanel.this.currentCash.color = ((Color) e.getItem()).getRGB();
-				}
-			}
-		});
-
-		this.cmbTTypeCombo.addItemListener(new ItemListener() {
-			public void itemStateChanged(final ItemEvent e) {
-				if (CableLinkTypeGeneralPanel.this.currentCash != null) {
-					CableLinkTypeGeneralPanel.this.currentCash.type = (LinkType) e.getItem();
-				}
-			}
-		});
-
-		this.taTDescrArea.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(final KeyEvent e) {
-				if (CableLinkTypeGeneralPanel.this.currentCash != null) {
-					CableLinkTypeGeneralPanel.this.currentCash.description = CableLinkTypeGeneralPanel.this.taTDescrArea.getText();
-				}
-			}
-		});
-
-		super.addToUndoableListener(this.tfNameText);
-		super.addToUndoableListener(this.tfManufacturerText);
-		super.addToUndoableListener(this.tfManufacturerCodeText);
-		super.addToUndoableListener(this.taDescriptionArea);
-
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
-		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
-		this.commitButton.setFocusPainted(false);
-		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
-		this.commitButton.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				CableLinkTypeGeneralPanel.this.commitChanges();
-			}
-		});
 	}
 
 	public JComponent getGUI() {
@@ -609,7 +601,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
 					Set linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					if (linkTypes.isEmpty()) {
-						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+						JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 								LangModelScheme.getString("Message.error.cablelinktype_not_found"), //$NON-NLS-1$
 								LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 								JOptionPane.ERROR_MESSAGE);

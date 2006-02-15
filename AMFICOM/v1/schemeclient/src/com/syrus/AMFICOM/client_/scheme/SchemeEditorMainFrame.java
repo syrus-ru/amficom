@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.35 2006/02/09 13:47:25 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.36 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.35 $, $Date: 2006/02/09 13:47:25 $
+ * @version $Revision: 1.36 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -45,7 +45,6 @@ import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeNewCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeOpenCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveAllCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveAsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveCommand;
 import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;

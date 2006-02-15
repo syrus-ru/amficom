@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.64 2006/02/09 15:22:59 stas Exp $
+ * $Id: SchemeActions.java,v 1.65 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
 import static java.util.logging.Level.FINER;
-import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
 import java.awt.Color;
@@ -46,8 +45,8 @@ import com.jgraph.graph.Port;
 import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
@@ -104,7 +103,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.64 $, $Date: 2006/02/09 15:22:59 $
+ * @version $Revision: 1.65 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -303,7 +302,7 @@ public class SchemeActions {
 					return true;
 			}
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			Log.errorMessage(ae);
 		}
 		return false;
 	}
@@ -1081,8 +1080,8 @@ public class SchemeActions {
 			((CablePortCell)visualPort).setSchemeCablePortId(portId);
 		}
 		graph.getGraphLayoutCache().insert(new Object[] { visualPort }, viewMap, null, null, null);
-		devPort = GraphActions.addPort (graph, EMPTY, deviceCell, devportPos); //$NON-NLS-1$
-		ellipsePort = GraphActions.addPort (graph, EMPTY, visualPort, ellipseportPos); //$NON-NLS-1$
+		devPort = GraphActions.addPort (graph, EMPTY, deviceCell, devportPos); 
+		ellipsePort = GraphActions.addPort (graph, EMPTY, visualPort, ellipseportPos); 
 		
 		ConnectionSet cs = new ConnectionSet();
 		PortEdge edge = PortEdge.createInstance(name, devPort, ellipsePort, p, new Point(dev_bounds.x
@@ -1392,7 +1391,7 @@ public class SchemeActions {
 		// check for valid SchemePath changes
 		PathElement pe = SchemeActions.getSelectedPathElement(link);
 		if (pe != null) {
-//			int res = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Это изменит путь!", "Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
+//			int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), "Это изменит путь!", "Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
 //			if (res != JOptionPane.YES_OPTION) {
 //				return false;
 //			}
@@ -1538,7 +1537,7 @@ public class SchemeActions {
 		try {
 		PathElement pe = SchemeActions.getSelectedPathElement(link);
 		if (pe != null) {
-//			int res = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Это изменит путь!", "Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
+//			int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), "Это изменит путь!", "Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
 //			if (res != JOptionPane.YES_OPTION) {
 //				return false;
 //			}
@@ -1578,7 +1577,7 @@ public class SchemeActions {
 			}
 		}
 		} catch (final ApplicationException ae) {
-			ae.printStackTrace();
+			Log.errorMessage(ae);
 		}
 	}
 	
@@ -1593,20 +1592,20 @@ public class SchemeActions {
 					} else if (edges.size() == 1) {
 						 Object link = edges.iterator().next();
 						 if (link instanceof DefaultCableLink && ((DefaultCableLink)link).getSchemeCableLinkId().equals(cableId)) {
-							 JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+							 JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 										LangModelScheme.getString("Message.information.schemecablelink_already_connected"),  //$NON-NLS-1$
 										LangModelScheme.getString("Message.information"),  //$NON-NLS-1$
 										JOptionPane.INFORMATION_MESSAGE);
 							 throw new CreateObjectException("SchemeCableLink already connected");
 						 }
 						 if (link instanceof DefaultLink && ((DefaultLink)link).getSchemeLinkId().equals(cableId)) {
-							 JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+							 JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 										LangModelScheme.getString("Message.information.schemelink_already_connected"),  //$NON-NLS-1$
 										LangModelScheme.getString("Message.information"),  //$NON-NLS-1$
 										JOptionPane.INFORMATION_MESSAGE);
 							 throw new CreateObjectException("SchemeCableLink already connected");
 						 }
-						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+						JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 									LangModelScheme.getString("Message.error.another_schemecablelink_connected"),  //$NON-NLS-1$
 									LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 									JOptionPane.ERROR_MESSAGE);

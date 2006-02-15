@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeVertexView.java,v 1.6 2005/08/19 15:41:35 stas Exp $
+ * $Id: SchemeVertexView.java,v 1.7 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/08/19 15:41:35 $
+ * @version $Revision: 1.7 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -30,6 +30,7 @@ public class SchemeVertexView extends VertexView {
 		super(v, graph, cm);
 	}
 
+	@Override
 	public CellViewRenderer getRenderer() {
 		return VertexView.renderer;
 	}
@@ -38,6 +39,7 @@ public class SchemeVertexView extends VertexView {
 		return this.bounds;
 	}
 	
+	@Override
 	protected void updateAllAttributes() {
 		this.allAttributes = getModel().getAttributes(this.cell);
 		if (this.allAttributes != null) {

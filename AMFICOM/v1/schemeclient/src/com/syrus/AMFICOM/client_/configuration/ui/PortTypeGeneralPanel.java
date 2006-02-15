@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeGeneralPanel.java,v 1.20 2005/10/31 12:30:25 bass Exp $
+ * $Id: PortTypeGeneralPanel.java,v 1.21 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.PortType;
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/10/31 12:30:25 $
+ * @author $Author: stas $
+ * @version $Revision: 1.21 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -72,11 +72,133 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 
 	protected PortTypeGeneralPanel() {
 		super();
-		try {
-			this.jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
+		final GridBagLayout gbPanel0 = new GridBagLayout();
+		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
+		this.pnPanel0.setLayout(gbPanel0);
+		
+		this.lbDescriptionLabel.setFocusable(false);
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 2;
+		gbcPanel0.gridwidth = 2;
+		gbcPanel0.gridheight = 1;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 0;
+		gbcPanel0.weighty = 0;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbcPanel0.insets = new Insets(0, 5, 0, 2);
+		gbPanel0.setConstraints(this.lbDescriptionLabel, gbcPanel0);
+		this.pnPanel0.add(this.lbDescriptionLabel);
+		
+		final JScrollPane scpDescriptionArea = new JScrollPane(this.taDescriptionArea);
+		gbcPanel0.gridx = 1;
+		gbcPanel0.gridy = 3;
+		gbcPanel0.gridwidth = 3;
+		gbcPanel0.gridheight = 2;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 1;
+		gbcPanel0.weighty = 1;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbcPanel0.insets = new Insets(0, 2, 0, 2);
+		gbPanel0.setConstraints(scpDescriptionArea, gbcPanel0);
+		this.pnPanel0.add(scpDescriptionArea);
+		
+		final GridBagLayout gbGeneralPanel = new GridBagLayout();
+		final GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
+		this.pnGeneralPanel.setLayout(gbGeneralPanel);
+		
+		this.lbNameLabel.setFocusable(false);
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
+		gbGeneralPanel.setConstraints(this.lbNameLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbNameLabel);
+		
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 1;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcGeneralPanel.insets = new Insets(0, 0, 0, 0);
+		gbGeneralPanel.setConstraints(this.tfNameText, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.tfNameText);
+		
+		gbcGeneralPanel.gridx = 3;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 1;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcGeneralPanel.insets = new Insets(0, 0, 0, 0);
+		gbGeneralPanel.setConstraints(this.commitButton, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.commitButton);
+		
+		this.lbSortLabel.setFocusable(false);
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 1;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
+		gbGeneralPanel.setConstraints(this.lbSortLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbSortLabel);
+		
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 1;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcGeneralPanel.insets = new Insets(0, 0, 0, 0);
+		gbGeneralPanel.setConstraints(this.cmbSortCombo, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.cmbSortCombo);
+		
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 0;
+		gbcPanel0.gridwidth = 4;
+		gbcPanel0.gridheight = 2;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 1;
+		gbcPanel0.weighty = 0;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbcPanel0.insets = new Insets(0, 0, 0, 0);
+		gbPanel0.setConstraints(this.pnGeneralPanel, gbcPanel0);
+		this.pnPanel0.add(this.pnGeneralPanel);
+		
+		this.pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
+		// pnGeneralPanel.setBackground(Color.WHITE);
+		// pnPanel0.setBackground(Color.WHITE);
+		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
+		
+		super.addToUndoableListener(this.tfNameText);
+		super.addToUndoableListener(this.cmbSortCombo);
+		super.addToUndoableListener(this.taDescriptionArea);
+		
+		this.commitButton.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
+		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.commitButton.setFocusPainted(false);
+		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.commitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				PortTypeGeneralPanel.this.commitChanges();
+			}
+		});
 	}
 
 	public void setContext(final ApplicationContext aContext) {
@@ -90,135 +212,6 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 	protected PortTypeGeneralPanel(final PortType portType) {
 		this();
 		this.setObject(portType);
-	}
-
-	private void jbInit() throws Exception {
-		final GridBagLayout gbPanel0 = new GridBagLayout();
-		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
-		this.pnPanel0.setLayout(gbPanel0);
-
-		this.lbDescriptionLabel.setFocusable(false);
-		gbcPanel0.gridx = 0;
-		gbcPanel0.gridy = 2;
-		gbcPanel0.gridwidth = 2;
-		gbcPanel0.gridheight = 1;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 0;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbcPanel0.insets = new Insets(0, 5, 0, 2);
-		gbPanel0.setConstraints(this.lbDescriptionLabel, gbcPanel0);
-		this.pnPanel0.add(this.lbDescriptionLabel);
-
-		final JScrollPane scpDescriptionArea = new JScrollPane(this.taDescriptionArea);
-		gbcPanel0.gridx = 1;
-		gbcPanel0.gridy = 3;
-		gbcPanel0.gridwidth = 3;
-		gbcPanel0.gridheight = 2;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 1;
-		gbcPanel0.weighty = 1;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbcPanel0.insets = new Insets(0, 2, 0, 2);
-		gbPanel0.setConstraints(scpDescriptionArea, gbcPanel0);
-		this.pnPanel0.add(scpDescriptionArea);
-
-		final GridBagLayout gbGeneralPanel = new GridBagLayout();
-		final GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
-		this.pnGeneralPanel.setLayout(gbGeneralPanel);
-
-		this.lbNameLabel.setFocusable(false);
-		gbcGeneralPanel.gridx = 0;
-		gbcGeneralPanel.gridy = 0;
-		gbcGeneralPanel.gridwidth = 2;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
-		gbGeneralPanel.setConstraints(this.lbNameLabel, gbcGeneralPanel);
-		this.pnGeneralPanel.add(this.lbNameLabel);
-
-		gbcGeneralPanel.gridx = 2;
-		gbcGeneralPanel.gridy = 0;
-		gbcGeneralPanel.gridwidth = 1;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 1;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcGeneralPanel.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(this.tfNameText, gbcGeneralPanel);
-		this.pnGeneralPanel.add(this.tfNameText);
-
-		gbcGeneralPanel.gridx = 3;
-		gbcGeneralPanel.gridy = 0;
-		gbcGeneralPanel.gridwidth = 1;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcGeneralPanel.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(this.commitButton, gbcGeneralPanel);
-		this.pnGeneralPanel.add(this.commitButton);
-
-		this.lbSortLabel.setFocusable(false);
-		gbcGeneralPanel.gridx = 0;
-		gbcGeneralPanel.gridy = 1;
-		gbcGeneralPanel.gridwidth = 2;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
-		gbGeneralPanel.setConstraints(this.lbSortLabel, gbcGeneralPanel);
-		this.pnGeneralPanel.add(this.lbSortLabel);
-
-		gbcGeneralPanel.gridx = 2;
-		gbcGeneralPanel.gridy = 1;
-		gbcGeneralPanel.gridwidth = 2;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 1;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcGeneralPanel.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(this.cmbSortCombo, gbcGeneralPanel);
-		this.pnGeneralPanel.add(this.cmbSortCombo);
-
-		gbcPanel0.gridx = 0;
-		gbcPanel0.gridy = 0;
-		gbcPanel0.gridwidth = 4;
-		gbcPanel0.gridheight = 2;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 1;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbcPanel0.insets = new Insets(0, 0, 0, 0);
-		gbPanel0.setConstraints(this.pnGeneralPanel, gbcPanel0);
-		this.pnPanel0.add(this.pnGeneralPanel);
-
-		this.pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
-		// pnGeneralPanel.setBackground(Color.WHITE);
-		// pnPanel0.setBackground(Color.WHITE);
-		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
-
-		super.addToUndoableListener(this.tfNameText);
-		super.addToUndoableListener(this.cmbSortCombo);
-		super.addToUndoableListener(this.taDescriptionArea);
-
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
-		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
-		this.commitButton.setFocusPainted(false);
-		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
-		this.commitButton.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				PortTypeGeneralPanel.this.commitChanges();
-			}
-		});
 	}
 
 	public JComponent getGUI() {

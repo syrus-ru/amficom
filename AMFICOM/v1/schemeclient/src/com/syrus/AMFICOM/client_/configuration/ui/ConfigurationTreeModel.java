@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationTreeModel.java,v 1.14 2005/12/06 14:13:49 stas Exp $
+ * $Id: ConfigurationTreeModel.java,v 1.15 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/12/06 14:13:49 $
+ * @version $Revision: 1.15 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -71,7 +71,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 		return this.root;
 	}
 	
-	@SuppressWarnings("unqualified-field-access") //$NON-NLS-1$
+	@SuppressWarnings("unqualified-field-access") 
 	public VisualManager getVisualManager(Item node) {
 		Object object = node.getObject();
 		if (object instanceof String) {
@@ -156,7 +156,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 			// }
 			// }
 			// catch (ApplicationException ex) {
-			// ex.printStackTrace();
+			// Log.errorMessage(ex);
 			// }
 			// }
 			else if (s.equals(SchemeResourceKeys.MEASUREMENT_PORT_TYPES)) {

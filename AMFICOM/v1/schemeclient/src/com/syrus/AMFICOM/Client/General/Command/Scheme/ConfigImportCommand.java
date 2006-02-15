@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigImportCommand.java,v 1.5 2005/10/31 12:30:26 bass Exp $
+ * $Id: ConfigImportCommand.java,v 1.6 2006/02/15 12:19:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import javax.swing.JScrollPane;
 
 import org.apache.xmlbeans.XmlException;
 
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.configuration.CableLinkType;
@@ -63,13 +63,13 @@ public class ConfigImportCommand extends ImportExportCommand {
 			loadConfigXML(fileName);
 		} catch (CreateObjectException e) {
 			Log.errorMessage(e.getMessage());
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.error.scheme_import"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		} catch (XmlException e) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 					LangModelScheme.getString("Message.error.parse_xml"),  //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 					JOptionPane.ERROR_MESSAGE);

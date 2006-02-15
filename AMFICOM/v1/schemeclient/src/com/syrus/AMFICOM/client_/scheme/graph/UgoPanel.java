@@ -1,5 +1,5 @@
 /*
- * $Id: UgoPanel.java,v 1.21 2005/10/31 12:30:29 bass Exp $
+ * $Id: UgoPanel.java,v 1.22 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,8 +43,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/10/31 12:30:29 $
+ * @author $Author: stas $
+ * @version $Revision: 1.22 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -67,26 +67,6 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 	};
 	
 	protected UgoPanel(ApplicationContext aContext) {
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		setContext(aContext);
-	}
-	
-	public void setContext(ApplicationContext aContext) {
-		if (this.aContext != null) {
-			this.aContext.getDispatcher().removePropertyChangeListener(SchemeEvent.TYPE, this);
-		}
-		if (aContext != null) {
-			this.aContext = aContext;
-			this.aContext.getDispatcher().addPropertyChangeListener(SchemeEvent.TYPE, this);
-			this.graph.setContext(aContext);
-		}
-	}
-	
-	private void jbInit() throws Exception {
 		this.graph = new SchemeGraph(new DefaultGraphModel(), this.aContext);
 		this.graph.setGridEnabled(true);
 		this.graph.setGridVisible(false);
@@ -103,8 +83,21 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 		// this.graph.setEnabled(false);
 		this.graph.setBendable(true);
 		this.graph.setDoubleBuffered(false);
-	}
 
+		setContext(aContext);
+	}
+	
+	public void setContext(ApplicationContext aContext) {
+		if (this.aContext != null) {
+			this.aContext.getDispatcher().removePropertyChangeListener(SchemeEvent.TYPE, this);
+		}
+		if (aContext != null) {
+			this.aContext = aContext;
+			this.aContext.getDispatcher().addPropertyChangeListener(SchemeEvent.TYPE, this);
+			this.graph.setContext(aContext);
+		}
+	}
+	
 	public String getReportTitle() {
 		return LangModelSchematics.getString("elementsUGOTitle");
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.28 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.29 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.NameableListCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.Equipment;
@@ -68,8 +68,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKi
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.29 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -134,31 +134,15 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 
 	protected SchemeElementGeneralPanel() {
 		super();
-		try {
-			this.jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
-	public void setContext(final ApplicationContext aContext) {
-		this.aContext = aContext;
-	}
-
-	protected SchemeElementGeneralPanel(final SchemeElement schemeElement) {
-		this();
-		this.setObject(schemeElement);
-	}
-
-	private void jbInit() throws Exception {
 		this.nf.setValueClass(Integer.class);
 		this.nf.setMinimum(new Integer(0));
 		this.nf.setCommitsOnValidEdit(true);
-
+		
 		final GridBagLayout gbPanel0 = new GridBagLayout();
 		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
 		this.pnPanel0.setLayout(gbPanel0);
-
+		
 		this.lbDescrLabel.setFocusable(false);
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 11;
@@ -170,7 +154,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints(this.lbDescrLabel, gbcPanel0);
 		this.pnPanel0.add(this.lbDescrLabel);
-
+		
 		JScrollPane scpDescrArea = new JScrollPane(this.taDescrArea);
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 12;
@@ -182,11 +166,11 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints(scpDescrArea, gbcPanel0);
 		this.pnPanel0.add(scpDescrArea);
-
+		
 		final GridBagLayout gbPanel3n = new GridBagLayout();
 		final GridBagConstraints gbcPanel3n = new GridBagConstraints();
 		this.pnPanel3n.setLayout(gbPanel3n);
-
+		
 		gbcPanel3n.gridx = 0;
 		gbcPanel3n.gridy = 0;
 		gbcPanel3n.gridwidth = 2;
@@ -197,7 +181,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.lbNameLabel, gbcPanel3n);
 		this.pnPanel3n.add(this.lbNameLabel);
-
+		
 		gbcPanel3n.gridx = 2;
 		gbcPanel3n.gridy = 0;
 		gbcPanel3n.gridwidth = 6;
@@ -208,7 +192,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.tfNameText, gbcPanel3n);
 		this.pnPanel3n.add(this.tfNameText);
-
+		
 		gbcPanel3n.gridx = 8;
 		gbcPanel3n.gridy = 0;
 		gbcPanel3n.gridwidth = 1;
@@ -219,7 +203,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.btCommitBut, gbcPanel3n);
 		this.pnPanel3n.add(this.btCommitBut);
-
+		
 		gbcPanel3n.gridx = 0;
 		gbcPanel3n.gridy = 1;
 		gbcPanel3n.gridwidth = 2;
@@ -230,7 +214,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.lbSymbolLabel, gbcPanel3n);
 		this.pnPanel3n.add(this.lbSymbolLabel);
-
+		
 		gbcPanel3n.gridx = 2;
 		gbcPanel3n.gridy = 1;
 		gbcPanel3n.gridwidth = 6;
@@ -241,7 +225,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.tfSymbolText, gbcPanel3n);
 		this.pnPanel3n.add(this.tfSymbolText);
-
+		
 		gbcPanel3n.gridx = 8;
 		gbcPanel3n.gridy = 1;
 		gbcPanel3n.gridwidth = 1;
@@ -252,7 +236,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.btSymbolBut, gbcPanel3n);
 		this.pnPanel3n.add(this.btSymbolBut);
-
+		
 		gbcPanel3n.gridx = 0;
 		gbcPanel3n.gridy = 2;
 		gbcPanel3n.gridwidth = 2;
@@ -263,7 +247,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.lbCodenameLabel, gbcPanel3n);
 		this.pnPanel3n.add(this.lbCodenameLabel);
-
+		
 		gbcPanel3n.gridx = 2;
 		gbcPanel3n.gridy = 2;
 		gbcPanel3n.gridwidth = 7;
@@ -274,7 +258,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.eqtCombo, gbcPanel3n);
 		this.pnPanel3n.add(this.eqtCombo);
-
+		
 		gbcPanel3n.gridx = 0;
 		gbcPanel3n.gridy = 3;
 		gbcPanel3n.gridwidth = 2;
@@ -285,7 +269,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.lbTypeLabel, gbcPanel3n);
 		this.pnPanel3n.add(this.lbTypeLabel);
-
+		
 		gbcPanel3n.gridx = 2;
 		gbcPanel3n.gridy = 3;
 		gbcPanel3n.gridwidth = 7;
@@ -296,7 +280,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.cmbTypeCombo, gbcPanel3n);
 		this.pnPanel3n.add(this.cmbTypeCombo);
-
+		
 		gbcPanel3n.gridx = 0;
 		gbcPanel3n.gridy = 4;
 		gbcPanel3n.gridwidth = 2;
@@ -307,7 +291,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.lbManufacturerLabel, gbcPanel3n);
 		this.pnPanel3n.add(this.lbManufacturerLabel);
-
+		
 		gbcPanel3n.gridx = 2;
 		gbcPanel3n.gridy = 4;
 		gbcPanel3n.gridwidth = 7;
@@ -318,7 +302,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.tfManufacturerText, gbcPanel3n);
 		this.pnPanel3n.add(this.tfManufacturerText);
-
+		
 		gbcPanel3n.gridx = 0;
 		gbcPanel3n.gridy = 5;
 		gbcPanel3n.gridwidth = 2;
@@ -329,7 +313,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.lbManufacturerCodeLabel, gbcPanel3n);
 		this.pnPanel3n.add(this.lbManufacturerCodeLabel);
-
+		
 		gbcPanel3n.gridx = 2;
 		gbcPanel3n.gridy = 5;
 		gbcPanel3n.gridwidth = 7;
@@ -340,7 +324,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.tfManufacturerCodeText, gbcPanel3n);
 		this.pnPanel3n.add(this.tfManufacturerCodeText);
-
+		
 		gbcPanel3n.gridx = 0;
 		gbcPanel3n.gridy = 6;
 		gbcPanel3n.gridwidth = 9;
@@ -351,12 +335,12 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.cbInstanceBox, gbcPanel3n);
 		this.pnPanel3n.add(this.cbInstanceBox);
-
+		
 		this.pnEquipmentPanel.setBorder(BorderFactory.createTitledBorder(""));
 		final GridBagLayout gbEquipmentPanel = new GridBagLayout();
 		final GridBagConstraints gbcEquipmentPanel = new GridBagConstraints();
 		this.pnEquipmentPanel.setLayout(gbEquipmentPanel);
-
+		
 		gbcEquipmentPanel.gridx = 0;
 		gbcEquipmentPanel.gridy = 0;
 		gbcEquipmentPanel.gridwidth = 2;
@@ -367,7 +351,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.lbSupplierLabel, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.lbSupplierLabel);
-
+		
 		gbcEquipmentPanel.gridx = 2;
 		gbcEquipmentPanel.gridy = 0;
 		gbcEquipmentPanel.gridwidth = 6;
@@ -378,7 +362,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.tfSupplierText, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.tfSupplierText);
-
+		
 		gbcEquipmentPanel.gridx = 0;
 		gbcEquipmentPanel.gridy = 1;
 		gbcEquipmentPanel.gridwidth = 2;
@@ -389,7 +373,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.lbSupplierCodeLabel, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.lbSupplierCodeLabel);
-
+		
 		gbcEquipmentPanel.gridx = 2;
 		gbcEquipmentPanel.gridy = 1;
 		gbcEquipmentPanel.gridwidth = 6;
@@ -400,7 +384,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.tfSupplierCodeText, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.tfSupplierCodeText);
-
+		
 		gbcEquipmentPanel.gridx = 0;
 		gbcEquipmentPanel.gridy = 3;
 		gbcEquipmentPanel.gridwidth = 8;
@@ -411,7 +395,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.lbHwLabel, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.lbHwLabel);
-
+		
 		gbcEquipmentPanel.gridx = 0;
 		gbcEquipmentPanel.gridy = 4;
 		gbcEquipmentPanel.gridwidth = 2;
@@ -422,7 +406,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.lbHwsnLabel, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.lbHwsnLabel);
-
+		
 		gbcEquipmentPanel.gridx = 2;
 		gbcEquipmentPanel.gridy = 4;
 		gbcEquipmentPanel.gridwidth = 2;
@@ -433,7 +417,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.tfHwsnText, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.tfHwsnText);
-
+		
 		gbcEquipmentPanel.gridx = 0;
 		gbcEquipmentPanel.gridy = 2;
 		gbcEquipmentPanel.gridwidth = 2;
@@ -444,7 +428,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.lbLongLabel, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.lbLongLabel);
-
+		
 		gbcEquipmentPanel.gridx = 2;
 		gbcEquipmentPanel.gridy = 2;
 		gbcEquipmentPanel.gridwidth = 2;
@@ -455,7 +439,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.tfLongText, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.tfLongText);
-
+		
 		gbcEquipmentPanel.gridx = 4;
 		gbcEquipmentPanel.gridy = 2;
 		gbcEquipmentPanel.gridwidth = 2;
@@ -466,7 +450,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.lbLatLabel, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.lbLatLabel);
-
+		
 		gbcEquipmentPanel.gridx = 6;
 		gbcEquipmentPanel.gridy = 2;
 		gbcEquipmentPanel.gridwidth = 2;
@@ -477,7 +461,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.tfLatText, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.tfLatText);
-
+		
 		gbcEquipmentPanel.gridx = 4;
 		gbcEquipmentPanel.gridy = 4;
 		gbcEquipmentPanel.gridwidth = 2;
@@ -488,7 +472,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.lbHwvLabel, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.lbHwvLabel);
-
+		
 		gbcEquipmentPanel.gridx = 6;
 		gbcEquipmentPanel.gridy = 4;
 		gbcEquipmentPanel.gridwidth = 2;
@@ -499,7 +483,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.tfHwvText, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.tfHwvText);
-
+		
 		gbcEquipmentPanel.gridx = 0;
 		gbcEquipmentPanel.gridy = 5;
 		gbcEquipmentPanel.gridwidth = 8;
@@ -510,7 +494,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.lbSwLabel, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.lbSwLabel);
-
+		
 		gbcEquipmentPanel.gridx = 0;
 		gbcEquipmentPanel.gridy = 6;
 		gbcEquipmentPanel.gridwidth = 2;
@@ -521,7 +505,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.lbSwsnLabel, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.lbSwsnLabel);
-
+		
 		gbcEquipmentPanel.gridx = 2;
 		gbcEquipmentPanel.gridy = 6;
 		gbcEquipmentPanel.gridwidth = 2;
@@ -532,7 +516,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.tfSwsnText, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.tfSwsnText);
-
+		
 		gbcEquipmentPanel.gridx = 4;
 		gbcEquipmentPanel.gridy = 6;
 		gbcEquipmentPanel.gridwidth = 2;
@@ -543,7 +527,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
 		gbEquipmentPanel.setConstraints(this.lbSwvLabel, gbcEquipmentPanel);
 		this.pnEquipmentPanel.add(this.lbSwvLabel);
-
+		
 		gbcEquipmentPanel.gridx = 6;
 		gbcEquipmentPanel.gridy = 6;
 		gbcEquipmentPanel.gridwidth = 2;
@@ -564,7 +548,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.pnEquipmentPanel, gbcPanel3n);
 		this.pnPanel3n.add(this.pnEquipmentPanel);
-
+		
 		gbcPanel3n.gridx = 0;
 		gbcPanel3n.gridy = 15;
 		gbcPanel3n.gridwidth = 9;
@@ -575,12 +559,12 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
 		gbPanel3n.setConstraints(this.cbKisBox, gbcPanel3n);
 		this.pnPanel3n.add(this.cbKisBox);
-
+		
 		this.pnPanel6.setBorder(BorderFactory.createTitledBorder(""));
 		GridBagLayout gbPanel6 = new GridBagLayout();
 		GridBagConstraints gbcPanel6 = new GridBagConstraints();
 		this.pnPanel6.setLayout(gbPanel6);
-
+		
 		gbcPanel6.gridx = 0;
 		gbcPanel6.gridy = 0;
 		gbcPanel6.gridwidth = 2;
@@ -591,7 +575,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel6.anchor = GridBagConstraints.NORTH;
 		gbPanel6.setConstraints(this.lbKisLabel, gbcPanel6);
 		this.pnPanel6.add(this.lbKisLabel);
-
+		
 		gbcPanel6.gridx = 2;
 		gbcPanel6.gridy = 0;
 		gbcPanel6.gridwidth = 7;
@@ -602,7 +586,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel6.anchor = GridBagConstraints.NORTH;
 		gbPanel6.setConstraints(this.cmbKisCombo, gbcPanel6);
 		this.pnPanel6.add(this.cmbKisCombo);
-
+		
 		gbcPanel6.gridx = 0;
 		gbcPanel6.gridy = 1;
 		gbcPanel6.gridwidth = 2;
@@ -613,7 +597,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel6.anchor = GridBagConstraints.NORTH;
 		gbPanel6.setConstraints(this.lbKisAddrLabel, gbcPanel6);
 		this.pnPanel6.add(this.lbKisAddrLabel);
-
+		
 		gbcPanel6.gridx = 2;
 		gbcPanel6.gridy = 1;
 		gbcPanel6.gridwidth = 5;
@@ -624,7 +608,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel6.anchor = GridBagConstraints.NORTH;
 		gbPanel6.setConstraints(this.tfKisAddrText, gbcPanel6);
 		this.pnPanel6.add(this.tfKisAddrText);
-
+		
 		gbcPanel6.gridx = 7;
 		gbcPanel6.gridy = 1;
 		gbcPanel6.gridwidth = 1;
@@ -635,7 +619,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel6.anchor = GridBagConstraints.NORTH;
 		gbPanel6.setConstraints(this.lbKisPortLabel, gbcPanel6);
 		this.pnPanel6.add(this.lbKisPortLabel);
-
+		
 		gbcPanel6.gridx = 8;
 		gbcPanel6.gridy = 1;
 		gbcPanel6.gridwidth = 1;
@@ -666,10 +650,10 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints(this.pnPanel3n, gbcPanel0);
 		this.pnPanel0.add(this.pnPanel3n);
-
+		
 		this.tfManufacturerText.setEnabled(false);
 		this.tfManufacturerCodeText.setEnabled(false);
-
+		
 		this.eqtCombo.addItemListener(new ItemListener() {
 			public void itemStateChanged(final ItemEvent e) {
 				SchemeElementGeneralPanel.this.eqtCombo_stateChanged((EquipmentType)e.getItem());
@@ -696,7 +680,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			}
 		});
 		this.taDescrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
-
+		
 		super.addToUndoableListener(this.tfNameText);
 		super.addToUndoableListener(this.tfLabelText);
 		super.addToUndoableListener(this.btSymbolBut);
@@ -718,10 +702,10 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		super.addToUndoableListener(this.tfKisAddrText);
 		super.addToUndoableListener(this.tfKisPortText);
 		super.addToUndoableListener(this.taDescrArea);
-
+		
 		this.eqtCombo.setRenderer(new NameableListCellRenderer());
-
-		this.btCommitBut.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		
+		this.btCommitBut.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 		this.btCommitBut.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.btCommitBut.setFocusPainted(false);
 		this.btCommitBut.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
@@ -730,6 +714,15 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 				SchemeElementGeneralPanel.this.commitChanges();
 			}
 		});
+	}
+
+	public void setContext(final ApplicationContext aContext) {
+		this.aContext = aContext;
+	}
+
+	protected SchemeElementGeneralPanel(final SchemeElement schemeElement) {
+		this();
+		this.setObject(schemeElement);
 	}
 
 	void kisCombo_stateChanged(final KIS kis) {

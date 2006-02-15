@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.40 2006/02/01 14:23:59 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.41 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.ProcessingDialog;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.40 $, $Date: 2006/02/01 14:23:59 $
+ * @version $Revision: 1.41 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -310,7 +310,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 					Scheme scheme = (Scheme)see.getStorableObject();
 					
 					if (scheme.getUgoCell() == null) {
-						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+						JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 								LangModelScheme.getString("Message.error.scheme_insert_empty"),  //$NON-NLS-1$
 								LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 								JOptionPane.ERROR_MESSAGE);
@@ -325,7 +325,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 						Scheme parentScheme = panel1.getSchemeResource().getScheme();
 						if (scheme.equals(parentScheme)) {
 							Log.debugMessage("Try to insert scheme into itself " + scheme.getId(), Level.INFO); //$NON-NLS-1$
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+							JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 									LangModelScheme.getString("Message.error.scheme_insert_itself"),  //$NON-NLS-1$
 									LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 									JOptionPane.ERROR_MESSAGE);
@@ -342,7 +342,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 							setLinkMode();
 						} else {
 							Log.debugMessage("Try to insert already inserted scheme " + scheme.getId(), Level.INFO); //$NON-NLS-1$
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+							JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 									scheme.getName() + " " + LangModelScheme.getString("Message.error.scheme_already_inserted") + " " + parent.getParentScheme().getName(),  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 									LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 									JOptionPane.ERROR_MESSAGE);
@@ -350,7 +350,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 						}
 					} else {
 						Log.debugMessage("Try to insert schemeElement into component " + scheme.getId(), Level.INFO); //$NON-NLS-1$
-						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+						JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 								LangModelScheme.getString("Message.error.scheme_insert_component"),  //$NON-NLS-1$
 								LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 								JOptionPane.ERROR_MESSAGE);
@@ -364,7 +364,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 					if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME_ELEMENT &&
 							schemeElement.equals(panel1.getSchemeResource().getSchemeElement())) {
 						Log.debugMessage("Try to insert schemeElement into itself " + schemeElement.getId(), Level.INFO); //$NON-NLS-1$
-						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+						JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 								LangModelScheme.getString("Message.error.schemeelement_insert_itself"),  //$NON-NLS-1$
 								LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 								JOptionPane.ERROR_MESSAGE);
@@ -388,7 +388,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 						SchemeActions.openSchemeImageResource(graph, image, true, see.getInsertionPoint(), false);
 						setLinkMode();						
 					} else {
-						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+						JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 								LangModelScheme.getString("Message.error.insert_component_to_other_parent"),  //$NON-NLS-1$
 								LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 								JOptionPane.ERROR_MESSAGE);
@@ -426,7 +426,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 					SchemeResource res = panel1.getSchemeResource();
 					if (res.getCellContainerType() != SchemeResource.SCHEME) {
 						Log.debugMessage("Try to insert SchemeCableLink into SchemeElement " + schemeCableLink.getId(), Level.INFO); //$NON-NLS-1$
-						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+						JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 								LangModelScheme.getString("Message.error.schemecablelink_insert_schemeelement"),  //$NON-NLS-1$
 								LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 								JOptionPane.ERROR_MESSAGE);
@@ -485,7 +485,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 							Log.errorMessage(e.getMessage());
 						}
 					} else {
-						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+						JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 								LangModelScheme.getString("Message.error.insert_cable_to_other_parent"),  //$NON-NLS-1$
 								LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 								JOptionPane.ERROR_MESSAGE);
@@ -573,7 +573,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 //				SchemeActions.putToGraph(sch, this);
 //				return null;
 //			} catch (Exception e) {
-//				e.printStackTrace();
+//				Log.errorMessage(e);
 //			}
 //		}
 		
@@ -587,7 +587,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 					selectPanel(panel1);
 //					if (p.getGraph().isGraphChanged()) {
 //						int ret = JOptionPane.showConfirmDialog(
-//								Environment.getActiveWindow(), "Схема " + sch.getName()
+//								AbstractMainFrame.getActiveMainFrame(), "Схема " + sch.getName()
 //									+ " уже открыта. Открыть сохраненную ранее версию?",
 //									"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
 //						if (ret == JOptionPane.YES_OPTION) {
@@ -629,7 +629,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 					selectPanel(panel1);
 					if (panel1.getGraph().isGraphChanged()) {
 						int ret = JOptionPane.showConfirmDialog(
-								Environment.getActiveWindow(), "Элемент " + se.getName()
+								AbstractMainFrame.getActiveMainFrame(), "Элемент " + se.getName()
 								+ " уже открыт. Открыть сохраненную ранее версию?",
 								"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
 						if (ret == JOptionPane.YES_OPTION) {

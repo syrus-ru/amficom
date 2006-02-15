@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelElementAction.java,v 1.7 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: CreateTopLevelElementAction.java,v 1.8 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.8 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 /*
@@ -35,7 +35,7 @@ public class CreateTopLevelElementAction extends AbstractAction {
 		DeviceGroup[] groups = GraphActions.findTopLevelGroups(graph, cells);
 
 		if (groups.length == 0) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 					Constants.ERROR_COMPONENT_NOT_FOUND, Constants.ERROR, JOptionPane.OK_OPTION);
 			return;
 		}
@@ -59,7 +59,7 @@ public class CreateTopLevelElementAction extends AbstractAction {
 			}
 		}
 		if (blockports_in.size() == 0 && blockports_out.size() == 0) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					Constants.ERROR_HIERARCHY_PORT_NOT_FOUND, Constants.ERROR,
 					JOptionPane.OK_OPTION);
 			return;

@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientUtils.java,v 1.7 2005/10/12 10:08:41 stas Exp $
+ * $Id: ClientUtils.java,v 1.8 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.CableThreadTypeWrapper;
@@ -133,7 +133,7 @@ public class ClientUtils {
 					optionPane = new JOptionPane(text, JOptionPane.QUESTION_MESSAGE,
 					JOptionPane.OK_CANCEL_OPTION, null, buttons, null);
 			}	
-			dialog = optionPane.createDialog(Environment.getActiveWindow(), 
+			dialog = optionPane.createDialog(AbstractMainFrame.getActiveMainFrame(), 
 					LangModelScheme.getString("Message.confirmation")); //$NON-NLS-1$
 			dialog.setModal(true);
 

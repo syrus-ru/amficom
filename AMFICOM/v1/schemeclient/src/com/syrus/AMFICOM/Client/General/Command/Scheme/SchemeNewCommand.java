@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.scheme.Scheme;

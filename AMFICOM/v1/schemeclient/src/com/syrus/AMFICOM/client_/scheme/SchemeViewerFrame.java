@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeViewerFrame.java,v 1.8 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeViewerFrame.java,v 1.9 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -34,11 +34,19 @@ public class SchemeViewerFrame extends JInternalFrame {
 
 	public SchemeViewerFrame(ApplicationContext aContext, UgoTabbedPane pane) {
 		this.pane = pane;
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
+		setName(NAME);
+		
+		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+				"images/general.gif")));
+		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		setResizable(true);
+		setClosable(true);
+		setMaximizable(true);
+		setIconifiable(true);
+		getContentPane().setLayout(new BorderLayout());
+		getContentPane().add(this.pane, BorderLayout.CENTER);
+		
 		setContext(aContext);
 	}
 
@@ -52,20 +60,6 @@ public class SchemeViewerFrame extends JInternalFrame {
 //			doDefaultCloseAction();
 //		}
 //	}
-
-	private void jbInit() throws Exception {
-		setName(NAME);
-		
-		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				"images/general.gif")));
-		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		setResizable(true);
-		setClosable(true);
-		setMaximizable(true);
-		setIconifiable(true);
-		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(this.pane, BorderLayout.CENTER);
-	}
 
 	public SchemeGraph getGraph() {
 		return this.pane.getGraph();

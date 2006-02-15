@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.18 2005/12/27 10:25:20 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.19 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2005/12/27 10:25:20 $
+ * @version $Revision: 1.19 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -34,11 +34,12 @@ public class UgoTabbedPane extends JPanel {
 	protected boolean editable;
 	
 	public UgoTabbedPane() {
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
+		this.marqueeHandler =  new SchemeMarqueeHandler(this);
+		setLayout(new BorderLayout());
+		add(createPanel(), BorderLayout.CENTER);
+		add(createToolBar(), BorderLayout.NORTH);
+		
+		this.panel.getGraph().addMouseWheelListener(this.marqueeHandler);
 	}
 	
 	public UgoTabbedPane(ApplicationContext aContext) {
@@ -53,15 +54,6 @@ public class UgoTabbedPane extends JPanel {
 	
 	public ApplicationContext getContext() {
 		return this.aContext;
-	}
-	
-	private void jbInit() throws Exception {
-		this.marqueeHandler =  new SchemeMarqueeHandler(this);
-		setLayout(new BorderLayout());
-		add(createPanel(), BorderLayout.CENTER);
-		add(createToolBar(), BorderLayout.NORTH);
-		
-		this.panel.getGraph().addMouseWheelListener(this.marqueeHandler);
 	}
 	
 	protected JComponent createToolBar() {

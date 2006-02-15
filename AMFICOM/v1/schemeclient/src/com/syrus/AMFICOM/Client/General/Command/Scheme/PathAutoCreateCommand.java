@@ -31,7 +31,7 @@ public class PathAutoCreateCommand extends AbstractCommand
 		if (path.getStartSchemeElement() == null ||
 				path.getEndSchemeElement() == null)
 		{
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 																		"Не введено начальное и/или конечное устройство",
 																		"Ошибка",
 																		JOptionPane.OK_OPTION);

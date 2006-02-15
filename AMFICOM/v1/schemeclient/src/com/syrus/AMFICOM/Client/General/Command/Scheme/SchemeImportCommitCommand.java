@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommitCommand.java,v 1.11 2005/11/04 12:55:09 stas Exp $
+ * $Id: SchemeImportCommitCommand.java,v 1.12 2006/02/15 12:19:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,9 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -71,7 +71,7 @@ public class SchemeImportCommitCommand extends AbstractCommand {
 			aModel.setEnabled("Menu.import.commit", false);
 			aModel.fireModelChanged();
 			
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 					LangModelScheme.getString("Message.information.import_saved"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.information"), //$NON-NLS-1$
 					JOptionPane.INFORMATION_MESSAGE);

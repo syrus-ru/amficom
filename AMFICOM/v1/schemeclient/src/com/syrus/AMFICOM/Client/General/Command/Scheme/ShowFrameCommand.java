@@ -6,6 +6,7 @@ import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.util.Log;
 
 public class ShowFrameCommand extends AbstractCommand
 {
@@ -31,7 +32,7 @@ public class ShowFrameCommand extends AbstractCommand
 					this.frame.setIcon(false);
 				} catch (PropertyVetoException ex)
 				{
-					ex.printStackTrace();
+					Log.errorMessage(ex);
 				}
 			}
 			this.frame.moveToFront();

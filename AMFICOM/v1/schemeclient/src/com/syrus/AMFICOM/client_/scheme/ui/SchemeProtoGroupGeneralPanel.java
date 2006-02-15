@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupGeneralPanel.java,v 1.15 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemeProtoGroupGeneralPanel.java,v 1.16 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -56,8 +56,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.16 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -81,31 +81,15 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 
 	protected SchemeProtoGroupGeneralPanel() {
 		super();
-		try {
-			this.jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
-	public void setContext(final ApplicationContext aContext) {
-		this.aContext = aContext;
-	}
-
-	protected SchemeProtoGroupGeneralPanel(final SchemeProtoGroup schemeProtoGroup) {
-		this();
-		this.setObject(schemeProtoGroup);
-	}
-
-	private void jbInit() throws Exception {
 		final GridBagLayout gbpanel0 = new GridBagLayout();
 		final GridBagConstraints gbcpanel0 = new GridBagConstraints();
 		this.panel0.setLayout(gbpanel0);
-
+		
 		final GridBagLayout gbgeneralPanel = new GridBagLayout();
 		final GridBagConstraints gbcgeneralPanel = new GridBagConstraints();
 		this.generalPanel.setLayout(gbgeneralPanel);
-
+		
 		this.nameLabel.setFocusable(false);
 		gbcgeneralPanel.gridx = 0;
 		gbcgeneralPanel.gridy = 0;
@@ -118,7 +102,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.nameLabel, gbcgeneralPanel);
 		this.generalPanel.add(this.nameLabel);
-
+		
 		gbcgeneralPanel.gridx = 2;
 		gbcgeneralPanel.gridy = 0;
 		gbcgeneralPanel.gridwidth = 4;
@@ -129,7 +113,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.nameText, gbcgeneralPanel);
 		this.generalPanel.add(this.nameText);
-
+		
 		gbcgeneralPanel.gridx = 6;
 		gbcgeneralPanel.gridy = 0;
 		gbcgeneralPanel.gridwidth = 1;
@@ -140,7 +124,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.symbolBut, gbcgeneralPanel);
 		this.generalPanel.add(this.symbolBut);
-
+		
 		gbcgeneralPanel.gridx = 7;
 		gbcgeneralPanel.gridy = 0;
 		gbcgeneralPanel.gridwidth = 1;
@@ -151,7 +135,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.commitButton, gbcgeneralPanel);
 		this.generalPanel.add(this.commitButton);
-
+		
 		gbcgeneralPanel.gridx = 0;
 		gbcgeneralPanel.gridy = 2;
 		gbcgeneralPanel.gridwidth = 2;
@@ -162,7 +146,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.lbParentLabel, gbcgeneralPanel);
 		this.generalPanel.add(this.lbParentLabel);
-
+		
 		gbcgeneralPanel.gridx = 2;
 		gbcgeneralPanel.gridy = 2;
 		gbcgeneralPanel.gridwidth = 6;
@@ -173,7 +157,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbgeneralPanel.setConstraints(this.parentCombo, gbcgeneralPanel);
 		this.generalPanel.add(this.parentCombo);
-
+		
 		gbcpanel0.gridx = 0;
 		gbcpanel0.gridy = 0;
 		gbcpanel0.gridwidth = 8;
@@ -184,7 +168,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 		gbcpanel0.anchor = GridBagConstraints.NORTH;
 		gbpanel0.setConstraints(this.generalPanel, gbcpanel0);
 		this.panel0.add(this.generalPanel);
-
+		
 		this.descrLabel.setFocusable(false);
 		gbcpanel0.gridx = 0;
 		gbcpanel0.gridy = 7;
@@ -196,7 +180,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 		gbcpanel0.anchor = GridBagConstraints.NORTH;
 		gbpanel0.setConstraints(this.descrLabel, gbcpanel0);
 		this.panel0.add(this.descrLabel);
-
+		
 		final JScrollPane scpdescrArea = new JScrollPane(this.descrArea);
 		gbcpanel0.gridx = 0;
 		gbcpanel0.gridy = 8;
@@ -208,16 +192,16 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 		gbcpanel0.anchor = GridBagConstraints.NORTH;
 		gbpanel0.setConstraints(scpdescrArea, gbcpanel0);
 		this.panel0.add(scpdescrArea);
-
+		
 		this.generalPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
 		this.descrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
-
+		
 		super.addToUndoableListener(this.nameText);
 		super.addToUndoableListener(this.symbolBut);
 		super.addToUndoableListener(this.parentCombo);
 		super.addToUndoableListener(this.descrArea);
-
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		
+		this.commitButton.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
@@ -226,6 +210,15 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 				SchemeProtoGroupGeneralPanel.this.commitChanges();
 			}
 		});
+	}
+
+	public void setContext(final ApplicationContext aContext) {
+		this.aContext = aContext;
+	}
+
+	protected SchemeProtoGroupGeneralPanel(final SchemeProtoGroup schemeProtoGroup) {
+		this();
+		this.setObject(schemeProtoGroup);
 	}
 
 	public JComponent getGUI() {

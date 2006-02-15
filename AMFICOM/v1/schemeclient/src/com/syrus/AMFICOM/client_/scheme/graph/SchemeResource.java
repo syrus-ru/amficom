@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.19 2006/01/25 12:57:14 stas Exp $
+ * $Id: SchemeResource.java,v 1.20 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 /**
  * 
  * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2006/01/25 12:57:14 $
+ * @version $Revision: 1.20 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -151,7 +151,7 @@ public class SchemeResource {
 
 	public Scheme getScheme() throws ApplicationException {
 		if (this.objectType == SCHEME) {
-			return StorableObjectPool.getStorableObject(objectId, false);
+			return StorableObjectPool.getStorableObject(this.objectId, false);
 		}
 		return null;
 	}
@@ -163,14 +163,14 @@ public class SchemeResource {
 	
 	public SchemeElement getSchemeElement() throws ApplicationException {
 		if (this.objectType == SCHEME_ELEMENT) {
-			return StorableObjectPool.getStorableObject(objectId, false);
+			return StorableObjectPool.getStorableObject(this.objectId, false);
 		}
 		return null;
 	}
 	
 	public SchemeProtoElement getSchemeProtoElement() throws ApplicationException {
 		if (this.objectType == SCHEME_PROTO_ELEMENT) {
-			return StorableObjectPool.getStorableObject(objectId, false);
+			return StorableObjectPool.getStorableObject(this.objectId, false);
 		}
 		return null;
 	}

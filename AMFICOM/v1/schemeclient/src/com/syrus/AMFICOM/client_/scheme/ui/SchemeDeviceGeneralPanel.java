@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceGeneralPanel.java,v 1.19 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemeDeviceGeneralPanel.java,v 1.20 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.utils.NumberedComparator;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -58,8 +58,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.20 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -79,18 +79,10 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 	int portDirection;
 	
 	protected SchemeDeviceGeneralPanel() {
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
-	@SuppressWarnings("unqualified-field-access")
-	private void jbInit() throws Exception {
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
-		pnPanel0.setLayout( gbPanel0 );
+		this.pnPanel0.setLayout( gbPanel0 );
 		
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 0;
@@ -100,8 +92,8 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weightx = 1;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( titlelabel, gbcPanel0 );
-		pnPanel0.add( titlelabel );
+		gbPanel0.setConstraints( this.titlelabel, gbcPanel0 );
+		this.pnPanel0.add( this.titlelabel );
 		
 		gbcPanel0.gridx = 5;
 		gbcPanel0.gridy = 0;
@@ -111,8 +103,8 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weightx = 0;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( commitBut, gbcPanel0 );
-		pnPanel0.add( commitBut );
+		gbPanel0.setConstraints( this.commitBut, gbcPanel0 );
+		this.pnPanel0.add( this.commitBut );
 		
 		JScrollPane pane = new JScrollPane(this.table);
 		gbcPanel0.gridx = 0;
@@ -124,9 +116,9 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weighty = 1;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints( pane, gbcPanel0 );
-		pnPanel0.add( pane );
+		this.pnPanel0.add( pane );
 		
-		this.commitBut.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.commitBut.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 		this.commitBut.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitBut.setFocusPainted(false);
 		this.commitBut.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
@@ -136,7 +128,7 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 			}
 		});
 	}
-	
+
 	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
@@ -208,6 +200,7 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 		TableModel model = new AbstractTableModel() {
 			private static final long serialVersionUID = -3385987775156183367L;
 
+			@Override
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
 				if (columnIndex == 0)
 					return false;
@@ -226,6 +219,7 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 				return SchemeDeviceGeneralPanel.this.data[rowIndex][columnIndex];
 			}
 			
+			@Override
 			public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 				for (Object[] value : SchemeDeviceGeneralPanel.this.data) {
 					if (value[columnIndex].equals(aValue)) {
@@ -256,6 +250,7 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 	 * 
 	 * @see StorableObjectEditor#commitChanges()
 	 */
+	@Override
 	public void commitChanges() {
 		super.commitChanges();
 		for (int i = 0; i < this.size; i++) {
@@ -282,6 +277,7 @@ class NameableEditor extends DefaultCellEditor {
 class NameableListRenderer extends DefaultListCellRenderer {
 	private static final long serialVersionUID = -3477107347883967982L;
 
+	@Override
 	public Component getListCellRendererComponent(JList list, Object value,
       int index, boolean isSelected, boolean cellHasFocus) {
 		super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -296,6 +292,7 @@ class NameableListRenderer extends DefaultListCellRenderer {
 class NameableRenderer extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = 7251600604516400642L;
 
+	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 		super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 		if (value instanceof Namable) {

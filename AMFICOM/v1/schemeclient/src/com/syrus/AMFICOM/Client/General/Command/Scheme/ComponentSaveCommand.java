@@ -7,7 +7,7 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
@@ -41,21 +41,21 @@ public class ComponentSaveCommand extends AbstractCommand {
 
 		long status = SchemeActions.getGraphState(graph);
 		if ((status & SchemeActions.SCHEME_EMPTY) != 0) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.error.empty_scheme"),  //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 					JOptionPane.OK_OPTION);
 			return;
 		}
 		if ((status & SchemeActions.SCHEME_HAS_UNGROUPED_DEVICE) != 0) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.error.ungrouped_device"),  //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 					JOptionPane.OK_OPTION);
 			return;
 		}
 		if ((status & SchemeActions.SCHEME_HAS_DEVICE_GROUP) == 0) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.error.component_not_found"),  //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 					JOptionPane.OK_OPTION);
@@ -71,14 +71,14 @@ public class ComponentSaveCommand extends AbstractCommand {
 				DeviceGroup[] groups = GraphActions.findTopLevelGroups(graph, graph.getRoots());
 				if (groups.length > 1) {
 					JOptionPane.showMessageDialog(
-							Environment.getActiveWindow(),
+							AbstractMainFrame.getActiveMainFrame(),
 							LangModelScheme.getString("Message.error.compound_component"), //$NON-NLS-1$
 							LangModelScheme.getString("Message.error"), //$NON-NLS-1$ 
 							JOptionPane.OK_OPTION);
 					return;
 				}
 				if ((status & SchemeActions.SCHEME_HAS_UNGROUPED_LINK) != 0) {
-					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 							LangModelScheme.getString("Message.error.simple_component_link"),  //$NON-NLS-1$
 							LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 							JOptionPane.OK_OPTION);
@@ -92,7 +92,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 		}
 
 //		if (proto.getProtoEquipment() == null) {
-//			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+//			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 //					LangModelScheme.getString("Message.error.component_type_not_set"),  //$NON-NLS-1$
 //					LangModelScheme.getString("Message.error"), //$NON-NLS-1$ 
 //					JOptionPane.OK_OPTION);
@@ -102,7 +102,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 		try {
 			proto.getParentSchemeProtoGroup();
 		} catch (IllegalStateException e2) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.error.component_parent_not_set"),  //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 					JOptionPane.OK_OPTION);
@@ -110,7 +110,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 		}
 		
 		if (proto.getParentSchemeProtoElement() != null) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.error.component_parent_not_set"),  //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 					JOptionPane.OK_OPTION);
@@ -154,7 +154,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 			}
 			this.cellPane.setGraphChanged(false);
 			
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					proto.getName() + " " + LangModelScheme.getString("Message.information.scheme_saved"),  //$NON-NLS-1$ //$NON-NLS-2$
 					LangModelScheme.getString("Message.information"), //$NON-NLS-1$,
 					JOptionPane.INFORMATION_MESSAGE);

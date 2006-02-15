@@ -1,5 +1,5 @@
 /*
- * $Id: SchemePortReport.java,v 1.5 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemePortReport.java,v 1.6 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -146,6 +146,7 @@ class AbstractPortTableModel extends AbstractTableModel {
 		return this.columnCount;
 	}
 
+	@Override
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex % SchemePortReport.COLUMNS_COUNT) {
 		case 0:

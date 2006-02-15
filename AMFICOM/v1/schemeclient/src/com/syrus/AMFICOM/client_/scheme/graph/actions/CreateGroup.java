@@ -1,5 +1,5 @@
 /*
- * $Id: CreateGroup.java,v 1.21 2005/10/31 12:30:28 bass Exp $
+ * $Id: CreateGroup.java,v 1.22 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.jgraph.graph.DefaultGraphModel;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.ParentMap;
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
@@ -53,8 +53,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.22 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -76,14 +76,14 @@ public class CreateGroup extends AbstractAction {
 		for (Object cell : graph.getSelectionCells()) {
 			if (cell instanceof DefaultCableLink) {
 				Log.debugMessage(LangModelGraph.getString("Error.group.cable"), Level.WARNING); //$NON-NLS-1$
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 						LangModelGraph.getString("Error.group.cable"), //$NON-NLS-1$
 						LangModelGraph.getString("error"), //$NON-NLS-1$
 						JOptionPane.OK_OPTION);
 				return;
 			} else if (cell instanceof Rack) {
 				Log.debugMessage(LangModelGraph.getString("Error.group.scheme"), Level.WARNING); //$NON-NLS-1$
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 						LangModelGraph.getString("Error.group.rack"), //$NON-NLS-1$
 						LangModelGraph.getString("error"), //$NON-NLS-1$
 						JOptionPane.OK_OPTION);
@@ -92,7 +92,7 @@ public class CreateGroup extends AbstractAction {
 				DeviceGroup group = (DeviceGroup)cell;
 				if (group.getType() == DeviceGroup.SCHEME) {
 					Log.debugMessage(LangModelGraph.getString("Error.group.scheme"), Level.WARNING); //$NON-NLS-1$
-					JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+					JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 							LangModelGraph.getString("Error.group.scheme"), //$NON-NLS-1$
 							LangModelGraph.getString("error"), //$NON-NLS-1$
 							JOptionPane.OK_OPTION);
@@ -157,7 +157,7 @@ public class CreateGroup extends AbstractAction {
 									if (obj instanceof PortCell) {
 										PortCell ellipse = (PortCell)obj;
 										if (ellipse.getSchemePort().getPortType() == null) {
-											JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+											JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 													LangModelGraph.getString("error_port_type_not_set"), //$NON-NLS-1$
 													LangModelGraph.getString("error"), //$NON-NLS-1$
 													JOptionPane.OK_OPTION);
@@ -168,7 +168,7 @@ public class CreateGroup extends AbstractAction {
 									} else if (obj instanceof CablePortCell) {
 										CablePortCell ellipse = (CablePortCell)obj;
 										if (ellipse.getSchemeCablePort().getPortType() == null) {
-											JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+											JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 													LangModelGraph.getString("error_port_type_not_set"), //$NON-NLS-1$
 													LangModelGraph.getString("error"), //$NON-NLS-1$
 													JOptionPane.OK_OPTION);

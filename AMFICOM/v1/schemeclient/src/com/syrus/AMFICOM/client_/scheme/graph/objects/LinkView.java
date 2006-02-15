@@ -1,5 +1,5 @@
 /*
- * $Id: LinkView.java,v 1.5 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: LinkView.java,v 1.6 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.jgraph.graph.Port;
 import com.jgraph.graph.PortView;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -35,6 +35,7 @@ public class LinkView extends EdgeView {
 		super(cell, graph, mapper);
 	}
 
+	@Override
 	public CellHandle getHandle(GraphContext context) {
 		return new ShemeEdgeHandle(this, context);
 	}
@@ -47,6 +48,7 @@ public class LinkView extends EdgeView {
 		}
 
 		// Update and paint control points
+		@Override
 		public void paint(Graphics g) {
 			invalidate();
 			for (int i = 0; i < this.r.length; i++) {
@@ -74,6 +76,7 @@ public class LinkView extends EdgeView {
 			}
 		}
 
+		@Override
 		protected void paintPort(Graphics g, PortView p) {
 			Port p1 = (Port) p.getCell();
 			Map map = getModel().getAttributes(p1);

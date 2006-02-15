@@ -1,5 +1,5 @@
 /*
- * $Id: CreateUgo.java,v 1.17 2006/01/25 13:01:05 stas Exp $
+ * $Id: CreateUgo.java,v 1.18 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2006/01/25 13:01:05 $
+ * @version $Revision: 1.18 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -144,13 +144,13 @@ public class CreateUgo {
 			lines++;
 			for (SchemePort port : schemePorts) {
 				Point p = new Point((int)((columns + 1.5) * step), (int)((lines + .7) * step));
-				DefaultGraphCell pcell = SchemeActions.createInternalPort(graph, p, port.getName(), port.getDirectionType(), false, Color.WHITE, port.getId());  //$NON-NLS-1$	
+				DefaultGraphCell pcell = SchemeActions.createInternalPort(graph, p, port.getName(), port.getDirectionType(), false, Color.WHITE, port.getId());  
 				toInsert.add(pcell);
 				columns++;
 			}
 			for (SchemeCablePort port : schemeCablePorts) {
 				Point p = new Point((int)((columns + 1.5) * step), (int)((lines + .7) * step));
-				DefaultGraphCell pcell = SchemeActions.createInternalPort(graph, p, port.getName(), port.getDirectionType(), true, Color.WHITE, port.getId());  //$NON-NLS-1$
+				DefaultGraphCell pcell = SchemeActions.createInternalPort(graph, p, port.getName(), port.getDirectionType(), true, Color.WHITE, port.getId());  
 				toInsert.add(pcell);
 				columns++;
 			}
@@ -203,7 +203,7 @@ public class CreateUgo {
 //				proto.setSchemeCell(null);
 //			}
 //		} catch (ApplicationException e) {
-//			e.printStackTrace();
+//			Log.errorMessage(e);
 //		}
 		
 		createMuff(graph, blockports_in, blockports_out);

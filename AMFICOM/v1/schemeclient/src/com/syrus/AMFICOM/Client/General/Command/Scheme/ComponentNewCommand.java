@@ -3,9 +3,9 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
@@ -35,7 +35,7 @@ public class ComponentNewCommand extends AbstractCommand {
 		
 		SchemeGraph cellGraph = this.cellPane.getGraph();
 		if (cellGraph.isGraphChanged()) {
-			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
+			int ret = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.confirmation.component_not_saved"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$
 					JOptionPane.OK_CANCEL_OPTION);

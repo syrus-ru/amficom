@@ -3,9 +3,7 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -27,7 +25,7 @@ public class PathSaveCommand extends AbstractCommand {
 		SchemePath path = SchemeResource.getSchemePath();
 		try {
 			StorableObjectPool.flush(path.getReverseDependencies(false), LoginManager.getUserId(), false);
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.information.path_saved"),  //$NON-NLS-1$
 					LangModelScheme.getString("Message.information"),  //$NON-NLS-1$
 					JOptionPane.INFORMATION_MESSAGE);

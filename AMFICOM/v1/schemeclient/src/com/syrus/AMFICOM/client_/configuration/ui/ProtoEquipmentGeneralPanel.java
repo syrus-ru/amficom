@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentGeneralPanel.java,v 1.9 2005/12/06 14:13:24 stas Exp $
+ * $Id: ProtoEquipmentGeneralPanel.java,v 1.10 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.NameableListCellRenderer;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.EquipmentType;
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/12/06 14:13:24 $
+ * @version $Revision: 1.10 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -73,23 +73,6 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 
 	protected ProtoEquipmentGeneralPanel() {
 		super();
-		try {
-			this.jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void setContext(final ApplicationContext aContext) {
-		this.aContext = aContext;
-	}
-
-	protected ProtoEquipmentGeneralPanel(final ProtoEquipment protoEquipment) {
-		this();
-		this.setObject(protoEquipment);
-	}
-
-	private void jbInit() throws Exception {
 		Set<EquipmentType> eqts = new HashSet<EquipmentType>(Arrays.asList(EquipmentType.values()));
 		eqts.remove(EquipmentType.BUG_136);
 		this.tfEqtCombo = new AComboBox(eqts.toArray(new EquipmentType[eqts.size()]));
@@ -97,11 +80,11 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		final GridBagLayout gbPanel0 = new GridBagLayout();
 		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
 		this.pnPanel0.setLayout(gbPanel0);
-
+		
 		final GridBagLayout gbGeneralPanel = new GridBagLayout();
 		final GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
 		this.pnGeneralPanel.setLayout(gbGeneralPanel);
-
+		
 		this.lbNameLabel.setFocusable(false);
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 0;
@@ -114,7 +97,7 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
 		gbGeneralPanel.setConstraints(this.lbNameLabel, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.lbNameLabel);
-
+		
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 0;
 		gbcGeneralPanel.gridwidth = 3;
@@ -126,7 +109,7 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.insets = new Insets(0, 0, 0, 0);
 		gbGeneralPanel.setConstraints(this.tfNameText, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.tfNameText);
-
+		
 		gbcGeneralPanel.gridx = 5;
 		gbcGeneralPanel.gridy = 0;
 		gbcGeneralPanel.gridwidth = 1;
@@ -138,7 +121,7 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.insets = new Insets(0, 0, 0, 0);
 		gbGeneralPanel.setConstraints(this.commitButton, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.commitButton);
-
+		
 		this.lbCodenameLabel.setFocusable(false);
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 1;
@@ -151,7 +134,7 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
 		gbGeneralPanel.setConstraints(this.lbCodenameLabel, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.lbCodenameLabel);
-
+		
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 1;
 		gbcGeneralPanel.gridwidth = 4;
@@ -163,7 +146,7 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.insets = new Insets(0, 0, 0, 0);
 		gbGeneralPanel.setConstraints(this.tfEqtCombo, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.tfEqtCombo);
-
+		
 		this.lbManufacturerLabel.setFocusable(false);
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 2;
@@ -176,7 +159,7 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
 		gbGeneralPanel.setConstraints(this.lbManufacturerLabel, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.lbManufacturerLabel);
-
+		
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 2;
 		gbcGeneralPanel.gridwidth = 4;
@@ -188,7 +171,7 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.insets = new Insets(0, 0, 0, 0);
 		gbGeneralPanel.setConstraints(this.tfManufacturerText, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.tfManufacturerText);
-
+		
 		this.lbManufacturerCodeLabel.setFocusable(false);
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 4;
@@ -201,7 +184,7 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
 		gbGeneralPanel.setConstraints(this.lbManufacturerCodeLabel, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.lbManufacturerCodeLabel);
-
+		
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 4;
 		gbcGeneralPanel.gridwidth = 4;
@@ -213,7 +196,7 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.insets = new Insets(0, 0, 0, 0);
 		gbGeneralPanel.setConstraints(this.tfManufacturerCodeText, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.tfManufacturerCodeText);
-
+		
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 0;
 		gbcPanel0.gridwidth = 6;
@@ -224,7 +207,7 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints(this.pnGeneralPanel, gbcPanel0);
 		this.pnPanel0.add(this.pnGeneralPanel);
-
+		
 		this.lbDescriptionLabel.setFocusable(false);
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 6;
@@ -237,7 +220,7 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.insets = new Insets(0, 5, 0, 2);
 		gbPanel0.setConstraints(this.lbDescriptionLabel, gbcPanel0);
 		this.pnPanel0.add(this.lbDescriptionLabel);
-
+		
 		final JScrollPane scpDescriptionArea = new JScrollPane(this.taDescriptionArea);
 		gbcPanel0.gridx = 1;
 		gbcPanel0.gridy = 7;
@@ -250,20 +233,20 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.insets = new Insets(0, 2, 0, 2);
 		gbPanel0.setConstraints(scpDescriptionArea, gbcPanel0);
 		this.pnPanel0.add(scpDescriptionArea);
-
+		
 		this.pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
 		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
 		this.tfEqtCombo.setRenderer(new NameableListCellRenderer());
 		this.tfEqtCombo.setFontSize(this.tfEqtCombo.getFont().getSize() - 2);
 		
-		addToUndoableListener(this.tfNameText);
-		addToUndoableListener(this.tfEqtCombo);
-		addToUndoableListener(this.tfManufacturerText);
-		addToUndoableListener(this.tfManufacturerCodeText);
-		addToUndoableListener(this.taDescriptionArea);
-
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.addToUndoableListener(this.tfNameText);
+		this.addToUndoableListener(this.tfEqtCombo);
+		this.addToUndoableListener(this.tfManufacturerText);
+		this.addToUndoableListener(this.tfManufacturerCodeText);
+		this.addToUndoableListener(this.taDescriptionArea);
+		
+		this.commitButton.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
@@ -272,6 +255,15 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 				ProtoEquipmentGeneralPanel.this.commitChanges();
 			}
 		});
+	}
+
+	public void setContext(final ApplicationContext aContext) {
+		this.aContext = aContext;
+	}
+
+	protected ProtoEquipmentGeneralPanel(final ProtoEquipment protoEquipment) {
+		this();
+		this.setObject(protoEquipment);
 	}
 
 	public JComponent getGUI() {

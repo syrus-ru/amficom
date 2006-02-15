@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.33 2006/01/30 14:49:11 stas Exp $
+ * $Id: DeleteAction.java,v 1.34 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.jgraph.graph.DefaultGraphModel;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.Port;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane;
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.33 $, $Date: 2006/01/30 14:49:11 $
+ * @version $Revision: 1.34 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -80,7 +80,7 @@ public class DeleteAction extends AbstractAction {
 			if (this.pane instanceof SchemeTabbedPane) {
 				ElementsPanel panel = ((SchemeTabbedPane)this.pane).getCurrentPanel();
 				if (panel.isTopLevelSchemeMode()) {
-					int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
+					int ret = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(),
 							LangModelGraph.getString("remove_elements_schematic"),  //$NON-NLS-1$
 							LangModelGraph.getString("confirm"), //$NON-NLS-1$
 							JOptionPane.YES_NO_CANCEL_OPTION);
@@ -91,7 +91,7 @@ public class DeleteAction extends AbstractAction {
 				} 
 			}
 
-			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
+			int ret = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelGraph.getString("remove_elements"),  //$NON-NLS-1$
 					LangModelGraph.getString("confirm"),  //$NON-NLS-1$
 					JOptionPane.YES_NO_CANCEL_OPTION);

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeSaveAllCommand.java,v 1.4 2006/02/13 08:35:28 stas Exp $
+ * $Id: SchemeSaveAllCommand.java,v 1.5 2006/02/15 12:19:50 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
@@ -86,21 +86,21 @@ public class SchemeSaveAllCommand extends AbstractCommand {
 			
 			long status = SchemeActions.getGraphState(graph);
 			if ((status & SchemeActions.SCHEME_EMPTY) != 0) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 						LangModelScheme.getString("Message.error.empty_scheme"), //$NON-NLS-1$
 						LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 						JOptionPane.OK_OPTION);
 				return;
 			}
 			if ((status & SchemeActions.SCHEME_HAS_UNGROUPED_DEVICE) != 0) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 						LangModelScheme.getString("Message.error.ungrouped_device"), //$NON-NLS-1$
 						LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 						JOptionPane.OK_OPTION);
 				return;
 			}
 			if ((status & SchemeActions.SCHEME_HAS_DEVICE_GROUP) == 0) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 						LangModelScheme.getString("Message.error.component_not_found"), //$NON-NLS-1$
 						LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 						JOptionPane.OK_OPTION);
@@ -142,12 +142,12 @@ public class SchemeSaveAllCommand extends AbstractCommand {
 		}
 		try {
 			saveEntities();
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-					LangModelScheme.getString("Message.information.all_schemes_saved"),  //$NON-NLS-1$ //$NON-NLS-2$
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+					LangModelScheme.getString("Message.information.all_schemes_saved"),  //$NON-NLS-1$ 
 					LangModelScheme.getString("Message.information"), //$NON-NLS-1$
 					JOptionPane.INFORMATION_MESSAGE);
 		} catch (ApplicationException e) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.error.save_scheme") + ": " + e.getMessage(), //$NON-NLS-1$ //$NON-NLS-2$
 					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 					JOptionPane.OK_OPTION);
