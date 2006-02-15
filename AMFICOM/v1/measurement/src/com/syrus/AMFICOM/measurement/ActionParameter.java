@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameter.java,v 1.1.2.2 2006/02/13 19:33:49 arseniy Exp $
+ * $Id: ActionParameter.java,v 1.1.2.3 2006/02/15 19:33:53 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,20 +26,24 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterHelper;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/13 19:33:49 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/02/15 19:33:53 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class ActionParameter extends StorableObject<ActionParameter> {
-	private static final long serialVersionUID = 4848841373848672128L;
+	private static final long serialVersionUID = 7624920897445002412L;
 
 	private Identifier bindingId;
 	private byte[] value;
+
+	private ParameterValueKind valueKind;
+	private String typeCodename;
 
 	ActionParameter(final Identifier id,
 			final Identifier creatorId,
@@ -100,7 +104,9 @@ public final class ActionParameter extends StorableObject<ActionParameter> {
 				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
 				this.bindingId.getIdlTransferable(),
-				this.value);
+				this.value,
+				this.valueKind.getIdlTransferable(),
+				this.typeCodename);
 	}
 
 	@Override
@@ -110,6 +116,9 @@ public final class ActionParameter extends StorableObject<ActionParameter> {
 
 		this.bindingId = Identifier.valueOf(idlActionParameter.bindingId);
 		this.value = idlActionParameter.value;
+
+		this.valueKind = ParameterValueKind.valueOf(idlActionParameter.valueKind);
+		this.typeCodename = idlActionParameter.typeCodename;
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -139,6 +148,19 @@ public final class ActionParameter extends StorableObject<ActionParameter> {
 		super.markAsChanged();
 	}
 
+	public String getTypeCodename() {
+		return this.typeCodename;
+	}
+
+	public ParameterValueKind getValueKind() {
+		return this.valueKind;
+	}
+
+	void setAdditionalAttributes(final ParameterValueKind valueKind, final String typeCodename) {
+		this.valueKind = valueKind;
+		this.typeCodename = typeCodename;
+	}
+
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
@@ -158,5 +180,4 @@ public final class ActionParameter extends StorableObject<ActionParameter> {
 	protected ActionParameterWrapper getWrapper() {
 		return ActionParameterWrapper.getInstance();
 	}
-
 }

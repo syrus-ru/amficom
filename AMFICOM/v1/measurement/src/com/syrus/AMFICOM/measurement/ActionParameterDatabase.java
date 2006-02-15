@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterDatabase.java,v 1.1.2.1 2006/02/11 18:40:45 arseniy Exp $
+ * $Id: ActionParameterDatabase.java,v 1.1.2.2 2006/02/15 19:33:53 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,12 +7,19 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETER;
+import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETERTYPEBINDING;
+import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.measurement.ActionParameterTypeBindingWrapper.COLUMN_PARAMETER_TYPE_ID;
+import static com.syrus.AMFICOM.measurement.ActionParameterTypeBindingWrapper.COLUMN_PARAMETER_VALUE_KIND;
 import static com.syrus.AMFICOM.measurement.ActionParameterWrapper.COLUMN_BINDING_ID;
 import static com.syrus.AMFICOM.measurement.ActionParameterWrapper.COLUMN_VALUE;
 
@@ -20,24 +27,28 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind;
 import com.syrus.util.Log;
 import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/11 18:40:45 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/02/15 19:33:53 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -90,9 +101,9 @@ public final class ActionParameterDatabase extends StorableObjectDatabase<Action
 				RetrieveObjectException,
 				SQLException {
 		final ActionParameter actionParameter = (storableObject == null)
-				? new ActionParameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				? new ActionParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						null,
 						null)
 					: storableObject;
@@ -104,6 +115,70 @@ public final class ActionParameterDatabase extends StorableObjectDatabase<Action
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_BINDING_ID),
 				ByteArrayDatabase.toByteArray(resultSet.getBlob(COLUMN_VALUE)));
 		return actionParameter;
+	}
+
+	@Override
+	protected Set<ActionParameter> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set<ActionParameter> actionParameters = super.retrieveByCondition(conditionQuery);
+
+		this.retrieveLinks(actionParameters);
+
+		return actionParameters;
+	}
+
+	private void retrieveLinks(final Set<ActionParameter> actionParameters) throws RetrieveObjectException {
+		final Map<Identifier, ActionParameter> actionParametersMap = Identifier.createIdsMap(actionParameters);
+
+		final String sql = SQL_SELECT
+				+ ACTIONPARAMETER + DOT + COLUMN_ID + COMMA
+				+ ACTIONPARAMETERTYPEBINDING + DOT + COLUMN_PARAMETER_VALUE_KIND + COMMA
+				+ PARAMETER_TYPE + DOT + COLUMN_CODENAME
+				+ SQL_FROM + ACTIONPARAMETER + COMMA + ACTIONPARAMETERTYPEBINDING + COMMA + PARAMETER_TYPE
+				+ SQL_WHERE
+				+ idsEnumerationString(actionParameters, ACTIONPARAMETER + DOT + COLUMN_ID, true) + SQL_AND
+				+ ACTIONPARAMETER + DOT + COLUMN_BINDING_ID + EQUALS + ACTIONPARAMETERTYPEBINDING + DOT + COLUMN_ID + SQL_AND
+				+ ACTIONPARAMETERTYPEBINDING + DOT + COLUMN_PARAMETER_TYPE_ID + EQUALS + PARAMETER_TYPE + DOT + COLUMN_ID;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.createStatement();
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				final Identifier actionParameterId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
+				final ActionParameter actionParameter = actionParametersMap.get(actionParameterId);
+				actionParameter.setAdditionalAttributes(ParameterValueKind.valueOf(resultSet.getInt(COLUMN_PARAMETER_VALUE_KIND)),
+						DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)));
+			}
+		} catch (SQLException sqle) {
+			final String mesg = "Cannot execute query -- " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		} finally {
+			try {
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					try {
+						if (resultSet != null) {
+							resultSet.close();
+							resultSet = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
+				}
+			} catch (SQLException sqle1) {
+				Log.errorMessage(sqle1);
+			}
+		}
 	}
 
 	@Override
