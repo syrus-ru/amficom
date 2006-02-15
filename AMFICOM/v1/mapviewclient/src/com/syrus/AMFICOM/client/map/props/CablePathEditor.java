@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathEditor.java,v 1.19 2006/02/15 11:55:14 stas Exp $$
+ * $$Id: CablePathEditor.java,v 1.20 2006/02/15 12:44:27 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2006/02/15 11:55:14 $
+ * @version $Revision: 1.20 $, $Date: 2006/02/15 12:44:27 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -352,6 +352,9 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 			this.startComboBox.setSelectedItem(this.cablePath.getStartNode());
 			this.endComboBox.addItem(this.cablePath.getEndNode());
 			this.endComboBox.setSelectedItem(this.cablePath.getEndNode());
+			
+			this.physicalLengthTextField.setEditable(false);
+			this.opticalLengthTextField.setEditable(false);
 		}
 	}
 
@@ -364,11 +367,11 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 		try {
 			this.cablePath.setDescription(this.descTextArea.getText());
 
-			double physicalLength = Double.parseDouble(this.physicalLengthTextField.getText());
-			double opticalLength = Double.parseDouble(this.opticalLengthTextField.getText());
-			
-			this.cablePath.setLengthLf(physicalLength);
-			this.cablePath.setLengthLo(opticalLength);
+//			double physicalLength = Double.parseDouble(this.physicalLengthTextField.getText());
+//			double opticalLength = Double.parseDouble(this.opticalLengthTextField.getText());
+//			
+//			this.cablePath.setLengthLf(physicalLength);
+//			this.cablePath.setLengthLo(opticalLength);
 		} 
 		catch (NumberFormatException ex) 
 		{
