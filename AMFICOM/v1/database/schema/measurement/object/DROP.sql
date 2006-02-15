@@ -1,57 +1,61 @@
--- $Id: DROP.sql,v 1.13.2.1 2006/02/14 10:02:20 arseniy Exp $
+-- $Id: DROP.sql,v 1.13.2.2 2006/02/15 19:46:38 arseniy Exp $
 
-PROMPT 19. Dropping table ModelingResultParameter...;
+PROMPT 20. Dropping table ModelingResultParameter...;
 DROP TABLE ModelingResultParameter;
 DROP SEQUENCE ModelingResultParameter_seq;
 
-PROMPT 18. Dropping table AnalysisResultParameter...;
+PROMPT 19. Dropping table AnalysisResultParameter...;
 DROP TABLE AnalysisResultParameter;
 DROP SEQUENCE AnalysisResultParameter_seq;
 
-PROMPT 17. Dropping table MeasurementResultParameter...;
+PROMPT 18. Dropping table MeasurementResultParameter...;
 DROP TABLE MeasurementResultParameter;
 DROP SEQUENCE MeasurementResultParameter_seq;
 
-PROMPT 16. Dropping table Modeling...;
+PROMPT 17. Dropping table Modeling...;
 DROP TABLE Modeling;
 DROP SEQUENCE Modeling_seq;
 
-PROMPT 15. Dropping table Analysis...;
+PROMPT 16. Dropping table Analysis...;
 DROP TABLE Analysis;
 DROP SEQUENCE Analysis_seq;
 
-PROMPT 14. Dropping table Measurement...;
+PROMPT 15. Dropping table Measurement...;
 DROP TABLE Measurement;
 DROP SEQUENCE Measurement_seq;
 
 
 
-PROMPT 13. Dropping table TestStopLink...;
+PROMPT 14. Dropping table TestStopLink...;
 DROP TABLE TestStopLink;
 
-PROMPT 12. Dropping table TestAnaTmplLink...;
-DROP TABLE TestAnaTmplLink;
+PROMPT 13. Dropping table TestMSLink...;
+DROP TABLE TestMSLink;
 
-PROMPT 11. Dropping table TestMeasTmplLink...;
-DROP TABLE TestMeasTmplLink;
-
-PROMPT 10. Dropping table Test...;
+PROMPT 12. Dropping table Test...;
 DROP TABLE Test;
 DROP SEQUENCE Test_seq;
 
 
 
-PROMPT 09. Dropping table TemporalPattern...;
-DROP TABLE TemporalPattern;
-DROP SEQUENCE TemporalPattern_seq;
+PROMPT 11. Dropping table PeriodicalTemporalPattern...;
+DROP TABLE PeriodicalTemporalPattern;
+DROP SEQUENCE PeriodicalTemporalPattern_seq;
 
 
 
-PROMPT 08. Dropping table METmplLink...;
-DROP TABLE METmplLink;
+PROMPT 10. Dropping table MSMELink...;
+DROP TABLE MSMELink;
 
-PROMPT 07. Dropping table ActParTmplLink...;
-DROP TABLE ActParTmplLink;
+PROMPT 09. Dropping table MeasurementSetup...;
+DROP TABLE MeasurementSetup;
+DROP SEQUENCE MeasurementSetup_seq;
+
+PROMPT 08. Dropping table AcTmplMELink...;
+DROP TABLE AcTmplMELink;
+
+PROMPT 07. Dropping table AcTmplParLink...;
+DROP TABLE AcTmplParLink;
 
 PROMPT 06. Dropping table ActionTemplate...;
 DROP TABLE ActionTemplate;
