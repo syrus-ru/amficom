@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.79 2005/12/17 12:11:35 arseniy Exp $
+* $Id: MapView.java,v 1.80 2006/02/15 11:58:57 stas Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -50,6 +50,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.util.Log;
 
 /**
  * Класс используется для хранения объектов, отображаемых на
@@ -59,9 +60,9 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * 
- * @author $Author: arseniy $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.79 $, $Date: 2005/12/17 12:11:35 $
+ * @version $Revision: 1.80 $, $Date: 2006/02/15 11:58:57 $
  * @module mapview
  */
 public final class MapView extends DomainMember<MapView> implements Describable {
@@ -430,7 +431,7 @@ public final class MapView extends DomainMember<MapView> implements Describable 
 				}
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			Log.errorMessage(ex);
 		}
 		return null;
 	}
@@ -460,7 +461,7 @@ public final class MapView extends DomainMember<MapView> implements Describable 
 				}
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			Log.errorMessage(ex);
 		}
 		return null;
 	}
@@ -487,7 +488,7 @@ public final class MapView extends DomainMember<MapView> implements Describable 
 				}
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			Log.errorMessage(ex);
 		}
 		return null;
 	}
@@ -514,7 +515,7 @@ public final class MapView extends DomainMember<MapView> implements Describable 
 				}
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			Log.errorMessage(ex);
 		}
 		return null;
 	}
