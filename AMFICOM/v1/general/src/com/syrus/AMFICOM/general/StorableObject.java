@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.144 2006/02/10 14:08:17 arseniy Exp $
+ * $Id: StorableObject.java,v 1.145 2006/02/15 18:05:47 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.144 $, $Date: 2006/02/10 14:08:17 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.145 $, $Date: 2006/02/15 18:05:47 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -630,9 +630,9 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	}
 
 	/**
-	 * This class shouldn&apos;t have been declared static since it&apos;s
+	 * <p>This class shouldn&apos;t have been declared static since it&apos;s
 	 * not referenced within a static context anywhere, unless an ugly
-	 * fucking bug in javac (up to version 1.5.0_05):
+	 * fucking bug in javac (up to version 1.5.0_05):</p>
 	 *
 	 * <pre>java.lang.NullPointerException
 	 * at com.sun.tools.javac.code.Types$IsSameTypeFcn.visitClassType(Types.java:652)
@@ -659,13 +659,17 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 * at com.sun.tools.javac.Main.compile(Main.java:67)
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
+	 * <p>Moreover, there&apos;s a
+	 * <a href = "https://bugs.eclipse.org/bugs/show_bug.cgi?id=128063">bug</a>
+	 * in Eclipse 3.2.0M4 which prevents this class from being protected.</p>
+	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.144 $, $Date: 2006/02/10 14:08:17 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.145 $, $Date: 2006/02/15 18:05:47 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
-	protected static class StorableObjectContainerWrappee<T extends StorableObject<T>> {
+	public static class StorableObjectContainerWrappee<T extends StorableObject<T>> {
 		private static final long serialVersionUID = -1264974065379428032L;
 
 		private boolean cacheBuilt = false;
@@ -769,8 +773,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.144 $, $Date: 2006/02/10 14:08:17 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.145 $, $Date: 2006/02/15 18:05:47 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
