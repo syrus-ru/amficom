@@ -12,5 +12,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/event"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/generalxml.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/reflectometry"/>
+	<classpathentry sourcepath="/XMLBEANS_HOME/source/xml-xmlbeans-src.zip" kind="var" path="XMLBEANS_HOME/lib/xbean.jar"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
