@@ -1,5 +1,5 @@
 /*-
- * $Id: TableNames.java,v 1.10.2.3 2006/02/14 00:24:31 arseniy Exp $
+ * $Id: TableNames.java,v 1.10.2.4 2006/02/15 19:32:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.10.2.3 $, $Date: 2006/02/14 00:24:31 $
+ * @version $Revision: 1.10.2.4 $, $Date: 2006/02/15 19:32:17 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -20,11 +20,12 @@ public final class TableNames {
 
 	public static final String SYSTEM_USER_ROLE_LINK = "SystemUserRoleLink";
 
-	public static final String ACT_PAR_TMPL_LINK = "ActParTmplLink";
-	public static final String ME_TMPL_LINK = "METmplLink";
+	public static final String ACTMPL_PAR_LINK = "AcTmplParLink";
+	public static final String ACTMPL_ME_LINK = "AcTmplMELink";
 
-	public static final String TEST_MEASTMPL_LINK = "TestMeasTmplLink";
-	public static final String TEST_ANATMPL_LINK = "TestAnaTmplLink";
+	public static final String MS_ME_LINK = "MSMELink";
+
+	public static final String TEST_MS_LINK = "TestMSLink";
 	public static final String TEST_STOP_LINK = "TestStopLink";
 
 	//---------------
