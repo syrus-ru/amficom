@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.93.2.1 2006/02/13 19:25:38 arseniy Exp $
+ * $Id: Identifier.java,v 1.93.2.2 2006/02/15 19:31:50 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.93.2.1 $, $Date: 2006/02/13 19:25:38 $
+ * @version $Revision: 1.93.2.2 $, $Date: 2006/02/15 19:31:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -269,6 +269,16 @@ public final class Identifier implements Comparable<Identifier>,
 			identifiers.add(identifiable.getId());
 		}
 		return identifiers;
+	}
+
+	public static <T extends Identifiable> Map<Identifier, T> createIdsMap(final Set<T> identifiables) {
+		assert identifiables != null : NON_NULL_EXPECTED;
+
+		final Map<Identifier, T> idsMap = new HashMap<Identifier, T>();
+		for (final T identifiable : identifiables) {
+			idsMap.put(identifiable.getId(), identifiable);
+		}
+		return idsMap;
 	}
 
 	/**
