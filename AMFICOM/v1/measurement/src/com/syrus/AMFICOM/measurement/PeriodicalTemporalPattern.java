@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.32 2006/02/14 12:39:41 bob Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.33 2006/02/15 14:54:59 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,14 +24,17 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
 
 
 /**
- * @version $Revision: 1.32 $, $Date: 2006/02/14 12:39:41 $
+ * @version $Revision: 1.33 $, $Date: 2006/02/15 14:54:59 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement
@@ -94,15 +97,46 @@ public final class PeriodicalTemporalPattern
 	}	
 	
 	/**
+	 * @param creatorId
+	 * @param period
+	 * @return exists PeridicalTemporalPattern with period, otherwise create new one.
+	 * @throws CreateObjectException
+	 */
+	public static PeriodicalTemporalPattern getInstance(final Identifier creatorId, 
+			final long period) throws CreateObjectException {
+		final TypicalCondition typicalCondition = new TypicalCondition(period, 
+			period, 
+			OperationSort.OPERATION_EQUALS, 
+			ObjectEntities.PERIODICALTEMPORALPATTERN_CODE, 
+			PeriodicalTemporalPatternWrapper.COLUMN_PERIOD); 
+		try {
+			final Set<PeriodicalTemporalPattern> periodicalTemporalPatterns = 
+				StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true, true);
+			if (!periodicalTemporalPatterns.isEmpty()) {
+				final int size = periodicalTemporalPatterns.size();
+				assert size == 1 : size;
+				return periodicalTemporalPatterns.iterator().next();
+			}
+			return createInstance(creatorId, period);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+	}
+	
+	/**
 	 * create new instance for client
 	 * @param creatorId creator id
 	 * @param period period in milliseconds
+	 * @deprecated use {@link #getInstance(Identifier, long)}
 	 */
+	@Deprecated
 	public static PeriodicalTemporalPattern createInstance(final Identifier creatorId, final long period)
 			throws CreateObjectException {
 
 		try {
-			final PeriodicalTemporalPattern periodicalTemporalPattern = new PeriodicalTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE),
+			final PeriodicalTemporalPattern periodicalTemporalPattern = 
+				new PeriodicalTemporalPattern(
+					IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE),
 					creatorId,
 					StorableObjectVersion.INITIAL_VERSION,
 					period);
