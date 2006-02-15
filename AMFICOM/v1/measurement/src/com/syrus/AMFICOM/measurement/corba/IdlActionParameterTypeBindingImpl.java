@@ -7,11 +7,10 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding;
-import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBindingPackage.IdlParameterValueKind;
 import com.syrus.util.Log;
 
 final class IdlActionParameterTypeBindingImpl extends IdlActionParameterTypeBinding {
-	private static final long serialVersionUID = -7387483051059416297L;
+	private static final long serialVersionUID = 208234089237198593L;
 
 	IdlActionParameterTypeBindingImpl() {
 		// empty

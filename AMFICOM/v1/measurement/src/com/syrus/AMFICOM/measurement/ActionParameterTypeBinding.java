@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.3 2006/02/14 01:26:43 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.4 2006/02/15 19:34:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,10 +28,10 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBinding;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBindingHelper;
-import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBindingPackage.IdlParameterValueKind;
+import com.syrus.AMFICOM.measurement.corba.IdlParameterValueKind;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/02/14 01:26:43 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/02/15 19:34:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
