@@ -1,4 +1,4 @@
--- $Id: test.sql,v 1.20.2.1 2006/02/14 09:58:40 arseniy Exp $
+-- $Id: test.sql,v 1.20.2.2 2006/02/15 19:45:52 arseniy Exp $
 
 CREATE TABLE Test (
  id NUMBER(19),
@@ -30,8 +30,8 @@ CREATE TABLE Test (
   REFERENCES Test (id) ON DELETE CASCADE,
  CONSTRAINT t_me_fk FOREIGN KEY (monitored_element_id)
   REFERENCES MonitoredElement (id) ON DELETE CASCADE,
- CONSTRAINT t_tp_fk FOREIGN KEY (temporal_pattern_id)
-  REFERENCES TemporalPattern (id) ON DELETE CASCADE,
+ CONSTRAINT t_ptp_fk FOREIGN KEY (temporal_pattern_id)
+  REFERENCES PeriodicalTemporalPattern (id) ON DELETE CASCADE,
  CONSTRAINT t_mt_fk FOREIGN KEY (measurement_type_id)
   REFERENCES MeasurementType (id) ON DELETE CASCADE,
  CONSTRAINT t_at_fk FOREIGN KEY (analysis_type_id)
