@@ -1,5 +1,5 @@
 /*-
- * $$Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.42 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.43 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.CablePath;
@@ -27,7 +28,7 @@ import com.syrus.util.Log;
  *  непривязанному кабелю, к элементу узла. При этом линия, которой 
  *  принадлежит данный узел, делится на 2 части
  *  
- * @version $Revision: 1.42 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.43 $, $Date: 2006/02/15 11:12:43 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -90,10 +91,11 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle 
 			newLink.setType(link.getType());
 			// single cpath, as long as link is UnboundLink
 			CablePath cablePath = link.getCablePath();
-
+			final java.util.Map<CableChannelingItem, PhysicalLink> binding = cablePath.getBinding();
+			
 //			CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(link);
-			for(CableChannelingItem cableChannelingItem : cablePath.getSchemeCableLink().getPathMembers()) {
-				if(cablePath.getBinding().get(cableChannelingItem) == link) {
+			for(CableChannelingItem cableChannelingItem : cablePath.getCachedCCIs()) {
+				if(binding.get(cableChannelingItem) == link) {
 					CableChannelingItem newCableChannelingItem = 
 						CableController.generateCCI(
 								cablePath, 

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapConnection.java,v 1.22 2005/10/31 12:30:07 bass Exp $$
+ * $$Id: MapConnection.java,v 1.23 2006/02/15 11:14:00 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import java.util.logging.Level;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/31 12:30:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2006/02/15 11:14:00 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -122,13 +122,13 @@ public abstract class MapConnection {
 		try {
 			connection = (MapConnection) Class.forName(connectionClass).newInstance();
 		} catch (ClassNotFoundException cnfe) {
-			cnfe.printStackTrace();
+			Log.errorMessage(cnfe);
 			throw new MapConnectionException("MapConnection.create() throws ClassNotFoundException"); //$NON-NLS-1$
 		} catch (InstantiationException ie) {
-			ie.printStackTrace();
+			Log.errorMessage(ie);
 			throw new MapConnectionException("MapConnection.create() throws InstantiationException"); //$NON-NLS-1$
 		} catch (IllegalAccessException iae) {
-			iae.printStackTrace();
+			Log.errorMessage(iae);
 			throw new MapConnectionException("MapConnection.create() throws IllegalAccessException"); //$NON-NLS-1$
 		}
 

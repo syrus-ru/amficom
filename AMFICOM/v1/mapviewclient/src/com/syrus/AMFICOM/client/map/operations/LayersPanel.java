@@ -1,5 +1,5 @@
 /*-
- * $$Id: LayersPanel.java,v 1.24 2005/10/31 12:30:09 bass Exp $$
+ * $$Id: LayersPanel.java,v 1.25 2006/02/15 11:16:45 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.util.Log;
 /**
  * панель управления отображением слоев
  * 
- * @version $Revision: 1.24 $, $Date: 2005/10/31 12:30:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2006/02/15 11:16:45 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -284,9 +284,9 @@ public class LayersPanel extends JPanel {
 
 			this.revalidate();
 		} catch (MapConnectionException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch (MapDataException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 

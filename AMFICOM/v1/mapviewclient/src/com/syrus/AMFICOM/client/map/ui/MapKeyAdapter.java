@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapKeyAdapter.java,v 1.18 2005/10/04 17:12:18 krupenn Exp $$
+ * $$Id: MapKeyAdapter.java,v 1.19 2006/02/15 11:13:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,14 +22,15 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.util.Log;
 
 /**
  * обработчик событий клавиатуры в окне карты. »спользуетс€ дл€ изменени€ режима
  * обработки действий (SHIFT, ALT, CTRL) и дл€ удалени€ выбранных элементов
  * (DEL)
  * 
- * @version $Revision: 1.18 $, $Date: 2005/10/04 17:12:18 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.19 $, $Date: 2006/02/15 11:13:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -128,10 +129,10 @@ public final class MapKeyAdapter extends KeyAdapter {
 			}
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch(MapDataException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 

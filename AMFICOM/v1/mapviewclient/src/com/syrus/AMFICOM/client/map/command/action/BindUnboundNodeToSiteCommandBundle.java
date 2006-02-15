@@ -1,5 +1,5 @@
 /*-
- * $$Id: BindUnboundNodeToSiteCommandBundle.java,v 1.41 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: BindUnboundNodeToSiteCommandBundle.java,v 1.42 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 /**
  *  Команда привязывания непривязанного элемента к узлу.
  *  
- * @version $Revision: 1.41 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.42 $, $Date: 2006/02/15 11:12:43 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -72,10 +72,11 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle {
 				if(cablePath.getStartNode().equals(this.unbound))
 					cablePath.setStartNode(this.site);
 				
-				for(CableChannelingItem cci : cablePath.getSchemeCableLink().getPathMembers()) {
+				for(CableChannelingItem cci : cablePath.getCachedCCIs()) {
 					if(cci.getStartSiteNode().equals(this.unbound)) {
 						if(cci.getEndSiteNode().equals(this.site)) {
 							cci.setParentPathOwner(null, false);
+							cablePath.invalidateCache();
 						}
 						else {
 							cci.setStartSiteNode(this.site);
@@ -84,6 +85,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle {
 					if(cci.getEndSiteNode().equals(this.unbound)) {
 						if(cci.getStartSiteNode().equals(this.site)) {
 							cci.setParentPathOwner(null, false);
+							cablePath.invalidateCache();
 						}
 						else {
 							cci.setEndSiteNode(this.site);

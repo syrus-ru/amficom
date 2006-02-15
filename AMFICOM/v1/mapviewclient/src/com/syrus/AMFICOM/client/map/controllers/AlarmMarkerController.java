@@ -1,5 +1,5 @@
 /*-
- * $$Id: AlarmMarkerController.java,v 1.22 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: AlarmMarkerController.java,v 1.23 2006/02/15 11:12:33 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,12 +21,13 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.AlarmMarker;
+import com.syrus.util.Log;
 
 /**
  * Контроллер маркера сигнала тревоги.
  * 
- * @version $Revision: 1.22 $, $Date: 2005/10/18 07:21:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.23 $, $Date: 2006/02/15 11:12:33 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -101,7 +102,7 @@ public final class AlarmMarkerController extends MarkerController {
 
 			return s1;
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		return null;
 	}

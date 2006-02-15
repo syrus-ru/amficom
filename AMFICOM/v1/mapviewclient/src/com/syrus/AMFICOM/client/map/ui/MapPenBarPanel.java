@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPenBarPanel.java,v 1.18 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: MapPenBarPanel.java,v 1.19 2006/02/15 11:13:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,12 +22,13 @@ import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.util.Log;
 
 /**
  *  Ќа этой панельке располагаютс€ элементы которые будут наноситьс€ на карту
  *  
- * @version $Revision: 1.18 $, $Date: 2005/09/30 16:08:42 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.19 $, $Date: 2006/02/15 11:13:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -49,7 +50,7 @@ public final class MapPenBarPanel extends JPanel
 		}
 		catch (Exception e)
 		{
-		  e.printStackTrace();
+		  Log.errorMessage(e);
 		}
 	}
 

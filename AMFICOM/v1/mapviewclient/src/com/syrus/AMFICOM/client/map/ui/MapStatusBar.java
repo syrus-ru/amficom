@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapStatusBar.java,v 1.23 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: MapStatusBar.java,v 1.24 2006/02/15 11:13:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,10 +27,11 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/11 08:56:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.24 $, $Date: 2006/02/15 11:13:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -52,7 +53,7 @@ public final class MapStatusBar extends JPanel {
 		try {
 			jbInit();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 
@@ -63,7 +64,7 @@ public final class MapStatusBar extends JPanel {
 			this.longitudeField.setText(
 				MapPropertiesManager.getCoordinatesFormat().format(longitude));
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 
@@ -72,7 +73,7 @@ public final class MapStatusBar extends JPanel {
 			this.scaleField.setText(
 				MapPropertiesManager.getScaleFormat().format(scale));
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 

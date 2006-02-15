@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorNewMapCommand.java,v 1.26 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapEditorNewMapCommand.java,v 1.27 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,14 +25,15 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.util.Log;
 
 /**
  * Класс $RCSfile: MapEditorNewMapCommand.java,v $ используется для создания новой топологической схемы в
  * модуле "Редактор топологических схем". При этом в модуле открываются все
  * окна (команда ViewMapAllCommand) и вызывается команда MapNewCommand
  * 
- * @version $Revision: 1.26 $, $Date: 2005/10/11 08:56:11 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.27 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  * @see MapNewCommand
@@ -92,7 +93,7 @@ public class MapEditorNewMapCommand extends AbstractCommand {
 			setResult(Command.RESULT_OK);
 		} catch(MapException e) {
 			mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, I18N.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 //		new MapCloseCommand(mapFrame.getMap()).execute();
 //

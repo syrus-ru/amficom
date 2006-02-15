@@ -1,5 +1,5 @@
 /*-
- * $$Id: MarkerController.java,v 1.43 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: MarkerController.java,v 1.44 2006/02/15 11:12:33 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,12 +39,13 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.util.Log;
 
 /**
  * Контроллер маркера.
  * 
- * @version $Revision: 1.43 $, $Date: 2005/10/18 07:21:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.44 $, $Date: 2006/02/15 11:12:33 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -476,7 +477,7 @@ public class MarkerController extends AbstractNodeController {
 											.getId(),
 									marker.getMonitoringElementId()));
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 

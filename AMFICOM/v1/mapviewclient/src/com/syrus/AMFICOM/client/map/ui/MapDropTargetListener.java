@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapDropTargetListener.java,v 1.47 2005/10/31 15:29:31 krupenn Exp $$
+ * $$Id: MapDropTargetListener.java,v 1.48 2006/02/15 11:13:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,12 +51,13 @@ import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.util.Log;
 
 /**
  * Обработчик событий drag/drop в окне карты
  * 
- * @version $Revision: 1.47 $, $Date: 2005/10/31 15:29:31 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.48 $, $Date: 2006/02/15 11:13:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -140,7 +141,7 @@ public final class MapDropTargetListener implements DropTargetListener {
 					dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 					dtde.getDropTargetContext().dropComplete(true);
 				} catch(Exception e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 				}
 			}
 		}
@@ -213,10 +214,10 @@ public final class MapDropTargetListener implements DropTargetListener {
 					logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 				} catch(MapConnectionException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.errorMessage(e);
 				} catch(MapDataException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.errorMessage(e);
 				}
 			} else {
 				map.setSelected(site, true);

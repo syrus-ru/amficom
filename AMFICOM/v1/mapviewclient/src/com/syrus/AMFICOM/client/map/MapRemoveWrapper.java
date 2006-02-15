@@ -1,5 +1,5 @@
 /**
- * $Id: MapRemoveWrapper.java,v 1.7 2005/11/23 16:20:32 stas Exp $
+ * $Id: MapRemoveWrapper.java,v 1.8 2006/02/15 11:14:01 stas Exp $
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.util.Log;
 
 public class MapRemoveWrapper extends DefaultStorableObjectRemoveWrapper {
 
@@ -101,7 +102,7 @@ public class MapRemoveWrapper extends DefaultStorableObjectRemoveWrapper {
 			}
 			return super.remove(object);
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		return false;
 	}

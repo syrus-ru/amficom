@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewTreeModel.java,v 1.34 2006/02/08 14:10:19 stas Exp $$
+ * $$Id: MapViewTreeModel.java,v 1.35 2006/02/15 11:13:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,9 +41,10 @@ import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2006/02/08 14:10:19 $
+ * @version $Revision: 1.35 $, $Date: 2006/02/15 11:13:06 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -160,7 +161,7 @@ public class MapViewTreeModel implements ChildrenFactory {
 					true);
 			mapViewsChildren = new ArrayList<MapView>(mapViews);
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return;
 		}
 

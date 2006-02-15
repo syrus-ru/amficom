@@ -1,5 +1,5 @@
 /*-
- * $$Id: RemovePhysicalLinkCommandAtomic.java,v 1.20 2005/10/31 12:30:07 bass Exp $$
+ * $$Id: RemovePhysicalLinkCommandAtomic.java,v 1.21 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.Log;
 /**
  * удаление физической линии из карты - атомарное действие
  * 
- * @version $Revision: 1.20 $, $Date: 2005/10/31 12:30:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -80,7 +80,7 @@ public class RemovePhysicalLinkCommandAtomic extends MapActionCommand {
 				mapView.getMap().addPhysicalLink(this.link);
 			}
 		} catch(IllegalObjectEntityException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 }

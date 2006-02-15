@@ -1,5 +1,5 @@
 /*-
- * $$Id: SchemeTableController.java,v 1.15 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: SchemeTableController.java,v 1.16 2006/02/15 11:13:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,10 +21,11 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/11 08:56:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.16 $, $Date: 2006/02/15 11:13:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -85,7 +86,7 @@ public final class SchemeTableController extends StorableObjectWrapper<Scheme> {
 							scheme.getDomainId(), false);
 					result = domain.getName();
 				} catch(final ApplicationException ae) {
-					ae.printStackTrace();
+					Log.errorMessage(ae);
 					result = null;
 				}
 			}
@@ -96,7 +97,7 @@ public final class SchemeTableController extends StorableObjectWrapper<Scheme> {
 							false);
 					result = user.getName();
 				} catch(Exception e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 				}
 			}
 			else if (key.equals(KEY_CREATED)) {

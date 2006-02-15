@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapAddExternalNodeCommand.java,v 1.21 2005/10/17 14:08:46 krupenn Exp $$
+ * $$Id: MapAddExternalNodeCommand.java,v 1.22 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,12 +35,13 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.util.Log;
 
 /**
  * добавить в вид схему из списка
  * 
- * @version $Revision: 1.21 $, $Date: 2005/10/17 14:08:46 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -95,7 +96,7 @@ public class MapAddExternalNodeCommand extends AbstractCommand {
 					true);
 			availableMaps.remove(mapView.getMap());
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return;
 		}
 

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryTableController.java,v 1.6 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: MapLibraryTableController.java,v 1.7 2006/02/15 11:13:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,11 +20,12 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.MapLibrary;
+import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/11 08:56:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2006/02/15 11:13:06 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -88,7 +89,7 @@ public class MapLibraryTableController implements Wrapper {
 				SystemUser user = StorableObjectPool.getStorableObject(mapLibrary.getCreatorId(), false);
 				result = user.getName();
 			} catch(ApplicationException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 		}
 		else

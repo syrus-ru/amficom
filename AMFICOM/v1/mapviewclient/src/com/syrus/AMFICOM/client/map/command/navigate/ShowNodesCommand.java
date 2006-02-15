@@ -1,5 +1,5 @@
 /*-
- * $$Id: ShowNodesCommand.java,v 1.15 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: ShowNodesCommand.java,v 1.16 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,13 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
+import com.syrus.util.Log;
 
 /**
  * Команда включения/выключения режима отображения топологических узлов на карте
  *  
- * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:39 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.16 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -67,11 +68,11 @@ public class ShowNodesCommand extends MapNavigateCommand {
 		} catch(MapConnectionException e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch(MapDataException e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 }

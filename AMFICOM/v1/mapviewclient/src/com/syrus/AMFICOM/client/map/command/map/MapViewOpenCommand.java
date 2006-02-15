@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewOpenCommand.java,v 1.36 2005/10/17 14:08:46 krupenn Exp $$
+ * $$Id: MapViewOpenCommand.java,v 1.37 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,12 +37,13 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.util.Log;
 
 /**
  * открыть вид
  *  
- * @version $Revision: 1.36 $, $Date: 2005/10/17 14:08:46 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.37 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -86,13 +87,13 @@ public class MapViewOpenCommand extends AbstractCommand {
 					condition,
 					true);
 		} catch(CommunicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return;
 		} catch(DatabaseException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return;
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return;
 		}
 
@@ -123,7 +124,7 @@ public class MapViewOpenCommand extends AbstractCommand {
 //				MapViewOpenCommand.openScheme(scheme);
 //			}
 //		} catch(ApplicationException e) {
-//			e.printStackTrace();
+//			Log.errorMessage(e);
 //			return;
 //		}
 		setResult(Command.RESULT_OK);

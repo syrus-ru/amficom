@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewSaveCommand.java,v 1.39 2006/02/13 08:39:53 stas Exp $$
+ * $$Id: MapViewSaveCommand.java,v 1.40 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,11 +26,12 @@ import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.util.Log;
 
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * 
- * @version $Revision: 1.39 $, $Date: 2006/02/13 08:39:53 $
+ * @version $Revision: 1.40 $, $Date: 2006/02/15 11:12:43 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -99,15 +100,15 @@ public class MapViewSaveCommand extends AbstractCommand {
 						StorableObjectPool.flush(changed.getReverseDependencies(false), userId, false);
 					}
 				} catch(VersionCollisionException e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 				} catch(IllegalDataException e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 				} catch(CommunicationException e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 				} catch(DatabaseException e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 				} catch(ApplicationException e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 				}
 			}*/
 
@@ -119,7 +120,7 @@ public class MapViewSaveCommand extends AbstractCommand {
 				StorableObjectPool.flush(this.mapView, userId, true);
 				LocalXmlIdentifierPool.flush();
 			} catch(ApplicationException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 
 			this.aContext.getDispatcher().firePropertyChange(

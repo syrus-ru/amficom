@@ -1,5 +1,5 @@
 /*-
- * $$Id: ImagesPanel.java,v 1.15 2005/10/11 08:56:10 krupenn Exp $$
+ * $$Id: ImagesPanel.java,v 1.16 2006/02/15 11:16:16 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,16 +46,17 @@ import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ImageResourceWrapper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/11 08:56:10 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.16 $, $Date: 2006/02/15 11:16:16 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class ImagesPanel extends JPanel
 		implements PropertyChangeListener {
-
+	private static final long serialVersionUID = 1L;
 	public static final String SELECT_IMAGE_RESOURCE = "selectir"; //$NON-NLS-1$
 	public static final String SELECT_IMAGE = "select"; //$NON-NLS-1$
 
@@ -176,7 +177,7 @@ public class ImagesPanel extends JPanel
 				try {
 					StorableObjectPool.flush(bitmapImageResource, LoginManager.getUserId(), true);
 				} catch(ApplicationException e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 				}
 
 				this.imagesPanel.add(new ImagesPanelLabel(
@@ -191,9 +192,9 @@ public class ImagesPanel extends JPanel
 					this.disp.firePropertyChange(new PropertyChangeEvent(this, SELECT_IMAGE_RESOURCE, null, bitmapImageResource));
 				this.imagesPanel.revalidate();
 			} catch(IOException ioe) {
-				ioe.printStackTrace();
+				Log.errorMessage(ioe);
 			} catch(CreateObjectException coe) {
-				coe.printStackTrace();
+				Log.errorMessage(coe);
 			}
 		}
 	}

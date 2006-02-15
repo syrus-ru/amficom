@@ -1,5 +1,5 @@
 /*-
- * $$Id: MarkerEditor.java,v 1.18 2005/10/26 14:17:34 krupenn Exp $$
+ * $$Id: MarkerEditor.java,v 1.19 2006/02/15 11:15:41 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,10 +32,11 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.Marker;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/26 14:17:34 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.19 $, $Date: 2006/02/15 11:15:41 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -69,7 +70,7 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 		try {
 			jbInit();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 	}
@@ -304,7 +305,7 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 			try {
 				this.distanceTextField.setText(MapPropertiesManager.getDistanceFormat().format(markerController.getFromStartLengthLf(this.marker)));
 			} catch(Exception e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 				return;
 			}
 

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorRemoveSiteTypeCommand.java,v 1.16 2005/10/25 08:01:48 krupenn Exp $$
+ * $$Id: MapEditorRemoveSiteTypeCommand.java,v 1.17 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,10 +34,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/25 08:01:48 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.17 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -104,7 +105,7 @@ public class MapEditorRemoveSiteTypeCommand extends AbstractCommand {
 				setResult(Command.RESULT_NO);
 			}
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 }

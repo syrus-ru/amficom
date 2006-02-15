@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeEditor.java,v 1.27 2005/10/31 15:29:31 krupenn Exp $$
+ * $$Id: SiteNodeEditor.java,v 1.28 2006/02/15 11:15:42 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/10/31 15:29:31 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.28 $, $Date: 2006/02/15 11:15:42 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -91,7 +91,7 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor {
 		try {
 			jbInit();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 	}

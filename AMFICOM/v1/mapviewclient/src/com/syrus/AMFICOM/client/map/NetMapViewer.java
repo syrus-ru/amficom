@@ -1,5 +1,5 @@
 /*-
- * $$Id: NetMapViewer.java,v 1.65 2005/10/31 12:30:07 bass Exp $$
+ * $$Id: NetMapViewer.java,v 1.66 2006/02/15 11:14:01 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -82,8 +82,8 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * 
- * @version $Revision: 1.65 $, $Date: 2005/10/31 12:30:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.66 $, $Date: 2006/02/15 11:14:01 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -163,7 +163,7 @@ public abstract class NetMapViewer {
 			MapPropertiesManager.setZoom(this.mapContext.getScale());
 			MapPropertiesManager.saveIniFile();
 		} catch(MapException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 
@@ -509,7 +509,7 @@ public abstract class NetMapViewer {
 						path = mapViewController
 							.getMeasurementPathByMonitoredElementId(mne.getMeId());
 					} catch(ApplicationException e) {
-						e.printStackTrace();
+						Log.errorMessage(e);
 						return;
 					}
 					if(path == null) {
@@ -539,7 +539,7 @@ public abstract class NetMapViewer {
 						path = mapViewController
 							.getMeasurementPathByMonitoredElementId(mne.getMeId());
 					} catch(ApplicationException e) {
-						e.printStackTrace();
+						Log.errorMessage(e);
 						return;
 					}
 
@@ -565,7 +565,7 @@ public abstract class NetMapViewer {
 						path = mapViewController
 							.getMeasurementPathByMonitoredElementId(mne.getMeId());
 					} catch(ApplicationException e) {
-						e.printStackTrace();
+						Log.errorMessage(e);
 						return;
 					}
 
@@ -674,10 +674,10 @@ public abstract class NetMapViewer {
 			}
 		} catch(MapException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch(ApplicationException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 
@@ -707,9 +707,9 @@ public abstract class NetMapViewer {
 			}
 			this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.LIBRARY_SET_CHANGED));
 		} catch(CreateObjectException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 
@@ -738,9 +738,9 @@ public abstract class NetMapViewer {
 				StorableObjectPool.delete(newPhysicalLinkType.getId());
 			}
 		} catch(CreateObjectException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 
@@ -804,22 +804,22 @@ public abstract class NetMapViewer {
 			}
 //			mapViewer = (NetMapViewer )Class.forName(viewerClass).newInstance();
 		} catch(ClassNotFoundException cnfe) {
-			cnfe.printStackTrace();
+			Log.errorMessage(cnfe);
 			throw new MapDataException(
 					"NetMapViewer.create() throws ClassNotFoundException"); //$NON-NLS-1$
 		} catch(InstantiationException ie) {
-			ie.printStackTrace();
+			Log.errorMessage(ie);
 			throw new MapDataException(
 					"NetMapViewer.create() throws InstantiationException"); //$NON-NLS-1$
 		} catch(IllegalAccessException iae) {
-			iae.printStackTrace();
+			Log.errorMessage(iae);
 			throw new MapDataException(
 					"NetMapViewer.create() throws IllegalAccessException"); //$NON-NLS-1$
 		} catch(IllegalArgumentException iae) {
-			iae.printStackTrace();
+			Log.errorMessage(iae);
 			throw new MapDataException("NetMapViewer.create() throws IllegalArgumentException"); //$NON-NLS-1$
 		} catch(InvocationTargetException ite) {
-			ite.printStackTrace();
+			Log.errorMessage(ite);
 			throw new MapDataException("NetMapViewer.create() throws InvocationTargetException"); //$NON-NLS-1$
 		}
 		throw new MapDataException("NetMapViewer.create() cannot find constructor with arguments (LogicalNetLayer, MapContext, MapImageRenderer) for class " + viewerClass); //$NON-NLS-1$

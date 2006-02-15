@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreatePhysicalLinkCommandAtomic.java,v 1.30 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: CreatePhysicalLinkCommandAtomic.java,v 1.31 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
  * создание физической линии, внесение ее в пул и на карту - 
  * атомарное действие
  *  
- * @version $Revision: 1.30 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.31 $, $Date: 2006/02/15 11:12:43 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -84,7 +84,7 @@ public class CreatePhysicalLinkCommandAtomic extends MapActionCommand {
 			StorableObjectPool.putStorableObject(this.link);
 			this.logicalNetLayer.getMapView().getMap().addPhysicalLink(this.link);
 		} catch(IllegalObjectEntityException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 

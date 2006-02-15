@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenLinkedMapViewCommand.java,v 1.1 2005/12/08 10:43:00 stas Exp $
+ * $Id: OpenLinkedMapViewCommand.java,v 1.2 2006/02/15 11:12:43 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -134,7 +134,7 @@ public class OpenLinkedMapViewCommand extends AbstractCommand {
 				try {
 					controller.moveToFromStartLt(mark, mark.getDistance());
 				} catch(MapException e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 				}
 			}
 
@@ -147,7 +147,7 @@ public class OpenLinkedMapViewCommand extends AbstractCommand {
 				setResult(Command.RESULT_OK);
 			} catch(MapException e) {
 				mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, I18N.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);

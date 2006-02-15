@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorNewSiteTypeCommand.java,v 1.12 2005/10/25 08:01:48 krupenn Exp $$
+ * $$Id: MapEditorNewSiteTypeCommand.java,v 1.13 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,10 +29,11 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/25 08:01:48 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -86,10 +87,10 @@ public class MapEditorNewSiteTypeCommand extends AbstractCommand {
 				setResult(Command.RESULT_CANCEL);
 			}
 		} catch(CreateObjectException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			setResult(Command.RESULT_NO);
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			setResult(Command.RESULT_NO);
 		}
 	}

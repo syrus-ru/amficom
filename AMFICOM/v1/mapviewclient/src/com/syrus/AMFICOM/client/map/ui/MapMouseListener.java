@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMouseListener.java,v 1.76 2006/02/14 10:20:07 stas Exp $$
+ * $$Id: MapMouseListener.java,v 1.77 2006/02/15 11:13:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * события передается текущему активному элементу карты (посредством объекта
  * MapStrategy)
  * 
- * @version $Revision: 1.76 $, $Date: 2006/02/14 10:20:07 $
+ * @version $Revision: 1.77 $, $Date: 2006/02/15 11:13:06 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -81,7 +81,7 @@ public final class MapMouseListener implements MouseListener {
 			this.robot = new Robot();
 		} catch(AWTException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.errorMessage(e);
 			throw new MapDataException(
 					"MapMouseListener - Constructor - Can't create robot"); //$NON-NLS-1$
 		}
@@ -186,10 +186,10 @@ public final class MapMouseListener implements MouseListener {
 				this.netMapViewer.repaint(false);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch(MapDataException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		// mapState.setMouseMode(MapState.MOUSE_NONE);
 	}
@@ -501,10 +501,10 @@ public final class MapMouseListener implements MouseListener {
 				}// switch (mapState.getOperationMode()
 			} catch(MapConnectionException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.errorMessage(e);
 			} catch(MapDataException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 			if(mapState.getOperationMode() != MapState.MOVE_HAND
 					&& mapState.getOperationMode() != MapState.MOVE_FIXDIST)

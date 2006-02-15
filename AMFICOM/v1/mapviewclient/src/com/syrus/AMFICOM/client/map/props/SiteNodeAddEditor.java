@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeAddEditor.java,v 1.37 2005/10/31 15:29:31 krupenn Exp $$
+ * $$Id: SiteNodeAddEditor.java,v 1.38 2006/02/15 11:15:42 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,10 +64,11 @@ import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/10/31 15:29:31 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.38 $, $Date: 2006/02/15 11:15:42 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -113,7 +114,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		try {
 			jbInit();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 	}
@@ -580,7 +581,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		try {
 			this.crossingPanel.setCable(null);
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		this.crossingScrollPane.setVisible(true);
 
@@ -643,7 +644,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 				}
 			} catch(ApplicationException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 		}
 

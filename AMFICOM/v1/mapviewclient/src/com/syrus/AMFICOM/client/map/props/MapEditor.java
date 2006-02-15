@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditor.java,v 1.20 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: MapEditor.java,v 1.21 2006/02/15 11:15:41 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,10 +36,11 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.VoidElement;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/10/11 08:56:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.21 $, $Date: 2006/02/15 11:15:41 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -62,7 +63,7 @@ public class MapEditor extends DefaultStorableObjectEditor {
 		try {
 			jbInit();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 	}
@@ -222,7 +223,7 @@ public class MapEditor extends DefaultStorableObjectEditor {
 //						condition,
 //						true);
 //			} catch(ApplicationException e) {
-//				e.printStackTrace();
+//				Log.errorMessage(e);
 //			}
 
 			try {
@@ -230,7 +231,7 @@ public class MapEditor extends DefaultStorableObjectEditor {
 						this.map.getDomainId(), 
 						false);
 			} catch(ApplicationException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 			domains = Collections.singleton(domain);
 

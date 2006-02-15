@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMouseMotionListener.java,v 1.40 2006/02/14 10:20:07 stas Exp $$
+ * $$Id: MapMouseMotionListener.java,v 1.41 2006/02/15 11:13:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * обработка события передается текущему активному элементу карты (посредством
  * объекта MapStrategy)
  * 
- * @version $Revision: 1.40 $, $Date: 2006/02/14 10:20:07 $
+ * @version $Revision: 1.41 $, $Date: 2006/02/15 11:13:06 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -173,10 +173,10 @@ public final class MapMouseMotionListener implements MouseMotionListener {
 			this.netMapViewer.showLatLong(me.getPoint());
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch(MapDataException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 		// Обрабатывает события на панели инстрементов

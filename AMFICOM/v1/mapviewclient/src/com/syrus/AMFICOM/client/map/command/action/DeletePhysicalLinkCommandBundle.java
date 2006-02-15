@@ -1,5 +1,5 @@
 /*-
- * $$Id: DeletePhysicalLinkCommandBundle.java,v 1.38 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: DeletePhysicalLinkCommandBundle.java,v 1.39 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
  * фрагментов линий, линий, узлов  (и путей). Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.38 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.39 $, $Date: 2006/02/15 11:12:43 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -98,7 +98,7 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle {
 				unbound.setCablePath(cablePath);
 
 //				CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(this.link);
-				for(CableChannelingItem cableChannelingItem : cablePath.getSchemeCableLink().getPathMembers()) {
+				for(CableChannelingItem cableChannelingItem : cablePath.getCachedCCIs()) {
 					if(cablePath.getBinding().get(cableChannelingItem) == this.link) {
 						CableChannelingItem newCableChannelingItem = 
 							CableController.generateCCI(

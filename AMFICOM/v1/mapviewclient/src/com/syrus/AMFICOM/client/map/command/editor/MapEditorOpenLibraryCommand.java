@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorOpenLibraryCommand.java,v 1.12 2005/10/17 14:07:37 krupenn Exp $$
+ * $$Id: MapEditorOpenLibraryCommand.java,v 1.13 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,10 +32,11 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/17 14:07:37 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -71,13 +72,13 @@ public class MapEditorOpenLibraryCommand extends AbstractCommand {
 					ObjectEntities.MAPLIBRARY_CODE);
 			allLibraries = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		} catch(CommunicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return;
 		} catch(DatabaseException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return;
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return;
 		}
 		

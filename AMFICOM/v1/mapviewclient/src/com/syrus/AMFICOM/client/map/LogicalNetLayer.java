@@ -1,5 +1,5 @@
 /*-
- * $$Id: LogicalNetLayer.java,v 1.141 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: LogicalNetLayer.java,v 1.142 2006/02/15 11:14:00 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
 /**
  * Управляет отображением логической структуры сети.
  * 
- * @version $Revision: 1.141 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.142 $, $Date: 2006/02/15 11:14:00 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -201,7 +201,7 @@ public final class LogicalNetLayer {
 				calculateVisualElements();
 			} catch(ApplicationException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 		}
 	}
@@ -413,7 +413,7 @@ public final class LogicalNetLayer {
 				drawLines(p, visibleBounds);
 			} catch(ApplicationException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 			drawNodes(p, visibleBounds);
 		}
@@ -795,7 +795,7 @@ public final class LogicalNetLayer {
 				}
 			}
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		return null;
 	}
@@ -872,7 +872,7 @@ public final class LogicalNetLayer {
 									}
 								}
 							} catch(ApplicationException e) {
-								e.printStackTrace();
+								Log.errorMessage(e);
 							}
 							if(doBreak) {
 								return curME;
@@ -1090,7 +1090,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: stas $
-	 * @version $Revision: 1.141 $, $Date: 2006/02/14 10:20:06 $
+	 * @version $Revision: 1.142 $, $Date: 2006/02/15 11:14:00 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
@@ -1736,7 +1736,7 @@ public final class LogicalNetLayer {
 								ObjectEntities.CHARACTERISTIC_CODE), 
 						true);
 				} catch(ApplicationException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 		}
 
@@ -1768,7 +1768,7 @@ public final class LogicalNetLayer {
 //				}
 //				// n
 //			} catch(ApplicationException e) {
-//				e.printStackTrace();
+//				Log.errorMessage(e);
 //			}
 //		}
 		return hashSet;

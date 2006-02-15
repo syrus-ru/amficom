@@ -1,5 +1,5 @@
 /*-
- * $$Id: LinkTypeController.java,v 1.64 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: LinkTypeController.java,v 1.65 2006/02/15 11:12:33 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,11 +41,12 @@ import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 import com.syrus.AMFICOM.resource.IntDimension;
+import com.syrus.util.Log;
 
 /**
  * Контроллер типа линейного элемента карты.
  * 
- * @version $Revision: 1.64 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.65 $, $Date: 2006/02/15 11:12:33 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -396,7 +397,7 @@ public final class LinkTypeController extends AbstractLinkController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		return null;
 	}

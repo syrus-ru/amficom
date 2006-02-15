@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapSchemeTreeModel.java,v 1.46 2006/02/14 10:20:07 stas Exp $$
+ * $$Id: MapSchemeTreeModel.java,v 1.47 2006/02/15 11:13:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -85,7 +85,7 @@ import com.syrus.util.WrapperComparator;
  *             		|____ (*) "path2"
  * </pre>
  * 
- * @version $Revision: 1.46 $, $Date: 2006/02/14 10:20:07 $
+ * @version $Revision: 1.47 $, $Date: 2006/02/15 11:13:06 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -405,7 +405,7 @@ public class MapSchemeTreeModel
 			}
 		} catch(ApplicationException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		return treeNode;
@@ -430,7 +430,7 @@ public class MapSchemeTreeModel
 			}
 		} catch(ApplicationException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		return treeNode;
 	}
@@ -452,7 +452,7 @@ public class MapSchemeTreeModel
 			}
 		} catch(ApplicationException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		
 		return treeNode;

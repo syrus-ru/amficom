@@ -1,5 +1,5 @@
 /*-
- * $$Id: ZoomOutCommand.java,v 1.13 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: ZoomOutCommand.java,v 1.14 2006/02/15 11:12:44 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,13 @@ import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.util.Log;
 
 /**
  * Команда "Отдалить вид со стандартным коэффициентом"
  *  
- * @version $Revision: 1.13 $, $Date: 2005/09/30 16:08:39 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2006/02/15 11:12:44 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -34,11 +35,11 @@ public class ZoomOutCommand extends MapNavigateCommand {
 		} catch(MapConnectionException e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			e.printStackTrace();
+			Log.errorMessage(e);
 		} catch(MapDataException e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 }

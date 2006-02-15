@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathPopupMenu.java,v 1.29 2005/10/31 15:29:31 krupenn Exp $$
+ * $$Id: CablePathPopupMenu.java,v 1.30 2006/02/15 11:12:25 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,14 +26,16 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/10/31 15:29:31 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.30 $, $Date: 2006/02/15 11:12:25 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class CablePathPopupMenu extends MapPopupMenu {
+	private static final long serialVersionUID = 7578207099905441307L;
 	private JMenuItem removeMenuItem = new JMenuItem();
 	private JMenuItem generateMenuItem = new JMenuItem();
 
@@ -46,7 +48,7 @@ public class CablePathPopupMenu extends MapPopupMenu {
 		try {
 			jbInit();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 
@@ -66,7 +68,7 @@ public class CablePathPopupMenu extends MapPopupMenu {
 					canGenerate = true;
 			}
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		this.generateMenuItem.setVisible(canGenerate);
 	}

@@ -1,5 +1,5 @@
 /*-
- * $$Id: SelectionPopupMenu.java,v 1.34 2005/10/31 15:29:31 krupenn Exp $$
+ * $$Id: SelectionPopupMenu.java,v 1.35 2006/02/15 11:12:25 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,10 +38,11 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/10/31 15:29:31 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.35 $, $Date: 2006/02/15 11:12:25 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -63,7 +64,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 		try {
 			jbInit();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 

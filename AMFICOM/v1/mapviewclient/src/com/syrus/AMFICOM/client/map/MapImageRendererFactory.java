@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapImageRendererFactory.java,v 1.9 2005/10/31 12:30:07 bass Exp $$
+ * $$Id: MapImageRendererFactory.java,v 1.10 2006/02/15 11:14:00 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.logging.Level;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/10/31 12:30:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2006/02/15 11:14:00 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -50,23 +50,23 @@ public final class MapImageRendererFactory {
 				}
 			}
 		} catch (ClassNotFoundException cnfe) {
-			cnfe.printStackTrace();
+			Log.errorMessage(cnfe);
 			throw new MapDataException(
 					"MapImageRendererFactory.create() throws ClassNotFoundException"); //$NON-NLS-1$
 		} catch (InstantiationException ie) {
-			ie.printStackTrace();
+			Log.errorMessage(ie);
 			throw new MapDataException(
 					"MapImageRendererFactory.create() throws InstantiationException"); //$NON-NLS-1$
 		} catch (IllegalAccessException iae) {
-			iae.printStackTrace();
+			Log.errorMessage(iae);
 			throw new MapDataException(
 					"MapImageRendererFactory.create() throws IllegalAccessException"); //$NON-NLS-1$
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
+			Log.errorMessage(iae);
 			throw new MapDataException(
 					"MapImageRendererFactory.create() throws IllegalArgumentException"); //$NON-NLS-1$
 		} catch (InvocationTargetException ite) {
-			ite.printStackTrace();
+			Log.errorMessage(ite);
 			throw new MapDataException(
 					"MapImageRendererFactory.create() throws InvocationTargetException"); //$NON-NLS-1$
 		}

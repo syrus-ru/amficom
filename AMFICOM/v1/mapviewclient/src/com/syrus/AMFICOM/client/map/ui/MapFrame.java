@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapFrame.java,v 1.88 2006/02/14 10:20:07 stas Exp $$
+ * $$Id: MapFrame.java,v 1.89 2006/02/15 11:13:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -205,7 +205,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * окна карты хранится в пуле с ключом "environment", идентификатор 
  * "mapmainframe". существует только один объект 
  * 
- * @version $Revision: 1.88 $, $Date: 2006/02/14 10:20:07 $
+ * @version $Revision: 1.89 $, $Date: 2006/02/15 11:13:06 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -606,7 +606,7 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 //			try {
 //				StorableObjectPool.cleanChangedStorableObjects(scheme.getReverseDependencies(false));
 //			} catch(ApplicationException e) {
-//				e.printStackTrace();
+//				Log.errorMessage(e);
 //			}
 //		}
 	}

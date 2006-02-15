@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryImportCommand.java,v 1.18 2005/10/31 12:30:09 bass Exp $$
+ * $$Id: MapLibraryImportCommand.java,v 1.19 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,8 +61,8 @@ import com.syrus.util.Log;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.18 $, $Date: 2005/10/31 12:30:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -165,22 +165,22 @@ public class MapLibraryImportCommand extends ImportCommand {
 
 			setResult(Command.RESULT_OK);
 		} catch(DatabaseException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			setResult(Command.RESULT_NO);
 		} catch(IllegalObjectEntityException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			setResult(Command.RESULT_NO);
 		} catch(IdentifierGenerationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			setResult(Command.RESULT_NO);
 		} catch(XmlException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			setResult(Command.RESULT_NO);
 		} catch(IOException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			setResult(Command.RESULT_NO);
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			setResult(Command.RESULT_NO);
 		}
 	}

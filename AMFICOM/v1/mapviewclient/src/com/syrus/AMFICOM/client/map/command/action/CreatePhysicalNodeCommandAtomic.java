@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreatePhysicalNodeCommandAtomic.java,v 1.37 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: CreatePhysicalNodeCommandAtomic.java,v 1.38 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
  * создание топологического узла, внесение его в пул и на карту - атомарное
  * действие
  * 
- * @version $Revision: 1.37 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.38 $, $Date: 2006/02/15 11:12:43 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -91,7 +91,7 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand {
 			StorableObjectPool.putStorableObject(this.node);
 			this.logicalNetLayer.getMapView().getMap().addNode(this.node);
 		} catch(IllegalObjectEntityException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 

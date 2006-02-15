@@ -1,5 +1,5 @@
 /*-
- * $$Id: MeasurementPathPopupMenu.java,v 1.19 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: MeasurementPathPopupMenu.java,v 1.20 2006/02/15 11:12:25 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,10 +19,11 @@ import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/10/11 08:56:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.20 $, $Date: 2006/02/15 11:12:25 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -39,7 +40,7 @@ public final class MeasurementPathPopupMenu extends MapPopupMenu {
 		try {
 			jbInit();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 

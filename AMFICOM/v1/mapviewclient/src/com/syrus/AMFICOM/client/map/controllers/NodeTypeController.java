@@ -1,5 +1,5 @@
 /*-
- * $$Id: NodeTypeController.java,v 1.55 2005/10/12 13:07:08 krupenn Exp $$
+ * $$Id: NodeTypeController.java,v 1.56 2006/02/15 11:12:33 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,12 +42,13 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
+import com.syrus.util.Log;
 
 /**
  * контроллер типа сетевого узла.
  * 
- * @version $Revision: 1.55 $, $Date: 2005/10/12 13:07:08 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.56 $, $Date: 2006/02/15 11:12:33 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -283,7 +284,7 @@ public class NodeTypeController extends AbstractNodeController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 		return objects;
 	}

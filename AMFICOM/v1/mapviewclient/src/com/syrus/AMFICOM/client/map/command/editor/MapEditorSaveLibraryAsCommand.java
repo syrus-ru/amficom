@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorSaveLibraryAsCommand.java,v 1.8 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapEditorSaveLibraryAsCommand.java,v 1.9 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,10 +26,11 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/11 08:56:11 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.9 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -66,7 +67,7 @@ public class MapEditorSaveLibraryAsCommand extends AbstractCommand {
 				StorableObjectPool.flush(mapLibrary, userId, true);
 			}
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 }

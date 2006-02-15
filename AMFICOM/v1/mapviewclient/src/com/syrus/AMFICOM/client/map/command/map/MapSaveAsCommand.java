@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapSaveAsCommand.java,v 1.31 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapSaveAsCommand.java,v 1.32 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,13 +25,14 @@ import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.util.Log;
 
 /**
  * Класс $RCSfile: MapSaveAsCommand.java,v $ используется для сохранения 
  * топологической схемы с новым именем
  * 
- * @version $Revision: 1.31 $, $Date: 2005/10/11 08:56:11 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.32 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -60,7 +61,7 @@ public class MapSaveAsCommand extends AbstractCommand {
 					MapEditorResourceKeys.EMPTY_STRING);
 			this.newMap.addMapLibrary(MapLibraryController.getDefaultMapLibrary());
 		} catch(CreateObjectException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return;
 		}
 
@@ -85,14 +86,14 @@ public class MapSaveAsCommand extends AbstractCommand {
 			try {
 				StorableObjectPool.putStorableObject(this.newMap);
 			} catch(IllegalObjectEntityException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 			try {
 				// save newMap
 				StorableObjectPool.flush(this.newMap, userId, true);
 				LocalXmlIdentifierPool.flush();
 			} catch(ApplicationException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 
 			this.aContext.getDispatcher().firePropertyChange(

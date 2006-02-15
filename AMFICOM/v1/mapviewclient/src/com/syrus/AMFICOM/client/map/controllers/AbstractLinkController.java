@@ -1,5 +1,5 @@
 /*-
- * $$Id: AbstractLinkController.java,v 1.53 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: AbstractLinkController.java,v 1.54 2006/02/15 11:12:33 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Shitlet;
 /**
  * Контроллер линейного элемента карты.
  * 
- * @version $Revision: 1.53 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.54 $, $Date: 2006/02/15 11:12:33 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -155,7 +155,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			StorableObjectPool.flush(type, userId, true);
 			return type;
 		} catch (ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return null;
 		}
 	}
@@ -207,13 +207,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
 				characterizable.addCharacteristic(attribute, false);
 			} catch (CreateObjectException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 				return;
 			} catch (IllegalObjectEntityException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 				return;
 			} catch (ApplicationException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 				return;
 			}
 		}
@@ -320,13 +320,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
 				characterizable.addCharacteristic(attribute, false);
 			} catch(CreateObjectException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 				return;
 			} catch(IllegalObjectEntityException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 				return;
 			} catch(ApplicationException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 				return;
 			}
 		}
@@ -376,13 +376,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
 				characterizable.addCharacteristic(attribute, false);
 			} catch (CreateObjectException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 				return;
 			} catch (IllegalObjectEntityException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 				return;
 			} catch (ApplicationException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 				return;
 			}
 		}
@@ -434,13 +434,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
 				characterizable.addCharacteristic(attribute, false);
 			} catch (CreateObjectException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 				return;
 			} catch (IllegalObjectEntityException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 				return;
 			} catch (ApplicationException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 				return;
 			}
 		}

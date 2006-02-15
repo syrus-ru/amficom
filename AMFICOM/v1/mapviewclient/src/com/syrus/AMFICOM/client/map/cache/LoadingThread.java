@@ -1,5 +1,5 @@
 /*-
- * $$Id: LoadingThread.java,v 1.19 2006/02/14 09:53:56 stas Exp $$
+ * $$Id: LoadingThread.java,v 1.20 2006/02/15 11:16:23 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2006/02/14 09:53:56 $
+ * @version $Revision: 1.20 $, $Date: 2006/02/15 11:16:23 $
  * @author $Author: stas $
  * @author Peter Peskovsky
  * @module mapviewclient
@@ -103,7 +103,7 @@ public class LoadingThread extends Thread {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Log.errorMessage(e);
             }
 
             synchronized (this.state) {

@@ -1,5 +1,5 @@
 /*-
- * $$Id: DeleteNodeLinkCommandBundle.java,v 1.47 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: DeleteNodeLinkCommandBundle.java,v 1.48 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
  * фрагментов линий, линий, узлов  (и путей). Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.47 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.48 $, $Date: 2006/02/15 11:12:43 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -322,7 +322,7 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle {
 					unbound.setCablePath(cablePath);
 
 //					CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(physicalLink);
-					for(CableChannelingItem cableChannelingItem : cablePath.getSchemeCableLink().getPathMembers()) {
+					for(CableChannelingItem cableChannelingItem : cablePath.getCachedCCIs()) {
 						if(cablePath.getBinding().get(cableChannelingItem) == physicalLink) {
 							CableChannelingItem newCableChannelingItem = 
 								CableController.generateCCI(

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapNewCommand.java,v 1.32 2005/10/31 12:30:09 bass Exp $$
+ * $$Id: MapNewCommand.java,v 1.33 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.Log;
 /**
  * создание новой карты (Map). включает в себя создание нового вида
  * 
- * @version $Revision: 1.32 $, $Date: 2005/10/31 12:30:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -58,7 +58,7 @@ public class MapNewCommand extends AbstractCommand {
 					MapEditorResourceKeys.EMPTY_STRING);
 			this.map.addMapLibrary(MapLibraryController.getDefaultMapLibrary());
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			this.map = null;
 			setResult(Command.RESULT_NO);
 			return;
@@ -78,11 +78,11 @@ public class MapNewCommand extends AbstractCommand {
 //			}
 //			catch (CommunicationException e)
 //			{
-//				e.printStackTrace();
+//				Log.errorMessage(e);
 //			}
 //			catch (DatabaseException e)
 //			{
-//				e.printStackTrace();
+//				Log.errorMessage(e);
 //			}
 //	
 //			mapView.setLogicalNetLayer(mapFrame.getMapViewer().getLogicalNetLayer());

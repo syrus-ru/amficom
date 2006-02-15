@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateNodeLinkCommandAtomic.java,v 1.28 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: CreateNodeLinkCommandAtomic.java,v 1.29 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  * создание фрагмента линии связи, внесение ее в пул и на карту - 
  * атомарное действие
  *  
- * @version $Revision: 1.28 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.29 $, $Date: 2006/02/15 11:12:43 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -101,7 +101,7 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand {
 				mapView.getMap().addNodeLink(this.nodeLink);
 			}
 		} catch(IllegalObjectEntityException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateMarkerCommandAtomic.java,v 1.44 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: CreateMarkerCommandAtomic.java,v 1.45 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
 /**
  * Команда создания метки на линии
  * 
- * @version $Revision: 1.44 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.45 $, $Date: 2006/02/15 11:12:43 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -168,7 +168,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand {
 //
 //						mc.notifyMarkerCreated(this.marker);
 //					} catch (ApplicationException e) {
-//						e.printStackTrace();
+//						Log.errorMessage(e);
 //					}
 //
 //					break;

@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeTypeEditor.java,v 1.21 2005/10/31 15:29:31 krupenn Exp $$
+ * $$Id: SiteNodeTypeEditor.java,v 1.22 2006/02/15 11:15:42 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,10 +52,11 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/31 15:29:31 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2006/02/15 11:15:42 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -109,7 +110,7 @@ public final class SiteNodeTypeEditor
 		try {
 			jbInit();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 
@@ -412,7 +413,7 @@ public final class SiteNodeTypeEditor
 
 				im = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 			} catch(ApplicationException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 				return;
 			}
 

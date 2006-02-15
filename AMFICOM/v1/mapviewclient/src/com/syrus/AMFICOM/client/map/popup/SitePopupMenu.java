@@ -1,5 +1,5 @@
 /*-
- * $$Id: SitePopupMenu.java,v 1.23 2005/10/31 15:29:31 krupenn Exp $$
+ * $$Id: SitePopupMenu.java,v 1.24 2006/02/15 11:12:25 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,10 +27,11 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/31 15:29:31 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.24 $, $Date: 2006/02/15 11:12:25 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -47,7 +48,7 @@ public final class SitePopupMenu extends MapPopupMenu {
 		try {
 			jbInit();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 

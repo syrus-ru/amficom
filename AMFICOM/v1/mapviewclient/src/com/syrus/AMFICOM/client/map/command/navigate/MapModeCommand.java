@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapModeCommand.java,v 1.24 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: MapModeCommand.java,v 1.25 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,13 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.util.Log;
 
 /**
  * Команда переключения режима работы с картой - режимы фрагмента, линии, пути
  * 
- * @version $Revision: 1.24 $, $Date: 2005/10/18 07:21:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.25 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -61,8 +62,7 @@ public class MapModeCommand extends MapNavigateCommand {
 						try {
 							mpath.sortPathElements();
 						} catch(ApplicationException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							Log.errorMessage(e);
 						}
 					}
 				}
@@ -76,15 +76,15 @@ public class MapModeCommand extends MapNavigateCommand {
 				} catch(MapConnectionException e) {
 					setException(e);
 					setResult(Command.RESULT_NO);
-					e.printStackTrace();
+					Log.errorMessage(e);
 				} catch(MapDataException e) {
 					setException(e);
 					setResult(Command.RESULT_NO);
-					e.printStackTrace();
+					Log.errorMessage(e);
 				} catch(ApplicationException e) {
 					setException(e);
 					setResult(Command.RESULT_NO);
-					e.printStackTrace();
+					Log.errorMessage(e);
 				}
 			}
 		}

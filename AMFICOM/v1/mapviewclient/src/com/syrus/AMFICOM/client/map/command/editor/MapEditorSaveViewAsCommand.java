@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorSaveViewAsCommand.java,v 1.25 2005/10/31 12:30:09 bass Exp $$
+ * $$Id: MapEditorSaveViewAsCommand.java,v 1.26 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.util.Log;
  * схемы в модуле "Редактор топологических схем" с новым именем. Использует
  * команду MapSaveAsCommand
  * 
- * @version $Revision: 1.25 $, $Date: 2005/10/31 12:30:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  * @see MapViewSaveAsCommand
@@ -87,7 +87,7 @@ public class MapEditorSaveViewAsCommand extends AbstractCommand {
 									I18N.getString(MapEditorResourceKeys.MESASGE_ERROR_OPENING),
 									JOptionPane.WARNING_MESSAGE);
 					setResult(Command.RESULT_OK);
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 

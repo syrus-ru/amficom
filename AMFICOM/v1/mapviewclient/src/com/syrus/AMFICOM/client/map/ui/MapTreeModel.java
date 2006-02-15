@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapTreeModel.java,v 1.28 2006/02/14 10:20:07 stas Exp $$
+ * $$Id: MapTreeModel.java,v 1.29 2006/02/15 11:13:06 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2006/02/14 10:20:07 $
+ * @version $Revision: 1.29 $, $Date: 2006/02/15 11:13:06 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -290,7 +290,7 @@ public class MapTreeModel extends AbstractChildrenFactory {
 					true);
 			mapsChildren = new ArrayList<Map>(maps);
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return;
 		}
 

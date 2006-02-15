@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorMainFrame.java,v 1.69 2005/10/31 15:29:31 krupenn Exp $$
+ * $$Id: MapEditorMainFrame.java,v 1.70 2006/02/15 11:16:31 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,8 +75,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * Основное окно модуля Редактор топологической схемы
  * 
- * @version $Revision: 1.69 $, $Date: 2005/10/31 15:29:31 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.70 $, $Date: 2006/02/15 11:16:31 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -496,13 +496,13 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 //					LoginManager.getUserId(),
 //					LoginManager.getDomainId());
 //		} catch(DatabaseException e) {
-//			e.printStackTrace();
+//			Log.errorMessage(e);
 //		} catch(IllegalObjectEntityException e) {
-//			e.printStackTrace();
+//			Log.errorMessage(e);
 //		} catch(IdentifierGenerationException e) {
-//			e.printStackTrace();
+//			Log.errorMessage(e);
 //		} catch(ApplicationException e) {
-//			e.printStackTrace();
+//			Log.errorMessage(e);
 //		}
 	}
 

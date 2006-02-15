@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapImportCommand.java,v 1.58 2005/10/31 12:30:09 bass Exp $$
+ * $$Id: MapImportCommand.java,v 1.59 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.util.Log;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.58 $, $Date: 2005/10/31 12:30:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.59 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -142,20 +142,20 @@ public class MapImportCommand extends ImportCommand {
 					setResult(Command.RESULT_OK);
 				} catch(MapException e) {
 					MapImportCommand.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, I18N.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
-					e.printStackTrace();
+					Log.errorMessage(e);
 					setResult(Command.RESULT_NO);
 				} catch(DatabaseException e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 					setResult(Command.RESULT_NO);
 				} catch(IllegalObjectEntityException e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 					setResult(Command.RESULT_NO);
 				} catch(XmlException e) {
 					MapImportCommand.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, I18N.getString(MapEditorResourceKeys.ERROR_XML_EXCEPTION)));
-					e.printStackTrace();
+					Log.errorMessage(e);
 					setResult(Command.RESULT_NO);
 				} catch(IOException e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 					setResult(Command.RESULT_NO);
 				}
 //			}

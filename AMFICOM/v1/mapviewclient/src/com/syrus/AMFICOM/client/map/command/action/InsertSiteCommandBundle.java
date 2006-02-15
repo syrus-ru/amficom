@@ -1,5 +1,5 @@
 /*-
- * $$Id: InsertSiteCommandBundle.java,v 1.43 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: InsertSiteCommandBundle.java,v 1.44 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @version $Revision: 1.43 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.44 $, $Date: 2006/02/15 11:12:43 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -146,7 +146,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 					super.setUndoable(false);
 
 //					CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(this.link);
-					for(CableChannelingItem cableChannelingItem : cablePath.getSchemeCableLink().getPathMembers()) {
+					for(CableChannelingItem cableChannelingItem : cablePath.getCachedCCIs()) {
 						if(cablePath.getBinding().get(cableChannelingItem) == this.link) {
 							if(this.newLink.getStartNode().equals(cableChannelingItem.getStartSiteNodeId())) {
 								CableChannelingItem newCableChannelingItem = 

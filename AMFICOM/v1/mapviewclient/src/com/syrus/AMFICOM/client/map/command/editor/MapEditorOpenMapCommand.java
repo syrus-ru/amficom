@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorOpenMapCommand.java,v 1.32 2005/10/22 15:00:35 krupenn Exp $$
+ * $$Id: MapEditorOpenMapCommand.java,v 1.33 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.util.Log;
 
 /**
  * Класс MapEditorOpenMapCommand используется для открытия топологической схемы в модуле
@@ -36,8 +37,8 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.32 $, $Date: 2005/10/22 15:00:35 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.33 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  * @see MapOpenCommand
@@ -100,9 +101,9 @@ public class MapEditorOpenMapCommand extends AbstractCommand {
 					this.mapFrame.setMapView(emptyMapView);
 				}
 			} catch(ApplicationException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 			} catch(MapException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 		}
 		
@@ -151,7 +152,7 @@ public class MapEditorOpenMapCommand extends AbstractCommand {
 				this.treeFrame = elementsCommand.treeFrame;
 			} catch(MapException e) {
 				this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, I18N.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 		}
 	}

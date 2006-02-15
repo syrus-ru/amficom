@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkAddEditor.java,v 1.41 2005/10/31 15:29:31 krupenn Exp $$
+ * $$Id: PhysicalLinkAddEditor.java,v 1.42 2006/02/15 11:15:42 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,12 +65,13 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
+import com.syrus.util.Log;
 import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/10/31 15:29:31 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.42 $, $Date: 2006/02/15 11:15:42 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -142,7 +143,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		try {
 			jbInit();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 
 	}
@@ -665,7 +666,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 				try {
 					bind(or);
 				} catch(ApplicationException e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 				}
 				this.bindButton.setSelected(false);
 				setBindMode(false);
@@ -694,7 +695,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 						}
 					}
 				} catch(Exception e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 				}
 			}
 			this.processSelection = true;
@@ -749,7 +750,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		unbound.setCablePath(cablePath);
 
 //		CableChannelingItem cci = cablePath.getFirstCCI(this.physicalLink);
-		for(CableChannelingItem cableChannelingItem : cablePath.getSchemeCableLink().getPathMembers()) {
+		for(CableChannelingItem cableChannelingItem : cablePath.getCachedCCIs()) {
 			if(cablePath.getBinding().get(cableChannelingItem) == this.physicalLink) {
 				CableChannelingItem newCableChannelingItem = 
 					CableController.generateCCI(

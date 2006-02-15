@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapExportCommand.java,v 1.38 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: MapExportCommand.java,v 1.39 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @version $Revision: 1.38 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.39 $, $Date: 2006/02/15 11:12:43 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -127,7 +127,7 @@ public class MapExportCommand extends ExportCommand {
 							e.getLocalizedMessage(), 
 							I18N.getString(MapEditorResourceKeys.ERROR_WRITE_ERROR), 
 							JOptionPane.ERROR_MESSAGE);
-					e.printStackTrace();
+					Log.errorMessage(e);
 				}
 				Log.debugMessage("\nXML Instance Document saved at : " + f.getPath(), INFO); //$NON-NLS-1$
 			}

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPropertiesManager.java,v 1.58 2006/02/07 15:27:11 stas Exp $$
+ * $$Id: MapPropertiesManager.java,v 1.59 2006/02/15 11:14:00 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
  * <li>center
  * <li>zoom
  * 
- * @version $Revision: 1.58 $, $Date: 2006/02/07 15:27:11 $
+ * @version $Revision: 1.59 $, $Date: 2006/02/15 11:14:00 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -885,7 +885,7 @@ public final class MapPropertiesManager {
 				originalImages.put(imageId, img);
 				MapPropertiesManager.loadImage(img);
 			} catch(ApplicationException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 		}
 		return img;

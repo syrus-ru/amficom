@@ -1,5 +1,5 @@
 /*-
- * $$Id: ViewMapWindowCommand.java,v 1.38 2005/12/08 10:43:00 stas Exp $$
+ * $$Id: ViewMapWindowCommand.java,v 1.39 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,11 +31,12 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.util.Log;
 
 /**
  * Команда отображает окно карты
  *  
- * @version $Revision: 1.38 $, $Date: 2005/12/08 10:43:00 $
+ * @version $Revision: 1.39 $, $Date: 2006/02/15 11:12:43 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -108,7 +109,7 @@ public class ViewMapWindowCommand extends AbstractCommand {
 					I18N.getString(MapEditorResourceKeys.ERROR_APPLICATION_EXCEPTION),
 					MapEditorResourceKeys.EMPTY_STRING,
 					JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 

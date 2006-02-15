@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryExportCommand.java,v 1.22 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: MapLibraryExportCommand.java,v 1.23 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @version $Revision: 1.22 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.23 $, $Date: 2006/02/15 11:12:43 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -89,13 +89,13 @@ public class MapLibraryExportCommand extends ExportCommand {
 					MAPLIBRARY_CODE);
 			allLibraries = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		} catch(CommunicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return;
 		} catch(DatabaseException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return;
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return;
 		}
 
@@ -156,7 +156,7 @@ public class MapLibraryExportCommand extends ExportCommand {
 					// Writing the XML Instance to a file.
 					doc.save(f, xmlOptions);
 				} catch(IOException e) {
-					e.printStackTrace();
+					Log.errorMessage(e);
 				}
 				Log.debugMessage("\nXML Instance Document saved at : " //$NON-NLS-1$
 						+ f.getPath(), INFO);

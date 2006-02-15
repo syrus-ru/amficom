@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateMapReportCommand.java,v 1.14 2005/10/13 14:14:14 peskovsky Exp $$
+ * $$Id: CreateMapReportCommand.java,v 1.15 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,10 +28,11 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/13 14:14:14 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.15 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -98,7 +99,7 @@ public class CreateMapReportCommand extends AbstractCommand {
 					reportData);
 			dialog.setVisible(true);
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
 	}
 }

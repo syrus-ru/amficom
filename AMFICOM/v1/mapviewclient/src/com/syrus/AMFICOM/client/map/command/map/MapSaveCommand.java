@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapSaveCommand.java,v 1.25 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapSaveCommand.java,v 1.26 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,12 +22,13 @@ import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.util.Log;
 
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * 
- * @version $Revision: 1.25 $, $Date: 2005/10/11 08:56:11 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.26 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -59,14 +60,14 @@ public class MapSaveCommand extends AbstractCommand {
 			try {
 				StorableObjectPool.putStorableObject(this.map);
 			} catch(IllegalObjectEntityException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 			try {
 				// save map
 				StorableObjectPool.flush(this.map, LoginManager.getUserId(), true);
 				LocalXmlIdentifierPool.flush();
 			} catch(ApplicationException e) {
-				e.printStackTrace();
+				Log.errorMessage(e);
 			}
 // aContext.getDispatcher().notify(new StatusMessageEvent(
 //					StatusMessageEvent.STATUS_PROGRESS_BAR, 

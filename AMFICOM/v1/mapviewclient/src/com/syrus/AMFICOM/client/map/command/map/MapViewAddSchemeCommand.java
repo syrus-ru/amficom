@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewAddSchemeCommand.java,v 1.28 2005/10/17 14:08:46 krupenn Exp $$
+ * $$Id: MapViewAddSchemeCommand.java,v 1.29 2006/02/15 11:12:43 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,12 +33,13 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.util.Log;
 
 /**
  * добавить в вид схему из списка
  * 
- * @version $Revision: 1.28 $, $Date: 2005/10/17 14:08:46 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.29 $, $Date: 2006/02/15 11:12:43 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -96,7 +97,7 @@ public class MapViewAddSchemeCommand extends AbstractCommand {
 					condition,
 					true);
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return;
 		}
 
@@ -123,7 +124,7 @@ public class MapViewAddSchemeCommand extends AbstractCommand {
 //			try {
 //				MapViewOpenCommand.openScheme(this.scheme);
 //			} catch(ApplicationException e) {
-//				e.printStackTrace();
+//				Log.errorMessage(e);
 //				return;
 //			}
 
