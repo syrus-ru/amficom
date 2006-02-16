@@ -1,5 +1,5 @@
 /*-
- * $Id: Event.java,v 1.49 2005/12/17 12:09:00 arseniy Exp $
+ * $Id: Event.java,v 1.50 2006/02/16 08:34:50 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,15 +36,14 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/12/17 12:09:00 $
+ * @version $Revision: 1.50 $, $Date: 2006/02/16 08:34:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 
-public final class Event extends StorableObject<Event>
-		implements TypedObject<EventType> {
-	private static final long serialVersionUID = 3977015150102788401L;
+public final class Event extends StorableObject<Event> implements TypedObject<EventType> {
+	private static final long serialVersionUID = -3539649925554357336L;
 
 	private EventType type;
 	private String description;

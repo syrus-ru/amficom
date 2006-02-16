@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultReflectogramMismatchEvent.java,v 1.11 2005/12/07 17:16:25 bass Exp $
+ * $Id: DefaultReflectogramMismatchEvent.java,v 1.12 2006/02/16 08:34:50 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.eventv2;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSISRESULTPARAMETER_CODE;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.reflectometry.SOAnchor;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/12/07 17:16:25 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2006/02/16 08:34:50 $
  * @module event
  */
 public final class DefaultReflectogramMismatchEvent extends
@@ -135,7 +135,7 @@ public final class DefaultReflectogramMismatchEvent extends
 		 * Currently, the second check is unnecessary. But
 		 * implementation may eventually change.
 		 */
-		if (resultId.getMajor() != RESULT_CODE
+		if (resultId.getMajor() != ANALYSISRESULTPARAMETER_CODE
 				|| resultId.isVoid()) {
 			throw new IllegalArgumentException("Either resultId is void or its type is invalid");
 		}
@@ -398,8 +398,8 @@ public final class DefaultReflectogramMismatchEvent extends
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.11 $, $Date: 2005/12/07 17:16:25 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.12 $, $Date: 2006/02/16 08:34:50 $
 	 * @module event
 	 */
 	private class SoAnchorImpl implements SOAnchor, Identifiable, Serializable {

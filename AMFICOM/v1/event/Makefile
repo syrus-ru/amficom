@@ -40,9 +40,11 @@ $(LIBNAME): .mach
 .PHONY: idlclean
 idlclean:
 	cd $(SRCDIR)/com/syrus/AMFICOM/event/corba && \
-		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/event/corba/.cvsignore | grep .java)
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/event/corba/.cvsignore | grep .java) && \
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/event/corba/.cvsignore | grep Package)
 	cd $(SRCDIR)/com/syrus/AMFICOM/eventv2/corba && \
-		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/eventv2/corba/.cvsignore | grep .java)
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/eventv2/corba/.cvsignore | grep .java) && \
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/eventv2/corba/.cvsignore | grep Package)
 	$(RM) .idl
 
 .PHONY: corba
