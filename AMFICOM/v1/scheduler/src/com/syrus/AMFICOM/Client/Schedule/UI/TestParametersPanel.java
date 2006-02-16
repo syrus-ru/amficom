@@ -519,6 +519,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 	
 	private void changeMonitoredElement(final Identifier monitoredElementId) 
 	throws ApplicationException {
+		final WrapperedListModel<MeasurementSetup> wrapperedListModel = this.testSetups.getModel();
+		wrapperedListModel.removeAllElements();
 		final MonitoredElement me = StorableObjectPool.getStorableObject(monitoredElementId, true);
 		final MeasurementPort port = StorableObjectPool.getStorableObject(me.getMeasurementPortId(), true);
 		this.switchPanel.removeAll();
