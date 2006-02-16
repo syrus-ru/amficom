@@ -519,8 +519,6 @@ final class TestParametersPanel implements PropertyChangeListener {
 	
 	private void changeMonitoredElement(final Identifier monitoredElementId) 
 	throws ApplicationException {
-		final WrapperedListModel<MeasurementSetup> wrapperedListModel = this.testSetups.getModel();
-		wrapperedListModel.removeAllElements();
 		final MonitoredElement me = StorableObjectPool.getStorableObject(monitoredElementId, true);
 		final MeasurementPort port = StorableObjectPool.getStorableObject(me.getMeasurementPortId(), true);
 		this.switchPanel.removeAll();
@@ -546,6 +544,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 		final String propertyName = evt.getPropertyName();
 		final Object newValue = evt.getNewValue();
 		if (propertyName == SchedulerModel.COMMAND_CHANGE_ME_TYPE) {
+			final WrapperedListModel<MeasurementSetup> wrapperedListModel = this.testSetups.getModel();
+			wrapperedListModel.removeAllElements();
 			try {
 				this.changeMonitoredElement((Identifier) evt.getNewValue());
 			} catch (final ApplicationException e) {
