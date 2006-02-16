@@ -1,5 +1,5 @@
 /*-
-* $Id: IntersectionValidator.java,v 1.1 2006/02/16 12:22:45 bob Exp $
+* $Id: IntersectionValidator.java,v 1.2 2006/02/16 15:20:15 bob Exp $
 *
 * Copyright ¿ 2006 Syrus Systems.
 * Dept. of Science & Technology.
@@ -32,10 +32,11 @@ import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.AMFICOM.measurement.TestWrapper;
+import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2006/02/16 12:22:45 $
+ * @version $Revision: 1.2 $, $Date: 2006/02/16 15:20:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -96,146 +97,6 @@ public class IntersectionValidator {
 		
 		return tests;
 	}
-	
-//	private boolean selfIntersection(final Date startDate,
-// 		final Date endDate,
-// 		final AbstractTemporalPattern<?> temporalPattern,
-// 		final long measurementDuration) {
-// 		
-// 		if (temporalPattern == null) {
-// 			return false;
-// 		}
-// 		
-// 		final long interval = 30L * 24L * 60L * 60L * 1000L;
-// 		
-// 		Date start = startDate;
-// 		Date previousDate = null;
-// 		while(start.compareTo(endDate) <= 0) {
-// 			final Date end = start.getTime() + interval < endDate.getTime() ? 
-// 					new Date(start.getTime() + interval) : 
-// 					endDate;
-// 			final SortedSet<Date> times = temporalPattern.getTimes(startDate, endDate, start, end);
-// 			for (final Date date : times) {
-// 				if (previousDate == null) {
-// 					previousDate = date;
-// 				} else {
-// 					final long diff = date.getTime() - previousDate.getTime();
-//					if (diff < measurementDuration) {
-// 						assert Log.debugMessage("previousDate:" 
-// 								+ previousDate 
-// 								+ ", date:" 
-// 								+ date
-// 								+ ",\n\t interval:" + measurementDuration
-// 								+ ", diff:" + diff, 
-// 							Log.DEBUGLEVEL03);
-// 						return  true;
-// 					}
-// 				}
-// 			}
-// 			
-// 			if (start.equals(end)) {
-// 				break;
-// 			}
-// 			start = end;
-// 		}
-// 		
-// 		return false;
-// 	}
-	
-//	private SortedSet<Date> getTestTimes(final AbstractTemporalPattern<?> temporalPattern,
-//		final Date startDate,
-//		final Date endDate,
-//		final Date startInterval,
-//		final Date endInterval,
-//		final long offset) {
-//		
-//		final Date startTime0 = offset == 0 ? startDate : new Date(startDate.getTime() + offset);
-//		final Date endTime0 = offset == 0 ? endDate : new Date(endDate.getTime() + offset);
-//		
-////		assert Log.debugMessage("startDate:" + startDate 
-////				+ ", endDate:" + endDate
-////				+ ", startTime0:" + startTime0
-////				+ ", endTime0:" + endTime0
-////				+ ", startInterval: " + startInterval
-////				+ ", endInterval:" + endInterval, 
-////				Log.DEBUGLEVEL03);
-//		final SortedSet<Date> times;
-//		if (temporalPattern != null) {
-//			times = temporalPattern.getTimes(startTime0,
-//						endTime0,
-//						startInterval,
-//						endInterval);
-//		} else {
-//			times = new TreeSet<Date>();
-//			times.add(startTime0);
-//		}
-//		return times;
-//	}
-	
-//	private SortedSet<Date> getTestTimes(final Identifier temporalPatternId,
-//		final Date startDate,
-//		final Date endDate,
-//		final Date startInterval,
-//		final Date endInterval,
-//		final long offset) throws ApplicationException{
-//		
-//		if (temporalPatternId != null && !temporalPatternId.isVoid()) {
-//			final AbstractTemporalPattern temporalPattern = 
-//				StorableObjectPool.getStorableObject(temporalPatternId, true);
-//			return this.getTestTimes(temporalPattern, 
-//				startDate, 
-//				endDate, 
-//				startInterval, 
-//				endInterval, 
-//				offset);
-//		}
-//		return this.getTestTimes((AbstractTemporalPattern)null, 
-//			startDate, 
-//			endDate, 
-//			startInterval, 
-//			endInterval, 
-//			offset);
-//	}
-	
-//	private SortedSet<Date> getTestTimes(final Test test,
-//		final Date startInterval,
-//		final Date endInterval,
-//		final long offset) throws ApplicationException{
-//		return this.getTestTimes(test, test.getStartTime(), test.getEndTime(), startInterval, endInterval, offset);
-//	}
-	
-//	private SortedSet<Date> getTestTimes(final Test test,
-//		final Date startTime,
-//		final Date endTime,
-//		final Date startInterval,
-//		final Date endInterval,
-//		final long offset) throws ApplicationException{		
-//		
-//		final SortedSet<Date> testTimes = this.getTestTimes(test.getTemporalPatternId(), startTime, endTime, startInterval, endInterval, 0L);
-//		
-//		final TestStatus status = test.getStatus();
-//		if (status == TestStatus.TEST_STATUS_STOPPED ||  
-//				status == TestStatus.TEST_STATUS_STOPPING) {			
-//			final SortedMap<Date, String> stoppingMap = test.getStoppingMap();
-//			final Date stopDate = stoppingMap.lastKey();
-//			Log.debugMessage("stopDate:" + stopDate,
-//				Log.DEBUGLEVEL10);
-//			final SortedSet<Date> tailSet2 = testTimes.tailSet(stopDate);
-//			Log.debugMessage("clear tailSet from " + stopDate + " : " + tailSet2,
-//				Log.DEBUGLEVEL10);
-//			tailSet2.clear();			
-//		}
-//		
-//		if (offset != 0 && !testTimes.isEmpty()) {
-//			final SortedSet<Date> testTimesOffsetted = new TreeSet<Date>();
-//			for (final Date date : testTimes) {
-//				testTimesOffsetted.add(new Date(date.getTime() + offset));
-//			}
-//			return testTimesOffsetted;
-//		}
-//		
-//		return testTimes;
-//	}
 	
 	private String isValid(final Test test, 
 	                       final MeasurementSetup measurementSetup,
@@ -322,7 +183,10 @@ public class IntersectionValidator {
 		final Date endDate0 = 
 			new Date(endDate.getTime() + measurementDuration);
 		
+		assert Log.debugMessage("startDate: " + startDate + ", endDate0:" + endDate0, Log.DEBUGLEVEL03);
+		
 		final Set<Test> tests = this.getTests(startDate, endDate0, monitoredElementId);
+		assert Log.debugMessage(tests, Log.DEBUGLEVEL03);
 		for (final Test test : tests) {
 			final String reason = this.isIntersects(timeLabel, test);
 			if (reason != null) {
@@ -392,74 +256,4 @@ public class IntersectionValidator {
 		return timeLabel;
 	}
 	
-//	@Deprecated
-//	private String isValid0(final Identifier monitoredElementId,
-//		final Date startDate,
-//		final Date endDate,
-//		final AbstractTemporalPattern temporalPattern,
-//		final MeasurementSetup newTestMeasurementSetup) 
-//	throws ApplicationException {
-//
-//		final long measurementDuration = newTestMeasurementSetup.getMeasurementDuration();
-//
-//		if (this.selfIntersection(startDate, endDate, temporalPattern, measurementDuration)) {
-//			return I18N.getString("Scheduler.Text.Scheduler.Model.SelfIntersection");
-//		}
-//		
-//		final Date endDate0 = 
-//			new Date(endDate.getTime() + measurementDuration);
-//		
-//		// XXX can be performance problem with too long interval		
-//		final Set<Test> tests = this.getTests(startDate, endDate0, monitoredElementId);
-//		// XXX can be performance problem with too long interval
-//		
-//		final SortedSet<Date> times = 
-//			this.getTestTimes(temporalPattern, startDate, endDate, startDate, endDate, 0L);
-//		assert Log.debugMessage("times.size():" + times.size(), Log.DEBUGLEVEL03);
-//		
-//		for (final Test test : tests) {			
-//			final Date testStartTime = test.getStartTime();
-//			
-//			if (testStartTime.after(endDate0)) {
-//				// skip test lies after end of interval 
-//				continue;
-//			}
-//			
-//			final Date testEndTime0 = test.getEndTime();
-//			final Identifier testMainMeasurementSetupId = test.getMainMeasurementSetupId();
-//			final MeasurementSetup testMeasurementSetup = 
-//				StorableObjectPool.getStorableObject(testMainMeasurementSetupId, true);
-//			
-//			final long testMeasurementDuration = testMeasurementSetup.getMeasurementDuration();
-//			final Date testEndTime = 
-//				new Date(testEndTime0.getTime() + testMeasurementDuration);
-//			
-//			if (testEndTime.before(startDate)) {
-//				// skip test lies before start of interval
-//				continue;
-//			}
-//			
-//			// XXX can be performance problem with too long interval
-//			final SortedSet<Date> testTimes = 
-//				this.getTestTimes(test, testStartTime, testEndTime0, 0L);
-//			
-//			for (final Date date : testTimes) {
-//				final long st0 = date.getTime();
-//				final long en0 = st0 + testMeasurementDuration;
-//				
-//				final SortedSet<Date> headSet = times.headSet(new Date(en0));
-//				if (!headSet.isEmpty()) {
-//					final Date date2 = headSet.last();
-//					if (date2.getTime() + measurementDuration > st0) {
-//						return I18N.getString("Scheduler.Text.Scheduler.Model.TestIntersection");
-//					}
-//				}
-//			}
-//		}
-//		
-//		return null;
-//	}
-	
-	
 }
-
