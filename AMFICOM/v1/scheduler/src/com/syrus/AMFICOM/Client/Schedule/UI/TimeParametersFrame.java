@@ -12,7 +12,6 @@ import java.beans.PropertyChangeListener;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -50,11 +49,8 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
-import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternWrapper;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
@@ -296,7 +292,7 @@ public class TimeParametersFrame extends JInternalFrame {
 												periodicalTemporalPattern.setPeriod(intervalLength);
 											} else {
 												periodicalTemporalPattern = 
-													PeriodicalTemporalPattern.createInstance(
+													PeriodicalTemporalPattern.getInstance(
 														LoginManager.getUserId(), 
 														intervalLength);
 												selectedTest.setTemporalPatternId(
@@ -497,7 +493,7 @@ public class TimeParametersFrame extends JInternalFrame {
 							} catch (final ApplicationException e) {
 								AbstractMainFrame.showErrorMessage(e.getMessage());
 							}
-						};
+						}
 					}, I18N.getString("Scheduler.Text.Popup.CreatingTest"));
 					
 				}
@@ -740,38 +736,17 @@ public class TimeParametersFrame extends JInternalFrame {
 				temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL;
 //				temporalPattern = (TemporalPattern) TimeParametersPanel.this.timeStamps.getSelectedValue();
 				long intervalLength = this.getIntervalLength();
-				TypicalCondition typicalCondition = new TypicalCondition(intervalLength, 
-					intervalLength, 
-					OperationSort.OPERATION_EQUALS, 
-					ObjectEntities.PERIODICALTEMPORALPATTERN_CODE, 
-					PeriodicalTemporalPatternWrapper.COLUMN_PERIOD); 
 				try {
-					final Set<PeriodicalTemporalPattern> periodicalTemporalPatterns = StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true, true);
-					if (!periodicalTemporalPatterns.isEmpty()) {
-						temporalPattern = periodicalTemporalPatterns.iterator().next();
-					}
-				} catch (final ApplicationException e) {
+					temporalPattern = PeriodicalTemporalPattern.getInstance(LoginManager.getUserId(), intervalLength);
+				} catch (CreateObjectException e1) {
 					this.schedulerModel.setBreakData();
 					JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
-						I18N.getString("Error.CannotAcquireObject"),
+						I18N.getString("Scheduler.Error.CannotCreatePeriodicalPattern"),
 						I18N.getString("Error"),
 						JOptionPane.OK_OPTION);
 					return null;
-				}
-				
-				if (temporalPattern == null) {
-					try {
-						temporalPattern = PeriodicalTemporalPattern.createInstance(LoginManager.getUserId(), intervalLength);
-					} catch (CreateObjectException e) {
-						this.schedulerModel.setBreakData();
-						JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
-							I18N.getString("Scheduler.Error.CannotCreatePeriodicalPattern"),
-							I18N.getString("Error"),
-							JOptionPane.OK_OPTION);
-						return null;
-					}
-
 				}				
+							
 				 end = this.getEndDate();
 			} 
 //			else if (this.continuosRadioButton.isSelected()) {
