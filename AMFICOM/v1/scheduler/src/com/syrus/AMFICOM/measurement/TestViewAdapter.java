@@ -1,5 +1,5 @@
 /*
- * $Id: TestViewAdapter.java,v 1.10 2006/02/10 11:21:10 bob Exp $
+ * $Id: TestViewAdapter.java,v 1.11 2006/02/16 12:51:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2006/02/10 11:21:10 $
+ * @version $Revision: 1.11 $, $Date: 2006/02/16 12:51:48 $
  * @author $Author: bob $
  * @module module
  */
@@ -171,9 +171,9 @@ public class TestViewAdapter implements Wrapper<TestView> {
 			} else if (key == KEY_MEASUREMENT_TYPE) {
 				return test.getMeasurementType().getDescription();
 			} else if (key == KEY_START_TIME) {
-				return test.getStartTime();
+				return testView.getFirstDate();
 			} else if (key == KEY_END_TIME) {
-				return test.getEndTime();
+				return testView.getLastDate();
 			} else if (key == KEY_STATUS) {
 				return test.getStatus();
 			} else if (key == KEY_D) {
