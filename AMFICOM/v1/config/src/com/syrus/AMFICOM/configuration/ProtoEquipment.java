@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.26.2.2 2006/02/14 01:26:42 arseniy Exp $
+ * $Id: ProtoEquipment.java,v 1.26.2.3 2006/02/16 13:03:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.26.2.2 $, $Date: 2006/02/14 01:26:42 $
+ * @version $Revision: 1.26.2.3 $, $Date: 2006/02/16 13:03:39 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -321,6 +321,10 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 
 	public Identifier getTypeId() {
 		return this.typeId;
+	}
+
+	public EquipmentType getType() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.typeId, true);
 	}
 
 	public String getName() {
