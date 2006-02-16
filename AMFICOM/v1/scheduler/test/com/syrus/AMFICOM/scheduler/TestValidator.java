@@ -1,5 +1,5 @@
 /*
- * $Id: TestValidator.java,v 1.1 2006/02/16 12:31:52 bob Exp $
+ * $Id: TestValidator.java,v 1.2 2006/02/16 14:10:42 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.validator.IntersectionValidator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2006/02/16 12:31:52 $
+ * @version $Revision: 1.2 $, $Date: 2006/02/16 14:10:42 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -290,6 +290,60 @@ public final class TestValidator extends TestCase {
 			final MeasurementSetup measurementSetup = LONG_MEASUREMENT_SETUP;
 			final Date start = new Date(now.getTime() - measurementSetup.getMeasurementDuration() 
 				+ firstTestMeasurementSetup.getMeasurementDuration() / 2);
+			final Date end = start;		
+			final AbstractTemporalPattern temporalPattern = null;
+			
+			final String reason = INTERSECTION_VALIDATOR.isValid(MONITORED_ELEMENT.getId(), 
+				start, 
+				end, 
+				temporalPattern, 
+				measurementSetup);
+			
+			assertNotNull("There must be intersection", reason);
+		}
+		
+		StorableObjectPool.delete(test.getId());
+	}
+	
+	public void testSingleTestsIntersection3() throws ApplicationException {
+		// Two single tests has intersection for follow situation:
+		// One test has shorter measurement duration than other one
+		// that starts after first test but before its ends
+		
+		final Date now = new Date();		
+		final MeasurementSetup measurementSetup = LONG_MEASUREMENT_SETUP;		
+		final Test test;
+		{
+			final Date start = now;
+			final Date end = now;		
+			final AbstractTemporalPattern temporalPattern = null;
+			
+			final String reason = INTERSECTION_VALIDATOR.isValid(MONITORED_ELEMENT.getId(), 
+				start, 
+				end, 
+				temporalPattern, 
+				measurementSetup);
+			assertNull("There shouldn't be any intersection.", reason);
+			
+			test = Test.createInstance(CREATOR_ID, 
+				start, 
+				end, 
+				temporalPattern != null ? temporalPattern.getId() : Identifier.VOID_IDENTIFIER, 
+				TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME, 
+				MeasurementType.REFLECTOMETRY, 
+				AnalysisType.UNKNOWN, 
+				Identifier.VOID_IDENTIFIER, 
+				MONITORED_ELEMENT, 
+				"single", 
+				Collections.singleton(measurementSetup.getId()));
+			
+			assert Log.debugMessage("Add single test: " + test.getId(), Log.DEBUGLEVEL03);
+		}
+		
+		// The second test's parameters:
+		{
+			final Date start = new Date(now.getTime() 
+					+ measurementSetup.getMeasurementDuration() / 2);
 			final Date end = start;		
 			final AbstractTemporalPattern temporalPattern = null;
 			
