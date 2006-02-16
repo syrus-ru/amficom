@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.34 2006/02/15 12:18:11 stas Exp $
+ * $Id: DeleteAction.java,v 1.35 2006/02/16 13:59:13 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
@@ -57,7 +58,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.34 $, $Date: 2006/02/15 12:18:11 $
+ * @version $Revision: 1.35 $, $Date: 2006/02/16 13:59:13 $
  * @module schemeclient
  */
 
@@ -357,6 +358,9 @@ public class DeleteAction extends AbstractAction {
 			try {
 				for (SchemeCableThread thread : link.getSchemeCableThreads(false)) {
 					objectsToDelete.add(thread.getId());
+				}
+				for (CableChannelingItem cci : link.getPathMembers()) {
+					objectsToDelete.add(cci.getId());
 				}
 			} catch (ApplicationException e) {
 				Log.errorMessage(e);
