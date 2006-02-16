@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.171 2006/02/14 10:33:21 bob Exp $
+ * $Id: SchedulerModel.java,v 1.172 2006/02/16 12:22:45 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,6 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.AnalysisType;
-import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -69,11 +68,12 @@ import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.AMFICOM.resources.ResourceHandler;
+import com.syrus.AMFICOM.validator.IntersectionValidator;
 import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.171 $, $Date: 2006/02/14 10:33:21 $
+ * @version $Revision: 1.172 $, $Date: 2006/02/16 12:22:45 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -148,6 +148,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	private Test	selectedFirstTest;
 //	private boolean	yetUpdated = false;
 	private SchedulerHandler	schedulerHandler;
+	
+	private IntersectionValidator intersectionValidator;
 
 	public SchedulerModel(final ApplicationContext aContext) {
 		this.dispatcher = aContext.getDispatcher();
@@ -201,7 +203,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		extensionLauncher.getExtensionHandler(ResourceHandler.class.getName()); 
 		extensionLauncher.addExtensions(classLoader.getResource("xml/scheduler.xml"));
 		
-		this.schedulerHandler = extensionLauncher.getExtensionHandler(SchedulerHandler.class.getName());		
+		this.schedulerHandler = extensionLauncher.getExtensionHandler(SchedulerHandler.class.getName());	
+		
+		this.intersectionValidator = new IntersectionValidator(true);
 	}
 
 	public SchedulerHandler getSchedulerHandler() {
@@ -1338,147 +1342,13 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		} else {
 			temporalPattern = StorableObjectPool.getStorableObject(temporalPatternId, true);
 		}
-		return this.isValid(monitoredElementId, startDate, endDate, temporalPattern, newMeasurementSetup);
-	}
-	
-	private String isValid0(final Identifier monitoredElementId,
-	                       final SortedSet<Date> times,
-	                       final MeasurementSetup newMeasurementSetup,
-	                       final Identifier testId,
-	                       final Set<Test> tests) 
-	throws ApplicationException {
-		
-		if (times.isEmpty()) {
-			return null;
-		}
-		
-		final long measurementDuration = newMeasurementSetup.getMeasurementDuration();
-		
-		final Map<Date, Date> localStartEndTimeMap = new HashMap<Date, Date>();
-		
-		String result = null;
-		try {
-			final Set<Test> tests2;
-			
-			if (tests == null) {
-				final Date last = new Date(times.last().getTime() + measurementDuration);
-				final TypicalCondition startTypicalCondition = 
-					new TypicalCondition(last,
-						last,
-						OperationSort.OPERATION_LESS_EQUALS,
-						ObjectEntities.TEST_CODE,
-						TestWrapper.COLUMN_START_TIME);
-				final TypicalCondition endTypicalCondition = 
-					new TypicalCondition(times.first(),
-						times.first(),
-						OperationSort.OPERATION_GREAT_EQUALS,
-						ObjectEntities.TEST_CODE,
-						TestWrapper.COLUMN_END_TIME);
-				
-				final MonitoredElement monitoredElement1 = 
-					StorableObjectPool.getStorableObject(monitoredElementId, true);
-				
-				final MeasurementPort measurementPort = 
-					StorableObjectPool.getStorableObject(monitoredElement1.getMeasurementPortId(), true);
-				
-				final LinkedIdsCondition measurementPortCondition = 
-					new LinkedIdsCondition(measurementPort.getKISId(), ObjectEntities.MEASUREMENTPORT_CODE);
-				final Set<MeasurementPort> ports = 
-					StorableObjectPool.getStorableObjectsByCondition(measurementPortCondition, false);
-				final LinkedIdsCondition measurementElementCondition = 
-					new LinkedIdsCondition(ports, ObjectEntities.MONITOREDELEMENT_CODE);
-				final Set<MonitoredElement> monitoredElements = 
-					StorableObjectPool.getStorableObjectsByCondition(measurementElementCondition, false);
-				
-				final LinkedIdsCondition monitoredElementsCondition = 
-					new LinkedIdsCondition(monitoredElements, ObjectEntities.TEST_CODE);
-				
-				final Set<StorableObjectCondition> conditions = 
-					new HashSet<StorableObjectCondition>(3);
-				conditions.add(startTypicalCondition);
-				conditions.add(endTypicalCondition);				
-				conditions.add(monitoredElementsCondition);
-				
-				tests2 = 
-					StorableObjectPool.getStorableObjectsByCondition(
-						new CompoundCondition(conditions,
-							CompoundConditionSort.AND), 
-						false);
-			} else {
-				tests2 = tests;
-			}
-			
-			for (final Test test : tests2) {			
-				// ignore sub group tests,   
-				// since they are taken into account in the main group test 
-				final Identifier groupTestId = test.getGroupTestId();
-				if (test.getId().equals(testId) ||
-						!groupTestId.isVoid() && !test.getId().equals(groupTestId)) {
-					continue;
-				}	
-				
-				result = this.isValid0(monitoredElementId, test, times, localStartEndTimeMap, measurementDuration);
-				
-				if (result != null) {
-					break;
-				}
-
-			}
-		} catch (final ApplicationException e) {
-			throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
-		}
-		Log.debugMessage("return " + result, Log.DEBUGLEVEL10);
-		return result;
-	}
-	
-	private String isValid0(final Identifier monitoredElementId,
-	                        final Test test,
-	                        final SortedSet<Date> times,
-	                        final Map<Date, Date> localStartEndTimeMap,
-	                        final long measurementDuration) throws ApplicationException {				
-		
-		final MonitoredElement monitoredElement1 = 
-			StorableObjectPool.getStorableObject(monitoredElementId, true);
-		
-		final MeasurementPort measurementPort = 
-			StorableObjectPool.getStorableObject(monitoredElement1.getMeasurementPortId(), true);
-		
-		if (!test.getKISId().equals(measurementPort.getKISId())) {
-			return null;
-		}
-		
-		final TestView view = TestView.valueOf(test);
-		
-		final Date firstDate = view.getFirstDate();
-		final Date lastDate = view.getLastDate();
-		
-		// rough estimation of intersection
-		final boolean before = times.last().before(firstDate);
-		final boolean after = times.first().after(lastDate);
-		if (before || after) {
-			Log.debugMessage("rough estimation of intersection that inspected time is "
-				+ (after ? "after" : "before") 
-				+ " test " + test.getId(),
-				Log.DEBUGLEVEL03);
-			return null;
-		}
-		
-		for(final Date stDate : times) {
-			Date enDate = localStartEndTimeMap.get(stDate);
-			if (enDate == null) {
-				enDate = new Date(stDate.getTime() + measurementDuration);
-				localStartEndTimeMap.put(stDate, enDate);
-			}
-			String result;
-			if ((result = this.isIntersect(test, stDate, enDate)) != null) {
-				return result;
-			}
-		}
-		
-		return null;
+		return this.isValid(monitoredElementId, 
+			startDate, 
+			endDate, 
+			temporalPattern, 
+			newMeasurementSetup);
 	}
 
-	
 	/**
 	 * @param monitoredElementId
 	 * @param startDate
@@ -1494,142 +1364,11 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	                       final AbstractTemporalPattern temporalPattern,
 	                       final MeasurementSetup newTestMeasurementSetup) 
 	throws ApplicationException {
-		
-		final TypicalCondition startTypicalCondition = 
-			new TypicalCondition(endDate,
-				endDate,
-				OperationSort.OPERATION_LESS_EQUALS,
-				ObjectEntities.TEST_CODE,
-				TestWrapper.COLUMN_START_TIME);
-		final TypicalCondition endTypicalCondition = 
-			new TypicalCondition(startDate,
-				startDate,
-				OperationSort.OPERATION_GREAT_EQUALS,
-				ObjectEntities.TEST_CODE,
-				TestWrapper.COLUMN_END_TIME);
-		
-		final MonitoredElement monitoredElement1 = 
-			StorableObjectPool.getStorableObject(monitoredElementId, true);
-		
-		final MeasurementPort measurementPort = 
-			StorableObjectPool.getStorableObject(monitoredElement1.getMeasurementPortId(), true);
-		
-		final LinkedIdsCondition measurementPortCondition = 
-			new LinkedIdsCondition(measurementPort.getKISId(), ObjectEntities.MEASUREMENTPORT_CODE);
-		final Set<MeasurementPort> ports = 
-			StorableObjectPool.getStorableObjectsByCondition(measurementPortCondition, false);
-		final LinkedIdsCondition measurementElementCondition = 
-			new LinkedIdsCondition(ports, ObjectEntities.MONITOREDELEMENT_CODE);
-		final Set<MonitoredElement> monitoredElements = 
-			StorableObjectPool.getStorableObjectsByCondition(measurementElementCondition, false);
-
-		final LinkedIdsCondition monitoredElementsCondition = 
-			new LinkedIdsCondition(monitoredElements, ObjectEntities.TEST_CODE);
-
-		final Set<StorableObjectCondition> conditions = new HashSet<StorableObjectCondition>(3);
-		conditions.add(startTypicalCondition);
-		conditions.add(endTypicalCondition);
-		conditions.add(monitoredElementsCondition);
-		
-		final CompoundCondition compoundCondition = 
-			new CompoundCondition(conditions,
-					CompoundConditionSort.AND);
-		
-		final Set<Test> tests = 
-			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, false);
-		
-		final Map<Date, Date> localStartEndTimeMap = new HashMap<Date, Date>();
-		final long measurementDuration = newTestMeasurementSetup.getMeasurementDuration();
-
-		final long interval = 30L * 24L * 60L * 60L * 1000L;
-
-		for (final Test test : tests) {
-//			assert Log.debugMessage("Test:" 
-//					+ test.getId() 
-//					+  ", (" 
-//					+ test.getStartTime()
-//					+ ", " 
-//					+ test.getEndTime() 
-//					+ ")", 
-//				Log.DEBUGLEVEL03);
-			Date start = startDate.compareTo(test.getStartTime()) < 0 ? test.getStartTime() : startDate;
-			final Date end2 = endDate.compareTo(test.getEndTime()) < 0 ? endDate : test.getEndTime();
-			assert Log.debugMessage("Start: " + start + ", end2: " + end2, Log.DEBUGLEVEL03);
-			while(start.compareTo(end2) <= 0) {
-				final Date end = start.getTime() + interval < end2.getTime() ? new Date(start.getTime() + interval) : end2;
-				assert Log.debugMessage("Start:" + start + ", end:" + end, Log.DEBUGLEVEL03);
-				assert Log.debugMessage(new Date(start.getTime() + interval) + " < " + end2 + " ? " + new Date(start.getTime() + interval) + " : " + end2, Log.DEBUGLEVEL03);
-				final SortedSet<Date> times = this.getTestTimes(temporalPattern, startDate, end2, start, end, 0L);
-//				assert Log.debugMessage("Times: " + times, Log.DEBUGLEVEL03);
-				if (!times.isEmpty()) {
-					final String result = this.isValid0(monitoredElementId, test, times, localStartEndTimeMap, measurementDuration);
-	//				assert Log.debugMessage("Result: " + result, Log.DEBUGLEVEL03);
-					if (result != null) {
-						return result;
-					}
-				}
-				if (start.equals(end)) {
-					break;
-				}
-				start = end;
-			}
-		}
-		return null;
-	}
-	
-	private SortedSet<Date> getTestTimes(final AbstractTemporalPattern<?> temporalPattern,
-		final Date startDate,
-		final Date endDate,
-		final Date startInterval,
-		final Date endInterval,
-		final long offset) {
-		
-		final Date startTime0 = offset == 0 ? startDate : new Date(startDate.getTime() + offset);
-		final Date endTime0 = offset == 0 ? endDate : new Date(endDate.getTime() + offset);
-		
-//		assert Log.debugMessage("startDate:" + startDate 
-//				+ ", endDate:" + endDate
-//				+ ", startTime0:" + startTime0
-//				+ ", endTime0:" + endTime0
-//				+ ", startInterval: " + startInterval
-//				+ ", endInterval:" + endInterval, 
-//				Log.DEBUGLEVEL03);
-		final SortedSet<Date> times;
-		if (temporalPattern != null) {
-			times = temporalPattern.getTimes(startTime0,
-						endTime0,
-						startInterval,
-						endInterval);
-		} else {
-			times = new TreeSet<Date>();
-			times.add(startTime0);
-		}
-		return times;
-	}
-	
-	private SortedSet<Date> getTestTimes(final Identifier temporalPatternId,
-		final Date startDate,
-		final Date endDate,
-		final Date startInterval,
-		final Date endInterval,
-		final long offset) throws ApplicationException{
-		
-		if (temporalPatternId != null && !temporalPatternId.isVoid()) {
-			final AbstractTemporalPattern temporalPattern = 
-				StorableObjectPool.getStorableObject(temporalPatternId, true);
-			return this.getTestTimes(temporalPattern, 
-				startDate, 
-				endDate, 
-				startInterval, 
-				endInterval, 
-				offset);
-		}
-		return this.getTestTimes((AbstractTemporalPattern)null, 
+		return this.intersectionValidator.isValid(monitoredElementId, 
 			startDate, 
 			endDate, 
-			startInterval, 
-			endInterval, 
-			offset);
+			temporalPattern, 
+			newTestMeasurementSetup);		
 	}
 	
 	private SortedSet<Date> getTestTimes(final Test test,
@@ -1674,6 +1413,54 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		return testTimes;
 	}
 	
+	private SortedSet<Date> getTestTimes(final Identifier temporalPatternId,
+		final Date startDate,
+		final Date endDate,
+		final Date startInterval,
+		final Date endInterval,
+		final long offset) throws ApplicationException{
+		
+		if (temporalPatternId != null && !temporalPatternId.isVoid()) {
+			final AbstractTemporalPattern temporalPattern = 
+				StorableObjectPool.getStorableObject(temporalPatternId, true);
+			return this.getTestTimes(temporalPattern, 
+				startDate, 
+				endDate, 
+				startInterval, 
+				endInterval, 
+				offset);
+		}
+		return this.getTestTimes((AbstractTemporalPattern)null, 
+			startDate, 
+			endDate, 
+			startInterval, 
+			endInterval, 
+			offset);
+	}
+	
+	private SortedSet<Date> getTestTimes(final AbstractTemporalPattern<?> temporalPattern,
+		final Date startDate,
+		final Date endDate,
+		final Date startInterval,
+		final Date endInterval,
+		final long offset) {
+		
+		final Date startTime0 = offset == 0 ? startDate : new Date(startDate.getTime() + offset);
+		final Date endTime0 = offset == 0 ? endDate : new Date(endDate.getTime() + offset);
+
+		final SortedSet<Date> times;
+		if (temporalPattern != null) {
+			times = temporalPattern.getTimes(startTime0,
+						endTime0,
+						startInterval,
+						endInterval);
+		} else {
+			times = new TreeSet<Date>();
+			times.add(startTime0);
+		}
+		return times;
+	}
+	
 	/**
 	 * @param test
 	 * @param newTestMeasurementSetup
@@ -1683,7 +1470,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	public String isValid(final Test test,
 		final  MeasurementSetup newTestMeasurementSetup) 
 	throws ApplicationException {
-		return this.isValid(test, newTestMeasurementSetup, 0, true);
+		return this.intersectionValidator.isValid(test, newTestMeasurementSetup);
 	}
 	
 	/**
@@ -1695,224 +1482,15 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	public String isValid(final Test test,
 		final long offset) 
 	throws ApplicationException {
-		return this.isValid(test, null, offset, false);
+		return this.intersectionValidator.isValid(test, offset);
 	}
 	
-	private String isValid(final Test test,
-      		final  MeasurementSetup newTestMeasurementSetup,
-      		final long offset,
-      		boolean ms) 
-      	throws ApplicationException {
-      		
-      		final Identifier monitoredElementId = test.getMonitoredElementId();
-      		final Date startDate = test.getStartTime();
-      		final Date endDate = test.getEndTime();
-      		final TypicalCondition startTypicalCondition = 
-      			new TypicalCondition(endDate,
-      				endDate,
-      				OperationSort.OPERATION_LESS_EQUALS,
-      				ObjectEntities.TEST_CODE,
-      				TestWrapper.COLUMN_START_TIME);
-      		final TypicalCondition endTypicalCondition = 
-      			new TypicalCondition(startDate,
-      				startDate,
-      				OperationSort.OPERATION_GREAT_EQUALS,
-      				ObjectEntities.TEST_CODE,
-      				TestWrapper.COLUMN_END_TIME);
-      		
-    		final MonitoredElement monitoredElement1 = 
-    			StorableObjectPool.getStorableObject(monitoredElementId, true);
-    		
-    		final MeasurementPort measurementPort = 
-    			StorableObjectPool.getStorableObject(monitoredElement1.getMeasurementPortId(), true);
-    		
-    		final LinkedIdsCondition measurementPortCondition = 
-    			new LinkedIdsCondition(measurementPort.getKISId(), ObjectEntities.MEASUREMENTPORT_CODE);
-    		final Set<MeasurementPort> ports = 
-    			StorableObjectPool.getStorableObjectsByCondition(measurementPortCondition, false);
-    		final LinkedIdsCondition measurementElementCondition = 
-    			new LinkedIdsCondition(ports, ObjectEntities.MONITOREDELEMENT_CODE);
-    		final Set<MonitoredElement> elements = 
-    			StorableObjectPool.getStorableObjectsByCondition(measurementElementCondition, false);
-    		
-      		final LinkedIdsCondition monitoredElementCondition = 
-      			new LinkedIdsCondition(elements, ObjectEntities.TEST_CODE);
-      		
-      		final Set<StorableObjectCondition> conditions = 
-      			new HashSet<StorableObjectCondition>(3);
-      		conditions.add(startTypicalCondition);
-      		conditions.add(endTypicalCondition);			
-      		conditions.add(monitoredElementCondition);
-      		
-      		final CompoundCondition compoundCondition = 
-      			new CompoundCondition(conditions,
-      				CompoundConditionSort.AND);
-      		
-      		final Set<Test> tests = 
-      			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, false);
-      		
-      		Date start = null;
-      		Date end = null;
-      		for (final Test test1 : tests) {
-      			if (test1.equals(test)) {
-      				continue;
-      			}
-      			final Date testStart = test1.getStartTime();
-      			final Date testEnd = test1.getEndTime();
-      			start = start != null && start.compareTo(testStart) < 0 ? start : testStart; 
-      			end = end != null && end.compareTo(testEnd) > 0 ? end : testEnd;
-      		}
-      		if (start == end && end == null) {
-      			return null;
-      		}
-      		
-      		start = start.compareTo(startDate) > 0 ? start : startDate;
-      		end = end.compareTo(endDate) > 0 ? endDate : end;
-      		
-      		final long interval = 7L * 24L * 60L * 60L * 1000L;
-      		
-      		final MeasurementSetup testMeasurementSetup;
-      		if (ms) {
-				testMeasurementSetup = newTestMeasurementSetup;
-			} else {
-				testMeasurementSetup = 
-      				StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
-			}
-      		
-      		while(start.compareTo(end) <= 0) {
-      			final Date end1 = start.getTime() + interval < end.getTime() ? new Date(start.getTime() + interval) : end;
-      			final SortedSet<Date> times = this.getTestTimes(test, start, end1, offset);
-      			
-      			if (!times.isEmpty()) {
-	      			final String result;
-	      			if (ms) {
-						result = this.isValid0(test.getMonitoredElementId(), 
-							times, 
-							testMeasurementSetup, 
-							test.getId(),
-							tests);
-					} else {
-	      				result = this.isValid0(test.getMonitoredElementId(), 
-	    					times, 
-	    					testMeasurementSetup, 
-	    					test.getId(),
-	    					tests);
-	      			}
-	      			if (result != null) {
-	      				assert Log.debugMessage("SchedulerModel.isValid (" 
-	      						+ test 
-	      						+ ", " 
-	      						+ newTestMeasurementSetup 
-	      						+ ")  | return " 
-	      						+ result, Log.DEBUGLEVEL10);
-	      				return result;
-	      			}
-      			}
-      			if (start.equals(end1)) {
-      				break;
-      			}
-      			start = end1;      			
-      		}
-      		return null;
-      	}
-	
-	/**
-	 * @param test
-	 * @param startDate
-	 * @param endDate
-	 * @return intersection desctription or null if there is no intersection
-	 * @throws ApplicationException
-	 */
 	public String isValid(final Test test,
-	                       final Date startDate,
-	               		   final Date endDate) 
-	throws ApplicationException {
-		
-		final SortedSet<Date> times = this.getTestTimes(test, startDate, endDate, 0L);
-		
-		final MeasurementSetup testMeasurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
-		
-		final String result = this.isValid0(test.getMonitoredElementId(), 
-			times, 
-			testMeasurementSetup, 
-			test.getId(),
-			null);
-		Log.debugMessage("SchedulerModel.isValid (" + test + ", " + startDate + ", " + endDate + ")  | return " + result, Log.DEBUGLEVEL10);
-		return result;
-	}
-	
-	private String isIntersect(final Test test, 
-	                            final Date startDate0, 
-	                            final Date endDate0) 
-	throws ApplicationException {
-		final Identifier groupTestId = test.getGroupTestId();
-		if (groupTestId.isVoid() || test.getId().equals(groupTestId)) {
-			return this.isIntersect0(test, startDate0, endDate0);
-		} 
-
-		String intersect = null;
-		
-		final LinkedIdsCondition groupTestCondition = 
-			new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE);
-		final Set<Test> groupTests = 
-			StorableObjectPool.getStorableObjectsByCondition(groupTestCondition, true);
-		for(final Test groupTest1 : groupTests) {
-			if ((intersect = this.isIntersect0(groupTest1, startDate0, endDate0)) != null) {
-				break;
-			}
-		}
-		
-		return intersect;
-	}
-	
-	/**
-	 * @param test
-	 * @param startDate0
-	 * @param endDate0
-	 * @return intersection desctription or null if there is no intersection
-	 * @throws ApplicationException
-	 */
-	private String isIntersect0(final Test test, 
-	                            final Date startDate0, 
-	                            final Date endDate0) 
-	throws ApplicationException {
-		final SortedSet<Date> testTimes = this.getTestTimes(test, startDate0, endDate0, 0);
-		Log.debugMessage(testTimes, Log.DEBUGLEVEL10);
-		
-		final SortedSet<Date> tailSet = testTimes.tailSet(startDate0);
-		
-		boolean intersect = false;
-		if (!tailSet.isEmpty()) {
-			intersect = tailSet.first().before(endDate0);
-		}
-		
-		if (!intersect) {
-			final SortedSet<Date> headSet = testTimes.headSet(endDate0);			
-			if (!headSet.isEmpty()) {
-				final TestView view = TestView.valueOf(test);
-				final MeasurementSetup testMeasurementSetup = view.getMeasurementSetup();
-				intersect = 
-					headSet.last().getTime() + testMeasurementSetup.getMeasurementDuration() > startDate0.getTime();
-			}
-		}
-
-		assert Log.debugMessage(test 
-				+ (intersect ? " intersects " : " doen't intersect ") 
-				+ '[' 
-				+ startDate0 
-				+ ", " 
-				+ endDate0 
-				+ ']' , 
-			Log.DEBUGLEVEL10);
-		if (intersect) {
-			final String extendedTestDescription = this.getExtendedTestDescription(test);
-			Log.debugMessage(extendedTestDescription,
-				Log.DEBUGLEVEL10);
-			return I18N.getString("Scheduler.Text.Scheduler.Model.TestIntersection") + "\n" + extendedTestDescription;
-		}
-		
-		return null;
-	}	
+  		final Date startDate,
+  		final Date endDate) 
+  	throws ApplicationException {
+  		return this.intersectionValidator.isValid(test, startDate, endDate);
+  	}
 	
 	public final String getExtendedTestDescription(final Test test) {		
 		final TestView view = TestView.valueOf(test);
