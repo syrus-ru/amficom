@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryAnalysisCriteria.java,v 1.1 2005/09/01 16:48:30 saa Exp $
+ * $Id: ReflectometryAnalysisCriteria.java,v 1.1.2.1 2006/02/16 12:45:32 arseniy Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,15 @@
 
 package com.syrus.AMFICOM.reflectometry;
 
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.measurement.Parameter;
-import com.syrus.AMFICOM.measurement.ParameterSet;
+import java.util.Set;
+
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.ActionParameter;
+import com.syrus.AMFICOM.measurement.ActionTemplate;
 import com.syrus.io.DataFormatException;
+import com.syrus.util.Log;
 
 /**
  * Параметры анализа при рефлектометрических измерениях.
@@ -23,31 +28,43 @@ import com.syrus.io.DataFormatException;
  * На данный момент modifier-методы не поддерживаются.
  * <p>
  * @author saa
- * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/09/01 16:48:30 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.1.2.1 $, $Date: 2006/02/16 12:45:32 $
  * @module
  */
-public class ReflectometryAnalysisCriteria {
-	private ParameterSet criteriaSet;
+public class ReflectometryAnalysisCriteria implements ReflectometryEtalon {
+	private ActionTemplate analysisTemplate;
 	private byte[] dadaraCriteria;
+	private byte[] dadaraEtalon;
+	private byte[] reflectogrammaEtalon;
 
-	ReflectometryAnalysisCriteria(final ParameterSet criteria)
-	throws DataFormatException {
-		this.criteriaSet = criteria;
+	ReflectometryAnalysisCriteria(final Identifier analysisTemplateId) throws DataFormatException, ApplicationException {
+		this.analysisTemplate = StorableObjectPool.getStorableObject(analysisTemplateId, true);
 		unpack();
 	}
 
-	private void unpack() throws DataFormatException {
-		Parameter[] params = this.criteriaSet.getParameters();
-		for (int i = 0; i < params.length; i++)
-		{
-			ParameterType p = params[i].getType();
-			if (p.equals(ParameterType.DADARA_CRITERIA)) {
-				this.dadaraCriteria = params[i].getValue();
+	private void unpack() throws DataFormatException, ApplicationException {
+		final Set<ActionParameter> actionParameters = this.analysisTemplate.getActionParameters();
+		for (final ActionParameter actionParameter : actionParameters) {
+			final String parameterTypeCodename = actionParameter.getTypeCodename();
+			if (parameterTypeCodename.equals(ParameterTypeCodename.DADARA_CRITERIA.stringValue())) {
+				this.dadaraCriteria = actionParameter.getValue();
+			} else if (parameterTypeCodename.equals(ParameterTypeCodename.DADARA_ETALON.stringValue())) {
+				this.dadaraEtalon = actionParameter.getValue();
+			} else if (parameterTypeCodename.equals(ParameterTypeCodename.REFLECTOGRAMMA_ETALON.stringValue())) {
+				this.reflectogrammaEtalon = actionParameter.getValue();
+			} else {
+				Log.errorMessage("Unknown codename: " + parameterTypeCodename);
 			}
 		}
 		if (this.dadaraCriteria == null) {
-			throw new DataFormatException(); // no criteria found in set
+			throw new DataFormatException("No criteria"); // no criteria found
+		}
+		if (this.dadaraEtalon == null) {
+			throw new DataFormatException("No dadara etalon"); // no dadara etalon
+		}
+		if (this.reflectogrammaEtalon == null) {
+			throw new DataFormatException("No reflectogramma etalon"); // no reflectogramma etalon
 		}
 	}
 
@@ -63,6 +80,36 @@ public class ReflectometryAnalysisCriteria {
 	 */
 	public void setDadaraCriteria(byte[] dadaraCriteria) {
 //		this.dadaraCriteria = dadaraCriteria;
+		throw new UnsupportedOperationException(); // @todo: implement
+	}
+
+	/**
+	 * @return массив байт для восстановления объекта-эталона dadara
+	 */
+	public byte[] getDadaraEtalon() {
+		return this.dadaraEtalon.clone();
+	}
+
+	/**
+	 * не реализован
+	 */
+	public void setDadaraEtalon(byte[] dadaraEtalon) {
+//		this.dadaraEtalon = dadaraEtalon;
+		throw new UnsupportedOperationException(); // @todo: implement
+	}
+
+	/**
+	 * @return массив байт для восстановления рефлектограммы BellcoreStructure
+	 */
+	public byte[] getReflectogrammaEtalon() {
+		return this.reflectogrammaEtalon.clone();
+	}
+
+	/**
+	 * не реализован
+	 */
+	public void setReflectogrammaEtalon(byte[] reflectogrammaEtalon) {
+		this.reflectogrammaEtalon = reflectogrammaEtalon;
 		throw new UnsupportedOperationException(); // @todo: implement
 	}
 }
