@@ -525,9 +525,9 @@ final class TestParametersPanel implements PropertyChangeListener {
 
 		final String codename = port.getType().getCodename();
 		this.parametersTestPanel = this.schedulerModel.getSchedulerHandler().getParametersTestPanel(codename);
-		this.parametersTestPanel.setApplicationContext(this.aContext);
-		this.parametersTestPanel.setTestParametersPanel(this);
 		if (this.parametersTestPanel != null) {
+			this.parametersTestPanel.setApplicationContext(this.aContext);
+			this.parametersTestPanel.setTestParametersPanel(this);
 			this.parametersTestPanel.setMonitoredElement(me);
 			this.switchPanel.add(this.parametersTestPanel, "");
 			this.patternPanel.revalidate();
@@ -535,6 +535,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			this.setEnableEditing(this.useSetupsCheckBox.isSelected());
 		} else {
 			Log.errorMessage("Port type codename '" + codename + "' does not support");
+			AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.UnsupportedDeviceType"));			
 		}
 	}
 
