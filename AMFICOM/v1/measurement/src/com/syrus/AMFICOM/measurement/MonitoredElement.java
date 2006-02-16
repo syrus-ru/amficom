@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.13 2006/02/03 07:43:28 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.14 2006/02/16 12:34:31 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2006/02/03 07:43:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2006/02/16 12:34:31 $
+ * @author $Author: saa $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -222,8 +222,23 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 		this.localAddress = localAddress;
 	}
 
+	/**
+	 * Возвращает свое базовое название 
+	 * @return свое базовое название
+	 */
 	public String getName() {
 		return this.name;
+	}
+
+	/**
+	 * Возвращает название, отображаемое пользователю
+	 * @return название, отображаемое пользователю
+	 */
+	public String getDisplayedName() {
+		// @todo: move the construction code to module util
+		// the same may be done for "RR"
+		// XXX: not cached yet; creates new string every invocation
+		return LangModelMeasurement.getString("ME") + " " + this.getName();
 	}
 
 	public void setName(final String name) {
