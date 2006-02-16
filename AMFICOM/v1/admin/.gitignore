@@ -17,3 +17,8 @@ Makefile.inc
 .settings
 .idl
 test
+javadoc.xml
+build.xml
+nbproject
+.nbintdb
+.pmd
