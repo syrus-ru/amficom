@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryMeasurementParametersImpl.java,v 1.4 2005/10/31 12:30:15 bass Exp $
+ * $Id: ReflectometryMeasurementParametersImpl.java,v 1.4.2.1 2006/02/16 12:46:18 arseniy Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,10 +9,13 @@
 package com.syrus.AMFICOM.reflectometry;
 
 import java.io.IOException;
+import java.util.Set;
 
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.measurement.Parameter;
-import com.syrus.AMFICOM.measurement.ParameterSet;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.ActionParameter;
+import com.syrus.AMFICOM.measurement.ActionTemplate;
 import com.syrus.io.DataFormatException;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
@@ -24,85 +27,98 @@ import com.syrus.util.Log;
  * На данный момент modifier-методы не поддерживаются.
  * </p>
  * @author saa
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/10/31 12:30:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4.2.1 $, $Date: 2006/02/16 12:46:18 $
  * @module
  */
-public final class ReflectometryMeasurementParametersImpl
-implements ReflectometryMeasurementParameters {
-	private ParameterSet msPars;
+public final class ReflectometryMeasurementParametersImpl implements ReflectometryMeasurementParameters {
+	private ActionTemplate measurementTemplate;
 
+	private int waveLength;
 	private double traceLength;
+	private double resolution;
+	private int pulseWidth;
+	private double refractionIndex;
+	private int numberOfAverages;
+	private boolean pulseWidthLowRes;
 	private boolean gainSplice;
 	private boolean liveFiberDetection;
-	private double refractionIndex;
-	private int wavelength;
-	private int numberOfAverages;
-	private int pulseWidth;
-	private boolean highResolution;
-	private double resolution;
 
 	/**
 	 * Этот конструктор предназначен для использования в
 	 * {@link ReflectometryMeasurementSetup}, а не для непосредственного вызова.
-	 * @param msPars Должен быть parameterSet'ом
-	 *   {@link com.syrus.AMFICOM.measurement.MeasurementSetup}
+	 * @param measurementTemplateId Должен быть шаблоном для измерений.
 	 * @throws DataFormatException Неправильный формат входных данных
 	 */
-	 ReflectometryMeasurementParametersImpl(final ParameterSet msPars)
-	 throws DataFormatException {
-		this.msPars = msPars;
+	 ReflectometryMeasurementParametersImpl(final Identifier measurementTemplateId) throws DataFormatException, ApplicationException {
+		this.measurementTemplate = StorableObjectPool.getStorableObject(measurementTemplateId, true);
 		this.unpack();
-	 }
+	}
 
 	 /**
 	  * @throws DataFormatException данные не распознаны
-	  * @throws NumberFormatException данные не распознаны
 	  */
-	 private void unpack() throws DataFormatException {
-		final Parameter[] setParameters = this.msPars.getParameters();
-		for (int i = 0; i < setParameters.length; i++) {
-			final ParameterType parameterType = setParameters[i].getType();
-			if (parameterType.equals(ParameterType.REF_FLAG_GAIN_SPLICE_ON)) {
+	 private void unpack() throws DataFormatException, ApplicationException {
+		 final Set<ActionParameter> actionParameters = this.measurementTemplate.getActionParameters();
+		 for (final ActionParameter actionParameter : actionParameters) {
+			 final String parameterTypeCodename = actionParameter.getTypeCodename();
+			if (parameterTypeCodename.equals(ParameterTypeCodename.WAVE_LENGTH.stringValue())) {
 				try {
-					final boolean b = new ByteArray(setParameters[i].getValue()).toBoolean();
-					this.gainSplice = b;
-				} catch (IOException e) {
-					throw new DataFormatException(); // not enough bytes
+					this.waveLength = new ByteArray(actionParameter.getValue()).toInt();
+				} catch (IOException ioe) {
+					throw new DataFormatException(ioe.toString()); // not enough bytes
 				}
-				continue;
-			}
-			if (parameterType.equals(ParameterType.REF_FLAG_LIFE_FIBER_DETECT)) {
+			} else if (parameterTypeCodename.equals(ParameterTypeCodename.TRACE_LENGTH.stringValue())) {
 				try {
-					final boolean b = new ByteArray(setParameters[i].getValue()).toBoolean();
-					this.liveFiberDetection = b;
-				} catch (IOException e) {
-					throw new DataFormatException(); // not enough bytes
+					this.traceLength = new ByteArray(actionParameter.getValue()).toDouble();
+				} catch (IOException ioe) {
+					throw new DataFormatException(ioe.toString()); // not enough bytes
 				}
-				continue;
-			}
-			final String stringValue = setParameters[i].getStringValue();
-			try {
-				if (parameterType.equals(ParameterType.REF_TRACE_LENGTH)) {
-					this.traceLength = Double.parseDouble(stringValue);
-				} else if (parameterType.equals(ParameterType.REF_INDEX_OF_REFRACTION)) {
-					this.refractionIndex = Double.parseDouble(stringValue);
-				} else if (parameterType.equals(ParameterType.REF_WAVE_LENGTH)) {
-					this.wavelength = Integer.parseInt(stringValue);
-				} else if (parameterType.equals(ParameterType.REF_AVERAGE_COUNT)) {
-					this.numberOfAverages = (int) Double.parseDouble(stringValue);
-				} else if (parameterType.equals(ParameterType.REF_RESOLUTION)) {
-					this.resolution = Double.parseDouble(stringValue);
-				} else if (parameterType.equals(ParameterType.REF_PULSE_WIDTH_HIGH_RES)) {
-					this.pulseWidth = Integer.parseInt(stringValue);
-					this.highResolution = true;
-				} else if (parameterType.equals(ParameterType.REF_PULSE_WIDTH_LOW_RES)) {
-					this.pulseWidth = Integer.parseInt(stringValue);
-					this.highResolution = false;
+			} else if (parameterTypeCodename.equals(ParameterTypeCodename.RESOLUTION.stringValue())) {
+				try {
+					this.resolution = new ByteArray(actionParameter.getValue()).toDouble();
+				} catch (IOException ioe) {
+					throw new DataFormatException(ioe.toString()); // not enough bytes
 				}
-			} catch (NumberFormatException ex) {
-				Log.errorMessage(ex);
-				throw new DataFormatException(ex.toString());
+			} else if (parameterTypeCodename.equals(ParameterTypeCodename.PULSE_WIDTH_M.stringValue())
+					|| parameterTypeCodename.equals(ParameterTypeCodename.PULSE_WIDTH_NS.stringValue())) {
+				try {
+					this.pulseWidth = new ByteArray(actionParameter.getValue()).toInt();
+				} catch (IOException ioe) {
+					throw new DataFormatException(ioe.toString()); // not enough bytes
+				}
+			} else if (parameterTypeCodename.equals(ParameterTypeCodename.INDEX_OF_REFRACTION.stringValue())) {
+				try {
+					this.refractionIndex = new ByteArray(actionParameter.getValue()).toDouble();
+				} catch (IOException ioe) {
+					throw new DataFormatException(ioe.toString()); // not enough bytes
+				}
+			} else if (parameterTypeCodename.equals(ParameterTypeCodename.AVERAGE_COUNT.stringValue())) {
+				try {
+					this.numberOfAverages = new ByteArray(actionParameter.getValue()).toInt();
+				} catch (IOException ioe) {
+					throw new DataFormatException(ioe.toString()); // not enough bytes
+				}
+			} else if (parameterTypeCodename.equals(ParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES.stringValue())) {
+				try {
+					this.pulseWidthLowRes = new ByteArray(actionParameter.getValue()).toBoolean();
+				} catch (IOException ioe) {
+					throw new DataFormatException(ioe.toString()); // not enough bytes
+				}
+			} else if (parameterTypeCodename.equals(ParameterTypeCodename.FLAG_GAIN_SPLICE_ON.stringValue())) {
+				try {
+					this.gainSplice = new ByteArray(actionParameter.getValue()).toBoolean();
+				} catch (IOException ioe) {
+					throw new DataFormatException(ioe.toString()); // not enough bytes
+				}
+			} else if (parameterTypeCodename.equals(ParameterTypeCodename.FLAG_LIFE_FIBER_DETECT.stringValue())) {
+				try {
+					this.liveFiberDetection = new ByteArray(actionParameter.getValue()).toBoolean();
+				} catch (IOException ioe) {
+					throw new DataFormatException(ioe.toString()); // not enough bytes
+				}
+			} else {
+				Log.errorMessage("Unknown codename: " + parameterTypeCodename);
 			}
 		}
 		// @todo: добавить проверку полноты, неизбыточности и корректности полученных данных
@@ -113,8 +129,16 @@ implements ReflectometryMeasurementParameters {
 		return this.gainSplice;
 	}
 
+	public boolean hasPulseWidthLowRes() {
+		return this.pulseWidthLowRes;
+	}
+
+	/**
+	 * @deprecated Use {@link #hasPulseWidthLowRes()} instead.
+	 */
+	@Deprecated
 	public boolean hasHighResolution() {
-		return this.highResolution;
+		return !this.hasPulseWidthLowRes();
 	}
 
 	public boolean hasLiveFiberDetection() {
@@ -142,7 +166,7 @@ implements ReflectometryMeasurementParameters {
 	}
 
 	public int getWavelength() {
-		return this.wavelength;
+		return this.waveLength;
 	}
 
 	public void setGainSplice(boolean gainSplice) {
@@ -150,8 +174,17 @@ implements ReflectometryMeasurementParameters {
 		throw new UnsupportedOperationException(); // @todo: implement
 	}
 
+	/**
+	 * @deprecated Use {@link #setPulseWidthLowRes(boolean)} instead.
+	 * @param highResolution
+	 */
+	@Deprecated
 	public void setHighResolution(boolean highResolution) {
 //		this.highResolution = highResolution;
+		throw new UnsupportedOperationException(); // @todo: implement
+	}
+
+	public void setPulseWidthLowRes(boolean pulseWidthLowRes) {
 		throw new UnsupportedOperationException(); // @todo: implement
 	}
 

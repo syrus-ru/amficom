@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementReflectometryAnalysisResult.java,v 1.5 2005/10/16 16:03:15 saa Exp $
+ * $Id: MeasurementReflectometryAnalysisResult.java,v 1.5.2.1 2006/02/16 12:45:58 arseniy Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,10 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Analysis;
+import com.syrus.AMFICOM.measurement.AnalysisResultParameter;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.Parameter;
-import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.io.DataFormatException;
 import com.syrus.util.ByteArray;
 
@@ -33,9 +31,9 @@ import com.syrus.util.ByteArray;
  * <li>DataFormatException - при ошибке восстановления double из byte[]
  * </ul>
  * 
- * @author $Author: saa $
+ * @author $Author: arseniy $
  * @author saa
- * @version $Revision: 1.5 $, $Date: 2005/10/16 16:03:15 $
+ * @version $Revision: 1.5.2.1 $, $Date: 2006/02/16 12:45:58 $
  * @module measurement
  */
 public final class MeasurementReflectometryAnalysisResult
@@ -103,9 +101,9 @@ implements ReflectometryAnalysisResult {
 	 * @throws ApplicationException @see MeasurementReflectometryAnalysisResult
 	 * @throws DataFormatException @see MeasurementReflectometryAnalysisResult
 	 */
-	private MeasurementReflectometryAnalysisResult(final Analysis analysis,
-			final boolean allowNull)
-	throws ApplicationException, DataFormatException {
+	private MeasurementReflectometryAnalysisResult(final Analysis analysis, final boolean allowNull)
+			throws ApplicationException,
+				DataFormatException {
 		if (!allowNull) {
 			assert analysis != null : ErrorMessages.NON_NULL_EXPECTED;
 		} else {
@@ -113,39 +111,31 @@ implements ReflectometryAnalysisResult {
 				return; // leave null fields
 			}
 		}
-		final LinkedIdsCondition condition = new LinkedIdsCondition(
-				analysis.getId(), ObjectEntities.RESULT_CODE);
-		final Set<Result> results =
-			StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		final LinkedIdsCondition condition = new LinkedIdsCondition(analysis.getId(), ObjectEntities.ANALYSISRESULTPARAMETER_CODE);
+		final Set<AnalysisResultParameter> results = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		boolean qualityHasQd = false;
 		double qualityQ = 0.0;
 		double qualityD = 0.0;
-		for (final Result result1 : results) {
-			for (final Parameter parameter : result1.getParameters()) {
-				if (parameter.getType().equals(ParameterType.DADARA_ANALYSIS_RESULT)) {
-					this.analysisResultBytes = parameter.getValue().clone();
+		for (final AnalysisResultParameter parameter : results) {
+			if (parameter.getTypeCodename().equals(ParameterTypeCodename.DADARA_ANALYSIS_RESULT.stringValue())) {
+				this.analysisResultBytes = parameter.getValue();//XXX removed clone()
+			} else if (parameter.getTypeCodename().equals(ParameterTypeCodename.DADARA_ALARMS.stringValue())) {//XXX added else
+				this.reflectogramMismatchBytes = parameter.getValue();//XXX removed clone()
+			} else if (parameter.getTypeCodename().equals(ParameterTypeCodename.DADARA_QUALITY_PER_EVENT)) {//XXX added else
+				this.evaluationPerEventResultBytes = parameter.getValue();//XXX removed clone()
+			} else if (parameter.getTypeCodename().equals(ParameterTypeCodename.DADARA_QUALITY_OVERALL_D.stringValue())) {//XXX added else
+				qualityHasQd = true;
+				try {
+					qualityD = new ByteArray(parameter.getValue()).toDouble();
+				} catch (IOException e) {
+					throw new DataFormatException();
 				}
-				if (parameter.getType().equals(ParameterType.DADARA_ALARMS)) {
-					this.reflectogramMismatchBytes = parameter.getValue().clone();
-				}
-				if (parameter.getType().equals(ParameterType.DADARA_QUALITY_PER_EVENT)) {
-					this.evaluationPerEventResultBytes = parameter.getValue().clone();
-				}
-				if (parameter.getType().equals(ParameterType.DADARA_QUALITY_OVERALL_D)) {
-					qualityHasQd = true;
-					try {
-						qualityD = new ByteArray(parameter.getValue()).toDouble();
-					} catch (IOException e) {
-						throw new DataFormatException();
-					}
-				}
-				if (parameter.getType().equals(ParameterType.DADARA_QUALITY_OVERALL_Q)) {
-					qualityHasQd = true;
-					try {
-						qualityQ = new ByteArray(parameter.getValue()).toDouble();
-					} catch (IOException e) {
-						throw new DataFormatException();
-					}
+			} else if (parameter.getTypeCodename().equals(ParameterTypeCodename.DADARA_QUALITY_OVERALL_Q)) {//XXX added else
+				qualityHasQd = true;
+				try {
+					qualityQ = new ByteArray(parameter.getValue()).toDouble();
+				} catch (IOException e) {
+					throw new DataFormatException();
 				}
 			}
 		}
