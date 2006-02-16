@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisType.java,v 1.107 2005/12/07 17:17:16 bass Exp $
+ * $Id: AnalysisType.java,v 1.108 2006/02/16 12:28:55 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.107 $, $Date: 2005/12/07 17:17:16 $
- * @author $Author: bass $
+ * @version $Revision: 1.108 $, $Date: 2006/02/16 12:28:55 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -63,7 +63,8 @@ public enum AnalysisType implements IdlTransferableObject<IdlAnalysisType>,
 		this.etalonParameterTypes = etaParameterTypes;
 		this.outParameterTypes = outParameterTypes;
 		this.measurementTypes = measurementTypes;
-		this.description = LangModelMeasurement.getString(KEY_ROOT + this.codename);
+		final String string = LangModelMeasurement.getString(KEY_ROOT + this.codename);
+		this.description = string != null ? string : "";
 	}
 
 	public static AnalysisType valueOf(final int code) {

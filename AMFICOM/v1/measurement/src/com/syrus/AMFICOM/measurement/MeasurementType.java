@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementType.java,v 1.111 2005/12/06 09:45:11 bass Exp $
+ * $Id: MeasurementType.java,v 1.112 2006/02/16 12:28:54 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.111 $, $Date: 2005/12/06 09:45:11 $
- * @author $Author: bass $
+ * @version $Revision: 1.112 $, $Date: 2006/02/16 12:28:54 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -57,7 +57,8 @@ public enum MeasurementType implements ActionType<IdlMeasurementType> {
 		this.codename = codename;
 		this.inParameterTypes = inParameterTypes;
 		this.outParameterTypes = outParameterTypes;
-		this.description = LangModelMeasurement.getString(KEY_ROOT + this.codename);
+		final String string = LangModelMeasurement.getString(KEY_ROOT + this.codename);
+		this.description = string != null ? string : "";
 	}
 
 	public static MeasurementType valueOf(final int code) {
