@@ -64,7 +64,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2006/02/13 12:22:55 $
+ * @version $Revision: 1.100 $, $Date: 2006/02/16 13:38:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -1170,11 +1170,11 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		this.add(this.countOfAverageOutLabel, gbc);
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		this.add(this.maxDistanceLabel, gbc);
 		gbc.weightx = 0.0;
-		this.add(this.averageQuantityComboBox, gbc);
-
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		this.add(this.maxDistanceComboBox, gbc);
+		
 		gbc.weightx = 1.0;
 		this.add(this.highResolutionCheckBox, gbc);
 
@@ -1190,10 +1190,10 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		this.add(this.maxDistanceLabel, gbc);
-		gbc.weightx = 0.0;
+		this.add(this.countOfAverageOutLabel, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		this.add(this.maxDistanceComboBox, gbc);
+		gbc.weightx = 0.0;
+		this.add(this.averageQuantityComboBox, gbc);
 
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
