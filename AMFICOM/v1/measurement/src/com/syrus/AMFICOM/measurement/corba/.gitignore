@@ -9,6 +9,7 @@ IdlAnalysisType.java
 IdlModelingType.java
 IdlParameterValueKind.java
 IdlActionParameterTypeBinding.java
+IdlParameter.java
 IdlActionParameter.java
 IdlActionTemplate.java
 IdlMeasurementSetup.java

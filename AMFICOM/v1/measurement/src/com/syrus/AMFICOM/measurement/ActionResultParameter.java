@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionResultParameter.java,v 1.1.2.3 2006/02/14 00:43:51 arseniy Exp $
+ * $Id: ActionResultParameter.java,v 1.1.2.4 2006/02/16 12:50:09 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,45 +17,37 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlActionResultParameter;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/02/14 00:43:51 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/02/16 12:50:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public abstract class ActionResultParameter<T extends ActionResultParameter<T>> extends StorableObject<T> {
+public abstract class ActionResultParameter<T extends ActionResultParameter<T>> extends Parameter<T> {
 	private Identifier typeId;
 	private Identifier actionId;
-	private byte[] value;
+
+	private String typeCodename;
 
 	ActionResultParameter(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
+			final byte[] value,
 			final Identifier typeId,
-			final Identifier actionId,
-			final byte[] value) {
-		super(id,
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
-				creatorId,
-				creatorId,
-				version);
+			final Identifier actionId) {
+		super(id, creatorId, version, value);
 		this.typeId = typeId;
 		this.actionId = actionId;
-		this.value = value;
 	}
 
-	ActionResultParameter(final IdlStorableObject idlStorableObject) throws CreateObjectException {
-		try {
-			this.fromTransferable(idlStorableObject);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+	ActionResultParameter(final IdlActionResultParameter idlActionResultParameter) throws CreateObjectException {
+		super(idlActionResultParameter);
 	}
 
 	@Override
@@ -64,7 +56,6 @@ public abstract class ActionResultParameter<T extends ActionResultParameter<T>> 
 		super.fromTransferable(transferable);
 		this.typeId = Identifier.valueOf(idlActionResultParameter._typeId);
 		this.actionId = Identifier.valueOf(idlActionResultParameter.actionId);
-		this.value = idlActionResultParameter.value;
 	}
 
 	public final Identifier getTypeId() {
@@ -75,13 +66,13 @@ public abstract class ActionResultParameter<T extends ActionResultParameter<T>> 
 		return this.actionId;
 	}
 
-	public final byte[] getValue() {
-		return this.value;
-	}
-
-	public void setValue(final byte[] value) {
-		this.value = value;
-		this.markAsChanged();
+	@Override
+	public final String getTypeCodename() throws ApplicationException {
+		if (this.typeCodename == null) {
+			final ParameterType parameterType = StorableObjectPool.getStorableObject(this.typeId, true);
+			this.typeCodename = parameterType.getCodename();
+		}
+		return this.typeCodename;
 	}
 
 	/**
@@ -92,21 +83,19 @@ public abstract class ActionResultParameter<T extends ActionResultParameter<T>> 
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
+			final byte[] value,
 			final Identifier typeId,
-			final Identifier actionId,
-			final byte[] value) {
-		super.setAttributes(created, modified, creatorId, modifierId, version);
+			final Identifier actionId) {
+		super.setAttributes(created, modified, creatorId, modifierId, version, value);
 		this.typeId = typeId;
 		this.actionId = actionId;
-		this.value = value;
 	}
 
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.typeId != null && this.typeId.getMajor() == ObjectEntities.PARAMETER_TYPE_CODE
-				&& this.actionId != null
-				&& this.value != null;
+				&& this.actionId != null;
 	}
 
 	@Override

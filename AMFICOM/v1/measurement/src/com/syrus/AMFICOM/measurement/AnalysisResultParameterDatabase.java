@@ -6,8 +6,8 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_TYPE_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
-import static com.syrus.AMFICOM.measurement.ActionResultParameterWrapper.COLUMN_VALUE;
 import static com.syrus.AMFICOM.measurement.AnalysisResultParameterWrapper.COLUMN_ANALYSIS_ID;
+import static com.syrus.AMFICOM.measurement.ParameterWrapper.COLUMN_VALUE;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -49,9 +49,9 @@ public final class AnalysisResultParameterDatabase extends ActionResultParameter
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
+				ByteArrayDatabase.toByteArray(resultSet.getBlob(COLUMN_VALUE)),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ANALYSIS_ID),
-				ByteArrayDatabase.toByteArray(resultSet.getBlob(COLUMN_VALUE)));
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ANALYSIS_ID));
 		return analysisResultParameter;
 	}
 

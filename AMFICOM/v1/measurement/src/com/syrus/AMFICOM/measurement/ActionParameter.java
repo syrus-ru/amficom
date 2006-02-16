@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameter.java,v 1.1.2.3 2006/02/15 19:33:53 arseniy Exp $
+ * $Id: ActionParameter.java,v 1.1.2.4 2006/02/16 12:50:09 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -23,7 +24,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind;
@@ -31,16 +33,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterHelper;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/02/15 19:33:53 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/02/16 12:50:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class ActionParameter extends StorableObject<ActionParameter> {
-	private static final long serialVersionUID = 7624920897445002412L;
-
+public final class ActionParameter extends Parameter<ActionParameter> {
 	private Identifier bindingId;
-	private byte[] value;
 
 	private ParameterValueKind valueKind;
 	private String typeCodename;
@@ -48,39 +47,29 @@ public final class ActionParameter extends StorableObject<ActionParameter> {
 	ActionParameter(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
-			final Identifier bindingId,
-			final byte[] value) {
-		super(id,
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
-				creatorId,
-				creatorId,
-				version);
+			final byte[] value,
+			final Identifier bindingId) {
+		super(id, creatorId, version, value);
 		this.bindingId = bindingId;
-		this.value = value;
 	}
 
 	public ActionParameter(final IdlActionParameter idlActionParameter) throws CreateObjectException {
-		try {
-			this.fromTransferable(idlActionParameter);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		super(idlActionParameter);
 	}
 
 	public static ActionParameter createInstance(final Identifier creatorId,
-			final Identifier bindingId,
-			final byte[] value) throws CreateObjectException{
-		if (creatorId == null || bindingId == null || value == null) {
+			final byte[] value,
+			final Identifier bindingId) throws CreateObjectException{
+		if (creatorId == null || value == null || bindingId == null) {
 			throw new IllegalArgumentException(NON_NULL_EXPECTED);
 		}
 
 		try {
 			final ActionParameter actionParameter = new ActionParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ACTIONPARAMETER_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
-					bindingId,
-					value);
+					INITIAL_VERSION,
+					value,
+					bindingId);
 
 			assert actionParameter.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -103,10 +92,8 @@ public final class ActionParameter extends StorableObject<ActionParameter> {
 				super.creatorId.getIdlTransferable(),
 				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
-				this.bindingId.getIdlTransferable(),
-				this.value,
-				this.valueKind.getIdlTransferable(),
-				this.typeCodename);
+				super.getValue(),
+				this.bindingId.getIdlTransferable());
 	}
 
 	@Override
@@ -115,10 +102,6 @@ public final class ActionParameter extends StorableObject<ActionParameter> {
 		super.fromTransferable(transferable);
 
 		this.bindingId = Identifier.valueOf(idlActionParameter.bindingId);
-		this.value = idlActionParameter.value;
-
-		this.valueKind = ParameterValueKind.valueOf(idlActionParameter.valueKind);
-		this.typeCodename = idlActionParameter.typeCodename;
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -128,44 +111,38 @@ public final class ActionParameter extends StorableObject<ActionParameter> {
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
-			final Identifier bindingId,
-			final byte[] value) {
-		super.setAttributes(created, modified, creatorId, modifierId, version);
+			final byte[] value,
+			final Identifier bindingId) {
+		super.setAttributes(created, modified, creatorId, modifierId, version, value	);
 		this.bindingId = bindingId;
-		this.value = value;
 	}
 
 	public Identifier getBindingId() {
 		return this.bindingId;
 	}
 
-	public byte[] getValue() {
-		return this.value;
-	}
-
-	public void setValue(final byte[] value) {
-		this.value = value;
-		super.markAsChanged();
-	}
-
-	public String getTypeCodename() {
+	@Override
+	public String getTypeCodename() throws ApplicationException {
+		if (this.typeCodename == null) {
+			final ActionParameterTypeBinding actionParameterTypeBinding = StorableObjectPool.getStorableObject(this.bindingId, true);
+			final ParameterType parameterType = StorableObjectPool.getStorableObject(actionParameterTypeBinding.getParameterTypeId(), true);
+			this.typeCodename = parameterType.getCodename();
+		}
 		return this.typeCodename;
 	}
 
-	public ParameterValueKind getValueKind() {
+	public ParameterValueKind getValueKind() throws ApplicationException {
+		if (this.valueKind == null) {
+			final ActionParameterTypeBinding actionParameterTypeBinding = StorableObjectPool.getStorableObject(this.bindingId, true);
+			this.valueKind = actionParameterTypeBinding.getParameterValueKind();
+		}
 		return this.valueKind;
-	}
-
-	void setAdditionalAttributes(final ParameterValueKind valueKind, final String typeCodename) {
-		this.valueKind = valueKind;
-		this.typeCodename = typeCodename;
 	}
 
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
-				&& this.bindingId != null && this.bindingId.getMajor() == ObjectEntities.ACTIONPARAMETERTYPEBINDING_CODE
-				&& this.value != null;
+				&& this.bindingId != null && this.bindingId.getMajor() == ObjectEntities.ACTIONPARAMETERTYPEBINDING_CODE;
 	}
 
 	@Override

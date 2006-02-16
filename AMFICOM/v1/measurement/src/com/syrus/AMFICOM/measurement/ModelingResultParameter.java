@@ -1,11 +1,13 @@
 /*-
- * $Id: ModelingResultParameter.java,v 1.1.2.2 2006/02/14 01:26:43 arseniy Exp $
+ * $Id: ModelingResultParameter.java,v 1.1.2.3 2006/02/16 12:50:09 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import org.omg.CORBA.ORB;
 
@@ -20,21 +22,20 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingResultParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingResultParameterHelper;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/14 01:26:43 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/02/16 12:50:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class ModelingResultParameter extends ActionResultParameter<ModelingResultParameter> {
-	private static final long serialVersionUID = -5514937939025109447L;
 
 	ModelingResultParameter(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
+			final byte[] value,
 			final Identifier typeId,
-			final Identifier modelingId,
-			final byte[] value) {
-		super(id, creatorId, version, typeId, modelingId, value);
+			final Identifier modelingId) {
+		super(id, creatorId, version, value, typeId, modelingId);
 	}
 
 	/**
@@ -45,16 +46,16 @@ public final class ModelingResultParameter extends ActionResultParameter<Modelin
 	}
 
 	static ModelingResultParameter createInstance(final Identifier creatorId,
+			final byte[] value,
 			final Identifier typeId,
-			final Identifier modelingId,
-			final byte[] value) throws CreateObjectException {
+			final Identifier modelingId) throws CreateObjectException {
 		try {
 			final ModelingResultParameter modelingResultParameter = new ModelingResultParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELINGRESULTPARAMETER_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
+					value,
 					typeId,
-					modelingId,
-					value);
+					modelingId);
 
 			assert modelingResultParameter.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -80,9 +81,9 @@ public final class ModelingResultParameter extends ActionResultParameter<Modelin
 				this.creatorId.getIdlTransferable(),
 				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
+				super.getValue(),
 				super.getTypeId().getIdlTransferable(orb),
-				this.getModelingId().getIdlTransferable(orb),
-				super.getValue());
+				this.getModelingId().getIdlTransferable(orb));
 	}
 
 	public Identifier getModelingId() {

@@ -1,11 +1,13 @@
 /*-
- * $Id: AnalysisResultParameter.java,v 1.1.2.2 2006/02/14 01:26:43 arseniy Exp $
+ * $Id: AnalysisResultParameter.java,v 1.1.2.3 2006/02/16 12:50:09 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import org.omg.CORBA.ORB;
 
@@ -20,21 +22,20 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisResultParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisResultParameterHelper;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/14 01:26:43 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/02/16 12:50:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class AnalysisResultParameter extends ActionResultParameter<AnalysisResultParameter> {
-	private static final long serialVersionUID = 4357715613876354961L;
 
 	AnalysisResultParameter(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
+			final byte[] value,
 			final Identifier typeId,
-			final Identifier analysisId,
-			final byte[] value) {
-		super(id, creatorId, version, typeId, analysisId, value);
+			final Identifier analysisId) {
+		super(id, creatorId, version, value, typeId, analysisId);
 	}
 
 	/**
@@ -45,16 +46,16 @@ public final class AnalysisResultParameter extends ActionResultParameter<Analysi
 	}
 
 	static AnalysisResultParameter createInstance(final Identifier creatorId,
+			final byte[] value,
 			final Identifier typeId,
-			final Identifier analysisId,
-			final byte[] value) throws CreateObjectException {
+			final Identifier analysisId) throws CreateObjectException {
 		try {
 			final AnalysisResultParameter analysisResultParameter = new AnalysisResultParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSISRESULTPARAMETER_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
+					value,
 					typeId,
-					analysisId,
-					value);
+					analysisId);
 
 			assert analysisResultParameter.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -80,9 +81,9 @@ public final class AnalysisResultParameter extends ActionResultParameter<Analysi
 				this.creatorId.getIdlTransferable(),
 				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
+				super.getValue(),
 				super.getTypeId().getIdlTransferable(orb),
-				this.getAnalysisId().getIdlTransferable(orb),
-				super.getValue());
+				this.getAnalysisId().getIdlTransferable(orb));
 	}
 
 	public Identifier getAnalysisId() {

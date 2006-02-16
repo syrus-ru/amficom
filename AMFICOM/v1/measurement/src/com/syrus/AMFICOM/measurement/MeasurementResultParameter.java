@@ -1,11 +1,13 @@
 /*-
- * $Id: MeasurementResultParameter.java,v 1.1.2.2 2006/02/14 01:26:43 arseniy Exp $
+ * $Id: MeasurementResultParameter.java,v 1.1.2.3 2006/02/16 12:50:09 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import org.omg.CORBA.ORB;
 
@@ -20,21 +22,20 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementResultParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementResultParameterHelper;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/14 01:26:43 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/02/16 12:50:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class MeasurementResultParameter extends ActionResultParameter<MeasurementResultParameter> {
-	private static final long serialVersionUID = 2985887561561020967L;
 
 	MeasurementResultParameter(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
+			final byte[] value,
 			final Identifier typeId,
-			final Identifier measurementId,
-			final byte[] value) {
-		super(id, creatorId, version, typeId, measurementId, value);
+			final Identifier measurementId) {
+		super(id, creatorId, version, value, typeId, measurementId);
 	}
 
 	/**
@@ -45,16 +46,16 @@ public final class MeasurementResultParameter extends ActionResultParameter<Meas
 	}
 
 	static MeasurementResultParameter createInstance(final Identifier creatorId,
+			final byte[] value,
 			final Identifier typeId,
-			final Identifier measurementId,
-			final byte[] value) throws CreateObjectException {
+			final Identifier measurementId) throws CreateObjectException {
 		try {
 			final MeasurementResultParameter measurementResultParameter = new MeasurementResultParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTRESULTPARAMETER_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
+					value,
 					typeId,
-					measurementId,
-					value);
+					measurementId);
 
 			assert measurementResultParameter.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -80,9 +81,9 @@ public final class MeasurementResultParameter extends ActionResultParameter<Meas
 				this.creatorId.getIdlTransferable(),
 				this.modifierId.getIdlTransferable(),
 				this.version.longValue(),
+				super.getValue(),
 				super.getTypeId().getIdlTransferable(orb),
-				this.getMeasurementId().getIdlTransferable(orb),
-				super.getValue());
+				this.getMeasurementId().getIdlTransferable(orb));
 	}
 
 	public Identifier getMeasurementId() {

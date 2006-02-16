@@ -10,7 +10,6 @@ import com.syrus.AMFICOM.measurement.ModelingResultParameter;
 import com.syrus.util.Log;
 
 final class IdlModelingResultParameterImpl extends IdlModelingResultParameter {
-	private static final long serialVersionUID = 5628264087971134115L;
 
 	IdlModelingResultParameterImpl() {
 		// empty
@@ -22,18 +21,18 @@ final class IdlModelingResultParameterImpl extends IdlModelingResultParameter {
 			final IdlIdentifier creatorId,
 			final IdlIdentifier modifierId,
 			final long version,
+			final byte[] value,
 			final IdlIdentifier _typeId,
-			final IdlIdentifier analysisId,
-			final byte[] value) {
+			final IdlIdentifier analysisId) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 		this.version = version;
+		this.value = value;
 		this._typeId = _typeId;
 		this.actionId = analysisId;
-		this.value = value;
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlActionParameterImpl.java,v 1.1.2.3 2006/02/15 19:38:11 arseniy Exp $
+ * $Id: IdlActionParameterImpl.java,v 1.1.2.4 2006/02/16 12:50:09 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,13 +17,12 @@ import com.syrus.AMFICOM.measurement.ActionParameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/02/15 19:38:11 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/02/16 12:50:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 final class IdlActionParameterImpl extends IdlActionParameter {
-	private static final long serialVersionUID = -6410625174852985525L;
 
 	IdlActionParameterImpl() {
 		// empty
@@ -35,21 +34,16 @@ final class IdlActionParameterImpl extends IdlActionParameter {
 			final IdlIdentifier creatorId,
 			final IdlIdentifier modifierId,
 			final long version,
-			final IdlIdentifier bindingId,
 			final byte[] value,
-			final IdlParameterValueKind valueKind,
-			final String typeCodename) {
+			final IdlIdentifier bindingId) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 		this.version = version;
-		this.bindingId = bindingId;
 		this.value = value;
-
-		this.valueKind = valueKind;
-		this.typeCodename = typeCodename;
+		this.bindingId = bindingId;
 	}
 
 	@Override
