@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.27 2006/02/15 12:18:11 stas Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.28 2006/02/16 14:56:05 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,10 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -42,25 +46,29 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
+import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.configuration.CableLink;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableLinkTypeWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
+import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
+import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.27 $, $Date: 2006/02/15 12:18:11 $
+ * @version $Revision: 1.28 $, $Date: 2006/02/16 14:56:05 $
  * @module schemeclient
  */
 
@@ -502,7 +510,33 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 				if (this.schemeCableLink.getAbstractLinkType() == null
 						|| (newType != null && !newType.equals(this.schemeCableLink.getAbstractLinkType()))
 						|| (newType != null && newType.getCableThreadTypes(false).size() != this.schemeCableLink.getSchemeCableThreads(false).size())) {
+					
+					LinkedIdsCondition condition = new LinkedIdsCondition(this.schemeCableLink.getId(), ObjectEntities.PATHELEMENT_CODE);
+					Set<PathElement> pes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Map<PathElement, Integer> peThreads = Collections.emptyMap();
+					if (!pes.isEmpty()) {
+						List<SchemeCableThread> sortedCableThreads = ClientUtils.getSortedCableThreads(this.schemeCableLink);
+						peThreads = new HashMap<PathElement, Integer>(sortedCableThreads.size());
+						for (PathElement pe : pes) {
+							SchemeCableThread sct = pe.getSchemeCableThread();
+							peThreads.put(pe, Integer.valueOf(sortedCableThreads.indexOf(sct)));
+						}
+					}
+										
 					this.schemeCableLink.setAbstractLinkTypeExt(newType, LoginManager.getUserId(), false);
+					
+					if (!peThreads.isEmpty()) {
+						List<SchemeCableThread> sortedCableThreads2 = ClientUtils.getSortedCableThreads(this.schemeCableLink);
+						for (PathElement pe : peThreads.keySet()) {
+							int i = peThreads.get(pe).intValue();
+							if (i < sortedCableThreads2.size()) {
+								SchemeCableThread sct2 = sortedCableThreads2.get(i);
+								pe.setSchemeCableThread(sct2);
+							} else {
+								pe.setParentPathOwner(null, true);
+							}
+						}
+					}
 					
 					SchemeCablePort sourcePort = this.schemeCableLink.getSourceAbstractSchemePort();
 					if (sourcePort != null) {
