@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryMeasurementSetup.java,v 1.2 2005/10/10 07:38:51 saa Exp $
+ * $Id: ReflectometryMeasurementSetup.java,v 1.2.2.1 2006/02/16 12:46:51 arseniy Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,41 +8,31 @@
 
 package com.syrus.AMFICOM.reflectometry;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.io.DataFormatException;
 
 /**
  * надстройка над MeasurementSetup для естественного представления
  * параметров, специфичных для рефлектометрии
- * @author $Author: saa $
+ * @author $Author: arseniy $
  * @author saa
- * @version $Revision: 1.2 $, $Date: 2005/10/10 07:38:51 $
+ * @version $Revision: 1.2.2.1 $, $Date: 2006/02/16 12:46:51 $
  * @module
  */
 public class ReflectometryMeasurementSetup {
-	private MeasurementSetup ms;
+	private MeasurementSetup measurementSetup;
 	private ReflectometryMeasurementParameters measurementParameters;
 	private ReflectometryAnalysisCriteria analysisCriteria;
-	private ReflectometryEtalon etalon;
 
-	public ReflectometryMeasurementSetup(MeasurementSetup ms)
-	throws DataFormatException {
-		this.ms = ms;
+	public ReflectometryMeasurementSetup(final MeasurementSetup measurementSetup) throws DataFormatException, ApplicationException {
+		this.measurementSetup = measurementSetup;
 
-		this.measurementParameters = new ReflectometryMeasurementParametersImpl(
-				this.ms.getParameterSet());
+		this.measurementParameters = new ReflectometryMeasurementParametersImpl(this.measurementSetup.getMeasurementTemplateId());
 
-		ParameterSet set;
-		set = this.ms.getCriteriaSet();
-		this.analysisCriteria = set != null
-				? new ReflectometryAnalysisCriteria(set)
-				: null;
-
-		set = this.ms.getEtalon();
-		this.etalon = set != null
-				? new ReflectometryEtalonImpl(set)
-				: null;
+		final Identifier analysisTemplateId = this.measurementSetup.getAnalysisTemplateId();
+		this.analysisCriteria = analysisTemplateId.isVoid() ? null : new ReflectometryAnalysisCriteria(analysisTemplateId);
 	}
 
 	/**
@@ -57,12 +47,5 @@ public class ReflectometryMeasurementSetup {
 	 */
 	public ReflectometryAnalysisCriteria getAnalysisCriteria() {
 		return this.analysisCriteria;
-	}
-
-	/**
-	 * @return эталон данного шаблона, may be null
-	 */
-	public ReflectometryEtalon getEtalon() {
-		return this.etalon;
 	}
 }
