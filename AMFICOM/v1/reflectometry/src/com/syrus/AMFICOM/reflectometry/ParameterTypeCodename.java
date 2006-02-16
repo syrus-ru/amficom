@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterCodename.java,v 1.1.2.1 2006/02/15 19:50:11 arseniy Exp $
+ * $Id: ParameterTypeCodename.java,v 1.1.2.1 2006/02/16 12:32:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,12 @@
 package com.syrus.AMFICOM.reflectometry;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/15 19:50:11 $
+ * @version $Revision: 1.1.2.1 $, $Date: 2006/02/16 12:32:54 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module reflectometry
  */
-public enum ParameterCodename {
+public enum ParameterTypeCodename {
 	WAVE_LENGTH("ref_wvlen"),
 	TRACE_LENGTH("ref_trclen"),
 	RESOLUTION("ref_res"),
@@ -27,6 +27,11 @@ public enum ParameterCodename {
 
 	REFLECTOGRAMMA("reflectogramma"),
 
+	DADARA_CRITERIA("dadara_criteria"),
+	REFLECTOGRAMMA_ETALON("reflectogramma_etalon"),
+	DADARA_ETALON("dadara_etalon"),
+	DADARA_ANALYSIS_RESULT("dadara_analysis_result"),
+	DADARA_ALARMS("dadara_alarm_array"),
 	DADARA_QUALITY_PER_EVENT("dadara_quality_per_event"),
 	DADARA_QUALITY_OVERALL_D("dadara_quality_overall_d"),
 	DADARA_QUALITY_OVERALL_Q("dadara_quality_overall_q"),
@@ -37,7 +42,7 @@ public enum ParameterCodename {
 
 	private String codename;
 
-	private ParameterCodename(final String codename) {
+	private ParameterTypeCodename(final String codename) {
 		this.codename = codename;
 	}
 
