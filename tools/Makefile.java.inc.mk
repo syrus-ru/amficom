@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.java.inc.mk,v 1.11 2005/12/05 18:24:27 bass Exp $
+# $Id: Makefile.java.inc.mk,v 1.12 2006/02/16 07:15:16 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -122,8 +122,13 @@ ifeq ($(shell hostname -s),bass)
 XMLSRCDIR = $(SRCDIR)
 XMLCLASSDIR = $(CLASSDIR)
 else
+ifeq ($(shell hostname -s),techsupport)
+XMLSRCDIR = $(SRCDIR)
+XMLCLASSDIR = $(CLASSDIR)
+else
 XMLSRCDIR = $(XMLDIR)/src
 XMLCLASSDIR = $(XMLDIR)/classes
+endif
 endif
 
 SCOMP=$(shell which scomp 2>/dev/null)
