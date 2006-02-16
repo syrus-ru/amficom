@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.74.2.2 2006/02/11 18:54:53 arseniy Exp $
+ * $Id: ParameterType.java,v 1.74.2.3 2006/02/16 13:47:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.IdlParameterTypeHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.74.2.2 $, $Date: 2006/02/11 18:54:53 $
+ * @version $Revision: 1.74.2.3 $, $Date: 2006/02/16 13:47:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -62,7 +62,7 @@ public final class ParameterType extends StorableObjectType<ParameterType> {
 			final String codename,
 			final String description,
 			final DataType dataType,
-			final MeasurementUnit measurementUnit) throws ApplicationException {
+			final MeasurementUnit measurementUnit) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null || dataType == null || measurementUnit == null) {
 			throw new IllegalArgumentException(NON_NULL_EXPECTED);
 		}
