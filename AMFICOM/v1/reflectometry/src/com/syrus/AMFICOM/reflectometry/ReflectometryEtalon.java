@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryEtalon.java,v 1.1 2005/10/10 07:38:40 saa Exp $
+ * $Id: ReflectometryEtalon.java,v 1.1.2.1 2006/02/16 12:43:25 arseniy Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.reflectometry;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/10/10 07:38:40 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.1.2.1 $, $Date: 2006/02/16 12:43:25 $
  * @module
  */
 public interface ReflectometryEtalon {
@@ -23,6 +23,6 @@ public interface ReflectometryEtalon {
 	/**
 	 * @return массив байт для восстановления рефлектограммы {@link com.syrus.io.BellcoreStructure}
 	 */
-	byte[] getReflectogramma();
+	byte[] getReflectogrammaEtalon();
 
 }
