@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.90 2006/01/26 15:15:34 arseniy Exp $
+ * $Id: Analysis.java,v 1.91 2006/02/16 13:42:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2006/01/26 15:15:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.91 $, $Date: 2006/02/16 13:42:34 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -198,7 +198,7 @@ public final class Analysis extends Action<Analysis> {
 	 * @param creatorId
 	 * @param type
 	 * @param monitoredElementId
-	 * @param measurement
+	 * @param measurementId
 	 * @param criteriaSet
 	 * @return a newly generated instance
 	 * @throws CreateObjectException
