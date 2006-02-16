@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.35 2006/02/16 13:59:13 stas Exp $
+ * $Id: DeleteAction.java,v 1.36 2006/02/16 14:56:43 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,11 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
@@ -58,7 +61,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.35 $, $Date: 2006/02/16 13:59:13 $
+ * @version $Revision: 1.36 $, $Date: 2006/02/16 14:56:43 $
  * @module schemeclient
  */
 
@@ -255,6 +258,11 @@ public class DeleteAction extends AbstractAction {
 				for (Iterator it = element.getSchemeElements(false).iterator(); it.hasNext();) {
 					objectsToDelete.add(((SchemeElement)it.next()).getId());
 				}
+				LinkedIdsCondition condition = new LinkedIdsCondition(element.getId(), ObjectEntities.PATHELEMENT_CODE);
+				Set<PathElement> pes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+				for (PathElement pe : pes) {
+					pe.setParentPathOwner(null, true);
+				}
 			} catch (ApplicationException e) {
 				Log.errorMessage(e);
 			}
@@ -355,12 +363,18 @@ public class DeleteAction extends AbstractAction {
 				objectsToDelete.add(link.getAbstractLink().getId());
 			}
 			objectsToDelete.add(link.getId());
+			
 			try {
 				for (SchemeCableThread thread : link.getSchemeCableThreads(false)) {
 					objectsToDelete.add(thread.getId());
 				}
 				for (CableChannelingItem cci : link.getPathMembers()) {
 					objectsToDelete.add(cci.getId());
+				}
+				LinkedIdsCondition condition = new LinkedIdsCondition(link.getId(), ObjectEntities.PATHELEMENT_CODE);
+				Set<PathElement> pes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+				for (PathElement pe : pes) {
+					pe.setParentPathOwner(null, true);
 				}
 			} catch (ApplicationException e) {
 				Log.errorMessage(e);
@@ -392,6 +406,17 @@ public class DeleteAction extends AbstractAction {
 				objectsToDelete.add(link.getAbstractLink().getId());
 			}
 			objectsToDelete.add(link.getId());
+			
+			try {
+				LinkedIdsCondition condition = new LinkedIdsCondition(link.getId(), ObjectEntities.PATHELEMENT_CODE);
+				Set<PathElement> pes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+				for (PathElement pe : pes) {
+					pe.setParentPathOwner(null, true);
+				}
+			} catch (ApplicationException e) {
+				Log.errorMessage(e);
+			}
+			
 		} else {
 			Log.debugMessage("DeleteAction.deleteLink(): no link found with id " + cell.getSchemeLinkId() + "; only delete graph cell", Level.FINER);
 		}
