@@ -308,6 +308,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 		this.useAnalysisSetupsCheckBox.setEnabled(enable);
 		this.patternsLabel.setEnabled(enable);
 		this.analysisLabel.setEnabled(enable);
+		this.allAvailableCheckBox.setEnabled(enable);
 	}
 
 	public final AnalysisType getAnalysisType() {
