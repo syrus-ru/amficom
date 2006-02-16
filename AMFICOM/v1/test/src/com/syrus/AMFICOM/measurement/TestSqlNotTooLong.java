@@ -1,5 +1,5 @@
 /*
- * $Id: TestSqlNotTooLong.java,v 1.2 2006/02/13 16:38:48 saa Exp $
+ * $Id: TestSqlNotTooLong.java,v 1.3 2006/02/16 15:33:46 saa Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2006/02/13 16:38:48 $
+ * @version $Revision: 1.3 $, $Date: 2006/02/16 15:33:46 $
  * @author $Author: saa $
  * @module test
  */
@@ -36,7 +36,10 @@ public final class TestSqlNotTooLong extends TestCase {
 	}
 
 	public static Test suiteSql() {
-		final CommonTest commonTest = new SQLCommonTest();
+		final CommonTest commonTest = new SQLCommonTest() {
+			@Override
+			public String getApplicationName() { return "test2"; }
+		};
 		commonTest.addTestSuite(TestSqlNotTooLong.class);
 		return commonTest.createTestSetup();
 	}

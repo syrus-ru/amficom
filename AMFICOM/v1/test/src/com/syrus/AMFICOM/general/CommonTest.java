@@ -1,5 +1,5 @@
 /*
- * $Id: CommonTest.java,v 1.12 2005/07/19 17:55:27 arseniy Exp $
+ * $Id: CommonTest.java,v 1.13 2006/02/16 15:34:06 saa Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,12 +14,12 @@ import junit.framework.TestSuite;
 import com.syrus.util.Application;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/19 17:55:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2006/02/16 15:34:06 $
+ * @author $Author: saa $
  * @module test
  */
 public class CommonTest {
-	public static final String APPLICATION_NAME = "test";
+	private static final String APPLICATION_NAME = "test";
 
 	private final TestSuite TEST_SUITE;
 
@@ -53,8 +53,12 @@ public class CommonTest {
 		return testSetup;
 	}
 
+	public String getApplicationName() {
+		return APPLICATION_NAME;
+	}
+
 	void oneTimeSetUp() {
-		Application.init(APPLICATION_NAME);
+		Application.init(getApplicationName());
 	}
 
 	void oneTimeTearDown() {
