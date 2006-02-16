@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.21 2006/02/08 09:37:51 stas Exp $
+ * $Id: ResultChildrenFactory.java,v 1.22 2006/02/16 13:10:37 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,8 +61,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2006/02/08 09:37:51 $
+ * @author $Author: saa $
+ * @version $Revision: 1.22 $, $Date: 2006/02/16 13:10:37 $
  * @module analysis
  */
 
@@ -150,7 +150,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 						MonitoredElement me = (MonitoredElement) it.next();
 						PopulatableIconedNode item2 = new PopulatableIconedNode();
 						item2.setObject(me);
-						item2.setName(me.getName());
+						item2.setName(me.getDisplayedName());
 						item2.setChildrenFactory(this);
 						item2.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_PATHMODE));
 						//XXX add possibility to insert item in arbitrary location
