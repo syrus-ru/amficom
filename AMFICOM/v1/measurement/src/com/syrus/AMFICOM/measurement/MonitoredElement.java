@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.14 2006/02/16 12:34:31 saa Exp $
+ * $Id: MonitoredElement.java,v 1.15 2006/02/16 13:02:18 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2006/02/16 12:34:31 $
+ * @version $Revision: 1.15 $, $Date: 2006/02/16 13:02:18 $
  * @author $Author: saa $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -230,15 +230,20 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 		return this.name;
 	}
 
+	public static String getNamePrefix() {
+		// @todo: move the construction code to module util
+		// the same may be done for "RR"
+		// XXX: cache?
+		return LangModelMeasurement.getString("ME");
+	}
+
 	/**
 	 * Возвращает название, отображаемое пользователю
 	 * @return название, отображаемое пользователю
 	 */
 	public String getDisplayedName() {
-		// @todo: move the construction code to module util
-		// the same may be done for "RR"
 		// XXX: not cached yet; creates new string every invocation
-		return LangModelMeasurement.getString("ME") + " " + this.getName();
+		return getNamePrefix() + " " + this.getName();
 	}
 
 	public void setName(final String name) {
