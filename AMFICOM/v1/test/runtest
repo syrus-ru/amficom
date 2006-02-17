@@ -2,20 +2,20 @@
 
 # This script can be used to run tests from console
 
-#TEST_CLASS=TestInitialSetup
-#TEST_PACKAGE=com.syrus.AMFICOM.setup
+TEST_CLASS=Setup
+TEST_PACKAGE=com.syrus.AMFICOM.setup
 #TEST_CLASS=TestLRUMap
 #TEST_PACKAGE=com.syrus.util
 #TEST_CLASS=TestIdentifier
 #TEST_PACKAGE=com.syrus.AMFICOM.general
 #TEST_CLASS=TestSystemUser
 #TEST_PACKAGE=com.syrus.AMFICOM.administration
-TEST_CLASS=TestDomain
-TEST_PACKAGE=com.syrus.AMFICOM.administration
+#TEST_CLASS=TestDomain
+#TEST_PACKAGE=com.syrus.AMFICOM.administration
 
 LIBDIR=../lib
 EXTLIBDIR=../../extlib
-APPCLASSPATH=$LIBDIR/general.jar:$LIBDIR/administration.jar:$LIBDIR/configuration.jar:$LIBDIR/scheme.jar:$LIBDIR/resource.jar:$LIBDIR/filter.jar:$LIBDIR/measurement.jar:$LIBDIR/event.jar:$LIBDIR/csbridge.jar:$LIBDIR/leserver_interface.jar:$LIBDIR/mserver_interface.jar:$LIBDIR/cmserver_interface.jar:$LIBDIR/mcm_interface.jar:$LIBDIR/commonclient.jar:$LIBDIR/util.jar
+APPCLASSPATH=$LIBDIR/general.jar:$LIBDIR/administration.jar:$LIBDIR/configuration.jar:$LIBDIR/scheme.jar:$LIBDIR/resource.jar:$LIBDIR/filter.jar:$LIBDIR/measurement.jar:$LIBDIR/event.jar:$LIBDIR/csbridge.jar:$LIBDIR/reflectometry.jar:$LIBDIR/leserver_interface.jar:$LIBDIR/mserver_interface.jar:$LIBDIR/cmserver_interface.jar:$LIBDIR/mcm_interface.jar:$LIBDIR/commonclient.jar:$LIBDIR/util.jar
 XMLCLASSPATH=$LIBDIR/generalxml.jar:$LIBDIR/configurationxml.jar
 EXTCLASSPATH=$EXTLIBDIR/trove.jar:$XMLBEANS_HOME/build/lib/xbean.jar:$XMLBEANS_HOME/build/lib/jsr173_api.jar
 JUNITCLASSPATH=$ECLIPSE_HOME/plugins/org.junit_3.8.1/junit.jar
