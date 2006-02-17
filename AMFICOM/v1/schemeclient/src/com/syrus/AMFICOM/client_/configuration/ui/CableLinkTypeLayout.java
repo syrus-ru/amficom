@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.15 2005/10/12 10:08:40 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.16 2006/02/17 13:07:20 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.configuration.CableThreadType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/10/12 10:08:40 $
+ * @version $Revision: 1.16 $, $Date: 2006/02/17 13:07:20 $
  * @module schemeclient
  */
 
@@ -73,11 +73,9 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 
 		if (this.type != null) {
 			List ctts = ClientUtils.getSortedThreadTypes(this.type);
-		// TODO разобраться с числом модулей
-			int nModules = 8;
-			if (ctts.size() == 6 || ctts.size() == 12 || ctts.size() == 18 || ctts.size() == 24 || ctts.size() == 30) {
-				nModules = 6;
-			}
+//		 в модуле всегда по 4 волокна
+			// TODO ввести цвет модуля
+			int nModules = (int)((ctts.size() - .5) / 4.0) + 1;
 			
 			int tmp = (int) (2 * FIBER_RADIUS * Math.sqrt(Math.round((double) 
 					ctts.size() / (double) nModules + 0.499)));
