@@ -1,5 +1,5 @@
 /*
- * $Id: TestAddUser.java,v 1.1 2005/10/27 12:56:36 bob Exp $
+ * $Id: TestAddUser.java,v 1.2 2006/02/17 12:04:55 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,8 @@ import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSor
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -27,8 +29,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/27 12:56:36 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2006/02/17 12:04:55 $
+ * @author $Author: arseniy $
  * @module test
  */
 public class TestAddUser extends TestCase {
@@ -44,8 +46,8 @@ public class TestAddUser extends TestCase {
 	}
 
 	public void testCreateRoles() throws ApplicationException {
-		final SystemUser sysUser = DatabaseCommonTest.getSysUser();
-		final SystemUser analyst = SystemUser.createInstance(sysUser.getId(), 
+		final Identifier userId = LoginManager.getUserId();
+		final SystemUser analyst = SystemUser.createInstance(userId, 
 			"analyst", 
 			SystemUserSort.USER_SORT_REGULAR, 
 			"Аналитик", 

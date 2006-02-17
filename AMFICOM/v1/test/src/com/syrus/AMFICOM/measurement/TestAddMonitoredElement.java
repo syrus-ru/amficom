@@ -1,5 +1,5 @@
 /*-
- * $Id: TestAddMonitoredElement.java,v 1.1 2005/10/25 12:04:11 arseniy Exp $
+ * $Id: TestAddMonitoredElement.java,v 1.2 2006/02/17 12:04:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
@@ -27,7 +28,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/25 12:04:11 $
+ * @version $Revision: 1.2 $, $Date: 2006/02/17 12:04:55 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -45,7 +46,7 @@ public final class TestAddMonitoredElement extends TestCase {
 	}
 
 	public void testCreateAll() throws ApplicationException {
-		final Identifier sysUserId = DatabaseCommonTest.getSysUser().getId();
+		final Identifier sysUserId = LoginManager.getUserId();
 
 		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.TRANSMISSIONPATH_CODE);
 		final Set<TransmissionPath> tps = StorableObjectPool.getStorableObjectsByCondition(ec, true);

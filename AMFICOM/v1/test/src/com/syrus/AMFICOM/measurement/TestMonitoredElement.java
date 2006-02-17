@@ -1,5 +1,5 @@
 /*
- * $Id: TestMonitoredElement.java,v 1.4 2005/10/25 10:42:25 arseniy Exp $
+ * $Id: TestMonitoredElement.java,v 1.5 2006/02/17 12:04:55 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,12 +25,13 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/10/25 10:42:25 $
+ * @version $Revision: 1.5 $, $Date: 2006/02/17 12:04:55 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -47,6 +48,7 @@ public class TestMonitoredElement extends TestCase {
 	}
 
 	public void testCreateAll() throws ApplicationException {
+		final Identifier userId = LoginManager.getUserId();
 
 		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.DOMAIN_CODE);
 		final Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
@@ -73,7 +75,7 @@ public class TestMonitoredElement extends TestCase {
 					+ SEPARATOR
 					+ transmissionPathDescription;
 			final String localAddress = "2:0:" + n;
-			MonitoredElement.createInstance(DatabaseCommonTest.getSysUser().getId(),
+			MonitoredElement.createInstance(userId,
 					domain.getId(),
 					monitoredElementName,
 					measurementPortId,
@@ -84,7 +86,7 @@ public class TestMonitoredElement extends TestCase {
 
 		
 
-		StorableObjectPool.flush(ObjectEntities.MONITOREDELEMENT_CODE, DatabaseCommonTest.getSysUser().getId(), false);
+		StorableObjectPool.flush(ObjectEntities.MONITOREDELEMENT_CODE, userId, false);
 	}
 
 

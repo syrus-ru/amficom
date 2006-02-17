@@ -1,5 +1,5 @@
 /*
- * $Id: TestParameterSet.java,v 1.2 2005/10/07 13:53:12 arseniy Exp $
+ * $Id: TestParameterSet.java,v 1.3 2006/02/17 12:04:55 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,12 +16,14 @@ import junit.framework.TestCase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/07 13:53:12 $
+ * @version $Revision: 1.3 $, $Date: 2006/02/17 12:04:55 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -38,6 +40,8 @@ public class TestParameterSet extends TestCase {
 	}
 
 	public void testAttachToMonitoredElement() throws ApplicationException {
+		final Identifier userId = LoginManager.getUserId();
+
 		final StorableObjectCondition meCondition = new EquivalentCondition(ObjectEntities.MONITOREDELEMENT_CODE);
 		final Set<MonitoredElement> monitoredElements = StorableObjectPool.getStorableObjectsByCondition(meCondition, true);
 		final MonitoredElement monitoredElement = monitoredElements.iterator().next();
@@ -56,6 +60,6 @@ public class TestParameterSet extends TestCase {
 				System.out.println("Parameter set " + parameterSet + ", valid: " + parameterSet.isValid());
 			}
 		}
-		StorableObjectPool.flush(updateParameterSets, DatabaseCommonTest.getSysUser().getId(), false);
+		StorableObjectPool.flush(updateParameterSets, userId, false);
 	}
 }

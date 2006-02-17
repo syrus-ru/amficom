@@ -1,5 +1,5 @@
 /*
- * $Id: TestMeasurementPort.java,v 1.2 2005/08/30 19:58:39 arseniy Exp $
+ * $Id: TestMeasurementPort.java,v 1.3 2006/02/17 12:04:55 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
@@ -40,6 +41,8 @@ public final class TestMeasurementPort extends TestCase {
 	}
 
 	public void testCreateAll() throws ApplicationException {
+		final Identifier userId = LoginManager.getUserId();
+
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
 		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		final MeasurementPortType measurementPortType = (MeasurementPortType) it.next();
@@ -71,7 +74,7 @@ public final class TestMeasurementPort extends TestCase {
 			final String measurementPortDescription = MEASUREMENTPORT + SEPARATOR + n
 					+ SEPARATOR
 					+ portDescription;
-			MeasurementPort.createInstance(DatabaseCommonTest.getSysUser().getId(),
+			MeasurementPort.createInstance(userId,
 					measurementPortType,
 					"Порт " + n,
 					measurementPortDescription,
@@ -79,6 +82,6 @@ public final class TestMeasurementPort extends TestCase {
 					port.getId());
 		}
 		
-		StorableObjectPool.flush(ObjectEntities.MEASUREMENTPORT_CODE, DatabaseCommonTest.getSysUser().getId(), true);
+		StorableObjectPool.flush(ObjectEntities.MEASUREMENTPORT_CODE, userId, true);
 	}
 }

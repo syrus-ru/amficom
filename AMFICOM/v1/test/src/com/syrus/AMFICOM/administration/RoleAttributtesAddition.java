@@ -1,5 +1,5 @@
 /*
- * $Id: RoleAttributtesAddition.java,v 1.3 2005/12/23 12:35:32 bob Exp $
+ * $Id: RoleAttributtesAddition.java,v 1.4 2006/02/17 12:04:55 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -49,8 +50,8 @@ import com.syrus.util.Log;
  * 
  * Sets Administration permission to Media Monitoring Administrator role added on 14/12/2005
  * 
- * @version $Revision: 1.3 $, $Date: 2005/12/23 12:35:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2006/02/17 12:04:55 $
+ * @author $Author: arseniy $
  * @module test
  */
 public class RoleAttributtesAddition extends TestCase {
@@ -69,8 +70,8 @@ public class RoleAttributtesAddition extends TestCase {
 	}
 
 	public void testCreateDefaultDeliveryRule() throws ApplicationException {
-		final SystemUser systemUser = DatabaseCommonTest.getSysUser();
-		final Identifier systemUserId = systemUser.getId();
+		final Identifier systemUserId = LoginManager.getUserId();
+		final SystemUser systemUser = StorableObjectPool.getStorableObject(systemUserId, true);
 
 		for (final Severity severity : Severity.values()) {
 			DeliveryAttributes.getInstance(systemUserId, severity).addSystemUser(systemUser);
@@ -110,8 +111,7 @@ public class RoleAttributtesAddition extends TestCase {
 	}
 
 	public void testCreateAdditionalRoleAttributtes() throws ApplicationException {
-		final SystemUser sysUser = DatabaseCommonTest.getSysUser();
-		final Identifier userId = sysUser.getId();
+		final Identifier userId = LoginManager.getUserId();
 
 		{
 			final Set<Role> roles = 

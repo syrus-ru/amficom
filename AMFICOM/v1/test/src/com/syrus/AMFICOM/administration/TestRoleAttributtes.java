@@ -1,5 +1,5 @@
 /*
- * $Id: TestRoleAttributtes.java,v 1.6 2006/01/13 13:53:28 bob Exp $
+ * $Id: TestRoleAttributtes.java,v 1.7 2006/02/17 12:04:55 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.administration.Role.RoleCodename;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -25,8 +26,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2006/01/13 13:53:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2006/02/17 12:04:55 $
+ * @author $Author: arseniy $
  * @module test
  */
 public class TestRoleAttributtes extends TestCase {
@@ -42,8 +43,7 @@ public class TestRoleAttributtes extends TestCase {
 	}
 
 	public void _testCreateRoles() throws ApplicationException {
-		final SystemUser sysUser = DatabaseCommonTest.getSysUser();
-		final Identifier userId = sysUser.getId();
+		final Identifier userId = LoginManager.getUserId();
 
 		
 		{
@@ -688,8 +688,7 @@ public class TestRoleAttributtes extends TestCase {
 	}
 	
 	public void _testCreateModelingPermissionForRoles() throws ApplicationException {
-		final SystemUser sysUser = DatabaseCommonTest.getSysUser();
-		final Identifier userId = sysUser.getId();
+		final Identifier userId = LoginManager.getUserId();
 
 		
 		{
@@ -835,8 +834,7 @@ public class TestRoleAttributtes extends TestCase {
 	}
 	
 	public void testCreateRolePermissionForPredition() throws Exception {
-		final SystemUser sysUser = DatabaseCommonTest.getSysUser();
-		final Identifier userId = sysUser.getId();
+		final Identifier userId = LoginManager.getUserId();
 
 		{
 			// Analyst

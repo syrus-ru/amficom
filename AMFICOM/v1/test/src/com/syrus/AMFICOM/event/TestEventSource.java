@@ -1,5 +1,5 @@
 /*
- * $Id: TestEventSource.java,v 1.6 2005/12/15 14:16:36 arseniy Exp $
+ * $Id: TestEventSource.java,v 1.7 2006/02/17 12:04:55 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,11 +16,12 @@ import junit.framework.TestCase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/12/15 14:16:36 $
+ * @version $Revision: 1.7 $, $Date: 2006/02/17 12:04:55 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -37,6 +38,8 @@ public class TestEventSource extends TestCase {
 	}
 
 	public void testCreateInstance() throws ApplicationException {
+		final Identifier userId = LoginManager.getUserId();
+
 		Identifier sourceEntityId;
 		final List<EventSource> eventSources = new LinkedList<EventSource>();
 
@@ -53,11 +56,13 @@ public class TestEventSource extends TestCase {
 		eventSources.add(createAndTestEventSource(sourceEntityId));
 
 		System.out.println("Event Sources: "+ Identifier.toString(eventSources));
-		StorableObjectPool.flush(ObjectEntities.EVENTSOURCE_CODE, DatabaseCommonTest.getSysUser().getId(), false);
+		StorableObjectPool.flush(ObjectEntities.EVENTSOURCE_CODE, userId, false);
 	}
 
 	private EventSource createAndTestEventSource(final Identifier sourceEntityId) throws ApplicationException {
-		EventSource eventSource = EventSource.createInstance(DatabaseCommonTest.getSysUser().getId(), sourceEntityId);
+		final Identifier userId = LoginManager.getUserId();
+
+		EventSource eventSource = EventSource.createInstance(userId, sourceEntityId);
 		return eventSource;
 	}
 //

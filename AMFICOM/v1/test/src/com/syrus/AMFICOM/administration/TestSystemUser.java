@@ -1,5 +1,5 @@
 /*
- * $Id: TestSystemUser.java,v 1.10 2005/12/15 13:41:40 arseniy Exp $
+ * $Id: TestSystemUser.java,v 1.11 2006/02/17 12:04:55 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -32,7 +33,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/12/15 13:41:40 $
+ * @version $Revision: 1.11 $, $Date: 2006/02/17 12:04:55 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -49,8 +50,10 @@ public final class TestSystemUser extends TestCase {
 	}
 
 	public void testCreateServerProcessUsers() throws ApplicationException {
+		final Identifier userId = LoginManager.getUserId();
+
 //	1
-		final SystemUser loginUser = SystemUser.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		final SystemUser loginUser = SystemUser.createInstance(userId,
 				SystemUserWrapper.LOGINPROCESSOR_LOGIN,
 				SystemUserSort.USER_SORT_SERVERPROCESS,
 				"Login Processorovich Serverov",
@@ -58,7 +61,7 @@ public final class TestSystemUser extends TestCase {
 		System.out.println("Login user: '" + loginUser.getLogin() + "', id: '" + loginUser.getId() + "'");
 
 //	2
-		final SystemUser eventUser = SystemUser.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		final SystemUser eventUser = SystemUser.createInstance(userId,
 				SystemUserWrapper.EVENTPROCESSOR_LOGIN,
 				SystemUserSort.USER_SORT_SERVERPROCESS,
 				"Event Processorovich Serverov",
@@ -66,7 +69,7 @@ public final class TestSystemUser extends TestCase {
 		System.out.println("Event user: '" + eventUser.getLogin() + "', id: '" + eventUser.getId() + "'");
 
 //	3
-		final SystemUser mserverUser = SystemUser.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		final SystemUser mserverUser = SystemUser.createInstance(userId,
 				SystemUserWrapper.MSERVER_LOGIN,
 				SystemUserSort.USER_SORT_SERVERPROCESS,
 				"Measurement Serverov",
@@ -74,7 +77,7 @@ public final class TestSystemUser extends TestCase {
 		System.out.println("MServer user: '" + mserverUser.getLogin() + "', id: '" + mserverUser.getId() + "'");
 
 //	4
-		final SystemUser cmserverUser = SystemUser.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		final SystemUser cmserverUser = SystemUser.createInstance(userId,
 				SystemUserWrapper.CMSERVER_LOGIN,
 				SystemUserSort.USER_SORT_SERVERPROCESS,
 				"Client Measurementovich Serverov",
@@ -82,7 +85,7 @@ public final class TestSystemUser extends TestCase {
 		System.out.println("CMServer user: '" + cmserverUser.getLogin() + "', id: '" + cmserverUser.getId() + "'");
 
 //	5
-		final SystemUser mshserverUser = SystemUser.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		final SystemUser mshserverUser = SystemUser.createInstance(userId,
 				SystemUserWrapper.MSCHARSERVER_LOGIN,
 				SystemUserSort.USER_SORT_SERVERPROCESS,
 				"mЫsh-server",
@@ -90,18 +93,20 @@ public final class TestSystemUser extends TestCase {
 		System.out.println("MSHServer user: '" + mshserverUser.getLogin() + "', id: '" + mshserverUser.getId() + "'");
 
 //	save all
-		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, DatabaseCommonTest.getSysUser().getId(), true);
+		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, userId, true);
 	}
 
 	public void testCreateMCMUsers() throws ApplicationException {
-		final SystemUser mcmUser = SystemUser.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		final Identifier userId = LoginManager.getUserId();
+
+		final SystemUser mcmUser = SystemUser.createInstance(userId,
 				SystemUserWrapper.MCM_LOGIN,
 				SystemUserSort.USER_SORT_SERVERPROCESS,
 				"mcm",
 				"Need for MCM");
 		System.out.println("MCM user: '" + mcmUser.getLogin() + "', id: '" + mcmUser.getId() + "'");
 
-		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, DatabaseCommonTest.getSysUser().getId(), true);
+		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, userId, true);
 	}
 
 	public void testSetPassword() throws ApplicationException, AMFICOMRemoteException {

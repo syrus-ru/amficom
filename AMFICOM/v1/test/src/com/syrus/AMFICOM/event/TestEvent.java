@@ -1,5 +1,5 @@
 /*
- * $Id: TestEvent.java,v 1.6 2005/12/15 14:16:36 arseniy Exp $
+ * $Id: TestEvent.java,v 1.7 2006/02/17 12:04:55 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -25,7 +26,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/12/15 14:16:36 $
+ * @version $Revision: 1.7 $, $Date: 2006/02/17 12:04:55 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -42,7 +43,7 @@ public class TestEvent extends TestCase {
 	}
 
 	public void testCreateInstance() throws ApplicationException {
-		final Identifier creatorId = DatabaseCommonTest.getSysUser().getId();
+		final Identifier userId = LoginManager.getUserId();
 
 		final TypicalCondition tc = new TypicalCondition(EventType.CODENAME_MEASUREMENT_ALARM,
 				OperationSort.OPERATION_EQUALS,
@@ -63,9 +64,9 @@ public class TestEvent extends TestCase {
 		System.out.println("###################### Retrieved: " + eventSources.size() + " event sources");
 		final Set<Identifier> eventSourceIds = Identifier.createIdentifiers(eventSources);
 
-		Event.createInstance(creatorId, eventType, description, eventParameters, eventSourceIds);
+		Event.createInstance(userId, eventType, description, eventParameters, eventSourceIds);
 
-		StorableObjectPool.flush(ObjectEntities.EVENT_CODE, creatorId, false);
+		StorableObjectPool.flush(ObjectEntities.EVENT_CODE, userId, false);
 	}
 
 }

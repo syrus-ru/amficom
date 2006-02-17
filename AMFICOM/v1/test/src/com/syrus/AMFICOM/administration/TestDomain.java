@@ -1,5 +1,5 @@
 /*
- * $Id: TestDomain.java,v 1.7 2005/12/15 14:16:36 arseniy Exp $
+ * $Id: TestDomain.java,v 1.8 2006/02/17 12:04:55 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/12/15 14:16:36 $
+ * @version $Revision: 1.8 $, $Date: 2006/02/17 12:04:55 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -44,11 +44,12 @@ public final class TestDomain extends TestCase {
 	}
 
 	public void testCreateInstance() throws ApplicationException {
-		final Domain domain = Domain.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		final Identifier userId = LoginManager.getUserId();
+		final Domain domain = Domain.createInstance(userId,
 				Identifier.VOID_IDENTIFIER,
 				"Корневой домен",
 				"Первый домен в иерархии");
-		StorableObjectPool.flush(domain, DatabaseCommonTest.getSysUser().getId(), true);
+		StorableObjectPool.flush(domain, userId, true);
 	}
 
 	public void testRetrieve() throws ApplicationException {

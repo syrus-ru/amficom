@@ -1,5 +1,5 @@
 /*
- * $Id: TestRole.java,v 1.2 2005/10/20 11:25:21 bob Exp $
+ * $Id: TestRole.java,v 1.3 2006/02/17 12:04:55 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,12 +14,13 @@ import com.syrus.AMFICOM.administration.Role.RoleCodename;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/20 11:25:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2006/02/17 12:04:55 $
+ * @author $Author: arseniy $
  * @module test
  */
 public class TestRole extends TestCase {
@@ -35,8 +36,8 @@ public class TestRole extends TestCase {
 	}
 
 	public void testCreateRoles() throws ApplicationException {
-		final SystemUser sysUser = DatabaseCommonTest.getSysUser();
-		final Identifier userId = sysUser.getId();
+		final Identifier userId = LoginManager.getUserId();
+		final SystemUser sysUser = StorableObjectPool.getStorableObject(userId, true);
 		for(final RoleCodename roleCodename : RoleCodename.values()) {
 			sysUser.addRole(Role.createInstance(userId, 
 				roleCodename.getCodename(), 

@@ -1,5 +1,5 @@
 /*
- * $Id: TestCreateAdministrationCharacteristics.java,v 1.3 2005/12/14 15:55:55 bass Exp $
+ * $Id: TestCreateAdministrationCharacteristics.java,v 1.4 2006/02/17 12:04:55 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,13 +17,14 @@ import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.LayoutItem;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/14 15:55:55 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2006/02/17 12:04:55 $
+ * @author $Author: arseniy $
  * @module test
  */
 public class TestCreateAdministrationCharacteristics extends TestCase {
@@ -39,8 +40,7 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 	}
 
 	public void testCreateRoles() throws ApplicationException {
-		final SystemUser sysUser = DatabaseCommonTest.getSysUser();
-		Identifier userId = sysUser.getId();
+		final Identifier userId = LoginManager.getUserId();
 		{
 			CharacteristicType.createInstance(userId, 
 				LayoutItem.CHARACTERISCTIC_TYPE_NAME, 

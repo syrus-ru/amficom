@@ -1,5 +1,5 @@
 /*
- * $Id: TestTransmissionPath.java,v 1.8 2005/12/15 14:16:36 arseniy Exp $
+ * $Id: TestTransmissionPath.java,v 1.9 2006/02/17 12:04:55 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,11 +20,13 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/12/15 14:16:36 $
+ * @version $Revision: 1.9 $, $Date: 2006/02/17 12:04:55 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -41,6 +43,8 @@ public class TestTransmissionPath extends TestCase {
 	}
 
 	public void testCreateAll() throws ApplicationException {
+		final Identifier userId = LoginManager.getUserId();
+
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.TRANSPATH_TYPE_CODE);
 		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		final TransmissionPathType transmissionPathType = (TransmissionPathType) it.next();
@@ -75,7 +79,7 @@ public class TestTransmissionPath extends TestCase {
 			final String transmissionPathDescription = TRANSMISSIONPATH + SEPARATOR + n
 					+ SEPARATOR
 					+ portDescription;
-			TransmissionPath.createInstance(DatabaseCommonTest.getSysUser().getId(),
+			TransmissionPath.createInstance(userId,
 					domain.getId(),
 					"Путь передачи данных " + n,
 					transmissionPathDescription,
@@ -84,6 +88,6 @@ public class TestTransmissionPath extends TestCase {
 					finishPort.getId());
 		}
 
-		StorableObjectPool.flush(ObjectEntities.TRANSMISSIONPATH_CODE, DatabaseCommonTest.getSysUser().getId(), true);
+		StorableObjectPool.flush(ObjectEntities.TRANSMISSIONPATH_CODE, userId, true);
 	}
 }
