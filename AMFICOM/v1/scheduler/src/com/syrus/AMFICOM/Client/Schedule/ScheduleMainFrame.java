@@ -1,5 +1,5 @@
 /*-
-* $Id: ScheduleMainFrame.java,v 1.51 2005/12/29 08:55:35 bob Exp $
+* $Id: ScheduleMainFrame.java,v 1.52 2006/02/17 09:58:57 bob Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/12/29 08:55:35 $
+ * @version $Revision: 1.52 $, $Date: 2006/02/17 09:58:57 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -109,7 +109,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 				
 				timeFrame.pack();
 				if (this.timeFrameHeight == 0) {
-					this.timeFrameHeight = 3 * timeFrame.getHeight() / 2;
+					this.timeFrameHeight = 3 * timeFrame.getHeight();
 				}
 				timeFrame.setSize(w / 5, this.timeFrameHeight);
 //				saveFrame.pack();
