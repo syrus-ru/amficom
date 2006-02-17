@@ -1,5 +1,5 @@
 /*-
-* $Id: IntersectionValidator.java,v 1.4 2006/02/17 09:51:58 bob Exp $
+* $Id: IntersectionValidator.java,v 1.5 2006/02/17 10:13:49 bob Exp $
 *
 * Copyright ¿ 2006 Syrus Systems.
 * Dept. of Science & Technology.
@@ -32,11 +32,10 @@ import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.AMFICOM.measurement.TestWrapper;
-import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2006/02/17 09:51:58 $
+ * @version $Revision: 1.5 $, $Date: 2006/02/17 10:13:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -243,7 +242,7 @@ public class IntersectionValidator {
 				final long period = periodicalTemporalPattern.getPeriod();
 				
 				if (period < measurementDuration) {
-					throw new IllegalDataException(I18N.getString("Scheduler.Text.Scheduler.Model.SelfIntersection"));
+					throw new IllegalDataException(I18N.getString("Scheduler.Text.Scheduler.Model.PediodLessThanMeasurementDuration"));
 				}
 				
 				timeLabel = new PeriodicalTimeLabel(startTime, 
