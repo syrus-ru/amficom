@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.172 2006/02/16 12:22:45 bob Exp $
+ * $Id: SchedulerModel.java,v 1.173 2006/02/17 09:02:49 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.172 $, $Date: 2006/02/16 12:22:45 $
+ * @version $Revision: 1.173 $, $Date: 2006/02/17 09:02:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -946,6 +946,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 				changedTestId.add(test.getId());
 				test.setMeasurementSetupIds(measurementSetupIdSet);
+				test.normalize();
 				final TestView testView = TestView.valueOf(test);
 				TestView.addTest(test, testView.getStart(), testView.getEnd());
 			}
@@ -989,6 +990,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 								this.monitoredElement,
 								this.name != null && this.name.trim().length() > 0 ? this.name : sdf.format(startTime),
 								measurementSetupIds);
+						test.normalize();
 						newTestIds.add(test.getId());
 					} catch (final CreateObjectException e) {
 						throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest"));
@@ -1124,6 +1126,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 						Log.DEBUGLEVEL03);
 					selectedTest.setStartTime(newStartDate);
 					selectedTest.setEndTime(newEndDate);
+					selectedTest.normalize();
 					final TestView testView = TestView.valueOf(selectedTest);
 					TestView.addTest(selectedTest, testView.getStart(), testView.getEnd());
 				}

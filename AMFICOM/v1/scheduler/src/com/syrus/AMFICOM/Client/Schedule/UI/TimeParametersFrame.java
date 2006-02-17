@@ -174,8 +174,7 @@ public class TimeParametersFrame extends JInternalFrame {
 						final Test selectedTest = TimeParametersPanel.this.schedulerModel.getSelectedTest();
 					if (TimeParametersPanel.this.propertyChangeEvent == null && 
 							TimeParametersPanel.this.isTestAgree(selectedTest)) {
-							final Date startDate = TimeParametersPanel.this
-							.getStartDate();
+							final Date startDate = TimeParametersPanel.this.getStartDate();
 							TimeParametersPanel.this.schedulerModel.moveSelectedTests(startDate);							
 					}
 					} catch (ApplicationException e1) {
@@ -279,6 +278,7 @@ public class TimeParametersFrame extends JInternalFrame {
 												StorableObjectVersion.INITIAL_VERSION)) {
 										final Identifier temporalPatternId = 
 											selectedTest.getTemporalPatternId();
+										// TODO add intersection validation
 										if (temporalPatternId != null && 
 												temporalPatternId.getMajor() == 
 													ObjectEntities.PERIODICALTEMPORALPATTERN_CODE) {
@@ -288,16 +288,13 @@ public class TimeParametersFrame extends JInternalFrame {
 														temporalPatternId,
 														true);
 											long intervalLength = TimeParametersPanel.this.getIntervalLength();
-											if (periodicalTemporalPattern.isChanged()) {
-												periodicalTemporalPattern.setPeriod(intervalLength);
-											} else {
-												periodicalTemporalPattern = 
-													PeriodicalTemporalPattern.getInstance(
-														LoginManager.getUserId(), 
-														intervalLength);
-												selectedTest.setTemporalPatternId(
-													periodicalTemporalPattern.getId());
-											}
+											periodicalTemporalPattern = 
+												PeriodicalTemporalPattern.getInstance(
+													LoginManager.getUserId(), 
+													intervalLength);
+											selectedTest.setTemporalPatternId(
+												periodicalTemporalPattern.getId());
+											selectedTest.normalize();
 										}
 									}
 								}
@@ -381,6 +378,7 @@ public class TimeParametersFrame extends JInternalFrame {
 									return;
 								}
 								selectedTest.setEndTime(endDate);
+								selectedTest.normalize();
 								TimeParametersPanel.this.dispatcher.firePropertyChange(
 									new PropertyChangeEvent(TimeParametersPanel.this,
 										SchedulerModel.COMMAND_REFRESH_TESTS,
