@@ -1,5 +1,5 @@
 /*
- * $Id: SetupDomain.java,v 1.1.2.2 2006/02/17 12:36:20 arseniy Exp $
+ * $Id: SetupDomain.java,v 1.1.2.3 2006/02/17 15:54:17 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,13 +15,16 @@ import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.setup.I18N;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/17 12:36:20 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/02/17 15:54:17 $
  * @author $Author: arseniy $
  * @module test
  */
 public final class SetupDomain extends TestCase {
+	private static final String KEY_NAME = "Name.RootDomain";
+	private static final String KEY_DESCRIPTION = "Description.RootDomain";
 
 	public SetupDomain(final String name) {
 		super(name);
@@ -33,13 +36,13 @@ public final class SetupDomain extends TestCase {
 		return databaseCommonTest.createTestSetup();
 	}
 
-	public void testCreateInstance() throws ApplicationException {
+	public void testCreate() throws ApplicationException {
 		final Identifier creatorId = LoginManager.getUserId();
 
 		final Domain domain = Domain.createInstance(creatorId,
 				Identifier.VOID_IDENTIFIER,
-				"Корневой домен",
-				"Первый домен в иерархии");
+				I18N.getString(KEY_NAME),
+				I18N.getString(KEY_DESCRIPTION));
 		StorableObjectPool.flush(domain, creatorId, true);
 	}
 }
