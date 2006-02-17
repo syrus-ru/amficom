@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.99 2006/02/10 13:05:12 bass Exp $
+ * $Id: PathElement.java,v 1.100 2006/02/17 14:55:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.99 $, $Date: 2006/02/10 13:05:12 $
+ * @version $Revision: 1.100 $, $Date: 2006/02/17 14:55:08 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -469,7 +469,7 @@ public final class PathElement extends StorableObject<PathElement>
 		}
 
 		assert abstractSchemeElementId != null : NON_NULL_EXPECTED + "; " + this + "; id = " + this.getId().getIdentifierCode();
-		assert abstractSchemeElementId.isVoid() : NON_VOID_EXPECTED + "; " + this + "; id = " + this.getId().getIdentifierCode();
+		assert !abstractSchemeElementId.isVoid() : NON_VOID_EXPECTED + "; " + this + "; id = " + this.getId().getIdentifierCode();
 
 		return abstractSchemeElementId;
 	}
