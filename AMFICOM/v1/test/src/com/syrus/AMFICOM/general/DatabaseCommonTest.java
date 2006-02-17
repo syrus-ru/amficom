@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCommonTest.java,v 1.16 2006/02/03 13:22:59 arseniy Exp $
+ * $Id: DatabaseCommonTest.java,v 1.17 2006/02/17 11:48:02 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectGroupEntities.ADMINISTRATION_GROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectGroupEntities.CONFIGURATION_GROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectGroupEntities.EVENT_GROUP_CODE;
@@ -97,28 +98,23 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2006/02/03 13:22:59 $
+ * @version $Revision: 1.17 $, $Date: 2006/02/17 11:48:02 $
  * @author $Author: arseniy $
  * @module test
  */
 public class DatabaseCommonTest extends SQLCommonTest {
-	private static SystemUser sysUser;
-
-
-	public static SystemUser getSysUser() {
-		return sysUser;
-	}
 
 	@Override
 	void oneTimeSetUp() {
 		super.oneTimeSetUp();
 		initDatabaseContext();
 		initStorableObjectPool();
-		setSysUser();
+		login();
 	}
 
 	@Override
 	void oneTimeTearDown() {
+		logout();
 		super.oneTimeTearDown();
 	}
 
@@ -215,14 +211,26 @@ public class DatabaseCommonTest extends SQLCommonTest {
 		//More pools...
 	}
 
-	private static void setSysUser() {
-		final StorableObjectDatabase<SystemUser> database = DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
-		final SystemUserDatabase userDatabase = (SystemUserDatabase) database;
+	private static void login() {
+		LoginManager.init(new DatabaseLoginPerformer(), null);
 		try {
-			sysUser = userDatabase.retrieveForLogin(SystemUserWrapper.SYS_LOGIN);
+			LoginManager.login(SystemUserWrapper.SYS_LOGIN, "", VOID_IDENTIFIER);
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
+			try {
+				LoginManager.logout();
+			} catch (ApplicationException ae1) {
+				Log.errorMessage(ae1);
+			}
 			System.exit(0);
+		}
+	}
+
+	private static void logout() {
+		try {
+			LoginManager.logout();
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
 		}
 	}
 }
