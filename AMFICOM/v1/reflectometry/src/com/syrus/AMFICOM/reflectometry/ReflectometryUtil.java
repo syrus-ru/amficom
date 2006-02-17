@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryUtil.java,v 1.3 2006/01/26 16:10:14 saa Exp $
+ * $Id: ReflectometryUtil.java,v 1.4 2006/02/17 12:47:36 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.reflectometry;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2006/01/26 16:10:14 $
+ * @version $Revision: 1.4 $, $Date: 2006/02/17 12:47:36 $
  * @module
  */
 public final class ReflectometryUtil {
@@ -37,7 +37,9 @@ public final class ReflectometryUtil {
 	 * @param rmp параметры измерения
 	 * @param upper true, если нужна оценка сверху,
 	 *   false, если нужна несмещенная оценка
-	 * @return время измерения в секундах, средняя погрешность порядка 1% + 1 сек
+	 * @return время измерения в секундах,
+	 *   средняя погрешность порядка 1% + 1 сек
+	 *   макс. погрешность 6% + 2 сек (см. тест)
 	 */
 	public static double getEstimatedQP1640ATestTime(
 			final ReflectometryMeasurementParameters rmp,
@@ -62,6 +64,61 @@ public final class ReflectometryUtil {
 	}
 
 	/**
+	 * Оценивает время проведения измерения на QP1640MR
+	 * FIXME: выдает неверные (заниженные) результаты для режима 320 км)
+	 * @param rmp параметры измерения
+	 * @param upper true, если нужна верхняя оценка
+	 * @return время измерения в секундах
+	 */
+	public static double getEstimatedQP1640MRTestTime(
+			final ReflectometryMeasurementParameters rmp,
+			final boolean upper) {
+		double len = rmp.getTraceLength(); // km
+		double dX = rmp.getResolution(); // m
+		double av = rmp.getNumberOfAverages();
+		double estimatedTime =
+			av * len / 131 * .4 * 8 / Math.min(8,dX) + av * 35 / 1600;
+		estimatedTime += upper ? 2.0 : 0.5;
+		return estimatedTime;
+	}
+
+	/**
+	 * Estimator for 1640A and 1643A. Tested for 1643A only.
+	 */ 
+	private static final MeasurementTimeEstimator QP1643A_ESTIMATOR =
+		new MeasurementTimeEstimator() {
+			final public double getEstimatedMeasurementTime(
+					final ReflectometryMeasurementParameters rmp,
+					final boolean upper) {
+				return getEstimatedQP1640ATestTime(rmp, upper);
+			}
+	};
+
+	/**
+	 * Estimator for 1640MR.
+	 */ 
+	private static final MeasurementTimeEstimator QP1640MR_ESTIMATOR =
+		new MeasurementTimeEstimator() {
+			final public double getEstimatedMeasurementTime(
+					final ReflectometryMeasurementParameters rmp,
+					final boolean upper) {
+				return getEstimatedQP1640MRTestTime(rmp, upper);
+			}
+	};
+
+	public static MeasurementTimeEstimator getQP1640AEstimator() {
+		return QP1643A_ESTIMATOR; // use timing for 1643A
+	}
+
+	public static MeasurementTimeEstimator getQP1643AEstimator() {
+		return QP1643A_ESTIMATOR;
+	}
+
+	public static MeasurementTimeEstimator getQP1640MREstimator() {
+		return QP1640MR_ESTIMATOR;
+	}
+
+	/**
 	 * Оценивает сверху время проведения измерения агентом.
 	 * Оцениваемое время включает:
 	 * <ul>
@@ -77,7 +134,9 @@ public final class ReflectometryUtil {
 	 * <p> XXX: не знает, какой рефлектометр установлен,
 	 * поэтому использует данные по QP1640A.
 	 * @return время проведения измерения, оцененное сверху, выраженное в секундах
+	 * @deprecated
 	 */
+	@Deprecated
 	public static double getUpperEstimatedAgentTestTime(
 			final ReflectometryMeasurementParameters rmp) {
 		// складываем время собственно измерения
