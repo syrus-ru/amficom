@@ -267,6 +267,7 @@ public class TimeParametersFrame extends JInternalFrame {
 					((SpinnerDateModel)this.periodTimeSpinner.getModel()).setValue(calendar.getTime());
 					
 					final ChangeListener aChangeListener = new ChangeListener() {
+						@SuppressWarnings("unqualified-field-access")
 						public void stateChanged(ChangeEvent e) {
 							try {
 								final Test selectedTest = TimeParametersPanel.this.schedulerModel
@@ -278,7 +279,6 @@ public class TimeParametersFrame extends JInternalFrame {
 												StorableObjectVersion.INITIAL_VERSION)) {
 										final Identifier temporalPatternId = 
 											selectedTest.getTemporalPatternId();
-										// TODO add intersection validation
 										if (temporalPatternId != null && 
 												temporalPatternId.getMajor() == 
 													ObjectEntities.PERIODICALTEMPORALPATTERN_CODE) {
@@ -292,15 +292,13 @@ public class TimeParametersFrame extends JInternalFrame {
 												PeriodicalTemporalPattern.getInstance(
 													LoginManager.getUserId(), 
 													intervalLength);
-											selectedTest.setTemporalPatternId(
-												periodicalTemporalPattern.getId());
-											selectedTest.normalize();
-											updateTest();
+											schedulerModel.changeTemporalPattern(periodicalTemporalPattern);
 										}
 									}
 								}
 							} catch (ApplicationException e1) {
 								AbstractMainFrame.showErrorMessage(e1.getMessage());
+								updateTest();
 								return;
 							}
 						}						
