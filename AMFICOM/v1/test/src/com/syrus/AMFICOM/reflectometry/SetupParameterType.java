@@ -1,5 +1,5 @@
 /*-
- * $Id: SetupParameterType.java,v 1.1.2.1 2006/02/17 11:38:53 arseniy Exp $
+ * $Id: SetupParameterType.java,v 1.1.2.2 2006/02/17 15:53:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/17 11:38:53 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/02/17 15:53:08 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -72,7 +72,7 @@ public final class SetupParameterType extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testCreateAll() throws ApplicationException {
+	public void testCreate() throws ApplicationException {
 		final Identifier creatorId = LoginManager.getUserId();
 		String typeCodename;
 		final Set<ParameterType> parameterTypes = new HashSet<ParameterType>();
