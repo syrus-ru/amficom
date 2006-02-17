@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.66 2006/02/13 19:28:41 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.67 2006/02/17 11:12:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2006/02/13 19:28:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.67 $, $Date: 2006/02/17 11:12:10 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -55,7 +55,6 @@ public class CORBAObjectLoader implements ObjectLoader {
 	/**
 	 * Use DefaultCORBAActionProcessor with given loginRestorer as CORBAActionProcessor
 	 * @param serverConnectionManager
-	 * @param loginRestorer
 	 */
 	public CORBAObjectLoader(final ServerConnectionManager serverConnectionManager) {
 		this(serverConnectionManager, new DefaultCORBAActionProcessor());
