@@ -1,5 +1,5 @@
 /*
- * $Id: SetupDomain.java,v 1.1.2.1 2006/02/17 11:37:51 arseniy Exp $
+ * $Id: SetupDomain.java,v 1.1.2.2 2006/02/17 12:36:20 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,10 +13,11 @@ import junit.framework.TestCase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/17 11:37:51 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/02/17 12:36:20 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -33,7 +34,8 @@ public final class SetupDomain extends TestCase {
 	}
 
 	public void testCreateInstance() throws ApplicationException {
-		final Identifier creatorId = DatabaseCommonTest.getSysUser().getId();
+		final Identifier creatorId = LoginManager.getUserId();
+
 		final Domain domain = Domain.createInstance(creatorId,
 				Identifier.VOID_IDENTIFIER,
 				"Корневой домен",
