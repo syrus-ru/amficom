@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.20 2006/02/15 12:18:10 stas Exp $
+ * $Id: SchemeResource.java,v 1.21 2006/02/17 13:08:09 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 /**
  * 
  * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2006/02/15 12:18:10 $
+ * @version $Revision: 1.21 $, $Date: 2006/02/17 13:08:09 $
  * @module schemeclient
  */
 
@@ -241,7 +241,7 @@ public class SchemeResource {
 			}	
 			pmIds = new TreeSet<Identifier>();
 			for(PathElement pe : pes) {
-				pmIds.add(pe.getAbstractSchemeElement().getId());
+				pmIds.add(pe.getAbstractSchemeElementId());
 			}
 		}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.24 2006/02/15 12:18:11 stas Exp $
+ * $Id: PopupFactory.java,v 1.25 2006/02/17 13:08:09 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -248,7 +248,7 @@ public class PopupFactory {
 		}	
 		pmIds = new TreeSet<Identifier>();
 		for(PathElement pe : pes) {
-			pmIds.add(pe.getAbstractSchemeElement().getId());
+			pmIds.add(pe.getAbstractSchemeElementId());
 		}
 		
 		if (pmIds.contains(id)) { // already added to path

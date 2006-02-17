@@ -135,7 +135,7 @@ public class PathBuilder {
 
 		while(true) {
 			PathElement lastPE = path.getPathMembers().last();
-			if (lastPE.getAbstractSchemeElement().equals(endId)) {
+			if (lastPE.getAbstractSchemeElementId().equals(endId)) {
 				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 						LangModelScheme.getString("Message.information.path_created"),  //$NON-NLS-1$
 						LangModelScheme.getString("Message.information"), //$NON-NLS-1$
