@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.174 2006/02/17 09:58:57 bob Exp $
+ * $Id: SchedulerModel.java,v 1.175 2006/02/17 10:31:31 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.174 $, $Date: 2006/02/17 09:58:57 $
+ * @version $Revision: 1.175 $, $Date: 2006/02/17 10:31:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -954,6 +954,31 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_REFRESH_TESTS, null, changedTestId));
 	}
 
+	public void changeTemporalPattern(final AbstractTemporalPattern<?> temporalPattern) 
+	throws ApplicationException {
+		final Test test = this.getSelectedTest();
+		if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+			final String reason = this.isValid(test, temporalPattern);
+			if (reason != null) {
+				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_MEASUREMENT_SETUP, null, null));
+				throw new IllegalDataException(I18N.getString("Scheduler.Error.CannotApplyMeasurementSetup")
+					+ "\n" 
+					+ reason);
+			}
+		}							
+		
+		final Set<Identifier> changedTestId = new HashSet<Identifier>(); 
+		if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+			changedTestId.add(test.getId());
+			test.setTemporalPatternId(temporalPattern.getId());
+			test.normalize();
+			final TestView testView = TestView.valueOf(test);
+			TestView.addTest(test, testView.getStart(), testView.getEnd());
+		}
+		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_REFRESH_TESTS, null, changedTestId));
+	}
+
+	
 	private void generateTest() throws ApplicationException {
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 
@@ -1476,6 +1501,12 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	throws ApplicationException {
 		return this.intersectionValidator.isValid(test, newTestMeasurementSetup);
 	}
+	
+	public String isValid(final Test test,
+  		final  AbstractTemporalPattern<?> temporalPattern) 
+  	throws ApplicationException {
+  		return this.intersectionValidator.isValid(test, temporalPattern);
+  	}
 	
 	/**
 	 * @param test
