@@ -31,6 +31,9 @@ JUNITCLASSPATH=$(ECLIPSE_HOME)/plugins/org.junit_3.8.1/junit.jar
 
 
 all:	.mach
+	$(CP) \
+		$(SRCDIR)/com/syrus/AMFICOM/setup/*.properties \
+		$(CLASSDIR)/com/syrus/AMFICOM/setup
 
 .mach:	$(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \

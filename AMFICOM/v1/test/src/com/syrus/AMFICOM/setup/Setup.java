@@ -1,5 +1,5 @@
 /*
- * $Id: Setup.java,v 1.1.2.1 2006/02/17 11:37:52 arseniy Exp $
+ * $Id: Setup.java,v 1.1.2.2 2006/02/17 15:54:32 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,9 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import com.syrus.AMFICOM.administration.SetupCreateSysUser;
+import com.syrus.AMFICOM.administration.SetupDomain;
+import com.syrus.AMFICOM.administration.SetupServer;
+import com.syrus.AMFICOM.administration.SetupSystemUser;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.SQLCommonTest;
 import com.syrus.AMFICOM.general.SetupDataType;
@@ -19,7 +22,7 @@ import com.syrus.AMFICOM.general.SetupMeasurementUnit;
 import com.syrus.AMFICOM.reflectometry.SetupParameterType;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/17 11:37:52 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/02/17 15:54:32 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -36,23 +39,26 @@ public final class Setup extends TestCase {
 		sqlCommonTest.addTest(new SetupCreateSysUser("testCreate"));
 
 		//-Create dictionaries.
-		sqlCommonTest.addTest(new SetupDataType("testCreateAll"));
-		sqlCommonTest.addTest(new SetupMeasurementUnit("testCreateAll"));
+		sqlCommonTest.addTest(new SetupDataType("testCreate"));
+		sqlCommonTest.addTest(new SetupMeasurementUnit("testCreate"));
 
 
 		final DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
 
+		//-Create root domain and server
+		databaseCommonTest.addTest(new SetupDomain("testCreate"));
+		databaseCommonTest.addTest(new SetupServer("testCreate"));
+
+		//-Create users for server processes and processes themselves.
+		databaseCommonTest.addTest(new SetupSystemUser("testCreate"));
+
 		//-Create parameter types
-		databaseCommonTest.addTest(new SetupParameterType("testCreateAll"));
+		databaseCommonTest.addTest(new SetupParameterType("testCreate"));
 
 //		sqlCommonTest.addTest(new TestEquipmentType("testCreateAll"));
 //		sqlCommonTest.addTest(new TestMeasurementType("testCreateAll"));
 //		sqlCommonTest.addTest(new TestAnalysisType("testCreateAll"));
 //		sqlCommonTest.addTest(new TestModelingType("testCreateAll"));
-//
-//		//-Create default domain and server.
-//		databaseCommonTest.addTest(new TestDomain("testCreateInstance"));
-//		databaseCommonTest.addTest(new TestServer("testCreateInstance"));
 //
 //		//-Create users for server processes and processes themself.
 //		databaseCommonTest.addTest(new TestSystemUser("testCreateServerProcessUsers"));
