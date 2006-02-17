@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.21 2006/02/10 11:21:10 bob Exp $
+* $Id: TestView.java,v 1.22 2006/02/17 08:43:04 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2006/02/10 11:21:10 $
+ * @version $Revision: 1.22 $, $Date: 2006/02/17 08:43:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -150,8 +150,8 @@ public final class TestView {
 			} 
 			// TODO calculate status for group test
 		}
-		this.lastDate = new Date(this.lastDate.getTime()  
-				+ this.measurementSetup.getMeasurementDuration());
+//		this.lastDate = new Date(this.lastDate.getTime()  
+//				+ this.measurementSetup.getMeasurementDuration());
 	}
 	
 	private final void createStatus() throws ApplicationException {

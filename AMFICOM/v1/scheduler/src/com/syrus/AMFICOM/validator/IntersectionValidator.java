@@ -1,5 +1,5 @@
 /*-
-* $Id: IntersectionValidator.java,v 1.2 2006/02/16 15:20:15 bob Exp $
+* $Id: IntersectionValidator.java,v 1.3 2006/02/17 08:43:04 bob Exp $
 *
 * Copyright ¿ 2006 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2006/02/16 15:20:15 $
+ * @version $Revision: 1.3 $, $Date: 2006/02/17 08:43:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -132,10 +132,7 @@ public class IntersectionValidator {
 			return e.getMessage();
 		}
 		
-		final Date endDate0 = 
-			new Date(endDate1.getTime() + measurementDuration);
-		
-		final Set<Test> tests = this.getTests(startDate1, endDate0, test.getMonitoredElementId());
+		final Set<Test> tests = this.getTests(startDate1, endDate1, test.getMonitoredElementId());
 		for (final Test aTest : tests) {
 			if (aTest.equals(test)) {
 				continue;
@@ -180,13 +177,13 @@ public class IntersectionValidator {
 			return e.getMessage();
 		}
 		
-		final Date endDate0 = 
-			new Date(endDate.getTime() + measurementDuration);
+//		assert Log.debugMessage("startDate: " 
+//				+ startDate 
+//				+ ", endDate0:" 
+//				+ endDate, 
+//			Log.DEBUGLEVEL03);
 		
-		assert Log.debugMessage("startDate: " + startDate + ", endDate0:" + endDate0, Log.DEBUGLEVEL03);
-		
-		final Set<Test> tests = this.getTests(startDate, endDate0, monitoredElementId);
-		assert Log.debugMessage(tests, Log.DEBUGLEVEL03);
+		final Set<Test> tests = this.getTests(startDate, endDate, monitoredElementId);
 		for (final Test test : tests) {
 			final String reason = this.isIntersects(timeLabel, test);
 			if (reason != null) {
@@ -231,8 +228,7 @@ public class IntersectionValidator {
 		
 		final TimeLabel timeLabel;
 		if (temporalPattern == null) {
-			assert startTime == endTime : "Single test must has equal start and end dates " + startDate + ", " + endDate;
-			final Range range = new Range(startTime, startTime + measurementDuration - 1);
+			final Range range = new Range(startTime, endTime - 1);
 			timeLabel = new OnceTimeLabel(range);
 		} else {
 			if (temporalPattern instanceof PeriodicalTemporalPattern) {

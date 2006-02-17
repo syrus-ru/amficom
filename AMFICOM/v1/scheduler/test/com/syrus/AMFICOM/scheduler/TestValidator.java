@@ -1,5 +1,5 @@
 /*
- * $Id: TestValidator.java,v 1.2 2006/02/16 14:10:42 bob Exp $
+ * $Id: TestValidator.java,v 1.3 2006/02/17 08:43:04 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.validator.IntersectionValidator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2006/02/16 14:10:42 $
+ * @version $Revision: 1.3 $, $Date: 2006/02/17 08:43:04 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -155,7 +155,7 @@ public final class TestValidator extends TestCase {
 		assertTrue(measurementDuration < period);
 		
 		final Date now = new Date();
-		final Date end = new Date(now.getTime() + 30L * 60L * 1000L);
+		final Date end = new Date(now.getTime() + 30L * 60L * 1000L + measurementDuration);
 		
 		final PeriodicalTemporalPattern temporalPattern = 
 			PeriodicalTemporalPattern.getInstance(CREATOR_ID, period);
@@ -179,14 +179,14 @@ public final class TestValidator extends TestCase {
 		
 		assertTrue(measurementDuration < period);
 		
-		final Date now = new Date();
-//		final Date end = new Date(now.getTime() + 30L * 60L * 1000L);
+		final Date start = new Date();
+		final Date end = new Date(start.getTime() + measurementDuration);
 		
 		final AbstractTemporalPattern temporalPattern = null;
 		
 		final String reason = INTERSECTION_VALIDATOR.isValid(MONITORED_ELEMENT.getId(), 
-			now, 
-			now, 
+			start, 
+			end, 
 			temporalPattern, 
 			measurementSetup);
 		
@@ -201,10 +201,12 @@ public final class TestValidator extends TestCase {
 		final Date now = new Date();
 		final Test test;
 		{
-			final Date start = now;
-			final Date end = now;		
-			final AbstractTemporalPattern temporalPattern = null;
 			final MeasurementSetup measurementSetup = SHORT_MEASUREMENT_SETUP;
+			final long measurementDuration = measurementSetup.getMeasurementDuration();
+			
+			final Date start = now;
+			final Date end = new Date(start.getTime() + measurementDuration);		
+			final AbstractTemporalPattern temporalPattern = null;
 			
 			final String reason = INTERSECTION_VALIDATOR.isValid(MONITORED_ELEMENT.getId(), 
 				start, 
@@ -225,15 +227,19 @@ public final class TestValidator extends TestCase {
 				"single", 
 				Collections.singleton(measurementSetup.getId()));
 			
+			test.normalize();
+			
 			assert Log.debugMessage("Add single test: " + test.getId(), Log.DEBUGLEVEL03);
 		}
 		
 		// The second test's parameters:
 		{
-			final Date start = new Date(now.getTime() - 60L * 1000L);
-			final Date end = start;		
-			final AbstractTemporalPattern temporalPattern = null;
 			final MeasurementSetup measurementSetup = LONG_MEASUREMENT_SETUP;
+			final long measurementDuration = measurementSetup.getMeasurementDuration();
+			
+			final Date start = new Date(now.getTime() - 60L * 1000L);
+			final Date end = new Date(start.getTime() + measurementDuration);	
+			final AbstractTemporalPattern temporalPattern = null;			
 			
 			final String reason = INTERSECTION_VALIDATOR.isValid(MONITORED_ELEMENT.getId(), 
 				start, 
@@ -259,8 +265,10 @@ public final class TestValidator extends TestCase {
 		
 		final Test test;
 		{
+			final long measurementDuration = firstTestMeasurementSetup.getMeasurementDuration();
+			
 			final Date start = now;
-			final Date end = now;		
+			final Date end = new Date(start.getTime() + measurementDuration);
 			final AbstractTemporalPattern temporalPattern = null;
 			
 			final String reason = INTERSECTION_VALIDATOR.isValid(MONITORED_ELEMENT.getId(), 
@@ -282,15 +290,18 @@ public final class TestValidator extends TestCase {
 				"single", 
 				Collections.singleton(firstTestMeasurementSetup.getId()));
 			
+			test.normalize();
+			
 			assert Log.debugMessage("Add single test: " + test.getId(), Log.DEBUGLEVEL03);
 		}
 		
 		// The second test's parameters:
 		{
 			final MeasurementSetup measurementSetup = LONG_MEASUREMENT_SETUP;
-			final Date start = new Date(now.getTime() - measurementSetup.getMeasurementDuration() 
+			final long measurementDuration = measurementSetup.getMeasurementDuration();
+			final Date start = new Date(now.getTime() - measurementDuration 
 				+ firstTestMeasurementSetup.getMeasurementDuration() / 2);
-			final Date end = start;		
+			final Date end = new Date(start.getTime() + measurementDuration);		
 			final AbstractTemporalPattern temporalPattern = null;
 			
 			final String reason = INTERSECTION_VALIDATOR.isValid(MONITORED_ELEMENT.getId(), 
@@ -311,11 +322,12 @@ public final class TestValidator extends TestCase {
 		// that starts after first test but before its ends
 		
 		final Date now = new Date();		
-		final MeasurementSetup measurementSetup = LONG_MEASUREMENT_SETUP;		
+		final MeasurementSetup measurementSetup = LONG_MEASUREMENT_SETUP;
+		final long measurementDuration = measurementSetup.getMeasurementDuration();
 		final Test test;
 		{
-			final Date start = now;
-			final Date end = now;		
+			final Date start = now;			
+			final Date end = new Date(start.getTime() + measurementDuration);
 			final AbstractTemporalPattern temporalPattern = null;
 			
 			final String reason = INTERSECTION_VALIDATOR.isValid(MONITORED_ELEMENT.getId(), 
@@ -338,13 +350,15 @@ public final class TestValidator extends TestCase {
 				Collections.singleton(measurementSetup.getId()));
 			
 			assert Log.debugMessage("Add single test: " + test.getId(), Log.DEBUGLEVEL03);
+			
+			test.normalize();
 		}
 		
 		// The second test's parameters:
 		{
 			final Date start = new Date(now.getTime() 
-					+ measurementSetup.getMeasurementDuration() / 2);
-			final Date end = start;		
+					+ measurementDuration / 2);
+			final Date end = new Date(start.getTime() + measurementDuration);
 			final AbstractTemporalPattern temporalPattern = null;
 			
 			final String reason = INTERSECTION_VALIDATOR.isValid(MONITORED_ELEMENT.getId(), 
@@ -362,14 +376,14 @@ public final class TestValidator extends TestCase {
 	public void testSingleAndPeriodicalTestsIntersection() throws ApplicationException {
 		final Date now = new Date();
 		final MeasurementSetup measurementSetup = SHORT_MEASUREMENT_SETUP;
-		
+		final long measurementDuration = measurementSetup.getMeasurementDuration();
 		// Two tests has intersection if the 1st is single test
 		// and the 2nd is periodical tests and its not first measurement is on time of the 1st test
 		
 		final Test test;
 		{
 			final Date start = now;
-			final Date end = now;		
+			final Date end = new Date(start.getTime() + measurementDuration);
 			final AbstractTemporalPattern temporalPattern = null;			
 			
 			final String reason = INTERSECTION_VALIDATOR.isValid(MONITORED_ELEMENT.getId(), 
@@ -390,7 +404,7 @@ public final class TestValidator extends TestCase {
 				MONITORED_ELEMENT, 
 				"single", 
 				Collections.singleton(measurementSetup.getId()));
-			
+			test.normalize();
 			assert Log.debugMessage("Add single test: " + test.getId(), Log.DEBUGLEVEL03);
 		}
 		
@@ -398,7 +412,7 @@ public final class TestValidator extends TestCase {
 		{
 			final long period = 5L * 60L * 1000L;
 			final Date start = new Date(now.getTime() - 3L * period);
-			final Date end = new Date(now.getTime() + 30L * 60L * 1000L);
+			final Date end = new Date(now.getTime() + 30L * 60L * 1000L + measurementDuration);
 			
 			final PeriodicalTemporalPattern temporalPattern = 
 				PeriodicalTemporalPattern.getInstance(CREATOR_ID, period);
@@ -419,6 +433,7 @@ public final class TestValidator extends TestCase {
 		final Calendar calendar = Calendar.getInstance();
 		final Date now = calendar.getTime();
 		final MeasurementSetup measurementSetup = SHORT_MEASUREMENT_SETUP;
+		final long measurementDuration = measurementSetup.getMeasurementDuration();
 		
 		final Test test;
 		{
@@ -449,7 +464,7 @@ public final class TestValidator extends TestCase {
 				MONITORED_ELEMENT, 
 				"single", 
 				Collections.singleton(measurementSetup.getId()));
-			
+			test.normalize();
 			assert Log.debugMessage("Add single test: " 
 					+ test.getId(), 
 				Log.DEBUGLEVEL03);
@@ -458,7 +473,7 @@ public final class TestValidator extends TestCase {
 		
 		{	
 			final Date start = now;
-			final Date end = now;		
+			final Date end = new Date(start.getTime() + measurementDuration);
 			final AbstractTemporalPattern temporalPattern = null;			
 			
 			final String reason = INTERSECTION_VALIDATOR.isValid(MONITORED_ELEMENT.getId(), 
@@ -477,10 +492,12 @@ public final class TestValidator extends TestCase {
 		final Date now = new Date();
 		final Test test;
 		{
-			final Date start = now;
-			final Date end = now;		
-			final AbstractTemporalPattern temporalPattern = null;
 			final MeasurementSetup measurementSetup = SHORT_MEASUREMENT_SETUP;
+			final long measurementDuration = measurementSetup.getMeasurementDuration();
+			final Date start = now;
+			final Date end = new Date(start.getTime() + measurementDuration);
+			final AbstractTemporalPattern temporalPattern = null;
+			
 			
 			final String reason = INTERSECTION_VALIDATOR.isValid(MONITORED_ELEMENT.getId(), 
 				start, 
@@ -500,16 +517,18 @@ public final class TestValidator extends TestCase {
 				MONITORED_ELEMENT, 
 				"single", 
 				Collections.singleton(measurementSetup.getId()));
-			
+			test.normalize();
 			assert Log.debugMessage("Add single test: " + test.getId(), Log.DEBUGLEVEL03);
 		}
 		
 		// The second test's parameters:
 		{
-			final Date start = new Date(test.getStartTime().getTime() + 60L * 1000L);
-			final Date end = start;		
-			final AbstractTemporalPattern temporalPattern = null;
 			final MeasurementSetup measurementSetup = LONG_MEASUREMENT_SETUP;
+			final long measurementDuration = measurementSetup.getMeasurementDuration();
+			final Date start = new Date(test.getStartTime().getTime() + 60L * 1000L);
+			final Date end = new Date(start.getTime() + measurementDuration);
+			final AbstractTemporalPattern temporalPattern = null;
+			
 			
 			{
 				final String reason = INTERSECTION_VALIDATOR.isValid(MONITORED_ELEMENT.getId(), 
@@ -532,7 +551,7 @@ public final class TestValidator extends TestCase {
 				MONITORED_ELEMENT, 
 				"single", 
 				Collections.singleton(measurementSetup.getId()));
-			
+			test2.normalize();
 			final String reason = INTERSECTION_VALIDATOR.isValid(test2, -2L * 60L * 1000L);
 			
 			assertNotNull("There must be intersection", reason);
@@ -579,6 +598,8 @@ public final class TestValidator extends TestCase {
 			"single", 
 			Collections.singleton(measurementSetup.getId()));
 		
+		test.normalize();
+		
 		assert Log.debugMessage("Add single test: " 
 				+ test.getId(), 
 			Log.DEBUGLEVEL03);
@@ -592,11 +613,11 @@ public final class TestValidator extends TestCase {
 	public void testSingleAndPeriodicalTestsResumeIntersection() throws ApplicationException {
 		final Date now = new Date();
 		final MeasurementSetup measurementSetup = SHORT_MEASUREMENT_SETUP;
-		
+		final long measurementDuration = measurementSetup.getMeasurementDuration();
 		final Test test;
 		{
 			final Date start = now;
-			final Date end = now;		
+			final Date end = new Date(start.getTime() + measurementDuration);
 			final AbstractTemporalPattern temporalPattern = null;			
 			
 			final String reason = INTERSECTION_VALIDATOR.isValid(MONITORED_ELEMENT.getId(), 
@@ -617,7 +638,7 @@ public final class TestValidator extends TestCase {
 				MONITORED_ELEMENT, 
 				"single", 
 				Collections.singleton(measurementSetup.getId()));
-			
+			test.normalize();
 			assert Log.debugMessage("Add single test: " + test.getId(), Log.DEBUGLEVEL03);
 		}
 		
@@ -650,7 +671,7 @@ public final class TestValidator extends TestCase {
 				MONITORED_ELEMENT, 
 				"single", 
 				Collections.singleton(measurementSetup.getId()));
-			
+			test2.normalize();
 			final Date resumeEnd = new Date(now.getTime() + 5L * period);
 			
 			final String reason = INTERSECTION_VALIDATOR.isValid(test2, test2.getStartTime(), resumeEnd);
