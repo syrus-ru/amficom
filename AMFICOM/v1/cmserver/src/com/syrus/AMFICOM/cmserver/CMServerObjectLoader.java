@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerObjectLoader.java,v 1.17 2006/01/16 18:58:19 arseniy Exp $
+ * $Id: CMServerObjectLoader.java,v 1.18 2006/02/17 11:33:25 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,11 +27,11 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2006/01/16 18:58:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2006/02/17 11:33:25 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
- * @todo Implement refresh (i. e. - method {@link ObjectLoader#getRemoteVersions(Set)})
+ * @todo Implement refresh (i. e. - method {@link com.syrus.AMFICOM.general.ObjectLoader#getRemoteVersions(Set)})
  * with timeout checking, using field {@link #refreshTimeout}
  */
 final class CMServerObjectLoader extends DatabaseObjectLoader {
