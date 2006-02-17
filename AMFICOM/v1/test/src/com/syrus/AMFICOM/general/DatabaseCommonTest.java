@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCommonTest.java,v 1.16 2006/02/03 13:22:59 arseniy Exp $
+ * $Id: DatabaseCommonTest.java,v 1.16.2.1 2006/02/17 11:41:01 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectGroupEntities.ADMINISTRATION_GROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectGroupEntities.CONFIGURATION_GROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectGroupEntities.EVENT_GROUP_CODE;
@@ -44,13 +45,13 @@ import com.syrus.AMFICOM.administration.PermissionAttributesDatabase;
 import com.syrus.AMFICOM.administration.RoleDatabase;
 import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
-import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
 import com.syrus.AMFICOM.administration.SystemUserWrapper;
 import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
+import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.LinkDatabase;
 import com.syrus.AMFICOM.configuration.LinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.PortDatabase;
@@ -62,19 +63,24 @@ import com.syrus.AMFICOM.event.DeliveryAttributesDatabase;
 import com.syrus.AMFICOM.event.EventDatabase;
 import com.syrus.AMFICOM.event.EventSourceDatabase;
 import com.syrus.AMFICOM.event.EventTypeDatabase;
+import com.syrus.AMFICOM.measurement.ActionParameterDatabase;
+import com.syrus.AMFICOM.measurement.ActionParameterTypeBindingDatabase;
+import com.syrus.AMFICOM.measurement.ActionTemplateDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
-import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
-import com.syrus.AMFICOM.measurement.IntervalsTemporalPatternDatabase;
+import com.syrus.AMFICOM.measurement.AnalysisResultParameterDatabase;
+import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
 import com.syrus.AMFICOM.measurement.KISDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementPortDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementPortTypeDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementResultParameterDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.ModelingDatabase;
+import com.syrus.AMFICOM.measurement.ModelingResultParameterDatabase;
+import com.syrus.AMFICOM.measurement.ModelingTypeDatabase;
 import com.syrus.AMFICOM.measurement.MonitoredElementDatabase;
-import com.syrus.AMFICOM.measurement.ParameterSetDatabase;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
-import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.scheme.CableChannelingItemDatabase;
 import com.syrus.AMFICOM.scheme.PathElementDatabase;
@@ -97,32 +103,28 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2006/02/03 13:22:59 $
+ * @version $Revision: 1.16.2.1 $, $Date: 2006/02/17 11:41:01 $
  * @author $Author: arseniy $
  * @module test
  */
 public class DatabaseCommonTest extends SQLCommonTest {
-	private static SystemUser sysUser;
-
-
-	public static SystemUser getSysUser() {
-		return sysUser;
-	}
 
 	@Override
 	void oneTimeSetUp() {
 		super.oneTimeSetUp();
 		initDatabaseContext();
 		initStorableObjectPool();
-		setSysUser();
+		login();
 	}
 
 	@Override
 	void oneTimeTearDown() {
+		logout();
 		super.oneTimeTearDown();
 	}
 
 	private static void initDatabaseContext() {
+		DatabaseContext.registerDatabase(new ParameterTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicDatabase());
 
@@ -135,6 +137,7 @@ public class DatabaseCommonTest extends SQLCommonTest {
 		DatabaseContext.registerDatabase(new RoleDatabase());
 		DatabaseContext.registerDatabase(new DeliveryAttributesDatabase());
 
+		DatabaseContext.registerDatabase(new EquipmentTypeDatabase());
 		DatabaseContext.registerDatabase(new PortTypeDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathTypeDatabase());
 		DatabaseContext.registerDatabase(new LinkTypeDatabase());
@@ -148,19 +151,24 @@ public class DatabaseCommonTest extends SQLCommonTest {
 		DatabaseContext.registerDatabase(new CableThreadDatabase());
 
 		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
+		DatabaseContext.registerDatabase(new MeasurementTypeDatabase());
+		DatabaseContext.registerDatabase(new AnalysisTypeDatabase());
+		DatabaseContext.registerDatabase(new ModelingTypeDatabase());
+		DatabaseContext.registerDatabase(new ActionParameterTypeBindingDatabase());
+		DatabaseContext.registerDatabase(new KISDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
+		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
+		DatabaseContext.registerDatabase(new ActionParameterDatabase());
+		DatabaseContext.registerDatabase(new ActionTemplateDatabase());
+		DatabaseContext.registerDatabase(new PeriodicalTemporalPatternDatabase());
+		DatabaseContext.registerDatabase(new TestDatabase());
+		DatabaseContext.registerDatabase(new MeasurementSetupDatabase());
 		DatabaseContext.registerDatabase(new MeasurementDatabase());
 		DatabaseContext.registerDatabase(new AnalysisDatabase());
 		DatabaseContext.registerDatabase(new ModelingDatabase());
-		DatabaseContext.registerDatabase(new MeasurementSetupDatabase());
-		DatabaseContext.registerDatabase(new ResultDatabase());
-		DatabaseContext.registerDatabase(new ParameterSetDatabase());
-		DatabaseContext.registerDatabase(new TestDatabase());
-		DatabaseContext.registerDatabase(new CronTemporalPatternDatabase());
-		DatabaseContext.registerDatabase(new IntervalsTemporalPatternDatabase());
-		DatabaseContext.registerDatabase(new PeriodicalTemporalPatternDatabase());
-		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
-		DatabaseContext.registerDatabase(new KISDatabase());
-		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
+		DatabaseContext.registerDatabase(new MeasurementResultParameterDatabase());
+		DatabaseContext.registerDatabase(new AnalysisResultParameterDatabase());
+		DatabaseContext.registerDatabase(new ModelingResultParameterDatabase());
 
 		DatabaseContext.registerDatabase(new EventTypeDatabase());
 		DatabaseContext.registerDatabase(new EventSourceDatabase());
@@ -215,14 +223,26 @@ public class DatabaseCommonTest extends SQLCommonTest {
 		//More pools...
 	}
 
-	private static void setSysUser() {
-		final StorableObjectDatabase<SystemUser> database = DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
-		final SystemUserDatabase userDatabase = (SystemUserDatabase) database;
+	private static void login() {
+		LoginManager.init(new DatabaseLoginPerformer(), null);
 		try {
-			sysUser = userDatabase.retrieveForLogin(SystemUserWrapper.SYS_LOGIN);
+			LoginManager.login(SystemUserWrapper.SYS_LOGIN, "", VOID_IDENTIFIER);
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
+			try {
+				LoginManager.logout();
+			} catch (ApplicationException ae1) {
+				Log.errorMessage(ae1);
+			}
 			System.exit(0);
+		}
+	}
+
+	private static void logout() {
+		try {
+			LoginManager.logout();
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
 		}
 	}
 }
