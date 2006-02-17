@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.67 2006/02/17 11:12:10 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.68 2006/02/17 11:33:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2006/02/17 11:12:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.68 $, $Date: 2006/02/17 11:33:02 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -88,7 +88,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 
 		final LoadCORBAAction<T> action = new LoadCORBAAction<T>() {
 			public void perform() throws AMFICOMRemoteException, ApplicationException {
-				final IdlSessionKey sessionKeyT = LoginManager.getIdlSessionKey();
+				final IdlSessionKey sessionKeyT = LoginManager.getSessionKey().getIdlTransferable();
 				final CommonServer server = CORBAObjectLoader.this.serverConnectionManager.getServerReference();
 				final IdlStorableObject[] transferables = server.transmitStorableObjects(idsT, sessionKeyT);
 				this.loadedObjects = StorableObject.fromTransferables(transferables);
@@ -118,7 +118,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 
 		final LoadCORBAAction<T> action = new LoadCORBAAction<T>() {
 			public void perform() throws AMFICOMRemoteException, ApplicationException {
-				final IdlSessionKey sessionKeyT = LoginManager.getIdlSessionKey();
+				final IdlSessionKey sessionKeyT = LoginManager.getSessionKey().getIdlTransferable();
 				final CommonServer server = CORBAObjectLoader.this.serverConnectionManager.getServerReference();
 				final IdlStorableObject[] transferables = server.transmitStorableObjectsButIdsByCondition(idsT, conditionT, sessionKeyT);
 				this.loadedObjects = StorableObject.fromTransferables(transferables);
@@ -144,7 +144,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 
 		final LoadCORBAAction<Identifier> action = new LoadCORBAAction<Identifier>() {
 			public void perform() throws AMFICOMRemoteException, ApplicationException {
-				final IdlSessionKey sessionKeyT = LoginManager.getIdlSessionKey();
+				final IdlSessionKey sessionKeyT = LoginManager.getSessionKey().getIdlTransferable();
 				final CommonServer server = CORBAObjectLoader.this.serverConnectionManager.getServerReference();
 				final IdlIdentifier[] transferables = server.transmitIdentifiersButIdsByCondition(idsT, conditionT, sessionKeyT);
 				this.loadedObjects = Identifier.fromTransferables(transferables);
@@ -172,7 +172,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 
 		final RemoveVersionCORBAAction action = new RemoveVersionCORBAAction() {
 			public void perform() throws AMFICOMRemoteException, ApplicationException {
-				final IdlSessionKey sessionKeyT = LoginManager.getIdlSessionKey();
+				final IdlSessionKey sessionKeyT = LoginManager.getSessionKey().getIdlTransferable();
 				final CommonServer server = CORBAObjectLoader.this.serverConnectionManager.getServerReference();				
 				final IdVersion[] idVersions = server.transmitRemoteVersions(idsT, sessionKeyT);
 				this.versionsMap = new HashMap<Identifier, StorableObjectVersion>(idVersions.length);
@@ -201,7 +201,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 			public void perform() throws AMFICOMRemoteException, ApplicationException {
 				final ORB orb = CORBAObjectLoader.this.serverConnectionManager.getCORBAServer().getOrb();
 				final IdlStorableObject[] transferables = StorableObject.createTransferables(storableObjects, orb);
-				final IdlSessionKey sessionKeyT = LoginManager.getIdlSessionKey();
+				final IdlSessionKey sessionKeyT = LoginManager.getSessionKey().getIdlTransferable();
 				final CommonServer server = CORBAObjectLoader.this.serverConnectionManager.getServerReference();
 				server.receiveStorableObjects(transferables, sessionKeyT);
 			}
@@ -218,7 +218,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 		this.corbaActionProcessor.performAction(new CORBAAction() {
 			public void perform() throws AMFICOMRemoteException, ApplicationException {
 				final IdlIdentifier[] idsT = Identifier.createTransferables(identifiables);
-				final IdlSessionKey sessionKeyT = LoginManager.getIdlSessionKey();
+				final IdlSessionKey sessionKeyT = LoginManager.getSessionKey().getIdlTransferable();
 				final CommonServer server = CORBAObjectLoader.this.serverConnectionManager.getServerReference();
 				server.delete(idsT, sessionKeyT);
 			}
