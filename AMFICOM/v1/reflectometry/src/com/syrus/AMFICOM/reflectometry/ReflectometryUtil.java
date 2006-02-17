@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryUtil.java,v 1.4 2006/02/17 12:47:36 saa Exp $
+ * $Id: ReflectometryUtil.java,v 1.5 2006/02/17 12:55:22 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.reflectometry;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2006/02/17 12:47:36 $
+ * @version $Revision: 1.5 $, $Date: 2006/02/17 12:55:22 $
  * @module
  */
 public final class ReflectometryUtil {
@@ -120,6 +120,20 @@ public final class ReflectometryUtil {
 
 	/**
 	 * Оценивает сверху время проведения измерения агентом.
+	 * <p> XXX: не знает, какой рефлектометр установлен,
+	 * поэтому использует данные по QP1640A/1643A.
+	 * @return время проведения измерения, оцененное сверху, выраженное в секундах
+	 * @see #getUpperEstimatedAgentTestTime(ReflectometryMeasurementParameters, MeasurementTimeEstimator)
+	 * @deprecated use {@link #getUpperEstimatedAgentTestTime(ReflectometryMeasurementParameters, MeasurementTimeEstimator)}
+	 */
+	@Deprecated
+	public static double getUpperEstimatedAgentTestTime(
+			final ReflectometryMeasurementParameters rmp) {
+		return getUpperEstimatedAgentTestTime(rmp, QP1643A_ESTIMATOR);
+	}
+
+	/**
+	 * Оценивает сверху время проведения измерения агентом.
 	 * Оцениваемое время включает:
 	 * <ul>
 	 * <li> время обработки агентом перед отправкой
@@ -127,21 +141,20 @@ public final class ReflectometryUtil {
 	 * <li> время измерения на КИС
 	 * <li> время передачи от КИС к агенту
 	 * <li> время обработки результата на агенте
-	 * </li>
+	 * </ul>
 	 * <p> Оценка довольно грубая, "как бы сверху", полагаясь на быструю
 	 * передачу по сети. Основана на пробных замерах.
 	 * <p> Типично выдает значение, завышенное на 10-20 сек.
-	 * <p> XXX: не знает, какой рефлектометр установлен,
-	 * поэтому использует данные по QP1640A.
+	 * @param rmp параметры измерения
+	 * @param estimator оцениватель времени измерения данного рефлектометра
 	 * @return время проведения измерения, оцененное сверху, выраженное в секундах
-	 * @deprecated
 	 */
-	@Deprecated
 	public static double getUpperEstimatedAgentTestTime(
-			final ReflectometryMeasurementParameters rmp) {
+			final ReflectometryMeasurementParameters rmp,
+			final MeasurementTimeEstimator estimator) {
 		// складываем время собственно измерения
 		// и время программной обработки и сетевой передачи
-		return getEstimatedQP1640ATestTime(rmp, true)
+		return estimator.getEstimatedMeasurementTime(rmp, true)
 				+ UPPER_AGENT_TIME
 				+ SAFE_TIME;
 	}
