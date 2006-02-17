@@ -1,5 +1,5 @@
 /*
- * $Id: SetupDataType.java,v 1.1.2.1 2006/02/17 11:37:52 arseniy Exp $
+ * $Id: SetupDataType.java,v 1.1.2.2 2006/02/17 15:53:08 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ public final class SetupDataType extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testCreateAll() throws CreateObjectException {
+	public void testCreate() throws CreateObjectException {
 		DataTypeDatabase.insertAll();
 	}
 }
