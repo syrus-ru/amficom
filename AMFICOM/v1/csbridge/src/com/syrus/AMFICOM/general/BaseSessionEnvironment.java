@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.33 2005/12/02 15:19:42 arseniy Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.34 2006/02/17 11:32:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/12/02 15:19:42 $
+ * @version $Revision: 1.34 $, $Date: 2006/02/17 11:32:21 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -66,7 +66,7 @@ public abstract class BaseSessionEnvironment {
 		this.poolContext = poolContext1;
 
 		this.poolContext.init();
-		LoginManager.init(this.baseConnectionManager, commonUser, loginRestorer);
+		LoginManager.init(new CORBALoginPerformer(this.baseConnectionManager, commonUser), loginRestorer);
 
 		this.logoutShutdownHook = new LogoutShutdownHook();
 
