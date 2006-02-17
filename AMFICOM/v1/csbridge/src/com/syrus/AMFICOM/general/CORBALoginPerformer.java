@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBALoginPerformer.java,v 1.1 2006/02/17 11:31:52 arseniy Exp $
+ * $Id: CORBALoginPerformer.java,v 1.2 2006/02/17 14:07:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2006/02/17 11:31:52 $
+ * @version $Revision: 1.2 $, $Date: 2006/02/17 14:07:34 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -122,7 +122,7 @@ public final class CORBALoginPerformer implements LoginPerformer {
 	}
 
 	public boolean isLoggedIn() {
-		final boolean loggedIn = (this.sessionKey == VOID_SESSION_KEY);
+		final boolean loggedIn = (this.sessionKey != VOID_SESSION_KEY);
 		assert loggedIn
 				? this.userId.getMajor() == SYSTEMUSER_CODE && this.domainId.getMajor() == DOMAIN_CODE
 				: this.userId.isVoid() && this.domainId.isVoid()
