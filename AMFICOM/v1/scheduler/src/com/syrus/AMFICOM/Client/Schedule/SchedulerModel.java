@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.173 2006/02/17 09:02:49 bob Exp $
+ * $Id: SchedulerModel.java,v 1.174 2006/02/17 09:58:57 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.173 $, $Date: 2006/02/17 09:02:49 $
+ * @version $Revision: 1.174 $, $Date: 2006/02/17 09:58:57 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -965,9 +965,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			final Set<Identifier> measurementSetupIds = Collections.singleton(this.measurementSetup.getId());
 
 			final Date startTime = this.testTimeStamps.getStartTime();
+			
 			final Date endTime = this.testTimeStamps.getEndTime() != null ?
 					this.testTimeStamps.getEndTime() : this.testTimeStamps.getStartTime();
-					
+				
 			final TestTemporalType temporalType = this.testTimeStamps.getTestTemporalType();
 			final AbstractTemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
 			if (test == null) {

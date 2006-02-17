@@ -152,8 +152,8 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.panel.add(this.periodicalRadioButton, gbc);
 //			gbc.gridy++;
 //			this.panel.add(this.continuosRadioButton, gbc);
-			gbc.gridy++;
-			this.panel.add(this.groupRadioButton, gbc);
+//			gbc.gridy++;
+//			this.panel.add(this.groupRadioButton, gbc);
 
 			JLabel beginLabel = new JLabel(I18N.getString("Scheduler.Text.TimePanel.Start") + ':');
 			gbc.gridx = 1;
@@ -295,6 +295,7 @@ public class TimeParametersFrame extends JInternalFrame {
 											selectedTest.setTemporalPatternId(
 												periodicalTemporalPattern.getId());
 											selectedTest.normalize();
+											updateTest();
 										}
 									}
 								}
@@ -379,6 +380,7 @@ public class TimeParametersFrame extends JInternalFrame {
 								}
 								selectedTest.setEndTime(endDate);
 								selectedTest.normalize();
+								updateTest();
 								TimeParametersPanel.this.dispatcher.firePropertyChange(
 									new PropertyChangeEvent(TimeParametersPanel.this,
 										SchedulerModel.COMMAND_REFRESH_TESTS,
@@ -526,46 +528,49 @@ public class TimeParametersFrame extends JInternalFrame {
 			return result;
 		}
 		
+		void updateTest() {
+			try {
+				final Test test;
+				try {
+					test = this.schedulerModel.getSelectedTest();
+				} catch (final ApplicationException e) {
+					throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
+				}
+			
+				if (test != null) {
+					if (test.getGroupTestId().isVoid()) {
+						final Identifier temporalPatternId = test.getTemporalPatternId();
+						AbstractTemporalPattern temporalPattern = null;
+						if (temporalPatternId != null) {
+							try {
+								temporalPattern = 
+									StorableObjectPool.getStorableObject(temporalPatternId, true);
+							}catch (final ApplicationException e) {
+								throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
+							}
+						}
+						this.setTestTemporalStamps(test.getStartTime(),
+								test.getEndTime(),
+								temporalPattern,
+								test.getTemporalType());
+					} else {
+						this.setGroupTestSelected(test.getStartTime());
+						if (this.groupRadioButton.isSelected()) {
+							this.setGroupEnabled(true);
+						}
+					}
+				}
+			} catch (final ApplicationException e) {
+				AbstractMainFrame.showErrorMessage(e.getMessage());
+			}
+		}
 		
 		public void propertyChange(PropertyChangeEvent propertyChangeEvent1) {
 			this.propertyChangeEvent = propertyChangeEvent1;
 			String propertyName = propertyChangeEvent1.getPropertyName();
 			Object newValue = propertyChangeEvent1.getNewValue();
 			if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TEMPORAL_STAMPS)) {
-				try {
-					final Test test;
-					try {
-						test = this.schedulerModel.getSelectedTest();
-					} catch (final ApplicationException e) {
-						throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
-					}
-				
-					if (test != null) {
-						if (test.getGroupTestId().isVoid()) {
-							final Identifier temporalPatternId = test.getTemporalPatternId();
-							AbstractTemporalPattern temporalPattern = null;
-							if (temporalPatternId != null) {
-								try {
-									temporalPattern = 
-										StorableObjectPool.getStorableObject(temporalPatternId, true);
-								}catch (final ApplicationException e) {
-									throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
-								}
-							}
-							this.setTestTemporalStamps(test.getStartTime(),
-									test.getEndTime(),
-									temporalPattern,
-									test.getTemporalType());
-						} else {
-							this.setGroupTestSelected(test.getStartTime());
-							if (this.groupRadioButton.isSelected()) {
-								this.setGroupEnabled(true);
-							}
-						}
-					}
-				} catch (final ApplicationException e) {
-					AbstractMainFrame.showErrorMessage(e.getMessage());
-				}
+				this.updateTest();
 			} else if (propertyName.equals(SchedulerModel.COMMAND_DATE_OPERATION)) {
 				Date date = (Date) newValue;
 				this.startDateSpinner.getModel().setValue(date);
