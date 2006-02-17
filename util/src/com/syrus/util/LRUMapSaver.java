@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMapSaver.java,v 1.5 2006/02/09 14:27:42 arseniy Exp $
+ * $Id: LRUMapSaver.java,v 1.6 2006/02/17 10:17:27 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.io.ObjectOutputStream;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2006/02/09 14:27:42 $
+ * @version $Revision: 1.6 $, $Date: 2006/02/17 10:17:27 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -95,8 +95,16 @@ public abstract class LRUMapSaver<K, V extends LRUMap.Retainable> {
 		final String path = this.cacheDir.getPath() + File.separator + entityName + this.fileSuffix;
 		final File lruMapFile = new File(path);
 		final File tmpLruMapFile = new File(path + ".swp");
+
+
+		if (lruMapFile.exists()) {//При нормальном поведении файл не должен существовать. См. bug321, comment #9. 
+			Log.errorMessage("LRUMap file " + lruMapFile.getAbsolutePath() + " exists");
+			lruMapFile.delete();//В случае ошибки при удалении файла, мы её увидим при переименовании.
+		}
+
 		FileOutputStream fileOutputStream = null;
 		ObjectOutputStream objectOutputStream = null;
+		boolean ok = false;
 		try {
 			fileOutputStream = new FileOutputStream(tmpLruMapFile);
 			objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -104,13 +112,7 @@ public abstract class LRUMapSaver<K, V extends LRUMap.Retainable> {
 			objectOutputStream.writeObject(entityName);
 			objectOutputStream.writeObject(this.getObjectToWrite(lruMap));
 			objectOutputStream.flush();
-
-			lruMapFile.delete();
-			tmpLruMapFile.renameTo(lruMapFile);
-
-			if (clearLRUMap) {
-				lruMap.clear();
-			}
+			ok = true;
 		} catch (IOException ioe) {
 			Log.errorMessage(ioe);
 		} finally {
@@ -124,6 +126,17 @@ public abstract class LRUMapSaver<K, V extends LRUMap.Retainable> {
 				// Nicho
 			}
 			tmpLruMapFile.delete();
+		}
+
+		if (ok) {
+			if (!tmpLruMapFile.renameTo(lruMapFile)) {
+				Log.errorMessage("Failed to rename swp LRUMap file " + tmpLruMapFile.getAbsolutePath() + " to " + lruMapFile.getAbsolutePath());
+				tmpLruMapFile.delete();
+			}
+		}
+
+		if (clearLRUMap) {
+			lruMap.clear();
 		}
 	}
 
