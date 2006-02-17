@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserDomainPopupMenu.java,v 1.12 2006/01/16 11:04:27 bob Exp $
+* $Id: SystemUserDomainPopupMenu.java,v 1.13 2006/02/17 12:57:06 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,9 +25,9 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.manager.beans.UserBean;
 import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.AMFICOM.manager.perspective.DomainPerpective;
@@ -35,8 +35,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2006/01/16 11:04:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2006/02/17 12:57:06 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -135,7 +135,7 @@ public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu<DomainPerpe
 					I18N.getString("Manager.Error.ErrorDuringPasswordChanging"), 
 					I18N.getString("Error"), 
 					JOptionPane.ERROR_MESSAGE);
-			} catch (AMFICOMRemoteException e) {
+			} catch (LoginException e) {
 				Log.errorMessage(e);
 				JOptionPane.showMessageDialog(null, 
 					I18N.getString("Manager.Error.ErrorDuringPasswordChanging"), 
