@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183 2006/01/23 16:03:01 arseniy Exp $
+ * $Id: Test.java,v 1.184 2006/02/17 07:52:55 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.183 $, $Date: 2006/01/23 16:03:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.184 $, $Date: 2006/02/17 07:52:55 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -630,6 +630,14 @@ public final class Test extends StorableObject<Test> implements Describable {
 		}
 		return transferables;
 	}
+	
+	/**
+	 * Normalize end date to finishing of last test's measurement
+	 * @throws ApplicationException
+	 */
+	public final void normalize() throws ApplicationException {		
+		this.timeStamps.normalize(this.mainMeasurementSetup);
+	}
 
 	public final class TestTimeStamps
 			implements IdlTransferableObject<IdlTestTimeStamps> {
@@ -669,6 +677,45 @@ public final class Test extends StorableObject<Test> implements Describable {
 					Log.errorMessage("TestTimeStamps | Illegal temporal type: " + temporalType + " of test");
 			}
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		}
+
+		void normalize(final MeasurementSetup measurementSetup) throws ApplicationException {
+			final long measurementDuration = 
+				measurementSetup.getMeasurementDuration();
+			final long start = this.startTime.getTime();
+			
+			switch (this.discriminator) {
+			case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
+				{					
+					final long expectedEndTime = start + measurementDuration;
+					if (this.endTime == null || this.endTime.getTime() != expectedEndTime) {
+						this.endTime = new Date(expectedEndTime);
+					}
+				}
+				break;
+			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+				final AbstractTemporalPattern temporalPattern = 
+					StorableObjectPool.getStorableObject(this.temporalPatternId, true);
+				
+				assert (temporalPattern instanceof PeriodicalTemporalPattern) : 
+					temporalPattern.getClass().getName() + " doesn't support.";
+					
+				final PeriodicalTemporalPattern periodicalTemporalPattern = 
+					(PeriodicalTemporalPattern) temporalPattern;
+				
+				final long period = periodicalTemporalPattern.getPeriod();
+				final long end = this.endTime.getTime();
+				final long expectedEndTime = start 
+					+ period * ((int)(end - start)/period) 
+					+ measurementDuration;
+				
+				if (end != expectedEndTime) {
+					this.endTime = new Date(expectedEndTime);
+				}
+				break;
+			default:
+				Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
+		}
 		}
 
 		TestTimeStamps(final IdlTestTimeStamps ttst) {
