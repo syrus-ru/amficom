@@ -1,5 +1,5 @@
 /*
- * $Id: TestServerProcess.java,v 1.13 2005/08/30 14:29:38 arseniy Exp $
+ * $Id: TestServerProcess.java,v 1.13.2.1 2006/02/17 12:28:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,8 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -27,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/30 14:29:38 $
+ * @version $Revision: 1.13.2.1 $, $Date: 2006/02/17 12:28:06 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -44,6 +46,8 @@ public final class TestServerProcess extends TestCase {
 	}
 
 	public void testCreateAll() throws ApplicationException {
+		final Identifier userId = LoginManager.getUserId();
+
 		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.SERVER_CODE);
 		final Server server = (Server) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
 		System.out.println("Server '" + server.getId() + "'");
@@ -96,7 +100,7 @@ public final class TestServerProcess extends TestCase {
 
 		//	login process
 		user = usersMap.get(SystemUserWrapper.LOGINPROCESSOR_LOGIN);
-		ServerProcess.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		ServerProcess.createInstance(userId,
 				ServerProcessWrapper.LOGIN_PROCESS_CODENAME,
 				server.getId(),
 				user.getId(),
@@ -104,7 +108,7 @@ public final class TestServerProcess extends TestCase {
 
 //	event process
 		user = usersMap.get(SystemUserWrapper.EVENTPROCESSOR_LOGIN);
-		ServerProcess.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		ServerProcess.createInstance(userId,
 				ServerProcessWrapper.EVENT_PROCESS_CODENAME,
 				server.getId(),
 				user.getId(),
@@ -112,7 +116,7 @@ public final class TestServerProcess extends TestCase {
 
 //	mserver process
 		user = usersMap.get(SystemUserWrapper.MSERVER_LOGIN);
-		ServerProcess.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		ServerProcess.createInstance(userId,
 				ServerProcessWrapper.MSERVER_PROCESS_CODENAME,
 				server.getId(),
 				user.getId(),
@@ -120,7 +124,7 @@ public final class TestServerProcess extends TestCase {
 
 //	cmserver process
 		user = usersMap.get(SystemUserWrapper.CMSERVER_LOGIN);
-		ServerProcess.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		ServerProcess.createInstance(userId,
 				ServerProcessWrapper.CMSERVER_PROCESS_CODENAME,
 				server.getId(),
 				user.getId(),
@@ -128,13 +132,13 @@ public final class TestServerProcess extends TestCase {
 
 //	mscharserver process
 		user = usersMap.get(SystemUserWrapper.MSCHARSERVER_LOGIN);
-		ServerProcess.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		ServerProcess.createInstance(userId,
 				ServerProcessWrapper.MSCHARSERVER_PROCESS_CODENAME,
 				server.getId(),
 				user.getId(),
 				"Map/Scheme/Administration/Resource Server");
 
-		StorableObjectPool.flush(ObjectEntities.SERVERPROCESS_CODE, DatabaseCommonTest.getSysUser().getId(), true);
+		StorableObjectPool.flush(ObjectEntities.SERVERPROCESS_CODE, userId, true);
 	}
 
 	public void testUpdate() throws ApplicationException {

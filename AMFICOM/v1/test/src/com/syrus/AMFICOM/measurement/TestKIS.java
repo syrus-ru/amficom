@@ -1,5 +1,5 @@
 /*
- * $Id: TestKIS.java,v 1.4 2005/10/29 20:42:51 arseniy Exp $
+ * $Id: TestKIS.java,v 1.4.2.1 2006/02/17 12:28:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
@@ -45,6 +46,8 @@ public final class TestKIS extends TestCase {
 	}
 
 	public void testCreateAll() throws ApplicationException {
+		final Identifier userId = LoginManager.getUserId();
+
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MCM_CODE);
 		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		final MCM mcm = (MCM) it.next();
@@ -63,7 +66,7 @@ public final class TestKIS extends TestCase {
 					+ SEPARATOR
 					+ equipmentDescription;
 			final String hostname = "rtu-" + n;
-			KIS.createInstance(DatabaseCommonTest.getSysUser().getId(),
+			KIS.createInstance(userId,
 					domain.getId(),
 					"Рефлектометр " + n,
 					kisDescription,
@@ -73,11 +76,11 @@ public final class TestKIS extends TestCase {
 					mcm.getId());
 		}
 
-		StorableObjectPool.flush(ObjectEntities.KIS_CODE, DatabaseCommonTest.getSysUser().getId(), false);
+		StorableObjectPool.flush(ObjectEntities.KIS_CODE, userId, false);
 	}
 
 	public void testAdd() throws ApplicationException {
-		final Identifier sysUserId = DatabaseCommonTest.getSysUser().getId();
+		final Identifier sysUserId = LoginManager.getUserId();
 
 		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.KIS_CODE);
 		final Set<KIS> kiss = StorableObjectPool.getStorableObjectsByCondition(ec, true);

@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProtoEquipment.java,v 1.2 2005/12/15 13:53:08 arseniy Exp $
+ * $Id: TestProtoEquipment.java,v 1.2.2.1 2006/02/17 12:28:06 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,10 +12,12 @@ import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/15 13:53:08 $
+ * @version $Revision: 1.2.2.1 $, $Date: 2006/02/17 12:28:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -33,14 +35,16 @@ public final class TestProtoEquipment extends TestCase {
 	}
 
 	public void testCreateInstance() throws ApplicationException {
+		final Identifier userId = LoginManager.getUserId();
+
 		final EquipmentType equipmentType = EquipmentType.REFLECTOMETER;
 
-		final ProtoEquipment protoEquipment = ProtoEquipment.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		final ProtoEquipment protoEquipment = ProtoEquipment.createInstance(userId,
 				equipmentType,
 				"Нэт-тэст",
 				"Рефлектометр с синей лампочкой на морде",
 				"Кооператив Нэт-тэст",
 				"15A30");
-		StorableObjectPool.flush(protoEquipment, DatabaseCommonTest.getSysUser().getId(), false);
+		StorableObjectPool.flush(protoEquipment, userId, false);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: TestEquipment.java,v 1.5 2005/09/28 13:25:16 arseniy Exp $
+ * $Id: TestEquipment.java,v 1.5.2.1 2006/02/17 12:28:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
@@ -36,6 +37,8 @@ public final class TestEquipment extends TestCase {
 	}
 
 	public void testCreateAll() throws ApplicationException {
+		final Identifier userId = LoginManager.getUserId();
+
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.PROTOEQUIPMENT_CODE);
 		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		final ProtoEquipment protoEquipment = (ProtoEquipment) it.next();
@@ -45,7 +48,7 @@ public final class TestEquipment extends TestCase {
 		it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		final Domain domain = (Domain) it.next();
 
-		Equipment.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		Equipment.createInstance(userId,
 				domain.getId(),
 				protoEquipmentId,
 				"Рефлектометр 1",
@@ -61,7 +64,7 @@ public final class TestEquipment extends TestCase {
 				"4444",
 				"5555");
 
-		Equipment.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		Equipment.createInstance(userId,
 				domain.getId(),
 				protoEquipmentId,
 				"Рефлектометр 2",
@@ -77,7 +80,7 @@ public final class TestEquipment extends TestCase {
 				"4444",
 				"5555");
 
-		Equipment.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		Equipment.createInstance(userId,
 				domain.getId(),
 				protoEquipmentId,
 				"Рефлектометр 3",
@@ -93,6 +96,6 @@ public final class TestEquipment extends TestCase {
 				"4444",
 				"5555");
 
-		StorableObjectPool.flush(ObjectEntities.EQUIPMENT_CODE, DatabaseCommonTest.getSysUser().getId(), false);
+		StorableObjectPool.flush(ObjectEntities.EQUIPMENT_CODE, userId, false);
 	}
 }

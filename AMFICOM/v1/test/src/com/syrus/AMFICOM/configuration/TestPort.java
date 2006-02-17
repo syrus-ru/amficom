@@ -1,5 +1,5 @@
 /*
- * $Id: TestPort.java,v 1.3 2005/08/30 19:58:39 arseniy Exp $
+ * $Id: TestPort.java,v 1.3.2.1 2006/02/17 12:28:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,8 @@ import junit.framework.TestCase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
@@ -38,6 +40,8 @@ public final class TestPort extends TestCase {
 	}
 
 	public void testCreateAll() throws ApplicationException {
+		final Identifier userId = LoginManager.getUserId();
+
 		final Map<String, Integer> portNumberMap = new HashMap<String, Integer>();
 		portNumberMap.put(EQUIPMENT + SEPARATOR + "1", new Integer(8));
 		portNumberMap.put(EQUIPMENT + SEPARATOR + "2", new Integer(8));
@@ -57,7 +61,7 @@ public final class TestPort extends TestCase {
 		final String equipment1Description = EQUIPMENT + SEPARATOR + "1";
 		final Equipment equipment1 = equipmentsMap.get(equipment1Description);
 		if (equipment1 != null) {
-			Port.createInstance(DatabaseCommonTest.getSysUser().getId(), portType, "finish", equipment1.getId());
+			Port.createInstance(userId, portType, "finish", equipment1.getId());
 		} else {
 			fail("Cannot find '" + equipment1Description + "'");
 		}
@@ -68,10 +72,10 @@ public final class TestPort extends TestCase {
 			final int portNumber = (portNumberInt != null) ? portNumberInt.intValue() : 0;
 			for (int i = 1; i <= portNumber; i++) {
 				final String portDescription = PORT + SEPARATOR + i + SEPARATOR + equipmentDescription;
-				Port.createInstance(DatabaseCommonTest.getSysUser().getId(), portType, portDescription, equipment.getId());
+				Port.createInstance(userId, portType, portDescription, equipment.getId());
 			}
 		}
 
-		StorableObjectPool.flush(ObjectEntities.PORT_CODE, DatabaseCommonTest.getSysUser().getId(), false);
+		StorableObjectPool.flush(ObjectEntities.PORT_CODE, userId, false);
 	}
 }
