@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLoginPerformer.java,v 1.1.2.1 2006/02/17 11:41:29 arseniy Exp $
+ * $Id: DatabaseLoginPerformer.java,v 1.1.2.2 2006/02/17 14:37:50 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/17 11:41:29 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/02/17 14:37:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -110,7 +110,7 @@ public final class DatabaseLoginPerformer implements LoginPerformer {
 	}
 
 	public boolean isLoggedIn() {
-		return (this.userId == VOID_IDENTIFIER);
+		return (this.userId != VOID_IDENTIFIER);
 	}
 
 	public void restoreLogin(final String login, final String password) throws CommunicationException, LoginException {
