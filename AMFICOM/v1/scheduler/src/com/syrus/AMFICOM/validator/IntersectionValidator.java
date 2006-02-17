@@ -1,5 +1,5 @@
 /*-
-* $Id: IntersectionValidator.java,v 1.5 2006/02/17 10:13:49 bob Exp $
+* $Id: IntersectionValidator.java,v 1.6 2006/02/17 10:23:57 bob Exp $
 *
 * Copyright ¿ 2006 Syrus Systems.
 * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.measurement.TestWrapper;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2006/02/17 10:13:49 $
+ * @version $Revision: 1.6 $, $Date: 2006/02/17 10:23:57 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -99,16 +99,23 @@ public class IntersectionValidator {
 	
 	private String isValid(final Test test, 
 	                       final MeasurementSetup measurementSetup,
+	                       final AbstractTemporalPattern<?> pattern,
 	                       final Date startDate,
 	                       final Date endDate,
 	                       final long offset) throws ApplicationException {
 		final Identifier temporalPatternId = test.getTemporalPatternId();
 		final AbstractTemporalPattern<?> testPattern;
-		if (temporalPatternId.isVoid()) {
-			testPattern = null; 
+		
+		if (pattern != null) {
+			testPattern = pattern;
 		} else {
-			testPattern =  StorableObjectPool.getStorableObject(temporalPatternId, true);
+			if (temporalPatternId.isVoid()) {
+				testPattern = null; 
+			} else {
+				testPattern =  StorableObjectPool.getStorableObject(temporalPatternId, true);
+			}
 		}
+		
 		final MeasurementSetup measurementSetup0;
 		if (measurementSetup == null) {
 			final Identifier mainMeasurementSetupId = test.getMainMeasurementSetupId();
@@ -147,16 +154,21 @@ public class IntersectionValidator {
 	
 	public String isValid(final Test test, final MeasurementSetup measurementSetup) 
 	throws ApplicationException {		
-		return this.isValid(test, measurementSetup, null, null, 0L);
+		return this.isValid(test, measurementSetup, null, null, null, 0L);
 	}
 	
 	public String isValid(final Test test, final long offset) throws ApplicationException {
-		return this.isValid(test, null, null, null, offset);
+		return this.isValid(test, null, null, null, null, offset);
+	}
+
+	public String isValid(final Test test, final AbstractTemporalPattern<?> temporalPattern) 
+	throws ApplicationException {
+		return this.isValid(test, null, temporalPattern, null, null, 0L);
 	}
 	
 	public String isValid(final Test test, final Date startDate, final Date endDate) 
 	throws ApplicationException {		
-		return this.isValid(test, null, startDate, endDate, 0L);
+		return this.isValid(test, null, null, startDate, endDate, 0L);
 	}
 	
 	public String isValid(final Identifier monitoredElementId,
@@ -212,7 +224,7 @@ public class IntersectionValidator {
 		if (testTimeLabel.intersects(timeLabel)) {
 			final TestView view = TestView.valueOf(test);			
 			return I18N.getString("Scheduler.Text.Scheduler.Model.TestIntersection")
-				+ (view != null ? " "  + view.getExtendedDescription() : "");
+				+ (view != null ? " "  + view.getExtendedDescription() : test.getId());
 		}
 		return null;
 	}

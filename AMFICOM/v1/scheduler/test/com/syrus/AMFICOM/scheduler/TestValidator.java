@@ -1,5 +1,5 @@
 /*
- * $Id: TestValidator.java,v 1.3 2006/02/17 08:43:04 bob Exp $
+ * $Id: TestValidator.java,v 1.4 2006/02/17 10:23:57 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.validator.IntersectionValidator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2006/02/17 08:43:04 $
+ * @version $Revision: 1.4 $, $Date: 2006/02/17 10:23:57 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -141,6 +141,54 @@ public final class TestValidator extends TestCase {
 			temporalPattern, 
 			measurementSetup);
 		assertNotNull("There must be self intersection", reason);
+	}
+	
+	public void testSelfIntersectionDueToChangeTemporalPattern() throws ApplicationException {
+		// Periodical test has self intersection if period
+		// less than measurement duration
+		final MeasurementSetup measurementSetup = LONG_MEASUREMENT_SETUP;		
+		final long measurementDuration = measurementSetup.getMeasurementDuration();		
+		final long period = 60L * 60L * 1000L;
+		final long period2 = 5L * 60L * 1000L;		
+		
+		assertTrue(measurementDuration < period);
+		assertTrue(measurementDuration > period2);
+		
+		final Date now = new Date();
+		final Date end = new Date(now.getTime() + 24L * 60L * 60L * 1000L);
+		
+		final PeriodicalTemporalPattern temporalPattern = 
+			PeriodicalTemporalPattern.getInstance(CREATOR_ID, period);
+		
+		final PeriodicalTemporalPattern temporalPattern2 = 
+			PeriodicalTemporalPattern.getInstance(CREATOR_ID, period2);
+		
+		{
+		final String reason = INTERSECTION_VALIDATOR.isValid(MONITORED_ELEMENT.getId(), 
+			now, 
+			end, 
+			temporalPattern, 
+			measurementSetup);
+		assertNull("There must be self intersection", reason);
+		}
+		
+		final Test test = Test.createInstance(CREATOR_ID, 
+			now, 
+			end, 
+			temporalPattern != null ? temporalPattern.getId() : Identifier.VOID_IDENTIFIER, 
+			TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL, 
+			MeasurementType.REFLECTOMETRY, 
+			AnalysisType.UNKNOWN, 
+			Identifier.VOID_IDENTIFIER, 
+			MONITORED_ELEMENT, 
+			"single", 
+			Collections.singleton(measurementSetup.getId()));
+		
+		test.normalize();
+		
+		final String reason = INTERSECTION_VALIDATOR.isValid(test, temporalPattern2);
+		assertNotNull("There must be self intersection", reason);
+		StorableObjectPool.delete(test.getId());
 	}
 	
 	public void testAbsentSelfIntersection() throws ApplicationException {
