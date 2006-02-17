@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoVirtualCorbaConnection.java,v 1.10 2005/12/06 09:43:50 bass Exp $
+ * $Id: MapInfoVirtualCorbaConnection.java,v 1.11 2006/02/17 12:47:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 	public List<String> getAvailableViews() throws MapDataException {
 		final List<String> listToReturn = new ArrayList<String>();
 		try {
-			IdlMapDescriptor[] mapDescriptors = this.mscharServer.getMapDescriptors(LoginManager.getIdlSessionKey());
+			IdlMapDescriptor[] mapDescriptors = this.mscharServer.getMapDescriptors(LoginManager.getSessionKey().getIdlTransferable());
 			for (int i = 0; i < mapDescriptors.length; i++){
 				listToReturn.add(mapDescriptors[i].name);
 			}
@@ -84,7 +84,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 			final CommonServer commonServer = mscharClientServantManager.getServerReference();
 			this.mscharServer = MscharServerHelper.narrow(commonServer);
 			
-			IdlMapDescriptor[] mapDescriptors = this.mscharServer.getMapDescriptors(LoginManager.getIdlSessionKey());
+			IdlMapDescriptor[] mapDescriptors = this.mscharServer.getMapDescriptors(LoginManager.getSessionKey().getIdlTransferable());
 			for (int i = 0; i < mapDescriptors.length; i++)
 				if (mapDescriptors[i].name.equals(this.getView())){
 					MapDescriptor mapDescriptor = new MapDescriptor(mapDescriptors[i]);
@@ -106,7 +106,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 	}
 	
 	public List<MapDescriptor> getMapDescriptors() {
-		final IdlSessionKey idlSessionKey = LoginManager.getIdlSessionKey();
+		final IdlSessionKey idlSessionKey = LoginManager.getSessionKey().getIdlTransferable();
 		final IdlMapDescriptor[] idlMapDescriptors;
 		try {
 			idlMapDescriptors = this.mscharServer.getMapDescriptors(idlSessionKey);
@@ -130,7 +130,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 	}
 	
 	private List<LayerDescriptor> getLayerDescriptors(MapDescriptor mapDescriptor) {
-		final IdlSessionKey idlSessionKey = LoginManager.getIdlSessionKey();
+		final IdlSessionKey idlSessionKey = LoginManager.getSessionKey().getIdlTransferable();
 		final IdlLayerDescriptor[] idlLayerDescriptors;
 		try {
 			idlLayerDescriptors = this.mscharServer.getLayerDescriptors(mapDescriptor.getIdlTransferable(),idlSessionKey);
@@ -236,7 +236,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 	}
 	
 	private File loadFile(final File localFile, final MapFileDescriptor mapFileDescriptor) {
-		final IdlSessionKey idlSessionKey = LoginManager.getIdlSessionKey();
+		final IdlSessionKey idlSessionKey = LoginManager.getSessionKey().getIdlTransferable();
 		boolean eof = false;
 		long offset = 0;
 		File tempFile = new File(localFile.getPath() + ".swp");

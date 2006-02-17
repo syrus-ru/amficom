@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoCorbaConnection.java,v 1.6 2005/11/22 14:26:56 bass Exp $
+ * $Id: MapInfoCorbaConnection.java,v 1.7 2006/02/17 12:47:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServerHelper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/11/22 14:26:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2006/02/17 12:47:16 $
+ * @author $Author: arseniy $
  * @module mapinfo
  */
 public class MapInfoCorbaConnection extends MapInfoConnection {
@@ -66,7 +66,7 @@ public class MapInfoCorbaConnection extends MapInfoConnection {
 	public List<String> getAvailableViews() throws MapDataException {
 		final List<String> listToReturn = new ArrayList<String>();
 		try {
-			IdlMapDescriptor[] mapDescriptors = this.mscharServer.getMapDescriptors(LoginManager.getIdlSessionKey());
+			IdlMapDescriptor[] mapDescriptors = this.mscharServer.getMapDescriptors(LoginManager.getSessionKey().getIdlTransferable());
 			for (int i = 0; i < mapDescriptors.length; i++){
 				listToReturn.add(mapDescriptors[i].name);
 			}
