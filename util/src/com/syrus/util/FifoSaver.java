@@ -1,5 +1,5 @@
 /*-
- * $Id: FifoSaver.java,v 1.7 2006/02/17 09:02:33 arseniy Exp $
+ * $Id: FifoSaver.java,v 1.8 2006/02/17 15:27:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2006/02/17 09:02:33 $
+ * @version $Revision: 1.8 $, $Date: 2006/02/17 15:27:38 $
  * @author $Author: arseniy $
  * @module util
  */
@@ -144,7 +144,7 @@ public final class FifoSaver {
 			try {
 				if (objectOutputStream != null) {
 					objectOutputStream.close();
-				} else {
+				} else if (fileOutputStream != null) {
 					fileOutputStream.close();
 				}
 			} catch (IOException ioe) {

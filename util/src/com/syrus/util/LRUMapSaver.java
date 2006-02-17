@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMapSaver.java,v 1.6 2006/02/17 10:17:27 arseniy Exp $
+ * $Id: LRUMapSaver.java,v 1.7 2006/02/17 15:27:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.io.ObjectOutputStream;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2006/02/17 10:17:27 $
+ * @version $Revision: 1.7 $, $Date: 2006/02/17 15:27:38 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -119,13 +119,12 @@ public abstract class LRUMapSaver<K, V extends LRUMap.Retainable> {
 			try {
 				if (objectOutputStream != null) {
 					objectOutputStream.close();
-				} else {
+				} else if (fileOutputStream!= null) {
 					fileOutputStream.close();
 				}
 			} catch (IOException ioe) {
 				// Nicho
 			}
-			tmpLruMapFile.delete();
 		}
 
 		if (ok) {
