@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.33 2006/02/15 14:54:59 bob Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.34 2006/02/17 07:53:20 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
 
 
 /**
- * @version $Revision: 1.33 $, $Date: 2006/02/15 14:54:59 $
+ * @version $Revision: 1.34 $, $Date: 2006/02/17 07:53:20 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement
@@ -274,6 +274,7 @@ public final class PeriodicalTemporalPattern
 		return buffer.toString();
 	}
 	
+	@Deprecated
 	public void setPeriod(final long period) {
 		if (this.period != period) {
 			super.times = null;
