@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.184 2006/02/17 07:52:55 bob Exp $
+ * $Id: Test.java,v 1.185 2006/02/17 07:57:16 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.184 $, $Date: 2006/02/17 07:52:55 $
+ * @version $Revision: 1.185 $, $Date: 2006/02/17 07:57:16 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -636,7 +636,9 @@ public final class Test extends StorableObject<Test> implements Describable {
 	 * @throws ApplicationException
 	 */
 	public final void normalize() throws ApplicationException {		
-		this.timeStamps.normalize(this.mainMeasurementSetup);
+		if (this.timeStamps.normalize(this.mainMeasurementSetup)) {
+			this.markAsChanged();
+		}
 	}
 
 	public final class TestTimeStamps
@@ -679,7 +681,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		}
 
-		void normalize(final MeasurementSetup measurementSetup) throws ApplicationException {
+		boolean normalize(final MeasurementSetup measurementSetup) throws ApplicationException {
 			final long measurementDuration = 
 				measurementSetup.getMeasurementDuration();
 			final long start = this.startTime.getTime();
@@ -690,6 +692,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 					final long expectedEndTime = start + measurementDuration;
 					if (this.endTime == null || this.endTime.getTime() != expectedEndTime) {
 						this.endTime = new Date(expectedEndTime);
+						return true;
 					}
 				}
 				break;
@@ -711,11 +714,13 @@ public final class Test extends StorableObject<Test> implements Describable {
 				
 				if (end != expectedEndTime) {
 					this.endTime = new Date(expectedEndTime);
+					return true;
 				}
 				break;
 			default:
 				Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
 		}
+			return false;
 		}
 
 		TestTimeStamps(final IdlTestTimeStamps ttst) {
