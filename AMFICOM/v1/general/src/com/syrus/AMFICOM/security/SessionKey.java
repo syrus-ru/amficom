@@ -1,5 +1,5 @@
 /*
- * $Id: SessionKey.java,v 1.15 2006/01/23 16:08:26 arseniy Exp $
+ * $Id: SessionKey.java,v 1.16 2006/02/17 11:30:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,13 +13,15 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2006/01/23 16:08:26 $
+ * @version $Revision: 1.16 $, $Date: 2006/02/17 11:30:28 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public final class SessionKey implements IdlTransferableObject<IdlSessionKey> {
 	private static final long serialVersionUID = -2395582378323499911L;
+
+	public static final SessionKey VOID_SESSION_KEY = new SessionKey("");
 
 	private final String sessionCode;
 
