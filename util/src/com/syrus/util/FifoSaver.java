@@ -1,5 +1,5 @@
 /*-
- * $Id: FifoSaver.java,v 1.6 2006/02/09 14:27:42 arseniy Exp $
+ * $Id: FifoSaver.java,v 1.7 2006/02/17 09:02:33 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2006/02/09 14:27:42 $
+ * @version $Revision: 1.7 $, $Date: 2006/02/17 09:02:33 $
  * @author $Author: arseniy $
  * @module util
  */
@@ -122,8 +122,14 @@ public final class FifoSaver {
 		final File fifoFile = new File(path);
 		final File tmpFifoFile = new File(path + ".swp");
 
+		if (fifoFile.exists()) {//При нормальном поведении файл не должен существовать. См. bug321, comment #9. 
+			Log.errorMessage("FIFO file " + fifoFile.getAbsolutePath() + " exists");
+			fifoFile.delete();//В случае ошибки при удалении файла, мы её увидим при переименовании.
+		}
+
 		ObjectOutputStream objectOutputStream = null;
 		FileOutputStream fileOutputStream = null;
+		boolean ok = false;
 		try {
 			fileOutputStream = new FileOutputStream(tmpFifoFile);
 			objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -131,9 +137,7 @@ public final class FifoSaver {
 			objectOutputStream.writeObject(entityName);
 			objectOutputStream.writeObject(fifo.getObjects());
 			objectOutputStream.flush();
-
-			fifoFile.delete();
-			tmpFifoFile.renameTo(fifoFile);
+			ok = true;
 		} catch (IOException ioe) {
 			Log.errorMessage(ioe);
 		} finally {
@@ -146,7 +150,13 @@ public final class FifoSaver {
 			} catch (IOException ioe) {
 				// Nicho
 			}
-			tmpFifoFile.delete();
+		}
+
+		if (ok) {
+			if (!tmpFifoFile.renameTo(fifoFile)) {
+				Log.errorMessage("Failed to rename swp FIFO file " + tmpFifoFile.getAbsolutePath() + " to " + fifoFile.getAbsolutePath());
+				tmpFifoFile.delete();
+			}
 		}
 	}
 
