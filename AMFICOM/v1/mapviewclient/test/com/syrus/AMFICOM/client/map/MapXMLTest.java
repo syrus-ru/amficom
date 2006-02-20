@@ -1,5 +1,5 @@
 /**
- * $Id: MapXMLTest.java,v 1.8 2006/02/15 12:42:12 stas Exp $
+ * $Id: MapXMLTest.java,v 1.9 2006/02/20 09:28:13 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkTypeSort;
 import com.syrus.AMFICOM.map.xml.XmlSiteNodeType;
 import com.syrus.AMFICOM.map.xml.XmlSiteNodeTypeSeq;
 import com.syrus.AMFICOM.map.xml.XmlSiteNodeTypeSort;
+import com.syrus.util.Log;
 
 public class MapXMLTest {
 

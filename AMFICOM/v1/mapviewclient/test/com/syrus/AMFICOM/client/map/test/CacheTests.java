@@ -1,11 +1,13 @@
 package com.syrus.AMFICOM.client.map.test;
 /**
- * $Id: CacheTests.java,v 1.4 2006/02/15 12:42:12 stas Exp $
+ * $Id: CacheTests.java,v 1.5 2006/02/20 09:28:13 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  */
+
+import com.syrus.util.Log;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;

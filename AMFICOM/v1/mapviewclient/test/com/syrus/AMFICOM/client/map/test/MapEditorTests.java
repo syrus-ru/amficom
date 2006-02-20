@@ -1,11 +1,13 @@
 /**
- * $Id: MapEditorTests.java,v 1.10 2006/02/15 12:42:12 stas Exp $
+ * $Id: MapEditorTests.java,v 1.11 2006/02/20 09:28:12 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  */
 package com.syrus.AMFICOM.client.map.test;
+
+import com.syrus.util.Log;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;

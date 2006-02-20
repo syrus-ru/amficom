@@ -1,5 +1,5 @@
 /*
- * $Id: LoadingThreadTest.java,v 1.6 2006/02/15 12:42:12 stas Exp $
+ * $Id: LoadingThreadTest.java,v 1.7 2006/02/20 09:28:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,11 @@ import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.cache.LoadingThread;
 import com.syrus.AMFICOM.client.map.cache.TopologicalImageCache;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
+import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2006/02/15 12:42:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2006/02/20 09:28:13 $
  * @module mapviewclient_modifying
  */
 public class LoadingThreadTest extends TestCase {
