@@ -64,8 +64,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.100 $, $Date: 2006/02/16 13:38:26 $
- * @author $Author: bob $
+ * @version $Revision: 1.101 $, $Date: 2006/02/20 12:31:41 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -449,7 +449,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 				byteArray = new ByteArray(value.equals(BigDecimal.ONE));
 				break;
 			default:
-				Log.errorMessage("Illegal data type '" + dataType.getCodename() + "'/" + dataType.getCode()
+				Log.errorMessage("Illegal data type '" + dataType.getCodename() + "'/" + dataType.ordinal()
 						+ " for parameter type '" + parameterType.getCodename() + "'");
 		}
 		return byteArray;
