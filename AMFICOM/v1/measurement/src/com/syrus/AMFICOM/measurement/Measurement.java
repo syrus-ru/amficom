@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.101 2006/01/26 15:15:35 arseniy Exp $
+ * $Id: Measurement.java,v 1.102 2006/02/20 15:35:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,11 +31,11 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurement;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
-import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.IdlMeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2006/01/26 15:15:35 $
+ * @version $Revision: 1.102 $, $Date: 2006/02/20 15:35:03 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -98,7 +98,7 @@ public final class Measurement extends Action<Measurement> {
 		if (this.setup != null) {
 			this.duration = this.setup.getMeasurementDuration();
 		}
-		this.status = MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED;
+		this.status = IdlMeasurementStatus._MEASUREMENT_STATUS_SCHEDULED;
 		this.localAddress = localAddress;
 		this.testId = testId;
 	}
@@ -144,7 +144,7 @@ public final class Measurement extends Action<Measurement> {
 				this.setup.getId().getIdlTransferable(),
 				this.startTime.getTime(),
 				this.duration,
-				MeasurementStatus.from_int(this.status),
+				IdlMeasurementStatus.from_int(this.status),
 				this.localAddress,
 				this.testId.getIdlTransferable());
 	}
@@ -183,8 +183,8 @@ public final class Measurement extends Action<Measurement> {
 		return this.duration;
 	}
 
-	public MeasurementStatus getStatus() {
-		return MeasurementStatus.from_int(this.status);
+	public IdlMeasurementStatus getStatus() {
+		return IdlMeasurementStatus.from_int(this.status);
 	}
 
 	public String getLocalAddress() {
@@ -309,7 +309,7 @@ public final class Measurement extends Action<Measurement> {
 	/**
 	 * @param status The status to set.
 	 */
-	public void setStatus(final MeasurementStatus status) {
+	public void setStatus(final IdlMeasurementStatus status) {
 		this.status = status.value();
 		super.markAsChanged();
 	}

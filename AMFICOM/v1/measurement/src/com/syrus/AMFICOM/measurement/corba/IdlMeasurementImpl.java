@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMeasurementImpl.java,v 1.7 2005/10/31 12:30:15 bass Exp $
+ * $Id: IdlMeasurementImpl.java,v 1.8 2006/02/20 15:35:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,13 +14,13 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.IdlMeasurementStatus;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/10/31 12:30:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2006/02/20 15:35:03 $
  * @module measurement
  */
 final class IdlMeasurementImpl extends IdlMeasurement {
@@ -42,7 +42,7 @@ final class IdlMeasurementImpl extends IdlMeasurement {
 			final IdlIdentifier setupId,
 			final long startTime,
 			final long duration,
-			final MeasurementStatus status,
+			final IdlMeasurementStatus status,
 			final String localAddress,
 			final IdlIdentifier testId) {
 		this.id = id;
