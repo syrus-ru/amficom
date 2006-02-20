@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.45 2005/11/28 15:07:22 arseniy Exp $
+ * $Id: event.idl,v 1.46 2006/02/20 17:13:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@
 
 #include "general.idl"
 #include "reflectometry.idl"
+#include "measurement.idl"
 
 #ifndef MY_COMPILER_IS_NOT_BRAINDEAD
 module com {
@@ -130,7 +131,8 @@ module eventv2 {
 			enum IdlEventType {
 				REFLECTOGRAM_MISMATCH,
 				LINE_MISMATCH,
-				NOTIFICATION
+				NOTIFICATION,
+				MEASUREMENT_STATUS_CHANGED
 			};
 
 			IdlEventType getType();
@@ -304,6 +306,26 @@ module eventv2 {
 					in double mismatchPhysicalDistance,
 					in long long mismatchCreated,
 					in reflectometry::corba::IdlSeverity severity);
+		};
+
+		abstract valuetype IdlMeasurementStatusChangedEvent : IdlEvent {
+			general::corba::IdlIdentifier getMeasurementId();
+		};
+
+		valuetype IdlMeasurementStartedEvent : general::corba::IdlStorableObject, IdlMeasurementStatusChangedEvent {
+			private general::corba::IdlIdentifier measurementId;
+
+			factory init(in general::corba::IdlIdentifier measurementId);
+		};
+
+		valuetype IdlMeasurementCompletedEvent : general::corba::IdlStorableObject, IdlMeasurementStatusChangedEvent {
+			private general::corba::IdlIdentifier measurementId;
+			private double d;
+
+			double getD();
+
+			factory init(in general::corba::IdlIdentifier measurementId,
+					in double d);
 		};
 
 

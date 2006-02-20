@@ -12,6 +12,9 @@ IdlMismatchContainer.java
 IdlEmailNotificationEvent.java
 IdlSmsNotificationEvent.java
 IdlPopupNotificationEvent.java
+IdlMeasurementStatusChangedEvent.java
+IdlMeasurementStartedEvent.java
+IdlMeasurementCompletedEvent.java
 MessageReceiver.java
 MessageReceiverOperations.java
 MessageReceiverPOA.java

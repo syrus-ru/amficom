@@ -1,5 +1,5 @@
 /*-
- * $Id: EventType.java,v 1.4 2005/12/07 17:16:25 bass Exp $
+ * $Id: EventType.java,v 1.5 2006/02/20 17:14:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,14 +17,15 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/12/07 17:16:25 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2006/02/20 17:14:56 $
  * @module event
  */
 public enum EventType implements IdlTransferableObject<IdlEventType> {
 	REFLECTORGAM_MISMATCH("reflectogramMismatch"),
 	LINE_MISMATCH("lineMismatch"),
-	NOTIFICATION("notification");
+	NOTIFICATION("notification"),
+	MEASUREMENT_STATUS_CHANGED("measurement_status_changed");
 
 	private String codename;
 
