@@ -4,3 +4,4 @@ classes
 *.jar
 .classpath
 .project
+.settings

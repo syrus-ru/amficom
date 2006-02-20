@@ -9,3 +9,4 @@ classes
 *.tar
 *.gz
 *.bz2
+.settings
