@@ -48,9 +48,9 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com \
 		-C $(CLASSDIR) xml
 
-.mach:	$(CLASSDIR)
+.mach:	$(CLASSDIR) xml
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(LIBNAME_EXTENSIONS_SCHEMAS):$(LIBNAME_SCHEDULER_SCHEMAS) \
 		$(SOURCES)
 	touch $@
 
