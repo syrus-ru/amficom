@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.6 2005/12/06 09:45:58 bass Exp $
+ * $Id: EventQueue.java,v 1.7 2006/02/20 17:08:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.eventv2.ReflectogramMismatchEvent;
+import com.syrus.AMFICOM.eventv2.Event;
 import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
 import com.syrus.AMFICOM.general.BaseConnectionManager;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -27,8 +27,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/12/06 09:45:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2006/02/20 17:08:56 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -37,7 +37,7 @@ final class EventQueue extends SleepButWorkThread {
 	private static final int FALL_CODE_ESTABLISH_CONNECTION = 1;
 	private static final int FALL_CODE_TRANSMIT_EVENTS = 2;
 
-	private List<ReflectogramMismatchEvent> eventEqueue;
+	private List<Event> eventEqueue;
 	private volatile boolean running;
 
 	public EventQueue() {
@@ -46,13 +46,12 @@ final class EventQueue extends SleepButWorkThread {
 
 		super.setName("EventQueue");
 
-		this.eventEqueue = Collections.synchronizedList(new LinkedList<ReflectogramMismatchEvent>());
+		this.eventEqueue = Collections.synchronizedList(new LinkedList<Event>());
 		this.running = true;
 	}
 
 	@SuppressWarnings("unused")
-	synchronized void addEvent(final ReflectogramMismatchEvent event)
-	throws EventQueueFullException {
+	synchronized void addEvent(final Event event) throws EventQueueFullException {
 		Log.debugMessage("Event: " + event + " added to outbox", INFO);
 		this.eventEqueue.add(event);
 		this.notifyAll();
@@ -114,7 +113,7 @@ final class EventQueue extends SleepButWorkThread {
 		final ORB orb = connectionManager.getCORBAServer().getOrb();
 		final IdlEvent[] idlEvents = new IdlEvent[this.eventEqueue.size()];
 		int i = 0;
-		for (final ReflectogramMismatchEvent event : this.eventEqueue) {
+		for (final Event<IdlEvent> event : this.eventEqueue) {
 			idlEvents[i++] = event.getIdlTransferable(orb);
 		}
 		return idlEvents;
