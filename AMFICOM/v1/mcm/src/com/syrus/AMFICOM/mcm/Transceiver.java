@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.79 2005/11/08 14:59:41 arseniy Exp $
+ * $Id: Transceiver.java,v 1.80 2006/02/20 17:11:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,12 +28,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.IdlMeasurementStatus;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/11/08 14:59:41 $
+ * @version $Revision: 1.80 $, $Date: 2006/02/20 17:11:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -76,7 +76,7 @@ final class Transceiver extends SleepButWorkThread {
 
 	synchronized void addMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
 		final Identifier measurementId = measurement.getId();
-		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED) {
+		if (measurement.getStatus().value() == IdlMeasurementStatus._MEASUREMENT_STATUS_SCHEDULED) {
 			Log.debugMessage("Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 			this.scheduledMeasurements.add(measurement);
 			this.testProcessors.put(measurementId, testProcessor);
@@ -90,7 +90,7 @@ final class Transceiver extends SleepButWorkThread {
 
 	synchronized void addAcquiringMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
 		final Identifier measurementId = measurement.getId();
-		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING) {
+		if (measurement.getStatus().value() == IdlMeasurementStatus._MEASUREMENT_STATUS_ACQUIRING) {
 			Log.debugMessage("Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 			this.testProcessors.put(measurementId, testProcessor);
 
@@ -144,8 +144,9 @@ final class Transceiver extends SleepButWorkThread {
 
 							Log.debugMessage("Successfully transferred measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 							this.scheduledMeasurements.remove(measurement);
-							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING);
+							measurement.setStatus(IdlMeasurementStatus.MEASUREMENT_STATUS_ACQUIRING);
 							StorableObjectPool.flush(measurementId, LoginManager.getUserId(), false);
+
 							super.clearFalls();
 						} catch (CommunicationException ce) {
 							Log.errorMessage(ce);
@@ -186,7 +187,7 @@ final class Transceiver extends SleepButWorkThread {
 							Result result = null;
 							try {
 								result = this.kisReport.getResult();
-								measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED);
+								measurement.setStatus(IdlMeasurementStatus.MEASUREMENT_STATUS_ACQUIRED);
 								final Set<Identifiable> saveObjects = new HashSet<Identifiable>();
 								saveObjects.add(measurement);
 								saveObjects.add(result);
@@ -282,7 +283,7 @@ final class Transceiver extends SleepButWorkThread {
 			this.scheduledMeasurements.remove(this.measurementToRemove);
 			this.testProcessors.remove(this.measurementToRemove.getId());
 
-			this.measurementToRemove.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
+			this.measurementToRemove.setStatus(IdlMeasurementStatus.MEASUREMENT_STATUS_ABORTED);
 			try {
 				StorableObjectPool.flush(this.measurementToRemove, LoginManager.getUserId(), false);
 			} catch (ApplicationException ae) {
@@ -298,7 +299,7 @@ final class Transceiver extends SleepButWorkThread {
 	private void abortMeasurementAndReport() {
 		Log.errorMessage("ERROR: Cannot create result");
 		if (this.measurementToRemove != null) {
-			this.measurementToRemove.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
+			this.measurementToRemove.setStatus(IdlMeasurementStatus.MEASUREMENT_STATUS_ABORTED);
 			try {
 				StorableObjectPool.flush(this.measurementToRemove, LoginManager.getUserId(), true);
 			} catch (ApplicationException ae) {

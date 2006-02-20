@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.89 2005/11/14 15:15:38 bass Exp $
+ * $Id: TestProcessor.java,v 1.90 2006/02/20 17:08:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,15 +42,15 @@ import com.syrus.AMFICOM.measurement.MeasurementWrapper;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.IdlMeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/11/14 15:15:38 $
- * @author $Author: bass $
+ * @version $Revision: 1.90 $, $Date: 2006/02/20 17:08:17 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -178,13 +178,13 @@ abstract class TestProcessor extends SleepButWorkThread {
 				Log.DEBUGLEVEL06);
 
 		switch (lastMeasurementStatus) {
-			case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
+			case IdlMeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
 				this.transceiver.addMeasurement(lastMeasurement, this);
 				break;
-			case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
+			case IdlMeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
 				this.transceiver.addAcquiringMeasurement(lastMeasurement, this);
 				break;
-			case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
+			case IdlMeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
 				try {
 					final Set<Result> results = lastMeasurement.getResults();
 					if (!results.isEmpty()) {
@@ -195,12 +195,12 @@ abstract class TestProcessor extends SleepButWorkThread {
 					} else {
 						Log.errorMessage("ERROR: Cannot find result for acquired measurement '" + lastMeasurement.getId()
 								+ "'; setting measurement as ABORTED");
-						lastMeasurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
+						lastMeasurement.setStatus(IdlMeasurementStatus.MEASUREMENT_STATUS_ABORTED);
 					}
 				} catch (ApplicationException ae) {
 					Log.errorMessage("ERROR: Cannot load results for acquired measurement '" + lastMeasurement.getId()
 							+ "'; setting measurement as ABORTED");
-					lastMeasurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
+					lastMeasurement.setStatus(IdlMeasurementStatus.MEASUREMENT_STATUS_ABORTED);
 				}
 				break;
 			default:
@@ -314,7 +314,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 				Log.errorMessage(ae);
 			}
 			
-			measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
+			measurement.setStatus(IdlMeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
 			objectsToFlush.add(measurement);
 			
 			it.remove();
@@ -417,11 +417,11 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 		try {
 			final LinkedIdsCondition lic = new LinkedIdsCondition(this.test.getId(), ObjectEntities.MEASUREMENT_CODE);
-			final TypicalCondition tc1 = new TypicalCondition(MeasurementStatus._MEASUREMENT_STATUS_COMPLETED,
+			final TypicalCondition tc1 = new TypicalCondition(IdlMeasurementStatus._MEASUREMENT_STATUS_COMPLETED,
 					OperationSort.OPERATION_NOT_EQUALS,
 					ObjectEntities.MEASUREMENT_CODE,
 					MeasurementWrapper.COLUMN_STATUS);
-			final TypicalCondition tc2 = new TypicalCondition(MeasurementStatus._MEASUREMENT_STATUS_ABORTED,
+			final TypicalCondition tc2 = new TypicalCondition(IdlMeasurementStatus._MEASUREMENT_STATUS_ABORTED,
 					OperationSort.OPERATION_NOT_EQUALS,
 					ObjectEntities.MEASUREMENT_CODE,
 					MeasurementWrapper.COLUMN_STATUS);
@@ -432,7 +432,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 			final CompoundCondition condition = new CompoundCondition(conditions, CompoundConditionSort.AND);
 			final Set<Measurement> measurements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			for (final Measurement measurement : measurements) {
-				measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
+				measurement.setStatus(IdlMeasurementStatus.MEASUREMENT_STATUS_ABORTED);
 			}
 			StorableObjectPool.flush(measurements, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
