@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerObjectLoader.java,v 1.4 2005/09/15 00:54:17 arseniy Exp $
+ * $Id: MscharServerObjectLoader.java,v 1.5 2006/02/20 10:22:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,11 @@ package com.syrus.AMFICOM.mscharserver;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/15 00:54:17 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2006/02/20 10:22:14 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mscharserver
- * @todo Implement refresh (i. e. - method {@link ObjectLoader#getRemoteVersions(Set)})
+ * @todo Implement refresh (i. e. - method {@link com.syrus.AMFICOM.general.ObjectLoader#getRemoteVersions(java.util.Set)})
  * with timeout checking, using field {@link #refreshTimeout}
  */
 final class MscharServerObjectLoader extends DatabaseObjectLoader {
