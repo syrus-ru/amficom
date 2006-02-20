@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.92 2006/02/07 14:22:01 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.93 2006/02/20 12:11:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.92 $, $Date: 2006/02/07 14:22:01 $
+ * @version $Revision: 1.93 $, $Date: 2006/02/20 12:11:01 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -272,7 +272,7 @@ final class MeasurementServer extends SleepButWorkThread {
 						}
 
 						try {
-							final IdlSessionKey sessionKey = LoginManager.getIdlSessionKey();
+							final IdlSessionKey sessionKey = LoginManager.getSessionKey().getIdlTransferable();
 
 							//- Send ids of starting tests to MCM, if any
 							if (!startTestIds.isEmpty()) {
