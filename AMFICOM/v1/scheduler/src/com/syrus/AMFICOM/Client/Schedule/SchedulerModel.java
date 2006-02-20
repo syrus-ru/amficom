@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.175 2006/02/17 10:31:31 bob Exp $
+ * $Id: SchedulerModel.java,v 1.176 2006/02/20 12:31:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,8 +73,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.175 $, $Date: 2006/02/17 10:31:31 $
- * @author $Author: bob $
+ * @version $Revision: 1.176 $, $Date: 2006/02/20 12:31:18 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -547,7 +547,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				Log.DEBUGLEVEL03);
 		} catch (final ApplicationException e) {
 			Log.errorMessage(e);
-			throw new ApplicationException(I18N.getString("Scheduler.Error.CannotRefreshTests"));
+			throw new ApplicationException(I18N.getString("Scheduler.Error.CannotRefreshTests"), e);
 		}
 
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
