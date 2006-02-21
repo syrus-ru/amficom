@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.107 2005/11/24 15:30:12 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.108 2006/02/21 14:18:54 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.107 $, $Date: 2005/11/24 15:30:12 $
+ * @version $Revision: 1.108 $, $Date: 2006/02/21 14:18:54 $
  * @module
  */
 public class ModelTraceManager
@@ -563,6 +563,7 @@ implements DataStreamable, Cloneable
 	 */
 	public void updateThreshToContain(double[] yTop, double[] yBottom, double dyMargin, double dyFactor)
 	{
+		// расширяем пороги
 		for (int i = 0; i < this.tDY.length; i++)
 			this.tDY[i].changeAllBy(-dyMargin);
 		CoreAnalysisManager.extendThreshToCoverCurve(
@@ -575,6 +576,9 @@ implements DataStreamable, Cloneable
 				dyFactor);
 		for (int i = 0; i < this.tDY.length; i++)
 			this.tDY[i].changeAllBy(dyMargin);
+		// корректируем пороги
+		postProcessThresholds();
+		// пороговые кривые изменились - сбрасываем кэш
 		invalidateCache();
 	}
 
@@ -1254,5 +1258,38 @@ implements DataStreamable, Cloneable
 			result = 37 * result + arr[i].hashCode();
 		}
 		return result;
+	}
+
+	/**
+	 * Делает пост-обработку сгенерированных порогов
+	 * <ul>
+	 * <li> Обеспечивает, чтобы тревожные DY-пороги были не менее 0.5 дБ
+	 * <li> Обеспечивает, чтобы DA-пороги не убывали (а точнее, чтобы
+	 * каждый DY-порог был не меньше, чем любой DA-порог слева от него,
+	 * кроме DA-порога в самом начале р/г)
+	 * </ul>
+	 */
+	private void postProcessThresholds() {
+		final double minHardAlarm = 0.5;
+
+		/*
+		 * создаем аккумулятор минимальной величины порогов
+		 * (объект ThreshDY используется просто хранилище значений)
+		 */
+		ThreshDY acc = new ThreshDY(0, ThreshDY.Type.dA, 0, 0);
+		acc.setDY(Thresh.HARD_UP, minHardAlarm);
+		acc.setDY(Thresh.HARD_DOWN, -minHardAlarm);
+
+		/*
+		 * Расширяем пороги. Предполагаем, что пороги в tDY идут слева направо
+		 */
+		for(ThreshDY th: this.tDY) {
+			// расширяем пороги th
+			th.extendUpto(acc);
+			// расширяем acc для всех th dA-типа, кроме первого (участок до МЗ)
+			if (th != this.tDY[0] && th.getType() == ThreshDY.Type.dA) {
+				acc.extendUpto(th);
+			}
+		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.24 2005/12/05 16:40:46 saa Exp $
+ * $Id: ThreshDY.java,v 1.25 2006/02/21 14:18:54 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.24 $, $Date: 2005/12/05 16:40:46 $
+ * @version $Revision: 1.25 $, $Date: 2006/02/21 14:18:54 $
  * @module
  */
 public class ThreshDY extends Thresh {
@@ -152,6 +152,21 @@ public class ThreshDY extends Thresh {
 		snapAndLimit(key);
 		interLimit(key);
 	}
+
+	/**
+	 * Расширяет те пороги, которые меньше, чем у другого ThreshDY,
+	 * до значений другого ThreshDY.
+	 * @param that другой ThreshDY
+	 */
+	public void extendUpto(ThreshDY that) {
+		for (int key = 0; key < 4; key++) {
+			double sign = IS_KEY_UPPER[key] ? 1 : -1;
+			if (this.values[key] * sign < that.values[key] * sign) {
+				this.values[key] = that.values[key];
+			}
+		}
+	}
+
 	@Override
 	protected void arrangeLimits(int key)
 	{
