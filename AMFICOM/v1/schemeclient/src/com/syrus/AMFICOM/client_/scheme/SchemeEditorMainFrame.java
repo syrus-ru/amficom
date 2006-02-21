@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.36 2006/02/15 12:18:10 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.37 2006/02/21 08:10:43 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.36 $, $Date: 2006/02/15 12:18:10 $
+ * @version $Revision: 1.37 $, $Date: 2006/02/21 08:10:43 $
  * @module schemeclient
  */
 
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeNewCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeOpenCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveAllCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveAsCommand;
-import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.ValidateSchemeCommand;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
@@ -228,6 +228,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setCommand("menuSchemeLoad", new SchemeOpenCommand(this.aContext));
 		aModel.setCommand("menuSchemeSave", new SchemeSaveAllCommand(this.schemeTab));
 		aModel.setCommand("menuSchemeSaveAs", new SchemeSaveAsCommand(this.aContext, this.schemeTab));
+		aModel.setCommand("menuSchemeValidate", new ValidateSchemeCommand(this.schemeTab));
 
 		
 		aModel.setCommand("Menu.import.protos", new ProtoElementsImportCommand(this.schemeTab));
@@ -288,45 +289,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent ae) {
-		if (ae.getPropertyName().equals(CreatePathEvent.TYPE)) {
-			CreatePathEvent cpe = (CreatePathEvent) ae;
-			if (cpe.CREATE_PATH || cpe.EDIT_PATH) {
-				ApplicationModel aModel = this.aContext.getApplicationModel();
-				aModel.setEnabled("menuPathSave", true);
-				aModel.setEnabled("menuPathAddStart", true);
-				aModel.setEnabled("menuPathAddEnd", true);
-				aModel.setEnabled("menuPathAddLink", true);
-				aModel.setEnabled("menuPathCancel", true);
-				aModel.setEnabled("menuPathAutoCreate", true);
-				aModel.getCommand("menuPathAutoCreate").setParameter("panel",
-						this.schemeTab.getCurrentPanel());
-				aModel.fireModelChanged("");
-			}
-			if (cpe.CANCEL_PATH_CREATION || cpe.SAVE_PATH) {
-				ApplicationModel aModel = this.aContext.getApplicationModel();
-				aModel.setEnabled("menuPathSave", false);
-				aModel.setEnabled("menuPathAddStart", false);
-				aModel.setEnabled("menuPathAddEnd", false);
-				aModel.setEnabled("menuPathAddLink", false);
-				aModel.setEnabled("menuPathRemoveLink", false);
-				aModel.setEnabled("menuPathAutoCreate", false);
-				aModel.setEnabled("menuPathCancel", false);
-				aModel.fireModelChanged("");
-			}
-			if (cpe.PE_SELECTED) {
-				ApplicationModel aModel = this.aContext.getApplicationModel();
-				if (aModel.isEnabled("menuPathCancel")) {
-					aModel.setEnabled("menuPathRemoveLink", true);
-					aModel.fireModelChanged("");
-				}
-			} else {
-				ApplicationModel aModel = this.aContext.getApplicationModel();
-				if (aModel.isEnabled("menuPathCancel")) {
-					aModel.setEnabled("menuPathRemoveLink", false);
-					aModel.fireModelChanged("");
-				}
-			}
-		} else if (ae.getPropertyName().equals(SchemeEvent.TYPE)) {
+		if (ae.getPropertyName().equals(SchemeEvent.TYPE)) {
 			ObjectSelectedEvent sne = (ObjectSelectedEvent) ae;
 			if (sne.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
 				ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -400,6 +363,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled("menuSchemeLoad", true);
 		aModel.setEnabled("menuSchemeSave", true);
 		aModel.setEnabled("menuSchemeSaveAs", true);
+		aModel.setEnabled("menuSchemeValidate", true);
 		aModel.setEnabled("menuPathNew", true);
 		aModel.setEnabled("menuReportCreate", true);
 		
@@ -426,6 +390,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled("menuSchemeLoad", false);
 		aModel.setEnabled("menuSchemeSave", false);
 		aModel.setEnabled("menuSchemeSaveAs", false);
+		aModel.setEnabled("menuSchemeValidate", false);
 		aModel.setEnabled("Menu.export", false);
 		aModel.setEnabled("Menu.import", false);
 		aModel.setEnabled("menuPathNew", false);

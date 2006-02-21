@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMenuBar.java,v 1.12 2006/02/15 12:18:10 stas Exp $
+ * $Id: SchemeEditorMenuBar.java,v 1.13 2006/02/21 08:10:43 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.resource.LangModelScheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2006/02/15 12:18:10 $
+ * @version $Revision: 1.13 $, $Date: 2006/02/21 08:10:43 $
  * @module schemeclient
  */
 
@@ -39,6 +39,8 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		final JMenuItem menuSchemeLoad = new JMenuItem();
 		final JMenuItem menuSchemeSave = new JMenuItem();
 		final JMenuItem menuSchemeSaveAs = new JMenuItem();
+		final JMenuItem menuSchemeValidate = new JMenuItem();
+		
 		final JMenu menuImport = new JMenu();
 		final JMenuItem menuSchemeImport = new JMenuItem();
 		final JMenuItem menuConfigImport = new JMenuItem();
@@ -79,6 +81,10 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		menuSchemeSaveAs.setText(LangModelSchematics.getString("menuSchemeSaveAs"));
 		menuSchemeSaveAs.setName("menuSchemeSaveAs");
 		menuSchemeSaveAs.addActionListener(this.actionAdapter);
+		menuSchemeValidate.setText(LangModelSchematics.getString("menuSchemeValidate"));
+		menuSchemeValidate.setName("menuSchemeValidate");
+		menuSchemeValidate.addActionListener(this.actionAdapter);
+		
 		menuSchemeLoad.setText(LangModelSchematics.getString("menuSchemeLoad"));
 		menuSchemeLoad.setName("menuSchemeLoad");
 		menuSchemeLoad.addActionListener(this.actionAdapter);
@@ -115,6 +121,8 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		menuScheme.addSeparator();
 		menuScheme.add(menuSchemeSave);
 		menuScheme.add(menuSchemeSaveAs);
+		menuScheme.addSeparator();
+		menuScheme.add(menuSchemeValidate);
 		menuScheme.addSeparator();
 		menuScheme.add(menuExport);
 		menuExport.add(menuConfigExport);
@@ -211,6 +219,9 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 				menuSchemeSave.setEnabled(aModel.isEnabled("menuSchemeSave"));
 				menuSchemeSaveAs.setVisible(aModel.isVisible("menuSchemeSaveAs"));
 				menuSchemeSaveAs.setEnabled(aModel.isEnabled("menuSchemeSaveAs"));
+				menuSchemeValidate.setVisible(aModel.isVisible("menuSchemeValidate"));
+				menuSchemeValidate.setEnabled(aModel.isEnabled("menuSchemeValidate"));
+				
 				menuSchemeLoad.setVisible(aModel.isVisible("menuSchemeLoad"));
 				menuSchemeLoad.setEnabled(aModel.isEnabled("menuSchemeLoad"));
 				menuImport.setVisible(aModel.isVisible("Menu.import"));
