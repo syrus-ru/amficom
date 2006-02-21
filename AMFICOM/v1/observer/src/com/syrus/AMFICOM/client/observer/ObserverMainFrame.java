@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.MapSurveyApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.ObserverApplicationModel;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
-import com.syrus.AMFICOM.client.observer.alarm.AlarmReceiver;
+//import com.syrus.AMFICOM.client.observer.alarm.AlarmReceiver;
 import com.syrus.AMFICOM.client.observer.command.OpenMapViewCommand;
 import com.syrus.AMFICOM.client.observer.command.OpenSchemeViewCommand;
 import com.syrus.AMFICOM.client.observer.command.start.OpenAnalysisCommand;
