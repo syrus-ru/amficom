@@ -1,11 +1,13 @@
 /*-
- * $Id: EquipmentType.java,v 1.110.2.3 2006/02/14 01:26:42 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.110.2.4 2006/02/21 14:37:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 
 import java.util.Collections;
 import java.util.Date;
@@ -20,12 +22,15 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.110.2.3 $, $Date: 2006/02/14 01:26:42 $
+ * @version $Revision: 1.110.2.4 $, $Date: 2006/02/21 14:37:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -70,6 +75,31 @@ public final class EquipmentType extends StorableObjectType<EquipmentType> {
 			this.fromTransferable(idlEquipmentType);
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
+		}
+	}
+
+	public static EquipmentType createInstance(final Identifier creatorId,
+			final String codename,
+			final String description) throws CreateObjectException {
+		if (creatorId == null || codename == null
+				|| description == null) {
+			throw new IllegalArgumentException(NON_NULL_EXPECTED);
+		}
+
+		try {
+			final EquipmentType equipmentType = new EquipmentType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENT_TYPE_CODE),
+					creatorId,
+					StorableObjectVersion.INITIAL_VERSION,
+					codename,
+					description);
+
+			assert equipmentType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+			equipmentType.markAsChanged();
+
+			return equipmentType;
+		} catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
