@@ -76,7 +76,6 @@ public class AlarmFrame extends JInternalFrame {
 
 	Filter filter = new Filter(new AlarmConditionWrapper());
 	AlarmUpdater updater;
-	Map<Alarm, Marker> alarmMarkerMapping = new HashMap<Alarm, Marker>();
 
 	class AlarmUpdater implements PopupMessageReceiver {
 		AlarmUpdater() {
@@ -110,11 +109,9 @@ public class AlarmFrame extends JInternalFrame {
 							SchemePath path = schemePaths.iterator().next();
 							PathElement pe = path.getPathElementByOpticalDistance(optDistance);
 
-							Marker marker = new Marker("", 0);
 							MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-									marker.getId(), optDistance, path.getId(), meId, pe.getId());
+									alarm.getId(), optDistance, path.getId(), meId, pe.getId());
 
-							AlarmFrame.this.alarmMarkerMapping.put(alarm, marker);
 							AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
 							
 							AlarmFrame.this.table.setSelectedValue(alarm);
@@ -164,46 +161,41 @@ public class AlarmFrame extends JInternalFrame {
 					
 					final ApplicationContext aContext1 = AlarmFrame.this.aContext;
 					if (!firstb) {
-						Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm1);
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-								marker.getId(), marker.getPos(), alarm1.getPath().getId(), 
+								alarm1.getId(), alarm1.getEvent().getMismatchOpticalDistance(), alarm1.getPath().getId(), 
 								alarm1.getMonitoredElement().getId(), alarm1.getPathElement().getId());
 
 						aContext1.getDispatcher().firePropertyChange(mEvent);
 					}
 					if (!lastb && first != last) {
-						Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm2);
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-								marker.getId(), marker.getPos(), alarm2.getPath().getId(), 
+								alarm2.getId(), alarm2.getEvent().getMismatchOpticalDistance(), alarm2.getPath().getId(), 
 								alarm2.getMonitoredElement().getId(), alarm2.getPathElement().getId());
 
 						aContext1.getDispatcher().firePropertyChange(mEvent);
 					}
 					
 					if (firstb) {
-						Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm1);
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-								marker.getId(), marker.getPos(), alarm1.getPath().getId(), 
+								alarm1.getId(), alarm1.getEvent().getMismatchOpticalDistance(), alarm1.getPath().getId(), 
 								alarm1.getMonitoredElement().getId(), alarm1.getPathElement().getId());
 
-						AlarmFrame.this.alarmMarkerMapping.put(alarm1, marker);
-						aContext1.getDispatcher().firePropertyChange(mEvent);
 						// notify about measurement
 						aContext1.getDispatcher().firePropertyChange(
 								new ObjectSelectedEvent(this, alarm1.getMeasurement(), null, ObjectSelectedEvent.MEASUREMENT));
+
+						aContext1.getDispatcher().firePropertyChange(mEvent);
 					} 
 					if (lastb && first != last) {
-						Marker marker = AlarmFrame.this.alarmMarkerMapping.get(alarm2);
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-								marker.getId(), marker.getPos(), alarm2.getPath().getId(), 
+								alarm2.getId(), alarm2.getEvent().getMismatchOpticalDistance(), alarm2.getPath().getId(), 
 								alarm2.getMonitoredElement().getId(), alarm2.getPathElement().getId());
-						
-						AlarmFrame.this.alarmMarkerMapping.put(alarm2, marker);
-						aContext1.getDispatcher().firePropertyChange(mEvent);
 						
 						// notify about measurement
 						aContext1.getDispatcher().firePropertyChange(
 								new ObjectSelectedEvent(this, alarm1.getMeasurement(), null, ObjectSelectedEvent.MEASUREMENT));
+						
+						aContext1.getDispatcher().firePropertyChange(mEvent);
 					} 
 				} catch (ApplicationException e1) {
 					Log.errorMessage(e1);
@@ -424,7 +416,7 @@ public class AlarmFrame extends JInternalFrame {
 		try {
 			Alarm alarm = this.model.getObject(this.table.getSelectedRow());
 			MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-					this.alarmMarkerMapping.get(alarm).getId(), alarm.getEvent().getMismatchOpticalDistance(),
+					alarm.getId(), alarm.getEvent().getMismatchOpticalDistance(),
 					alarm.getPath().getId(), alarm.getMonitoredElement().getId(),
 					alarm.getPathElement().getId());
 			this.aContext.getDispatcher().firePropertyChange(mEvent2);
@@ -437,11 +429,10 @@ public class AlarmFrame extends JInternalFrame {
 		try {
 			Alarm alarm = this.model.getObject(this.table.getSelectedRow());
 			MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-					this.alarmMarkerMapping.get(alarm).getId(), alarm.getEvent().getMismatchOpticalDistance(),
+					alarm.getId(), alarm.getEvent().getMismatchOpticalDistance(),
 					alarm.getPath().getId(), alarm.getMonitoredElement().getId(),
 					alarm.getPathElement().getId());
 			this.aContext.getDispatcher().firePropertyChange(mEvent2);
-			AlarmFrame.this.alarmMarkerMapping.remove(alarm);
 			
 			this.table.setSelectedValue(null);
 			this.model.removeObject(alarm);
