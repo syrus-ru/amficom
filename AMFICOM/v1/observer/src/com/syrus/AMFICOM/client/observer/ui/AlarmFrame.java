@@ -6,8 +6,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
@@ -21,8 +19,13 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.Marker;
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.PermissionManager;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
+import com.syrus.AMFICOM.analysis.EventAnchorer;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.event.MarkerEvent;
@@ -40,21 +43,27 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.newFilter.Filter;
+import com.syrus.AMFICOM.reflectometry.SOAnchor;
 import com.syrus.AMFICOM.resource.LangModelObserver;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 public class AlarmFrame extends JInternalFrame {
+	private static final long serialVersionUID = 516953186269837809L;
+
 	ApplicationContext aContext;
 
 	boolean initial_init = true;
@@ -101,22 +110,63 @@ public class AlarmFrame extends JInternalFrame {
 					MonitoredElement me = StorableObjectPool.getStorableObject(meId, true);
 					Set<Identifier> tpathIds = me.getMonitoredDomainMemberIds();
 
-					if (!tpathIds.isEmpty()) {
-						Set<SchemePath> schemePaths = StorableObjectPool.getStorableObjectsByCondition(
-								new LinkedIdsCondition(tpathIds.iterator().next(), ObjectEntities.SCHEMEPATH_CODE), true);
+					MeasurementSetup ms = m.getSetup();
+					Heap.setContextMeasurementSetup(ms);
+					try {
+						// пытаемся загрузить параметры анализа
+						// (в принципе, если они были, то они уже были загружены
+						// во время загрузки primary trace)
+						AnalysisUtil.loadCriteriaSet(LoginManager.getUserId(), ms);
+						// пытаемся загрузить эталон
+						if (ms.getEtalon() != null) {
+							AnalysisUtil.loadEtalon(ms);
+						} else {
+							Heap.unSetEtalonPair();
+						}
+						// загружаем результаты сравнения с эталоном (если есть)
+						// NB: при загрузке всех р/г уже были загружены
+						// результаты анализа. Теперь мы повторно загружаем
+						// результаты анализа + результаты оценки,
+						// но уже только для одной р/г - той, что выбрана как первичная.
+						AnalysisUtil.loadEtalonComparison(m);
+					} catch (DataFormatException e) {
+						GUIUtil.showDataFormatError();
+					} catch (ApplicationException e) {
+						GUIUtil.processApplicationException(e);
+					}
+					
+					PathElement pe = null;
+					SchemePath path = null;
+					if (Heap.hasEtalon()) {
+						ModelTraceAndEvents mtae = Heap.getMTMEtalon().getMTAE();
+						EventAnchorer ea = Heap.obtainAnchorer();
 						
-						if (!schemePaths.isEmpty()) {
-							SchemePath path = schemePaths.iterator().next();
-							PathElement pe = path.getPathElementByOpticalDistance(optDistance);
-
-							MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-									alarm.getId(), optDistance, path.getId(), meId, pe.getId());
-
-							AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
+						int nEvent = mtae.getEventByCoord((int) (alarm.getEvent().getMismatchOpticalDistance() / mtae.getDeltaX()));
+						SOAnchor anchor = ea.getEventAnchor(nEvent);
+						Identifier peId = Identifier.valueOf(anchor.getValue());
+						pe = StorableObjectPool.getStorableObject(peId, true);
+						path = pe.getParentPathOwner();
+					}
+					
+					if (pe == null) {
+						if (!tpathIds.isEmpty()) {
+							Set<SchemePath> schemePaths = StorableObjectPool.getStorableObjectsByCondition(
+									new LinkedIdsCondition(tpathIds.iterator().next(), ObjectEntities.SCHEMEPATH_CODE), true);
 							
-							AlarmFrame.this.table.setSelectedValue(alarm);
+							if (!schemePaths.isEmpty()) {
+								path = schemePaths.iterator().next();
+								pe = path.getPathElementByOpticalDistance(optDistance);
+								
+							}
 						}
 					}
+					
+					MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
+							alarm.getId(), optDistance, path.getId(), meId, pe.getId());
+
+					AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
+					
+					AlarmFrame.this.table.setSelectedValue(alarm);
 				}
 			} catch (ApplicationException e) {
 				Log.errorMessage(e);
