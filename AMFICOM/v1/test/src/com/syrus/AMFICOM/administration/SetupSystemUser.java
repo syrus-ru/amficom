@@ -1,5 +1,5 @@
 /*
- * $Id: SetupSystemUser.java,v 1.1.2.1 2006/02/17 15:53:39 arseniy Exp $
+ * $Id: SetupSystemUser.java,v 1.1.2.2 2006/02/21 15:55:45 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,23 +26,23 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.setup.I18N;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/17 15:53:39 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/02/21 15:55:45 $
  * @author $Author: arseniy $
  * @module test
  */
 public final class SetupSystemUser extends TestCase {
-	private static final String KEY_LOGINSERVER_NAME = "Name.ServerProcess.LoginServer";
-	private static final String KEY_LOGINSERVER_DESCRIPTION = "Description.ServerProcess.LoginServer";
-	private static final String KEY_EVENTSERVER_NAME = "Name.ServerProcess.EventServer";
-	private static final String KEY_EVENTSERVER_DESCRIPTION = "Description.ServerProcess.EventServer";
-	private static final String KEY_MSERVER_NAME = "Name.ServerProcess.MServer";
-	private static final String KEY_MSERVER_DESCRIPTION = "Description.ServerProcess.MServer";
-	private static final String KEY_CMSERVER_NAME = "Name.ServerProcess.CMServer";
-	private static final String KEY_CMSERVER_DESCRIPTION = "Description.ServerProcess.CMServer";
-	private static final String KEY_MSCHARSERVER_NAME = "Name.ServerProcess.MSchARServer";
-	private static final String KEY_MSCHARSERVER_DESCRIPTION = "Description.ServerProcess.MSchARServer";
-	private static final String KEY_MCM_NAME = "Name.MCM.MCM1";
-	private static final String KEY_MCM_DESCRIPTION = "Description.MCM.MCM1";
+	static final String KEY_LOGINSERVER_NAME = "Name.ServerProcess.LoginServer";
+	static final String KEY_LOGINSERVER_DESCRIPTION = "Description.ServerProcess.LoginServer";
+	static final String KEY_EVENTSERVER_NAME = "Name.ServerProcess.EventServer";
+	static final String KEY_EVENTSERVER_DESCRIPTION = "Description.ServerProcess.EventServer";
+	static final String KEY_MSERVER_NAME = "Name.ServerProcess.MServer";
+	static final String KEY_MSERVER_DESCRIPTION = "Description.ServerProcess.MServer";
+	static final String KEY_CMSERVER_NAME = "Name.ServerProcess.CMServer";
+	static final String KEY_CMSERVER_DESCRIPTION = "Description.ServerProcess.CMServer";
+	static final String KEY_MSCHARSERVER_NAME = "Name.ServerProcess.MSchARServer";
+	static final String KEY_MSCHARSERVER_DESCRIPTION = "Description.ServerProcess.MSchARServer";
+	static final String KEY_MCM_NAME = "Name.MCM.MCM";
+	static final String KEY_MCM_DESCRIPTION = "Description.MCM.MCM";
 
 	public SetupSystemUser(final String name) {
 		super(name);
@@ -70,39 +70,39 @@ public final class SetupSystemUser extends TestCase {
 				EVENTPROCESSOR_LOGIN,
 				USER_SORT_SERVERPROCESS,
 				I18N.getString(KEY_EVENTSERVER_NAME),
-				KEY_EVENTSERVER_DESCRIPTION);
+				I18N.getString(KEY_EVENTSERVER_DESCRIPTION));
 		System.out.println("Event user: '" + eventUser.getLogin() + "', id: '" + eventUser.getId() + "'");
 
 //	3
 		final SystemUser mserverUser = SystemUser.createInstance(userId,
 				MSERVER_LOGIN,
 				USER_SORT_SERVERPROCESS,
-				KEY_MSERVER_NAME,
-				KEY_MSERVER_DESCRIPTION);
+				I18N.getString(KEY_MSERVER_NAME),
+				I18N.getString(KEY_MSERVER_DESCRIPTION));
 		System.out.println("MServer user: '" + mserverUser.getLogin() + "', id: '" + mserverUser.getId() + "'");
 
 //	4
 		final SystemUser cmserverUser = SystemUser.createInstance(userId,
 				CMSERVER_LOGIN,
 				USER_SORT_SERVERPROCESS,
-				KEY_CMSERVER_NAME,
-				KEY_CMSERVER_DESCRIPTION);
+				I18N.getString(KEY_CMSERVER_NAME),
+				I18N.getString(KEY_CMSERVER_DESCRIPTION));
 		System.out.println("CMServer user: '" + cmserverUser.getLogin() + "', id: '" + cmserverUser.getId() + "'");
 
 //	5
 		final SystemUser mscharserverUser = SystemUser.createInstance(userId,
 				MSCHARSERVER_LOGIN,
 				USER_SORT_SERVERPROCESS,
-				KEY_MSCHARSERVER_NAME,
-				KEY_MSCHARSERVER_DESCRIPTION);
+				I18N.getString(KEY_MSCHARSERVER_NAME),
+				I18N.getString(KEY_MSCHARSERVER_DESCRIPTION));
 		System.out.println("MSHServer user: '" + mscharserverUser.getLogin() + "', id: '" + mscharserverUser.getId() + "'");
 
 // MCM
 		final SystemUser mcmUser = SystemUser.createInstance(userId,
 				MCM_LOGIN,
 				USER_SORT_SERVERPROCESS,
-				KEY_MCM_NAME,
-				KEY_MCM_DESCRIPTION);
+				I18N.getString(KEY_MCM_NAME),
+				I18N.getString(KEY_MCM_DESCRIPTION));
 		System.out.println("MCM user: '" + mcmUser.getLogin() + "', id: '" + mcmUser.getId() + "'");
 
 //	save all
