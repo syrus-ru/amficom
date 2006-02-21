@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
@@ -62,14 +64,11 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 	JPanel mainPanel = new JPanel();
 	JScrollPane scrollPane = new JScrollPane();
 	JViewport viewport = new JViewport();
-	
-	JButton analysisInitialButton;
-	JButton analysisDefaultsButton;
-	JButton increaseThreshButton;
-	JButton decreaseThreshButton;
-	JButton previuosEventButton;
-	JButton nextEventButton;
-	
+
+	private List<JButton> createButtons = new ArrayList<JButton>();
+	private List<JButton> editButtons = new ArrayList<JButton>();
+	private List<JButton> navigateButtons = new ArrayList<JButton>();
+
 	private ThresholdTableModel tModel;
 
 	public ThresholdsSelectionFrame(Dispatcher dispatcher)
@@ -97,6 +96,28 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		return this.jTable.getModel();
 	}
 
+	private void addButton(JToolBar toolbar,
+			List<JButton> group,
+			String tipKey,
+			String iconKey,
+			String text,
+			ActionListener listener) {
+		JButton button = new JButton();
+		button.setEnabled(false);
+		button.setMargin(UIManager.getInsets(
+				ResourceKeys.INSETS_ICONED_BUTTON));
+		button.setToolTipText(LangModelAnalyse.getString(tipKey));
+		if (iconKey != null) {
+			button.setIcon(UIManager.getIcon(iconKey));
+		}
+		if (text != null) {
+			button.setText(text);
+		}
+		button.addActionListener(listener);
+		group.add(button);
+		toolbar.add(button);
+	}
+
 	private void jbInit() throws Exception
 	{
 		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
@@ -119,129 +140,90 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		this.jTable = new ATable(this.tModel);
 		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(200);
 		this.jTable.setDefaultEditor(Object.class, ThresholdEditor.getInstance());
-		
-		analysisInitialButton = new JButton();
-		analysisInitialButton.setMargin(UIManager.getInsets(
-			ResourceKeys.INSETS_ICONED_BUTTON));
-		
-		analysisDefaultsButton = new JButton();
-		analysisDefaultsButton.setMargin(UIManager.getInsets(
-			ResourceKeys.INSETS_ICONED_BUTTON));
-		
-		increaseThreshButton = new JButton();
-		increaseThreshButton.setMargin(UIManager.getInsets(
-			ResourceKeys.INSETS_ICONED_BUTTON));
-		
-		decreaseThreshButton = new JButton();
-		decreaseThreshButton.setMargin(UIManager.getInsets(
-			ResourceKeys.INSETS_ICONED_BUTTON));
-		
-		
-		previuosEventButton = new JButton();
-		previuosEventButton.setMargin(UIManager.getInsets(
-			ResourceKeys.INSETS_ICONED_BUTTON));
-		
-		nextEventButton = new JButton();
-		nextEventButton.setMargin(UIManager.getInsets(
-			ResourceKeys.INSETS_ICONED_BUTTON));
-
-		analysisInitialButton.setToolTipText(
-			LangModelAnalyse.getString("analysisInitial"));
-		analysisInitialButton.setIcon(UIManager.getIcon(
-			AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INITIAL));
-		analysisInitialButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				Heap.setMTMEtalon(Heap.getMTMBackupEtalon());
-			}
-		});
-
-		analysisDefaultsButton.setToolTipText(
-			LangModelAnalyse.getString("newThresholds"));
-		analysisDefaultsButton.setIcon(UIManager.getIcon(
-			AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_CREATE_NEW));
-		analysisDefaultsButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				new CreateEtalonCommand().execute();
-			}
-		});
-
-		increaseThreshButton.setToolTipText(
-			LangModelAnalyse.getString("increaseThresh"));
-		increaseThreshButton.setIcon(UIManager.getIcon(
-			AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE));
-		increaseThreshButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				ModelTraceManager.ThreshEditor ted = getCurrentTED();
-				if (ted != null)
-				{
-					ted.increaseValues();
-					dispatcher.firePropertyChange(new RefUpdateEvent(this,
-						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-				}
-			}
-		});
-
-		decreaseThreshButton.setToolTipText(
-			LangModelAnalyse.getString("decreaseThresh"));
-		decreaseThreshButton.setIcon(UIManager.getIcon(
-			AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE));
-		decreaseThreshButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				ModelTraceManager.ThreshEditor ted = getCurrentTED();
-				if (ted != null)
-				{
-					ted.decreaseValues();
-					dispatcher.firePropertyChange(new RefUpdateEvent(this,
-						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-				}
-			}
-		});
-		
-		previuosEventButton.setToolTipText(
-			LangModelAnalyse.getString("previuosEvent"));
-		previuosEventButton.setText("<");
-		previuosEventButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Heap.gotoPreviousEtalonEvent();
-			}
-		});
-		
-		nextEventButton.setToolTipText(
-			LangModelAnalyse.getString("nextEvent"));
-		nextEventButton.setText(">");
-		nextEventButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Heap.gotoNextEtalonEvent();
-			}
-		});
 
 		this.setContentPane(mainPanel);
 
-//		analysisDefaultsButton.setEnabled(
-//				PermissionManager.isPermitted(Operation.EDIT_ETALON));
-		analysisInitialButton.setEnabled(false);
-		increaseThreshButton.setEnabled(false);
-		decreaseThreshButton.setEnabled(false);
-		previuosEventButton.setEnabled(false);
-		nextEventButton.setEnabled(false);
 		//jToolBar1.setBorderPainted(true);
 		JToolBar jToolBar = new JToolBar();
 		jToolBar.setFloatable(false);
-		jToolBar.add(analysisDefaultsButton);
-		jToolBar.add(analysisInitialButton);
-		jToolBar.add(decreaseThreshButton);
-		jToolBar.add(increaseThreshButton);
+
+		addButton(jToolBar,
+				this.createButtons,
+				"newThresholds",
+				AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_CREATE_NEW,
+				null,
+				new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						new CreateEtalonCommand().execute();
+					}
+				});
+
+		addButton(jToolBar,
+				this.editButtons,
+				"analysisInitial",
+				AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INITIAL,
+				null,
+				new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						Heap.setMTMEtalon(Heap.getMTMBackupEtalon());
+					}
+				});
+
+		addButton(jToolBar,
+				this.editButtons,
+				"decreaseThresh",
+				AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE,
+				null,
+				new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						ModelTraceManager.ThreshEditor ted = getCurrentTED();
+						if (ted != null) {
+							ted.decreaseValues();
+							dispatcher.firePropertyChange(new RefUpdateEvent(this,
+								RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+						}
+					}
+				});
+
+		addButton(jToolBar,
+				this.editButtons,
+				"increaseThresh",
+				AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE,
+				null,
+				new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						ModelTraceManager.ThreshEditor ted = getCurrentTED();
+						if (ted != null) {
+							ted.increaseValues();
+							dispatcher.firePropertyChange(new RefUpdateEvent(this,
+								RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+						}
+					}
+				});
+
 		jToolBar.add(new JToolBar.Separator());
-		jToolBar.add(previuosEventButton);
-		jToolBar.add(nextEventButton);
+
+		addButton(jToolBar,
+				this.navigateButtons,
+				"previuosEvent",
+				null,
+				"<",
+				new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						Heap.gotoPreviousEtalonEvent();
+					}
+				});
+
+		addButton(jToolBar,
+				this.navigateButtons,
+				"nextEvent",
+				null,
+				">",
+				new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						Heap.gotoNextEtalonEvent();
+					}
+				});
 
 		this.jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
@@ -452,8 +434,10 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 	}
 
 	private void updateMakeEtalonButton() {
-		analysisDefaultsButton.setEnabled(
+		for(JButton button: this.createButtons) {
+			button.setEnabled(
 				PermissionManager.isPermitted(Operation.EDIT_ETALON));
+		}
 	}
 
 	public void bsHashAdded(String key) {
@@ -476,23 +460,26 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 	public void etalonMTMCUpdated()
 	{
 		updateThresholds();
+		updateMakeEtalonButton();
 		final boolean editEtalonPermitted =
 				PermissionManager.isPermitted(Operation.EDIT_ETALON);
-		analysisDefaultsButton.setEnabled(editEtalonPermitted);
-		analysisInitialButton.setEnabled(editEtalonPermitted);
-		increaseThreshButton.setEnabled(editEtalonPermitted);
-		decreaseThreshButton.setEnabled(editEtalonPermitted);
-		previuosEventButton.setEnabled(true);
-		nextEventButton.setEnabled(true);
+		for(JButton button: this.editButtons) {
+			button.setEnabled(editEtalonPermitted);
+		}
+		for(JButton button: this.navigateButtons) {
+			button.setEnabled(true);
+		}
 	}
 
 	public void etalonMTMRemoved()
 	{
 		updateThresholds();
-		analysisInitialButton.setEnabled(false);
-		increaseThreshButton.setEnabled(false);
-		decreaseThreshButton.setEnabled(false);
-		previuosEventButton.setEnabled(false);
-		nextEventButton.setEnabled(false);
+		updateMakeEtalonButton();
+		for(JButton button: this.editButtons) {
+			button.setEnabled(false);
+		}
+		for(JButton button: this.navigateButtons) {
+			button.setEnabled(false);
+		}
 	}
 }
