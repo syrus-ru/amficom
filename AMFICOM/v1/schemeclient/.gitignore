@@ -35,3 +35,4 @@ cache
 export
 Application.properties
 logs
+*.local
