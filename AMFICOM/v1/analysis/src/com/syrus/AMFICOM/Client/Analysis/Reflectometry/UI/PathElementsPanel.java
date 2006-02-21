@@ -60,6 +60,11 @@ public final class PathElementsPanel extends AnalysisPanel {
 
 	public void setPath(final SchemePath path) {
 		this.path = path;
+
+		if (Heap.hasEtalon()) {
+			ModelTraceAndEvents mtae = Heap.getMTMEtalon().getMTAE();
+			validateAnchors(mtae);
+		}
 	}
 
 	@Override
