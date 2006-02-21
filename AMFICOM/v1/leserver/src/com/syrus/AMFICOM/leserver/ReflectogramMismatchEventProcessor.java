@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.11 2005/12/06 09:43:07 bass Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.12 2006/02/21 11:20:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/12/06 09:43:07 $
+ * @version $Revision: 1.12 $, $Date: 2006/02/21 11:20:22 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor implements
@@ -109,7 +109,14 @@ final class ReflectogramMismatchEventProcessor implements
 			final double totalOpticalLength = schemePath.getOpticalLength();
 			final double deltaX = reflectogramMismatchEvent.getDeltaX();
 			final double eventOpticalDistance = reflectogramMismatchEvent.getCoord() * deltaX;			
-			if (eventOpticalDistance > totalOpticalLength) {
+
+			final double epsilon = deltaX / 2.0;
+
+			/*
+			 * Throw an exception if eventOpticalDistance, in points,
+			 * is greater than totalOpticalLength, in points.
+			 */
+			if (eventOpticalDistance > totalOpticalLength + epsilon) {
 				throw new EventProcessingException(
 						"For SchemePath: " + schemePathId
 						+ ", eventOpticalDistance: "
@@ -117,8 +124,6 @@ final class ReflectogramMismatchEventProcessor implements
 						+ " is greater than totalOpticalLength: "
 						+ totalOpticalLength);
 			}
-
-			final double epsilon = deltaX / 2.0;
 
 			double minimumMetric = Double.POSITIVE_INFINITY;
 			PathElement affectedPathElement = null;
