@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.22 2006/02/16 13:10:37 saa Exp $
+ * $Id: ResultChildrenFactory.java,v 1.23 2006/02/21 09:49:18 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,14 +55,14 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.MonitoredElementWrapper;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
-import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.IdlMeasurementStatus;
 import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.22 $, $Date: 2006/02/16 13:10:37 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2006/02/21 09:49:18 $
  * @module analysis
  */
 
@@ -381,7 +381,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 				item1.setDefaultCondition(new LinkedIdsCondition(me.getId(), ObjectEntities.TEST_CODE));
 				item.addChild(item1);
 				
-				final StorableObjectCondition measurementStatusCondition = new TypicalCondition(MeasurementStatus._MEASUREMENT_STATUS_COMPLETED,
+				final StorableObjectCondition measurementStatusCondition = new TypicalCondition(IdlMeasurementStatus._MEASUREMENT_STATUS_COMPLETED,
 						0,
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.MEASUREMENT_CODE,
@@ -427,7 +427,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 					Collections.sort(toAdd, new WrapperComparator(TestWrapper.getInstance(), TestWrapper.COLUMN_START_TIME));
 					int i = 0;
 					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-					final StorableObjectCondition measurementStatusCondition = new TypicalCondition(MeasurementStatus._MEASUREMENT_STATUS_COMPLETED,
+					final StorableObjectCondition measurementStatusCondition = new TypicalCondition(IdlMeasurementStatus._MEASUREMENT_STATUS_COMPLETED,
 							0,
 							OperationSort.OPERATION_EQUALS,
 							ObjectEntities.MEASUREMENT_CODE,

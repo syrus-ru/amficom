@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.22 2006/02/17 08:43:04 bob Exp $
+* $Id: TestView.java,v 1.23 2006/02/21 09:49:18 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.IdlMeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.AMFICOM.reflectometry.MeasurementReflectometryAnalysisResult;
@@ -46,8 +46,8 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2006/02/17 08:43:04 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2006/02/21 09:49:18 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -221,7 +221,7 @@ public final class TestView {
 		final Set<Identifier> measurementIds = new HashSet<Identifier>();
 		for (final Measurement measurement : this.measurements) {
 			if (measurement.getStatus() != 
-				MeasurementStatus.MEASUREMENT_STATUS_COMPLETED) {
+				IdlMeasurementStatus.MEASUREMENT_STATUS_COMPLETED) {
 				measurementIds.add(measurement.getId());
 			}
 		}
@@ -308,7 +308,7 @@ public final class TestView {
 		while (!set.isEmpty()) {
 			final Measurement measurement = set.last();			
 			if (measurement.getStatus() == 
-				MeasurementStatus.MEASUREMENT_STATUS_COMPLETED) {
+				IdlMeasurementStatus.MEASUREMENT_STATUS_COMPLETED) {
 				if (this.qualityMeasurement == measurement) {
 					return;
 				}

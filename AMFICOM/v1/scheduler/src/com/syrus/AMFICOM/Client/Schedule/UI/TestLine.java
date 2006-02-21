@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.AMFICOM.measurement.TestViewAdapter;
-import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.IdlMeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.util.Log;
@@ -791,23 +791,23 @@ final class TestLine extends TimeLine {
 	private final void updateTestTimeLine(final TestTimeLine testTimeLine,  
 	                                final Measurement measurement) {
 		switch (measurement.getStatus().value()) {
-		case MeasurementStatus._MEASUREMENT_STATUS_ABORTED:
+		case IdlMeasurementStatus._MEASUREMENT_STATUS_ABORTED:
 			testTimeLine.title = SchedulerModel.getStatusName(TestStatus.TEST_STATUS_ABORTED);
 			testTimeLine.color = SchedulerModel.getColor(TestStatus.TEST_STATUS_ABORTED, false);
 			testTimeLine.selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_ABORTED, true);
 			break;
-		case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
+		case IdlMeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
 			testTimeLine.title = SchedulerModel.getStatusName(TestStatus.TEST_STATUS_SCHEDULED);
 			testTimeLine.color = SchedulerModel.getColor(TestStatus.TEST_STATUS_SCHEDULED, false);
 			testTimeLine.selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_SCHEDULED, true);
 			break;
-		case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
+		case IdlMeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
 			testTimeLine.title = SchedulerModel.getStatusName(TestStatus.TEST_STATUS_PROCESSING);
 			testTimeLine.color = SchedulerModel.getColor(TestStatus.TEST_STATUS_PROCESSING, false);
 			testTimeLine.selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_PROCESSING, true);
 			break;
-		case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
-		case MeasurementStatus._MEASUREMENT_STATUS_COMPLETED:
+		case IdlMeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
+		case IdlMeasurementStatus._MEASUREMENT_STATUS_COMPLETED:
 		default:
 			testTimeLine.title = SchedulerModel.getStatusName(TestStatus.TEST_STATUS_COMPLETED);
 			testTimeLine.color = SchedulerModel.getColor(TestStatus.TEST_STATUS_COMPLETED, false);
