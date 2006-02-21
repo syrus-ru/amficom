@@ -1,5 +1,5 @@
 /*
- * $Id: SetupServer.java,v 1.1.2.1 2006/02/17 15:53:39 arseniy Exp $
+ * $Id: SetupServer.java,v 1.1.2.2 2006/02/21 15:55:15 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.setup.I18N;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/17 15:53:39 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/02/21 15:55:15 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -31,6 +31,7 @@ public final class SetupServer extends TestCase {
 	private static final String KEY_NAME = "Name.Server";
 	private static final String KEY_DESCRIPTION = "Description.Server";
 	private static final String KEY_SERVER_HOST_NAME = "ServerHostName";
+
 	private static final String SERVER_HOST_NAME = "amficom";
 
 	public SetupServer(final String name) {
