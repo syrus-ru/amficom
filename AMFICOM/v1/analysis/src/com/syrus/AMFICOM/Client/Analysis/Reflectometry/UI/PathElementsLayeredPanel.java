@@ -1,5 +1,5 @@
 /*
- * $Id: PathElementsLayeredPanel.java,v 1.12 2005/10/17 15:05:05 saa Exp $
+ * $Id: PathElementsLayeredPanel.java,v 1.13 2006/02/21 09:38:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/17 15:05:05 $
- * @author $Author: saa $
+ * @version $Revision: 1.13 $, $Date: 2006/02/21 09:38:00 $
+ * @author $Author: stas $
  * @module analysis
  */
 
@@ -65,7 +65,7 @@ public class PathElementsLayeredPanel extends AnalysisLayeredPanel
 			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if(panel instanceof PathElementsPanel)
 			{
-				((PathElementsPanel)panel).paint_path_elements = b;
+				((PathElementsPanel)panel).setPaintPathElements(b);
 				this.jLayeredPane.repaint();
 				return;
 			}

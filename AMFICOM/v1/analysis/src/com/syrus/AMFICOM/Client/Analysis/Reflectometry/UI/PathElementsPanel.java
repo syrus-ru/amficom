@@ -188,7 +188,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 	
 //				super.parent.repaint(this.startpos.x - 1, 0, 1, super.parent.getHeight());
 //				super.parent.repaint(this.startpos.x + 1, 0, this.textWidth, this.textHeight);
-				super.parent.repaint(this.currpos.x - 1, 0, 1, super.parent.getHeight());
+				super.parent.repaint(this.currpos.x - 2, 0, 1, super.parent.getHeight());
 				super.parent.repaint(this.currpos.x + 1, 0, this.textWidth, this.textHeight);
 				
 				Graphics g = getGraphics();
@@ -314,6 +314,38 @@ public final class PathElementsPanel extends AnalysisPanel {
 			}		
 		}
 		return this.path.getPathMembers().last();
+	}
+	
+	void validateAnchors(ModelTraceAndEvents mtae) {
+		EventAnchorer ea = Heap.obtainAnchorer();
+		boolean anchorerUpdated = false;
+		try {
+			for (int i = 0; i < mtae.getNEvents(); i++) {
+				SOAnchorImpl soAnchor = ea.getEventAnchor(i);
+				if (soAnchor.getValue() != SOAnchorImpl.VOID_ANCHOR.getValue()) {
+					Identifier peId = Identifier.valueOf(soAnchor.getValue());
+					PathElement pe = StorableObjectPool.getStorableObject(peId, true);
+					if (pe == null) {
+						ea.setEventAnchor(i, SOAnchorImpl.VOID_ANCHOR);
+						anchorerUpdated = true;
+						Log.debugMessage("Invalid pathElement with id '" + peId + "' Remove anchor for event " + i, Level.FINER);	
+					}
+				}
+			}
+			if (anchorerUpdated) {
+				Heap.notifyAnchorerChanged();
+			}
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
+		}
+	}
+	
+	void setPaintPathElements(boolean b) {
+		this.paint_path_elements = b;
+		if (b && Heap.hasEtalon()) {
+			ModelTraceAndEvents mtae = Heap.getMTMEtalon().getMTAE();
+			validateAnchors(mtae);
+		}
 	}
 	
 	void updateAnchor(PathElement pe, ModelTraceAndEvents mtae) {
