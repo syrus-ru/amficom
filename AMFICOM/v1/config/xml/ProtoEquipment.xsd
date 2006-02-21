@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: ProtoEquipment.xsd,v 1.7.2.1 2006/02/14 00:23:00 arseniy Exp $
+			$Id: ProtoEquipment.xsd,v 1.7.2.2 2006/02/21 15:32:41 arseniy Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -31,7 +31,7 @@
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
 				<xsd:sequence>
-					<xsd:element name = "typeId" type = "general:XmlIdentifier"/>
+					<xsd:element name = "equipmentTypeId" type = "general:XmlIdentifier"/>
 					<xsd:element name = "name">
 						<xsd:simpleType>
 							<xsd:restriction base = "xsd:string">
