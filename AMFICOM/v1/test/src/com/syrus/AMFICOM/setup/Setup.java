@@ -1,5 +1,5 @@
 /*
- * $Id: Setup.java,v 1.1.2.2 2006/02/17 15:54:32 arseniy Exp $
+ * $Id: Setup.java,v 1.1.2.3 2006/02/21 15:54:37 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,12 @@ import junit.framework.TestSuite;
 
 import com.syrus.AMFICOM.administration.SetupCreateSysUser;
 import com.syrus.AMFICOM.administration.SetupDomain;
+import com.syrus.AMFICOM.administration.SetupMCM;
 import com.syrus.AMFICOM.administration.SetupServer;
+import com.syrus.AMFICOM.administration.SetupServerProcess;
 import com.syrus.AMFICOM.administration.SetupSystemUser;
+import com.syrus.AMFICOM.configuration.SetupEquipmentType;
+import com.syrus.AMFICOM.configuration.SetupPortType;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.SQLCommonTest;
 import com.syrus.AMFICOM.general.SetupDataType;
@@ -22,7 +26,7 @@ import com.syrus.AMFICOM.general.SetupMeasurementUnit;
 import com.syrus.AMFICOM.reflectometry.SetupParameterType;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/17 15:54:32 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/02/21 15:54:37 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -51,22 +55,19 @@ public final class Setup extends TestCase {
 
 		//-Create users for server processes and processes themselves.
 		databaseCommonTest.addTest(new SetupSystemUser("testCreate"));
+		databaseCommonTest.addTest(new SetupServerProcess("testCreate"));
+		databaseCommonTest.addTest(new SetupMCM("testCreate"));
+
+		//-Create configuration objects.
+		databaseCommonTest.addTest(new SetupEquipmentType("testCreate"));
+		databaseCommonTest.addTest(new SetupPortType("testCreate"));
 
 		//-Create parameter types
 		databaseCommonTest.addTest(new SetupParameterType("testCreate"));
 
-//		sqlCommonTest.addTest(new TestEquipmentType("testCreateAll"));
 //		sqlCommonTest.addTest(new TestMeasurementType("testCreateAll"));
 //		sqlCommonTest.addTest(new TestAnalysisType("testCreateAll"));
 //		sqlCommonTest.addTest(new TestModelingType("testCreateAll"));
-//
-//		//-Create users for server processes and processes themself.
-//		databaseCommonTest.addTest(new TestSystemUser("testCreateServerProcessUsers"));
-//		databaseCommonTest.addTest(new TestServerProcess("testCreateAll"));
-//
-//		//-Create users for MCM and MCMs itself.
-//		databaseCommonTest.addTest(new TestSystemUser("testCreateMCMUsers"));
-//		databaseCommonTest.addTest(new TestMCM("testCreateInstance"));
 //
 //		//-Create configuration objects.
 //		databaseCommonTest.addTest(new TestPortType("testCreateInstance"));
