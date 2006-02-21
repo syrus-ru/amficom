@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUser.java,v 1.40 2005/12/17 12:45:00 arseniy Exp $
+* $Id: SystemUser.java,v 1.41 2006/02/21 12:02:09 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/12/17 12:45:00 $
+ * @version $Revision: 1.41 $, $Date: 2006/02/21 12:02:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -92,6 +92,34 @@ public final class SystemUser extends StorableObject<SystemUser>
 	}
 
 	/**
+	 * Create System Administrator
+	 * This method is only need on system installation to create the first system administrator.
+	 * Normally, only installation procedure should call it.
+	 * Other users must be created using {@link SystemUser#createInstance(Identifier, String, SystemUserSort, String, String)}.
+	 * @param login
+	 * @param name
+	 * @param description
+	 * @return instance of SystemUser, SystemUserSort._USER_SORT_SYSADMIN
+	 * @throws CreateObjectException
+	 */
+	protected static SystemUser createSysAdminInstance(final String login, final String name, final String description) throws CreateObjectException {
+		try {
+			final Identifier generatedIdentifier = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SYSTEMUSER_CODE);
+			final SystemUser systemUser = new SystemUser(generatedIdentifier,
+					generatedIdentifier,
+					StorableObjectVersion.INITIAL_VERSION,
+					login,
+					SystemUserSort._USER_SORT_SYSADMIN,
+					name,
+					description);
+			assert systemUser.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			return systemUser;
+		} catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
+		}
+	}
+
+	/**
 	 * client constructor
 	 * @param creatorId
 	 * @param login
@@ -105,10 +133,13 @@ public final class SystemUser extends StorableObject<SystemUser>
 			final SystemUserSort sort,
 			final String name,
 			final String description) throws CreateObjectException {
+		if (creatorId == null || login == null || sort == null || name == null) {
+			throw new IllegalArgumentException(ErrorMessages.NON_NULL_EXPECTED);
+		}
+
 		try {
-			final Identifier generatedIdentifier = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SYSTEMUSER_CODE);
-			final SystemUser systemUser = new SystemUser(generatedIdentifier,
-					creatorId != null ? creatorId : generatedIdentifier,
+			final SystemUser systemUser = new SystemUser(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SYSTEMUSER_CODE),
+					creatorId,
 					StorableObjectVersion.INITIAL_VERSION,
 					login,
 					sort.value(),
@@ -120,8 +151,7 @@ public final class SystemUser extends StorableObject<SystemUser>
 			systemUser.markAsChanged();
 
 			return systemUser;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
