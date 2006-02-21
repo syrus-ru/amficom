@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.108 2006/02/21 14:18:54 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.109 2006/02/21 15:20:35 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.108 $, $Date: 2006/02/21 14:18:54 $
+ * @version $Revision: 1.109 $, $Date: 2006/02/21 15:20:35 $
  * @module
  */
 public class ModelTraceManager
@@ -1267,6 +1267,7 @@ implements DataStreamable, Cloneable
 	 * <li> Обеспечивает, чтобы DA-пороги не убывали (а точнее, чтобы
 	 * каждый DY-порог был не меньше, чем любой DA-порог слева от него,
 	 * кроме DA-порога в самом начале р/г)
+	 * <li> Расширяет DA на фронте DZ и спаде EOT до +10..15 / -50..75 дБ дБ  
 	 * </ul>
 	 */
 	private void postProcessThresholds() {
@@ -1290,6 +1291,19 @@ implements DataStreamable, Cloneable
 			if (th != this.tDY[0] && th.getType() == ThreshDY.Type.dA) {
 				acc.extendUpto(th);
 			}
+		}
+
+		/*
+		 * Расширяем пороги на начало DZ и хвост EOT
+		 */
+		acc.setToZero();
+		acc.setDY(Thresh.SOFT_UP, 10.0);
+		acc.setDY(Thresh.HARD_UP, 15.0);
+		acc.setDY(Thresh.SOFT_DOWN, -50.0);
+		acc.setDY(Thresh.HARD_DOWN, -75.0);
+		if (this.tDY.length > 0) {
+			this.tDY[0].extendUpto(acc);
+			this.tDY[this.tDY.length - 1].extendUpto(acc);
 		}
 	}
 }

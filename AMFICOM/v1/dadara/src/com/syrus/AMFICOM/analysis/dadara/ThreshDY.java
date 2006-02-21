@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.25 2006/02/21 14:18:54 saa Exp $
+ * $Id: ThreshDY.java,v 1.26 2006/02/21 15:20:35 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.25 $, $Date: 2006/02/21 14:18:54 $
+ * @version $Revision: 1.26 $, $Date: 2006/02/21 15:20:35 $
  * @module
  */
 public class ThreshDY extends Thresh {
@@ -164,6 +164,12 @@ public class ThreshDY extends Thresh {
 			if (this.values[key] * sign < that.values[key] * sign) {
 				this.values[key] = that.values[key];
 			}
+		}
+	}
+
+	public void setToZero() {
+		for (int key = 0; key < 4; key++) {
+			this.values[key] = 0.0;
 		}
 	}
 
