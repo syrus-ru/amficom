@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.47 2006/02/21 10:50:32 arseniy Exp $
+ * $Id: event.idl,v 1.48 2006/02/21 12:53:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@
 
 #include "general.idl"
 #include "reflectometry.idl"
-#include "measurement.idl"
 
 #ifndef MY_COMPILER_IS_NOT_BRAINDEAD
 module com {
