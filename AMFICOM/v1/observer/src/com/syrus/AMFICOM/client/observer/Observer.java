@@ -1,5 +1,5 @@
 /*-
- * $Id: Observer.java,v 1.2 2005/10/27 10:53:57 bass Exp $
+ * $Id: Observer.java,v 1.3 2006/02/21 14:07:43 stas Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.client.model.DefaultObserverApplicationModelFactory;
 
 /**
  * @author krupenn
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/10/27 10:53:57 $
+ * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2006/02/21 14:07:43 $
  * @module observer
  */
 final class Observer extends AbstractApplication {
@@ -28,7 +28,7 @@ final class Observer extends AbstractApplication {
 
 	@Override
 	protected void init() {
-		super.aContext.setApplicationModel(new DefaultObserverApplicationModelFactory().create());
+		super.aContext.setApplicationModel(new DefaultObserverApplicationModelFactory().create(super.aContext));
 		super.startMainFrame(new ObserverMainFrame(this.aContext), Toolkit.getDefaultToolkit().getImage("images/main/observe_mini.gif"));
 	}
 

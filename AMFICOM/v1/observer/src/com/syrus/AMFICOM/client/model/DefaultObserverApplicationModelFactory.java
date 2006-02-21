@@ -7,8 +7,9 @@ public class DefaultObserverApplicationModelFactory extends
 		// empty
 	}
 
-	public ApplicationModel create() {
-		ApplicationModel aModel = super.create();
+	@Override
+	public ApplicationModel create(ApplicationContext aContext) {
+		ApplicationModel aModel = super.create(aContext);
 		
 		aModel.setVisible(ObserverApplicationModel.MENU_OPEN, false);
 		aModel.setVisible(ObserverApplicationModel.MENU_OPEN_SCHEME, false);
