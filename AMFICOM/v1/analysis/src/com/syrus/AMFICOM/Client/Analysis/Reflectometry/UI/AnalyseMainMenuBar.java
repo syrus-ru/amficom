@@ -162,8 +162,7 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 //		menuTrace.add(menuNetStudy);
 		menuTrace.addSeparator();
 		menuTrace.add(menuMakeCurrentTracePrimary);
-		menuTrace.add(menuTraceSavePES);
-
+		
 		menuTestSetup.setText(LangModelAnalyse.getString("menuTestSetup"));
 		menuTestSetup.setName(AnalyseApplicationModel.MENU_MEASUREMENTSETUP);
 //		menuAnalyseUpload.setText(LangModelAnalyse.getString("menuAnalyseUpload"));
@@ -189,6 +188,8 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 		menuTestSetup.addSeparator();
 		menuTestSetup.add(menuSaveTestSetup);
 		menuTestSetup.add(menuSaveTestSetupAs);
+		menuTestSetup.addSeparator();
+		menuTestSetup.add(menuTraceSavePES);
 
 //		menuOptions.setText(LangModelAnalyse.getString("menuOptions"));
 //		menuOptions.setName("menuOptions");
