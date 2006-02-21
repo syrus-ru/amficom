@@ -26,6 +26,8 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 	private boolean move_marker = false;
 	private static final float marker_w = 1f; // width of marker in pixels
 	public static Stroke MARKER_STROKE = new BasicStroke(marker_w);
+	private static final float alarm_marker_w = 1f; // width of marker in pixels
+	public static Stroke ALARM_MARKER_STROKE = new BasicStroke(alarm_marker_w);
 
 	protected boolean useXORMode = true;
 	protected boolean paintMarkerXOR = false;
@@ -258,7 +260,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 	{
 		int jh =  getHeight();
 		g.setColor(m.getColor());
-		((Graphics2D) g).setStroke(MARKER_STROKE);
+		((Graphics2D) g).setStroke(m instanceof AlarmMarker ? ALARM_MARKER_STROKE : MARKER_STROKE);
 		g.drawLine(index2coord(m.pos), 0, index2coord(m.pos), jh);
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 		g.drawString(m.name, index2coord(m.pos)+2+(int)marker_w,10);

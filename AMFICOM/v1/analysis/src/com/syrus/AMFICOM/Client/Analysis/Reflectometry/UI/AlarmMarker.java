@@ -23,6 +23,6 @@ class AlarmMarker extends Marker
 	@Override
 	public Color getColor()
 	{
-		return Color.pink;
+		return Color.RED;
 	}
 }
