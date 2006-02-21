@@ -1,5 +1,5 @@
 /*
- * $Id: TestSqlNotTooLong.java,v 1.3 2006/02/16 15:33:46 saa Exp $
+ * $Id: TestSqlNotTooLong.java,v 1.4 2006/02/21 11:30:27 saa Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2006/02/16 15:33:46 $
+ * @version $Revision: 1.4 $, $Date: 2006/02/21 11:30:27 $
  * @author $Author: saa $
  * @module test
  */
@@ -44,7 +44,7 @@ public final class TestSqlNotTooLong extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testHostName() {
+	private void verifyHostName() {
 		final String dbHostName = ApplicationProperties.getString(
 				SQLCommonTest.KEY_DB_HOST_NAME, Application.getInternetAddress());
 		final String dbSid = ApplicationProperties.getString(
@@ -52,11 +52,16 @@ public final class TestSqlNotTooLong extends TestCase {
 		final String requiredDbHostName = "mongol";
 		final String requiredDbSid = "mongol";
 
-		assertEquals("DbHostName should be " + requiredDbHostName, requiredDbHostName, dbHostName);
-		assertEquals("DbSid should be " + requiredDbSid, requiredDbSid, dbSid);
+		if (!requiredDbHostName.equals(dbHostName)) {
+			throw new RuntimeException("DbHostName should be " + requiredDbHostName);
+		}
+		if (!requiredDbSid.equals(dbSid)) {
+			throw new RuntimeException("DbSid should be " + requiredDbSid);
+		}
 	}
 
 	public void testDbQuery() throws SQLException, InterruptedException {
+		verifyHostName();
 
 		String query = "SELECT id , TO_CHAR(created, 'YYYYMMDD HH24MISS') created , TO_CHAR(modified, 'YYYYMMDD HH24MISS') modified , creator_id , modifier_id , version , type_code , monitored_element_id , measurement_id , name , criteria_set_id FROM Analysis WHERE 1=1 AND  (  ( measurement_id IN  ( 145241087982707182 )  )  )";
 
