@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.110.2.4 2006/02/21 14:37:58 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.110.2.5 2006/02/21 15:34:52 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,17 @@
 package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
+import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
@@ -17,6 +28,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.corba.IdlEquipmentType;
 import com.syrus.AMFICOM.configuration.corba.IdlEquipmentTypeHelper;
+import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -24,13 +36,23 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
+import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.util.Log;
+import com.syrus.util.Shitlet;
+import com.syrus.util.transport.xml.XmlConversionException;
+import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.110.2.4 $, $Date: 2006/02/21 14:37:58 $
+ * @version $Revision: 1.110.2.5 $, $Date: 2006/02/21 15:34:52 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -52,7 +74,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 	BUG_136("bug136");
 
  */
-public final class EquipmentType extends StorableObjectType<EquipmentType> {
+public final class EquipmentType extends StorableObjectType<EquipmentType> implements Namable, XmlTransferableObject<XmlEquipmentType> {
 	private static final long serialVersionUID = 361767579292639873L;
 
 	EquipmentType(final Identifier id,
@@ -78,11 +100,24 @@ public final class EquipmentType extends StorableObjectType<EquipmentType> {
 		}
 	}
 
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param importType
+	 * @param created
+	 * @param creatorId
+	 * @throws IdentifierGenerationException
+	 */
+	private EquipmentType(final XmlIdentifier id, final String importType, final Date created, final Identifier creatorId)
+			throws IdentifierGenerationException {
+		super(id, importType, EQUIPMENT_TYPE_CODE, created, creatorId);
+	}
+
 	public static EquipmentType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description) throws CreateObjectException {
-		if (creatorId == null || codename == null
-				|| description == null) {
+		if (creatorId == null || codename == null || description == null) {
 			throw new IllegalArgumentException(NON_NULL_EXPECTED);
 		}
 
@@ -103,6 +138,93 @@ public final class EquipmentType extends StorableObjectType<EquipmentType> {
 		}
 	}
 
+	/**
+	 * Create new instance on import/export from XML
+	 * @param creatorId
+	 * @param importType
+	 * @param xmlEquipmentType
+	 * @return new instance
+	 * @throws CreateObjectException
+	 */
+	public static EquipmentType createInstance(final Identifier creatorId,
+			final String importType,
+			final XmlEquipmentType xmlEquipmentType) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
+		try {
+			final String newCodename = xmlEquipmentType.getCodename();
+			final Set<EquipmentType> equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(new TypicalCondition(newCodename,
+					OPERATION_EQUALS,
+					EQUIPMENT_TYPE_CODE,
+					COLUMN_CODENAME),
+					true);
+
+			assert equipmentTypes.size() <= 1;
+
+			final XmlIdentifier xmlId = xmlEquipmentType.getId();
+			final Identifier expectedId = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+
+			EquipmentType equipmentType;
+			if (equipmentTypes.isEmpty()) {
+				/*
+				 * No objects found with the specified codename.
+				 * Continue normally.
+				 */
+				final Date created = new Date();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
+					equipmentType = new EquipmentType(xmlId, importType, created, creatorId);
+				} else {
+					equipmentType = StorableObjectPool.getStorableObject(expectedId, true);
+					if (equipmentType == null) {
+						Log.debugMessage("WARNING: expected counterpart (" + expectedId + ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + VOID_IDENTIFIER + ") do not match; expected one will be deleted", WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						equipmentType = new EquipmentType(xmlId, importType, created, creatorId);
+					} else {
+						final String oldCodename = equipmentType.getCodename();
+						if (!oldCodename.equals(newCodename)) {
+							Log.debugMessage("WARNING: " + expectedId + " will change its codename from ``"
+									+ oldCodename + "'' to ``" + newCodename + "''", WARNING);
+						}
+					}
+				}
+			} else {
+				equipmentType = equipmentTypes.iterator().next();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
+					equipmentType.insertXmlMapping(xmlId, importType);
+				} else {
+					final Identifier actualId = equipmentType.getId();
+					if (!actualId.equals(expectedId)) {
+						/*
+						 * Arghhh, no match.
+						 */
+						Log.debugMessage("WARNING: expected counterpart (" + expectedId + ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + actualId + ") do not match; expected one will be deleted", WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						equipmentType.insertXmlMapping(xmlId, importType);
+					}
+				}
+			}
+
+			equipmentType.fromXmlTransferable(xmlEquipmentType, importType);
+			assert equipmentType.isValid() : OBJECT_BADLY_INITIALIZED;
+			equipmentType.markAsChanged();
+			return equipmentType;
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		} catch (final XmlConversionException xce) {
+			throw new CreateObjectException(xce);
+		}
+	}
+
 	@Override
 	public IdlEquipmentType getIdlTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -118,12 +240,45 @@ public final class EquipmentType extends StorableObjectType<EquipmentType> {
 				super.description != null ? super.description : "");
 	}
 
+	@Shitlet
+	public void getXmlTransferable(final XmlEquipmentType equipmentType, final String importType, final boolean usePool)
+			throws XmlConversionException {
+		try {
+			this.id.getXmlTransferable(equipmentType.addNewId(), importType);
+			equipmentType.setCodename(super.codename);
+			if (equipmentType.isSetDescription()) {
+				equipmentType.unsetDescription();
+			}
+			if (super.description.length() != 0) {
+				equipmentType.setDescription(super.description);
+			}
+
+			XmlComplementorRegistry.complementStorableObject(equipmentType, EQUIPMENT_TYPE_CODE, importType, EXPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
+		}
+	}
+
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlEquipmentType idlEquipmentType = (IdlEquipmentType) transferable;
 		super.fromTransferable(idlEquipmentType, idlEquipmentType.codename, idlEquipmentType.description);
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+	}
+
+	@Shitlet
+	public void fromXmlTransferable(final XmlEquipmentType equipmentType, final String importType) throws XmlConversionException {
+		try {
+			XmlComplementorRegistry.complementStorableObject(equipmentType, EQUIPMENT_TYPE_CODE, importType, PRE_IMPORT);
+
+			super.codename = equipmentType.getCodename();
+			super.description = equipmentType.isSetDescription() ? equipmentType.getDescription() : "";
+
+			XmlComplementorRegistry.complementStorableObject(equipmentType, EQUIPMENT_TYPE_CODE, importType, POST_IMPORT);
+		} catch (final ApplicationException ae) {
+			throw new XmlConversionException(ae);
+		}
 	}
 
 	public String getName() {
