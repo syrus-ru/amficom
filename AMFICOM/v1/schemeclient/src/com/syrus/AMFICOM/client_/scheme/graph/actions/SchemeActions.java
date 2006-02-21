@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.66 2006/02/15 12:58:34 stas Exp $
+ * $Id: SchemeActions.java,v 1.67 2006/02/21 08:04:23 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -103,7 +103,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.66 $, $Date: 2006/02/15 12:58:34 $
+ * @version $Revision: 1.67 $, $Date: 2006/02/21 08:04:23 $
  * @module schemeclient
  */
 
@@ -1510,10 +1510,10 @@ public class SchemeActions {
 		for (Iterator it1 = ports.iterator(), it2 = threads.iterator(); it1.hasNext() && it2.hasNext();) {
 			SchemePort sport = (SchemePort)it1.next();
 			SchemeCableThread thread = (SchemeCableThread)it2.next();
-			if (is_source) { // is_source - is for cable port, so scheme port inside other 
-				thread.setTargetSchemePort(sport);
-			} else {
+			if (is_source) { 
 				thread.setSourceSchemePort(sport);
+			} else {
+				thread.setTargetSchemePort(sport);
 			}
 		}
 	}
