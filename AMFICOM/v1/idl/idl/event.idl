@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.46 2006/02/20 17:13:00 arseniy Exp $
+ * $Id: event.idl,v 1.47 2006/02/21 10:50:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -320,12 +320,12 @@ module eventv2 {
 
 		valuetype IdlMeasurementCompletedEvent : general::corba::IdlStorableObject, IdlMeasurementStatusChangedEvent {
 			private general::corba::IdlIdentifier measurementId;
-			private double d;
+			private double quality;
 
-			double getD();
+			double getQuality();
 
 			factory init(in general::corba::IdlIdentifier measurementId,
-					in double d);
+					in double quality);
 		};
 
 

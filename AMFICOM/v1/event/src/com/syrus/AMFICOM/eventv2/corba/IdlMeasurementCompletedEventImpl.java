@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMeasurementCompletedEventImpl.java,v 1.1 2006/02/20 17:14:56 arseniy Exp $
+ * $Id: IdlMeasurementCompletedEventImpl.java,v 1.2 2006/02/21 10:50:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,21 +15,21 @@ import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2006/02/20 17:14:56 $
+ * @version $Revision: 1.2 $, $Date: 2006/02/21 10:50:32 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 final class IdlMeasurementCompletedEventImpl extends IdlMeasurementCompletedEvent {
-	private static final long serialVersionUID = -6120337769778030209L;
+	private static final long serialVersionUID = -8236403388373111017L;
 
 	IdlMeasurementCompletedEventImpl() {
 		//empty
 	}
 
-	IdlMeasurementCompletedEventImpl(final IdlIdentifier measurementId, final double d) {
+	IdlMeasurementCompletedEventImpl(final IdlIdentifier measurementId, final double quality) {
 		super.measurementId = measurementId;
-		super.d = d;
+		super.quality = quality;
 	}
 
 	public IdlIdentifier getMeasurementId() {
@@ -37,8 +37,8 @@ final class IdlMeasurementCompletedEventImpl extends IdlMeasurementCompletedEven
 	}
 
 	@Override
-	public double getD() {
-		return super.d;
+	public double getQuality() {
+		return super.quality;
 	}
 
 	public IdlEventType getType() {
