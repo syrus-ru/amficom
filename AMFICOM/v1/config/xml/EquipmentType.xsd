@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: EquipmentType.xsd,v 1.9.2.1 2006/02/21 14:44:43 arseniy Exp $
+			$Id: EquipmentType.xsd,v 1.9.2.2 2006/02/21 15:33:11 arseniy Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -30,9 +30,6 @@
 	<xsd:complexType name = "XmlEquipmentType" final = "#all">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObjectType">
-				<xsd:sequence>
-					<xsd:element name = "name" type = "xsd:string"/>
-				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
