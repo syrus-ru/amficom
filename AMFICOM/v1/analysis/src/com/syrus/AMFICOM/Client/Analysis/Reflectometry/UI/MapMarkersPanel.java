@@ -26,7 +26,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 	private boolean move_marker = false;
 	private static final float marker_w = 1f; // width of marker in pixels
 	public static Stroke MARKER_STROKE = new BasicStroke(marker_w);
-	private static final float alarm_marker_w = 1f; // width of marker in pixels
+	private static final float alarm_marker_w = 2f; // width of marker in pixels
 	public static Stroke ALARM_MARKER_STROKE = new BasicStroke(alarm_marker_w);
 
 	protected boolean useXORMode = true;
