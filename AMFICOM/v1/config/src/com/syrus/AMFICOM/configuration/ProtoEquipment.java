@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.26.2.3 2006/02/16 13:03:39 arseniy Exp $
+ * $Id: ProtoEquipment.java,v 1.26.2.4 2006/02/21 15:34:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.26.2.3 $, $Date: 2006/02/16 13:03:39 $
+ * @version $Revision: 1.26.2.4 $, $Date: 2006/02/21 15:34:21 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -224,7 +224,7 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 		try {
 			XmlComplementorRegistry.complementStorableObject(protoEquipment, PROTOEQUIPMENT_CODE, importType, PRE_IMPORT);
 	
-			this.typeId = Identifier.fromXmlTransferable(protoEquipment.getTypeId(), importType, MODE_THROW_IF_ABSENT);
+			this.typeId = Identifier.fromXmlTransferable(protoEquipment.getEquipmentTypeId(), importType, MODE_THROW_IF_ABSENT);
 	
 			this.name = protoEquipment.getName();
 			this.description = protoEquipment.isSetDescription()
@@ -281,7 +281,7 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 		try {
 			super.id.getXmlTransferable(protoEquipment.addNewId(), importType);
 
-			this.typeId.getXmlTransferable(protoEquipment.addNewTypeId(), importType);
+			this.typeId.getXmlTransferable(protoEquipment.addNewEquipmentTypeId(), importType);
 
 			protoEquipment.setName(this.name);
 			if (protoEquipment.isSetDescription()) {
