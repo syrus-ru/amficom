@@ -401,8 +401,9 @@ public class ThresholdsPanel extends MapMarkersPanel
 
 	private boolean isToPaintAllThresholds()
 	{
-		return parent instanceof ThresholdsLayeredPanel
-			&& ((ThresholdsLayeredPanel )parent).hasShowThresholdButtonSelected();
+		return (parent instanceof ThresholdsLayeredPanel
+			&& ((ThresholdsLayeredPanel )parent).hasShowThresholdButtonSelected() 
+			|| parent instanceof MapThresholdsLayeredPanel);
 	}
 
 	/**
