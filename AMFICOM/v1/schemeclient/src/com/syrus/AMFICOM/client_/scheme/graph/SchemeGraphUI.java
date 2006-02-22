@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.30 2006/02/15 12:18:10 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.31 2006/02/22 11:59:26 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.30 $, $Date: 2006/02/15 12:18:10 $
+ * @version $Revision: 1.31 $, $Date: 2006/02/22 11:59:26 $
  * @module schemeclient
  */
 
@@ -543,7 +543,15 @@ public class SchemeGraphUI extends GPGraphUI {
 		}
 	}
 
-//	@Override
+	@Override
+	public void paintCell(Graphics g, CellView view, Rectangle bounds, boolean preview) {
+		try {
+			super.paintCell(g, view, bounds, preview);
+		} catch (NullPointerException e) {
+			Log.errorMessage(e);
+		}
+	}
+
 	@Override
 	protected void paintBackground(Graphics g) {
 //		super.paintBackground(g);
