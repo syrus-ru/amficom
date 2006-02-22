@@ -53,11 +53,11 @@ public class MapThresholdsLayeredPanel extends MapMarkersLayeredPanel
 	}
 	@Override
 	public boolean modelShowDesired() {
-		return Heap.getPrimaryTrace().hasAnalysisLoaded();
+		return super.modelShowDesired() && Heap.getPrimaryTrace().hasAnalysisLoaded();
 	}
 	@Override
 	public boolean eventsShowDesired() {
-		return Heap.getPrimaryTrace().hasAnalysisLoaded();
+		return super.eventsShowDesired() && Heap.getPrimaryTrace().hasAnalysisLoaded();
 	}
 }
 
