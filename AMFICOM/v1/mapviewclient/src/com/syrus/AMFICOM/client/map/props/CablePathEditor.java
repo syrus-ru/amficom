@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathEditor.java,v 1.21 2006/02/15 12:54:38 stas Exp $$
+ * $$Id: CablePathEditor.java,v 1.22 2006/02/22 13:49:02 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2006/02/15 12:54:38 $
+ * @version $Revision: 1.22 $, $Date: 2006/02/22 13:49:02 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -292,6 +293,7 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 		constraints.ipady = 0;
 		this.jPanel.add(this.descLabel, constraints);
 
+		JScrollPane descrPane = new JScrollPane(this.descTextArea);
 		constraints.gridx =  1;
 		constraints.gridy = 7;
 		constraints.gridwidth = 2;
@@ -303,13 +305,15 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 		constraints.insets = new Insets(0, 0, 0, 0);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.jPanel.add(this.descTextArea, constraints);
+		this.jPanel.add(descrPane, constraints);
 
 		this.nameTextField.setEnabled(false);
 		this.startComboBox.setEnabled(false);
 		this.endComboBox.setEnabled(false);
 		this.topologicalLengthTextField.setEnabled(false);
-
+		this.physicalLengthTextField.setEnabled(false);
+		this.opticalLengthTextField.setEnabled(false);
+		
 		super.addToUndoableListener(this.physicalLengthTextField);
 		super.addToUndoableListener(this.opticalLengthTextField);
 		super.addToUndoableListener(this.descTextArea);
@@ -352,9 +356,6 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 			this.startComboBox.setSelectedItem(this.cablePath.getStartNode());
 			this.endComboBox.addItem(this.cablePath.getEndNode());
 			this.endComboBox.setSelectedItem(this.cablePath.getEndNode());
-			
-			this.physicalLengthTextField.setEditable(false);
-			this.opticalLengthTextField.setEditable(false);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MeasurementPathEditor.java,v 1.21 2006/02/15 11:27:23 stas Exp $$
+ * $$Id: MeasurementPathEditor.java,v 1.22 2006/02/22 13:49:02 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,14 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
@@ -32,7 +34,7 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2006/02/15 11:27:23 $
+ * @version $Revision: 1.22 $, $Date: 2006/02/22 13:49:02 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -289,6 +291,7 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 		constraints.ipady = 0;
 		this.jPanel.add(this.descLabel, constraints);
 
+		JScrollPane descrPane = new JScrollPane(this.descTextArea);
 		constraints.gridx =  1;
 		constraints.gridy = 7;
 		constraints.gridwidth = 2;
@@ -300,12 +303,14 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 		constraints.insets = new Insets(0, 0, 0, 0);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.jPanel.add(this.descTextArea, constraints);
+		this.jPanel.add(descrPane, constraints);
 
 		this.nameTextField.setEnabled(false);
 		this.startComboBox.setEnabled(false);
 		this.endComboBox.setEnabled(false);
 		this.topologicalLengthTextField.setEnabled(false);
+		this.physicalLengthTextField.setEnabled(false);
+		this.opticalLengthTextField.setEnabled(false);
 
 		super.addToUndoableListener(this.physicalLengthTextField);
 		super.addToUndoableListener(this.opticalLengthTextField);
@@ -324,24 +329,21 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 
 		if(this.measurementPath == null) {
 			this.nameTextField.setEnabled(false);
-			this.nameTextField.setText(""); //$NON-NLS-1$
+			this.nameTextField.setText(MapEditorResourceKeys.EMPTY_STRING);
 			this.descTextArea.setEnabled(false);
-			this.descTextArea.setText(""); //$NON-NLS-1$
+			this.descTextArea.setText(MapEditorResourceKeys.EMPTY_STRING);
 
-			this.topologicalLengthTextField.setText(""); //$NON-NLS-1$
-			this.physicalLengthTextField.setText(""); //$NON-NLS-1$
-			this.opticalLengthTextField.setText(""); //$NON-NLS-1$
+			this.topologicalLengthTextField.setText(MapEditorResourceKeys.EMPTY_STRING);
+			this.physicalLengthTextField.setText(MapEditorResourceKeys.EMPTY_STRING);
+			this.opticalLengthTextField.setText(MapEditorResourceKeys.EMPTY_STRING);
 		}
 		else {
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.measurementPath.getName());
 			try {
-				this.topologicalLengthTextField.setText(String
-						.valueOf(this.measurementPath.getLengthLt()));
-				this.physicalLengthTextField.setText(String
-						.valueOf(this.measurementPath.getLengthLf()));
-				this.opticalLengthTextField.setText(String
-						.valueOf(this.measurementPath.getLengthLo()));
+				this.topologicalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.measurementPath.getLengthLt()));
+				this.physicalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.measurementPath.getLengthLf()));
+				this.opticalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.measurementPath.getLengthLo()));
 				this.descTextArea.setEnabled(true);
 			} catch(Exception e) {
 				Log.errorMessage(e);
