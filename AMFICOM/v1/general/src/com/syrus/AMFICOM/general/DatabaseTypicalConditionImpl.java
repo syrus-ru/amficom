@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.14 2005/12/01 09:13:14 bass Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.14.2.1 2006/02/22 15:46:34 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,12 +10,13 @@ package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.CharacteristicTypeWrapper.COLUMN_SORT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/12/01 09:13:14 $
- * @author $Author: bass $
+ * @version $Revision: 1.14.2.1 $, $Date: 2006/02/22 15:46:34 $
+ * @author $Author: arseniy $
  * @module general
  */
 final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -46,10 +47,12 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 	@Override
 	protected boolean isKeySupported(final String key) {
 		switch (this.condition.getEntityCode().shortValue()) {
-		case CHARACTERISTIC_TYPE_CODE:
-			return key == COLUMN_CODENAME || key == COLUMN_SORT;
-		default:
-			return false;
+			case PARAMETER_TYPE_CODE:
+				return key == COLUMN_CODENAME;
+			case CHARACTERISTIC_TYPE_CODE:
+				return key == COLUMN_CODENAME || key == COLUMN_SORT;
+			default:
+				return false;
 		}
 	}
 }
