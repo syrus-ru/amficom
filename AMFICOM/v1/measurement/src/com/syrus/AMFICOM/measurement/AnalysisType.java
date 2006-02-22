@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisType.java,v 1.107.2.3 2006/02/14 01:26:43 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.107.2.4 2006/02/22 08:36:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisTypeHelper;
 
 /**
- * @version $Revision: 1.107.2.3 $, $Date: 2006/02/14 01:26:43 $
+ * @version $Revision: 1.107.2.4 $, $Date: 2006/02/22 08:36:55 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -46,7 +46,7 @@ public final class AnalysisType extends ActionType<AnalysisType> {
 
 	public static AnalysisType createInstance(final Identifier creatorId,
 			final String codename,
-			final String description) throws ApplicationException {
+			final String description) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null) {
 			throw new IllegalArgumentException(NON_NULL_EXPECTED);
 		}
