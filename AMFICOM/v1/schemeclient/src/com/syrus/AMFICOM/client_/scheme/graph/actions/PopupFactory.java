@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.25 2006/02/17 13:08:09 stas Exp $
+ * $Id: PopupFactory.java,v 1.26 2006/02/22 12:00:26 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -123,9 +123,11 @@ public class PopupFactory {
 				final SchemeElement se = group.getSchemeElement();
 				if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 					pop.add(createOpenSchemeMenuItem(aContext, se.getScheme(false)));
-					JMenuItem item2 = createRefreshSchemeElementMenuItem(pane.getGraph(), se);
-					if (item2 != null) {
-						pop.add(item2);
+					if (editable) {
+						JMenuItem item2 = createRefreshSchemeElementMenuItem(pane.getGraph(), se);
+						if (item2 != null) {
+							pop.add(item2);
+						}
 					}
 					if (editable && e.isControlDown()) {
 						pop.addSeparator();
@@ -137,9 +139,11 @@ public class PopupFactory {
 					if (item != null) {
 						pop.add(item);
 					}
-					JMenuItem item2 = createRefreshSchemeElementMenuItem(pane.getGraph(), se);
-					if (item2 != null) {
-						pop.add(item2);
+					if (editable) {
+						JMenuItem item2 = createRefreshSchemeElementMenuItem(pane.getGraph(), se);
+						if (item2 != null) {
+							pop.add(item2);
+						}
 					}
 					if (editable && e.isControlDown()) {
 						pop.add(createCutMenuItem(pane));
