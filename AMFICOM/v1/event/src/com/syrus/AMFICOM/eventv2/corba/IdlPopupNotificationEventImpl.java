@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPopupNotificationEventImpl.java,v 1.6 2005/12/06 09:42:28 bass Exp $
+ * $Id: IdlPopupNotificationEventImpl.java,v 1.7 2006/02/22 08:44:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/12/06 09:42:28 $
+ * @version $Revision: 1.7 $, $Date: 2006/02/22 08:44:04 $
  * @module event
  */
 final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
@@ -37,7 +37,8 @@ final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
 			final double mismatchOpticalDistance,
 			final double mismatchPhysicalDistance,
 			final long mismatchCreated,
-			final IdlSeverity severity) {
+			final IdlSeverity severity,
+			final IdlIdentifier affectedPathElementId) {
 		final IdlIdentifier voidId = VOID_IDENTIFIER.getIdlTransferable();
 		this.id = voidId;
 		this.creatorId = voidId;
@@ -51,6 +52,7 @@ final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
 		this.mismatchPhysicalDistance = mismatchPhysicalDistance;
 		this.mismatchCreated = mismatchCreated;
 		this.severity = severity;
+		this.affectedPathElementId = affectedPathElementId;
 	}
 
 	/**
@@ -120,6 +122,14 @@ final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
 	@Override
 	public IdlSeverity getSeverity() {
 		return this.severity;
+	}
+
+	/**
+	 * @see IdlPopupNotificationEvent#getAffectedPathElementId()
+	 */
+	@Override
+	public IdlIdentifier getAffectedPathElementId() {
+		return this.affectedPathElementId;
 	}
 
 	/**

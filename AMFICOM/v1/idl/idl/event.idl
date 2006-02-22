@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.48 2006/02/21 12:53:10 arseniy Exp $
+ * $Id: event.idl,v 1.49 2006/02/22 08:44:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -290,6 +290,7 @@ module eventv2 {
 			private double mismatchPhysicalDistance;
 			private long long mismatchCreated;
 			private reflectometry::corba::IdlSeverity severity;
+			private general::corba::IdlIdentifier affectedPathElementId;
 
 			general::corba::IdlIdentifier getTargetUserId();
 			general::corba::IdlIdentifier getResultId();
@@ -297,6 +298,7 @@ module eventv2 {
 			double getMismatchPhysicalDistance();
 			long long getMismatchCreated();
 			reflectometry::corba::IdlSeverity getSeverity();
+			general::corba::IdlIdentifier getAffectedPathElementId();
 
 			factory init(in general::corba::IdlIdentifier targetUserId,
 					in wstring message,
@@ -304,7 +306,8 @@ module eventv2 {
 					in double mismatchOpticalDistance,
 					in double mismatchPhysicalDistance,
 					in long long mismatchCreated,
-					in reflectometry::corba::IdlSeverity severity);
+					in reflectometry::corba::IdlSeverity severity,
+					in general::corba::IdlIdentifier affectedPathElementId);
 		};
 
 		abstract valuetype IdlMeasurementStatusChangedEvent : IdlEvent {

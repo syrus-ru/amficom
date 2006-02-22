@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupNotificationEvent.java,v 1.5 2005/11/17 16:21:55 bass Exp $
+ * $Id: PopupNotificationEvent.java,v 1.6 2006/02/22 08:44:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/11/17 16:21:55 $
+ * @version $Revision: 1.6 $, $Date: 2006/02/22 08:44:04 $
  * @module event
  */
 public interface PopupNotificationEvent extends NotificationEvent<IdlPopupNotificationEvent> {
@@ -48,4 +48,10 @@ public interface PopupNotificationEvent extends NotificationEvent<IdlPopupNotifi
 	 *         notification event.
 	 */
 	Severity getSeverity();
+
+	/**
+	 * @return identifier of the {@code PathElement} affected. It&apos;s
+	 *         guaranteed to be both non-{@code null} and non-void.
+	 */
+	Identifier getAffectedPathElementId();
 }

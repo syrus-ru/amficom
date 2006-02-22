@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultPopupNotificationEvent.java,v 1.15 2005/12/07 17:16:25 bass Exp $
+ * $Id: DefaultPopupNotificationEvent.java,v 1.16 2006/02/22 08:44:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/12/07 17:16:25 $
+ * @version $Revision: 1.16 $, $Date: 2006/02/22 08:44:04 $
  * @module event
  */
 public final class DefaultPopupNotificationEvent extends
@@ -62,6 +62,11 @@ public final class DefaultPopupNotificationEvent extends
 	 */
 	private Severity severity;
 
+	/**
+	 * @serial include
+	 */
+	private Identifier affectedPathElementId;
+
 	private DefaultPopupNotificationEvent(
 			final IdlPopupNotificationEvent popupNotificationEvent) {
 		this.targetUserId = Identifier.valueOf(
@@ -75,6 +80,8 @@ public final class DefaultPopupNotificationEvent extends
 				popupNotificationEvent.getMismatchPhysicalDistance();
 		this.mismatchCreated = new Date(popupNotificationEvent.getMismatchCreated());
 		this.severity = Severity.valueOf(popupNotificationEvent.getSeverity());
+		this.affectedPathElementId = Identifier.valueOf(
+				popupNotificationEvent.getAffectedPathElementId());
 	}
 
 	private DefaultPopupNotificationEvent(
@@ -88,6 +95,7 @@ public final class DefaultPopupNotificationEvent extends
 		this.mismatchPhysicalDistance = lineMismatchEvent.getMismatchPhysicalDistance();
 		this.mismatchCreated = new Date(lineMismatchEvent.getMismatchCreated().getTime());
 		this.severity = lineMismatchEvent.getSeverity();
+		this.affectedPathElementId = lineMismatchEvent.getAffectedPathElementId();
 	}
 
 	/**
@@ -102,7 +110,8 @@ public final class DefaultPopupNotificationEvent extends
 				this.getMismatchOpticalDistance(),
 				this.getMismatchPhysicalDistance(),
 				this.mismatchCreated.getTime(),
-				this.getSeverity().getIdlTransferable(orb));
+				this.getSeverity().getIdlTransferable(orb),
+				this.getAffectedPathElementId().getIdlTransferable(orb));
 	}
 
 	public static PopupNotificationEvent valueOf(
@@ -166,5 +175,12 @@ public final class DefaultPopupNotificationEvent extends
 	 */
 	public Severity getSeverity() {
 		return this.severity;
+	}
+
+	/**
+	 * @see PopupNotificationEvent#getAffectedPathElementId()
+	 */
+	public Identifier getAffectedPathElementId() {
+		return this.affectedPathElementId;
 	}
 }
