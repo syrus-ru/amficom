@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.4 2006/02/15 19:34:48 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.5 2006/02/22 15:47:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBindingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterValueKind;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2006/02/15 19:34:48 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/02/22 15:47:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -55,6 +55,11 @@ public final class ActionParameterTypeBinding extends StorableObject<ActionParam
 
 		static ParameterValueKind valueOf(final IdlParameterValueKind idlParameterValueKind) {
 			return valueOf(idlParameterValueKind.value());
+		}
+
+		@Override
+		public String toString() {
+			return Integer.toString(this.ordinal());
 		}
 	}
 
