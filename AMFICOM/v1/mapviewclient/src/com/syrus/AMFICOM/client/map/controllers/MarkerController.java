@@ -1,5 +1,5 @@
 /*-
- * $$Id: MarkerController.java,v 1.46 2006/02/22 11:57:28 stas Exp $$
+ * $$Id: MarkerController.java,v 1.47 2006/02/22 15:48:18 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер маркера.
  * 
- * @version $Revision: 1.46 $, $Date: 2006/02/22 11:57:28 $
+ * @version $Revision: 1.47 $, $Date: 2006/02/22 15:48:18 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -254,12 +254,20 @@ public class MarkerController extends AbstractNodeController {
 	 *        расстояние
 	 * @throws ApplicationException 
 	 */
-	public void moveToFromStartLo(final Marker marker, final Identifier peId, final double optDist) throws MapConnectionException, MapDataException, ApplicationException {
+	public void moveToFromStartLo(final Marker marker, final double dist) throws MapConnectionException, MapDataException, ApplicationException {
+		final SchemePath schemePath = marker.getMeasurementPath().getSchemePath();
+		if (schemePath == null) {
+			this.moveToFromStartLf(marker, dist);
+		}
+		else {
+			this.moveToFromStartLf(marker, schemePath.getPhysicalDistance(dist));
+		}
+	}
 		
+	public void moveToFromStartLo(final Marker marker, final Identifier peId, final double optDist) throws MapConnectionException, MapDataException, ApplicationException {
 		PathElement pe = StorableObjectPool.getStorableObject(peId, true);
 		SchemePath schemePath = pe.getParentPathOwner();
 		this.moveToFromStartLf(marker, pe, schemePath.getPhysicalDistance(optDist));
-
 	}
 
 	/**
@@ -275,22 +283,43 @@ public class MarkerController extends AbstractNodeController {
 	 * @throws MapDataException 
 	 * @throws MapConnectionException 
 	 */
-	public void moveToFromStartLf(final Marker marker, final double physicalDistance) throws ApplicationException, MapConnectionException, MapDataException {
+	public void moveToFromStartLf(final Marker marker, final double physicalDistance)
+	throws MapConnectionException,
+	MapDataException, ApplicationException {
+		marker.setPhysicalDistance(physicalDistance);
+		
 		final MeasurementPath measurementPath = marker.getMeasurementPath();
-
+		
 		final double pathl = measurementPath.getLengthLf();
 		if (marker.getPhysicalDistance() > pathl) {
 			marker.setPhysicalDistance(pathl);
 		}
-
+		
+		MapElement me = null;
 		double pathLength = 0;
+		double localDistance = 0.0;
+		
+		final MeasurementPathController pathController = (MeasurementPathController) this.logicalNetLayer.getMapViewController().getController(measurementPath);
+		
 		final SortedSet<PathElement> pathElements = measurementPath.getSchemePath().getPathMembers();
 		for (final PathElement pathElement : pathElements) {
 			final double d = SchemeUtils.getPhysicalLength(pathElement);
-			if (pathLength + d >= marker.getPhysicalDistance()) {
-				moveToFromStartLf(marker, pathElement, physicalDistance);
+			if (pathLength + d > marker.getPhysicalDistance()) {
+				me = pathController.getMapElement(measurementPath, pathElement);
+				localDistance = marker.getPhysicalDistance() - pathLength;
+				break;
 			}
+			
 			pathLength += d;
+		}
+		
+		if (me != null) {
+			if (me instanceof CablePath) {
+				marker.setCablePath((CablePath) me);
+				this.setRelativeToCablePath(marker, localDistance);
+			} else {
+				this.setRelativeToNode(marker, (AbstractNode) me);
+			}
 		}
 	}
 	
@@ -312,25 +341,10 @@ public class MarkerController extends AbstractNodeController {
 
 		final MeasurementPathController pathController = (MeasurementPathController) this.logicalNetLayer.getMapViewController().getController(measurementPath);
 
-		pathLength = physicalDistance;
+		final SchemePath parentPath = pathElement.getParentPathOwner();
+		pathLength =  parentPath.getPhysicalDistance(parentPath.getOpticalDistanceFromStart(pathElement)[0]);
 		localDistance = marker.getPhysicalDistance() - pathLength;
 		me = pathController.getMapElement(measurementPath, pathElement);
-		
-/*		final SortedSet<PathElement> pathElements = measurementPath.getSchemePath().getPathMembers();
-		for (final PathElement pathElement : pathElements) {
-			final double d = SchemeUtils.getPhysicalLength(pathElement);
-			if (pathLength + d == marker.getPhysicalDistance()) {
-				me = pathController.getMapElement(measurementPath, pathElement);
-				localDistance = marker.getPhysicalDistance() - pathLength;
-			} else if (pathLength + d > marker.getPhysicalDistance()) {
-				me = pathController.getMapElement(measurementPath, pathElement);
-				localDistance = marker.getPhysicalDistance() - pathLength;
-				break;
-			}
-
-			pathLength += d;
-		}
-*/
 		
 		if (me != null) {
 			if (me instanceof CablePath) {
@@ -503,7 +517,7 @@ public class MarkerController extends AbstractNodeController {
 									this,
 									MarkerEvent.MARKER_CREATED_EVENT,
 									marker.getId(),
-									getFromStartLengthLf(marker),
+									getFromStartLengthLo(marker),
 									marker.getMeasurementPath().getSchemePath()
 											.getId(),
 									marker.getMonitoringElementId()));
