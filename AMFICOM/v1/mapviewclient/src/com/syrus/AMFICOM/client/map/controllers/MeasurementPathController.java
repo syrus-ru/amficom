@@ -1,5 +1,5 @@
 /*-
- * $$Id: MeasurementPathController.java,v 1.47 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: MeasurementPathController.java,v 1.48 2006/02/22 11:57:28 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер топологическиго пути.
  * 
- * @version $Revision: 1.47 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.48 $, $Date: 2006/02/22 11:57:28 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -224,8 +224,19 @@ public final class MeasurementPathController extends AbstractLinkController {
 		final AbstractSchemeElement abstractSchemeElement = pe.getAbstractSchemeElement();
 		switch (pe.getKind().value()) {
 			case IdlKind._SCHEME_ELEMENT:
-				final SchemeElement se = (SchemeElement) abstractSchemeElement;
-				mapElement = mapView.findElement(se);
+				try {
+					final SchemeElement se = (SchemeElement) abstractSchemeElement;
+					final Scheme scheme1 = se.getNearestParentScheme();
+					if (scheme1.getParentSchemeElement() != null) {
+						final SchemeElement topological = scheme1.getParentSchemeElement();
+						mapElement = mapView.findElement(topological);
+					} else {
+						final SchemeElement topological = MapView.getTopologicalSchemeElement(scheme1, se);
+						mapElement = mapView.findElement(topological);
+					}
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
+				}
 				break;
 			case IdlKind._SCHEME_LINK:
 				final SchemeLink schemeLink = (SchemeLink) abstractSchemeElement;
