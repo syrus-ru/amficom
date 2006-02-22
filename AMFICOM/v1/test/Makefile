@@ -31,6 +31,7 @@ JUNITCLASSPATH=$(ECLIPSE_HOME)/plugins/org.junit_3.8.1/junit.jar
 
 
 all:	.mach
+	mkdir -p $(CLASSDIR)/com/syrus/AMFICOM/setup
 	$(CP) \
 		$(SRCDIR)/com/syrus/AMFICOM/setup/*.properties \
 		$(CLASSDIR)/com/syrus/AMFICOM/setup
@@ -48,7 +49,8 @@ clean:	cleanmach
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(CLASSDIR)/$(subst .,/,$(TEST_PACKAGE))/$(TEST_CLASS)*$(CLASS_SUFFIX)
+#	$(RM) $(CLASSDIR)/$(subst .,/,$(TEST_PACKAGE))/$(TEST_CLASS)*$(CLASS_SUFFIX)
+	$(RM) -r $(CLASSDIR)/com
 	$(RM) .mach
 
 
