@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMap.java,v 1.51 2006/02/03 13:18:53 arseniy Exp $
+ * $Id: LRUMap.java,v 1.52 2006/02/22 14:31:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import java.util.Set;
 
 
 /**
- * @version $Revision: 1.51 $, $Date: 2006/02/03 13:18:53 $
+ * @version $Revision: 1.52 $, $Date: 2006/02/22 14:31:21 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -73,14 +73,14 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 	}
 
 
-	public boolean containsKey(final Object key) {
+	public synchronized boolean containsKey(final Object key) {
 		assert this.index.size() == this.data.size() : ERRMESSG_DIFF_SIZES
 				+ " Index[" + this.index.size() + "]: " + this.index + "; data[" + this.data.size() + "]: " + this.data;
 
 		return getEntry(key) != null;
 	}
 
-	public boolean containsValue(final Object value) {
+	public synchronized boolean containsValue(final Object value) {
 		assert this.index.size() == this.data.size() : ERRMESSG_DIFF_SIZES
 				+ " Index[" + this.index.size() + "]: " + this.index + "; data[" + this.data.size() + "]: " + this.data;
 
@@ -92,7 +92,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 		return false;
 	}
 
-	public V get(final Object key) {
+	public synchronized V get(final Object key) {
 		assert this.index.size() == this.data.size() : ERRMESSG_DIFF_SIZES
 				+ " Index[" + this.index.size() + "]: " + this.index + "; data[" + this.data.size() + "]: " + this.data;
 
@@ -106,7 +106,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 		return entry.getValue();
 	}
 
-	public V unmodifiableGet(final Object key) {
+	public synchronized V unmodifiableGet(final Object key) {
 		assert this.index.size() == this.data.size() : ERRMESSG_DIFF_SIZES
 				+ " Index[" + this.index.size() + "]: " + this.index + "; data[" + this.data.size() + "]: " + this.data;
 
@@ -117,7 +117,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 		return entry.getValue();
 	}
 
-	public V put(final K key, final V value) {
+	public synchronized V put(final K key, final V value) {
 		assert this.index.size() == this.data.size() : ERRMESSG_DIFF_SIZES
 				+ " Index[" + this.index.size() + "]: " + this.index + "; data[" + this.data.size() + "]: " + this.data;
 
@@ -139,7 +139,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 		return oldValue;
 	}
 
-	public void putAll(final Map<? extends K, ? extends V> t) {
+	public synchronized void putAll(final Map<? extends K, ? extends V> t) {
 		assert this.index.size() == this.data.size() : ERRMESSG_DIFF_SIZES
 				+ " Index[" + this.index.size() + "]: " + this.index + "; data[" + this.data.size() + "]: " + this.data;
 
@@ -148,7 +148,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 		}
 	}
 
-	public V remove(final Object key) {
+	public synchronized V remove(final Object key) {
 		assert this.index.size() == this.data.size() : ERRMESSG_DIFF_SIZES
 				+ " Index[" + this.index.size() + "]: " + this.index + "; data[" + this.data.size() + "]: " + this.data;
 
@@ -162,7 +162,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 		return oldValue;
 	}
 
-	public void clear() {
+	public synchronized void clear() {
 		assert this.index.size() == this.data.size() : ERRMESSG_DIFF_SIZES
 				+ " Index[" + this.index.size() + "]: " + this.index + "; data[" + this.data.size() + "]: " + this.data;
 
@@ -171,14 +171,14 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 		this.data.clear();
 	}
 
-	public int size() {
+	public synchronized int size() {
 		assert this.index.size() == this.data.size() : ERRMESSG_DIFF_SIZES
 				+ " Index[" + this.index.size() + "]: " + this.index + "; data[" + this.data.size() + "]: " + this.data;
 
 		return this.data.size();
 	}
 
-	public boolean isEmpty() {
+	public synchronized boolean isEmpty() {
 		assert this.index.size() == this.data.size() : ERRMESSG_DIFF_SIZES
 				+ " Index[" + this.index.size() + "]: " + this.index + "; data[" + this.data.size() + "]: " + this.data;
 
@@ -188,7 +188,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 
 	private transient volatile Set<K> keySet = null;
 
-	public Set<K> keySet() {
+	public synchronized Set<K> keySet() {
 		if (this.keySet == null) {
 			this.keySet = new AbstractSet<K>() {
 
@@ -245,7 +245,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 
 	private transient volatile Collection<V> values = null;
 
-	public Collection<V> values() {
+	public synchronized Collection<V> values() {
 		if (this.values == null) {
 			this.values = new AbstractCollection<V>() {
 
@@ -316,7 +316,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 
 	private transient volatile Set<Map.Entry<K,V>> entrySet = null;
 
-	public Set<Map.Entry<K,V>> entrySet() {
+	public synchronized Set<Map.Entry<K,V>> entrySet() {
 		if (this.entrySet == null) {
 			this.entrySet = new AbstractSet<Map.Entry<K,V>>() {
 
@@ -384,7 +384,7 @@ public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, 
 	}
 
 	@Override
-	public Object clone() {
+	public synchronized Object clone() {
 		try {
 			final LRUMap<K, V> clone = (LRUMap<K, V>) super.clone();
 
