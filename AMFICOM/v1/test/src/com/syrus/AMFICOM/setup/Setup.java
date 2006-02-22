@@ -1,5 +1,5 @@
 /*
- * $Id: Setup.java,v 1.1.2.4 2006/02/22 15:00:59 arseniy Exp $
+ * $Id: Setup.java,v 1.1.2.5 2006/02/22 15:50:38 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,12 +24,13 @@ import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.SQLCommonTest;
 import com.syrus.AMFICOM.general.SetupDataType;
 import com.syrus.AMFICOM.general.SetupMeasurementUnit;
+import com.syrus.AMFICOM.measurement.SetupActionParameterTypeBinding;
 import com.syrus.AMFICOM.measurement.SetupActionType;
 import com.syrus.AMFICOM.measurement.SetupMeasurementPortType;
 import com.syrus.AMFICOM.reflectometry.SetupParameterType;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2006/02/22 15:00:59 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/02/22 15:50:38 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -70,6 +71,9 @@ public final class Setup extends TestCase {
 		databaseCommonTest.addTest(new SetupMeasurementPortType("testCreate"));
 		databaseCommonTest.addTest(new SetupParameterType("testCreate"));
 		databaseCommonTest.addTest(new SetupActionType("testCreate"));
+
+		//-Create action parameter type bindings
+		databaseCommonTest.addTest(new SetupActionParameterTypeBinding("testCreate"));
 //
 //		//-Create configuration objects.
 //		databaseCommonTest.addTest(new TestProtoEquipment("testCreateInstance"));
