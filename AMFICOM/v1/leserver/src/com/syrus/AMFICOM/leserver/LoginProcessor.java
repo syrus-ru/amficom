@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.32 2006/01/31 13:14:07 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.33 2006/02/22 08:57:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,6 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -31,8 +30,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2006/01/31 13:14:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2006/02/22 08:57:04 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -206,8 +205,6 @@ final class LoginProcessor extends SleepButWorkThread {
 	}
 
 	private static void printUserLogins() {
-		final CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
-
 		final StringBuffer stringBuffer = new StringBuffer("\n\t\t LoginProcessor.printUserLogins | Logged in:\n");
 		int i = 0;
 		synchronized (loginMap) {
