@@ -1,5 +1,5 @@
 /*-
-* $Id: AnalisysResourcesLoaderTest.java,v 1.1 2005/12/13 10:45:55 bob Exp $
+* $Id: AnalisysResourcesLoaderTest.java,v 1.2 2006/02/22 10:29:01 saa Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.extensions.ExtensionLauncher;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/12/13 10:45:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2006/02/22 10:29:01 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -101,6 +101,10 @@ public class AnalisysResourcesLoaderTest extends TestCase {
 			"images/increaseThresh.gif");
 		map.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE,
 			"images/decreaseThresh.gif");
+		map.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE_ALL,
+			"images/increaseAllThresh.gif");
+		map.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE_ALL,
+			"images/decreaseAllThresh.gif");
 		map.put(AnalysisResourceKeys.ICON_ANALYSIS_EVENTS,
 			"images/events.gif");
 		map.put(AnalysisResourceKeys.ICON_ANALYSIS_MODELED,

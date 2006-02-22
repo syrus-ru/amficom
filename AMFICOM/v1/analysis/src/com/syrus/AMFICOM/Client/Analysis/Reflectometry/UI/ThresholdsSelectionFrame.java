@@ -225,6 +225,40 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 					}
 				});
 
+		jToolBar.add(new JToolBar.Separator());
+
+		addButton(jToolBar,
+				this.editButtons,
+				"decreaseAllThresh",
+				AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE_ALL,
+				null,
+				new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						ModelTraceManager mtm = Heap.getMTMEtalon();
+						if (mtm != null) {
+							mtm.decreaseAllDyThresholds();
+							dispatcher.firePropertyChange(new RefUpdateEvent(this,
+								RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+						}
+					}
+				});
+
+		addButton(jToolBar,
+				this.editButtons,
+				"increaseAllThresh",
+				AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE_ALL,
+				null,
+				new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						ModelTraceManager mtm = Heap.getMTMEtalon();
+						if (mtm != null) {
+							mtm.increaseAllDyThresholds();
+							dispatcher.firePropertyChange(new RefUpdateEvent(this,
+								RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+						}
+					}
+				});
+
 		this.jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		this.jTable.setDefaultRenderer(Object.class,

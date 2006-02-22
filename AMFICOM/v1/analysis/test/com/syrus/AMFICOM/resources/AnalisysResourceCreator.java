@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalisysResourceCreator.java,v 1.2 2005/12/14 08:14:03 bob Exp $
+ * $Id: AnalisysResourceCreator.java,v 1.3 2006/02/22 10:29:01 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.extensions.resources.Rgb;
 import com.syrus.AMFICOM.extensions.resources.Color.Name.Enum;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/14 08:14:03 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2006/02/22 10:29:01 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis
  */
@@ -132,6 +132,10 @@ public class AnalisysResourceCreator extends TestCase {
 			"images/increaseThresh.gif");
 		map.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE,
 			"images/decreaseThresh.gif");
+		map.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE_ALL,
+			"images/increaseAllThresh.gif");
+		map.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE_ALL,
+			"images/decreaseAllThresh.gif");
 		map.put(AnalysisResourceKeys.ICON_ANALYSIS_EVENTS,
 			"images/events.gif");
 		map.put(AnalysisResourceKeys.ICON_ANALYSIS_MODELED,
