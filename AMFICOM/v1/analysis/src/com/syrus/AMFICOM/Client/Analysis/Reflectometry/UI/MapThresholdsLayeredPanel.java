@@ -9,6 +9,7 @@ import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
@@ -94,7 +95,7 @@ class MapThresholdsToolBar extends MapMarkersToolBar
 				null,
 				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
 				null,
-				"",
+				LangModelAnalyse.getString("allThresholds"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD),
 				new ActionListener()
 				{
