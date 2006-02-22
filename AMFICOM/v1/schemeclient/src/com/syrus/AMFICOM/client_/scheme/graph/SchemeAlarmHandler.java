@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeAlarmHandler.java,v 1.11 2006/02/17 13:08:09 stas Exp $
+ * $Id: SchemeAlarmHandler.java,v 1.12 2006/02/22 07:08:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2006/02/17 13:08:09 $
+ * @version $Revision: 1.12 $, $Date: 2006/02/22 07:08:11 $
  * @module schemeclient_v1
  */
 
@@ -87,6 +87,8 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 					if (cell != null) {
 						this.cellsMap.put(event.getMarkerId(), cell);
 						this.panelsMap.put(event.getMarkerId(), panel);
+						
+						panel.getGraph().insureCellVisible(cell);
 						
 						AlarmPainter painter = this.paintersMap.get(panel);
 						if (painter == null || painter.getState() == State.TERMINATED) {

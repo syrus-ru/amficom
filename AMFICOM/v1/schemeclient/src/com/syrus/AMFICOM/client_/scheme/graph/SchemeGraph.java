@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.24 2005/12/06 14:14:18 stas Exp $
+ * $Id: SchemeGraph.java,v 1.25 2006/02/22 07:08:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2005/12/06 14:14:18 $
+ * @version $Revision: 1.25 $, $Date: 2006/02/22 07:08:11 $
  * @module schemeclient
  */
 
@@ -271,10 +271,14 @@ public class SchemeGraph extends GPGraph {
 			super.setSelectionCell(cell);
 	}
 	
+	public void insureCellVisible(Object cell) {
+		scrollCellToVisible(cell);
+	}
+	
 	public void insureSelectionVisible() {
 		Object cell = getSelectionCell();
 		if (cell != null) {
-			scrollCellToVisible(cell);
+			insureCellVisible(cell);
 		}
 	}
 	
