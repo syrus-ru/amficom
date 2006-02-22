@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryMeasurementParametersImpl.java,v 1.4.2.1 2006/02/16 12:46:18 arseniy Exp $
+ * $Id: ReflectometryMeasurementParametersImpl.java,v 1.4.2.2 2006/02/22 08:51:27 arseniy Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
  * </p>
  * @author saa
  * @author $Author: arseniy $
- * @version $Revision: 1.4.2.1 $, $Date: 2006/02/16 12:46:18 $
+ * @version $Revision: 1.4.2.2 $, $Date: 2006/02/22 08:51:27 $
  * @module
  */
 public final class ReflectometryMeasurementParametersImpl implements ReflectometryMeasurementParameters {
@@ -62,56 +62,56 @@ public final class ReflectometryMeasurementParametersImpl implements Reflectomet
 		 final Set<ActionParameter> actionParameters = this.measurementTemplate.getActionParameters();
 		 for (final ActionParameter actionParameter : actionParameters) {
 			 final String parameterTypeCodename = actionParameter.getTypeCodename();
-			if (parameterTypeCodename.equals(ParameterTypeCodename.WAVE_LENGTH.stringValue())) {
+			if (parameterTypeCodename.equals(ReflectometryParameterTypeCodename.WAVE_LENGTH.stringValue())) {
 				try {
 					this.waveLength = new ByteArray(actionParameter.getValue()).toInt();
 				} catch (IOException ioe) {
 					throw new DataFormatException(ioe.toString()); // not enough bytes
 				}
-			} else if (parameterTypeCodename.equals(ParameterTypeCodename.TRACE_LENGTH.stringValue())) {
+			} else if (parameterTypeCodename.equals(ReflectometryParameterTypeCodename.TRACE_LENGTH.stringValue())) {
 				try {
 					this.traceLength = new ByteArray(actionParameter.getValue()).toDouble();
 				} catch (IOException ioe) {
 					throw new DataFormatException(ioe.toString()); // not enough bytes
 				}
-			} else if (parameterTypeCodename.equals(ParameterTypeCodename.RESOLUTION.stringValue())) {
+			} else if (parameterTypeCodename.equals(ReflectometryParameterTypeCodename.RESOLUTION.stringValue())) {
 				try {
 					this.resolution = new ByteArray(actionParameter.getValue()).toDouble();
 				} catch (IOException ioe) {
 					throw new DataFormatException(ioe.toString()); // not enough bytes
 				}
-			} else if (parameterTypeCodename.equals(ParameterTypeCodename.PULSE_WIDTH_M.stringValue())
-					|| parameterTypeCodename.equals(ParameterTypeCodename.PULSE_WIDTH_NS.stringValue())) {
+			} else if (parameterTypeCodename.equals(ReflectometryParameterTypeCodename.PULSE_WIDTH_M.stringValue())
+					|| parameterTypeCodename.equals(ReflectometryParameterTypeCodename.PULSE_WIDTH_NS.stringValue())) {
 				try {
 					this.pulseWidth = new ByteArray(actionParameter.getValue()).toInt();
 				} catch (IOException ioe) {
 					throw new DataFormatException(ioe.toString()); // not enough bytes
 				}
-			} else if (parameterTypeCodename.equals(ParameterTypeCodename.INDEX_OF_REFRACTION.stringValue())) {
+			} else if (parameterTypeCodename.equals(ReflectometryParameterTypeCodename.INDEX_OF_REFRACTION.stringValue())) {
 				try {
 					this.refractionIndex = new ByteArray(actionParameter.getValue()).toDouble();
 				} catch (IOException ioe) {
 					throw new DataFormatException(ioe.toString()); // not enough bytes
 				}
-			} else if (parameterTypeCodename.equals(ParameterTypeCodename.AVERAGE_COUNT.stringValue())) {
+			} else if (parameterTypeCodename.equals(ReflectometryParameterTypeCodename.AVERAGE_COUNT.stringValue())) {
 				try {
 					this.numberOfAverages = new ByteArray(actionParameter.getValue()).toInt();
 				} catch (IOException ioe) {
 					throw new DataFormatException(ioe.toString()); // not enough bytes
 				}
-			} else if (parameterTypeCodename.equals(ParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES.stringValue())) {
+			} else if (parameterTypeCodename.equals(ReflectometryParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES.stringValue())) {
 				try {
 					this.pulseWidthLowRes = new ByteArray(actionParameter.getValue()).toBoolean();
 				} catch (IOException ioe) {
 					throw new DataFormatException(ioe.toString()); // not enough bytes
 				}
-			} else if (parameterTypeCodename.equals(ParameterTypeCodename.FLAG_GAIN_SPLICE_ON.stringValue())) {
+			} else if (parameterTypeCodename.equals(ReflectometryParameterTypeCodename.FLAG_GAIN_SPLICE_ON.stringValue())) {
 				try {
 					this.gainSplice = new ByteArray(actionParameter.getValue()).toBoolean();
 				} catch (IOException ioe) {
 					throw new DataFormatException(ioe.toString()); // not enough bytes
 				}
-			} else if (parameterTypeCodename.equals(ParameterTypeCodename.FLAG_LIFE_FIBER_DETECT.stringValue())) {
+			} else if (parameterTypeCodename.equals(ReflectometryParameterTypeCodename.FLAG_LIFE_FIBER_DETECT.stringValue())) {
 				try {
 					this.liveFiberDetection = new ByteArray(actionParameter.getValue()).toBoolean();
 				} catch (IOException ioe) {

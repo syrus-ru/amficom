@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryAnalysisCriteria.java,v 1.1.2.1 2006/02/16 12:45:32 arseniy Exp $
+ * $Id: ReflectometryAnalysisCriteria.java,v 1.1.2.2 2006/02/22 08:51:27 arseniy Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * <p>
  * @author saa
  * @author $Author: arseniy $
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/16 12:45:32 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/02/22 08:51:27 $
  * @module
  */
 public class ReflectometryAnalysisCriteria implements ReflectometryEtalon {
@@ -47,11 +47,11 @@ public class ReflectometryAnalysisCriteria implements ReflectometryEtalon {
 		final Set<ActionParameter> actionParameters = this.analysisTemplate.getActionParameters();
 		for (final ActionParameter actionParameter : actionParameters) {
 			final String parameterTypeCodename = actionParameter.getTypeCodename();
-			if (parameterTypeCodename.equals(ParameterTypeCodename.DADARA_CRITERIA.stringValue())) {
+			if (parameterTypeCodename.equals(ReflectometryParameterTypeCodename.DADARA_CRITERIA.stringValue())) {
 				this.dadaraCriteria = actionParameter.getValue();
-			} else if (parameterTypeCodename.equals(ParameterTypeCodename.DADARA_ETALON.stringValue())) {
+			} else if (parameterTypeCodename.equals(ReflectometryParameterTypeCodename.DADARA_ETALON.stringValue())) {
 				this.dadaraEtalon = actionParameter.getValue();
-			} else if (parameterTypeCodename.equals(ParameterTypeCodename.REFLECTOGRAMMA_ETALON.stringValue())) {
+			} else if (parameterTypeCodename.equals(ReflectometryParameterTypeCodename.REFLECTOGRAMMA_ETALON.stringValue())) {
 				this.reflectogrammaEtalon = actionParameter.getValue();
 			} else {
 				Log.errorMessage("Unknown codename: " + parameterTypeCodename);

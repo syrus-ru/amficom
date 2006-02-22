@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementReflectometryAnalysisResult.java,v 1.5.2.1 2006/02/16 12:45:58 arseniy Exp $
+ * $Id: MeasurementReflectometryAnalysisResult.java,v 1.5.2.2 2006/02/22 08:51:27 arseniy Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.ByteArray;
  * 
  * @author $Author: arseniy $
  * @author saa
- * @version $Revision: 1.5.2.1 $, $Date: 2006/02/16 12:45:58 $
+ * @version $Revision: 1.5.2.2 $, $Date: 2006/02/22 08:51:27 $
  * @module measurement
  */
 public final class MeasurementReflectometryAnalysisResult
@@ -117,20 +117,20 @@ implements ReflectometryAnalysisResult {
 		double qualityQ = 0.0;
 		double qualityD = 0.0;
 		for (final AnalysisResultParameter parameter : results) {
-			if (parameter.getTypeCodename().equals(ParameterTypeCodename.DADARA_ANALYSIS_RESULT.stringValue())) {
+			if (parameter.getTypeCodename().equals(ReflectometryParameterTypeCodename.DADARA_ANALYSIS_RESULT.stringValue())) {
 				this.analysisResultBytes = parameter.getValue();//XXX removed clone()
-			} else if (parameter.getTypeCodename().equals(ParameterTypeCodename.DADARA_ALARMS.stringValue())) {//XXX added else
+			} else if (parameter.getTypeCodename().equals(ReflectometryParameterTypeCodename.DADARA_ALARMS.stringValue())) {//XXX added else
 				this.reflectogramMismatchBytes = parameter.getValue();//XXX removed clone()
-			} else if (parameter.getTypeCodename().equals(ParameterTypeCodename.DADARA_QUALITY_PER_EVENT)) {//XXX added else
+			} else if (parameter.getTypeCodename().equals(ReflectometryParameterTypeCodename.DADARA_QUALITY_PER_EVENT)) {//XXX added else
 				this.evaluationPerEventResultBytes = parameter.getValue();//XXX removed clone()
-			} else if (parameter.getTypeCodename().equals(ParameterTypeCodename.DADARA_QUALITY_OVERALL_D.stringValue())) {//XXX added else
+			} else if (parameter.getTypeCodename().equals(ReflectometryParameterTypeCodename.DADARA_QUALITY_OVERALL_D.stringValue())) {//XXX added else
 				qualityHasQd = true;
 				try {
 					qualityD = new ByteArray(parameter.getValue()).toDouble();
 				} catch (IOException e) {
 					throw new DataFormatException();
 				}
-			} else if (parameter.getTypeCodename().equals(ParameterTypeCodename.DADARA_QUALITY_OVERALL_Q)) {//XXX added else
+			} else if (parameter.getTypeCodename().equals(ReflectometryParameterTypeCodename.DADARA_QUALITY_OVERALL_Q)) {//XXX added else
 				qualityHasQd = true;
 				try {
 					qualityQ = new ByteArray(parameter.getValue()).toDouble();
