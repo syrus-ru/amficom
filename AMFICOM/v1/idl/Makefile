@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.32 2005/10/09 12:58:13 bass Exp $
+# $Id: Makefile,v 1.33 2006/02/22 08:54:12 bass Exp $
 #
 # vim:ft=make:
 #
@@ -18,8 +18,8 @@ idlclean:
 	$(MAKE) -C ../general $@
 	$(MAKE) -C ../resource $@
 	$(MAKE) -C ../report $@
-	$(MAKE) -C ../admin $@
-	$(MAKE) -C ../config $@
+	$(MAKE) -C ../administration $@
+	$(MAKE) -C ../configuration $@
 	$(MAKE) -C ../measurement $@
 	$(MAKE) -C ../map $@
 	$(MAKE) -C ../scheme $@

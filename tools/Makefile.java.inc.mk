@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.java.inc.mk,v 1.12 2006/02/16 07:15:16 bass Exp $
+# $Id: Makefile.java.inc.mk,v 1.13 2006/02/22 08:54:12 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -252,8 +252,8 @@ reflectometry \
 event \
 general \
 resource \
-admin \
-config \
+administration \
+configuration \
 measurement \
 map \
 scheme \
