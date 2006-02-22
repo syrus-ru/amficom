@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.measurement.MeasurementResultParameter;
 import com.syrus.util.Log;
 
 final class IdlMeasurementResultParameterImpl extends IdlMeasurementResultParameter {
+	private static final long serialVersionUID = -3225622922083120939L;
 
 	IdlMeasurementResultParameterImpl() {
 		// empty

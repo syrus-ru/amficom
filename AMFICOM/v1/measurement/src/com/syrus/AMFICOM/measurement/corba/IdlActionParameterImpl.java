@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlActionParameterImpl.java,v 1.1.2.4 2006/02/16 12:50:09 arseniy Exp $
+ * $Id: IdlActionParameterImpl.java,v 1.1.2.5 2006/02/22 11:26:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,13 @@ import com.syrus.AMFICOM.measurement.ActionParameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2006/02/16 12:50:09 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/02/22 11:26:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 final class IdlActionParameterImpl extends IdlActionParameter {
+	private static final long serialVersionUID = 6070258509252618584L;
 
 	IdlActionParameterImpl() {
 		// empty

@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.measurement.ModelingResultParameter;
 import com.syrus.util.Log;
 
 final class IdlModelingResultParameterImpl extends IdlModelingResultParameter {
+	private static final long serialVersionUID = -1034747719852426086L;
 
 	IdlModelingResultParameterImpl() {
 		// empty
