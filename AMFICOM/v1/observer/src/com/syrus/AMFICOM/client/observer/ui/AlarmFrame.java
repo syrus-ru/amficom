@@ -6,6 +6,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
@@ -19,13 +21,7 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
-import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
-import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.Analysis.PermissionManager;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
-import com.syrus.AMFICOM.analysis.EventAnchorer;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.event.MarkerEvent;
@@ -43,21 +39,18 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.newFilter.Filter;
-import com.syrus.AMFICOM.reflectometry.SOAnchor;
 import com.syrus.AMFICOM.resource.LangModelObserver;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
-import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
@@ -85,6 +78,7 @@ public class AlarmFrame extends JInternalFrame {
 
 	Filter filter = new Filter(new AlarmConditionWrapper());
 	AlarmUpdater updater;
+	Map<Identifier, Identifier> alarmMarkerMapping = new HashMap<Identifier, Identifier>();
 
 	class AlarmUpdater implements PopupMessageReceiver {
 		AlarmUpdater() {
@@ -98,6 +92,7 @@ public class AlarmFrame extends JInternalFrame {
 			AlarmFrame.this.model.addObject(alarm);
 			
 			Identifier resultId = popupNotificationEvent.getResultId();
+			Identifier peId = popupNotificationEvent.getAffectedPathElementId();
 			double optDistance = popupNotificationEvent.getMismatchOpticalDistance();
 			
 			try {
@@ -107,48 +102,13 @@ public class AlarmFrame extends JInternalFrame {
 					Measurement m = (Measurement) action;
 				
 					Identifier meId = m.getMonitoredElementId();
-					MonitoredElement me = StorableObjectPool.getStorableObject(meId, true);
-					Set<Identifier> tpathIds = me.getMonitoredDomainMemberIds();
-
-					MeasurementSetup ms = m.getSetup();
-					Heap.setContextMeasurementSetup(ms);
-					try {
-						// пытаемся загрузить параметры анализа
-						// (в принципе, если они были, то они уже были загружены
-						// во время загрузки primary trace)
-						AnalysisUtil.loadCriteriaSet(LoginManager.getUserId(), ms);
-						// пытаемся загрузить эталон
-						if (ms.getEtalon() != null) {
-							AnalysisUtil.loadEtalon(ms);
-						} else {
-							Heap.unSetEtalonPair();
-						}
-						// загружаем результаты сравнения с эталоном (если есть)
-						// NB: при загрузке всех р/г уже были загружены
-						// результаты анализа. Теперь мы повторно загружаем
-						// результаты анализа + результаты оценки,
-						// но уже только для одной р/г - той, что выбрана как первичная.
-						AnalysisUtil.loadEtalonComparison(m);
-					} catch (DataFormatException e) {
-						GUIUtil.showDataFormatError();
-					} catch (ApplicationException e) {
-						GUIUtil.processApplicationException(e);
-					}
-					
-					PathElement pe = null;
+					PathElement pe = StorableObjectPool.getStorableObject(peId, true);
 					SchemePath path = null;
-					if (Heap.hasEtalon()) {
-						ModelTraceAndEvents mtae = Heap.getMTMEtalon().getMTAE();
-						EventAnchorer ea = Heap.obtainAnchorer();
-						
-						int nEvent = mtae.getEventByCoord((int) (alarm.getEvent().getMismatchOpticalDistance() / mtae.getDeltaX()));
-						SOAnchor anchor = ea.getEventAnchor(nEvent);
-						Identifier peId = Identifier.valueOf(anchor.getValue());
-						pe = StorableObjectPool.getStorableObject(peId, true);
-						path = pe.getParentPathOwner();
-					}
 					
 					if (pe == null) {
+						MonitoredElement me = StorableObjectPool.getStorableObject(meId, true);
+						Set<Identifier> tpathIds = me.getMonitoredDomainMemberIds();
+						
 						if (!tpathIds.isEmpty()) {
 							Set<SchemePath> schemePaths = StorableObjectPool.getStorableObjectsByCondition(
 									new LinkedIdsCondition(tpathIds.iterator().next(), ObjectEntities.SCHEMEPATH_CODE), true);
@@ -156,13 +116,16 @@ public class AlarmFrame extends JInternalFrame {
 							if (!schemePaths.isEmpty()) {
 								path = schemePaths.iterator().next();
 								pe = path.getPathElementByOpticalDistance(optDistance);
-								
 							}
 						}
+					} else {
+						path = pe.getParentPathOwner();
 					}
 					
+					Identifier markerId = LocalIdentifierGenerator.generateIdentifier(ObjectEntities.MARK_CODE);
+					AlarmFrame.this.alarmMarkerMapping.put(alarm.getId(), markerId);
 					MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-							alarm.getId(), optDistance, path.getId(), meId, pe.getId());
+							markerId, optDistance, path.getId(), meId, pe.getId());
 
 					AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
 					
@@ -211,23 +174,26 @@ public class AlarmFrame extends JInternalFrame {
 					
 					final ApplicationContext aContext1 = AlarmFrame.this.aContext;
 					if (!firstb) {
+						Identifier markerId = AlarmFrame.this.alarmMarkerMapping.get(alarm1.getId());
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-								alarm1.getId(), alarm1.getEvent().getMismatchOpticalDistance(), alarm1.getPath().getId(), 
+								markerId, alarm1.getEvent().getMismatchOpticalDistance(), alarm1.getPath().getId(), 
 								alarm1.getMonitoredElement().getId(), alarm1.getPathElement().getId());
 
 						aContext1.getDispatcher().firePropertyChange(mEvent);
 					}
 					if (!lastb && first != last) {
+						Identifier markerId = AlarmFrame.this.alarmMarkerMapping.get(alarm2.getId());
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-								alarm2.getId(), alarm2.getEvent().getMismatchOpticalDistance(), alarm2.getPath().getId(), 
+								markerId, alarm2.getEvent().getMismatchOpticalDistance(), alarm2.getPath().getId(), 
 								alarm2.getMonitoredElement().getId(), alarm2.getPathElement().getId());
 
 						aContext1.getDispatcher().firePropertyChange(mEvent);
 					}
 					
 					if (firstb) {
+						Identifier markerId = AlarmFrame.this.alarmMarkerMapping.get(alarm1.getId());
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-								alarm1.getId(), alarm1.getEvent().getMismatchOpticalDistance(), alarm1.getPath().getId(), 
+								markerId, alarm1.getEvent().getMismatchOpticalDistance(), alarm1.getPath().getId(), 
 								alarm1.getMonitoredElement().getId(), alarm1.getPathElement().getId());
 
 						// notify about measurement
@@ -237,8 +203,9 @@ public class AlarmFrame extends JInternalFrame {
 						aContext1.getDispatcher().firePropertyChange(mEvent);
 					} 
 					if (lastb && first != last) {
+						Identifier markerId = AlarmFrame.this.alarmMarkerMapping.get(alarm2.getId());
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-								alarm2.getId(), alarm2.getEvent().getMismatchOpticalDistance(), alarm2.getPath().getId(), 
+								markerId, alarm2.getEvent().getMismatchOpticalDistance(), alarm2.getPath().getId(), 
 								alarm2.getMonitoredElement().getId(), alarm2.getPathElement().getId());
 						
 						// notify about measurement
@@ -466,9 +433,11 @@ public class AlarmFrame extends JInternalFrame {
 		try {
 			Alarm alarm = this.model.getObject(this.table.getSelectedRow());
 			MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-					alarm.getId(), alarm.getEvent().getMismatchOpticalDistance(),
+					this.alarmMarkerMapping.get(alarm.getId()), 
+					alarm.getEvent().getMismatchOpticalDistance(),
 					alarm.getPath().getId(), alarm.getMonitoredElement().getId(),
 					alarm.getPathElement().getId());
+			this.table.setSelectedValue(null);
 			this.aContext.getDispatcher().firePropertyChange(mEvent2);
 		} catch (ApplicationException e1) {
 			Log.errorMessage(e1);
@@ -479,10 +448,12 @@ public class AlarmFrame extends JInternalFrame {
 		try {
 			Alarm alarm = this.model.getObject(this.table.getSelectedRow());
 			MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-					alarm.getId(), alarm.getEvent().getMismatchOpticalDistance(),
+					this.alarmMarkerMapping.get(alarm.getId()), 
+					alarm.getEvent().getMismatchOpticalDistance(),
 					alarm.getPath().getId(), alarm.getMonitoredElement().getId(),
 					alarm.getPathElement().getId());
 			this.aContext.getDispatcher().firePropertyChange(mEvent2);
+			AlarmFrame.this.alarmMarkerMapping.remove(alarm.getId());
 			
 			this.table.setSelectedValue(null);
 			this.model.removeObject(alarm);
