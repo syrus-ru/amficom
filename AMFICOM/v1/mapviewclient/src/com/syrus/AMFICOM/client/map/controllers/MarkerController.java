@@ -1,5 +1,5 @@
 /*-
- * $$Id: MarkerController.java,v 1.44 2006/02/15 11:12:33 stas Exp $$
+ * $$Id: MarkerController.java,v 1.45 2006/02/22 09:26:57 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер маркера.
  * 
- * @version $Revision: 1.44 $, $Date: 2006/02/15 11:12:33 $
+ * @version $Revision: 1.45 $, $Date: 2006/02/22 09:26:57 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -294,7 +294,7 @@ public class MarkerController extends AbstractNodeController {
 		final SortedSet<PathElement> pathElements = measurementPath.getSchemePath().getPathMembers();
 		for (final PathElement pathElement : pathElements) {
 			final double d = SchemeUtils.getPhysicalLength(pathElement);
-			if (pathLength + d > marker.getPhysicalDistance()) {
+			if (pathLength + d >= marker.getPhysicalDistance()) {
 				me = pathController.getMapElement(measurementPath, pathElement);
 				localDistance = marker.getPhysicalDistance() - pathLength;
 				break;
@@ -373,7 +373,7 @@ public class MarkerController extends AbstractNodeController {
 
 		// serch for a node link
 		for (final NodeLink nl : cablePath.getSortedNodeLinks()) {
-			if (cumulativeDistance + nl.getLengthLt() > topologicalDistance) {
+			if (cumulativeDistance + nl.getLengthLt() >= topologicalDistance - 0.01) {
 				marker.setNodeLink(nl);
 				marker.setStartNode(sn);
 				marker.setEndNode(nl.getOtherNode(sn));

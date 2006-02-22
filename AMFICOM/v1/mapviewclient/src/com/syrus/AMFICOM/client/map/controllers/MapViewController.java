@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewController.java,v 1.67 2006/02/15 12:54:38 stas Exp $$
+ * $$Id: MapViewController.java,v 1.68 2006/02/22 09:26:57 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * 
- * @version $Revision: 1.67 $, $Date: 2006/02/15 12:54:38 $
+ * @version $Revision: 1.68 $, $Date: 2006/02/22 09:26:57 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -461,31 +461,37 @@ public final class MapViewController {
 	 * @param schemePath схемный путь
 	 */
 	public void scanPath(SchemePath schemePath) {
-		long t1 = System.currentTimeMillis();
-		SiteNode pathStartNode = this.mapView.getStartNode(schemePath);
-		long t2 = System.currentTimeMillis();
-		SiteNode pathEndNode = this.mapView.getEndNode(schemePath);
-		long t3 = System.currentTimeMillis();
-		MeasurementPath mp = this.mapView.findMeasurementPath(schemePath);
-		long t4 = System.currentTimeMillis();
-		if(mp == null) {
-			if(pathStartNode != null && pathEndNode != null) {
-				placeElement(schemePath);
+		try {
+			long t1 = System.currentTimeMillis();
+			SiteNode pathStartNode = this.mapView.getStartNode(schemePath);
+			long t2 = System.currentTimeMillis();
+			SiteNode pathEndNode = this.mapView.getEndNode(schemePath);
+			long t3 = System.currentTimeMillis();
+			MeasurementPath mp = this.mapView.findMeasurementPath(schemePath);
+			long t4 = System.currentTimeMillis();
+			if(mp == null) {
+				if(pathStartNode != null && pathEndNode != null) {
+					placeElement(schemePath);
+				}
 			}
+			else {
+				if(pathStartNode == null || pathEndNode == null) {
+					unplaceElement(mp);
+				}
+				else {
+					placeElement(schemePath);
+				}
+			}
+			long t5 = System.currentTimeMillis();
+			Log.debugMessage("scanPath :: get start node for sp " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("scanPath :: get end node for sp " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("scanPath :: find measurement path " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("scanPath :: placeElement(sp) " + (t5 - t4) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		} catch (Exception e) {
+			Log.errorMessage("Exception while scaning path " + schemePath.getName() 
+					+ " (" + schemePath + ")");
+			Log.errorMessage(e);
 		}
-		else {
-		if(pathStartNode == null || pathEndNode == null) {
-			unplaceElement(mp);
-		}
-		else {
-			placeElement(schemePath);
-		}
-		}
-		long t5 = System.currentTimeMillis();
-		Log.debugMessage("scanPath :: get start node for sp " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-		Log.debugMessage("scanPath :: get end node for sp " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-		Log.debugMessage("scanPath :: find measurement path " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-		Log.debugMessage("scanPath :: placeElement(sp) " + (t5 - t4) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
