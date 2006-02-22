@@ -1,4 +1,4 @@
--- $Id: actionparametertypebinding.sql,v 1.1.2.1 2006/02/14 09:53:54 arseniy Exp $
+-- $Id: actionparametertypebinding.sql,v 1.1.2.2 2006/02/22 15:53:43 arseniy Exp $
 
 CREATE TABLE ActionParameterTypeBinding (
  id NUMBER(19),
@@ -10,7 +10,7 @@ CREATE TABLE ActionParameterTypeBinding (
 --
  parameter_value_kind NUMBER(1) NOT NULL,
  parameter_type_id NOT NULL,
- action_type_kind_code NOT NULL,
+ action_type_kind_code NUMBER(2) NOT NULL,
  measurement_type_id,
  analysis_type_id,
  modeling_type_id,
@@ -24,6 +24,8 @@ CREATE TABLE ActionParameterTypeBinding (
 --
  CONSTRAINT aptb_pvk_check CHECK (
   parameter_value_kind = 0 OR parameter_value_kind = 1),
+ CONSTRAINT aptb_atkc_check CHECK (
+  action_type_kind_code >= 0 AND action_type_kind_code <= 2),
  CONSTRAINT aptb_atk_check CHECK (
   (measurement_type_id IS NOT NULL
    AND analysis_type_id IS NULL
@@ -42,8 +44,6 @@ CREATE TABLE ActionParameterTypeBinding (
   measurement_port_type_id),
  CONSTRAINT aptb_pt_fk FOREIGN KEY (parameter_type_id)
   REFERENCES ParameterType (id) ON DELETE CASCADE,
- CONSTRAINT aptb_atk_fk FOREIGN KEY (action_type_kind_code)
-  REFERENCES ActionTypeKind (code) ON DELETE CASCADE,
  CONSTRAINT aptb_meat_fk FOREIGN KEY (measurement_type_id)
   REFERENCES MeasurementType (id) ON DELETE CASCADE,
  CONSTRAINT aptb_anat_fk FOREIGN KEY (analysis_type_id)

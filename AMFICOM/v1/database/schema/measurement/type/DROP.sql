@@ -1,11 +1,8 @@
--- $Id: DROP.sql,v 1.7.2.1 2006/02/14 09:54:33 arseniy Exp $
+-- $Id: DROP.sql,v 1.7.2.2 2006/02/22 15:53:43 arseniy Exp $
 
-PROMPT 06. Dropping table ActionParameterTypeBinding...;
+PROMPT 05. Dropping table ActionParameterTypeBinding...;
 DROP TABLE ActionParameterTypeBinding;
 DROP SEQUENCE ActionParameterTypeBinding_seq;
-
-PROMPT 05. Dropping table ActionTypeKind...;
-DROP TABLE ActionTypeKind;
 
 PROMPT 04. Dropping table ModelingType...;
 DROP TABLE ModelingType;
