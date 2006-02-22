@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMouseMotionListener.java,v 1.43 2006/02/15 12:54:38 stas Exp $$
+ * $$Id: MapMouseMotionListener.java,v 1.44 2006/02/22 15:37:15 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.util.Log;
 
 /**
@@ -40,7 +41,7 @@ import com.syrus.util.Log;
  * обработка события передается текущему активному элементу карты (посредством
  * объекта MapStrategy)
  * 
- * @version $Revision: 1.43 $, $Date: 2006/02/15 12:54:38 $
+ * @version $Revision: 1.44 $, $Date: 2006/02/22 15:37:15 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -54,25 +55,28 @@ public final class MapMouseMotionListener implements MouseMotionListener {
 
 	public void mouseDragged(MouseEvent me) {
 		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
-		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-			return;
+		final LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		MapElement mapElement = logicalNetLayer.getCurrentMapElement();
+		if (mapElement instanceof Marker) { // no edit action!
+			
+		} else { 
+			if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
+				aContext.getDispatcher().firePropertyChange(
+						new StatusMessageEvent(
+								this,
+								StatusMessageEvent.STATUS_MESSAGE,
+								I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
+				return;
+			}
+			if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
+				aContext.getDispatcher().firePropertyChange(
+						new StatusMessageEvent(
+								this,
+								StatusMessageEvent.STATUS_MESSAGE,
+								I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
+				return;
+			}
 		}
-		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
-			aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-			return;
-		}
-
-		LogicalNetLayer logicalNetLayer = this.netMapViewer
-				.getLogicalNetLayer();
 
 		// Log.debugMessage("Dragged to (" + me.getPoint().x + ", " +
 		// me.getPoint().y + ")");
@@ -121,8 +125,6 @@ public final class MapMouseMotionListener implements MouseMotionListener {
 				// fall through
 				case MapState.NO_OPERATION:
 					try {
-						MapElement mapElement = logicalNetLayer
-								.getCurrentMapElement();
 						MapStrategy strategy = MapStrategyManager
 								.getStrategy(mapElement);
 						if(strategy != null) {
