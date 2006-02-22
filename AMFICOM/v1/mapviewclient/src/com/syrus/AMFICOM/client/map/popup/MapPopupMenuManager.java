@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPopupMenuManager.java,v 1.17 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: MapPopupMenuManager.java,v 1.18 2006/02/22 10:54:45 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/30 16:08:39 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2006/02/22 10:54:45 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -35,37 +35,43 @@ public final class MapPopupMenuManager {
 		// empty
 	}
 
-	private static java.util.Map popupMap = new HashMap();
+	private static java.util.Map<Class, MapPopupMenu> popupMap = new HashMap<Class, MapPopupMenu>();
+	private static java.util.Map<Class, MapPopupMenu> alwaysShownPopupMap = new HashMap<Class, MapPopupMenu>();
 
 	static {
 		popupMap.put(CablePath.class,
 			CablePathPopupMenu.getInstance());
+		popupMap.put(SiteNode.class,
+				SitePopupMenu.getInstance());
 		popupMap.put(PhysicalLink.class,
 			LinkPopupMenu.getInstance());
-		popupMap.put(Mark.class,
-			MarkPopupMenu.getInstance());
-		popupMap.put(NodeLink.class,
-			NodeLinkPopupMenu.getInstance());
 		popupMap.put(TopologicalNode.class,
-			NodePopupMenu.getInstance());
-		popupMap.put(Selection.class,
-			SelectionPopupMenu.getInstance());
-		popupMap.put(SiteNode.class,
-			SitePopupMenu.getInstance());
+				NodePopupMenu.getInstance());
+		popupMap.put(NodeLink.class,
+				NodeLinkPopupMenu.getInstance());
 		popupMap.put(UnboundNode.class,
-			UnboundPopupMenu.getInstance());
+				UnboundPopupMenu.getInstance());
 		popupMap.put(UnboundLink.class,
-			UnboundLinkPopupMenu.getInstance());
+				UnboundLinkPopupMenu.getInstance());
 		popupMap.put(VoidElement.class,
-			VoidElementPopupMenu.getInstance());
-		popupMap.put(Marker.class,
+				VoidElementPopupMenu.getInstance());
+		popupMap.put(Selection.class,
+				SelectionPopupMenu.getInstance());
+		
+		alwaysShownPopupMap.put(Mark.class,
+			MarkPopupMenu.getInstance());
+		alwaysShownPopupMap.put(Marker.class,
 			MarkerPopupMenu.getInstance());
-		popupMap.put(MeasurementPath.class,
+		alwaysShownPopupMap.put(MeasurementPath.class,
 			MeasurementPathPopupMenu.getInstance());
 	}
 	
-	public static MapPopupMenu getPopupMenu(MapElement me) {
-		MapPopupMenu menu = (MapPopupMenu )popupMap.get(me.getClass());
+	public static MapPopupMenu getPopupMenu(MapElement me, boolean editable) {
+//	 for noneditable search in one map
+		MapPopupMenu menu = alwaysShownPopupMap.get(me.getClass());
+		if (menu == null && editable) { // for editable search in two maps
+			menu = popupMap.get(me.getClass());
+		}
 		return menu;
 	}
 

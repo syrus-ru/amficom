@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMouseListener.java,v 1.78 2006/02/15 11:27:56 stas Exp $$
+ * $$Id: MapMouseListener.java,v 1.79 2006/02/22 10:54:45 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * события передается текущему активному элементу карты (посредством объекта
  * MapStrategy)
  * 
- * @version $Revision: 1.78 $, $Date: 2006/02/15 11:27:56 $
+ * @version $Revision: 1.79 $, $Date: 2006/02/22 10:54:45 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -328,9 +328,11 @@ public final class MapMouseListener implements MouseListener {
 					.debugMessage(
 							"sendSelectionChangeEvent -------- " + (d0 - d1) + " " + (d - d0) + " " + (f - d) + " ms ---------", Log.DEBUGLEVEL09); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else if(SwingUtilities.isRightMouseButton(me)) {
+			boolean editable = this.netMapViewer.getLogicalNetLayer().getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP);
+			
 			MapPopupMenu contextMenu;
 
-			contextMenu = MapPopupMenuManager.getPopupMenu(mapElement);
+			contextMenu = MapPopupMenuManager.getPopupMenu(mapElement, editable);
 			if(contextMenu != null) {
 				contextMenu.setNetMapViewer(this.netMapViewer);
 				contextMenu.setElement(mapElement);
