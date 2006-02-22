@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPropertiesManager.java,v 1.60 2006/02/15 12:54:38 stas Exp $$
+ * $$Id: MapPropertiesManager.java,v 1.61 2006/02/22 13:51:35 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
  * <li>center
  * <li>zoom
  * 
- * @version $Revision: 1.60 $, $Date: 2006/02/15 12:54:38 $
+ * @version $Revision: 1.61 $, $Date: 2006/02/22 13:51:35 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -378,8 +378,8 @@ public final class MapPropertiesManager {
 		coordinatesFormat.setDecimalFormatSymbols(dfs);
 
 		distanceFormat = (DecimalFormat )NumberFormat.getNumberInstance();
-		distanceFormat.setMaximumFractionDigits(1);
-		distanceFormat.setMinimumFractionDigits(1);
+		distanceFormat.setMaximumFractionDigits(2);
+		distanceFormat.setMinimumFractionDigits(0);
 		distanceFormat.setMinimumIntegerDigits(1);
 		dfs = distanceFormat.getDecimalFormatSymbols();
 		dfs.setDecimalSeparator('.');
