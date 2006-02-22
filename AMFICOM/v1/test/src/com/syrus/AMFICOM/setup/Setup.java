@@ -1,5 +1,5 @@
 /*
- * $Id: Setup.java,v 1.1.2.3 2006/02/21 15:54:37 arseniy Exp $
+ * $Id: Setup.java,v 1.1.2.4 2006/02/22 15:00:59 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,14 +19,17 @@ import com.syrus.AMFICOM.administration.SetupServerProcess;
 import com.syrus.AMFICOM.administration.SetupSystemUser;
 import com.syrus.AMFICOM.configuration.SetupEquipmentType;
 import com.syrus.AMFICOM.configuration.SetupPortType;
+import com.syrus.AMFICOM.configuration.SetupTransmissionPathType;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.SQLCommonTest;
 import com.syrus.AMFICOM.general.SetupDataType;
 import com.syrus.AMFICOM.general.SetupMeasurementUnit;
+import com.syrus.AMFICOM.measurement.SetupActionType;
+import com.syrus.AMFICOM.measurement.SetupMeasurementPortType;
 import com.syrus.AMFICOM.reflectometry.SetupParameterType;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/02/21 15:54:37 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/02/22 15:00:59 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -61,24 +64,20 @@ public final class Setup extends TestCase {
 		//-Create configuration objects.
 		databaseCommonTest.addTest(new SetupEquipmentType("testCreate"));
 		databaseCommonTest.addTest(new SetupPortType("testCreate"));
+		databaseCommonTest.addTest(new SetupTransmissionPathType("testCreate"));
 
-		//-Create parameter types
+		//-Create measurement port types, parameter types and action types
+		databaseCommonTest.addTest(new SetupMeasurementPortType("testCreate"));
 		databaseCommonTest.addTest(new SetupParameterType("testCreate"));
-
-//		sqlCommonTest.addTest(new TestMeasurementType("testCreateAll"));
-//		sqlCommonTest.addTest(new TestAnalysisType("testCreateAll"));
-//		sqlCommonTest.addTest(new TestModelingType("testCreateAll"));
+		databaseCommonTest.addTest(new SetupActionType("testCreate"));
 //
 //		//-Create configuration objects.
-//		databaseCommonTest.addTest(new TestPortType("testCreateInstance"));
-//		databaseCommonTest.addTest(new TestTransmissionPathType("testCreateInstance"));
 //		databaseCommonTest.addTest(new TestProtoEquipment("testCreateInstance"));
 //		databaseCommonTest.addTest(new TestEquipment("testCreateAll"));
 //		databaseCommonTest.addTest(new TestPort("testCreateAll"));
 //		databaseCommonTest.addTest(new TestTransmissionPath("testCreateAll"));
 //
 //		//-Create measurement objects.
-//		databaseCommonTest.addTest(new TestMeasurementPortType("testCreateInstance"));
 //		databaseCommonTest.addTest(new TestKIS("testCreateAll"));
 //		databaseCommonTest.addTest(new TestMeasurementPort("testCreateAll"));
 //		databaseCommonTest.addTest(new TestMonitoredElement("testCreateAll"));

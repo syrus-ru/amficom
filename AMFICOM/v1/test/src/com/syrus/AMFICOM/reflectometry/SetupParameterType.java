@@ -1,5 +1,5 @@
 /*-
- * $Id: SetupParameterType.java,v 1.1.2.2 2006/02/17 15:53:08 arseniy Exp $
+ * $Id: SetupParameterType.java,v 1.1.2.3 2006/02/22 15:00:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,28 +18,28 @@ import static com.syrus.AMFICOM.general.MeasurementUnit.NANOMETER;
 import static com.syrus.AMFICOM.general.MeasurementUnit.NANOSECOND;
 import static com.syrus.AMFICOM.general.MeasurementUnit.NONDIMENSIONAL;
 import static com.syrus.AMFICOM.general.MeasurementUnit.SECOND;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.AVERAGE_COUNT;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.DADARA_ALARMS;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.DADARA_ANALYSIS_RESULT;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.DADARA_CRITERIA;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.DADARA_ETALON;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.DADARA_QUALITY_OVERALL_D;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.DADARA_QUALITY_OVERALL_Q;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.DADARA_QUALITY_PER_EVENT;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.FLAG_GAIN_SPLICE_ON;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.FLAG_LIFE_FIBER_DETECT;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.INDEX_OF_REFRACTION;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.PREDICTION_TIME;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.PREDICTION_TIME_END;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.PREDICTION_TIME_START;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.PULSE_WIDTH_M;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.PULSE_WIDTH_NS;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.REFLECTOGRAMMA;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.REFLECTOGRAMMA_ETALON;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.RESOLUTION;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.TRACE_LENGTH;
-import static com.syrus.AMFICOM.reflectometry.ParameterTypeCodename.WAVE_LENGTH;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.AVERAGE_COUNT;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_ALARMS;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_ANALYSIS_RESULT;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_CRITERIA;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_ETALON;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_QUALITY_OVERALL_D;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_QUALITY_OVERALL_Q;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_QUALITY_PER_EVENT;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_GAIN_SPLICE_ON;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_LIFE_FIBER_DETECT;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.INDEX_OF_REFRACTION;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PREDICTION_TIME;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PREDICTION_TIME_END;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PREDICTION_TIME_START;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PULSE_WIDTH_M;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PULSE_WIDTH_NS;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.REFLECTOGRAMMA;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.REFLECTOGRAMMA_ETALON;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.RESOLUTION;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.TRACE_LENGTH;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.WAVE_LENGTH;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/17 15:53:08 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/02/22 15:00:59 $
  * @author $Author: arseniy $
  * @module test
  */
