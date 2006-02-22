@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultFrame.java,v 1.5 2005/11/23 12:19:10 arseniy Exp $
+ * $Id: ResultFrame.java,v 1.6 2006/02/22 08:33:56 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,8 +72,8 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/11/23 12:19:10 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2006/02/22 08:33:56 $
  * @module surveyclient_v1
  */
 
@@ -236,13 +236,23 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 			
 			try {
 				AnalysisUtil.loadCriteriaSet(LoginManager.getUserId(), ms);
-				if (ar != null)
+				if (ar != null) {
 					Heap.openPrimaryTraceAndNotify(result, ar);
-				else
+				} else {
 					Heap.openPrimaryTraceAndNotify(result);
+				}
+				
+				if (ms.getEtalon() != null) {
+					AnalysisUtil.loadEtalon(ms);
+				} else {
+					Heap.unSetEtalonPair();
+				}
+				
 			} catch (SimpleApplicationException e) {
 				Log.errorMessage(e);
 			} catch (DataFormatException e) {
+				Log.errorMessage(e);
+			} catch (ApplicationException e) {
 				Log.errorMessage(e);
 			}
 
@@ -341,6 +351,7 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 			
 		ThresholdsPanel reflectogramPanel = new ThresholdsPanel(this.layeredPanel, this.aContext.getDispatcher(), data, deltaX);
 		reflectogramPanel.setColorModel(Heap.PRIMARY_TRACE_KEY);
+		reflectogramPanel.updEvents(Heap.PRIMARY_TRACE_KEY);
 			
 		if (this.meId != null)
 			reflectogramPanel.setMonitoredElementId(this.meId);
