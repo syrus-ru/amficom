@@ -1,5 +1,5 @@
 /*-
- * $$Id: MeasurementPathController.java,v 1.48 2006/02/22 11:57:28 stas Exp $$
+ * $$Id: MeasurementPathController.java,v 1.49 2006/02/22 15:39:47 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
@@ -22,16 +23,20 @@ import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
-import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.scheme.AbstractSchemeElement;
+import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -43,7 +48,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер топологическиго пути.
  * 
- * @version $Revision: 1.48 $, $Date: 2006/02/22 11:57:28 $
+ * @version $Revision: 1.49 $, $Date: 2006/02/22 15:39:47 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -226,12 +231,14 @@ public final class MeasurementPathController extends AbstractLinkController {
 			case IdlKind._SCHEME_ELEMENT:
 				try {
 					final SchemeElement se = (SchemeElement) abstractSchemeElement;
-					final Scheme scheme1 = se.getNearestParentScheme();
+					final SchemeElement top = MapView.getTopLevelSchemeElement(se);
+					
+					final Scheme scheme1 = top.getNearestParentScheme();
 					if (scheme1.getParentSchemeElement() != null) {
 						final SchemeElement topological = scheme1.getParentSchemeElement();
 						mapElement = mapView.findElement(topological);
 					} else {
-						final SchemeElement topological = MapView.getTopologicalSchemeElement(scheme1, se);
+						final SchemeElement topological = MapView.getTopologicalSchemeElement(scheme1, top);
 						mapElement = mapView.findElement(topological);
 					}
 				} catch (ApplicationException e) {
@@ -270,15 +277,25 @@ public final class MeasurementPathController extends AbstractLinkController {
 	 * @param path путь
 	 * @return идентификатор или <code>null</code>, если исследуемый объект 
 	 * не найден
+	 * @throws ApplicationException 
 	 */
-	public Identifier getMonitoredElementId(final MeasurementPath path) {
-		final TransmissionPath tp = path.getSchemePath().getTransmissionPath();
-		if(tp == null)
-			return null;
-		Set<Identifier> monitoredElementIds = tp.getMonitoredElementIds();
-		if(monitoredElementIds.size() == 0)
-			return null;
-		return monitoredElementIds.iterator().next();
+	public Identifier getMonitoredElementId(final MeasurementPath path) throws ApplicationException {
+		SortedSet<PathElement> pathMemebers = path.getSchemePath().getPathMembers();
+		if (!pathMemebers.isEmpty()) {
+			AbstractSchemePort startPort = pathMemebers.first().getEndAbstractSchemePort();
+			if (startPort != null) {
+				Identifier measurementPortId = startPort.getMeasurementPortId();
+				if (!measurementPortId.isVoid()) {
+					LinkedIdsCondition condition = new LinkedIdsCondition(measurementPortId, ObjectEntities.MONITOREDELEMENT_CODE);
+					Set<MonitoredElement> mes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+					if (!mes.isEmpty()) {
+						MonitoredElement me = mes.iterator().next();
+						return me.getId();
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	public Rectangle2D getBoundingRectangle(MapElement mapElement) throws MapConnectionException, MapDataException {
