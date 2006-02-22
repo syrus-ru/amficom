@@ -1,5 +1,5 @@
 /*-
- * $Id: TestLRUMap.java,v 1.2 2005/12/09 08:18:09 arseniy Exp $
+ * $Id: TestLRUMap.java,v 1.3 2006/02/22 16:11:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,12 +25,13 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/09 08:18:09 $
+ * @version $Revision: 1.3 $, $Date: 2006/02/22 16:11:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
  */
 public final class TestLRUMap extends TestCase {
+	private static final String KEY_PREFIX = "key_";
 
 	private static class Value implements Retainable, Serializable {
 		private static final long serialVersionUID = 8879807331759613030L;
@@ -106,7 +107,7 @@ public final class TestLRUMap extends TestCase {
 	public void testPut() {
 		final int size = 100;
 		for (int i = 0; i < size; i++) {
-			final String key = "key_" + i;
+			final String key = KEY_PREFIX + i;
 			final Value value = new Value(i);
 			lruMap.put(key, value);
 		}
@@ -115,40 +116,40 @@ public final class TestLRUMap extends TestCase {
 	}
 
 	public void _testRemove() {
-		lruMap.remove("key_10");
+		lruMap.remove(KEY_PREFIX + "10");
 		System.out.println("Size: " + lruMap.size());
 		System.out.println("LRUMap: " + lruMap);
 	}
 
-	public void testPutAll() {
+	public void _testPutAll() {
 		final Map<String, Value> map = new HashMap<String, Value>();
 		for (int i = 100; i < 200; i++) {
-			map.put("key_" + i, new Value(i));
+			map.put(KEY_PREFIX + i, new Value(i));
 		}
 		lruMap.putAll(map);
 		System.out.println("Size: " + lruMap.size());
 		System.out.println("LRUMap: " + lruMap);
 	}
 
-	public void _testIterator() {
-		final Thread thread1 = new Thread() {
+	public void testConcurrent() {
+		final Thread getThread = new Thread() {
 			@Override
 			public void run() {
-				for (final Map.Entry<String, Value> entry : lruMap.entrySet()) {
-					System.out.println(" Thread 1 | Key: " + entry.getKey() + ", value: " + entry.getValue());
-					try {
-						sleep(1);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+				for (int i = 199; i >= 100; i--) {
+					final String key = KEY_PREFIX + i;
+					final Value value = lruMap.get(key);
+					System.out.println("Get | Key: " + key + ", value: " + value);
 				}
 			}
 		};
-		final Thread thread2 = new Thread() {
+		final Thread putThread = new Thread() {
 			@Override
 			public void run() {
 				for (int i = 100; i < 200; i++) {
-					lruMap.put("key_" + i, new Value(i));
+					final String key = KEY_PREFIX + i;
+					final Value value = new Value(i);
+					System.out.println("Put | Key: " + key + ", value: " + value);
+					lruMap.put(key, value);
 					try {
 						sleep(1);
 					} catch (InterruptedException e) {
@@ -157,8 +158,8 @@ public final class TestLRUMap extends TestCase {
 				}
 			}
 		};
-		thread2.start();
-		thread1.start();
+		putThread.start();
+		getThread.start();
 
 		try {
 			Thread.sleep(3000);
@@ -172,7 +173,7 @@ public final class TestLRUMap extends TestCase {
 	public void _testKeySet() {
 		for (final Iterator<String> it = lruMap.keySet().iterator(); it.hasNext();) {
 			final String key = it.next();
-			if (key.equals("key_30")) {
+			if (key.equals(KEY_PREFIX + "30")) {
 				it.remove();
 			}
 		}
@@ -213,7 +214,7 @@ public final class TestLRUMap extends TestCase {
 		}
 	}
 
-	public void testRetain() {
+	public void __estRetain() {
 		for (final Map.Entry<String, Value> entry : lruMap.entrySet()) {
 			final Value value = entry.getValue();
 			if (value.isEven()) {
@@ -227,7 +228,7 @@ public final class TestLRUMap extends TestCase {
 			e.printStackTrace();
 		}
 
-		lruMap.put("key_1001", new Value(1001));
+		lruMap.put(KEY_PREFIX + "1001", new Value(1001));
 		System.out.println("Size: " + lruMap.size());
 		System.out.println("LRUMap: " + lruMap);
 
@@ -238,7 +239,7 @@ public final class TestLRUMap extends TestCase {
 			}
 		}
 
-		lruMap.put("key_1002", new Value(1002));
+		lruMap.put(KEY_PREFIX + "1002", new Value(1002));
 		System.out.println("Size: " + lruMap.size());
 		System.out.println("LRUMap: " + lruMap);
 	}
