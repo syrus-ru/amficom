@@ -18,7 +18,6 @@ import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.LINK_COLUMN_
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,6 +27,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -140,10 +140,11 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 	}
 
 	@Override
-	protected void insert(final Set<MeasurementSetup> actionTemplates) throws IllegalDataException, CreateObjectException {
-		super.insert(actionTemplates);
+	protected void insert(final Set<MeasurementSetup> measurementSetups) throws IllegalDataException, CreateObjectException {
+		super.insert(measurementSetups);
 
-		final Map<Identifier, Set<Identifier>> monitoredElementIdsMap = this.createMonitoredElementIdsMap(actionTemplates);
+		final Map<Identifier, Set<Identifier>> monitoredElementIdsMap = StorableObject.createValuesMap(measurementSetups,
+				LINK_COLUMN_MONITORED_ELEMENT_ID);
 		super.insertLinkedEntityIds(monitoredElementIdsMap,
 				MS_ME_LINK,
 				LINK_COLUMN_MEASUREMENT_SETUP_ID,
@@ -154,18 +155,11 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 	protected void update(final Set<MeasurementSetup> measurementSetups) throws UpdateObjectException {
 		super.update(measurementSetups);
 
-		final Map<Identifier, Set<Identifier>> monitoredElementIdsMap = this.createMonitoredElementIdsMap(measurementSetups);
+		final Map<Identifier, Set<Identifier>> monitoredElementIdsMap = StorableObject.createValuesMap(measurementSetups,
+				LINK_COLUMN_MONITORED_ELEMENT_ID);
 		super.updateLinkedEntityIds(monitoredElementIdsMap,
 				MS_ME_LINK,
 				LINK_COLUMN_MEASUREMENT_SETUP_ID,
 				LINK_COLUMN_MONITORED_ELEMENT_ID);
-	}
-
-	private Map<Identifier, Set<Identifier>> createMonitoredElementIdsMap(final Set<MeasurementSetup> measurementSetups) {
-		final Map<Identifier, Set<Identifier>> monitoredElementIdsMap = new HashMap<Identifier, Set<Identifier>>();
-		for (final MeasurementSetup measurementSetup : measurementSetups) {
-			monitoredElementIdsMap.put(measurementSetup.getId(), measurementSetup.getMonitoredElementIds());
-		}
-		return monitoredElementIdsMap;
 	}
 }
