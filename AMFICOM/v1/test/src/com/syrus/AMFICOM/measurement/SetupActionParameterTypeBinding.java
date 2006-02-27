@@ -1,5 +1,5 @@
 /*-
- * $Id: SetupActionParameterTypeBinding.java,v 1.1.2.1 2006/02/22 15:50:26 arseniy Exp $
+ * $Id: SetupActionParameterTypeBinding.java,v 1.1.2.2 2006/02/27 16:23:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PREDICTION_TIME_START;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/22 15:50:26 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/02/27 16:23:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -224,7 +224,7 @@ public class SetupActionParameterTypeBinding extends TestCase {
 				COLUMN_CODENAME));
 		final Set<MeasurementPortType> measurementPortTypes = StorableObjectPool.getStorableObjectsByCondition(measurementPortTypeCondition, true);
 		assertTrue("Not all measurement port types can be loaded", measurementPortTypes.size() == measurementPortTypeCondition.getConditionsNumber());
-		final Map<String, MeasurementPortType> measurementPortTypeCodenames = StorableObjectType.createCodenamesMap(measurementPortTypes);
+		final Map<String, MeasurementPortType> measurementPortTypeCodenamesMap = StorableObjectType.createCodenamesMap(measurementPortTypes);
 
 
 		/*	Create bindings*/
@@ -235,7 +235,7 @@ public class SetupActionParameterTypeBinding extends TestCase {
 		final Identifier modelingTypeId = modelingType.getId();
 
 		/*	Bindings for QP1640A*/
-		final Identifier qp1640aMeasurementPortTypeId = measurementPortTypeCodenames.get(REFLECTOMETRY_QP1640A.stringValue()).getId();
+		final Identifier qp1640aMeasurementPortTypeId = measurementPortTypeCodenamesMap.get(REFLECTOMETRY_QP1640A.stringValue()).getId();
 
 		actionParameterTypeBindings.add(ActionParameterTypeBinding.createInstance(creatorId,
 				ParameterValueKind.ENUMERATED,
@@ -346,7 +346,7 @@ public class SetupActionParameterTypeBinding extends TestCase {
 				qp1640aMeasurementPortTypeId));
 
 		/*	Bindings for QP1643A*/
-		final Identifier qp1643aMeasurementPortTypeId = measurementPortTypeCodenames.get(REFLECTOMETRY_QP1643A.stringValue()).getId();
+		final Identifier qp1643aMeasurementPortTypeId = measurementPortTypeCodenamesMap.get(REFLECTOMETRY_QP1643A.stringValue()).getId();
 
 		actionParameterTypeBindings.add(ActionParameterTypeBinding.createInstance(creatorId,
 				ParameterValueKind.ENUMERATED,
@@ -457,7 +457,7 @@ public class SetupActionParameterTypeBinding extends TestCase {
 				qp1643aMeasurementPortTypeId));
 
 		/*	Bindings for PK7600*/
-		final Identifier pk7600MeasurementPortTypeId = measurementPortTypeCodenames.get(REFLECTOMETRY_PK7600.stringValue()).getId();
+		final Identifier pk7600MeasurementPortTypeId = measurementPortTypeCodenamesMap.get(REFLECTOMETRY_PK7600.stringValue()).getId();
 
 		actionParameterTypeBindings.add(ActionParameterTypeBinding.createInstance(creatorId,
 				ParameterValueKind.ENUMERATED,
@@ -485,7 +485,7 @@ public class SetupActionParameterTypeBinding extends TestCase {
 				measurementTypeId,
 				pk7600MeasurementPortTypeId));
 		actionParameterTypeBindings.add(ActionParameterTypeBinding.createInstance(creatorId,
-				ParameterValueKind.ENUMERATED,
+				ParameterValueKind.CONTINUOUS,
 				parameterTypeCodenamesMap.get(AVERAGE_COUNT.stringValue()).getId(),
 				measurementTypeId,
 				pk7600MeasurementPortTypeId));
