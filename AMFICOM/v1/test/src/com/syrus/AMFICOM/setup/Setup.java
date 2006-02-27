@@ -1,5 +1,5 @@
 /*
- * $Id: Setup.java,v 1.1.2.5 2006/02/22 15:50:38 arseniy Exp $
+ * $Id: Setup.java,v 1.1.2.6 2006/02/27 16:26:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.administration.SetupMCM;
 import com.syrus.AMFICOM.administration.SetupServer;
 import com.syrus.AMFICOM.administration.SetupServerProcess;
 import com.syrus.AMFICOM.administration.SetupSystemUser;
+import com.syrus.AMFICOM.administration.SetupSystemUserPasswords;
 import com.syrus.AMFICOM.configuration.SetupEquipmentType;
 import com.syrus.AMFICOM.configuration.SetupPortType;
 import com.syrus.AMFICOM.configuration.SetupTransmissionPathType;
@@ -27,10 +28,11 @@ import com.syrus.AMFICOM.general.SetupMeasurementUnit;
 import com.syrus.AMFICOM.measurement.SetupActionParameterTypeBinding;
 import com.syrus.AMFICOM.measurement.SetupActionType;
 import com.syrus.AMFICOM.measurement.SetupMeasurementPortType;
+import com.syrus.AMFICOM.reflectometry.SetupActionParameter;
 import com.syrus.AMFICOM.reflectometry.SetupParameterType;
 
 /**
- * @version $Revision: 1.1.2.5 $, $Date: 2006/02/22 15:50:38 $
+ * @version $Revision: 1.1.2.6 $, $Date: 2006/02/27 16:26:21 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -62,18 +64,8 @@ public final class Setup extends TestCase {
 		databaseCommonTest.addTest(new SetupServerProcess("testCreate"));
 		databaseCommonTest.addTest(new SetupMCM("testCreate"));
 
-		//-Create configuration objects.
-		databaseCommonTest.addTest(new SetupEquipmentType("testCreate"));
-		databaseCommonTest.addTest(new SetupPortType("testCreate"));
-		databaseCommonTest.addTest(new SetupTransmissionPathType("testCreate"));
-
-		//-Create measurement port types, parameter types and action types
-		databaseCommonTest.addTest(new SetupMeasurementPortType("testCreate"));
-		databaseCommonTest.addTest(new SetupParameterType("testCreate"));
-		databaseCommonTest.addTest(new SetupActionType("testCreate"));
-
-		//-Create action parameter type bindings
-		databaseCommonTest.addTest(new SetupActionParameterTypeBinding("testCreate"));
+		//-Set passwords for base system users.
+		databaseCommonTest.addTest(new SetupSystemUserPasswords("testSetPassword"));
 //
 //		//-Create configuration objects.
 //		databaseCommonTest.addTest(new TestProtoEquipment("testCreateInstance"));
