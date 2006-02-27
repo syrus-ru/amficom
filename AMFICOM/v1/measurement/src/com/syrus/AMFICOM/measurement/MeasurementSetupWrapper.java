@@ -23,7 +23,8 @@ public final class MeasurementSetupWrapper extends StorableObjectWrapper<Measure
 		final String[] keysArray = new String[] { COLUMN_DESCRIPTION,
 				COLUMN_MEASUREMENT_TEMPLATE_ID,
 				COLUMN_ANALYSIS_TEMPLATE_ID,
-				COLUMN_ETALON_TEMPLATE_ID };
+				COLUMN_ETALON_TEMPLATE_ID,
+				LINK_COLUMN_MONITORED_ELEMENT_ID };
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
