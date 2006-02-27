@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.71.2.2 2006/02/15 19:36:50 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.71.2.3 2006/02/27 16:19:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,19 +8,26 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETERTYPEBINDING_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSISRESULTPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTRESULTPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MODELINGRESULTPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 
@@ -40,7 +47,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71.2.2 $, $Date: 2006/02/15 19:36:50 $
+ * @version $Revision: 1.71.2.3 $, $Date: 2006/02/27 16:19:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -99,6 +106,42 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
+			case ACTIONPARAMETERTYPEBINDING_CODE:
+				final ActionParameterTypeBinding actionParameterTypeBinding = (ActionParameterTypeBinding) storableObject;
+				switch (this.linkedEntityCode) {
+					case PARAMETER_TYPE_CODE:
+						final Identifier parameterTypeId = actionParameterTypeBinding.getParameterTypeId();
+						condition = super.conditionTest(parameterTypeId);
+						break;
+					case MEASUREMENT_TYPE_CODE:
+					case ANALYSIS_TYPE_CODE:
+					case MODELING_TYPE_CODE:
+						final Identifier actionTypeId = actionParameterTypeBinding.getActionTypeId();
+						condition = super.conditionTest(actionTypeId);
+						break;
+					case MEASUREMENTPORT_TYPE_CODE:
+						final Identifier measurementPortTypeId = actionParameterTypeBinding.getMeasurementPortTypeId();
+						condition = super.conditionTest(measurementPortTypeId);
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
+				break;
+			case ACTIONPARAMETER_CODE:
+				final ActionParameter actionParameter = (ActionParameter) storableObject;
+				switch (this.linkedEntityCode) {
+					case ACTIONPARAMETERTYPEBINDING_CODE:
+						final Identifier actionParameterTypeBindingId = actionParameter.getBindingId();
+						condition = super.conditionTest(actionParameterTypeBindingId);
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
+				break;
 			case ANALYSIS_CODE:
 				final Analysis analysis = (Analysis) storableObject;
 				switch (this.linkedEntityCode) {
