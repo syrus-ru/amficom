@@ -1,5 +1,5 @@
 /*-
- * $Id: SetupParameterType.java,v 1.1.2.3 2006/02/22 15:00:59 arseniy Exp $
+ * $Id: SetupParameterType.java,v 1.1.2.4 2006/02/27 16:24:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/02/22 15:00:59 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/02/27 16:24:55 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -126,7 +126,7 @@ public final class SetupParameterType extends TestCase {
 		parameterTypes.add(ParameterType.createInstance(creatorId,
 				typeCodename,
 				I18N.getString(RESOURCE_KEY_ROOT + typeCodename),
-				DOUBLE,
+				INTEGER,
 				NONDIMENSIONAL));
 
 		typeCodename = FLAG_PULSE_WIDTH_LOW_RES.stringValue();
