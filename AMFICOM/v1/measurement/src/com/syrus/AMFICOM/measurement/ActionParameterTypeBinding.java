@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.5 2006/02/22 15:47:59 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.6 2006/02/27 16:15:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,15 @@
 package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
+import static com.syrus.AMFICOM.general.ErrorMessages.ONLY_ONE_EXPECTED;
+import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETERTYPEBINDING_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -16,14 +25,19 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBinding;
@@ -31,7 +45,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBindingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterValueKind;
 
 /**
- * @version $Revision: 1.1.2.5 $, $Date: 2006/02/22 15:47:59 $
+ * @version $Revision: 1.1.2.6 $, $Date: 2006/02/27 16:15:31 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -219,6 +233,33 @@ public final class ActionParameterTypeBinding extends StorableObject<ActionParam
 	@Override
 	protected ActionParameterTypeBindingWrapper getWrapper() {
 		return ActionParameterTypeBindingWrapper.getInstance();
+	}
+
+	public static ActionParameterTypeBinding valueOf(final ParameterType parameterType,
+			final ActionType actionType,
+			final MeasurementPortType measurementPortType) throws ApplicationException {
+		return valueOf(parameterType.getId(), actionType.getId(), measurementPortType.getId());
+	}
+
+	public static ActionParameterTypeBinding valueOf(final Identifier parameterTypeId,
+			final Identifier actionTypeId,
+			final Identifier measurementPortTypeId) throws ApplicationException {
+		assert parameterTypeId.getMajor() == PARAMETER_TYPE_CODE : ILLEGAL_ENTITY_CODE;
+		assert actionTypeId.getMajor() == MEASUREMENT_TYPE_CODE
+				|| actionTypeId.getMajor() == ANALYSIS_TYPE_CODE
+				|| actionTypeId.getMajor() == MODELING_TYPE_CODE : ILLEGAL_ENTITY_CODE;
+		assert measurementPortTypeId.getMajor() == MEASUREMENTPORT_TYPE_CODE : ILLEGAL_ENTITY_CODE;
+
+		final CompoundCondition condition = new CompoundCondition(new LinkedIdsCondition(parameterTypeId, ACTIONPARAMETERTYPEBINDING_CODE),
+				AND,
+				new LinkedIdsCondition(actionTypeId, ACTIONPARAMETERTYPEBINDING_CODE));
+		condition.addCondition(new LinkedIdsCondition(measurementPortTypeId, ACTIONPARAMETERTYPEBINDING_CODE));
+		final Set<ActionParameterTypeBinding> actionParameterTypeBindings = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		if (actionParameterTypeBindings.isEmpty()) {
+			throw new ObjectNotFoundException("Binding for '" + parameterTypeId + "', '" + actionTypeId + "', '" + measurementPortTypeId + "' not found");
+		}
+		assert actionParameterTypeBindings.size() == 1 : ONLY_ONE_EXPECTED;
+		return actionParameterTypeBindings.iterator().next();
 	}
 
 }
