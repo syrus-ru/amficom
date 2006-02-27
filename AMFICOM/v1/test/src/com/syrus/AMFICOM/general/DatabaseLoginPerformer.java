@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLoginPerformer.java,v 1.1.2.2 2006/02/17 14:37:50 arseniy Exp $
+ * $Id: DatabaseLoginPerformer.java,v 1.1.2.3 2006/02/27 16:06:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,10 +22,11 @@ import java.util.Set;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.security.SessionKey;
+import com.syrus.AMFICOM.security.ShadowDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/17 14:37:50 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/02/27 16:06:55 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -130,11 +131,21 @@ public final class DatabaseLoginPerformer implements LoginPerformer {
 	}
 
 	public void setPassword(final String password) throws CommunicationException, LoginException {
-		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+		final ShadowDatabase shadowDatabase = new ShadowDatabase();
+		try {
+			shadowDatabase.updateOrInsert(this.userId, password);
+		} catch (UpdateObjectException uoe) {
+			throw new LoginException(uoe);
+		}
 	}
 
 	public void setPassword(final Identifier systemUserId, final String password) throws CommunicationException, LoginException {
-		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+		final ShadowDatabase shadowDatabase = new ShadowDatabase();
+		try {
+			shadowDatabase.updateOrInsert(systemUserId, password);
+		} catch (UpdateObjectException uoe) {
+			throw new LoginException(uoe);
+		}
 	}
 
 	private void reset() {
