@@ -2,7 +2,7 @@
 
 # This script can be used to run tests from console
 
-TEST_CLASS=Setup
+TEST_CLASS=Setup2
 TEST_PACKAGE=com.syrus.AMFICOM.setup
 #TEST_CLASS=TestLRUMap
 #TEST_PACKAGE=com.syrus.util
