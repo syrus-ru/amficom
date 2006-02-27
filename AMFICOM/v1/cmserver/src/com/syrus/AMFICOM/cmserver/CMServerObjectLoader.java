@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerObjectLoader.java,v 1.18 2006/02/17 11:33:25 bass Exp $
+ * $Id: CMServerObjectLoader.java,v 1.19 2006/02/27 16:20:18 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,8 @@ package com.syrus.AMFICOM.cmserver;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTRESULTPARAMETER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSISRESULTPARAMETER_CODE;
 
 import java.util.Collections;
 import java.util.Set;
@@ -27,8 +28,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/02/17 11:33:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2006/02/27 16:20:18 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  * @todo Implement refresh (i. e. - method {@link com.syrus.AMFICOM.general.ObjectLoader#getRemoteVersions(Set)})
@@ -57,7 +58,8 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 		switch (entityCode) {
 			case MEASUREMENT_CODE:
 			case ANALYSIS_CODE:
-			case RESULT_CODE:
+			case MEASUREMENTRESULTPARAMETER_CODE:
+			case ANALYSISRESULTPARAMETER_CODE:
 				return this.loadStorableObjectsCustom(ids);
 			default:
 				return super.loadStorableObjects(ids);
@@ -75,7 +77,8 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 		switch (entityCode) {
 			case MEASUREMENT_CODE:
 			case ANALYSIS_CODE:
-			case RESULT_CODE:
+			case MEASUREMENTRESULTPARAMETER_CODE:
+			case ANALYSISRESULTPARAMETER_CODE:
 				return this.loadStorableObjectsButIdsByConditionCustom(ids, condition);
 			default:
 				return super.loadStorableObjectsButIdsByCondition(ids, condition);
