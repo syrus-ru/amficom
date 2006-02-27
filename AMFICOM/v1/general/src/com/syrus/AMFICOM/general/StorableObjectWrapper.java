@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.20.2.1 2006/02/16 12:33:20 arseniy Exp $
+ * $Id: StorableObjectWrapper.java,v 1.20.2.2 2006/02/27 16:13:50 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Wrapper;
  * a static method <code>getInstance()</code>.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.20.2.1 $, $Date: 2006/02/16 12:33:20 $
+ * @version $Revision: 1.20.2.2 $, $Date: 2006/02/27 16:13:50 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
@@ -91,25 +91,24 @@ public abstract class StorableObjectWrapper<T extends StorableObject> implements
 		}
 		return wrapper;
 	}	
-	
-	public Object getValue(	T object,
-							String key) {
+
+	public Object getValue(final T object, final String key) {
 		if (object != null) {
 			if (key.equals(COLUMN_ID)) {
 				return object.getId();
-			} else if(key.equals(COLUMN_CREATED)) {
+			} else if (key.equals(COLUMN_CREATED)) {
 				return object.getCreated();
-			} else if(key.equals(COLUMN_CREATOR_ID)) {
+			} else if (key.equals(COLUMN_CREATOR_ID)) {
 				return object.getCreatorId();
-			} else if(key.equals(COLUMN_MODIFIED)) {
+			} else if (key.equals(COLUMN_MODIFIED)) {
 				return object.getModified();
-			} else if(key.equals(COLUMN_MODIFIER_ID)) {
+			} else if (key.equals(COLUMN_MODIFIER_ID)) {
 				return object.getCreatorId();
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @param storableObject
 	 * @param key
@@ -117,17 +116,14 @@ public abstract class StorableObjectWrapper<T extends StorableObject> implements
 	 * @throws PropertyChangeException
 	 * @see Wrapper#setValue(Object, String, Object)
 	 */
-	public abstract void setValue(final T storableObject,
-			final String key,
-			final Object value)
-	throws PropertyChangeException;
+	public abstract void setValue(final T storableObject, final String key, final Object value) throws PropertyChangeException;
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_ID) 
+		if (key.equals(COLUMN_ID)
 				|| key.equals(COLUMN_CREATOR_ID)
 				|| key.equals(COLUMN_MODIFIER_ID)) {
 			return Identifier.class;
-		} else if(key.equals(COLUMN_CREATED) 
+		} else if (key.equals(COLUMN_CREATED)
 				|| key.equals(COLUMN_MODIFIED)) {
 			return Date.class;
 		}
