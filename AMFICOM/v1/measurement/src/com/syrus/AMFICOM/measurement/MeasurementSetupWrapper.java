@@ -59,6 +59,9 @@ public final class MeasurementSetupWrapper extends StorableObjectWrapper<Measure
 			if (key.equals(COLUMN_DESCRIPTION)) {
 				return object.getDescription();
 			}
+			if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID)) {
+				return object.getMonitoredElementIds();
+			}
 		}
 		return value;
 	}
