@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.6 2006/02/27 16:15:31 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.7 2006/02/28 10:46:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBindingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterValueKind;
 
 /**
- * @version $Revision: 1.1.2.6 $, $Date: 2006/02/27 16:15:31 $
+ * @version $Revision: 1.1.2.7 $, $Date: 2006/02/28 10:46:22 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -238,12 +238,20 @@ public final class ActionParameterTypeBinding extends StorableObject<ActionParam
 	public static ActionParameterTypeBinding valueOf(final ParameterType parameterType,
 			final ActionType actionType,
 			final MeasurementPortType measurementPortType) throws ApplicationException {
+		assert parameterType != null : NON_NULL_EXPECTED;
+		assert actionType != null : NON_NULL_EXPECTED;
+		assert measurementPortType != null : NON_NULL_EXPECTED;
+
 		return valueOf(parameterType.getId(), actionType.getId(), measurementPortType.getId());
 	}
 
 	public static ActionParameterTypeBinding valueOf(final Identifier parameterTypeId,
 			final Identifier actionTypeId,
 			final Identifier measurementPortTypeId) throws ApplicationException {
+		assert parameterTypeId != null : NON_NULL_EXPECTED;
+		assert actionTypeId != null : NON_NULL_EXPECTED;
+		assert measurementPortTypeId != null : NON_NULL_EXPECTED;
+
 		assert parameterTypeId.getMajor() == PARAMETER_TYPE_CODE : ILLEGAL_ENTITY_CODE;
 		assert actionTypeId.getMajor() == MEASUREMENT_TYPE_CODE
 				|| actionTypeId.getMajor() == ANALYSIS_TYPE_CODE
