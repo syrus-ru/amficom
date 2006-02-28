@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.33 2005/12/02 15:22:24 arseniy Exp $
+ * $Id: LoginEventServer.java,v 1.34 2006/02/28 15:19:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,9 @@
  */
 
 package com.syrus.AMFICOM.leserver;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.SERVERPROCESS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
 
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.ServerProcess;
@@ -16,7 +19,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Application;
@@ -25,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/12/02 15:22:24 $
+ * @version $Revision: 1.34 $, $Date: 2006/02/28 15:19:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -99,7 +101,7 @@ final class LoginEventServer {
 		/*	Retrieve info about server*/
 		final Identifier serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
 		try {
-			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
+			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);
 			final Server server = serverDatabase.retrieveForId(serverId);
 
 			/*	Retrieve info about processes*/
@@ -107,7 +109,7 @@ final class LoginEventServer {
 					ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
 			eventProcessCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
 					ServerProcessWrapper.EVENT_PROCESS_CODENAME);
-			final StorableObjectDatabase<ServerProcess> storableObjectDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE);
+			final StorableObjectDatabase<ServerProcess> storableObjectDatabase = DatabaseContext.getDatabase(SERVERPROCESS_CODE);
 			final ServerProcessDatabase serverProcessDatabase = (ServerProcessDatabase) storableObjectDatabase;
 			final ServerProcess loginServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, loginProcessCodename);
 			final ServerProcess eventServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, eventProcessCodename);

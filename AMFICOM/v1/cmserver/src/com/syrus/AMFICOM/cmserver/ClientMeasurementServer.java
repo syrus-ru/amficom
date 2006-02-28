@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.71 2005/11/28 12:35:02 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.72 2006/02/28 15:20:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,17 +8,21 @@
 
 package com.syrus.AMFICOM.cmserver;
 
+import static com.syrus.AMFICOM.administration.ServerProcessWrapper.CMSERVER_PROCESS_CODENAME;
+import static com.syrus.AMFICOM.administration.ServerProcessWrapper.KEY_CMSERVER_PROCESS_CODENAME;
+import static com.syrus.AMFICOM.general.ObjectEntities.SERVERPROCESS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
+
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.ServerProcess;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
-import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginRestorer;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
@@ -26,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/11/28 12:35:02 $
+ * @version $Revision: 1.72 $, $Date: 2006/02/28 15:20:00 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -108,17 +112,16 @@ final class ClientMeasurementServer {
 		/*	Retrieve info about process*/
 		/*	Retrieve info about user*/
 		serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
-		processCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_CMSERVER_PROCESS_CODENAME,
-				ServerProcessWrapper.CMSERVER_PROCESS_CODENAME);
+		processCodename = ApplicationProperties.getString(KEY_CMSERVER_PROCESS_CODENAME, CMSERVER_PROCESS_CODENAME);
 		try {
-			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
+			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);
 			final Server server = serverDatabase.retrieveForId(serverId);
 
-			final StorableObjectDatabase<ServerProcess> storableObjectDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE);
+			final StorableObjectDatabase<ServerProcess> storableObjectDatabase = DatabaseContext.getDatabase(SERVERPROCESS_CODE);
 			final ServerProcess serverProcess = ((ServerProcessDatabase) storableObjectDatabase).retrieveForServerAndCodename(serverId,
 					processCodename);
 
-			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
+			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(SYSTEMUSER_CODE);
 			final SystemUser user = ((SystemUserDatabase) systemUserDatabase).retrieveForId(serverProcess.getUserId());
 
 			login = user.getLogin();

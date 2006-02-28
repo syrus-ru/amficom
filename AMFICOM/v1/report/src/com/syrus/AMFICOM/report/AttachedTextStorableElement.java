@@ -4,6 +4,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.ATTACHEDTEXT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.awt.Font;
 import java.awt.Rectangle;
@@ -116,7 +117,7 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					location,
 					size,
 					VOID_IDENTIFIER,

@@ -1,5 +1,5 @@
 /*-
-* $Id: ScheduleMainFrame.java,v 1.53 2006/02/17 10:00:29 bob Exp $
+* $Id: ScheduleMainFrame.java,v 1.54 2006/02/28 15:19:59 arseniy Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2006/02/17 10:00:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.54 $, $Date: 2006/02/28 15:19:59 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -181,7 +181,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 			final SchedulerModel schedulerModel = 
 				(SchedulerModel) this.aContext.getApplicationModel();
 			schedulerModel.unselectTests(this);
-			StorableObjectPool.clean();
+//			StorableObjectPool.clean();
 		}
 
 		((Component) this.frames.get(PARAMETERS_FRAME)).setVisible(loggedIn);

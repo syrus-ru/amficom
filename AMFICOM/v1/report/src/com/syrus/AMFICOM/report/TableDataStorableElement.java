@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.18 2005/12/17 12:11:23 arseniy Exp $
+ * $Id: TableDataStorableElement.java,v 1.19 2006/02/28 15:19:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTABLEDATA_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.awt.Font;
 import java.util.Collections;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
 /**
  * Класс для отображения данных в табличном виде
  * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/12/17 12:11:23 $
+ * @version $Revision: 1.19 $, $Date: 2006/02/28 15:19:59 $
  * @module report
  */
 public final class TableDataStorableElement extends AbstractDataStorableElement<TableDataStorableElement> {
@@ -78,7 +79,7 @@ public final class TableDataStorableElement extends AbstractDataStorableElement<
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					location,
 					new IntDimension(),
 					VOID_IDENTIFIER,

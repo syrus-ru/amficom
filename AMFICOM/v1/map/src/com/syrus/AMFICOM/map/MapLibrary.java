@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.43 2005/12/17 12:09:00 arseniy Exp $
+ * $Id: MapLibrary.java,v 1.44 2006/02/28 15:20:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN
 import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.SEVERE;
@@ -61,7 +62,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/12/17 12:09:00 $
+ * @version $Revision: 1.44 $, $Date: 2006/02/28 15:20:01 $
  * @author $Author: arseniy $
  * @module map
  */
@@ -118,7 +119,7 @@ public final class MapLibrary extends StorableObject<MapLibrary>
 		try {
 			final MapLibrary mapLibrary = new MapLibrary(IdentifierPool.getGeneratedIdentifier(MAPLIBRARY_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					codename,
 					description,

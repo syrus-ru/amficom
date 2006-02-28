@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.43 2006/01/13 13:53:07 bob Exp $
+* $Id: PermissionAttributes.java,v 1.44 2006/02/28 15:19:58 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -7,6 +7,11 @@
 */
 
 package com.syrus.AMFICOM.administration;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.PERMATTR_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -24,12 +29,10 @@ import com.syrus.AMFICOM.administration.corba.IdlPermissionAttributesHelper;
 import com.syrus.AMFICOM.administration.corba.IdlPermissionAttributesPackage.IdlModule;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -38,8 +41,8 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 
 
 /**
- * @version $Revision: 1.43 $, $Date: 2006/01/13 13:53:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.44 $, $Date: 2006/02/28 15:19:58 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module administration
  */
@@ -727,7 +730,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 
 		this.setDenyMaskByteArray0(pat.denyMask);
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -737,7 +740,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	 */
 	@Override
 	public IdlPermissionAttributes getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		return IdlPermissionAttributesHelper.init(orb,
 				super.id.getIdlTransferable(),
 				super.created.getTime(),
@@ -757,7 +760,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		return super.isValid()
 				&& this.parentId != null && !this.parentId.isVoid()
 				&& this.domainId != null &&
-					(this.parentId.getMajor() == ObjectEntities.ROLE_CODE || !this.domainId.isVoid())
+					(this.parentId.getMajor() == ROLE_CODE || !this.domainId.isVoid())
 				&& this.permissions != null;
 	}
 
@@ -775,16 +778,16 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 			final Module module) throws CreateObjectException {
 		try {
 			final PermissionAttributes permissionAttributes = new PermissionAttributes(
-					IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERMATTR_CODE),
+					IdentifierPool.getGeneratedIdentifier(PERMATTR_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					userId,
 					module,
 					BigInteger.ZERO,
 					BigInteger.ZERO);
 
-			assert permissionAttributes.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert permissionAttributes.isValid() : OBJECT_STATE_ILLEGAL;
 
 			permissionAttributes.markAsChanged();
 
@@ -824,8 +827,6 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
 		if (!this.domainId.isVoid()) {
 			dependencies.add(this.domainId);

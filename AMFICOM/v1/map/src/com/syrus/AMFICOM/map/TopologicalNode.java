@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.96 2005/12/17 12:09:00 arseniy Exp $
+ * $Id: TopologicalNode.java,v 1.97 2006/02/28 15:20:01 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -47,7 +48,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: arseniy $
- * @version $Revision: 1.96 $, $Date: 2005/12/17 12:09:00 $
+ * @version $Revision: 1.97 $, $Date: 2006/02/28 15:20:01 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode<TopologicalNode>
@@ -105,7 +106,7 @@ public final class TopologicalNode extends AbstractNode<TopologicalNode>
 		try {
 			final TopologicalNode topologicalNode = new TopologicalNode(IdentifierPool.getGeneratedIdentifier(TOPOLOGICALNODE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					description,
 					location.getX(),

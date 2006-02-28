@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.36 2005/12/02 11:24:11 bass Exp $
+ * $Id: DomainDatabase.java,v 1.37 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,14 @@
 
 package com.syrus.AMFICOM.administration;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -23,8 +24,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/12/02 11:24:11 $
- * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2006/02/28 15:19:58 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -35,7 +36,7 @@ public final class DomainDatabase extends StorableObjectDatabase<Domain> {
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.DOMAIN_CODE;
+		return DOMAIN_CODE;
 	}
 
 	@Override

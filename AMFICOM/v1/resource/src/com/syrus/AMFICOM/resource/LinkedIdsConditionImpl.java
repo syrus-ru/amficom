@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.4 2005/12/09 11:36:10 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.5 2006/02/28 15:19:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,18 +16,17 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/09 11:36:10 $
+ * @version $Revision: 1.5 $, $Date: 2006/02/28 15:19:59 $
  * @author $Author: arseniy $
  * @module resource
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	private static final long serialVersionUID = 2022895734421025015L;
 
-	protected static final Short LAYOUT_ITEM_SHORT = new Short(ObjectEntities.LAYOUT_ITEM_CODE);
+	protected static final Short LAYOUT_ITEM_SHORT = new Short(LAYOUT_ITEM_CODE);
 
 	@SuppressWarnings("unused")
 	private LinkedIdsConditionImpl(final Set<? extends Identifiable> linkedIdentifiables, final Short linkedEntityCode, final Short entityCode) {
@@ -71,7 +70,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	@Override
 	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
-			case ObjectEntities.LAYOUT_ITEM_CODE:
+			case LAYOUT_ITEM_CODE:
 				this.entityCode = LAYOUT_ITEM_SHORT;
 				break;
 			default:

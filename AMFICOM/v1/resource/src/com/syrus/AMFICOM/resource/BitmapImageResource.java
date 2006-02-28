@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.36 2005/12/07 17:17:17 bass Exp $
+ * $Id: BitmapImageResource.java,v 1.37 2006/02/28 15:19:59 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,17 +8,19 @@
 
 package com.syrus.AMFICOM.resource;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
+
 import java.util.Date;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
@@ -28,8 +30,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/12/07 17:17:17 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2006/02/28 15:19:59 $
  * @module resource
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource implements Cloneable {
@@ -66,13 +68,13 @@ public final class BitmapImageResource extends AbstractBitmapImageResource imple
 	public static BitmapImageResource createInstance(final Identifier creatorId, final String codename, final byte image[])
 			throws CreateObjectException {
 		try {
-			final BitmapImageResource bitmapImageResource = new BitmapImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE),
+			final BitmapImageResource bitmapImageResource = new BitmapImageResource(IdentifierPool.getGeneratedIdentifier(IMAGERESOURCE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					codename,
 					image);
 
-			assert bitmapImageResource.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert bitmapImageResource.isValid() : OBJECT_STATE_ILLEGAL;
 
 			bitmapImageResource.markAsChanged();
 
@@ -104,6 +106,8 @@ public final class BitmapImageResource extends AbstractBitmapImageResource imple
 	 */
 	@Override
 	public IdlImageResource getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		final IdlBitmapImageResourceData bitmapImageResourceData = new IdlBitmapImageResourceData();
 		bitmapImageResourceData.codename = this.codename;
 		bitmapImageResourceData.image = this.image;
@@ -165,6 +169,8 @@ public final class BitmapImageResource extends AbstractBitmapImageResource imple
 		final IdlBitmapImageResourceData bitmapImageResourceData = imageResourceData.bitmapImageResourceData();
 		this.codename = bitmapImageResourceData.codename;
 		this.image = bitmapImageResourceData.image;
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	@Override

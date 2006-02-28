@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.24 2005/11/28 12:47:46 arseniy Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.25 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,10 @@
  */
 
 package com.syrus.AMFICOM.mscharserver;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.SERVERPROCESS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 
 import java.util.logging.Level;
 
@@ -20,7 +24,6 @@ import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginRestorer;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
@@ -28,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/11/28 12:47:46 $
+ * @version $Revision: 1.25 $, $Date: 2006/02/28 15:19:58 $
  * @author $Author: arseniy $
  * @module mscharserver
  */
@@ -126,14 +129,14 @@ final class MapSchemeAdministrationResourceServer {
 		processCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSCHARSERVER_PROCESS_CODENAME,
 				ServerProcessWrapper.MSCHARSERVER_PROCESS_CODENAME);
 		try {
-			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
+			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);
 			final Server server = serverDatabase.retrieveForId(serverId);
 
-			final StorableObjectDatabase<ServerProcess> storableObjectDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE);
+			final StorableObjectDatabase<ServerProcess> storableObjectDatabase = DatabaseContext.getDatabase(SERVERPROCESS_CODE);
 			final ServerProcess serverProcess = ((ServerProcessDatabase) storableObjectDatabase).retrieveForServerAndCodename(serverId,
 					processCodename);
 
-			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
+			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(SYSTEMUSER_CODE);
 			final SystemUser user = ((SystemUserDatabase) systemUserDatabase).retrieveForId(serverProcess.getUserId());
 
 			login = user.getLogin();

@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.71 2005/12/17 12:09:00 arseniy Exp $
+ * $Id: Mark.java,v 1.72 2006/02/28 15:20:01 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.map;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.MARK_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -41,7 +42,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: arseniy $
- * @version $Revision: 1.71 $, $Date: 2005/12/17 12:09:00 $
+ * @version $Revision: 1.72 $, $Date: 2006/02/28 15:20:01 $
  * @module map
  */
 public final class Mark extends AbstractNode<Mark> {
@@ -122,7 +123,7 @@ public final class Mark extends AbstractNode<Mark> {
 		try {
 			final Mark mark = new Mark(IdentifierPool.getGeneratedIdentifier(MARK_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					description,
 					longitude,
@@ -145,7 +146,6 @@ public final class Mark extends AbstractNode<Mark> {
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		return Collections.singleton((Identifiable) this.physicalLink);
 	}
 
@@ -155,6 +155,8 @@ public final class Mark extends AbstractNode<Mark> {
 	 */
 	@Override
 	public IdlMark getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlMarkHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -175,7 +177,7 @@ public final class Mark extends AbstractNode<Mark> {
 	
 	@Override
 	protected synchronized void fromTransferable(IdlStorableObject transferable) throws ApplicationException {
-		IdlMark idlMark = (IdlMark) transferable; 
+		final IdlMark idlMark = (IdlMark) transferable; 
 		super.fromTransferable(idlMark);
 		this.distance = idlMark.distance;
 		this.city = idlMark.city;
@@ -186,6 +188,8 @@ public final class Mark extends AbstractNode<Mark> {
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	public String getBuilding() {

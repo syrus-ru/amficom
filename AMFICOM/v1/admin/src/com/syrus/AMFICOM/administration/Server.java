@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.62 2005/12/17 12:08:16 arseniy Exp $
+ * $Id: Server.java,v 1.63 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,11 @@
 package com.syrus.AMFICOM.administration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -25,18 +28,16 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/12/17 12:08:16 $
+ * @version $Revision: 1.63 $, $Date: 2006/02/28 15:19:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -95,7 +96,7 @@ public final class Server extends DomainMember<Server>
 		this.description = st.description;
 		this.hostname = st.hostname;
 		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 	
 	/**
@@ -103,7 +104,7 @@ public final class Server extends DomainMember<Server>
 	 */
 	@Override
 	public IdlServer getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlServerHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -154,15 +155,15 @@ public final class Server extends DomainMember<Server>
 			final String description,
 			final String hostname) throws CreateObjectException {
 		try {
-			final Server server = new Server(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVER_CODE),
+			final Server server = new Server(IdentifierPool.getGeneratedIdentifier(SERVER_CODE),
 						creatorId,
-						StorableObjectVersion.INITIAL_VERSION,
+						INITIAL_VERSION,
 						domainId,
 						name,
 						description,
 						hostname);
 
-			assert server.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert server.isValid() : OBJECT_STATE_ILLEGAL;
 
 			server.markAsChanged();
 
@@ -201,8 +202,6 @@ public final class Server extends DomainMember<Server>
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 		return Collections.emptySet();
 	}
 

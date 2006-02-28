@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlock.java,v 1.16 2005/12/17 12:09:00 arseniy Exp $
+ * $Id: PipeBlock.java,v 1.17 2006/02/28 15:20:01 arseniy Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.PIPEBLOCK_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -48,7 +49,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * и матрицу пролегани€ кабелей по трубам тоннел€.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/12/17 12:09:00 $
+ * @version $Revision: 1.17 $, $Date: 2006/02/28 15:20:01 $
  * @module map
  */
 public final class PipeBlock 
@@ -135,7 +136,7 @@ public final class PipeBlock
 			final PipeBlock pipeBlock = new PipeBlock(
 					IdentifierPool.getGeneratedIdentifier(PIPEBLOCK_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					number,
 					new IntDimension(dimensionX, dimensionY),
 					leftToRight,

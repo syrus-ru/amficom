@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.61 2005/12/17 12:08:16 arseniy Exp $
+ * $Id: MCM.java,v 1.62 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,11 @@
 package com.syrus.AMFICOM.administration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -25,18 +28,16 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/12/17 12:08:16 $
+ * @version $Revision: 1.62 $, $Date: 2006/02/28 15:19:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -103,7 +104,7 @@ public final class MCM extends DomainMember<MCM>
 		this.userId = new Identifier(mt.userId);
 		this.serverId = new Identifier(mt.serverId);
 		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 	
 	/**
@@ -111,7 +112,7 @@ public final class MCM extends DomainMember<MCM>
 	 */
 	@Override
 	public IdlMCM getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlMCMHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -178,9 +179,9 @@ public final class MCM extends DomainMember<MCM>
 			final Identifier userId,
 			final Identifier serverId) throws CreateObjectException {
 		try {
-			final MCM mcm = new MCM(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MCM_CODE),
+			final MCM mcm = new MCM(IdentifierPool.getGeneratedIdentifier(MCM_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					name,
 					description,
@@ -188,7 +189,7 @@ public final class MCM extends DomainMember<MCM>
 					userId,
 					serverId);
 			
-			assert mcm.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert mcm.isValid() : OBJECT_STATE_ILLEGAL;
 
 			mcm.markAsChanged();
 
@@ -231,8 +232,6 @@ public final class MCM extends DomainMember<MCM>
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.userId);
 		dependencies.add(this.serverId);

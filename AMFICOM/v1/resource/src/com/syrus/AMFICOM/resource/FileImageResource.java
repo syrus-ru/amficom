@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.36 2005/12/07 17:17:16 bass Exp $
+ * $Id: FileImageResource.java,v 1.37 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,17 +8,19 @@
 
 package com.syrus.AMFICOM.resource;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
+
 import java.util.Date;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
@@ -28,8 +30,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/12/07 17:17:16 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2006/02/28 15:19:58 $
  * @module resource
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
@@ -64,13 +66,13 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 
 	public static FileImageResource createInstance(final Identifier creatorId, final String codeName ,final String fileName) throws CreateObjectException {
 		try {
-			final FileImageResource fileImageResource = new FileImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE),
+			final FileImageResource fileImageResource = new FileImageResource(IdentifierPool.getGeneratedIdentifier(IMAGERESOURCE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					codeName,
 					fileName);
 
-			assert fileImageResource.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert fileImageResource.isValid() : OBJECT_STATE_ILLEGAL;
 
 			fileImageResource.markAsChanged();
 
@@ -112,6 +114,8 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 	 */
 	@Override
 	public IdlImageResource getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		final IdlFileImageResourceData fileImageResourceData = new IdlFileImageResourceData();
 		fileImageResourceData.codename = this.codeName;
 		fileImageResourceData.fileName = this.fileName;
@@ -172,5 +176,7 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 		final IdlFileImageResourceData fileImageResourceData = imageResourceData.fileImageResourceData(); 
 		this.codeName = fileImageResourceData.codename;
 		this.fileName = fileImageResourceData.fileName;
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 }

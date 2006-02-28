@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalImageQuery.java,v 1.17 2005/12/07 17:17:18 bass Exp $
+ * $Id: TopologicalImageQuery.java,v 1.18 2006/02/28 15:20:01 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 /**
  * Класс-запрос для обращения к серверу топографических данных через пул
  * 
- * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/12/07 17:17:18 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2006/02/28 15:20:01 $
  * @module mapinfo
  */
 public final class TopologicalImageQuery
@@ -186,6 +186,7 @@ public final class TopologicalImageQuery
 	 */
 	public IdlTopologicalImageQuery getIdlTransferable() {
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return new IdlTopologicalImageQuery(this.mapImageWidth,
 				this.mapImageHeight,
 				this.topoCenterX,

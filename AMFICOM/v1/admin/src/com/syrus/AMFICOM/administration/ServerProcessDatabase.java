@@ -1,11 +1,13 @@
 /*
- * $Id: ServerProcessDatabase.java,v 1.16 2005/12/02 11:24:11 bass Exp $
+ * $Id: ServerProcessDatabase.java,v 1.17 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.administration;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.SERVERPROCESS_CODE;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,7 +17,6 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -25,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/12/02 11:24:11 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2006/02/28 15:19:58 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -36,7 +37,7 @@ public final class ServerProcessDatabase extends StorableObjectDatabase<ServerPr
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.SERVERPROCESS_CODE;
+		return SERVERPROCESS_CODE;
 	}
 
 	@Override

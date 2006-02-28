@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItemXML.java,v 1.1 2005/08/22 12:10:45 bob Exp $
+* $Id: LayoutItemXML.java,v 1.2 2006/02/28 15:19:58 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,19 +8,23 @@
 
 package com.syrus.AMFICOM.resource;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.LAYOUT_ITEM_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.resource.LayoutItemWrapper.COLUMN_LAYOUT_NAME;
+import static com.syrus.AMFICOM.resource.LayoutItemWrapper.COLUMN_PARENT_ID;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.AbstractStorableObjectXML;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-
-import static com.syrus.AMFICOM.resource.LayoutItemWrapper.*;
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/22 12:10:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2006/02/28 15:19:58 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module resource
  */
@@ -30,7 +34,7 @@ public class LayoutItemXML extends AbstractStorableObjectXML<LayoutItem> {
 	
 	@Override
 	public short getEntityCode() {
-		return ObjectEntities.LAYOUT_ITEM_CODE;
+		return LAYOUT_ITEM_CODE;
 	}
 	
 	@Override
@@ -48,9 +52,9 @@ public class LayoutItemXML extends AbstractStorableObjectXML<LayoutItem> {
 	@Override
 	public LayoutItem getStorableObject(final Map<String, Object> objectMap) {
 		LayoutItem layoutItem = 
-			new LayoutItem(this.getIdentifier(objectMap, StorableObjectWrapper.COLUMN_ID),
-				this.getIdentifier(objectMap, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				this.getVersion(objectMap, StorableObjectWrapper.COLUMN_VERSION),
+			new LayoutItem(this.getIdentifier(objectMap, COLUMN_ID),
+				this.getIdentifier(objectMap, COLUMN_CREATOR_ID),
+				this.getVersion(objectMap, COLUMN_VERSION),
 				this.getIdentifier(objectMap, COLUMN_PARENT_ID),
 				this.getString(objectMap, COLUMN_LAYOUT_NAME),
 				this.getString(objectMap, COLUMN_NAME));

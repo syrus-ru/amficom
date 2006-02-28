@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.113 2005/12/17 12:09:00 arseniy Exp $
+ * $Id: PhysicalLinkType.java,v 1.114 2006/02/28 15:20:01 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.SEVERE;
@@ -62,7 +63,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: arseniy $
- * @version $Revision: 1.113 $, $Date: 2005/12/17 12:09:00 $
+ * @version $Revision: 1.114 $, $Date: 2006/02/28 15:20:01 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType> 
@@ -159,7 +160,7 @@ public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType>
 		try {
 			final PhysicalLinkType physicalLinkType = new PhysicalLinkType(IdentifierPool.getGeneratedIdentifier(PHYSICALLINK_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					sort,
 					codename,
 					name,

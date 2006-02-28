@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.41 2005/12/02 11:24:14 bass Exp $
+ * $Id: ImageResourceDatabase.java,v 1.42 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,9 @@
 
 package com.syrus.AMFICOM.resource;
 
+
+import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE;
+import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,7 +23,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -34,8 +36,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/12/02 11:24:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.42 $, $Date: 2006/02/28 15:19:58 $
  * @module resource
  */
 
@@ -63,7 +65,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 
 	@Override
 	protected short getEntityCode() {
-		return ObjectEntities.IMAGERESOURCE_CODE;
+		return IMAGERESOURCE_CODE;
 	}
 
 	@Override
@@ -290,7 +292,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 			connection = DatabaseConnection.getConnection();
 			ByteArrayDatabase.saveAsBlob(abstractImageResource.getImage(),
 					connection,
-					ObjectEntities.IMAGERESOURCE,
+					IMAGERESOURCE,
 					COLUMN_IMAGE,
 					StorableObjectWrapper.COLUMN_ID + EQUALS + idStr);
 			connection.commit();			

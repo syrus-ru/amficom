@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.73 2005/12/17 12:08:16 arseniy Exp $
+ * $Id: Domain.java,v 1.74 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,16 @@
 
 package com.syrus.AMFICOM.administration;
 
+import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_MODULE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PERMATTR_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 
 import java.util.Collections;
 import java.util.Date;
@@ -27,22 +34,18 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/12/17 12:08:16 $
+ * @version $Revision: 1.74 $, $Date: 2006/02/28 15:19:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -97,7 +100,7 @@ public final class Domain extends DomainMember<Domain>
 		this.name = dt.name;
 		this.description = dt.description;
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -105,7 +108,7 @@ public final class Domain extends DomainMember<Domain>
 	 */
 	@Override
 	public IdlDomain getIdlTransferable(final ORB orb) {
-		assert this.isValid(): ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid(): OBJECT_STATE_ILLEGAL;
 		return IdlDomainHelper.init(orb,
 				super.id.getIdlTransferable(),
 				super.created.getTime(),
@@ -146,13 +149,13 @@ public final class Domain extends DomainMember<Domain>
 	public final PermissionAttributes getPermissionAttributes(final Identifier userId, final Module module)
 			throws ApplicationException {
 		PermissionAttributes permissionAttributes = null;
-		final LinkedIdsCondition domainCondition = new LinkedIdsCondition(this.id, ObjectEntities.PERMATTR_CODE);
-		final LinkedIdsCondition userCondition = new LinkedIdsCondition(userId, ObjectEntities.PERMATTR_CODE);
-		final CompoundCondition compoundCondition = new CompoundCondition(domainCondition, CompoundConditionSort.AND, userCondition);
+		final LinkedIdsCondition domainCondition = new LinkedIdsCondition(this.id, PERMATTR_CODE);
+		final LinkedIdsCondition userCondition = new LinkedIdsCondition(userId, PERMATTR_CODE);
+		final CompoundCondition compoundCondition = new CompoundCondition(domainCondition, AND, userCondition);
 		compoundCondition.addCondition(new TypicalCondition(module,
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PERMATTR_CODE,
-				PermissionAttributesWrapper.COLUMN_MODULE));
+				OPERATION_EQUALS,
+				PERMATTR_CODE,
+				COLUMN_MODULE));
 
 		final Set<PermissionAttributes> permAttrs = StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
 
@@ -176,14 +179,14 @@ public final class Domain extends DomainMember<Domain>
 			final String name,
 			final String description) throws CreateObjectException {
 		try {
-			final Domain domain = new Domain(IdentifierPool.getGeneratedIdentifier(ObjectEntities.DOMAIN_CODE),
+			final Domain domain = new Domain(IdentifierPool.getGeneratedIdentifier(DOMAIN_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					name,
 					description);
 
-			assert domain.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert domain.isValid() : OBJECT_STATE_ILLEGAL;
 
 			domain.markAsChanged();
 
@@ -241,8 +244,6 @@ public final class Domain extends DomainMember<Domain>
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(1);
 		if (!super.domainId.isVoid()) {
 			dependencies.add(super.domainId);

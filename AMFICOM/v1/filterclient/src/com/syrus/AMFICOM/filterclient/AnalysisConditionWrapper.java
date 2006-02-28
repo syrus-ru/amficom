@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisConditionWrapper.java,v 1.4 2005/08/08 11:41:00 arseniy Exp $
+ * $Id: AnalysisConditionWrapper.java,v 1.5 2006/02/28 15:20:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,17 +7,18 @@
  */
 package com.syrus.AMFICOM.filterclient;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
+
 import com.syrus.AMFICOM.general.ConditionWrapper;
-import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/08 11:41:00 $
+ * @version $Revision: 1.5 $, $Date: 2006/02/28 15:20:00 $
  * @author $Author: arseniy $
  * @module filterclient
  */
 public class AnalysisConditionWrapper {
 	
-	private static short entityCode = ObjectEntities.ANALYSIS_CODE;
+	private static short entityCode = ANALYSIS_CODE;
 	
 	private static final String MEASUREMENT = "filter by measurement";
 	

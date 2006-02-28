@@ -1,11 +1,16 @@
 /*
- * $Id: ServerProcess.java,v 1.32 2005/12/17 12:08:16 arseniy Exp $
+ * $Id: ServerProcess.java,v 1.33 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.administration;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.SERVERPROCESS_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -17,19 +22,17 @@ import com.syrus.AMFICOM.administration.corba.IdlServerProcess;
 import com.syrus.AMFICOM.administration.corba.IdlServerProcessHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/12/17 12:08:16 $
+ * @version $Revision: 1.33 $, $Date: 2006/02/28 15:19:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -96,7 +99,7 @@ public final class ServerProcess extends StorableObject<ServerProcess> {
 		this.userId = new Identifier(spt.userId);
 		this.description = spt.description;
 		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -104,7 +107,7 @@ public final class ServerProcess extends StorableObject<ServerProcess> {
 	 */
 	@Override
 	public IdlServerProcess getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlServerProcessHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -125,15 +128,15 @@ public final class ServerProcess extends StorableObject<ServerProcess> {
 			final Identifier userId,
 			final String description) throws CreateObjectException {
 		try {
-			final ServerProcess serverProcess = new ServerProcess(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVERPROCESS_CODE),
+			final ServerProcess serverProcess = new ServerProcess(IdentifierPool.getGeneratedIdentifier(SERVERPROCESS_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					codename,
 					serverId,
 					userId,
 					description);
 
-			assert serverProcess.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert serverProcess.isValid() : OBJECT_STATE_ILLEGAL;
 
 			serverProcess.markAsChanged();
 
@@ -186,13 +189,13 @@ public final class ServerProcess extends StorableObject<ServerProcess> {
 	}
 
 	protected void setCodename(final String codename) {
-		assert codename != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert codename != null : NON_NULL_EXPECTED;
 		this.codename = codename;
 		super.markAsChanged();
 	}
 
 	public void setDescription(final String description) {
-		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
 		this.description = description;
 		super.markAsChanged();
 	}
@@ -213,8 +216,6 @@ public final class ServerProcess extends StorableObject<ServerProcess> {
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.serverId);
 		dependencies.add(this.userId);

@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.116 2005/12/17 12:09:00 arseniy Exp $
+ * $Id: NodeLink.java,v 1.117 2006/02/28 15:20:01 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static java.util.logging.Level.FINEST;
 
 import java.util.Date;
@@ -51,7 +52,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: arseniy $
- * @version $Revision: 1.116 $, $Date: 2005/12/17 12:09:00 $
+ * @version $Revision: 1.117 $, $Date: 2006/02/28 15:20:01 $
  * @module map
  */
 public final class NodeLink extends StorableObject<NodeLink>
@@ -121,7 +122,7 @@ public final class NodeLink extends StorableObject<NodeLink>
 		try {
 			final NodeLink nodeLink = new NodeLink(IdentifierPool.getGeneratedIdentifier(NODELINK_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					physicalLink.getId(),
 					starNode.getId(),

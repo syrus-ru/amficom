@@ -1,5 +1,5 @@
 /*-
- * $Id: UnboundNode.java,v 1.36 2005/12/17 12:11:36 arseniy Exp $
+ * $Id: UnboundNode.java,v 1.37 2006/02/28 15:20:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,9 @@
  */
 
 package com.syrus.AMFICOM.mapview;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Set;
 
@@ -18,7 +21,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
@@ -32,7 +34,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  *
  * @author $Author: arseniy $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.36 $, $Date: 2005/12/17 12:11:36 $
+ * @version $Revision: 1.37 $, $Date: 2006/02/28 15:20:02 $
  * @module mapview
  */
 public final class UnboundNode extends SiteNode {
@@ -110,9 +112,9 @@ public final class UnboundNode extends SiteNode {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final UnboundNode unboundNode = new UnboundNode(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_CODE),
+			final UnboundNode unboundNode = new UnboundNode(IdentifierPool.getGeneratedIdentifier(SITENODE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					schemeElement,
 					location,
 					nodeType);

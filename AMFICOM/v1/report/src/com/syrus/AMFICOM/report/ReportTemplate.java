@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.27 2005/12/17 12:11:23 arseniy Exp $
+ * $Id: ReportTemplate.java,v 1.28 2006/02/28 15:19:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,14 @@ package com.syrus.AMFICOM.report;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ObjectEntities.ATTACHEDTEXT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.REPORTDATA_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.REPORTIMAGE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTABLEDATA_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTEMPLATE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 
 import java.awt.Rectangle;
 import java.util.Collections;
@@ -32,7 +39,6 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -40,8 +46,6 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.report.corba.IdlReportTemplate;
 import com.syrus.AMFICOM.report.corba.IdlReportTemplateHelper;
 import com.syrus.AMFICOM.report.corba.IdlReportTemplatePackage.IdlOrientation;
@@ -58,7 +62,7 @@ import com.syrus.util.Log;
  * отчёт </p>
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.27 $, $Date: 2005/12/17 12:11:23 $
+ * @version $Revision: 1.28 $, $Date: 2006/02/28 15:19:59 $
  * @module report
  */
 public class ReportTemplate extends StorableObject<ReportTemplate> implements Namable, Describable, ReverseDependencyContainer,
@@ -148,7 +152,7 @@ public class ReportTemplate extends StorableObject<ReportTemplate> implements Na
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					description,
 					SheetSize.A4,
@@ -231,11 +235,11 @@ public class ReportTemplate extends StorableObject<ReportTemplate> implements Na
 	 */
 	public AbstractDataStorableElement findStorableElementForName(final String rteName) {
 		TypicalCondition typicalCondition = new TypicalCondition(rteName,
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.REPORTDATA_CODE,
+				OPERATION_EQUALS,
+				REPORTDATA_CODE,
 				StorableObjectWrapper.COLUMN_NAME);
-		LinkedIdsCondition linkedCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.REPORTDATA_CODE);
-		CompoundCondition condition = new CompoundCondition(typicalCondition, CompoundConditionSort.AND, linkedCondition);
+		LinkedIdsCondition linkedCondition = new LinkedIdsCondition(this.getId(), REPORTDATA_CODE);
+		CompoundCondition condition = new CompoundCondition(typicalCondition, AND, linkedCondition);
 		Set<AbstractDataStorableElement> abstractDataElements = null;
 		try {
 			abstractDataElements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -257,10 +261,9 @@ public class ReportTemplate extends StorableObject<ReportTemplate> implements Na
 	 * @return Список надписей, привязанных к данному объекту отображения
 	 */
 	public Set<AttachedTextStorableElement> getAttachedTextStorableElements(final AbstractDataStorableElement abstractDataStorableElement) {
-		final LinkedIdsCondition condition1 = new LinkedIdsCondition(this.getId(), ObjectEntities.ATTACHEDTEXT_CODE);
-		final LinkedIdsCondition condition2 = new LinkedIdsCondition(abstractDataStorableElement.getId(),
-				ObjectEntities.ATTACHEDTEXT_CODE);
-		final CompoundCondition condition = new CompoundCondition(condition1, CompoundConditionSort.AND, condition2);
+		final LinkedIdsCondition condition1 = new LinkedIdsCondition(this.getId(), ATTACHEDTEXT_CODE);
+		final LinkedIdsCondition condition2 = new LinkedIdsCondition(abstractDataStorableElement.getId(), ATTACHEDTEXT_CODE);
+		final CompoundCondition condition = new CompoundCondition(condition1, AND, condition2);
 		try {
 			return StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		} catch (ApplicationException e) {
@@ -362,10 +365,10 @@ public class ReportTemplate extends StorableObject<ReportTemplate> implements Na
 
 	public Set<AbstractDataStorableElement> getDataStorableElements(final boolean usePool) throws ApplicationException {
 		if (this.dataCondition == null) {
-			this.dataCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.REPORTDATA_CODE);
+			this.dataCondition = new LinkedIdsCondition(this.getId(), REPORTDATA_CODE);
 		}
 		if (this.tableDataCondition == null) {
-			this.tableDataCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.REPORTTABLEDATA_CODE);
+			this.tableDataCondition = new LinkedIdsCondition(this.getId(), REPORTTABLEDATA_CODE);
 		}
 		final Set<AbstractDataStorableElement> dataSet = new HashSet<AbstractDataStorableElement>();
 		dataSet.addAll(StorableObjectPool.<DataStorableElement> getStorableObjectsByCondition(this.dataCondition, usePool));
@@ -379,7 +382,7 @@ public class ReportTemplate extends StorableObject<ReportTemplate> implements Na
 
 	public Set<ImageStorableElement> getImageStorableElements(final boolean usePool) throws ApplicationException {
 		if (this.imageCondition == null) {
-			this.imageCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.REPORTIMAGE_CODE);
+			this.imageCondition = new LinkedIdsCondition(this.getId(), REPORTIMAGE_CODE);
 		}
 		return StorableObjectPool.getStorableObjectsByCondition(this.imageCondition, usePool);
 	}
@@ -390,7 +393,7 @@ public class ReportTemplate extends StorableObject<ReportTemplate> implements Na
 
 	public Set<AttachedTextStorableElement> getAttachedTextStorableElements(final boolean usePool) throws ApplicationException {
 		if (this.attTextCondition == null) {
-			this.attTextCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.ATTACHEDTEXT_CODE);
+			this.attTextCondition = new LinkedIdsCondition(this.getId(), ATTACHEDTEXT_CODE);
 		}
 		return StorableObjectPool.getStorableObjectsByCondition(this.attTextCondition, usePool);
 	}

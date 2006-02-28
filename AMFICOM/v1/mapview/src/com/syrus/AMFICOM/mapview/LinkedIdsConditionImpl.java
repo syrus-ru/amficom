@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.15 2005/12/09 11:36:10 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.16 2006/02/28 15:20:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,10 @@
  */
 
 package com.syrus.AMFICOM.mapview;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MAPVIEW_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 
 import java.util.Set;
 
@@ -16,7 +20,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  * @author $Author: arseniy $
  * @module mapview
  */
@@ -34,12 +38,12 @@ final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCo
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
-			case ObjectEntities.MAPVIEW_CODE:
+			case MAPVIEW_CODE:
 				final MapView mapView = (MapView) storableObject;
 				switch (super.linkedEntityCode) {
-				case ObjectEntities.DOMAIN_CODE:
+				case DOMAIN_CODE:
 					return super.conditionTest(mapView.getDomainId());
-				case ObjectEntities.MAP_CODE:
+				case MAP_CODE:
 					return super.conditionTest(mapView.getMapId());
 				default:
 					throw newExceptionLinkedEntityIllegal();
@@ -53,7 +57,7 @@ final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCo
 	@Override
 	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
-			case ObjectEntities.MAPVIEW_CODE:
+			case MAPVIEW_CODE:
 				this.entityCode = entityCode;
 				break;
 			default:

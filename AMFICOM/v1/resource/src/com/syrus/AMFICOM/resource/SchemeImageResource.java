@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImageResource.java,v 1.43 2005/12/07 17:17:17 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.44 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,11 @@
  */
 
 package com.syrus.AMFICOM.resource;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -26,11 +31,9 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
@@ -40,8 +43,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/12/07 17:17:17 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.44 $, $Date: 2006/02/28 15:19:58 $
  * @module resource
  */
 public final class SchemeImageResource extends AbstractCloneableImageResource {
@@ -82,11 +85,11 @@ public final class SchemeImageResource extends AbstractCloneableImageResource {
 	 */
 	public static SchemeImageResource createInstance(final Identifier creatorId) throws CreateObjectException {
 		try {
-			final SchemeImageResource schemeImageResource = new SchemeImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE),
+			final SchemeImageResource schemeImageResource = new SchemeImageResource(IdentifierPool.getGeneratedIdentifier(IMAGERESOURCE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION);
+					INITIAL_VERSION);
 
-			assert schemeImageResource.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert schemeImageResource.isValid() : OBJECT_STATE_ILLEGAL;
 
 			schemeImageResource.markAsChanged();
 
@@ -118,6 +121,8 @@ public final class SchemeImageResource extends AbstractCloneableImageResource {
 	 */
 	@Override
 	public IdlImageResource getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		final IdlImageResourceData imageResourceData = new IdlImageResourceData();
 		imageResourceData.image(ImageResourceSort.SCHEME, this.image);
 		return IdlImageResourceHelper.init(orb,
@@ -163,7 +168,7 @@ public final class SchemeImageResource extends AbstractCloneableImageResource {
 	}
 
 	protected void setImage0(final byte image[]) {
-		assert image != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert image != null : NON_NULL_EXPECTED;
 		this.image = image;
 	}
 
@@ -239,6 +244,8 @@ public final class SchemeImageResource extends AbstractCloneableImageResource {
 		final IdlImageResourceData imageResourceData = idlImageResource.data;
 		assert imageResourceData.discriminator().value() == ImageResourceSort._SCHEME;
 		this.image = imageResourceData.image();
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	@Override

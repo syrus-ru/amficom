@@ -1,5 +1,5 @@
 /*-
- * $Id: Role.java,v 1.13 2005/12/17 12:08:16 arseniy Exp $
+ * $Id: Role.java,v 1.14 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,10 @@
 
 package com.syrus.AMFICOM.administration;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -21,13 +24,11 @@ import com.syrus.AMFICOM.administration.corba.IdlRoleHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -35,7 +36,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/12/17 12:08:16 $
+ * @version $Revision: 1.14 $, $Date: 2006/02/28 15:19:58 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -115,14 +116,14 @@ public final class Role extends StorableObject<Role>
 			final String codename,
 			final String description) throws CreateObjectException {
 		try {
-			final Identifier generatedIdentifier = IdentifierPool.getGeneratedIdentifier(ObjectEntities.ROLE_CODE);
+			final Identifier generatedIdentifier = IdentifierPool.getGeneratedIdentifier(ROLE_CODE);
 			final Role role = new Role(generatedIdentifier,
 					creatorId != null ? creatorId : generatedIdentifier,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					codename,
 					description);
 
-			assert role.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert role.isValid() : OBJECT_STATE_ILLEGAL;
 
 			role.markAsChanged();
 
@@ -151,7 +152,7 @@ public final class Role extends StorableObject<Role>
 		this.codename = rt.codename;
 		this.description = rt.description;
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -159,7 +160,7 @@ public final class Role extends StorableObject<Role>
 	 */
 	@Override
 	public IdlRole getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlRoleHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -229,8 +230,6 @@ public final class Role extends StorableObject<Role>
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 		return Collections.emptySet();
 	}
 

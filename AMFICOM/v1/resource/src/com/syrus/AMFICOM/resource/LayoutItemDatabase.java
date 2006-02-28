@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItemDatabase.java,v 1.3 2005/12/02 11:24:14 bass Exp $
+* $Id: LayoutItemDatabase.java,v 1.4 2006/02/28 15:19:58 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.resource;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.LAYOUT_ITEM_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
@@ -15,7 +16,6 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
-
 import static com.syrus.AMFICOM.resource.LayoutItemWrapper.COLUMN_LAYOUT_NAME;
 import static com.syrus.AMFICOM.resource.LayoutItemWrapper.COLUMN_PARENT_ID;
 
@@ -25,7 +25,6 @@ import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.database.DatabaseDate;
@@ -33,8 +32,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/02 11:24:14 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2006/02/28 15:19:58 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module resource
  */
@@ -44,7 +43,7 @@ public class LayoutItemDatabase extends StorableObjectDatabase<LayoutItem> {
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.LAYOUT_ITEM_CODE;
+		return LAYOUT_ITEM_CODE;
 	}
 
 	@Override

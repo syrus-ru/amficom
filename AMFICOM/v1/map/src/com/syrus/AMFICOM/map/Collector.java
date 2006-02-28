@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.106 2005/12/17 12:09:00 arseniy Exp $
+ * $Id: Collector.java,v 1.107 2006/02/28 15:20:01 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -55,7 +56,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.106 $, $Date: 2005/12/17 12:09:00 $
+ * @version $Revision: 1.107 $, $Date: 2006/02/28 15:20:01 $
  * @module map
  */
 public final class Collector extends StorableObject<Collector>
@@ -106,7 +107,7 @@ public final class Collector extends StorableObject<Collector>
 		try {
 			final Collector collector = new Collector(IdentifierPool.getGeneratedIdentifier(COLLECTOR_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					description);
 

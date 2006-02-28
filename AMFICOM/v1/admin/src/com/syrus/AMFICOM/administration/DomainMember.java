@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.28 2005/10/25 19:53:15 bass Exp $
+ * $Id: DomainMember.java,v 1.29 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,20 +8,21 @@
 
 package com.syrus.AMFICOM.administration;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/10/25 19:53:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2006/02/28 15:19:58 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -97,23 +98,21 @@ public abstract class DomainMember<T extends DomainMember<T>> extends StorableOb
 	protected boolean isValid() {
 		/* XXX : fix checking domainId w/o check id for concrete impementation as domain
 		 * Domain entity can have null domain id what's why its doesnt must check domainId for null */
-		return super.isValid() && (this.id.getMajor() == ObjectEntities.DOMAIN_CODE || !this.domainId.isVoid());
+		return super.isValid() && (this.id.getMajor() == DOMAIN_CODE || !this.domainId.isVoid());
 	}
 
 	public final Identifier getDomainId() {
 		return this.domainId;
 	}
-	
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected final void setDomainId0(final Identifier domainId) {
-		assert domainId.isVoid() || 
-			domainId.getMajor() == ObjectEntities.DOMAIN_CODE : 
-				"Domain id expected";
+		assert domainId.isVoid() || domainId.getMajor() == DOMAIN_CODE : "Domain id expected";
 		this.domainId = domainId;
 	}
-	
+
 	public final void setDomainId(final Identifier domainId) {
 		this.setDomainId0(domainId);
 		super.markAsChanged();

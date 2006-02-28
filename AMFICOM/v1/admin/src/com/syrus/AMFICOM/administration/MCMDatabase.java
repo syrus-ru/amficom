@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.41 2005/12/02 11:24:11 bass Exp $
+ * $Id: MCMDatabase.java,v 1.42 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.administration;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +18,6 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -25,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/12/02 11:24:11 $
- * @author $Author: bass $
+ * @version $Revision: 1.42 $, $Date: 2006/02/28 15:19:58 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -39,7 +40,7 @@ public final class MCMDatabase extends StorableObjectDatabase<MCM> {
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.MCM_CODE;
+		return MCM_CODE;
 	}
 
 	@Override

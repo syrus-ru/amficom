@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerPoolContext.java,v 1.18 2006/02/03 13:22:58 arseniy Exp $
+ * $Id: LEServerPoolContext.java,v 1.19 2006/02/28 15:19:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,14 @@
 
 package com.syrus.AMFICOM.leserver;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierLRUMapSaver;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.ObjectLoader;
 import com.syrus.AMFICOM.general.PoolContext;
@@ -20,7 +25,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.LRUMapSaver;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/02/03 13:22:58 $
+ * @version $Revision: 1.19 $, $Date: 2006/02/28 15:19:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -55,12 +60,12 @@ final class LEServerPoolContext extends PoolContext {
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.EVENT_GROUP_CODE, eventPoolSize, eventPoolTimeToLive);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.SCHEME_GROUP_CODE, schemePoolSize, schemePoolTimeToLive);
 
-		StorableObjectPool.addObjectPool(ObjectEntities.TRANSPATH_TYPE_CODE, configurationPoolSize, configurationPoolTimeToLive);
-		StorableObjectPool.addObjectPool(ObjectEntities.TRANSMISSIONPATH_CODE, configurationPoolSize, configurationPoolTimeToLive);
+		StorableObjectPool.addObjectPool(TRANSPATH_TYPE_CODE, configurationPoolSize, configurationPoolTimeToLive);
+		StorableObjectPool.addObjectPool(TRANSMISSIONPATH_CODE, configurationPoolSize, configurationPoolTimeToLive);
 
-		StorableObjectPool.addObjectPool(ObjectEntities.MEASUREMENTPORT_TYPE_CODE, measurementPoolSize, measurementPoolTimeToLive);
-		StorableObjectPool.addObjectPool(ObjectEntities.MONITOREDELEMENT_CODE, measurementPoolSize, measurementPoolTimeToLive);
-		StorableObjectPool.addObjectPool(ObjectEntities.MEASUREMENTPORT_CODE, measurementPoolSize, measurementPoolTimeToLive);
+		StorableObjectPool.addObjectPool(MEASUREMENTPORT_TYPE_CODE, measurementPoolSize, measurementPoolTimeToLive);
+		StorableObjectPool.addObjectPool(MONITOREDELEMENT_CODE, measurementPoolSize, measurementPoolTimeToLive);
+		StorableObjectPool.addObjectPool(MEASUREMENTPORT_CODE, measurementPoolSize, measurementPoolTimeToLive);
 
 		if (LRU_MAP_SAVER == null) {
 			LRU_MAP_SAVER = new IdentifierLRUMapSaver(super.objectLoader);

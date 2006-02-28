@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.48 2005/12/02 11:24:20 bass Exp $
+ * $Id: MapViewDatabase.java,v 1.49 2006/02/28 15:20:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.mapview;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.MAPVIEW_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
 import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_DEFAULTSCALE;
@@ -32,7 +33,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -45,8 +45,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/12/02 11:24:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.49 $, $Date: 2006/02/28 15:20:02 $
+ * @author $Author: arseniy $
  * @module mapview
  */
 public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
@@ -57,7 +57,7 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.MAPVIEW_CODE;
+		return MAPVIEW_CODE;
 	}	
 
 	@Override

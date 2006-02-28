@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.114 2005/12/17 12:09:00 arseniy Exp $
+ * $Id: SiteNodeType.java,v 1.115 2006/02/28 15:20:01 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
@@ -80,7 +81,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: arseniy $
- * @version $Revision: 1.114 $, $Date: 2005/12/17 12:09:00 $
+ * @version $Revision: 1.115 $, $Date: 2006/02/28 15:20:01 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType<SiteNodeType>
@@ -162,7 +163,7 @@ public final class SiteNodeType extends StorableObjectType<SiteNodeType>
 		try {
 			final SiteNodeType siteNodeType = new SiteNodeType(IdentifierPool.getGeneratedIdentifier(SITENODE_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					sort,
 					codename,
 					name,

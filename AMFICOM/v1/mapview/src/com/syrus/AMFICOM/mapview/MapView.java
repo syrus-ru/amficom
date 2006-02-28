@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.80 2006/02/15 11:58:57 stas Exp $
+* $Id: MapView.java,v 1.81 2006/02/28 15:20:02 arseniy Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,7 +9,10 @@
 package com.syrus.AMFICOM.mapview;
 
 
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.MAPVIEW_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind.CABLE_SUBNETWORK;
 
 import java.util.Collections;
@@ -26,15 +29,12 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
@@ -60,9 +60,9 @@ import com.syrus.util.Log;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * 
- * @author $Author: stas $
+ * @author $Author: arseniy $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.80 $, $Date: 2006/02/15 11:58:57 $
+ * @version $Revision: 1.81 $, $Date: 2006/02/28 15:20:02 $
  * @module mapview
  */
 public final class MapView extends DomainMember<MapView> implements Describable {
@@ -169,9 +169,9 @@ public final class MapView extends DomainMember<MapView> implements Describable 
 		if (domainId == null || name == null || description == null || map == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		try {
-			final MapView mapView = new MapView(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAPVIEW_CODE),
+			final MapView mapView = new MapView(IdentifierPool.getGeneratedIdentifier(MAPVIEW_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					name,
 					description,
@@ -180,6 +180,9 @@ public final class MapView extends DomainMember<MapView> implements Describable 
 					scale,
 					defaultScale,
 					map);
+
+			assert mapView.isValid() : OBJECT_STATE_ILLEGAL;
+
 			mapView.markAsChanged();
 			return mapView;
 		} catch (IdentifierGenerationException ige) {
@@ -189,7 +192,6 @@ public final class MapView extends DomainMember<MapView> implements Describable 
 	
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-
 		final IdlMapView mvt = (IdlMapView) transferable;
 		super.fromTransferable(mvt, new Identifier(mvt.domainId));
 
@@ -214,12 +216,12 @@ public final class MapView extends DomainMember<MapView> implements Describable 
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException("MapView.<init> | cannot get schemes ", ae);
 		}
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.getDomainId());
 		dependencies.add(this.map);
@@ -233,7 +235,7 @@ public final class MapView extends DomainMember<MapView> implements Describable 
 	 */
 	@Override
 	public IdlMapView getIdlTransferable(final ORB orb) {
-		final IdlIdentifier[] schemeIdsTransferable = Identifier.createTransferables(this.schemes);		
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlMapViewHelper.init(orb,
 				this.id.getIdlTransferable(),
@@ -250,7 +252,7 @@ public final class MapView extends DomainMember<MapView> implements Describable 
 				this.scale,
 				this.defaultScale,
 				this.map.getId().getIdlTransferable(),
-				schemeIdsTransferable);
+				Identifier.createTransferables(this.schemes));
 	}
 
 	/**

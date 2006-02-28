@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserDatabase.java,v 1.20 2005/12/02 11:24:11 bass Exp $
+ * $Id: SystemUserDatabase.java,v 1.21 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.administration;
 
 import static com.syrus.AMFICOM.administration.SystemUserWrapper.LINK_COLUMN_ROLE_ID;
 import static com.syrus.AMFICOM.administration.SystemUserWrapper.LINK_COLUMN_SYSTEM_USER_ID;
+import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 import static com.syrus.AMFICOM.general.TableNames.SYSTEM_USER_ROLE_LINK;
 
 import java.sql.PreparedStatement;
@@ -23,7 +24,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/12/02 11:24:11 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2006/02/28 15:19:58 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -48,7 +48,7 @@ public final class SystemUserDatabase extends StorableObjectDatabase<SystemUser>
 
 	@Override
 	protected short getEntityCode() {
-		return ObjectEntities.SYSTEMUSER_CODE;
+		return SYSTEMUSER_CODE;
 	}
 
 	@Override

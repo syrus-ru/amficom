@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.121 2005/12/17 12:09:00 arseniy Exp $
+ * $Id: SiteNode.java,v 1.122 2006/02/28 15:20:01 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -67,7 +68,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: arseniy $
- * @version $Revision: 1.121 $, $Date: 2005/12/17 12:09:00 $
+ * @version $Revision: 1.122 $, $Date: 2006/02/28 15:20:01 $
  * @module map
  */
 public class SiteNode extends AbstractNode<SiteNode>
@@ -145,7 +146,7 @@ public class SiteNode extends AbstractNode<SiteNode>
 		try {
 			final SiteNode siteNode = new SiteNode(IdentifierPool.getGeneratedIdentifier(SITENODE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					siteNodeType.getImageId(),
 					name,
 					description,

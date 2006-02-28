@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.125 2005/12/17 12:09:00 arseniy Exp $
+ * $Id: Map.java,v 1.126 2006/02/28 15:20:01 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,9 +12,11 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -34,7 +36,6 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -67,7 +68,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.125 $, $Date: 2005/12/17 12:09:00 $
+ * @version $Revision: 1.126 $, $Date: 2006/02/28 15:20:01 $
  * @module map
  */
 public final class Map extends DomainMember<Map>
@@ -193,7 +194,7 @@ public final class Map extends DomainMember<Map>
 		try {
 			final Map map = new Map(IdentifierPool.getGeneratedIdentifier(MAP_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					name,
 					description);
@@ -232,7 +233,7 @@ public final class Map extends DomainMember<Map>
 		LinkedIdsCondition condition = null;
 
 		if(!this.siteNodeIds.isEmpty()) {
-			condition = new LinkedIdsCondition(this.siteNodeIds, ObjectEntities.CHARACTERISTIC_CODE);
+			condition = new LinkedIdsCondition(this.siteNodeIds, CHARACTERISTIC_CODE);
 			StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 
@@ -248,7 +249,7 @@ public final class Map extends DomainMember<Map>
 
 		if (!this.physicalLinkIds.isEmpty()) {
 			if (condition == null) {
-				condition = new LinkedIdsCondition(this.physicalLinkIds, ObjectEntities.CHARACTERISTIC_CODE);
+				condition = new LinkedIdsCondition(this.physicalLinkIds, CHARACTERISTIC_CODE);
 			} else {
 				condition.setLinkedIdentifiables(this.physicalLinkIds);
 			}
@@ -262,7 +263,7 @@ public final class Map extends DomainMember<Map>
 
 		if (!this.collectorIds.isEmpty()) {
 			if (condition == null) {
-				condition = new LinkedIdsCondition(this.collectorIds, ObjectEntities.CHARACTERISTIC_CODE);
+				condition = new LinkedIdsCondition(this.collectorIds, CHARACTERISTIC_CODE);
 			} else {
 				condition.setLinkedIdentifiables(this.collectorIds);
 			}
@@ -272,7 +273,7 @@ public final class Map extends DomainMember<Map>
 
 		if (!this.externalNodeIds.isEmpty()) {
 			if (condition == null) {
-				condition = new LinkedIdsCondition(this.externalNodeIds, ObjectEntities.CHARACTERISTIC_CODE);
+				condition = new LinkedIdsCondition(this.externalNodeIds, CHARACTERISTIC_CODE);
 			} else {
 				condition.setLinkedIdentifiables(this.externalNodeIds);
 			}

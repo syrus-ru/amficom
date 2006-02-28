@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItem.java,v 1.19 2005/12/17 12:11:20 arseniy Exp $
+* $Id: LayoutItem.java,v 1.20 2006/02/28 15:19:58 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,8 +9,11 @@
 package com.syrus.AMFICOM.resource;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LAYOUT_ITEM_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -23,13 +26,11 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.resource.corba.IdlLayoutItemHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  * @author $Author: arseniy $
  * @module resource
  */
@@ -98,14 +99,14 @@ public final class LayoutItem extends StorableObject<LayoutItem>
 			final String layoutName,
 			final String name) throws CreateObjectException {
 		try {
-			final LayoutItem layout = new LayoutItem(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LAYOUT_ITEM_CODE),
+			final LayoutItem layout = new LayoutItem(IdentifierPool.getGeneratedIdentifier(LAYOUT_ITEM_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					parentId,
 					layoutName,
 					name);
 
-			assert layout.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert layout.isValid() : OBJECT_STATE_ILLEGAL;
 
 			layout.markAsChanged();
 
@@ -144,7 +145,7 @@ public final class LayoutItem extends StorableObject<LayoutItem>
 		this.layoutName = ili.layoutName;
 		this.name = ili.name;
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 	
 	/**
@@ -152,7 +153,7 @@ public final class LayoutItem extends StorableObject<LayoutItem>
 	 */
 	@Override
 	public IdlLayoutItem getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlLayoutItemHelper.init(orb,
 				this.id.getIdlTransferable(),
@@ -193,7 +194,6 @@ public final class LayoutItem extends StorableObject<LayoutItem>
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		if (!this.parentId.isVoid()) {
 			return Collections.singleton((Identifiable)this.parentId);
 		}		

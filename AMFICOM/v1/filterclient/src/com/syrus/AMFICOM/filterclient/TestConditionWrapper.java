@@ -1,5 +1,5 @@
 /*
- * $Id: TestConditionWrapper.java,v 1.15 2005/11/14 15:31:41 max Exp $
+ * $Id: TestConditionWrapper.java,v 1.16 2006/02/28 15:20:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,24 +7,25 @@
  */
 package com.syrus.AMFICOM.filterclient;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.ConditionWrapper;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.newFilter.ConditionKey;
 import com.syrus.AMFICOM.newFilter.LangModelFilter;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/11/14 15:31:41 $
- * @author $Author: max $
+ * @version $Revision: 1.16 $, $Date: 2006/02/28 15:20:00 $
+ * @author $Author: arseniy $
  * @module filterclient
  */
 public class TestConditionWrapper implements ConditionWrapper {
 
-	private static short entityCode = ObjectEntities.TEST_CODE;
+	private static short entityCode = TEST_CODE;
 	
 	private static final String START_TIME = LangModelFilter.getString("filter.criteria.starttime");
 	private static final String END_TIME = LangModelFilter.getString("filter.criteria.endtime");

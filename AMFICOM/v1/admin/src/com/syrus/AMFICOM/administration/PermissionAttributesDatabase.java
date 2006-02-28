@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionAttributesDatabase.java,v 1.7 2005/12/02 11:24:11 bass Exp $
+ * $Id: PermissionAttributesDatabase.java,v 1.8 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,11 @@
 
 package com.syrus.AMFICOM.administration;
 
+import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_DENY_MASK;
 import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_MODULE;
 import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_PARENT_ID;
 import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_PERMISSION_MASK;
-import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_DENY_MASK;
+import static com.syrus.AMFICOM.general.ObjectEntities.PERMATTR_CODE;
 
 import java.math.BigInteger;
 import java.sql.PreparedStatement;
@@ -21,7 +22,6 @@ import java.sql.SQLException;
 import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/12/02 11:24:11 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2006/02/28 15:19:58 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module administration
  */
@@ -41,7 +41,7 @@ public final class PermissionAttributesDatabase extends StorableObjectDatabase<P
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.PERMATTR_CODE;
+		return PERMATTR_CODE;
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.42 2006/02/13 19:29:25 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.43 2006/02/28 15:19:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,8 +7,12 @@
  */
 package com.syrus.AMFICOM.leserver;
 
+import static com.syrus.AMFICOM.administration.SystemUserWrapper.COLUMN_LOGIN;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NOT_LOGGED_IN;
+import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 
 import java.util.Set;
 
@@ -17,12 +21,10 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.SystemUser;
-import com.syrus.AMFICOM.administration.SystemUserWrapper;
 import com.syrus.AMFICOM.administration.corba.IdlDomain;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -34,7 +36,6 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlCompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.leserver.corba.LoginServerPOA;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.ShadowDatabase;
@@ -43,7 +44,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2006/02/13 19:29:25 $
+ * @version $Revision: 1.43 $, $Date: 2006/02/28 15:19:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -56,15 +57,15 @@ final class LoginServerImplementation extends LoginServerPOA {
 
 	protected LoginServerImplementation() {
 		this.tc = new TypicalCondition("",
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.SYSTEMUSER_CODE,
-				SystemUserWrapper.COLUMN_LOGIN);
+				OPERATION_EQUALS,
+				SYSTEMUSER_CODE,
+				COLUMN_LOGIN);
 		this.shadowDatabase = new ShadowDatabase();
 	}
 
 
 	public IdlDomain[] transmitAvailableDomains() throws AMFICOMRemoteException {
-		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.DOMAIN_CODE);
+		final EquivalentCondition ec = new EquivalentCondition(DOMAIN_CODE);
 		try {
 			final Set<Domain> domains = StorableObjectPool.getStorableObjectsByCondition(ec, true, true);
 

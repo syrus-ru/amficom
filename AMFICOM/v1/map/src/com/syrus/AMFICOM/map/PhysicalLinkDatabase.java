@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.45 2005/12/02 11:24:13 bass Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.46 2006/02/28 15:20:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.map;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PIPEBLOCK_CODE;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,7 +25,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -36,8 +36,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/12/02 11:24:13 $
- * @author $Author: bass $
+ * @version $Revision: 1.46 $, $Date: 2006/02/28 15:20:01 $
+ * @author $Author: arseniy $
  * @module map
  */
 public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalLink> {
@@ -200,7 +200,7 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 		
 		for (Identifier physicalLinkId : map.keySet()) {
 			PhysicalLink physicalLink = physicalLinkIds.get(physicalLinkId);
-			StorableObjectDatabase<PipeBlock> database = DatabaseContext.getDatabase(ObjectEntities.PIPEBLOCK_CODE);
+			StorableObjectDatabase<PipeBlock> database = DatabaseContext.getDatabase(PIPEBLOCK_CODE);
 			Set<PipeBlock> pipeBlocks = database.retrieveByIdsByCondition(map.get(physicalLinkId), null);
 			physicalLink.getBinding().setPipeBlocks(pipeBlocks);
 		}
@@ -224,7 +224,7 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 			pipeBlocks.addAll(link.getBinding().getPipeBlocks());
 		}
 		
-		StorableObjectDatabase<PipeBlock> database = DatabaseContext.getDatabase(ObjectEntities.PIPEBLOCK_CODE);
+		StorableObjectDatabase<PipeBlock> database = DatabaseContext.getDatabase(PIPEBLOCK_CODE);
 		database.delete(pipeBlocks);	
 	}
 }

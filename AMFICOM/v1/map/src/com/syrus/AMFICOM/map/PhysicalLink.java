@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.151 2005/12/17 12:09:00 arseniy Exp $
+ * $Id: PhysicalLink.java,v 1.152 2006/02/28 15:20:01 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,10 @@ import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHI
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static java.util.logging.Level.FINEST;
 
 import java.util.ArrayList;
@@ -45,7 +47,6 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -77,7 +78,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: arseniy $
- * @version $Revision: 1.151 $, $Date: 2005/12/17 12:09:00 $
+ * @version $Revision: 1.152 $, $Date: 2006/02/28 15:20:01 $
  * @module map
  */
 public class PhysicalLink extends StorableObject<PhysicalLink>
@@ -125,7 +126,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 
 	private List<NodeLink> findNodeLinks() {
 		try {
-			final StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODELINK_CODE);
+			final StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), NODELINK_CODE);
 
 			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
 			final Set<NodeLink> nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
@@ -225,7 +226,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 		try {
 			final PhysicalLink physicalLink = new PhysicalLink(IdentifierPool.getGeneratedIdentifier(PHYSICALLINK_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					description,
 					physicalLinkType,

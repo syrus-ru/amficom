@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.22 2005/12/06 11:52:21 bass Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.23 2006/02/28 15:20:05 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,10 @@
  */
 
 package com.syrus.AMFICOM.client.UI;
+
+import static com.syrus.AMFICOM.general.CharacteristicTypeWrapper.COLUMN_SORT;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -39,17 +43,15 @@ import com.syrus.AMFICOM.general.CharacteristicTypeWrapper;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/12/06 11:52:21 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2006/02/28 15:20:05 $
  * @module commonclient
  */
 
@@ -161,9 +163,9 @@ public class CharacteristicAddDialog {
 		try {
 			final TypicalCondition condition = new TypicalCondition(ctSort.value(),
 					ctSort.value(),
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.CHARACTERISTIC_TYPE_CODE,
-					CharacteristicTypeWrapper.COLUMN_SORT);
+					OPERATION_EQUALS,
+					CHARACTERISTIC_TYPE_CODE,
+					COLUMN_SORT);
 			final Collection<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(condition,
 					true,
 					true);

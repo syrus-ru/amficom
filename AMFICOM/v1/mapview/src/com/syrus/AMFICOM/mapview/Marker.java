@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.44 2005/12/17 12:11:36 arseniy Exp $
+ * $Id: Marker.java,v 1.45 2006/02/28 15:20:02 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,9 @@
  */
 
 package com.syrus.AMFICOM.mapview;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -21,8 +24,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -49,7 +50,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *         и окно рефлектограммы инициализирует маркер такой            *
  *         информацией, после чего опять используется Lo.               *
  *
- * @version $Revision: 1.44 $, $Date: 2005/12/17 12:11:36 $
+ * @version $Revision: 1.45 $, $Date: 2006/02/28 15:20:02 $
  * @module mapview
  * @author $Author: arseniy $
  * @author Andrei Kroupennikov
@@ -164,7 +165,7 @@ public class Marker extends AbstractNode<Marker> {
 
 		try {
 			// TODO: use separate entity code for markers!
-			final Identifier ide = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_CODE);
+			final Identifier ide = IdentifierPool.getGeneratedIdentifier(SITENODE_CODE);
 			return new Marker(ide, creatorId, mapView, startNode, endNode, nodeLink, path, monitoredElementId, dpoint);
 		} catch (IdentifierGenerationException e) {
 			throw new CreateObjectException("MapMarker.createInstance | cannot generate identifier ", e);
@@ -200,7 +201,7 @@ public class Marker extends AbstractNode<Marker> {
 				new Date(System.currentTimeMillis()), 
 				creatorId, 
 				creatorId, 
-				StorableObjectVersion.INITIAL_VERSION,
+				INITIAL_VERSION,
 				name,
 				"",
 				new DoublePoint(0.0, 0.0));
@@ -237,7 +238,7 @@ public class Marker extends AbstractNode<Marker> {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final Identifier ide = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_CODE);
+			final Identifier ide = IdentifierPool.getGeneratedIdentifier(SITENODE_CODE);
 			return new Marker(ide, creatorId, mapView, path, monitoredElementId, name);
 		} catch (IdentifierGenerationException e) {
 			throw new CreateObjectException("MapMarker.createInstance | cannot generate identifier ", e);
