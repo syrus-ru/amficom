@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.8 2006/02/28 10:51:45 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.9 2006/02/28 11:18:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@ package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_FOUND;
 import static com.syrus.AMFICOM.general.ErrorMessages.ONLY_ONE_EXPECTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETERTYPEBINDING_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
@@ -45,13 +46,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBindingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterValueKind;
 
 /**
- * @version $Revision: 1.1.2.8 $, $Date: 2006/02/28 10:51:45 $
+ * @version $Revision: 1.1.2.9 $, $Date: 2006/02/28 11:18:38 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class ActionParameterTypeBinding extends StorableObject<ActionParameterTypeBinding> {
-	private static final long serialVersionUID = -8573213586761059060L;
+	private static final long serialVersionUID = 8851510439449075891L;
 
 	static enum ParameterValueKind {
 		ENUMERATED,
@@ -81,6 +82,10 @@ public final class ActionParameterTypeBinding extends StorableObject<ActionParam
 	private Identifier parameterTypeId;
 	private Identifier actionTypeId;
 	private Identifier measurementPortTypeId;
+
+	private static LinkedIdsCondition parameterTypeIdCondition;
+	private static LinkedIdsCondition actionTypeIdCondition;
+	private static LinkedIdsCondition measurementPortTypeIdCondition;
 
 	ActionParameterTypeBinding(final Identifier id,
 			final Identifier creatorId,
@@ -258,13 +263,31 @@ public final class ActionParameterTypeBinding extends StorableObject<ActionParam
 				|| actionTypeId.getMajor() == MODELING_TYPE_CODE : ILLEGAL_ENTITY_CODE;
 		assert measurementPortTypeId.getMajor() == MEASUREMENTPORT_TYPE_CODE : ILLEGAL_ENTITY_CODE;
 
-		final CompoundCondition condition = new CompoundCondition(new LinkedIdsCondition(parameterTypeId, ACTIONPARAMETERTYPEBINDING_CODE),
+		if (parameterTypeIdCondition == null) {
+			parameterTypeIdCondition = new LinkedIdsCondition(parameterTypeId, ACTIONPARAMETERTYPEBINDING_CODE);
+		} else {
+			parameterTypeIdCondition.setLinkedIdentifiable(parameterTypeId);
+		}
+
+		if (actionTypeIdCondition == null) {
+			actionTypeIdCondition = new LinkedIdsCondition(actionTypeId, ACTIONPARAMETERTYPEBINDING_CODE);
+		} else {
+			actionTypeIdCondition.setLinkedIdentifiable(actionTypeId);
+		}
+
+		if (measurementPortTypeIdCondition == null) {
+			measurementPortTypeIdCondition = new LinkedIdsCondition(measurementPortTypeId, ACTIONPARAMETERTYPEBINDING_CODE);
+		} else {
+			measurementPortTypeIdCondition.setLinkedIdentifiable(measurementPortTypeId);
+		}
+
+		final CompoundCondition condition = new CompoundCondition(parameterTypeIdCondition,
 				AND,
-				new LinkedIdsCondition(actionTypeId, ACTIONPARAMETERTYPEBINDING_CODE));
-		condition.addCondition(new LinkedIdsCondition(measurementPortTypeId, ACTIONPARAMETERTYPEBINDING_CODE));
+				actionTypeIdCondition);
+		condition.addCondition(measurementPortTypeIdCondition);
 		final Set<ActionParameterTypeBinding> actionParameterTypeBindings = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		if (actionParameterTypeBindings.isEmpty()) {
-			throw new ObjectNotFoundException("Binding for '" + parameterTypeId + "', '" + actionTypeId + "', '" + measurementPortTypeId + "' not found");
+			throw new ObjectNotFoundException(OBJECT_NOT_FOUND + ": for '" + parameterTypeId + "', '" + actionTypeId + "', '" + measurementPortTypeId + "'");
 		}
 		assert actionParameterTypeBindings.size() == 1 : ONLY_ONE_EXPECTED;
 		return actionParameterTypeBindings.iterator().next();
