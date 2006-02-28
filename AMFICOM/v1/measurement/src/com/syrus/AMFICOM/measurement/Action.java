@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.43.2.3 2006/02/14 00:43:51 arseniy Exp $
+ * $Id: Action.java,v 1.43.2.4 2006/02/28 15:20:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,16 +7,17 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -25,7 +26,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAction;
 import com.syrus.AMFICOM.measurement.corba.IdlActionStatus;
 
 /**
- * @version $Revision: 1.43.2.3 $, $Date: 2006/02/14 00:43:51 $
+ * @version $Revision: 1.43.2.4 $, $Date: 2006/02/28 15:20:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -188,15 +189,14 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.typeId != null
-				&& this.monitoredElementId != null && this.monitoredElementId.getMajor() == ObjectEntities.MONITOREDELEMENT_CODE
-				&& this.actionTemplateId != null && this.actionTemplateId.getMajor() == ObjectEntities.ACTIONTEMPLATE_CODE
+				&& this.monitoredElementId != null && this.monitoredElementId.getMajor() == MONITOREDELEMENT_CODE
+				&& this.actionTemplateId != null && this.actionTemplateId.getMajor() == ACTIONTEMPLATE_CODE
 				&& this.startTime != null
 				&& this.status != null;
 	}
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.typeId);
 		dependencies.add(this.monitoredElementId);

@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementResultParameter.java,v 1.1.2.4 2006/02/22 11:26:42 arseniy Exp $
+ * $Id: MeasurementResultParameter.java,v 1.1.2.5 2006/02/28 15:20:04 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,22 +7,23 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTRESULTPARAMETER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementResultParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementResultParameterHelper;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2006/02/22 11:26:42 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/02/28 15:20:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -51,14 +52,14 @@ public final class MeasurementResultParameter extends ActionResultParameter<Meas
 			final Identifier typeId,
 			final Identifier measurementId) throws CreateObjectException {
 		try {
-			final MeasurementResultParameter measurementResultParameter = new MeasurementResultParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTRESULTPARAMETER_CODE),
+			final MeasurementResultParameter measurementResultParameter = new MeasurementResultParameter(IdentifierPool.getGeneratedIdentifier(MEASUREMENTRESULTPARAMETER_CODE),
 					creatorId,
 					INITIAL_VERSION,
 					value,
 					typeId,
 					measurementId);
 
-			assert measurementResultParameter.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert measurementResultParameter.isValid() : OBJECT_STATE_ILLEGAL;
 
 			measurementResultParameter.markAsChanged();
 
@@ -73,7 +74,7 @@ public final class MeasurementResultParameter extends ActionResultParameter<Meas
 	 */
 	@Override
 	public IdlMeasurementResultParameter getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlMeasurementResultParameterHelper.init(orb,
 				this.id.getIdlTransferable(),
@@ -93,7 +94,7 @@ public final class MeasurementResultParameter extends ActionResultParameter<Meas
 
 	@Override
 	protected boolean isValid() {
-		return super.isValid() && this.getMeasurementId().getMajor() == ObjectEntities.MEASUREMENT_CODE;
+		return super.isValid() && this.getMeasurementId().getMajor() == MEASUREMENT_CODE;
 	}
 
 	@Override

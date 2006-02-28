@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisResultParameter.java,v 1.1.2.4 2006/02/22 11:26:42 arseniy Exp $
+ * $Id: AnalysisResultParameter.java,v 1.1.2.5 2006/02/28 15:20:04 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,22 +7,23 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSISRESULTPARAMETER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisResultParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisResultParameterHelper;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2006/02/22 11:26:42 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/02/28 15:20:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -51,14 +52,14 @@ public final class AnalysisResultParameter extends ActionResultParameter<Analysi
 			final Identifier typeId,
 			final Identifier analysisId) throws CreateObjectException {
 		try {
-			final AnalysisResultParameter analysisResultParameter = new AnalysisResultParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSISRESULTPARAMETER_CODE),
+			final AnalysisResultParameter analysisResultParameter = new AnalysisResultParameter(IdentifierPool.getGeneratedIdentifier(ANALYSISRESULTPARAMETER_CODE),
 					creatorId,
 					INITIAL_VERSION,
 					value,
 					typeId,
 					analysisId);
 
-			assert analysisResultParameter.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert analysisResultParameter.isValid() : OBJECT_STATE_ILLEGAL;
 
 			analysisResultParameter.markAsChanged();
 
@@ -73,7 +74,7 @@ public final class AnalysisResultParameter extends ActionResultParameter<Analysi
 	 */
 	@Override
 	public IdlAnalysisResultParameter getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlAnalysisResultParameterHelper.init(orb,
 				this.id.getIdlTransferable(),
@@ -93,7 +94,7 @@ public final class AnalysisResultParameter extends ActionResultParameter<Analysi
 
 	@Override
 	protected boolean isValid() {
-		return super.isValid() && this.getAnalysisId().getMajor() == ObjectEntities.ANALYSIS_CODE;
+		return super.isValid() && this.getAnalysisId().getMajor() == ANALYSIS_CODE;
 	}
 
 	@Override

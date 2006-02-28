@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.21.2.3 2006/02/28 12:03:55 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.21.2.4 2006/02/28 15:20:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortTypeHelper;
 
 /**
- * @version $Revision: 1.21.2.3 $, $Date: 2006/02/28 12:03:55 $
+ * @version $Revision: 1.21.2.4 $, $Date: 2006/02/28 15:20:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -165,7 +165,6 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 

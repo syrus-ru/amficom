@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.68.2.3 2006/02/14 01:26:43 arseniy Exp $
+ * $Id: Modeling.java,v 1.68.2.4 2006/02/28 15:20:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,24 +8,27 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
+
 import java.util.Date;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlModeling;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingHelper;
 
 /**
- * @version $Revision: 1.68.2.3 $, $Date: 2006/02/14 01:26:43 $
+ * @version $Revision: 1.68.2.4 $, $Date: 2006/02/28 15:20:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -70,9 +73,9 @@ public final class Modeling extends Action<Modeling> {
 			final Date startTime,
 			final long duration) throws CreateObjectException{
 		try {
-			final Modeling modeling = new Modeling(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_CODE),
+			final Modeling modeling = new Modeling(IdentifierPool.getGeneratedIdentifier(MODELING_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					typeId,
 					monitoredElementId,
 					actionTemplateId,
@@ -81,7 +84,7 @@ public final class Modeling extends Action<Modeling> {
 					duration,
 					ActionStatus.ACTION_STATUS_NEW);
 
-			assert modeling.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert modeling.isValid() : OBJECT_STATE_ILLEGAL;
 
 			modeling.markAsChanged();
 
@@ -96,7 +99,7 @@ public final class Modeling extends Action<Modeling> {
 	 */
 	@Override
 	public IdlModeling getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		
 		return IdlModelingHelper.init(orb,
 				this.id.getIdlTransferable(),
@@ -122,7 +125,7 @@ public final class Modeling extends Action<Modeling> {
 		final IdlModeling idlModeling = (IdlModeling) transferable;
 		super.fromTransferable(idlModeling);
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -131,7 +134,7 @@ public final class Modeling extends Action<Modeling> {
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
-				&& this.getTypeId().getMajor() == ObjectEntities.MODELING_TYPE_CODE;
+				&& this.getTypeId().getMajor() == MODELING_TYPE_CODE;
 	}
 
 	/**

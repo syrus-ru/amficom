@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.156 2005/12/17 12:08:30 arseniy Exp $
+ * $Id: Equipment.java,v 1.156.2.1 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -60,7 +61,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.156 $, $Date: 2005/12/17 12:08:30 $
+ * @version $Revision: 1.156.2.1 $, $Date: 2006/02/28 15:19:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -194,7 +195,7 @@ public final class Equipment extends DomainMember<Equipment>
 		try {
 			final Equipment equipment = new Equipment(IdentifierPool.getGeneratedIdentifier(EQUIPMENT_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					protoEquipmentId,
 					name,
@@ -278,6 +279,8 @@ public final class Equipment extends DomainMember<Equipment>
 		this.swSerial = et.swSerial;
 		this.swVersion = et.swVersion;
 		this.inventoryNumber = et.inventoryNumber;
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -348,6 +351,8 @@ public final class Equipment extends DomainMember<Equipment>
 	 */
 	@Override
 	public IdlEquipment getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlEquipmentHelper.init(orb,
 				super.id.getIdlTransferable(),
 				super.created.getTime(),
@@ -533,8 +538,6 @@ public final class Equipment extends DomainMember<Equipment>
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies =  new HashSet<Identifiable>();
 		dependencies.add(this.protoEquipmentId);
 		return dependencies;

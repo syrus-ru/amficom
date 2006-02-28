@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.55.2.2 2006/02/11 18:40:46 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.55.2.3 2006/02/28 15:20:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.measurement;
 
 
+import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
@@ -27,7 +28,6 @@ import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.Action.ActionStatus;
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.55.2.2 $, $Date: 2006/02/11 18:40:46 $
+ * @version $Revision: 1.55.2.3 $, $Date: 2006/02/28 15:20:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -45,7 +45,7 @@ public final class ModelingDatabase extends ActionDatabase<Modeling> {
 
 	@Override
 	protected short getEntityCode() {
-		return ObjectEntities.MODELING_CODE;
+		return MODELING_CODE;
 	}
 
 	@Override

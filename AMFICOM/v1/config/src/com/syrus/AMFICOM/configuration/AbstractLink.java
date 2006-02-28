@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLink.java,v 1.19 2005/12/17 12:08:30 arseniy Exp $
+ * $Id: AbstractLink.java,v 1.19.2.1 2006/02/28 15:19:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
@@ -118,7 +117,6 @@ public abstract class AbstractLink<T extends AbstractLink<T>>
 	 */
 	@Override
 	public final Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		return Collections.singleton((Identifiable) this.type);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.11.2.1 2006/02/11 18:40:46 arseniy Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.11.2.2 2006/02/28 15:20:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,14 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -22,7 +23,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11.2.1 $, $Date: 2006/02/11 18:40:46 $
+ * @version $Revision: 1.11.2.2 $, $Date: 2006/02/28 15:20:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -33,7 +34,7 @@ public final class MeasurementPortTypeDatabase extends StorableObjectDatabase<Me
 
 	@Override
 	protected short getEntityCode() {
-		return ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
+		return MEASUREMENTPORT_TYPE_CODE;
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.99.2.3 2006/02/16 11:12:00 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.99.2.4 2006/02/28 15:20:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
@@ -32,7 +34,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -42,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.99.2.3 $, $Date: 2006/02/16 11:12:00 $
+ * @version $Revision: 1.99.2.4 $, $Date: 2006/02/28 15:20:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -52,7 +53,7 @@ public final class MeasurementDatabase extends ActionDatabase<Measurement> {
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.MEASUREMENT_CODE;
+		return MEASUREMENT_CODE;
 	}
 
 	@Override
@@ -124,7 +125,7 @@ public final class MeasurementDatabase extends ActionDatabase<Measurement> {
 
 	public Measurement retrieveLast(final Identifier testId) throws RetrieveObjectException, ObjectNotFoundException {
 		assert testId != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert testId.getMajor() == ObjectEntities.TEST_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert testId.getMajor() == TEST_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
 		final String testIdStr = DatabaseIdentifier.toSQLString(testId);
 		final String condition = COLUMN_TEST_ID + EQUALS + testIdStr

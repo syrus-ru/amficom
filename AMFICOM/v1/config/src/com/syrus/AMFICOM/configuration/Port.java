@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.109 2005/12/17 12:08:30 arseniy Exp $
+ * $Id: Port.java,v 1.109.2.1 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -44,7 +45,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.109 $, $Date: 2005/12/17 12:08:30 $
+ * @version $Revision: 1.109.2.1 $, $Date: 2006/02/28 15:19:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -101,7 +102,7 @@ public final class Port extends StorableObject<Port>
 		try {
 			final Port port = new Port(IdentifierPool.getGeneratedIdentifier(PORT_CODE),
 						creatorId,
-						StorableObjectVersion.INITIAL_VERSION,
+						INITIAL_VERSION,
 						type,
 						description,
 						equipmentId);
@@ -118,13 +119,15 @@ public final class Port extends StorableObject<Port>
 
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlPort pt = (IdlPort) transferable;
+		final IdlPort pt = (IdlPort) transferable;
 		super.fromTransferable(pt);
 
-		this.type = (PortType) StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);
+		this.type = StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);
 
 		this.description = pt.description;
 		this.equipmentId = new Identifier(pt.equipmentId);
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 	
 
@@ -134,6 +137,7 @@ public final class Port extends StorableObject<Port>
 	 */
 	@Override
 	public IdlPort getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlPortHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -188,8 +192,6 @@ public final class Port extends StorableObject<Port>
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
 		dependencies.add(this.type);
 		dependencies.add(this.equipmentId);

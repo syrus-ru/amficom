@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementReflectometryAnalysisResult.java,v 1.5.2.2 2006/02/22 08:51:27 arseniy Exp $
+ * $Id: MeasurementReflectometryAnalysisResult.java,v 1.5.2.3 2006/02/28 15:20:05 arseniy Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,15 @@
 
 package com.syrus.AMFICOM.reflectometry;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSISRESULTPARAMETER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
+
 import java.io.IOException;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisResultParameter;
@@ -33,7 +35,7 @@ import com.syrus.util.ByteArray;
  * 
  * @author $Author: arseniy $
  * @author saa
- * @version $Revision: 1.5.2.2 $, $Date: 2006/02/22 08:51:27 $
+ * @version $Revision: 1.5.2.3 $, $Date: 2006/02/28 15:20:05 $
  * @module measurement
  */
 public final class MeasurementReflectometryAnalysisResult
@@ -59,7 +61,7 @@ implements ReflectometryAnalysisResult {
 		assert measurement != null : ErrorMessages.NON_NULL_EXPECTED;
 		final Set<Analysis> analyse =
 			StorableObjectPool.getStorableObjectsByCondition(
-				new LinkedIdsCondition(measurement.getId(), ObjectEntities.ANALYSIS_CODE), true); // XXX: performance: the most slow part of loading trace that has no analysis
+				new LinkedIdsCondition(measurement.getId(), ANALYSIS_CODE), true); // XXX: performance: the most slow part of loading trace that has no analysis
 		return analyse.isEmpty() ? null : analyse.iterator().next();
 	}
 
@@ -111,7 +113,7 @@ implements ReflectometryAnalysisResult {
 				return; // leave null fields
 			}
 		}
-		final LinkedIdsCondition condition = new LinkedIdsCondition(analysis.getId(), ObjectEntities.ANALYSISRESULTPARAMETER_CODE);
+		final LinkedIdsCondition condition = new LinkedIdsCondition(analysis.getId(), ANALYSISRESULTPARAMETER_CODE);
 		final Set<AnalysisResultParameter> results = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		boolean qualityHasQd = false;
 		double qualityQ = 0.0;

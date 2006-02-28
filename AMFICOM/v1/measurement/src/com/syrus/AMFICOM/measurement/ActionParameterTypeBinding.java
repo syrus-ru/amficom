@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.9 2006/02/28 11:18:38 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.10 2006/02/28 15:20:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_FOUND;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.ONLY_ONE_EXPECTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETERTYPEBINDING_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
@@ -17,6 +18,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
 
 import java.util.Date;
@@ -28,13 +30,11 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBindingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterValueKind;
 
 /**
- * @version $Revision: 1.1.2.9 $, $Date: 2006/02/28 11:18:38 $
+ * @version $Revision: 1.1.2.10 $, $Date: 2006/02/28 15:20:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -128,15 +128,15 @@ public final class ActionParameterTypeBinding extends StorableObject<ActionParam
 		}
 
 		try {
-			final ActionParameterTypeBinding actionParameterTypeBinding = new ActionParameterTypeBinding(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ACTIONPARAMETERTYPEBINDING_CODE),
+			final ActionParameterTypeBinding actionParameterTypeBinding = new ActionParameterTypeBinding(IdentifierPool.getGeneratedIdentifier(ACTIONPARAMETERTYPEBINDING_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					parameterValueKind,
 					parameterTypeId,
 					actionTypeId,
 					measurementPortTypeId);
 
-			assert actionParameterTypeBinding.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert actionParameterTypeBinding.isValid() : OBJECT_STATE_ILLEGAL;
 
 			actionParameterTypeBinding.markAsChanged();
 
@@ -148,7 +148,7 @@ public final class ActionParameterTypeBinding extends StorableObject<ActionParam
 
 	@Override
 	public IdlActionParameterTypeBinding getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlActionParameterTypeBindingHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -173,7 +173,7 @@ public final class ActionParameterTypeBinding extends StorableObject<ActionParam
 		this.actionTypeId = Identifier.valueOf(idlActionParameterTypeBinding.actionTypeId);
 		this.measurementPortTypeId = Identifier.valueOf(idlActionParameterTypeBinding.measurementPortTypeId);
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 			
 
@@ -218,16 +218,15 @@ public final class ActionParameterTypeBinding extends StorableObject<ActionParam
 		final short actionTypeIdMajor = this.actionTypeId.getMajor();
 		return super.isValid()
 				&& this.parameterValueKind != null
-				&& this.parameterTypeId != null && this.parameterTypeId.getMajor() == ObjectEntities.PARAMETER_TYPE_CODE
-				&& (actionTypeIdMajor == ObjectEntities.MEASUREMENT_TYPE_CODE
-						|| actionTypeIdMajor == ObjectEntities.ANALYSIS_TYPE_CODE
-						|| actionTypeIdMajor == ObjectEntities.MODELING_TYPE_CODE)
-				&& this.measurementPortTypeId != null && this.measurementPortTypeId.getMajor() == ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
+				&& this.parameterTypeId != null && this.parameterTypeId.getMajor() == PARAMETER_TYPE_CODE
+				&& (actionTypeIdMajor == MEASUREMENT_TYPE_CODE
+						|| actionTypeIdMajor == ANALYSIS_TYPE_CODE
+						|| actionTypeIdMajor == MODELING_TYPE_CODE)
+				&& this.measurementPortTypeId != null && this.measurementPortTypeId.getMajor() == MEASUREMENTPORT_TYPE_CODE;
 	}
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.parameterTypeId);
 		dependencies.add(this.actionTypeId);

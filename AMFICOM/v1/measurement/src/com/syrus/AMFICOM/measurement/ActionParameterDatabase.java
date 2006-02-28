@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterDatabase.java,v 1.1.2.3 2006/02/16 12:50:09 arseniy Exp $
+ * $Id: ActionParameterDatabase.java,v 1.1.2.4 2006/02/28 15:20:04 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
@@ -23,14 +24,13 @@ import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/02/16 12:50:09 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/02/28 15:20:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -39,7 +39,7 @@ public final class ActionParameterDatabase extends ParameterDatabase<ActionParam
 
 	@Override
 	protected short getEntityCode() {
-		return ObjectEntities.ACTIONPARAMETER_CODE;
+		return ACTIONPARAMETER_CODE;
 	}
 
 	@Override

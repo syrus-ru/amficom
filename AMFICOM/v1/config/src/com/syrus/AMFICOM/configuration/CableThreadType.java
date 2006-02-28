@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThreadType.java,v 1.85 2006/01/17 16:24:10 bass Exp $
+ * $Id: CableThreadType.java,v 1.85.2.1 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,13 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
-import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
-import static java.util.logging.Level.WARNING;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
+import static java.util.logging.Level.WARNING;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -59,8 +60,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * optical fiber (or an <i>abstract</i> optical fiber), the latter is a type of
  * cable (or an <i>abstract</i> cable containing this thread).
  *
- * @version $Revision: 1.85 $, $Date: 2006/01/17 16:24:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.85.2.1 $, $Date: 2006/02/28 15:19:58 $
+ * @author $Author: arseniy $
  * @module configuration
  */
 public final class CableThreadType extends StorableObjectType<CableThreadType>
@@ -321,7 +322,7 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 		try {
 			final CableThreadType cableThreadType = new CableThreadType(IdentifierPool.getGeneratedIdentifier(CABLETHREAD_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					codename,
 					description,
 					name,

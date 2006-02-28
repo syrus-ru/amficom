@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.84 2005/12/17 12:08:30 arseniy Exp $
+ * $Id: TransmissionPathType.java,v 1.84.2.1 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHI
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/12/17 12:08:30 $
+ * @version $Revision: 1.84.2.1 $, $Date: 2006/02/28 15:19:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -95,7 +96,7 @@ public final class TransmissionPathType extends StorableObjectType<TransmissionP
 		try {
 			final TransmissionPathType transmissionPathType = new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(TRANSPATH_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					codename,
 					description,
 					name);
@@ -115,6 +116,8 @@ public final class TransmissionPathType extends StorableObjectType<TransmissionP
 		final IdlTransmissionPathType tptt = (IdlTransmissionPathType) transferable;
 		super.fromTransferable(tptt, tptt.codename, tptt.description);
 		this.name = tptt.name;
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -123,6 +126,7 @@ public final class TransmissionPathType extends StorableObjectType<TransmissionP
 	 */
 	@Override
 	public IdlTransmissionPathType getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlTransmissionPathTypeHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -159,8 +163,6 @@ public final class TransmissionPathType extends StorableObjectType<TransmissionP
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		return Collections.emptySet();
 	}
 

@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.42.2.1 2006/02/13 19:34:32 arseniy Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.42.2.2 2006/02/28 15:20:05 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -7,6 +7,11 @@
 */
 
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.INTERVALSTEMPORALPATTERN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PERIODICALTEMPORALPATTERN_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -25,13 +30,11 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -45,7 +48,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.42.2.1 $, $Date: 2006/02/13 19:34:32 $
+ * @version $Revision: 1.42.2.2 $, $Date: 2006/02/28 15:20:05 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement
@@ -90,13 +93,13 @@ public final class IntervalsTemporalPattern
 			final SortedMap<Long, Long> intervalsDuration) throws CreateObjectException {
 
 		try {
-			final IntervalsTemporalPattern intervalsTemporalPattern = new IntervalsTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.INTERVALSTEMPORALPATTERN_CODE),
+			final IntervalsTemporalPattern intervalsTemporalPattern = new IntervalsTemporalPattern(IdentifierPool.getGeneratedIdentifier(INTERVALSTEMPORALPATTERN_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					intervalsAbstractTemporalPatternMap,
 					intervalsDuration);
 
-			assert intervalsTemporalPattern.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert intervalsTemporalPattern.isValid() : OBJECT_STATE_ILLEGAL;
 
 			intervalsTemporalPattern.markAsChanged();
 
@@ -131,7 +134,7 @@ public final class IntervalsTemporalPattern
 
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlIntervalsTemporalPattern itpt = (IdlIntervalsTemporalPattern) transferable;
+		final IdlIntervalsTemporalPattern itpt = (IdlIntervalsTemporalPattern) transferable;
 		super.fromTransferable(itpt);
 
 		{
@@ -151,6 +154,7 @@ public final class IntervalsTemporalPattern
 			this.setIntervalsDuration0(map);
 		}
 
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	@Override
@@ -448,8 +452,6 @@ public final class IntervalsTemporalPattern
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		for (final Long milliseconds : this.intervalsAbstractTemporalPatternMap.keySet()) {
 			final Identifier abstractTemporalPatternId = this.intervalsAbstractTemporalPatternMap.get(milliseconds);
@@ -465,7 +467,7 @@ public final class IntervalsTemporalPattern
 	 */
 	@Override
 	public IdlIntervalsTemporalPattern getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		IntervalTemporalPatternId[] intervalTemporalPatternsIdT;
 		IntervalDuration[] durationsT;
@@ -785,7 +787,7 @@ public final class IntervalsTemporalPattern
 			this.intervalsDuration.remove(offset);
 			final short major = temporalPatternId.getMajor();
 			switch (major) {
-				case ObjectEntities.INTERVALSTEMPORALPATTERN_CODE:
+				case INTERVALSTEMPORALPATTERN_CODE:
 					final IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId,
 							true);
 					SortedMap<?, Identifier> intervalsAbstractTemporalPatternMap2 = intervalsTemporalPattern.getIntervalsAbstractTemporalPatternMap();
@@ -800,7 +802,7 @@ public final class IntervalsTemporalPattern
 						this.intervalsDuration.put(newOffset, intervalsDuration2.get(offset2));
 					}
 					break;
-				case ObjectEntities.PERIODICALTEMPORALPATTERN_CODE:
+				case PERIODICALTEMPORALPATTERN_CODE:
 					PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId,
 							true);
 					// Log.debugMessage("PERIODICAL duration: " + duration, Log.FINEST);

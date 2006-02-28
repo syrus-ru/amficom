@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionResultParameter.java,v 1.1.2.4 2006/02/16 12:50:09 arseniy Exp $
+ * $Id: ActionResultParameter.java,v 1.1.2.5 2006/02/28 15:20:04 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,16 +7,17 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE_CODE;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlActionResultParameter;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2006/02/16 12:50:09 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/02/28 15:20:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -56,6 +57,8 @@ public abstract class ActionResultParameter<T extends ActionResultParameter<T>> 
 		super.fromTransferable(transferable);
 		this.typeId = Identifier.valueOf(idlActionResultParameter._typeId);
 		this.actionId = Identifier.valueOf(idlActionResultParameter.actionId);
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	public final Identifier getTypeId() {
@@ -94,13 +97,12 @@ public abstract class ActionResultParameter<T extends ActionResultParameter<T>> 
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
-				&& this.typeId != null && this.typeId.getMajor() == ObjectEntities.PARAMETER_TYPE_CODE
+				&& this.typeId != null && this.typeId.getMajor() == PARAMETER_TYPE_CODE
 				&& this.actionId != null;
 	}
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.typeId);
 		dependencies.add(this.actionId);

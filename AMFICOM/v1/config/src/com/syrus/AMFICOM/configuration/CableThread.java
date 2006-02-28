@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.48 2005/12/17 12:08:30 arseniy Exp $
+ * $Id: CableThread.java,v 1.48.2.1 2006/02/28 15:19:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@ package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/12/17 12:08:30 $
+ * @version $Revision: 1.48.2.1 $, $Date: 2006/02/28 15:19:57 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -82,7 +83,7 @@ public final class CableThread extends DomainMember<CableThread>
 		try {
 			final CableThread cableThread = new CableThread(IdentifierPool.getGeneratedIdentifier(CABLETHREAD_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					name,
 					description,
@@ -105,7 +106,9 @@ public final class CableThread extends DomainMember<CableThread>
 
 		this.name = ctt.name;
 		this.description = ctt.description;
-		this.type = (CableThreadType) StorableObjectPool.getStorableObject(new Identifier(ctt._typeId), true);
+		this.type = StorableObjectPool.getStorableObject(new Identifier(ctt._typeId), true);
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -114,6 +117,8 @@ public final class CableThread extends DomainMember<CableThread>
 	 */
 	@Override
 	public IdlCableThread getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlCableThreadHelper.init(orb,
 				super.id.getIdlTransferable(),
 				super.created.getTime(),
@@ -161,8 +166,6 @@ public final class CableThread extends DomainMember<CableThread>
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(1);
 		dependencies.add(this.type);
 		return dependencies;

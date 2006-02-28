@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.4 2006/02/15 19:37:18 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.5 2006/02/28 15:20:04 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,20 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CRONTEMPORALPATTERN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.INTERVALSTEMPORALPATTERN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PERIODICALTEMPORALPATTERN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -22,12 +35,10 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -44,7 +55,7 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.183.2.4 $, $Date: 2006/02/15 19:37:18 $
+ * @version $Revision: 1.183.2.5 $, $Date: 2006/02/28 15:20:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -135,9 +146,9 @@ public final class Test extends StorableObject<Test> implements Describable {
 			final Set<Identifier> measurementSetupIds,
 			final Identifier measurementTypeId) throws CreateObjectException {
 		try {
-			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_CODE),
+			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(TEST_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					description,
 					groupTestId,
 					monitoredElementId,
@@ -152,7 +163,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 					VOID_IDENTIFIER,
 					null);
 
-			assert test.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert test.isValid() : OBJECT_STATE_ILLEGAL;
 
 			test.markAsChanged();
 
@@ -185,9 +196,9 @@ public final class Test extends StorableObject<Test> implements Describable {
 			final Identifier measurementTypeId,
 			final Identifier analysisTypeId) throws CreateObjectException {
 		try {
-			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_CODE),
+			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(TEST_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					description,
 					groupTestId,
 					monitoredElementId,
@@ -202,7 +213,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 					analysisTypeId,
 					null);
 
-			assert test.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert test.isValid() : OBJECT_STATE_ILLEGAL;
 
 			test.markAsChanged();
 
@@ -237,9 +248,9 @@ public final class Test extends StorableObject<Test> implements Describable {
 			final Set<Identifier> measurementSetupIds,
 			final Identifier measurementTypeId) throws CreateObjectException {
 		try {
-			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_CODE),
+			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(TEST_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					description,
 					groupTestId,
 					monitoredElementId,
@@ -254,7 +265,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 					VOID_IDENTIFIER,
 					null);
 
-			assert test.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert test.isValid() : OBJECT_STATE_ILLEGAL;
 
 			test.markAsChanged();
 
@@ -291,9 +302,9 @@ public final class Test extends StorableObject<Test> implements Describable {
 			final Identifier measurementTypeId,
 			final Identifier analysisTypeId) throws CreateObjectException {
 		try {
-			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_CODE),
+			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(TEST_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					description,
 					groupTestId,
 					monitoredElementId,
@@ -308,7 +319,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 					analysisTypeId,
 					null);
 
-			assert test.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert test.isValid() : OBJECT_STATE_ILLEGAL;
 
 			test.markAsChanged();
 
@@ -324,7 +335,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 	 */
 	@Override
 	public IdlTest getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		final IdlTestStops[] idlTestStops = new IdlTestStops[this.stopMap.size()];
 		int i = 0;
@@ -375,7 +386,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 			this.stopMap.put(new Date(idlTestStops.time), idlTestStops.reason);
 		}
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	public String getDescription() {
@@ -386,7 +397,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 	 * @param description The description to set.
 	 */
 	public void setDescription(final String description) {
-		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
 		this.description = description;
 		super.markAsChanged();
 	}
@@ -408,8 +419,8 @@ public final class Test extends StorableObject<Test> implements Describable {
 	}
 
 	public void setGroupTestId(final Identifier groupTestId) {
-		assert groupTestId != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert (groupTestId.isVoid() || groupTestId.getMajor() == ObjectEntities.TEST_CODE) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert groupTestId != null : NON_NULL_EXPECTED;
+		assert (groupTestId.isVoid() || groupTestId.getMajor() == TEST_CODE) : ILLEGAL_ENTITY_CODE;
 		this.groupTestId = groupTestId;
 		this.markAsChanged();
 	}
@@ -426,8 +437,8 @@ public final class Test extends StorableObject<Test> implements Describable {
 	 * @param monitoredElement The monitoredElement to set.
 	 */
 	public void setMonitoredElementId(final Identifier monitoredElementId) {
-		assert monitoredElementId != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert monitoredElementId.getMajor() == ObjectEntities.MONITOREDELEMENT_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert monitoredElementId != null : NON_NULL_EXPECTED;
+		assert monitoredElementId.getMajor() == MONITOREDELEMENT_CODE : ILLEGAL_ENTITY_CODE;
 		this.monitoredElementId = monitoredElementId;
 		super.markAsChanged();
 	}
@@ -440,7 +451,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 	 * @param status The status to set.
 	 */
 	public void setStatus(final TestStatus status) {
-		assert status != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert status != null : NON_NULL_EXPECTED;
 		this.status = status;
 		super.markAsChanged();
 	}
@@ -453,7 +464,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 	 * @param temporalType The temporalType to set.
 	 */
 	public void setTemporalType(final TestTemporalType temporalType) {
-		assert temporalType != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert temporalType != null : NON_NULL_EXPECTED;
 		this.temporalType = temporalType;
 		super.markAsChanged();
 	}
@@ -493,9 +504,9 @@ public final class Test extends StorableObject<Test> implements Describable {
 	}
 
 	public void setMeasurementSetupIds(final Set<Identifier> measurementSetupIds) {
-		assert measurementSetupIds != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert measurementSetupIds.size() > 0 : ErrorMessages.NON_EMPTY_EXPECTED;
-		assert StorableObject.getEntityCodeOfIdentifiables(measurementSetupIds) == ObjectEntities.MEASUREMENTSETUP_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert measurementSetupIds != null : NON_NULL_EXPECTED;
+		assert measurementSetupIds.size() > 0 : NON_EMPTY_EXPECTED;
+		assert StorableObject.getEntityCodeOfIdentifiables(measurementSetupIds) == MEASUREMENTSETUP_CODE : ILLEGAL_ENTITY_CODE;
 		this.setMeasurementSetupIds0(measurementSetupIds);
 		super.markAsChanged();
 	}
@@ -518,8 +529,8 @@ public final class Test extends StorableObject<Test> implements Describable {
 	 * @param measurementType The measurementType to set.
 	 */
 	public void setMeasurementType(final Identifier measurementTypeId) {
-		assert measurementTypeId != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert measurementTypeId.getMajor() == ObjectEntities.MEASUREMENT_TYPE_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert measurementTypeId != null : NON_NULL_EXPECTED;
+		assert measurementTypeId.getMajor() == MEASUREMENT_TYPE_CODE : ILLEGAL_ENTITY_CODE;
 		this.measurementTypeId = measurementTypeId;
 		super.markAsChanged();
 	}
@@ -536,8 +547,8 @@ public final class Test extends StorableObject<Test> implements Describable {
 	 * @param analysisType The analysisType to set.
 	 */
 	public void setAnalysisTypeId(final Identifier analysisTypeId) {
-		assert analysisTypeId != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert (analysisTypeId.isVoid() || analysisTypeId.getMajor() == ObjectEntities.ANALYSIS_TYPE_CODE) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert analysisTypeId != null : NON_NULL_EXPECTED;
+		assert (analysisTypeId.isVoid() || analysisTypeId.getMajor() == ANALYSIS_TYPE_CODE) : ILLEGAL_ENTITY_CODE;
 		this.analysisTypeId = analysisTypeId;
 		super.markAsChanged();
 	}
@@ -564,8 +575,8 @@ public final class Test extends StorableObject<Test> implements Describable {
 	 * @param reason reason to stop test
 	 */
 	public void addStop(final Date stopTime, final String reason) {
-		assert stopTime != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert reason != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert stopTime != null : NON_NULL_EXPECTED;
+		assert reason != null : NON_NULL_EXPECTED;
 		this.stopMap.put(new Date(stopTime.getTime()), reason);
 		super.markAsChanged();
 	}
@@ -605,20 +616,20 @@ public final class Test extends StorableObject<Test> implements Describable {
 		final boolean valid = super.isValid()
 				&& this.description != null
 				&& this.groupTestId != null
-					&& (this.groupTestId.isVoid() || this.groupTestId.getMajor() == ObjectEntities.TEST_CODE)
+					&& (this.groupTestId.isVoid() || this.groupTestId.getMajor() == TEST_CODE)
 				&& this.monitoredElementId != null
-					&& this.monitoredElementId.getMajor() == ObjectEntities.MONITOREDELEMENT_CODE
+					&& this.monitoredElementId.getMajor() == MONITOREDELEMENT_CODE
 				&& this.status != null
 				&& this.temporalType != null
 				&& this.timeStamps.isValid()
 				&& this.measurementSetupIds != null
 					&& this.measurementSetupIds.size() > 0
-					&& StorableObject.getEntityCodeOfIdentifiables(this.measurementSetupIds) == ObjectEntities.MEASUREMENTSETUP_CODE
+					&& StorableObject.getEntityCodeOfIdentifiables(this.measurementSetupIds) == MEASUREMENTSETUP_CODE
 				&& this.measurementTypeId != null
-					&& this.measurementTypeId.getMajor() == ObjectEntities.MEASUREMENT_TYPE_CODE
+					&& this.measurementTypeId.getMajor() == MEASUREMENT_TYPE_CODE
 				&& this.numberOfMeasurements >= 0
 				&& this.analysisTypeId != null
-					&& (this.analysisTypeId.isVoid() || this.analysisTypeId.getMajor() == ObjectEntities.ANALYSIS_TYPE_CODE)
+					&& (this.analysisTypeId.isVoid() || this.analysisTypeId.getMajor() == ANALYSIS_TYPE_CODE)
 				&& this.stopMap != null;
 		if (!valid) {
 			return false;
@@ -725,8 +736,6 @@ public final class Test extends StorableObject<Test> implements Describable {
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 
 		if (!this.groupTestId.isVoid() && !this.id.equals(this.groupTestId)) {
@@ -758,7 +767,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 	}
 
 	public static IdlTest[] createTransferables(final Set<Test> tests, final ORB orb) {
-		assert tests != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert tests != null : NON_NULL_EXPECTED;
 
 		final IdlTest[] transferables = new IdlTest[tests.size()];
 		int i = 0;
@@ -772,7 +781,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 
 
 
-	static enum TestStatus {
+	public static enum TestStatus {
 		TEST_STATUS_NEW,		//Сохранён в БД на сервере
 		TEST_STATUS_SCHEDULED,	//Передан на МУИ и сохранён в БД
 		TEST_STATUS_PROCESSING,	//Извлечён из очереди; первое измерение начинает выполняться
@@ -796,7 +805,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 		}
 	}
 
-	static enum TestTemporalType {
+	public static enum TestTemporalType {
 		TEST_TEMPORAL_TYPE_ONETIME,
 		TEST_TEMPORAL_TYPE_PERIODICAL;
 
@@ -845,7 +854,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 				default:
 					Log.errorMessage("TestTimeStamps | Illegal temporal type: " + this.getTestTemporalType() + " of test");
 			}
-			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		}
 
 		TestTimeStamps(final IdlTestTimeStamps idlTestTimeStamps) {
@@ -865,7 +874,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.getTestTemporalType());
 			}
 
-			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		}
 
 		/**
@@ -873,7 +882,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 		 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 		 */
 		public IdlTestTimeStamps getIdlTransferable(final ORB orb) {
-			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 			final IdlTestTimeStamps idlTestTimeStamps = new IdlTestTimeStamps();
 			switch (this.getTestTemporalType()) {
@@ -903,9 +912,9 @@ public final class Test extends StorableObject<Test> implements Describable {
 						return false;
 					}
 					final short temporalPatternIdMajor = this.temporalPatternId.getMajor();
-					return (temporalPatternIdMajor == ObjectEntities.CRONTEMPORALPATTERN_CODE
-									|| temporalPatternIdMajor == ObjectEntities.INTERVALSTEMPORALPATTERN_CODE
-									|| temporalPatternIdMajor == ObjectEntities.PERIODICALTEMPORALPATTERN_CODE)
+					return (temporalPatternIdMajor == CRONTEMPORALPATTERN_CODE
+									|| temporalPatternIdMajor == INTERVALSTEMPORALPATTERN_CODE
+									|| temporalPatternIdMajor == PERIODICALTEMPORALPATTERN_CODE)
 							&& this.startTime.before(this.endTime);
 				default:
 					return false;
@@ -958,23 +967,23 @@ public final class Test extends StorableObject<Test> implements Describable {
 		}
 
 		public void setStartTime(final Date startTime) {
-			assert startTime != null : ErrorMessages.NON_NULL_EXPECTED;
+			assert startTime != null : NON_NULL_EXPECTED;
 			this.startTime = startTime;
 		}
 
 		public void setEndTime(final Date endTime) {
-			assert endTime != null : ErrorMessages.NON_NULL_EXPECTED;
+			assert endTime != null : NON_NULL_EXPECTED;
 			this.endTime = endTime;
 		}
 
 		public void setTemporalPatternId(final Identifier temporalPatternId) {
-			assert temporalPatternId != null : ErrorMessages.NON_NULL_EXPECTED;
+			assert temporalPatternId != null : NON_NULL_EXPECTED;
 			final short temporalPatternIdMajor = temporalPatternId.getMajor();
 			assert temporalPatternId.isVoid()
-					|| temporalPatternIdMajor == ObjectEntities.CRONTEMPORALPATTERN_CODE
-					|| temporalPatternIdMajor == ObjectEntities.INTERVALSTEMPORALPATTERN_CODE
-					|| temporalPatternIdMajor == ObjectEntities.PERIODICALTEMPORALPATTERN_CODE
-				: ErrorMessages.ILLEGAL_ENTITY_CODE;
+					|| temporalPatternIdMajor == CRONTEMPORALPATTERN_CODE
+					|| temporalPatternIdMajor == INTERVALSTEMPORALPATTERN_CODE
+					|| temporalPatternIdMajor == PERIODICALTEMPORALPATTERN_CODE
+				: ILLEGAL_ENTITY_CODE;
 			this.temporalPatternId = temporalPatternId;
 		}
 	}

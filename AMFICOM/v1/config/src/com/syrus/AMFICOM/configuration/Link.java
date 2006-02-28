@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.77 2005/12/07 17:16:25 bass Exp $
+ * $Id: Link.java,v 1.77.2.1 2006/02/28 15:19:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import static com.syrus.AMFICOM.general.ErrorMessages.NATURE_INVALID;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Date;
 
@@ -28,8 +29,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.77 $, $Date: 2005/12/07 17:16:25 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.77.2.1 $, $Date: 2006/02/28 15:19:57 $
  * @module config
  */
 public final class Link extends AbstractLink<Link> {
@@ -102,7 +103,7 @@ public final class Link extends AbstractLink<Link> {
 		try {
 			final Link link = new Link(IdentifierPool.getGeneratedIdentifier(LINK_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					name,
 					description,
@@ -134,7 +135,9 @@ public final class Link extends AbstractLink<Link> {
 		this.supplier = idlLink.supplier;
 		this.supplierCode = idlLink.supplierCode;
 
-		super.type = (LinkType) StorableObjectPool.getStorableObject(new Identifier(idlLink._typeId), true);
+		super.type = StorableObjectPool.getStorableObject(new Identifier(idlLink._typeId), true);
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -142,6 +145,8 @@ public final class Link extends AbstractLink<Link> {
 	 */
 	@Override
 	public IdlLink getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlLinkHelper.init(orb,
 				super.id.getIdlTransferable(),
 				super.created.getTime(),

@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.26.2.4 2006/02/21 15:34:21 arseniy Exp $
+ * $Id: ProtoEquipment.java,v 1.26.2.5 2006/02/28 15:19:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -55,7 +56,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.26.2.4 $, $Date: 2006/02/21 15:34:21 $
+ * @version $Revision: 1.26.2.5 $, $Date: 2006/02/28 15:19:57 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -138,7 +139,7 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 		try {
 			final ProtoEquipment protoEquipment = new ProtoEquipment(IdentifierPool.getGeneratedIdentifier(PROTOEQUIPMENT_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					typeId,
 					name,
 					description,
@@ -210,6 +211,8 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 		this.description = idlProtoEquipment.description;
 		this.manufacturer = idlProtoEquipment.manufacturer;
 		this.manufacturerCode = idlProtoEquipment.manufacturerCode;
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -254,6 +257,8 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 	 */
 	@Override
 	public IdlProtoEquipment getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlProtoEquipmentHelper.init(orb, this.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
@@ -388,8 +393,6 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		return Collections.emptySet();
 	}
 

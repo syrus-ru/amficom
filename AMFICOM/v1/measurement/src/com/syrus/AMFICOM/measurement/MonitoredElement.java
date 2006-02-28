@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.13.2.1 2006/02/13 19:36:09 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.13.2.2 2006/02/28 15:20:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,10 @@
  */
 
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -18,22 +22,19 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElement;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.13.2.1 $, $Date: 2006/02/13 19:36:09 $
+ * @version $Revision: 1.13.2.2 $, $Date: 2006/02/28 15:20:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -104,9 +105,9 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			final MonitoredElement monitoredElement = new MonitoredElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MONITOREDELEMENT_CODE),
+			final MonitoredElement monitoredElement = new MonitoredElement(IdentifierPool.getGeneratedIdentifier(MONITOREDELEMENT_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					name,
 					measurementPortId,
@@ -114,7 +115,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 					localAddress,
 					monitoredDomainMemberIds);
 
-			assert monitoredElement.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert monitoredElement.isValid() : OBJECT_STATE_ILLEGAL;
 
 			monitoredElement.markAsChanged();
 
@@ -126,7 +127,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
-		IdlMonitoredElement met = (IdlMonitoredElement) transferable;
+		final IdlMonitoredElement met = (IdlMonitoredElement) transferable;
 		super.fromTransferable(met, Identifier.valueOf(met.domainId));
 		this.measurementPortId = Identifier.valueOf(met.measurementPortId);
 		this.sort = met.sort.value();
@@ -135,6 +136,8 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 		this.name = met.name;
 
 		this.monitoredDomainMemberIds = Identifier.fromTransferables(met.monitoredDomainMemberIds);
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -143,7 +146,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 	 */
 	@Override
 	public IdlMonitoredElement getIdlTransferable(final ORB orb) {
-		final IdlIdentifier[] mdmIds = Identifier.createTransferables(this.monitoredDomainMemberIds);
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlMonitoredElementHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -157,7 +160,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 				this.measurementPortId.getIdlTransferable(),
 				MonitoredElementSort.from_int(this.sort),
 				this.localAddress,
-				mdmIds);
+				Identifier.createTransferables(this.monitoredDomainMemberIds));
 	}
 
 	public Identifier getMeasurementPortId() {
@@ -233,8 +236,6 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.monitoredDomainMemberIds);
 		dependencies.add(this.measurementPortId);

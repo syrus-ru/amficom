@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.MODELINGRESULTPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
@@ -14,7 +15,6 @@ import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -25,7 +25,7 @@ public final class ModelingResultParameterDatabase extends ActionResultParameter
 
 	@Override
 	protected short getEntityCode() {
-		return ObjectEntities.MODELINGRESULTPARAMETER_CODE;
+		return MODELINGRESULTPARAMETER_CODE;
 	}
 
 	@Override

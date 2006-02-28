@@ -1,11 +1,13 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.24 2005/12/02 11:24:09 bass Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.24.2.1 2006/02/28 15:20:04 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.INTERVALSTEMPORALPATTERN_CODE;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,7 +28,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -37,8 +38,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/12/02 11:24:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.24.2.1 $, $Date: 2006/02/28 15:20:04 $
+ * @author $Author: arseniy $
  * @module measurement
  */
 public final class IntervalsTemporalPatternDatabase extends StorableObjectDatabase<IntervalsTemporalPattern> {
@@ -50,7 +51,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.INTERVALSTEMPORALPATTERN_CODE;
+		return INTERVALSTEMPORALPATTERN_CODE;
 	}
 
 	@Override

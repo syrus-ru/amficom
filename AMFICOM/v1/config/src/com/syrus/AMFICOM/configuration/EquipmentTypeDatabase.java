@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeDatabase.java,v 1.62.2.2 2006/02/14 00:23:00 arseniy Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.62.2.3 2006/02/28 15:19:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.configuration;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
@@ -23,7 +24,6 @@ import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.62.2.2 $, $Date: 2006/02/14 00:23:00 $
+ * @version $Revision: 1.62.2.3 $, $Date: 2006/02/28 15:19:57 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -42,7 +42,7 @@ public final class EquipmentTypeDatabase extends StorableObjectDatabase<Equipmen
 
 	@Override
 	protected short getEntityCode() {
-		return ObjectEntities.EQUIPMENT_TYPE_CODE;
+		return EQUIPMENT_TYPE_CODE;
 	}
 
 	@Override

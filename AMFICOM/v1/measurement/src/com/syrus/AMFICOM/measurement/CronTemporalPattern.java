@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.33 2006/01/30 11:20:49 bob Exp $
+ * $Id: CronTemporalPattern.java,v 1.33.2.1 2006/02/28 15:20:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,10 @@
  */
 
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.CRONTEMPORALPATTERN_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -25,12 +29,10 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -39,8 +41,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPatternHelper;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2006/01/30 11:20:49 $
- * @author $Author: bob $
+ * @version $Revision: 1.33.2.1 $, $Date: 2006/02/28 15:20:05 $
+ * @author $Author: arseniy $
  * @module measurement
  */
 
@@ -795,13 +797,13 @@ public final class CronTemporalPattern extends AbstractTemporalPattern<CronTempo
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_CODE),
+			final CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(CRONTEMPORALPATTERN_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					description,
 					cronString);
 
-			assert cronTemporalPattern.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert cronTemporalPattern.isValid() : OBJECT_STATE_ILLEGAL;
 
 			cronTemporalPattern.markAsChanged();
 
@@ -818,13 +820,13 @@ public final class CronTemporalPattern extends AbstractTemporalPattern<CronTempo
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_CODE),
+			final CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(CRONTEMPORALPATTERN_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					description,
 					cronStrings);
 
-			assert cronTemporalPattern.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert cronTemporalPattern.isValid() : OBJECT_STATE_ILLEGAL;
 
 			cronTemporalPattern.markAsChanged();
 
@@ -837,7 +839,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern<CronTempo
 	public static String getCronStringsDescription(final String[] cronStrings) {
 		final CronTemporalPattern pattern = new CronTemporalPattern(null,
 				null,
-				StorableObjectVersion.INITIAL_VERSION,
+				INITIAL_VERSION,
 				null,
 				cronStrings);
 		final String desc = pattern.toString();
@@ -845,7 +847,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern<CronTempo
 	}
 
 	public short getEntityCode() {
-		return ObjectEntities.CRONTEMPORALPATTERN_CODE;
+		return CRONTEMPORALPATTERN_CODE;
 	}
 
 	public String[] getCronStrings() {
@@ -870,6 +872,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern<CronTempo
 		this.description = ctpt.description;
 		this.setTemplates0(ctpt.cronStrings);
 
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 	
 	/**
@@ -878,6 +881,8 @@ public final class CronTemporalPattern extends AbstractTemporalPattern<CronTempo
 	 */
 	@Override
 	public IdlCronTemporalPattern getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlCronTemporalPatternHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -1026,7 +1031,6 @@ public final class CronTemporalPattern extends AbstractTemporalPattern<CronTempo
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 

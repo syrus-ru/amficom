@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTemporalPatternDatabase.java,v 1.13 2005/12/02 11:24:09 bass Exp $
+ * $Id: PeriodicalTemporalPatternDatabase.java,v 1.13.2.1 2006/02/28 15:20:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,21 +9,22 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.PERIODICALTEMPORALPATTERN_CODE;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/12/02 11:24:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.13.2.1 $, $Date: 2006/02/28 15:20:05 $
+ * @author $Author: arseniy $
  * @module measurement
  */
 
@@ -33,7 +34,7 @@ public final class PeriodicalTemporalPatternDatabase extends StorableObjectDatab
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.PERIODICALTEMPORALPATTERN_CODE;
+		return PERIODICALTEMPORALPATTERN_CODE;
 	}	
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.14.2.1 2006/02/13 19:34:32 arseniy Exp $
+ * $Id: KIS.java,v 1.14.2.2 2006/02/28 15:20:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,11 @@
  */
 
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -19,14 +24,12 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -35,7 +38,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlKISHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14.2.1 $, $Date: 2006/02/13 19:34:32 $
+ * @version $Revision: 1.14.2.2 $, $Date: 2006/02/28 15:20:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -109,9 +112,9 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final KIS kis = new KIS(IdentifierPool.getGeneratedIdentifier(ObjectEntities.KIS_CODE),
+			final KIS kis = new KIS(IdentifierPool.getGeneratedIdentifier(KIS_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					name,
 					description,
@@ -120,7 +123,7 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 					equipmentId,
 					mcmId);
 
-			assert kis.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert kis.isValid() : OBJECT_STATE_ILLEGAL;
 
 			kis.markAsChanged();
 
@@ -141,6 +144,8 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 		this.description = kt.description;
 		this.hostname = kt.hostname;
 		this.tcpPort = kt.tcpPort;
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -149,6 +154,7 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 	 */
 	@Override
 	public IdlKIS getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlKISHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -228,8 +234,6 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.equipmentId);
 		dependencies.add(this.mcmId);
@@ -271,7 +275,7 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 	public Set<MeasurementPort> getMeasurementPorts(final boolean breakOnLoadError) {
 		try {
 			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id,
-					ObjectEntities.MEASUREMENTPORT_CODE), true, breakOnLoadError);
+					MEASUREMENTPORT_CODE), true, breakOnLoadError);
 		} catch (final ApplicationException ae) {
 			Log.debugMessage(ae, Level.SEVERE);
 			return Collections.emptySet();

@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionType.java,v 1.26.2.2 2006/02/11 18:40:45 arseniy Exp $
+ * $Id: ActionType.java,v 1.26.2.3 2006/02/28 15:20:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectType;
@@ -21,7 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.26.2.2 $, $Date: 2006/02/11 18:40:45 $
+ * @version $Revision: 1.26.2.3 $, $Date: 2006/02/28 15:20:03 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -68,7 +67,6 @@ public abstract class ActionType<T extends ActionType<T>> extends StorableObject
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 }

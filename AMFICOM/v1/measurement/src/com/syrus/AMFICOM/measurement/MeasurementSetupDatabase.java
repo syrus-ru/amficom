@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
@@ -25,7 +26,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -40,7 +40,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 
 	@Override
 	protected short getEntityCode() {
-		return ObjectEntities.MEASUREMENTSETUP_CODE;
+		return MEASUREMENTSETUP_CODE;
 	}
 
 	@Override

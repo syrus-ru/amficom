@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplateDatabase.java,v 1.1.2.3 2006/02/15 19:36:15 arseniy Exp $
+ * $Id: ActionTemplateDatabase.java,v 1.1.2.4 2006/02/28 15:20:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
@@ -33,7 +34,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/02/15 19:36:15 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/02/28 15:20:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -53,7 +53,7 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 
 	@Override
 	protected short getEntityCode() {
-		return ObjectEntities.ACTIONTEMPLATE_CODE;
+		return ACTIONTEMPLATE_CODE;
 	}
 
 	@Override

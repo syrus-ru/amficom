@@ -1,11 +1,13 @@
 /*
- * $Id: EventParameter.java,v 1.30.2.1 2006/02/16 13:36:42 arseniy Exp $
+ * $Id: EventParameter.java,v 1.30.2.2 2006/02/28 15:19:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.event;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.EVENTPARAMETER_CODE;
 
 import org.omg.CORBA.ORB;
 
@@ -15,11 +17,10 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.30.2.1 $, $Date: 2006/02/16 13:36:42 $
+ * @version $Revision: 1.30.2.2 $, $Date: 2006/02/28 15:19:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -49,7 +50,7 @@ public final class EventParameter implements Identifiable, IdlTransferableObject
 		}
 
 		try {
-			final EventParameter eventParameter = new EventParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTPARAMETER_CODE),
+			final EventParameter eventParameter = new EventParameter(IdentifierPool.getGeneratedIdentifier(EVENTPARAMETER_CODE),
 					typeId,
 					value);
 			return eventParameter;

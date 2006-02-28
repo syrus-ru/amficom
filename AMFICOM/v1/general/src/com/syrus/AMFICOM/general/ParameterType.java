@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.74.2.4 2006/02/28 12:03:13 arseniy Exp $
+ * $Id: ParameterType.java,v 1.74.2.5 2006/02/28 15:20:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.IdlParameterTypeHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.74.2.4 $, $Date: 2006/02/28 12:03:13 $
+ * @version $Revision: 1.74.2.5 $, $Date: 2006/02/28 15:20:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -146,7 +146,6 @@ public final class ParameterType extends StorableObjectType<ParameterType> {
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 

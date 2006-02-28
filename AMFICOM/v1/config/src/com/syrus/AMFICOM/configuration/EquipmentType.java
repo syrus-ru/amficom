@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.110.2.5 2006/02/21 15:34:52 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.110.2.6 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,12 +7,15 @@
  */
 package com.syrus.AMFICOM.configuration;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.METHOD_NOT_NEEDED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
@@ -31,14 +34,12 @@ import com.syrus.AMFICOM.configuration.corba.IdlEquipmentTypeHelper;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -52,7 +53,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.110.2.5 $, $Date: 2006/02/21 15:34:52 $
+ * @version $Revision: 1.110.2.6 $, $Date: 2006/02/28 15:19:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -122,13 +123,13 @@ public final class EquipmentType extends StorableObjectType<EquipmentType> imple
 		}
 
 		try {
-			final EquipmentType equipmentType = new EquipmentType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENT_TYPE_CODE),
+			final EquipmentType equipmentType = new EquipmentType(IdentifierPool.getGeneratedIdentifier(EQUIPMENT_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					codename,
 					description);
 
-			assert equipmentType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert equipmentType.isValid() : OBJECT_STATE_ILLEGAL;
 
 			equipmentType.markAsChanged();
 
@@ -227,7 +228,7 @@ public final class EquipmentType extends StorableObjectType<EquipmentType> imple
 
 	@Override
 	public IdlEquipmentType getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlEquipmentTypeHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -264,7 +265,7 @@ public final class EquipmentType extends StorableObjectType<EquipmentType> imple
 		final IdlEquipmentType idlEquipmentType = (IdlEquipmentType) transferable;
 		super.fromTransferable(idlEquipmentType, idlEquipmentType.codename, idlEquipmentType.description);
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	@Shitlet
@@ -286,7 +287,7 @@ public final class EquipmentType extends StorableObjectType<EquipmentType> imple
 	}
 
 	public void setName(final String name) {
-		throw new UnsupportedOperationException(ErrorMessages.METHOD_NOT_NEEDED);
+		throw new UnsupportedOperationException(METHOD_NOT_NEEDED);
 	}
 
 	/**
@@ -306,7 +307,6 @@ public final class EquipmentType extends StorableObjectType<EquipmentType> imple
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 

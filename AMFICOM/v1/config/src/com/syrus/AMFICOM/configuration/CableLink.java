@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.17 2005/12/07 17:16:25 bass Exp $
+ * $Id: CableLink.java,v 1.17.2.1 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.ErrorMessages.NATURE_INVALID;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
@@ -29,8 +30,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/12/07 17:16:25 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.17.2.1 $, $Date: 2006/02/28 15:19:58 $
  * @module config
  */
 public final class CableLink extends AbstractLink<CableLink> {
@@ -103,7 +104,7 @@ public final class CableLink extends AbstractLink<CableLink> {
 		try {
 			final CableLink cableLink = new CableLink(IdentifierPool.getGeneratedIdentifier(CABLELINK_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					name,
 					description,
@@ -135,7 +136,9 @@ public final class CableLink extends AbstractLink<CableLink> {
 		this.supplier = idlCableLink.supplier;
 		this.supplierCode = idlCableLink.supplierCode;
 
-		super.type = (CableLinkType) StorableObjectPool.getStorableObject(new Identifier(idlCableLink._typeId), true);
+		super.type = StorableObjectPool.getStorableObject(new Identifier(idlCableLink._typeId), true);
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -144,6 +147,8 @@ public final class CableLink extends AbstractLink<CableLink> {
 	 */
 	@Override
 	public IdlCableLink getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlCableLinkHelper.init(orb,
 				super.id.getIdlTransferable(),
 				super.created.getTime(),

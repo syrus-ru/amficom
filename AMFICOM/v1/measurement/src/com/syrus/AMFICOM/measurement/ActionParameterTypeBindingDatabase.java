@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBindingDatabase.java,v 1.1.2.2 2006/02/22 15:49:27 arseniy Exp $
+ * $Id: ActionParameterTypeBindingDatabase.java,v 1.1.2.3 2006/02/28 15:20:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,10 @@
 package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETERTYPEBINDING_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
@@ -30,7 +34,6 @@ import java.sql.SQLException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -38,7 +41,7 @@ import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKi
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/22 15:49:27 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/02/28 15:20:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -57,11 +60,11 @@ public final class ActionParameterTypeBindingDatabase extends StorableObjectData
 
 		public static ActionTypeKind valueOf(final Identifier actionTypeId) {
 			switch (actionTypeId.getMajor()) {
-				case ObjectEntities.MEASUREMENT_TYPE_CODE:
+				case MEASUREMENT_TYPE_CODE:
 					return MEASUREMENT_TYPE;
-				case ObjectEntities.ANALYSIS_TYPE_CODE:
+				case ANALYSIS_TYPE_CODE:
 					return ANALYSIS_TYPE;
-				case ObjectEntities.MODELING_TYPE_CODE:
+				case MODELING_TYPE_CODE:
 					return MODELING_TYPE;
 				default:
 					throw new IllegalArgumentException("Illegal identifier: " + actionTypeId);
@@ -79,7 +82,7 @@ public final class ActionParameterTypeBindingDatabase extends StorableObjectData
 
 	@Override
 	protected short getEntityCode() {
-		return ObjectEntities.ACTIONPARAMETERTYPEBINDING_CODE;
+		return ACTIONPARAMETERTYPEBINDING_CODE;
 	}
 
 	@Override

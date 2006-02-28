@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.91 2005/12/17 12:08:30 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.91.2.1 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
@@ -57,7 +58,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/12/17 12:08:30 $
+ * @version $Revision: 1.91.2.1 $, $Date: 2006/02/28 15:19:58 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -246,7 +247,7 @@ public final class CableLinkType extends AbstractLinkType<CableLinkType> impleme
 		try {
 			final CableLinkType cableLinkType = new CableLinkType(IdentifierPool.getGeneratedIdentifier(CABLELINK_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					codename,
 					description,
 					name,

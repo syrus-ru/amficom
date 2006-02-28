@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.19.2.1 2006/02/13 19:36:09 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.19.2.2 2006/02/28 15:20:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,11 @@
 package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -24,12 +27,10 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPort;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortHelper;
 
 /**
- * @version $Revision: 1.19.2.1 $, $Date: 2006/02/13 19:36:09 $
+ * @version $Revision: 1.19.2.2 $, $Date: 2006/02/28 15:20:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -107,16 +108,16 @@ public final class MeasurementPort extends StorableObject<MeasurementPort>
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final MeasurementPort measurementPort = new MeasurementPort(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTPORT_CODE),
+			final MeasurementPort measurementPort = new MeasurementPort(IdentifierPool.getGeneratedIdentifier(MEASUREMENTPORT_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					type,
 					name,
 					description,
 					kisId,
 					portId);
 
-			assert measurementPort.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert measurementPort.isValid() : OBJECT_STATE_ILLEGAL;
 
 			measurementPort.markAsChanged();
 
@@ -128,7 +129,7 @@ public final class MeasurementPort extends StorableObject<MeasurementPort>
 
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlMeasurementPort mpt = (IdlMeasurementPort) transferable;
+		final IdlMeasurementPort mpt = (IdlMeasurementPort) transferable;
 		super.fromTransferable(mpt);
 
 		this.type = StorableObjectPool.getStorableObject(Identifier.valueOf(mpt._typeId), true);
@@ -138,7 +139,9 @@ public final class MeasurementPort extends StorableObject<MeasurementPort>
 
 		this.kisId = Identifier.valueOf(mpt.kisId);
 		this.portId = Identifier.valueOf(mpt.portId);
-	}
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+}
 
 	/**
 	 * @param orb
@@ -146,6 +149,8 @@ public final class MeasurementPort extends StorableObject<MeasurementPort>
 	 */
 	@Override
 	public IdlMeasurementPort getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlMeasurementPortHelper.init(orb,
 				super.id.getIdlTransferable(),
 				super.created.getTime(),
@@ -220,8 +225,6 @@ public final class MeasurementPort extends StorableObject<MeasurementPort>
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.type);
 		dependencies.add(this.kisId);

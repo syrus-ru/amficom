@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.57.2.1 2006/02/16 13:36:42 arseniy Exp $
+ * $Id: EventType.java,v 1.57.2.2 2006/02/28 15:19:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,10 @@
  */
 
 package com.syrus.AMFICOM.event;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.EVENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -23,18 +27,16 @@ import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.AlertKind;
 import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.IdlUserAlertKinds;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.57.2.1 $, $Date: 2006/02/16 13:36:42 $
+ * @version $Revision: 1.57.2.2 $, $Date: 2006/02/28 15:19:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -99,15 +101,15 @@ public final class EventType extends StorableObjectType<EventType> {
 			throw new IllegalArgumentException("Argument is null'");
 
 		try {
-			final EventType eventType = new EventType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENT_TYPE_CODE),
+			final EventType eventType = new EventType(IdentifierPool.getGeneratedIdentifier(EVENT_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					codename,
 					description,
 					parameterTypeIds,
 					userAlertKindsMap);
 
-			assert eventType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert eventType.isValid() : OBJECT_STATE_ILLEGAL;
 
 			eventType.markAsChanged();
 
@@ -136,7 +138,7 @@ public final class EventType extends StorableObjectType<EventType> {
 			this.userAlertKindsMap.put(userId, userAlertKinds);
 		}
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -145,7 +147,7 @@ public final class EventType extends StorableObjectType<EventType> {
 	 */
 	@Override
 	public IdlEventType getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		final IdlUserAlertKinds[] userAlertKindsT = new IdlUserAlertKinds[this.userAlertKindsMap.size()];
 		int i, j;
@@ -275,8 +277,6 @@ public final class EventType extends StorableObjectType<EventType> {
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.userAlertKindsMap.keySet());
 		return dependencies;

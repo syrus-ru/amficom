@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementSetup.java,v 1.100.2.2 2006/02/15 19:28:47 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.100.2.3 2006/02/28 15:20:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,7 +7,13 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -18,12 +24,10 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -33,7 +37,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.100.2.2 $, $Date: 2006/02/15 19:28:47 $
+ * @version $Revision: 1.100.2.3 $, $Date: 2006/02/28 15:20:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -97,16 +101,16 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 		}
 
 		try {
-			final MeasurementSetup measurementSetup = new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTSETUP_CODE),
+			final MeasurementSetup measurementSetup = new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(MEASUREMENTSETUP_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					measurementTemplateId,
 					analysisTemplateId,
 					etalonTemplateId,
 					description,
 					monitoredElementIds);
 
-			assert measurementSetup.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert measurementSetup.isValid() : OBJECT_STATE_ILLEGAL;
 
 			measurementSetup.markAsChanged();
 
@@ -118,7 +122,7 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 
 	@Override
 	public IdlMeasurementSetup getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlMeasurementSetupHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -144,7 +148,7 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 		this.description = idlMeasurementSetup.description;
 		this.setMonitoredElementIds0(Identifier.fromTransferables(idlMeasurementSetup.monitoredElementIds));
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	public Identifier getMeasurementTemplateId() {
@@ -184,7 +188,7 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 	}
 
 	public boolean isAttachedToMonitoredElement(final Identifier monitoredElementId) {
-		assert monitoredElementId.getMajor() == ObjectEntities.MONITOREDELEMENT_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert monitoredElementId.getMajor() == MONITOREDELEMENT_CODE : ILLEGAL_ENTITY_CODE;
 		return this.monitoredElementIds.contains(monitoredElementId);
 	}
 
@@ -218,9 +222,9 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 	@Override
 	protected boolean isValid() {
 		final boolean valid = super.isValid()
-				&& this.measurementTemplateId != null && this.measurementTemplateId.getMajor() == ObjectEntities.ACTIONTEMPLATE_CODE
-				&& this.analysisTemplateId != null && this.analysisTemplateId.getMajor() == ObjectEntities.ACTIONTEMPLATE_CODE
-				&& this.etalonTemplateId != null && this.etalonTemplateId.getMajor() == ObjectEntities.ACTIONTEMPLATE_CODE;
+				&& this.measurementTemplateId != null && this.measurementTemplateId.getMajor() == ACTIONTEMPLATE_CODE
+				&& this.analysisTemplateId != null && this.analysisTemplateId.getMajor() == ACTIONTEMPLATE_CODE
+				&& this.etalonTemplateId != null && this.etalonTemplateId.getMajor() == ACTIONTEMPLATE_CODE;
 		if (!valid) {
 			return false;
 		}
@@ -255,7 +259,6 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.measurementTemplateId);
 		dependencies.add(this.analysisTemplateId);

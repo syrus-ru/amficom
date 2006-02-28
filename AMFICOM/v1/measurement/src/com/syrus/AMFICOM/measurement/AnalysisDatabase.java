@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.76.2.2 2006/02/11 18:40:45 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.76.2.3 2006/02/28 15:20:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
@@ -30,7 +31,6 @@ import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.Action.ActionStatus;
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.76.2.2 $, $Date: 2006/02/11 18:40:45 $
+ * @version $Revision: 1.76.2.3 $, $Date: 2006/02/28 15:20:03 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -48,7 +48,7 @@ public final class AnalysisDatabase extends ActionDatabase<Analysis> {
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.ANALYSIS_CODE;
+		return ANALYSIS_CODE;
 	}
 
 	@Override

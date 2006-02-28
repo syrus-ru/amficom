@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.4 2005/12/02 11:24:09 bass Exp $
+ * $Id: KISDatabase.java,v 1.4.2.1 2006/02/28 15:20:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +18,6 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -24,8 +25,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/02 11:24:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.4.2.1 $, $Date: 2006/02/28 15:20:04 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -38,7 +39,7 @@ public final class KISDatabase extends StorableObjectDatabase<KIS> {
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.KIS_CODE;
+		return KIS_CODE;
 	}
 
 	@Override

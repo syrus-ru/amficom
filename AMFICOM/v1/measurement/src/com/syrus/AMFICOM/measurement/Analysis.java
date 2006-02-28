@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.90.2.3 2006/02/14 01:26:43 arseniy Exp $
+ * $Id: Analysis.java,v 1.90.2.4 2006/02/28 15:20:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,12 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
+
 import java.util.Date;
 import java.util.Set;
 
@@ -15,12 +21,10 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -28,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisHelper;
 
 /**
- * @version $Revision: 1.90.2.3 $, $Date: 2006/02/14 01:26:43 $
+ * @version $Revision: 1.90.2.4 $, $Date: 2006/02/28 15:20:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -80,9 +84,9 @@ public final class Analysis extends Action<Analysis> {
 			final Identifier measurementId) throws CreateObjectException {
 
 		try {
-			final Analysis analysis = new Analysis(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_CODE),
+			final Analysis analysis = new Analysis(IdentifierPool.getGeneratedIdentifier(ANALYSIS_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					typeId,
 					monitoredElementId,
 					actionTemplateId,
@@ -92,7 +96,7 @@ public final class Analysis extends Action<Analysis> {
 					ActionStatus.ACTION_STATUS_NEW,
 					measurementId);
 
-			assert analysis.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert analysis.isValid() : OBJECT_STATE_ILLEGAL;
 
 			analysis.markAsChanged();
 
@@ -107,7 +111,7 @@ public final class Analysis extends Action<Analysis> {
 	 */
 	@Override
 	public IdlAnalysis getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlAnalysisHelper.init(orb,
 				this.id.getIdlTransferable(),
@@ -135,7 +139,7 @@ public final class Analysis extends Action<Analysis> {
 		super.fromTransferable(idlAnalysis);
 		this.measurementId = Identifier.valueOf(idlAnalysis.measurementId);
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	public Identifier getMeasurementId() {
@@ -183,8 +187,8 @@ public final class Analysis extends Action<Analysis> {
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
-				&& this.getTypeId().getMajor() == ObjectEntities.ANALYSIS_TYPE_CODE
-				&& (this.measurementId == null || this.measurementId.getMajor() == ObjectEntities.MEASUREMENT_CODE);
+				&& this.getTypeId().getMajor() == ANALYSIS_TYPE_CODE
+				&& (this.measurementId == null || this.measurementId.getMajor() == MEASUREMENT_CODE);
 	}
 
 	/**
@@ -194,8 +198,6 @@ public final class Analysis extends Action<Analysis> {
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = super.getDependenciesTmpl();
 		dependencies.add(this.measurementId);
 		return dependencies;

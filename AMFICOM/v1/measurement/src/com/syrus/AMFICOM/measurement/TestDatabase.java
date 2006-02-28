@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.137.2.3 2006/02/15 19:37:18 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.137.2.4 2006/02/28 15:20:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
@@ -50,7 +51,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -63,7 +63,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.137.2.3 $, $Date: 2006/02/15 19:37:18 $
+ * @version $Revision: 1.137.2.4 $, $Date: 2006/02/28 15:20:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -78,7 +78,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 
 	@Override
 	protected short getEntityCode() {
-		return ObjectEntities.TEST_CODE;
+		return TEST_CODE;
 	}	
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.106 2005/12/17 12:08:30 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.106.2.1 2006/02/28 15:19:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHI
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -40,7 +41,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.106 $, $Date: 2005/12/17 12:08:30 $
+ * @version $Revision: 1.106.2.1 $, $Date: 2006/02/28 15:19:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -109,7 +110,7 @@ public final class TransmissionPath extends DomainMember<TransmissionPath>
 		try {
 			final TransmissionPath transmissionPath = new TransmissionPath(IdentifierPool.getGeneratedIdentifier(TRANSMISSIONPATH_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					name,
 					description,
@@ -129,15 +130,17 @@ public final class TransmissionPath extends DomainMember<TransmissionPath>
 
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlTransmissionPath tpt = (IdlTransmissionPath) transferable;
+		final IdlTransmissionPath tpt = (IdlTransmissionPath) transferable;
 		super.fromTransferable(tpt, new Identifier(tpt.domainId));
 
-		this.type = (TransmissionPathType) StorableObjectPool.getStorableObject(new Identifier(tpt._typeId), true);
+		this.type = StorableObjectPool.getStorableObject(new Identifier(tpt._typeId), true);
 
 		this.name = tpt.name;
 		this.description = tpt.description;
 		this.startPortId = new Identifier(tpt.startPortId);
 		this.finishPortId = new Identifier(tpt.finishPortId);
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -146,6 +149,7 @@ public final class TransmissionPath extends DomainMember<TransmissionPath>
 	 */
 	@Override
 	public IdlTransmissionPath getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlTransmissionPathHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -230,8 +234,6 @@ public final class TransmissionPath extends DomainMember<TransmissionPath>
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.type);
 		dependencies.add(this.startPortId);

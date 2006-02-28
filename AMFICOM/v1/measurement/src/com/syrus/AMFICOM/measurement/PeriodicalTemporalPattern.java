@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.30 2006/01/31 13:08:15 arseniy Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.30.2.1 2006/02/28 15:20:04 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -7,6 +7,10 @@
 */
 
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.PERIODICALTEMPORALPATTERN_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -18,12 +22,10 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPattern;
@@ -31,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
 
 
 /**
- * @version $Revision: 1.30 $, $Date: 2006/01/31 13:08:15 $
+ * @version $Revision: 1.30.2.1 $, $Date: 2006/02/28 15:20:04 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement
@@ -90,7 +92,7 @@ public final class PeriodicalTemporalPattern
 		super.fromTransferable(ptpt);
 		this.period = ptpt.period;
 		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}	
 	
 	/**
@@ -102,12 +104,12 @@ public final class PeriodicalTemporalPattern
 			throws CreateObjectException {
 
 		try {
-			final PeriodicalTemporalPattern periodicalTemporalPattern = new PeriodicalTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE),
+			final PeriodicalTemporalPattern periodicalTemporalPattern = new PeriodicalTemporalPattern(IdentifierPool.getGeneratedIdentifier(PERIODICALTEMPORALPATTERN_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					period);
 
-			assert periodicalTemporalPattern.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert periodicalTemporalPattern.isValid() : OBJECT_STATE_ILLEGAL;
 
 			periodicalTemporalPattern.markAsChanged();
 
@@ -178,7 +180,6 @@ public final class PeriodicalTemporalPattern
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 
@@ -187,7 +188,7 @@ public final class PeriodicalTemporalPattern
 	 */
 	@Override
 	public IdlPeriodicalTemporalPattern getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		
 		return IdlPeriodicalTemporalPatternHelper.init(orb,
 				this.id.getIdlTransferable(),

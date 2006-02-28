@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplate.java,v 1.1.2.4 2006/02/15 19:36:15 arseniy Exp $
+ * $Id: ActionTemplate.java,v 1.1.2.5 2006/02/28 15:20:04 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,7 +7,13 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -18,12 +24,10 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -32,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionTemplate;
 import com.syrus.AMFICOM.measurement.corba.IdlActionTemplateHelper;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2006/02/15 19:36:15 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/02/28 15:20:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -87,15 +91,15 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 		}
 
 		try {
-			final ActionTemplate actionTemplate = new ActionTemplate(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ACTIONTEMPLATE_CODE),
+			final ActionTemplate actionTemplate = new ActionTemplate(IdentifierPool.getGeneratedIdentifier(ACTIONTEMPLATE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					description,
 					approximateActionDuration,
 					actionParameterIds,
 					monitoredElementIds);
 
-			assert actionTemplate.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert actionTemplate.isValid() : OBJECT_STATE_ILLEGAL;
 
 			actionTemplate.markAsChanged();
 
@@ -107,7 +111,7 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 
 	@Override
 	public IdlActionTemplate getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlActionTemplateHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -131,7 +135,7 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 		this.setActionParameterIds0(Identifier.fromTransferables(idlActionTemplate.actionParameterIds));
 		this.setMonitoredElementIds0(Identifier.fromTransferables(idlActionTemplate.monitoredElementIds));
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	public String getDescription() {
@@ -168,7 +172,7 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 	}
 
 	public boolean isAttachedToMonitoredElement(final Identifier monitoredElementId) {
-		assert monitoredElementId.getMajor() == ObjectEntities.MONITOREDELEMENT_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert monitoredElementId.getMajor() == MONITOREDELEMENT_CODE : ILLEGAL_ENTITY_CODE;
 		return this.monitoredElementIds.contains(monitoredElementId);
 	}
 
@@ -199,14 +203,13 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.actionParameterIds != null
-				&& StorableObject.getEntityCodeOfIdentifiables(this.actionParameterIds) == ObjectEntities.ACTIONPARAMETER_CODE
+				&& StorableObject.getEntityCodeOfIdentifiables(this.actionParameterIds) == ACTIONPARAMETER_CODE
 				&& this.monitoredElementIds != null
-				&& StorableObject.getEntityCodeOfIdentifiables(this.monitoredElementIds) == ObjectEntities.MONITOREDELEMENT_CODE;
+				&& StorableObject.getEntityCodeOfIdentifiables(this.monitoredElementIds) == MONITOREDELEMENT_CODE;
 	}
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.actionParameterIds);
 		dependencies.addAll(this.monitoredElementIds);
