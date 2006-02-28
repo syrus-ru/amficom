@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.35 2005/12/14 11:57:00 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.35.2.1 2006/02/28 15:32:09 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,8 @@ package com.syrus.AMFICOM.mcm;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTRESULTPARAMETER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSISRESULTPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 
 import java.util.Collections;
@@ -35,7 +36,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/12/14 11:57:00 $
+ * @version $Revision: 1.35.2.1 $, $Date: 2006/02/28 15:32:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -60,7 +61,8 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		switch (entityCode) {
 			case MEASUREMENT_CODE:
 			case ANALYSIS_CODE:
-			case RESULT_CODE:
+			case MEASUREMENTRESULTPARAMETER_CODE:
+			case ANALYSISRESULTPARAMETER_CODE:
 				return this.databaseObjectLoader.loadStorableObjects(ids);
 			default:
 				return this.loadStorableObjectsCustom(ids);
@@ -107,7 +109,8 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		switch (entityCode) {
 			case MEASUREMENT_CODE:
 			case ANALYSIS_CODE:
-			case RESULT_CODE:
+			case MEASUREMENTRESULTPARAMETER_CODE:
+			case ANALYSISRESULTPARAMETER_CODE:
 				return this.databaseObjectLoader.loadStorableObjectsButIdsByCondition(ids, condition);
 			default:
 				return this.loadStorableObjectsButIdsByConditionCustom(ids, condition);
@@ -233,7 +236,8 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		switch (entityCode) {
 			case MEASUREMENT_CODE:
 			case ANALYSIS_CODE:
-			case RESULT_CODE:
+			case MEASUREMENTRESULTPARAMETER_CODE:
+			case ANALYSISRESULTPARAMETER_CODE:
 				return this.databaseObjectLoader.loadIdentifiersButIdsByCondition(ids, condition);
 			default:
 				return this.loadIdentifiersButIdsByConditionCustom(ids, condition);
@@ -265,7 +269,8 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		switch (entityCode) {
 			case MEASUREMENT_CODE:
 			case ANALYSIS_CODE:
-			case RESULT_CODE:
+			case MEASUREMENTRESULTPARAMETER_CODE:
+			case ANALYSISRESULTPARAMETER_CODE:
 				return this.databaseObjectLoader.getRemoteVersions(ids);
 			default:
 				return super.getRemoteVersions(ids);

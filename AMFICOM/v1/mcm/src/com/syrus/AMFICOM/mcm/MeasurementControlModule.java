@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.146 2005/12/17 12:18:57 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146.2.1 2006/02/28 15:32:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,20 @@
  */
 
 package com.syrus.AMFICOM.mcm;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
+import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_PROCESSING;
+import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_SCHEDULED;
+import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_STOPPED;
+import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_STATUS;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,31 +39,24 @@ import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.TestWrapper;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146 $, $Date: 2005/12/17 12:18:57 $
+ * @version $Revision: 1.146.2.1 $, $Date: 2006/02/28 15:32:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -202,13 +209,13 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		/*	Retrieve information about MCM, it's user and server*/
 		mcmId = new Identifier(ApplicationProperties.getString(KEY_MCM_ID, MCM_ID));
 		try {
-			final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
+			final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(MCM_CODE);
 			final MCM mcm = mcmDatabase.retrieveForId(mcmId);
 
-			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
+			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(SYSTEMUSER_CODE);
 			final SystemUser user = systemUserDatabase.retrieveForId(mcm.getUserId());
 
-			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
+			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);
 			final Server server = serverDatabase.retrieveForId(mcm.getServerId());
 
 			login = user.getLogin();
@@ -266,7 +273,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 	private static void activateKISTransceivers() {
 		try {
-			final LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, ObjectEntities.KIS_CODE);
+			final LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, KIS_CODE);
 			final Set<KIS> kiss = StorableObjectPool.getStorableObjectsByCondition(lic, true, false);
 
 			transceivers = Collections.synchronizedMap(new HashMap<Identifier, Transceiver>(kiss.size()));
@@ -286,13 +293,13 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		testList = Collections.synchronizedList(new ArrayList<Test>());
 		TypicalCondition tc;
 
-		final LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, ObjectEntities.TEST_CODE);
+		final LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, TEST_CODE);
 
-		tc = new TypicalCondition(TestStatus._TEST_STATUS_SCHEDULED,
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.TEST_CODE,
-				TestWrapper.COLUMN_STATUS);
-		CompoundCondition cc = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
+		tc = new TypicalCondition(TEST_STATUS_SCHEDULED,
+				OPERATION_EQUALS,
+				TEST_CODE,
+				COLUMN_STATUS);
+		CompoundCondition cc = new CompoundCondition(lic, AND, tc);
 
 		final Set<Identifier> scheduledTestIds = new HashSet<Identifier>();
 		try {
@@ -308,11 +315,11 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			Log.errorMessage(ae);
 		}
 
-		tc = new TypicalCondition(TestStatus._TEST_STATUS_PROCESSING,
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.TEST_CODE,
-				TestWrapper.COLUMN_STATUS);
-		cc = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
+		tc = new TypicalCondition(TEST_STATUS_PROCESSING,
+				OPERATION_EQUALS,
+				TEST_CODE,
+				COLUMN_STATUS);
+		cc = new CompoundCondition(lic, AND, tc);
 
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjectsButIdsByCondition(scheduledTestIds, cc, true, false);
@@ -351,26 +358,26 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	}
 
 	static void putTestProcessor(final TestProcessor testProcessor) {
-		assert testProcessor != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert testProcessor != null : NON_NULL_EXPECTED;
 		testProcessors.put(testProcessor.getTestId(), testProcessor);
 	}
 
 	static void removeTestProcessor(final Identifier testId) {
-		assert testId != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert testId.getMajor() == ObjectEntities.TEST_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert testId != null : NON_NULL_EXPECTED;
+		assert testId.getMajor() == TEST_CODE : ILLEGAL_ENTITY_CODE;
 		testProcessors.remove(testId);
 	}
 
 	private static void startTestProcessor(final Test test) {
-		switch (test.getTemporalType().value()) {
-			case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
+		switch (test.getTemporalType()) {
+			case TEST_TEMPORAL_TYPE_ONETIME:
 				(new OnetimeTestProcessor(test)).start();
 				break;
-			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+			case TEST_TEMPORAL_TYPE_PERIODICAL:
 				(new PeriodicalTestProcessor(test)).start();
 				break;
 			default:
-				Log.errorMessage("Incorrect temporal type " + test.getTemporalType().value() + " of test '" + test.getId().toString() + "'");
+				Log.errorMessage("Incorrect temporal type " + test.getTemporalType() + " of test '" + test.getId().toString() + "'");
 		}
 	}
 
@@ -403,7 +410,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 				}
 				testIt.add(newTest);
 
-				newTest.setStatus(TestStatus.TEST_STATUS_SCHEDULED);
+				newTest.setStatus(TEST_STATUS_SCHEDULED);
 
 				newTest = newTestIt.hasNext() ? newTestIt.next() : null;
 			}
@@ -422,7 +429,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			final Set<Test> tests = StorableObjectPool.getStorableObjects(testIds, true);
 			for (final Test test : tests) {
 				stopTest(test);
-				test.setStatus(TestStatus.TEST_STATUS_STOPPED);
+				test.setStatus(TEST_STATUS_STOPPED);
 			}
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
