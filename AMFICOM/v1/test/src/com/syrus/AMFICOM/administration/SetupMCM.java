@@ -1,5 +1,5 @@
 /*
- * $Id: SetupMCM.java,v 1.1.2.1 2006/02/21 15:53:40 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: SetupMCM.java,v 1.1.2.2 2006/02/28 15:45:29 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.administration;
@@ -22,13 +22,11 @@ import com.syrus.AMFICOM.setup.I18N;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/21 15:53:40 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/02/28 15:45:29 $
  * @author $Author: arseniy $
  * @module test
  */
 public final class SetupMCM extends TestCase {
-	private static final String KEY_NAME = "Name.MCM.MCM";
-	private static final String KEY_DESCRIPTION = "Description.MCM.MCM";
 	private static final String KEY_MCM_HOST_NAME = "MCMHostName";
 
 	private static final String SERVER_MCM_NAME = "amficom";
