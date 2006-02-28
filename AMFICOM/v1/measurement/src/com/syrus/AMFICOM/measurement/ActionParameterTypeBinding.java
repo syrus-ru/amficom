@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.7 2006/02/28 10:46:22 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.8 2006/02/28 10:51:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,15 +7,15 @@
  */
 package com.syrus.AMFICOM.measurement;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.ONLY_ONE_EXPECTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETERTYPEBINDING_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE_CODE;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
 
 import java.util.Date;
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBindingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterValueKind;
 
 /**
- * @version $Revision: 1.1.2.7 $, $Date: 2006/02/28 10:46:22 $
+ * @version $Revision: 1.1.2.8 $, $Date: 2006/02/28 10:51:45 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
