@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.74.2.3 2006/02/16 13:47:02 arseniy Exp $
+ * $Id: ParameterType.java,v 1.74.2.4 2006/02/28 12:03:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,13 @@
 package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_FOUND;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.ONLY_ONE_EXPECTED;
+import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 
 import java.util.Collections;
 import java.util.Date;
@@ -20,16 +27,18 @@ import com.syrus.AMFICOM.general.corba.IdlParameterTypeHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.74.2.3 $, $Date: 2006/02/16 13:47:02 $
+ * @version $Revision: 1.74.2.4 $, $Date: 2006/02/28 12:03:13 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public final class ParameterType extends StorableObjectType<ParameterType> {
-	private static final long serialVersionUID = 2495470569913138317L;
+	private static final long serialVersionUID = -2843753663001680790L;
 
 	private DataType dataType;
 	private MeasurementUnit measurementUnit;
+
+	private static TypicalCondition codenameCondition;
 
 	ParameterType(final Identifier id,
 			final Identifier creatorId,
@@ -68,15 +77,15 @@ public final class ParameterType extends StorableObjectType<ParameterType> {
 		}
 
 		try {
-			final ParameterType parameterType = new ParameterType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETER_TYPE_CODE),
+			final ParameterType parameterType = new ParameterType(IdentifierPool.getGeneratedIdentifier(PARAMETER_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					codename,
 					description,
 					dataType,
 					measurementUnit);
 
-			assert parameterType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert parameterType.isValid() : OBJECT_STATE_ILLEGAL;
 
 			parameterType.markAsChanged();
 
@@ -96,6 +105,8 @@ public final class ParameterType extends StorableObjectType<ParameterType> {
 
 	@Override
 	public IdlParameterType getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlParameterTypeHelper.init(orb,
 				super.id.getIdlTransferable(),
 				super.created.getTime(),
@@ -115,6 +126,8 @@ public final class ParameterType extends StorableObjectType<ParameterType> {
 		super.fromTransferable(idlParameterType, idlParameterType.codename, idlParameterType.description);
 		this.dataType = DataType.valueOf(idlParameterType.idlDataType);
 		this.measurementUnit = MeasurementUnit.valueOf(idlParameterType.idlMeasurementUnit);
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	protected synchronized void setAttributes(final Date created,
@@ -133,12 +146,32 @@ public final class ParameterType extends StorableObjectType<ParameterType> {
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 
 	@Override
 	public ParameterTypeWrapper getWrapper() {
 		return ParameterTypeWrapper.getInstance();
+	}
+
+	public static ParameterType valueOf(final String codename) throws ApplicationException {
+		assert codename != null : NON_NULL_EXPECTED;
+
+		if (codenameCondition == null) {
+			codenameCondition = new TypicalCondition(codename,
+					OPERATION_EQUALS,
+					PARAMETER_TYPE_CODE,
+					COLUMN_CODENAME);
+		} else {
+			codenameCondition.setValue(codename);
+		}
+
+		final Set<ParameterType> parameterTypes = StorableObjectPool.getStorableObjectsByCondition(codenameCondition, true);
+		if (parameterTypes.isEmpty()) {
+			throw new ObjectNotFoundException(OBJECT_NOT_FOUND + ": '" + codename + "'");
+		}
+		assert parameterTypes.size() == 1 : ONLY_ONE_EXPECTED;
+		return parameterTypes.iterator().next();
 	}
 }
