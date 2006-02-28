@@ -1,5 +1,5 @@
 /*-
- * $Id: ErrorMessages.java,v 1.28.2.1 2006/02/27 16:13:20 arseniy Exp $
+ * $Id: ErrorMessages.java,v 1.28.2.2 2006/02/28 11:50:51 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,11 +11,12 @@ package com.syrus.AMFICOM.general;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.28.2.1 $, $Date: 2006/02/27 16:13:20 $
+ * @version $Revision: 1.28.2.2 $, $Date: 2006/02/28 11:50:51 $
  * @module general
  */
 public final class ErrorMessages {
 	public static final String NOT_LOGGED_IN = "NOT_LOGGED_IN";
+	public static final String OBJECT_NOT_FOUND = "Object not found";
 	public static final String OBJECT_NOT_INITIALIZED = "object not initialized yet";
 	public static final String NON_NULL_EXPECTED = "non-null value expected";
 	public static final String NON_ZERO_EXPECTED = "non-zero value expected";
