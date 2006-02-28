@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingType.java,v 1.65.2.4 2006/02/22 08:36:55 arseniy Exp $
+ * $Id: ModelingType.java,v 1.65.2.5 2006/02/28 12:03:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,29 +8,41 @@
 package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_FOUND;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.ONLY_ONE_EXPECTED;
+import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
+
+import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingTypeHelper;
 
 /**
- * @version $Revision: 1.65.2.4 $, $Date: 2006/02/22 08:36:55 $
+ * @version $Revision: 1.65.2.5 $, $Date: 2006/02/28 12:03:55 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class ModelingType extends ActionType<ModelingType> {
-	private static final long serialVersionUID = 2852932028753532448L;
+	private static final long serialVersionUID = 1150540687087689211L;
+
+	private static TypicalCondition codenameCondition;
 
 	ModelingType(final Identifier id,
 			final Identifier creatorId,
@@ -52,13 +64,13 @@ public final class ModelingType extends ActionType<ModelingType> {
 		}
 
 		try {
-			final ModelingType modelingType = new ModelingType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_TYPE_CODE),
+			final ModelingType modelingType = new ModelingType(IdentifierPool.getGeneratedIdentifier(MODELING_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					codename,
 					description);
 
-			assert modelingType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert modelingType.isValid() : OBJECT_STATE_ILLEGAL;
 
 			modelingType.markAsChanged();
 
@@ -70,7 +82,7 @@ public final class ModelingType extends ActionType<ModelingType> {
 
 	@Override
 	public IdlModelingType getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlModelingTypeHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -88,11 +100,31 @@ public final class ModelingType extends ActionType<ModelingType> {
 		final IdlModelingType idlModelingType = (IdlModelingType) transferable;
 		super.fromTransferable(idlModelingType, idlModelingType.codename, idlModelingType.description);
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	@Override
 	public ModelingTypeWrapper getWrapper() {
 		return ModelingTypeWrapper.getInstance();
+	}
+
+	public static ModelingType valueOf(final String codename) throws ApplicationException {
+		assert codename != null : NON_NULL_EXPECTED;
+
+		if (codenameCondition == null) {
+			codenameCondition = new TypicalCondition(codename,
+					OPERATION_EQUALS,
+					MODELING_TYPE_CODE,
+					COLUMN_CODENAME);
+		} else {
+			codenameCondition.setValue(codename);
+		}
+
+		final Set<ModelingType> modelingTypes = StorableObjectPool.getStorableObjectsByCondition(codenameCondition, true);
+		if (modelingTypes.isEmpty()) {
+			throw new ObjectNotFoundException(OBJECT_NOT_FOUND + ": '" + codename + "'");
+		}
+		assert modelingTypes.size() == 1 : ONLY_ONE_EXPECTED;
+		return modelingTypes.iterator().next();
 	}
 }

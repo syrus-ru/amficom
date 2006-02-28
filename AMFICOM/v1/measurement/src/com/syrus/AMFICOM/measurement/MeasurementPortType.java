@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.21.2.2 2006/02/14 01:26:43 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.21.2.3 2006/02/28 12:03:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,15 @@
  */
 
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_FOUND;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.ONLY_ONE_EXPECTED;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 
 import java.util.Collections;
 import java.util.Date;
@@ -16,30 +25,33 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortTypeHelper;
 
 /**
- * @version $Revision: 1.21.2.2 $, $Date: 2006/02/14 01:26:43 $
+ * @version $Revision: 1.21.2.3 $, $Date: 2006/02/28 12:03:55 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
 public final class MeasurementPortType extends StorableObjectType<MeasurementPortType> implements Namable {
-	private static final long serialVersionUID = 4387531870305140904L;
+	private static final long serialVersionUID = 8744021573090885674L;
 
 	private String name;
+
+	private static TypicalCondition codenameCondition;
 
 	MeasurementPortType(final Identifier id,
 			final Identifier creatorId,
@@ -79,18 +91,18 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 			final String description,
 			final String name) throws CreateObjectException {
 		if (creatorId == null || codename == null || name == null || description == null) {
-			throw new IllegalArgumentException("Argument is 'null'");
+			throw new IllegalArgumentException(NON_NULL_EXPECTED);
 		}
 
 		try {
-			final MeasurementPortType measurementPortType = new MeasurementPortType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTPORT_TYPE_CODE),
+			final MeasurementPortType measurementPortType = new MeasurementPortType(IdentifierPool.getGeneratedIdentifier(MEASUREMENTPORT_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					codename,
 					description,
 					name);
 
-			assert measurementPortType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert measurementPortType.isValid() : OBJECT_STATE_ILLEGAL;
 
 			measurementPortType.markAsChanged();
 
@@ -106,7 +118,7 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 	 */
 	@Override
 	public IdlMeasurementPortType getIdlTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlMeasurementPortTypeHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -126,7 +138,7 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 		super.fromTransferable(mptt, mptt.codename, mptt.description);
 		this.name = mptt.name;
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	protected synchronized void setAttributes(final Date created,
@@ -153,7 +165,7 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 
@@ -163,5 +175,25 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 	@Override
 	protected MeasurementPortTypeWrapper getWrapper() {
 		return MeasurementPortTypeWrapper.getInstance();
+	}
+
+	public static MeasurementPortType valueOf(final String codename) throws ApplicationException {
+		assert codename != null : NON_NULL_EXPECTED;
+
+		if (codenameCondition == null) {
+			codenameCondition = new TypicalCondition(codename,
+					OPERATION_EQUALS,
+					MEASUREMENTPORT_TYPE_CODE,
+					COLUMN_CODENAME);
+		} else {
+			codenameCondition.setValue(codename);
+		}
+
+		final Set<MeasurementPortType> measurementPortTypes = StorableObjectPool.getStorableObjectsByCondition(codenameCondition, true);
+		if (measurementPortTypes.isEmpty()) {
+			throw new ObjectNotFoundException(OBJECT_NOT_FOUND + ": '" + codename + "'");
+		}
+		assert measurementPortTypes.size() == 1 : ONLY_ONE_EXPECTED;
+		return measurementPortTypes.iterator().next();
 	}
 }
