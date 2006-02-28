@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.89.2.1 2006/02/13 19:25:38 arseniy Exp $
+ * $Id: Characteristic.java,v 1.89.2.2 2006/02/28 15:20:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -35,7 +36,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.89.2.1 $, $Date: 2006/02/13 19:25:38 $
+ * @version $Revision: 1.89.2.2 $, $Date: 2006/02/28 15:20:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -200,7 +201,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 		try {
 			final Characteristic characteristic = new Characteristic(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					type,
 					name,
 					description,
@@ -635,8 +636,6 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
 		dependencies.add(this.parentCharacterizableId);
 		dependencies.add(this.type);

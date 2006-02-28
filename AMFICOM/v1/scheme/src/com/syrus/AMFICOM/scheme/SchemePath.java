@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.119.2.1 2006/02/16 13:11:03 arseniy Exp $
+ * $Id: SchemePath.java,v 1.119.2.2 2006/02/28 15:20:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
@@ -72,7 +73,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #16 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.119.2.1 $, $Date: 2006/02/16 13:11:03 $
+ * @version $Revision: 1.119.2.2 $, $Date: 2006/02/28 15:20:01 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject<SchemePath>
@@ -171,7 +172,7 @@ public final class SchemePath extends StorableObject<SchemePath>
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					description,
 					transmissionPath,
@@ -261,6 +262,8 @@ public final class SchemePath extends StorableObject<SchemePath>
 	 */
 	@Override
 	public IdlSchemePath getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlSchemePathHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -465,6 +468,8 @@ public final class SchemePath extends StorableObject<SchemePath>
 			this.transmissionPathId = new Identifier(schemePath.transmissionPathId);
 			this.parentSchemeMonitoringSolutionId = new Identifier(schemePath.parentSchemeMonitoringSolutionId);
 		}
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
