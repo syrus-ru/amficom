@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerObjectLoader.java,v 1.18 2006/02/28 15:19:59 arseniy Exp $
+ * $Id: MServerObjectLoader.java,v 1.19 2006/02/28 15:37:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,10 +7,9 @@
  */
 package com.syrus.AMFICOM.mserver;
 
-import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSISRESULTPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTRESULTPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/02/28 15:19:59 $
+ * @version $Revision: 1.19 $, $Date: 2006/02/28 15:37:01 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -61,8 +60,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 		switch (entityCode) {
 			case MEASUREMENT_CODE:
 			case ANALYSIS_CODE:
-			case MEASUREMENTRESULTPARAMETER_CODE:
-			case ANALYSISRESULTPARAMETER_CODE:
+			case RESULT_CODE:
 				return this.loadStorableObjectsCustom(ids);
 			default:
 				return super.loadStorableObjects(ids);
@@ -80,8 +78,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 		switch (entityCode) {
 			case MEASUREMENT_CODE:
 			case ANALYSIS_CODE:
-			case MEASUREMENTRESULTPARAMETER_CODE:
-			case ANALYSISRESULTPARAMETER_CODE:
+			case RESULT_CODE:
 				return this.loadStorableObjectsButIdsByConditionCustom(ids, condition);
 			default:
 				return super.loadStorableObjectsButIdsByCondition(ids, condition);

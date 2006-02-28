@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.94 2006/02/28 15:19:59 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.95 2006/02/28 15:37:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,21 +7,6 @@
  */
 
 package com.syrus.AMFICOM.mserver;
-
-import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
-import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
-import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SERVERPROCESS_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
-import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
-import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.OR;
-import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
-import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_ABORTED;
-import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_NEW;
-import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_STOPPING;
-import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_STATUS;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,11 +24,13 @@ import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -51,8 +38,11 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.Test.TestStatus;
+import com.syrus.AMFICOM.measurement.TestWrapper;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
@@ -60,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2006/02/28 15:19:59 $
+ * @version $Revision: 1.95 $, $Date: 2006/02/28 15:37:01 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -174,17 +164,17 @@ final class MeasurementServer extends SleepButWorkThread {
 		final String processCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSERVER_PROCESS_CODENAME,
 				ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
 		try {
-			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);
+			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
 			final Server server = serverDatabase.retrieveForId(serverId);
 
-			final StorableObjectDatabase<ServerProcess> serverProcessDatabase = DatabaseContext.getDatabase(SERVERPROCESS_CODE);
+			final StorableObjectDatabase<ServerProcess> serverProcessDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE);
 			final ServerProcess serverProcess = ((ServerProcessDatabase) serverProcessDatabase).retrieveForServerAndCodename(serverId,
 					processCodename);
 
-			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(SYSTEMUSER_CODE);
+			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
 			final SystemUser user = systemUserDatabase.retrieveForId(serverProcess.getUserId());
 
-			final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(MCM_CODE);
+			final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
 			final Set<Identifier> mcmIds = Identifier.createIdentifiers(((MCMDatabase) mcmDatabase).retrieveForServer(serverId));
 
 			login = user.getLogin();
@@ -237,18 +227,18 @@ final class MeasurementServer extends SleepButWorkThread {
 	}
 
 	private static void createTestLoadCondition() {
-		final LinkedIdsCondition lic = new LinkedIdsCondition(startTestIdMap.keySet(), TEST_CODE);
-		final TypicalCondition tc1 = new TypicalCondition(TEST_STATUS_NEW,
-				OPERATION_EQUALS,
-				TEST_CODE,
-				COLUMN_STATUS);
-		final TypicalCondition tc2 = new TypicalCondition(TEST_STATUS_STOPPING,
-				OPERATION_EQUALS,
-				TEST_CODE,
-				COLUMN_STATUS);
+		final LinkedIdsCondition lic = new LinkedIdsCondition(startTestIdMap.keySet(), ObjectEntities.TEST_CODE);
+		final TypicalCondition tc1 = new TypicalCondition(TestStatus._TEST_STATUS_NEW,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.TEST_CODE,
+				TestWrapper.COLUMN_STATUS);
+		final TypicalCondition tc2 = new TypicalCondition(TestStatus._TEST_STATUS_STOPPING,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.TEST_CODE,
+				TestWrapper.COLUMN_STATUS);
 		testLoadCondition = new CompoundCondition(lic,
-				AND,
-				new CompoundCondition(tc1, OR, tc2));
+				CompoundConditionSort.AND,
+				new CompoundCondition(tc1, CompoundConditionSort.OR, tc2));
 	}
 
 	@Override
@@ -343,13 +333,13 @@ final class MeasurementServer extends SleepButWorkThread {
 
 		for (final Test test : tests) {
 			final Identifier mcmId = test.getMCMId();
-			final TestStatus status = test.getStatus();
+			final int status = test.getStatus().value();
 
 			switch (status) {
-				case TEST_STATUS_NEW:
+				case TestStatus._TEST_STATUS_NEW:
 					addToStartTestIdMap(test.getId(), mcmId);
 					break;
-				case TEST_STATUS_STOPPING:
+				case TestStatus._TEST_STATUS_STOPPING:
 					addToStopTestIdMap(test.getId(), mcmId);
 					break;
 				default:
@@ -385,7 +375,7 @@ final class MeasurementServer extends SleepButWorkThread {
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjects(testIds, true);
 			for (final Test test : tests) {
-				if (test.getStatus() != status) {
+				if (test.getStatus().value() != status.value()) {
 					test.setStatus(status);
 				}
 			}
@@ -415,7 +405,7 @@ final class MeasurementServer extends SleepButWorkThread {
 				for (final Identifier mcmId : mcmIdsToAbortTests) {
 					final Set<Identifier> testIds = startTestIdMap.get(mcmId);
 
-					updateTestsStatus(testIds, TEST_STATUS_ABORTED);
+					updateTestsStatus(testIds, TestStatus.TEST_STATUS_ABORTED);
 
 					testIds.clear();
 				}
@@ -432,8 +422,8 @@ final class MeasurementServer extends SleepButWorkThread {
 	}
 
 	static void addMCMId(final Identifier mcmId) {
-		assert mcmId != null : NON_NULL_EXPECTED;
-		assert mcmId.getMajor() == MCM_CODE : ILLEGAL_ENTITY_CODE;
+		assert mcmId != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert mcmId.getMajor() == ObjectEntities.MCM_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
 		if (!startTestIdMap.containsKey(mcmId)) {
 			startTestIdMap.put(mcmId, Collections.synchronizedSet(new HashSet<Identifier>()));
