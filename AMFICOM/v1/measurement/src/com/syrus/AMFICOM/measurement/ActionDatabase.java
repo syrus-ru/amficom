@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionDatabase.java,v 1.1.2.1 2006/02/11 18:40:44 arseniy Exp $
+ * $Id: ActionDatabase.java,v 1.1.2.2 2006/03/01 15:43:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,12 +26,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/11 18:40:44 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/03/01 15:43:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public abstract class ActionDatabase<T extends Action<T>> extends StorableObjectDatabase<T> {
+public abstract class ActionDatabase<R extends ActionResultParameter<R>, T extends Action<R, T>> extends StorableObjectDatabase<T> {
 	static String columns;
 	static String updateMultipleSQLValues;
 

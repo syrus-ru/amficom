@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionWrapper.java,v 1.1.2.1 2006/02/11 18:40:45 arseniy Exp $
+ * $Id: ActionWrapper.java,v 1.1.2.2 2006/03/01 15:43:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import com.syrus.AMFICOM.measurement.Action.ActionStatus;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/11 18:40:45 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/03/01 15:43:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public abstract class ActionWrapper<T extends Action<T>> extends StorableObjectWrapper<T> {
+public abstract class ActionWrapper<R extends ActionResultParameter<R>, T extends Action<R, T>> extends StorableObjectWrapper<T> {
 	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
 	public static final String COLUMN_ACTION_TEMPLATE_ID = "action_template_id";
 	public static final String COLUMN_START_TIME = "start_time";

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.99.2.4 2006/02/28 15:20:05 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.99.2.5 2006/03/01 15:43:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,13 +43,13 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.99.2.4 $, $Date: 2006/02/28 15:20:05 $
+ * @version $Revision: 1.99.2.5 $, $Date: 2006/03/01 15:43:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class MeasurementDatabase extends ActionDatabase<Measurement> {
+public final class MeasurementDatabase extends ActionDatabase<MeasurementResultParameter, Measurement> {
 
 	@Override
 	protected short getEntityCode() {		

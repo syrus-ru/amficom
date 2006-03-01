@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.55.2.3 2006/02/28 15:20:04 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.55.2.4 2006/03/01 15:43:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,13 +35,13 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.55.2.3 $, $Date: 2006/02/28 15:20:04 $
+ * @version $Revision: 1.55.2.4 $, $Date: 2006/03/01 15:43:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class ModelingDatabase extends ActionDatabase<Modeling> {
+public final class ModelingDatabase extends ActionDatabase<ModelingResultParameter, Modeling> {
 
 	@Override
 	protected short getEntityCode() {
