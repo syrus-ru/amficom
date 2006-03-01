@@ -1,5 +1,5 @@
 /*-
- * $Id: SetupSystemUserPasswords.java,v 1.1.2.2 2006/02/27 16:20:51 arseniy Exp $
+ * $Id: SetupSystemUserPasswords.java,v 1.1.2.3 2006/03/01 15:48:47 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +31,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -40,7 +38,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/27 16:20:51 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/03/01 15:48:47 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
