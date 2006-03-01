@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.42.2.2 2006/02/28 15:20:05 arseniy Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.42.2.3 2006/03/01 10:30:05 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.42.2.2 $, $Date: 2006/02/28 15:20:05 $
+ * @version $Revision: 1.42.2.3 $, $Date: 2006/03/01 10:30:05 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement
@@ -172,7 +172,7 @@ public final class IntervalsTemporalPattern
 	
 	@Override
 	protected void fillTimes() {
-		AbstractTemporalPattern previousTemporalPattern = null;
+		AbstractTemporalPattern<? extends AbstractTemporalPattern> previousTemporalPattern = null;
 
 		Long previousDuration = null;
 		Date previousDate = null;
@@ -183,10 +183,10 @@ public final class IntervalsTemporalPattern
 			final Long milliseconds = it.next();
 			final Identifier abstractTemporalPatternId = this.intervalsAbstractTemporalPatternMap.get(milliseconds);
 
-			AbstractTemporalPattern temporalPattern = null;
+			AbstractTemporalPattern<? extends AbstractTemporalPattern> temporalPattern = null;
 			if (abstractTemporalPatternId != null && !abstractTemporalPatternId.isVoid()) {
 				try {
-					temporalPattern = (AbstractTemporalPattern) StorableObjectPool.getStorableObject(abstractTemporalPatternId, true);
+					temporalPattern = StorableObjectPool.getStorableObject(abstractTemporalPatternId, true);
 				} catch (ApplicationException e) {
 					// nothing do, just ignore temporal pattern
 					Log.errorMessage(e);
@@ -223,7 +223,7 @@ public final class IntervalsTemporalPattern
 	private void addTimeItem(final Date startDate,
 			final Date endDate,
 			final Long duration,
-			final AbstractTemporalPattern temporalPattern) {
+			final AbstractTemporalPattern<? extends AbstractTemporalPattern> temporalPattern) {
 		if (startDate != null) {
 			if (temporalPattern == null) {
 				super.times.add(startDate);
