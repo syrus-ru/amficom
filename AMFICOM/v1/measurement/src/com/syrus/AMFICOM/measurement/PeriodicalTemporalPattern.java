@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.34 2006/02/17 07:53:20 bob Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.35 2006/03/01 16:14:07 saa Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -31,11 +32,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
+import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.34 $, $Date: 2006/02/17 07:53:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.35 $, $Date: 2006/03/01 16:14:07 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
@@ -114,7 +116,11 @@ public final class PeriodicalTemporalPattern
 				StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true, true);
 			if (!periodicalTemporalPatterns.isEmpty()) {
 				final int size = periodicalTemporalPatterns.size();
-				assert size == 1 : size;
+				if (size != 1) {
+					// normally this should not happen, but see bug 464
+					Log.debugMessage("PeriodicalTemporalPatterns.size is "
+							+ size + ", expected 1", Level.WARNING);
+				}
 				return periodicalTemporalPatterns.iterator().next();
 			}
 			return createInstance(creatorId, period);
