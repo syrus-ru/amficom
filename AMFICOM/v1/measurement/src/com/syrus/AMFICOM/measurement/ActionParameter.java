@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameter.java,v 1.1.2.8 2006/03/01 10:19:15 arseniy Exp $
+ * $Id: ActionParameter.java,v 1.1.2.9 2006/03/01 11:42:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterHelper;
 
 /**
- * @version $Revision: 1.1.2.8 $, $Date: 2006/03/01 10:19:15 $
+ * @version $Revision: 1.1.2.9 $, $Date: 2006/03/01 11:42:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -65,11 +65,51 @@ public final class ActionParameter extends Parameter<ActionParameter> {
 		super(idlActionParameter);
 	}
 
+	/**
+	 * Create new instance.
+	 * This method always check, if parameter value kind
+	 * for the binding supplied is not ENUMERATED.
+	 * 
+	 * @param creatorId
+	 * @param value
+	 * @param bindingId
+	 * @return New instance.
+	 * @throws CreateObjectException
+	 */
+	public static ActionParameter createInstance(final Identifier creatorId, final byte[] value, final Identifier bindingId)
+			throws CreateObjectException {
+		return createInstance(creatorId, value, bindingId, true);
+	}
+
+	/**
+	 * Create new instance.
+	 * 
+	 * @param creatorId
+	 * @param value
+	 * @param bindingId
+	 * @param checkValueKind
+	 * @return New instance.
+	 * @throws CreateObjectException
+	 */
 	public static ActionParameter createInstance(final Identifier creatorId,
 			final byte[] value,
-			final Identifier bindingId) throws CreateObjectException{
+			final Identifier bindingId,
+			final boolean checkValueKind) throws CreateObjectException {
 		if (creatorId == null || value == null || bindingId == null) {
 			throw new IllegalArgumentException(NON_NULL_EXPECTED);
+		}
+
+		if (checkValueKind) {
+			final ActionParameterTypeBinding binding;
+			try {
+				binding = StorableObjectPool.getStorableObject(bindingId, true);
+			} catch (ApplicationException ae) {
+				throw new CreateObjectException(ae);
+			}
+			final ParameterValueKind valueKind = binding.getParameterValueKind();
+			if (valueKind == ParameterValueKind.ENUMERATED) {
+				throw new CreateObjectException("Cannot create new ENUMERATED action parameter; binding :'" + bindingId + "'");
+			}
 		}
 
 		try {
