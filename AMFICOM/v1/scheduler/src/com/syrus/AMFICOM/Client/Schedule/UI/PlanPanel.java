@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.80 2006/02/14 14:05:19 bob Exp $
+ * $Id: PlanPanel.java,v 1.81 2006/03/01 11:58:20 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,8 +62,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2006/02/14 14:05:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.81 $, $Date: 2006/03/01 11:58:20 $
+ * @author $Author: saa $
  * @module scheduler
  */
 final class PlanPanel extends JPanel implements ActionListener, PropertyChangeListener {
@@ -365,6 +365,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		assert Log.debugMessage(start, Log.DEBUGLEVEL03);
 		this.startDate = start;
 		if (start != null) {
+			synchronized (this.cal) {
 			this.cal.setTime(start);
 //			if (this.scale > 1) {
 //				this.cal.set(Calendar.MINUTE, 0);
@@ -384,14 +385,14 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			this.scaleEnd = this.cal.getTime();
 			// scroll calendar to start point
 			this.cal.setTime(this.startDate);
-			
+			}
 			try {
 				this.schedulerModel.updateTestIds(this.startDate, this.scaleEnd);
 			} catch (final ApplicationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
 		
 	}
@@ -431,7 +432,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			this.clearTests();
 		}
 	}
-	
+
 	void update(	Date startDate,
 					int scale) {
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -555,6 +556,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	protected void paintComponent(final Graphics g) {
 		super.paintComponent(g);
 
+		synchronized (this.cal) {
 		// кг/ам Вот этот бы исчо кусочег гофна пириписцать ...
 		this.cal.setTimeInMillis(0);
 		this.cal.add(STEPS[this.actualScale].scale, STEPS[this.actualScale].one);
@@ -585,6 +587,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			
 			g.fillRect(x, 0, w, super.getHeight());
 			g.setColor(color);
+		}
 		}
 	}
 
@@ -646,7 +649,6 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		updateRealScale();
 		this.parent.revalidate();
 	}
-
 	private void updateRealScale() {
 		if ((this.scaleEnd != null) && (this.scaleEnd != null)) {
 			this.actualScale = this.scale;
@@ -654,6 +656,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			double k = (double) this.parent.getViewport().getViewRect().width / (double) getSize().width;
 			long visibleTime = (long) ((this.scaleEnd.getTime() - this.scaleStart.getTime()) * k);
 			while (visibleTime != 0 && this.actualScale > 0) {
+				synchronized (this.cal) {
 				this.cal.setTimeInMillis(0);
 				this.cal
 						.add(STEPS[this.actualScale].scale, STEPS[this.actualScale].total / STEPS[this.actualScale].one);
@@ -661,12 +664,15 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 					this.actualScale--;
 				else
 					break;
+				}
 			}
 
+			final int width0 = getWidth();
+			synchronized (this.cal) {
 			this.cal.setTimeInMillis(0);
 			this.cal.add(STEPS[this.actualScale].scale, STEPS[this.actualScale].one);
 			long diff = this.cal.getTimeInMillis();
-			double delta = (getWidth() - 2 * MARGIN)
+			double delta = (width0 - 2 * MARGIN)
 					/ ((double) (this.scaleEnd.getTime() - this.scaleStart.getTime()) / (double) diff);
 
 			// double sub_delta = delta / STEPS[actualScale].subscales;
@@ -687,6 +693,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 				this.cal.set(Calendar.MINUTE, 0);
 //			}
 			this.cal.set(Calendar.SECOND, 0);
+			}
 		}
 		
 		for (int i = 0; i < this.getComponentCount(); i++) {
