@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameter.java,v 1.1.2.7 2006/02/28 15:20:04 arseniy Exp $
+ * $Id: ActionParameter.java,v 1.1.2.8 2006/03/01 10:19:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterHelper;
 
 /**
- * @version $Revision: 1.1.2.7 $, $Date: 2006/02/28 15:20:04 $
+ * @version $Revision: 1.1.2.8 $, $Date: 2006/03/01 10:19:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -49,6 +49,7 @@ public final class ActionParameter extends Parameter<ActionParameter> {
 
 	/*	Cached fields*/
 	private ParameterValueKind valueKind;
+	private Identifier typeId;
 	private String typeCodename;
 
 	ActionParameter(final Identifier id,
@@ -126,6 +127,15 @@ public final class ActionParameter extends Parameter<ActionParameter> {
 
 	public Identifier getBindingId() {
 		return this.bindingId;
+	}
+
+	@Override
+	public Identifier getTypeId() throws ApplicationException {
+		if (this.typeId == null) {
+			final ActionParameterTypeBinding actionParameterTypeBinding = StorableObjectPool.getStorableObject(this.bindingId, true);
+			this.typeId = actionParameterTypeBinding.getParameterTypeId();
+		}
+		return this.typeId;
 	}
 
 	@Override

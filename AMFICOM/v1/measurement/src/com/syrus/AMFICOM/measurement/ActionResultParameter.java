@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionResultParameter.java,v 1.1.2.5 2006/02/28 15:20:04 arseniy Exp $
+ * $Id: ActionResultParameter.java,v 1.1.2.6 2006/03/01 10:19:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlActionResultParameter;
 
 /**
- * @version $Revision: 1.1.2.5 $, $Date: 2006/02/28 15:20:04 $
+ * @version $Revision: 1.1.2.6 $, $Date: 2006/03/01 10:19:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -61,6 +61,7 @@ public abstract class ActionResultParameter<T extends ActionResultParameter<T>> 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
+	@Override
 	public final Identifier getTypeId() {
 		return this.typeId;
 	}
