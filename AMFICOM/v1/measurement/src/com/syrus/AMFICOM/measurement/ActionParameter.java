@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameter.java,v 1.1.2.9 2006/03/01 11:42:42 arseniy Exp $
+ * $Id: ActionParameter.java,v 1.1.2.10 2006/03/01 12:08:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,20 +37,20 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterHelper;
 
 /**
- * @version $Revision: 1.1.2.9 $, $Date: 2006/03/01 11:42:42 $
+ * @version $Revision: 1.1.2.10 $, $Date: 2006/03/01 12:08:08 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class ActionParameter extends Parameter<ActionParameter> {
-	private static final long serialVersionUID = 3238162272695974644L;
+	private static final long serialVersionUID = -7695430559152990049L;
 
 	private Identifier bindingId;
 
 	/*	Cached fields*/
-	private ParameterValueKind valueKind;
-	private Identifier typeId;
-	private String typeCodename;
+	private transient ParameterValueKind valueKind;
+	private transient Identifier typeId;
+	private transient String typeCodename;
 
 	ActionParameter(final Identifier id,
 			final Identifier creatorId,

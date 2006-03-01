@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionResultParameter.java,v 1.1.2.6 2006/03/01 10:19:15 arseniy Exp $
+ * $Id: ActionResultParameter.java,v 1.1.2.7 2006/03/01 12:08:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlActionResultParameter;
 
 /**
- * @version $Revision: 1.1.2.6 $, $Date: 2006/03/01 10:19:15 $
+ * @version $Revision: 1.1.2.7 $, $Date: 2006/03/01 12:08:08 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -34,7 +34,7 @@ public abstract class ActionResultParameter<T extends ActionResultParameter<T>> 
 	private Identifier typeId;
 	private Identifier actionId;
 
-	private String typeCodename;
+	private transient String typeCodename;
 
 	ActionResultParameter(final Identifier id,
 			final Identifier creatorId,
