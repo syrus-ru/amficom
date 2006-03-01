@@ -1,5 +1,5 @@
 /*-
- * $Id: Parameter.java,v 1.24.2.2 2006/02/16 12:47:45 arseniy Exp $
+ * $Id: Parameter.java,v 1.24.2.3 2006/03/01 10:19:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,18 +7,24 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import java.io.IOException;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlParameter;
+import com.syrus.util.ByteArray;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24.2.2 $, $Date: 2006/02/16 12:47:45 $
+ * @version $Revision: 1.24.2.3 $, $Date: 2006/03/01 10:19:54 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -63,6 +69,8 @@ public abstract class Parameter<T extends Parameter<T>> extends StorableObject<T
 		super.markAsChanged();
 	}
 
+	public abstract Identifier getTypeId() throws ApplicationException;
+
 	public abstract String getTypeCodename() throws ApplicationException;
 
 	/**
@@ -83,4 +91,28 @@ public abstract class Parameter<T extends Parameter<T>> extends StorableObject<T
 		return super.isValid() && this.value != null;
 	}
 
+	public final String stringValue() throws ApplicationException, IOException {
+		final ByteArray byteArrayValue = new ByteArray(this.value);
+		final ParameterType parameterType = StorableObjectPool.getStorableObject(this.getTypeId(), true);
+		final DataType dataType = parameterType.getDataType();
+		switch (dataType) {
+			case INTEGER:
+				return Integer.toString(byteArrayValue.toInt());
+			case DOUBLE:
+				return Double.toString(byteArrayValue.toDouble());
+			case STRING:
+				return byteArrayValue.toUTFString();
+			case DATE:
+				return byteArrayValue.toDate().toString();
+			case LONG:
+				return Long.toString(byteArrayValue.toLong());
+			case BOOLEAN:
+				return Boolean.toString(byteArrayValue.toBoolean());
+			case RAW:
+				return String.valueOf(this.value);
+			default:
+				Log.errorMessage("Illegal data type: " + dataType);
+				return String.valueOf(this.value);
+		}
+	}
 }
