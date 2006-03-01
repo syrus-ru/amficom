@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupNotificationEventProcessor.java,v 1.9 2005/12/06 09:43:07 bass Exp $
+ * $Id: PopupNotificationEventProcessor.java,v 1.10 2006/03/01 20:46:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.eventv2.Event;
 import com.syrus.AMFICOM.eventv2.EventType;
 import com.syrus.AMFICOM.eventv2.NotificationEvent;
 import com.syrus.AMFICOM.eventv2.PopupNotificationEvent;
-import com.syrus.AMFICOM.eventv2.corba.MessageReceiver;
-import com.syrus.AMFICOM.eventv2.corba.MessageReceiverHelper;
+import com.syrus.AMFICOM.eventv2.corba.EventReceiver;
+import com.syrus.AMFICOM.eventv2.corba.EventReceiverHelper;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.security.UserLogin;
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/12/06 09:43:07 $
+ * @version $Revision: 1.10 $, $Date: 2006/03/01 20:46:54 $
  * @module leserver
  */
 final class PopupNotificationEventProcessor implements EventProcessor {
@@ -64,12 +64,12 @@ final class PopupNotificationEventProcessor implements EventProcessor {
 			for (final UserLogin userLogin : LoginProcessor.getUserLogins(targetUserId)) {
 				try {
 					final Object object = corbaServer.stringToObject(userLogin.getUserIOR());
-					if (!object._is_a(MessageReceiverHelper.id())) {
-						Log.debugMessage("Object: " + object + " is not a MessageReceiver; skipping", FINEST);
+					if (!object._is_a(EventReceiverHelper.id())) {
+						Log.debugMessage("Object: " + object + " is not an EventReceiver; skipping", FINEST);
 						continue;
 					}
-					final MessageReceiver messageReceiver = MessageReceiverHelper.narrow(object);
-					messageReceiver.receiveMessages(popupNotificationEvent.getIdlTransferable(corbaServer.getOrb()));
+					final EventReceiver eventReceiver = EventReceiverHelper.narrow(object);
+					eventReceiver.receiveEvent(popupNotificationEvent.getIdlTransferable(corbaServer.getOrb()));
 				} catch (final SystemException se) {
 					Log.debugMessage(se, SEVERE);
 				}

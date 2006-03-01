@@ -1,10 +1,10 @@
 /*-
-* $Id: DefaultPopupMessageReceiver.java,v 1.4 2005/11/22 11:27:16 bob Exp $
-*
-* Copyright © 2005 Syrus Systems.
-* Dept. of Science & Technology.
-* Project: AMFICOM.
-*/
+ * $Id: PopupNotificationEventReceiver.java,v 1.1 2006/03/01 20:46:53 bass Exp $
+ *
+ * Copyright ¿ 2004-2006 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.client.UI.dialogs;
 
@@ -25,36 +25,43 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
-import com.syrus.AMFICOM.client.event.PopupMessageReceiver;
+import com.syrus.AMFICOM.client.event.EventReceiver;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.eventv2.Event;
 import com.syrus.AMFICOM.eventv2.PopupNotificationEvent;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/22 11:27:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.1 $, $Date: 2006/03/01 20:46:53 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
-public final class DefaultPopupMessageReceiver implements PopupMessageReceiver {
+public final class PopupNotificationEventReceiver implements EventReceiver {
 	
 	private DefaultListModel	model;
 
 	JDialog	dialog;
 	
-	public DefaultPopupMessageReceiver() {
+	public PopupNotificationEventReceiver() {
 		this.createUI();
 	}
 
-	public void receiveMessage(final Event event) {
-		if (event instanceof PopupNotificationEvent) {
-			final PopupNotificationEvent popupNotificationEvent = 
-				(PopupNotificationEvent) event;			
-			this.addMessage(popupNotificationEvent);
-		}		
+	/**
+	 * @param event
+	 * @see EventReceiver#receiveEvent(Event)
+	 */
+	public void receiveEvent(final Event<?> event) {
+		if (!(event instanceof PopupNotificationEvent)) {
+			return;
+		}
+
+		@SuppressWarnings("unchecked")
+		final PopupNotificationEvent popupNotificationEvent = (PopupNotificationEvent) event;
+
+		this.addMessage(popupNotificationEvent);
 	}
-	
+
 	void cleanMessages() {
 		this.model.clear();		
 	}
@@ -92,7 +99,7 @@ public final class DefaultPopupMessageReceiver implements PopupMessageReceiver {
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cleanMessages();
-				DefaultPopupMessageReceiver.this.dialog.setVisible(false);
+				PopupNotificationEventReceiver.this.dialog.setVisible(false);
 			}
 		});
 		

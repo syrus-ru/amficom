@@ -3,6 +3,9 @@
 *Helper.java
 *Holder.java
 *Factory.java
+*Operations.java
+*POA.java
+*POATie.java
 _*Stub.java
 IdlEvent.java
 IdlNotificationEvent.java
@@ -15,7 +18,4 @@ IdlPopupNotificationEvent.java
 IdlMeasurementStatusChangedEvent.java
 IdlMeasurementStartedEvent.java
 IdlMeasurementCompletedEvent.java
-MessageReceiver.java
-MessageReceiverOperations.java
-MessageReceiverPOA.java
-MessageReceiverPOATie.java
+EventReceiver.java

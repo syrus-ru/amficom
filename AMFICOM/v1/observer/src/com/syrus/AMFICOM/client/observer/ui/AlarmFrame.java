@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.event.MarkerEvent;
-import com.syrus.AMFICOM.client.event.PopupMessageReceiver;
+import com.syrus.AMFICOM.client.event.EventReceiver;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
@@ -77,17 +77,26 @@ public class AlarmFrame extends JInternalFrame {
 	boolean perform_processing = true;
 
 	Filter filter = new Filter(new AlarmConditionWrapper());
-	AlarmUpdater updater;
 	Map<Identifier, Identifier> alarmMarkerMapping = new HashMap<Identifier, Identifier>();
 
-	class AlarmUpdater implements PopupMessageReceiver {
+	private final class AlarmUpdater implements EventReceiver {
 		AlarmUpdater() {
 			final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
-			clientSessionEnvironment.addPopupMessageReceiver(this);
+			clientSessionEnvironment.addEventReceiver(this);
 		}
 	
-		public void receiveMessage(Event event) {
-			PopupNotificationEvent popupNotificationEvent = (PopupNotificationEvent)event;
+		/**
+		 * @param event
+		 * @see EventReceiver#receiveEvent(Event)
+		 */
+		public void receiveEvent(final Event<?> event) {
+			if (!(event instanceof PopupNotificationEvent)) {
+				return;
+			}
+
+			@SuppressWarnings("unchecked")
+			final PopupNotificationEvent popupNotificationEvent = (PopupNotificationEvent) event;
+
 			Alarm alarm = new Alarm(popupNotificationEvent);
 			AlarmFrame.this.model.addObject(alarm);
 			
@@ -222,7 +231,7 @@ public class AlarmFrame extends JInternalFrame {
 
 		this.initUI();
 
-		this.updater = new AlarmUpdater();
+		new AlarmUpdater();
 		setContext(aContext);
 	}
 
