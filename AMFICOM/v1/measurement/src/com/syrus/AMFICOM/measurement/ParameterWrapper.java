@@ -42,11 +42,7 @@ public abstract class ParameterWrapper<T extends Parameter<T>> extends StorableO
 
 	@Override
 	public void setValue(final T storableObject, final String key, final Object value) throws PropertyChangeException {
-		if (storableObject != null) {
-			if (key.equals(COLUMN_VALUE)) {
-				storableObject.setValue((byte[]) value);
-			}
-		}
+		/* Nothing to set */
 	}
 
 	public final Object getPropertyValue(final String key) {
