@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBindingDatabase.java,v 1.1.2.3 2006/02/28 15:20:05 arseniy Exp $
+ * $Id: ActionParameterTypeBindingDatabase.java,v 1.1.2.4 2006/03/01 10:30:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKi
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/02/28 15:20:05 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/03/01 10:30:33 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -132,6 +132,7 @@ public final class ActionParameterTypeBindingDatabase extends StorableObjectData
 				actionTypeSql = SQL_NULL + COMMA
 						+ SQL_NULL + COMMA
 						+ DatabaseIdentifier.toSQLString(storableObject.getActionTypeId());
+				break;
 			default:
 				throw new IllegalArgumentException("Unknown action type kind: " + actionTypeKind);
 		}
