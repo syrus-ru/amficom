@@ -1,5 +1,5 @@
 /*-
- * $Id: SetupActionParameter.java,v 1.1.2.1 2006/02/27 16:24:26 arseniy Exp $
+ * $Id: SetupActionParameter.java,v 1.1.2.2 2006/03/01 11:43:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/27 16:24:26 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/03/01 11:43:03 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -165,153 +165,192 @@ public final class SetupActionParameter extends TestCase {
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(1625),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Trace length*/
 		parameterType = parameterTypeCodenamesMap.get(TRACE_LENGTH.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(5.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(20.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(50.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(75.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(125.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(250.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(300.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Resolution*/
 		parameterType = parameterTypeCodenamesMap.get(RESOLUTION.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(0.125),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(0.25),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(0.5),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(1.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(2.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(4.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(8.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(16.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Pulse width*/
 		parameterType = parameterTypeCodenamesMap.get(PULSE_WIDTH_NS.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(5),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(10),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(20),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(50),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(100),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(200),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(500),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(1000),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(2000),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(5000),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(10000),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(20000),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(30000),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Index of refraction*/
 		parameterType = parameterTypeCodenamesMap.get(INDEX_OF_REFRACTION.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(1.4682),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Average count*/
 		parameterType = parameterTypeCodenamesMap.get(AVERAGE_COUNT.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(4096),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(32768),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(262144),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Flag pulse width low res*/
 		parameterType = parameterTypeCodenamesMap.get(FLAG_PULSE_WIDTH_LOW_RES.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(true),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(false),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Flag gain splice*/
 		parameterType = parameterTypeCodenamesMap.get(FLAG_GAIN_SPLICE_ON.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(true),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(false),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Flag live fiber detect*/
 		parameterType = parameterTypeCodenamesMap.get(FLAG_LIFE_FIBER_DETECT.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(true),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(false),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 
 		/*	QP1643A*/
@@ -322,153 +361,192 @@ public final class SetupActionParameter extends TestCase {
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(1625),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Trace length*/
 		parameterType = parameterTypeCodenamesMap.get(TRACE_LENGTH.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(5.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(20.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(50.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(75.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(125.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(250.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(300.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Resolution*/
 		parameterType = parameterTypeCodenamesMap.get(RESOLUTION.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(0.125),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(0.25),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(0.5),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(1.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(2.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(4.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(8.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(16.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Pulse width*/
 		parameterType = parameterTypeCodenamesMap.get(PULSE_WIDTH_NS.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(5),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(10),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(20),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(50),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(100),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(200),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(500),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(1000),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(2000),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(5000),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(10000),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(20000),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(30000),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Index of refraction*/
 		parameterType = parameterTypeCodenamesMap.get(INDEX_OF_REFRACTION.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(1.4682),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Average count*/
 		parameterType = parameterTypeCodenamesMap.get(AVERAGE_COUNT.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(4096),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(45312),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(262144),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Flag pulse width low res*/
 		parameterType = parameterTypeCodenamesMap.get(FLAG_PULSE_WIDTH_LOW_RES.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(true),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(false),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Flag gain splice*/
 		parameterType = parameterTypeCodenamesMap.get(FLAG_GAIN_SPLICE_ON.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(true),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(false),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Flag live fiber detect*/
 		parameterType = parameterTypeCodenamesMap.get(FLAG_LIFE_FIBER_DETECT.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(true),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(false),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 
 		/*	PK7600*/
@@ -479,98 +557,124 @@ public final class SetupActionParameter extends TestCase {
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(1625),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Trace length*/
 		parameterType = parameterTypeCodenamesMap.get(TRACE_LENGTH.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(4.096),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(8.192),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(16.384),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(32.768),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(65.536),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(131.072),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(262.144),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(320.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Resolution*/
 		parameterType = parameterTypeCodenamesMap.get(RESOLUTION.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(0.25),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(0.5),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(1.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(2.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(4.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(8.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(16.0),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Pulse width*/
 		parameterType = parameterTypeCodenamesMap.get(PULSE_WIDTH_M.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(1),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(5),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(10),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(20),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(50),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(100),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(500),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(1000),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(2000),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 		/*	Index of refraction*/
 		parameterType = parameterTypeCodenamesMap.get(INDEX_OF_REFRACTION.stringValue());
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(1.4682),
-				actionParameterTypeBinding.getId()));
+				actionParameterTypeBinding.getId(),
+				false));
 
 
 		/*	Save all*/
