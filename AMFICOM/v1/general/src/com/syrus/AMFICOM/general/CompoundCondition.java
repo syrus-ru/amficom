@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.44.2.1 2006/02/22 15:46:15 arseniy Exp $
+ * $Id: CompoundCondition.java,v 1.44.2.2 2006/03/01 15:40:35 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,10 @@
 
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,12 +27,14 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  *
- * @version $Revision: 1.44.2.1 $, $Date: 2006/02/22 15:46:15 $
+ * @version $Revision: 1.44.2.2 $, $Date: 2006/03/01 15:40:35 $
  * @author $Author: arseniy $
  * @module general
  */
 public final class CompoundCondition implements StorableObjectCondition {
 	private static final long serialVersionUID = -5517086652959242088L;
+
+	private static final String ERROR_DIFFERENT_ENTITIES = "Unable to create CompoundCondition for conditions for different entities";
 
 	private int operation;
 
@@ -54,31 +56,42 @@ public final class CompoundCondition implements StorableObjectCondition {
 		}
 	}
 
+	public CompoundCondition(final CompoundConditionSort operation,
+			final StorableObjectCondition firstCondition,
+			final StorableObjectCondition... restConditions) {
+		assert operation != null : NON_NULL_EXPECTED;
+		assert firstCondition != null : NON_NULL_EXPECTED;
+		assert restConditions != null : NON_NULL_EXPECTED;
+
+		this.entityCode = firstCondition.getEntityCode();
+		this.operation = operation.value();
+		this.conditions = new HashSet<StorableObjectCondition>();
+		for (final StorableObjectCondition storableObjectCondition : restConditions) {
+			if (storableObjectCondition.getEntityCode().shortValue() != this.entityCode.shortValue()) {
+				throw new IllegalArgumentException(ERROR_DIFFERENT_ENTITIES);
+			}
+			this.conditions.add(storableObjectCondition);
+		}
+	}
+
 	public CompoundCondition(final StorableObjectCondition firstCondition,
 			final CompoundConditionSort operation,
 			final StorableObjectCondition secondCondition) {
-		this(new HashSet<StorableObjectCondition>(Arrays.asList(new StorableObjectCondition[] { firstCondition, secondCondition })),
-				operation);
+		this(operation, firstCondition, secondCondition);
 	}
 
-	public CompoundCondition(final Set<StorableObjectCondition> conditions, final CompoundConditionSort operation) {
-		if (conditions == null) {
-			throw new IllegalArgumentException("Unable to create CompoundCondition for null conditions");
-		}
-
-		if (conditions.size() <= 1) {
-			throw new IllegalArgumentException("Unable to create CompoundCondition for alone condition, use condition itself");
-		}
+	public CompoundCondition(final Set<? extends StorableObjectCondition> conditions, final CompoundConditionSort operation) {
+		assert conditions != null : NON_NULL_EXPECTED;
+		assert conditions.size() > 1 : "Unable to create CompoundCondition for alone condition, use condition itself";
 
 		Short code = null;
-
 		for (final StorableObjectCondition condition : conditions) {
 			final Short conditionEntityCode = condition.getEntityCode();
 			if (code == null) {
 				this.entityCode = conditionEntityCode;
 				code = this.entityCode;
 			} else if (code.shortValue() != conditionEntityCode.shortValue()) {
-				throw new IllegalArgumentException("Unable to create CompoundCondition for conditions for different entities");
+				throw new IllegalArgumentException(ERROR_DIFFERENT_ENTITIES);
 			}
 		}
 
@@ -87,7 +100,8 @@ public final class CompoundCondition implements StorableObjectCondition {
 		}
 
 		this.operation = operation.value();
-		this.conditions = conditions;
+		this.conditions = new HashSet<StorableObjectCondition>();
+		this.conditions.addAll(conditions);
 	}
 
 	public void addCondition(final StorableObjectCondition condition) {
