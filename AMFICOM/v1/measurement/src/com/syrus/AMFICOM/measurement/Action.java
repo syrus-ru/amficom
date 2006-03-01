@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.43.2.4 2006/02/28 15:20:05 arseniy Exp $
+ * $Id: Action.java,v 1.43.2.5 2006/03/01 15:41:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,13 +26,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlAction;
 import com.syrus.AMFICOM.measurement.corba.IdlActionStatus;
 
 /**
- * @version $Revision: 1.43.2.4 $, $Date: 2006/02/28 15:20:05 $
+ * @version $Revision: 1.43.2.5 $, $Date: 2006/03/01 15:41:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public abstract class Action<T extends Action<T>> extends StorableObject<T> {
+public abstract class Action<R extends ActionResultParameter<R>, T extends Action<R, T>> extends StorableObject<T> {
 
 	static enum ActionStatus {
 		ACTION_STATUS_NEW,
@@ -61,6 +61,8 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 	private Date startTime;
 	private long duration;
 	private ActionStatus status;
+
+	private transient String typeCodename;
 
 	Action(final Identifier id,
 			final Identifier creatorId,
@@ -135,6 +137,10 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 		return this.actionTemplateId;
 	}
 
+	public final ActionTemplate getActionTemplate() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.actionTemplateId, true);
+	}
+
 	public final String getName() {
 		return this.name;
 	}
@@ -154,6 +160,14 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 	public final void setStatus(final ActionStatus status) {
 		this.status = status;
 		super.markAsChanged();
+	}
+
+	public final String getTypeCodename() throws ApplicationException {
+		if (this.typeCodename == null) {
+			final ActionType<? extends ActionType> actionType = StorableObjectPool.getStorableObject(this.typeId, true);
+			this.typeCodename = actionType.getCodename();
+		}
+		return this.typeCodename;
 	}
 
 	/**
@@ -203,4 +217,8 @@ public abstract class Action<T extends Action<T>> extends StorableObject<T> {
 		dependencies.add(this.actionTemplateId);
 		return dependencies;
 	}
+
+	public abstract R createActionResultParameter(final Identifier resultParameterCreatorId,
+			final byte[] resultParameterValue,
+			final Identifier resultParameterTypeId) throws CreateObjectException;
 }

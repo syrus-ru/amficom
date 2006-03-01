@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.90.2.4 2006/02/28 15:20:04 arseniy Exp $
+ * $Id: Analysis.java,v 1.90.2.5 2006/03/01 15:41:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,13 +32,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisHelper;
 
 /**
- * @version $Revision: 1.90.2.4 $, $Date: 2006/02/28 15:20:04 $
+ * @version $Revision: 1.90.2.5 $, $Date: 2006/03/01 15:41:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Analysis extends Action<Analysis> {
+public final class Analysis extends Action<AnalysisResultParameter, Analysis> {
 	private static final long serialVersionUID = 2935808157242604848L;
 
 	private Identifier measurementId;
@@ -209,5 +209,15 @@ public final class Analysis extends Action<Analysis> {
 	@Override
 	protected AnalysisWrapper getWrapper() {
 		return AnalysisWrapper.getInstance();
+	}
+
+	@Override
+	public AnalysisResultParameter createActionResultParameter(final Identifier resultParameterCreatorId,
+			final byte[] resultParameterValue,
+			final Identifier resultParameterTypeId) throws CreateObjectException {
+		return AnalysisResultParameter.createInstance(resultParameterCreatorId,
+				resultParameterValue,
+				resultParameterTypeId,
+				this.id);
 	}
 }

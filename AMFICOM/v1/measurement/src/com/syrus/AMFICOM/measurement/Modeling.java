@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.68.2.4 2006/02/28 15:20:04 arseniy Exp $
+ * $Id: Modeling.java,v 1.68.2.5 2006/03/01 15:41:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,12 +28,12 @@ import com.syrus.AMFICOM.measurement.corba.IdlModeling;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingHelper;
 
 /**
- * @version $Revision: 1.68.2.4 $, $Date: 2006/02/28 15:20:04 $
+ * @version $Revision: 1.68.2.5 $, $Date: 2006/03/01 15:41:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class Modeling extends Action<Modeling> {
+public final class Modeling extends Action<ModelingResultParameter, Modeling> {
 	private static final long serialVersionUID = 622710280466286589L;
 
 	Modeling(final Identifier id,
@@ -143,5 +143,15 @@ public final class Modeling extends Action<Modeling> {
 	@Override
 	protected ModelingWrapper getWrapper() {
 		return ModelingWrapper.getInstance();
+	}
+
+	@Override
+	public ModelingResultParameter createActionResultParameter(final Identifier resultParameterCreatorId,
+			final byte[] resultParameterValue,
+			final Identifier resultParameterTypeId) throws CreateObjectException {
+		return ModelingResultParameter.createInstance(resultParameterCreatorId,
+				resultParameterValue,
+				resultParameterTypeId,
+				this.id);
 	}
 }
