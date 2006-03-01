@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.176 2006/02/20 12:31:18 arseniy Exp $
+ * $Id: SchedulerModel.java,v 1.177 2006/03/01 16:27:04 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,8 +73,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.176 $, $Date: 2006/02/20 12:31:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.177 $, $Date: 2006/03/01 16:27:04 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -978,7 +978,41 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_REFRESH_TESTS, null, changedTestId));
 	}
 
-	
+	/**
+	 * Нормализует конечную дату.
+	 * FIXME: пока нормализует только конечную дату одноразового теста.
+	 * @param startTime начальная дата
+	 * @param endTime ненормализованная конечная дате, не раньше startTime
+	 * @param temporalPattern временной шаблон либо null для одноразового теста
+	 * @param measurementSetup параметры измерения (для определения
+	 *   продолжительности измерения)
+	 * @return нормализованная конечная дата. если параметр endTime
+	 *   уже нормализован, то может возвращать тот же объект endTime.
+	 */
+	private static Date normalizeEndDate(Date startTime,
+			Date endTime,
+			AbstractTemporalPattern temporalPattern,
+			MeasurementSetup measurementSetup) {
+		assert startTime != null;
+		assert endTime != null;
+		assert measurementSetup != null;
+		assert !endTime.before(startTime);
+
+		if (temporalPattern != null) {
+			return endTime; // @todo: пока игнорируем все не-одноразовые тесты
+		}
+		long duration = measurementSetup.getMeasurementDuration();
+		long endMillis = startTime.getTime() + duration;
+		// FIXME: debug sysout
+		System.out.println("NormalizeEndDate(): start: " + startTime
+				+ ", end: " + endTime
+				+ ", normalized end: " + new Date(endMillis));
+		if (endTime.getTime() == endMillis) {
+			return endTime;
+		}
+		return new Date(endMillis);
+	}
+
 	private void generateTest() throws ApplicationException {
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 
@@ -986,16 +1020,19 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			Test test = null;
 			test = (this.flag == FLAG_APPLY) ? this.getSelectedTest() : null;
 			final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-			
+
 			final Set<Identifier> measurementSetupIds = Collections.singleton(this.measurementSetup.getId());
 
 			final Date startTime = this.testTimeStamps.getStartTime();
-			
-			final Date endTime = this.testTimeStamps.getEndTime() != null ?
+
+			final Date endTime0 = this.testTimeStamps.getEndTime() != null ?
 					this.testTimeStamps.getEndTime() : this.testTimeStamps.getStartTime();
-				
+
 			final TestTemporalType temporalType = this.testTimeStamps.getTestTemporalType();
 			final AbstractTemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
+
+			final Date endTime = normalizeEndDate(startTime, endTime0, temporalPattern, this.measurementSetup);
+
 			if (test == null) {
 				final String reason;
 				if ((reason = this.isValid(this.monitoredElement.getId(), 
