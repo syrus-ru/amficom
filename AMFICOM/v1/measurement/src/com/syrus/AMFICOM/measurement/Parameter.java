@@ -1,5 +1,5 @@
 /*-
- * $Id: Parameter.java,v 1.24.2.3 2006/03/01 10:19:54 arseniy Exp $
+ * $Id: Parameter.java,v 1.24.2.4 2006/03/01 12:07:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,13 +24,15 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24.2.3 $, $Date: 2006/03/01 10:19:54 $
+ * @version $Revision: 1.24.2.4 $, $Date: 2006/03/01 12:07:07 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public abstract class Parameter<T extends Parameter<T>> extends StorableObject<T> {
 	private byte[] value;
+
+	private transient ByteArray byteArrayValue;
 
 	Parameter(final Identifier id,
 			final Identifier creatorId,
@@ -64,11 +66,6 @@ public abstract class Parameter<T extends Parameter<T>> extends StorableObject<T
 		return this.value;
 	}
 
-	public final void setValue(final byte[] value) {
-		this.value = value;
-		super.markAsChanged();
-	}
-
 	public abstract Identifier getTypeId() throws ApplicationException;
 
 	public abstract String getTypeCodename() throws ApplicationException;
@@ -92,22 +89,24 @@ public abstract class Parameter<T extends Parameter<T>> extends StorableObject<T
 	}
 
 	public final String stringValue() throws ApplicationException, IOException {
-		final ByteArray byteArrayValue = new ByteArray(this.value);
+		if (this.byteArrayValue == null) {
+			this.byteArrayValue = new ByteArray(this.value);
+		}
 		final ParameterType parameterType = StorableObjectPool.getStorableObject(this.getTypeId(), true);
 		final DataType dataType = parameterType.getDataType();
 		switch (dataType) {
 			case INTEGER:
-				return Integer.toString(byteArrayValue.toInt());
+				return Integer.toString(this.byteArrayValue.toInt());
 			case DOUBLE:
-				return Double.toString(byteArrayValue.toDouble());
+				return Double.toString(this.byteArrayValue.toDouble());
 			case STRING:
-				return byteArrayValue.toUTFString();
+				return this.byteArrayValue.toUTFString();
 			case DATE:
-				return byteArrayValue.toDate().toString();
+				return this.byteArrayValue.toDate().toString();
 			case LONG:
-				return Long.toString(byteArrayValue.toLong());
+				return Long.toString(this.byteArrayValue.toLong());
 			case BOOLEAN:
-				return Boolean.toString(byteArrayValue.toBoolean());
+				return Boolean.toString(this.byteArrayValue.toBoolean());
 			case RAW:
 				return String.valueOf(this.value);
 			default:
