@@ -738,14 +738,13 @@ final class TestLine extends TimeLine {
 						break;
 					}
 				}
-				
+
 				if (!foundMeasurement) {
 					testTimeLine.date = testTime;
 					testTimeLine.title = testTitle;
 					testTimeLine.startTime = time;
-					testTimeLine.duration =  test.getEndTime().getTime() - testTimeLine.startTime +
-							measurementSetup.getMeasurementDuration();
-					
+					testTimeLine.duration =  test.getEndTime().getTime() - testTimeLine.startTime;
+
 					testTimeLine.color = color;
 					testTimeLine.selectedColor = selectedColor;
 				}
@@ -754,7 +753,7 @@ final class TestLine extends TimeLine {
 		}
 		Collections.sort(measurementTestList);	
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void acquireTests(final Set<Identifier> testIds) {
 		if (testIds != null && testIds.isEmpty()) {
