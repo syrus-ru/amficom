@@ -1,5 +1,5 @@
 /*
- * $Id: Setup.java,v 1.1.2.6 2006/02/27 16:26:21 arseniy Exp $
+ * $Id: Setup.java,v 1.1.2.7 2006/03/01 15:49:02 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,21 +18,13 @@ import com.syrus.AMFICOM.administration.SetupServer;
 import com.syrus.AMFICOM.administration.SetupServerProcess;
 import com.syrus.AMFICOM.administration.SetupSystemUser;
 import com.syrus.AMFICOM.administration.SetupSystemUserPasswords;
-import com.syrus.AMFICOM.configuration.SetupEquipmentType;
-import com.syrus.AMFICOM.configuration.SetupPortType;
-import com.syrus.AMFICOM.configuration.SetupTransmissionPathType;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.SQLCommonTest;
 import com.syrus.AMFICOM.general.SetupDataType;
 import com.syrus.AMFICOM.general.SetupMeasurementUnit;
-import com.syrus.AMFICOM.measurement.SetupActionParameterTypeBinding;
-import com.syrus.AMFICOM.measurement.SetupActionType;
-import com.syrus.AMFICOM.measurement.SetupMeasurementPortType;
-import com.syrus.AMFICOM.reflectometry.SetupActionParameter;
-import com.syrus.AMFICOM.reflectometry.SetupParameterType;
 
 /**
- * @version $Revision: 1.1.2.6 $, $Date: 2006/02/27 16:26:21 $
+ * @version $Revision: 1.1.2.7 $, $Date: 2006/03/01 15:49:02 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -66,21 +58,6 @@ public final class Setup extends TestCase {
 
 		//-Set passwords for base system users.
 		databaseCommonTest.addTest(new SetupSystemUserPasswords("testSetPassword"));
-//
-//		//-Create configuration objects.
-//		databaseCommonTest.addTest(new TestProtoEquipment("testCreateInstance"));
-//		databaseCommonTest.addTest(new TestEquipment("testCreateAll"));
-//		databaseCommonTest.addTest(new TestPort("testCreateAll"));
-//		databaseCommonTest.addTest(new TestTransmissionPath("testCreateAll"));
-//
-//		//-Create measurement objects.
-//		databaseCommonTest.addTest(new TestKIS("testCreateAll"));
-//		databaseCommonTest.addTest(new TestMeasurementPort("testCreateAll"));
-//		databaseCommonTest.addTest(new TestMonitoredElement("testCreateAll"));
-//
-//		//-Create equipment-specific characteristics. 
-//		//databaseCommonTest.addTest(new TestCharacteristicQP1640A("testCreate"));
-
 
 		//-Create test suite contains all operations
 		final TestSuite testSuite = new TestSuite();
