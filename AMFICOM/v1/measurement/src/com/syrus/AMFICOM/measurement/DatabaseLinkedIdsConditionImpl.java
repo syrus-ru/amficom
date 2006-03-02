@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41.2.4 2006/02/27 16:19:02 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41.2.5 2006/03/02 16:07:08 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETERTYPEBINDING_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSISRESULTPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
@@ -19,6 +20,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.KIS;
 import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
@@ -52,10 +54,10 @@ import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.LINK_COLUMN_AC
 import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID;
 import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_MONITORED_ELEMENT_ID;
 import static com.syrus.AMFICOM.measurement.AnalysisResultParameterWrapper.COLUMN_ANALYSIS_ID;
-import static com.syrus.AMFICOM.measurement.AnalysisWrapper.COLUMN_MEASUREMENT_ID;
 import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_MCM_ID;
 import static com.syrus.AMFICOM.measurement.MeasurementPortWrapper.COLUMN_KIS_ID;
 import static com.syrus.AMFICOM.measurement.MeasurementPortWrapper.COLUMN_PORT_ID;
+import static com.syrus.AMFICOM.measurement.MeasurementResultParameterWrapper.COLUMN_MEASUREMENT_ID;
 import static com.syrus.AMFICOM.measurement.MeasurementWrapper.COLUMN_TEST_ID;
 import static com.syrus.AMFICOM.measurement.ModelingResultParameterWrapper.COLUMN_MODELING_ID;
 import static com.syrus.AMFICOM.measurement.MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID;
@@ -68,7 +70,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 /**
- * @version $Revision: 1.41.2.4 $, $Date: 2006/02/27 16:19:02 $
+ * @version $Revision: 1.41.2.5 $, $Date: 2006/03/02 16:07:08 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -108,7 +110,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 			case ANALYSIS_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 					case MEASUREMENT_CODE:
-						return super.getQuery(COLUMN_MEASUREMENT_ID);
+						return super.getQuery(AnalysisWrapper.COLUMN_MEASUREMENT_ID);
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}
@@ -140,7 +142,9 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 			case MEASUREMENTRESULTPARAMETER_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 					case MEASUREMENT_CODE:
-						return super.getQuery(MeasurementResultParameterWrapper.COLUMN_MEASUREMENT_ID);
+						return super.getQuery(COLUMN_MEASUREMENT_ID);
+					case TEST_CODE:
+						return super.getLinkedQuery(COLUMN_MEASUREMENT_ID, COLUMN_ID, COLUMN_TEST_ID, MEASUREMENT);
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}
@@ -148,6 +152,27 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				switch (super.condition.getLinkedEntityCode()) {
 					case ANALYSIS_CODE:
 						return super.getQuery(COLUMN_ANALYSIS_ID);
+					case MEASUREMENT_CODE:
+						return super.getLinkedQuery(COLUMN_ANALYSIS_ID,
+								COLUMN_ID,
+								AnalysisWrapper.COLUMN_MEASUREMENT_ID,
+								ANALYSIS);
+					case TEST_CODE:
+						stringBuffer = new StringBuffer();
+						stringBuffer.append(COLUMN_ANALYSIS_ID);
+						stringBuffer.append(SQL_IN);
+						stringBuffer.append(OPEN_BRACKET);
+						stringBuffer.append(SQL_SELECT);
+						stringBuffer.append(COLUMN_ID);
+						stringBuffer.append(SQL_FROM);
+						stringBuffer.append(ANALYSIS);
+						stringBuffer.append(SQL_WHERE);
+						stringBuffer.append(super.getLinkedQuery(AnalysisWrapper.COLUMN_MEASUREMENT_ID,
+								COLUMN_ID,
+								COLUMN_TEST_ID,
+								MEASUREMENT));
+						stringBuffer.append(CLOSE_BRACKET);
+						return stringBuffer.toString();
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}

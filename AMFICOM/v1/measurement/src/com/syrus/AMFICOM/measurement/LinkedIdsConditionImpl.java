@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.71.2.4 2006/02/28 15:20:04 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.71.2.5 2006/03/02 16:07:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71.2.4 $, $Date: 2006/02/28 15:20:04 $
+ * @version $Revision: 1.71.2.5 $, $Date: 2006/03/02 16:07:08 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -203,6 +203,14 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					case MEASUREMENT_CODE:
 						condition = super.conditionTest(measurementResultParameter.getMeasurementId());
 						break;
+					case TEST_CODE:
+						try {
+							condition = super.conditionTest(measurementResultParameter.getAction().getTestId());
+						} catch (ApplicationException ae) {
+							Log.errorMessage(ae);
+							condition = false;
+						}
+						break;
 				}
 				break;
 			case ANALYSISRESULTPARAMETER_CODE:
@@ -210,6 +218,22 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				switch (this.linkedEntityCode) {
 					case ANALYSIS_CODE:
 						condition = super.conditionTest(analysisResultParameter.getAnalysisId());
+						break;
+					case MEASUREMENT_CODE:
+						try {
+							condition = super.conditionTest(analysisResultParameter.getAction().getMeasurementId());
+						} catch (ApplicationException ae) {
+							Log.errorMessage(ae);
+							condition = false;
+						}
+						break;
+					case TEST_CODE:
+						try {
+							condition = super.conditionTest(analysisResultParameter.getAction().getMeasurement().getTestId());
+						} catch (ApplicationException ae) {
+							Log.errorMessage(ae);
+							condition = false;
+						}
 						break;
 				}
 				break;
