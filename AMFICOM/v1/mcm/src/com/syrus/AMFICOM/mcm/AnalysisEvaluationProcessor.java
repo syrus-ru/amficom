@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.57 2006/01/26 15:15:35 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.57.2.1 2006/03/02 16:13:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,35 +8,33 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import static com.syrus.AMFICOM.general.ParameterType.DADARA_ALARMS;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_ALARMS;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
 
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.eventv2.DefaultReflectogramMismatchEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Analysis;
-import com.syrus.AMFICOM.measurement.AnalysisType;
+import com.syrus.AMFICOM.measurement.AnalysisResultParameter;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.Parameter;
-import com.syrus.AMFICOM.measurement.ParameterSet;
-import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.MeasurementResultParameter;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2006/01/26 15:15:35 $
+ * @version $Revision: 1.57.2.1 $, $Date: 2006/03/02 16:13:27 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -56,56 +54,39 @@ final class AnalysisEvaluationProcessor {
 		assert false;
 	}
 
-	public static Result[] analyseEvaluate(final Result measurementResult) throws AnalysisException {
-		@SuppressWarnings("unchecked")
-		final Action action = measurementResult.getAction();
-		final Measurement measurement = (Measurement) action;
-		final Test test;
+	public static Set<AnalysisResultParameter> analyseEvaluate(final MeasurementResultParameter measurementResultParameter) throws AnalysisException {
+		final Identifier measurementId = measurementResultParameter.getMeasurementId();
 		try {
-			test = (Test) StorableObjectPool.getStorableObject(measurement.getTestId(), true);
-		} catch (ApplicationException ae) {
-			throw new AnalysisException("Cannot find test -- " + ae.getMessage(), ae);
-		}
-		final Identifier monitoredElementId = test.getMonitoredElement().getId();
-		final MeasurementSetup measurementSetup = measurement.getSetup();
+			final Measurement measurement = measurementResultParameter.getAction();
 
-		final AnalysisType analysisType = test.getAnalysisType();
-		if (!analysisType.equals(AnalysisType.UNKNOWN)) {
-			final Analysis analysis = createAnalysis(analysisType, monitoredElementId, measurement.getId(), measurementSetup.getCriteriaSet());
-			return new Result[] { analyseAndEvaluate(measurementResult, analysis, measurementSetup.getEtalon()) };
-		}
+			final Test test = measurement.getTest();
 
-		Log.debugMessage("UNKNOWN AnalysisType for test '" + test.getId() + "'", SEVERE);
-		return new Result[0];
-	}
+			final Identifier analysisTypeId = test.getAnalysisTypeId();
+			if (analysisTypeId.isVoid()) {
+				return Collections.emptySet();
+			}
 
-	private static Analysis createAnalysis(final AnalysisType analysisType,
-			final Identifier monitoredElementId,
-			final Identifier measurementId,
-			final ParameterSet criteriaSet) throws AnalysisException {
-		if (criteriaSet == null) {
-			throw new AnalysisException("Criteria set is NULL");
-		}
+			final Identifier analysisTemplateId = test.getCurrentMeasurementSetup().getAnalysisTemplateId();
 
-		try {
 			final Analysis analysis = Analysis.createInstance(LoginManager.getUserId(),
-					analysisType,
-					monitoredElementId,
-					measurementId,
+					analysisTypeId,
+					test.getMonitoredElementId(),
+					analysisTemplateId,
 					ANALYSIS_NAME + " " + measurementId,
-					criteriaSet);
+					new Date(),
+					0L,
+					measurementId);
 			StorableObjectPool.flush(analysis, LoginManager.getUserId(), false);
-			return analysis;
+
+			return analyseAndEvaluate(measurementResultParameter, analysis);
 		} catch (ApplicationException ae) {
-			throw new AnalysisException("Cannot create analysis", ae);
+				throw new AnalysisException("Cannot process analysis for measurement '" + measurementId + "'", ae);
 		}
 	}
 
-    // @todo: rename to loadAnalysisManager
-	private static void loadAnalysisAndEvaluationManager(final String analysisCodename,
-			final Result measurementResult,
-			final Analysis analysis,
-			final ParameterSet etalon) throws AnalysisException {
+	private static void loadAnalysisManager(final String analysisCodename,
+			final MeasurementResultParameter measurementResultParameter,
+			final Analysis analysis) throws AnalysisException {
 		String className = null;
 		Constructor<?> constructor = null;
 
@@ -116,11 +97,10 @@ final class AnalysisEvaluationProcessor {
 		}
 
 		try {
-			constructor = Class.forName(className).getDeclaredConstructor(new Class[] { Result.class,
-					Analysis.class,
-					ParameterSet.class });
+			constructor = Class.forName(className).getDeclaredConstructor(new Class[] { MeasurementResultParameter.class,
+					Analysis.class });
 			constructor.setAccessible(true);
-			analysisManager = (AnalysisManager) constructor.newInstance(new Object[] { measurementResult, analysis, etalon });
+			analysisManager = (AnalysisManager) constructor.newInstance(new Object[] { measurementResultParameter, analysis });
 		} catch (SecurityException e) {
 			throw new AnalysisException("Cannot get constructor -- " + e.getMessage(), e);
 		} catch (NoSuchMethodException e) {
@@ -142,50 +122,43 @@ final class AnalysisEvaluationProcessor {
 		}
 	}
 
-	private static Result analyseAndEvaluate(final Result measurementResult,
-			final Analysis analysis,
-			final ParameterSet etalon)
-	throws AnalysisException {
+	private static Set<AnalysisResultParameter> analyseAndEvaluate(final MeasurementResultParameter measurementResultParameter,
+			final Analysis analysis) throws AnalysisException {
 		try {
-			loadAnalysisAndEvaluationManager(
-					analysis.getType().getCodename(),
-					measurementResult, analysis, etalon);
-	
-			final Parameter[] arParameters = analysisManager.analyse();
-			final Identifier resultId = measurementResult.getId();
-			final Identifier monitoredElementId = measurementResult.getAction().getMonitoredElementId();
+			loadAnalysisManager(analysis.getTypeCodename(), measurementResultParameter, analysis);
+
+			final Set<AnalysisResultParameter> analysisResultParameters = analysisManager.analyse();
+			final Identifier resultId = measurementResultParameter.getId();
+			final Identifier monitoredElementId = measurementResultParameter.getAction().getMonitoredElementId();
 
 			int dadaraAlarmsOccurenceCount = 0;
-			for (final Parameter parameter : arParameters) {
-				if (parameter.getType() != DADARA_ALARMS) {
+			for (final AnalysisResultParameter analysisResultParameter : analysisResultParameters) {
+				if (!analysisResultParameter.getTypeCodename().equals(DADARA_ALARMS.stringValue())) {
 					continue;
 				}
 
 				if (++dadaraAlarmsOccurenceCount != 1) {
-					Log.debugMessage("WARNING: dadaraAlarmsOccurenceCount = "
-							+ dadaraAlarmsOccurenceCount
-							+ "; should be 1", WARNING);
+					Log.debugMessage("WARNING: dadaraAlarmsOccurenceCount = " + dadaraAlarmsOccurenceCount + "; should be 1",
+							WARNING);
 				}
 
-				for (final ReflectogramMismatch reflectogramMismatch : ReflectogramMismatchImpl.alarmsFromByteArray(parameter.getValue())) {
-					MeasurementControlModule.eventQueue.addEvent(
-							DefaultReflectogramMismatchEvent.valueOf(
-									reflectogramMismatch,
-									resultId,
-									monitoredElementId));
+				for (final ReflectogramMismatch reflectogramMismatch : ReflectogramMismatchImpl.alarmsFromByteArray(analysisResultParameter.getValue())) {
+					MeasurementControlModule.eventQueue.addEvent(DefaultReflectogramMismatchEvent.valueOf(reflectogramMismatch,
+							resultId,
+							monitoredElementId));
 				}
 			}
 
-			return analysis.createResult(LoginManager.getUserId(), arParameters);
+			return analysisResultParameters;
 		} catch (final EventQueueFullException eqfe) {
 			Log.debugMessage(eqfe, SEVERE);
 			throw new AnalysisException(eqfe);
 		} catch (final DataFormatException dfe) {
 			Log.debugMessage(dfe, SEVERE);
 			throw new AnalysisException(dfe);
-		} catch (final CreateObjectException coe) {
-			Log.debugMessage(coe, SEVERE);
-			throw new AnalysisException(coe);
+		} catch (final ApplicationException ae) {
+			Log.debugMessage(ae, SEVERE);
+			throw new AnalysisException(ae);
 		}
 	}
 }
