@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.5 2006/02/28 15:20:04 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.6 2006/03/02 16:07:36 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -55,14 +55,14 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.183.2.5 $, $Date: 2006/02/28 15:20:04 $
+ * @version $Revision: 1.183.2.6 $, $Date: 2006/03/02 16:07:36 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
 public final class Test extends StorableObject<Test> implements Describable {
-	private static final long serialVersionUID = -4714527059300288280L;
+	private static final long serialVersionUID = -6387317612272518101L;
 
 	private String description;
 	private Identifier groupTestId;
@@ -77,8 +77,9 @@ public final class Test extends StorableObject<Test> implements Describable {
 
 	private SortedMap<Date, String> stopMap;  
 
-	private Identifier kisId;
-	private Identifier mcmId;
+	private transient Identifier kisId;
+	private transient Identifier mcmId;
+	private transient Identifier currentMeasurementSetupId;
 
 	Test(final Identifier id,
 			final Identifier creatorId,
@@ -608,6 +609,25 @@ public final class Test extends StorableObject<Test> implements Describable {
 		return this.mcmId;
 	}
 
+	public Identifier getCurrentMeasurementSetupId() {
+		this.ensureCurrentMeasurementSetupIsSet();
+		return this.currentMeasurementSetupId;
+	}
+
+	public MeasurementSetup getCurrentMeasurementSetup() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getCurrentMeasurementSetupId(), true);
+	}
+
+	/**
+	 * @todo Implement more sophysticated method to determine current MeasurementSetup
+	 *
+	 */
+	private void ensureCurrentMeasurementSetupIsSet() {
+		if (this.currentMeasurementSetupId == null) {
+			this.currentMeasurementSetupId = this.measurementSetupIds.iterator().next();
+		}
+	}
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -666,7 +686,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 		ActionTemplate measurementTemplate = null;
 		try {
 			monitoredElement = StorableObjectPool.getStorableObject(this.monitoredElementId, true);
-			final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(this.measurementSetupIds.iterator().next(), true);
+			final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(this.getCurrentMeasurementSetupId(), true);
 			measurementTemplate = StorableObjectPool.getStorableObject(measurementSetup.getMeasurementTemplateId(), true);
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
