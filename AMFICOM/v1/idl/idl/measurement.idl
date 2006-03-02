@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.91.2.7 2006/02/16 12:51:45 arseniy Exp $
+ * $Id: measurement.idl,v 1.91.2.8 2006/03/02 16:04:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -155,7 +155,8 @@ module measurement {
 		enum IdlActionStatus {
 			ACTION_STATUS_NEW,
 			ACTION_STATUS_RUNNING,
-			ACTION_STATUS_COMPLETE
+			ACTION_STATUS_COMPLETED,
+			ACTION_STATUS_ABORTED
 		};
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
@@ -282,7 +283,6 @@ module measurement {
 		valuetype IdlMeasurementSetup : general::corba::IdlStorableObject {
 			public general::corba::IdlIdentifier measurementTemplateId;
 			public general::corba::IdlIdentifier analysisTemplateId;
-			public general::corba::IdlIdentifier etalonTemplateId;
 			public general::corba::WString256 description;
 			public general::corba::IdlIdentifierSeq monitoredElementIds;
 
@@ -294,7 +294,6 @@ module measurement {
 					in long long version,
 					in general::corba::IdlIdentifier measurementTemplateId,
 					in general::corba::IdlIdentifier analysisTemplateId,
-					in general::corba::IdlIdentifier etalonTemplateId,
 					in general::corba::WString256 description,
 					in general::corba::IdlIdentifierSeq monitoredElementIds);
 		};
