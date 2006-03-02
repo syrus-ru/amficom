@@ -24,7 +24,6 @@ final class IdlMeasurementSetupImpl extends IdlMeasurementSetup {
 			final long version,
 			final IdlIdentifier measurementTemplateId,
 			final IdlIdentifier analysisTemplateId,
-			final IdlIdentifier etalonTemplateId,
 			final String description,
 			final IdlIdentifier[] monitoredElementIds) {
 		this.id = id;
@@ -36,7 +35,6 @@ final class IdlMeasurementSetupImpl extends IdlMeasurementSetup {
 		this.description = description;
 		this.measurementTemplateId = measurementTemplateId;
 		this.analysisTemplateId = analysisTemplateId;
-		this.etalonTemplateId = etalonTemplateId;
 		this.monitoredElementIds = monitoredElementIds;
 	}
 

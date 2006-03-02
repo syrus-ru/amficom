@@ -11,7 +11,6 @@ import com.syrus.util.PropertyChangeException;
 public final class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSetup> {
 	public static final String COLUMN_MEASUREMENT_TEMPLATE_ID = "measurement_template_id";
 	public static final String COLUMN_ANALYSIS_TEMPLATE_ID = "analysis_template_id";
-	public static final String COLUMN_ETALON_TEMPLATE_ID = "etalon_template_id";
 	public static final String LINK_COLUMN_MEASUREMENT_SETUP_ID = "measurement_setup_id";
 	public static final String LINK_COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
 
@@ -23,7 +22,6 @@ public final class MeasurementSetupWrapper extends StorableObjectWrapper<Measure
 		final String[] keysArray = new String[] { COLUMN_DESCRIPTION,
 				COLUMN_MEASUREMENT_TEMPLATE_ID,
 				COLUMN_ANALYSIS_TEMPLATE_ID,
-				COLUMN_ETALON_TEMPLATE_ID,
 				LINK_COLUMN_MONITORED_ELEMENT_ID };
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -54,9 +52,6 @@ public final class MeasurementSetupWrapper extends StorableObjectWrapper<Measure
 			if (key.equals(COLUMN_ANALYSIS_TEMPLATE_ID)) {
 				return object.getAnalysisTemplateId();
 			}
-			if (key.equals(COLUMN_ETALON_TEMPLATE_ID)) {
-				return object.getEtalonTemplateId();
-			}
 			if (key.equals(COLUMN_DESCRIPTION)) {
 				return object.getDescription();
 			}
@@ -80,9 +75,6 @@ public final class MeasurementSetupWrapper extends StorableObjectWrapper<Measure
 			if (key.equals(COLUMN_ANALYSIS_TEMPLATE_ID)) {
 				storableObject.setAnalysisTemplateId((Identifier) value);
 			}
-			if (key.equals(COLUMN_ETALON_TEMPLATE_ID)) {
-				storableObject.setEtalonTemplateId((Identifier) value);
-			}
 			if (key.equals(COLUMN_DESCRIPTION)) {
 				storableObject.setDescription((String) value);
 			}
@@ -104,9 +96,7 @@ public final class MeasurementSetupWrapper extends StorableObjectWrapper<Measure
 		if (clazz != null) {
 			return clazz;
 		}
-		if (key.equals(COLUMN_MEASUREMENT_TEMPLATE_ID)
-				|| key.equals(COLUMN_ANALYSIS_TEMPLATE_ID)
-				|| key.equals(COLUMN_ETALON_TEMPLATE_ID)) {
+		if (key.equals(COLUMN_MEASUREMENT_TEMPLATE_ID) || key.equals(COLUMN_ANALYSIS_TEMPLATE_ID)) {
 			return Identifier.class;
 		}
 		if (key.equals(COLUMN_DESCRIPTION)) {

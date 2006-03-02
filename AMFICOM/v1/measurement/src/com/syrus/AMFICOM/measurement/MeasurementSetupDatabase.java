@@ -11,7 +11,6 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
 import static com.syrus.AMFICOM.general.TableNames.MS_ME_LINK;
 import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.COLUMN_ANALYSIS_TEMPLATE_ID;
-import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.COLUMN_ETALON_TEMPLATE_ID;
 import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.COLUMN_MEASUREMENT_TEMPLATE_ID;
 import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID;
 import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID;
@@ -48,7 +47,6 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 		if (columns == null) {
 			columns = COLUMN_MEASUREMENT_TEMPLATE_ID + COMMA
 					+ COLUMN_ANALYSIS_TEMPLATE_ID + COMMA
-					+ COLUMN_ETALON_TEMPLATE_ID + COMMA
 					+ COLUMN_DESCRIPTION;
 		}
 		return columns;
@@ -59,7 +57,6 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
 					+ QUESTION + COMMA
-					+ QUESTION + COMMA
 					+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -69,7 +66,6 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 	protected String getUpdateSingleSQLValuesTmpl(final MeasurementSetup storableObject) throws IllegalDataException {
 		final String sql = DatabaseIdentifier.toSQLString(storableObject.getMeasurementTemplateId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getAnalysisTemplateId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getEtalonTemplateId()) + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return sql;
 	}
@@ -80,7 +76,6 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 			int startParameterNumber) throws IllegalDataException, SQLException {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMeasurementTemplateId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAnalysisTemplateId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getEtalonTemplateId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
@@ -97,7 +92,6 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 						null,
 						null,
 						null,
-						null,
 						null)
 					: storableObject;
 				measurementSetup.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
@@ -107,7 +101,6 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 						StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
 						DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_TEMPLATE_ID),
 						DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ANALYSIS_TEMPLATE_ID),
-						DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ETALON_TEMPLATE_ID),
 						DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
 		return measurementSetup;
 	}

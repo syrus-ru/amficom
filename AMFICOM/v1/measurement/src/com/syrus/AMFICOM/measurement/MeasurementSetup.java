@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementSetup.java,v 1.100.2.3 2006/02/28 15:20:05 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.100.2.4 2006/03/02 16:08:41 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.100.2.3 $, $Date: 2006/02/28 15:20:05 $
+ * @version $Revision: 1.100.2.4 $, $Date: 2006/03/02 16:08:41 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -47,7 +47,6 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 
 	private Identifier measurementTemplateId;
 	private Identifier analysisTemplateId;
-	private Identifier etalonTemplateId;
 	private String description;
 	private Set<Identifier> monitoredElementIds;
 
@@ -61,7 +60,6 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 			final StorableObjectVersion version,
 			final Identifier measurementTemplateId,
 			final Identifier analysisTemplateId,
-			final Identifier etalonTemplateId,
 			final String description,
 			final Set<Identifier> monitoredElementIds) {
 		super(id,
@@ -72,7 +70,6 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 				version);
 		this.measurementTemplateId = measurementTemplateId;
 		this.analysisTemplateId = analysisTemplateId;
-		this.etalonTemplateId = etalonTemplateId;
 		this.description = description;
 		this.monitoredElementIds = new HashSet<Identifier>();
 		this.setMonitoredElementIds0(monitoredElementIds);
@@ -89,14 +86,13 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 	public static MeasurementSetup createInstance(final Identifier creatorId,
 			final Identifier measurementTemplateId,
 			final Identifier analysisTemplateId,
-			final Identifier etalonTemplateId,
 			final String description,
-			Set<Identifier> monitoredElementIds) throws CreateObjectException {
+			final Set<Identifier> monitoredElementIds) throws CreateObjectException {
 		if (creatorId == null
 				|| measurementTemplateId == null
 				|| analysisTemplateId == null
-				|| etalonTemplateId == null
-				|| description == null) {
+				|| description == null
+				|| monitoredElementIds == null) {
 			throw new IllegalArgumentException(NON_NULL_EXPECTED);
 		}
 
@@ -106,7 +102,6 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 					INITIAL_VERSION,
 					measurementTemplateId,
 					analysisTemplateId,
-					etalonTemplateId,
 					description,
 					monitoredElementIds);
 
@@ -133,7 +128,6 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 				super.version.longValue(),
 				this.measurementTemplateId.getIdlTransferable(orb),
 				this.analysisTemplateId.getIdlTransferable(orb),
-				this.etalonTemplateId.getIdlTransferable(orb),
 				this.description,
 				Identifier.createTransferables(this.monitoredElementIds));
 	}
@@ -144,7 +138,6 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 		super.fromTransferable(idlMeasurementSetup);
 		this.measurementTemplateId = Identifier.valueOf(idlMeasurementSetup.measurementTemplateId);
 		this.analysisTemplateId = Identifier.valueOf(idlMeasurementSetup.analysisTemplateId);
-		this.etalonTemplateId = Identifier.valueOf(idlMeasurementSetup.etalonTemplateId);
 		this.description = idlMeasurementSetup.description;
 		this.setMonitoredElementIds0(Identifier.fromTransferables(idlMeasurementSetup.monitoredElementIds));
 
@@ -166,15 +159,6 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 
 	public void setAnalysisTemplateId(final Identifier analysisTemplateId) {
 		this.analysisTemplateId = analysisTemplateId;
-		super.markAsChanged();
-	}
-
-	public Identifier getEtalonTemplateId() {
-		return this.etalonTemplateId;
-	}
-
-	public void setEtalonTemplateId(final Identifier etalonTemplateId) {
-		this.etalonTemplateId = etalonTemplateId;
 		super.markAsChanged();
 	}
 
@@ -210,12 +194,10 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 			final StorableObjectVersion version,
 			final Identifier measurementTemplateId,
 			final Identifier analysisTemplateId,
-			final Identifier etalonTemplateId,
 			final String description) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.measurementTemplateId = measurementTemplateId;
 		this.analysisTemplateId = analysisTemplateId;
-		this.etalonTemplateId = etalonTemplateId;
 		this.description = description;
 	}
 
@@ -223,8 +205,7 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 	protected boolean isValid() {
 		final boolean valid = super.isValid()
 				&& this.measurementTemplateId != null && this.measurementTemplateId.getMajor() == ACTIONTEMPLATE_CODE
-				&& this.analysisTemplateId != null && this.analysisTemplateId.getMajor() == ACTIONTEMPLATE_CODE
-				&& this.etalonTemplateId != null && this.etalonTemplateId.getMajor() == ACTIONTEMPLATE_CODE;
+				&& this.analysisTemplateId != null && this.analysisTemplateId.getMajor() == ACTIONTEMPLATE_CODE;
 		if (!valid) {
 			return false;
 		}
@@ -233,7 +214,6 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 			this.actionTemplateIds = new HashSet<Identifier>();
 			this.actionTemplateIds.add(this.measurementTemplateId);
 			this.actionTemplateIds.add(this.analysisTemplateId);
-			this.actionTemplateIds.add(this.etalonTemplateId);
 		}
 		try {
 			final Set<ActionTemplate> actionTemplates = StorableObjectPool.getStorableObjects(this.actionTemplateIds, true);
@@ -262,7 +242,6 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.measurementTemplateId);
 		dependencies.add(this.analysisTemplateId);
-		dependencies.add(this.etalonTemplateId);
 		dependencies.addAll(this.monitoredElementIds);
 		return dependencies;
 	}
