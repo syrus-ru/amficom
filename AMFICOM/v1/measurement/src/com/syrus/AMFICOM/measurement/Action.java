@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.43.2.5 2006/03/01 15:41:59 arseniy Exp $
+ * $Id: Action.java,v 1.43.2.6 2006/03/02 16:09:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -26,18 +27,19 @@ import com.syrus.AMFICOM.measurement.corba.IdlAction;
 import com.syrus.AMFICOM.measurement.corba.IdlActionStatus;
 
 /**
- * @version $Revision: 1.43.2.5 $, $Date: 2006/03/01 15:41:59 $
+ * @version $Revision: 1.43.2.6 $, $Date: 2006/03/02 16:09:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public abstract class Action<R extends ActionResultParameter<R>, T extends Action<R, T>> extends StorableObject<T> {
+public abstract class Action<A extends Action<A, R>, R extends ActionResultParameter<R, A>> extends StorableObject<A> {
 
-	static enum ActionStatus {
+	public static enum ActionStatus {
 		ACTION_STATUS_NEW,
 		ACTION_STATUS_RUNNING,
-		ACTION_STATUS_COMPLETE;
+		ACTION_STATUS_COMPLETED,
+		ACTION_STATUS_ABORTED;
 
 		private static final ActionStatus[] VALUES = values();
 
@@ -63,6 +65,7 @@ public abstract class Action<R extends ActionResultParameter<R>, T extends Actio
 	private ActionStatus status;
 
 	private transient String typeCodename;
+	transient LinkedIdsCondition actionResultParametersCondition;
 
 	Action(final Identifier id,
 			final Identifier creatorId,
@@ -169,6 +172,18 @@ public abstract class Action<R extends ActionResultParameter<R>, T extends Actio
 		}
 		return this.typeCodename;
 	}
+
+	public final Set<Identifier> getActionResultParameterIds() throws ApplicationException {
+		this.ensureActionResultParametersConditionIsCreated();
+		return StorableObjectPool.getIdentifiersByCondition(this.actionResultParametersCondition, true);
+	}
+
+	public final Set<R> getActionResultParameters() throws ApplicationException {
+		this.ensureActionResultParametersConditionIsCreated();
+		return StorableObjectPool.getStorableObjectsByCondition(this.actionResultParametersCondition, true);
+	}
+
+	abstract void ensureActionResultParametersConditionIsCreated();
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
