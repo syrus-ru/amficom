@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.90.2.5 2006/03/01 15:41:59 arseniy Exp $
+ * $Id: Analysis.java,v 1.90.2.6 2006/03/02 16:10:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSISRESULTPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
@@ -25,6 +26,7 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -32,13 +34,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisHelper;
 
 /**
- * @version $Revision: 1.90.2.5 $, $Date: 2006/03/01 15:41:59 $
+ * @version $Revision: 1.90.2.6 $, $Date: 2006/03/02 16:10:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Analysis extends Action<AnalysisResultParameter, Analysis> {
+public final class Analysis extends Action<Analysis, AnalysisResultParameter> {
 	private static final long serialVersionUID = 2935808157242604848L;
 
 	private Identifier measurementId;
@@ -148,6 +150,13 @@ public final class Analysis extends Action<AnalysisResultParameter, Analysis> {
 
 	public Measurement getMeasurement() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.measurementId, true);
+	}
+
+	@Override
+	void ensureActionResultParametersConditionIsCreated() {
+		if (super.actionResultParametersCondition == null) {
+			super.actionResultParametersCondition = new LinkedIdsCondition(this.id, ANALYSISRESULTPARAMETER_CODE);
+		}
 	}
 
 	/**

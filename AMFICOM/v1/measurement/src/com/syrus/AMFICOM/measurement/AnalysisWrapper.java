@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisWrapper.java,v 1.17.2.2 2006/03/01 15:43:15 arseniy Exp $
+ * $Id: AnalysisWrapper.java,v 1.17.2.3 2006/03/02 16:10:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,12 @@ package com.syrus.AMFICOM.measurement;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.17.2.2 $, $Date: 2006/03/01 15:43:15 $
+ * @version $Revision: 1.17.2.3 $, $Date: 2006/03/02 16:10:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class AnalysisWrapper extends ActionWrapper<AnalysisResultParameter, Analysis> {
+public final class AnalysisWrapper extends ActionWrapper<Analysis, AnalysisResultParameter> {
 	public static final String COLUMN_MEASUREMENT_ID = "measurement_id";
 
 	private static AnalysisWrapper instance;

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.76.2.4 2006/03/01 15:43:15 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.76.2.5 2006/03/02 16:10:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,13 +38,13 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.76.2.4 $, $Date: 2006/03/01 15:43:15 $
+ * @version $Revision: 1.76.2.5 $, $Date: 2006/03/02 16:10:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class AnalysisDatabase extends ActionDatabase<AnalysisResultParameter, Analysis> {
+public final class AnalysisDatabase extends ActionDatabase<Analysis, AnalysisResultParameter> {
 
 	@Override
 	protected short getEntityCode() {		

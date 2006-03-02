@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.68.2.5 2006/03/01 15:41:59 arseniy Exp $
+ * $Id: Modeling.java,v 1.68.2.6 2006/03/02 16:10:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.MODELINGRESULTPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
@@ -22,18 +23,19 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlModeling;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingHelper;
 
 /**
- * @version $Revision: 1.68.2.5 $, $Date: 2006/03/01 15:41:59 $
+ * @version $Revision: 1.68.2.6 $, $Date: 2006/03/02 16:10:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class Modeling extends Action<ModelingResultParameter, Modeling> {
+public final class Modeling extends Action<Modeling, ModelingResultParameter> {
 	private static final long serialVersionUID = 622710280466286589L;
 
 	Modeling(final Identifier id,
@@ -126,6 +128,13 @@ public final class Modeling extends Action<ModelingResultParameter, Modeling> {
 		super.fromTransferable(idlModeling);
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+	}
+
+	@Override
+	void ensureActionResultParametersConditionIsCreated() {
+		if (super.actionResultParametersCondition == null) {
+			super.actionResultParametersCondition = new LinkedIdsCondition(this.id, MODELINGRESULTPARAMETER_CODE);
+		}
 	}
 
 	/**

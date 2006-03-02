@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionWrapper.java,v 1.1.2.2 2006/03/01 15:43:15 arseniy Exp $
+ * $Id: ActionWrapper.java,v 1.1.2.3 2006/03/02 16:10:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import com.syrus.AMFICOM.measurement.Action.ActionStatus;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/03/01 15:43:15 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/03/02 16:10:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public abstract class ActionWrapper<R extends ActionResultParameter<R>, T extends Action<R, T>> extends StorableObjectWrapper<T> {
+public abstract class ActionWrapper<A extends Action<A, R>, R extends ActionResultParameter<R, A>> extends StorableObjectWrapper<A> {
 	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
 	public static final String COLUMN_ACTION_TEMPLATE_ID = "action_template_id";
 	public static final String COLUMN_START_TIME = "start_time";
@@ -46,7 +46,7 @@ public abstract class ActionWrapper<R extends ActionResultParameter<R>, T extend
 	}
 
 	@Override
-	public Object getValue(final T object, final String key) {
+	public Object getValue(final A object, final String key) {
 		final Object value = super.getValue(object, key);
 		if (value == null && object != null) {
 			if (key.equals(COLUMN_TYPE_ID)) {
@@ -79,7 +79,7 @@ public abstract class ActionWrapper<R extends ActionResultParameter<R>, T extend
 	}
 
 	@Override
-	public final void setValue(final T object, final String key, final Object value) throws PropertyChangeException {
+	public final void setValue(final A object, final String key, final Object value) throws PropertyChangeException {
 		if (object != null) {
 			if (key.equals(COLUMN_MONITORED_ELEMENT_ID)) {
 				object.setMonitoredElementId((Identifier) value);

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingWrapper.java,v 1.14.2.2 2006/03/01 15:43:15 arseniy Exp $
+ * $Id: ModelingWrapper.java,v 1.14.2.3 2006/03/02 16:10:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,12 +10,12 @@ package com.syrus.AMFICOM.measurement;
 
 
 /**
- * @version $Revision: 1.14.2.2 $, $Date: 2006/03/01 15:43:15 $
+ * @version $Revision: 1.14.2.3 $, $Date: 2006/03/02 16:10:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class ModelingWrapper extends ActionWrapper<ModelingResultParameter, Modeling> {
+public final class ModelingWrapper extends ActionWrapper<Modeling, ModelingResultParameter> {
 
 	private static ModelingWrapper instance;
 
