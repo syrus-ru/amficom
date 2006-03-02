@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionResultParameter.java,v 1.1.2.7 2006/03/01 12:08:08 arseniy Exp $
+ * $Id: ActionResultParameter.java,v 1.1.2.8 2006/03/02 16:11:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,12 +25,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlActionResultParameter;
 
 /**
- * @version $Revision: 1.1.2.7 $, $Date: 2006/03/01 12:08:08 $
+ * @version $Revision: 1.1.2.8 $, $Date: 2006/03/02 16:11:11 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public abstract class ActionResultParameter<T extends ActionResultParameter<T>> extends Parameter<T> {
+public abstract class ActionResultParameter<R extends ActionResultParameter<R, A>, A extends Action<A, R>> extends Parameter<R> {
 	private Identifier typeId;
 	private Identifier actionId;
 
@@ -68,6 +68,10 @@ public abstract class ActionResultParameter<T extends ActionResultParameter<T>> 
 
 	public final Identifier getActionId() {
 		return this.actionId;
+	}
+
+	public final A getAction() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.actionId, true);
 	}
 
 	@Override
