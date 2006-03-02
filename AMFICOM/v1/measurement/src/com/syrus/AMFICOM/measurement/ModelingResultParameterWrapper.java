@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingResultParameterWrapper.java,v 1.1.2.1 2006/02/11 18:40:46 arseniy Exp $
+ * $Id: ModelingResultParameterWrapper.java,v 1.1.2.2 2006/03/02 16:11:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,12 +10,12 @@ package com.syrus.AMFICOM.measurement;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/11 18:40:46 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/03/02 16:11:34 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class ModelingResultParameterWrapper extends ActionResultParameterWrapper<ModelingResultParameter> {
+public final class ModelingResultParameterWrapper extends ActionResultParameterWrapper<ModelingResultParameter, Modeling> {
 	public static final String COLUMN_MODELING_ID = "modeling_id";
 
 	private static ModelingResultParameterWrapper instance;

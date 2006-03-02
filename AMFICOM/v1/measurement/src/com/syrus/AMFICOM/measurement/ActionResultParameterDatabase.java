@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionResultParameterDatabase.java,v 1.1.2.2 2006/02/16 12:50:07 arseniy Exp $
+ * $Id: ActionResultParameterDatabase.java,v 1.1.2.3 2006/03/02 16:11:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,12 +16,12 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/16 12:50:07 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/03/02 16:11:34 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public abstract class ActionResultParameterDatabase<T extends ActionResultParameter<T>> extends ParameterDatabase<T> {
+public abstract class ActionResultParameterDatabase<R extends ActionResultParameter<R, A>, A extends Action<A, R>> extends ParameterDatabase<R> {
 
 	@Override
 	protected String getColumnsTmplTmpl() {
@@ -39,14 +39,14 @@ public abstract class ActionResultParameterDatabase<T extends ActionResultParame
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmplTmpl(final T storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmplTmpl(final R storableObject) throws IllegalDataException {
 		final String sql = DatabaseIdentifier.toSQLString(storableObject.getTypeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getActionId());
 		return sql;
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmplTmpl(final T storableObject,
+	protected int setEntityForPreparedStatementTmplTmpl(final R storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getTypeId());

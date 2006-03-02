@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseDate;
 
-public final class ModelingResultParameterDatabase extends ActionResultParameterDatabase<ModelingResultParameter> {
+public final class ModelingResultParameterDatabase extends ActionResultParameterDatabase<ModelingResultParameter, Modeling> {
 
 	@Override
 	protected short getEntityCode() {

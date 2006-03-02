@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionResultParameterWrapper.java,v 1.1.2.2 2006/02/16 12:50:09 arseniy Exp $
+ * $Id: ActionResultParameterWrapper.java,v 1.1.2.3 2006/03/02 16:11:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,19 +11,19 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/16 12:50:09 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/03/02 16:11:34 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public abstract class ActionResultParameterWrapper<T extends ActionResultParameter<T>> extends ParameterWrapper<T> {
+public abstract class ActionResultParameterWrapper<R extends ActionResultParameter<R, A>, A extends Action<A, R>> extends ParameterWrapper<R> {
 
 	ActionResultParameterWrapper(final String[] keysArray) {
 		super(keysArray);
 	}
 
 	@Override
-	public Object getValue(final T object, final String key) {
+	public Object getValue(final R object, final String key) {
 		final Object value = super.getValue(object, key);
 		if (value == null && object != null) {
 			if (key.equals(COLUMN_TYPE_ID)) {
@@ -34,7 +34,7 @@ public abstract class ActionResultParameterWrapper<T extends ActionResultParamet
 	}
 
 	@Override
-	public final void setValue(final T storableObject, final String key, final Object value) throws PropertyChangeException {
+	public final void setValue(final R storableObject, final String key, final Object value) throws PropertyChangeException {
 		//Nothing to set
 	}
 

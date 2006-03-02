@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementResultParameter.java,v 1.1.2.5 2006/02/28 15:20:04 arseniy Exp $
+ * $Id: MeasurementResultParameter.java,v 1.1.2.6 2006/03/02 16:11:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,12 +23,12 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementResultParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementResultParameterHelper;
 
 /**
- * @version $Revision: 1.1.2.5 $, $Date: 2006/02/28 15:20:04 $
+ * @version $Revision: 1.1.2.6 $, $Date: 2006/03/02 16:11:34 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class MeasurementResultParameter extends ActionResultParameter<MeasurementResultParameter> {
+public final class MeasurementResultParameter extends ActionResultParameter<MeasurementResultParameter, Measurement> {
 	private static final long serialVersionUID = -5324135974911914875L;
 
 	MeasurementResultParameter(final Identifier id,
