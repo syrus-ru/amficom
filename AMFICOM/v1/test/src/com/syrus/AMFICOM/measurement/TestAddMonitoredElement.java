@@ -1,5 +1,5 @@
 /*-
- * $Id: TestAddMonitoredElement.java,v 1.1.2.1 2006/02/17 12:28:06 arseniy Exp $
+ * $Id: TestAddMonitoredElement.java,v 1.1.2.2 2006/03/06 19:03:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,13 +22,13 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
+import static com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.IdlMonitoredElementKind.MONITOREDELEMENT_KIND_TRANSMISSION_PATH;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/17 12:28:06 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/03/06 19:03:56 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -86,7 +86,7 @@ public final class TestAddMonitoredElement extends TestCase {
 				transmissionPath1.getDomainId(),
 				"monitored element",
 				measurementPort2.getId(),
-				MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH,
+				MONITOREDELEMENT_KIND_TRANSMISSION_PATH,
 				"2:0:2",
 				Collections.singleton(transmissionPath2.getId()));
 		final Set<Identifiable> flushObjects = new HashSet<Identifiable>();
