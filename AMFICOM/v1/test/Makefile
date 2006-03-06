@@ -3,7 +3,7 @@
 MODULE_NAME := test
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-TEST_CLASS = Setup2
+TEST_CLASS = Setup3
 TEST_PACKAGE = com.syrus.AMFICOM.setup
 #TEST_CLASS=TestIdentifier
 #TEST_PACKAGE=com.syrus.AMFICOM.general
