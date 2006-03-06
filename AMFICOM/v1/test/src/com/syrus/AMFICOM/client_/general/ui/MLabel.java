@@ -13,22 +13,22 @@ import java.awt.Graphics;
 
 import javax.swing.JLabel;
 
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
+import com.syrus.AMFICOM.measurement.Test.TestStatus;
 
 /**
  * @author Vladimir Dolzhenko
  */
 public class MLabel extends JLabel implements Comparable {
-	private static final long serialVersionUID = 3114499641497137402L;
+	private static final long serialVersionUID = -9037230670375151002L;
 
-	private int	status;
+	private TestStatus status;
 
 	public MLabel(String text) {
 		super(text);
-		setOpaque(true);
+		this.setOpaque(true);
 	}
 
-	public MLabel(String text, int status) {
+	public MLabel(final String text, final TestStatus status) {
 		this(text);
 		this.status = status;
 	}
@@ -38,16 +38,16 @@ public class MLabel extends JLabel implements Comparable {
 		super.paintComponent(g);
 		Color color = null;
 		switch (this.status) {
-			case TestStatus._TEST_STATUS_ABORTED:
+			case TEST_STATUS_ABORTED:
 				color = Color.RED;
 				break;
-			case TestStatus._TEST_STATUS_COMPLETED:
+			case TEST_STATUS_COMPLETED:
 				color = Color.GREEN;
 				break;
-			case TestStatus._TEST_STATUS_PROCESSING:
+			case TEST_STATUS_PROCESSING:
 				color = Color.CYAN;
 				break;
-			case TestStatus._TEST_STATUS_SCHEDULED:
+			case TEST_STATUS_SCHEDULED:
 				color = Color.GRAY;
 				break;
 			default:
