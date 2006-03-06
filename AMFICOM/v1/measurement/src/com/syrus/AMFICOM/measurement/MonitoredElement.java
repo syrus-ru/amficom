@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.13.2.2 2006/02/28 15:20:04 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.13.2.3 2006/03/06 19:00:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,10 +31,10 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElement;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
-import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
+import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.IdlMonitoredElementKind;
 
 /**
- * @version $Revision: 1.13.2.2 $, $Date: 2006/02/28 15:20:04 $
+ * @version $Revision: 1.13.2.3 $, $Date: 2006/03/06 19:00:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -44,7 +44,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 	private static final long serialVersionUID = 5689746173688711494L;
 
 	private Identifier measurementPortId;
-	private int sort;
+	private int kind;
 	private String name;
 	private String localAddress;
 
@@ -61,7 +61,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 			final Identifier domainId,
 			final String name,
 			final Identifier measurementPortId,
-			final int sort,
+			final int kind,
 			final String localAddress,
 			final Set<Identifier> monitoredDomainMemberIds) {
 		super(id,
@@ -73,7 +73,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 			domainId);
 		this.name = name;
 		this.measurementPortId = measurementPortId;
-		this.sort = sort;
+		this.kind = kind;
 		this.localAddress = localAddress;
 
 		this.monitoredDomainMemberIds = new HashSet<Identifier>();
@@ -85,7 +85,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 	 * @param creatorId
 	 * @param domainId
 	 * @param measurementPortId
-	 * @param sort
+	 * @param kind
 	 * @param localAddress
 	 * @throws CreateObjectException
 	 */
@@ -93,7 +93,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 			final Identifier domainId,
 			final String name,
 			final Identifier measurementPortId,
-			final MonitoredElementSort sort,
+			final IdlMonitoredElementKind kind,
 			final String localAddress,
 			final Set<Identifier> monitoredDomainMemberIds) throws CreateObjectException {
 		if (creatorId == null
@@ -111,7 +111,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 					domainId,
 					name,
 					measurementPortId,
-					sort.value(),
+					kind.value(),
 					localAddress,
 					monitoredDomainMemberIds);
 
@@ -130,7 +130,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 		final IdlMonitoredElement met = (IdlMonitoredElement) transferable;
 		super.fromTransferable(met, Identifier.valueOf(met.domainId));
 		this.measurementPortId = Identifier.valueOf(met.measurementPortId);
-		this.sort = met.sort.value();
+		this.kind = met.kind.value();
 		this.localAddress = met.localAddress;
 
 		this.name = met.name;
@@ -158,7 +158,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 				this.getDomainId().getIdlTransferable(),
 				this.name,
 				this.measurementPortId.getIdlTransferable(),
-				MonitoredElementSort.from_int(this.sort),
+				IdlMonitoredElementKind.from_int(this.kind),
 				this.localAddress,
 				Identifier.createTransferables(this.monitoredDomainMemberIds));
 	}
@@ -174,8 +174,8 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 		return StorableObjectPool.getStorableObject(this.getMeasurementPortId(), true);
 	}
 
-	public MonitoredElementSort getSort() {
-		return MonitoredElementSort.from_int(this.sort);
+	public IdlMonitoredElementKind getKind() {
+		return IdlMonitoredElementKind.from_int(this.kind);
 	}
 
 	public String getLocalAddress() {
@@ -211,7 +211,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 			final Identifier domainId,
 			final String name,
 			final Identifier measurementPortId,
-			final int sort,
+			final int kind,
 			final String localAddress) {
 		super.setAttributes(created,
 				modified,
@@ -221,7 +221,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 				domainId);
 		this.name = name;
 		this.measurementPortId = measurementPortId;
-		this.sort = sort;
+		this.kind = kind;
 		this.localAddress = localAddress;
 	}
 
@@ -249,10 +249,10 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 		super.markAsChanged();
 	}
 	/**
-	 * @param sort The sort to set.
+	 * @param kind The kind to set.
 	 */
-	public void setSort(final MonitoredElementSort sort) {
-		this.sort = sort.value();
+	public void setKind(final IdlMonitoredElementKind kind) {
+		this.kind = kind.value();
 		super.markAsChanged();
 	}
 

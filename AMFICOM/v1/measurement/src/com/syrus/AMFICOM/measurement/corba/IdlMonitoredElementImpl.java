@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMonitoredElementImpl.java,v 1.5 2005/10/31 12:30:15 bass Exp $
+ * $Id: IdlMonitoredElementImpl.java,v 1.5.2.1 2006/03/06 19:00:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,18 +10,17 @@ package com.syrus.AMFICOM.measurement.corba;
 
 import static java.util.logging.Level.SEVERE;
 
-import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElement;
-import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
+import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.IdlMonitoredElementKind;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/10/31 12:30:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5.2.1 $, $Date: 2006/03/06 19:00:16 $
  * @module measurement
  */
 final class IdlMonitoredElementImpl extends IdlMonitoredElement {
@@ -40,7 +39,7 @@ final class IdlMonitoredElementImpl extends IdlMonitoredElement {
 			final IdlIdentifier domainId,
 			final String name,
 			final IdlIdentifier measurementPortId,
-			final MonitoredElementSort sort,
+			final IdlMonitoredElementKind kind,
 			final String localAddress,
 			final IdlIdentifier monitoredDomainMemberIds[]) {
 		this.id = id;
@@ -52,7 +51,7 @@ final class IdlMonitoredElementImpl extends IdlMonitoredElement {
 		this.domainId = domainId;
 		this.name = name;
 		this.measurementPortId = measurementPortId;
-		this.sort = sort;
+		this.kind = kind;
 		this.localAddress = localAddress;
 		this.monitoredDomainMemberIds = monitoredDomainMemberIds;
 	}

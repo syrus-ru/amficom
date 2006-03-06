@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.11.2.1 2006/02/28 15:20:05 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.11.2.2 2006/03/06 19:00:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,26 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
 import static com.syrus.AMFICOM.general.TableNames.EQUIPMENT_ME_LINK;
 import static com.syrus.AMFICOM.general.TableNames.TRANSMISSIONPATH_ME_LINK;
+import static com.syrus.AMFICOM.measurement.MonitoredElementWrapper.COLUMN_KIND;
+import static com.syrus.AMFICOM.measurement.MonitoredElementWrapper.COLUMN_LOCAL_ADDRESS;
+import static com.syrus.AMFICOM.measurement.MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID;
+import static com.syrus.AMFICOM.measurement.MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID;
+import static com.syrus.AMFICOM.measurement.MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID;
+import static com.syrus.AMFICOM.measurement.MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID;
+import static com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.IdlMonitoredElementKind._MONITOREDELEMENT_KIND_EQUIPMENT;
+import static com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.IdlMonitoredElementKind._MONITOREDELEMENT_KIND_TRANSMISSION_PATH;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,7 +39,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
@@ -30,16 +46,14 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11.2.1 $, $Date: 2006/02/28 15:20:05 $
+ * @version $Revision: 1.11.2.2 $, $Date: 2006/03/06 19:00:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -59,10 +73,10 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
-					+ StorableObjectWrapper.COLUMN_NAME + COMMA + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID
-					+ COMMA + MonitoredElementWrapper.COLUMN_SORT + COMMA
-					+ MonitoredElementWrapper.COLUMN_LOCAL_ADDRESS;
+			columns = COLUMN_DOMAIN_ID + COMMA
+					+ COLUMN_NAME + COMMA + COLUMN_MEASUREMENT_PORT_ID
+					+ COMMA + COLUMN_KIND + COMMA
+					+ COLUMN_LOCAL_ADDRESS;
 		}
 		return columns;
 	}
@@ -84,7 +98,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 		final String sql = DatabaseIdentifier.toSQLString(storableObject.getDomainId()) + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getMeasurementPortId()) + COMMA
-				+ storableObject.getSort().value() + COMMA
+				+ storableObject.getKind().value() + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN) + APOSTROPHE;
 		return sql;
 	}
@@ -96,7 +110,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getDomainId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMeasurementPortId());
-		preparedStatement.setInt(++startParameterNumber, storableObject.getSort().value());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getKind().value());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getLocalAddress(),
 			SIZE_LOCAL_ADDRESS_COLUMN);
 		return startParameterNumber;
@@ -106,9 +120,9 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 	protected MonitoredElement updateEntityFromResultSet(final MonitoredElement storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		MonitoredElement monitoredElement = (storableObject == null)
-				? monitoredElement = new MonitoredElement(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				? monitoredElement = new MonitoredElement(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						null,
 						null,
 						null,
@@ -116,16 +130,16 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 						null,
 						null)
 				: storableObject;
-		monitoredElement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-				DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID),
-				resultSet.getInt(MonitoredElementWrapper.COLUMN_SORT),
-				DatabaseString.fromQuerySubString(resultSet.getString(MonitoredElementWrapper.COLUMN_LOCAL_ADDRESS)));
+		monitoredElement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_PORT_ID),
+				resultSet.getInt(COLUMN_KIND),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LOCAL_ADDRESS)));
 		return monitoredElement;
 	}
 
@@ -134,7 +148,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 		final Map<Integer, Set<MonitoredElement>> sortedMonitoredElements = new HashMap<Integer, Set<MonitoredElement>>();
 
 		for (final MonitoredElement monitoredElement : monitoredElements) {
-			final Integer meSort = new Integer(monitoredElement.getSort().value());
+			final Integer meSort = new Integer(monitoredElement.getKind().value());
 			Set<MonitoredElement> monitoredElementsOneSort = sortedMonitoredElements.get(meSort);
 			if (monitoredElementsOneSort == null) {
 				monitoredElementsOneSort = new HashSet<MonitoredElement>();
@@ -146,15 +160,15 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 		for (final Integer meSort : sortedMonitoredElements.keySet()) {
 			final Set<MonitoredElement> monitoredElementsOneSort = sortedMonitoredElements.get(meSort);
 			switch (meSort.intValue()) {
-				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
+				case _MONITOREDELEMENT_KIND_EQUIPMENT:
 					this.retrieveMDMIdsByOneQuery(monitoredElementsOneSort,
 							EQUIPMENT_ME_LINK,
-							MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID);
+							LINK_COLUMN_EQUIPMENT_ID);
 					break;
-				case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
+				case _MONITOREDELEMENT_KIND_TRANSMISSION_PATH:
 					this.retrieveMDMIdsByOneQuery(monitoredElementsOneSort,
 							TRANSMISSIONPATH_ME_LINK,
-							MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID);
+							LINK_COLUMN_TRANSMISSION_PATH_ID);
 					break;
 				default:
 					String mesg = "ERROR: Unknown sort of monitoredelement: " + meSort;
@@ -171,7 +185,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 
 		final Map<Identifier, Set<Identifier>> mdmIdsMap = this.retrieveLinkedEntityIds(monitoredElements,
 				linkTable,
-				MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID,
+				LINK_COLUMN_MONITORED_ELEMENT_ID,
 				linkColumn);
 
 		for (final MonitoredElement monitoredElement : monitoredElements) {
@@ -194,14 +208,14 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 	private void insertMonitoredDomainMemberIds(final MonitoredElement monitoredElement) throws CreateObjectException {
 		final Set<Identifier> mdmIds = monitoredElement.getMonitoredDomainMemberIds();
 		final Identifier meId = monitoredElement.getId();
-		final int meSort = monitoredElement.getSort().value();
+		final int meSort = monitoredElement.getKind().value();
 		
 		final StringBuffer buffer = new StringBuffer(SQL_INSERT_INTO);
 		switch (meSort) {
-			case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
+			case _MONITOREDELEMENT_KIND_EQUIPMENT:
 				buffer.append(EQUIPMENT_ME_LINK);
 				break;
-			case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
+			case _MONITOREDELEMENT_KIND_TRANSMISSION_PATH:
 				buffer.append(TRANSMISSIONPATH_ME_LINK);
 				break;
 			default:
@@ -210,18 +224,18 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 		}
 		buffer.append(OPEN_BRACKET);
 		switch (meSort) {
-			case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
-				buffer.append(MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID);
+			case _MONITOREDELEMENT_KIND_EQUIPMENT:
+				buffer.append(LINK_COLUMN_EQUIPMENT_ID);
 				break;
-			case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
-				buffer.append(MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID);
+			case _MONITOREDELEMENT_KIND_TRANSMISSION_PATH:
+				buffer.append(LINK_COLUMN_TRANSMISSION_PATH_ID);
 				break;
 			default:
 				final String mesg = "ERROR: Unknown sort of monitoredelement: " + meSort;
 				throw new CreateObjectException(mesg);
 		}
 		buffer.append(COMMA);
-		buffer.append(MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
+		buffer.append(LINK_COLUMN_MONITORED_ELEMENT_ID);
 		buffer.append(CLOSE_BRACKET);
 		buffer.append(SQL_VALUES);
 		buffer.append(OPEN_BRACKET);
@@ -284,7 +298,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 
 		for (final Iterator it = monitoredElements.iterator(); it.hasNext();) {
 			final MonitoredElement monitoredElement = (MonitoredElement) it.next();
-			final Integer meSort = new Integer(monitoredElement.getSort().value());
+			final Integer meSort = new Integer(monitoredElement.getKind().value());
 			Set<MonitoredElement> monitoredElementsOneSort = sortedMonitoredElements.get(meSort);
 			if (monitoredElementsOneSort == null) {
 				monitoredElementsOneSort = new HashSet<MonitoredElement>();
@@ -296,15 +310,15 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 		for (final Integer meSort : sortedMonitoredElements.keySet()) {
 			final Set<MonitoredElement> monitoredElementsOneSort = sortedMonitoredElements.get(meSort);
 			switch (meSort.intValue()) {
-				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
+				case _MONITOREDELEMENT_KIND_EQUIPMENT:
 					this.updateMDMIds(monitoredElementsOneSort,
 							EQUIPMENT_ME_LINK,
-							MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID);
+							LINK_COLUMN_EQUIPMENT_ID);
 					break;
-				case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
+				case _MONITOREDELEMENT_KIND_TRANSMISSION_PATH:
 					this.updateMDMIds(monitoredElementsOneSort,
 							TRANSMISSIONPATH_ME_LINK,
-							MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID);
+							LINK_COLUMN_TRANSMISSION_PATH_ID);
 					break;
 				default:
 					String mesg = "ERROR: Unknown sort of monitoredelement: " + meSort;
@@ -324,7 +338,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 			mdmIdsMap.put(monitoredElement.getId(), mdmIds);
 		}
 
-		super.updateLinkedEntityIds(mdmIdsMap, linkTable, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID, linkColumn);
+		super.updateLinkedEntityIds(mdmIdsMap, linkTable, LINK_COLUMN_MONITORED_ELEMENT_ID, linkColumn);
 	}
 
 	@Override

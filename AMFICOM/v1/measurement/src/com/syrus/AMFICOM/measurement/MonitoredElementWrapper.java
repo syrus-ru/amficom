@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementWrapper.java,v 1.3 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: MonitoredElementWrapper.java,v 1.3.2.1 2006/03/06 19:00:09 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.IdlMonitoredElementKind;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/14 18:35:57 $
+ * @version $Revision: 1.3.2.1 $, $Date: 2006/03/06 19:00:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -29,7 +29,7 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper<Monitor
 
 	public static final String COLUMN_MEASUREMENT_PORT_ID = "measurement_port_id";
 	// sort NUMBER(2) NOT NULL,
-	public static final String COLUMN_SORT = "sort";
+	public static final String COLUMN_KIND = "kind";
 
 	public static final String COLUMN_LOCAL_ADDRESS = "local_address";
 
@@ -47,7 +47,7 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper<Monitor
 		// empty private constructor
 		final String[] keysArray = new String[] { COLUMN_NAME,
 				COLUMN_MEASUREMENT_PORT_ID,
-				COLUMN_SORT,
+				COLUMN_KIND,
 				COLUMN_LOCAL_ADDRESS,
 				COLUMN_MONITORED_DOMAIN_MEMBER };
 
@@ -78,8 +78,8 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper<Monitor
 				return monitoredElement.getName();
 			if (key.equals(COLUMN_MEASUREMENT_PORT_ID))
 				return monitoredElement.getMeasurementPortId();
-			if (key.equals(COLUMN_SORT))
-				return new Integer(monitoredElement.getSort().value());
+			if (key.equals(COLUMN_KIND))
+				return new Integer(monitoredElement.getKind().value());
 			if (key.equals(COLUMN_LOCAL_ADDRESS))
 				return monitoredElement.getLocalAddress();
 			if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER))
@@ -99,8 +99,8 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper<Monitor
 				monitoredElement.setName((String) value);
 			else if (key.equals(COLUMN_MEASUREMENT_PORT_ID))
 				monitoredElement.setMeasurementPortId((Identifier) value);
-			else if (key.equals(COLUMN_SORT))
-				monitoredElement.setSort(MonitoredElementSort.from_int(((Integer) value).intValue()));
+			else if (key.equals(COLUMN_KIND))
+				monitoredElement.setKind(IdlMonitoredElementKind.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_LOCAL_ADDRESS))
 				monitoredElement.setLocalAddress((String) value);
 			if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER)) {
@@ -132,7 +132,7 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper<Monitor
 			return String.class;
 		} else if (key.equals(COLUMN_MEASUREMENT_PORT_ID)) {
 			return Identifier.class;
-		} else if (key.equals(COLUMN_SORT)) {
+		} else if (key.equals(COLUMN_KIND)) {
 			return Integer.class;
 		} else if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER)) {
 			return Set.class;
