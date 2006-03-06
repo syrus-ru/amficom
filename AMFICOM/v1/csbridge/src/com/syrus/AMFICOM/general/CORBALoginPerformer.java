@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBALoginPerformer.java,v 1.3 2006/03/06 12:16:26 arseniy Exp $
+ * $Id: CORBALoginPerformer.java,v 1.4 2006/03/06 14:58:47 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2006/03/06 12:16:26 $
+ * @version $Revision: 1.4 $, $Date: 2006/03/06 14:58:47 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -47,6 +48,7 @@ public final class CORBALoginPerformer implements LoginPerformer {
 		this.commonUser = commonUser;
 
 		this.reset();
+		this.domainId = VOID_IDENTIFIER;
 	}
 
 	public Set<Domain> getAvailableDomains() throws CommunicationException, LoginException {
@@ -69,6 +71,7 @@ public final class CORBALoginPerformer implements LoginPerformer {
 		assert login != null : NON_NULL_EXPECTED;
 		assert password != null : NON_NULL_EXPECTED;
 		assert loginDomainId != null : NON_NULL_EXPECTED;
+		assert loginDomainId.getMajor() == DOMAIN_CODE : ILLEGAL_ENTITY_CODE;
 
 		if (this.isLoggedIn()) {
 			throw new LoginException(I18N.getString("Error.AlreadyLoggedIn"), true);
@@ -130,7 +133,7 @@ public final class CORBALoginPerformer implements LoginPerformer {
 		final boolean loggedIn = (this.sessionKey != VOID_SESSION_KEY);
 		assert loggedIn
 				? this.userId.getMajor() == SYSTEMUSER_CODE && this.domainId.getMajor() == DOMAIN_CODE
-				: this.userId.isVoid() && this.domainId.isVoid()
+				: this.userId.isVoid()
 						: this.userId + "; " + this.domainId + "; logged in: " + loggedIn;
 		return loggedIn;
 	}
@@ -207,7 +210,6 @@ public final class CORBALoginPerformer implements LoginPerformer {
 	private void reset() {
 		this.sessionKey = VOID_SESSION_KEY;
 		this.userId = VOID_IDENTIFIER;
-		this.domainId = VOID_IDENTIFIER;
 	}
 
 }
