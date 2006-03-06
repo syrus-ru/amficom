@@ -723,7 +723,7 @@ final class TestLine extends TimeLine {
 				}
 				TestTimeLine testTimeLine = new TestTimeLine();
 				testTimeLine.testId = testId;
-				
+
 				final long time = testTime.getTime();
 				boolean foundMeasurement = false;
 				for (final Measurement measurement : testMeasurements) {
@@ -738,13 +738,14 @@ final class TestLine extends TimeLine {
 						break;
 					}
 				}
-
+				
 				if (!foundMeasurement) {
 					testTimeLine.date = testTime;
 					testTimeLine.title = testTitle;
 					testTimeLine.startTime = time;
-					testTimeLine.duration =  test.getEndTime().getTime() - testTimeLine.startTime;
-
+					testTimeLine.duration =  test.getEndTime().getTime() - testTimeLine.startTime +
+							measurementSetup.getMeasurementDuration();
+					
 					testTimeLine.color = color;
 					testTimeLine.selectedColor = selectedColor;
 				}
@@ -753,7 +754,7 @@ final class TestLine extends TimeLine {
 		}
 		Collections.sort(measurementTestList);	
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	private void acquireTests(final Set<Identifier> testIds) {
 		if (testIds != null && testIds.isEmpty()) {
@@ -814,7 +815,7 @@ final class TestLine extends TimeLine {
 			break;														
 		}
 	}
-	
+
 	@Override
 	public void setStart(long start) {
 		long oldValue = super.start;
