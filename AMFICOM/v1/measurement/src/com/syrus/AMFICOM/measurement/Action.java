@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.43.2.6 2006/03/02 16:09:43 arseniy Exp $
+ * $Id: Action.java,v 1.43.2.7 2006/03/06 12:19:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAction;
 import com.syrus.AMFICOM.measurement.corba.IdlActionStatus;
 
 /**
- * @version $Revision: 1.43.2.6 $, $Date: 2006/03/02 16:09:43 $
+ * @version $Revision: 1.43.2.7 $, $Date: 2006/03/06 12:19:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -53,6 +53,11 @@ public abstract class Action<A extends Action<A, R>, R extends ActionResultParam
 
 		static ActionStatus valueOf(final IdlActionStatus idlActionStatus) {
 			return valueOf(idlActionStatus.value());
+		}
+
+		@Override
+		public String toString() {
+			return this.name() + "(" + Integer.toString(this.ordinal()) + ")";
 		}
 	}
 
