@@ -1,5 +1,5 @@
 /*-
- * $Id: Parameter.java,v 1.24.2.4 2006/03/01 12:07:07 arseniy Exp $
+ * $Id: Parameter.java,v 1.24.2.5 2006/03/06 12:22:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,8 +7,14 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -24,7 +30,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24.2.4 $, $Date: 2006/03/01 12:07:07 $
+ * @version $Revision: 1.24.2.5 $, $Date: 2006/03/06 12:22:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -113,5 +119,25 @@ public abstract class Parameter<T extends Parameter<T>> extends StorableObject<T
 				Log.errorMessage("Illegal data type: " + dataType);
 				return String.valueOf(this.value);
 		}
+	}
+
+	/**
+	 * Create Map codename-value
+	 * @param parameters
+	 * @return Unmodifiable Map<String codename, byte[] value>
+	 * @throws ApplicationException
+	 */
+	public static Map<String, byte[]> getTypeCodenameValueMap(final Set<? extends Parameter> parameters) throws ApplicationException {
+		assert parameters != null : NON_NULL_EXPECTED;
+
+		if (parameters.isEmpty()) {
+			return Collections.emptyMap();
+		}
+
+		final Map<String, byte[]> typeCodenameValueMap = new HashMap<String, byte[]>();
+		for (final Parameter parameter: parameters) {
+			typeCodenameValueMap.put(parameter.getTypeCodename(), parameter.getValue());
+		}
+		return Collections.unmodifiableMap(typeCodenameValueMap);
 	}
 }
