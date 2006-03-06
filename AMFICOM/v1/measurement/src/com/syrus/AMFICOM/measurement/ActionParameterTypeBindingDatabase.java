@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBindingDatabase.java,v 1.1.2.4 2006/03/01 10:30:33 arseniy Exp $
+ * $Id: ActionParameterTypeBindingDatabase.java,v 1.1.2.5 2006/03/06 12:19:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKi
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2006/03/01 10:30:33 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/03/06 12:19:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -73,7 +73,7 @@ public final class ActionParameterTypeBindingDatabase extends StorableObjectData
 
 		@Override
 		public String toString() {
-			return Integer.toString(this.ordinal());
+			return this.name() + "(" + Integer.toString(this.ordinal()) + ")";
 		}
 	}
 
