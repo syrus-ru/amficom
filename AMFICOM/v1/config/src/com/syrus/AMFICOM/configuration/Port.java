@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.109.2.1 2006/02/28 15:19:58 arseniy Exp $
+ * $Id: Port.java,v 1.109.2.2 2006/03/06 18:59:09 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.109.2.1 $, $Date: 2006/02/28 15:19:58 $
+ * @version $Revision: 1.109.2.2 $, $Date: 2006/03/06 18:59:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -170,6 +170,10 @@ public final class Port extends StorableObject<Port>
 
 	public Identifier getEquipmentId() {
 		return this.equipmentId;
+	}
+
+	public Equipment getEquipment() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.equipmentId, true);
 	}
 
 	protected synchronized void setAttributes(final Date created,
