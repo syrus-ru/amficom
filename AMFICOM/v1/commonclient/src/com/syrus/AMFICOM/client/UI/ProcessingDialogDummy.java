@@ -1,5 +1,5 @@
 /*-
- * $Id: ProcessingDialogDummy.java,v 1.1 2006/03/06 13:31:14 saa Exp $
+ * $Id: ProcessingDialogDummy.java,v 1.2 2006/03/06 14:55:41 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.client.UI;
+
+import com.syrus.AMFICOM.client.launcher.Launcher;
 
 /**
  * Used to execute Runnable immediately.
@@ -20,11 +22,16 @@ package com.syrus.AMFICOM.client.UI;
  * 
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2006/03/06 13:31:14 $
+ * @version $Revision: 1.2 $, $Date: 2006/03/06 14:55:41 $
  * @module
  */
 public class ProcessingDialogDummy {
 	public ProcessingDialogDummy(Runnable runnable, String string) {
-		runnable.run();
+		try {
+			runnable.run();
+		} catch (final Throwable throwable) {
+			// too unlikely
+			new Launcher.DefaultThrowableHandler().handle(throwable);
+		}
 	}
 }
