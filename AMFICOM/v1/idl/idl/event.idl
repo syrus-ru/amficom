@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.45.2.2 2006/02/21 13:28:24 arseniy Exp $
+ * $Id: event.idl,v 1.45.2.3 2006/03/06 13:44:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -290,6 +290,7 @@ module eventv2 {
 			private double mismatchPhysicalDistance;
 			private long long mismatchCreated;
 			private reflectometry::corba::IdlSeverity severity;
+			private general::corba::IdlIdentifier affectedPathElementId;
 
 			general::corba::IdlIdentifier getTargetUserId();
 			general::corba::IdlIdentifier getResultId();
@@ -297,6 +298,7 @@ module eventv2 {
 			double getMismatchPhysicalDistance();
 			long long getMismatchCreated();
 			reflectometry::corba::IdlSeverity getSeverity();
+			general::corba::IdlIdentifier getAffectedPathElementId();
 
 			factory init(in general::corba::IdlIdentifier targetUserId,
 					in wstring message,
@@ -304,7 +306,8 @@ module eventv2 {
 					in double mismatchOpticalDistance,
 					in double mismatchPhysicalDistance,
 					in long long mismatchCreated,
-					in reflectometry::corba::IdlSeverity severity);
+					in reflectometry::corba::IdlSeverity severity,
+					in general::corba::IdlIdentifier affectedPathElementId);
 		};
 
 		abstract valuetype IdlMeasurementStatusChangedEvent : IdlEvent {
@@ -328,14 +331,11 @@ module eventv2 {
 		};
 
 
-/////////////////// MessageReceiver ////////////////////
+/////////////////// EventReceiver ////////////////////
 
-		interface MessageReceiver {
-			//@todo this method must accept messages, not events
-			void receiveMessages(in IdlEvent event) raises (general::corba::AMFICOMRemoteException);
+		interface EventReceiver {
+			void receiveEvent(in IdlEvent event) raises (general::corba::AMFICOMRemoteException);
 		};
-
-
 	};
 };
 
