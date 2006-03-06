@@ -1,5 +1,5 @@
 /*-
- * $Id: Setup2.java,v 1.1.2.1 2006/02/27 16:26:22 arseniy Exp $
+ * $Id: Setup2.java,v 1.1.2.2 2006/03/06 15:14:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/27 16:26:22 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/03/06 15:14:34 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -35,14 +35,16 @@ public final class Setup2 extends TestCase {
 	public static Test suite() {
 		final CORBACommonTest commonTest = new CORBACommonTest();
 
+		//-Create parameter types 
+		commonTest.addTest(new SetupParameterType("testCreate"));
+
 		//-Create configuration objects.
 		commonTest.addTest(new SetupEquipmentType("testCreate"));
 		commonTest.addTest(new SetupPortType("testCreate"));
 		commonTest.addTest(new SetupTransmissionPathType("testCreate"));
 
-		//-Create measurement port types, parameter types and action types
+		//-Create measurement port types, and action types
 		commonTest.addTest(new SetupMeasurementPortType("testCreate"));
-		commonTest.addTest(new SetupParameterType("testCreate"));
 		commonTest.addTest(new SetupActionType("testCreate"));
 
 		//-Create action parameter type bindings
