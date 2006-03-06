@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeCodename.java,v 1.3.2.1 2006/02/16 13:04:08 arseniy Exp $
+ * $Id: EquipmentTypeCodename.java,v 1.3.2.2 2006/03/06 12:18:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.bugs.Crutch136;
 
 /**
- * @version $Revision: 1.3.2.1 $, $Date: 2006/02/16 13:04:08 $
+ * @version $Revision: 1.3.2.2 $, $Date: 2006/03/06 12:18:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -44,7 +44,7 @@ public enum EquipmentTypeCodename {
 
 	@Override
 	public String toString() {
-		return this.stringValue();
+		return this.name() + "(" + Integer.toString(this.ordinal()) + ", " + this.stringValue() + ")";
 	}
 
 }

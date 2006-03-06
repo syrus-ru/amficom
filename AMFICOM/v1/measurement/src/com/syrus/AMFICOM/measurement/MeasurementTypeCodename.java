@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementTypeCodename.java,v 1.1.2.1 2006/02/22 10:06:26 arseniy Exp $
+ * $Id: MeasurementTypeCodename.java,v 1.1.2.2 2006/03/06 12:21:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.measurement;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/22 10:06:26 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/03/06 12:21:33 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -28,6 +28,6 @@ public enum MeasurementTypeCodename {
 
 	@Override
 	public String toString() {
-		return this.getClass().getName() + " " + this.stringValue();
+		return this.name() + "(" + Integer.toString(this.ordinal()) + ", " + this.stringValue() + ")";
 	}
 }

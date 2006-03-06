@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeCodename.java,v 1.3 2005/09/14 18:42:07 arseniy Exp $
+ * $Id: PortTypeCodename.java,v 1.3.2.1 2006/03/06 12:18:15 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.configuration;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/14 18:42:07 $
+ * @version $Revision: 1.3.2.1 $, $Date: 2006/03/06 12:18:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -29,7 +29,7 @@ public enum PortTypeCodename {
 
 	@Override
 	public String toString() {
-		return this.getClass().getName() + " " + this.stringValue();
+		return this.name() + "(" + Integer.toString(this.ordinal()) + ", " + this.stringValue() + ")";
 	}
 
 }
