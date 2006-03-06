@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.90.2.1 2006/03/02 16:13:40 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.90.2.2 2006/03/06 14:15:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.mcm;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTRESULTPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_NOT_EQUALS;
@@ -51,7 +52,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.90.2.1 $, $Date: 2006/03/02 16:13:40 $
+ * @version $Revision: 1.90.2.2 $, $Date: 2006/03/06 14:15:26 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -208,6 +209,19 @@ abstract class TestProcessor extends SleepButWorkThread {
 		}
 	}
 
+	final void addMeasurementResultParameters(final Set<MeasurementResultParameter> measurementResultParameters) {
+		assert measurementResultParameters != null : NON_NULL_EXPECTED;
+
+		synchronized (this.measurementResults) {
+			for (final MeasurementResultParameter measurementResultParameter : measurementResultParameters) {
+				if (!this.measurementResults.contains(measurementResultParameter)) {
+					this.measurementResults.add(measurementResultParameter);
+					this.numberOfMResults++;
+				}
+			}
+		}
+	}
+
 	final void addMeasurementResult(final MeasurementResultParameter measurementResult) {
 		synchronized (this.measurementResults) {
 			if (!this.measurementResults.contains(measurementResult)) {
@@ -289,8 +303,8 @@ abstract class TestProcessor extends SleepButWorkThread {
 			final MeasurementResultParameter measurementResult = it.next();
 			try {
 				final Measurement measurement = measurementResult.getAction();
-				final Set<AnalysisResultParameter> aeResults = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
-				objectsToFlush.addAll(aeResults);
+				final Set<AnalysisResultParameter> analysisResultParameters = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
+				objectsToFlush.addAll(analysisResultParameters);
 				measurement.setStatus(ACTION_STATUS_COMPLETED);
 				objectsToFlush.add(measurement);
 			} catch (ApplicationException ae) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: TCPKISConnection.java,v 1.27.2.1 2006/03/01 15:51:18 arseniy Exp $
+ * $Id: TCPKISConnection.java,v 1.27.2.2 2006/03/06 14:15:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27.2.1 $, $Date: 2006/03/01 15:51:18 $
+ * @version $Revision: 1.27.2.2 $, $Date: 2006/03/06 14:15:26 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -115,7 +115,7 @@ final class TCPKISConnection implements KISConnection {
 	public synchronized void transmitMeasurement(final Measurement measurement, final long timewait) throws ApplicationException {
 		final Identifier measurementId  = measurement.getId();
 
-		final Map<String, byte[]> codenameValueMap = measurement.getActionTemplate().getCodenameValueMap();
+		final Map<String, byte[]> codenameValueMap = measurement.getActionTemplate().getParameterTypeCodenameValueMap();
 		final String[] codenames = new String[codenameValueMap.size()];
 		final byte[][] values = new byte[codenameValueMap.size()][];
 		int i = 0;

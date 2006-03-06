@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.57.2.1 2006/03/02 16:13:27 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.57.2.2 2006/03/06 14:15:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import static com.syrus.AMFICOM.measurement.AnalysisTypeCodename.DADARA;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_ALARMS;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -34,17 +35,14 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57.2.1 $, $Date: 2006/03/02 16:13:27 $
+ * @version $Revision: 1.57.2.2 $, $Date: 2006/03/06 14:15:26 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 
 final class AnalysisEvaluationProcessor {
-	private static final String CODENAME_ANALYSIS_TYPE_DADARA = "dadara";
-
 	private static final String CLASS_NAME_ANALYSIS_MANAGER_DADARA = "DadaraAnalysisManager";
-
 	private static final String ANALYSIS_NAME = "Analysis of measurement";
 
 	private static AnalysisManager analysisManager;
@@ -90,7 +88,7 @@ final class AnalysisEvaluationProcessor {
 		String className = null;
 		Constructor<?> constructor = null;
 
-		if (analysisCodename.equals(CODENAME_ANALYSIS_TYPE_DADARA)) {
+		if (analysisCodename.equals(DADARA.stringValue())) {
 			className = "com.syrus.AMFICOM.mcm." + CLASS_NAME_ANALYSIS_MANAGER_DADARA;
 		} else {
 			throw new AnalysisException("Cannot find analysis manager for analysis of codename '" + analysisCodename + "'");
@@ -122,6 +120,13 @@ final class AnalysisEvaluationProcessor {
 		}
 	}
 
+	/**
+	 * @todo Move DADARA-specific code to DadaraAnalysisManager
+	 * @param measurementResultParameter
+	 * @param analysis
+	 * @return
+	 * @throws AnalysisException
+	 */
 	private static Set<AnalysisResultParameter> analyseAndEvaluate(final MeasurementResultParameter measurementResultParameter,
 			final Analysis analysis) throws AnalysisException {
 		try {

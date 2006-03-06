@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.75 2005/12/13 16:32:30 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.75.2.1 2006/03/06 14:15:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,15 +9,27 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/12/13 16:32:30 $
- * @author $Author: saa $
+ * @version $Revision: 1.75.2.1 $, $Date: 2006/03/06 14:15:26 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 
 //*
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_ALARMS;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_ANALYSIS_RESULT;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_CRITERIA;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_ETALON;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_QUALITY_OVERALL_D;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_QUALITY_OVERALL_Q;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_QUALITY_PER_EVENT;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.REFLECTOGRAMMA;
+
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
@@ -25,14 +37,16 @@ import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.EtalonComparison;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
-import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.DadaraReflectometryAnalysisResult;
-import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.measurement.Analysis;
+import com.syrus.AMFICOM.measurement.AnalysisResultParameter;
+import com.syrus.AMFICOM.measurement.MeasurementResultParameter;
 import com.syrus.AMFICOM.measurement.Parameter;
-import com.syrus.AMFICOM.measurement.ParameterSet;
-import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
@@ -41,9 +55,9 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 final class DadaraAnalysisManager implements AnalysisManager {
-	private final Map<ParameterType, byte[]> tracePars;
-	private final Map<ParameterType, byte[]> criteriaPars;
-	private final Map<ParameterType, byte[]> etalonPars;
+	private final MeasurementResultParameter measurementResultParameter;
+	private final Analysis analysis;
+	private final Map<String, byte[]> analysisParametersMap;
 
 	/**
 	 * This constructor is called only by Reflection API
@@ -53,68 +67,79 @@ final class DadaraAnalysisManager implements AnalysisManager {
 	 * @throws AnalysisException
 	 */
 	@SuppressWarnings("unused")
-	private DadaraAnalysisManager(final Result measurementResult,
-			final Analysis analysis,
-			final ParameterSet etalon) throws AnalysisException {
-		this.tracePars = new HashMap<ParameterType, byte[]>();
-		this.criteriaPars = new HashMap<ParameterType, byte[]>();
-		this.etalonPars = new HashMap<ParameterType, byte[]>();
-		this.addSetParameters(this.tracePars, measurementResult.getParameters());
-		this.addSetParameters(this.criteriaPars, analysis.getCriteriaSet().getParameters());
+	private DadaraAnalysisManager(final MeasurementResultParameter measurementResultParameter,
+			final Analysis analysis) throws AnalysisException, ApplicationException {
+		this.measurementResultParameter = measurementResultParameter;
+
+		this.analysis = analysis;
+		this.analysisParametersMap = Parameter.getTypeCodenameValueMap(analysis.getActionTemplate().getActionParameters());
+	}
+
+	public Set<AnalysisResultParameter> analyse() throws AnalysisException, ApplicationException {
+		Log.debugMessage("entered", Level.FINER);
+
+		if (!this.measurementResultParameter.getTypeCodename().equals(REFLECTOGRAMMA)) {
+			return Collections.emptySet();
+		}
+
+		// output parameters map
+		final Map<String, byte[]> analysisResultParameterValuesMap = new HashMap<String, byte[]>();
+
+		// === Получаем входные данные ===
+
+		// Получаем рефлектограмму
+		final BellcoreReader bellcoreReader = new BellcoreReader();
+		final BellcoreStructure bellcoreStructure = bellcoreReader.getData(this.measurementResultParameter.getValue());
+
+		// Получаем параметры анализа
+		final AnalysisParameters analysisParameters = this.obtainAnalysisParameters();
+
+		// Получаем эталон (может быть null, тогда сравнение не проводим)
+		final Etalon etalon = this.obtainEtalon();
+
+		Log.debugMessage("bellcoreStructure = " + bellcoreStructure, Level.FINER);
+		Log.debugMessage("analysisParameters = " + analysisParameters, Level.FINER);
+		Log.debugMessage("etalon = " + etalon, Level.FINER);
+
+		// === Обрабатываем входные данные, анализируем, сравниваем ===
+		Log.debugMessage("starting analysis", Level.FINER);
+
+		// проводим анализ
+		final AnalysisResult analysisResult = CoreAnalysisManager.performAnalysis(bellcoreStructure, analysisParameters);
+
+		// добавляем AnalysisResult в результаты анализа
+		analysisResultParameterValuesMap.put(DADARA_ANALYSIS_RESULT.stringValue(), analysisResult.toByteArray());
+
 		if (etalon != null) {
-			this.addSetParameters(this.etalonPars, etalon.getParameters());
-		}
-	}
+			// сравниваем
+			final EtalonComparison etalonComparison = CoreAnalysisManager.compareToEtalon(analysisResult, etalon);
+			final DadaraReflectometryAnalysisResult reflectometryAnalysisResult = new DadaraReflectometryAnalysisResult(analysisResult, etalonComparison);
 
-	private void addSetParameters(final Map<ParameterType, byte[]> parsMap, final Parameter[] setParameters) throws AnalysisException {
-		for (int i = 0; i < setParameters.length; i++) {
-			this.addParameter(parsMap, setParameters[i]);
-		}
-	}
-
-	private void addParameter(final Map<ParameterType, byte[]> parsMap, final Parameter parameter) throws AnalysisException {
-		final ParameterType parameterType = parameter.getType();
-		if (parameterType != null) {
-			if (!parsMap.containsKey(parameterType)) {
-				parsMap.put(parameterType, parameter.getValue());
-			} else {
-				throw new AnalysisException("Parameter of codename '" + parameterType + "' already loaded");
+			// сохраняем результаты сравнения
+			analysisResultParameterValuesMap.put(DADARA_ALARMS.stringValue(), reflectometryAnalysisResult.getDadaraReflectogramMismatchBytes());
+			analysisResultParameterValuesMap.put(DADARA_QUALITY_PER_EVENT.stringValue(), reflectometryAnalysisResult.getDadaraEvaluationPerEventResultBytes());
+			final ReflectometryEvaluationOverallResult overallResult = reflectometryAnalysisResult.getReflectometryEvaluationOverallResult();
+			if (overallResult.hasDQ()) {
+				analysisResultParameterValuesMap.put(DADARA_QUALITY_OVERALL_D.stringValue(), ByteArray.toByteArray(overallResult.getD()));
+				analysisResultParameterValuesMap.put(DADARA_QUALITY_OVERALL_Q.stringValue(), ByteArray.toByteArray(overallResult.getQ()));
 			}
-		} else {
-			throw new AnalysisException("Codename of parameter: '" + parameter.getId() + "' is NULL");
 		}
-	}
 
-	private boolean hasParameter(final Map<ParameterType, byte[]> parsMap, final ParameterType parameterType) {
-		return parsMap.get(parameterType) != null;
-	}
-
-	private byte[] getParameter(final Map<ParameterType, byte[]> parsMap, final ParameterType parameterType)
-			throws AnalysisException {
-		final byte[] rawData = parsMap.get(parameterType);
-		if (rawData == null) {
-			throw new AnalysisException("Cannot get parameter of codename '" + parameterType + "'");
+		final Set<String> analysisResultParametersTypeCodenames = analysisResultParameterValuesMap.keySet();
+		final Map<String, Identifier> analysisResultParametersTypeCodenameIdMap = ParameterType.getCodenameIdentifierMap(analysisResultParametersTypeCodenames);
+		final Set<AnalysisResultParameter> analysisResultParameters = new HashSet<AnalysisResultParameter>();
+		for (final String codename : analysisResultParametersTypeCodenames) {
+			analysisResultParameters.add(this.analysis.createActionResultParameter(LoginManager.getUserId(),
+					analysisResultParameterValuesMap.get(codename),
+					analysisResultParametersTypeCodenameIdMap.get(codename)));
 		}
-		return rawData;
-	}
-
-	// возвращает null, если эталона нет.
-	private Etalon obtainEtalon() throws AnalysisException {
-		if (! this.hasParameter(this.etalonPars, ParameterType.DADARA_ETALON)) {
-			return null;
-		}
-		final byte[] etalonData = this.getParameter(this.etalonPars, ParameterType.DADARA_ETALON);
-		try {
-			final Etalon et = (Etalon) DataStreamableUtil.readDataStreamableFromBA(etalonData, Etalon.getDSReader());
-			return et;
-		} catch (DataFormatException e) {
-			throw new AnalysisException("DataFormatException: " + e.toString());
-		}
+		Log.debugMessage("done, returning " + analysisResultParameters.size() + " AnalysisResultParameters", Level.FINER);
+		return analysisResultParameters;
 	}
 
 	// will not return null
 	private AnalysisParameters obtainAnalysisParameters() throws AnalysisException {
-		final byte[] bar = this.getParameter(this.criteriaPars, ParameterType.DADARA_CRITERIA);
+		final byte[] bar = this.analysisParametersMap.get(DADARA_CRITERIA.stringValue());
 		try {
 			return (AnalysisParameters) DataStreamableUtil.readDataStreamableFromBA(bar, AnalysisParameters.getReader());
 		}
@@ -123,85 +148,18 @@ final class DadaraAnalysisManager implements AnalysisManager {
 		}
 	}
 
-	public Parameter[] analyse() throws AnalysisException {
-		Log.debugMessage("entered", Level.FINER);
-
-		// output parameters (not Parameter[] yet)
-		final Map<ParameterType, byte[]> outParameters = new HashMap<ParameterType, byte[]>(); // Map<String codename, byte[] rawData>
-		
-		// === Получаем входные данные ===
-
-		// Получаем рефлектограмму
-		final BellcoreStructure bs = (new BellcoreReader()).getData(this.getParameter(this.tracePars, ParameterType.REFLECTOGRAMMA));
-
-		// Получаем параметры анализа
-		final AnalysisParameters ap = this.obtainAnalysisParameters();
-
-		// Получаем эталон (может быть null, тогда сравнение не проводим)
-		final Etalon etalon = obtainEtalon();
-
-		Log.debugMessage("bs = " + bs, Level.FINER);
-		Log.debugMessage("ap = " + ap, Level.FINER);
-		Log.debugMessage("etalon = " + etalon, Level.FINER);
-
-		// === Обрабатываем входные данные, анализируем, сравниваем ===
-		Log.debugMessage("starting analysis", Level.FINER);
-
-		// проводим анализ
-		final AnalysisResult ar = CoreAnalysisManager.performAnalysis(bs, ap);
-
-		// добавляем AnalysisResult в результаты анализа
-		outParameters.put(ParameterType.DADARA_ANALYSIS_RESULT, ar.toByteArray());
-
-//		// если есть эталон, то сравниваем:
-//		// дополняем ar результатами сравнения и получаем алармы
-//		final List<ReflectogramMismatchImpl> alarmList = (etalon != null) ? CoreAnalysisManager.compareAndMakeAlarms(ar, etalon) : null;
-//		Log.debugMessage("alarmList = " + alarmList, Log.DEBUGLEVEL08);
-//
-//
-//		// === Формируем результаты ===
-		//
-//				// если эталон есть, то добавляем алармы в результаты анализа
-//				if (etalon != null) {
-//					final ReflectogramMismatchImpl[] alarms = alarmList.toArray(new ReflectogramMismatchImpl[alarmList.size()]);
-//					outParameters.put(ParameterType.DADARA_ALARMS, ReflectogramMismatchImpl.alarmsToByteArray(alarms));
-//				}
-
-		if (etalon != null) {
-			// сравниваем
-			EtalonComparison ec =
-				CoreAnalysisManager.compareToEtalon(ar, etalon);
-			final DadaraReflectometryAnalysisResult rar =
-				new DadaraReflectometryAnalysisResult(ar, ec);
-
-			// сохраняем результаты сравнения
-			outParameters.put(ParameterType.DADARA_ALARMS,
-					rar.getDadaraReflectogramMismatchBytes());
-			outParameters.put(ParameterType.DADARA_QUALITY_PER_EVENT,
-					rar.getDadaraEvaluationPerEventResultBytes());
-			final ReflectometryEvaluationOverallResult overallResult =
-				rar.getReflectometryEvaluationOverallResult();
-			if (overallResult.hasDQ()) {
-				outParameters.put(ParameterType.DADARA_QUALITY_OVERALL_D,
-						ByteArray.toByteArray(overallResult.getD()));
-				outParameters.put(ParameterType.DADARA_QUALITY_OVERALL_Q,
-						ByteArray.toByteArray(overallResult.getQ()));
-			}
+	// возвращает null, если эталона нет.
+	private Etalon obtainEtalon() throws AnalysisException {
+		final byte[] bar = this.analysisParametersMap.get(DADARA_ETALON.stringValue());
+		if (bar == null) {
+			return null;
 		}
 
-
-		// формируем результаты анализа
-		final Parameter[] ret = new Parameter[outParameters.size()];
-		int i = 0;
-		for (final ParameterType parameterType : outParameters.keySet()) {
-			try {
-				ret[i++] = Parameter.createInstance(parameterType, outParameters.get(parameterType));
-			} catch (CreateObjectException coe) {
-				throw new AnalysisException("Cannot create parameter -- " + coe.getMessage(), coe);
-			}
+		try {
+			final Etalon et = (Etalon) DataStreamableUtil.readDataStreamableFromBA(bar, Etalon.getDSReader());
+			return et;
+		} catch (DataFormatException e) {
+			throw new AnalysisException("DataFormatException: " + e.toString());
 		}
-
-		Log.debugMessage("done, returning Parameter[" + ret.length + "]", Level.FINER);
-		return ret;
 	}
 }
