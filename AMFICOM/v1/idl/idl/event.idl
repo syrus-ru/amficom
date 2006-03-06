@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.50 2006/03/01 20:46:53 bass Exp $
+ * $Id: event.idl,v 1.51 2006/03/06 12:38:14 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -331,11 +331,14 @@ module eventv2 {
 		};
 
 
-/////////////////// EventReceiver ////////////////////
+/////////////////// MessageReceiver ////////////////////
 
-		interface EventReceiver {
-			void receiveEvent(in IdlEvent event) raises (general::corba::AMFICOMRemoteException);
+		interface MessageReceiver {
+			//@todo this method must accept messages, not events
+			void receiveMessages(in IdlEvent event) raises (general::corba::AMFICOMRemoteException);
 		};
+
+
 	};
 };
 

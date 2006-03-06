@@ -1,5 +1,5 @@
 /*-
- * $Id: commonclient.idl,v 1.6 2006/03/01 20:46:53 bass Exp $
+ * $Id: commonclient.idl,v 1.7 2006/03/06 12:38:14 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ module general {
 		 *
 		 * \u002a\u002f@SuppressWarnings("all")/*
 		 */
-		interface CORBAClient : Verifiable, CommonUser, eventv2::corba::EventReceiver {
+		interface CORBAClient : Verifiable, CommonUser, eventv2::corba::MessageReceiver {
 		};
 	};
 };
