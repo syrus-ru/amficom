@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBALoginPerformer.java,v 1.2 2006/02/17 14:07:34 arseniy Exp $
+ * $Id: CORBALoginPerformer.java,v 1.3 2006/03/06 12:16:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2006/02/17 14:07:34 $
+ * @version $Revision: 1.3 $, $Date: 2006/03/06 12:16:26 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -78,7 +78,12 @@ public final class CORBALoginPerformer implements LoginPerformer {
 		try {
 			final IdlSessionKeyHolder idlSessionKeyHolder = new IdlSessionKeyHolder();
 			final IdlIdentifierHolder userIdHolder = new IdlIdentifierHolder();
-			loginServer.login(login, password, loginDomainId.getIdlTransferable(), this.commonUser, idlSessionKeyHolder, userIdHolder);
+			loginServer.login(login,
+					password,
+					loginDomainId.getIdlTransferable(),
+					this.commonUser,
+					idlSessionKeyHolder,
+					userIdHolder);
 
 			this.sessionKey = new SessionKey(idlSessionKeyHolder.value);
 			this.userId = Identifier.valueOf(userIdHolder.value);
