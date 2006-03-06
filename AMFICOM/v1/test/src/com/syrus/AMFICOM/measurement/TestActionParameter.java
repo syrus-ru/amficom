@@ -1,5 +1,5 @@
 /*-
- * $Id: TestActionParameter.java,v 1.1.2.2 2006/03/01 11:41:46 arseniy Exp $
+ * $Id: TestActionParameter.java,v 1.1.2.3 2006/03/06 12:25:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 
 import junit.framework.Test;
@@ -15,12 +16,13 @@ import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBACommonTest;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind;
 import com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/03/01 11:41:46 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/03/06 12:25:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -50,5 +52,14 @@ public final class TestActionParameter extends TestCase {
 		for (final ActionParameter actionParameter : actionParameters) {
 			System.out.println("Codename: '" + actionParameter.getTypeCodename() + "', value: " + actionParameter.stringValue());
 		}
+	}
+
+	public void testCodenameIdentifierMap() throws ApplicationException {
+		final String[] codenames = new String[] { ReflectometryParameterTypeCodename.PULSE_WIDTH_M.stringValue(),
+				ReflectometryParameterTypeCodename.PULSE_WIDTH_NS.stringValue(),
+				ReflectometryParameterTypeCodename.DADARA_ANALYSIS_RESULT.stringValue(),
+				ReflectometryParameterTypeCodename.PREDICTION_TIME.stringValue() };
+		final Map<String, Identifier> typeCodenameIdMap = ParameterType.getCodenameIdentifierMap(codenames);
+		System.out.println("Map: " + typeCodenameIdMap);
 	}
 }
