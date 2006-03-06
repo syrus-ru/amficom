@@ -1,5 +1,5 @@
 /*-
-* $Id: FlushCommand.java,v 1.10 2005/12/08 13:21:09 bob Exp $
+* $Id: FlushCommand.java,v 1.11 2006/03/06 13:32:40 saa Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.manager.UI;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.client.UI.ProcessingDialog;
+import com.syrus.AMFICOM.client.UI.ProcessingDialogDummy;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/12/08 13:21:09 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2006/03/06 13:32:40 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -43,7 +43,7 @@ public class FlushCommand extends AbstractCommand {
 				if (perspective.isValid()) {
 					final CellBuffer cellBuffer = this.managerMainFrame.getCellBuffer();
 
-					new ProcessingDialog(new Runnable() {
+					new ProcessingDialogDummy(new Runnable() {
 						public void run() {
 							try {
 								// clear cache

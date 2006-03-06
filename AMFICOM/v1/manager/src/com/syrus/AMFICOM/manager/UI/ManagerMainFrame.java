@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.37 2005/12/26 13:16:18 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.38 2006/03/06 13:32:40 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import org.jgraph.graph.GraphSelectionModel;
 import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
 
-import com.syrus.AMFICOM.client.UI.ProcessingDialog;
+import com.syrus.AMFICOM.client.UI.ProcessingDialogDummy;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
@@ -74,8 +74,8 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.37 $, $Date: 2005/12/26 13:16:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.38 $, $Date: 2006/03/06 13:32:40 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -420,7 +420,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		this.windowArranger.arrange();
 		
 		
-		new ProcessingDialog(new Runnable() {
+		new ProcessingDialogDummy(new Runnable() {
 			public void run() {
 				final long time0 = System.currentTimeMillis();
 				graph.setVisible(false);
