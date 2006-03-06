@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.74.2.6 2006/03/03 09:49:26 arseniy Exp $
+ * $Id: ParameterType.java,v 1.74.2.7 2006/03/06 12:17:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,9 +29,10 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.general.corba.IdlParameterTypeHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.74.2.6 $, $Date: 2006/03/03 09:49:26 $
+ * @version $Revision: 1.74.2.7 $, $Date: 2006/03/06 12:17:21 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -184,16 +185,16 @@ public final class ParameterType extends StorableObjectType<ParameterType> {
 	 * @return Unmodifiable Map<String codename, Identifier id>
 	 * @throws ApplicationException
 	 */
-	public static Map<String, Identifier> getCodenameIdentifierMap(final String[] codenames) throws ApplicationException {
+	public static Map<String, Identifier> getCodenameIdentifierMap(final Set<String> codenames) throws ApplicationException {
 		assert codenames != null : NON_NULL_EXPECTED;
 
-		if (codenames.length == 0) {
+		if (codenames.isEmpty()) {
 			return Collections.emptyMap();
 		}
 
 		//Slightly optimized case
-		if (codenames.length == 1) {
-			final String codename = codenames[0];
+		if (codenames.size() == 1) {
+			final String codename = codenames.iterator().next();
 			final TypicalCondition condition = new TypicalCondition(codename,
 					OPERATION_EQUALS,
 					PARAMETER_TYPE_CODE,
@@ -208,7 +209,6 @@ public final class ParameterType extends StorableObjectType<ParameterType> {
 			final Map<String, Identifier> codenameIdentifierMap = new HashMap<String, Identifier>();
 			codenameIdentifierMap.put(codename, parameterTypeId);
 			return Collections.unmodifiableMap(codenameIdentifierMap);
-
 		}
 
 		final Set<TypicalCondition> codenameConditions = new HashSet<TypicalCondition>();
@@ -226,5 +226,26 @@ public final class ParameterType extends StorableObjectType<ParameterType> {
 			codenameIdentifierMap.put(parameterType.getCodename(), parameterType.getId());
 		}
 		return Collections.unmodifiableMap(codenameIdentifierMap);
+	}
+
+	/**
+	 * Create Map codename-identifier.
+	 * NOTE: This method assumes, that array of codenames is unique.
+	 * @param codenames
+	 * @return Unmodifiable Map<String codename, Identifier id>
+	 * @throws ApplicationException
+	 */
+	public static Map<String, Identifier> getCodenameIdentifierMap(final String[] codenames) throws ApplicationException {
+		assert codenames != null : NON_NULL_EXPECTED;
+
+		final Set<String> codenamesSet = new HashSet<String>();
+		for (final String codename : codenames) {
+			if (!codenamesSet.contains(codename)) {
+				codenamesSet.add(codename);
+			} else {
+				Log.errorMessage("WARNING: codename '" + codename + "' allready added");
+			}
+		}
+		return getCodenameIdentifierMap(codenamesSet);
 	}
 }
