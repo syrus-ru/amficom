@@ -18,4 +18,4 @@ IdlPopupNotificationEvent.java
 IdlMeasurementStatusChangedEvent.java
 IdlMeasurementStartedEvent.java
 IdlMeasurementCompletedEvent.java
-EventReceiver.java
+MessageReceiver.java
