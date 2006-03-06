@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -16,8 +15,8 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2006/01/17 17:16:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2006/03/06 13:03:58 $
+ * @author $Author: arseniy $
  * @module commonclient
  */
 public class WrapperedTableModel<T> extends AbstractTableModel {
