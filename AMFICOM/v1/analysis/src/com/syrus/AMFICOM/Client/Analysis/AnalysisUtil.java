@@ -119,13 +119,34 @@ public class AnalysisUtil
 		return getAnalysisForMeasurementIfPresent(m); // may return null
 	}
 
+	/**
+	 * Загружает результат анализа данного измерения.
+	 * @param m данное измерение
+	 * @return результат анализа данного измерения либо null
+	 * @throws DataFormatException
+	 * @throws ApplicationException
+	 */
 	public static AnalysisResult getAnalysisForMeasurementIfPresent(Measurement m)
 	throws DataFormatException, ApplicationException {
+		/*
+		 * ОПТИМИЗАЦИЯ:
+		 * Если результат анализа уже есть в пуле, то useLoader вовсе ни к чему,
+		 * see bug 481.
+		 */
+		final AnalysisResult result1 = getAnalysisForMeasurementIfPresent0(m, false);
+		if (result1 != null) {
+			return result1;
+		}
+		return getAnalysisForMeasurementIfPresent0(m, true);
+	}
+
+	private static AnalysisResult getAnalysisForMeasurementIfPresent0(Measurement m, boolean useLoader)
+	throws DataFormatException, ApplicationException {
 		LinkedIdsCondition condition1 = new LinkedIdsCondition(m.getId(), ObjectEntities.ANALYSIS_CODE);
-		Set<Analysis> analyse = StorableObjectPool.getStorableObjectsByCondition(condition1, true); // XXX: performance: the most slow part of loading trace that has no analysis
+		Set<Analysis> analyse = StorableObjectPool.getStorableObjectsByCondition(condition1, useLoader); // XXX: performance: the most slow part of loading trace that has no analysis
 		for (Analysis analysis : analyse) {
 			LinkedIdsCondition condition2 = new LinkedIdsCondition(analysis.getId(), ObjectEntities.RESULT_CODE);
-			Set<Result> results = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
+			Set<Result> results = StorableObjectPool.getStorableObjectsByCondition(condition2, useLoader);
 			for (Result result1 : results) {
 				for (Parameter parameter : result1.getParameters()) {
 					if (parameter.getType().equals(ParameterType.DADARA_ANALYSIS_RESULT)) {
