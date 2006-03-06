@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplate.java,v 1.1.2.6 2006/03/01 15:42:27 arseniy Exp $
+ * $Id: ActionTemplate.java,v 1.1.2.7 2006/03/06 12:23:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -30,7 +29,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -39,7 +37,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionTemplate;
 import com.syrus.AMFICOM.measurement.corba.IdlActionTemplateHelper;
 
 /**
- * @version $Revision: 1.1.2.6 $, $Date: 2006/03/01 15:42:27 $
+ * @version $Revision: 1.1.2.7 $, $Date: 2006/03/06 12:23:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -233,24 +231,8 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 	 * @return Map<String parameterTypeCodename, byte[] actionParameterValue>
 	 * @throws ApplicationException
 	 */
-	public Map<String, byte[]> getCodenameValueMap() throws ApplicationException {
+	public Map<String, byte[]> getParameterTypeCodenameValueMap() throws ApplicationException {
 		final Set<ActionParameter> actionParameters = StorableObjectPool.getStorableObjects(this.actionParameterIds, true);
-
-		final Map<Identifier, byte[]> parameterTypeIdValueMap = new HashMap<Identifier, byte[]>();
-		final Set<Identifier> parameterTypeIds = new HashSet<Identifier>();
-		for (final ActionParameter actionParameter : actionParameters) {
-			final Identifier parameterTypeId = actionParameter.getTypeId();
-			parameterTypeIdValueMap.put(parameterTypeId, actionParameter.getValue());
-			parameterTypeIds.add(parameterTypeId);
-		}
-
-		final Set<ParameterType> parameterTypes = StorableObjectPool.getStorableObjects(parameterTypeIds, true);
-
-		final Map<String, byte[]> codenameValueMap = new HashMap<String, byte[]>();
-		for (final ParameterType parameterType : parameterTypes) {
-			final String parameterTypeCodename = parameterType.getCodename();
-			codenameValueMap.put(parameterTypeCodename, parameterTypeIdValueMap.get(parameterType.getId()));
-		}
-		return codenameValueMap;
+		return Parameter.getTypeCodenameValueMap(actionParameters);
 	}
 }
