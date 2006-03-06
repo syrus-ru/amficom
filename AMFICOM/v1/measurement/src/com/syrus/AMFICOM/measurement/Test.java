@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.6 2006/03/02 16:07:36 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.7 2006/03/06 12:22:19 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.183.2.6 $, $Date: 2006/03/02 16:07:36 $
+ * @version $Revision: 1.183.2.7 $, $Date: 2006/03/06 12:22:19 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -823,6 +823,11 @@ public final class Test extends StorableObject<Test> implements Describable {
 		static TestStatus valueOf(final IdlTestStatus idlTestStatus) {
 			return valueOf(idlTestStatus.value());
 		}
+
+		@Override
+		public String toString() {
+			return this.name() + "(" + Integer.toString(this.ordinal()) + ")";
+		}
 	}
 
 	public static enum TestTemporalType {
@@ -841,6 +846,11 @@ public final class Test extends StorableObject<Test> implements Describable {
 
 		static TestTemporalType valueOf(final IdlTestTemporalType idlTestTemporalType) {
 			return valueOf(idlTestTemporalType.value());
+		}
+
+		@Override
+		public String toString() {
+			return this.name() + "(" + Integer.toString(this.ordinal()) + ")";
 		}
 	}
 
