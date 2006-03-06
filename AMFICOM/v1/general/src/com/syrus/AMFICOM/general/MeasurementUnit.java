@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementUnit.java,v 1.13.2.4 2006/02/11 18:54:53 arseniy Exp $
+ * $Id: MeasurementUnit.java,v 1.13.2.5 2006/03/06 12:18:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.13.2.4 $, $Date: 2006/02/11 18:54:53 $
+ * @version $Revision: 1.13.2.5 $, $Date: 2006/03/06 12:18:00 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -77,5 +77,14 @@ public enum MeasurementUnit implements IdlTransferableObject<IdlMeasurementUnit>
 			Log.errorMessage("Illegal code: " + this.ordinal() + ", returning UNKNOWN");
 			return IdlMeasurementUnit.UNKNOWN_MEASUREMENTUNIT;
 		}
+	}
+
+	public String stringValue() {
+		return this.codename;
+	}
+
+	@Override
+	public String toString() {
+		return this.name() + "(" + Integer.toString(this.ordinal()) + ", " + this.stringValue() + ")";
 	}
 }

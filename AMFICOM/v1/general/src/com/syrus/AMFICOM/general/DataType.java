@@ -1,5 +1,5 @@
 /*-
- * $Id: DataType.java,v 1.17.2.4 2006/03/01 10:17:51 arseniy Exp $
+ * $Id: DataType.java,v 1.17.2.5 2006/03/06 12:18:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.17.2.4 $, $Date: 2006/03/01 10:17:51 $
+ * @version $Revision: 1.17.2.5 $, $Date: 2006/03/06 12:18:00 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -90,7 +90,7 @@ public enum DataType implements IdlTransferableObject<IdlDataType> {
 
 	@Override
 	public String toString() {
-		return Integer.toString(this.ordinal());
+		return this.name() + "(" + Integer.toString(this.ordinal()) + ")";
 	}
 
 
@@ -99,7 +99,7 @@ public enum DataType implements IdlTransferableObject<IdlDataType> {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.17.2.4 $, $Date: 2006/03/01 10:17:51 $
+	 * @version $Revision: 1.17.2.5 $, $Date: 2006/03/06 12:18:00 $
 	 * @module general
 	 */
 	public static final class Proxy

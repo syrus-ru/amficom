@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicTypeSort.java,v 1.4.2.1 2006/02/06 14:44:02 arseniy Exp $
+ * $Id: CharacteristicTypeSort.java,v 1.4.2.2 2006/03/06 12:18:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.4.2.1 $, $Date: 2006/02/06 14:44:02 $
+ * @version $Revision: 1.4.2.2 $, $Date: 2006/03/06 12:18:00 $
  * @module general
  */
 public enum CharacteristicTypeSort {
@@ -62,7 +62,7 @@ public enum CharacteristicTypeSort {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.4.2.1 $, $Date: 2006/02/06 14:44:02 $
+	 * @version $Revision: 1.4.2.2 $, $Date: 2006/03/06 12:18:00 $
 	 * @module general
 	 */
 	public static final class Proxy
@@ -134,5 +134,10 @@ public enum CharacteristicTypeSort {
 		throws XmlConversionException {
 			this.value = valueOf(characteristicTypeSort);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return this.name() + "(" + Integer.toString(this.ordinal()) + ")";
 	}
 }
