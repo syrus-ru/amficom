@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.50 2006/03/07 14:01:45 arseniy Exp $
+ * $Id: ServerCore.java,v 1.51 2006/03/07 14:13:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.50 $, $Date: 2006/03/07 14:01:45 $
+ * @version $Revision: 1.51 $, $Date: 2006/03/07 14:13:20 $
  * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -116,7 +116,7 @@ public abstract class ServerCore implements CommonServerOperations {
 			final StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(conditionT);
 			final short entityCode = condition.getEntityCode().shortValue();
 
-			assert idsT.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(idsT);
+			assert idsT.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(idsT) : ILLEGAL_ENTITY_CODE;
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
 
 			this.validateLogin(new SessionKey(sessionKeyT));
