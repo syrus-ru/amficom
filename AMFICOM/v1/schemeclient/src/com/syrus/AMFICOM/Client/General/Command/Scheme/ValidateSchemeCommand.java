@@ -1,5 +1,5 @@
 /*-
- * $Id: ValidateSchemeCommand.java,v 1.2 2006/02/21 08:14:57 stas Exp $
+ * $Id: ValidateSchemeCommand.java,v 1.3 2006/03/07 13:31:28 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import java.util.Set;
+import java.util.SortedSet;
 
 import javax.swing.JOptionPane;
 
@@ -27,6 +28,7 @@ import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 import com.syrus.util.Log;
 
 public class ValidateSchemeCommand extends AbstractCommand {
@@ -59,6 +61,13 @@ public class ValidateSchemeCommand extends AbstractCommand {
 								Log.errorMessage("Deleting " + pe + " Please check consistency of SchemePath " + path);
 								pe.setParentPathOwner(null, false);
 							}
+						}
+						
+						PathElement last = path.getPathMembers().last();
+						if (last.getKind() != IdlKind.SCHEME_ELEMENT) {
+							Log.errorMessage("PathElement " + last + " is invalid. Must be SchemeElement kind");
+							Log.errorMessage("Deleting " + last + " Please check consistency of SchemePath " + path);
+							last.setParentPathOwner(null, false);
 						}
 					}
 					
