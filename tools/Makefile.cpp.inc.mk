@@ -1,5 +1,5 @@
 ########################################################################################
-# $Id: Makefile.cpp.inc.mk,v 1.10 2005/10/13 13:36:43 arseniy Exp $
+# $Id: Makefile.cpp.inc.mk,v 1.11 2006/03/07 09:45:36 arseniy Exp $
 # $Author: arseniy $
 # Author: Tashoyan Arseniy Feliksovich
 # Description: Include this file to your Makefile of any C++ project
@@ -45,7 +45,7 @@ CXX_INCLUDE_DIR_FLAG := /I$(SPACE)
 CXX_COMPILE_ONLY_FLAG := /c
 CXX_OUTFILE_FLAG := /o
 CXX_WARN_OFF_FLAG := /w
-CXXFLAGS := /nologo /ML /W3 /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "_CONSOLE" /Ze /GX
+CXXFLAGS := /nologo /ML /W3 /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "_CONSOLE" /Ze /GX $(CXXFLAGS)
 # /O1 /Gy /Gf
 
 # Library archive tool and options
@@ -84,7 +84,7 @@ CXX_INCLUDE_DIR_FLAG := -I
 CXX_COMPILE_ONLY_FLAG = -c
 CXX_OUTFILE_FLAG = -o$(SPACE)
 CXX_WARN_OFF_FLAG := -Wno-all
-CXXFLAGS := -O3 -Wall -W
+CXXFLAGS := -O3 -Wall -W $(CXXFLAGS)
 
 # Library archive tool and options
 LIBAR := ar
@@ -118,7 +118,7 @@ CXX_INCLUDE_DIR_FLAG := -I
 CXX_COMPILE_ONLY_FLAG = -c
 CXX_OUTFILE_FLAG = -o$(SPACE)
 CXX_WARN_OFF_FLAG := -Wno-all
-CXXFLAGS := -O3 -Wall -W
+CXXFLAGS := -O3 -Wall -W $(CXXFLAGS)
 
 # Library archive tool and options
 LIBAR := ar
