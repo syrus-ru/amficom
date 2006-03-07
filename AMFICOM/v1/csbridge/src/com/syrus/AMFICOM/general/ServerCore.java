@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.49 2006/01/23 16:18:18 arseniy Exp $
+ * $Id: ServerCore.java,v 1.50 2006/03/07 14:01:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,11 @@
  */
 
 package com.syrus.AMFICOM.general;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -34,7 +39,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.49 $, $Date: 2006/01/23 16:18:18 $
+ * @version $Revision: 1.50 $, $Date: 2006/03/07 14:01:45 $
  * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -77,10 +82,10 @@ public abstract class ServerCore implements CommonServerOperations {
 	public final IdlStorableObject[] transmitStorableObjects(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT)
 			throws AMFICOMRemoteException {
 		try {
-			assert idsT != null && sessionKeyT != null: ErrorMessages.NON_NULL_EXPECTED;
+			assert idsT != null && sessionKeyT != null : NON_NULL_EXPECTED;
 			final int length = idsT.length;
-			assert length != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-			assert StorableObject.hasSingleTypeEntities(idsT);
+			assert length != 0: NON_EMPTY_EXPECTED;
+			assert StorableObject.hasSingleTypeEntities(idsT) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
 			this.validateLogin(new SessionKey(sessionKeyT));
 
@@ -106,13 +111,13 @@ public abstract class ServerCore implements CommonServerOperations {
 			final IdlStorableObjectCondition conditionT,
 			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		try {
-			assert idsT != null && sessionKeyT != null && conditionT != null : ErrorMessages.NON_NULL_EXPECTED;
+			assert idsT != null && sessionKeyT != null && conditionT != null : NON_NULL_EXPECTED;
 
 			final StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(conditionT);
 			final short entityCode = condition.getEntityCode().shortValue();
 
 			assert idsT.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(idsT);
-			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+			assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
 
 			this.validateLogin(new SessionKey(sessionKeyT));
 
@@ -143,13 +148,13 @@ public abstract class ServerCore implements CommonServerOperations {
 			final IdlStorableObjectCondition conditionT,
 			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		try {
-			assert idsT != null && sessionKeyT != null && conditionT != null : ErrorMessages.NON_NULL_EXPECTED;
+			assert idsT != null && sessionKeyT != null && conditionT != null : NON_NULL_EXPECTED;
 
 			final StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(conditionT);
 			final short entityCode = condition.getEntityCode().shortValue();
 
 			assert idsT.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(idsT);
-			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+			assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
 
 			this.validateLogin(new SessionKey(sessionKeyT));
 
@@ -176,17 +181,17 @@ public abstract class ServerCore implements CommonServerOperations {
 	public final IdVersion[] transmitRemoteVersions(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT)
 			throws AMFICOMRemoteException {
 		try {
-			assert idsT != null && sessionKeyT != null : ErrorMessages.NON_NULL_EXPECTED;
+			assert idsT != null && sessionKeyT != null : NON_NULL_EXPECTED;
 			final int length = idsT.length;
-			assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+			assert length != 0 : NON_EMPTY_EXPECTED;
 
 			this.validateLogin(new SessionKey(sessionKeyT));
 
 			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
-			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+			assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
 			final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
-			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED + "; entity: " + ObjectEntities.codeToString(entityCode);
+			assert (database != null) : NON_NULL_EXPECTED + "; entity: " + ObjectEntities.codeToString(entityCode);
 
 			Log.debugMessage("Versions for '" + ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
 
@@ -213,22 +218,22 @@ public abstract class ServerCore implements CommonServerOperations {
 	public final void receiveStorableObjects(final IdlStorableObject[] storableObjectsT, final IdlSessionKey sessionKeyT)
 			throws AMFICOMRemoteException {
 		try {
-			assert storableObjectsT != null && sessionKeyT != null : ErrorMessages.NON_NULL_EXPECTED;
+			assert storableObjectsT != null && sessionKeyT != null : NON_NULL_EXPECTED;
 			final int length = storableObjectsT.length;
-			assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+			assert length != 0 : NON_EMPTY_EXPECTED;
 
 			this.validateLogin(new SessionKey(sessionKeyT));
 
 			final Set<? extends StorableObject<?>> storableObjects = StorableObjectPool.fromTransferables(storableObjectsT, true);
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
-			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+			assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
 
 			Log.debugMessage("Received '"
 					+ ObjectEntities.codeToString(entityCode) + "'s: "
 					+ Identifier.createIdentifiers(storableObjects), Level.FINEST);
 
 			final StorableObjectDatabase<? extends StorableObject<?>> database = DatabaseContext.getDatabase(entityCode);
-			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED + "; entity: " + ObjectEntities.codeToString(entityCode);
+			assert (database != null) : NON_NULL_EXPECTED + "; entity: " + ObjectEntities.codeToString(entityCode);
 			((StorableObjectDatabase) database).save(storableObjects);
 		} catch (ApplicationException ae) {
 			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_UPDATE);
@@ -241,15 +246,15 @@ public abstract class ServerCore implements CommonServerOperations {
 
 	public final void delete(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		try {
-			assert idsT != null && sessionKeyT != null : ErrorMessages.NON_NULL_EXPECTED;
+			assert idsT != null && sessionKeyT != null : NON_NULL_EXPECTED;
 			final int length = idsT.length;
-			assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+			assert length != 0 : NON_EMPTY_EXPECTED;
 
 			this.validateLogin(new SessionKey(sessionKeyT));
 
 			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
-			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+			assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
 
 			Log.debugMessage("Deleting '" + ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
 
