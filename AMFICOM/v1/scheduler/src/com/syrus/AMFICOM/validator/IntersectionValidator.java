@@ -1,5 +1,5 @@
 /*-
-* $Id: IntersectionValidator.java,v 1.6 2006/02/17 10:23:57 bob Exp $
+* $Id: IntersectionValidator.java,v 1.7 2006/03/07 09:41:48 saa Exp $
 *
 * Copyright ¿ 2006 Syrus Systems.
 * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.measurement.TestWrapper;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2006/02/17 10:23:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2006/03/07 09:41:48 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -143,7 +143,7 @@ public class IntersectionValidator {
 			if (aTest.equals(test)) {
 				continue;
 			}
-			final String reason = this.isIntersects(timeLabel, test);
+			final String reason = this.isIntersects(timeLabel, aTest);
 			if (reason != null) {
 				return reason;
 			}
@@ -207,6 +207,8 @@ public class IntersectionValidator {
 	
 	private String isIntersects(final TimeLabel timeLabel, final Test test) 
 	throws ApplicationException {
+		System.out.println("isIntersects(): " + timeLabel + " vs " + test);
+
 		final Identifier temporalPatternId = test.getTemporalPatternId();
 		final AbstractTemporalPattern<?> testPattern;
 		if (temporalPatternId.isVoid()) {

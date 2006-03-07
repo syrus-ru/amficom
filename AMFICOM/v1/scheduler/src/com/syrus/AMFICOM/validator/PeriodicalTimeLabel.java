@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTimeLabel.java,v 1.1 2006/02/16 12:22:45 bob Exp $
+ * $Id: PeriodicalTimeLabel.java,v 1.2 2006/03/07 09:41:48 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.validator;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2006/02/16 12:22:45 $
+ * @author $Author: saa $
+ * @version $Revision: 1.2 $, $Date: 2006/03/07 09:41:48 $
  * @module
  */
 public class PeriodicalTimeLabel extends TimeLabel {
