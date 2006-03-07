@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeSelectionListener.java,v 1.19 2006/02/08 14:08:41 stas Exp $
+ * $Id: SchemeTreeSelectionListener.java,v 1.20 2006/03/07 13:30:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2006/02/08 14:08:41 $
+ * @version $Revision: 1.20 $, $Date: 2006/03/07 13:30:51 $
  * @module schemeclient
  */
 
@@ -75,6 +75,11 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 							Scheme scheme = (Scheme)object;
 							treeUI.getTree().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 							aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.OPEN_SCHEME));
+							treeUI.getTree().setCursor(Cursor.getDefaultCursor());
+						} else if (object instanceof Measurement) {
+							ObjectSelectedEvent ev = new ObjectSelectedEvent(this, object, null, ObjectSelectedEvent.MEASUREMENT);
+							treeUI.getTree().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+							aContext.getDispatcher().firePropertyChange(ev, false);
 							treeUI.getTree().setCursor(Cursor.getDefaultCursor());
 						}
 					}
@@ -144,8 +149,6 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 			type = ObjectSelectedEvent.SCHEME_PORT;
 		else if (object instanceof SchemeCablePort)
 			type = ObjectSelectedEvent.SCHEME_CABLEPORT;
-		else if (object instanceof Measurement)
-			type = ObjectSelectedEvent.MEASUREMENT;
 		else if (object instanceof String || object instanceof IdlKind || object instanceof EquipmentType) {
 			type = ObjectSelectedEvent.OTHER_OBJECT;
 			if (manager != null)
