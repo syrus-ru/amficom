@@ -1,4 +1,4 @@
--- $Id: kis.sql,v 1.2.2.1 2006/02/14 09:59:19 arseniy Exp $
+-- $Id: kis.sql,v 1.2.2.2 2006/03/07 10:38:26 arseniy Exp $
 
 CREATE TABLE KIS (
  id NUMBER(19),
@@ -15,6 +15,7 @@ CREATE TABLE KIS (
  tcp_port NUMBER(5,0) NOT NULL,
  equipment_id NOT NULL,
  mcm_id NOT NULL,
+ on_service NUMBER(1) NOT NULL,
 --
  CONSTRAINT kis_pk PRIMARY KEY (id),
  CONSTRAINT kis_creator_fk FOREIGN KEY (creator_id)
@@ -28,7 +29,8 @@ CREATE TABLE KIS (
  CONSTRAINT kis_eqp_fk FOREIGN KEY (equipment_id)
   REFERENCES Equipment (id) ON DELETE SET NULL,
  CONSTRAINT kis_mcm_fk FOREIGN KEY (mcm_id)
-  REFERENCES MCM (id) ON DELETE CASCADE
+  REFERENCES MCM (id) ON DELETE CASCADE,
+ CONSTRAINT kis_os_check CHECK (on_service = 0 OR on_service = 1)
 );
 
 CREATE SEQUENCE kis_seq ORDER;
