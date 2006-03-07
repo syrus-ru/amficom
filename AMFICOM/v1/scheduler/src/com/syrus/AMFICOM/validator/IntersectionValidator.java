@@ -1,5 +1,5 @@
 /*-
-* $Id: IntersectionValidator.java,v 1.7 2006/03/07 09:41:48 saa Exp $
+* $Id: IntersectionValidator.java,v 1.8 2006/03/07 11:05:09 saa Exp $
 *
 * Copyright © 2006 Syrus Systems.
 * Dept. of Science & Technology.
@@ -32,10 +32,11 @@ import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.AMFICOM.measurement.TestWrapper;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2006/03/07 09:41:48 $
+ * @version $Revision: 1.8 $, $Date: 2006/03/07 11:05:09 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -44,11 +45,39 @@ public class IntersectionValidator {
 	
 	private final boolean	useLoader;
 
+	private static final int ACTIVE_TEST_STATES[] = new int[] {
+			/*
+			 * Измерения этих тестов запланированы
+			 */
+			TestStatus._TEST_STATUS_NEW,		
+			TestStatus._TEST_STATUS_PROCESSING,
+			TestStatus._TEST_STATUS_SCHEDULED,
+			/*
+			 * Измерения этих тестов все еще могут быть выполнены
+			 */
+			TestStatus._TEST_STATUS_STOPPING,
+			/*
+			 * Измерения этих тестов уже выполнены - и нечего задавать тесты
+			 * на прошлое.
+			 */
+			TestStatus._TEST_STATUS_COMPLETED
+	};
+
 	public IntersectionValidator(final boolean useLoader) {
 		this.useLoader = useLoader;
 	}
 
-	private Set<Test> getTests(final Date startInterval,
+	/**
+	 * Определяет множество тестов на данном me и данном интервале времени,
+	 *   которые нельзя пересекать вновь создаваемыми тестами.
+	 * @param startInterval
+	 * @param endInterval
+	 * @param monitoredElementId
+	 * @return список тестов,
+	 *   которые нельзя пересекать вновь создаваемыми тестами.
+	 * @throws ApplicationException
+	 */
+	private Set<Test> getNonIntersectiveTests(final Date startInterval,
 			final Date endInterval,
 			final Identifier monitoredElementId) throws ApplicationException{
 		final TypicalCondition startTypicalCondition = 
@@ -82,14 +111,26 @@ public class IntersectionValidator {
 		final LinkedIdsCondition monitoredElementsCondition = 
 			new LinkedIdsCondition(monitoredElements, ObjectEntities.TEST_CODE);
 
-		final Set<StorableObjectCondition> conditions = new HashSet<StorableObjectCondition>(3);
+		final Set<StorableObjectCondition> stateConditions =
+			new HashSet<StorableObjectCondition>(ACTIVE_TEST_STATES.length);
+		for (int state: ACTIVE_TEST_STATES) {
+			stateConditions.add(new TypicalCondition(state,
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.TEST_CODE,
+					TestWrapper.COLUMN_STATUS));
+		}
+
+		final StorableObjectCondition stateCompound =
+			new CompoundCondition(stateConditions, CompoundConditionSort.OR);
+
+		final Set<StorableObjectCondition> conditions = new HashSet<StorableObjectCondition>(4);
 		conditions.add(startTypicalCondition);
 		conditions.add(endTypicalCondition);
 		conditions.add(monitoredElementsCondition);
-		
+		conditions.add(stateCompound);
+
 		final CompoundCondition compoundCondition = 
-			new CompoundCondition(conditions,
-					CompoundConditionSort.AND);
+			new CompoundCondition(conditions, CompoundConditionSort.AND);
 		
 		final Set<Test> tests = 
 			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, this.useLoader);
@@ -138,7 +179,7 @@ public class IntersectionValidator {
 			return e.getMessage();
 		}
 		
-		final Set<Test> tests = this.getTests(startDate1, endDate1, test.getMonitoredElementId());
+		final Set<Test> tests = this.getNonIntersectiveTests(startDate1, endDate1, test.getMonitoredElementId());
 		for (final Test aTest : tests) {
 			if (aTest.equals(test)) {
 				continue;
@@ -194,7 +235,7 @@ public class IntersectionValidator {
 //				+ endDate, 
 //			Log.DEBUGLEVEL03);
 		
-		final Set<Test> tests = this.getTests(startDate, endDate, monitoredElementId);
+		final Set<Test> tests = this.getNonIntersectiveTests(startDate, endDate, monitoredElementId);
 		for (final Test test : tests) {
 			final String reason = this.isIntersects(timeLabel, test);
 			if (reason != null) {
