@@ -7,6 +7,7 @@ CXX_SOURCES := ByteArray \
 	ResultSegment \
 	KISInfoSegment \
 	MCMInfoSegment
+CXXFLAGS = -fPIC
 ADD_LIBARS = $(LIBAR_SOCKET)
 
 include ../tools/Makefile.cpp.inc.mk

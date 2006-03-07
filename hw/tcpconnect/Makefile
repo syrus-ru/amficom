@@ -9,6 +9,7 @@ CXX_SOURCES := tcpconnect \
 	SocketReader \
 	SocketWriter \
 	SocketConnectionAcceptor
+CXXFLAGS = -fPIC
 INCLUDE_DIRS := $(AKP_DIR)
 ADD_LIBARS = $(LIBAR_SOCKET) $(AKP_DIR)/$(AKP_LIBAR)
 
