@@ -1,5 +1,5 @@
 /*-
- * $Id: ProcessingDialogDummy.java,v 1.2 2006/03/06 14:55:41 saa Exp $
+ * $Id: ProcessingDialogDummy.java,v 1.2.2.1 2006/03/07 14:08:55 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.client.launcher.Launcher;
  * 
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2006/03/06 14:55:41 $
+ * @version $Revision: 1.2.2.1 $, $Date: 2006/03/07 14:08:55 $
  * @module
  */
 public class ProcessingDialogDummy {

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.43 2006/03/01 20:46:53 bass Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.42 2005/12/09 14:49:19 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,15 +21,15 @@ import static com.syrus.AMFICOM.general.ObjectGroupEntities.MAPVIEW_GROUP_CODE;
 
 import java.beans.PropertyChangeListener;
 
-import com.syrus.AMFICOM.client.UI.dialogs.PopupNotificationEventReceiver;
-import com.syrus.AMFICOM.client.event.EventReceiver;
+import com.syrus.AMFICOM.client.UI.dialogs.DefaultPopupMessageReceiver;
+import com.syrus.AMFICOM.client.event.PopupMessageReceiver;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.corba.CORBAClient;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2006/03/01 20:46:53 $
- * @author $Author: bass $
+ * @version $Revision: 1.42 $, $Date: 2005/12/09 14:49:19 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -50,7 +50,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 	private static ClientSessionEnvironment instance;
 
 	private CORBAClientImpl corbaClientImplServant;
-	private EventReceiver	receiver;
+	private PopupMessageReceiver	receiver;
 
 	private ClientSessionEnvironment(final ClientServantManager clientServantManager,
 			final ClientPoolContext clientPoolContext,
@@ -60,8 +60,8 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		super(clientServantManager, clientPoolContext, corbaClient, loginRestorer, new ClientCORBAActionProcessor());
 
 		this.corbaClientImplServant = servant;
-		this.receiver = new PopupNotificationEventReceiver();
-		this.corbaClientImplServant.addEventReceiver(this.receiver);
+		this.receiver = new DefaultPopupMessageReceiver();
+		this.corbaClientImplServant.addPopupMessageReceiver(this.receiver);
 	}
 
 	public ClientServantManager getClientServantManager() {
@@ -176,11 +176,11 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		this.getClientServantManager().removePropertyListener(listener);
 	}
 
-	public void addEventReceiver(final EventReceiver eventReceiver) {
-		this.corbaClientImplServant.addEventReceiver(eventReceiver);
+	public void addPopupMessageReceiver(final PopupMessageReceiver popupMessageReceiver) {
+		this.corbaClientImplServant.addPopupMessageReceiver(popupMessageReceiver);
 	}
 
-	public void removeEventReceiver(final EventReceiver eventReceiver) {
-		this.corbaClientImplServant.removeEventReceiver(eventReceiver);
+	public void removePopupMessageReceiver(final PopupMessageReceiver popupMessageReceiver) {
+		this.corbaClientImplServant.removePopupMessageReceiver(popupMessageReceiver);
 	}
 }
