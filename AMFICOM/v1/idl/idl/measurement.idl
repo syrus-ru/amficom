@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.91.2.9 2006/03/06 19:00:09 arseniy Exp $
+ * $Id: measurement.idl,v 1.91.2.10 2006/03/07 10:42:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -480,6 +480,7 @@ module measurement {
 			public short tcpPort;
 			public general::corba::IdlIdentifier equipmentId;
 			public general::corba::IdlIdentifier mcmId;
+			public boolean onSevice;
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -493,7 +494,8 @@ module measurement {
 					in general::corba::WString64 hostname,
 					in short tcpPort,
 					in general::corba::IdlIdentifier equipmentId,
-					in general::corba::IdlIdentifier mcmId);
+					in general::corba::IdlIdentifier mcmId,
+					in boolean onSevice);
 		};
 
 

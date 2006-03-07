@@ -1,5 +1,5 @@
 /*
- * $Id: KISWrapper.java,v 1.3 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: KISWrapper.java,v 1.3.2.1 2006/03/07 10:42:49 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/14 18:35:57 $
+ * @version $Revision: 1.3.2.1 $, $Date: 2006/03/07 10:42:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -37,6 +37,8 @@ public final class KISWrapper extends StorableObjectWrapper<KIS> {
 	// mcm_id Identifier NOT NULL
 	public static final String COLUMN_MCM_ID = "mcm_id";
 
+	public static final String COLUMN_ON_SERVICE = "on_service";
+
 	public static final String COLUMN_MEASUREMENT_PORT_IDS = "measurementPortIds";
 
 	private static KISWrapper instance;
@@ -48,17 +50,19 @@ public final class KISWrapper extends StorableObjectWrapper<KIS> {
 		final String[] keysArray = new String[] { COLUMN_DESCRIPTION,
 				COLUMN_NAME,
 				COLUMN_DOMAIN_ID,
+				COLUMN_HOSTNAME,
+				COLUMN_TCP_PORT,
 				COLUMN_EQUIPMENT_ID,
 				COLUMN_MCM_ID,
-				COLUMN_HOSTNAME,
-				COLUMN_TCP_PORT };
+				COLUMN_ON_SERVICE };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static KISWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new KISWrapper();
+		}
 		return instance;
 	}
 
@@ -75,20 +79,30 @@ public final class KISWrapper extends StorableObjectWrapper<KIS> {
 	public Object getValue(final KIS kis, final String key) {
 		final Object value = super.getValue(kis, key);
 		if (value == null && kis != null) {			
-			if (key.equals(COLUMN_DESCRIPTION))
+			if (key.equals(COLUMN_DESCRIPTION)) {
 				return kis.getDescription();
-			if (key.equals(COLUMN_NAME))
+			}
+			if (key.equals(COLUMN_NAME)) {
 				return kis.getName();
-			if (key.equals(COLUMN_DOMAIN_ID)) 
-				return kis.getDomainId();			
-			if (key.equals(COLUMN_EQUIPMENT_ID))
-				return kis.getEquipmentId();
-			if (key.equals(COLUMN_MCM_ID))
-				return kis.getMCMId();
-			if (key.equals(COLUMN_HOSTNAME))
+			}
+			if (key.equals(COLUMN_DOMAIN_ID)) { 
+				return kis.getDomainId();		
+			}
+			if (key.equals(COLUMN_HOSTNAME)) {
 				return kis.getHostName();
-			if (key.equals(COLUMN_TCP_PORT))
-				return new Short(kis.getTCPPort());
+			}
+			if (key.equals(COLUMN_TCP_PORT)) {
+				return Short.valueOf(kis.getTCPPort());
+			}
+			if (key.equals(COLUMN_EQUIPMENT_ID)) {
+				return kis.getEquipmentId();
+			}
+			if (key.equals(COLUMN_MCM_ID)) {
+				return kis.getMCMId();
+			}
+			if (key.equals(COLUMN_ON_SERVICE)) {
+				return Boolean.valueOf(kis.isOnService());
+			}
 		}
 		return value;
 	}
@@ -100,20 +114,23 @@ public final class KISWrapper extends StorableObjectWrapper<KIS> {
 	@Override
 	public void setValue(final KIS kis, final String key, final Object value) {
 		if (kis != null) {
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				kis.setName((String) value);
-			else if (key.equals(COLUMN_DESCRIPTION))
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				kis.setDescription((String) value);
-			else if (key.equals(COLUMN_DOMAIN_ID)) 
+			} else if (key.equals(COLUMN_DOMAIN_ID)) {
 				kis.setDomainId((Identifier) value);
-			else if (key.equals(COLUMN_EQUIPMENT_ID))
-				kis.setEquipmentId((Identifier) value);
-			else if (key.equals(COLUMN_MCM_ID))
-				kis.setMCMId((Identifier) value);
-			else if (key.equals(COLUMN_HOSTNAME))
+			} else if (key.equals(COLUMN_HOSTNAME)) {
 				kis.setHostName((String) value);
-			else if (key.equals(COLUMN_TCP_PORT))
-				kis.setTCPPort(((Short)value).shortValue());
+			} else if (key.equals(COLUMN_TCP_PORT)) {
+				kis.setTCPPort(((Short) value).shortValue());
+			} else if (key.equals(COLUMN_EQUIPMENT_ID)) {
+				kis.setEquipmentId((Identifier) value);
+			} else if (key.equals(COLUMN_MCM_ID)) {
+				kis.setMCMId((Identifier) value);
+			} else if (key.equals(COLUMN_ON_SERVICE)) {
+				kis.setOnService(((Boolean) value).booleanValue());
+			}
 		}
 	}
 

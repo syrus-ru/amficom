@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.4.2.1 2006/02/28 15:20:04 arseniy Exp $
+ * $Id: KISDatabase.java,v 1.4.2.2 2006/03/07 10:42:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,24 +8,37 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
 import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_EQUIPMENT_ID;
+import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_HOSTNAME;
+import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_MCM_ID;
+import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_ON_SERVICE;
+import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_TCP_PORT;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4.2.1 $, $Date: 2006/02/28 15:20:04 $
+ * @version $Revision: 1.4.2.2 $, $Date: 2006/03/07 10:42:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -45,13 +58,14 @@ public final class KISDatabase extends StorableObjectDatabase<KIS> {
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_NAME + COMMA
-				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-				+ KISWrapper.COLUMN_HOSTNAME + COMMA
-				+ KISWrapper.COLUMN_TCP_PORT + COMMA
-				+ KISWrapper.COLUMN_EQUIPMENT_ID + COMMA
-				+ KISWrapper.COLUMN_MCM_ID;
+			columns = COLUMN_DOMAIN_ID + COMMA
+				+ COLUMN_NAME + COMMA
+				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_HOSTNAME + COMMA
+				+ COLUMN_TCP_PORT + COMMA
+				+ COLUMN_EQUIPMENT_ID + COMMA
+				+ COLUMN_MCM_ID + COMMA
+				+ COLUMN_ON_SERVICE;
 		}
 		return columns;
 	}
@@ -60,6 +74,7 @@ public final class KISDatabase extends StorableObjectDatabase<KIS> {
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -78,7 +93,8 @@ public final class KISDatabase extends StorableObjectDatabase<KIS> {
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTROPHE + COMMA
 			+ storableObject.getTCPPort() + COMMA
 			+ DatabaseIdentifier.toSQLString(storableObject.getEquipmentId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(storableObject.getMCMId());
+			+ DatabaseIdentifier.toSQLString(storableObject.getMCMId()) + COMMA
+			+ (storableObject.isOnService() ? "1" : "0");
 		return sql;
 	}
 
@@ -95,38 +111,39 @@ public final class KISDatabase extends StorableObjectDatabase<KIS> {
 		preparedStatement.setInt( ++startParameterNumber, storableObject.getTCPPort());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, equipmentId);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, mcmId);
+		preparedStatement.setInt(++startParameterNumber, storableObject.isOnService() ? 1 : 0);
 		return startParameterNumber;
 	}
 
 	@Override
 	protected KIS updateEntityFromResultSet(final KIS storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		KIS kis = storableObject == null
-				? new KIS(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+		final KIS kis = (storableObject == null)
+				? new KIS(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						null,
 						null,
 						null,
 						null,
 						(short) 0,
 						null,
-						null)
+						null,
+						false)
 				: storableObject;
-
-		kis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-				resultSet.getString(KISWrapper.COLUMN_HOSTNAME),
-				resultSet.getShort(KISWrapper.COLUMN_TCP_PORT),
-				DatabaseIdentifier.getIdentifier(resultSet, KISWrapper.COLUMN_EQUIPMENT_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, KISWrapper.COLUMN_MCM_ID));
-
+		kis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+				resultSet.getString(COLUMN_HOSTNAME),
+				resultSet.getShort(COLUMN_TCP_PORT),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_EQUIPMENT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MCM_ID),
+				(resultSet.getInt(COLUMN_ON_SERVICE) == 0) ? false : true);
 		return kis;
 	}
 

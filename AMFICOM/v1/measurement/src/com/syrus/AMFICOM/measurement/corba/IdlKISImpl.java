@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlKISImpl.java,v 1.5 2005/10/31 12:30:15 bass Exp $
+ * $Id: IdlKISImpl.java,v 1.5.2.1 2006/03/07 10:42:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,12 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/10/31 12:30:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5.2.1 $, $Date: 2006/03/07 10:42:49 $
  * @module measurement
  */
 final class IdlKISImpl extends IdlKIS {
-	private static final long serialVersionUID = 6006824965310693760L;
+	private static final long serialVersionUID = 3199661152098755159L;
 
 	IdlKISImpl() {
 		// empty
@@ -42,7 +42,8 @@ final class IdlKISImpl extends IdlKIS {
 			final String hostname,
 			final short tcpPort,
 			final IdlIdentifier equipmentId,
-			final IdlIdentifier mcmId) {
+			final IdlIdentifier mcmId,
+			final boolean onService) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -56,6 +57,7 @@ final class IdlKISImpl extends IdlKIS {
 		this.tcpPort = tcpPort;
 		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;
+		this.onSevice = onService;
 	}
 
 	/**

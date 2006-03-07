@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.14.2.2 2006/02/28 15:20:05 arseniy Exp $
+ * $Id: KIS.java,v 1.14.2.3 2006/03/07 10:42:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,24 +38,21 @@ import com.syrus.AMFICOM.measurement.corba.IdlKISHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14.2.2 $, $Date: 2006/02/28 15:20:05 $
+ * @version $Revision: 1.14.2.3 $, $Date: 2006/03/07 10:42:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class KIS extends DomainMember<KIS> implements Namable {
+	private static final long serialVersionUID = -7396074492931314603L;
 
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long	serialVersionUID	= 3257281422661466166L;
-
-	private Identifier equipmentId;
-	private Identifier mcmId;
 	private String name;
 	private String description;
 	private String hostname;
 	private short tcpPort;
+	private Identifier equipmentId;
+	private Identifier mcmId;
+	private boolean onService;
 
 	public KIS(final IdlKIS kt) throws CreateObjectException {
 		try {
@@ -74,7 +71,8 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 			final String hostname,
 			final short tcpPort,
 			final Identifier equipmentId,
-			final Identifier mcmId) {
+			final Identifier mcmId,
+			final boolean onSevice) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -88,6 +86,7 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 		this.tcpPort = tcpPort;
 		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;
+		this.onService = onSevice;
 	}
 
 	/**
@@ -121,7 +120,8 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 					hostname,
 					tcpPort,
 					equipmentId,
-					mcmId);
+					mcmId,
+					false);
 
 			assert kis.isValid() : OBJECT_STATE_ILLEGAL;
 
@@ -135,15 +135,16 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		final IdlKIS kt = (IdlKIS) transferable;
-		super.fromTransferable(kt, Identifier.valueOf(kt.domainId));
+		final IdlKIS idlKIS = (IdlKIS) transferable;
+		super.fromTransferable(idlKIS, Identifier.valueOf(idlKIS.domainId));
 
-		this.equipmentId = Identifier.valueOf(kt.equipmentId);
-		this.mcmId = Identifier.valueOf(kt.mcmId);
-		this.name = kt.name;
-		this.description = kt.description;
-		this.hostname = kt.hostname;
-		this.tcpPort = kt.tcpPort;
+		this.name = idlKIS.name;
+		this.description = idlKIS.description;
+		this.hostname = idlKIS.hostname;
+		this.tcpPort = idlKIS.tcpPort;
+		this.equipmentId = Identifier.valueOf(idlKIS.equipmentId);
+		this.mcmId = Identifier.valueOf(idlKIS.mcmId);
+		this.onService = idlKIS.onSevice;
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
@@ -169,17 +170,29 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 				this.hostname,
 				this.tcpPort,
 				this.equipmentId.getIdlTransferable(),
-				this.mcmId.getIdlTransferable());
+				this.mcmId.getIdlTransferable(),
+				this.onService);
 	}
 
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * @param name The name to set.
+	 */
+	public void setName(final String name) {
+		this.name = name;
+		super.markAsChanged();
+	}
+
 	public String getDescription() {
 		return this.description;
 	}
 
+	/**
+	 * @param description
+	 */
 	public void setDescription(final String description) {
 		this.description = description;
 		super.markAsChanged();
@@ -189,20 +202,56 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 		return this.hostname;
 	}
 
+	/**
+	 * @param hostname The hostname to set.
+	 */
+	public void setHostName(final String hostname) {
+		this.hostname = hostname;
+		super.markAsChanged();
+	}
+
 	public short getTCPPort() {
 		return this.tcpPort;
+	}
+
+	/**
+	 * @param tcpPort The tcpPort to set.
+	 */
+	public void setTCPPort(final short tcpPort) {
+		this.tcpPort = tcpPort;
+		super.markAsChanged();
 	}
 
 	public Identifier getEquipmentId() {
 		return this.equipmentId;
 	}
 
+	/**
+	 * @param equipmentId The equipmentId to set.
+	 */
+	public void setEquipmentId(final Identifier equipmentId) {
+		this.equipmentId = equipmentId;
+		super.markAsChanged();
+	}
+
 	public Identifier getMCMId() {
 		return this.mcmId;
 	}
 
+	/**
+	 * @param mcmId
+	 */
 	public void setMCMId(final Identifier mcmId) {
 		this.mcmId = mcmId;
+		super.markAsChanged();
+	}
+
+	public boolean isOnService() {
+		return this.onService;
+	}
+
+	public void setOnService(final boolean onService) {
+		this.onService = onService;
 		super.markAsChanged();
 	}
 
@@ -217,7 +266,8 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 			final String hostname,
 			final short tcpPort,
 			final Identifier equipmentId,
-			final Identifier mcmId) {
+			final Identifier mcmId,
+			final boolean onService) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -230,6 +280,7 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 		this.tcpPort = tcpPort;
 		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;
+		this.onService = onService;
 	}
 
 	@Override
@@ -238,35 +289,6 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 		dependencies.add(this.equipmentId);
 		dependencies.add(this.mcmId);
 		return dependencies;
-	}
-
-	/**
-	 * @param name The name to set.
-	 */
-	public void setName(final String name) {
-		this.name = name;
-		super.markAsChanged();
-	}
-	/**
-	 * @param equipmentId The equipmentId to set.
-	 */
-	public void setEquipmentId(final Identifier equipmentId) {
-		this.equipmentId = equipmentId;
-		super.markAsChanged();
-	}
-	/**
-	 * @param hostname The hostname to set.
-	 */
-	public void setHostName(final String hostname) {
-		this.hostname = hostname;
-		super.markAsChanged();
-	}
-	/**
-	 * @param tcpPort The tcpPort to set.
-	 */
-	public void setTCPPort(final short tcpPort) {
-		this.tcpPort = tcpPort;
-		super.markAsChanged();
 	}
 
 	/**

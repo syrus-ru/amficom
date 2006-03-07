@@ -1,5 +1,5 @@
 /*-
-* $Id: KISXML.java,v 1.2.2.1 2006/02/28 15:20:05 arseniy Exp $
+* $Id: KISXML.java,v 1.2.2.2 2006/03/07 10:42:49 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
 import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_EQUIPMENT_ID;
 import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_HOSTNAME;
 import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_MCM_ID;
+import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_ON_SERVICE;
 import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_TCP_PORT;
 
 import java.util.Arrays;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.general.AbstractStorableObjectXML;
 
 
 /**
- * @version $Revision: 1.2.2.1 $, $Date: 2006/02/28 15:20:05 $
+ * @version $Revision: 1.2.2.2 $, $Date: 2006/03/07 10:42:49 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement
@@ -49,10 +50,11 @@ public class KISXML extends AbstractStorableObjectXML<KIS> {
 			final String[] keysArray = new String[] { COLUMN_DESCRIPTION,
 					COLUMN_NAME,
 					COLUMN_DOMAIN_ID,
+					COLUMN_HOSTNAME,
+					COLUMN_TCP_PORT,
 					COLUMN_EQUIPMENT_ID,
 					COLUMN_MCM_ID,
-					COLUMN_HOSTNAME,
-					COLUMN_TCP_PORT };
+					COLUMN_ON_SERVICE };
 			keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 		}
 		return keys;
@@ -60,7 +62,7 @@ public class KISXML extends AbstractStorableObjectXML<KIS> {
 
 	@Override
 	public KIS getStorableObject(final Map<String, Object> objectMap) {
-		KIS kis = new KIS(this.getIdentifier(objectMap, COLUMN_ID),
+		final KIS kis = new KIS(this.getIdentifier(objectMap, COLUMN_ID),
 				this.getIdentifier(objectMap, COLUMN_CREATOR_ID),
 				this.getVersion(objectMap, COLUMN_VERSION),
 				this.getIdentifier(objectMap, COLUMN_DOMAIN_ID),
@@ -69,7 +71,8 @@ public class KISXML extends AbstractStorableObjectXML<KIS> {
 				this.getString(objectMap, COLUMN_HOSTNAME),
 				this.getShort(objectMap, COLUMN_TCP_PORT).shortValue(),
 				this.getIdentifier(objectMap, COLUMN_EQUIPMENT_ID),
-				this.getIdentifier(objectMap, COLUMN_MCM_ID));
+				this.getIdentifier(objectMap, COLUMN_MCM_ID),
+				this.getBoolean(objectMap, COLUMN_ON_SERVICE).booleanValue());
 		return kis;
 	}
 }
