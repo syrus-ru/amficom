@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.36 2006/02/15 12:18:11 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.37 2006/03/08 07:20:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
@@ -54,7 +55,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.36 $, $Date: 2006/02/15 12:18:11 $
+ * @version $Revision: 1.37 $, $Date: 2006/03/08 07:20:34 $
  * @module schemeclient
  */
 
@@ -254,8 +255,17 @@ public class SchemeTreeUI extends IconedTreeUI {
 								LinkedIdsCondition condition1 = new LinkedIdsCondition(type.getId(), ObjectEntities.SCHEMEPORT_CODE);
 								Set<SchemePort> ports = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 								if (ports.isEmpty()) {
-									StorableObjectPool.delete(type.getId());
-									StorableObjectPool.flush(type, LoginManager.getUserId(), false);
+									LinkedIdsCondition condition2 = new LinkedIdsCondition(type.getId(), ObjectEntities.SCHEMECABLEPORT_CODE);
+									Set<SchemeCablePort> cablePorts = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
+									if (cablePorts.isEmpty()) {
+										StorableObjectPool.delete(type.getId());
+										StorableObjectPool.flush(type, LoginManager.getUserId(), false);
+									} else {
+										JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
+												LangModelScheme.getString("Message.error.delete.port_type"),
+												LangModelScheme.getString("Message.error"),
+												JOptionPane.OK_OPTION);
+									}
 								} else {
 									JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 											LangModelScheme.getString("Message.error.delete.port_type"),
