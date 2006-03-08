@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeSelectionListener.java,v 1.20 2006/03/07 13:30:51 stas Exp $
+ * $Id: SchemeTreeSelectionListener.java,v 1.21 2006/03/08 07:23:48 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2006/03/07 13:30:51 $
+ * @version $Revision: 1.21 $, $Date: 2006/03/08 07:23:48 $
  * @module schemeclient
  */
 
@@ -75,6 +75,11 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 							Scheme scheme = (Scheme)object;
 							treeUI.getTree().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 							aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.OPEN_SCHEME));
+							treeUI.getTree().setCursor(Cursor.getDefaultCursor());
+						} else if (object instanceof SchemeElement) {
+							SchemeElement schemeElement = (SchemeElement)object;
+							treeUI.getTree().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+							aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemeElement.getId(), SchemeEvent.OPEN_SCHEMEELEMENT));
 							treeUI.getTree().setCursor(Cursor.getDefaultCursor());
 						} else if (object instanceof Measurement) {
 							ObjectSelectedEvent ev = new ObjectSelectedEvent(this, object, null, ObjectSelectedEvent.MEASUREMENT);
