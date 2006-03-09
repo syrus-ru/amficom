@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.35.2.1 2006/02/28 15:32:09 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.35.2.2 2006/03/09 17:36:09 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35.2.1 $, $Date: 2006/02/28 15:32:09 $
+ * @version $Revision: 1.35.2.2 $, $Date: 2006/03/09 17:36:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -84,7 +84,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 			return objects;
 		}
 
-		final Set<T> loadedObjects = (Set<T>) loadObjectsMap.get(Integer.valueOf(0)).get(new Short(entityCode));
+		final Set<T> loadedObjects = (Set<T>) loadObjectsMap.get(Integer.valueOf(0)).get(Short.valueOf(entityCode));
 		if (loadedObjects.isEmpty()) {
 			return objects;
 		}
@@ -133,7 +133,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		final short entityCode = condition.getEntityCode().shortValue();
 		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
-		levelLoadObjectsMap.put(new Short(entityCode), (Set<StorableObject>) loadedObjects);
+		levelLoadObjectsMap.put(Short.valueOf(entityCode), (Set<StorableObject>) loadedObjects);
 		loadObjectsMap.put(Integer.valueOf(0), levelLoadObjectsMap);
 
 		final Map<Short, Set<Identifier>> missingDependencesMap = this.createMissingDependenciesMap((Set<StorableObject>) loadedObjects);
@@ -146,6 +146,34 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		return objects;
 	}
 
+	/**
+	 * Подгружает объекты по списку <code>ids</code> рекурсивно вместе с их
+	 * зависимостями, до тех пор, пока среди зависимостей есть объекты, не
+	 * найденные в локальной БД. Первый параметр -- карта подгрузки --
+	 * передаётся по ссылке всем вложенным вызовам. После окончания рекурсивной
+	 * работы этого метода карта подгрузки содержит все объекты, не найденные в
+	 * локальной БД, разложенные 1) по уровню зависимости, 2) по коду сущности.
+	 * 
+	 * @param loadObjectsMap
+	 *        Карта подгрузки. По ключу хранится уровень зависимости, взятый с
+	 *        обратным знаком. Величина - карта, где хранятся подгруженные
+	 *        объекты, разложенные по кодам сущностей. Карта подгрузки
+	 *        пополняется новыми объектами с каждым новым рекурсивным вызовом
+	 *        метода.
+	 * @param dependencyLevel
+	 *        Уровень зависимости, он же уровень вложенности рекурсивного вызова
+	 *        метода. Каждый новый рекурсивный вызов этого метода производится с
+	 *        уровнем зависимости, большим на единицу по сравнению с тем
+	 *        значением, с которым был произведён вызов предыдущего уровня
+	 *        рекурсии.
+	 * @param ids
+	 *        Набор идентификаторов объектов, которые требуется подгрузить на
+	 *        данном уровне зависимостей. При начальном вызове это просто набор
+	 *        идентификаторов объектов, которые надо подгрузить. При последующих
+	 *        рекурсивных вызовах это идентификаторы объектов-зависимостей,
+	 *        которые не были найдены в локальной БД.
+	 * @throws ApplicationException
+	 */
 	private final void loadStorableObjectsWithDependencies(final SortedMap<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap,
 			final int dependencyLevel,
 			final Set<Identifier> ids) throws ApplicationException {
@@ -154,7 +182,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 			return;
 		}
 
-		final Integer dependencyKey = new Integer(-dependencyLevel);
+		final Integer dependencyKey = Integer.valueOf(-dependencyLevel);
 		Map<Short, Set<StorableObject>> levelLoadObjectsMap = loadObjectsMap.get(dependencyKey);
 		if (levelLoadObjectsMap == null) {
 			levelLoadObjectsMap = new HashMap<Short, Set<StorableObject>>();
@@ -162,7 +190,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		}
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
-		final Short entityKey1 = new Short(entityCode);
+		final Short entityKey1 = Short.valueOf(entityCode);
 		Set<StorableObject> entityLevelLoadObjects = levelLoadObjectsMap.get(entityKey1);
 		if (entityLevelLoadObjects == null) {
 			entityLevelLoadObjects = new HashSet<StorableObject>();
@@ -179,6 +207,19 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 
 	}
 
+	/**
+	 * Создаёт карту вида Map<Short, Set<Identifier>>, где хранятся
+	 * зависимости каждого из объектов входного набора
+	 * <code>storableObjects</code>, не найденные в локальной БД, разложенные
+	 * по кодам сущностей. Этот метод не требует, чтобы все объекты
+	 * <code>storableObjects</code> были одной сущности, хотя и используется
+	 * только для такого случая.
+	 * 
+	 * @param storableObjects
+	 *        Набор объектов, для которых ищутся зависимости, не существующие в
+	 *        локальной БД.
+	 * @return Карта зависимостей объектов, упорядоченных по ключу сущности.
+	 */
 	private Map<Short, Set<Identifier>> createMissingDependenciesMap(final Set<StorableObject> storableObjects) {
 		final Map<Short, Set<Identifier>> missingDependencesMap = new HashMap<Short, Set<Identifier>>();
 		for (final StorableObject storableObject : storableObjects) {
@@ -187,12 +228,12 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 				final Identifier idDependency = dependency.getId();
 				boolean needLoad = true;
 				try {
-					needLoad = !StorableObjectDatabase.isPresentInDatabase(dependency.getId());
+					needLoad = !StorableObjectDatabase.isObjectPresentInDatabase(dependency.getId());
 				} catch (ApplicationException ae) {
 					Log.errorMessage(ae);
 				}
 				if (needLoad) {
-					final Short entityKey = new Short(idDependency.getMajor());
+					final Short entityKey = Short.valueOf(idDependency.getMajor());
 					Set<Identifier> loadObjectIds = missingDependencesMap.get(entityKey);
 					if (loadObjectIds == null) {
 						loadObjectIds = new HashSet<Identifier>();
@@ -207,6 +248,19 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 
 
 
+	/**
+	 * Вставить в локальную БД объекты, хранящиеся в карте зависимостей
+	 * <code>dependenciesMap</code>. Эта карта устроена следующим образом.
+	 * Ключ - уровень зависимости, взятый с обратным знаком. Величина - карта
+	 * объектов, разложенных по коду сущности. Перебирая ключи карты
+	 * зависимости, метод движется от более глубокого уровня зависимости к более
+	 * мелкому. Такой порядок обеспечивается обратным знаком уровня зависимости.
+	 * 
+	 * @param dependenciesMap
+	 *        Карта зависимостей. Устроена также, как и карта подгрузки метода
+	 *        {@link #loadStorableObjectsWithDependencies(SortedMap, int, Set)}
+	 *        и получается в результате вызова этого метода.
+	 */
 	private void insertWithDependencies(final Map<Integer, Map<Short, Set<StorableObject>>> dependenciesMap) {
 		for (final Integer dependencyKey : dependenciesMap.keySet()) {
 			final Map<Short, Set<StorableObject>> levelLoadObjectsMap = dependenciesMap.get(dependencyKey);
@@ -215,8 +269,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 				try {
 					final StorableObjectDatabase<? extends StorableObject<?>> database = DatabaseContext.getDatabase(entityKey);
 					((StorableObjectDatabase) database).save(entityLevelLoadObjects);
-				}
-				catch (ApplicationException ae) {
+				} catch (ApplicationException ae) {
 					Log.errorMessage(ae);
 				}
 			}
