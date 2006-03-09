@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.28 2006/02/28 15:19:59 arseniy Exp $
+ * $Id: ReportTemplate.java,v 1.29 2006/03/09 18:05:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
@@ -62,7 +61,7 @@ import com.syrus.util.Log;
  * отчёт </p>
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.28 $, $Date: 2006/02/28 15:19:59 $
+ * @version $Revision: 1.29 $, $Date: 2006/03/09 18:05:41 $
  * @module report
  */
 public class ReportTemplate extends StorableObject<ReportTemplate> implements Namable, Describable, ReverseDependencyContainer,
@@ -159,15 +158,10 @@ public class ReportTemplate extends StorableObject<ReportTemplate> implements Na
 					Orientation.PORTRAIT,
 					STANDART_MARGIN_SIZE,
 					destinationModule);
-			StorableObjectPool.putStorableObject(reportTemplate);
 			return reportTemplate;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
 					"AttachedTextStorableElement.createInstance() | cannot generate identifier ", ige);
-		}
-		catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"AttachedTextStorableElement.createInstance() | error while putting in Pool ", ioee);
 		}		
 	}
 
