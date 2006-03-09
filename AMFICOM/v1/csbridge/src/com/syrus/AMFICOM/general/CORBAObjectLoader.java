@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.68 2006/02/17 11:33:02 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.69 2006/03/09 17:23:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2006/02/17 11:33:02 $
+ * @version $Revision: 1.69 $, $Date: 2006/03/09 17:23:28 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -83,6 +85,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
 		}
+		assert StorableObject.hasSingleTypeEntities(ids) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
 		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
 
@@ -112,6 +115,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 			final StorableObjectCondition condition) throws ApplicationException {
 		assert ids != null : NON_NULL_EXPECTED;
 		assert condition != null : NON_NULL_EXPECTED;
+		assert ids.isEmpty() || condition.getEntityCode().shortValue() == StorableObject.getEntityCodeOfIdentifiables(ids) : ILLEGAL_ENTITY_CODE;
 
 		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
 		final IdlStorableObjectCondition conditionT = condition.getIdlTransferable();
@@ -138,6 +142,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 			throws ApplicationException {
 		assert ids != null : NON_NULL_EXPECTED;
 		assert condition != null : NON_NULL_EXPECTED;
+		assert ids.isEmpty() || condition.getEntityCode().shortValue() == StorableObject.getEntityCodeOfIdentifiables(ids) : ILLEGAL_ENTITY_CODE;
 
 		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
 		final IdlStorableObjectCondition conditionT = condition.getIdlTransferable();
