@@ -1,5 +1,5 @@
-/*-
- * $$Id: MarkerController.java,v 1.47 2006/02/22 15:48:18 stas Exp $$
+ /*-
+ * $$Id: MarkerController.java,v 1.48 2006/03/09 13:18:59 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 /**
  *  онтроллер маркера.
  * 
- * @version $Revision: 1.47 $, $Date: 2006/02/22 15:48:18 $
+ * @version $Revision: 1.48 $, $Date: 2006/03/09 13:18:59 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -162,6 +162,7 @@ public class MarkerController extends AbstractNodeController {
 	 */
 	public double getPhysicalDistanceFromLeft(final Marker marker) throws MapConnectionException, MapDataException {
 		final NodeLink nodeLink = marker.getNodeLink();
+		
 		final CablePath cablePath = marker.getCablePath();
 
 //		final double kd = cablePath.getKd();
@@ -254,7 +255,9 @@ public class MarkerController extends AbstractNodeController {
 	 *        рассто€ние
 	 * @throws ApplicationException 
 	 */
-	public void moveToFromStartLo(final Marker marker, final double dist) throws MapConnectionException, MapDataException, ApplicationException {
+/*	public void moveToFromStartLo(final Marker marker, final double dist) throws MapConnectionException, MapDataException, ApplicationException {
+		marker.setOpticalDistance(dist);
+		
 		final SchemePath schemePath = marker.getMeasurementPath().getSchemePath();
 		if (schemePath == null) {
 			this.moveToFromStartLf(marker, dist);
@@ -262,13 +265,13 @@ public class MarkerController extends AbstractNodeController {
 		else {
 			this.moveToFromStartLf(marker, schemePath.getPhysicalDistance(dist));
 		}
-	}
-		
+	}*/
+		/*
 	public void moveToFromStartLo(final Marker marker, final Identifier peId, final double optDist) throws MapConnectionException, MapDataException, ApplicationException {
 		PathElement pe = StorableObjectPool.getStorableObject(peId, true);
 		SchemePath schemePath = pe.getParentPathOwner();
 		this.moveToFromStartLf(marker, pe, schemePath.getPhysicalDistance(optDist));
-	}
+	}*/
 
 	/**
 	 * ѕередвинуть маркер на заданное физическое рассто€ние от начала
@@ -323,6 +326,7 @@ public class MarkerController extends AbstractNodeController {
 		}
 	}
 	
+	/*
 	public void moveToFromStartLf(final Marker marker, final PathElement pathElement, final double physicalDistance)
 			throws MapConnectionException,
 				MapDataException, ApplicationException {
@@ -355,7 +359,7 @@ public class MarkerController extends AbstractNodeController {
 			}
 		}
 	}
-
+*/
 	/**
 	 * Adjust marker position at given node.
 	 * 
@@ -489,7 +493,7 @@ public class MarkerController extends AbstractNodeController {
 				double cumulativeTopologicalDistance = 0.0D;
 				for(NodeLink nodeLink : cablePath.getSortedNodeLinks()) {
 					if(marker.getNodeLink().equals(nodeLink)) {
-						cumulativeTopologicalDistance += getPhysicalDistanceFromLeft(marker);
+						cumulativeTopologicalDistance += startToThis(marker);
 						break;
 					}
 					cumulativeTopologicalDistance += nodeLink.getLengthLt();
@@ -546,12 +550,16 @@ public class MarkerController extends AbstractNodeController {
 	 * @throws MapConnectionException 
 	 */
 	public void notifyMarkerMoved(final Marker marker) throws MapConnectionException, MapDataException {
-		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MarkerEvent(this,
-				MarkerEvent.MARKER_MOVED_EVENT,
-				marker.getId(),
-				getFromStartLengthLo(marker),
-				marker.getMeasurementPath().getSchemePath().getId(),
-				marker.getMonitoringElementId()));
+		try {
+			this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MarkerEvent(this,
+					MarkerEvent.MARKER_MOVED_EVENT,
+					marker.getId(),
+					marker.getMeasurementPath().getSchemePath().getOpticalDistance(marker.getPhysicalDistance()),
+					marker.getMeasurementPath().getSchemePath().getId(),
+					marker.getMonitoringElementId()));
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
+		}
 	}
 
 }
