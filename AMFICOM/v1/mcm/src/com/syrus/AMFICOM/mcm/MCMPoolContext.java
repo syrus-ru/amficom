@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMPoolContext.java,v 1.14 2006/02/03 13:22:58 arseniy Exp $
+ * $Id: MCMPoolContext.java,v 1.14.2.1 2006/03/09 17:36:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.mcm;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierLRUMapSaver;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
+import com.syrus.AMFICOM.general.ObjectLoader;
 import com.syrus.AMFICOM.general.PoolContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -18,7 +19,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.LRUMapSaver;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2006/02/03 13:22:58 $
+ * @version $Revision: 1.14.2.1 $, $Date: 2006/03/09 17:36:44 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -26,7 +27,7 @@ import com.syrus.util.LRUMapSaver;
 final class MCMPoolContext extends PoolContext {
 	private static LRUMapSaver<Identifier, StorableObject> LRU_MAP_SAVER;
 
-	public MCMPoolContext(final MCMObjectLoader objectLoader) {
+	public MCMPoolContext(final ObjectLoader objectLoader) {
 		super(objectLoader);
 	}
 
