@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginManager.java,v 1.44 2006/03/09 17:24:41 arseniy Exp $
+ * $Id: LoginManager.java,v 1.45 2006/03/09 18:02:06 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,11 +11,10 @@ package com.syrus.AMFICOM.general;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.bugs.Crutch366;
 import com.syrus.AMFICOM.security.SessionKey;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2006/03/09 17:24:41 $
+ * @version $Revision: 1.45 $, $Date: 2006/03/09 18:02:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -115,24 +114,5 @@ public final class LoginManager {
 
 	public static Identifier getDomainId() {
 		return loginPerformer.getDomainId();
-	}
-
-	/**
-	 * This method is only used to emulate login in XML session.
-	 * It is crutch.
-	 * @param userId1
-	 * @param domainId1
-	 */
-	@Crutch366(notes = "Implement universal login procedure.")
-	public static void loginXmlStub(final Identifier userId1, final Identifier domainId1) {
-		assert userId1 != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert domainId1 != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert userId1.getMajor() == ObjectEntities.SYSTEMUSER_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
-		assert domainId1.getMajor() == ObjectEntities.DOMAIN_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
-//
-//		userId = userId1;
-//		domainId = domainId1;
-//		idlSessionKey = new IdlSessionKey("XMLStub_" + (new Date()).toString());
-//		sessionKey = new SessionKey(idlSessionKey);
 	}
 }
