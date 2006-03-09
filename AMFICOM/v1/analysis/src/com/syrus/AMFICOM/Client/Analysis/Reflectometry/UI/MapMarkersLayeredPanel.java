@@ -109,8 +109,8 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements P
 					}
 					if(mne.getMarkerEventType() == MarkerEvent.MARKER_DELETED_EVENT)
 					{
-						if (((MapMarkersPanel)panel).deleteMarker(mne.getMarkerId()) == null)
-							((MapMarkersToolBar)this.toolbar).deleteMarkerButton.setEnabled(false);
+						((MapMarkersPanel)panel).deleteMarker(mne.getMarkerId());
+						((MapMarkersToolBar)this.toolbar).deleteMarkerButton.setEnabled(false);
 						this.jLayeredPane.repaint();
 					}
 				}
