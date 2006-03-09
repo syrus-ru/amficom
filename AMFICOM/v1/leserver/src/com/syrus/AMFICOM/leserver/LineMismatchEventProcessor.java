@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.18 2005/12/06 09:43:07 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.19 2006/03/09 16:59:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,15 +50,14 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
-import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/12/06 09:43:07 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2006/03/09 16:59:28 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
