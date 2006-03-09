@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultFrame.java,v 1.6 2006/02/22 08:33:56 stas Exp $
+ * $Id: ResultFrame.java,v 1.7 2006/03/09 13:26:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,19 +61,21 @@ import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Modeling;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
 import com.syrus.AMFICOM.resource.LangModelObserver;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2006/02/22 08:33:56 $
+ * @version $Revision: 1.7 $, $Date: 2006/03/09 13:26:03 $
  * @module surveyclient_v1
  */
 
@@ -203,6 +205,24 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 			final Action action = result.getAction();
 			Measurement m = (Measurement) action;
 			this.meId = m.getMonitoredElementId();
+			
+			
+			try {
+				MonitoredElement me = StorableObjectPool.getStorableObject(this.meId, true);
+				final Set<Identifier> tpIds = me.getMonitoredDomainMemberIds();
+				if (!tpIds.isEmpty()) {
+					LinkedIdsCondition condition = new LinkedIdsCondition(tpIds.iterator().next(), ObjectEntities.SCHEMEPATH_CODE);
+					Set<SchemePath> paths = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+					if (!paths.isEmpty()) {
+						this.spId = paths.iterator().next().getId();
+					}
+				}
+			} 
+			catch (ApplicationException e1) {
+				Log.errorMessage(e1);
+			}
+			
+			
 			MeasurementSetup ms = m.getSetup();
 			ParameterSet argumentSet = ms.getParameterSet();
 			
@@ -346,7 +366,7 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 		if (this.layeredPanel == null) {
 			this.layeredPanel = new MapThresholdsLayeredPanel(this.aContext.getDispatcher());
 		} else {
-			this.layeredPanel.deleteNonAlarmMarkers();
+			this.layeredPanel.removeAllGraphPanels();
 		}
 			
 		ThresholdsPanel reflectogramPanel = new ThresholdsPanel(this.layeredPanel, this.aContext.getDispatcher(), data, deltaX);
@@ -358,7 +378,7 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 		if (this.spId != null)
 			reflectogramPanel.setSchemePathId(this.spId);
 						
-		this.layeredPanel.setGraphPanel(reflectogramPanel);
+		this.layeredPanel.addGraphPanel(reflectogramPanel);
 		reflectogramPanel.select_by_mouse = true;
 		this.layeredPanel.updScale2fit();
 
