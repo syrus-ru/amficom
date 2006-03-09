@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.19 2006/03/09 16:59:28 arseniy Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.20 2006/03/09 17:53:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2006/03/09 16:59:28 $
+ * @version $Revision: 1.20 $, $Date: 2006/03/09 17:53:23 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
