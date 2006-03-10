@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserPerpective.java,v 1.9 2005/12/27 10:54:23 bob Exp $
+* $Id: SystemUserPerpective.java,v 1.10 2006/03/10 10:47:12 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/12/27 10:54:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2006/03/10 10:47:12 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -136,9 +136,12 @@ public final class SystemUserPerpective extends AbstractPerspective {
 	}
 	
 	public final Identifier getDomainId() {
-		return this.userBean.getIdentifier();
+		if (this.superPerspective instanceof DomainPerpective) {
+			return ((DomainPerpective) this.superPerspective).getDomainId();
+		}
+		throw new IllegalStateException("superPerspective for '" + this.getName() + "' is NOT a DomainPerspective");
 	}
-	
+
 	public final Identifier getUserId() {
 		return this.userBean.getIdentifier();
 	}
