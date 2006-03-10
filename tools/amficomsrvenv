@@ -1,0 +1,43 @@
+############################################################
+#
+# $Id: amficomsrvenv,v 1.1 2006/03/10 18:11:38 arseniy Exp $
+#
+# vim:ft=sh:
+#
+
+LIB=`dirname $0`/../lib
+PATCHLIB=$LIB/patch
+EXTLIB=`dirname $0`/../../extlib
+
+[ -d ${LIB} ] || (echo 'LIB not found'; exit 1)
+[ -d ${PATCHLIB} ] || (echo 'PATCHLIB not found'; exit 1)
+[ -d ${EXTLIB} ] || (echo 'EXTLIB not found'; exit 1)
+
+ORACLECLASSPATH=\
+$ORACLE_HOME/jdbc/lib/ojdbc14_g.jar:\
+$ORACLE_HOME/jdbc/lib/orai18n.jar:\
+$ORACLE_HOME/jdbc/lib/classes12.jar:\
+$ORACLE_HOME/jdbc/lib/nls_charset12.jar
+
+XMLCLASSPATH=\
+$EXTLIB/xbean.jar:\
+$LIB/generalxml.jar
+
+TROVECLASSPATH=\
+$EXTLIB/trove.jar
+
+MAILCLASSPATH=\
+$EXTLIB/activation.jar:\
+$EXTLIB/mail.jar
+
+MAPINFOCLASSPATH=\
+$EXTLIB/jdom.jar:\
+$EXTLIB/micsys.jar:\
+$EXTLIB/miutil.jar:\
+$EXTLIB/mxj.jar:\
+$EXTLIB/commons-logging.jar:\
+$EXTLIB/mxjgeom.jar:\
+$EXTLIB/miappletsup.jar:\
+$EXTLIB/xercesImpl.jar:\
+$EXTLIB/mxjtabdp.jar:\
+$EXTLIB/mistyles.jar
