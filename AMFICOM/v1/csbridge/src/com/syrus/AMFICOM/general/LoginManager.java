@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginManager.java,v 1.45 2006/03/09 18:02:06 arseniy Exp $
+ * $Id: LoginManager.java,v 1.46 2006/03/10 13:06:29 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.security.SessionKey;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2006/03/09 18:02:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.46 $, $Date: 2006/03/10 13:06:29 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -114,5 +114,20 @@ public final class LoginManager {
 
 	public static Identifier getDomainId() {
 		return loginPerformer.getDomainId();
+	}
+
+	/**
+	 * Not supported any longer, see bug #487.
+	 * @param userId
+	 * @param domainId
+	 * @throws UnsupportedOperationException always
+	 * @deprecated invocation not supported anymore, and will result un
+	 *             an UnsupportedOperationException.
+	 */
+	@Deprecated
+	public static void loginXmlStub(
+			@SuppressWarnings("unused") final Identifier userId,
+			@SuppressWarnings("unused") final Identifier domainId) {
+		throw new UnsupportedOperationException();
 	}
 }
