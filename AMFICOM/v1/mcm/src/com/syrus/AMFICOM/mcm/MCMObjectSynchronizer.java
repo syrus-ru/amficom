@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMObjectSynchronizer.java,v 1.1.2.1 2006/03/09 17:38:21 arseniy Exp $
+ * $Id: MCMObjectSynchronizer.java,v 1.1.2.2 2006/03/10 16:19:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/03/09 17:38:21 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/03/10 16:19:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -242,9 +242,9 @@ final class MCMObjectSynchronizer extends Thread {
 				} catch (IllegalObjectEntityException ioee) {
 					Log.errorMessage(ioee);
 				}
-				final StorableObjectDatabase storableObjectDatabase = DatabaseContext.getDatabase(entityKey);
+				final StorableObjectDatabase<?> storableObjectDatabase = DatabaseContext.getDatabase(entityKey);
 				try {
-					storableObjectDatabase.save(entityLevelLoadObjects);
+					((StorableObjectDatabase) storableObjectDatabase).save(entityLevelLoadObjects);
 				} catch (ApplicationException ae) {
 					Log.errorMessage(ae);
 				}
