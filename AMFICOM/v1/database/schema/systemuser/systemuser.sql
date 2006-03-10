@@ -1,4 +1,4 @@
--- $Id: systemuser.sql,v 1.3 2005/06/15 17:03:10 bass Exp $
+-- $Id: systemuser.sql,v 1.2 2006/03/10 16:14:51 arseniy Exp $
 
 CREATE TABLE SystemUser(
  id NUMBER(19),

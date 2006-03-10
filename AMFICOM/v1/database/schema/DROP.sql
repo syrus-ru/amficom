@@ -1,4 +1,4 @@
--- $Id: DROP.sql,v 1.11 2005/09/29 11:56:17 max Exp $
+-- $Id: DROP.sql,v 1.12 2006/03/10 16:15:22 arseniy Exp $
 
 @@./report/DROP;
 @@./security/DROP;
@@ -11,4 +11,4 @@
 @@./resource/DROP;
 @@./administration/DROP;
 @@./general/DROP;
-@@./user/DROP;
+@@./systemuser/DROP;

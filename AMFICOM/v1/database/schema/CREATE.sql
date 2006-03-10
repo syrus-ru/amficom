@@ -1,7 +1,7 @@
--- $Id: CREATE.sql,v 1.12 2005/09/29 11:56:17 max Exp $
+-- $Id: CREATE.sql,v 1.13 2006/03/10 16:15:22 arseniy Exp $
 
-REM user
-@@./user/CREATE;
+REM systemuser
+@@./systemuser/CREATE;
 
 REM general
 @@./general/CREATE;
