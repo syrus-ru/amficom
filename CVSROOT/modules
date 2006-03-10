@@ -66,7 +66,7 @@ AMFICOM_v1	&tools\
 		&mapinfo \
 		&dadara \
 		&scripts \
-		&importUCM \
+		&importucm \
 		&test \
 		&bugs \
 		&reflectometry \
@@ -201,7 +201,8 @@ dadara_v1		AMFICOM/v1/dadara
 #M	scripts		Installation and Configuration Scripts for Solaris and Oracle
 scripts			AMFICOM/v1/scripts
 scripts_v1		AMFICOM/v1/scripts
-#M	importUCM
+#M	importucm
+importucm		AMFICOM/v1/importUCM
 importUCM		AMFICOM/v1/importUCM
 importUCM_v1		AMFICOM/v1/importUCM
 #M	test		Tests for all AMFICOM modules
