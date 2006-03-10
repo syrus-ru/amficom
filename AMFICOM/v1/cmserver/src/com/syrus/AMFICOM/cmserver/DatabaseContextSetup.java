@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.44 2006/02/27 16:19:43 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.43 2005/11/14 12:09:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
-import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.LinkDatabase;
 import com.syrus.AMFICOM.configuration.LinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.PortDatabase;
@@ -34,25 +33,19 @@ import com.syrus.AMFICOM.event.EventTypeDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ParameterTypeDatabase;
-import com.syrus.AMFICOM.measurement.ActionParameterDatabase;
-import com.syrus.AMFICOM.measurement.ActionParameterTypeBindingDatabase;
-import com.syrus.AMFICOM.measurement.ActionTemplateDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
-import com.syrus.AMFICOM.measurement.AnalysisResultParameterDatabase;
-import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
+import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
+import com.syrus.AMFICOM.measurement.IntervalsTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.KISDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementPortDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementPortTypeDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementResultParameterDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.ModelingDatabase;
-import com.syrus.AMFICOM.measurement.ModelingResultParameterDatabase;
-import com.syrus.AMFICOM.measurement.ModelingTypeDatabase;
 import com.syrus.AMFICOM.measurement.MonitoredElementDatabase;
+import com.syrus.AMFICOM.measurement.ParameterSetDatabase;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
+import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.report.AttachedTextDatabase;
 import com.syrus.AMFICOM.report.DataDatabase;
@@ -61,7 +54,7 @@ import com.syrus.AMFICOM.report.ReportTemplateDatabase;
 import com.syrus.AMFICOM.report.TableDataDatabase;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2006/02/27 16:19:43 $
+ * @version $Revision: 1.43 $, $Date: 2005/11/14 12:09:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -73,7 +66,6 @@ final class DatabaseContextSetup {
 	}
 
 	public static void initDatabaseContext() {
-		DatabaseContext.registerDatabase(new ParameterTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicDatabase());
 
@@ -85,7 +77,6 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new ServerProcessDatabase());
 		DatabaseContext.registerDatabase(new RoleDatabase());
 
-		DatabaseContext.registerDatabase(new EquipmentTypeDatabase());
 		DatabaseContext.registerDatabase(new PortTypeDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathTypeDatabase());
 		DatabaseContext.registerDatabase(new LinkTypeDatabase());
@@ -99,24 +90,19 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new CableThreadDatabase());
 
 		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
-		DatabaseContext.registerDatabase(new MeasurementTypeDatabase());
-		DatabaseContext.registerDatabase(new AnalysisTypeDatabase());
-		DatabaseContext.registerDatabase(new ModelingTypeDatabase());
-		DatabaseContext.registerDatabase(new ActionParameterTypeBindingDatabase());
-		DatabaseContext.registerDatabase(new KISDatabase());
-		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
-		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
-		DatabaseContext.registerDatabase(new ActionParameterDatabase());
-		DatabaseContext.registerDatabase(new ActionTemplateDatabase());
-		DatabaseContext.registerDatabase(new PeriodicalTemporalPatternDatabase());
-		DatabaseContext.registerDatabase(new TestDatabase());
-		DatabaseContext.registerDatabase(new MeasurementSetupDatabase());
 		DatabaseContext.registerDatabase(new MeasurementDatabase());
 		DatabaseContext.registerDatabase(new AnalysisDatabase());
 		DatabaseContext.registerDatabase(new ModelingDatabase());
-		DatabaseContext.registerDatabase(new MeasurementResultParameterDatabase());
-		DatabaseContext.registerDatabase(new AnalysisResultParameterDatabase());
-		DatabaseContext.registerDatabase(new ModelingResultParameterDatabase());
+		DatabaseContext.registerDatabase(new MeasurementSetupDatabase());
+		DatabaseContext.registerDatabase(new ResultDatabase());
+		DatabaseContext.registerDatabase(new ParameterSetDatabase());
+		DatabaseContext.registerDatabase(new TestDatabase());
+		DatabaseContext.registerDatabase(new CronTemporalPatternDatabase());
+		DatabaseContext.registerDatabase(new IntervalsTemporalPatternDatabase());
+		DatabaseContext.registerDatabase(new PeriodicalTemporalPatternDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
+		DatabaseContext.registerDatabase(new KISDatabase());
+		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
 
 		DatabaseContext.registerDatabase(new EventTypeDatabase());
 		DatabaseContext.registerDatabase(new EventDatabase());
