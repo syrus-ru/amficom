@@ -2,10 +2,10 @@
 <mapdescriptor>
 	<map>
 		<name>Moscow City</name>
-		<mdf>../lib/mapinfo/cb.mdf</mdf>
+		<mdf>../../mapinfo/cb.mdf</mdf>
 	</map>
 	<map>
 		<name>Moscow without buildings</name>
-		<mdf>../lib/mapinfo/cb_wo_houses/cb.mdf</mdf>
+		<mdf>../../mapinfo/cb_wo_houses/cb.mdf</mdf>
 	</map>
 </mapdescriptor>
