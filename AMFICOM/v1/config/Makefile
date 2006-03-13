@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.82 2006/03/13 06:57:15 arseniy Exp $
+# $Id: Makefile,v 1.83 2006/03/13 07:35:58 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -28,7 +28,7 @@ util \
 bugs
 
 EXTCLASSPATH := $(TROVE4JCLASSPATH):$(XMLBEANSCLASSPATH)
-XMLCLASSPATH := $(LIBNAMEXML):$(GENERALXML)
+XMLCLASSPATH := $(LIBDIR)/$(LIBNAMEXML):$(GENERALXML)
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/configuration/*.java)
 XSD_SOURCES := $(wildcard $(XMLDIR)/*.xsd)
