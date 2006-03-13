@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLoginPerformer.java,v 1.1.2.3 2006/02/27 16:06:55 arseniy Exp $
+ * $Id: DatabaseLoginPerformer.java,v 1.1.2.4 2006/03/13 07:52:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.security.ShadowDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/02/27 16:06:55 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/03/13 07:52:54 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -38,7 +38,9 @@ public final class DatabaseLoginPerformer implements LoginPerformer {
 
 	public DatabaseLoginPerformer() {
 		this.sessionKey = VOID_SESSION_KEY;
+
 		this.reset();
+		this.domainId = VOID_IDENTIFIER;
 	}
 
 	public Set<Domain> getAvailableDomains() throws CommunicationException, LoginException {
@@ -103,6 +105,8 @@ public final class DatabaseLoginPerformer implements LoginPerformer {
 		this.userId = systemUser.getId();
 		if (domain != null) {
 			this.domainId = domain.getId();
+		} else {
+			this.domainId = VOID_IDENTIFIER;
 		}
 	}
 
@@ -150,7 +154,6 @@ public final class DatabaseLoginPerformer implements LoginPerformer {
 
 	private void reset() {
 		this.userId = VOID_IDENTIFIER;
-		this.domainId = VOID_IDENTIFIER;
 	}
 
 }
