@@ -3,3 +3,6 @@ docs
 *.jar
 .mach
 .javadocs
+*.tar
+*.gz
+*.swp
