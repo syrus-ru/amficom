@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.9 2005/12/05 18:24:27 bass Exp $
+# $Id: Makefile,v 1.10 2006/03/13 08:56:35 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -19,6 +19,7 @@ $(call checkenve,XMLBEANSCLASSPATH)
 $(call checkenve,SCOMP)
 $(call checkenve,SCOMPFLAGS)
 
+GENERALXML = $(LIBDIR)/generalxml.jar
 LIBNAME_EXTENSIONS_SCHEMAS = $(AMFICOM_HOME)/lib/extensions_schemas.jar
 LIBNAME_MANAGER_SCHEMAS = $(MODULE_NAME)_schemas.jar
 
@@ -30,28 +31,26 @@ configuration \
 measurement \
 event \
 filter \
+reflectometry \
 csbridge \
+extensions \
 commonclient \
 filterclient \
 resource
 
+XMLCLASSPATH := $(LIBNAME_MANAGER_SCHEMAS):$(LIBNAME_EXTENSIONS_SCHEMAS):$(GENERALXML)
 EXTCLASSPATH := $(TROVE4JCLASSPATH):$(EXTLIBDIR)/jgraph.jar
 
+SOURCES := $(shell find $(SRCDIR) -name *java)
+
 $(LIBNAME): .mach
-	mkdir -p $(CLASSDIR)/com/syrus/AMFICOM/manager/resources/icons
-	$(CP) \
-		$(SRCDIR)/com/syrus/AMFICOM/manager/resources/icons/*.[pg][ni][gf] \
-		$(CLASSDIR)/com/syrus/AMFICOM/manager/resources/icons
-	$(CP) \
-		$(SRCDIR)/com/syrus/AMFICOM/manager/resources/*.[pgp][nir][gfo]* \
-		$(CLASSDIR)/com/syrus/AMFICOM/manager/resources/
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
-.mach:	$(CLASSDIR)
+.mach:	$(CLASSDIR) $(LIBNAME_MANAGER_SCHEMAS)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH) \
-		$(shell find . -name *java)
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH):$(XMLBEANSCLASSPATH) \
+		$(SOURCES)
 	touch $@
 
 .PHONY: xml
