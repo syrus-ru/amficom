@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItem.java,v 1.20 2006/02/28 15:19:58 arseniy Exp $
+* $Id: LayoutItem.java,v 1.21 2006/03/13 13:54:00 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -39,12 +39,12 @@ import com.syrus.AMFICOM.resource.corba.IdlLayoutItemHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $
+ * @author $Author: bass $
  * @module resource
  */
 
-public final class LayoutItem extends StorableObject<LayoutItem>
+public final class LayoutItem extends StorableObject
 		implements Characterizable, Namable {
 	
 	public static final String CHARACTERISCTIC_TYPE_X = "x";

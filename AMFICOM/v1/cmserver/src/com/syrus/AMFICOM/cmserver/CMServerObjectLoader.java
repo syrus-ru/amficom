@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerObjectLoader.java,v 1.21 2006/03/13 07:08:21 arseniy Exp $
+ * $Id: CMServerObjectLoader.java,v 1.22 2006/03/13 13:54:03 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2006/03/13 07:08:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2006/03/13 13:54:03 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  * @todo Implement refresh (i. e. - method {@link com.syrus.AMFICOM.general.ObjectLoader#getRemoteVersions(Set)})
@@ -46,7 +46,7 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 	}
 
 	@Override
-	public final <T extends StorableObject<T>> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+	public final <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
@@ -65,7 +65,7 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 	}
 
 	@Override
-	public final <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+	public final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 
@@ -82,7 +82,7 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 		}
 	}
 
-	private final <T extends StorableObject<T>> Set<T> loadStorableObjectsCustom(final Set<Identifier> ids) throws ApplicationException {
+	private final <T extends StorableObject> Set<T> loadStorableObjectsCustom(final Set<Identifier> ids) throws ApplicationException {
 		final Set<T> objects = super.loadStorableObjects(ids);
 
 		final Set<Identifier> loadIds = Identifier.createSubtractionIdentifiers(ids, objects);
@@ -114,7 +114,7 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 		return objects;
 	}
 
-	private final <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByConditionCustom(final Set<Identifier> ids,
+	private final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByConditionCustom(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws ApplicationException {
 		final Set<T> objects = super.loadStorableObjectsButIdsByCondition(ids, condition);
 

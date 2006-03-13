@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPopupNotificationEventImpl.java,v 1.7 2006/02/22 08:44:04 bass Exp $
+ * $Id: IdlPopupNotificationEventImpl.java,v 1.8 2006/03/13 13:53:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2006/02/22 08:44:04 $
+ * @version $Revision: 1.8 $, $Date: 2006/03/13 13:53:59 $
  * @module event
  */
 final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
@@ -137,7 +137,7 @@ final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
 	 * @see com.syrus.AMFICOM.general.corba.IdlStorableObject#getNative()
 	 */
 	@Override
-	public StorableObject<?> getNative() throws IdlCreateObjectException {
+	public StorableObject getNative() throws IdlCreateObjectException {
 		throw new UnsupportedOperationException();
 	}
 

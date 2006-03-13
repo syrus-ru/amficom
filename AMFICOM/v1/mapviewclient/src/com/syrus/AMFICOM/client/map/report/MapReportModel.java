@@ -1,5 +1,5 @@
 /*
- * $Id: MapReportModel.java,v 1.20 2005/11/16 19:28:59 max Exp $
+ * $Id: MapReportModel.java,v 1.21 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,11 +72,10 @@ public class MapReportModel extends ReportModel {
 	
 	@Override
 	public RenderingComponent createReport(
-			AbstractDataStorableElement<?> element,
+			AbstractDataStorableElement element,
 			Object data,
 			ApplicationContext aContext) throws CreateReportException{
 		RenderingComponent result = null;
-		final AbstractDataStorableElement rawElement = element;
 		String reportName = element.getReportName();
 		String modelClassName = element.getModelClassName();		
 		try {
@@ -136,7 +135,7 @@ public class MapReportModel extends ReportModel {
 					if (objectID.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE) {
 						SchemeCableLink schemeCableLink = StorableObjectPool.getStorableObject(objectID,true);
 						result = CableLayoutReport.createReport(
-								(TableDataStorableElement) rawElement,
+								(TableDataStorableElement) element,
 								schemeCableLink);
 					}
 				}
@@ -145,21 +144,21 @@ public class MapReportModel extends ReportModel {
 						PhysicalLink physicalLink =
 							StorableObjectPool.getStorableObject(objectID,true);
 						result = TunnelCableListReport.createReport(
-								(TableDataStorableElement) rawElement,
+								(TableDataStorableElement) element,
 								physicalLink);
 					}
 					else if (objectID.getMajor() == ObjectEntities.COLLECTOR_CODE) {
 						Collector collector =
 							StorableObjectPool.getStorableObject(objectID,true);
 						result = CollectorInfoReport.createReport(
-								(TableDataStorableElement) rawElement,
+								(TableDataStorableElement) element,
 								collector);
 					}
 					else if (objectID.getMajor() == ObjectEntities.SITENODE_CODE) {
 						SiteNode siteNode =
 							StorableObjectPool.getStorableObject(objectID,true);
 						result = SiteNodeReport.createReport(
-								(TableDataStorableElement) rawElement,
+								(TableDataStorableElement) element,
 								siteNode);
 					}
 				}

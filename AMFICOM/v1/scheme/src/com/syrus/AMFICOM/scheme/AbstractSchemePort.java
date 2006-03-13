@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.91 2005/12/17 12:11:19 arseniy Exp $
+ * $Id: AbstractSchemePort.java,v 1.92 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,12 +58,12 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.xml.XmlConversionException;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.91 $, $Date: 2005/12/17 12:11:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.92 $, $Date: 2006/03/13 13:54:01 $
  * @module scheme
  */
-public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
-		extends AbstractCloneableStorableObject<T>
+public abstract class AbstractSchemePort
+		extends AbstractCloneableStorableObject
 		implements Describable, Characterizable,
 		ReverseDependencyContainer {
 	private static final long serialVersionUID = 6943625949984422779L;
@@ -579,11 +579,11 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 	 * @see Object#clone()
 	 */
 	@Override
-	public final T clone() throws CloneNotSupportedException {
+	public AbstractSchemePort clone() throws CloneNotSupportedException {
 		final boolean usePool = false;
 
 		final StackTraceElement stackTrace[] = (new Throwable()).getStackTrace();
-		final int depth = 1;
+		final int depth = 2;
 		if (stackTrace.length > depth) {
 			final StackTraceElement stackTraceElement = stackTrace[depth];
 			final String className = stackTraceElement.getClassName();
@@ -603,7 +603,7 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 			}
 		}
 		try {
-			final T clone = super.clone();
+			final AbstractSchemePort clone = (AbstractSchemePort) super.clone();
 
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();

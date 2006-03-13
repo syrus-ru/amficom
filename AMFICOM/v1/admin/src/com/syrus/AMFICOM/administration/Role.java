@@ -1,5 +1,5 @@
 /*-
- * $Id: Role.java,v 1.14 2006/02/28 15:19:58 arseniy Exp $
+ * $Id: Role.java,v 1.15 2006/03/13 13:53:59 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,13 +36,13 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2006/02/28 15:19:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2006/03/13 13:53:59 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
  */
 
-public final class Role extends StorableObject<Role>
+public final class Role extends StorableObject
 		implements Describable {
 	private static final long serialVersionUID = 1530119194975831896L;
 

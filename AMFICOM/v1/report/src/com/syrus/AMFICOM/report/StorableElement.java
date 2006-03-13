@@ -1,5 +1,5 @@
 /*
- * $Id: StorableElement.java,v 1.12 2005/11/16 18:36:50 max Exp $
+ * $Id: StorableElement.java,v 1.13 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,12 +21,12 @@ import com.syrus.AMFICOM.resource.IntPoint;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.12 $, $Date: 2005/11/16 18:36:50 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2006/03/13 13:53:57 $
  * @module report
  */
-public abstract class StorableElement<T extends StorableElement<T>>
-		extends StorableObject<T> implements Cloneable {
+public abstract class StorableElement
+		extends StorableObject implements Cloneable {
 
 	protected IntPoint location;
 	protected IntDimension size;
@@ -160,8 +160,8 @@ public abstract class StorableElement<T extends StorableElement<T>>
 	}
 	
 	@Override
-	protected T clone() throws CloneNotSupportedException {
-		T clone = super.clone();
+	protected StorableElement clone() throws CloneNotSupportedException {
+		StorableElement clone = (StorableElement) super.clone();
 		clone.location = new IntPoint(this.location.x, this.location.y);
 		clone.size = new IntDimension(this.size.getWidth(), this.size.getHeight());
 		clone.reportTemplateId = Identifier.VOID_IDENTIFIER;

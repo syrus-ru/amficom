@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.26 2005/12/09 11:38:59 arseniy Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.27 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/12/09 11:38:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2006/03/13 13:53:57 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module analysis
  */
@@ -319,9 +319,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 							IconPopulatableItem item2 = new IconPopulatableItem();
 							item2.setObject(result);
 							item2.setCanHaveChildren(false);
-							@SuppressWarnings("unchecked")
-							final Action action = result.getAction();
-							item2.setName(((Measurement) action).getName());
+							item2.setName(((Measurement) result.getAction()).getName());
 							item2.setChildrenFactory(this);
 							item2.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_RESULT));
 							item.addChild(item2);

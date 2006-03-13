@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.15 2006/02/16 13:02:18 saa Exp $
+ * $Id: MonitoredElement.java,v 1.16 2006/03/13 13:53:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,13 +33,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2006/02/16 13:02:18 $
- * @author $Author: saa $
+ * @version $Revision: 1.16 $, $Date: 2006/03/13 13:53:58 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class MonitoredElement extends DomainMember<MonitoredElement> {
+public final class MonitoredElement extends DomainMember {
 	private static final long serialVersionUID = 5689746173688711494L;
 
 	private Identifier measurementPortId;

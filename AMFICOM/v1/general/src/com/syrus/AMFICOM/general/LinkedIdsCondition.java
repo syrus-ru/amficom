@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.62 2005/12/14 13:10:12 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.63 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,8 +67,8 @@ import com.syrus.util.Log;
  * {@link #isNeedMore(Set)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.62 $, $Date: 2005/12/14 13:10:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.63 $, $Date: 2006/03/13 13:54:02 $
  * @module general
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -286,7 +286,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			private static final long serialVersionUID = 4447852496352966852L;
 
 			@Override
-			public boolean isConditionTrue(final StorableObject<?> storableObject) {
+			public boolean isConditionTrue(final StorableObject storableObject) {
 				Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 						+ "Object: " + storableObject.toString() + "; "
 						+ "This is a dummy condition; evaluation result is always false...",
@@ -313,7 +313,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	 * @throws IllegalObjectEntityException
 	 * @see StorableObjectCondition#isConditionTrue(StorableObject)
 	 */
-	public boolean isConditionTrue(final StorableObject<?> storableObject) throws IllegalObjectEntityException {
+	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		return this.delegate.isConditionTrue(storableObject);
 	}
 

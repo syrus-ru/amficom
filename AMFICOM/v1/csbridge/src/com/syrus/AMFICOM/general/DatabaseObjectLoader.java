@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.40 2006/03/09 17:23:58 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.41 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2006/03/09 17:23:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.41 $, $Date: 2006/03/13 13:53:57 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -28,7 +28,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 	 * CMServerObjectLoader
 	 * MServerObjectLoader
 	 */
-	public <T extends StorableObject<T>> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
@@ -45,7 +45,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 	 * CMServerObjectLoader
 	 * MServerObjectLoader
 	 */
-	public <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+	public <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws ApplicationException {
 		assert ids != null && condition != null: NON_NULL_EXPECTED;
 		final short entityCode = condition.getEntityCode().shortValue();
@@ -88,7 +88,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
-		final StorableObjectDatabase<? extends StorableObject<?>> database = DatabaseContext.getDatabase(entityCode);
+		final StorableObjectDatabase<? extends StorableObject> database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : NON_NULL_EXPECTED + "; entity: " + ObjectEntities.codeToString(entityCode);
 		((StorableObjectDatabase) database).save(storableObjects);
 	}

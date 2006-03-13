@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLink.java,v 1.19 2005/12/17 12:08:30 arseniy Exp $
+ * $Id: AbstractLink.java,v 1.20 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 
-public abstract class AbstractLink<T extends AbstractLink<T>>
-		extends DomainMember<T>
+public abstract class AbstractLink
+		extends DomainMember
 		implements Characterizable, TypedObject<AbstractLinkType>,
 		ReverseDependencyContainer {
 	AbstractLinkType type;

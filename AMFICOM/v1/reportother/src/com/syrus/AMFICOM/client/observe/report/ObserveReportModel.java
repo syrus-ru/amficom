@@ -1,5 +1,5 @@
 /*
- * $Id: ObserveReportModel.java,v 1.7 2005/11/16 18:55:25 max Exp $
+ * $Id: ObserveReportModel.java,v 1.8 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ public class ObserveReportModel extends ReportModel {
 	public static String ALARMS_LIST = "alarmsList";
 
 	@Override
-	public RenderingComponent createReport(AbstractDataStorableElement<?> element, Object data, ApplicationContext aContext)
+	public RenderingComponent createReport(AbstractDataStorableElement element, Object data, ApplicationContext aContext)
 		throws CreateReportException, CreateModelException {
 		RenderingComponent result = null;
 		

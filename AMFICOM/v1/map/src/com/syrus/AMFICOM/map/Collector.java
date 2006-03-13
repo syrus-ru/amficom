@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.107 2006/02/28 15:20:01 arseniy Exp $
+ * $Id: Collector.java,v 1.108 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,11 +55,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.107 $, $Date: 2006/02/28 15:20:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.108 $, $Date: 2006/03/13 13:54:02 $
  * @module map
  */
-public final class Collector extends StorableObject<Collector>
+public final class Collector extends StorableObject
 		implements Describable, Characterizable,
 		MapElement, XmlTransferableObject<XmlCollector> {
 	private static final long serialVersionUID = 4049922679379212598L;

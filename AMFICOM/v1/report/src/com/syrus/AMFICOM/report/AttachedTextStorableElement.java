@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
  * @module report
  */
 
-public final class AttachedTextStorableElement extends StorableElement<AttachedTextStorableElement>
+public final class AttachedTextStorableElement extends StorableElement
 {
 	private static final long serialVersionUID = 276389622206172004L;
 	
@@ -241,7 +241,7 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 	 * @param attachmentType тип привязки
 	 */
 	public void setAttachment(
-			AbstractDataStorableElement<?> attacher,
+			AbstractDataStorableElement attacher,
 			TextAttachingType attachmentType) {
 		if (	attachmentType.equals(TextAttachingType.TO_FIELDS_LEFT)		
 			||	attachmentType.equals(TextAttachingType.TO_LEFT)
@@ -331,7 +331,7 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 	public void suiteAttachingDistances(Rectangle templateBounds) throws ApplicationException {
 		int newX = 0;
 		int newY = 0;
-		AbstractDataStorableElement<?> horizontalAttacher = this.getHorizontalAttacher();
+		AbstractDataStorableElement horizontalAttacher = this.getHorizontalAttacher();
 		if (this.horizontalAttachType.equals(TextAttachingType.TO_FIELDS_LEFT))
 			newX = this.getX();
 		else if (this.horizontalAttachType.equals(TextAttachingType.TO_LEFT)) {
@@ -386,7 +386,7 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 //			}
 		}
 		
-		AbstractDataStorableElement<?> verticalAttacher = this.getVerticalAttacher();
+		AbstractDataStorableElement verticalAttacher = this.getVerticalAttacher();
 		if (this.verticalAttachType.equals(TextAttachingType.TO_FIELDS_TOP))
 			newY = this.getY();
 		else if (this.verticalAttachType.equals(TextAttachingType.TO_TOP)) {
@@ -445,7 +445,7 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 	 */
 	public void refreshAttachingDistances() throws ApplicationException {
 		if (!this.horizontalAttacherId.equals(Identifier.VOID_IDENTIFIER)) {
-			AbstractDataStorableElement<?> horizontalAttacher = this.getHorizontalAttacher();			
+			AbstractDataStorableElement horizontalAttacher = this.getHorizontalAttacher();			
 			if (this.horizontalAttachType.equals(TextAttachingType.TO_FIELDS_LEFT)) {
 				this.distanceX = this.getX();
 			} else if (this.horizontalAttachType.equals(TextAttachingType.TO_LEFT)) {
@@ -460,7 +460,7 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 		}
 		
 		if (!this.verticalAttacherId.equals(Identifier.VOID_IDENTIFIER)) {		
-			AbstractDataStorableElement<?> verticalAttacher = this.getVerticalAttacher();
+			AbstractDataStorableElement verticalAttacher = this.getVerticalAttacher();
 			if (this.verticalAttachType.equals(TextAttachingType.TO_FIELDS_TOP)) {
 				this.distanceY = this.getY();
 			} else if (this.verticalAttachType.equals(TextAttachingType.TO_TOP)) {
@@ -491,7 +491,7 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 	@Override
 	protected AttachedTextStorableElement clone() throws CloneNotSupportedException {
 		Map clonedIdIdMap = new HashMap();
-		AttachedTextStorableElement clone = super.clone();
+		AttachedTextStorableElement clone = (AttachedTextStorableElement) super.clone();
 		clone.text = this.text;
 		clone.distanceX = this.distanceX;
 		clone.distanceY = this.distanceY;
@@ -504,9 +504,9 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 		
 		//TODO: fix warnings. Do not use Map. Use simple if
 		try {
-			AbstractDataStorableElement<?> verticalDataElement = this.getVerticalAttacher();
+			AbstractDataStorableElement verticalDataElement = this.getVerticalAttacher();
 			if (verticalDataElement != null) {
-				AbstractDataStorableElement<?> clonedDataElement = (AbstractDataStorableElement) clonedIdIdMap.get(verticalDataElement);
+				AbstractDataStorableElement clonedDataElement = (AbstractDataStorableElement) clonedIdIdMap.get(verticalDataElement);
 				if (clonedDataElement == null) {
 					clonedDataElement = verticalDataElement.clone();
 					clonedIdIdMap.put(verticalDataElement, clonedDataElement);
@@ -515,7 +515,7 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 				clonedDataElement.setReportTemplateId(clone.reportTemplateId);
 			}
 			
-			AbstractDataStorableElement<?> horizontalDataElement = this.getHorizontalAttacher();
+			AbstractDataStorableElement horizontalDataElement = this.getHorizontalAttacher();
 			if (horizontalDataElement != null) {
 				AbstractDataStorableElement clonedDataElement = (AbstractDataStorableElement) clonedIdIdMap.get(verticalDataElement);
 				if (clonedDataElement == null) {

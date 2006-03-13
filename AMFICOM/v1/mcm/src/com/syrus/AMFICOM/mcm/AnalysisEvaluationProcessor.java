@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.57 2006/01/26 15:15:35 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.58 2006/03/13 13:53:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -36,8 +35,8 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2006/01/26 15:15:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.58 $, $Date: 2006/03/13 13:53:59 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -57,9 +56,7 @@ final class AnalysisEvaluationProcessor {
 	}
 
 	public static Result[] analyseEvaluate(final Result measurementResult) throws AnalysisException {
-		@SuppressWarnings("unchecked")
-		final Action action = measurementResult.getAction();
-		final Measurement measurement = (Measurement) action;
+		final Measurement measurement = (Measurement) measurementResult.getAction();
 		final Test test;
 		try {
 			test = (Test) StorableObjectPool.getStorableObject(measurement.getTestId(), true);

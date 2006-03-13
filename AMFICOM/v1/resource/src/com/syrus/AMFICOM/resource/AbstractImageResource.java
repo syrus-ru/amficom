@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.29 2006/02/28 15:19:58 arseniy Exp $
+ * $Id: AbstractImageResource.java,v 1.30 2006/03/13 13:54:00 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,12 +24,12 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2006/02/28 15:19:58 $
+ * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2006/03/13 13:54:00 $
  * @module resource
  */
 public abstract class AbstractImageResource
-		extends StorableObject<AbstractImageResource> {
+		extends StorableObject {
 	static final long serialVersionUID = -730035505208725678L;
 
 	/**

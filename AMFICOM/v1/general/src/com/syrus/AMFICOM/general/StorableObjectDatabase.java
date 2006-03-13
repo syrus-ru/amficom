@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.206 2005/12/14 11:07:31 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.207 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,14 +32,14 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.206 $, $Date: 2005/12/14 11:07:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.207 $, $Date: 2006/03/13 13:54:02 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 9
  */
 
-public abstract class StorableObjectDatabase<T extends StorableObject<T>> {
+public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 	public static final String APOSTROPHE = "'";
 	public static final String DOT = " . ";

@@ -1,5 +1,5 @@
 /*
- * $Id: XMLObjectLoader.java,v 1.14 2005/12/14 11:16:08 arseniy Exp $
+ * $Id: XMLObjectLoader.java,v 1.15 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/12/14 11:16:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2006/03/13 13:53:57 $
+ * @author $Author: bass $
  * @author Voffka
  * @module csbridge
  */
@@ -31,7 +31,7 @@ public final class XMLObjectLoader implements ObjectLoader {
 	}
 
 
-	public <T extends StorableObject<T>> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
@@ -45,7 +45,7 @@ public final class XMLObjectLoader implements ObjectLoader {
 		return storableObjects;
 	}
 
-	public <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+	public <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 

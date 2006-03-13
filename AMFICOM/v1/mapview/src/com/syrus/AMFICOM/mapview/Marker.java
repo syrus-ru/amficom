@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.45 2006/02/28 15:20:02 arseniy Exp $
+ * $Id: Marker.java,v 1.46 2006/03/13 13:54:00 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,13 +50,13 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *         и окно рефлектограммы инициализирует маркер такой            *
  *         информацией, после чего опять используется Lo.               *
  *
- * @version $Revision: 1.45 $, $Date: 2006/02/28 15:20:02 $
+ * @version $Revision: 1.46 $, $Date: 2006/03/13 13:54:00 $
  * @module mapview
- * @author $Author: arseniy $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  */
 
-public class Marker extends AbstractNode<Marker> {
+public class Marker extends AbstractNode {
 	private static final long serialVersionUID = 02L;
 	
 	/**

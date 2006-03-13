@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.63 2006/02/28 15:19:58 arseniy Exp $
+ * $Id: Server.java,v 1.64 2006/03/13 13:53:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,13 +37,13 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2006/02/28 15:19:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.64 $, $Date: 2006/03/13 13:53:59 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 
-public final class Server extends DomainMember<Server>
+public final class Server extends DomainMember
 		implements Characterizable, Namable {
 	private static final long serialVersionUID = 1988410957632317660L;
 

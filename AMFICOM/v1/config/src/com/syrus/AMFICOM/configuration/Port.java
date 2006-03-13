@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.109 2005/12/17 12:08:30 arseniy Exp $
+ * $Id: Port.java,v 1.110 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,12 +44,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.109 $, $Date: 2005/12/17 12:08:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.110 $, $Date: 2006/03/13 13:53:57 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
-public final class Port extends StorableObject<Port>
+public final class Port extends StorableObject
 		implements Characterizable, TypedObject<PortType>, ReverseDependencyContainer {
 	private static final long serialVersionUID = -5139393638116159453L;
 

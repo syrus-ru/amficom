@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThreadType.java,v 1.85 2006/01/17 16:24:10 bass Exp $
+ * $Id: CableThreadType.java,v 1.86 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,11 +59,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * optical fiber (or an <i>abstract</i> optical fiber), the latter is a type of
  * cable (or an <i>abstract</i> cable containing this thread).
  *
- * @version $Revision: 1.85 $, $Date: 2006/01/17 16:24:10 $
+ * @version $Revision: 1.86 $, $Date: 2006/03/13 13:53:57 $
  * @author $Author: bass $
  * @module configuration
  */
-public final class CableThreadType extends StorableObjectType<CableThreadType>
+public final class CableThreadType extends StorableObjectType
 		implements Namable, XmlTransferableObject<XmlCableThreadType> {
 	private static final long  serialVersionUID	= 3689355429075628086L;
 

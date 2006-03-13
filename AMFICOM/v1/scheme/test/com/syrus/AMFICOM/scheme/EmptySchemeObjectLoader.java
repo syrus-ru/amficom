@@ -1,5 +1,5 @@
 /*-
- * $Id: EmptySchemeObjectLoader.java,v 1.7 2005/12/14 11:35:46 bass Exp $
+ * $Id: EmptySchemeObjectLoader.java,v 1.8 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,15 +23,15 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/12/14 11:35:46 $
+ * @version $Revision: 1.8 $, $Date: 2006/03/13 13:54:01 $
  * @module scheme
  */
 final class EmptySchemeObjectLoader implements ObjectLoader {
-	public <T extends StorableObject<T>> Set<T> loadStorableObjects(Set<Identifier> ids) throws ApplicationException {
+	public <T extends StorableObject> Set<T> loadStorableObjects(Set<Identifier> ids) throws ApplicationException {
 		return Collections.<T>emptySet();
 	}
 
-	public <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByCondition(Set<Identifier> ids, StorableObjectCondition condition) throws ApplicationException {
+	public <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(Set<Identifier> ids, StorableObjectCondition condition) throws ApplicationException {
 		return Collections.<T>emptySet();
 	}
 

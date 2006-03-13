@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.91 2006/02/16 13:42:34 bass Exp $
+ * $Id: Analysis.java,v 1.92 2006/03/13 13:53:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,13 +31,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2006/02/16 13:42:34 $
+ * @version $Revision: 1.92 $, $Date: 2006/03/13 13:53:58 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Analysis extends Action<Analysis> {
+public final class Analysis extends Action {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */

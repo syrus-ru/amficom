@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.35 2005/12/08 16:11:03 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.36 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/12/08 16:11:03 $
+ * @version $Revision: 1.36 $, $Date: 2006/03/13 13:54:01 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -201,7 +201,7 @@ public final class SchemePathTestCase extends TestCase {
 		final SchemePort startSchemePort = SchemePort.createInstance(userId, "starting scheme port", IdlDirectionType._IN, schemeDevice);
 		final SchemePort endSchemePort = SchemePort.createInstance(userId, "ending scheme port", IdlDirectionType._OUT, schemeDevice);
 
-		final AbstractSchemeElement<?> abstractSchemeElements[] = new AbstractSchemeElement[] {schemeElement, schemeCableLink, schemeLink};
+		final AbstractSchemeElement abstractSchemeElements[] = new AbstractSchemeElement[] {schemeElement, schemeCableLink, schemeLink};
 
 		final PathElement pathElement0 = PathElement.createInstance(userId, schemePath, schemePath.getPathMembers().isEmpty() ? null : startSchemePort, endSchemePort);
 		final PathElement pathElement1 = PathElement.createInstance(userId, schemePath, schemeCableThread);

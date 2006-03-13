@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.154 2005/12/17 12:11:19 arseniy Exp $
+ * $Id: SchemeElement.java,v 1.155 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,11 +96,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.154 $, $Date: 2005/12/17 12:11:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.155 $, $Date: 2006/03/13 13:54:01 $
  * @module scheme
  */
-public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
+public final class SchemeElement extends AbstractSchemeElement
 		implements SchemeCellContainer,
 		XmlTransferableObject<XmlSchemeElement> {
 	private static final long serialVersionUID = 3618977875802797368L;
@@ -622,7 +622,7 @@ public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
 		final boolean usePool = false;
 
 		try {
-			final SchemeElement clone = super.clone();
+			final SchemeElement clone = (SchemeElement) super.clone();
 
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
@@ -2332,7 +2332,7 @@ public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
 	@Shitlet
 	@Deprecated
 	public boolean containsAbstractSchemePort(
-			final AbstractSchemePort<?> abstractSchemePort,
+			final AbstractSchemePort abstractSchemePort,
 			final boolean usePool)
 	throws ApplicationException {
 		if (this.getSchemeDevices0(usePool).contains(abstractSchemePort.getParentSchemeDeviceId())) {

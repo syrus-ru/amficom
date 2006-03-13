@@ -1,5 +1,5 @@
 /*
- * $Id: ReportRenderer.java,v 1.15 2005/11/16 18:53:17 max Exp $
+ * $Id: ReportRenderer.java,v 1.16 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
  * Реализует отчёт по шаблону
- * @author $Author: max $
- * @version $Revision: 1.15 $, $Date: 2005/11/16 18:53:17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2006/03/13 13:54:02 $
  * @module reportclient
  */
 public class ReportRenderer extends JPanel {
@@ -75,7 +75,7 @@ public class ReportRenderer extends JPanel {
 		this.checkForIntersections();
 		
 		Set<AbstractDataStorableElement> dataStorableElements = this.reportTemplate.getDataStorableElements();
-		for (AbstractDataStorableElement<?> dataElement : dataStorableElements) {
+		for (AbstractDataStorableElement dataElement : dataStorableElements) {
 			String modelName = dataElement.getModelClassName();
 			ReportModel model = ReportModelPool.getModel(modelName);
 
@@ -201,8 +201,8 @@ public class ReportRenderer extends JPanel {
 	}
 	
 	private boolean elementsIntersect(
-			StorableElement<?> element1,
-			StorableElement<?> element2) {
+			StorableElement element1,
+			StorableElement element2) {
 		int e1w = element1.getWidth();
 		int e1h = element1.getHeight();
 		int e2w = element2.getWidth();

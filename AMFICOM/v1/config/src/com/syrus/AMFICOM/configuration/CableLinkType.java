@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.91 2005/12/17 12:08:30 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.92 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,11 +57,11 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/12/17 12:08:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.92 $, $Date: 2006/03/13 13:53:57 $
+ * @author $Author: bass $
  * @module config
  */
-public final class CableLinkType extends AbstractLinkType<CableLinkType> implements XmlTransferableObject<XmlCableLinkType> {
+public final class CableLinkType extends AbstractLinkType implements XmlTransferableObject<XmlCableLinkType> {
 
 	private static final long serialVersionUID = 3257007652839372857L;
 

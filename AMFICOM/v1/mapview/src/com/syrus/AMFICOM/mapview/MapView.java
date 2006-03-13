@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.81 2006/02/28 15:20:02 arseniy Exp $
+* $Id: MapView.java,v 1.82 2006/03/13 13:54:00 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -60,12 +60,12 @@ import com.syrus.util.Log;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * 
- * @author $Author: arseniy $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.81 $, $Date: 2006/02/28 15:20:02 $
+ * @version $Revision: 1.82 $, $Date: 2006/03/13 13:54:00 $
  * @module mapview
  */
-public final class MapView extends DomainMember<MapView> implements Describable {
+public final class MapView extends DomainMember implements Describable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>

@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.152 2006/02/28 15:20:01 arseniy Exp $
+ * $Id: PhysicalLink.java,v 1.153 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,11 +77,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: arseniy $
- * @version $Revision: 1.152 $, $Date: 2006/02/28 15:20:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.153 $, $Date: 2006/03/13 13:54:02 $
  * @module map
  */
-public class PhysicalLink extends StorableObject<PhysicalLink>
+public class PhysicalLink extends StorableObject
 		implements Characterizable, TypedObject<PhysicalLinkType>,
 		MapElement, XmlTransferableObject<XmlPhysicalLink> {
 	private static final long serialVersionUID = 4121409622671570743L;
@@ -393,7 +393,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 		super.markAsChanged();
 	}
 
-	public AbstractNode<?> getEndNode() {
+	public AbstractNode getEndNode() {
 		if(this.endNode == null) {
 			try {
 				this.endNode = StorableObjectPool.<AbstractNode>getStorableObject(this.endNodeId, true);
@@ -472,7 +472,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 		super.markAsChanged();
 	}
 
-	public AbstractNode<?> getStartNode() {
+	public AbstractNode getStartNode() {
 		if(this.startNode == null) {
 			try {
 				this.startNode = StorableObjectPool.<AbstractNode>getStorableObject(this.startNodeId, true);

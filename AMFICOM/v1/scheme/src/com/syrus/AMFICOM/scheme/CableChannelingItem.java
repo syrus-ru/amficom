@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.88 2005/12/17 12:11:19 arseniy Exp $
+ * $Id: CableChannelingItem.java,v 1.89 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,12 +66,12 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #15 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.88 $, $Date: 2005/12/17 12:11:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.89 $, $Date: 2006/03/13 13:54:01 $
  * @module scheme
  */
 public final class CableChannelingItem
-		extends StorableObject<CableChannelingItem>
+		extends StorableObject
 		implements Comparable<CableChannelingItem>,
 		PathMember<SchemeCableLink, CableChannelingItem>,
 		ReverseDependencyContainer,

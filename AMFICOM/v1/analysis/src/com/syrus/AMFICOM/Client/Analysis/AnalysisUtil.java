@@ -67,9 +67,7 @@ public class AnalysisUtil
 	 * {@link #hasMeasurementByResult(Result)}
 	 */
 	public static Measurement getMeasurementByResult(Result result) {
-		@SuppressWarnings("unchecked")
-		final Action action = result.getAction();
-		return (Measurement) action;
+		return (Measurement) result.getAction();
 	}
 
 	/**

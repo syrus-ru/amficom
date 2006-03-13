@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.84 2005/12/07 17:17:20 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.85 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,10 +62,10 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.84 $, $Date: 2005/12/07 17:17:20 $
+ * @version $Revision: 1.85 $, $Date: 2006/03/13 13:54:01 $
  * @module scheme
  */
-public final class SchemeCablePort extends AbstractSchemePort<SchemeCablePort>
+public final class SchemeCablePort extends AbstractSchemePort
 		implements XmlTransferableObject<XmlSchemeCablePort> {
 	private static final long serialVersionUID = 4050767078690534455L;
 
@@ -261,6 +261,11 @@ public final class SchemeCablePort extends AbstractSchemePort<SchemeCablePort>
 		} catch (final XmlConversionException xce) {
 			throw new CreateObjectException(xce);
 		}
+	}
+
+	@Override
+	public SchemeCablePort clone() throws CloneNotSupportedException {
+		return (SchemeCablePort) super.clone();
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.178 2006/03/06 10:10:32 saa Exp $
+ * $Id: SchedulerModel.java,v 1.179 2006/03/13 13:53:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,8 +73,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.178 $, $Date: 2006/03/06 10:10:32 $
- * @author $Author: saa $
+ * @version $Revision: 1.179 $, $Date: 2006/03/13 13:53:59 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -954,7 +954,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_REFRESH_TESTS, null, changedTestId));
 	}
 
-	public void changeTemporalPattern(final AbstractTemporalPattern<?> temporalPattern) 
+	public void changeTemporalPattern(final AbstractTemporalPattern temporalPattern) 
 	throws ApplicationException {
 		final Test test = this.getSelectedTest();
 		if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
@@ -1467,7 +1467,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			offset);
 	}
 	
-	private SortedSet<Date> getTestTimes(final AbstractTemporalPattern<?> temporalPattern,
+	private SortedSet<Date> getTestTimes(final AbstractTemporalPattern temporalPattern,
 		final Date startDate,
 		final Date endDate,
 		final Date startInterval,
@@ -1503,7 +1503,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 	
 	public String isValid(final Test test,
-  		final  AbstractTemporalPattern<?> temporalPattern) 
+  		final  AbstractTemporalPattern temporalPattern) 
   	throws ApplicationException {
   		return this.intersectionValidator.isValid(test, temporalPattern);
   	}

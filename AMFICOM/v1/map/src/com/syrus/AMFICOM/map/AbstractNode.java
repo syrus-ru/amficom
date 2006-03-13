@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.47 2005/10/25 19:53:10 bass Exp $
+ * $Id: AbstractNode.java,v 1.48 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,13 +27,13 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * ({@link #location}) и изображением ({@link #imageId}).
  *
  * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/10/25 19:53:10 $
+ * @version $Revision: 1.48 $, $Date: 2006/03/13 13:54:02 $
  * @module map
  * @see SiteNode
  * @see TopologicalNode
  */
-public abstract class AbstractNode<T extends AbstractNode<T>>
-		extends StorableObject<T>
+public abstract class AbstractNode
+		extends StorableObject
 		implements MapElement {
 	static final long serialVersionUID = -2623880496462305233L;
 

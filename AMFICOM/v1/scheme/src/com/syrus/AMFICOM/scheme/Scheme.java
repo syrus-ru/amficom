@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.126 2005/12/17 12:11:19 arseniy Exp $
+ * $Id: Scheme.java,v 1.127 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -86,12 +86,12 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #03 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.126 $, $Date: 2005/12/17 12:11:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.127 $, $Date: 2006/03/13 13:54:01 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
-public final class Scheme extends AbstractCloneableDomainMember<Scheme>
+public final class Scheme extends AbstractCloneableDomainMember
 		implements Describable, SchemeCellContainer,
 		ReverseDependencyContainer, XmlTransferableObject<XmlScheme> {
 	private static final long serialVersionUID = 3257289136389173298L;
@@ -357,7 +357,7 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 		final boolean usePool = false;
 
 		try {
-			final Scheme clone = super.clone();
+			final Scheme clone = (Scheme) super.clone();
 
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();

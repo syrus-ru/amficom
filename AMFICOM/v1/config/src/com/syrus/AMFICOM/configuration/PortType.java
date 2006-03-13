@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.115 2005/12/17 12:08:30 arseniy Exp $
+ * $Id: PortType.java,v 1.116 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,13 +63,13 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.115 $, $Date: 2005/12/17 12:08:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.116 $, $Date: 2006/03/13 13:53:57 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 
-public final class PortType extends StorableObjectType<PortType>
+public final class PortType extends StorableObjectType
 		implements Characterizable, Namable,
 		XmlTransferableObject<XmlPortType>, ReverseDependencyContainer {
 	private static final long serialVersionUID = -115251480084275101L;

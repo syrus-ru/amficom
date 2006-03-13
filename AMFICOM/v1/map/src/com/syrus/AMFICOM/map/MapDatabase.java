@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.64 2005/12/02 11:24:13 bass Exp $
+ * $Id: MapDatabase.java,v 1.65 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/12/02 11:24:13 $
+ * @version $Revision: 1.65 $, $Date: 2006/03/13 13:54:02 $
  * @author $Author: bass $
  * @module map
  */
@@ -301,7 +301,6 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 		super.updateLinkedEntityIds(mapIdLinkedObjectIds, tableName, MapWrapper.LINK_COLUMN_MAP_ID, columnName);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void delete(final Set<? extends Identifiable> ids) {
 
@@ -329,7 +328,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 				}
 			}
 			if(!linkedIds.isEmpty()) {
-				final StorableObjectDatabase<? extends StorableObject<?>> database = DatabaseContext.getDatabase(linkedIds.iterator().next().getMajor());
+				final StorableObjectDatabase<? extends StorableObject> database = DatabaseContext.getDatabase(linkedIds.iterator().next().getMajor());
 				// Nothing to do but suppress a warning
 				database.delete(linkedIds);
 				linkedIds.clear();

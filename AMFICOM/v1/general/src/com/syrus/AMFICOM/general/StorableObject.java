@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.145 2006/02/15 18:05:47 bass Exp $
+ * $Id: StorableObject.java,v 1.146 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,16 +34,15 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 import com.syrus.util.LRUMap.Retainable;
-import com.syrus.util.Wrapper;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.145 $, $Date: 2006/02/15 18:05:47 $
+ * @version $Revision: 1.146 $, $Date: 2006/03/13 13:54:02 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public abstract class StorableObject<T extends StorableObject<T>> implements Identifiable,
+public abstract class StorableObject implements Identifiable,
 		IdlTransferableObject<IdlStorableObject>, Retainable {
 	private static final long serialVersionUID = 3904998894075738999L;
 
@@ -348,9 +347,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 * @see Object#clone()
 	 */
 	@Override
-	protected T clone() throws CloneNotSupportedException {
-		@SuppressWarnings("unchecked")
-		final T clone = (T) super.clone();
+	protected StorableObject clone() throws CloneNotSupportedException {
+		final StorableObject clone = (StorableObject) super.clone();
 		try {
 			clone.id = IdentifierPool.getGeneratedIdentifier(this.id.getMajor());
 		} catch (final IdentifierGenerationException ige) {
@@ -569,11 +567,14 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 				+ "; changed: " + this.isChanged()  + '}';
 	}
 
-	protected abstract Wrapper<T> getWrapper();
+	protected abstract StorableObjectWrapper<?> getWrapper();
 
-	@SuppressWarnings("unchecked")
 	public final Object getValue(final String key) {
-		return this.getWrapper().getValue((T) this, key);
+		@SuppressWarnings("unchecked")
+		final StorableObjectWrapper wrapper = this.getWrapper();
+		@SuppressWarnings("unchecked")
+		final Object value = wrapper.getValue(this, key);
+		return value;
 	}
 
 	/**
@@ -665,11 +666,11 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.145 $, $Date: 2006/02/15 18:05:47 $
+	 * @version $Revision: 1.146 $, $Date: 2006/03/13 13:54:02 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
-	public static class StorableObjectContainerWrappee<T extends StorableObject<T>> {
+	public static class StorableObjectContainerWrappee<T extends StorableObject> {
 		private static final long serialVersionUID = -1264974065379428032L;
 
 		private boolean cacheBuilt = false;
@@ -682,7 +683,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 		 * @param wrapper
 		 * @param entityCode
 		 */
-		public StorableObjectContainerWrappee(final StorableObject<?> wrapper,
+		public StorableObjectContainerWrappee(final StorableObject wrapper,
 				final short entityCode) {
 			this.condition = new LinkedIdsCondition(wrapper.getId(), entityCode);
 		}
@@ -774,7 +775,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.145 $, $Date: 2006/02/15 18:05:47 $
+	 * @version $Revision: 1.146 $, $Date: 2006/03/13 13:54:02 $
 	 * @module general
 	 */
 	@Retention(SOURCE)

@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.72 2006/02/28 15:20:01 arseniy Exp $
+ * $Id: Mark.java,v 1.73 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,11 +41,11 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: arseniy $
- * @version $Revision: 1.72 $, $Date: 2006/02/28 15:20:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.73 $, $Date: 2006/03/13 13:54:02 $
  * @module map
  */
-public final class Mark extends AbstractNode<Mark> {
+public final class Mark extends AbstractNode {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>

@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.42 2006/01/30 11:20:49 bob Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.43 2006/03/13 13:53:58 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -45,13 +45,13 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.42 $, $Date: 2006/01/30 11:20:49 $
- * @author $Author: bob $
+ * @version $Revision: 1.43 $, $Date: 2006/03/13 13:53:58 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
 public final class IntervalsTemporalPattern
-		extends AbstractTemporalPattern<IntervalsTemporalPattern>
+		extends AbstractTemporalPattern
 		implements Undoable {
 
 	private static final long serialVersionUID = 3257567312898175032L;

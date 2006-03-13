@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.122 2006/02/28 15:20:01 arseniy Exp $
+ * $Id: SiteNode.java,v 1.123 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,11 +67,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: arseniy $
- * @version $Revision: 1.122 $, $Date: 2006/02/28 15:20:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.123 $, $Date: 2006/03/13 13:54:02 $
  * @module map
  */
-public class SiteNode extends AbstractNode<SiteNode>
+public class SiteNode extends AbstractNode
 		implements Characterizable,
 		TypedObject<SiteNodeType>, XmlTransferableObject<XmlSiteNode> {
 

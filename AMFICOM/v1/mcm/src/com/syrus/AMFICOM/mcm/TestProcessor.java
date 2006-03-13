@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.90 2006/02/20 17:08:17 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.91 2006/03/13 13:53:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2006/02/20 17:08:17 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.91 $, $Date: 2006/03/13 13:53:59 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -298,9 +298,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 		for (final Iterator<Result> it = this.measurementResults.iterator(); it.hasNext();) {
 			final Result measurementResult = it.next();
-			@SuppressWarnings("unchecked")
-			final Action action = measurementResult.getAction();
-			final Measurement measurement = (Measurement) action;
+			final Measurement measurement = (Measurement) measurementResult.getAction();
 			try {
 				final Result[] aeResults = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
 				for (int i = 0; i < aeResults.length; i++) {

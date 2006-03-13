@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.117 2006/02/28 15:20:01 arseniy Exp $
+ * $Id: NodeLink.java,v 1.118 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,11 +51,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: arseniy $
- * @version $Revision: 1.117 $, $Date: 2006/02/28 15:20:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.118 $, $Date: 2006/03/13 13:54:02 $
  * @module map
  */
-public final class NodeLink extends StorableObject<NodeLink>
+public final class NodeLink extends StorableObject
 		implements MapElement, XmlTransferableObject<XmlNodeLink> {
 	private static final long serialVersionUID = 3257290240262617393L;
 
@@ -184,7 +184,7 @@ public final class NodeLink extends StorableObject<NodeLink>
 		super.markAsChanged();
 	}
 
-	public AbstractNode<?> getEndNode() {
+	public AbstractNode getEndNode() {
 		if(this.endNode == null) {
 			try {
 				this.endNode = StorableObjectPool.<AbstractNode>getStorableObject(this.endNodeId, true);
@@ -279,7 +279,7 @@ public final class NodeLink extends StorableObject<NodeLink>
 		markAsChanged();
 	}
 
-	public AbstractNode<?> getStartNode() {
+	public AbstractNode getStartNode() {
 		if(this.startNode == null) {
 			try {
 				this.startNode = StorableObjectPool.<AbstractNode>getStorableObject(this.startNodeId, true);

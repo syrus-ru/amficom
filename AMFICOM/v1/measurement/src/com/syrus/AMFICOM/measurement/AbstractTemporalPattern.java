@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractTemporalPattern.java,v 1.12 2006/01/30 11:20:49 bob Exp $
+ * $Id: AbstractTemporalPattern.java,v 1.13 2006/03/13 13:53:58 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,13 +18,13 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2006/01/30 11:20:49 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2006/03/13 13:53:58 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
-public abstract class AbstractTemporalPattern<T extends AbstractTemporalPattern<T>>
-		extends StorableObject<T> {
+public abstract class AbstractTemporalPattern
+		extends StorableObject {
 
 	private static final long serialVersionUID = -4278178783985442738L;
 

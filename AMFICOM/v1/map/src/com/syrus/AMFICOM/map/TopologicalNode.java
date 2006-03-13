@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.97 2006/02/28 15:20:01 arseniy Exp $
+ * $Id: TopologicalNode.java,v 1.98 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,11 +47,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: arseniy $
- * @version $Revision: 1.97 $, $Date: 2006/02/28 15:20:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.98 $, $Date: 2006/03/13 13:54:02 $
  * @module map
  */
-public final class TopologicalNode extends AbstractNode<TopologicalNode>
+public final class TopologicalNode extends AbstractNode
 		implements XmlTransferableObject<XmlTopologicalNode> {
 
 	/**

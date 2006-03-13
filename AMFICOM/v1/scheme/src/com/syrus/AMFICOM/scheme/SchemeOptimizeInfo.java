@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.84 2005/12/17 12:11:19 arseniy Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.85 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,11 +53,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #05 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.84 $, $Date: 2005/12/17 12:11:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.85 $, $Date: 2006/03/13 13:54:01 $
  * @module scheme
  */
-public final class SchemeOptimizeInfo extends StorableObject<SchemeOptimizeInfo>
+public final class SchemeOptimizeInfo extends StorableObject
 		implements Describable, ReverseDependencyContainer,
 		XmlTransferableObject<XmlSchemeOptimizeInfo> {
 	private static final long serialVersionUID = 3761127137155232822L;

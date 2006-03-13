@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicType.java,v 1.69 2005/12/17 12:04:07 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.70 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,14 +38,14 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/12/17 12:04:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.70 $, $Date: 2006/03/13 13:54:02 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 
 public final class CharacteristicType
-		extends StorableObjectType<CharacteristicType>
+		extends StorableObjectType
 		implements Namable, XmlTransferableObject<XmlCharacteristicType> {
 	private static final long serialVersionUID = 6153350736368296076L;
 

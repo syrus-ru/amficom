@@ -1,5 +1,5 @@
 /*-
-* $Id: IntersectionValidator.java,v 1.8 2006/03/07 11:05:09 saa Exp $
+* $Id: IntersectionValidator.java,v 1.9 2006/03/13 13:53:59 bass Exp $
 *
 * Copyright ¿ 2006 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2006/03/07 11:05:09 $
- * @author $Author: saa $
+ * @version $Revision: 1.9 $, $Date: 2006/03/13 13:53:59 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -140,12 +140,12 @@ public class IntersectionValidator {
 	
 	private String isValid(final Test test, 
 	                       final MeasurementSetup measurementSetup,
-	                       final AbstractTemporalPattern<?> pattern,
+	                       final AbstractTemporalPattern pattern,
 	                       final Date startDate,
 	                       final Date endDate,
 	                       final long offset) throws ApplicationException {
 		final Identifier temporalPatternId = test.getTemporalPatternId();
-		final AbstractTemporalPattern<?> testPattern;
+		final AbstractTemporalPattern testPattern;
 		
 		if (pattern != null) {
 			testPattern = pattern;
@@ -202,7 +202,7 @@ public class IntersectionValidator {
 		return this.isValid(test, null, null, null, null, offset);
 	}
 
-	public String isValid(final Test test, final AbstractTemporalPattern<?> temporalPattern) 
+	public String isValid(final Test test, final AbstractTemporalPattern temporalPattern) 
 	throws ApplicationException {
 		return this.isValid(test, null, temporalPattern, null, null, 0L);
 	}
@@ -251,7 +251,7 @@ public class IntersectionValidator {
 		System.out.println("isIntersects(): " + timeLabel + " vs " + test);
 
 		final Identifier temporalPatternId = test.getTemporalPatternId();
-		final AbstractTemporalPattern<?> testPattern;
+		final AbstractTemporalPattern testPattern;
 		if (temporalPatternId.isVoid()) {
 			testPattern = null; 
 		} else {

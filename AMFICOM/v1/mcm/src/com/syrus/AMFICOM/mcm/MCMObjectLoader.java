@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.35 2005/12/14 11:57:00 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.36 2006/03/13 13:53:59 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/12/14 11:57:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2006/03/13 13:53:59 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -49,7 +49,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 	}
 
 	@Override
-	public <T extends StorableObject<T>> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
@@ -97,7 +97,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 
 
 	@Override
-	public final <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+	public final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 
@@ -210,7 +210,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 			for (final Short entityKey : levelLoadObjectsMap.keySet()) {
 				final Set<StorableObject> entityLevelLoadObjects = levelLoadObjectsMap.get(entityKey);
 				try {
-					final StorableObjectDatabase<? extends StorableObject<?>> database = DatabaseContext.getDatabase(entityKey);
+					final StorableObjectDatabase<? extends StorableObject> database = DatabaseContext.getDatabase(entityKey);
 					((StorableObjectDatabase) database).save(entityLevelLoadObjects);
 				}
 				catch (ApplicationException ae) {

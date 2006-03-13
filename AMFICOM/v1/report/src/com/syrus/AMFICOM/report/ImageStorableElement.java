@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
  */
 
 public final class ImageStorableElement
-		extends StorableElement<ImageStorableElement> {
+		extends StorableElement {
 
 	private static final long serialVersionUID = 336147260496995306L;
 	private Identifier bitmapImageResourceId;
@@ -214,7 +214,7 @@ public final class ImageStorableElement
 	
 	@Override
 	protected ImageStorableElement clone() throws CloneNotSupportedException {
-		ImageStorableElement clone = super.clone();
+		ImageStorableElement clone = (ImageStorableElement) super.clone();
 		try {
 			BitmapImageResource image = this.getBitmapImageResource();
 			BitmapImageResource imageClone = image.clone();

@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.44 2006/02/28 15:20:01 arseniy Exp $
+ * $Id: MapLibrary.java,v 1.45 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,11 +62,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 
 
 /**
- * @version $Revision: 1.44 $, $Date: 2006/02/28 15:20:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2006/03/13 13:54:02 $
+ * @author $Author: bass $
  * @module map
  */
-public final class MapLibrary extends StorableObject<MapLibrary>
+public final class MapLibrary extends StorableObject
 		implements Namable, Library, XmlTransferableObject<XmlMapLibrary> {
 	private static final long	serialVersionUID	= -8616969914711251336L;
 

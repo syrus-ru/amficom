@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitch.java,v 1.39 2005/12/17 12:11:19 arseniy Exp $
+ * $Id: SchemeOptimizeInfoSwitch.java,v 1.40 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,12 +49,12 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #06 in hierarchy.
  *
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.39 $, $Date: 2005/12/17 12:11:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.40 $, $Date: 2006/03/13 13:54:01 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitch
-		extends StorableObject<SchemeOptimizeInfoSwitch>
+		extends StorableObject
 		implements Namable, ReverseDependencyContainer,
 		XmlTransferableObject<XmlSchemeOptimizeInfoSwitch> {
 	private static final long serialVersionUID = 2583191675321445786L;

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.25 2005/12/17 12:11:21 arseniy Exp $
+ * $Id: ParameterSet.java,v 1.26 2006/03/13 13:53:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,13 +33,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameterSetHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/12/17 12:11:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2006/03/13 13:53:58 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class ParameterSet extends StorableObject<ParameterSet> {
+public final class ParameterSet extends StorableObject {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */

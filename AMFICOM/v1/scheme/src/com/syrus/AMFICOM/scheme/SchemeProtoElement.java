@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.131 2005/12/17 12:11:19 arseniy Exp $
+ * $Id: SchemeProtoElement.java,v 1.132 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -83,12 +83,12 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #02 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.131 $, $Date: 2005/12/17 12:11:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.132 $, $Date: 2006/03/13 13:54:01 $
  * @module scheme
  */
 public final class SchemeProtoElement
-		extends AbstractCloneableStorableObject<SchemeProtoElement>
+		extends AbstractCloneableStorableObject
 		implements Describable, SchemeCellContainer,
 		Characterizable, ReverseDependencyContainer,
 		XmlTransferableObject<XmlSchemeProtoElement> {
@@ -394,7 +394,7 @@ public final class SchemeProtoElement
 		final boolean usePool = false;
 
 		try {
-			final SchemeProtoElement clone = super.clone();
+			final SchemeProtoElement clone = (SchemeProtoElement) super.clone();
 
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();

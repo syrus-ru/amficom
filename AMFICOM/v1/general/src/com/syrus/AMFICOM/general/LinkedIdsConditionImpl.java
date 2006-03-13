@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.25 2005/12/09 11:36:13 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.26 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/12/09 11:36:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2006/03/13 13:54:02 $
+ * @author $Author: bass $
  * @module general
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -74,14 +74,11 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 *         </ul>
 	 */
 	@Override
-	public boolean isConditionTrue(final StorableObject<?> storableObject) throws IllegalObjectEntityException {
-		@SuppressWarnings("unchecked")
-		final StorableObject rawStorableObject = storableObject;
-
+	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
 			case CHARACTERISTIC_CODE:
-				final Characteristic characteristic = (Characteristic) rawStorableObject;
+				final Characteristic characteristic = (Characteristic) storableObject;
 				switch (this.linkedEntityCode) {
 
 					/* Administration */

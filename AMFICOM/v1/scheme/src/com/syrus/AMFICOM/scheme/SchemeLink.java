@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.107 2005/12/17 12:11:19 arseniy Exp $
+ * $Id: SchemeLink.java,v 1.108 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,11 +74,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #12 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.107 $, $Date: 2005/12/17 12:11:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.108 $, $Date: 2006/03/13 13:54:01 $
  * @module scheme
  */
-public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
+public final class SchemeLink extends AbstractSchemeLink
 		implements XmlTransferableObject<XmlSchemeLink> {
 	private static final long serialVersionUID = 3834587703751947064L;
 
@@ -508,7 +508,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 			}
 		}
 		try {
-			final SchemeLink clone = super.clone();
+			final SchemeLink clone = (SchemeLink) super.clone();
 
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();

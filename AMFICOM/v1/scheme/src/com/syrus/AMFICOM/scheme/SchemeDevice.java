@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.118 2005/12/17 12:11:19 arseniy Exp $
+ * $Id: SchemeDevice.java,v 1.119 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,12 +77,12 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #09 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.118 $, $Date: 2005/12/17 12:11:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.119 $, $Date: 2006/03/13 13:54:01 $
  * @module scheme
  */
 public final class SchemeDevice
-		extends AbstractCloneableStorableObject<SchemeDevice>
+		extends AbstractCloneableStorableObject
 		implements Describable, Characterizable,
 		ReverseDependencyContainer,
 		XmlTransferableObject<XmlSchemeDevice> {
@@ -348,7 +348,7 @@ public final class SchemeDevice
 			}
 		}
 		try {
-			final SchemeDevice clone = super.clone();
+			final SchemeDevice clone = (SchemeDevice) super.clone();
 	
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.113 2005/12/17 12:11:19 arseniy Exp $
+ * $Id: SchemeCableThread.java,v 1.114 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,12 +75,12 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #14 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.113 $, $Date: 2005/12/17 12:11:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.114 $, $Date: 2006/03/13 13:54:01 $
  * @module scheme
  */
 public final class SchemeCableThread
-		extends AbstractCloneableStorableObject<SchemeCableThread>
+		extends AbstractCloneableStorableObject
 		implements Describable, Characterizable,
 		ReverseDependencyContainer,
 		XmlTransferableObject<XmlSchemeCableThread> {
@@ -314,7 +314,7 @@ public final class SchemeCableThread
 			}
 		}
 		try {
-			final SchemeCableThread clone = super.clone();
+			final SchemeCableThread clone = (SchemeCableThread) super.clone();
 
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.106 2005/12/17 12:08:30 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.107 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,13 +40,13 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.106 $, $Date: 2005/12/17 12:08:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.107 $, $Date: 2006/03/13 13:53:57 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 
-public final class TransmissionPath extends DomainMember<TransmissionPath>
+public final class TransmissionPath extends DomainMember
 		implements MonitoredDomainMember,
 		Characterizable,
 		TypedObject<TransmissionPathType>, ReverseDependencyContainer {

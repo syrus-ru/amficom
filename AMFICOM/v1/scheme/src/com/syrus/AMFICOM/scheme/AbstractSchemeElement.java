@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.78 2005/12/17 12:11:19 arseniy Exp $
+ * $Id: AbstractSchemeElement.java,v 1.79 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,12 +46,12 @@ import com.syrus.util.transport.xml.XmlConversionException;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeElement}instead.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.78 $, $Date: 2005/12/17 12:11:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.79 $, $Date: 2006/03/13 13:54:01 $
  * @module scheme
  */
-public abstract class AbstractSchemeElement<T extends AbstractSchemeElement<T>>
-		extends AbstractCloneableStorableObject<T>
+public abstract class AbstractSchemeElement
+		extends AbstractCloneableStorableObject
 		implements Describable, Characterizable,
 		ReverseDependencyContainer {
 	static final long serialVersionUID = 4644766113809681630L;

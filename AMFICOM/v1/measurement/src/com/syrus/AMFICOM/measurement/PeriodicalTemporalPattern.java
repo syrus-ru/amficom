@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.35 2006/03/01 16:14:07 saa Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.36 2006/03/13 13:53:58 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,13 +36,13 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.35 $, $Date: 2006/03/01 16:14:07 $
- * @author $Author: saa $
+ * @version $Revision: 1.36 $, $Date: 2006/03/13 13:53:58 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
 public final class PeriodicalTemporalPattern
-		extends AbstractTemporalPattern<PeriodicalTemporalPattern> {
+		extends AbstractTemporalPattern {
 
 	private static final long serialVersionUID = 3257567312898175032L;
 

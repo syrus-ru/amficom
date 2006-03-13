@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
  * @module report
  */
 
-public class DataStorableElement extends AbstractDataStorableElement<DataStorableElement> {
+public class DataStorableElement extends AbstractDataStorableElement {
 	private static final long	serialVersionUID	= 3501681877580290043L;
 
 	DataStorableElement(final Identifier id,
@@ -155,7 +155,7 @@ public class DataStorableElement extends AbstractDataStorableElement<DataStorabl
 
 	@Override
 	protected DataStorableElement clone() throws CloneNotSupportedException {
-		DataStorableElement clone = super.clone();
+		DataStorableElement clone = (DataStorableElement) super.clone();
 		return clone;
 	}
 }

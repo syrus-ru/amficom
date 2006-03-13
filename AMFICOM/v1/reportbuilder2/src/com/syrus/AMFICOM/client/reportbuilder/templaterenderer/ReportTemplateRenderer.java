@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.2 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -543,7 +543,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	
 	
 	public RTEDataRenderingComponent createReportTemplateDataRenderingComponent(
-			AbstractDataStorableElement<?> storableElement) throws CreateModelException, ApplicationException {
+			AbstractDataStorableElement storableElement) throws CreateModelException, ApplicationException {
 		RTEDataRenderingComponent component =
 			new RTEDataRenderingComponent(storableElement);
 		

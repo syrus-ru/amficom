@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.11 2005/12/17 12:09:00 arseniy Exp $
+ * $Id: DeliveryAttributes.java,v 1.12 2006/03/13 13:53:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,11 +42,11 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/12/17 12:09:00 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2006/03/13 13:53:59 $
  * @module event
  */
-public final class DeliveryAttributes extends StorableObject<DeliveryAttributes> {
+public final class DeliveryAttributes extends StorableObject {
 	private static final long serialVersionUID = -8861427452530992582L;
 
 	private Severity severity;

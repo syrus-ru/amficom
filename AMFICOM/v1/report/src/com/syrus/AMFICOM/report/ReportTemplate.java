@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.29 2006/03/09 18:05:41 arseniy Exp $
+ * $Id: ReportTemplate.java,v 1.30 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,11 +60,11 @@ import com.syrus.util.Log;
  * <p>Тип шаблона характеризует из какого модуля по нему можно построить
  * отчёт </p>
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2006/03/09 18:05:41 $
+ * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2006/03/13 13:53:57 $
  * @module report
  */
-public class ReportTemplate extends StorableObject<ReportTemplate> implements Namable, Describable, ReverseDependencyContainer,
+public class ReportTemplate extends StorableObject implements Namable, Describable, ReverseDependencyContainer,
 		Cloneable {
 	private static final long serialVersionUID = 6270406142449624592L;
 
@@ -272,7 +272,7 @@ public class ReportTemplate extends StorableObject<ReportTemplate> implements Na
 	 * привязанные к нему надписи.
 	 * @throws ApplicationException 
 	 */
-	public Rectangle getElementClasterBounds(final AbstractDataStorableElement<?> abstractDataStorableElement)
+	public Rectangle getElementClasterBounds(final AbstractDataStorableElement abstractDataStorableElement)
 			throws ApplicationException {
 		if (abstractDataStorableElement == null) {
 			throw new AssertionError("The claster bounds can't be calculated for the null element!");
@@ -495,7 +495,7 @@ public class ReportTemplate extends StorableObject<ReportTemplate> implements Na
 
 	@Override
 	public ReportTemplate clone() throws CloneNotSupportedException {
-		final ReportTemplate clone = super.clone();
+		final ReportTemplate clone = (ReportTemplate) super.clone();
 		clone.name = this.name;
 		clone.description = this.description;
 		clone.sheetSize = this.sheetSize;

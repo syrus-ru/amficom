@@ -1,5 +1,5 @@
 /*-
- * $Id: Alarm.java,v 1.6 2005/12/17 12:11:18 arseniy Exp $
+ * $Id: Alarm.java,v 1.7 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,11 +33,11 @@ import com.syrus.util.Log;
 
 /**
  * @author krupenn
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/12/17 12:11:18 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2006/03/13 13:54:01 $
  * @module observer
  */
-public final class Alarm extends StorableObject<Alarm> {
+public final class Alarm extends StorableObject {
 	private static final long serialVersionUID = -8320740053940064854L;
 
 	private PopupNotificationEvent event;

@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.33 2006/02/28 15:19:58 arseniy Exp $
+ * $Id: ServerProcess.java,v 1.34 2006/03/13 13:53:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,12 +32,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2006/02/28 15:19:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2006/03/13 13:53:59 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
-public final class ServerProcess extends StorableObject<ServerProcess> {
+public final class ServerProcess extends StorableObject {
 	private static final long serialVersionUID = 2216890579914405388L;
 
 	private String codename;

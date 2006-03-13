@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.89 2006/01/17 16:19:34 bass Exp $
+ * $Id: Characteristic.java,v 1.90 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,12 +35,12 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2006/01/17 16:19:34 $
+ * @version $Revision: 1.90 $, $Date: 2006/03/13 13:54:02 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public final class Characteristic extends AbstractCloneableStorableObject<Characteristic>
+public final class Characteristic extends AbstractCloneableStorableObject
 		implements TypedObject<CharacteristicType>,
 		ReverseDependencyContainer,
 		XmlTransferableObject<XmlCharacteristic> {
@@ -525,7 +525,6 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	 * @todo add check whether parentCharacterizable is non-null.
 	 */
 	public Characterizable getParentCharacterizable() throws ApplicationException {
-		@SuppressWarnings("unchecked")
 		final StorableObject storableObject = StorableObjectPool.getStorableObject(this.getParentCharacterizableId(), true);
 		if (storableObject == null || storableObject instanceof Characterizable) {
 			return (Characterizable) storableObject;
@@ -557,7 +556,6 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 			return;
 		}
 
-		@SuppressWarnings("unchecked")
 		final StorableObject storableObject = StorableObjectPool.getStorableObject(parentCharacterizableId, true);
 		/*
 		 * The situation when null StorableObject is returned is unusual, and must be
@@ -658,7 +656,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 		 * characterizableId is updated from within that code,
 		 * and not here. 
 		 */
-		final Characteristic clone = super.clone();
+		final Characteristic clone = (Characteristic) super.clone();
 
 		if (clone.clonedIdMap == null) {
 			clone.clonedIdMap = new HashMap<Identifier, Identifier>();

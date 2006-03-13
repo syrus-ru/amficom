@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeReportModel.java,v 1.5 2005/11/16 19:25:59 max Exp $
+ * $Id: SchemeReportModel.java,v 1.6 2006/03/13 13:54:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,11 +67,9 @@ public class SchemeReportModel extends ReportModel
 	
 	@Override
 	public RenderingComponent createReport(
-			AbstractDataStorableElement<?> element,
+			AbstractDataStorableElement element,
 			Object data,
 			ApplicationContext aContext) throws CreateReportException{
-		final AbstractDataStorableElement rawElement = element;
-
 		RenderingComponent result = null;
 		
 		String reportName = element.getReportName();
@@ -145,27 +143,27 @@ public class SchemeReportModel extends ReportModel
 					SchemeElement schemeElement = StorableObjectPool.getStorableObject(objectId,true);
 					result = SchemeElementReport.createReport(
 							schemeElement,
-							(TableDataStorableElement) rawElement);
+							(TableDataStorableElement) element);
 				}
 				else if (	(objectId.getMajor() == ObjectEntities.SCHEMEPORT_CODE)
 						||	(objectId.getMajor() == ObjectEntities.SCHEMECABLEPORT_CODE)) {
 					AbstractSchemePort schemePort = StorableObjectPool.getStorableObject(objectId,true);
 					result = SchemePortReport.createReport(
 							schemePort,
-							(TableDataStorableElement) rawElement);
+							(TableDataStorableElement) element);
 				}
 				else if (	(objectId.getMajor() == ObjectEntities.SCHEMELINK_CODE)
 						||	(objectId.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE)) {
 					AbstractSchemeLink schemeLink = StorableObjectPool.getStorableObject(objectId,true);
 					result = SchemeLinkReport.createReport(
 							schemeLink,
-							(TableDataStorableElement) rawElement);
+							(TableDataStorableElement) element);
 				}
 				else if (objectId.getMajor() == ObjectEntities.SCHEMEPATH_CODE) {
 					SchemePath schemePath = StorableObjectPool.getStorableObject(objectId,true);
 					result = SchemePathReport.createReport(
 							schemePath,
-							(TableDataStorableElement) rawElement);
+							(TableDataStorableElement) element);
 				}
 			}
 		} catch (ApplicationException e) {

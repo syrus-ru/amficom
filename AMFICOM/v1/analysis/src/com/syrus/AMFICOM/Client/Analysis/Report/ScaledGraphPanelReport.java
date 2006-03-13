@@ -1,5 +1,5 @@
 /*
- * $Id: ScaledGraphPanelReport.java,v 1.4 2005/11/16 18:13:42 max Exp $
+ * $Id: ScaledGraphPanelReport.java,v 1.5 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 
 public class ScaledGraphPanelReport {
 	public static ImageRenderingComponent createReport(
-			AbstractDataStorableElement<?> element,
+			AbstractDataStorableElement element,
 			ScaledGraphPanel sgPanel) {
 		int elementWidth = element.getWidth();
 		int elementHeight = element.getHeight();

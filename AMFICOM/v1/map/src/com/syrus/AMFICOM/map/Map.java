@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.126 2006/02/28 15:20:01 arseniy Exp $
+ * $Id: Map.java,v 1.127 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,11 +67,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.126 $, $Date: 2006/02/28 15:20:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.127 $, $Date: 2006/03/13 13:54:02 $
  * @module map
  */
-public final class Map extends DomainMember<Map>
+public final class Map extends DomainMember
 		implements Namable, XmlTransferableObject<XmlMap> {
 
 	/**

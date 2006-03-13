@@ -1,5 +1,5 @@
 /*
- * $Id: SchedulerReportModel.java,v 1.6 2005/12/05 10:16:47 bass Exp $
+ * $Id: SchedulerReportModel.java,v 1.7 2006/03/13 13:54:02 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,13 +52,10 @@ public class SchedulerReportModel extends ReportModel {
 	
 	@Override
 	public RenderingComponent createReport(
-			final AbstractDataStorableElement<?> dataStorableElement,
+			final AbstractDataStorableElement dataStorableElement,
 			final Object data,
 			final ApplicationContext aContext)
 	throws CreateReportException{
-		@SuppressWarnings("unchecked")
-		final AbstractDataStorableElement rawDataStorableElement = dataStorableElement;
-
 		RenderingComponent result = null;
 		String reportName = dataStorableElement.getReportName();
 		String modelClassName = dataStorableElement.getModelClassName();		
@@ -76,7 +73,7 @@ public class SchedulerReportModel extends ReportModel {
 					Test test = StorableObjectPool.getStorableObject(testId,true); 
 					result = TestReport.createReport(
 							test,
-							(TableDataStorableElement) rawDataStorableElement);
+							(TableDataStorableElement) dataStorableElement);
 				} catch (CreateReportException e) {
 				} catch (ApplicationException e) {
 				}
@@ -90,7 +87,7 @@ public class SchedulerReportModel extends ReportModel {
 						CreateReportException.WRONG_DATA_TO_INSTALL);
 			result = TableModelVerticalDivider.createReport(
 					(AbstractTableModel) data,
-					(TableDataStorableElement) rawDataStorableElement);
+					(TableDataStorableElement) dataStorableElement);
 		}
 		
 		if (result == null)

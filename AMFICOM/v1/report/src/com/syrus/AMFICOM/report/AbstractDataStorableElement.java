@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 
 /*-
- * $Id: AbstractDataStorableElement.java,v 1.1 2005/11/16 18:29:58 max Exp $
+ * $Id: AbstractDataStorableElement.java,v 1.2 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,13 +21,13 @@ import com.syrus.AMFICOM.resource.IntPoint;
 
 /**
  * @author max
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/11/16 18:29:58 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2006/03/13 13:53:57 $
  * @module report
  */
 
-public abstract class AbstractDataStorableElement<T extends AbstractDataStorableElement<T>> 
-		extends StorableElement<T> {
+public abstract class AbstractDataStorableElement 
+		extends StorableElement {
 	protected String reportName;
 
 	/**
@@ -98,8 +98,8 @@ public abstract class AbstractDataStorableElement<T extends AbstractDataStorable
 	}
 
 	@Override
-	protected T clone() throws CloneNotSupportedException {
-		T clone = super.clone();
+	protected AbstractDataStorableElement clone() throws CloneNotSupportedException {
+		AbstractDataStorableElement clone = (AbstractDataStorableElement) super.clone();
 		
 		clone.reportName = this.reportName;
 		clone.modelClassName = this.modelClassName;

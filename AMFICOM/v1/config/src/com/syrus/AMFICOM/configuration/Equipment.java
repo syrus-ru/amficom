@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.156 2005/12/17 12:08:30 arseniy Exp $
+ * $Id: Equipment.java,v 1.157 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,12 +60,12 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.156 $, $Date: 2005/12/17 12:08:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.157 $, $Date: 2006/03/13 13:53:57 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
-public final class Equipment extends DomainMember<Equipment>
+public final class Equipment extends DomainMember
 		implements MonitoredDomainMember,
 		Characterizable,
 		XmlTransferableObject<XmlEquipment>, ReverseDependencyContainer {

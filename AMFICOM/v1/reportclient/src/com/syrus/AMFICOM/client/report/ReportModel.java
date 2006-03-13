@@ -32,7 +32,7 @@ public abstract class ReportModel
 	 * @throws CreateModelException 
 */
 	public abstract RenderingComponent createReport(
-		AbstractDataStorableElement<?> element,
+		AbstractDataStorableElement element,
 		Object data,
 		ApplicationContext aContext)
 		throws CreateReportException, CreateModelException;

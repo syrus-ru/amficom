@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.14 2005/12/17 12:11:21 arseniy Exp $
+ * $Id: KIS.java,v 1.15 2006/03/13 13:53:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,12 +35,12 @@ import com.syrus.AMFICOM.measurement.corba.IdlKISHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/12/17 12:11:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2006/03/13 13:53:58 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class KIS extends DomainMember<KIS> implements Namable {
+public final class KIS extends DomainMember implements Namable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>

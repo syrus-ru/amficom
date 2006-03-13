@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.119 2006/02/16 13:07:24 arseniy Exp $
+ * $Id: SchemePath.java,v 1.120 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,11 +71,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #16 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.119 $, $Date: 2006/02/16 13:07:24 $
+ * @author $Author: bass $
+ * @version $Revision: 1.120 $, $Date: 2006/03/13 13:54:01 $
  * @module scheme
  */
-public final class SchemePath extends StorableObject<SchemePath>
+public final class SchemePath extends StorableObject
 		implements Describable, Characterizable,
 		PathOwner<PathElement>, ReverseDependencyContainer,
 		XmlTransferableObject<XmlSchemePath> {

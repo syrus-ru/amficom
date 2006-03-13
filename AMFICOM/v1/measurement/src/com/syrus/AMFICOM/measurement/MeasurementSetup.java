@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.100 2006/02/03 08:47:31 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.101 2006/03/13 13:53:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,13 +38,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSo
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.100 $, $Date: 2006/02/03 08:47:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.101 $, $Date: 2006/03/13 13:53:58 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
+public final class MeasurementSetup extends StorableObject {
 	private static final long serialVersionUID = 3256442525404443446L;
 
 	private ParameterSet parameterSet;

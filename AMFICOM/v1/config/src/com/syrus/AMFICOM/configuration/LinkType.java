@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.97 2005/12/17 12:08:30 arseniy Exp $
+ * $Id: LinkType.java,v 1.98 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,12 +53,12 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/12/17 12:08:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.98 $, $Date: 2006/03/13 13:53:57 $
+ * @author $Author: bass $
  * @module config
  */
 
-public final class LinkType extends AbstractLinkType<LinkType> implements XmlTransferableObject<XmlLinkType> {
+public final class LinkType extends AbstractLinkType implements XmlTransferableObject<XmlLinkType> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>

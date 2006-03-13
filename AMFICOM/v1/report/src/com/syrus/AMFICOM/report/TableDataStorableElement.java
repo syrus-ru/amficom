@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.19 2006/02/28 15:19:59 arseniy Exp $
+ * $Id: TableDataStorableElement.java,v 1.20 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,11 +34,11 @@ import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 /**
  * Класс для отображения данных в табличном виде
- * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2006/02/28 15:19:59 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2006/03/13 13:53:57 $
  * @module report
  */
-public final class TableDataStorableElement extends AbstractDataStorableElement<TableDataStorableElement> {
+public final class TableDataStorableElement extends AbstractDataStorableElement {
 	private static final long serialVersionUID = -2699698026579054587L;
 
 	public static Font DEFAULT_FONT = new Font("Times New Roman",Font.PLAIN,12);	
@@ -177,7 +177,7 @@ public final class TableDataStorableElement extends AbstractDataStorableElement<
 
 	@Override
 	protected TableDataStorableElement clone() throws CloneNotSupportedException {
-		TableDataStorableElement clone = super.clone();
+		TableDataStorableElement clone = (TableDataStorableElement) super.clone();
 		clone.verticalDivisionsCount = this.verticalDivisionsCount;
 		return clone;
 	}
