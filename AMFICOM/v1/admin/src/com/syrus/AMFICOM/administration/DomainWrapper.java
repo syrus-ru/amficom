@@ -1,5 +1,5 @@
 /*
- * $Id: DomainWrapper.java,v 1.18 2005/10/25 19:53:15 bass Exp $
+ * $Id: DomainWrapper.java,v 1.19 2006/03/13 15:54:25 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/25 19:53:15 $
+ * @version $Revision: 1.19 $, $Date: 2006/03/13 15:54:25 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -100,8 +100,8 @@ public final class DomainWrapper extends StorableObjectWrapper<Domain> {
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key); 
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

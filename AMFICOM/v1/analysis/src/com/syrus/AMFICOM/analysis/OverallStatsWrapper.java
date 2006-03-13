@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStatsWrapper.java,v 1.7 2005/10/20 09:17:40 saa Exp $
+ * $Id: OverallStatsWrapper.java,v 1.8 2006/03/13 15:54:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/10/20 09:17:40 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2006/03/13 15:54:24 $
  * @module analysis
  */
 
@@ -86,7 +86,7 @@ public class OverallStatsWrapper implements Wrapper<OverallStats> {
 		return key;
 	}
 
-	public Class getPropertyClass(final String key) {
+	public Class<?> getPropertyClass(final String key) {
 		if (this.keys.contains(key)) {
 			return String.class; 
 		}

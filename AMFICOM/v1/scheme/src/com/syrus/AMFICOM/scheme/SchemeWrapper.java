@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeWrapper.java,v 1.11 2005/09/20 11:49:55 bass Exp $
+ * $Id: SchemeWrapper.java,v 1.12 2006/03/13 15:54:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/20 11:49:55 $
+ * @version $Revision: 1.12 $, $Date: 2006/03/13 15:54:26 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -65,8 +65,8 @@ public final class SchemeWrapper extends StorableObjectWrapper<Scheme> {
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key);
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key);
 		if (clazz != null) {
 			return clazz;
 		}

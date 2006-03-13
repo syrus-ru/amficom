@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeWrapper.java,v 1.16 2005/08/08 13:24:41 arseniy Exp $
+ * $Id: LinkTypeWrapper.java,v 1.17 2006/03/13 15:54:24 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/08 13:24:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2006/03/13 15:54:24 $
+ * @author $Author: bass $
  * @module config
  */
 public final class LinkTypeWrapper extends StorableObjectWrapper<LinkType> {
@@ -127,8 +127,8 @@ public final class LinkTypeWrapper extends StorableObjectWrapper<LinkType> {
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key);
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key);
 		if (clazz != null) {
 			return clazz;
 		}

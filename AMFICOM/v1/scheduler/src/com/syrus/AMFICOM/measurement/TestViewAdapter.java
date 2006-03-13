@@ -1,5 +1,5 @@
 /*
- * $Id: TestViewAdapter.java,v 1.11 2006/02/16 12:51:48 bob Exp $
+ * $Id: TestViewAdapter.java,v 1.12 2006/03/13 15:54:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2006/02/16 12:51:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2006/03/13 15:54:25 $
+ * @author $Author: bass $
  * @module module
  */
 public class TestViewAdapter implements Wrapper<TestView> {
@@ -127,8 +127,8 @@ public class TestViewAdapter implements Wrapper<TestView> {
 		return name;
 	}
 
-	public Class getPropertyClass(String key) {
-		Class clazz = String.class;
+	public Class<?> getPropertyClass(String key) {
+		Class<?> clazz = String.class;
 		key = key != null ? key.intern() : null;
 		if (key == KEY_STATUS) {
 			clazz = Map.class;

@@ -1,6 +1,6 @@
 
 /*-
- * $Id: PermissionBeanWrapper.java,v 1.2 2005/12/14 15:08:30 bob Exp $
+ * $Id: PermissionBeanWrapper.java,v 1.3 2006/03/13 15:54:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/14 15:08:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2006/03/13 15:54:24 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -75,7 +75,7 @@ public class PermissionBeanWrapper implements Wrapper<PermissionBean> {
 		return null;
 	}
 
-	public Class getPropertyClass(final String key) {	
+	public Class<?> getPropertyClass(final String key) {	
 		if (this.permissionCodenamesMap.containsKey(key)) {
 			return Boolean.class;
 		}

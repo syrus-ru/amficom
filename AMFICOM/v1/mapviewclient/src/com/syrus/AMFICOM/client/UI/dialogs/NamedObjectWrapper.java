@@ -1,5 +1,5 @@
 /*-
- * $$Id: NamedObjectWrapper.java,v 1.7 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: NamedObjectWrapper.java,v 1.8 2006/03/13 15:54:27 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/10/11 08:56:11 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.8 $, $Date: 2006/03/13 15:54:27 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -137,7 +137,7 @@ public class NamedObjectWrapper implements Wrapper {
 		// empty
 	}
 
-	public Class getPropertyClass(String key) {
+	public Class<?> getPropertyClass(String key) {
 		return String.class;
 	}
 }

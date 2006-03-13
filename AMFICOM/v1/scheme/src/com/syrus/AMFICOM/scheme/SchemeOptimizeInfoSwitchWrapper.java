@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitchWrapper.java,v 1.9 2005/10/02 18:58:43 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitchWrapper.java,v 1.10 2006/03/13 15:54:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.PropertyChangeException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/10/02 18:58:43 $
+ * @version $Revision: 1.10 $, $Date: 2006/03/13 15:54:26 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper<SchemeOptimizeInfoSwitch> {
@@ -59,8 +59,8 @@ public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper
 	 * @see com.syrus.util.Wrapper#getPropertyClass(java.lang.String)
 	 */
 	@Override
-	public Class getPropertyClass(String key) {
-		final Class clazz = super.getPropertyClass(key);
+	public Class<?> getPropertyClass(String key) {
+		final Class<?> clazz = super.getPropertyClass(key);
 		if (clazz != null) {
 			return clazz;
 		}

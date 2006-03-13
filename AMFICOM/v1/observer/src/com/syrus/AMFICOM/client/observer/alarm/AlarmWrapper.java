@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmWrapper.java,v 1.4 2006/03/13 15:23:06 bass Exp $
+ * $Id: AlarmWrapper.java,v 1.5 2006/03/13 15:54:26 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ public class AlarmWrapper implements Wrapper<Alarm> {
 		return I18N.getString("Wrapper.Keys." + key);
 	}
 
-	public Class getPropertyClass(String key) {
+	public Class<?> getPropertyClass(String key) {
 		if (key.equals(COLUMN_OPTICAL_DISTANCE)
 				|| key.equals(COLUMN_PHYSICAL_DISTANCE)) {
 			return Double.class;

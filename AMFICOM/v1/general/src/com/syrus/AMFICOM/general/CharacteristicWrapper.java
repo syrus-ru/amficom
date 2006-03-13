@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.25 2005/10/25 19:53:04 bass Exp $
+ * $Id: CharacteristicWrapper.java,v 1.26 2006/03/13 15:54:27 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/10/25 19:53:04 $
+ * @version $Revision: 1.26 $, $Date: 2006/03/13 15:54:27 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -66,8 +66,8 @@ public final class CharacteristicWrapper extends StorableObjectWrapper<Character
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key); 
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

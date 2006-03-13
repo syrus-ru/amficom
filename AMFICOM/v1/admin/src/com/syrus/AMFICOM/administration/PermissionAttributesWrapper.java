@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionAttributesWrapper.java,v 1.10 2005/10/25 19:53:15 bass Exp $
+ * $Id: PermissionAttributesWrapper.java,v 1.11 2006/03/13 15:54:25 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/25 19:53:15 $
+ * @version $Revision: 1.11 $, $Date: 2006/03/13 15:54:25 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -125,8 +125,8 @@ public final class PermissionAttributesWrapper extends StorableObjectWrapper<Per
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key); 
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterController.java,v 1.1 2005/09/11 16:14:37 stas Exp $
+ * $Id: ParameterController.java,v 1.2 2006/03/13 15:54:26 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.Parameter;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/09/11 16:14:37 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2006/03/13 15:54:26 $
  * @module measurement_v1
  */
 
@@ -61,7 +61,7 @@ public class ParameterController extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
+	public Class<?> getPropertyClass(String key) {
 		return String.class;
 	}
 

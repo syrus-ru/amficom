@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkAddEditor.java,v 1.43 2006/02/15 11:27:23 stas Exp $$
+ * $$Id: PhysicalLinkAddEditor.java,v 1.44 2006/03/13 15:54:27 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,8 +70,8 @@ import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2006/02/15 11:27:23 $
- * @author $Author: stas $
+ * @version $Revision: 1.44 $, $Date: 2006/03/13 15:54:27 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -851,7 +851,7 @@ class PipeBlockWrapper implements Wrapper {
 		return null;
 	}
 
-	public Class getPropertyClass(String key) {
+	public Class<?> getPropertyClass(String key) {
 		// nothing
 		return null;
 	}

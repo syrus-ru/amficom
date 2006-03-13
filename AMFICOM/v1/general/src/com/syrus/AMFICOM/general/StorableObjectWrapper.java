@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.20 2005/09/20 07:49:21 bass Exp $
+ * $Id: StorableObjectWrapper.java,v 1.21 2006/03/13 15:54:27 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Wrapper;
  * a static method <code>getInstance()</code>.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/09/20 07:49:21 $
+ * @version $Revision: 1.21 $, $Date: 2006/03/13 15:54:27 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
@@ -121,7 +121,7 @@ public abstract class StorableObjectWrapper<T extends StorableObject> implements
 			final Object value)
 	throws PropertyChangeException;
 
-	public Class getPropertyClass(String key) {
+	public Class<?> getPropertyClass(String key) {
 		if (key.equals(COLUMN_ID) 
 				|| key.equals(COLUMN_CREATOR_ID)
 				|| key.equals(COLUMN_MODIFIER_ID)) {

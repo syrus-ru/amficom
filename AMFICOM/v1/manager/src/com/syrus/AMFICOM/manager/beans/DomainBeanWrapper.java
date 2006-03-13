@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanWrapper.java,v 1.1 2005/11/17 09:00:32 bob Exp $
+ * $Id: DomainBeanWrapper.java,v 1.2 2006/03/13 15:54:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2006/03/13 15:54:24 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -61,7 +61,7 @@ public class DomainBeanWrapper implements Wrapper<DomainBean> {
 		return null;
 	}
 
-	public Class getPropertyClass(String key) {
+	public Class<?> getPropertyClass(String key) {
 		key = key.intern();
 		if (key == KEY_NAME || 
 				key == KEY_DESCRIPTION) { 

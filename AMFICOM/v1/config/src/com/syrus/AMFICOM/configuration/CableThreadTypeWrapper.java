@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeWrapper.java,v 1.16 2005/09/08 14:20:25 max Exp $
+ * $Id: CableThreadTypeWrapper.java,v 1.17 2006/03/13 15:54:24 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/08 14:20:25 $
- * @author $Author: max $
+ * @version $Revision: 1.17 $, $Date: 2006/03/13 15:54:24 $
+ * @author $Author: bass $
  * @module config
  */
 public final class CableThreadTypeWrapper extends StorableObjectWrapper<CableThreadType> {
@@ -109,8 +109,8 @@ public final class CableThreadTypeWrapper extends StorableObjectWrapper<CableThr
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key); 
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

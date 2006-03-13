@@ -1,5 +1,5 @@
 /*
-* $Id: Wrapper.java,v 1.9 2006/03/01 14:04:32 bass Exp $
+* $Id: Wrapper.java,v 1.10 2006/03/13 15:54:24 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import java.util.List;
  * using a static method <code>getInstance()</code>.
  *
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2006/03/01 14:04:32 $
+ * @version $Revision: 1.10 $, $Date: 2006/03/13 15:54:24 $
  * @see <a href = "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter Java&raquo; by Bruce A. Tate</a>
  * @module util
  */
@@ -48,7 +48,7 @@ public interface Wrapper<T> {
 	 *         values, {@link String}<code>.class</code> otherwise.
 	 * @see #getPropertyValue(String)
 	 */
-	Class getPropertyClass(final String key);
+	Class<?> getPropertyClass(final String key);
 
 	/**
 	 * If some entities have limited range of values represented as a set

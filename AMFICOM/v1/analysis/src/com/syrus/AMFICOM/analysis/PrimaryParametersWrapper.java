@@ -1,5 +1,5 @@
 /*-
- * $Id: PrimaryParametersWrapper.java,v 1.1 2005/09/07 02:58:10 arseniy Exp $
+ * $Id: PrimaryParametersWrapper.java,v 1.2 2006/03/13 15:54:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.1 $, $Date: 2005/09/07 02:58:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2006/03/13 15:54:24 $
  * @module analysis
  */
 
@@ -73,7 +73,7 @@ public class PrimaryParametersWrapper implements Wrapper<PrimaryParameters> {
 		return key;
 	}
 
-	public Class getPropertyClass(final String key) {
+	public Class<?> getPropertyClass(final String key) {
 		if (this.keys.contains(key)) {
 			return String.class;
 		}

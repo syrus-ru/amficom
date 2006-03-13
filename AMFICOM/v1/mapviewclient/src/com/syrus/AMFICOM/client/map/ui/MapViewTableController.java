@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewTableController.java,v 1.18 2006/02/15 11:13:06 stas Exp $$
+ * $$Id: MapViewTableController.java,v 1.19 2006/03/13 15:54:27 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/02/15 11:13:06 $
- * @author $Author: stas $
+ * @version $Revision: 1.19 $, $Date: 2006/03/13 15:54:27 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -136,8 +136,8 @@ public final class MapViewTableController implements Wrapper {
 		// empty
 	}
 
-	public Class getPropertyClass(String key) {
-		Class clazz = String.class;
+	public Class<?> getPropertyClass(String key) {
+		Class<?> clazz = String.class;
 		return clazz;
 	}
 

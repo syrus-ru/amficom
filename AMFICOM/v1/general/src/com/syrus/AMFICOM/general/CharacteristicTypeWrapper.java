@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeWrapper.java,v 1.22 2005/12/06 11:31:12 bass Exp $
+ * $Id: CharacteristicTypeWrapper.java,v 1.23 2006/03/13 15:54:27 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/12/06 11:31:12 $
+ * @version $Revision: 1.23 $, $Date: 2006/03/13 15:54:27 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module general
@@ -55,8 +55,8 @@ public final class CharacteristicTypeWrapper extends StorableObjectWrapper<Chara
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key); 
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

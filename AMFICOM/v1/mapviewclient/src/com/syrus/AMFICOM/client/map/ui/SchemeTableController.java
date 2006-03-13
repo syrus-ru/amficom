@@ -1,5 +1,5 @@
 /*-
- * $$Id: SchemeTableController.java,v 1.16 2006/02/15 11:13:06 stas Exp $$
+ * $$Id: SchemeTableController.java,v 1.17 2006/03/13 15:54:27 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2006/02/15 11:13:06 $
- * @author $Author: stas $
+ * @version $Revision: 1.17 $, $Date: 2006/03/13 15:54:27 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -138,8 +138,8 @@ public final class SchemeTableController extends StorableObjectWrapper<Scheme> {
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = String.class;
+	public Class<?> getPropertyClass(String key) {
+		Class<?> clazz = String.class;
 		return clazz;
 	}
 

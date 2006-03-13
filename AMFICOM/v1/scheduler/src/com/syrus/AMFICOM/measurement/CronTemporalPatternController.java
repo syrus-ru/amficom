@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPatternController.java,v 1.4 2005/10/06 13:18:02 bob Exp $
+ * $Id: CronTemporalPatternController.java,v 1.5 2006/03/13 15:54:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/10/06 13:18:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2006/03/13 15:54:25 $
+ * @author $Author: bass $
  * @module module
  */
 public class CronTemporalPatternController implements Wrapper {
@@ -64,8 +64,8 @@ public class CronTemporalPatternController implements Wrapper {
 		return name;
 	}
 
-	public Class getPropertyClass(String key) {
-		Class clazz = String.class;
+	public Class<?> getPropertyClass(String key) {
+		Class<?> clazz = String.class;
 		return clazz;
 	}
 

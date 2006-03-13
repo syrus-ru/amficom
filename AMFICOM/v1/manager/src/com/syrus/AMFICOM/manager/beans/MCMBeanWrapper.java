@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBeanWrapper.java,v 1.2 2005/11/30 13:15:27 bob Exp $
+ * $Id: MCMBeanWrapper.java,v 1.3 2006/03/13 15:54:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/30 13:15:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2006/03/13 15:54:24 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -146,7 +146,7 @@ public class MCMBeanWrapper implements Wrapper<MCMBean> {
 		return null;
 	}
 
-	public Class getPropertyClass(String key) {
+	public Class<?> getPropertyClass(String key) {
 		if (key.equals(KEY_NAME) || 
 				key.equals(KEY_DESCRIPTION) ||
 				key.equals(KEY_HOSTNAME)) { 

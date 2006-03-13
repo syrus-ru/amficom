@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesWrapper.java,v 1.6 2005/11/30 15:58:08 bass Exp $
+ * $Id: DeliveryAttributesWrapper.java,v 1.7 2006/03/13 15:54:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.PropertyChangeException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/11/30 15:58:08 $
+ * @version $Revision: 1.7 $, $Date: 2006/03/13 15:54:25 $
  * @module event
  */
 public final class DeliveryAttributesWrapper
@@ -64,8 +64,8 @@ public final class DeliveryAttributesWrapper
 	 * @see StorableObjectWrapper#getPropertyClass(String)
 	 */
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key);
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key);
 		if (clazz != null) {
 			return clazz;
 		}

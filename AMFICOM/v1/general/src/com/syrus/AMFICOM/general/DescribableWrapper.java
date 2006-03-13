@@ -1,5 +1,5 @@
 /*-
-* $Id: DescribableWrapper.java,v 1.1 2005/10/06 08:03:17 bob Exp $
+* $Id: DescribableWrapper.java,v 1.2 2006/03/13 15:54:27 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/06 08:03:17 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2006/03/13 15:54:27 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module general
  */
@@ -51,7 +51,7 @@ public final class DescribableWrapper implements Wrapper<Describable> {
 		return null;
 	}
 	
-	public Class getPropertyClass(final String key) {
+	public Class<?> getPropertyClass(final String key) {
 		if (key == COLUMN_DESCRIPTION) {
 			return String.class;
 		}

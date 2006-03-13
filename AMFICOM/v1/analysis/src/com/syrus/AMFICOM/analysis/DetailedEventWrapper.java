@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventWrapper.java,v 1.8 2005/11/18 12:54:17 saa Exp $
+ * $Id: DetailedEventWrapper.java,v 1.9 2006/03/13 15:54:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/11/18 12:54:17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2006/03/13 15:54:24 $
  * @module analysis
  */
 
@@ -101,7 +101,7 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 		return key;
 	}
 
-	public Class getPropertyClass(final String key) {
+	public Class<?> getPropertyClass(final String key) {
 		if (key.equals(KEY_IMAGE) || key.equals(KEY_ANCHOR_IMAGE)) {
 			return Icon.class;
 		} else if (this.keys.contains(key)) {

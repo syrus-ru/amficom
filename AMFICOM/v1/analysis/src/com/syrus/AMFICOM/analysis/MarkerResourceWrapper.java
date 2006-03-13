@@ -1,5 +1,5 @@
 /*-
- * $Id: MarkerResourceWrapper.java,v 1.3 2005/09/07 02:56:49 arseniy Exp $
+ * $Id: MarkerResourceWrapper.java,v 1.4 2006/03/13 15:54:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/09/07 02:56:49 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2006/03/13 15:54:24 $
  * @module analysis
  */
 
@@ -77,7 +77,7 @@ public class MarkerResourceWrapper implements Wrapper<MarkerResource> {
 		return key;
 	}
 
-	public Class getPropertyClass(final String key) {
+	public Class<?> getPropertyClass(final String key) {
 		if (this.keys.contains(key)) {
 			return String.class;
 		}

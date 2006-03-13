@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateWrapper.java,v 1.1 2005/09/13 12:23:10 peskovsky Exp $
+ * $Id: ReportTemplateWrapper.java,v 1.2 2006/03/13 15:54:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.report.ReportTemplate;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/09/13 12:23:10 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.2 $, $Date: 2006/03/13 15:54:27 $
+ * @author $Author: bass $
  * @module map
  */
 public class ReportTemplateWrapper extends StorableObjectWrapper<ReportTemplate> {
@@ -54,7 +54,7 @@ public class ReportTemplateWrapper extends StorableObjectWrapper<ReportTemplate>
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
+	public Class<?> getPropertyClass(final String key) {
 		return String.class;
 	}
 

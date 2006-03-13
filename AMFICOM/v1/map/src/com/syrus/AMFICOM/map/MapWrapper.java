@@ -1,5 +1,5 @@
 /*
- * $Id: MapWrapper.java,v 1.21 2005/10/25 19:53:11 bass Exp $
+ * $Id: MapWrapper.java,v 1.22 2006/03/13 15:54:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/25 19:53:11 $
+ * @version $Revision: 1.22 $, $Date: 2006/03/13 15:54:26 $
  * @author $Author: bass $
  * @module map
  */
@@ -91,7 +91,7 @@ public final class MapWrapper extends StorableObjectWrapper<Map> {
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
+	public Class<?> getPropertyClass(final String key) {
 		if (key.equals(LINK_COLUMN_COLLECTOR_ID)
 				|| key.equals(LINK_COLUMN_MARK_ID)
 				|| key.equals(LINK_COLUMN_NODE_LINK_ID)

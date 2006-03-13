@@ -1,5 +1,5 @@
 /*
- * $Id: RoleWrapper.java,v 1.2 2005/10/25 19:53:15 bass Exp $
+ * $Id: RoleWrapper.java,v 1.3 2006/03/13 15:54:25 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/25 19:53:15 $
+ * @version $Revision: 1.3 $, $Date: 2006/03/13 15:54:25 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -92,8 +92,8 @@ public final class RoleWrapper extends StorableObjectWrapper<Role> {
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key); 
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

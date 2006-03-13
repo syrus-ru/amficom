@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorWrapper.java,v 1.16 2005/10/25 19:53:11 bass Exp $
+ * $Id: CollectorWrapper.java,v 1.17 2006/03/13 15:54:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/25 19:53:11 $
+ * @version $Revision: 1.17 $, $Date: 2006/03/13 15:54:26 $
  * @author $Author: bass $
  * @module map
  */
@@ -64,7 +64,7 @@ public final class CollectorWrapper extends StorableObjectWrapper<Collector> {
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
+	public Class<?> getPropertyClass(final String key) {
 		if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID)) {
 			return List.class;
 		}

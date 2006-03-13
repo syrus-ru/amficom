@@ -1,5 +1,5 @@
 /*
- * $Id: LayoutItemWrapper.java,v 1.2 2005/10/25 19:53:14 bass Exp $
+ * $Id: LayoutItemWrapper.java,v 1.3 2006/03/13 15:54:26 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/25 19:53:14 $
+ * @version $Revision: 1.3 $, $Date: 2006/03/13 15:54:26 $
  * @author $Author: bass $
  * @module general
  */
@@ -56,7 +56,7 @@ public final class LayoutItemWrapper extends StorableObjectWrapper<LayoutItem> {
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
+	public Class<?> getPropertyClass(final String key) {
 		if (key.equals(COLUMN_LAYOUT_NAME) ||
 				key.equals(COLUMN_NAME)) {
 			return String.class;
