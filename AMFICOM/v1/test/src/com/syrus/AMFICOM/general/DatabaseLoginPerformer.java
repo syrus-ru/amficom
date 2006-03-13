@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLoginPerformer.java,v 1.3 2006/02/17 14:38:54 arseniy Exp $
+ * $Id: DatabaseLoginPerformer.java,v 1.4 2006/03/13 07:54:47 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,10 +22,11 @@ import java.util.Set;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.security.SessionKey;
+import com.syrus.AMFICOM.security.ShadowDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2006/02/17 14:38:54 $
+ * @version $Revision: 1.4 $, $Date: 2006/03/13 07:54:47 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -37,7 +38,9 @@ public final class DatabaseLoginPerformer implements LoginPerformer {
 
 	public DatabaseLoginPerformer() {
 		this.sessionKey = VOID_SESSION_KEY;
+
 		this.reset();
+		this.domainId = VOID_IDENTIFIER;
 	}
 
 	public Set<Domain> getAvailableDomains() throws CommunicationException, LoginException {
@@ -102,6 +105,8 @@ public final class DatabaseLoginPerformer implements LoginPerformer {
 		this.userId = systemUser.getId();
 		if (domain != null) {
 			this.domainId = domain.getId();
+		} else {
+			this.domainId = VOID_IDENTIFIER;
 		}
 	}
 
@@ -130,16 +135,25 @@ public final class DatabaseLoginPerformer implements LoginPerformer {
 	}
 
 	public void setPassword(final String password) throws CommunicationException, LoginException {
-		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+		final ShadowDatabase shadowDatabase = new ShadowDatabase();
+		try {
+			shadowDatabase.updateOrInsert(this.userId, password);
+		} catch (UpdateObjectException uoe) {
+			throw new LoginException(uoe);
+		}
 	}
 
 	public void setPassword(final Identifier systemUserId, final String password) throws CommunicationException, LoginException {
-		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+		final ShadowDatabase shadowDatabase = new ShadowDatabase();
+		try {
+			shadowDatabase.updateOrInsert(systemUserId, password);
+		} catch (UpdateObjectException uoe) {
+			throw new LoginException(uoe);
+		}
 	}
 
 	private void reset() {
 		this.userId = VOID_IDENTIFIER;
-		this.domainId = VOID_IDENTIFIER;
 	}
 
 }
