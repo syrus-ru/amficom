@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCommonTest.java,v 1.17 2006/02/17 11:48:02 arseniy Exp $
+ * $Id: DatabaseCommonTest.java,v 1.18 2006/03/13 09:54:09 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,6 @@ import com.syrus.AMFICOM.administration.PermissionAttributesDatabase;
 import com.syrus.AMFICOM.administration.RoleDatabase;
 import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
-import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
 import com.syrus.AMFICOM.administration.SystemUserWrapper;
 import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
@@ -98,8 +97,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2006/02/17 11:48:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2006/03/13 09:54:09 $
+ * @author $Author: bass $
  * @module test
  */
 public class DatabaseCommonTest extends SQLCommonTest {
@@ -212,7 +211,7 @@ public class DatabaseCommonTest extends SQLCommonTest {
 	}
 
 	private static void login() {
-		LoginManager.init(new DatabaseLoginPerformer(), null);
+		LoginManager.init(new DirectLoginPerformer(), null);
 		try {
 			LoginManager.login(SystemUserWrapper.SYS_LOGIN, "", VOID_IDENTIFIER);
 		} catch (ApplicationException ae) {
