@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLoginPerformer.java,v 1.4 2006/03/13 07:54:47 arseniy Exp $
+ * $Id: DatabaseLoginPerformer.java,v 1.5 2006/03/13 07:55:29 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,12 @@
 package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.administration.SystemUserWrapper.COLUMN_LOGIN;
+import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NOT_IMPLEMENTED;
-import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
-import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static com.syrus.AMFICOM.security.SessionKey.VOID_SESSION_KEY;
 
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.security.ShadowDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2006/03/13 07:54:47 $
+ * @version $Revision: 1.5 $, $Date: 2006/03/13 07:55:29 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
