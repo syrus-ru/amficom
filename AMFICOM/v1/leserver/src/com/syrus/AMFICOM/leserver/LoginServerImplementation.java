@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.43 2006/02/28 15:19:59 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.44 2006/03/13 07:23:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2006/02/28 15:19:59 $
+ * @version $Revision: 1.44 $, $Date: 2006/03/13 07:23:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -69,20 +69,20 @@ final class LoginServerImplementation extends LoginServerPOA {
 		try {
 			final Set<Domain> domains = StorableObjectPool.getStorableObjectsByCondition(ec, true, true);
 
-			if (domains.size() == 0) {
+			if (domains.isEmpty()) {
 				throw new AMFICOMRemoteException(IdlErrorCode.ERROR_NO_DOMAINS_AVAILABLE,
 						IdlCompletionStatus.COMPLETED_YES,
 						"No domains found");
 			}
 
 			final ORB orb = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer().getOrb();
-			final IdlDomain[] domainsT = new IdlDomain[domains.size()];
+			final IdlDomain[] idlDomains = new IdlDomain[domains.size()];
 			int i = 0;
 			for (final Domain domain : domains) {
 				Log.debugMessage("Domain '" + domain.getId() + "', '" + domain.getName() + "'", Log.DEBUGLEVEL08);
-				domainsT[i] = domain.getIdlTransferable(orb);
+				idlDomains[i++] = domain.getIdlTransferable(orb);
 			}
-			return domainsT;
+			return idlDomains;
 		} catch (ApplicationException ae) {
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
