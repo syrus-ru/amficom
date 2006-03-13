@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.29 2005/12/26 13:16:53 bob Exp $
+* $Id: Manager.java,v 1.30 2006/03/13 08:43:23 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,8 +20,10 @@ import com.syrus.AMFICOM.client.launcher.Launcher;
 import com.syrus.AMFICOM.client.model.AbstractApplication;
 import com.syrus.AMFICOM.extensions.ExtensionLauncher;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DirectLoginPerformer;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -34,8 +36,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/12/26 13:16:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.30 $, $Date: 2006/03/13 08:43:23 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -155,9 +157,8 @@ public class Manager extends AbstractApplication {
 				SystemUserWrapper.COLUMN_LOGIN), true);
 		assert !systemUserWithLoginSys.isEmpty() : "There is no sys user";
 
-		final Domain domain = StorableObjectPool.getStorableObject(new Identifier("Domain_0"), true);
-
-		LoginManager.loginXmlStub(systemUserWithLoginSys.iterator().next().getId(), domain.getId());
+		LoginManager.setLoginPerformer(new DirectLoginPerformer());
+		LoginManager.login("sys", "sys", VOID_IDENTIFIER);
 	}
 	
 	public static void main(String[] args) {
