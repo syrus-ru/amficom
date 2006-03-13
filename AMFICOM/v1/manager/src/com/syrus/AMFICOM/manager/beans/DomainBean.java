@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.6 2005/12/14 15:08:30 bob Exp $
+ * $Id: DomainBean.java,v 1.7 2006/03/13 08:43:54 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/12/14 15:08:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2006/03/13 08:43:54 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -230,7 +230,7 @@ public final class DomainBean extends Bean {
 	@SuppressWarnings("unchecked")
 	private void disposeDomainMember(final short domainMemberCode) 
 	throws ApplicationException {
-		final Set<? extends DomainMember> kiss = 
+		final Set<DomainMember> kiss = 
 			StorableObjectPool.getStorableObjectsByCondition(
 				new LinkedIdsCondition(this.identifier, domainMemberCode), 
 				true);
