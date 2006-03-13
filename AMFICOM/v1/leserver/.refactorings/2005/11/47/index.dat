@@ -1,0 +1,6 @@
+1131866065973	Rename type 'com.syrus.AMFICOM.leserver.Queue' to 'QueueTest'
+1131870818649	Rename field 'com.syrus.AMFICOM.leserver.QueueTest.Queue.size' to 'maximumSize'
+1131878225150	Rename method 'com.syrus.AMFICOM.leserver.QueueTest.Queue.getSize()' to 'getCurrentSize'
+1132238489014	Rename field 'com.syrus.AMFICOM.leserver.LineMismatchEventProcessor.CHARACTERISTIC_TYPE_ID' to 'characteristicTypeId'
+1132238496480	Rename field 'com.syrus.AMFICOM.leserver.LineMismatchEventProcessor.CREATOR_ID' to 'creatorId'
+1132241739663	Rename local variable 'popupNotificationEvents' in 'com.syrus.AMFICOM.leserver.LineMismatchEventProcessor.processEvent(...)' to 'notificationEvents'
