@@ -6,7 +6,9 @@ logs
 .classpath
 .project
 .xml
+.mach
 *.jar
+*.swp
 Application.properties
 common.properties
 cache
