@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.77 2005/11/28 13:36:41 arseniy Exp $
+# $Id: Makefile,v 1.78 2006/03/13 08:53:32 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -14,10 +14,29 @@ IDL_SOURCES = $(IDLDIR)/measurement.idl
 HOST = aldan
 SERVICE_NAME = hodja
 
+# Missing from flags:
+# -J-classpath $(JDBCCLASSPATH):$(SQLJCLASSPATH)
+#
+# Actual classpath entries (as per 10g Release 2):
+# $ORACLE_HOME/javavm/lib/aurora.zip
+# $ORACLE_HOME/jdbc/lib/classes12_g.jar
+# $ORACLE_HOME/jdbc/lib/nls_charset12.zip
+# $ORACLE_HOME/jdk/lib/dt.jar
+# $ORACLE_HOME/jdk/lib/tools.jar
+# $ORACLE_HOME/jlib/javax-ssl-1_2.jar
+# $ORACLE_HOME/jlib/jssl-1_2.jar
+# $ORACLE_HOME/jlib/xmlparserv2.jar
+# $ORACLE_HOME/lib/xsu12.jar
+# $ORACLE_HOME/rdbms/jlib/aqapi.jar
+# $ORACLE_HOME/rdbms/jlib/jmscommon.jar
+# $ORACLE_HOME/rdbms/jlib/jndi.jar
+# $ORACLE_HOME/rdbms/jlib/xdb.jar
+# $ORACLE_HOME/sqlj/lib/dbwsa.jar
+# $ORACLE_HOME/sqlj/lib/runtime12.jar
+# $ORACLE_HOME/sqlj/lib/translator.jar
 JPUB = $(ORACLE_HOME)/bin/jpub
 JPUB_FLAGS = \
 	-compile=false \
-	-J-classpath $(JDBCCLASSPATH):$(SQLJCLASSPATH) \
 	-user=amficom/amficom \
 	-url=jdbc:oracle:thin:@$(HOST):1521:$(SERVICE_NAME) \
 	-omit_schema_names \
