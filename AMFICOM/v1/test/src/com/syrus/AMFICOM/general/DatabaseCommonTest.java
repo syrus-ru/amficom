@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCommonTest.java,v 1.16.2.1 2006/02/17 11:41:01 arseniy Exp $
+ * $Id: DatabaseCommonTest.java,v 1.16.2.2 2006/03/13 08:38:22 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -103,7 +103,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16.2.1 $, $Date: 2006/02/17 11:41:01 $
+ * @version $Revision: 1.16.2.2 $, $Date: 2006/03/13 08:38:22 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -224,7 +224,7 @@ public class DatabaseCommonTest extends SQLCommonTest {
 	}
 
 	private static void login() {
-		LoginManager.init(new DatabaseLoginPerformer(), null);
+		LoginManager.init(new DirectLoginPerformer(), null);
 		try {
 			LoginManager.login(SystemUserWrapper.SYS_LOGIN, "", VOID_IDENTIFIER);
 		} catch (ApplicationException ae) {
