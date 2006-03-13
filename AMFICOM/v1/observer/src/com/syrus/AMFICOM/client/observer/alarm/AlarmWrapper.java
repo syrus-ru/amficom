@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmWrapper.java,v 1.3 2005/12/08 10:45:19 stas Exp $
+ * $Id: AlarmWrapper.java,v 1.4 2006/03/13 15:23:06 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,12 +13,12 @@ import java.util.Date;
 import java.util.List;
 
 import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.PropertyChangeException;
+import com.syrus.util.Wrapper;
 
-public class AlarmWrapper extends StorableObjectWrapper<Alarm> {
+public class AlarmWrapper implements Wrapper<Alarm> {
 	public static final String COLUMN_MESSAGE = "message";
 	public static final String COLUMN_DATE = "date";
 	public static final String COLUMN_OPTICAL_DISTANCE = "optical_distance";
@@ -47,7 +47,6 @@ public class AlarmWrapper extends StorableObjectWrapper<Alarm> {
 		return I18N.getString("Wrapper.Keys." + key);
 	}
 
-	@Override
 	public Class getPropertyClass(String key) {
 		if (key.equals(COLUMN_OPTICAL_DISTANCE)
 				|| key.equals(COLUMN_PHYSICAL_DISTANCE)) {
@@ -69,14 +68,10 @@ public class AlarmWrapper extends StorableObjectWrapper<Alarm> {
 	}
 
 	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+		// empty
 	}
 
-	@Override
 	public Object getValue(Alarm alarm, String key) {
-		final Object value = super.getValue(alarm, key);
-		if (value != null) {
-			return value;
-		}
 		if (alarm != null) {
 			if (key.equals(COLUMN_MESSAGE)) {
 				return alarm.getEvent().getMessage();
@@ -102,7 +97,6 @@ public class AlarmWrapper extends StorableObjectWrapper<Alarm> {
 		return null;
 	}
 
-	@Override
 	public void setValue(Alarm storableObject, String key, Object value) throws PropertyChangeException {
 		// not editable
 	}

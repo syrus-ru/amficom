@@ -1,5 +1,5 @@
 /*-
- * $Id: Alarm.java,v 1.7 2006/03/13 13:54:01 bass Exp $
+ * $Id: Alarm.java,v 1.8 2006/03/13 15:23:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.client.observer.alarm;
 
-import java.util.Collections;
 import java.util.Set;
 
 import com.syrus.AMFICOM.eventv2.PopupNotificationEvent;
@@ -19,9 +18,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
@@ -34,12 +31,11 @@ import com.syrus.util.Log;
 /**
  * @author krupenn
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2006/03/13 13:54:01 $
+ * @version $Revision: 1.8 $, $Date: 2006/03/13 15:23:06 $
  * @module observer
  */
-public final class Alarm extends StorableObject {
-	private static final long serialVersionUID = -8320740053940064854L;
-
+public final class Alarm implements Identifiable {
+	private Identifier id;
 	private PopupNotificationEvent event;
 	private SchemePath path;
 	private PathElement pathElement;
@@ -81,6 +77,10 @@ public final class Alarm extends StorableObject {
 		}
 	}
 
+	public Identifier getId() {
+		return this.id;
+	}
+
 	public SchemePath getPath() {
 		return this.path;
 	}
@@ -99,18 +99,5 @@ public final class Alarm extends StorableObject {
 
 	public PopupNotificationEvent getEvent() {
 		return this.event;
-	}
-	
-	@Override
-	protected Set<Identifiable> getDependenciesTmpl() {
-		return Collections.emptySet();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
-	 */
-	@Override
-	protected StorableObjectWrapper<Alarm> getWrapper() {
-		return new AlarmWrapper();
 	}
 }
