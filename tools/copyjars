@@ -6,9 +6,9 @@ then
 	exit
 fi
 
-DEST_HOST=mongol
+DEST_HOST=aldan
 USER=amficom
-DEST_DIR=\~/lib
+DEST_DIR=/opt/AMFICOM/ntc-testing/lib
 
 if [ $# -eq 3 ];
 then
