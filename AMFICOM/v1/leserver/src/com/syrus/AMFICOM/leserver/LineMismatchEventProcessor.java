@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.20 2006/03/09 17:53:23 arseniy Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.21 2006/03/13 09:55:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,8 +56,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2006/03/09 17:53:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2006/03/13 09:55:52 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
@@ -196,9 +196,9 @@ final class LineMismatchEventProcessor implements EventProcessor {
 	}
 
 	/**
-	 * @return a plain-text, human-readable, localized representaion of
-	 *         the {@link ReflectogramMismatch mismatch} that triggerred
-	 *         this event's generation.
+	 * @return a plain-text, human-readable, localized representaion of the
+	 *         {@link com.syrus.AMFICOM.reflectometry.ReflectogramMismatch mismatch}
+	 *         that triggerred this event's generation.
 	 */
 	private static String createMessage(final LineMismatchEvent lineMismatchEvent) {
 		return MISMATCH_CREATED + COLON_TAB + EasyDateFormatter.formatDate(lineMismatchEvent.getMismatchCreated())
