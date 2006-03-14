@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlAttachedTextImpl.java,v 1.1 2005/10/04 11:02:35 max Exp $
+ * $Id: IdlAttachedTextImpl.java,v 1.2 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.report.corba;
 
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -15,8 +16,8 @@ import com.syrus.AMFICOM.report.corba.IdlAttachedTextPackage.IdlFont;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/10/04 11:02:35 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2006/03/14 10:47:56 $
  * @module report
  */
 
@@ -72,7 +73,10 @@ public class IdlAttachedTextImpl extends IdlAttachedText {
 	 */
 	@Override
 	public StorableObject getNative() throws IdlCreateObjectException {
-		return new AttachedTextStorableElement(this);
+		try {
+			return new AttachedTextStorableElement(this);
+		} catch (final CreateObjectException coe) {
+			throw coe.getIdlTransferable();
+		}
 	}
-	
 }

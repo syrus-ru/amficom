@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.110 2006/03/13 13:53:57 bass Exp $
+ * $Id: Port.java,v 1.111 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,9 +42,10 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.110 $, $Date: 2006/03/13 13:53:57 $
+ * @version $Revision: 1.111 $, $Date: 2006/03/14 10:48:00 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -59,9 +60,9 @@ public final class Port extends StorableObject
 
 	public Port(final IdlPort pt) throws CreateObjectException {
 		try {
-			this.fromTransferable(pt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(pt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -117,14 +118,19 @@ public final class Port extends StorableObject
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlPort pt = (IdlPort) transferable;
-		super.fromTransferable(pt);
-
-		this.type = (PortType) StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);
-
-		this.description = pt.description;
-		this.equipmentId = new Identifier(pt.equipmentId);
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
+		try {
+			IdlPort pt = (IdlPort) transferable;
+			super.fromIdlTransferable(pt);
+	
+			this.type = (PortType) StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);
+	
+			this.description = pt.description;
+			this.equipmentId = new Identifier(pt.equipmentId);
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
 	}
 	
 

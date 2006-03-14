@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.92 2006/03/13 13:54:01 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.93 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,6 @@ import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -55,11 +54,12 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemePort;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.92 $, $Date: 2006/03/13 13:54:01 $
+ * @version $Revision: 1.93 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -524,19 +524,13 @@ public abstract class AbstractSchemePort
 	 * @param abstractSchemePort
 	 * @param abstractPortTypeId
 	 * @param abstractPortId
-	 * @throws CreateObjectException
+	 * @throws IdlConversionException
 	 */
 	final void fromTransferable(final IdlAbstractSchemePort abstractSchemePort,
 			final IdlIdentifier abstractPortTypeId,
 			final IdlIdentifier abstractPortId)
-	throws CreateObjectException {
-		try {
-			super.fromTransferable(abstractSchemePort);
-		} catch (final CreateObjectException coe) {
-			throw coe;
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+	throws IdlConversionException {
+		super.fromIdlTransferable(abstractSchemePort);
 		this.name = abstractSchemePort.name;
 		this.description = abstractSchemePort.description;
 		this.directionType = abstractSchemePort.directionType.value();

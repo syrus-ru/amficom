@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.89 2006/03/13 13:53:58 bass Exp $
+ * $Id: Result.java,v 1.90 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,9 +32,10 @@ import com.syrus.AMFICOM.measurement.corba.IdlResult;
 import com.syrus.AMFICOM.measurement.corba.IdlResultHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2006/03/13 13:53:58 $
+ * @version $Revision: 1.90 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -54,9 +55,9 @@ public final class Result extends StorableObject {
 	 */
 	public Result(final IdlResult rt) throws CreateObjectException {
 		try {
-			this.fromTransferable(rt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(rt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}	
 
@@ -84,9 +85,10 @@ public final class Result extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlResult rt = (IdlResult) transferable;
-		super.fromTransferable(rt);
+		super.fromIdlTransferable(rt);
 
 		this.sort = rt.sort.value();
 		switch (this.sort) {

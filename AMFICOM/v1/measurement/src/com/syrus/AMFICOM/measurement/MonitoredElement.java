@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.16 2006/03/13 13:53:58 bass Exp $
+ * $Id: MonitoredElement.java,v 1.17 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,9 +31,10 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElement;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2006/03/13 13:53:58 $
+ * @version $Revision: 1.17 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -51,9 +52,13 @@ public final class MonitoredElement extends DomainMember {
 
 
 	public MonitoredElement(final IdlMonitoredElement met) throws CreateObjectException {
-		this.fromTransferable(met);
+		try {
+			this.fromIdlTransferable(met);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
-	
+
 	MonitoredElement(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
@@ -125,7 +130,8 @@ public final class MonitoredElement extends DomainMember {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		IdlMonitoredElement met = (IdlMonitoredElement) transferable;
 		super.fromTransferable(met, new Identifier(met.domainId));
 		this.measurementPortId = new Identifier(met.measurementPortId);

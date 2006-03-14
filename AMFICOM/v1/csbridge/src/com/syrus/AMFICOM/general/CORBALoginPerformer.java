@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBALoginPerformer.java,v 1.4 2006/03/06 14:58:47 arseniy Exp $
+ * $Id: CORBALoginPerformer.java,v 1.5 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,10 +28,11 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCod
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2006/03/06 14:58:47 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2006/03/14 10:47:56 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -58,10 +59,12 @@ public final class CORBALoginPerformer implements LoginPerformer {
 			final Set<Domain> availableDomains = StorableObjectPool.fromTransferables(domainsT, true);
 			StorableObjectPool.putStorableObjects(availableDomains);
 			return availableDomains;
-		} catch (AMFICOMRemoteException are) {
+		} catch (final AMFICOMRemoteException are) {
 			throw new LoginException("Cannot get available domains -- " + are.message);
-		} catch (ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			throw new LoginException("Cannot get available domains -- " + ae.getMessage(), ae);
+		} catch (final IdlConversionException ice) {
+			throw new LoginException("Cannot get available domains -- " + ice.getMessage(), ice);
 		}
 	}
 

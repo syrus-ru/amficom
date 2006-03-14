@@ -12,7 +12,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -24,6 +23,7 @@ import com.syrus.AMFICOM.report.corba.IdlData;
 import com.syrus.AMFICOM.report.corba.IdlDataHelper;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * <p>Title: </p>
@@ -83,19 +83,19 @@ public class DataStorableElement extends AbstractDataStorableElement {
 		}
 	}
 
-	public DataStorableElement(IdlData transferable) {
-		fromTransferable(transferable);
+	public DataStorableElement(IdlData transferable) throws CreateObjectException {
+		try {
+			fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	@Override
-	protected synchronized void fromTransferable(IdlStorableObject transferable) {
+	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
+	throws IdlConversionException {
 		IdlData idlData = (IdlData) transferable;  
-		try {
-			super.fromTransferable(idlData);
-		} catch (ApplicationException e) {
-			// Never can happen
-			assert false;
-		}
+		super.fromIdlTransferable(idlData);
 	}
 
 	@Override

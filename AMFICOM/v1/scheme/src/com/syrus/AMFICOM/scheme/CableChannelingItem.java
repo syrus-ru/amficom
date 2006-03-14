@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.89 2006/03/13 13:54:01 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.90 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,6 +60,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlCableChannelingItem;
 import com.syrus.AMFICOM.scheme.corba.IdlCableChannelingItemHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlCableChannelingItem;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -67,7 +68,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.89 $, $Date: 2006/03/13 13:54:01 $
+ * @version $Revision: 1.90 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -171,14 +172,12 @@ public final class CableChannelingItem
 	 */
 	public CableChannelingItem(final IdlCableChannelingItem transferable)
 	throws CreateObjectException {
-		this.pipeBlockId = VOID_IDENTIFIER;
-
 		try {
-			this.fromTransferable(transferable);
-		} catch (final CreateObjectException coe) {
-			throw coe;
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.pipeBlockId = VOID_IDENTIFIER;
+	
+			this.fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -797,31 +796,29 @@ public final class CableChannelingItem
 
 	/**
 	 * @param transferable
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
+	 * @throws IdlConversionException
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
-			final IdlCableChannelingItem cableChannelingItem = (IdlCableChannelingItem) transferable;
 			try {
-				super.fromTransferable(cableChannelingItem);
+				final IdlCableChannelingItem cableChannelingItem = (IdlCableChannelingItem) transferable;
+				super.fromIdlTransferable(cableChannelingItem);
+				this.startSpare = cableChannelingItem.startSpare;
+				this.endSpare = cableChannelingItem.endSpare;
+				this.rowX = cableChannelingItem.rowX;
+				this.placeY = cableChannelingItem.placeY;
+				this.sequentialNumber = cableChannelingItem.sequentialNumber;
+				this.physicalLinkId = new Identifier(cableChannelingItem.physicalLinkId);
+				this.setPipeBlockId0(Identifier.valueOf(cableChannelingItem.pipeBlockId));
+				this.startSiteNodeId = new Identifier(cableChannelingItem.startSiteNodeId);
+				this.endSiteNodeId = new Identifier(cableChannelingItem.endSiteNodeId);
+				this.parentSchemeCableLinkId = new Identifier(cableChannelingItem.parentSchemeCableLinkId);
 			} catch (final ApplicationException ae) {
-				/*
-				 * Never.
-				 */
-				assert false;
+				throw new IdlConversionException(ae);
 			}
-			this.startSpare = cableChannelingItem.startSpare;
-			this.endSpare = cableChannelingItem.endSpare;
-			this.rowX = cableChannelingItem.rowX;
-			this.placeY = cableChannelingItem.placeY;
-			this.sequentialNumber = cableChannelingItem.sequentialNumber;
-			this.physicalLinkId = new Identifier(cableChannelingItem.physicalLinkId);
-			this.setPipeBlockId0(Identifier.valueOf(cableChannelingItem.pipeBlockId));
-			this.startSiteNodeId = new Identifier(cableChannelingItem.startSiteNodeId);
-			this.endSiteNodeId = new Identifier(cableChannelingItem.endSiteNodeId);
-			this.parentSchemeCableLinkId = new Identifier(cableChannelingItem.parentSchemeCableLinkId);
 		}
 	}
 

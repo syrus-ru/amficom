@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.45 2006/03/13 13:54:02 bass Exp $
+ * $Id: MapLibrary.java,v 1.46 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,12 +57,13 @@ import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkTypeSeq;
 import com.syrus.AMFICOM.map.xml.XmlSiteNodeType;
 import com.syrus.AMFICOM.map.xml.XmlSiteNodeTypeSeq;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 
 /**
- * @version $Revision: 1.45 $, $Date: 2006/03/13 13:54:02 $
+ * @version $Revision: 1.46 $, $Date: 2006/03/14 10:48:01 $
  * @author $Author: bass $
  * @module map
  */
@@ -77,9 +78,9 @@ public final class MapLibrary extends StorableObject
 
 	public MapLibrary(final IdlMapLibrary mlt) throws CreateObjectException {
 		try {
-			this.fromTransferable(mlt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(mlt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -175,9 +176,10 @@ public final class MapLibrary extends StorableObject
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlMapLibrary mlt = (IdlMapLibrary) transferable;
-		super.fromTransferable(mlt);
+		super.fromIdlTransferable(mlt);
 
 		this.name = mlt.name;
 		this.codename = mlt.codename;

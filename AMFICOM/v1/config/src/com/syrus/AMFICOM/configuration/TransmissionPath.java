@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.107 2006/03/13 13:53:57 bass Exp $
+ * $Id: TransmissionPath.java,v 1.108 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,9 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.transport.idl.IdlConversionException;
 /**
- * @version $Revision: 1.107 $, $Date: 2006/03/13 13:53:57 $
+ * @version $Revision: 1.108 $, $Date: 2006/03/14 10:48:00 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -61,9 +62,9 @@ public final class TransmissionPath extends DomainMember
 
 	public TransmissionPath(final IdlTransmissionPath tpt) throws CreateObjectException {
 		try {
-			this.fromTransferable(tpt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(tpt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -128,16 +129,21 @@ public final class TransmissionPath extends DomainMember
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlTransmissionPath tpt = (IdlTransmissionPath) transferable;
-		super.fromTransferable(tpt, new Identifier(tpt.domainId));
-
-		this.type = (TransmissionPathType) StorableObjectPool.getStorableObject(new Identifier(tpt._typeId), true);
-
-		this.name = tpt.name;
-		this.description = tpt.description;
-		this.startPortId = new Identifier(tpt.startPortId);
-		this.finishPortId = new Identifier(tpt.finishPortId);
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
+		try {
+			IdlTransmissionPath tpt = (IdlTransmissionPath) transferable;
+			super.fromTransferable(tpt, new Identifier(tpt.domainId));
+	
+			this.type = (TransmissionPathType) StorableObjectPool.getStorableObject(new Identifier(tpt._typeId), true);
+	
+			this.name = tpt.name;
+			this.description = tpt.description;
+			this.startPortId = new Identifier(tpt.startPortId);
+			this.finishPortId = new Identifier(tpt.finishPortId);
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
 	}
 
 	/**

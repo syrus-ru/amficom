@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.18 2006/03/13 13:53:57 bass Exp $
+ * $Id: CableLink.java,v 1.19 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,11 +26,12 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2006/03/13 13:53:57 $
+ * @version $Revision: 1.19 $, $Date: 2006/03/14 10:48:00 $
  * @module config
  */
 public final class CableLink extends AbstractLink {
@@ -38,9 +39,9 @@ public final class CableLink extends AbstractLink {
 
 	public CableLink(final IdlCableLink idlCableLink) throws CreateObjectException {
 		try {
-			this.fromTransferable(idlCableLink);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(idlCableLink);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -125,17 +126,22 @@ public final class CableLink extends AbstractLink {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		final IdlCableLink idlCableLink = (IdlCableLink) transferable;
-		super.fromTransferable(idlCableLink, new Identifier(idlCableLink.domainId));
-
-		this.name = idlCableLink.name;
-		this.description = idlCableLink.description;
-		this.inventoryNo = idlCableLink.inventoryNo;
-		this.supplier = idlCableLink.supplier;
-		this.supplierCode = idlCableLink.supplierCode;
-
-		super.type = (CableLinkType) StorableObjectPool.getStorableObject(new Identifier(idlCableLink._typeId), true);
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
+		try {
+			final IdlCableLink idlCableLink = (IdlCableLink) transferable;
+			super.fromTransferable(idlCableLink, new Identifier(idlCableLink.domainId));
+	
+			this.name = idlCableLink.name;
+			this.description = idlCableLink.description;
+			this.inventoryNo = idlCableLink.inventoryNo;
+			this.supplier = idlCableLink.supplier;
+			this.supplierCode = idlCableLink.supplierCode;
+	
+			super.type = (CableLinkType) StorableObjectPool.getStorableObject(new Identifier(idlCableLink._typeId), true);
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
 	}
 
 	/**

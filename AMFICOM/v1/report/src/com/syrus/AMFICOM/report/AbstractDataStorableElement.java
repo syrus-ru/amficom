@@ -1,31 +1,29 @@
-package com.syrus.AMFICOM.report;
-
-import java.util.Date;
-
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.report.corba.IdlAbstractData;
-import com.syrus.AMFICOM.resource.IntDimension;
-import com.syrus.AMFICOM.resource.IntPoint;
-
 /*-
- * $Id: AbstractDataStorableElement.java,v 1.2 2006/03/13 13:53:57 bass Exp $
+ * $Id: AbstractDataStorableElement.java,v 1.3 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
+package com.syrus.AMFICOM.report;
+
+import java.util.Date;
+
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.report.corba.IdlAbstractData;
+import com.syrus.AMFICOM.resource.IntDimension;
+import com.syrus.AMFICOM.resource.IntPoint;
+import com.syrus.util.transport.idl.IdlConversionException;
+
 /**
  * @author max
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2006/03/13 13:53:57 $
+ * @version $Revision: 1.3 $, $Date: 2006/03/14 10:47:56 $
  * @module report
  */
-
 public abstract class AbstractDataStorableElement 
 		extends StorableElement {
 	protected String reportName;
@@ -58,15 +56,10 @@ public abstract class AbstractDataStorableElement
 	}
 	
 	@Override
-	protected synchronized void fromTransferable(IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
+	throws IdlConversionException {
 		IdlAbstractData idlAbstractData = (IdlAbstractData) transferable;
-		try {
-			super.fromTransferable(idlAbstractData);
-		} catch (final CreateObjectException coe) {
-			throw coe;
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		super.fromIdlTransferable(idlAbstractData);
 		this.reportName = idlAbstractData.reportName;
 		this.modelClassName = idlAbstractData.modelClassName;		
 	}

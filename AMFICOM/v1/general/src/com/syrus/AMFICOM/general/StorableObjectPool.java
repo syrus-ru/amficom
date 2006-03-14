@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.211 2006/03/13 13:54:02 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.212 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,9 +31,10 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.LRUMap;
 import com.syrus.util.LRUMapSaver;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.211 $, $Date: 2006/03/13 13:54:02 $
+ * @version $Revision: 1.212 $, $Date: 2006/03/14 10:48:00 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -1156,10 +1157,11 @@ public final class StorableObjectPool {
 	 * @param transferables
 	 * @param continueOnError
 	 * @return {@link Set} of {@link StorableObject}
-	 * @throws ApplicationException
+	 * @throws IdlConversionException
 	 */
 	public static <T extends StorableObject> Set<T> fromTransferables(final IdlStorableObject[] transferables,
-			final boolean continueOnError) throws ApplicationException {
+			final boolean continueOnError)
+	throws IdlConversionException {
 		final int length = transferables.length;
 		final Set<T> storableObjects = new HashSet<T>(length);
 
@@ -1167,12 +1169,12 @@ public final class StorableObjectPool {
 			try {
 				final T storableObject = StorableObjectPool.<T>fromTransferable(transferables[i]);
 				storableObjects.add(storableObject);
-			} catch (final ApplicationException ae) {
+			} catch (final IdlConversionException ice) {
 				if (continueOnError) {
-					Log.debugMessage(ae, Level.SEVERE);
+					Log.debugMessage(ice, Level.SEVERE);
 					continue;
 				} // else
-				throw ae;
+				throw ice;
 			}
 		}
 		return storableObjects;
@@ -1186,10 +1188,11 @@ public final class StorableObjectPool {
 	 * <code>null</code>.
 	 * 
 	 * @param transferable
-	 * @throws ApplicationException
+	 * @throws IdlConversionException
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends StorableObject> T fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	public static <T extends StorableObject> T fromTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		T storableObject = null;
 		try {
 			storableObject = StorableObjectPool.<T>getStorableObject(new Identifier(transferable.id), false);
@@ -1201,13 +1204,13 @@ public final class StorableObjectPool {
 		}
 
 		if (storableObject != null) {
-			storableObject.fromTransferable(transferable);
+			storableObject.fromIdlTransferable(transferable);
 		} else {
 			try {
 				storableObject = (T) transferable.getNative();
 			} catch (final IdlCreateObjectException coe) {
 				Log.debugMessage(coe, Level.SEVERE);
-				throw new CreateObjectException(coe.detailMessage);
+				throw new IdlConversionException(new CreateObjectException(coe.detailMessage));
 			}
 		}
 
@@ -1385,9 +1388,9 @@ public final class StorableObjectPool {
 		assert localStorableObject.id.equals(remoteStorableObject.id) : "Local: '" + localStorableObject.id + "', remote: '" + remoteStorableObject.id + "'";
 
 		try {
-			localStorableObject.fromTransferable(remoteStorableObject.getIdlTransferable(CRUTCH_ORB));
-		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
+			localStorableObject.fromIdlTransferable(remoteStorableObject.getIdlTransferable(CRUTCH_ORB));
+		} catch (final IdlConversionException ice) {
+			Log.errorMessage(ice);
 		}
 	}
 

@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.report.corba.IdlImageHelper;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * <p>Title: </p>
@@ -115,19 +116,19 @@ public final class ImageStorableElement
 		}
 	}
 	
-	public ImageStorableElement(IdlImage transferable) {
-		fromTransferable(transferable);		
+	public ImageStorableElement(IdlImage transferable) throws CreateObjectException {
+		try {
+			this.fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}		
 	}
 	
 	@Override
-	protected synchronized void fromTransferable(IdlStorableObject transferable) {
+	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
+	throws IdlConversionException {
 		IdlImage idlImage = (IdlImage) transferable;
-		try {
-			super.fromTransferable(idlImage);
-		} catch (ApplicationException e) {
-			// Never can happen
-			assert false;
-		}
+		super.fromIdlTransferable(idlImage);
 		this.bitmapImageResourceId = new Identifier(idlImage.bitmapImageResource);
 	}
 	

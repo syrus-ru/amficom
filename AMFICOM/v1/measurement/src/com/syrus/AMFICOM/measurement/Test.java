@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.186 2006/03/13 13:53:58 bass Exp $
+ * $Id: Test.java,v 1.187 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -43,10 +42,11 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPacka
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.186 $, $Date: 2006/03/13 13:53:58 $
+ * @version $Revision: 1.187 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -201,9 +201,9 @@ public final class Test extends StorableObject implements Describable {
 	 */
 	public Test(final IdlTest tt) throws CreateObjectException {
 		try {
-			this.fromTransferable(tt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(tt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -211,36 +211,41 @@ public final class Test extends StorableObject implements Describable {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		final IdlTest tt = (IdlTest)transferable;
-		super.fromTransferable(tt);
-		this.temporalType = tt.timeStamps.discriminator().value();
-		this.timeStamps = new TestTimeStamps(tt.timeStamps);
-		this.measurementType = MeasurementType.fromTransferable(tt.measurementType);
-		this.analysisType = AnalysisType.fromTransferable(tt.analysisType);
-
-		this.status = tt.status.value();
-		this.groupTestId = new Identifier(tt.groupTestId);
-
-		this.monitoredElement = (MonitoredElement) StorableObjectPool.getStorableObject(new Identifier(tt.monitoredElementId), true);
-
-		this.description = tt.description;
-		this.numberOfMeasurements = tt.numberOfMeasurements;
-
-		this.measurementSetupIds = Identifier.fromTransferables(tt.measurementSetupIds);
-		if (!this.measurementSetupIds.isEmpty()) {
-			final Identifier msId = this.measurementSetupIds.iterator().next();
-			this.mainMeasurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject(msId, true);
-		} else {
-			throw new IllegalDataException("Cannot find measurement setup for test '" + this.id + '\'');
+	public void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
+		try {
+			final IdlTest tt = (IdlTest)transferable;
+			super.fromIdlTransferable(tt);
+			this.temporalType = tt.timeStamps.discriminator().value();
+			this.timeStamps = new TestTimeStamps(tt.timeStamps);
+			this.measurementType = MeasurementType.fromTransferable(tt.measurementType);
+			this.analysisType = AnalysisType.fromTransferable(tt.analysisType);
+	
+			this.status = tt.status.value();
+			this.groupTestId = new Identifier(tt.groupTestId);
+	
+			this.monitoredElement = (MonitoredElement) StorableObjectPool.getStorableObject(new Identifier(tt.monitoredElementId), true);
+	
+			this.description = tt.description;
+			this.numberOfMeasurements = tt.numberOfMeasurements;
+	
+			this.measurementSetupIds = Identifier.fromTransferables(tt.measurementSetupIds);
+			if (!this.measurementSetupIds.isEmpty()) {
+				final Identifier msId = this.measurementSetupIds.iterator().next();
+				this.mainMeasurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject(msId, true);
+			} else {
+				throw new IdlConversionException("Cannot find measurement setup for test '" + this.id + '\'');
+			}
+			
+			this.stoppingMap = new TreeMap<Date, String>();
+			for(int index = 0; index < tt.stoppings.length; index++) {
+				this.stoppingMap.put(new Date(tt.stoppings[index].time), tt.stoppings[index].reason);
+			}
+			
+			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
 		}
-		
-		this.stoppingMap = new TreeMap<Date, String>();
-		for(int index = 0; index < tt.stoppings.length; index++) {
-			this.stoppingMap.put(new Date(tt.stoppings[index].time), tt.stoppings[index].reason);
-		}
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

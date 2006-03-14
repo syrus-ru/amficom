@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.34 2006/03/13 13:53:58 bass Exp $
+ * $Id: CronTemporalPattern.java,v 1.35 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -37,9 +36,10 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPatternHelper;
 import com.syrus.util.HashCodeGenerator;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2006/03/13 13:53:58 $
+ * @version $Revision: 1.35 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @module measurement
  */
@@ -743,9 +743,9 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 
 	public CronTemporalPattern(final IdlCronTemporalPattern ctpt) throws CreateObjectException {
 		try {
-			this.fromTransferable(ctpt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(ctpt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -863,13 +863,13 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlCronTemporalPattern ctpt = (IdlCronTemporalPattern)transferable;
-		super.fromTransferable(ctpt);
+		super.fromIdlTransferable(ctpt);
 
 		this.description = ctpt.description;
 		this.setTemplates0(ctpt.cronStrings);
-
 	}
 	
 	/**

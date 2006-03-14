@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.43 2006/03/13 13:53:58 bass Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.44 2006/03/14 10:47:56 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -42,10 +42,11 @@ import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPatternHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPatternPackage.IntervalDuration;
 import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPatternPackage.IntervalTemporalPatternId;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 
 /**
- * @version $Revision: 1.43 $, $Date: 2006/03/13 13:53:58 $
+ * @version $Revision: 1.44 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement
@@ -123,16 +124,17 @@ public final class IntervalsTemporalPattern
 	public IntervalsTemporalPattern(final IdlIntervalsTemporalPattern itpt) throws CreateObjectException {
 
 		try {
-			this.fromTransferable(itpt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(itpt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		IdlIntervalsTemporalPattern itpt = (IdlIntervalsTemporalPattern) transferable;
-		super.fromTransferable(itpt);
+		super.fromIdlTransferable(itpt);
 
 		{
 			final SortedMap<Long, Identifier> map = new TreeMap<Long, Identifier>();

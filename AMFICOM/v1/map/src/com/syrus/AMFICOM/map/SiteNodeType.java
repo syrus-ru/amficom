@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.116 2006/03/13 13:54:02 bass Exp $
+ * $Id: SiteNodeType.java,v 1.117 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,6 +67,7 @@ import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -81,7 +82,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: bass $
- * @version $Revision: 1.116 $, $Date: 2006/03/13 13:54:02 $
+ * @version $Revision: 1.117 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType
@@ -111,9 +112,9 @@ public final class SiteNodeType extends StorableObjectType
 
 	public SiteNodeType(final IdlSiteNodeType sntt) throws CreateObjectException {
 		try {
-			this.fromTransferable(sntt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(sntt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -183,7 +184,8 @@ public final class SiteNodeType extends StorableObjectType
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlSiteNodeType sntt = (IdlSiteNodeType) transferable;
 		super.fromTransferable(sntt, sntt.codename, sntt.description);
 

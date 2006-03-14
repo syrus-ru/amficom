@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.132 2006/03/13 13:54:01 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.133 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,6 +77,7 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeLinkSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElement;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElementSeq;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -84,7 +85,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.132 $, $Date: 2006/03/13 13:54:01 $
+ * @version $Revision: 1.133 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public final class SchemeProtoElement
@@ -180,7 +181,11 @@ public final class SchemeProtoElement
 	 * @throws CreateObjectException
 	 */
 	public SchemeProtoElement(final IdlSchemeProtoElement transferable) throws CreateObjectException {
-		fromTransferable(transferable);
+		try {
+			this.fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -1188,21 +1193,15 @@ public final class SchemeProtoElement
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
+	 * @throws IdlConversionException
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable)
-	throws CreateObjectException {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlSchemeProtoElement schemeProtoElement = (IdlSchemeProtoElement) transferable;
-			try {
-				super.fromTransferable(schemeProtoElement);
-			} catch (final CreateObjectException coe) {
-				throw coe;
-			} catch (final ApplicationException ae) {
-				throw new CreateObjectException(ae);
-			}
+			super.fromIdlTransferable(schemeProtoElement);
 			this.name = schemeProtoElement.name;
 			this.description = schemeProtoElement.description;
 			this.label = schemeProtoElement.label;

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.101 2006/03/13 13:53:58 bass Exp $
+ * $Id: MeasurementSetup.java,v 1.102 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,9 +36,10 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2006/03/13 13:53:58 $
+ * @version $Revision: 1.102 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -65,9 +66,9 @@ public final class MeasurementSetup extends StorableObject {
 	 */
 	public MeasurementSetup(final IdlMeasurementSetup mst) throws CreateObjectException {
 		try {
-			this.fromTransferable(mst);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(mst);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -154,60 +155,65 @@ public final class MeasurementSetup extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		final IdlMeasurementSetup mst = (IdlMeasurementSetup) transferable;
-		super.fromTransferable(mst);
-
-
-		this.parameterSet = null;
-		this.criteriaSet = null;
-		this.thresholdSet = null;
-		this.etalon = null;
-
-		final Set<Identifier> parameterSetIds = new HashSet<Identifier>(4);
-		parameterSetIds.add(new Identifier(mst.parameterSetId));
-		Identifier psId = new Identifier(mst.criteriaSetId);
-		if (!psId.isVoid()) {
-			parameterSetIds.add(psId);
-		}
-		psId = new Identifier(mst.thresholdSetId);
-		if (!psId.isVoid()) {
-			parameterSetIds.add(psId);
-		}
-		psId = new Identifier(mst.etalonId);
-		if (!psId.isVoid()) {
-			parameterSetIds.add(psId);
-		}
-
-		final Set<ParameterSet> parameterSets = StorableObjectPool.getStorableObjects(parameterSetIds, true);
-		for (final ParameterSet ps : parameterSets) {
-			switch (ps.getSort().value()) {
-				case ParameterSetSort._SET_SORT_MEASUREMENT_PARAMETERS:
-					this.parameterSet = ps;
-					break;
-				case ParameterSetSort._SET_SORT_ANALYSIS_CRITERIA:
-					this.criteriaSet = ps;
-					break;
-				case ParameterSetSort._SET_SORT_EVALUATION_THRESHOLDS:
-					this.thresholdSet = ps;
-					break;
-				case ParameterSetSort._SET_SORT_ETALON:
-					this.etalon = ps;
-					break;
-				default:
-					Log.errorMessage("Unknown sort: " + ps.getSort().value() + " of ParameterSet '" + ps.getId()
-							+ "' for MeasurementSetup '" + this.id + "'");
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
+		try {
+			final IdlMeasurementSetup mst = (IdlMeasurementSetup) transferable;
+			super.fromIdlTransferable(mst);
+	
+	
+			this.parameterSet = null;
+			this.criteriaSet = null;
+			this.thresholdSet = null;
+			this.etalon = null;
+	
+			final Set<Identifier> parameterSetIds = new HashSet<Identifier>(4);
+			parameterSetIds.add(new Identifier(mst.parameterSetId));
+			Identifier psId = new Identifier(mst.criteriaSetId);
+			if (!psId.isVoid()) {
+				parameterSetIds.add(psId);
 			}
+			psId = new Identifier(mst.thresholdSetId);
+			if (!psId.isVoid()) {
+				parameterSetIds.add(psId);
+			}
+			psId = new Identifier(mst.etalonId);
+			if (!psId.isVoid()) {
+				parameterSetIds.add(psId);
+			}
+	
+			final Set<ParameterSet> parameterSets = StorableObjectPool.getStorableObjects(parameterSetIds, true);
+			for (final ParameterSet ps : parameterSets) {
+				switch (ps.getSort().value()) {
+					case ParameterSetSort._SET_SORT_MEASUREMENT_PARAMETERS:
+						this.parameterSet = ps;
+						break;
+					case ParameterSetSort._SET_SORT_ANALYSIS_CRITERIA:
+						this.criteriaSet = ps;
+						break;
+					case ParameterSetSort._SET_SORT_EVALUATION_THRESHOLDS:
+						this.thresholdSet = ps;
+						break;
+					case ParameterSetSort._SET_SORT_ETALON:
+						this.etalon = ps;
+						break;
+					default:
+						Log.errorMessage("Unknown sort: " + ps.getSort().value() + " of ParameterSet '" + ps.getId()
+								+ "' for MeasurementSetup '" + this.id + "'");
+				}
+			}
+	
+	
+			this.description = mst.description;
+			this.measurementDuration = mst.measurementDuration;
+	
+			this.monitoredElementIds = Identifier.fromTransferables(mst.monitoredElementIds);
+			this.measurementTypes = MeasurementType.fromTransferables(mst.measurementTypes);
+	
+			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
 		}
-
-
-		this.description = mst.description;
-		this.measurementDuration = mst.measurementDuration;
-
-		this.monitoredElementIds = Identifier.fromTransferables(mst.monitoredElementIds);
-		this.measurementTypes = MeasurementType.fromTransferables(mst.measurementTypes);
-
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

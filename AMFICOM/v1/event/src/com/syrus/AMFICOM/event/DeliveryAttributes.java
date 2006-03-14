@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.12 2006/03/13 13:53:59 bass Exp $
+ * $Id: DeliveryAttributes.java,v 1.13 2006/03/14 10:47:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,11 +39,12 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2006/03/13 13:53:59 $
+ * @version $Revision: 1.13 $, $Date: 2006/03/14 10:47:58 $
  * @module event
  */
 public final class DeliveryAttributes extends StorableObject {
@@ -71,11 +72,9 @@ public final class DeliveryAttributes extends StorableObject {
 	public DeliveryAttributes(final IdlDeliveryAttributes deliveryAttributes)
 	throws CreateObjectException {
 		try {
-			this.fromTransferable(deliveryAttributes);
-		} catch (final CreateObjectException coe) {
-			throw coe;
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(deliveryAttributes);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -110,15 +109,15 @@ public final class DeliveryAttributes extends StorableObject {
 
 	/**
 	 * @param transferable
-	 * @throws ApplicationException
-	 * @see StorableObject#fromTransferable(IdlStorableObject)
+	 * @throws IdlConversionException
+	 * @see StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable)
-	throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlDeliveryAttributes deliveryAttributes = (IdlDeliveryAttributes) transferable;
-			super.fromTransferable(deliveryAttributes);
+			super.fromIdlTransferable(deliveryAttributes);
 			this.severity = Severity.valueOf(deliveryAttributes.severity);
 			this.setRoleIds0(Identifier.fromTransferables(deliveryAttributes.roleIds));
 			this.setSystemUserIds0(Identifier.fromTransferables(deliveryAttributes.systemUserIds));

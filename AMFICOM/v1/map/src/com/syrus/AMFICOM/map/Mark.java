@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.73 2006/03/13 13:54:02 bass Exp $
+ * $Id: Mark.java,v 1.74 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.corba.IdlMark;
 import com.syrus.AMFICOM.map.corba.IdlMarkHelper;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * Метка на линии на топологической схеме. Метка частично характеризуется
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2006/03/13 13:54:02 $
+ * @version $Revision: 1.74 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  */
 public final class Mark extends AbstractNode {
@@ -176,20 +177,21 @@ public final class Mark extends AbstractNode {
 	}
 	
 	@Override
-	protected synchronized void fromTransferable(IdlStorableObject transferable) throws ApplicationException {
-		final IdlMark idlMark = (IdlMark) transferable; 
-		super.fromTransferable(idlMark);
-		this.distance = idlMark.distance;
-		this.city = idlMark.city;
-		this.street = idlMark.street;
-		this.building = idlMark.building;
+	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
+	throws IdlConversionException {
 		try {
+			final IdlMark idlMark = (IdlMark) transferable; 
+			super.fromIdlTransferable(idlMark);
+			this.distance = idlMark.distance;
+			this.city = idlMark.city;
+			this.street = idlMark.street;
+			this.building = idlMark.building;
 			this.physicalLink = StorableObjectPool.getStorableObject(new Identifier(idlMark.physicalLinkId), true);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+	
+			assert this.isValid() : OBJECT_STATE_ILLEGAL;
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
 		}
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	public String getBuilding() {

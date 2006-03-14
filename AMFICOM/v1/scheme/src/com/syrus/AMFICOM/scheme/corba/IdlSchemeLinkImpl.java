@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeLinkImpl.java,v 1.7 2005/10/31 12:29:55 bass Exp $
+ * $Id: IdlSchemeLinkImpl.java,v 1.8 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/10/31 12:29:55 $
+ * @version $Revision: 1.8 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 final class IdlSchemeLinkImpl extends IdlSchemeLink {
@@ -77,7 +77,7 @@ final class IdlSchemeLinkImpl extends IdlSchemeLink {
 			return new SchemeLink(this);
 		} catch (final CreateObjectException coe) {
 			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
+			throw coe.getIdlTransferable();
 		}
 	}
 }

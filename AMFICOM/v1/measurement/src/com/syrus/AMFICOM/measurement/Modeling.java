@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.69 2006/03/13 13:53:58 bass Exp $
+ * $Id: Modeling.java,v 1.70 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,9 +31,10 @@ import com.syrus.AMFICOM.measurement.corba.IdlModeling;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2006/03/13 13:53:58 $
+ * @version $Revision: 1.70 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -53,9 +54,9 @@ public final class Modeling extends Action {
 	 */
 	public Modeling(final IdlModeling mt) throws CreateObjectException {
 		try {
-			this.fromTransferable(mt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(mt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -86,15 +87,20 @@ public final class Modeling extends Action {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlModeling mt = (IdlModeling) transferable;
-		super.fromTransferable(mt, ModelingType.fromTransferable(mt.type), new Identifier(mt.monitoredElementId), VOID_IDENTIFIER);
-
-		this.argumentSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mt.argumentSetId), true);
-
-		this.name = mt.name;
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
+		try {
+			IdlModeling mt = (IdlModeling) transferable;
+			super.fromTransferable(mt, ModelingType.fromTransferable(mt.type), new Identifier(mt.monitoredElementId), VOID_IDENTIFIER);
+	
+			this.argumentSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mt.argumentSetId), true);
+	
+			this.name = mt.name;
+			
+			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
 	}
 
 	/**

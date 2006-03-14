@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.27 2006/03/13 13:53:57 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.28 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,11 +50,12 @@ import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Shitlet;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2006/03/13 13:53:57 $
+ * @version $Revision: 1.28 $, $Date: 2006/03/14 10:48:00 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -73,9 +74,9 @@ public final class ProtoEquipment extends StorableObject
 
 	public ProtoEquipment(final IdlProtoEquipment et) throws CreateObjectException {
 		try {
-			this.fromTransferable(et);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(et);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -201,9 +202,10 @@ public final class ProtoEquipment extends StorableObject
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlProtoEquipment pet = (IdlProtoEquipment) transferable;
-		super.fromTransferable(pet);
+		super.fromIdlTransferable(pet);
 		this.type = EquipmentType.fromTransferable(pet.type);
 		this.name = pet.name;
 		this.description = pet.description;

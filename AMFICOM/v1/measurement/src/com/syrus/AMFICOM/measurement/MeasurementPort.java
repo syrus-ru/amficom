@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.20 2006/03/13 13:53:58 bass Exp $
+ * $Id: MeasurementPort.java,v 1.21 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,9 +37,10 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPort;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortHelper;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2006/03/13 13:53:58 $
+ * @version $Revision: 1.21 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -59,9 +60,9 @@ public final class MeasurementPort extends StorableObject
 
 	public MeasurementPort(final IdlMeasurementPort mpt) throws CreateObjectException {
 		try {
-			this.fromTransferable(mpt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(mpt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -127,17 +128,22 @@ public final class MeasurementPort extends StorableObject
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlMeasurementPort mpt = (IdlMeasurementPort) transferable;
-		super.fromTransferable(mpt);
-
-		this.type = (MeasurementPortType) StorableObjectPool.getStorableObject(new Identifier(mpt._typeId), true);
-
-		this.name = mpt.name;
-		this.description = mpt.description;
-
-		this.kisId = new Identifier(mpt.kisId);
-		this.portId = new Identifier(mpt.portId);
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
+		try {
+			IdlMeasurementPort mpt = (IdlMeasurementPort) transferable;
+			super.fromIdlTransferable(mpt);
+	
+			this.type = (MeasurementPortType) StorableObjectPool.getStorableObject(new Identifier(mpt._typeId), true);
+	
+			this.name = mpt.name;
+			this.description = mpt.description;
+	
+			this.kisId = new Identifier(mpt.kisId);
+			this.portId = new Identifier(mpt.portId);
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
 	}
 
 	/**

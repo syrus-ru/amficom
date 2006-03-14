@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItem.java,v 1.21 2006/03/13 13:54:00 bass Exp $
+* $Id: LayoutItem.java,v 1.22 2006/03/14 10:47:57 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,10 +36,10 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.resource.corba.IdlLayoutItem;
 import com.syrus.AMFICOM.resource.corba.IdlLayoutItemHelper;
-import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  * @author $Author: bass $
  * @module resource
  */
@@ -62,9 +62,9 @@ public final class LayoutItem extends StorableObject
 	 */
 	public LayoutItem(final IdlLayoutItem ili) throws CreateObjectException {
 		try {
-			this.fromTransferable(ili);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(ili);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -132,14 +132,10 @@ public final class LayoutItem extends StorableObject
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlLayoutItem ili = (IdlLayoutItem) transferable;
-		try {
-			super.fromTransferable(ili);
-		} catch (ApplicationException ae) {
-			// Never
-			Log.errorMessage(ae);
-		}
+		super.fromIdlTransferable(ili);
 		
 		this.parentId = new Identifier(ili.parentId);
 		this.layoutName = ili.layoutName;

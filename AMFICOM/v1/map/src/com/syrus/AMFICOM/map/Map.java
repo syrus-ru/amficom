@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.127 2006/03/13 13:54:02 bass Exp $
+ * $Id: Map.java,v 1.128 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,6 +59,7 @@ import com.syrus.AMFICOM.map.xml.XmlSiteNode;
 import com.syrus.AMFICOM.map.xml.XmlSiteNodeSeq;
 import com.syrus.AMFICOM.map.xml.XmlTopologicalNode;
 import com.syrus.AMFICOM.map.xml.XmlTopologicalNodeSeq;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -68,7 +69,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.127 $, $Date: 2006/03/13 13:54:02 $
+ * @version $Revision: 1.128 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  */
 public final class Map extends DomainMember
@@ -155,9 +156,9 @@ public final class Map extends DomainMember
 	
 	public Map(final IdlMap mt) throws CreateObjectException {
 		try {
-			this.fromTransferable(mt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(mt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -210,7 +211,8 @@ public final class Map extends DomainMember
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlMap mt = (IdlMap) transferable;
 		super.fromTransferable(mt, new Identifier(mt.domainId));
 

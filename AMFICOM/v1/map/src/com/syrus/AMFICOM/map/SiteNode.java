@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.123 2006/03/13 13:54:02 bass Exp $
+ * $Id: SiteNode.java,v 1.124 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,6 +52,7 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
 import com.syrus.AMFICOM.map.xml.XmlSiteNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -68,7 +69,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.123 $, $Date: 2006/03/13 13:54:02 $
+ * @version $Revision: 1.124 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -228,19 +229,19 @@ public class SiteNode extends AbstractNode
 	}
 
 	@Override
-	protected synchronized void fromTransferable(IdlStorableObject transferable) throws ApplicationException {
-		IdlSiteNode idlSiteNode = (IdlSiteNode) transferable; 
-		super.fromTransferable(idlSiteNode);
-		this.imageId = new Identifier(idlSiteNode.imageId);
-		this.city = idlSiteNode.city;
-		this.street = idlSiteNode.street;
-		this.building = idlSiteNode.building;
-		this.attachmentSiteNodeId = new Identifier(idlSiteNode.attachmentSiteNodeId);
-
+	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
+	throws IdlConversionException {
 		try {
+			IdlSiteNode idlSiteNode = (IdlSiteNode) transferable; 
+			super.fromIdlTransferable(idlSiteNode);
+			this.imageId = new Identifier(idlSiteNode.imageId);
+			this.city = idlSiteNode.city;
+			this.street = idlSiteNode.street;
+			this.building = idlSiteNode.building;
+			this.attachmentSiteNodeId = new Identifier(idlSiteNode.attachmentSiteNodeId);
 			this.type = StorableObjectPool.getStorableObject(new Identifier(idlSiteNode.siteNodeTypeId), true);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableElement.java,v 1.13 2006/03/13 13:53:57 bass Exp $
+ * $Id: StorableElement.java,v 1.14 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,6 @@ package com.syrus.AMFICOM.report;
 
 import java.util.Date;
 
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -18,11 +16,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.report.corba.IdlAbstractReportElement;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Maxim Selivanov
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2006/03/13 13:53:57 $
+ * @version $Revision: 1.14 $, $Date: 2006/03/14 10:47:56 $
  * @module report
  */
 public abstract class StorableElement
@@ -119,15 +118,10 @@ public abstract class StorableElement
 	}
 	
 	@Override
-	protected synchronized void fromTransferable(IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
+	throws IdlConversionException {
 		IdlAbstractReportElement iae = (IdlAbstractReportElement) transferable;
-		try {
-			super.fromTransferable(iae);
-		} catch (final CreateObjectException coe) {
-			throw coe;
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		super.fromIdlTransferable(iae);
 		this.location = new IntPoint(iae.locationX, iae.locationY);
 		this.size = new IntDimension(iae.width, iae.height);
 		this.reportTemplateId  = new Identifier(iae.idlReportTemplateId);

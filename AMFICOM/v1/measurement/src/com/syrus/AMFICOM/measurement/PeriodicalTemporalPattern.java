@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.36 2006/03/13 13:53:58 bass Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.37 2006/03/14 10:47:56 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,10 +33,11 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 
 /**
- * @version $Revision: 1.36 $, $Date: 2006/03/13 13:53:58 $
+ * @version $Revision: 1.37 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement
@@ -80,9 +81,9 @@ public final class PeriodicalTemporalPattern
 	 */
 	public PeriodicalTemporalPattern(final IdlPeriodicalTemporalPattern itpt) throws CreateObjectException {
 		try {
-			this.fromTransferable(itpt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(itpt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}	
 	
@@ -90,9 +91,10 @@ public final class PeriodicalTemporalPattern
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlPeriodicalTemporalPattern ptpt = (IdlPeriodicalTemporalPattern)transferable;
-		super.fromTransferable(ptpt);
+		super.fromIdlTransferable(ptpt);
 		this.period = ptpt.period;
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;

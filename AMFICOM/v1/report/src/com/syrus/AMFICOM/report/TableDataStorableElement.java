@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.20 2006/03/13 13:53:57 bass Exp $
+ * $Id: TableDataStorableElement.java,v 1.21 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -32,10 +31,11 @@ import com.syrus.AMFICOM.report.corba.IdlTableData;
 import com.syrus.AMFICOM.report.corba.IdlTableDataHelper;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
+import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * Класс для отображения данных в табличном виде
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2006/03/13 13:53:57 $
+ * @version $Revision: 1.21 $, $Date: 2006/03/14 10:47:56 $
  * @module report
  */
 public final class TableDataStorableElement extends AbstractDataStorableElement {
@@ -94,19 +94,19 @@ public final class TableDataStorableElement extends AbstractDataStorableElement 
 		}
 	}
 
-	public TableDataStorableElement(IdlTableData transferable) {
-		fromTransferable(transferable);		
+	public TableDataStorableElement(IdlTableData transferable) throws CreateObjectException {
+		try {
+			fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}		
 	}
 
 	@Override
-	protected synchronized void fromTransferable(IdlStorableObject transferable) {
+	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
+	throws IdlConversionException {
 		IdlTableData idlTableData = (IdlTableData) transferable;
-		try {
-			super.fromTransferable(idlTableData);
-		} catch (ApplicationException e) {
-			// Never can happen
-			assert false;
-		}
+		super.fromIdlTransferable(idlTableData);
 		this.verticalDivisionsCount = idlTableData.verticalDivisionCount;
 	}
 

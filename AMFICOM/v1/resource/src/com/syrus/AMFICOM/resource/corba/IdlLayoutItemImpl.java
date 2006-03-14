@@ -1,5 +1,5 @@
 /*-
-* $Id: IdlLayoutItemImpl.java,v 1.4 2005/10/31 12:29:57 bass Exp $
+* $Id: IdlLayoutItemImpl.java,v 1.5 2006/03/14 10:47:57 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/10/31 12:29:57 $
+ * @version $Revision: 1.5 $, $Date: 2006/03/14 10:47:57 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module resource
@@ -59,7 +59,7 @@ public class IdlLayoutItemImpl extends IdlLayoutItem {
 			return new LayoutItem(this);
 		} catch (final CreateObjectException coe) {
 			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
+			throw coe.getIdlTransferable();
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlEventTypeImpl.java,v 1.11 2006/02/16 13:34:26 arseniy Exp $
+ * $Id: IdlEventTypeImpl.java,v 1.12 2006/03/14 10:47:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2006/02/16 13:34:26 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2006/03/14 10:47:58 $
  * @module event
  */
 final class IdlEventTypeImpl extends IdlEventType {
@@ -63,7 +63,7 @@ final class IdlEventTypeImpl extends IdlEventType {
 			return new EventType(this);
 		} catch (final CreateObjectException coe) {
 			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
+			throw coe.getIdlTransferable();
 		}
 	}
 }

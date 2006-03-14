@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.30 2006/03/13 13:53:57 bass Exp $
+ * $Id: ReportTemplate.java,v 1.31 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,6 +51,7 @@ import com.syrus.AMFICOM.report.corba.IdlReportTemplatePackage.IdlOrientation;
 import com.syrus.AMFICOM.report.corba.IdlReportTemplatePackage.IdlSheetSize;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * <p>Класс шаблона отчёта - включает в себя списки элементов, надписей и
@@ -61,7 +62,7 @@ import com.syrus.util.Log;
  * отчёт </p>
  * 
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2006/03/13 13:53:57 $
+ * @version $Revision: 1.31 $, $Date: 2006/03/14 10:47:56 $
  * @module report
  */
 public class ReportTemplate extends StorableObject implements Namable, Describable, ReverseDependencyContainer,
@@ -165,19 +166,19 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 		}		
 	}
 
-	public ReportTemplate(final IdlReportTemplate transferable) {
-		fromTransferable(transferable);
+	public ReportTemplate(final IdlReportTemplate transferable) throws CreateObjectException {
+		try {
+			fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlReportTemplate irt = (IdlReportTemplate) transferable;
-		try {
-			super.fromTransferable(transferable);
-		} catch (ApplicationException e) {
-			// this shit cann't happen
-			assert false;
-		}
+		super.fromIdlTransferable(transferable);
 		this.name = irt.name;
 		this.description = irt.description;
 		this.sheetSize = SheetSize.values()[irt.sheetSize.value()];

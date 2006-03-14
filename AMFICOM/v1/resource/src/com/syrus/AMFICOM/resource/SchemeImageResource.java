@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImageResource.java,v 1.44 2006/02/28 15:19:58 arseniy Exp $
+ * $Id: SchemeImageResource.java,v 1.45 2006/03/14 10:47:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import java.util.zip.GZIPOutputStream;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -41,10 +40,11 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourceHelper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceData;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.44 $, $Date: 2006/02/28 15:19:58 $
+ * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2006/03/14 10:47:57 $
  * @module resource
  */
 public final class SchemeImageResource extends AbstractCloneableImageResource {
@@ -237,9 +237,10 @@ public final class SchemeImageResource extends AbstractCloneableImageResource {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlImageResource idlImageResource = (IdlImageResource) transferable;
-		super.fromTransferable(idlImageResource);
+		super.fromIdlTransferable(idlImageResource);
 
 		final IdlImageResourceData imageResourceData = idlImageResource.data;
 		assert imageResourceData.discriminator().value() == ImageResourceSort._SCHEME;

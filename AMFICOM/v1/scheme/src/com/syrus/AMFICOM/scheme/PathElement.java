@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.101 2006/03/13 13:54:01 bass Exp $
+ * $Id: PathElement.java,v 1.102 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,6 +61,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlSchemeElementData;
 import com.syrus.AMFICOM.scheme.xml.XmlPathElement;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -72,7 +73,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.101 $, $Date: 2006/03/13 13:54:01 $
+ * @version $Revision: 1.102 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -300,9 +301,14 @@ public final class PathElement extends StorableObject
 
 	/**
 	 * @param transferable
+	 * @throws CreateObjectException
 	 */
-	public PathElement(final IdlPathElement transferable) {
-		fromTransferable(transferable);
+	public PathElement(final IdlPathElement transferable) throws CreateObjectException {
+		try {
+			fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -1184,21 +1190,15 @@ public final class PathElement extends StorableObject
 
 	/**
 	 * @param transferable
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
+	 * @throws IdlConversionException
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlPathElement pathElement = (IdlPathElement) transferable;
-			try {
-				super.fromTransferable(pathElement);
-			} catch (final ApplicationException ae) {
-				/*
-				 * Never. Arseniy, don't add any error-handling code,
-				 * please.
-				 */
-				assert false;
-			}
+			super.fromIdlTransferable(pathElement);
 			this.parentSchemePathId = new Identifier(pathElement.parentSchemePathId);
 			this.sequentialNumber = pathElement.sequentialNumber;
 			final IdlData data = pathElement.data;

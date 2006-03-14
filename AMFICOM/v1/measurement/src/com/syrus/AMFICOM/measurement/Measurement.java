@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.103 2006/03/13 13:53:58 bass Exp $
+ * $Id: Measurement.java,v 1.104 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,9 +33,10 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.IdlMeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2006/03/13 13:53:58 $
+ * @version $Revision: 1.104 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -64,9 +65,9 @@ public final class Measurement extends Action {
 	 */
 	public Measurement(final IdlMeasurement mt) throws CreateObjectException {
 		try {
-			this.fromTransferable(mt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(mt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -107,20 +108,25 @@ public final class Measurement extends Action {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		final IdlMeasurement mt = (IdlMeasurement) transferable;
-		super.fromTransferable(mt, MeasurementType.fromTransferable(mt.type), new Identifier(mt.monitoredElementId), VOID_IDENTIFIER);
-
-		this.setup = (MeasurementSetup) StorableObjectPool.getStorableObject(new Identifier(mt.setupId), true);
-
-		this.name = mt.name;
-		this.startTime = new Date(mt.startTime);
-		this.duration = mt.duration;
-		this.status = mt.status.value();
-		this.localAddress = mt.localAddress;
-		this.testId = new Identifier(mt.testId);
-
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
+		try {
+			final IdlMeasurement mt = (IdlMeasurement) transferable;
+			super.fromTransferable(mt, MeasurementType.fromTransferable(mt.type), new Identifier(mt.monitoredElementId), VOID_IDENTIFIER);
+	
+			this.setup = (MeasurementSetup) StorableObjectPool.getStorableObject(new Identifier(mt.setupId), true);
+	
+			this.name = mt.name;
+			this.startTime = new Date(mt.startTime);
+			this.duration = mt.duration;
+			this.status = mt.status.value();
+			this.localAddress = mt.localAddress;
+			this.testId = new Identifier(mt.testId);
+	
+			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
 	}
 
 	/**

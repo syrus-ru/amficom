@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.90 2006/03/13 13:54:02 bass Exp $
+ * $Id: Characteristic.java,v 1.91 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,11 +31,12 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2006/03/13 13:54:02 $
+ * @version $Revision: 1.91 $, $Date: 2006/03/14 10:48:00 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -101,9 +102,9 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	 */
 	public Characteristic(final IdlCharacteristic ct) throws CreateObjectException {
 		try {
-			this.fromTransferable(ct);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(ct);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -275,20 +276,25 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		final IdlCharacteristic ct = (IdlCharacteristic) transferable;
-		
-		super.fromTransferable(ct);
-		
-		this.type = StorableObjectPool.getStorableObject(new Identifier(ct._typeId), true);
-		this.name = ct.name;
-		this.description = ct.description;
-		this.value = ct.value;
-		this.parentCharacterizableId = new Identifier(ct.characterizableId);
-		this.editable = ct.editable;
-		this.visible = ct.visible;
-		
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
+		try {
+			final IdlCharacteristic ct = (IdlCharacteristic) transferable;
+			
+			super.fromIdlTransferable(ct);
+			
+			this.type = StorableObjectPool.getStorableObject(new Identifier(ct._typeId), true);
+			this.name = ct.name;
+			this.description = ct.description;
+			this.value = ct.value;
+			this.parentCharacterizableId = new Identifier(ct.characterizableId);
+			this.editable = ct.editable;
+			this.visible = ct.visible;
+			
+			assert this.isValid() : OBJECT_STATE_ILLEGAL;
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
 	}
 
 	/**

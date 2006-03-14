@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.122 2006/03/13 13:54:01 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.123 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -85,6 +85,7 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableThread;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableThreadSeq;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -92,7 +93,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.122 $, $Date: 2006/03/13 13:54:01 $
+ * @version $Revision: 1.123 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -162,7 +163,11 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	 * @throws CreateObjectException
 	 */
 	public SchemeCableLink(final IdlSchemeCableLink transferable) throws CreateObjectException {
-		this.fromTransferable((IdlStorableObject) transferable);
+		try {
+			this.fromIdlTransferable((IdlStorableObject) transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -704,12 +709,12 @@ public final class SchemeCableLink extends AbstractSchemeLink
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
+	 * @throws IdlConversionException
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable)
-	throws CreateObjectException {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlSchemeCableLink schemeCableLink = (IdlSchemeCableLink) transferable;
 			super.fromTransferable(schemeCableLink,

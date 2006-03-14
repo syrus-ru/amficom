@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlDataImpl.java,v 1.1 2005/10/04 11:02:35 max Exp $
+ * $Id: IdlDataImpl.java,v 1.2 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.report.corba;
 
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -14,8 +15,8 @@ import com.syrus.AMFICOM.report.DataStorableElement;
 
 /**
  * @author max
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/10/04 11:02:35 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2006/03/14 10:47:56 $
  * @module report
  */
 
@@ -57,6 +58,10 @@ public class IdlDataImpl extends IdlData {
 	
 	@Override
 	public StorableObject getNative() throws IdlCreateObjectException {
-		return new DataStorableElement(this);
+		try {
+			return new DataStorableElement(this);
+		} catch (final CreateObjectException coe) {
+			throw coe.getIdlTransferable();
+		}
 	}
 }

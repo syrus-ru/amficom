@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.46 2006/03/13 13:53:59 bass Exp $
+* $Id: PermissionAttributes.java,v 1.47 2006/03/14 10:47:59 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,7 +27,6 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.administration.corba.IdlPermissionAttributes;
 import com.syrus.AMFICOM.administration.corba.IdlPermissionAttributesHelper;
 import com.syrus.AMFICOM.administration.corba.IdlPermissionAttributesPackage.IdlModule;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -37,11 +36,12 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 
 /**
- * @version $Revision: 1.46 $, $Date: 2006/03/13 13:53:59 $
+ * @version $Revision: 1.47 $, $Date: 2006/03/14 10:47:59 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -672,9 +672,9 @@ public final class PermissionAttributes extends StorableObject {
 	 */
 	public PermissionAttributes(final IdlPermissionAttributes dt) throws CreateObjectException {
 		try {
-			this.fromTransferable(dt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(dt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -712,9 +712,10 @@ public final class PermissionAttributes extends StorableObject {
 	 * </p>
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlPermissionAttributes pat = (IdlPermissionAttributes) transferable;
-		super.fromTransferable(pat);
+		super.fromIdlTransferable(pat);
 		this.domainId = new Identifier(pat.domainId);
 		this.parentId = new Identifier(pat.userId);
 		this.module = Module.valueOf(pat._module);

@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.37 2006/02/28 15:19:59 arseniy Exp $
+ * $Id: BitmapImageResource.java,v 1.38 2006/03/14 10:47:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.util.Date;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -28,10 +27,11 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourceHelper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceData;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.IdlBitmapImageResourceData;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.37 $, $Date: 2006/02/28 15:19:59 $
+ * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2006/03/14 10:47:57 $
  * @module resource
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource implements Cloneable {
@@ -160,9 +160,10 @@ public final class BitmapImageResource extends AbstractBitmapImageResource imple
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlImageResource idlImageResource = (IdlImageResource) transferable;
-		super.fromTransferable(idlImageResource);
+		super.fromIdlTransferable(idlImageResource);
 
 		final IdlImageResourceData imageResourceData = idlImageResource.data;
 		assert imageResourceData.discriminator().value() == ImageResourceSort._BITMAP;

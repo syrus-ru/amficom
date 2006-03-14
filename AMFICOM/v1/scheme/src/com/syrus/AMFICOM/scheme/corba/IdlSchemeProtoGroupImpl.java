@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeProtoGroupImpl.java,v 1.2 2005/07/24 17:08:16 bass Exp $
+ * $Id: IdlSchemeProtoGroupImpl.java,v 1.3 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,15 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/24 17:08:16 $
+ * @version $Revision: 1.3 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 final class IdlSchemeProtoGroupImpl extends IdlSchemeProtoGroup {
@@ -47,10 +49,15 @@ final class IdlSchemeProtoGroupImpl extends IdlSchemeProtoGroup {
 	}
 
 	/**
+	 * @throws IdlCreateObjectException
 	 * @see com.syrus.AMFICOM.general.corba.IdlStorableObject#getNative()
 	 */
 	@Override
-	public SchemeProtoGroup getNative() {
-		return new SchemeProtoGroup(this);
+	public SchemeProtoGroup getNative() throws IdlCreateObjectException {
+		try {
+			return new SchemeProtoGroup(this);
+		} catch (final CreateObjectException coe) {
+			throw coe.getIdlTransferable();
+		}
 	}
 }

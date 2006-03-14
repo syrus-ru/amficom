@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.157 2006/03/13 13:53:57 bass Exp $
+ * $Id: Equipment.java,v 1.158 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,11 +56,12 @@ import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.157 $, $Date: 2006/03/13 13:53:57 $
+ * @version $Revision: 1.158 $, $Date: 2006/03/14 10:48:00 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -87,9 +88,9 @@ public final class Equipment extends DomainMember
 
 	public Equipment(final IdlEquipment et) throws CreateObjectException {
 		try {
-			this.fromTransferable(et);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(et);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -260,7 +261,8 @@ public final class Equipment extends DomainMember
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlEquipment et = (IdlEquipment) transferable;
 		super.fromTransferable(et, new Identifier(et.domainId));
 

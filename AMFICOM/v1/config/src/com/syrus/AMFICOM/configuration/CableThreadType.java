@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThreadType.java,v 1.86 2006/03/13 13:53:57 bass Exp $
+ * $Id: CableThreadType.java,v 1.87 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,6 +50,7 @@ import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -59,7 +60,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * optical fiber (or an <i>abstract</i> optical fiber), the latter is a type of
  * cable (or an <i>abstract</i> cable containing this thread).
  *
- * @version $Revision: 1.86 $, $Date: 2006/03/13 13:53:57 $
+ * @version $Revision: 1.87 $, $Date: 2006/03/14 10:48:00 $
  * @author $Author: bass $
  * @module configuration
  */
@@ -106,9 +107,9 @@ public final class CableThreadType extends StorableObjectType
 
 	public CableThreadType(final IdlCableThreadType cttt) throws CreateObjectException {
 		try {
-			this.fromTransferable(cttt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(cttt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -340,9 +341,9 @@ public final class CableThreadType extends StorableObjectType
 	}
 
 	@Override
-	protected synchronized void fromTransferable(
+	protected synchronized void fromIdlTransferable(
 			final IdlStorableObject transferable)
-	throws ApplicationException {
+	throws IdlConversionException {
 		final IdlCableThreadType idlCableThreadType = (IdlCableThreadType) transferable;
 
 		super.fromTransferable(idlCableThreadType, idlCableThreadType.codename, idlCableThreadType.description);

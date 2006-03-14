@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.43 2006/03/13 13:53:59 bass Exp $
+ * $Id: EventSource.java,v 1.44 2006/03/14 10:47:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.event;
+
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -16,7 +18,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.event.corba.IdlEventSource;
 import com.syrus.AMFICOM.event.corba.IdlEventSourceHelper;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -28,9 +29,10 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2006/03/13 13:53:59 $
+ * @version $Revision: 1.44 $, $Date: 2006/03/14 10:47:58 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -41,7 +43,14 @@ public final class EventSource extends StorableObject {
 	private Identifier sourceEntityId;
 
 	public EventSource(final IdlEventSource est) {
-		this.fromTransferable(est);
+		try {
+			this.fromIdlTransferable(est);
+		} catch (final IdlConversionException ice) {
+			/*
+			 * Never.
+			 */
+			Log.debugMessage(ice, SEVERE);
+		}
 	}
 
 	EventSource(final Identifier id,
@@ -74,15 +83,10 @@ public final class EventSource extends StorableObject {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlEventSource est = (IdlEventSource) transferable;
-		try {
-			super.fromTransferable(est);
-		}
-		catch (ApplicationException ae) {
-			// Never
-			Log.errorMessage(ae);
-		}
+		super.fromIdlTransferable(est);
 		this.sourceEntityId = new Identifier(est.sourceEntityId);
 	}
 

@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUser.java,v 1.43 2006/03/13 13:53:59 bass Exp $
+* $Id: SystemUser.java,v 1.44 2006/03/14 10:47:59 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,9 +38,10 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2006/03/13 13:53:59 $
+ * @version $Revision: 1.44 $, $Date: 2006/03/14 10:47:59 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -62,9 +63,9 @@ public final class SystemUser extends StorableObject
 	 */
 	public SystemUser(final IdlSystemUser ut) throws CreateObjectException {
 		try {
-			this.fromTransferable(ut);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(ut);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -159,18 +160,17 @@ public final class SystemUser extends StorableObject
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 * @throws ApplicationException 
+	 * @throws IdlConversionException 
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) 
-	throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) 
+	throws IdlConversionException {
 		final IdlSystemUser ut = (IdlSystemUser) transferable;
 		try {
-			super.fromTransferable(ut);
-		}
-		catch (final ApplicationException ae) {
+			super.fromIdlTransferable(ut);
+		} catch (final IdlConversionException ice) {
 			// Never
-			Log.errorMessage(ae);
+			Log.errorMessage(ice);
 		}
 		this.login = ut.login;
 		this.sort = ut.sort.value();

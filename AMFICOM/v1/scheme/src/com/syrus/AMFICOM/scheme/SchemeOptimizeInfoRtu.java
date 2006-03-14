@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.40 2006/03/13 13:54:01 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.41 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,6 +42,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoRtu;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoRtuHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfoRtu;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -50,7 +51,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2006/03/13 13:54:01 $
+ * @version $Revision: 1.41 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu
@@ -84,8 +85,12 @@ public final class SchemeOptimizeInfoRtu
 		this.parentSchemeOptimizeInfoId = Identifier.possiblyVoid(parentSchemeOptimizeInfo);
 	}
 
-	public SchemeOptimizeInfoRtu(final IdlSchemeOptimizeInfoRtu transferable) {
-		this.fromTransferable(transferable);
+	public SchemeOptimizeInfoRtu(final IdlSchemeOptimizeInfoRtu transferable) throws CreateObjectException {
+		try {
+			this.fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -324,20 +329,15 @@ public final class SchemeOptimizeInfoRtu
 
 	/**
 	 * @param transferable
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
+	 * @throws IdlConversionException
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlSchemeOptimizeInfoRtu schemeOptimizeInfoRtu = (IdlSchemeOptimizeInfoRtu) transferable;
-			try {
-				super.fromTransferable(schemeOptimizeInfoRtu);
-			} catch (final ApplicationException ae) {
-				/*
-				 * Never.
-				 */
-				assert false;
-			}
+			super.fromIdlTransferable(schemeOptimizeInfoRtu);
 			this.name = schemeOptimizeInfoRtu.name;
 			this.priceUsd = schemeOptimizeInfoRtu.priceUsd;
 			this.rangeDb = schemeOptimizeInfoRtu.rangeDb;

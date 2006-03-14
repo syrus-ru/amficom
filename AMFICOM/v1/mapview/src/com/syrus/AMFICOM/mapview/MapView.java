@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.82 2006/03/13 13:54:00 bass Exp $
+* $Id: MapView.java,v 1.83 2006/03/14 10:48:01 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -51,6 +51,7 @@ import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * Класс используется для хранения объектов, отображаемых на
@@ -62,7 +63,7 @@ import com.syrus.util.Log;
  * 
  * @author $Author: bass $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.82 $, $Date: 2006/03/13 13:54:00 $
+ * @version $Revision: 1.83 $, $Date: 2006/03/14 10:48:01 $
  * @module mapview
  */
 public final class MapView extends DomainMember implements Describable {
@@ -129,9 +130,9 @@ public final class MapView extends DomainMember implements Describable {
 
 	public MapView(final IdlMapView mvt) throws CreateObjectException {
 		try {
-			this.fromTransferable(mvt);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(mvt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -191,33 +192,27 @@ public final class MapView extends DomainMember implements Describable {
 	}
 	
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		final IdlMapView mvt = (IdlMapView) transferable;
-		super.fromTransferable(mvt, new Identifier(mvt.domainId));
-
-		this.name = mvt.name;
-		this.description = mvt.description;
-
-		this.center = new DoublePoint(mvt.longitude, mvt.latitude);
-		this.scale = mvt.scale;
-		this.defaultScale = mvt.defaultScale;
-
-		final Set<Identifier> schemeIds = Identifier.fromTransferables(mvt.schemeIds);
-
-		final Identifier mapId = new Identifier(mvt.mapId);
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		try {
-			this.map = StorableObjectPool.getStorableObject(mapId, true);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException("MapView.<init> | cannot get map " + mapId.toString(), ae);
+			final IdlMapView mvt = (IdlMapView) transferable;
+			super.fromTransferable(mvt, new Identifier(mvt.domainId));
+	
+			this.name = mvt.name;
+			this.description = mvt.description;
+	
+			this.center = new DoublePoint(mvt.longitude, mvt.latitude);
+			this.scale = mvt.scale;
+			this.defaultScale = mvt.defaultScale;
+	
+			this.map = StorableObjectPool.getStorableObject(Identifier.valueOf(mvt.mapId), true);
+	
+			this.schemes = new HashSet<Scheme>(StorableObjectPool.<Scheme>getStorableObjects(Identifier.fromTransferables(mvt.schemeIds), true));
+	
+			assert this.isValid() : OBJECT_STATE_ILLEGAL;
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
 		}
-
-		try {
-			this.schemes = new HashSet<Scheme>(StorableObjectPool.<Scheme>getStorableObjects(schemeIds, true));
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException("MapView.<init> | cannot get schemes ", ae);
-		}
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	@Override

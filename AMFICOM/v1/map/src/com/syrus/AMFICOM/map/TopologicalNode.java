@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.98 2006/03/13 13:54:02 bass Exp $
+ * $Id: TopologicalNode.java,v 1.99 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,6 +39,7 @@ import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
 import com.syrus.AMFICOM.map.xml.XmlTopologicalNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -48,7 +49,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: bass $
- * @version $Revision: 1.98 $, $Date: 2006/03/13 13:54:02 $
+ * @version $Revision: 1.99 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode
@@ -163,9 +164,10 @@ public final class TopologicalNode extends AbstractNode
 	}
 	
 	@Override
-	protected synchronized void fromTransferable(IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
+	throws IdlConversionException {
 		IdlTopologicalNode idlTopologicalNode = (IdlTopologicalNode) transferable;
-		super.fromTransferable(idlTopologicalNode);
+		super.fromIdlTransferable(idlTopologicalNode);
 		this.active = idlTopologicalNode.active;
 	}
 

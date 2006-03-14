@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectType.java,v 1.35 2006/03/13 13:54:02 bass Exp $
+ * $Id: StorableObjectType.java,v 1.36 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,9 +12,10 @@ import java.util.Date;
 
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2006/03/13 13:54:02 $
+ * @version $Revision: 1.36 $, $Date: 2006/03/14 10:48:00 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -70,8 +71,8 @@ public abstract class StorableObjectType
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected synchronized void fromTransferable(final IdlStorableObject transferable, final String codename1, final String description1)
-			throws ApplicationException {
-		super.fromTransferable(transferable);
+			throws IdlConversionException {
+		super.fromIdlTransferable(transferable);
 		this.codename = codename1;
 		this.description = description1;
 	}

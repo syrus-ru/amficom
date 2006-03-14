@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.78 2006/03/13 13:53:57 bass Exp $
+ * $Id: Link.java,v 1.79 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,10 +26,11 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.78 $, $Date: 2006/03/13 13:53:57 $
+ * @version $Revision: 1.79 $, $Date: 2006/03/14 10:48:00 $
  * @module config
  */
 public final class Link extends AbstractLink {
@@ -37,9 +38,9 @@ public final class Link extends AbstractLink {
 
 	public Link(final IdlLink idlLink) throws CreateObjectException {
 		try {
-			this.fromTransferable(idlLink);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(idlLink);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -124,17 +125,22 @@ public final class Link extends AbstractLink {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		final IdlLink idlLink = (IdlLink) transferable;
-		super.fromTransferable(idlLink, new Identifier(idlLink.domainId));
-
-		this.name = idlLink.name;
-		this.description = idlLink.description;
-		this.inventoryNo = idlLink.inventoryNo;
-		this.supplier = idlLink.supplier;
-		this.supplierCode = idlLink.supplierCode;
-
-		super.type = (LinkType) StorableObjectPool.getStorableObject(new Identifier(idlLink._typeId), true);
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
+		try {
+			final IdlLink idlLink = (IdlLink) transferable;
+			super.fromTransferable(idlLink, new Identifier(idlLink.domainId));
+	
+			this.name = idlLink.name;
+			this.description = idlLink.description;
+			this.inventoryNo = idlLink.inventoryNo;
+			this.supplier = idlLink.supplier;
+			this.supplierCode = idlLink.supplierCode;
+	
+			super.type = (LinkType) StorableObjectPool.getStorableObject(new Identifier(idlLink._typeId), true);
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
 	}
 
 	/**

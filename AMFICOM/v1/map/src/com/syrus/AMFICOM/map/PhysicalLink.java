@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.153 2006/03/13 13:54:02 bass Exp $
+ * $Id: PhysicalLink.java,v 1.154 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,6 +66,7 @@ import com.syrus.AMFICOM.map.xml.XmlPipeBlock;
 import com.syrus.AMFICOM.map.xml.XmlPipeBlockSeq;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -78,7 +79,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.153 $, $Date: 2006/03/13 13:54:02 $
+ * @version $Revision: 1.154 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -145,9 +146,9 @@ public class PhysicalLink extends StorableObject
 	
 	public PhysicalLink(final IdlPhysicalLink plt) throws CreateObjectException {
 		try {
-			this.fromTransferable(plt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(plt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -274,37 +275,45 @@ public class PhysicalLink extends StorableObject
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		final IdlPhysicalLink plt = (IdlPhysicalLink) transferable;
-		super.fromTransferable(plt);
-
-		this.name = plt.name;
-		this.description = plt.description;
-
-		this.city = plt.city;
-		this.street = plt.street;
-		this.building = plt.building;
-
-		this.physicalLinkType = StorableObjectPool.getStorableObject(new Identifier(plt.physicalLinkTypeId), true);
-
-		this.startNodeId = new Identifier(plt.startNodeId);
-		this.endNodeId = new Identifier(plt.endNodeId);
-		
-		assert !this.startNodeId.isVoid() : NON_VOID_EXPECTED; 
-		assert !this.endNodeId.isVoid() : NON_VOID_EXPECTED;
-		
-		this.selected = false;
-		
-		Set<PipeBlock> pipeBlocks = null;
-		Set<Identifier> pipeBlockIds = Identifier.fromTransferables(plt.pipeBlockIds);
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		try {
-			pipeBlocks = StorableObjectPool.getStorableObjects(pipeBlockIds, true);
-		} catch (ApplicationException e) {
-			Log.errorMessage(e);
-		}		
-		this.binding = new PhysicalLinkBinding(pipeBlocks);
-
-		this.transientFieldsInitialized = false;
+			final IdlPhysicalLink plt = (IdlPhysicalLink) transferable;
+			super.fromIdlTransferable(plt);
+	
+			this.name = plt.name;
+			this.description = plt.description;
+	
+			this.city = plt.city;
+			this.street = plt.street;
+			this.building = plt.building;
+	
+			this.physicalLinkType = StorableObjectPool.getStorableObject(new Identifier(plt.physicalLinkTypeId), true);
+	
+			this.startNodeId = new Identifier(plt.startNodeId);
+			this.endNodeId = new Identifier(plt.endNodeId);
+			
+			assert !this.startNodeId.isVoid() : NON_VOID_EXPECTED; 
+			assert !this.endNodeId.isVoid() : NON_VOID_EXPECTED;
+			
+			this.selected = false;
+			
+			Set<PipeBlock> pipeBlocks = null;
+			Set<Identifier> pipeBlockIds = Identifier.fromTransferables(plt.pipeBlockIds);
+			try {
+				pipeBlocks = StorableObjectPool.getStorableObjects(pipeBlockIds, true);
+			} catch (final ApplicationException ae) {
+				/**
+				 * @bug Why simple catch here instead of a rethrow?
+				 */
+				Log.errorMessage(ae);
+			}		
+			this.binding = new PhysicalLinkBinding(pipeBlocks);
+	
+			this.transientFieldsInitialized = false;
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
 	}
 
 	@Override

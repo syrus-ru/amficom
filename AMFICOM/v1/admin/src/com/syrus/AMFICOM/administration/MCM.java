@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.63 2006/03/13 13:53:59 bass Exp $
+ * $Id: MCM.java,v 1.64 2006/03/14 10:47:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,9 +35,10 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2006/03/13 13:53:59 $
+ * @version $Revision: 1.64 $, $Date: 2006/03/14 10:47:59 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -58,10 +59,9 @@ public final class MCM extends DomainMember
 	 */
 	public MCM(final IdlMCM mt) throws CreateObjectException {
 		try {
-			this.fromTransferable(mt);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(mt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}		
 	}
 
@@ -95,7 +95,8 @@ public final class MCM extends DomainMember
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlMCM mt = (IdlMCM)transferable;
 		super.fromTransferable(mt, new Identifier(mt.domainId));
 		this.name = mt.name;

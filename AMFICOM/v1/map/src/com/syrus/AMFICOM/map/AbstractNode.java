@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.48 2006/03/13 13:54:02 bass Exp $
+ * $Id: AbstractNode.java,v 1.49 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.map;
 
 import java.util.Date;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -20,6 +19,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlAbstractNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * Абстрактный класс, описывающий узловой элемент топологической схемы
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * ({@link #location}) и изображением ({@link #imageId}).
  *
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2006/03/13 13:54:02 $
+ * @version $Revision: 1.49 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  * @see SiteNode
  * @see TopologicalNode
@@ -75,9 +75,9 @@ public abstract class AbstractNode
 
 	AbstractNode(final IdlStorableObject transferable) throws CreateObjectException {
 		try {
-			this.fromTransferable(transferable);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -99,9 +99,10 @@ public abstract class AbstractNode
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		IdlAbstractNode idlAbstractNode = (IdlAbstractNode) transferable;
-		super.fromTransferable(idlAbstractNode);
+		super.fromIdlTransferable(idlAbstractNode);
 		this.name = idlAbstractNode.name;
 		this.description = idlAbstractNode.description;		
 		this.location = new DoublePoint(idlAbstractNode.longitude, idlAbstractNode.latitude);

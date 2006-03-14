@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.94 2006/03/13 13:54:01 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.95 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,6 +58,7 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElementSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroupSeq;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -65,7 +66,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.94 $, $Date: 2006/03/13 13:54:01 $
+ * @version $Revision: 1.95 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -133,9 +134,14 @@ public final class SchemeProtoGroup extends StorableObject
 
 	/**
 	 * @param transferable
+	 * @throws CreateObjectException
 	 */
-	public SchemeProtoGroup(final IdlSchemeProtoGroup transferable) {
-		fromTransferable(transferable);
+	public SchemeProtoGroup(final IdlSchemeProtoGroup transferable) throws CreateObjectException {
+		try {
+			this.fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -552,20 +558,14 @@ public final class SchemeProtoGroup extends StorableObject
 
 	/**
 	 * @param transferable
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlSchemeProtoGroup schemeProtoGroup = (IdlSchemeProtoGroup) transferable;
-			try {
-				super.fromTransferable(schemeProtoGroup);
-			} catch (final ApplicationException ae) {
-				/*
-				 * Never.
-				 */
-				assert false;
-			}
+			super.fromIdlTransferable(schemeProtoGroup);
 			this.name = schemeProtoGroup.name;
 			this.description = schemeProtoGroup.description;
 			this.symbolId = new Identifier(schemeProtoGroup.symbolId);

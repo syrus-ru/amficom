@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.report.corba.IdlAttachedTextHelper;
 import com.syrus.AMFICOM.report.corba.IdlAttachedTextPackage.IdlFont;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * <p>Title: </p>
@@ -137,19 +138,19 @@ public final class AttachedTextStorableElement extends StorableElement
 		}
 	}
 	
-	public AttachedTextStorableElement(IdlAttachedText transferable) {
-		this.fromTransferable(transferable);
+	public AttachedTextStorableElement(IdlAttachedText transferable) throws CreateObjectException {
+		try {
+			this.fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 	
 	@Override
-	protected synchronized void fromTransferable(IdlStorableObject transferable) {
+	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
+	throws IdlConversionException {
 		IdlAttachedText iat = (IdlAttachedText) transferable;
-		try {
-			super.fromTransferable(iat);
-		} catch (ApplicationException e) {
-			// this shit cann't happen
-			assert false;
-		}
+		super.fromIdlTransferable(iat);
 		this.text = iat.text;
 		this.verticalAttacherId = new Identifier(iat.verticalAttacherId);
 		this.horizontalAttacherId = new Identifier(iat.horizontalAttacherId);

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.114 2006/03/13 13:54:01 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.115 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,6 +69,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThread;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThreadHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableThread;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -76,7 +77,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.114 $, $Date: 2006/03/13 13:54:01 $
+ * @version $Revision: 1.115 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public final class SchemeCableThread
@@ -162,7 +163,11 @@ public final class SchemeCableThread
 	 * @throws CreateObjectException
 	 */
 	public SchemeCableThread(final IdlSchemeCableThread transferable) throws CreateObjectException {
-		fromTransferable(transferable);
+		try {
+			fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -828,21 +833,15 @@ public final class SchemeCableThread
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
+	 * @throws IdlConversionException
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable)
-	throws CreateObjectException {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlSchemeCableThread schemeCableThread = (IdlSchemeCableThread) transferable;
-			try {
-				super.fromTransferable(schemeCableThread);
-			} catch (final CreateObjectException coe) {
-				throw coe;
-			} catch (final ApplicationException ae) {
-				throw new CreateObjectException(ae);
-			}
+			super.fromIdlTransferable(schemeCableThread);
 			this.name = schemeCableThread.name;
 			this.description = schemeCableThread.description;
 			this.linkTypeId = new Identifier(schemeCableThread.linkTypeId);

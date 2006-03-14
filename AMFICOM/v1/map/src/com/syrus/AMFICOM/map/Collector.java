@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.108 2006/03/13 13:54:02 bass Exp $
+ * $Id: Collector.java,v 1.109 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,6 +48,7 @@ import com.syrus.AMFICOM.map.corba.IdlCollectorHelper;
 import com.syrus.AMFICOM.map.xml.XmlCollector;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -56,7 +57,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.108 $, $Date: 2006/03/13 13:54:02 $
+ * @version $Revision: 1.109 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  */
 public final class Collector extends StorableObject
@@ -75,9 +76,9 @@ public final class Collector extends StorableObject
 
 	public Collector(final IdlCollector ct) throws CreateObjectException {
 		try {
-			this.fromTransferable(ct);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(ct);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -122,9 +123,10 @@ public final class Collector extends StorableObject
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlCollector ct = (IdlCollector) transferable;
-		super.fromTransferable(ct);
+		super.fromIdlTransferable(ct);
 
 		this.name = ct.name;
 		this.description = ct.description;

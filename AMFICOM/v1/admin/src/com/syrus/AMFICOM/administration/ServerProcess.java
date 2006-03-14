@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.34 2006/03/13 13:53:59 bass Exp $
+ * $Id: ServerProcess.java,v 1.35 2006/03/14 10:47:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.corba.IdlServerProcess;
 import com.syrus.AMFICOM.administration.corba.IdlServerProcessHelper;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -30,9 +29,10 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2006/03/13 13:53:59 $
+ * @version $Revision: 1.35 $, $Date: 2006/03/14 10:47:59 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -49,7 +49,7 @@ public final class ServerProcess extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public ServerProcess(final IdlServerProcess spt) {
-		this.fromTransferable(spt);
+		this.fromIdlTransferable(spt);
 	}
 
 	/**
@@ -85,14 +85,13 @@ public final class ServerProcess extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) {
 		final IdlServerProcess spt = (IdlServerProcess) transferable;
 		try {
-			super.fromTransferable(spt);
-		}
-		catch (ApplicationException ae) {
+			super.fromIdlTransferable(spt);
+		} catch (final IdlConversionException ice) {
 			// Never
-			Log.errorMessage(ae);
+			Log.errorMessage(ice);
 		}
 		this.codename = spt.codename;
 		this.serverId = new Identifier(spt.serverId);

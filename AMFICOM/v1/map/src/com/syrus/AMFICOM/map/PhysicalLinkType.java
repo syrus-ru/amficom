@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.115 2006/03/13 13:54:02 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.116 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,6 +54,7 @@ import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkType;
 import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkTypeSort;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -63,7 +64,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.115 $, $Date: 2006/03/13 13:54:02 $
+ * @version $Revision: 1.116 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -104,9 +105,9 @@ public final class PhysicalLinkType extends StorableObjectType
 
 	public PhysicalLinkType(final IdlPhysicalLinkType pltt) throws CreateObjectException {
 		try {
-			this.fromTransferable(pltt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(pltt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -180,7 +181,8 @@ public final class PhysicalLinkType extends StorableObjectType
 	}
 	
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlPhysicalLinkType pltt = (IdlPhysicalLinkType) transferable;
 		super.fromTransferable(pltt, pltt.codename, pltt.description);
 		

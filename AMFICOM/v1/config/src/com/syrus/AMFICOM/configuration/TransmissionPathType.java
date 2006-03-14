@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.85 2006/03/13 13:53:57 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.86 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,9 +37,10 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2006/03/13 13:53:57 $
+ * @version $Revision: 1.86 $, $Date: 2006/03/14 10:48:00 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -54,9 +55,9 @@ public final class TransmissionPathType extends StorableObjectType
 
 	public TransmissionPathType(final IdlTransmissionPathType tptt) throws CreateObjectException {
 		try {
-			this.fromTransferable(tptt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(tptt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -111,7 +112,8 @@ public final class TransmissionPathType extends StorableObjectType
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlTransmissionPathType tptt = (IdlTransmissionPathType) transferable;
 		super.fromTransferable(tptt, tptt.codename, tptt.description);
 		this.name = tptt.name;

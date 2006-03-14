@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlock.java,v 1.18 2006/03/13 13:54:02 bass Exp $
+ * $Id: PipeBlock.java,v 1.19 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,6 +40,7 @@ import com.syrus.AMFICOM.map.corba.IdlPipeBlockHelper;
 import com.syrus.AMFICOM.map.xml.XmlPipeBlock;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -49,7 +50,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * и матрицу пролегани€ кабелей по трубам тоннел€.
  *
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2006/03/13 13:54:02 $
+ * @version $Revision: 1.19 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  */
 public final class PipeBlock 
@@ -91,9 +92,9 @@ public final class PipeBlock
 
 	public PipeBlock(final IdlPipeBlock pltb) throws CreateObjectException {
 		try {
-			this.fromTransferable(pltb);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(pltb);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -154,9 +155,10 @@ public final class PipeBlock
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlPipeBlock pltb = (IdlPipeBlock) transferable;
-		super.fromTransferable(pltb);
+		super.fromIdlTransferable(pltb);
 
 		this.number = pltb.number;
 		this.dimension = new IntDimension(pltb.dimensionX, pltb.dimensionY);

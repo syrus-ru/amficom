@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.26 2006/03/13 13:53:58 bass Exp $
+ * $Id: ParameterSet.java,v 1.27 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -31,9 +30,10 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSet;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2006/03/13 13:53:58 $
+ * @version $Revision: 1.27 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -56,9 +56,9 @@ public final class ParameterSet extends StorableObject {
 	 */
 	public ParameterSet(final IdlParameterSet st) throws CreateObjectException {
 		try {
-			this.fromTransferable(st);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(st);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}	
@@ -127,9 +127,10 @@ public final class ParameterSet extends StorableObject {
 	 * </p>
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlParameterSet st = (IdlParameterSet)transferable;
-		super.fromTransferable(st);
+		super.fromIdlTransferable(st);
 		this.sort = st.sort.value();
 		this.description = st.description;
 

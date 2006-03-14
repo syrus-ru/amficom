@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.85 2006/03/13 13:54:01 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.86 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,6 +47,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfo;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfo;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -54,7 +55,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.85 $, $Date: 2006/03/13 13:54:01 $
+ * @version $Revision: 1.86 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -156,9 +157,14 @@ public final class SchemeOptimizeInfo extends StorableObject
 
 	/**
 	 * @param transferable
+	 * @throws CreateObjectException
 	 */
-	public SchemeOptimizeInfo(final IdlSchemeOptimizeInfo transferable) {
-		fromTransferable(transferable);
+	public SchemeOptimizeInfo(final IdlSchemeOptimizeInfo transferable) throws CreateObjectException {
+		try {
+			fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -642,20 +648,15 @@ public final class SchemeOptimizeInfo extends StorableObject
 
 	/**
 	 * @param transferable
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
+	 * @throws IdlConversionException
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlSchemeOptimizeInfo schemeOptimizeInfo = (IdlSchemeOptimizeInfo) transferable;
-			try {
-				super.fromTransferable(schemeOptimizeInfo);
-			} catch (final ApplicationException ae) {
-				/*
-				 * Never.
-				 */
-				assert false;
-			}
+			super.fromIdlTransferable(schemeOptimizeInfo);
 			this.name = schemeOptimizeInfo.name;
 			this.description = schemeOptimizeInfo.description;
 			this.optimizationMode = schemeOptimizeInfo.optimizationMode;

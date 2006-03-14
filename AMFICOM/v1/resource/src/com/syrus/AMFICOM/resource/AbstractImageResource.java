@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.30 2006/03/13 13:54:00 bass Exp $
+ * $Id: AbstractImageResource.java,v 1.31 2006/03/14 10:47:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -22,10 +21,11 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2006/03/13 13:54:00 $
+ * @version $Revision: 1.31 $, $Date: 2006/03/14 10:47:57 $
  * @module resource
  */
 public abstract class AbstractImageResource
@@ -51,9 +51,9 @@ public abstract class AbstractImageResource
 	 */
 	protected AbstractImageResource(final IdlImageResource irt) throws CreateObjectException {
 		try {
-			this.fromTransferable(irt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(irt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 

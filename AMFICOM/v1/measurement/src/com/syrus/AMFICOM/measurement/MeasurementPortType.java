@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.22 2006/03/13 13:53:58 bass Exp $
+ * $Id: MeasurementPortType.java,v 1.23 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,9 +36,10 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortTypeHelper;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2006/03/13 13:53:58 $
+ * @version $Revision: 1.23 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -53,9 +54,9 @@ public final class MeasurementPortType extends StorableObjectType implements Cha
 
 	public MeasurementPortType(final IdlMeasurementPortType mptt) throws CreateObjectException {
 		try {
-			this.fromTransferable(mptt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(mptt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -116,7 +117,8 @@ public final class MeasurementPortType extends StorableObjectType implements Cha
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlMeasurementPortType mptt = (IdlMeasurementPortType) transferable;
 		super.fromTransferable(mptt, mptt.codename, mptt.description);
 		this.name = mptt.name;
