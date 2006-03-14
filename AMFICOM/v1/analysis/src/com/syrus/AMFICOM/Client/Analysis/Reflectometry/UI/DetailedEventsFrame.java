@@ -187,7 +187,7 @@ implements EtalonMTMListener, CurrentEventChangeListener,
 		// сравнение по модельной кривой
 		final ModelTrace etalonMT = Heap.getMTMEtalon().getMTAE().getModelTrace();
 		this.res.initComparative(dataEvent, etalonEvent, etalonMT, deltaX,
-				perEvent, nEvent, nEtalon, Heap.getAnchorer());
+				perEvent, nEvent);
 		this.comparativeTable.getModel().fireTableDataChanged();
 	}
 

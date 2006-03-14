@@ -506,8 +506,13 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 							Heap.getMTMEtalon().getMTAE().getModelTrace(),
 							resMt,
 							Heap.getEvaluationPerEventResult(),
-							nPri, nEt, Heap.getAnchorer());
+							nPri);
 				}
+			}
+
+			// выводим параметры привязки (по эталону)
+			if (nEt >= 0 && Heap.getMTMEtalon() != null) {
+				res.initAnchorer(nEt, Heap.getAnchorer());
 			}
 			resources.add(res);
 		}

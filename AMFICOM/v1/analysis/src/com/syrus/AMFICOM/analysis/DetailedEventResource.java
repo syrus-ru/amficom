@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.22 2005/11/18 12:54:17 saa Exp $
+ * $Id: DetailedEventResource.java,v 1.23 2006/03/14 14:45:51 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.22 $, $Date: 2005/11/18 12:54:17 $
+ * @version $Revision: 1.23 $, $Date: 2006/03/14 14:45:51 $
  * @module analysis
  */
 
@@ -183,9 +183,7 @@ public class DetailedEventResource {
 			ModelTrace etalonMT,
 			double deltaX,
 			EvaluationPerEventResult perEvent,
-			int perEventId,
-			int etalonId,
-			EventAnchorer anchorer) {
+			int perEventId) {
 		this.event = dataEvent;
 		setTypeGeneral(dataEvent != null ? AnalysisUtil.getSimpleEventNameByType(dataEvent.getEventType()) : DEFAULT_TYPE);
 		setEtalonType(etalonEvent != null ? AnalysisUtil.getSimpleEventNameByType(etalonEvent.getEventType()) : DEFAULT_TYPE);
@@ -259,13 +257,17 @@ public class DetailedEventResource {
 			setQi(DASH);
 			setKi(DASH);
 		}
+	}
+
+	public void initAnchorer(int etalonId,
+			EventAnchorer anchorer) {
 		anchored = false;
 		if (anchorer != null && etalonId >= 0) {
 			if (!anchorer.getEventAnchor(etalonId).isVoid())
 				anchored = true;
 		}
 	}
-	
+
 	public String getAttenuation() {
 		return this.attenuation;
 	}
