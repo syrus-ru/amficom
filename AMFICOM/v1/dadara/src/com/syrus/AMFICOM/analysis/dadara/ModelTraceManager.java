@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.110 2006/02/22 10:32:02 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.111 2006/03/14 11:50:09 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.110 $, $Date: 2006/02/22 10:32:02 $
+ * @version $Revision: 1.111 $, $Date: 2006/03/14 11:50:09 $
  * @module
  */
 public class ModelTraceManager
@@ -1317,6 +1317,12 @@ implements DataStreamable, Cloneable
 	public void decreaseAllDyThresholds() {
 		for (ThreshDY th: this.tDY) {
 			th.changeAllBy(-0.1); // XXX: move this constant outside
+		}
+		invalidateCache();
+	}
+	public void changeAllDyThresholdsBy(double deltaSoft, double deltaHard) {
+		for (ThreshDY th: this.tDY) {
+			th.changeAllBy(deltaSoft, deltaHard);
 		}
 		invalidateCache();
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.26 2006/02/21 15:20:35 saa Exp $
+ * $Id: ThreshDY.java,v 1.27 2006/03/14 11:50:09 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.26 $, $Date: 2006/02/21 15:20:35 $
+ * @version $Revision: 1.27 $, $Date: 2006/03/14 11:50:09 $
  * @module
  */
 public class ThreshDY extends Thresh {
@@ -180,15 +180,21 @@ public class ThreshDY extends Thresh {
 		if (this.values[key] * compareSign < this.values[FORCEMOVE_KEY[key]] * compareSign)
 			this.values[FORCEMOVE_KEY[key]] = this.values[key];
 	}
-	public void changeAllBy(double delta)
-	{
-		for (int key = 0; key < 4; key++)
-		{
-			this.values[key] += (IS_KEY_UPPER[key] ? delta : -delta) * (IS_KEY_HARD[key] ? 2 : 1);
-			snapAndLimit(key);
+	public void changeAllBy(double delta) {
+		changeAllBy(delta, delta * 2.0);
+	}
+	public void changeAllBy(double deltaSoft, double deltaHard) {
+		for (int key = 0; key < 4; key++) {
+			final double delta = (IS_KEY_UPPER[key] ? 1.0 : -1.0) * (IS_KEY_HARD[key] ? deltaHard : deltaSoft);
+			if (delta != 0) {
+				this.values[key] += delta;
+				snapAndLimit(key);
+				arrangeLimits(key);
+			}
 		}
-		for (int key = 0; key < 4; key++)
-			interLimit(key);
+		for (int key = 0; key < 4; key++) {
+			interLimit(key); // надо ли?
+		}
 	}
 	@Override
 	protected void roundUp(int key)
