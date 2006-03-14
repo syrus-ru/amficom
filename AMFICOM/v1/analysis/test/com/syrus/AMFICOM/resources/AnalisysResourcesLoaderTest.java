@@ -1,5 +1,5 @@
 /*-
-* $Id: AnalisysResourcesLoaderTest.java,v 1.2 2006/02/22 10:29:01 saa Exp $
+* $Id: AnalisysResourcesLoaderTest.java,v 1.3 2006/03/14 12:19:24 saa Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.extensions.ExtensionLauncher;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2006/02/22 10:29:01 $
+ * @version $Revision: 1.3 $, $Date: 2006/03/14 12:19:24 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -101,10 +101,16 @@ public class AnalisysResourcesLoaderTest extends TestCase {
 			"images/increaseThresh.gif");
 		map.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE,
 			"images/decreaseThresh.gif");
-		map.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE_ALL,
-			"images/increaseAllThresh.gif");
-		map.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE_ALL,
-			"images/decreaseAllThresh.gif");
+
+		map.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE_ALL_SOFT,
+			"images/increaseAllSoftThresh.gif");
+		map.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE_ALL_SOFT,
+			"images/decreaseAllSoftThresh.gif");
+		map.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE_ALL_HARD,
+			"images/increaseAllHardThresh.gif");
+		map.put(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE_ALL_HARD,
+			"images/decreaseAllHardThresh.gif");
+		
 		map.put(AnalysisResourceKeys.ICON_ANALYSIS_EVENTS,
 			"images/events.gif");
 		map.put(AnalysisResourceKeys.ICON_ANALYSIS_MODELED,
@@ -137,7 +143,7 @@ public class AnalisysResourcesLoaderTest extends TestCase {
 			"images/opt_start.gif");
 		
 		for (final String string : map.keySet()) {
-			assertNotNull(UIManager.get(string));
+			assertNotNull("key " + string + " should be resolvable", UIManager.get(string));
 		}		
 		
 		final Map<String, Color> colors = new HashMap<String, Color>();

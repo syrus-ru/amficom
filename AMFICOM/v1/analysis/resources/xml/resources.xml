@@ -2,9 +2,6 @@
   <ext:extension xsi:type="res:resources" id="com.syrus.AMFICOM.resources.ResourceHandler" xmlns:res="http://syrus.com/AMFICOM/extensions/resources" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <res:resource xsi:type="res:handler" id="image" handlerClass="com.syrus.AMFICOM.resources.ImageResourceHandler"/>
     <res:resource xsi:type="res:handler" id="color" handlerClass="com.syrus.AMFICOM.resources.ColorResourceHandler"/>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdIncreaseAll">
-      <res:filename>images/increaseAllThresh.gif</res:filename>
-    </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.evaluation.mainmini">
       <res:filename>images/main/evaluate_mini.gif</res:filename>
     </res:resource>
@@ -38,8 +35,11 @@
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.perform">
       <res:filename>images/perform_analysis.gif</res:filename>
     </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdDecreaseAll">
-      <res:filename>images/decreaseAllThresh.gif</res:filename>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdIncreaseAllSoft">
+      <res:filename>images/increaseAllSoftThresh.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdDecreaseAllHard">
+      <res:filename>images/decreaseAllHardThresh.gif</res:filename>
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.marker">
       <res:filename>images/marker.gif</res:filename>
@@ -119,6 +119,9 @@
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.survey.mainmini">
       <res:filename>images/main/survey_mini.gif</res:filename>
     </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdDecreaseAllSoft">
+      <res:filename>images/decreaseAllSoftThresh.gif</res:filename>
+    </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.noanalysis">
       <res:filename>images/noanalyse.gif</res:filename>
     </res:resource>
@@ -127,6 +130,9 @@
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.zoombox">
       <res:filename>images/zoom_box.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdIncreaseAllHard">
+      <res:filename>images/increaseAllHardThresh.gif</res:filename>
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.threshold">
       <res:filename>images/threshold.gif</res:filename>

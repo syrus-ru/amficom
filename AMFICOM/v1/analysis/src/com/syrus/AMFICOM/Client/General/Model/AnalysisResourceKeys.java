@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.27 2006/02/22 10:29:01 saa Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.28 2006/03/14 12:19:24 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.27 $, $Date: 2006/02/22 10:29:01 $
+ * @version $Revision: 1.28 $, $Date: 2006/03/14 12:19:24 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis
@@ -83,12 +83,14 @@ public interface AnalysisResourceKeys extends ResourceKeys {
 	String	ICON_ANALYSIS_THRESHOLD_CREATE_NEW		= "com.syrus.AMFICOM.icon.analisys.thresholdCreateNew";
 	String	ICON_ANALYSIS_THRESHOLD_INCREASE		= "com.syrus.AMFICOM.icon.analisys.thresholdIncrease";
 	String	ICON_ANALYSIS_THRESHOLD_DECREASE		= "com.syrus.AMFICOM.icon.analisys.thresholdDecrease";
-	String	ICON_ANALYSIS_THRESHOLD_INCREASE_ALL	= "com.syrus.AMFICOM.icon.analisys.thresholdIncreaseAll";
-	String	ICON_ANALYSIS_THRESHOLD_DECREASE_ALL	= "com.syrus.AMFICOM.icon.analisys.thresholdDecreaseAll";
+	String	ICON_ANALYSIS_THRESHOLD_INCREASE_ALL_HARD	= "com.syrus.AMFICOM.icon.analisys.thresholdIncreaseAllHard";
+	String	ICON_ANALYSIS_THRESHOLD_DECREASE_ALL_HARD	= "com.syrus.AMFICOM.icon.analisys.thresholdDecreaseAllHard";
+	String	ICON_ANALYSIS_THRESHOLD_INCREASE_ALL_SOFT	= "com.syrus.AMFICOM.icon.analisys.thresholdIncreaseAllSoft";
+	String	ICON_ANALYSIS_THRESHOLD_DECREASE_ALL_SOFT	= "com.syrus.AMFICOM.icon.analisys.thresholdDecreaseAllSoft";
 	String	ICON_ANALYSIS_EVENTS					= "com.syrus.AMFICOM.icon.analisys.events";
 	String	ICON_ANALYSIS_MODELED					= "com.syrus.AMFICOM.icon.analisys.modeled";
 	String	ICON_ANALYSIS_TRACE						= "com.syrus.AMFICOM.icon.analisys.trace";
-	String	ICON_SHOW_PATH_ELEMENTS						= "com.syrus.AMFICOM.icon.analisys.show_pes";
+	String	ICON_SHOW_PATH_ELEMENTS					= "com.syrus.AMFICOM.icon.analisys.show_pes";
 
 	String	ICON_ANALYSIS_GAIN					= "com.syrus.AMFICOM.icon.analisys.gain";
 	String	ICON_ANALYSIS_SPLICE_GAIN					= "com.syrus.AMFICOM.icon.analisys.splicegain";

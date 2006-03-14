@@ -226,17 +226,16 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 				});
 
 		jToolBar.add(new JToolBar.Separator());
-
 		addButton(jToolBar,
 				this.editButtons,
-				"decreaseAllThresh",
-				AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE_ALL,
+				"decreaseAllSoftThresh",
+				AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE_ALL_SOFT,
 				null,
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						ModelTraceManager mtm = Heap.getMTMEtalon();
 						if (mtm != null) {
-							mtm.decreaseAllDyThresholds();
+							mtm.changeAllDyThresholdsBy(-0.1, 0.0);
 							dispatcher.firePropertyChange(new RefUpdateEvent(this,
 								RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 						}
@@ -245,14 +244,47 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 
 		addButton(jToolBar,
 				this.editButtons,
-				"increaseAllThresh",
-				AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE_ALL,
+				"increaseAllSoftThresh",
+				AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE_ALL_SOFT,
 				null,
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						ModelTraceManager mtm = Heap.getMTMEtalon();
 						if (mtm != null) {
-							mtm.increaseAllDyThresholds();
+							mtm.changeAllDyThresholdsBy(0.1, 0.0);
+							dispatcher.firePropertyChange(new RefUpdateEvent(this,
+								RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+						}
+					}
+				});
+		jToolBar.add(new JToolBar.Separator());
+
+		addButton(jToolBar,
+				this.editButtons,
+				"decreaseAllHardThresh",
+				AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE_ALL_HARD,
+				null,
+				new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						ModelTraceManager mtm = Heap.getMTMEtalon();
+						if (mtm != null) {
+							mtm.changeAllDyThresholdsBy(0.0, -0.5);
+							dispatcher.firePropertyChange(new RefUpdateEvent(this,
+								RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+						}
+					}
+				});
+
+		addButton(jToolBar,
+				this.editButtons,
+				"increaseAllHardThresh",
+				AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE_ALL_HARD,
+				null,
+				new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						ModelTraceManager mtm = Heap.getMTMEtalon();
+						if (mtm != null) {
+							mtm.changeAllDyThresholdsBy(0.0, 0.5);
 							dispatcher.firePropertyChange(new RefUpdateEvent(this,
 								RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 						}
