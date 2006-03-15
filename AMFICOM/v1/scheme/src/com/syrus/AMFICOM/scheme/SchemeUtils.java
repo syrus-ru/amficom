@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.46 2006/03/13 13:54:01 bass Exp $
+ * $Id: SchemeUtils.java,v 1.47 2006/03/15 15:49:10 arseniy Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Shitlet;
  * Functionality will be partially moved to appropriate model classes; partially
  * removed Œ¡»’ .
  *
- * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2006/03/13 13:54:01 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.47 $, $Date: 2006/03/15 15:49:10 $
  * @module scheme
  * @deprecated
  */

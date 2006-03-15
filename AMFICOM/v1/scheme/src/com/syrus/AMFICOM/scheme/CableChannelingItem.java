@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.91 2006/03/15 14:47:28 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.92 2006/03/15 15:49:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PIPEBLOCK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -51,6 +52,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PipeBlock;
@@ -60,15 +62,14 @@ import com.syrus.AMFICOM.scheme.corba.IdlCableChannelingItemHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlCableChannelingItem;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * #15 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.91 $, $Date: 2006/03/15 14:47:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.92 $, $Date: 2006/03/15 15:49:10 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -76,8 +77,7 @@ public final class CableChannelingItem
 		implements Comparable<CableChannelingItem>,
 		PathMember<SchemeCableLink, CableChannelingItem>,
 		ReverseDependencyContainer,
-		XmlTransferableObject<XmlCableChannelingItem>,
-		IdlTransferableObjectExt<IdlCableChannelingItem> {
+		XmlTransferableObject<XmlCableChannelingItem>{
 	private static final long serialVersionUID = 3256437027796038705L;
 
 	private double startSpare;
@@ -243,7 +243,7 @@ public final class CableChannelingItem
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					startSpare,
 					endSpare,
 					rowX,
@@ -796,14 +796,16 @@ public final class CableChannelingItem
 	}
 
 	/**
-	 * @param cableChannelingItem
+	 * @param transferable
 	 * @throws IdlConversionException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
-	public void fromIdlTransferable(final IdlCableChannelingItem cableChannelingItem)
+	@Override
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
 		synchronized (this) {
 			try {
+				final IdlCableChannelingItem cableChannelingItem = (IdlCableChannelingItem) transferable;
 				super.fromIdlTransferable(cableChannelingItem);
 				this.startSpare = cableChannelingItem.startSpare;
 				this.endSpare = cableChannelingItem.endSpare;

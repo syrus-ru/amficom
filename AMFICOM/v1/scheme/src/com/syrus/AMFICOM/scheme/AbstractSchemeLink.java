@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.54 2006/03/15 14:47:28 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.55 2006/03/15 15:49:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,6 +39,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemeLink;
 import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemeLink;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 
 /**
@@ -46,8 +47,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeLink}instead.
  *
- * @author $Author: bass $
- * @version $Revision: 1.54 $, $Date: 2006/03/15 14:47:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.55 $, $Date: 2006/03/15 15:49:10 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink
@@ -491,27 +492,21 @@ public abstract class AbstractSchemeLink
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 *
-	 * <p>
-	 * Non-synchronized.
-	 * Non-overriding.
-	 * Non-overridable.
-	 * </p>
-	 *
 	 * @param abstractSchemeLink
 	 * @param abstractLinkTypeId1
 	 * @param abstractLinkId1
 	 * @param sourceAbstractSchemePortId1
 	 * @param targetAbstractSchemePortId1
+	 * @throws IdlConversionException
 	 */
-	final void fromIdlTransferable(
+	final void fromTransferable(
 			final IdlAbstractSchemeLink abstractSchemeLink,
 			final IdlIdentifier abstractLinkTypeId1,
 			final IdlIdentifier abstractLinkId1,
 			final IdlIdentifier sourceAbstractSchemePortId1,
-			final IdlIdentifier targetAbstractSchemePortId1) {
-		super.fromIdlTransferable(abstractSchemeLink);
+			final IdlIdentifier targetAbstractSchemePortId1)
+	throws IdlConversionException {
+		super.fromTransferable(abstractSchemeLink);
 		this.physicalLength = abstractSchemeLink.physicalLength;
 		this.opticalLength = abstractSchemeLink.opticalLength;
 		this.abstractLinkTypeId = new Identifier(abstractLinkTypeId1);

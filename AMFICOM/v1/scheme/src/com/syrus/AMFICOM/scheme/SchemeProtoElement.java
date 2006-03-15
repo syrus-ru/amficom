@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.134 2006/03/15 14:47:28 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.135 2006/03/15 15:49:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -62,6 +63,7 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -77,23 +79,21 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElement;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElementSeq;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * #02 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.134 $, $Date: 2006/03/15 14:47:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.135 $, $Date: 2006/03/15 15:49:10 $
  * @module scheme
  */
 public final class SchemeProtoElement
 		extends AbstractCloneableStorableObject
 		implements Describable, SchemeCellContainer,
 		Characterizable, ReverseDependencyContainer,
-		XmlTransferableObject<XmlSchemeProtoElement>,
-		IdlTransferableObjectExt<IdlSchemeProtoElement> {
+		XmlTransferableObject<XmlSchemeProtoElement> {
 	private static final long serialVersionUID = 3689348806202569782L;
 
 	private String name;
@@ -261,7 +261,7 @@ public final class SchemeProtoElement
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					description,
 					label,
@@ -322,7 +322,7 @@ public final class SchemeProtoElement
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					description,
 					label,
@@ -678,6 +678,8 @@ public final class SchemeProtoElement
 	 */
 	@Override
 	public IdlSchemeProtoElement getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlSchemeProtoElementHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -1193,13 +1195,15 @@ public final class SchemeProtoElement
 	}
 
 	/**
-	 * @param schemeProtoElement
+	 * @param transferable
 	 * @throws IdlConversionException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
-	public void fromIdlTransferable(final IdlSchemeProtoElement schemeProtoElement)
+	@Override
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
 		synchronized (this) {
+			final IdlSchemeProtoElement schemeProtoElement = (IdlSchemeProtoElement) transferable;
 			super.fromIdlTransferable(schemeProtoElement);
 			this.name = schemeProtoElement.name;
 			this.description = schemeProtoElement.description;
@@ -1211,6 +1215,8 @@ public final class SchemeProtoElement
 			this.parentSchemeProtoGroupId = new Identifier(schemeProtoElement.parentSchemeProtoGroupId);
 			this.parentSchemeProtoElementId = new Identifier(schemeProtoElement.parentSchemeProtoElementId);
 		}
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

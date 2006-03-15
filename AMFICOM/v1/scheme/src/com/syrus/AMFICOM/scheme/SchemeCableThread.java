@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.116 2006/03/15 14:47:29 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.117 2006/03/15 15:49:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -61,6 +62,7 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -69,23 +71,21 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThreadHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableThread;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * #14 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.116 $, $Date: 2006/03/15 14:47:29 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.117 $, $Date: 2006/03/15 15:49:10 $
  * @module scheme
  */
 public final class SchemeCableThread
 		extends AbstractCloneableStorableObject
 		implements Describable, Characterizable,
 		ReverseDependencyContainer,
-		XmlTransferableObject<XmlSchemeCableThread>,
-		IdlTransferableObjectExt<IdlSchemeCableThread> {
+		XmlTransferableObject<XmlSchemeCableThread> {
 	private static final long serialVersionUID = 4050204133015171124L;
 
 	private String name;
@@ -222,7 +222,7 @@ public final class SchemeCableThread
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					description,
 					linkType,
@@ -529,6 +529,8 @@ public final class SchemeCableThread
 	 */
 	@Override
 	public IdlSchemeCableThread getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlSchemeCableThreadHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -833,13 +835,15 @@ public final class SchemeCableThread
 	}
 
 	/**
-	 * @param schemeCableThread
+	 * @param transferable
 	 * @throws IdlConversionException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject) 
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
-	public void fromIdlTransferable(final IdlSchemeCableThread schemeCableThread)
+	@Override
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
 		synchronized (this) {
+			final IdlSchemeCableThread schemeCableThread = (IdlSchemeCableThread) transferable;
 			super.fromIdlTransferable(schemeCableThread);
 			this.name = schemeCableThread.name;
 			this.description = schemeCableThread.description;
@@ -851,6 +855,8 @@ public final class SchemeCableThread
 
 			this.linkTypeSet = true;
 		}
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.121 2006/03/15 14:47:28 bass Exp $
+ * $Id: SchemeDevice.java,v 1.122 2006/03/15 15:49:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -59,6 +60,7 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -71,23 +73,21 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemePort;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemePortSeq;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * #09 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.121 $, $Date: 2006/03/15 14:47:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.122 $, $Date: 2006/03/15 15:49:10 $
  * @module scheme
  */
 public final class SchemeDevice
 		extends AbstractCloneableStorableObject
 		implements Describable, Characterizable,
 		ReverseDependencyContainer,
-		XmlTransferableObject<XmlSchemeDevice>,
-		IdlTransferableObjectExt<IdlSchemeDevice> {
+		XmlTransferableObject<XmlSchemeDevice> {
 	private static final long serialVersionUID = 3762529027398644793L;
 
 	private String name;
@@ -218,7 +218,7 @@ public final class SchemeDevice
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					description,
 					parentSchemeProtoElement,
@@ -263,7 +263,7 @@ public final class SchemeDevice
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					description,
 					null,
@@ -495,6 +495,8 @@ public final class SchemeDevice
 	 */
 	@Override
 	public IdlSchemeDevice getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlSchemeDeviceHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -783,19 +785,23 @@ public final class SchemeDevice
 	}
 
 	/**
-	 * @param schemeDevice
+	 * @param transferable
 	 * @throws IdlConversionException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject) 
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
-	public void fromIdlTransferable(final IdlSchemeDevice schemeDevice)
+	@Override
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
 		synchronized (this) {
+			final IdlSchemeDevice schemeDevice = (IdlSchemeDevice) transferable;
 			super.fromIdlTransferable(schemeDevice);
 			this.name = schemeDevice.name;
 			this.description = schemeDevice.description;
 			this.parentSchemeProtoElementId = new Identifier(schemeDevice.parentSchemeProtoElementId);
 			this.parentSchemeElementId = new Identifier(schemeDevice.parentSchemeElementId);
 		}
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

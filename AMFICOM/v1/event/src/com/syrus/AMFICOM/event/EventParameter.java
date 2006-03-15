@@ -1,11 +1,13 @@
 /*
- * $Id: EventParameter.java,v 1.32 2006/02/16 13:34:26 arseniy Exp $
+ * $Id: EventParameter.java,v 1.33 2006/03/15 15:47:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.event;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.EVENTPARAMETER_CODE;
 
 import org.omg.CORBA.ORB;
 
@@ -15,44 +17,41 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2006/02/16 13:34:26 $
+ * @version $Revision: 1.33 $, $Date: 2006/03/15 15:47:20 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
-public final class EventParameter implements Identifiable,
-		IdlTransferableObject<IdlEventParameter> {
-	private static final long serialVersionUID = 4906660762164733352L;
+public final class EventParameter implements Identifiable, IdlTransferableObject<IdlEventParameter> {
+	private static final long serialVersionUID = -6771402972594829134L;
 
 	private Identifier id;
-	private ParameterType type;
+	private Identifier typeId;
 	private String value;
 
 	public EventParameter(final IdlEventParameter ept) {
 		this.id = new Identifier(ept.id);
-		this.type = ParameterType.fromTransferable(ept.type);
+		this.typeId = Identifier.valueOf(ept._typeId);
 		this.value = ept.value;
 	}
 
-	protected EventParameter(final Identifier id, final ParameterType type, final String value) {
+	protected EventParameter(final Identifier id, final Identifier typeId, final String value) {
 		this.id = id;
-		this.type = type;
+		this.typeId = typeId;
 		this.value = value;
 	}
 
-	public static EventParameter createInstance(final ParameterType type, final String value) throws CreateObjectException {
-		if (type == null || value == null) {
+	public static EventParameter createInstance(final Identifier typeId, final String value) throws CreateObjectException {
+		if (typeId == null || value == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
 		}
 
 		try {
-			final EventParameter eventParameter = new EventParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTPARAMETER_CODE),
-					type,
+			final EventParameter eventParameter = new EventParameter(IdentifierPool.getGeneratedIdentifier(EVENTPARAMETER_CODE),
+					typeId,
 					value);
 			return eventParameter;
 		} catch (IdentifierGenerationException ige) {
@@ -66,7 +65,7 @@ public final class EventParameter implements Identifiable,
 	 */
 	public IdlEventParameter getIdlTransferable(final ORB orb) {
 		return new IdlEventParameter(this.id.getIdlTransferable(),
-				this.type.getIdlTransferable(orb),
+				this.typeId.getIdlTransferable(orb),
 				this.value);
 	}
 
@@ -74,8 +73,8 @@ public final class EventParameter implements Identifiable,
 		return this.id;
 	}
 
-	public ParameterType getType() {
-		return this.type;
+	public Identifier getTypeId() {
+		return this.typeId;
 	}
 
 	public String getValue() {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtuWrapper.java,v 1.10 2006/03/13 15:54:26 bass Exp $
+ * $Id: SchemeOptimizeInfoRtuWrapper.java,v 1.11 2006/03/15 15:49:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.util.PropertyChangeException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2006/03/13 15:54:26 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2006/03/15 15:49:10 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtuWrapper extends StorableObjectWrapper<SchemeOptimizeInfoRtu> {

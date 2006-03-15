@@ -1,5 +1,5 @@
 /*
- * $Id: EventWrapper.java,v 1.20 2006/03/13 15:54:25 bass Exp $
+ * $Id: EventWrapper.java,v 1.21 2006/03/15 15:47:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2006/03/13 15:54:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2006/03/15 15:47:20 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */

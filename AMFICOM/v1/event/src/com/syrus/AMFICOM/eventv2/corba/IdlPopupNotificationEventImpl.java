@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPopupNotificationEventImpl.java,v 1.8 2006/03/13 13:53:59 bass Exp $
+ * $Id: IdlPopupNotificationEventImpl.java,v 1.9 2006/03/15 15:47:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2006/03/13 13:53:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2006/03/15 15:47:20 $
  * @module event
  */
 final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {

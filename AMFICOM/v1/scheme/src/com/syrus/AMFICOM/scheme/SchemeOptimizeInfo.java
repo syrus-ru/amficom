@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.87 2006/03/15 14:47:28 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.88 2006/03/15 15:49:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFORTU_COD
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
@@ -48,21 +49,19 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfo;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * #05 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.87 $, $Date: 2006/03/15 14:47:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.88 $, $Date: 2006/03/15 15:49:10 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
 		implements Describable, ReverseDependencyContainer,
-		XmlTransferableObject<XmlSchemeOptimizeInfo>,
-		IdlTransferableObjectExt<IdlSchemeOptimizeInfo> {
+		XmlTransferableObject<XmlSchemeOptimizeInfo> {
 	private static final long serialVersionUID = 3761127137155232822L;
 
 	private String name;
@@ -236,7 +235,7 @@ public final class SchemeOptimizeInfo extends StorableObject
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					description,
 					optimizationMode,
@@ -649,13 +648,15 @@ public final class SchemeOptimizeInfo extends StorableObject
 	}
 
 	/**
-	 * @param schemeOptimizeInfo
+	 * @param transferable
 	 * @throws IdlConversionException
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
-	public void fromIdlTransferable(final IdlSchemeOptimizeInfo schemeOptimizeInfo)
+	@Override
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
 		synchronized (this) {
+			final IdlSchemeOptimizeInfo schemeOptimizeInfo = (IdlSchemeOptimizeInfo) transferable;
 			super.fromIdlTransferable(schemeOptimizeInfo);
 			this.name = schemeOptimizeInfo.name;
 			this.description = schemeOptimizeInfo.description;

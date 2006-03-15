@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.88 2006/03/15 14:47:28 bass Exp $
+ * $Id: SchemePort.java,v 1.89 2006/03/15 15:49:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -48,6 +49,7 @@ import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePort;
@@ -56,20 +58,18 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.AMFICOM.scheme.xml.XmlSchemePort;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * #10 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.88 $, $Date: 2006/03/15 14:47:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.89 $, $Date: 2006/03/15 15:49:10 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort
-		implements XmlTransferableObject<XmlSchemePort>,
-		IdlTransferableObjectExt<IdlSchemePort> {
+		implements XmlTransferableObject<XmlSchemePort> {
 	private static final long serialVersionUID = 3256436993469658930L;
 
 	/**
@@ -202,7 +202,7 @@ public final class SchemePort extends AbstractSchemePort
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					description,
 					directionType,
@@ -322,6 +322,8 @@ public final class SchemePort extends AbstractSchemePort
 	 */
 	@Override
 	public IdlSchemePort getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlSchemePortHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -380,17 +382,21 @@ public final class SchemePort extends AbstractSchemePort
 	}
 
 	/**
-	 * @param schemePort
+	 * @param transferable
 	 * @throws IdlConversionException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
-	public void fromIdlTransferable(final IdlSchemePort schemePort)
+	@Override
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
 		synchronized (this) {
-			super.fromIdlTransferable(schemePort,
+			final IdlSchemePort schemePort = (IdlSchemePort) transferable;
+			super.fromTransferable(schemePort,
 					schemePort.portTypeId,
 					schemePort.portId);
 		}
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

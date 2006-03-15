@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.129 2006/03/15 14:47:28 bass Exp $
+ * $Id: Scheme.java,v 1.130 2006/03/15 15:49:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -80,22 +81,20 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfo;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfoSeq;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * #03 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.129 $, $Date: 2006/03/15 14:47:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.130 $, $Date: 2006/03/15 15:49:10 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
 public final class Scheme extends AbstractCloneableDomainMember
 		implements Describable, SchemeCellContainer,
-		ReverseDependencyContainer, XmlTransferableObject<XmlScheme>,
-		IdlTransferableObjectExt<IdlScheme> {
+		ReverseDependencyContainer, XmlTransferableObject<XmlScheme> {
 	private static final long serialVersionUID = 3257289136389173298L;
 
 	private static final int DEFAULT_WIDTH = 840;
@@ -278,7 +277,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					name,
 					description,
@@ -1144,12 +1143,14 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	/**
-	 * @param scheme
+	 * @param transferable
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
-	public void fromIdlTransferable(final IdlScheme scheme) {
+	@Override
+	protected void fromIdlTransferable(final IdlStorableObject transferable) {
 		synchronized (this) {
-			super.fromIdlTransferable(scheme, new Identifier(scheme.domainId));
+			final IdlScheme scheme = (IdlScheme) transferable;
+			super.fromTransferable(scheme, new Identifier(scheme.domainId));
 			this.name = scheme.name;
 			this.description = scheme.description;
 			this.label = scheme.label;

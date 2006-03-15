@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.96 2006/03/15 14:47:28 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.97 2006/03/15 15:49:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_
 import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -59,22 +60,20 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroupSeq;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * #01 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.96 $, $Date: 2006/03/15 14:47:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.97 $, $Date: 2006/03/15 15:49:10 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
 		implements Describable, SchemeSymbolContainer,
 		ReverseDependencyContainer,
-		XmlTransferableObject<XmlSchemeProtoGroup>,
-		IdlTransferableObjectExt<IdlSchemeProtoGroup> {
+		XmlTransferableObject<XmlSchemeProtoGroup> {
 	private static final long serialVersionUID = 3256721788422862901L;
 
 	private String name;
@@ -188,7 +187,7 @@ public final class SchemeProtoGroup extends StorableObject
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					description,
 					symbol,
@@ -559,12 +558,14 @@ public final class SchemeProtoGroup extends StorableObject
 	}
 
 	/**
-	 * @param schemeProtoGroup
+	 * @param transferable
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
-	public void fromIdlTransferable(final IdlSchemeProtoGroup schemeProtoGroup)
+	@Override
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
 		synchronized (this) {
+			final IdlSchemeProtoGroup schemeProtoGroup = (IdlSchemeProtoGroup) transferable;
 			super.fromIdlTransferable(schemeProtoGroup);
 			this.name = schemeProtoGroup.name;
 			this.description = schemeProtoGroup.description;

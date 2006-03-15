@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.14 2006/03/15 14:47:31 bass Exp $
+ * $Id: DeliveryAttributes.java,v 1.15 2006/03/15 15:47:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.DELIVERYATTRIBUTES_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 
 import java.util.Collections;
@@ -40,16 +41,14 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2006/03/15 14:47:31 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2006/03/15 15:47:20 $
  * @module event
  */
-public final class DeliveryAttributes extends StorableObject
-		implements IdlTransferableObjectExt<IdlDeliveryAttributes> {
+public final class DeliveryAttributes extends StorableObject {
 	private static final long serialVersionUID = -8861427452530992582L;
 
 	private Severity severity;
@@ -96,7 +95,7 @@ public final class DeliveryAttributes extends StorableObject
 	 * @see StorableObject#getIdlTransferable(ORB)
 	 */
 	@Override
-	public IdlDeliveryAttributes getIdlTransferable(final ORB orb) {
+	public IdlStorableObject getIdlTransferable(final ORB orb) {
 		return IdlDeliveryAttributesHelper.init(orb,
 				this.id.getIdlTransferable(orb),
 				this.created.getTime(),
@@ -110,13 +109,15 @@ public final class DeliveryAttributes extends StorableObject
 	}
 
 	/**
-	 * @param deliveryAttributes
+	 * @param transferable
 	 * @throws IdlConversionException
 	 * @see StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
-	public synchronized void fromIdlTransferable(final IdlDeliveryAttributes deliveryAttributes)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
 		synchronized (this) {
+			final IdlDeliveryAttributes deliveryAttributes = (IdlDeliveryAttributes) transferable;
 			super.fromIdlTransferable(deliveryAttributes);
 			this.severity = Severity.valueOf(deliveryAttributes.severity);
 			this.setRoleIds0(Identifier.fromTransferables(deliveryAttributes.roleIds));
@@ -174,7 +175,7 @@ public final class DeliveryAttributes extends StorableObject
 						IdentifierPool.getGeneratedIdentifier(DELIVERYATTRIBUTES_CODE),
 						creatorId,
 						new Date(),
-						StorableObjectVersion.INITIAL_VERSION,
+						INITIAL_VERSION,
 						severity);
 				deliveryAttributes.markAsChanged();
 				StorableObjectPool.flush(deliveryAttributes, creatorId, false);

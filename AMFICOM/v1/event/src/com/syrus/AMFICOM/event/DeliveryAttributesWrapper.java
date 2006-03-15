@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesWrapper.java,v 1.7 2006/03/13 15:54:25 bass Exp $
+ * $Id: DeliveryAttributesWrapper.java,v 1.8 2006/03/15 15:47:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.PropertyChangeException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2006/03/13 15:54:25 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2006/03/15 15:47:20 $
  * @module event
  */
 public final class DeliveryAttributesWrapper

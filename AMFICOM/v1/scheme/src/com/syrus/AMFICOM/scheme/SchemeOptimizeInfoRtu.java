@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.42 2006/03/15 14:47:28 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.43 2006/03/15 15:49:10 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
@@ -37,12 +38,12 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoRtu;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoRtuHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfoRtu;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -50,15 +51,14 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #07 in hierarchy.
  *
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2006/03/15 14:47:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.43 $, $Date: 2006/03/15 15:49:10 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu
 		extends StorableObject
 		implements Namable, ReverseDependencyContainer,
-		XmlTransferableObject<XmlSchemeOptimizeInfoRtu>,
-		IdlTransferableObjectExt<IdlSchemeOptimizeInfoRtu> {
+		XmlTransferableObject<XmlSchemeOptimizeInfoRtu> {
 	private static final long serialVersionUID = 6687067380421014690L;
 
 	private String name;
@@ -137,7 +137,7 @@ public final class SchemeOptimizeInfoRtu
 					created,
 					creatorId,
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					name,
 					priceUsd,
 					rangeDb,
@@ -329,13 +329,15 @@ public final class SchemeOptimizeInfoRtu
 	}
 
 	/**
-	 * @param schemeOptimizeInfoRtu
+	 * @param transferable
 	 * @throws IdlConversionException
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
-	public void fromIdlTransferable(final IdlSchemeOptimizeInfoRtu schemeOptimizeInfoRtu)
+	@Override
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
 		synchronized (this) {
+			final IdlSchemeOptimizeInfoRtu schemeOptimizeInfoRtu = (IdlSchemeOptimizeInfoRtu) transferable;
 			super.fromIdlTransferable(schemeOptimizeInfoRtu);
 			this.name = schemeOptimizeInfoRtu.name;
 			this.priceUsd = schemeOptimizeInfoRtu.priceUsd;
