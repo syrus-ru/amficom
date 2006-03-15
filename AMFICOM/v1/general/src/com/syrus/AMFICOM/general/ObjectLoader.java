@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectLoader.java,v 1.12 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: ObjectLoader.java,v 1.13 2006/03/15 17:37:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2006/03/15 15:17:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2006/03/15 17:37:28 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */

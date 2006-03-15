@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectCondition.java,v 1.26 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: StorableObjectCondition.java,v 1.27 2006/03/15 17:36:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2006/03/15 15:17:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2006/03/15 17:36:54 $
+ * @author $Author: bass $
  * @module general
  */
 public interface StorableObjectCondition
