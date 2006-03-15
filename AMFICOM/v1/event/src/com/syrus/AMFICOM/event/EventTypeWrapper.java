@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeWrapper.java,v 1.20.2.1 2006/02/16 13:36:42 arseniy Exp $
+ * $Id: EventTypeWrapper.java,v 1.20.2.2 2006/03/15 15:45:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.20.2.1 $, $Date: 2006/02/16 13:36:42 $
+ * @version $Revision: 1.20.2.2 $, $Date: 2006/03/15 15:45:33 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -99,8 +99,8 @@ public final class EventTypeWrapper extends StorableObjectWrapper<EventType> {
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key);
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key);
 		if (clazz != null) {
 			return clazz;
 		}

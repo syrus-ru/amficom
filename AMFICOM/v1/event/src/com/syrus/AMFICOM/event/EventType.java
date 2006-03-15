@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.57.2.2 2006/02/28 15:19:59 arseniy Exp $
+ * $Id: EventType.java,v 1.57.2.3 2006/03/15 15:45:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.event.corba.IdlEventType;
 import com.syrus.AMFICOM.event.corba.IdlEventTypeHelper;
 import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.AlertKind;
 import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.IdlUserAlertKinds;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -34,16 +33,17 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.57.2.2 $, $Date: 2006/02/28 15:19:59 $
+ * @version $Revision: 1.57.2.3 $, $Date: 2006/03/15 15:45:33 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 
-public final class EventType extends StorableObjectType<EventType> {
-	private static final long serialVersionUID = 7639070739352920145L;
+public final class EventType extends StorableObjectType {
+	private static final long serialVersionUID = -5205946777012405394L;
 
 	public static final String CODENAME_MEASUREMENT_ALARM = "measurement_alarm";
 
@@ -52,10 +52,9 @@ public final class EventType extends StorableObjectType<EventType> {
 
 	public EventType(final IdlEventType ett) throws CreateObjectException {
 		try {
-			this.fromTransferable(ett);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(ett);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -120,7 +119,7 @@ public final class EventType extends StorableObjectType<EventType> {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlEventType ett = (IdlEventType) transferable;
 
 		super.fromTransferable(ett, ett.codename, ett.description);
