@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadWrapper.java,v 1.15 2006/03/13 15:54:24 bass Exp $
+ * $Id: CableThreadWrapper.java,v 1.16 2006/03/15 15:35:12 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2006/03/13 15:54:24 $
- * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2006/03/15 15:35:12 $
+ * @author $Author: arseniy $
  * @module config
  */
 

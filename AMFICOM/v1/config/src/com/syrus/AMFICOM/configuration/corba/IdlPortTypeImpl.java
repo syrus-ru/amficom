@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPortTypeImpl.java,v 1.8 2006/03/14 10:48:00 bass Exp $
+ * $Id: IdlPortTypeImpl.java,v 1.9 2006/03/15 15:35:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2006/03/14 10:48:00 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2006/03/15 15:35:12 $
  * @module config
  */
 final class IdlPortTypeImpl extends IdlPortType {
