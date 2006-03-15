@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterTypeWrapper.java,v 1.16.2.1 2006/02/11 18:54:53 arseniy Exp $
+ * $Id: ParameterTypeWrapper.java,v 1.16.2.2 2006/03/15 13:28:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.List;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.16.2.1 $, $Date: 2006/02/11 18:54:53 $
+ * @version $Revision: 1.16.2.2 $, $Date: 2006/03/15 13:28:07 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -97,8 +97,8 @@ public final class ParameterTypeWrapper extends StorableObjectWrapper<ParameterT
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key);
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key);
 		if (clazz != null) {
 			return clazz;
 		}

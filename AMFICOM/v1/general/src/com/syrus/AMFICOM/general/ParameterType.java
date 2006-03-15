@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.74.2.7 2006/03/06 12:17:21 arseniy Exp $
+ * $Id: ParameterType.java,v 1.74.2.8 2006/03/15 13:28:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.OR;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -30,14 +31,15 @@ import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.general.corba.IdlParameterTypeHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.74.2.7 $, $Date: 2006/03/06 12:17:21 $
+ * @version $Revision: 1.74.2.8 $, $Date: 2006/03/15 13:28:07 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public final class ParameterType extends StorableObjectType<ParameterType> {
+public final class ParameterType extends StorableObjectType {
 	private static final long serialVersionUID = -2843753663001680790L;
 
 	private DataType dataType;
@@ -64,11 +66,14 @@ public final class ParameterType extends StorableObjectType<ParameterType> {
 		this.measurementUnit = measurementUnit;
 	}
 
-	public ParameterType(final IdlParameterType idlParameterType) throws CreateObjectException {
+	public ParameterType(final IdlParameterType idlParameterType) {
 		try {
-			this.fromTransferable(idlParameterType);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(idlParameterType);
+		} catch (final IdlConversionException ice) {
+			/*
+			 * Never.
+			 */
+			Log.debugMessage(ice, SEVERE);
 		}
 	}
 
@@ -126,7 +131,7 @@ public final class ParameterType extends StorableObjectType<ParameterType> {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlParameterType idlParameterType = (IdlParameterType) transferable;
 		super.fromTransferable(idlParameterType, idlParameterType.codename, idlParameterType.description);
 		this.dataType = DataType.valueOf(idlParameterType.idlDataType);

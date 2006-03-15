@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlParameterTypeImpl.java,v 1.5.2.2 2006/02/14 01:26:42 arseniy Exp $
+ * $Id: IdlParameterTypeImpl.java,v 1.5.2.3 2006/03/15 13:26:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,12 @@
 
 package com.syrus.AMFICOM.general.corba;
 
-import static java.util.logging.Level.SEVERE;
-
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.5.2.2 $, $Date: 2006/02/14 01:26:42 $
+ * @version $Revision: 1.5.2.3 $, $Date: 2006/03/15 13:26:10 $
  * @module general
  */
 final class IdlParameterTypeImpl extends IdlParameterType {
@@ -54,11 +50,6 @@ final class IdlParameterTypeImpl extends IdlParameterType {
 	 */
 	@Override
 	public ParameterType getNative() throws IdlCreateObjectException {
-		try {
-			return new ParameterType(this);
-		} catch (final CreateObjectException coe) {
-			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
-		}
+		return new ParameterType(this);
 	}
 }
