@@ -1,7 +1,7 @@
-/*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.26 2006/03/15 15:17:43 arseniy Exp $
+/*-
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.27 2006/03/15 17:57:39 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -18,15 +18,17 @@ import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2006/03/15 15:17:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2006/03/15 17:57:39 $
+ * @author $Author: bass $
  * @module general
  */
-public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStorableObjectCondition {
+public abstract class AbstractDatabaseLinkedIdsCondition
+		implements DatabaseStorableObjectCondition {
 
 	protected LinkedIdsCondition condition;
 
-	public AbstractDatabaseLinkedIdsCondition(final LinkedIdsCondition delegate) {
+	public AbstractDatabaseLinkedIdsCondition(
+			final LinkedIdsCondition delegate) {
 		this.condition = delegate;
 	}
 
@@ -36,15 +38,22 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 
 	protected String getQuery(final String columnName) {
 		assert (columnName != null) : "Column name is null -- maybe entity '"
-				+ ObjectEntities.codeToString(this.getEntityCode()) + " isn't supported";
+				+ ObjectEntities.codeToString(this.getEntityCode())
+				+ " isn't supported";
 
-		return StorableObjectDatabase.idsEnumerationString(this.condition.getLinkedIdentifiables(), columnName, true).toString();
+		return StorableObjectDatabase.idsEnumerationString(
+				this.condition.getLinkedIdentifiables(),
+				columnName,
+				true).toString();
 	}
 
 	protected String getLinkedQuery(final String linkedColumnIdName,
 			final String linkedColumnTargetName,
 			final String linkedTableName) {
-		return this.getLinkedQuery(COLUMN_ID, linkedColumnIdName, linkedColumnTargetName, linkedTableName);
+		return this.getLinkedQuery(COLUMN_ID,
+				linkedColumnIdName,
+				linkedColumnTargetName,
+				linkedTableName);
 	}
 
 	protected String getLinkedQuery(final String columnName,
@@ -69,8 +78,10 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 		final short entityCode = this.getEntityCode().shortValue();
 		final short linkedEntityCode = this.condition.getLinkedEntityCode();
 		return new IllegalObjectEntityException("Unsupported entity '"
-				+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode + "; linked entity '"
-				+ ObjectEntities.codeToString(linkedEntityCode) + "'/" + linkedEntityCode,
+				+ ObjectEntities.codeToString(entityCode) + "'/"
+				+ entityCode + "; linked entity '"
+				+ ObjectEntities.codeToString(linkedEntityCode)
+				+ "'/" + linkedEntityCode,
 				ENTITY_NOT_REGISTERED_CODE);
 	}
 
@@ -78,9 +89,10 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 		final short entityCode = this.getEntityCode().shortValue();
 		final short linkedEntityCode = this.condition.getLinkedEntityCode();
 		return new IllegalObjectEntityException("Unsupported linked entity '"
-				+ ObjectEntities.codeToString(linkedEntityCode) + "'/" + linkedEntityCode + " for entity '"
-				+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode,
+				+ ObjectEntities.codeToString(linkedEntityCode)
+				+ "'/" + linkedEntityCode + " for entity '"
+				+ ObjectEntities.codeToString(entityCode)
+				+ "'/" + entityCode,
 				ENTITY_NOT_REGISTERED_CODE);
 	}
-
 }
