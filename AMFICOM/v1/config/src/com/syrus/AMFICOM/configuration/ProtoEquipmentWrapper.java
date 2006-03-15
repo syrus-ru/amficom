@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentWrapper.java,v 1.2.2.1 2006/02/14 00:23:00 arseniy Exp $
+ * $Id: ProtoEquipmentWrapper.java,v 1.2.2.2 2006/03/15 13:53:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2.2.1 $, $Date: 2006/02/14 00:23:00 $
+ * @version $Revision: 1.2.2.2 $, $Date: 2006/03/15 13:53:17 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -117,8 +117,8 @@ public final class ProtoEquipmentWrapper extends StorableObjectWrapper<ProtoEqui
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key); 
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

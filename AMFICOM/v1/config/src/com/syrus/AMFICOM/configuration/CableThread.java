@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.48.2.1 2006/02/28 15:19:57 arseniy Exp $
+ * $Id: CableThread.java,v 1.48.2.2 2006/03/15 13:53:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,13 +30,14 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.48.2.1 $, $Date: 2006/02/28 15:19:57 $
+ * @version $Revision: 1.48.2.2 $, $Date: 2006/03/15 13:53:17 $
  * @author $Author: arseniy $
  * @module config
  */
-public final class CableThread extends DomainMember<CableThread>
+public final class CableThread extends DomainMember
 		implements TypedObject<CableThreadType> {
 
 	private static final long serialVersionUID = 3258415027823063600L;
@@ -47,9 +48,9 @@ public final class CableThread extends DomainMember<CableThread>
 
 	public CableThread(final IdlCableThread ctt) throws CreateObjectException {
 		try {
-			this.fromTransferable(ctt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(ctt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -100,13 +101,18 @@ public final class CableThread extends DomainMember<CableThread>
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlCableThread ctt = (IdlCableThread) transferable;
 		super.fromTransferable(ctt, new Identifier(ctt.domainId));
 
+		try {
+			this.type = StorableObjectPool.getStorableObject(new Identifier(ctt._typeId), true);
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
+
 		this.name = ctt.name;
 		this.description = ctt.description;
-		this.type = StorableObjectPool.getStorableObject(new Identifier(ctt._typeId), true);
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.106.2.1 2006/02/28 15:19:58 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.106.2.2 2006/03/15 13:53:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,18 +40,18 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.transport.idl.IdlConversionException;
 /**
- * @version $Revision: 1.106.2.1 $, $Date: 2006/02/28 15:19:58 $
+ * @version $Revision: 1.106.2.2 $, $Date: 2006/03/15 13:53:17 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 
-public final class TransmissionPath extends DomainMember<TransmissionPath>
+public final class TransmissionPath extends DomainMember
 		implements MonitoredDomainMember,
 		Characterizable,
 		TypedObject<TransmissionPathType>, ReverseDependencyContainer {
-
 	private static final long serialVersionUID = 8129503678304843903L;
 
 	private TransmissionPathType type;
@@ -62,9 +62,9 @@ public final class TransmissionPath extends DomainMember<TransmissionPath>
 
 	public TransmissionPath(final IdlTransmissionPath tpt) throws CreateObjectException {
 		try {
-			this.fromTransferable(tpt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(tpt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -129,11 +129,15 @@ public final class TransmissionPath extends DomainMember<TransmissionPath>
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlTransmissionPath tpt = (IdlTransmissionPath) transferable;
 		super.fromTransferable(tpt, new Identifier(tpt.domainId));
 
-		this.type = StorableObjectPool.getStorableObject(new Identifier(tpt._typeId), true);
+		try {
+			this.type = StorableObjectPool.getStorableObject(new Identifier(tpt._typeId), true);
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
 
 		this.name = tpt.name;
 		this.description = tpt.description;

@@ -77,8 +77,8 @@ public final class EquipmentTypeWrapper extends StorableObjectWrapper<EquipmentT
 	}
 
 	@Override
-	public final Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key);
+	public final Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key);
 		if (clazz != null) {
 			return clazz;
 		}

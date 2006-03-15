@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.77.2.1 2006/02/28 15:19:57 arseniy Exp $
+ * $Id: Link.java,v 1.77.2.2 2006/03/15 13:53:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,20 +27,21 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.77.2.1 $, $Date: 2006/02/28 15:19:57 $
+ * @version $Revision: 1.77.2.2 $, $Date: 2006/03/15 13:53:17 $
  * @module config
  */
-public final class Link extends AbstractLink<Link> {
+public final class Link extends AbstractLink {
 	private static final long serialVersionUID = 3257283626012783672L;
 
 	public Link(final IdlLink idlLink) throws CreateObjectException {
 		try {
-			this.fromTransferable(idlLink);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(idlLink);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -125,17 +126,21 @@ public final class Link extends AbstractLink<Link> {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlLink idlLink = (IdlLink) transferable;
 		super.fromTransferable(idlLink, new Identifier(idlLink.domainId));
+
+		try {
+			super.type = StorableObjectPool.getStorableObject(new Identifier(idlLink._typeId), true);
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
 
 		this.name = idlLink.name;
 		this.description = idlLink.description;
 		this.inventoryNo = idlLink.inventoryNo;
 		this.supplier = idlLink.supplier;
 		this.supplierCode = idlLink.supplierCode;
-
-		super.type = StorableObjectPool.getStorableObject(new Identifier(idlLink._typeId), true);
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}

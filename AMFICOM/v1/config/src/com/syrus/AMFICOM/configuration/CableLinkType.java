@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.91.2.1 2006/02/28 15:19:58 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.91.2.2 2006/03/15 13:53:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,15 +54,16 @@ import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.91.2.1 $, $Date: 2006/02/28 15:19:58 $
+ * @version $Revision: 1.91.2.2 $, $Date: 2006/03/15 13:53:17 $
  * @author $Author: arseniy $
  * @module config
  */
-public final class CableLinkType extends AbstractLinkType<CableLinkType> implements XmlTransferableObject<XmlCableLinkType> {
+public final class CableLinkType extends AbstractLinkType implements XmlTransferableObject<XmlCableLinkType> {
 
 	private static final long serialVersionUID = 3257007652839372857L;
 
@@ -74,9 +75,9 @@ public final class CableLinkType extends AbstractLinkType<CableLinkType> impleme
 
 	public CableLinkType(final IdlCableLinkType cltt) throws CreateObjectException {
 		try {
-			this.fromTransferable(cltt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(cltt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -267,7 +268,7 @@ public final class CableLinkType extends AbstractLinkType<CableLinkType> impleme
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlCableLinkType cltt = (IdlCableLinkType) transferable;
 		super.fromTransferable(cltt, cltt.codename, cltt.description);
 		this.sort = cltt.sort.value();

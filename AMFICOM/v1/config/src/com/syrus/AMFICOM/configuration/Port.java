@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.109.2.2 2006/03/06 18:59:09 arseniy Exp $
+ * $Id: Port.java,v 1.109.2.3 2006/03/15 13:53:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,14 +43,15 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.109.2.2 $, $Date: 2006/03/06 18:59:09 $
+ * @version $Revision: 1.109.2.3 $, $Date: 2006/03/15 13:53:17 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
-public final class Port extends StorableObject<Port>
+public final class Port extends StorableObject
 		implements Characterizable, TypedObject<PortType>, ReverseDependencyContainer {
 	private static final long serialVersionUID = -5139393638116159453L;
 
@@ -60,9 +61,9 @@ public final class Port extends StorableObject<Port>
 
 	public Port(final IdlPort pt) throws CreateObjectException {
 		try {
-			this.fromTransferable(pt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(pt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -118,18 +119,21 @@ public final class Port extends StorableObject<Port>
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlPort pt = (IdlPort) transferable;
-		super.fromTransferable(pt);
+		super.fromIdlTransferable(pt);
 
-		this.type = StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);
+		try {
+			this.type = StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
 
 		this.description = pt.description;
 		this.equipmentId = new Identifier(pt.equipmentId);
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
-	
 
 	/**
 	 * @param orb

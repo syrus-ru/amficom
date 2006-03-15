@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.26.2.5 2006/02/28 15:19:57 arseniy Exp $
+ * $Id: ProtoEquipment.java,v 1.26.2.6 2006/03/15 13:53:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,16 +52,17 @@ import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Shitlet;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.26.2.5 $, $Date: 2006/02/28 15:19:57 $
+ * @version $Revision: 1.26.2.6 $, $Date: 2006/03/15 13:53:17 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
-public final class ProtoEquipment extends StorableObject<ProtoEquipment>
+public final class ProtoEquipment extends StorableObject
 		implements Characterizable, Namable,
 		XmlTransferableObject<XmlProtoEquipment>, ReverseDependencyContainer {
 	private static final long serialVersionUID = 6439194616441623786L;
@@ -75,9 +76,9 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 
 	public ProtoEquipment(final IdlProtoEquipment et) throws CreateObjectException {
 		try {
-			this.fromTransferable(et);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(et);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -203,9 +204,9 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlProtoEquipment idlProtoEquipment = (IdlProtoEquipment) transferable;
-		super.fromTransferable(idlProtoEquipment);
+		super.fromIdlTransferable(idlProtoEquipment);
 		this.typeId = Identifier.valueOf(idlProtoEquipment._typeId);
 		this.name = idlProtoEquipment.name;
 		this.description = idlProtoEquipment.description;

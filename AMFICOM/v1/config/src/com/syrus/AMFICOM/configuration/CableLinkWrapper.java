@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkWrapper.java,v 1.4 2005/10/25 19:53:09 bass Exp $
+ * $Id: CableLinkWrapper.java,v 1.4.2.1 2006/03/15 13:53:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author max
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/10/25 19:53:09 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4.2.1 $, $Date: 2006/03/15 13:53:17 $
  * @module config
  */
 
@@ -126,8 +126,8 @@ public final class CableLinkWrapper extends StorableObjectWrapper<CableLink> {
 	}
 	
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key); 
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.24 2005/09/28 10:01:42 arseniy Exp $
+ * $Id: EquipmentWrapper.java,v 1.24.2.1 2006/03/15 13:53:17 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TableNames;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/09/28 10:01:42 $
+ * @version $Revision: 1.24.2.1 $, $Date: 2006/03/15 13:53:17 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -196,8 +196,8 @@ public final class EquipmentWrapper extends StorableObjectWrapper<Equipment> {
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key); 
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.115.2.1 2006/02/28 15:19:58 arseniy Exp $
+ * $Id: PortType.java,v 1.115.2.2 2006/03/15 13:53:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,17 +60,18 @@ import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.115.2.1 $, $Date: 2006/02/28 15:19:58 $
+ * @version $Revision: 1.115.2.2 $, $Date: 2006/03/15 13:53:17 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 
-public final class PortType extends StorableObjectType<PortType>
+public final class PortType extends StorableObjectType
 		implements Characterizable, Namable,
 		XmlTransferableObject<XmlPortType>, ReverseDependencyContainer {
 	private static final long serialVersionUID = -115251480084275101L;
@@ -81,9 +82,9 @@ public final class PortType extends StorableObjectType<PortType>
 
 	public PortType(final IdlPortType ptt) throws CreateObjectException {
 		try {
-			this.fromTransferable(ptt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(ptt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -267,7 +268,7 @@ public final class PortType extends StorableObjectType<PortType>
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlPortType ptt = (IdlPortType) transferable;
 		super.fromTransferable(ptt, ptt.codename, ptt.description);
 		this.name = ptt.name;

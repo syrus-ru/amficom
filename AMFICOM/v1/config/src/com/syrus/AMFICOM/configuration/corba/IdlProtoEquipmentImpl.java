@@ -1,5 +1,5 @@
 /*
- * $Id: IdlProtoEquipmentImpl.java,v 1.5.2.1 2006/02/14 00:23:00 arseniy Exp $
+ * $Id: IdlProtoEquipmentImpl.java,v 1.5.2.2 2006/03/15 13:53:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5.2.1 $, $Date: 2006/02/14 00:23:00 $
+ * @version $Revision: 1.5.2.2 $, $Date: 2006/03/15 13:53:17 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -62,7 +62,7 @@ final class IdlProtoEquipmentImpl extends IdlProtoEquipment {
 			return new ProtoEquipment(this);
 		} catch (final CreateObjectException coe) {
 			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
+			throw coe.getIdlTransferable();
 		}
 	}
 }

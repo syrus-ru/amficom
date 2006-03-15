@@ -40,7 +40,7 @@ final class IdlEquipmentTypeImpl extends IdlEquipmentType {
 			return new EquipmentType(this);
 		} catch (final CreateObjectException coe) {
 			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
+			throw coe.getIdlTransferable();
 		}
 	}
 

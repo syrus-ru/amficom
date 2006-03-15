@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.17.2.1 2006/02/28 15:19:58 arseniy Exp $
+ * $Id: CableLink.java,v 1.17.2.2 2006/03/15 13:53:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,21 +27,22 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.17.2.1 $, $Date: 2006/02/28 15:19:58 $
+ * @version $Revision: 1.17.2.2 $, $Date: 2006/03/15 13:53:17 $
  * @module config
  */
-public final class CableLink extends AbstractLink<CableLink> {
+public final class CableLink extends AbstractLink {
 	private static final long serialVersionUID = 7733720151418798562L;
 
 	public CableLink(final IdlCableLink idlCableLink) throws CreateObjectException {
 		try {
-			this.fromTransferable(idlCableLink);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(idlCableLink);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -126,17 +127,21 @@ public final class CableLink extends AbstractLink<CableLink> {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlCableLink idlCableLink = (IdlCableLink) transferable;
 		super.fromTransferable(idlCableLink, new Identifier(idlCableLink.domainId));
+
+		try {
+			super.type = StorableObjectPool.getStorableObject(new Identifier(idlCableLink._typeId), true);
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
 
 		this.name = idlCableLink.name;
 		this.description = idlCableLink.description;
 		this.inventoryNo = idlCableLink.inventoryNo;
 		this.supplier = idlCableLink.supplier;
 		this.supplierCode = idlCableLink.supplierCode;
-
-		super.type = StorableObjectPool.getStorableObject(new Identifier(idlCableLink._typeId), true);
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}

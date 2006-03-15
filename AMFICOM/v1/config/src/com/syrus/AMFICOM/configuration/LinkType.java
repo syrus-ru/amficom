@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.97.2.1 2006/02/28 15:19:57 arseniy Exp $
+ * $Id: LinkType.java,v 1.97.2.2 2006/03/15 13:53:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,20 +50,17 @@ import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.97.2.1 $, $Date: 2006/02/28 15:19:57 $
+ * @version $Revision: 1.97.2.2 $, $Date: 2006/03/15 13:53:17 $
  * @author $Author: arseniy $
  * @module config
  */
 
-public final class LinkType extends AbstractLinkType<LinkType> implements XmlTransferableObject<XmlLinkType> {
-
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
+public final class LinkType extends AbstractLinkType implements XmlTransferableObject<XmlLinkType> {
 	private static final long	serialVersionUID	= 3257007652839372857L;
 
 	private String name;
@@ -74,9 +71,9 @@ public final class LinkType extends AbstractLinkType<LinkType> implements XmlTra
 
 	public LinkType(final IdlLinkType ltt) throws CreateObjectException {
 		try {
-			this.fromTransferable(ltt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(ltt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -268,7 +265,7 @@ public final class LinkType extends AbstractLinkType<LinkType> implements XmlTra
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlLinkType ltt = (IdlLinkType) transferable;
 		super.fromTransferable(ltt, ltt.codename, ltt.description);
 

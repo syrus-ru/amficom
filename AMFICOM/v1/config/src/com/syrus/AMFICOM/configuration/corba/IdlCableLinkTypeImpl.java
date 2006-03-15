@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlCableLinkTypeImpl.java,v 1.7 2005/10/31 12:29:56 bass Exp $
+ * $Id: IdlCableLinkTypeImpl.java,v 1.7.2.1 2006/03/15 13:53:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/10/31 12:29:56 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7.2.1 $, $Date: 2006/03/15 13:53:17 $
  * @module config
  */
 final class IdlCableLinkTypeImpl extends IdlCableLinkType {
@@ -68,7 +68,7 @@ final class IdlCableLinkTypeImpl extends IdlCableLinkType {
 			return new CableLinkType(this);
 		} catch (final CreateObjectException coe) {
 			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
+			throw coe.getIdlTransferable();
 		}
 	}
 }

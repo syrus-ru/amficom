@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.110.2.6 2006/02/28 15:19:58 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.110.2.7 2006/03/15 13:53:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,11 +49,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.110.2.6 $, $Date: 2006/02/28 15:19:58 $
+ * @version $Revision: 1.110.2.7 $, $Date: 2006/03/15 13:53:17 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -75,7 +76,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 	BUG_136("bug136");
 
  */
-public final class EquipmentType extends StorableObjectType<EquipmentType> implements Namable, XmlTransferableObject<XmlEquipmentType> {
+public final class EquipmentType extends StorableObjectType implements Namable, XmlTransferableObject<XmlEquipmentType> {
 	private static final long serialVersionUID = 361767579292639873L;
 
 	EquipmentType(final Identifier id,
@@ -95,9 +96,9 @@ public final class EquipmentType extends StorableObjectType<EquipmentType> imple
 
 	public EquipmentType(final IdlEquipmentType idlEquipmentType) throws CreateObjectException {
 		try {
-			this.fromTransferable(idlEquipmentType);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(idlEquipmentType);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -261,7 +262,7 @@ public final class EquipmentType extends StorableObjectType<EquipmentType> imple
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlEquipmentType idlEquipmentType = (IdlEquipmentType) transferable;
 		super.fromTransferable(idlEquipmentType, idlEquipmentType.codename, idlEquipmentType.description);
 
