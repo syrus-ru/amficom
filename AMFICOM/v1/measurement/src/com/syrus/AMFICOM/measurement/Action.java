@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.46 2006/03/15 14:47:30 bass Exp $
+ * $Id: Action.java,v 1.45 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,9 +19,10 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2006/03/15 14:47:30 $
+ * @version $Revision: 1.45 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -68,22 +69,12 @@ public abstract class Action extends StorableObject {
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 *
-	 * <p>
-	 * Non-synchronized.
-	 * Non-overriding.
-	 * Non-overridable.
-	 * </p>
-	 *
-	 * @param transferable
-	 * @param type1
-	 * @param monitoredElementId1
-	 * @param parentActionId1
 	 */
-	final void fromIdlTransferable(final IdlStorableObject transferable,
+	protected synchronized void fromTransferable(final IdlStorableObject transferable,
 			final ActionType type1,
 			final Identifier monitoredElementId1,
-			final Identifier parentActionId1) {
+			final Identifier parentActionId1)
+	throws IdlConversionException {
 		super.fromIdlTransferable(transferable);
 		this.type = type1;
 		this.monitoredElementId = monitoredElementId1;

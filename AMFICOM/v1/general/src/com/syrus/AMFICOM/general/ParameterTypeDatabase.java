@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterTypeDatabase.java,v 1.43 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.42 2005/10/31 12:30:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2006/03/15 15:17:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.42 $, $Date: 2005/10/31 12:30:19 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -84,8 +84,8 @@ public final class ParameterTypeDatabase {
 
 				preparedStatement.setInt(1, code);
 				DatabaseString.setString(preparedStatement, 2, codename, SIZE_CODENAME_COLUMN);
-				preparedStatement.setInt(3, dataType.ordinal());
-				preparedStatement.setInt(4, measurementUnit.ordinal());
+				preparedStatement.setInt(3, dataType.getCode());
+				preparedStatement.setInt(4, measurementUnit.getCode());
 				DatabaseString.setString(preparedStatement, 5, description, SIZE_DESCRIPTION_COLUMN);
 
 				try {

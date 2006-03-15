@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementUnitDatabase.java,v 1.7 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: MeasurementUnitDatabase.java,v 1.6 2005/10/31 12:30:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2006/03/15 15:17:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/10/31 12:30:19 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -61,7 +61,7 @@ public final class MeasurementUnitDatabase {
 			preparedStatement = connection.prepareStatement(sql);
 
 			for (final MeasurementUnit measurementUnit : MeasurementUnit.values()) {
-				code = measurementUnit.ordinal();
+				code = measurementUnit.getCode();
 				codename = measurementUnit.getCodename();
 				name = measurementUnit.getName();
 

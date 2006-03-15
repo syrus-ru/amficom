@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlCharacteristicImpl.java,v 1.8 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: IdlCharacteristicImpl.java,v 1.7 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2006/03/15 15:17:43 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2006/03/14 10:48:00 $
  * @module general
  */
 final class IdlCharacteristicImpl extends IdlCharacteristic {

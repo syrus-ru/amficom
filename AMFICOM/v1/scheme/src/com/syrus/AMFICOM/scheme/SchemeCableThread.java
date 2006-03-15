@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.117 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: SchemeCableThread.java,v 1.115 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -77,8 +76,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #14 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.117 $, $Date: 2006/03/15 15:49:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.115 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public final class SchemeCableThread
@@ -222,7 +221,7 @@ public final class SchemeCableThread
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					linkType,
@@ -529,8 +528,6 @@ public final class SchemeCableThread
 	 */
 	@Override
 	public IdlSchemeCableThread getIdlTransferable(final ORB orb) {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		return IdlSchemeCableThreadHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -855,8 +852,6 @@ public final class SchemeCableThread
 
 			this.linkTypeSet = true;
 		}
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

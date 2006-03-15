@@ -1,5 +1,5 @@
 /*-
- * $Id: UnboundNode.java,v 1.38 2006/03/15 14:47:33 bass Exp $
+ * $Id: UnboundNode.java,v 1.37 2006/02/28 15:20:02 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,15 +27,14 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * Непривязанный элемент. Сооветствует элеименту схемы, не привязанному
  * ни к какому элементу топологической схемы.
  *
- * @author $Author: bass $
+ * @author $Author: arseniy $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.38 $, $Date: 2006/03/15 14:47:33 $
+ * @version $Revision: 1.37 $, $Date: 2006/02/28 15:20:02 $
  * @module mapview
  */
 public final class UnboundNode extends SiteNode {
@@ -184,12 +183,6 @@ public final class UnboundNode extends SiteNode {
 	 */
 	@Override
 	public IdlSiteNode getIdlTransferable(final ORB orb) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public synchronized void fromIdlTransferable(final IdlSiteNode idlSiteNode)
-	throws IdlConversionException {
 		throw new UnsupportedOperationException();
 	}
 

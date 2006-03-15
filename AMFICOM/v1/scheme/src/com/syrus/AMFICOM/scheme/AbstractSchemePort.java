@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.95 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: AbstractSchemePort.java,v 1.93 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,8 +58,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.95 $, $Date: 2006/03/15 15:49:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.93 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public abstract class AbstractSchemePort

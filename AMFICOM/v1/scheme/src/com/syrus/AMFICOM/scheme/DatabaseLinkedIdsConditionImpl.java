@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.47 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.46 2005/11/25 09:33:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,10 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
@@ -32,31 +30,27 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFORTU_COD
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FROM;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_IN;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_OR;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_SELECT;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
 
 import com.syrus.AMFICOM.general.AbstractDatabaseLinkedIdsCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.47 $, $Date: 2006/03/15 15:49:10 $
+ * @version $Revision: 1.46 $, $Date: 2005/11/25 09:33:27 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -250,104 +244,104 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					//TODO: simplify this thing
 					final StringBuffer buffer = new StringBuffer();
 					buffer.append(PathElementWrapper.COLUMN_START_ABSTRACT_SCHEME_PORT_ID);
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					buffer.append(SQL_SELECT);
-					buffer.append(COLUMN_ID);
-					buffer.append(SQL_FROM);
-					buffer.append(SCHEMEPORT);
-					buffer.append(SQL_WHERE);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(StorableObjectWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEPORT);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
 					
 					buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					buffer.append(SQL_SELECT);
-					buffer.append(COLUMN_ID);
-					buffer.append(SQL_FROM);
-					buffer.append(SCHEMEDEVICE);
-					buffer.append(SQL_WHERE);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(StorableObjectWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEDEVICE);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
 					
 					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
-					buffer.append(CLOSE_BRACKET);
-					buffer.append(CLOSE_BRACKET);
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 					
-					buffer.append(SQL_OR);
+					buffer.append(StorableObjectDatabase.SQL_OR);
 					
 					buffer.append(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID);
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					buffer.append(SQL_SELECT);
-					buffer.append(COLUMN_ID);
-					buffer.append(SQL_FROM);
-					buffer.append(SCHEMEPORT);
-					buffer.append(SQL_WHERE);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(StorableObjectWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEPORT);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
 					
 					buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					buffer.append(SQL_SELECT);
-					buffer.append(COLUMN_ID);
-					buffer.append(SQL_FROM);
-					buffer.append(SCHEMEDEVICE);
-					buffer.append(SQL_WHERE);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(StorableObjectWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEDEVICE);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
 					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
-					buffer.append(CLOSE_BRACKET);
-					buffer.append(CLOSE_BRACKET);
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 					
-					buffer.append(SQL_OR);
+					buffer.append(StorableObjectDatabase.SQL_OR);
 					
 					buffer.append(PathElementWrapper.COLUMN_START_ABSTRACT_SCHEME_PORT_ID);
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					buffer.append(SQL_SELECT);
-					buffer.append(COLUMN_ID);
-					buffer.append(SQL_FROM);
-					buffer.append(SCHEMECABLEPORT);
-					buffer.append(SQL_WHERE);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(StorableObjectWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMECABLEPORT);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
 					
 					buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					buffer.append(SQL_SELECT);
-					buffer.append(COLUMN_ID);
-					buffer.append(SQL_FROM);
-					buffer.append(SCHEMEDEVICE);
-					buffer.append(SQL_WHERE);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(StorableObjectWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEDEVICE);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
 					
 					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
-					buffer.append(CLOSE_BRACKET);
-					buffer.append(CLOSE_BRACKET);
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 					
-					buffer.append(SQL_OR);
+					buffer.append(StorableObjectDatabase.SQL_OR);
 					
 					buffer.append(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID);
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					buffer.append(SQL_SELECT);
-					buffer.append(COLUMN_ID);
-					buffer.append(SQL_FROM);
-					buffer.append(SCHEMECABLEPORT);
-					buffer.append(SQL_WHERE);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(StorableObjectWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMECABLEPORT);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
 					
 					buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					buffer.append(SQL_SELECT);
-					buffer.append(COLUMN_ID);
-					buffer.append(SQL_FROM);
-					buffer.append(SCHEMEDEVICE);
-					buffer.append(SQL_WHERE);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(StorableObjectWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEDEVICE);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
 					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
-					buffer.append(CLOSE_BRACKET);
-					buffer.append(CLOSE_BRACKET);
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 					return buffer.toString();
 				case SCHEMECABLELINK_CODE:
-					return super.getLinkedQuery(PathElementWrapper.COLUMN_SCHEME_CABLE_THREAD_ID, COLUMN_ID, SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID, SCHEMECABLETHREAD);
+					return super.getLinkedQuery(PathElementWrapper.COLUMN_SCHEME_CABLE_THREAD_ID, StorableObjectWrapper.COLUMN_ID, SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID, ObjectEntities.SCHEMECABLETHREAD);
 				case MEASUREMENTPORT_CODE:
 					final StringBuffer buffer3 = new StringBuffer();
-					buffer3.append(super.getLinkedQuery(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID, COLUMN_ID, SchemeCablePortWrapper.COLUMN_MEASUREMENT_PORT_ID, SCHEMECABLEPORT));
-					buffer3.append(SQL_OR);
-					buffer3.append(super.getLinkedQuery(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID, COLUMN_ID, SchemePortWrapper.COLUMN_MEASUREMENT_PORT_ID, SCHEMEPORT));
+					buffer3.append(super.getLinkedQuery(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID, StorableObjectWrapper.COLUMN_ID, SchemeCablePortWrapper.COLUMN_MEASUREMENT_PORT_ID, ObjectEntities.SCHEMECABLEPORT));
+					buffer3.append(StorableObjectDatabase.SQL_OR);
+					buffer3.append(super.getLinkedQuery(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID, StorableObjectWrapper.COLUMN_ID, SchemePortWrapper.COLUMN_MEASUREMENT_PORT_ID, ObjectEntities.SCHEMEPORT));
 					return buffer3.toString();
 				default:
 					throw super.newExceptionLinkedEntityIllegal();

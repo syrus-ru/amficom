@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalCondition.java,v 1.64 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.63 2005/12/07 17:16:24 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.util.EnumUtil;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2006/03/15 15:17:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.63 $, $Date: 2005/12/07 17:16:24 $
+ * @author $Author: bass $
  * @module general
  */
 public class TypicalCondition implements StorableObjectCondition {
@@ -552,7 +552,7 @@ public class TypicalCondition implements StorableObjectCondition {
 				transferable.otherValue = Long.toString(((Date) this.otherValue).getTime());
 				break;
 			case _TYPE_ENUM:
-				transferable.value = Integer.toString(((Enum) this.value).ordinal());
+				transferable.value = Integer.toString(EnumUtil.getCode((Enum) this.value));
 				transferable.otherValue = this.value.getClass().getName();
 				break;
 			default:

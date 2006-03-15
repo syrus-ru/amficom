@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.63 2006/03/15 15:47:20 arseniy Exp $
+ * $Id: EventType.java,v 1.61 2006/03/14 10:47:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,9 @@
 
 package com.syrus.AMFICOM.event;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
-import static com.syrus.AMFICOM.general.ObjectEntities.EVENT_TYPE_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
-
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -26,28 +23,32 @@ import com.syrus.AMFICOM.event.corba.IdlEventTypeHelper;
 import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.AlertKind;
 import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.IdlUserAlertKinds;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2006/03/15 15:47:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.61 $, $Date: 2006/03/14 10:47:58 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 
 public final class EventType extends StorableObjectType {
-	private static final long serialVersionUID = -5205946777012405394L;
+	private static final long serialVersionUID = -8660055955879452510L;
 
 	public static final String CODENAME_MEASUREMENT_ALARM = "measurement_alarm";
 
-	private Set<Identifier> parameterTypeIds;
+	private EnumSet<ParameterType> parameterTypes;
 	private Map<Identifier, Set<AlertKind>> userAlertKindsMap;	//Map <Identifier userId, Set <AlertKind> alertKinds>
 
 	public EventType(final IdlEventType ett) throws CreateObjectException {
@@ -63,7 +64,7 @@ public final class EventType extends StorableObjectType {
 			final StorableObjectVersion version,
 			final String codename,
 			final String description,
-			final Set<Identifier> parameterTypeIds,
+			final EnumSet<ParameterType> parameterTypes,
 			final Map<Identifier, Set<AlertKind>> userAlertKindsMap) {
 		super(id,
 				new Date(System.currentTimeMillis()),
@@ -74,8 +75,8 @@ public final class EventType extends StorableObjectType {
 				codename,
 				description);
 
-		this.parameterTypeIds = new HashSet<Identifier>();
-		this.setParameterTypes0(parameterTypeIds);
+		this.parameterTypes = EnumSet.noneOf(ParameterType.class);
+		this.setParameterTypes0(parameterTypes);
 
 		this.userAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
 		this.setUserAlertKindsMap0(userAlertKindsMap);
@@ -86,7 +87,7 @@ public final class EventType extends StorableObjectType {
 	 * @param creatorId
 	 * @param codename
 	 * @param description
-	 * @param parameterTypeIds
+	 * @param parameterTypes
 	 * @param userAlertKindsMap
 	 * @return a newly generated object
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException
@@ -94,21 +95,21 @@ public final class EventType extends StorableObjectType {
 	public static EventType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description,
-			final Set<Identifier> parameterTypeIds,
+			final EnumSet<ParameterType> parameterTypes,
 			final Map<Identifier, Set<AlertKind>> userAlertKindsMap) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null)
 			throw new IllegalArgumentException("Argument is null'");
 
 		try {
-			final EventType eventType = new EventType(IdentifierPool.getGeneratedIdentifier(EVENT_TYPE_CODE),
+			final EventType eventType = new EventType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENT_TYPE_CODE),
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					codename,
 					description,
-					parameterTypeIds,
+					parameterTypes,
 					userAlertKindsMap);
 
-			assert eventType.isValid() : OBJECT_STATE_ILLEGAL;
+			assert eventType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 			eventType.markAsChanged();
 
@@ -119,12 +120,13 @@ public final class EventType extends StorableObjectType {
 	}
 
 	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlEventType ett = (IdlEventType) transferable;
 
 		super.fromTransferable(ett, ett.codename, ett.description);
 
-		this.setParameterTypes0(Identifier.fromTransferables(ett.parameterTypeIds));
+		this.parameterTypes = ParameterType.fromTransferables(ett.parameterTypes);
 
 		this.userAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>(ett.userAlertKinds.length);
 		for (int i = 0; i < ett.userAlertKinds.length; i++) {
@@ -137,7 +139,7 @@ public final class EventType extends StorableObjectType {
 			this.userAlertKindsMap.put(userId, userAlertKinds);
 		}
 
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -146,7 +148,9 @@ public final class EventType extends StorableObjectType {
 	 */
 	@Override
 	public IdlEventType getIdlTransferable(final ORB orb) {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+		final IdlParameterType[] parTypesT = ParameterType.createTransferables(this.parameterTypes, orb);
 
 		final IdlUserAlertKinds[] userAlertKindsT = new IdlUserAlertKinds[this.userAlertKindsMap.size()];
 		int i, j;
@@ -170,7 +174,7 @@ public final class EventType extends StorableObjectType {
 				this.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
-				Identifier.createTransferables(this.parameterTypeIds),
+				parTypesT,
 				userAlertKindsT);
 	}
 
@@ -180,7 +184,7 @@ public final class EventType extends StorableObjectType {
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
-				&& this.parameterTypeIds != null && this.parameterTypeIds != Collections.EMPTY_SET
+				&& this.parameterTypes != null && this.parameterTypes != Collections.EMPTY_SET
 				&& this.userAlertKindsMap != null && this.userAlertKindsMap != Collections.EMPTY_MAP;
 	}
 
@@ -195,14 +199,14 @@ public final class EventType extends StorableObjectType {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 	}
 
-	public Set<Identifier> getParameterTypeIds() {
-		return Collections.unmodifiableSet(this.parameterTypeIds);
+	public EnumSet<ParameterType> getParameterTypes() {
+		return this.parameterTypes.clone();
 	}
 
-	protected void setParameterTypes0(final Set<Identifier> parameterTypeIds) {
-		this.parameterTypeIds.clear();
-		if (parameterTypeIds != null) {
-			this.parameterTypeIds.addAll(parameterTypeIds);
+	protected void setParameterTypes0(final EnumSet<ParameterType> parameterTypes) {
+		this.parameterTypes.clear();
+		if (parameterTypes != null) {
+			this.parameterTypes.addAll(parameterTypes);
 		}
 	}
 
@@ -212,8 +216,8 @@ public final class EventType extends StorableObjectType {
 	 * @param parameterTypes
 	 *        The inParameterTypeIds to set.
 	 */
-	public void setParameterTypes(final Set<Identifier> parameterTypeIds) {
-		this.setParameterTypes0(parameterTypeIds);
+	public void setParameterTypes(final EnumSet<ParameterType> parameterTypes) {
+		this.setParameterTypes0(parameterTypes);
 		this.markAsChanged();
 	}
 
@@ -276,6 +280,8 @@ public final class EventType extends StorableObjectType {
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.userAlertKindsMap.keySet());
 		return dependencies;

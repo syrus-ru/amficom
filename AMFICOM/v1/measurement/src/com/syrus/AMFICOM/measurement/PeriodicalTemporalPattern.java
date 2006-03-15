@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.38 2006/03/15 14:47:30 bass Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.37 2006/03/14 10:47:56 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,23 +28,22 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 
 /**
- * @version $Revision: 1.38 $, $Date: 2006/03/15 14:47:30 $
+ * @version $Revision: 1.37 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
 public final class PeriodicalTemporalPattern
-		extends AbstractTemporalPattern
-		implements IdlTransferableObjectExt<IdlPeriodicalTemporalPattern> {
+		extends AbstractTemporalPattern {
 
 	private static final long serialVersionUID = 3257567312898175032L;
 
@@ -91,8 +90,10 @@ public final class PeriodicalTemporalPattern
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public synchronized void fromIdlTransferable(final IdlPeriodicalTemporalPattern ptpt)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
+		final IdlPeriodicalTemporalPattern ptpt = (IdlPeriodicalTemporalPattern)transferable;
 		super.fromIdlTransferable(ptpt);
 		this.period = ptpt.period;
 		

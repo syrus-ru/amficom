@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.32 2006/03/15 14:47:31 bass Exp $
+ * $Id: DomainMember.java,v 1.31 2006/03/14 10:47:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,9 +18,10 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2006/03/15 14:47:31 $
+ * @version $Revision: 1.31 $, $Date: 2006/03/14 10:47:59 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -72,20 +73,17 @@ public abstract class DomainMember extends StorableObject {
 	}
 
 	/**
-	 * <p>Clients must never explicitly call this method.</p>
-	 *
-	 * <p>
-	 * Non-synchronized.
-	 * Non-overriding.
-	 * Non-overridable.
-	 * </p>
-	 *
-	 * @param header
-	 * @param domainId1
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected final void fromIdlTransferable(final IdlStorableObject header,
-			final Identifier domainId1) {
-		super.fromIdlTransferable(header);
+	protected synchronized void fromTransferable(final IdlStorableObject header, final Identifier domainId1) {
+		try {
+			super.fromIdlTransferable(header);
+		} catch (final IdlConversionException ice) {
+			/*
+			 * Never.
+			 */
+			assert false;
+		}
 		this.domainId = domainId1;
 	}
 

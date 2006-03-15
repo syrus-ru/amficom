@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitch.java,v 1.43 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: SchemeOptimizeInfoSwitch.java,v 1.41 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
@@ -51,8 +50,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #06 in hierarchy.
  *
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.43 $, $Date: 2006/03/15 15:49:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitch
@@ -137,7 +136,7 @@ public final class SchemeOptimizeInfoSwitch
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					priceUsd,
 					noOfPorts,

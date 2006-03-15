@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeElementImpl.java,v 1.12 2006/03/15 15:49:11 arseniy Exp $
+ * $Id: IdlSchemeElementImpl.java,v 1.11 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2006/03/15 15:49:11 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 final class IdlSchemeElementImpl extends IdlSchemeElement {

@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.214 2006/03/15 15:16:40 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.212 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,6 @@
 
 package com.syrus.AMFICOM.general;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.ENTITY_POOL_NOT_REGISTERED;
-import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
-import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_GROUP_CODE;
-import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import gnu.trove.TShortObjectHashMap;
 import gnu.trove.TShortObjectIterator;
 
@@ -39,8 +34,8 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.214 $, $Date: 2006/03/15 15:16:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.212 $, $Date: 2006/03/14 10:48:00 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 8
@@ -219,7 +214,7 @@ public final class StorableObjectPool {
 	 * @param objectTimeToLive
 	 */
 	public static void addObjectPoolGroup(final short groupCode, final int capacity, final long objectTimeToLive) {
-		assert ObjectGroupEntities.isGroupCodeValid(groupCode) : ILLEGAL_GROUP_CODE;
+		assert ObjectGroupEntities.isGroupCodeValid(groupCode) : ErrorMessages.ILLEGAL_GROUP_CODE;
 		final int objectPoolSize = (capacity < 0) ? 0 : (capacity > MAX_OBJECT_POOL_SIZE) ? MAX_OBJECT_POOL_SIZE : capacity;
 		for (final short entityCode : ObjectGroupEntities.getEntityCodes(groupCode).toArray()) {
 			addObjectPool(entityCode, objectPoolSize, objectTimeToLive);
@@ -233,7 +228,7 @@ public final class StorableObjectPool {
 	 * @param objectTimeToLive
 	 */
 	public static void addObjectPool(final short entityCode, final int objectPoolCapacity, final long objectTimeToLive) {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE + ": " + entityCode;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 		final LRUMap objectPool = new LRUMap(objectPoolCapacity, objectTimeToLive);
 		objectPoolMap.put(entityCode, objectPool);
 		Log.debugMessage("Pool for '" + ObjectEntities.codeToString(entityCode)
@@ -254,7 +249,7 @@ public final class StorableObjectPool {
 	 */
 	public static <T extends StorableObject> T getStorableObject(final Identifier id, final boolean useLoader)
 			throws ApplicationException {
-		assert id != null : NON_NULL_EXPECTED;
+		assert id != null : ErrorMessages.NON_NULL_EXPECTED;
 		final short entityCode = id.getMajor();
 
 		/*
@@ -288,7 +283,7 @@ public final class StorableObjectPool {
 			return storableObject;
 		}
 
-		Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+		Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 				+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		return null;
 	}
@@ -302,18 +297,18 @@ public final class StorableObjectPool {
 	 * @throws ApplicationException
 	 */
 	public static <T extends StorableObject> Set<T> getStorableObjects(final Set<Identifier> ids, boolean useLoader) throws ApplicationException {
-		assert ids != null : NON_NULL_EXPECTED;
+		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
 		Log.debugMessage("Requested for: " + ids, Log.DEBUGLEVEL08);
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
 		}
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE + ": " + entityCode;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 
 		final LRUMap<Identifier, T> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+			Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 			return Collections.emptySet();
 		}
@@ -413,11 +408,11 @@ public final class StorableObjectPool {
 			final StorableObjectCondition condition,
 			final boolean useLoader,
 			final boolean breakOnLoadError) throws ApplicationException {
-		assert ids != null : NON_NULL_EXPECTED;
-		assert condition != null : NON_NULL_EXPECTED;
+		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert condition != null : ErrorMessages.NON_NULL_EXPECTED;
 
 		final short entityCode = condition.getEntityCode().shortValue();
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		assert (ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids)) : "Condition entity code: "
 				+ condition.getEntityCode() + ", ids entity code: " + StorableObject.getEntityCodeOfIdentifiables(ids);
 
@@ -425,7 +420,7 @@ public final class StorableObjectPool {
 
 		final LRUMap<Identifier, T> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+			Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 			return Collections.emptySet();
 		}
@@ -469,7 +464,7 @@ public final class StorableObjectPool {
 				Log.errorMessage(ae);
 				loadedObjects = Collections.emptySet();
 			}
-			assert loadedObjects != null : NON_NULL_EXPECTED; 
+			assert loadedObjects != null : ErrorMessages.NON_NULL_EXPECTED; 
 			Log.debugMessage("Loaded " + loadedObjects.size() + " objects: " + Identifier.toString(loadedObjects), Log.DEBUGLEVEL08);
 
 			for (final T loadedStorableObject : loadedObjects) {
@@ -554,11 +549,11 @@ public final class StorableObjectPool {
 			final StorableObjectCondition condition,
 			final boolean useLoader,
 			final boolean breakOnLoadError) throws ApplicationException {
-		assert ids != null : NON_NULL_EXPECTED;
-		assert condition != null : NON_NULL_EXPECTED;
+		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert condition != null : ErrorMessages.NON_NULL_EXPECTED;
 
 		final short entityCode = condition.getEntityCode().shortValue();
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		assert (ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids)) : "Condition entity code: "
 				+ condition.getEntityCode() + ", ids entity code: " + StorableObject.getEntityCodeOfIdentifiables(ids);
 
@@ -566,7 +561,7 @@ public final class StorableObjectPool {
 
 		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+			Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 			return Collections.emptySet();
 		}
@@ -611,7 +606,7 @@ public final class StorableObjectPool {
 				Log.errorMessage(ae);
 				loadedIdentifiers = Collections.emptySet();
 			}
-			assert loadedIdentifiers != null : NON_NULL_EXPECTED; 
+			assert loadedIdentifiers != null : ErrorMessages.NON_NULL_EXPECTED; 
 			Log.debugMessage("Loaded " + loadedIdentifiers.size() + " identifiers: " + Identifier.toString(loadedIdentifiers),
 					Log.DEBUGLEVEL08);
 
@@ -645,7 +640,7 @@ public final class StorableObjectPool {
 	 * @param storableObject
 	 * @throws IllegalObjectEntityException
 	 */
-	static void putStorableObject(final StorableObject storableObject) throws IllegalObjectEntityException {
+	public static void putStorableObject(final StorableObject storableObject) throws IllegalObjectEntityException {
 		assert storableObject != null;
 		final Identifier id = storableObject.getId();
 		final short entityCode = id.getMajor();
@@ -655,15 +650,11 @@ public final class StorableObjectPool {
 		}
 
 		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
-		if (objectPool == null) {
-			throw new IllegalObjectEntityException(ENTITY_POOL_NOT_REGISTERED + ": '"
-					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode, IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
-		}
-
-		if (!objectPool.containsKey(id)) {
+		if (objectPool != null) {
 			objectPool.put(id, storableObject);
 		} else {
-			setStorableObjectAttributes(objectPool.get(id), storableObject);
+			throw new IllegalObjectEntityException(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode, IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 	}
 
@@ -690,7 +681,7 @@ public final class StorableObjectPool {
 	 * @param identifiables
 	 */
 	public static void cleanChangedStorableObjects(final Set<? extends Identifiable> identifiables) {
-		assert identifiables != null : NON_NULL_EXPECTED;
+		assert identifiables != null : ErrorMessages.NON_NULL_EXPECTED;
 		if (identifiables.isEmpty()) {
 			return;
 		}
@@ -720,7 +711,7 @@ public final class StorableObjectPool {
 					}
 				}
 			} else {
-				Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+				Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 						+ ObjectEntities.codeToString(entityKey) + "'/" + entityKey);
 				continue;
 			}
@@ -732,7 +723,7 @@ public final class StorableObjectPool {
 	 * @param entityCode
 	 */
 	public static void cleanChangedStorableObjects(final short entityCode) {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE + ": " + entityCode;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 
 		DELETED_IDS_MAP.remove(new Short(entityCode));
 
@@ -745,7 +736,7 @@ public final class StorableObjectPool {
 				}
 			}
 		} else {
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+			Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
@@ -755,12 +746,12 @@ public final class StorableObjectPool {
 	 */
 	public static void clean() {
 		for(final short entityCode : objectPoolMap.keys()) {
-			assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE + ": " + entityCode;
+			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 
 			DELETED_IDS_MAP.remove(new Short(entityCode));
 
 			final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
-			assert objectPool != null : NON_NULL_EXPECTED + ", entity: " + ObjectEntities.codeToString(entityCode);
+			assert objectPool != null : ErrorMessages.NON_NULL_EXPECTED + ", entity: " + ObjectEntities.codeToString(entityCode);
 			objectPool.clear();
 		}
 	}
@@ -798,12 +789,12 @@ public final class StorableObjectPool {
 	 * @param id
 	 */
 	public static void delete(final Identifier id) {
-		assert id != null: NON_NULL_EXPECTED;
+		assert id != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		markAsDeleted(Collections.singleton(id));
 
 		final short entityCode = id.getMajor();
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE + ": " + entityCode;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 		Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
 		if (entityDeletedIds == null) {
 			entityDeletedIds = new HashSet<Identifier>();
@@ -816,7 +807,7 @@ public final class StorableObjectPool {
 			objectPool.remove(id);
 		}
 		else {
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+			Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
@@ -826,14 +817,28 @@ public final class StorableObjectPool {
 	 * @param identifiables
 	 */
 	public static void delete(final Set<? extends Identifiable> identifiables) {
-		assert identifiables != null: NON_NULL_EXPECTED;
+		assert identifiables != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		markAsDeleted(identifiables);
 
 		/*
 		 * Map<Short entityCode, Set<Identifiable> identifiables>
 		 */
-		final Map<Short, Set<Identifier>> deleteIdsMap = Identifier.createEntityIdsMap(identifiables);
+		final Map<Short, Set<Identifier>> deleteIdsMap = new HashMap<Short, Set<Identifier>>();
+
+		for (final Identifiable identifiable : identifiables) {
+			final Identifier id = identifiable.getId();
+			final short entityCode = id.getMajor();
+			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
+
+			final Short entityKey = new Short(entityCode);
+			Set<Identifier> entityDeleteIds = deleteIdsMap.get(entityKey);
+			if (entityDeleteIds == null) {
+				entityDeleteIds = new HashSet<Identifier>();
+				deleteIdsMap.put(entityKey, entityDeleteIds);
+			}
+			entityDeleteIds.add(id);
+		}
 
 		for (final Short entityKey : deleteIdsMap.keySet()) {
 			final Set<Identifier> entityDeleteIds = deleteIdsMap.get(entityKey);
@@ -850,8 +855,9 @@ public final class StorableObjectPool {
 				for (final Identifier id : entityDeleteIds) {
 					objectPool.remove(id);
 				}
-			} else {
-				Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+			}
+			else {
+				Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 						+ ObjectEntities.codeToString(entityKey) + "'/" + entityKey);
 			}
 		}
@@ -871,7 +877,7 @@ public final class StorableObjectPool {
 	public static void flush(final Identifiable identifiable, final Identifier modifierId, final boolean force) throws ApplicationException {
 		final Identifier id = identifiable.getId();
 		final short entityCode = id.getMajor();
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE + ": " + entityCode;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 
 		final Short entityKey = new Short(entityCode);
 		final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(entityKey);
@@ -904,7 +910,7 @@ public final class StorableObjectPool {
 	 */
 	public static void flush(final Set<? extends Identifiable> identifiables, final Identifier modifierId, final boolean force)
 			throws ApplicationException {
-		assert identifiables != null : NON_NULL_EXPECTED;
+		assert identifiables != null : ErrorMessages.NON_NULL_EXPECTED;
 		if (identifiables.isEmpty()) {
 			return;
 		}
@@ -968,7 +974,7 @@ public final class StorableObjectPool {
 	 * @throws ApplicationException
 	 */
 	public static void flush(final short entityCode, final Identifier modifierId, final boolean force) throws ApplicationException {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE + ": " + entityCode;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 
 		flushDeleted(entityCode);
 
@@ -997,8 +1003,9 @@ public final class StorableObjectPool {
 					checkChangedWithDependencies(storableObject, 0);
 				}
 			}
-		} else {
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+		}
+		else {
+			Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
@@ -1011,7 +1018,7 @@ public final class StorableObjectPool {
 				DEPENDENCY_SORTED_CONTAINER.moveIfAlreadyPresent(storableObject, dependencyLevel);
 				final Set<Identifiable> dependencies = storableObject.getDependencies();
 				for (final Identifiable identifiable : dependencies) {
-					assert identifiable != null : NON_NULL_EXPECTED;
+					assert identifiable != null : ErrorMessages.NON_NULL_EXPECTED;
 					final StorableObject dependencyObject = fromIdentifiable(identifiable);
 					if (dependencyObject != null) {
 						checkChangedWithDependencies(dependencyObject, dependencyLevel + 1);
@@ -1025,7 +1032,7 @@ public final class StorableObjectPool {
 
 		final Set<Identifiable> dependencies = storableObject.getDependencies();
 		for (final Identifiable identifiable : dependencies) {
-			assert identifiable != null : NON_NULL_EXPECTED;
+			assert identifiable != null : ErrorMessages.NON_NULL_EXPECTED;
 			StorableObject dependencyObject = fromIdentifiable(identifiable);
 			if (dependencyObject != null) {
 				checkChangedWithDependencies(dependencyObject, dependencyLevel + 1);
@@ -1050,7 +1057,7 @@ public final class StorableObjectPool {
 			if (objectPool != null) {
 				return objectPool.unmodifiableGet(id);
 			}
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+			Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 			return null;
 		} else if (identifiable instanceof StorableObject) {
@@ -1088,7 +1095,7 @@ public final class StorableObjectPool {
 				final StorableObjectVersion version = storableObject.getVersion();
 				final StorableObjectVersion remoteVersion = versionsMap.get(id);
 
-				if (!remoteVersion.equals(ILLEGAL_VERSION) && version.isOlder(remoteVersion)) {
+				if (!remoteVersion.equals(StorableObjectVersion.ILLEGAL_VERSION) && version.isOlder(remoteVersion)) {
 					if (force) {
 						storableObject.version = remoteVersion;
 					} else {
@@ -1145,22 +1152,22 @@ public final class StorableObjectPool {
 	/*	From transferable*/
 
 	/**
-	 * Create {@link Set} of {@link StorableObject} from the array of
-	 * {@link IdlStorableObject}. Update in pool every object.
-	 * 
+	 * Create {@link Set} of {@link StorableObject} from the array of {@link IdlStorableObject}.
+	 * Update in pool every object.
 	 * @param transferables
 	 * @param continueOnError
 	 * @return {@link Set} of {@link StorableObject}
 	 * @throws IdlConversionException
 	 */
 	public static <T extends StorableObject> Set<T> fromTransferables(final IdlStorableObject[] transferables,
-			final boolean continueOnError) throws IdlConversionException {
+			final boolean continueOnError)
+	throws IdlConversionException {
 		final int length = transferables.length;
 		final Set<T> storableObjects = new HashSet<T>(length);
 
 		for (int i = 0; i < length; i++) {
 			try {
-				final T storableObject = StorableObjectPool.<T> fromTransferable(transferables[i]);
+				final T storableObject = StorableObjectPool.<T>fromTransferable(transferables[i]);
 				storableObjects.add(storableObject);
 			} catch (final IdlConversionException ice) {
 				if (continueOnError) {
@@ -1177,18 +1184,18 @@ public final class StorableObjectPool {
 	 * Gets a <code>StorableObject</code> from pool by its <code>id</code>,
 	 * update its fields from <code>transferable</code> and return it. If the
 	 * object is not found in pool, then a newly created from
-	 * <code>transferable</code> instance is returned. <em>Never</em>
-	 * returns <code>null</code>.
+	 * <code>transferable</code> instance is returned. <em>Never</em> returns
+	 * <code>null</code>.
 	 * 
 	 * @param transferable
 	 * @throws IdlConversionException
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends StorableObject> T fromTransferable(final IdlStorableObject transferable)
-			throws IdlConversionException {
+	throws IdlConversionException {
 		T storableObject = null;
 		try {
-			storableObject = StorableObjectPool.<T> getStorableObject(Identifier.valueOf(transferable.id), false);
+			storableObject = StorableObjectPool.<T>getStorableObject(new Identifier(transferable.id), false);
 		} catch (final ApplicationException ae) {
 			/*
 			 * Never.
@@ -1221,18 +1228,18 @@ public final class StorableObjectPool {
 	 * @throws ApplicationException
 	 */
 	public static void refresh(final Set<Identifier> ids) throws ApplicationException {
-		assert ids != null : NON_NULL_EXPECTED;
+		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
 		Log.debugMessage("Requested for: " + ids, Log.DEBUGLEVEL08);
 		if (ids.isEmpty()) {
 			return;
 		}
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE + ": " + entityCode;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 
 		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
-			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
+			Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 			return;
 		}
@@ -1322,9 +1329,9 @@ public final class StorableObjectPool {
 			final StorableObjectVersion version = storableObject.getVersion();
 			final StorableObjectVersion remoteVersion = remoteVersionsMap.get(id);
 
-			assert remoteVersion != null : NON_NULL_EXPECTED + " for object '" + id + "'";
+			assert remoteVersion != null : ErrorMessages.NON_NULL_EXPECTED + " for object '" + id + "'";
 
-			if (remoteVersion.equals(ILLEGAL_VERSION)) {
+			if (remoteVersion.equals(StorableObjectVersion.ILLEGAL_VERSION)) {
 				Log.debugMessage("Object '" + ObjectEntities.codeToString(entityCode) + "' '" + id
 						+ "' removed remotely -- removing locally", Log.DEBUGLEVEL08);
 				objectPool.remove(id);
@@ -1371,21 +1378,18 @@ public final class StorableObjectPool {
 
 	/**
 	 * Crutch#235
-	 * 
 	 * @param localStorableObject
 	 * @param remoteStorableObject
 	 */
 	@Crutch235(notes = "Implement method StorableObject#setAttributes(StorableObject)")
-	private static void setStorableObjectAttributes(final StorableObject localStorableObject,
-			final StorableObject remoteStorableObject) {
-		assert localStorableObject != null : NON_NULL_EXPECTED;
-		assert remoteStorableObject != null : NON_NULL_EXPECTED;
-		assert localStorableObject.id.equals(remoteStorableObject.id) : "Local: '"
-				+ localStorableObject.id + "', remote: '" + remoteStorableObject.id + "'";
+	private static void setStorableObjectAttributes(final StorableObject localStorableObject, final StorableObject remoteStorableObject) {
+		assert localStorableObject != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert remoteStorableObject != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert localStorableObject.id.equals(remoteStorableObject.id) : "Local: '" + localStorableObject.id + "', remote: '" + remoteStorableObject.id + "'";
 
 		try {
 			localStorableObject.fromIdlTransferable(remoteStorableObject.getIdlTransferable(CRUTCH_ORB));
-		} catch (IdlConversionException ice) {
+		} catch (final IdlConversionException ice) {
 			Log.errorMessage(ice);
 		}
 	}

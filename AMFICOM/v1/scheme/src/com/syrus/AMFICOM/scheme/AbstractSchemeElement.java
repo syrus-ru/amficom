@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.82 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: AbstractSchemeElement.java,v 1.80 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,8 +47,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeElement}instead.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.82 $, $Date: 2006/03/15 15:49:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.80 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement

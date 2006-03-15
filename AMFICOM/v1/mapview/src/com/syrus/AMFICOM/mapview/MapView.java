@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.84 2006/03/15 14:47:33 bass Exp $
+* $Id: MapView.java,v 1.83 2006/03/14 10:48:01 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -51,7 +52,6 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * Класс используется для хранения объектов, отображаемых на
@@ -63,11 +63,10 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author $Author: bass $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.84 $, $Date: 2006/03/15 14:47:33 $
+ * @version $Revision: 1.83 $, $Date: 2006/03/14 10:48:01 $
  * @module mapview
  */
-public final class MapView extends DomainMember implements Describable,
-		IdlTransferableObjectExt<IdlMapView> {
+public final class MapView extends DomainMember implements Describable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -192,10 +191,12 @@ public final class MapView extends DomainMember implements Describable,
 		}
 	}
 	
-	public synchronized void fromIdlTransferable(final IdlMapView mvt)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
 		try {
-			super.fromIdlTransferable(mvt, new Identifier(mvt.domainId));
+			final IdlMapView mvt = (IdlMapView) transferable;
+			super.fromTransferable(mvt, new Identifier(mvt.domainId));
 	
 			this.name = mvt.name;
 			this.description = mvt.description;

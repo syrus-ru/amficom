@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.94 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.92 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -57,8 +56,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #08 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.94 $, $Date: 2006/03/15 15:49:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.92 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -196,7 +195,7 @@ public final class SchemeMonitoringSolution
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					price,
@@ -245,7 +244,7 @@ public final class SchemeMonitoringSolution
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					price,

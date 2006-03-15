@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicType.java,v 1.73 2006/03/15 15:15:35 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.71 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,9 @@ package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
@@ -42,8 +40,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2006/03/15 15:15:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.71 $, $Date: 2006/03/14 10:48:00 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -72,9 +70,7 @@ public final class CharacteristicType
 	}
 
 	/**
-	 * <p>
-	 * <b>Clients must never explicitly call this method.</b>
-	 * </p>
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	CharacteristicType(final Identifier id,
 			final Identifier creatorId,
@@ -99,56 +95,58 @@ public final class CharacteristicType
 
 	/**
 	 * Minimalistic constructor used when importing from XML.
-	 * 
+	 *
 	 * @param id
 	 * @param importType
 	 * @param created
 	 * @param creatorId
 	 * @throws IdentifierGenerationException
 	 */
-	private CharacteristicType(final XmlIdentifier id, final String importType, final Date created, final Identifier creatorId)
-			throws IdentifierGenerationException {
+	private CharacteristicType(final XmlIdentifier id,
+			final String importType,
+			final Date created,
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
 		super(id, importType, CHARACTERISTIC_TYPE_CODE, created, creatorId);
 	}
 
 	/**
-	 * <p>
-	 * <b>Clients must never explicitly call this method.</b>
-	 * </p>
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlCharacteristicType ctt = (IdlCharacteristicType) transferable;
 		super.fromTransferable(ctt, ctt.codename, ctt.description);
 		this.name = ctt.name;
 		this.dataType.fromIdlTransferable(ctt.dataType);
 		this.sort.fromIdlTransferable(ctt.sort);
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
 	 * @param characteristicType
 	 * @param importType
 	 * @throws XmlConversionException
-	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject,
-	 *      String)
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
-	public void fromXmlTransferable(final XmlCharacteristicType characteristicType, final String importType)
-			throws XmlConversionException {
+	public void fromXmlTransferable(
+			final XmlCharacteristicType characteristicType,
+			final String importType)
+	throws XmlConversionException {
 		try {
 			XmlComplementorRegistry.complementStorableObject(characteristicType, CHARACTERISTIC_TYPE_CODE, importType, PRE_IMPORT);
-
+	
 			this.codename = characteristicType.getCodename();
-			this.description = characteristicType.isSetDescription() ? characteristicType.getDescription() : "";
+			this.description = characteristicType.isSetDescription()
+					? characteristicType.getDescription()
+					: "";
 			this.name = characteristicType.getName();
 			this.dataType.fromXmlTransferable(characteristicType.xgetDataType(), importType);
 			this.sort.fromXmlTransferable(characteristicType.xgetSort(), importType);
-
-			XmlComplementorRegistry.complementStorableObject(characteristicType,
-					CHARACTERISTIC_TYPE_CODE,
-					importType,
-					POST_IMPORT);
+	
+			XmlComplementorRegistry.complementStorableObject(characteristicType, CHARACTERISTIC_TYPE_CODE, importType, POST_IMPORT);
 		} catch (final ApplicationException ae) {
 			throw new XmlConversionException(ae);
 		}
@@ -156,12 +154,12 @@ public final class CharacteristicType
 
 	/**
 	 * create new instance for client
-	 * 
+	 *
 	 * @param creatorId
 	 * @param codename
 	 * @param description
 	 * @param dataType
-	 *        see {@link DataType}
+	 *            see {@link DataType}
 	 * @throws CreateObjectException
 	 */
 	public static CharacteristicType createInstance(final Identifier creatorId,
@@ -169,18 +167,19 @@ public final class CharacteristicType
 			final String description,
 			final String name,
 			final DataType dataType,
-			final CharacteristicTypeSort sort) throws CreateObjectException {
+			final CharacteristicTypeSort sort)
+	throws CreateObjectException {
 		try {
 			CharacteristicType characteristicType = new CharacteristicType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_TYPE_CODE),
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					codename,
 					description,
 					name,
 					dataType,
 					sort);
 
-			assert characteristicType.isValid() : OBJECT_STATE_ILLEGAL;
+			assert characteristicType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 			characteristicType.markAsChanged();
 
@@ -196,9 +195,11 @@ public final class CharacteristicType
 	 * @param importType
 	 * @throws CreateObjectException
 	 */
-	public static CharacteristicType createInstance(final Identifier creatorId,
+	public static CharacteristicType createInstance(
+			final Identifier creatorId,
 			final XmlCharacteristicType xmlCharacteristicType,
-			final String importType) throws CreateObjectException {
+			final String importType)
+	throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
@@ -290,14 +291,11 @@ public final class CharacteristicType
 	}
 
 	/**
-	 * <p>
-	 * <b>Clients must never explicitly call this method.</b>
-	 * </p>
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
 	public IdlCharacteristicType getIdlTransferable(final ORB orb) {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL + ", id: '" + this.id + "'";
-
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL + ", id: '" + this.id + "'";
 		return IdlCharacteristicTypeHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -317,11 +315,13 @@ public final class CharacteristicType
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject,
-	 *      String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
-	public void getXmlTransferable(final XmlCharacteristicType characteristicType, final String importType, final boolean usePool)
-			throws XmlConversionException {
+	public void getXmlTransferable(
+			final XmlCharacteristicType characteristicType,
+			final String importType,
+			final boolean usePool)
+	throws XmlConversionException {
 		try {
 			this.id.getXmlTransferable(characteristicType.addNewId(), importType);
 
@@ -357,10 +357,10 @@ public final class CharacteristicType
 	}
 
 	/**
-	 * <em>As long as</em> client is allowed to set {@code dataType} property
-	 * via the corresponding wrapper, this modifier method should also remain
-	 * public.
-	 * 
+	 * <em>As long as</em> client is allowed to set {@code dataType}
+	 * property via the corresponding wrapper, this modifier method should
+	 * also remain public.
+	 *
 	 * @param dataType
 	 */
 	public void setDataType(final DataType dataType) {
@@ -384,12 +384,12 @@ public final class CharacteristicType
 	private void setSort0(final CharacteristicTypeSort sort) {
 		this.sort.setValue(sort);
 	}
-
+	
 	/**
-	 * <em>As long as</em> client is allowed to set {@code sort} property via
-	 * the corresponding wrapper, this modifier method should also remain
-	 * public.
-	 * 
+	 * <em>As long as</em> client is allowed to set {@code sort} property
+	 * via the corresponding wrapper, this modifier method should also
+	 * remain public.
+	 *
 	 * @param sort
 	 */
 	public void setSort(final CharacteristicTypeSort sort) {
@@ -398,9 +398,7 @@ public final class CharacteristicType
 	}
 
 	/**
-	 * <p>
-	 * <b>Clients must never explicitly call this method.</b>
-	 * </p>
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected synchronized void setAttributes(final Date created,
 			final Date modified,
@@ -420,16 +418,15 @@ public final class CharacteristicType
 
 	@Override
 	protected boolean isValid() {
-		return super.isValid() && this.name != null && this.name.length() != 0;
+		return super.isValid()
+				&& this.name != null && this.name.length() != 0;
 	}
-
 	/**
-	 * <p>
-	 * <b>Clients must never explicitly call this method.</b>
-	 * </p>
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 

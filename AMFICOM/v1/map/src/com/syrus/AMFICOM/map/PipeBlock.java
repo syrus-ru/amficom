@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlock.java,v 1.20 2006/03/15 14:47:33 bass Exp $
+ * $Id: PipeBlock.java,v 1.19 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlPipeBlock;
 import com.syrus.AMFICOM.map.corba.IdlPipeBlockHelper;
@@ -40,7 +41,6 @@ import com.syrus.AMFICOM.map.xml.XmlPipeBlock;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -50,14 +50,13 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * и матрицу пролегани€ кабелей по трубам тоннел€.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2006/03/15 14:47:33 $
+ * @version $Revision: 1.19 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  */
 public final class PipeBlock 
 		extends StorableObject
 		implements XmlTransferableObject<XmlPipeBlock>,
-		Comparable<PipeBlock>,
-		IdlTransferableObjectExt<IdlPipeBlock> {
+		Comparable<PipeBlock> {
 	private static final long serialVersionUID = -6089210980096232608L;
 
 	private int number;
@@ -155,8 +154,10 @@ public final class PipeBlock
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlPipeBlock pltb)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
+		final IdlPipeBlock pltb = (IdlPipeBlock) transferable;
 		super.fromIdlTransferable(pltb);
 
 		this.number = pltb.number;

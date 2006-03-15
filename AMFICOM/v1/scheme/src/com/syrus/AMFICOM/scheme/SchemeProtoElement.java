@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.135 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: SchemeProtoElement.java,v 1.133 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -85,8 +84,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #02 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.135 $, $Date: 2006/03/15 15:49:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.133 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public final class SchemeProtoElement
@@ -261,7 +260,7 @@ public final class SchemeProtoElement
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					label,
@@ -322,7 +321,7 @@ public final class SchemeProtoElement
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					label,
@@ -678,8 +677,6 @@ public final class SchemeProtoElement
 	 */
 	@Override
 	public IdlSchemeProtoElement getIdlTransferable(final ORB orb) {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		return IdlSchemeProtoElementHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -1215,8 +1212,6 @@ public final class SchemeProtoElement
 			this.parentSchemeProtoGroupId = new Identifier(schemeProtoElement.parentSchemeProtoGroupId);
 			this.parentSchemeProtoElementId = new Identifier(schemeProtoElement.parentSchemeProtoElementId);
 		}
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

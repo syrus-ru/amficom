@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.36 2006/03/15 14:47:30 bass Exp $
+ * $Id: CronTemporalPattern.java,v 1.35 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,20 +32,19 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPatternHelper;
 import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2006/03/15 14:47:30 $
+ * @version $Revision: 1.35 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @module measurement
  */
 
-public final class CronTemporalPattern extends AbstractTemporalPattern
-		implements IdlTransferableObjectExt<IdlCronTemporalPattern> {
+public final class CronTemporalPattern extends AbstractTemporalPattern {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -863,8 +862,10 @@ public final class CronTemporalPattern extends AbstractTemporalPattern
 		return this.description;
 	}
 
-	public synchronized void fromIdlTransferable(final IdlCronTemporalPattern ctpt)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
+		final IdlCronTemporalPattern ctpt = (IdlCronTemporalPattern)transferable;
 		super.fromIdlTransferable(ctpt);
 
 		this.description = ctpt.description;

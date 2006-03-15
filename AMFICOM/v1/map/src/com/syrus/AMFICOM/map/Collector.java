@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.110 2006/03/15 14:47:33 bass Exp $
+ * $Id: Collector.java,v 1.109 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,6 +40,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.general.xml.XmlIdentifierSeq;
 import com.syrus.AMFICOM.map.corba.IdlCollector;
@@ -48,7 +49,6 @@ import com.syrus.AMFICOM.map.xml.XmlCollector;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -57,13 +57,12 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.110 $, $Date: 2006/03/15 14:47:33 $
+ * @version $Revision: 1.109 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  */
 public final class Collector extends StorableObject
 		implements Describable, Characterizable,
-		MapElement, XmlTransferableObject<XmlCollector>,
-		IdlTransferableObjectExt<IdlCollector> {
+		MapElement, XmlTransferableObject<XmlCollector> {
 	private static final long serialVersionUID = 4049922679379212598L;
 
 	private String name;
@@ -123,8 +122,10 @@ public final class Collector extends StorableObject
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlCollector ct)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
+		final IdlCollector ct = (IdlCollector) transferable;
 		super.fromIdlTransferable(ct);
 
 		this.name = ct.name;

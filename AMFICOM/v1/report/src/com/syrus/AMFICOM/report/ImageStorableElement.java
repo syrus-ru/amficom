@@ -26,13 +26,13 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.report.corba.IdlImage;
 import com.syrus.AMFICOM.report.corba.IdlImageHelper;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * <p>Title: </p>
@@ -44,8 +44,8 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * @module report
  */
 
-public final class ImageStorableElement extends StorableElement
-		implements IdlTransferableObjectExt<IdlImage> {
+public final class ImageStorableElement
+		extends StorableElement {
 
 	private static final long serialVersionUID = 336147260496995306L;
 	private Identifier bitmapImageResourceId;
@@ -124,8 +124,10 @@ public final class ImageStorableElement extends StorableElement
 		}		
 	}
 	
-	public synchronized void fromIdlTransferable(final IdlImage idlImage)
+	@Override
+	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
 	throws IdlConversionException {
+		IdlImage idlImage = (IdlImage) transferable;
 		super.fromIdlTransferable(idlImage);
 		this.bitmapImageResourceId = new Identifier(idlImage.bitmapImageResource);
 	}
@@ -155,7 +157,7 @@ public final class ImageStorableElement extends StorableElement
 	}
 	
 	@Override
-	public IdlImage getIdlTransferable(ORB orb) {
+	public IdlStorableObject getIdlTransferable(ORB orb) {
 		return IdlImageHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),

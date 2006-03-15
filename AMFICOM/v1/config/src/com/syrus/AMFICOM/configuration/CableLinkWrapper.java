@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkWrapper.java,v 1.6 2006/03/15 15:35:12 arseniy Exp $
+ * $Id: CableLinkWrapper.java,v 1.5 2006/03/13 15:54:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author max
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2006/03/15 15:35:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2006/03/13 15:54:24 $
  * @module config
  */
 

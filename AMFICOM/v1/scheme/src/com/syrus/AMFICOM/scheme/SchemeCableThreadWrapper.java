@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThreadWrapper.java,v 1.12 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: SchemeCableThreadWrapper.java,v 1.11 2006/03/13 15:54:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2006/03/15 15:49:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2006/03/13 15:54:26 $
+ * @author $Author: bass $
  * @module scheme
  */
 public final class SchemeCableThreadWrapper extends StorableObjectWrapper<SchemeCableThread> {

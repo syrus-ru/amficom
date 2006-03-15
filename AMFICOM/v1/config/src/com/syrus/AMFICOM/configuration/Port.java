@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.113 2006/03/15 15:18:30 arseniy Exp $
+ * $Id: Port.java,v 1.111 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -46,8 +45,8 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.113 $, $Date: 2006/03/15 15:18:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.111 $, $Date: 2006/03/14 10:48:00 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -103,7 +102,7 @@ public final class Port extends StorableObject
 		try {
 			final Port port = new Port(IdentifierPool.getGeneratedIdentifier(PORT_CODE),
 						creatorId,
-						INITIAL_VERSION,
+						StorableObjectVersion.INITIAL_VERSION,
 						type,
 						description,
 						equipmentId);
@@ -119,21 +118,21 @@ public final class Port extends StorableObject
 	}
 
 	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlPort pt = (IdlPort) transferable;
-		super.fromIdlTransferable(pt);
-
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		try {
-			this.type = StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);
+			IdlPort pt = (IdlPort) transferable;
+			super.fromIdlTransferable(pt);
+	
+			this.type = (PortType) StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);
+	
+			this.description = pt.description;
+			this.equipmentId = new Identifier(pt.equipmentId);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}
-
-		this.description = pt.description;
-		this.equipmentId = new Identifier(pt.equipmentId);
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
+	
 
 	/**
 	 * @param orb
@@ -141,7 +140,6 @@ public final class Port extends StorableObject
 	 */
 	@Override
 	public IdlPort getIdlTransferable(final ORB orb) {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlPortHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -176,10 +174,6 @@ public final class Port extends StorableObject
 		return this.equipmentId;
 	}
 
-	public Equipment getEquipment() throws ApplicationException {
-		return StorableObjectPool.getStorableObject(this.equipmentId, true);
-	}
-
 	protected synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
@@ -200,6 +194,8 @@ public final class Port extends StorableObject
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
 		dependencies.add(this.type);
 		dependencies.add(this.equipmentId);

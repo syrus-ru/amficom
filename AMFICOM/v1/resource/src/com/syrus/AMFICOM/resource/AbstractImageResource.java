@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.32 2006/03/15 14:47:31 bass Exp $
+ * $Id: AbstractImageResource.java,v 1.31 2006/03/14 10:47:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,16 +22,14 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2006/03/15 14:47:31 $
+ * @version $Revision: 1.31 $, $Date: 2006/03/14 10:47:57 $
  * @module resource
  */
 public abstract class AbstractImageResource
-		extends StorableObject
-		implements IdlTransferableObjectExt<IdlImageResource> {
+		extends StorableObject {
 	static final long serialVersionUID = -730035505208725678L;
 
 	/**
@@ -70,20 +68,10 @@ public abstract class AbstractImageResource
 
 	/**
 	 * @param orb
-	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public abstract IdlImageResource getIdlTransferable(final ORB orb);
-
-	/**
-	 * @param imageResource
-	 * @throws IdlConversionException
-	 * @see com.syrus.util.transport.idl.IdlTransferableObjectExt#fromIdlTransferable(org.omg.CORBA.portable.IDLEntity)
-	 */
-	public synchronized void fromIdlTransferable(final IdlImageResource imageResource)
-	throws IdlConversionException {
-		super.fromIdlTransferable(imageResource);
-	}
 
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()

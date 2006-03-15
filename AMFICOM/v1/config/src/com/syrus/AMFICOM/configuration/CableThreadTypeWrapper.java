@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeWrapper.java,v 1.18 2006/03/15 15:35:12 arseniy Exp $
+ * $Id: CableThreadTypeWrapper.java,v 1.17 2006/03/13 15:54:24 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/03/15 15:35:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2006/03/13 15:54:24 $
+ * @author $Author: bass $
  * @module config
  */
 public final class CableThreadTypeWrapper extends StorableObjectWrapper<CableThreadType> {

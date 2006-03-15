@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlCableThreadImpl.java,v 1.8 2006/03/15 15:35:12 arseniy Exp $
+ * $Id: IdlCableThreadImpl.java,v 1.7 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2006/03/15 15:35:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2006/03/14 10:48:00 $
  * @module config
  */
 final class IdlCableThreadImpl extends IdlCableThread {

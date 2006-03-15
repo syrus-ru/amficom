@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.104 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: PathElement.java,v 1.102 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind.SCHEME_CABLE_LINK;
 import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind.SCHEME_ELEMENT;
 import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind.SCHEME_LINK;
@@ -73,8 +72,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.104 $, $Date: 2006/03/15 15:49:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.102 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -353,7 +352,7 @@ public final class PathElement extends StorableObject
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					parentSchemePath,
 					startAbstractSchemePort,
 					endAbstractSchemePort);
@@ -394,7 +393,7 @@ public final class PathElement extends StorableObject
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					parentSchemePath,
 					schemeCableThread);
 			parentSchemePath.getPathElementContainerWrappee().addToCache(pathElement, usePool);
@@ -434,7 +433,7 @@ public final class PathElement extends StorableObject
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					parentSchemePath,
 					schemeLink);
 			parentSchemePath.getPathElementContainerWrappee().addToCache(pathElement, usePool);
@@ -793,8 +792,6 @@ public final class PathElement extends StorableObject
 	 */
 	@Override
 	public IdlPathElement getIdlTransferable(final ORB orb) {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		final IdlData data = new IdlData();
 		final IdlKind idlKind = this.getKind();
 		switch (this.getKind().value()) {
@@ -1230,8 +1227,6 @@ public final class PathElement extends StorableObject
 					assert false;
 			}
 		}
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

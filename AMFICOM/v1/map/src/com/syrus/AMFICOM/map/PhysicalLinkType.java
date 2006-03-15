@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.117 2006/03/15 14:47:33 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.116 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.logic.Library;
 import com.syrus.AMFICOM.general.logic.LibraryEntry;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -54,7 +55,6 @@ import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkTypeSort;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -64,13 +64,12 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.117 $, $Date: 2006/03/15 14:47:33 $
+ * @version $Revision: 1.116 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
 		implements Characterizable, Namable,
-		LibraryEntry, XmlTransferableObject<XmlPhysicalLinkType>,
-		IdlTransferableObjectExt<IdlPhysicalLinkType> {
+		LibraryEntry, XmlTransferableObject<XmlPhysicalLinkType> {
 
 	/** тоннель */
 	public static final String DEFAULT_TUNNEL = "defaulttunnel";
@@ -181,9 +180,11 @@ public final class PhysicalLinkType extends StorableObjectType
 		}
 	}
 	
-	public synchronized void fromIdlTransferable(final IdlPhysicalLinkType pltt)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
-		super.fromIdlTransferable(pltt, pltt.codename, pltt.description);
+		final IdlPhysicalLinkType pltt = (IdlPhysicalLinkType) transferable;
+		super.fromTransferable(pltt, pltt.codename, pltt.description);
 		
 		this.name = pltt.name;
 

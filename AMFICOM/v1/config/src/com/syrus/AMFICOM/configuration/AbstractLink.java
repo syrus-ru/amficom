@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLink.java,v 1.21 2006/03/15 15:35:12 arseniy Exp $
+ * $Id: AbstractLink.java,v 1.20 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
@@ -28,12 +29,6 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 
-/**
- * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2006/03/15 15:35:12 $
- * @module config
- */
 public abstract class AbstractLink
 		extends DomainMember
 		implements Characterizable, TypedObject<AbstractLinkType>,
@@ -123,6 +118,7 @@ public abstract class AbstractLink
 	 */
 	@Override
 	public final Set<Identifiable> getDependenciesTmpl() {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		return Collections.singleton((Identifiable) this.type);
 	}
 

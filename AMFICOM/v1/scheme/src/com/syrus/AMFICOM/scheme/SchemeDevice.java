@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.122 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: SchemeDevice.java,v 1.120 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -79,8 +78,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #09 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.122 $, $Date: 2006/03/15 15:49:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.120 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public final class SchemeDevice
@@ -218,7 +217,7 @@ public final class SchemeDevice
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					parentSchemeProtoElement,
@@ -263,7 +262,7 @@ public final class SchemeDevice
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					null,
@@ -495,8 +494,6 @@ public final class SchemeDevice
 	 */
 	@Override
 	public IdlSchemeDevice getIdlTransferable(final ORB orb) {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		return IdlSchemeDeviceHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -800,8 +797,6 @@ public final class SchemeDevice
 			this.parentSchemeProtoElementId = new Identifier(schemeDevice.parentSchemeProtoElementId);
 			this.parentSchemeElementId = new Identifier(schemeDevice.parentSchemeElementId);
 		}
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

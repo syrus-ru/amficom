@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.71 2006/03/15 14:47:30 bass Exp $
+ * $Id: Modeling.java,v 1.70 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,21 +26,20 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlModeling;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2006/03/15 14:47:30 $
+ * @version $Revision: 1.70 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class Modeling extends Action
-		implements IdlTransferableObjectExt<IdlModeling> {
+public final class Modeling extends Action {
 	
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -87,10 +86,12 @@ public final class Modeling extends Action
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public synchronized void fromIdlTransferable(final IdlModeling mt)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
 		try {
-			super.fromIdlTransferable(mt, ModelingType.fromTransferable(mt.type), new Identifier(mt.monitoredElementId), VOID_IDENTIFIER);
+			IdlModeling mt = (IdlModeling) transferable;
+			super.fromTransferable(mt, ModelingType.fromTransferable(mt.type), new Identifier(mt.monitoredElementId), VOID_IDENTIFIER);
 	
 			this.argumentSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mt.argumentSetId), true);
 	

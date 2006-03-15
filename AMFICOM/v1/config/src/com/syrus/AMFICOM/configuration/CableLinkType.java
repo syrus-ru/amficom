@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.95 2006/03/15 15:18:30 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.93 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
@@ -59,8 +58,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2006/03/15 15:18:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.93 $, $Date: 2006/03/14 10:48:00 $
+ * @author $Author: bass $
  * @module config
  */
 public final class CableLinkType extends AbstractLinkType implements XmlTransferableObject<XmlCableLinkType> {
@@ -248,7 +247,7 @@ public final class CableLinkType extends AbstractLinkType implements XmlTransfer
 		try {
 			final CableLinkType cableLinkType = new CableLinkType(IdentifierPool.getGeneratedIdentifier(CABLELINK_TYPE_CODE),
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					codename,
 					description,
 					name,
@@ -268,7 +267,8 @@ public final class CableLinkType extends AbstractLinkType implements XmlTransfer
 	}
 
 	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlCableLinkType cltt = (IdlCableLinkType) transferable;
 		super.fromTransferable(cltt, cltt.codename, cltt.description);
 		this.sort = cltt.sort.value();

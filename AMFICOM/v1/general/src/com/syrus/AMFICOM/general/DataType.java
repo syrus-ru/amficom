@@ -1,5 +1,5 @@
 /*-
- * $Id: DataType.java,v 1.18 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: DataType.java,v 1.17 2005/12/07 20:07:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,22 +9,23 @@
 package com.syrus.AMFICOM.general;
 
 import org.omg.CORBA.ORB;
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.IdlDataType;
 import com.syrus.AMFICOM.general.xml.XmlDataType;
+import com.syrus.util.Codeable;
 import com.syrus.util.Log;
-import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/03/15 15:17:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/12/07 20:07:37 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public enum DataType implements IdlTransferableObject<IdlDataType> {
+public enum DataType implements Codeable {
 	INTEGER("integer"),
 	DOUBLE("double"),
 	STRING("string"),
@@ -33,9 +34,9 @@ public enum DataType implements IdlTransferableObject<IdlDataType> {
 	RAW("raw"),
 	BOOLEAN("boolean");
 
-	private static final DataType VALUES[] = values();
-
 	private static final String KEY_ROOT = "DataType.Description.";
+
+	private static final DataType VALUES[] = values();
 
 	private final String codename;
 	private final String description;
@@ -48,18 +49,24 @@ public enum DataType implements IdlTransferableObject<IdlDataType> {
 
 	/**
 	 * @param code
+	 * @does_not_throw ArrayIndexOutOfBoundsException
 	 */
 	public static DataType valueOf(final int code) {
 		try {
 			return VALUES[code];
 		} catch (final ArrayIndexOutOfBoundsException aioobe) {
-			Log.errorMessage("Illegal code: " + code + ", returning RAW");
+			/*
+			 * Arseniy, if you want error handling here, the task
+			 * can be accomplished in a more convenient way:
+			 */
+			Log.errorMessage("Illegal IDL code: " + code + ", returning RAW");
 			return RAW;
 		}
 	}
 
 	/**
 	 * @param dataType
+	 * @does_not_throw ArrayIndexOutOfBoundsException
 	 */
 	public static DataType valueOf(final IdlDataType dataType) {
 		return valueOf(dataType.value());
@@ -67,9 +74,14 @@ public enum DataType implements IdlTransferableObject<IdlDataType> {
 
 	/**
 	 * @param dataType
+	 * @does_not_throw ArrayIndexOutOfBoundsException
 	 */
 	public static DataType valueOf(final XmlDataType dataType) {
 		return valueOf(dataType.enumValue().intValue() - 1);
+	}
+
+	public int getCode() {
+		return this.ordinal();
 	}
 
 	public String getCodename() {
@@ -80,26 +92,12 @@ public enum DataType implements IdlTransferableObject<IdlDataType> {
 		return this.description;
 	}
 
-	public IdlDataType getIdlTransferable(final ORB orb) {
-		return this.getIdlTransferable();
-	}
-
-	public IdlDataType getIdlTransferable() {
-		return IdlDataType.from_int(this.ordinal());
-	}
-
-	@Override
-	public String toString() {
-		return this.name() + "(" + Integer.toString(this.ordinal()) + ")";
-	}
-
-
 	/**
 	 * A mutable holder for immutable enum instances.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.18 $, $Date: 2006/03/15 15:17:43 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.17 $, $Date: 2005/12/07 20:07:37 $
 	 * @module general
 	 */
 	public static final class Proxy
@@ -133,7 +131,7 @@ public enum DataType implements IdlTransferableObject<IdlDataType> {
 		 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
 		 */
 		public IdlDataType getIdlTransferable(final ORB orb) {
-			return this.value.getIdlTransferable(orb);
+			return IdlDataType.from_int(this.value.ordinal());
 		}
 
 		/**

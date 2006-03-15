@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.18 2006/03/15 14:47:30 bass Exp $
+ * $Id: MonitoredElement.java,v 1.17 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,21 +27,20 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElement;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/03/15 14:47:30 $
+ * @version $Revision: 1.17 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class MonitoredElement extends DomainMember
-		implements IdlTransferableObjectExt<IdlMonitoredElement> {
+public final class MonitoredElement extends DomainMember {
 	private static final long serialVersionUID = 5689746173688711494L;
 
 	private Identifier measurementPortId;
@@ -130,9 +129,11 @@ public final class MonitoredElement extends DomainMember
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlMonitoredElement met)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
-		super.fromIdlTransferable(met, new Identifier(met.domainId));
+		IdlMonitoredElement met = (IdlMonitoredElement) transferable;
+		super.fromTransferable(met, new Identifier(met.domainId));
 		this.measurementPortId = new Identifier(met.measurementPortId);
 		this.sort = met.sort.value();
 		this.localAddress = met.localAddress;

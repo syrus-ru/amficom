@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.39 2006/03/15 14:47:31 bass Exp $
+ * $Id: BitmapImageResource.java,v 1.38 2006/03/14 10:47:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourceHelper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceData;
@@ -30,7 +31,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2006/03/15 14:47:31 $
+ * @version $Revision: 1.38 $, $Date: 2006/03/14 10:47:57 $
  * @module resource
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource implements Cloneable {
@@ -159,8 +160,9 @@ public final class BitmapImageResource extends AbstractBitmapImageResource imple
 	}
 
 	@Override
-	public synchronized void fromIdlTransferable(final IdlImageResource idlImageResource)
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
+		final IdlImageResource idlImageResource = (IdlImageResource) transferable;
 		super.fromIdlTransferable(idlImageResource);
 
 		final IdlImageResourceData imageResourceData = idlImageResource.data;

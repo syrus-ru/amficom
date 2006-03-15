@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.101 2006/03/15 15:18:30 arseniy Exp $
+ * $Id: LinkType.java,v 1.99 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
@@ -55,12 +54,16 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2006/03/15 15:18:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.99 $, $Date: 2006/03/14 10:48:00 $
+ * @author $Author: bass $
  * @module config
  */
 
 public final class LinkType extends AbstractLinkType implements XmlTransferableObject<XmlLinkType> {
+
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
 	private static final long	serialVersionUID	= 3257007652839372857L;
 
 	private String name;
@@ -245,7 +248,7 @@ public final class LinkType extends AbstractLinkType implements XmlTransferableO
 		try {
 			final LinkType linkType = new LinkType(IdentifierPool.getGeneratedIdentifier(LINK_TYPE_CODE),
 						creatorId,
-						INITIAL_VERSION,
+						StorableObjectVersion.INITIAL_VERSION,
 						codename,
 						description,
 						name,
@@ -265,7 +268,8 @@ public final class LinkType extends AbstractLinkType implements XmlTransferableO
 	}
 
 	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlLinkType ltt = (IdlLinkType) transferable;
 		super.fromTransferable(ltt, ltt.codename, ltt.description);
 

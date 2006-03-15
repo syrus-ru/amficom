@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItem.java,v 1.23 2006/03/15 14:47:31 bass Exp $
+* $Id: LayoutItem.java,v 1.22 2006/03/14 10:47:57 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,20 +33,19 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.resource.corba.IdlLayoutItem;
 import com.syrus.AMFICOM.resource.corba.IdlLayoutItemHelper;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.22 $
  * @author $Author: bass $
  * @module resource
  */
 
 public final class LayoutItem extends StorableObject
-		implements Characterizable, Namable,
-		IdlTransferableObjectExt<IdlLayoutItem> {
+		implements Characterizable, Namable {
 	
 	public static final String CHARACTERISCTIC_TYPE_X = "x";
 	public static final String CHARACTERISCTIC_TYPE_Y = "y";
@@ -132,8 +131,10 @@ public final class LayoutItem extends StorableObject
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public synchronized void fromIdlTransferable(final IdlLayoutItem ili)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
+		final IdlLayoutItem ili = (IdlLayoutItem) transferable;
 		super.fromIdlTransferable(ili);
 		
 		this.parentId = new Identifier(ili.parentId);

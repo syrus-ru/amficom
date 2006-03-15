@@ -1,5 +1,5 @@
 /*
- * $Id: SessionKey.java,v 1.17 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: SessionKey.java,v 1.16 2006/02/17 11:30:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2006/03/15 15:17:43 $
+ * @version $Revision: 1.16 $, $Date: 2006/02/17 11:30:28 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general

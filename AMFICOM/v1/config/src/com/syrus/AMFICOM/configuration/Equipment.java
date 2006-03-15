@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.160 2006/03/15 15:18:42 arseniy Exp $
+ * $Id: Equipment.java,v 1.158 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,6 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -62,8 +61,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.160 $, $Date: 2006/03/15 15:18:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.158 $, $Date: 2006/03/14 10:48:00 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -196,7 +195,7 @@ public final class Equipment extends DomainMember
 		try {
 			final Equipment equipment = new Equipment(IdentifierPool.getGeneratedIdentifier(EQUIPMENT_CODE),
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					domainId,
 					protoEquipmentId,
 					name,
@@ -262,7 +261,8 @@ public final class Equipment extends DomainMember
 	}
 
 	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		final IdlEquipment et = (IdlEquipment) transferable;
 		super.fromTransferable(et, new Identifier(et.domainId));
 
@@ -280,8 +280,6 @@ public final class Equipment extends DomainMember
 		this.swSerial = et.swSerial;
 		this.swVersion = et.swVersion;
 		this.inventoryNumber = et.inventoryNumber;
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -352,8 +350,6 @@ public final class Equipment extends DomainMember
 	 */
 	@Override
 	public IdlEquipment getIdlTransferable(final ORB orb) {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		return IdlEquipmentHelper.init(orb,
 				super.id.getIdlTransferable(),
 				super.created.getTime(),
@@ -539,6 +535,8 @@ public final class Equipment extends DomainMember
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		final Set<Identifiable> dependencies =  new HashSet<Identifiable>();
 		dependencies.add(this.protoEquipmentId);
 		return dependencies;

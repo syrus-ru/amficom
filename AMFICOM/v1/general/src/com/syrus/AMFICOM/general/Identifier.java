@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.94 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: Identifier.java,v 1.93 2005/12/14 12:54:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.94 $, $Date: 2006/03/15 15:17:43 $
+ * @version $Revision: 1.93 $, $Date: 2005/12/14 12:54:27 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -271,16 +271,6 @@ public final class Identifier implements Comparable<Identifier>,
 		return identifiers;
 	}
 
-	public static <T extends Identifiable> Map<Identifier, T> createIdsMap(final Set<T> identifiables) {
-		assert identifiables != null : NON_NULL_EXPECTED;
-
-		final Map<Identifier, T> idsMap = new HashMap<Identifier, T>();
-		for (final T identifiable : identifiables) {
-			idsMap.put(identifiable.getId(), identifiable);
-		}
-		return idsMap;
-	}
-
 	/**
 	 * Creates <code>Map<Short entityCode, Set<Identifier> ids></code>.
 	 * NOTE: Method is not synchronized on argument.
@@ -292,7 +282,7 @@ public final class Identifier implements Comparable<Identifier>,
 		final Map<Short, Set<Identifier>> entityIdsMap = new HashMap<Short, Set<Identifier>>();
 		for (final Identifiable identifiable : identifiables) {
 			final Identifier id = identifiable.getId();
-			final Short entityKey = Short.valueOf(id.getMajor());
+			final Short entityKey = new Short(id.getMajor());
 			Set<Identifier> entityIds = entityIdsMap.get(entityKey);
 			if (entityIds == null) {
 				entityIds = new HashSet<Identifier>();
@@ -345,8 +335,8 @@ public final class Identifier implements Comparable<Identifier>,
 
 	/**
 	 * Creates new set of identifiers, containing values from set
-	 * <code>minuendi</code> with exception to those, containing in set
-	 * <code>subtrahendi</code>
+	 * <code>identifiables1</code> with exception to those, containing in set
+	 * <code>identifiables2</code>
 	 * NOTE: Method is not synchronized on arguments. Need synchronization on <code>subtrahendi</code>.
 	 * 
 	 * @param minuendi
@@ -386,9 +376,9 @@ public final class Identifier implements Comparable<Identifier>,
 	}
 
 	/**
-	 * Removes from set of identifiers <code>minuendi</code> those, which
-	 * contained in set of identifiables <code>subtrahendi</code>. (I. e.,
-	 * parameter <code>minuendi</code> is passed as &quot;inout&quot;
+	 * Removes from set of identifiers <code>identifiers</code> those, which
+	 * contained in set of identifiables <code>identifiables</code>. (I. e.,
+	 * parameter <code>identifiers</code> is passed as &quot;inout&quot;
 	 * argument.)
 	 * NOTE: Method is not synchronized on arguments. Need synchronization on <code>subtrahendi</code>.
 	 * 
@@ -418,7 +408,7 @@ public final class Identifier implements Comparable<Identifier>,
 	public static Set<Identifier> fromTransferables(final IdlIdentifier[] transferables) {
 		final Set<Identifier> ids = new HashSet<Identifier>(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
-			ids.add(valueOf(transferables[i]));
+			ids.add(new Identifier(transferables[i]));
 		}
 		return ids;
 	}

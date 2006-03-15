@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.125 2006/03/15 14:47:33 bass Exp $
+ * $Id: SiteNode.java,v 1.124 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlSiteNode;
@@ -52,7 +53,6 @@ import com.syrus.AMFICOM.map.xml.XmlSiteNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -69,13 +69,12 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.125 $, $Date: 2006/03/15 14:47:33 $
+ * @version $Revision: 1.124 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  */
 public class SiteNode extends AbstractNode
 		implements Characterizable,
-		TypedObject<SiteNodeType>, XmlTransferableObject<XmlSiteNode>,
-		IdlTransferableObjectExt<IdlSiteNode> {
+		TypedObject<SiteNodeType>, XmlTransferableObject<XmlSiteNode> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -91,11 +90,7 @@ public class SiteNode extends AbstractNode
 	private Identifier attachmentSiteNodeId = Identifier.VOID_IDENTIFIER;
 
 	public SiteNode(final IdlSiteNode snt) throws CreateObjectException {
-		try {
-			this.fromIdlTransferable(snt);
-		} catch (final IdlConversionException ice) {
-			throw new CreateObjectException(ice);
-		}
+		super(snt);
 	}
 
 	protected SiteNode(final Identifier id,
@@ -233,9 +228,11 @@ public class SiteNode extends AbstractNode
 				this.attachmentSiteNodeId.getIdlTransferable());
 	}
 
-	public synchronized void fromIdlTransferable(final IdlSiteNode idlSiteNode)
+	@Override
+	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
 	throws IdlConversionException {
 		try {
+			IdlSiteNode idlSiteNode = (IdlSiteNode) transferable; 
 			super.fromIdlTransferable(idlSiteNode);
 			this.imageId = new Identifier(idlSiteNode.imageId);
 			this.city = idlSiteNode.city;

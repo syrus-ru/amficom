@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlServerProcessImpl.java,v 1.3 2006/03/15 14:47:31 bass Exp $
+ * $Id: IdlServerProcessImpl.java,v 1.2 2005/09/14 19:01:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,15 +9,13 @@
 package com.syrus.AMFICOM.administration.corba;
 
 import com.syrus.AMFICOM.administration.ServerProcess;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2006/03/15 14:47:31 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/09/14 19:01:24 $
  * @module administration
  */
 final class IdlServerProcessImpl extends IdlServerProcess {
@@ -50,15 +48,10 @@ final class IdlServerProcessImpl extends IdlServerProcess {
 	}
 
 	/**
-	 * @throws IdlCreateObjectException
 	 * @see com.syrus.AMFICOM.general.corba.IdlStorableObject#getNative()
 	 */
 	@Override
-	public StorableObject getNative() throws IdlCreateObjectException {
-		try {
-			return new ServerProcess(this);
-		} catch (final CreateObjectException coe) {
-			throw coe.getIdlTransferable();
-		}
+	public StorableObject getNative() {
+		return new ServerProcess(this);
 	}
 }

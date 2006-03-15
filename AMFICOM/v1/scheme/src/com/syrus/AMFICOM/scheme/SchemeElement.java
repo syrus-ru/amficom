@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.158 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: SchemeElement.java,v 1.156 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -98,8 +97,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.158 $, $Date: 2006/03/15 15:49:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.156 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -284,7 +283,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					SCHEME_CONTAINER,
 					name,
 					childScheme.getDescription(),
@@ -469,7 +468,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					SCHEME_ELEMENT_CONTAINER,
 					name,
 					description,
@@ -549,7 +548,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					SCHEME_ELEMENT_CONTAINER,					
 					name,
 					description,
@@ -958,8 +957,6 @@ public final class SchemeElement extends AbstractSchemeElement
 	 */
 	@Override
 	public IdlSchemeElement getIdlTransferable(final ORB orb) {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		return IdlSchemeElementHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -1535,8 +1532,6 @@ public final class SchemeElement extends AbstractSchemeElement
 	
 			this.protoEquipmentSet = true;
 		}
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

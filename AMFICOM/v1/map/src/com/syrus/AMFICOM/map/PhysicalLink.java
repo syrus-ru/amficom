@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.155 2006/03/15 14:47:33 bass Exp $
+ * $Id: PhysicalLink.java,v 1.154 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,6 +56,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
@@ -66,7 +67,6 @@ import com.syrus.AMFICOM.map.xml.XmlPipeBlockSeq;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -79,13 +79,12 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.155 $, $Date: 2006/03/15 14:47:33 $
+ * @version $Revision: 1.154 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
 		implements Characterizable, TypedObject<PhysicalLinkType>,
-		MapElement, XmlTransferableObject<XmlPhysicalLink>,
-		IdlTransferableObjectExt<IdlPhysicalLink> {
+		MapElement, XmlTransferableObject<XmlPhysicalLink> {
 	private static final long serialVersionUID = 4121409622671570743L;
 
 	private String name;
@@ -275,9 +274,11 @@ public class PhysicalLink extends StorableObject
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlPhysicalLink plt)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
 		try {
+			final IdlPhysicalLink plt = (IdlPhysicalLink) transferable;
 			super.fromIdlTransferable(plt);
 	
 			this.name = plt.name;

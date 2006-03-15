@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.91 2006/03/15 14:47:30 bass Exp $
+ * $Id: Result.java,v 1.90 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,23 +26,22 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlResult;
 import com.syrus.AMFICOM.measurement.corba.IdlResultHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2006/03/15 14:47:30 $
+ * @version $Revision: 1.90 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Result extends StorableObject
-		implements IdlTransferableObjectExt<IdlResult> {
+public final class Result extends StorableObject {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -85,8 +84,10 @@ public final class Result extends StorableObject
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public synchronized void fromIdlTransferable(final IdlResult rt)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
+		final IdlResult rt = (IdlResult) transferable;
 		super.fromIdlTransferable(rt);
 
 		this.sort = rt.sort.value();

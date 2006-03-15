@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlEventImpl.java,v 1.8 2006/03/15 15:47:20 arseniy Exp $
+ * $Id: IdlEventImpl.java,v 1.7 2006/03/14 10:47:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2006/03/15 15:47:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2006/03/14 10:47:58 $
  * @module event
  */
 final class IdlEventImpl extends IdlEvent {

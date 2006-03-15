@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.188 2006/03/15 14:47:30 bass Exp $
+ * $Id: Test.java,v 1.187 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.measurement.corba.IdlTestHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStamps;
@@ -43,17 +44,15 @@ import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObject;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.188 $, $Date: 2006/03/15 14:47:30 $
+ * @version $Revision: 1.187 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Test extends StorableObject
-		implements Describable, IdlTransferableObjectExt<IdlTest> {	
+public final class Test extends StorableObject implements Describable {	
 	private static final long	serialVersionUID	= 3688785890592241972L;
 
 	private int temporalType;
@@ -210,13 +209,12 @@ public final class Test extends StorableObject
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 *
-	 * @param tt
-	 * @throws IdlConversionException
 	 */
-	public synchronized void fromIdlTransferable(final IdlTest tt)
+	@Override
+	public void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
 		try {
+			final IdlTest tt = (IdlTest)transferable;
 			super.fromIdlTransferable(tt);
 			this.temporalType = tt.timeStamps.discriminator().value();
 			this.timeStamps = new TestTimeStamps(tt.timeStamps);

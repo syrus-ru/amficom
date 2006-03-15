@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.32 2006/03/15 14:47:29 bass Exp $
+ * $Id: ReportTemplate.java,v 1.31 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.report.corba.IdlReportTemplate;
 import com.syrus.AMFICOM.report.corba.IdlReportTemplateHelper;
 import com.syrus.AMFICOM.report.corba.IdlReportTemplatePackage.IdlOrientation;
@@ -51,7 +52,6 @@ import com.syrus.AMFICOM.report.corba.IdlReportTemplatePackage.IdlSheetSize;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * <p>Класс шаблона отчёта - включает в себя списки элементов, надписей и
@@ -62,12 +62,11 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * отчёт </p>
  * 
  * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2006/03/15 14:47:29 $
+ * @version $Revision: 1.31 $, $Date: 2006/03/14 10:47:56 $
  * @module report
  */
-public final class ReportTemplate extends StorableObject
-		implements Namable, Describable, ReverseDependencyContainer,
-		Cloneable, IdlTransferableObjectExt<IdlReportTemplate> {
+public class ReportTemplate extends StorableObject implements Namable, Describable, ReverseDependencyContainer,
+		Cloneable {
 	private static final long serialVersionUID = 6270406142449624592L;
 
 	public enum Orientation {
@@ -175,9 +174,11 @@ public final class ReportTemplate extends StorableObject
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlReportTemplate irt)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
-		super.fromIdlTransferable(irt);
+		final IdlReportTemplate irt = (IdlReportTemplate) transferable;
+		super.fromIdlTransferable(transferable);
 		this.name = irt.name;
 		this.description = irt.description;
 		this.sheetSize = SheetSize.values()[irt.sheetSize.value()];
@@ -187,7 +188,7 @@ public final class ReportTemplate extends StorableObject
 	}
 
 	@Override
-	public IdlReportTemplate getIdlTransferable(final ORB orb) {
+	public IdlStorableObject getIdlTransferable(final ORB orb) {
 		return IdlReportTemplateHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),

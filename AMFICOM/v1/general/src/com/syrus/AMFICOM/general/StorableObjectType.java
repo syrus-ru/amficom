@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectType.java,v 1.38 2006/03/15 15:16:40 arseniy Exp $
+ * $Id: StorableObjectType.java,v 1.36 2006/03/14 10:48:00 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,17 +9,14 @@
 package com.syrus.AMFICOM.general;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2006/03/15 15:16:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2006/03/14 10:48:00 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -135,13 +132,5 @@ public abstract class StorableObjectType
 		this.codename = codename;
 		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
 		this.description = description;
-	}
-
-	public static <T extends StorableObjectType> Map<String, T> createCodenamesMap(final Set<T> storableObjectTypes) {
-		final Map<String, T> codenamesMap = new HashMap<String, T>();
-		for (final T storableObjectType : storableObjectTypes) {
-			codenamesMap.put(storableObjectType.getCodename(), storableObjectType);
-		}
-		return codenamesMap;
 	}
 }

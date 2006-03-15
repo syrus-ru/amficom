@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkType.java,v 1.32 2006/03/15 15:35:12 arseniy Exp $
+ * $Id: AbstractLinkType.java,v 1.31 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2006/03/15 15:35:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2006/03/13 13:53:57 $
+ * @author $Author: bass $
  * @module config
  */
 public abstract class AbstractLinkType

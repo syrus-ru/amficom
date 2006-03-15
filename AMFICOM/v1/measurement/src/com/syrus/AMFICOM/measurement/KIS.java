@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.17 2006/03/15 14:47:30 bass Exp $
+ * $Id: KIS.java,v 1.16 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,20 +29,19 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlKIS;
 import com.syrus.AMFICOM.measurement.corba.IdlKISHelper;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2006/03/15 14:47:30 $
+ * @version $Revision: 1.16 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class KIS extends DomainMember
-		implements Namable, IdlTransferableObjectExt<IdlKIS> {
+public final class KIS extends DomainMember implements Namable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -132,9 +131,11 @@ public final class KIS extends DomainMember
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlKIS kt)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
-		super.fromIdlTransferable(kt, new Identifier(kt.domainId));
+		final IdlKIS kt = (IdlKIS) transferable;
+		super.fromTransferable(kt, new Identifier(kt.domainId));
 
 		this.equipmentId = new Identifier(kt.equipmentId);
 		this.mcmId = new Identifier(kt.mcmId);

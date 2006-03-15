@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.75 2006/03/15 14:47:33 bass Exp $
+ * $Id: Mark.java,v 1.74 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,11 +29,11 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.corba.IdlMark;
 import com.syrus.AMFICOM.map.corba.IdlMarkHelper;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * Метка на линии на топологической схеме. Метка частично характеризуется
@@ -43,11 +43,10 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2006/03/15 14:47:33 $
+ * @version $Revision: 1.74 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  */
-public final class Mark extends AbstractNode
-		implements IdlTransferableObjectExt<IdlMark> {
+public final class Mark extends AbstractNode {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -67,11 +66,7 @@ public final class Mark extends AbstractNode
 	private transient AbstractNode startNode;
 
 	public Mark(final IdlMark mt) throws CreateObjectException {
-		try {
-			this.fromIdlTransferable(mt);
-		} catch (final IdlConversionException ice) {
-			throw new CreateObjectException(ice);
-		}
+		super(mt);
 	}
 
 	Mark(final Identifier id,
@@ -181,9 +176,11 @@ public final class Mark extends AbstractNode
 				this.building);
 	}
 	
-	public synchronized void fromIdlTransferable(final IdlMark idlMark)
+	@Override
+	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
 	throws IdlConversionException {
 		try {
+			final IdlMark idlMark = (IdlMark) transferable; 
 			super.fromIdlTransferable(idlMark);
 			this.distance = idlMark.distance;
 			this.city = idlMark.city;

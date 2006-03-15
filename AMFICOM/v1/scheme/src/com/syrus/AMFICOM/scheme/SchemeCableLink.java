@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.125 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: SchemeCableLink.java,v 1.123 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
@@ -93,8 +92,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.125 $, $Date: 2006/03/15 15:49:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.123 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -225,7 +224,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					physicalLength,
@@ -455,8 +454,6 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	 */
 	@Override
 	public IdlSchemeCableLink getIdlTransferable(final ORB orb) {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		return IdlSchemeCableLinkHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -726,8 +723,6 @@ public final class SchemeCableLink extends AbstractSchemeLink
 					schemeCableLink.sourceSchemeCablePortId,
 					schemeCableLink.targetSchemeCablePortId);
 		}
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

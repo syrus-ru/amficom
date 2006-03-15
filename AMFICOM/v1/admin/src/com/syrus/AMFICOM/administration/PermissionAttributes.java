@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.48 2006/03/15 14:47:31 bass Exp $
+* $Id: PermissionAttributes.java,v 1.47 2006/03/14 10:47:59 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,20 +34,19 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObject;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 
 /**
- * @version $Revision: 1.48 $, $Date: 2006/03/15 14:47:31 $
+ * @version $Revision: 1.47 $, $Date: 2006/03/14 10:47:59 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
  */
-public final class PermissionAttributes extends StorableObject
-		implements IdlTransferableObjectExt<IdlPermissionAttributes> {
+public final class PermissionAttributes extends StorableObject {
 	private static final long serialVersionUID = -8967626134139619548L;
 
 	public static enum Module implements IdlTransferableObject<IdlModule> {
@@ -712,8 +711,10 @@ public final class PermissionAttributes extends StorableObject
 	 * <b>Clients must never explicitly call this method.</b>
 	 * </p>
 	 */
-	public synchronized void fromIdlTransferable(final IdlPermissionAttributes pat)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
+		final IdlPermissionAttributes pat = (IdlPermissionAttributes) transferable;
 		super.fromIdlTransferable(pat);
 		this.domainId = new Identifier(pat.domainId);
 		this.parentId = new Identifier(pat.userId);

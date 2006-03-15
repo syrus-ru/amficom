@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.129 2006/03/15 14:47:33 bass Exp $
+ * $Id: Map.java,v 1.128 2006/03/14 10:48:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,6 +42,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlMap;
@@ -59,7 +60,6 @@ import com.syrus.AMFICOM.map.xml.XmlSiteNodeSeq;
 import com.syrus.AMFICOM.map.xml.XmlTopologicalNode;
 import com.syrus.AMFICOM.map.xml.XmlTopologicalNodeSeq;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -69,12 +69,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.129 $, $Date: 2006/03/15 14:47:33 $
+ * @version $Revision: 1.128 $, $Date: 2006/03/14 10:48:01 $
  * @module map
  */
 public final class Map extends DomainMember
-		implements Namable, XmlTransferableObject<XmlMap>,
-		IdlTransferableObjectExt<IdlMap> {
+		implements Namable, XmlTransferableObject<XmlMap> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -211,9 +210,11 @@ public final class Map extends DomainMember
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlMap mt)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
-		super.fromIdlTransferable(mt, new Identifier(mt.domainId));
+		final IdlMap mt = (IdlMap) transferable;
+		super.fromTransferable(mt, new Identifier(mt.domainId));
 
 		this.name = mt.name;
 		this.description = mt.description;

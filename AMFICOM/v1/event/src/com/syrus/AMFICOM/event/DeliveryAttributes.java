@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.15 2006/03/15 15:47:20 arseniy Exp $
+ * $Id: DeliveryAttributes.java,v 1.13 2006/03/14 10:47:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.DELIVERYATTRIBUTES_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 
 import java.util.Collections;
@@ -44,8 +43,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2006/03/15 15:47:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2006/03/14 10:47:58 $
  * @module event
  */
 public final class DeliveryAttributes extends StorableObject {
@@ -175,7 +174,7 @@ public final class DeliveryAttributes extends StorableObject {
 						IdentifierPool.getGeneratedIdentifier(DELIVERYATTRIBUTES_CODE),
 						creatorId,
 						new Date(),
-						INITIAL_VERSION,
+						StorableObjectVersion.INITIAL_VERSION,
 						severity);
 				deliveryAttributes.markAsChanged();
 				StorableObjectPool.flush(deliveryAttributes, creatorId, false);

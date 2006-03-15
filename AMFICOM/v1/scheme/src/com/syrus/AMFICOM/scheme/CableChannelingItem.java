@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.92 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: CableChannelingItem.java,v 1.90 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PIPEBLOCK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -68,8 +67,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #15 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.92 $, $Date: 2006/03/15 15:49:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.90 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -243,7 +242,7 @@ public final class CableChannelingItem
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					startSpare,
 					endSpare,
 					rowX,

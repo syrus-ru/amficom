@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.111 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: SchemeLink.java,v 1.109 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -76,8 +75,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #12 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.111 $, $Date: 2006/03/15 15:49:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.109 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -270,7 +269,7 @@ public final class SchemeLink extends AbstractSchemeLink
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					physicalLength,
@@ -339,7 +338,7 @@ public final class SchemeLink extends AbstractSchemeLink
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					physicalLength,
@@ -408,7 +407,7 @@ public final class SchemeLink extends AbstractSchemeLink
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					physicalLength,
@@ -748,8 +747,6 @@ public final class SchemeLink extends AbstractSchemeLink
 	 */
 	@Override
 	public IdlSchemeLink getIdlTransferable(final ORB orb) {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		return IdlSchemeLinkHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -1243,8 +1240,6 @@ public final class SchemeLink extends AbstractSchemeLink
 			this.parentSchemeElementId = new Identifier(schemeLink.parentSchemeElementId);
 			this.parentSchemeProtoElementId = new Identifier(schemeLink.parentSchemeProtoElementId);
 		}
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

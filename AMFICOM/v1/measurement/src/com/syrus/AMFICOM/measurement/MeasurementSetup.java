@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.103 2006/03/15 14:47:30 bass Exp $
+ * $Id: MeasurementSetup.java,v 1.102 2006/03/14 10:47:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,23 +30,22 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetup;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2006/03/15 14:47:30 $
+ * @version $Revision: 1.102 $, $Date: 2006/03/14 10:47:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class MeasurementSetup extends StorableObject
-		implements IdlTransferableObjectExt<IdlMeasurementSetup> {
+public final class MeasurementSetup extends StorableObject {
 	private static final long serialVersionUID = 3256442525404443446L;
 
 	private ParameterSet parameterSet;
@@ -155,9 +154,11 @@ public final class MeasurementSetup extends StorableObject
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public synchronized void fromIdlTransferable(final IdlMeasurementSetup mst)
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
 		try {
+			final IdlMeasurementSetup mst = (IdlMeasurementSetup) transferable;
 			super.fromIdlTransferable(mst);
 	
 	

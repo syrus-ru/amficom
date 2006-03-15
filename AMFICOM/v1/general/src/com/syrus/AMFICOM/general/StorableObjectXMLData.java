@@ -1,5 +1,5 @@
 /*-
-* $Id: StorableObjectXMLData.java,v 1.7 2006/03/15 15:17:43 arseniy Exp $
+* $Id: StorableObjectXMLData.java,v 1.6 2005/12/02 11:24:10 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2006/03/15 15:17:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/12/02 11:24:10 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module general
  */
@@ -107,7 +107,7 @@ public abstract class StorableObjectXMLData {
 			value = Long.toString(version.longValue());
 		} else if (object instanceof DataType) {
 			final DataType dataType = (DataType) object;
-			value = Integer.toString(dataType.ordinal());
+			value = Integer.toString(dataType.getCode());
 		} else if (object instanceof Date) {
 			final Date date = (Date) object;
 			value = Long.toString(date.getTime());
