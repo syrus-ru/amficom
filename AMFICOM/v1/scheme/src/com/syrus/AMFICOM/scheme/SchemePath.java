@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.124 2006/03/15 15:57:56 arseniy Exp $
+ * $Id: SchemePath.java,v 1.125 2006/03/15 20:28:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,6 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePath;
@@ -67,20 +66,22 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemePath;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * #16 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.124 $, $Date: 2006/03/15 15:57:56 $
+ * @author $Author: bass $
+ * @version $Revision: 1.125 $, $Date: 2006/03/15 20:28:23 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
 		implements Describable, Characterizable,
 		PathOwner<PathElement>, ReverseDependencyContainer,
-		XmlTransferableObject<XmlSchemePath> {
+		XmlTransferableObject<XmlSchemePath>,
+		IdlTransferableObjectExt<IdlSchemePath> {
 	private static final long serialVersionUID = 3257567312831132469L;
 
 	private String name;
@@ -452,15 +453,13 @@ public final class SchemePath extends StorableObject
 	}
 
 	/**
-	 * @param transferable
+	 * @param schemePath
 	 * @throws IdlConversionException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
-	@Override
-	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	public void fromIdlTransferable(final IdlSchemePath schemePath)
 	throws IdlConversionException {
 		synchronized (this) {
-			final IdlSchemePath schemePath = (IdlSchemePath) transferable;
 			super.fromIdlTransferable(schemePath);
 			this.name = schemePath.name;
 			this.description = schemePath.description;
