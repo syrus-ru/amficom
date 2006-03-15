@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.99 2006/03/14 10:48:01 bass Exp $
+ * $Id: TopologicalNode.java,v 1.100 2006/03/15 14:47:33 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,13 +33,13 @@ import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
 import com.syrus.AMFICOM.map.xml.XmlTopologicalNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -49,11 +49,12 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: bass $
- * @version $Revision: 1.99 $, $Date: 2006/03/14 10:48:01 $
+ * @version $Revision: 1.100 $, $Date: 2006/03/15 14:47:33 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode
-		implements XmlTransferableObject<XmlTopologicalNode> {
+		implements XmlTransferableObject<XmlTopologicalNode>,
+		IdlTransferableObjectExt<IdlTopologicalNode> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -72,7 +73,11 @@ public final class TopologicalNode extends AbstractNode
 	private transient boolean canBind = false;
 
 	public TopologicalNode(final IdlTopologicalNode tnt) throws CreateObjectException {
-		super(tnt);		
+		try {
+			this.fromIdlTransferable(tnt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	TopologicalNode(final Identifier id,
@@ -163,10 +168,8 @@ public final class TopologicalNode extends AbstractNode
 				this.active);
 	}
 	
-	@Override
-	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlTopologicalNode idlTopologicalNode)
 	throws IdlConversionException {
-		IdlTopologicalNode idlTopologicalNode = (IdlTopologicalNode) transferable;
 		super.fromIdlTransferable(idlTopologicalNode);
 		this.active = idlTopologicalNode.active;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.50 2006/03/14 10:48:00 bass Exp $
+ * $Id: CableThread.java,v 1.51 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,16 +28,17 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2006/03/14 10:48:00 $
+ * @version $Revision: 1.51 $, $Date: 2006/03/15 14:47:32 $
  * @author $Author: bass $
  * @module config
  */
 public final class CableThread extends DomainMember
-		implements TypedObject<CableThreadType> {
+		implements TypedObject<CableThreadType>,
+		IdlTransferableObjectExt<IdlCableThread> {
 
 	private static final long serialVersionUID = 3258415027823063600L;
 
@@ -99,16 +100,14 @@ public final class CableThread extends DomainMember
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlCableThread ctt)
 	throws IdlConversionException {
 		try {
-		final IdlCableThread ctt = (IdlCableThread) transferable;
-		super.fromTransferable(ctt, new Identifier(ctt.domainId));
-
-		this.name = ctt.name;
-		this.description = ctt.description;
-		this.type = (CableThreadType) StorableObjectPool.getStorableObject(new Identifier(ctt._typeId), true);
+			super.fromIdlTransferable(ctt, new Identifier(ctt.domainId));
+	
+			this.name = ctt.name;
+			this.description = ctt.description;
+			this.type = (CableThreadType) StorableObjectPool.getStorableObject(new Identifier(ctt._typeId), true);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}

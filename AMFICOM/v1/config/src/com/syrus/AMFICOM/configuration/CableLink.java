@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.19 2006/03/14 10:48:00 bass Exp $
+ * $Id: CableLink.java,v 1.20 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,16 +25,17 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2006/03/14 10:48:00 $
+ * @version $Revision: 1.20 $, $Date: 2006/03/15 14:47:32 $
  * @module config
  */
-public final class CableLink extends AbstractLink {
+public final class CableLink extends AbstractLink
+		implements IdlTransferableObjectExt<IdlCableLink> {
 	private static final long serialVersionUID = 7733720151418798562L;
 
 	public CableLink(final IdlCableLink idlCableLink) throws CreateObjectException {
@@ -125,12 +126,10 @@ public final class CableLink extends AbstractLink {
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlCableLink idlCableLink)
 	throws IdlConversionException {
 		try {
-			final IdlCableLink idlCableLink = (IdlCableLink) transferable;
-			super.fromTransferable(idlCableLink, new Identifier(idlCableLink.domainId));
+			super.fromIdlTransferable(idlCableLink, new Identifier(idlCableLink.domainId));
 	
 			this.name = idlCableLink.name;
 			this.description = idlCableLink.description;

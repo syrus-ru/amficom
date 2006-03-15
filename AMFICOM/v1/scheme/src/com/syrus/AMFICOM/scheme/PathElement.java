@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.102 2006/03/14 10:47:55 bass Exp $
+ * $Id: PathElement.java,v 1.103 2006/03/15 14:47:29 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,6 +62,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlSc
 import com.syrus.AMFICOM.scheme.xml.XmlPathElement;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -73,7 +74,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.102 $, $Date: 2006/03/14 10:47:55 $
+ * @version $Revision: 1.103 $, $Date: 2006/03/15 14:47:29 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -81,7 +82,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 public final class PathElement extends StorableObject
 		implements Describable, Comparable<PathElement>,
 		PathMember<SchemePath, PathElement>, ReverseDependencyContainer,
-		XmlTransferableObject<XmlPathElement>{
+		XmlTransferableObject<XmlPathElement>,
+		IdlTransferableObjectExt<IdlPathElement> {
 	private static final long serialVersionUID = 3905799768986038576L;
 
 	Identifier parentSchemePathId;
@@ -1189,15 +1191,13 @@ public final class PathElement extends StorableObject
 	}
 
 	/**
-	 * @param transferable
+	 * @param pathElement
 	 * @throws IdlConversionException
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
-	@Override
-	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	public void fromIdlTransferable(final IdlPathElement pathElement)
 	throws IdlConversionException {
 		synchronized (this) {
-			final IdlPathElement pathElement = (IdlPathElement) transferable;
 			super.fromIdlTransferable(pathElement);
 			this.parentSchemePathId = new Identifier(pathElement.parentSchemePathId);
 			this.sequentialNumber = pathElement.sequentialNumber;

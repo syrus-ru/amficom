@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.46 2006/03/13 13:54:00 bass Exp $
+ * $Id: Marker.java,v 1.47 2006/03/15 14:47:33 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.omg.CORBA.ORB;
-
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -25,7 +23,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -50,7 +47,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *         и окно рефлектограммы инициализирует маркер такой            *
  *         информацией, после чего опять используется Lo.               *
  *
- * @version $Revision: 1.46 $, $Date: 2006/03/13 13:54:00 $
+ * @version $Revision: 1.47 $, $Date: 2006/03/15 14:47:33 $
  * @module mapview
  * @author $Author: bass $
  * @author Andrei Kroupennikov
@@ -465,16 +462,6 @@ public class Marker extends AbstractNode {
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Suppress since this class is not storable
-	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
-	 */
-	@Override
-	public final IdlStorableObject getIdlTransferable(final ORB orb) {
 		throw new UnsupportedOperationException();
 	}
 

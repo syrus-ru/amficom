@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.28 2006/03/14 10:48:00 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.29 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,24 +45,26 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Shitlet;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2006/03/14 10:48:00 $
+ * @version $Revision: 1.29 $, $Date: 2006/03/15 14:47:32 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class ProtoEquipment extends StorableObject
 		implements Characterizable, Namable,
-		XmlTransferableObject<XmlProtoEquipment>, ReverseDependencyContainer {
+		XmlTransferableObject<XmlProtoEquipment>,
+		ReverseDependencyContainer,
+		IdlTransferableObjectExt<IdlProtoEquipment> {
 	private static final long serialVersionUID = 7066410483749919904L;
 
 	private EquipmentType type;
@@ -201,10 +203,8 @@ public final class ProtoEquipment extends StorableObject
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlProtoEquipment pet)
 	throws IdlConversionException {
-		final IdlProtoEquipment pet = (IdlProtoEquipment) transferable;
 		super.fromIdlTransferable(pet);
 		this.type = EquipmentType.fromTransferable(pet.type);
 		this.name = pet.name;

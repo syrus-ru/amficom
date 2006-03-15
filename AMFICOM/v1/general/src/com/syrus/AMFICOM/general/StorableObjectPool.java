@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.212 2006/03/14 10:48:00 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.213 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.general;
+
+import static java.util.logging.Level.SEVERE;
 
 import gnu.trove.TShortObjectHashMap;
 import gnu.trove.TShortObjectIterator;
@@ -32,9 +34,10 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.LRUMapSaver;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.212 $, $Date: 2006/03/14 10:48:00 $
+ * @version $Revision: 1.213 $, $Date: 2006/03/15 14:47:32 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -1190,7 +1193,6 @@ public final class StorableObjectPool {
 	 * @param transferable
 	 * @throws IdlConversionException
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T extends StorableObject> T fromTransferable(final IdlStorableObject transferable)
 	throws IdlConversionException {
 		T storableObject = null;
@@ -1204,10 +1206,18 @@ public final class StorableObjectPool {
 		}
 
 		if (storableObject != null) {
-			storableObject.fromIdlTransferable(transferable);
+			if (storableObject instanceof IdlTransferableObjectExt) {
+				@SuppressWarnings("unchecked")
+				final IdlTransferableObjectExt<IdlStorableObject> pureJava = (IdlTransferableObjectExt) storableObject;
+				pureJava.fromIdlTransferable(transferable);
+			} else {
+				Log.debugMessage(storableObject.getClass().getName() + " doesn't support IDL import/export; returning as is", SEVERE);
+			}
 		} else {
 			try {
-				storableObject = (T) transferable.getNative();
+				@SuppressWarnings("unchecked")
+				final T pureJava = (T) transferable.getNative();
+				storableObject = pureJava;
 			} catch (final IdlCreateObjectException coe) {
 				Log.debugMessage(coe, Level.SEVERE);
 				throw new IdlConversionException(new CreateObjectException(coe.detailMessage));
@@ -1387,8 +1397,28 @@ public final class StorableObjectPool {
 		assert remoteStorableObject != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert localStorableObject.id.equals(remoteStorableObject.id) : "Local: '" + localStorableObject.id + "', remote: '" + remoteStorableObject.id + "'";
 
+		if (!(localStorableObject instanceof IdlTransferableObjectExt)) {
+			Log.debugMessage("Local object (an instance of "
+					+ localStorableObject.getClass().getName()
+					+ ") doesn't support IDL import/export; update aborted",
+					SEVERE);
+			return;
+		}
+		if (!(remoteStorableObject instanceof IdlTransferableObjectExt)) {
+			Log.debugMessage("Remote object (an instance of "
+					+ remoteStorableObject.getClass().getName()
+					+ ") doesn't support IDL import/export; update aborted",
+					SEVERE);
+			return;
+		}
+
+		@SuppressWarnings("unchecked")
+		final IdlTransferableObjectExt<IdlStorableObject> localPureJava = (IdlTransferableObjectExt) localStorableObject;
+		@SuppressWarnings("unchecked")
+		final IdlTransferableObjectExt<IdlStorableObject> remotePureJava = (IdlTransferableObjectExt) remoteStorableObject;
+
 		try {
-			localStorableObject.fromIdlTransferable(remoteStorableObject.getIdlTransferable(CRUTCH_ORB));
+			localPureJava.fromIdlTransferable(remotePureJava.getIdlTransferable(CRUTCH_ORB));
 		} catch (final IdlConversionException ice) {
 			Log.errorMessage(ice);
 		}

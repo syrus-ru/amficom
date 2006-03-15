@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.108 2006/03/14 10:48:00 bass Exp $
+ * $Id: TransmissionPath.java,v 1.109 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,10 +38,10 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 /**
- * @version $Revision: 1.108 $, $Date: 2006/03/14 10:48:00 $
+ * @version $Revision: 1.109 $, $Date: 2006/03/15 14:47:32 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -50,7 +50,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 public final class TransmissionPath extends DomainMember
 		implements MonitoredDomainMember,
 		Characterizable,
-		TypedObject<TransmissionPathType>, ReverseDependencyContainer {
+		TypedObject<TransmissionPathType>, ReverseDependencyContainer,
+		IdlTransferableObjectExt<IdlTransmissionPath> {
 
 	private static final long serialVersionUID = 8129503678304843903L;
 
@@ -128,12 +129,10 @@ public final class TransmissionPath extends DomainMember
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlTransmissionPath tpt)
 	throws IdlConversionException {
 		try {
-			IdlTransmissionPath tpt = (IdlTransmissionPath) transferable;
-			super.fromTransferable(tpt, new Identifier(tpt.domainId));
+			super.fromIdlTransferable(tpt, new Identifier(tpt.domainId));
 	
 			this.type = (TransmissionPathType) StorableObjectPool.getStorableObject(new Identifier(tpt._typeId), true);
 	

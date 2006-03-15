@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.93 2006/03/14 10:48:00 bass Exp $
+ * $Id: CableLinkType.java,v 1.94 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,22 +47,24 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2006/03/14 10:48:00 $
+ * @version $Revision: 1.94 $, $Date: 2006/03/15 14:47:32 $
  * @author $Author: bass $
  * @module config
  */
-public final class CableLinkType extends AbstractLinkType implements XmlTransferableObject<XmlCableLinkType> {
+public final class CableLinkType extends AbstractLinkType
+		implements XmlTransferableObject<XmlCableLinkType>,
+		IdlTransferableObjectExt<IdlCableLinkType> {
 
 	private static final long serialVersionUID = 3257007652839372857L;
 
@@ -266,11 +268,9 @@ public final class CableLinkType extends AbstractLinkType implements XmlTransfer
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlCableLinkType cltt)
 	throws IdlConversionException {
-		final IdlCableLinkType cltt = (IdlCableLinkType) transferable;
-		super.fromTransferable(cltt, cltt.codename, cltt.description);
+		super.fromIdlTransferable(cltt, cltt.codename, cltt.description);
 		this.sort = cltt.sort.value();
 		this.manufacturer = cltt.manufacturer;
 		this.manufacturerCode = cltt.manufacturerCode;

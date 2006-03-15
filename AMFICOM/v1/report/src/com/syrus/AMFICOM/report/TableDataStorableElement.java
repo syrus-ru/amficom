@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.21 2006/03/14 10:47:56 bass Exp $
+ * $Id: TableDataStorableElement.java,v 1.22 2006/03/15 14:47:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,19 +26,20 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.report.corba.IdlTableData;
 import com.syrus.AMFICOM.report.corba.IdlTableDataHelper;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 /**
  * Класс для отображения данных в табличном виде
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2006/03/14 10:47:56 $
+ * @version $Revision: 1.22 $, $Date: 2006/03/15 14:47:29 $
  * @module report
  */
-public final class TableDataStorableElement extends AbstractDataStorableElement {
+public final class TableDataStorableElement extends AbstractDataStorableElement
+		implements IdlTransferableObjectExt<IdlTableData> {
 	private static final long serialVersionUID = -2699698026579054587L;
 
 	public static Font DEFAULT_FONT = new Font("Times New Roman",Font.PLAIN,12);	
@@ -102,10 +103,8 @@ public final class TableDataStorableElement extends AbstractDataStorableElement 
 		}		
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlTableData idlTableData)
 	throws IdlConversionException {
-		IdlTableData idlTableData = (IdlTableData) transferable;
 		super.fromIdlTransferable(idlTableData);
 		this.verticalDivisionsCount = idlTableData.verticalDivisionCount;
 	}
@@ -134,7 +133,7 @@ public final class TableDataStorableElement extends AbstractDataStorableElement 
 	}
 
 	@Override
-	public IdlStorableObject getIdlTransferable(ORB orb) {
+	public IdlTableData getIdlTransferable(final ORB orb) {
 		return IdlTableDataHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),

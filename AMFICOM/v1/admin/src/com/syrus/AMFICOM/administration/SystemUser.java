@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUser.java,v 1.44 2006/03/14 10:47:59 bass Exp $
+* $Id: SystemUser.java,v 1.45 2006/03/15 14:47:31 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,19 +36,18 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2006/03/14 10:47:59 $
+ * @version $Revision: 1.45 $, $Date: 2006/03/15 14:47:31 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 
 public final class SystemUser extends StorableObject
-		implements Characterizable, Namable {
+		implements Characterizable, Namable, IdlTransferableObjectExt<IdlSystemUser> {
 	private static final long serialVersionUID = 7173419705878464356L;
 
 	private String login;
@@ -162,16 +161,9 @@ public final class SystemUser extends StorableObject
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @throws IdlConversionException 
 	 */
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) 
+	public synchronized void fromIdlTransferable(final IdlSystemUser ut) 
 	throws IdlConversionException {
-		final IdlSystemUser ut = (IdlSystemUser) transferable;
-		try {
-			super.fromIdlTransferable(ut);
-		} catch (final IdlConversionException ice) {
-			// Never
-			Log.errorMessage(ice);
-		}
+		super.fromIdlTransferable(ut);
 		this.login = ut.login;
 		this.sort = ut.sort.value();
 		this.name = ut.name;

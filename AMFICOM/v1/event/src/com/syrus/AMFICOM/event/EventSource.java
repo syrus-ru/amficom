@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.44 2006/03/14 10:47:58 bass Exp $
+ * $Id: EventSource.java,v 1.45 2006/03/15 14:47:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,17 +27,18 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2006/03/14 10:47:58 $
+ * @version $Revision: 1.45 $, $Date: 2006/03/15 14:47:31 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
-public final class EventSource extends StorableObject {
+public final class EventSource extends StorableObject
+		implements IdlTransferableObjectExt<IdlEventSource> {
 	private static final long serialVersionUID = 3833179220682682674L;
 
 	private Identifier sourceEntityId;
@@ -82,10 +83,8 @@ public final class EventSource extends StorableObject {
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlEventSource est)
 	throws IdlConversionException {
-		final IdlEventSource est = (IdlEventSource) transferable;
 		super.fromIdlTransferable(est);
 		this.sourceEntityId = new Identifier(est.sourceEntityId);
 	}

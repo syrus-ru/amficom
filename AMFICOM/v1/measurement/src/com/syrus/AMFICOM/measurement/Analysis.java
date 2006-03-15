@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.93 2006/03/14 10:47:56 bass Exp $
+ * $Id: Analysis.java,v 1.94 2006/03/15 14:47:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,21 +24,22 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2006/03/14 10:47:56 $
+ * @version $Revision: 1.94 $, $Date: 2006/03/15 14:47:30 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Analysis extends Action {
+public final class Analysis extends Action
+		implements IdlTransferableObjectExt<IdlAnalysis> {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -86,12 +87,10 @@ public final class Analysis extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlAnalysis at)
 	throws IdlConversionException {
 		try {
-			final IdlAnalysis at = (IdlAnalysis) transferable;
-			super.fromTransferable(at, AnalysisType.fromTransferable(at.type), new Identifier(at.monitoredElementId), null);
+			super.fromIdlTransferable(at, AnalysisType.fromTransferable(at.type), new Identifier(at.monitoredElementId), null);
 	
 			this.name = at.name;
 			super.parentActionId = new Identifier(at.measurementId);

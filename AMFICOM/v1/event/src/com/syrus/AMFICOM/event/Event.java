@@ -1,5 +1,5 @@
 /*-
- * $Id: Event.java,v 1.53 2006/03/14 10:47:58 bass Exp $
+ * $Id: Event.java,v 1.54 2006/03/15 14:47:31 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,18 +33,19 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2006/03/14 10:47:58 $
+ * @version $Revision: 1.54 $, $Date: 2006/03/15 14:47:31 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 
 public final class Event extends StorableObject
-		implements TypedObject<EventType> {
+		implements TypedObject<EventType>,
+		IdlTransferableObjectExt<IdlEvent> {
 	private static final long serialVersionUID = 3977015150102788401L;
 
 	private EventType type;
@@ -121,13 +122,9 @@ public final class Event extends StorableObject
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(
-			final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlEvent event)
 	throws IdlConversionException {
 		try {
-			final IdlEvent event = (IdlEvent) transferable;
-	
 			super.fromIdlTransferable(event);
 	
 			this.type = StorableObjectPool.getStorableObject(new Identifier(event._typeId), true);

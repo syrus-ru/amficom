@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.87 2006/03/14 10:47:55 bass Exp $
+ * $Id: SchemePort.java,v 1.88 2006/03/15 14:47:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,6 @@ import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePort;
@@ -57,6 +56,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.AMFICOM.scheme.xml.XmlSchemePort;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -64,11 +64,12 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.87 $, $Date: 2006/03/14 10:47:55 $
+ * @version $Revision: 1.88 $, $Date: 2006/03/15 14:47:28 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort
-		implements XmlTransferableObject<XmlSchemePort> {
+		implements XmlTransferableObject<XmlSchemePort>,
+		IdlTransferableObjectExt<IdlSchemePort> {
 	private static final long serialVersionUID = 3256436993469658930L;
 
 	/**
@@ -379,16 +380,14 @@ public final class SchemePort extends AbstractSchemePort
 	}
 
 	/**
-	 * @param transferable
+	 * @param schemePort
 	 * @throws IdlConversionException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
-	@Override
-	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	public void fromIdlTransferable(final IdlSchemePort schemePort)
 	throws IdlConversionException {
 		synchronized (this) {
-			final IdlSchemePort schemePort = (IdlSchemePort) transferable;
-			super.fromTransferable(schemePort,
+			super.fromIdlTransferable(schemePort,
 					schemePort.portTypeId,
 					schemePort.portId);
 		}

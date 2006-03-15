@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.91 2006/03/14 10:48:00 bass Exp $
+ * $Id: Characteristic.java,v 1.92 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,15 +28,15 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlCharacteristic;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2006/03/14 10:48:00 $
+ * @version $Revision: 1.92 $, $Date: 2006/03/15 14:47:32 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -44,7 +44,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 public final class Characteristic extends AbstractCloneableStorableObject
 		implements TypedObject<CharacteristicType>,
 		ReverseDependencyContainer,
-		XmlTransferableObject<XmlCharacteristic> {
+		XmlTransferableObject<XmlCharacteristic>,
+		IdlTransferableObjectExt<IdlCharacteristic> {
 	private static final long serialVersionUID = -2746555753961778403L;
 
 	/**
@@ -275,12 +276,9 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlCharacteristic ct)
 	throws IdlConversionException {
 		try {
-			final IdlCharacteristic ct = (IdlCharacteristic) transferable;
-			
 			super.fromIdlTransferable(ct);
 			
 			this.type = StorableObjectPool.getStorableObject(new Identifier(ct._typeId), true);

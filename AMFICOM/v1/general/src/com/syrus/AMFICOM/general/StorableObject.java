@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.147 2006/03/14 10:48:00 bass Exp $
+ * $Id: StorableObject.java,v 1.148 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.bugs.Crutch134;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
@@ -32,19 +34,16 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
-
 import com.syrus.util.LRUMap.Retainable;
-import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObject;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.147 $, $Date: 2006/03/14 10:48:00 $
+ * @version $Revision: 1.148 $, $Date: 2006/03/15 14:47:32 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public abstract class StorableObject implements Identifiable,
-		IdlTransferableObject<IdlStorableObject>, Retainable {
+public abstract class StorableObject implements Identifiable, Retainable {
 	private static final long serialVersionUID = 3904998894075738999L;
 
 	protected Identifier id;
@@ -128,15 +127,17 @@ public abstract class StorableObject implements Identifiable,
 	}
 
 	/**
-	 *
-	 * Will be overridden by descendants.
-	 *
 	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 * @throws IdlConversionException
+	 *
+	 * <p>
+	 * Non-synchronized.
+	 * Non-overriding.
+	 * Non-overridable.
+	 * </p>
+	 *
+	 * @param transferable
 	 */
-	@SuppressWarnings("unused")
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
-	throws IdlConversionException {
+	protected final void fromIdlTransferable(final IdlStorableObject transferable) {
 		this.id = Identifier.valueOf(transferable.id);
 		this.created = new Date(transferable.created);
 		this.modified = new Date(transferable.modified);
@@ -148,7 +149,7 @@ public abstract class StorableObject implements Identifiable,
 
 		this.savedModified = null;
 		this.savedModifierId = null;
-		this.savedVersion = StorableObjectVersion.ILLEGAL_VERSION;		
+		this.savedVersion = StorableObjectVersion.ILLEGAL_VERSION;
 	}
 
 	/**
@@ -206,7 +207,7 @@ public abstract class StorableObject implements Identifiable,
 	 * @param orb
 	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlStorableObject getIdlTransferable(final ORB orb) {
+	protected IdlStorableObject getIdlTransferable(final ORB orb) {
 		return IdlStorableObjectHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -401,7 +402,17 @@ public abstract class StorableObject implements Identifiable,
 		int i = 0;
 		synchronized (storableObjects) {
 			for (final StorableObject storableObject : storableObjects) {
-				transferables[i++] = storableObject.getIdlTransferable(orb);
+				if (!(storableObject instanceof IdlTransferableObjectExt)) {
+					Log.debugMessage(storableObject.getClass().getName() + " doesn't support IDL import/export", SEVERE);
+					continue;
+				}
+				IdlTransferableObjectExt<?> pureJava = (IdlTransferableObjectExt) storableObject;
+				final IDLEntity transferable = pureJava.getIdlTransferable(orb);
+				if (!(transferable instanceof IdlStorableObject)) {
+					Log.debugMessage(transferable.getClass().getName() + " isn't castable to IdlStorableObject", SEVERE);
+					continue;
+				}
+				transferables[i++] = (IdlStorableObject) transferable;
 			}
 		}
 		return transferables;
@@ -668,7 +679,7 @@ public abstract class StorableObject implements Identifiable,
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.147 $, $Date: 2006/03/14 10:48:00 $
+	 * @version $Revision: 1.148 $, $Date: 2006/03/15 14:47:32 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -777,7 +788,7 @@ public abstract class StorableObject implements Identifiable,
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.147 $, $Date: 2006/03/14 10:48:00 $
+	 * @version $Revision: 1.148 $, $Date: 2006/03/15 14:47:32 $
 	 * @module general
 	 */
 	@Retention(SOURCE)

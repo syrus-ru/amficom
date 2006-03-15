@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.117 2006/03/14 10:48:01 bass Exp $
+ * $Id: SiteNodeType.java,v 1.118 2006/03/15 14:47:33 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,6 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.logic.Library;
 import com.syrus.AMFICOM.general.logic.LibraryEntry;
@@ -68,6 +67,7 @@ import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -82,12 +82,13 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: bass $
- * @version $Revision: 1.117 $, $Date: 2006/03/14 10:48:01 $
+ * @version $Revision: 1.118 $, $Date: 2006/03/15 14:47:33 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType
 		implements Characterizable, Namable,
-		LibraryEntry, XmlTransferableObject<XmlSiteNodeType> {
+		LibraryEntry, XmlTransferableObject<XmlSiteNodeType>,
+		IdlTransferableObjectExt<IdlSiteNodeType> {
 
 	public static final String DEFAULT_WELL = "defaultwell";
 	public static final String DEFAULT_PIQUET = "defaultpiquet";
@@ -183,11 +184,9 @@ public final class SiteNodeType extends StorableObjectType
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlSiteNodeType sntt)
 	throws IdlConversionException {
-		final IdlSiteNodeType sntt = (IdlSiteNodeType) transferable;
-		super.fromTransferable(sntt, sntt.codename, sntt.description);
+		super.fromIdlTransferable(sntt, sntt.codename, sntt.description);
 
 		this.name = sntt.name;
 		this.imageId = new Identifier(sntt.imageId);

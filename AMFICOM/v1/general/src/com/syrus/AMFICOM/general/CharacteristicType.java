@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicType.java,v 1.71 2006/03/14 10:48:00 bass Exp $
+ * $Id: CharacteristicType.java,v 1.72 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,18 +29,18 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypeHelper;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicType;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.xml.XmlDataType;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2006/03/14 10:48:00 $
+ * @version $Revision: 1.72 $, $Date: 2006/03/15 14:47:32 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -48,7 +48,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 
 public final class CharacteristicType
 		extends StorableObjectType
-		implements Namable, XmlTransferableObject<XmlCharacteristicType> {
+		implements Namable, XmlTransferableObject<XmlCharacteristicType>,
+		IdlTransferableObjectExt<IdlCharacteristicType> {
 	private static final long serialVersionUID = 6153350736368296076L;
 
 	private String name;
@@ -113,11 +114,9 @@ public final class CharacteristicType
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlCharacteristicType ctt)
 	throws IdlConversionException {
-		final IdlCharacteristicType ctt = (IdlCharacteristicType) transferable;
-		super.fromTransferable(ctt, ctt.codename, ctt.description);
+		super.fromIdlTransferable(ctt, ctt.codename, ctt.description);
 		this.name = ctt.name;
 		this.dataType.fromIdlTransferable(ctt.dataType);
 		this.sort.fromIdlTransferable(ctt.sort);

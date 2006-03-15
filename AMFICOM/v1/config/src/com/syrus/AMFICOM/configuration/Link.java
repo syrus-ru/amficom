@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.79 2006/03/14 10:48:00 bass Exp $
+ * $Id: Link.java,v 1.80 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,15 +25,16 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.79 $, $Date: 2006/03/14 10:48:00 $
+ * @version $Revision: 1.80 $, $Date: 2006/03/15 14:47:32 $
  * @module config
  */
-public final class Link extends AbstractLink {
+public final class Link extends AbstractLink
+		implements IdlTransferableObjectExt<IdlLink> {
 	private static final long serialVersionUID = 3257283626012783672L;
 
 	public Link(final IdlLink idlLink) throws CreateObjectException {
@@ -124,12 +125,10 @@ public final class Link extends AbstractLink {
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlLink idlLink)
 	throws IdlConversionException {
 		try {
-			final IdlLink idlLink = (IdlLink) transferable;
-			super.fromTransferable(idlLink, new Identifier(idlLink.domainId));
+			super.fromIdlTransferable(idlLink, new Identifier(idlLink.domainId));
 	
 			this.name = idlLink.name;
 			this.description = idlLink.description;

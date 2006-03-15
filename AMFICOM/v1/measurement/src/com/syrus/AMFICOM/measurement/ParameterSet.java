@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.27 2006/03/14 10:47:56 bass Exp $
+ * $Id: ParameterSet.java,v 1.28 2006/03/15 14:47:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,21 +25,22 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSet;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2006/03/14 10:47:56 $
+ * @version $Revision: 1.28 $, $Date: 2006/03/15 14:47:30 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class ParameterSet extends StorableObject {
+public final class ParameterSet extends StorableObject
+		implements IdlTransferableObjectExt<IdlParameterSet> {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -126,10 +127,8 @@ public final class ParameterSet extends StorableObject {
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlParameterSet st)
 	throws IdlConversionException {
-		final IdlParameterSet st = (IdlParameterSet)transferable;
 		super.fromIdlTransferable(st);
 		this.sort = st.sort.value();
 		this.description = st.description;

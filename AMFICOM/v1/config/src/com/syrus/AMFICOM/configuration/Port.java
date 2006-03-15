@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.111 2006/03/14 10:48:00 bass Exp $
+ * $Id: Port.java,v 1.112 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,18 +40,19 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.111 $, $Date: 2006/03/14 10:48:00 $
+ * @version $Revision: 1.112 $, $Date: 2006/03/15 14:47:32 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class Port extends StorableObject
-		implements Characterizable, TypedObject<PortType>, ReverseDependencyContainer {
+		implements Characterizable, TypedObject<PortType>,
+		ReverseDependencyContainer, IdlTransferableObjectExt<IdlPort> {
 	private static final long serialVersionUID = -5139393638116159453L;
 
 	private PortType type;
@@ -117,11 +118,9 @@ public final class Port extends StorableObject
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlPort pt)
 	throws IdlConversionException {
 		try {
-			IdlPort pt = (IdlPort) transferable;
 			super.fromIdlTransferable(pt);
 	
 			this.type = (PortType) StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);

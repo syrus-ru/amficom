@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.104 2006/03/14 10:47:56 bass Exp $
+ * $Id: Measurement.java,v 1.105 2006/03/15 14:47:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,22 +27,23 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurement;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.IdlMeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.104 $, $Date: 2006/03/14 10:47:56 $
+ * @version $Revision: 1.105 $, $Date: 2006/03/15 14:47:30 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Measurement extends Action {
+public final class Measurement extends Action
+		implements IdlTransferableObjectExt<IdlMeasurement> {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -107,12 +108,10 @@ public final class Measurement extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlMeasurement mt)
 	throws IdlConversionException {
 		try {
-			final IdlMeasurement mt = (IdlMeasurement) transferable;
-			super.fromTransferable(mt, MeasurementType.fromTransferable(mt.type), new Identifier(mt.monitoredElementId), VOID_IDENTIFIER);
+			super.fromIdlTransferable(mt, MeasurementType.fromTransferable(mt.type), new Identifier(mt.monitoredElementId), VOID_IDENTIFIER);
 	
 			this.setup = (MeasurementSetup) StorableObjectPool.getStorableObject(new Identifier(mt.setupId), true);
 	

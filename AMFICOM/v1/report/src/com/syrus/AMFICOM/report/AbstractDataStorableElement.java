@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractDataStorableElement.java,v 1.3 2006/03/14 10:47:56 bass Exp $
+ * $Id: AbstractDataStorableElement.java,v 1.4 2006/03/15 14:47:29 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,16 +12,14 @@ import java.util.Date;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.report.corba.IdlAbstractData;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
-import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author max
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2006/03/14 10:47:56 $
+ * @version $Revision: 1.4 $, $Date: 2006/03/15 14:47:29 $
  * @module report
  */
 public abstract class AbstractDataStorableElement 
@@ -55,10 +53,18 @@ public abstract class AbstractDataStorableElement
 		this.modelClassName = modelClassName;
 	}
 	
-	@Override
-	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
-	throws IdlConversionException {
-		IdlAbstractData idlAbstractData = (IdlAbstractData) transferable;
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 *
+	 * <p>
+	 * Non-synchronized.
+	 * Non-overriding.
+	 * Non-overridable.
+	 * </p>
+	 *
+	 * @param idlAbstractData
+	 */
+	final void fromIdlTransferable(final IdlAbstractData idlAbstractData) {
 		super.fromIdlTransferable(idlAbstractData);
 		this.reportName = idlAbstractData.reportName;
 		this.modelClassName = idlAbstractData.modelClassName;		

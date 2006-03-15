@@ -24,13 +24,13 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.report.corba.IdlAttachedText;
 import com.syrus.AMFICOM.report.corba.IdlAttachedTextHelper;
 import com.syrus.AMFICOM.report.corba.IdlAttachedTextPackage.IdlFont;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * <p>Title: </p>
@@ -43,7 +43,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
  */
 
 public final class AttachedTextStorableElement extends StorableElement
-{
+		implements IdlTransferableObjectExt<IdlAttachedText> {
 	private static final long serialVersionUID = 276389622206172004L;
 	
 	private String text;
@@ -146,10 +146,8 @@ public final class AttachedTextStorableElement extends StorableElement
 		}
 	}
 	
-	@Override
-	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlAttachedText iat)
 	throws IdlConversionException {
-		IdlAttachedText iat = (IdlAttachedText) transferable;
 		super.fromIdlTransferable(iat);
 		this.text = iat.text;
 		this.verticalAttacherId = new Identifier(iat.verticalAttacherId);
@@ -167,7 +165,7 @@ public final class AttachedTextStorableElement extends StorableElement
 	 * @see com.syrus.AMFICOM.general.StorableObject#getIdlTransferable(ORB)
 	 */
 	@Override
-	public IdlStorableObject getIdlTransferable(final ORB orb) {
+	public IdlAttachedText getIdlTransferable(final ORB orb) {
 		return IdlAttachedTextHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),

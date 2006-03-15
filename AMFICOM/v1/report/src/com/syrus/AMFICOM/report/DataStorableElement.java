@@ -18,12 +18,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.report.corba.IdlData;
 import com.syrus.AMFICOM.report.corba.IdlDataHelper;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * <p>Title: </p>
@@ -36,7 +36,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
  * @module report
  */
 
-public class DataStorableElement extends AbstractDataStorableElement {
+public final class DataStorableElement extends AbstractDataStorableElement
+		implements IdlTransferableObjectExt<IdlData> {
 	private static final long	serialVersionUID	= 3501681877580290043L;
 
 	DataStorableElement(final Identifier id,
@@ -91,10 +92,8 @@ public class DataStorableElement extends AbstractDataStorableElement {
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlData idlData)
 	throws IdlConversionException {
-		IdlData idlData = (IdlData) transferable;  
 		super.fromIdlTransferable(idlData);
 	}
 
@@ -126,7 +125,7 @@ public class DataStorableElement extends AbstractDataStorableElement {
 	}
 
 	@Override
-	public IdlStorableObject getIdlTransferable(ORB orb) {
+	public IdlData getIdlTransferable(ORB orb) {
 		return IdlDataHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),

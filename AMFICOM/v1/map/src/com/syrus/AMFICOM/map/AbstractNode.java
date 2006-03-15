@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.49 2006/03/14 10:48:01 bass Exp $
+ * $Id: AbstractNode.java,v 1.50 2006/03/15 14:47:33 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,16 +10,13 @@ package com.syrus.AMFICOM.map;
 
 import java.util.Date;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlAbstractNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
-import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * Абстрактный класс, описывающий узловой элемент топологической схемы
@@ -27,7 +24,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
  * ({@link #location}) и изображением ({@link #imageId}).
  *
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2006/03/14 10:48:01 $
+ * @version $Revision: 1.50 $, $Date: 2006/03/15 14:47:33 $
  * @module map
  * @see SiteNode
  * @see TopologicalNode
@@ -73,12 +70,8 @@ public abstract class AbstractNode
 		this.location.setLocation(location.getX(), location.getY());
 	}
 
-	AbstractNode(final IdlStorableObject transferable) throws CreateObjectException {
-		try {
-			this.fromIdlTransferable(transferable);
-		} catch (final IdlConversionException ice) {
-			throw new CreateObjectException(ice);
-		}
+	AbstractNode(/*IdlAbstractNode*/) {
+		// super();
 	}
 
 	/**
@@ -98,10 +91,18 @@ public abstract class AbstractNode
 		super(id, importType, entityCode, created, creatorId);
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
-	throws IdlConversionException {
-		IdlAbstractNode idlAbstractNode = (IdlAbstractNode) transferable;
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 *
+	 * <p>
+	 * Non-synchronized.
+	 * Non-overriding.
+	 * Non-overridable.
+	 * </p>
+	 *
+	 * @param idlAbstractNode
+	 */
+	final void fromIdlTransferable(final IdlAbstractNode idlAbstractNode) {
 		super.fromIdlTransferable(idlAbstractNode);
 		this.name = idlAbstractNode.name;
 		this.description = idlAbstractNode.description;		

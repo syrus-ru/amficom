@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.121 2006/03/14 10:47:55 bass Exp $
+ * $Id: SchemePath.java,v 1.122 2006/03/15 14:47:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,6 +66,7 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemePath;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -73,13 +74,14 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.121 $, $Date: 2006/03/14 10:47:55 $
+ * @version $Revision: 1.122 $, $Date: 2006/03/15 14:47:28 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
 		implements Describable, Characterizable,
 		PathOwner<PathElement>, ReverseDependencyContainer,
-		XmlTransferableObject<XmlSchemePath> {
+		XmlTransferableObject<XmlSchemePath>,
+		IdlTransferableObjectExt<IdlSchemePath> {
 	private static final long serialVersionUID = 3257567312831132469L;
 
 	private String name;
@@ -449,15 +451,13 @@ public final class SchemePath extends StorableObject
 	}
 
 	/**
-	 * @param transferable
+	 * @param schemePath
 	 * @throws IdlConversionException
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
-	@Override
-	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	public void fromIdlTransferable(final IdlSchemePath schemePath)
 	throws IdlConversionException {
 		synchronized (this) {
-			final IdlSchemePath schemePath = (IdlSchemePath) transferable;
 			super.fromIdlTransferable(schemePath);
 			this.name = schemePath.name;
 			this.description = schemePath.description;

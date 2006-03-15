@@ -1,5 +1,5 @@
 /*
- * $Id: StorableElement.java,v 1.14 2006/03/14 10:47:56 bass Exp $
+ * $Id: StorableElement.java,v 1.15 2006/03/15 14:47:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,16 +12,14 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.report.corba.IdlAbstractReportElement;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
-import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Maxim Selivanov
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2006/03/14 10:47:56 $
+ * @version $Revision: 1.15 $, $Date: 2006/03/15 14:47:29 $
  * @module report
  */
 public abstract class StorableElement
@@ -117,10 +115,18 @@ public abstract class StorableElement
 		this.reportTemplateId = reportTemplateId;
 	}
 	
-	@Override
-	protected synchronized void fromIdlTransferable(IdlStorableObject transferable)
-	throws IdlConversionException {
-		IdlAbstractReportElement iae = (IdlAbstractReportElement) transferable;
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 *
+	 * <p>
+	 * Non-synchronized.
+	 * Non-overriding.
+	 * Non-overridable.
+	 * </p>
+	 *
+	 * @param iae
+	 */
+	final void fromIdlTransferable(final IdlAbstractReportElement iae) {
 		super.fromIdlTransferable(iae);
 		this.location = new IntPoint(iae.locationX, iae.locationY);
 		this.size = new IntDimension(iae.width, iae.height);

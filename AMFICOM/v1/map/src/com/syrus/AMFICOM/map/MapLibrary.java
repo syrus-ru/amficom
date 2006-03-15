@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.46 2006/03/14 10:48:01 bass Exp $
+ * $Id: MapLibrary.java,v 1.47 2006/03/15 14:47:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,6 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.logic.Library;
 import com.syrus.AMFICOM.general.logic.LibraryEntry;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -58,17 +57,20 @@ import com.syrus.AMFICOM.map.xml.XmlSiteNodeType;
 import com.syrus.AMFICOM.map.xml.XmlSiteNodeTypeSeq;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 
 /**
- * @version $Revision: 1.46 $, $Date: 2006/03/14 10:48:01 $
+ * @version $Revision: 1.47 $, $Date: 2006/03/15 14:47:33 $
  * @author $Author: bass $
  * @module map
  */
 public final class MapLibrary extends StorableObject
-		implements Namable, Library, XmlTransferableObject<XmlMapLibrary> {
+		implements Namable, Library,
+		XmlTransferableObject<XmlMapLibrary>,
+		IdlTransferableObjectExt<IdlMapLibrary> {
 	private static final long	serialVersionUID	= -8616969914711251336L;
 
 	private String name;
@@ -175,10 +177,8 @@ public final class MapLibrary extends StorableObject
 		this.description = description;
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlMapLibrary mlt)
 	throws IdlConversionException {
-		final IdlMapLibrary mlt = (IdlMapLibrary) transferable;
 		super.fromIdlTransferable(mlt);
 
 		this.name = mlt.name;

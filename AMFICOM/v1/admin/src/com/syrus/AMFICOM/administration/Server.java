@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.65 2006/03/14 10:47:59 bass Exp $
+ * $Id: Server.java,v 1.66 2006/03/15 14:47:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,18 +34,19 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2006/03/14 10:47:59 $
+ * @version $Revision: 1.66 $, $Date: 2006/03/15 14:47:31 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 
 public final class Server extends DomainMember
-		implements Characterizable, Namable {
+		implements Characterizable, Namable,
+		IdlTransferableObjectExt<IdlServer> {
 	private static final long serialVersionUID = 1988410957632317660L;
 
 	private String name;
@@ -88,11 +89,9 @@ public final class Server extends DomainMember
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlServer st)
 	throws IdlConversionException {
-		final IdlServer st = (IdlServer) transferable;
-		super.fromTransferable(st, new Identifier(st.domainId));
+		super.fromIdlTransferable(st, new Identifier(st.domainId));
 		this.name = st.name;
 		this.description = st.description;
 		this.hostname = st.hostname;

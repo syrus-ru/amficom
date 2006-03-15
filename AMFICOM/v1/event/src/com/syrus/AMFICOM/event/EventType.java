@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.61 2006/03/14 10:47:58 bass Exp $
+ * $Id: EventType.java,v 1.62 2006/03/15 14:47:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,17 +33,18 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlParameterType;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2006/03/14 10:47:58 $
+ * @version $Revision: 1.62 $, $Date: 2006/03/15 14:47:31 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 
-public final class EventType extends StorableObjectType {
+public final class EventType extends StorableObjectType
+		implements IdlTransferableObjectExt<IdlEventType> {
 	private static final long serialVersionUID = -8660055955879452510L;
 
 	public static final String CODENAME_MEASUREMENT_ALARM = "measurement_alarm";
@@ -119,12 +120,9 @@ public final class EventType extends StorableObjectType {
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlEventType ett)
 	throws IdlConversionException {
-		final IdlEventType ett = (IdlEventType) transferable;
-
-		super.fromTransferable(ett, ett.codename, ett.description);
+		super.fromIdlTransferable(ett, ett.codename, ett.description);
 
 		this.parameterTypes = ParameterType.fromTransferables(ett.parameterTypes);
 

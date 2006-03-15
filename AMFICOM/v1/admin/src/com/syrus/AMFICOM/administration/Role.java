@@ -1,5 +1,5 @@
 /*-
- * $Id: Role.java,v 1.16 2006/03/14 10:47:59 bass Exp $
+ * $Id: Role.java,v 1.17 2006/03/15 14:47:31 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,19 +32,18 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2006/03/14 10:47:59 $
+ * @version $Revision: 1.17 $, $Date: 2006/03/15 14:47:31 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
  */
 
 public final class Role extends StorableObject
-		implements Describable {
+		implements Describable, IdlTransferableObjectExt<IdlRole> {
 	private static final long serialVersionUID = 1530119194975831896L;
 
 	public enum RoleCodename {
@@ -139,17 +138,9 @@ public final class Role extends StorableObject
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @throws IdlConversionException 
 	 */
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) 
+	public synchronized void fromIdlTransferable(final IdlRole rt) 
 	throws IdlConversionException {
-		final IdlRole rt = (IdlRole) transferable;
-		try {
-			super.fromIdlTransferable(rt);
-		}
-		catch (final IdlConversionException ice) {
-			// Never
-			Log.errorMessage(ice);
-		}
+		super.fromIdlTransferable(rt);
 		this.codename = rt.codename;
 		this.description = rt.description;
 

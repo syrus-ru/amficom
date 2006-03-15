@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.35 2006/03/14 10:47:59 bass Exp $
+ * $Id: ServerProcess.java,v 1.36 2006/03/15 14:47:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,17 +27,17 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2006/03/14 10:47:59 $
+ * @version $Revision: 1.36 $, $Date: 2006/03/15 14:47:31 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
-public final class ServerProcess extends StorableObject {
+public final class ServerProcess extends StorableObject
+		implements IdlTransferableObjectExt<IdlServerProcess> {
 	private static final long serialVersionUID = 2216890579914405388L;
 
 	private String codename;
@@ -47,9 +47,14 @@ public final class ServerProcess extends StorableObject {
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * @throws CreateObjectException
 	 */
-	public ServerProcess(final IdlServerProcess spt) {
-		this.fromIdlTransferable(spt);
+	public ServerProcess(final IdlServerProcess spt) throws CreateObjectException {
+		try {
+			this.fromIdlTransferable(spt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -84,15 +89,9 @@ public final class ServerProcess extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) {
-		final IdlServerProcess spt = (IdlServerProcess) transferable;
-		try {
-			super.fromIdlTransferable(spt);
-		} catch (final IdlConversionException ice) {
-			// Never
-			Log.errorMessage(ice);
-		}
+	public synchronized void fromIdlTransferable(final IdlServerProcess spt)
+	throws IdlConversionException {
+		super.fromIdlTransferable(spt);
 		this.codename = spt.codename;
 		this.serverId = new Identifier(spt.serverId);
 		this.userId = new Identifier(spt.userId);

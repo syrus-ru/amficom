@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.86 2006/03/14 10:48:00 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.87 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,18 +36,19 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2006/03/14 10:48:00 $
+ * @version $Revision: 1.87 $, $Date: 2006/03/15 14:47:32 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 
 public final class TransmissionPathType extends StorableObjectType
-		implements Characterizable, Namable, ReverseDependencyContainer {
+		implements Characterizable, Namable, ReverseDependencyContainer,
+		IdlTransferableObjectExt<IdlTransmissionPathType> {
 
 	private static final long serialVersionUID = 5311725679846973948L;
 
@@ -111,11 +112,9 @@ public final class TransmissionPathType extends StorableObjectType
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public synchronized void fromIdlTransferable(final IdlTransmissionPathType tptt)
 	throws IdlConversionException {
-		final IdlTransmissionPathType tptt = (IdlTransmissionPathType) transferable;
-		super.fromTransferable(tptt, tptt.codename, tptt.description);
+		super.fromIdlTransferable(tptt, tptt.codename, tptt.description);
 		this.name = tptt.name;
 	}
 

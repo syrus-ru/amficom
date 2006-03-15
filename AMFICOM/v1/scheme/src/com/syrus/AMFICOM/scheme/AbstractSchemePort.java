@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.93 2006/03/14 10:47:55 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.94 2006/03/15 14:47:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,12 +54,11 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemePort;
 import com.syrus.util.Log;
-import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.93 $, $Date: 2006/03/14 10:47:55 $
+ * @version $Revision: 1.94 $, $Date: 2006/03/15 14:47:28 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -521,15 +520,21 @@ public abstract class AbstractSchemePort
 	}
 
 	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 *
+	 * <p>
+	 * Non-synchronized.
+	 * Non-overriding.
+	 * Non-overridable.
+	 * </p>
+	 *
 	 * @param abstractSchemePort
 	 * @param abstractPortTypeId
 	 * @param abstractPortId
-	 * @throws IdlConversionException
 	 */
-	final void fromTransferable(final IdlAbstractSchemePort abstractSchemePort,
+	final void fromIdlTransferable(final IdlAbstractSchemePort abstractSchemePort,
 			final IdlIdentifier abstractPortTypeId,
-			final IdlIdentifier abstractPortId)
-	throws IdlConversionException {
+			final IdlIdentifier abstractPortId) {
 		super.fromIdlTransferable(abstractSchemePort);
 		this.name = abstractSchemePort.name;
 		this.description = abstractSchemePort.description;
