@@ -1,5 +1,5 @@
 /*-
- * $$Id: NetMapViewer.java,v 1.70 2006/03/09 13:21:42 stas Exp $$
+ * $$Id: NetMapViewer.java,v 1.71 2006/03/15 13:04:01 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * 
- * @version $Revision: 1.70 $, $Date: 2006/03/09 13:21:42 $
+ * @version $Revision: 1.71 $, $Date: 2006/03/15 13:04:01 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -529,7 +529,8 @@ public abstract class NetMapViewer {
 								mne.getMeId(),
 								I18N.getString(MapEditorResourceKeys.ENTITY_MARKER));
 						mapView.addMarker(marker);
-
+						mapView.getMap().setSelected(marker, true);
+						
 						MarkerController mc = (MarkerController)mapViewController.getController(marker);
 						/*
 						if (mne.getSchemePathElementId() != null) {
@@ -563,7 +564,8 @@ public abstract class NetMapViewer {
 								mne.getMeId(),
 								I18N.getString(MapEditorResourceKeys.ENTITY_EVENT));
 						mapView.addMarker(marker);
-
+						mapView.getMap().setSelected(marker, true);
+						
 						MarkerController mc = (MarkerController)mapViewController.getController(marker);
 				/*		if (mne.getSchemePathElementId() != null) {
 							mc.moveToFromStartLo(marker, mne.getSchemePathElementId(), mne.getOpticalDistance());
@@ -609,7 +611,7 @@ public abstract class NetMapViewer {
 						else {
 							marker.setId(mne.getMarkerId());
 						}
-
+						mapView.getMap().setSelected(marker, true);
 						MarkerController mc = (MarkerController)mapViewController.getController(marker);
 /*						if (mne.getSchemePathElementId() != null) {
 							mc.moveToFromStartLo(marker, mne.getSchemePathElementId(), mne.getOpticalDistance());
@@ -638,6 +640,7 @@ public abstract class NetMapViewer {
 					
 					Marker marker = mapView.getMarker(mne.getMarkerId());
 					if(marker != null) {
+						mapView.getMap().setSelected(marker, true);
 						final MeasurementPath measurementPath = marker.getMeasurementPath();
 						
 						final SchemePath schemePath = StorableObjectPool.getStorableObject(mne.getSchemePathId(), true);
