@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.33 2006/02/22 08:57:04 bass Exp $
+ * $Id: LoginProcessor.java,v 1.34 2006/03/15 16:20:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2006/02/22 08:57:04 $
+ * @version $Revision: 1.34 $, $Date: 2006/03/15 16:20:34 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -200,6 +200,22 @@ final class LoginProcessor extends SleepButWorkThread {
 			if (userLogin.getUserId().equals(userId)) {
 				userLogins.add(userLogin);
 			}
+		}
+		return userLogins;
+	}
+
+	/**
+	 * Returns user logins that correspond to <em>all</em> users currently
+	 * logged in.
+	 *
+	 * @return user logins that correspond to <em>all</em> users currently
+	 *         logged in.
+	 * @see #getUserLogins(Identifier)
+	 */
+	static Set<UserLogin> getUserLogins() {
+		final Set<UserLogin> userLogins = new HashSet<UserLogin>();
+		for (final SessionKey sessionKey : loginMap.keySet()) {
+			userLogins.add(loginMap.get(sessionKey));
 		}
 		return userLogins;
 	}
