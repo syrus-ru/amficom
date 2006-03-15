@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicTypeSort.java,v 1.5 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: CharacteristicTypeSort.java,v 1.6 2006/03/15 17:44:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2006/03/15 15:17:43 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2006/03/15 17:44:00 $
  * @module general
  */
 public enum CharacteristicTypeSort {
@@ -61,8 +61,8 @@ public enum CharacteristicTypeSort {
 	 * A mutable holder for immutable enum instances.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.5 $, $Date: 2006/03/15 15:17:43 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.6 $, $Date: 2006/03/15 17:44:00 $
 	 * @module general
 	 */
 	public static final class Proxy
@@ -101,7 +101,7 @@ public enum CharacteristicTypeSort {
 
 		/**
 		 * @param characteristicTypeSort
-		 * @see IdlTransferableObjectExt#fromIdlTransferable(IDLEntity)
+		 * @see IdlTransferableObjectExt#fromIdlTransferable(org.omg.CORBA.portable.IDLEntity)
 		 */
 		public void fromIdlTransferable(final IdlCharacteristicTypeSort characteristicTypeSort) {
 			this.value = valueOf(characteristicTypeSort);
