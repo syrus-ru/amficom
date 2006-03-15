@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.148 2006/03/15 14:47:32 bass Exp $
+ * $Id: StorableObject.java,v 1.149 2006/03/15 15:16:16 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,17 @@
 
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECTS_NOT_OF_THE_SAME_GROUP;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -25,7 +31,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.bugs.Crutch134;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
@@ -34,16 +39,19 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
+import com.syrus.util.Wrapper;
 import com.syrus.util.LRUMap.Retainable;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
+import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.148 $, $Date: 2006/03/15 14:47:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.149 $, $Date: 2006/03/15 15:16:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public abstract class StorableObject implements Identifiable, Retainable {
+public abstract class StorableObject implements Identifiable,
+		IdlTransferableObject<IdlStorableObject>, Retainable {
 	private static final long serialVersionUID = 3904998894075738999L;
 
 	protected Identifier id;
@@ -100,7 +108,7 @@ public abstract class StorableObject implements Identifiable, Retainable {
 
 		this.savedModified = null;
 		this.savedModifierId = null;
-		this.savedVersion = StorableObjectVersion.ILLEGAL_VERSION;
+		this.savedVersion = ILLEGAL_VERSION;
 	}
 
 	/**
@@ -123,21 +131,19 @@ public abstract class StorableObject implements Identifiable, Retainable {
 				created, // two separate objects are created in underlying ctor.
 				creatorId,
 				creatorId,
-				StorableObjectVersion.INITIAL_VERSION);
+				INITIAL_VERSION);
 	}
 
 	/**
+	 *
+	 * Will be overridden by descendants.
+	 *
 	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 *
-	 * <p>
-	 * Non-synchronized.
-	 * Non-overriding.
-	 * Non-overridable.
-	 * </p>
-	 *
-	 * @param transferable
+	 * @throws ApplicationException
 	 */
-	protected final void fromIdlTransferable(final IdlStorableObject transferable) {
+	@SuppressWarnings("unused")
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		this.id = Identifier.valueOf(transferable.id);
 		this.created = new Date(transferable.created);
 		this.modified = new Date(transferable.modified);
@@ -149,7 +155,7 @@ public abstract class StorableObject implements Identifiable, Retainable {
 
 		this.savedModified = null;
 		this.savedModifierId = null;
-		this.savedVersion = StorableObjectVersion.ILLEGAL_VERSION;
+		this.savedVersion = ILLEGAL_VERSION;		
 	}
 
 	/**
@@ -185,6 +191,8 @@ public abstract class StorableObject implements Identifiable, Retainable {
 	 * @return <code>Set</code> of {@link Identifiable} - dependencies of this object.
 	 */
 	public final Set<Identifiable> getDependencies() {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.getDependenciesTmpl());
 		dependencies.add(this.creatorId);
@@ -207,7 +215,7 @@ public abstract class StorableObject implements Identifiable, Retainable {
 	 * @param orb
 	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
-	protected IdlStorableObject getIdlTransferable(final ORB orb) {
+	public IdlStorableObject getIdlTransferable(final ORB orb) {
 		return IdlStorableObjectHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -288,14 +296,14 @@ public abstract class StorableObject implements Identifiable, Retainable {
 	protected final void cleanupUpdate() {
 		this.savedModified = null;
 		this.savedModifierId = null;
-		this.savedVersion = StorableObjectVersion.ILLEGAL_VERSION;
+		this.savedVersion = ILLEGAL_VERSION;
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected final void rollbackUpdate() {
-		if (this.savedModified == null || this.savedModifierId == null || this.savedVersion == StorableObjectVersion.ILLEGAL_VERSION) {
+		if (this.savedModified == null || this.savedModifierId == null || this.savedVersion == ILLEGAL_VERSION) {
 			Log.errorMessage("Cannot rollback update of object: '" + this.id + "', entity: '" + ObjectEntities.codeToString(this.id.getMajor())
 					+ "' -- saved values are in illegal states!");
 			return;
@@ -368,7 +376,7 @@ public abstract class StorableObject implements Identifiable, Retainable {
 		 * Initialize version vith 0L, like for all newly created
 		 * objects.
 		 */
-		clone.version = StorableObjectVersion.INITIAL_VERSION;
+		clone.version = INITIAL_VERSION;
 
 		clone.changed = false;
 		clone.markAsChanged();
@@ -396,23 +404,13 @@ public abstract class StorableObject implements Identifiable, Retainable {
 	}
 
 	public static final IdlStorableObject[] createTransferables(final Set<? extends StorableObject> storableObjects, final ORB orb) {
-		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert storableObjects != null : NON_NULL_EXPECTED;
 
 		final IdlStorableObject[] transferables = new IdlStorableObject[storableObjects.size()];
 		int i = 0;
 		synchronized (storableObjects) {
 			for (final StorableObject storableObject : storableObjects) {
-				if (!(storableObject instanceof IdlTransferableObjectExt)) {
-					Log.debugMessage(storableObject.getClass().getName() + " doesn't support IDL import/export", SEVERE);
-					continue;
-				}
-				IdlTransferableObjectExt<?> pureJava = (IdlTransferableObjectExt) storableObject;
-				final IDLEntity transferable = pureJava.getIdlTransferable(orb);
-				if (!(transferable instanceof IdlStorableObject)) {
-					Log.debugMessage(transferable.getClass().getName() + " isn't castable to IdlStorableObject", SEVERE);
-					continue;
-				}
-				transferables[i++] = (IdlStorableObject) transferable;
+				transferables[i++] = storableObject.getIdlTransferable(orb);
 			}
 		}
 		return transferables;
@@ -420,7 +418,7 @@ public abstract class StorableObject implements Identifiable, Retainable {
 
 	@SuppressWarnings("unchecked")
 	public static final <T extends StorableObject> Set<T> fromTransferables(final IdlStorableObject[] storableObjectsT) {
-		assert storableObjectsT != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert storableObjectsT != null : NON_NULL_EXPECTED;
 
 		final Set<T> storableObjects = new HashSet<T>();
 		for (final IdlStorableObject idlStorableObject : storableObjectsT) {
@@ -499,7 +497,7 @@ public abstract class StorableObject implements Identifiable, Retainable {
 		short entityCode = VOID_IDENTIFIER.getMajor();
 		int i = 0;
 		for (; i < length; i++) {
-			final Identifier id = new Identifier(ids[i]);
+			final Identifier id = Identifier.valueOf(ids[i]);
 			if (id.isVoid()) {
 				continue;
 			}
@@ -507,7 +505,7 @@ public abstract class StorableObject implements Identifiable, Retainable {
 			break;
 		}
 		for (; i < length; i++) {
-			final Identifier id = new Identifier(ids[i]);
+			final Identifier id = Identifier.valueOf(ids[i]);
 			if (id.isVoid()) {
 				continue;
 			}
@@ -559,8 +557,8 @@ public abstract class StorableObject implements Identifiable, Retainable {
 	 *         <code>short</code>.
 	 */
 	public static final short getEntityCodeOfIdentifiables(final Set<? extends Identifiable> identifiables) {
-		assert identifiables != null && !identifiables.isEmpty() : ErrorMessages.NON_EMPTY_EXPECTED;
-		assert hasSingleTypeEntities(identifiables) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
+		assert identifiables != null && !identifiables.isEmpty() : NON_EMPTY_EXPECTED;
+		assert hasSingleTypeEntities(identifiables) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
 		synchronized (identifiables) {
 			for (final Identifiable identifiable : identifiables) {
@@ -595,10 +593,10 @@ public abstract class StorableObject implements Identifiable, Retainable {
 	 */
 	public static final short getEntityCodeOfIdentifiables(final IdlIdentifier[] ids) {
 		assert ids != null && ids.length != 0;
-		assert hasSingleTypeEntities(ids) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
+		assert hasSingleTypeEntities(ids) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
 		for (final IdlIdentifier idlIdentifier : ids) {
-			final Identifier id = new Identifier(idlIdentifier);
+			final Identifier id = Identifier.valueOf(idlIdentifier);
 			if (id.isVoid()) {
 				continue;
 			}
@@ -622,9 +620,24 @@ public abstract class StorableObject implements Identifiable, Retainable {
 	 */
 	public static final short getGroupCodeOfIdentifiables(final Set<? extends Identifiable> identifiables) {
 		assert identifiables != null && !identifiables.isEmpty();
-		assert hasSingleGroupEntities(identifiables) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_GROUP;
+		assert hasSingleGroupEntities(identifiables) : OBJECTS_NOT_OF_THE_SAME_GROUP;
 
 		return ObjectGroupEntities.getGroupCode(identifiables.iterator().next().getId().getMajor());
+	}
+
+	public static <T extends StorableObject, V> Map<Identifier, V> createValuesMap(final Set<T> storableObjects, final String key) {
+		assert storableObjects != null : NON_NULL_EXPECTED;
+		assert !storableObjects.isEmpty() : NON_EMPTY_EXPECTED;
+		assert hasSingleTypeEntities(storableObjects) :  OBJECTS_NOT_OF_THE_SAME_ENTITY;
+
+		final Wrapper storableObjectWrapper = storableObjects.iterator().next().getWrapper();
+		final Map<Identifier, V> valuesMap = new HashMap<Identifier, V>();
+		for (final T storableObject : storableObjects) {
+			final V value = (V) storableObjectWrapper.getValue(storableObject, key);
+			valuesMap.put(storableObject.getId(), value);
+		}
+
+		return valuesMap;
 	}
 
 	/*-********************************************************************
@@ -678,8 +691,8 @@ public abstract class StorableObject implements Identifiable, Retainable {
 	 * in Eclipse 3.2.0M4 which prevents this class from being protected.</p>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.148 $, $Date: 2006/03/15 14:47:32 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.149 $, $Date: 2006/03/15 15:16:16 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -787,8 +800,8 @@ public abstract class StorableObject implements Identifiable, Retainable {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.148 $, $Date: 2006/03/15 14:47:32 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.149 $, $Date: 2006/03/15 15:16:16 $
 	 * @module general
 	 */
 	@Retention(SOURCE)

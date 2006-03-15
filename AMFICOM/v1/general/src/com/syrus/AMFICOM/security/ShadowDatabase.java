@@ -1,5 +1,5 @@
 /*
- * $Id: ShadowDatabase.java,v 1.2 2006/02/21 13:41:34 arseniy Exp $
+ * $Id: ShadowDatabase.java,v 1.3 2006/03/15 15:17:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2006/02/21 13:41:34 $
+ * @version $Revision: 1.3 $, $Date: 2006/03/15 15:17:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver

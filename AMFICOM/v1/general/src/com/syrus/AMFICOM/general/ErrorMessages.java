@@ -1,5 +1,5 @@
 /*-
- * $Id: ErrorMessages.java,v 1.28 2005/12/14 13:25:51 bass Exp $
+ * $Id: ErrorMessages.java,v 1.29 2006/03/15 15:17:43 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,17 +10,19 @@ package com.syrus.AMFICOM.general;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/12/14 13:25:51 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2006/03/15 15:17:43 $
  * @module general
  */
 public final class ErrorMessages {
 	public static final String NOT_LOGGED_IN = "NOT_LOGGED_IN";
+	public static final String OBJECT_NOT_FOUND = "Object not found";
 	public static final String OBJECT_NOT_INITIALIZED = "object not initialized yet";
 	public static final String NON_NULL_EXPECTED = "non-null value expected";
 	public static final String NON_ZERO_EXPECTED = "non-zero value expected";
 	public static final String NON_EMPTY_EXPECTED = "both non-null and non-empty string/array value expected";
 	public static final String NON_VOID_EXPECTED = "both non-null and non-void identifier expected";
+	public static final String ONLY_ONE_EXPECTED = "Only one object expected";
 	public static final String CIRCULAR_DEPS_PROHIBITED = "circular dependencies not allowed";
 	public static final String EXACTLY_ONE_PARENT_REQUIRED = "exactly one parent required";
 	public static final String REMOVAL_OF_AN_ABSENT_PROHIBITED = "this collection is missing the element to be removed; removal of an absent member not allowed";

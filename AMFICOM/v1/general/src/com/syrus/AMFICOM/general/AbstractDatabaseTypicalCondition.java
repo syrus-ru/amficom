@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.23 2005/11/11 09:15:16 arseniy Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.24 2006/03/15 15:17:43 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,25 +19,24 @@ import static com.syrus.AMFICOM.general.StorableObjectDatabase.NOT_EQUALS;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_AND;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FROM;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FUNCTION_UPPER;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_IN;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_LIKE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_PATTERN_CHARACTERS;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_SELECT;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FUNCTION_UPPER;
 
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.TypicalSort;
-import com.syrus.util.EnumUtil;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/11/11 09:15:16 $
+ * @version $Revision: 1.24 $, $Date: 2006/03/15 15:17:43 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -72,7 +71,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 				return StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET
 						+ SQL_SELECT + this.getLinkedThisColumnName()
 						+ SQL_FROM + this.getLinkedTableName()
-						+ SQL_WHERE + this.getLinkedColumnName() + EQUALS + EnumUtil.getCode(e)
+						+ SQL_WHERE + this.getLinkedColumnName() + EQUALS + e.ordinal()
 						+ CLOSE_BRACKET;
 			default:
 				Log.errorMessage("Illegal type of condition: " + this.condition.getType().value());
@@ -92,12 +91,12 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 					case OperationSort._OPERATION_EQUALS:
 						buffer.append(this.getColumnName());
 						buffer.append(EQUALS);
-						buffer.append(EnumUtil.getCode((Enum) this.condition.getValue()));
+						buffer.append(((Enum) this.condition.getValue()).ordinal());
 						break;
 					case OperationSort._OPERATION_NOT_EQUALS:
 						buffer.append(this.getColumnName());
 						buffer.append(NOT_EQUALS);
-						buffer.append(EnumUtil.getCode((Enum) this.condition.getValue()));
+						buffer.append(((Enum) this.condition.getValue()).ordinal());
 						break;
 					case OperationSort._OPERATION_IN:
 						buffer.append(this.getLinkedSubQuery());

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.109 2006/03/15 14:47:32 bass Exp $
+ * $Id: TransmissionPath.java,v 1.110 2006/03/15 15:18:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHI
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -38,11 +39,11 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 /**
- * @version $Revision: 1.109 $, $Date: 2006/03/15 14:47:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.110 $, $Date: 2006/03/15 15:18:30 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -50,9 +51,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 public final class TransmissionPath extends DomainMember
 		implements MonitoredDomainMember,
 		Characterizable,
-		TypedObject<TransmissionPathType>, ReverseDependencyContainer,
-		IdlTransferableObjectExt<IdlTransmissionPath> {
-
+		TypedObject<TransmissionPathType>, ReverseDependencyContainer {
 	private static final long serialVersionUID = 8129503678304843903L;
 
 	private TransmissionPathType type;
@@ -111,7 +110,7 @@ public final class TransmissionPath extends DomainMember
 		try {
 			final TransmissionPath transmissionPath = new TransmissionPath(IdentifierPool.getGeneratedIdentifier(TRANSMISSIONPATH_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					name,
 					description,
@@ -129,20 +128,23 @@ public final class TransmissionPath extends DomainMember
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlTransmissionPath tpt)
-	throws IdlConversionException {
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
+		final IdlTransmissionPath tpt = (IdlTransmissionPath) transferable;
+		super.fromTransferable(tpt, new Identifier(tpt.domainId));
+
 		try {
-			super.fromIdlTransferable(tpt, new Identifier(tpt.domainId));
-	
-			this.type = (TransmissionPathType) StorableObjectPool.getStorableObject(new Identifier(tpt._typeId), true);
-	
-			this.name = tpt.name;
-			this.description = tpt.description;
-			this.startPortId = new Identifier(tpt.startPortId);
-			this.finishPortId = new Identifier(tpt.finishPortId);
+			this.type = StorableObjectPool.getStorableObject(new Identifier(tpt._typeId), true);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}
+
+		this.name = tpt.name;
+		this.description = tpt.description;
+		this.startPortId = new Identifier(tpt.startPortId);
+		this.finishPortId = new Identifier(tpt.finishPortId);
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -151,6 +153,7 @@ public final class TransmissionPath extends DomainMember
 	 */
 	@Override
 	public IdlTransmissionPath getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlTransmissionPathHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -235,8 +238,6 @@ public final class TransmissionPath extends DomainMember
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.type);
 		dependencies.add(this.startPortId);

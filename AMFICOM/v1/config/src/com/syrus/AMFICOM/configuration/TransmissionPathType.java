@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.87 2006/03/15 14:47:32 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.88 2006/03/15 15:18:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHI
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -36,20 +37,18 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2006/03/15 14:47:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.88 $, $Date: 2006/03/15 15:18:30 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 
 public final class TransmissionPathType extends StorableObjectType
-		implements Characterizable, Namable, ReverseDependencyContainer,
-		IdlTransferableObjectExt<IdlTransmissionPathType> {
-
+		implements Characterizable, Namable, ReverseDependencyContainer {
 	private static final long serialVersionUID = 5311725679846973948L;
 
 	private String name;
@@ -97,7 +96,7 @@ public final class TransmissionPathType extends StorableObjectType
 		try {
 			final TransmissionPathType transmissionPathType = new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(TRANSPATH_TYPE_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					codename,
 					description,
 					name);
@@ -112,10 +111,13 @@ public final class TransmissionPathType extends StorableObjectType
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlTransmissionPathType tptt)
-	throws IdlConversionException {
-		super.fromIdlTransferable(tptt, tptt.codename, tptt.description);
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
+		final IdlTransmissionPathType tptt = (IdlTransmissionPathType) transferable;
+		super.fromTransferable(tptt, tptt.codename, tptt.description);
 		this.name = tptt.name;
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -124,6 +126,7 @@ public final class TransmissionPathType extends StorableObjectType
 	 */
 	@Override
 	public IdlTransmissionPathType getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlTransmissionPathTypeHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -160,8 +163,6 @@ public final class TransmissionPathType extends StorableObjectType
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		return Collections.emptySet();
 	}
 

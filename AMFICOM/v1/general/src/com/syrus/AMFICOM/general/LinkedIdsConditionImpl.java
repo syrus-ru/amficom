@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.26 2006/03/13 13:54:02 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.27 2006/03/15 15:17:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2006/03/13 13:54:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2006/03/15 15:17:43 $
+ * @author $Author: arseniy $
  * @module general
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {

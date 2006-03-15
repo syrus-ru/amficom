@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.112 2006/03/15 14:47:32 bass Exp $
+ * $Id: Port.java,v 1.113 2006/03/15 15:18:30 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -40,19 +41,18 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.112 $, $Date: 2006/03/15 14:47:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.113 $, $Date: 2006/03/15 15:18:30 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class Port extends StorableObject
-		implements Characterizable, TypedObject<PortType>,
-		ReverseDependencyContainer, IdlTransferableObjectExt<IdlPort> {
+		implements Characterizable, TypedObject<PortType>, ReverseDependencyContainer {
 	private static final long serialVersionUID = -5139393638116159453L;
 
 	private PortType type;
@@ -103,7 +103,7 @@ public final class Port extends StorableObject
 		try {
 			final Port port = new Port(IdentifierPool.getGeneratedIdentifier(PORT_CODE),
 						creatorId,
-						StorableObjectVersion.INITIAL_VERSION,
+						INITIAL_VERSION,
 						type,
 						description,
 						equipmentId);
@@ -118,20 +118,22 @@ public final class Port extends StorableObject
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlPort pt)
-	throws IdlConversionException {
+	@Override
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
+		final IdlPort pt = (IdlPort) transferable;
+		super.fromIdlTransferable(pt);
+
 		try {
-			super.fromIdlTransferable(pt);
-	
-			this.type = (PortType) StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);
-	
-			this.description = pt.description;
-			this.equipmentId = new Identifier(pt.equipmentId);
+			this.type = StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}
+
+		this.description = pt.description;
+		this.equipmentId = new Identifier(pt.equipmentId);
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
-	
 
 	/**
 	 * @param orb
@@ -139,6 +141,7 @@ public final class Port extends StorableObject
 	 */
 	@Override
 	public IdlPort getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlPortHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -173,6 +176,10 @@ public final class Port extends StorableObject
 		return this.equipmentId;
 	}
 
+	public Equipment getEquipment() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.equipmentId, true);
+	}
+
 	protected synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
@@ -193,8 +200,6 @@ public final class Port extends StorableObject
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
 		dependencies.add(this.type);
 		dependencies.add(this.equipmentId);

@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicTypeSort.java,v 1.4 2005/12/07 19:58:56 bass Exp $
+ * $Id: CharacteristicTypeSort.java,v 1.5 2006/03/15 15:17:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.general;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicTypeSort;
@@ -19,8 +18,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/12/07 19:58:56 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2006/03/15 15:17:43 $
  * @module general
  */
 public enum CharacteristicTypeSort {
@@ -62,8 +61,8 @@ public enum CharacteristicTypeSort {
 	 * A mutable holder for immutable enum instances.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.4 $, $Date: 2005/12/07 19:58:56 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.5 $, $Date: 2006/03/15 15:17:43 $
 	 * @module general
 	 */
 	public static final class Proxy
@@ -135,5 +134,10 @@ public enum CharacteristicTypeSort {
 		throws XmlConversionException {
 			this.value = valueOf(characteristicTypeSort);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return this.name() + "(" + Integer.toString(this.ordinal()) + ")";
 	}
 }
