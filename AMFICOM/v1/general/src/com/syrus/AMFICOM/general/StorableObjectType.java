@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectType.java,v 1.34.2.1 2006/02/22 15:46:51 arseniy Exp $
+ * $Id: StorableObjectType.java,v 1.34.2.2 2006/03/15 13:28:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,15 +15,16 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.34.2.1 $, $Date: 2006/02/22 15:46:51 $
+ * @version $Revision: 1.34.2.2 $, $Date: 2006/03/15 13:28:07 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public abstract class StorableObjectType<T extends StorableObjectType<T>>
-		extends StorableObject<T> {
+public abstract class StorableObjectType
+		extends StorableObject {
 	static final long serialVersionUID = 6253817645176813979L;
 
 	protected String codename;
@@ -73,8 +74,8 @@ public abstract class StorableObjectType<T extends StorableObjectType<T>>
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected synchronized void fromTransferable(final IdlStorableObject transferable, final String codename1, final String description1)
-			throws ApplicationException {
-		super.fromTransferable(transferable);
+			throws IdlConversionException {
+		super.fromIdlTransferable(transferable);
 		this.codename = codename1;
 		this.description = description1;
 	}
@@ -136,7 +137,7 @@ public abstract class StorableObjectType<T extends StorableObjectType<T>>
 		this.description = description;
 	}
 
-	public static <T extends StorableObjectType<T>> Map<String, T> createCodenamesMap(final Set<T> storableObjectTypes) {
+	public static <T extends StorableObjectType> Map<String, T> createCodenamesMap(final Set<T> storableObjectTypes) {
 		final Map<String, T> codenamesMap = new HashMap<String, T>();
 		for (final T storableObjectType : storableObjectTypes) {
 			codenamesMap.put(storableObjectType.getCodename(), storableObjectType);

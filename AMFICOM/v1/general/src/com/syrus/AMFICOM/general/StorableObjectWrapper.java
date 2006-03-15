@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.20.2.2 2006/02/27 16:13:50 arseniy Exp $
+ * $Id: StorableObjectWrapper.java,v 1.20.2.3 2006/03/15 13:28:07 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Wrapper;
  * a static method <code>getInstance()</code>.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.20.2.2 $, $Date: 2006/02/27 16:13:50 $
+ * @version $Revision: 1.20.2.3 $, $Date: 2006/03/15 13:28:07 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
@@ -82,15 +82,17 @@ public abstract class StorableObjectWrapper<T extends StorableObject> implements
 			final Throwable cause = e.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
-				if (message == null)
+				if (message == null) {
 					assert false;
-				else
-					assert false: message;
-			} else				
+				} else {
+					assert false : message;
+				}
+			} else {
 				throw new IllegalDataException("StorableObjectWrapper.getWrapper | Caught " + e.getMessage());
+			}
 		}
 		return wrapper;
-	}	
+	}
 
 	public Object getValue(final T object, final String key) {
 		if (object != null) {
@@ -118,7 +120,7 @@ public abstract class StorableObjectWrapper<T extends StorableObject> implements
 	 */
 	public abstract void setValue(final T storableObject, final String key, final Object value) throws PropertyChangeException;
 
-	public Class getPropertyClass(String key) {
+	public Class<?> getPropertyClass(String key) {
 		if (key.equals(COLUMN_ID)
 				|| key.equals(COLUMN_CREATOR_ID)
 				|| key.equals(COLUMN_MODIFIER_ID)) {

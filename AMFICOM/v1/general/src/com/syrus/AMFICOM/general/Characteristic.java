@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.89.2.2 2006/02/28 15:20:02 arseniy Exp $
+ * $Id: Characteristic.java,v 1.89.2.3 2006/03/15 13:28:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,16 +32,17 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.89.2.2 $, $Date: 2006/02/28 15:20:02 $
+ * @version $Revision: 1.89.2.3 $, $Date: 2006/03/15 13:28:07 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public final class Characteristic extends AbstractCloneableStorableObject<Characteristic>
+public final class Characteristic extends AbstractCloneableStorableObject
 		implements TypedObject<CharacteristicType>,
 		ReverseDependencyContainer,
 		XmlTransferableObject<XmlCharacteristic> {
@@ -96,20 +97,25 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	private boolean visible;
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
+	 * 
 	 * @param ct
 	 * @throws CreateObjectException
 	 */
 	public Characteristic(final IdlCharacteristic ct) throws CreateObjectException {
 		try {
-			this.fromTransferable(ct);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(ct);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	Characteristic(final Identifier id,
 			final Identifier creatorId,
@@ -121,12 +127,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 			final Identifier characterizableId,
 			final boolean editable,
 			final boolean visible) {
-		super(id,
-				new Date(),
-				new Date(),
-				creatorId,
-				creatorId,
-				version);
+		super(id, new Date(), new Date(), creatorId, creatorId, version);
 		this.type = type;
 		this.name = name;
 		this.description = description;
@@ -139,18 +140,15 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 
 	/**
 	 * Minimalistic constructor used when importing from XML.
-	 *
+	 * 
 	 * @param id
 	 * @param importType
 	 * @param created
 	 * @param creatorId
 	 * @throws IdentifierGenerationException
 	 */
-	private Characteristic(final XmlIdentifier id,
-			final String importType,
-			final Date created,
-			final Identifier creatorId)
-	throws IdentifierGenerationException {
+	private Characteristic(final XmlIdentifier id, final String importType, final Date created, final Identifier creatorId)
+			throws IdentifierGenerationException {
 		super(id, importType, CHARACTERISTIC_CODE, created, creatorId);
 	}
 
@@ -172,14 +170,14 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	 * 
 	 * @param creatorId
 	 * @param type
-	 *          see {@link CharacteristicType}
+	 *        see {@link CharacteristicType}
 	 * @param name
 	 * @param description
 	 * @param value
 	 * @param parentCharacterizable
 	 * @throws CreateObjectException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
+	@ParameterizationPending(value = { "final boolean usePool" })
 	public static Characteristic createInstance(final Identifier creatorId,
 			final CharacteristicType type,
 			final String name,
@@ -232,11 +230,9 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	 * @param importType
 	 * @throws CreateObjectException
 	 */
-	public static Characteristic createInstance(
-			final Identifier creatorId,
+	public static Characteristic createInstance(final Identifier creatorId,
 			final XmlCharacteristic xmlCharacteristic,
-			final String importType)
-	throws CreateObjectException {
+			final String importType) throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
@@ -245,18 +241,12 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
 			Characteristic characteristic;
 			if (id.isVoid()) {
-				characteristic = new Characteristic(xmlId,
-						importType,
-						created,
-						creatorId);
+				characteristic = new Characteristic(xmlId, importType, created, creatorId);
 			} else {
 				characteristic = StorableObjectPool.getStorableObject(id, true);
 				if (characteristic == null) {
 					LocalXmlIdentifierPool.remove(xmlId, importType);
-					characteristic = new Characteristic(xmlId,
-							importType,
-							created,
-							creatorId);
+					characteristic = new Characteristic(xmlId, importType, created, creatorId);
 				}
 			}
 			characteristic.fromXmlTransferable(xmlCharacteristic, importType);
@@ -273,22 +263,28 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlCharacteristic ct = (IdlCharacteristic) transferable;
-		
-		super.fromTransferable(ct);
-		
-		this.type = StorableObjectPool.getStorableObject(Identifier.valueOf(ct._typeId), true);
+		super.fromIdlTransferable(ct);
+
+		try {
+			this.type = StorableObjectPool.getStorableObject(Identifier.valueOf(ct._typeId), true);
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
+
 		this.name = ct.name;
 		this.description = ct.description;
 		this.value = ct.value;
 		this.parentCharacterizableId = Identifier.valueOf(ct.characterizableId);
 		this.editable = ct.editable;
 		this.visible = ct.visible;
-		
+
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
@@ -296,7 +292,8 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	 * @param characteristic
 	 * @param importType
 	 * @throws XmlConversionException
-	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject,
+	 *      String)
 	 */
 	public void fromXmlTransferable(final XmlCharacteristic characteristic,
 			final String importType)
@@ -360,13 +357,11 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject,
+	 *      String, boolean)
 	 */
-	public void getXmlTransferable(
-			final XmlCharacteristic characteristic,
-			final String importType,
-			final boolean usePool)
-	throws XmlConversionException {
+	public void getXmlTransferable(final XmlCharacteristic characteristic, final String importType, final boolean usePool)
+			throws XmlConversionException {
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		try {
@@ -405,21 +400,25 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	public boolean isVisible() {
 		return this.visible;
 	}
-	
+
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	protected void setEditable0(final boolean editable) {
 		this.editable = editable;
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	protected void setVisible0(final boolean visible) {
 		this.visible = visible;
 	}
-	
+
 	public void setEditable(final boolean editable) {
 		this.setEditable0(editable);
 		super.markAsChanged();
@@ -440,7 +439,9 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	protected void setType0(final CharacteristicType type) {
 		checkTypeValid(type);
@@ -456,9 +457,11 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 		assert this.isNameValid();
 		return this.name;
 	}
-	
+
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	protected void setName0(final String name) {
 		checkNameValid(name);
@@ -470,14 +473,15 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 		super.markAsChanged();
 	}
 
-
 	public String getDescription() {
 		assert this.isDescriptionValid();
 		return this.description;
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	protected void setDescription0(final String description) {
 		checkDescriptionValid(description);
@@ -490,8 +494,8 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	}
 
 	/**
-	 * This method returns the data this characteristic holds. It's in no
-	 * way connected with {@link StorableObject#getValue(String)}. 
+	 * This method returns the data this characteristic holds. It's in no way
+	 * connected with {@link StorableObject#getValue(String)}.
 	 */
 	public String getValue() {
 		assert this.isValueValid();
@@ -521,12 +525,11 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 
 	/**
 	 * A wrapper around {@link #getParentCharacterizableId()}.
-	 *
+	 * 
 	 * @throws ApplicationException
 	 * @todo add check whether parentCharacterizable is non-null.
 	 */
 	public Characterizable getParentCharacterizable() throws ApplicationException {
-		@SuppressWarnings("unchecked")
 		final StorableObject storableObject = StorableObjectPool.getStorableObject(this.getParentCharacterizableId(), true);
 		if (storableObject == null || storableObject instanceof Characterizable) {
 			return (Characterizable) storableObject;
@@ -535,34 +538,32 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	}
 
 	/**
-	 * A wrapper around {@link #setParentCharacterizable(Characterizable, boolean)}.
-	 *
+	 * A wrapper around
+	 * {@link #setParentCharacterizable(Characterizable, boolean)}.
+	 * 
 	 * @param parentCharacterizableId
 	 * @param usePool
 	 * @throws ApplicationException
 	 * @bug current code permits orphan characteristics.
 	 */
-	public void setParentCharacterizableId(
-			final Identifier parentCharacterizableId,
-			final boolean usePool)
-	throws ApplicationException {
+	public void setParentCharacterizableId(final Identifier parentCharacterizableId, final boolean usePool)
+			throws ApplicationException {
 		checkParentCaharacterizableIdValid(parentCharacterizableId);
 		/*
-		 * Further check for identifier validity (e. g.: major corresponds to some specific
-		 * entity code) cannot be performed since multiple StorableObject descendants may
-		 * implement Characterizable (in other words, we don't have a special
-		 * CHARACTERIZABLE_CODE).
+		 * Further check for identifier validity (e. g.: major corresponds to
+		 * some specific entity code) cannot be performed since multiple
+		 * StorableObject descendants may implement Characterizable (in other
+		 * words, we don't have a special CHARACTERIZABLE_CODE).
 		 */
 
 		if (this.parentCharacterizableId.equals(parentCharacterizableId)) {
 			return;
 		}
 
-		@SuppressWarnings("unchecked")
 		final StorableObject storableObject = StorableObjectPool.getStorableObject(parentCharacterizableId, true);
 		/*
-		 * The situation when null StorableObject is returned is unusual, and must be
-		 * handled somehow. However, currently it is not.
+		 * The situation when null StorableObject is returned is unusual, and
+		 * must be handled somehow. However, currently it is not.
 		 */
 		if (storableObject == null || storableObject instanceof Characterizable) {
 			this.setParentCharacterizable((Characterizable) storableObject, usePool);
@@ -577,10 +578,8 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	 * @throws ApplicationException
 	 * @bug current code permits orphan characteristics.
 	 */
-	public void setParentCharacterizable(
-			final Characterizable parentCharacterizable,
-			final boolean usePool)
-	throws ApplicationException {
+	public void setParentCharacterizable(final Characterizable parentCharacterizable, final boolean usePool)
+			throws ApplicationException {
 		final Identifier newParentCharacterizableId = Identifier.possiblyVoid(parentCharacterizable);
 		if (this.parentCharacterizableId.equals(newParentCharacterizableId)) {
 			return;
@@ -599,7 +598,9 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	protected void setAttributes(final Date created,
 			final Date modified,
@@ -614,11 +615,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 			final boolean editable,
 			final boolean visible) {
 		synchronized (this) {
-			super.setAttributes(created,
-					modified,
-					creatorId,
-					modifierId,
-					version);
+			super.setAttributes(created, modified, creatorId, modifierId, version);
 			this.type = type;
 			this.name = name;
 			this.description = description;
@@ -632,7 +629,9 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
@@ -643,7 +642,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	}
 
 	public Set<Identifiable> getReverseDependencies(final boolean usePool) {
-		return Collections.<Identifiable>singleton(super.id);
+		return Collections.<Identifiable> singleton(super.id);
 	}
 
 	/**
@@ -657,7 +656,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 		 * characterizableId is updated from within that code,
 		 * and not here. 
 		 */
-		final Characteristic clone = super.clone();
+		final Characteristic clone = (Characteristic) super.clone();
 
 		if (clone.clonedIdMap == null) {
 			clone.clonedIdMap = new HashMap<Identifier, Identifier>();
