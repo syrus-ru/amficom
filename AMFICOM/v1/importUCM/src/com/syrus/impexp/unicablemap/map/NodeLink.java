@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLink.java,v 1.3 2005/09/22 10:32:28 krupenn Exp $
+ * $Id: NodeLink.java,v 1.4 2006/03/15 10:27:06 stas Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -86,6 +86,9 @@ public class NodeLink {
 		NodeLink nodeLink = new NodeLink();
 		
 		nodeLink.setId(link.getId() + "nodelink");
+		if (link.getLength() == 0) {
+			System.err.println("Не задана длина для " + link.getName());
+		}
 		nodeLink.setLength(link.getLength());
 		nodeLink.setPhysicalLinkId(link.getId());
 		nodeLink.setStartNodeId(link.getStartNodeId());
