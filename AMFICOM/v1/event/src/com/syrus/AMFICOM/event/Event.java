@@ -1,5 +1,5 @@
 /*-
- * $Id: Event.java,v 1.49.2.2 2006/02/28 15:19:59 arseniy Exp $
+ * $Id: Event.java,v 1.49.2.3 2006/03/15 15:45:33 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,16 +34,17 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.49.2.2 $, $Date: 2006/02/28 15:19:59 $
+ * @version $Revision: 1.49.2.3 $, $Date: 2006/03/15 15:45:33 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 
-public final class Event extends StorableObject<Event> implements TypedObject<EventType> {
-	private static final long serialVersionUID = -3539649925554357336L;
+public final class Event extends StorableObject implements TypedObject<EventType> {
+	private static final long serialVersionUID = 8312515167821319496L;
 
 	private EventType type;
 	private String description;
@@ -53,9 +54,9 @@ public final class Event extends StorableObject<Event> implements TypedObject<Ev
 
 	public Event(final IdlEvent event) throws CreateObjectException {
 		try {
-			this.fromTransferable(event);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(event);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -120,12 +121,16 @@ public final class Event extends StorableObject<Event> implements TypedObject<Ev
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlEvent event = (IdlEvent) transferable;
 
-		super.fromTransferable(event);
+		super.fromIdlTransferable(event);
 
-		this.type = StorableObjectPool.getStorableObject(new Identifier(event._typeId), true);
+		try {
+			this.type = StorableObjectPool.getStorableObject(new Identifier(event._typeId), true);
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
 
 		this.description = event.description;
 

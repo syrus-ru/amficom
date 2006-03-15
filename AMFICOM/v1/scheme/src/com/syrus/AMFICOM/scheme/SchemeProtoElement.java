@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.131.2.1 2006/02/28 15:20:02 arseniy Exp $
+ * $Id: SchemeProtoElement.java,v 1.131.2.2 2006/03/15 15:47:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,6 +78,7 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeLinkSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElement;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElementSeq;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -85,11 +86,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #02 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.131.2.1 $, $Date: 2006/02/28 15:20:02 $
+ * @version $Revision: 1.131.2.2 $, $Date: 2006/03/15 15:47:49 $
  * @module scheme
  */
 public final class SchemeProtoElement
-		extends AbstractCloneableStorableObject<SchemeProtoElement>
+		extends AbstractCloneableStorableObject
 		implements Describable, SchemeCellContainer,
 		Characterizable, ReverseDependencyContainer,
 		XmlTransferableObject<XmlSchemeProtoElement> {
@@ -181,7 +182,11 @@ public final class SchemeProtoElement
 	 * @throws CreateObjectException
 	 */
 	public SchemeProtoElement(final IdlSchemeProtoElement transferable) throws CreateObjectException {
-		fromTransferable(transferable);
+		try {
+			this.fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -395,7 +400,7 @@ public final class SchemeProtoElement
 		final boolean usePool = false;
 
 		try {
-			final SchemeProtoElement clone = super.clone();
+			final SchemeProtoElement clone = (SchemeProtoElement) super.clone();
 
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
@@ -1191,21 +1196,15 @@ public final class SchemeProtoElement
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
+	 * @throws IdlConversionException
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable)
-	throws CreateObjectException {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlSchemeProtoElement schemeProtoElement = (IdlSchemeProtoElement) transferable;
-			try {
-				super.fromTransferable(schemeProtoElement);
-			} catch (final CreateObjectException coe) {
-				throw coe;
-			} catch (final ApplicationException ae) {
-				throw new CreateObjectException(ae);
-			}
+			super.fromIdlTransferable(schemeProtoElement);
 			this.name = schemeProtoElement.name;
 			this.description = schemeProtoElement.description;
 			this.label = schemeProtoElement.label;

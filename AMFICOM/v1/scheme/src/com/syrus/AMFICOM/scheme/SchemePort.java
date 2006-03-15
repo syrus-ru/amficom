@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.85.2.1 2006/02/28 15:20:02 arseniy Exp $
+ * $Id: SchemePort.java,v 1.85.2.2 2006/03/15 15:47:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,6 +57,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePortHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemePort;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -64,10 +65,10 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #10 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.85.2.1 $, $Date: 2006/02/28 15:20:02 $
+ * @version $Revision: 1.85.2.2 $, $Date: 2006/03/15 15:47:49 $
  * @module scheme
  */
-public final class SchemePort extends AbstractSchemePort<SchemePort>
+public final class SchemePort extends AbstractSchemePort
 		implements XmlTransferableObject<XmlSchemePort> {
 	private static final long serialVersionUID = 3256436993469658930L;
 
@@ -139,7 +140,11 @@ public final class SchemePort extends AbstractSchemePort<SchemePort>
 	 * @throws CreateObjectException
 	 */
 	public SchemePort(final IdlSchemePort transferable) throws CreateObjectException {
-		fromTransferable(transferable);
+		try {
+			this.fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -265,6 +270,11 @@ public final class SchemePort extends AbstractSchemePort<SchemePort>
 		}
 	}
 
+	@Override
+	public SchemePort clone() throws CloneNotSupportedException {
+		return (SchemePort) super.clone();
+	}
+
 	/**
 	 * @see AbstractSchemePort#getAbstractSchemeLink()
 	 */
@@ -373,12 +383,12 @@ public final class SchemePort extends AbstractSchemePort<SchemePort>
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
+	 * @throws IdlConversionException
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable)
-	throws CreateObjectException {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlSchemePort schemePort = (IdlSchemePort) transferable;
 			super.fromTransferable(schemePort,

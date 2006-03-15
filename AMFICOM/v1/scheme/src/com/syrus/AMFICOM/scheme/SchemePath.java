@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.119.2.2 2006/02/28 15:20:01 arseniy Exp $
+ * $Id: SchemePath.java,v 1.119.2.3 2006/03/15 15:47:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,6 +66,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 import com.syrus.AMFICOM.scheme.xml.XmlSchemePath;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -73,10 +74,10 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #16 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.119.2.2 $, $Date: 2006/02/28 15:20:01 $
+ * @version $Revision: 1.119.2.3 $, $Date: 2006/03/15 15:47:49 $
  * @module scheme
  */
-public final class SchemePath extends StorableObject<SchemePath>
+public final class SchemePath extends StorableObject
 		implements Describable, Characterizable,
 		PathOwner<PathElement>, ReverseDependencyContainer,
 		XmlTransferableObject<XmlSchemePath> {
@@ -124,7 +125,11 @@ public final class SchemePath extends StorableObject<SchemePath>
 	 * @throws CreateObjectException
 	 */
 	public SchemePath(final IdlSchemePath transferable) throws CreateObjectException {
-		fromTransferable(transferable);
+		try {
+			this.fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -448,21 +453,15 @@ public final class SchemePath extends StorableObject<SchemePath>
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
+	 * @throws IdlConversionException
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable)
-	throws CreateObjectException {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlSchemePath schemePath = (IdlSchemePath) transferable;
-			try {
-				super.fromTransferable(schemePath);
-			} catch (final CreateObjectException coe) {
-				throw coe;
-			} catch (final ApplicationException ae) {
-				throw new CreateObjectException(ae);
-			}
+			super.fromIdlTransferable(schemePath);
 			this.name = schemePath.name;
 			this.description = schemePath.description;
 			this.transmissionPathId = new Identifier(schemePath.transmissionPathId);

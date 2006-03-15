@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.100.2.1 2006/02/28 15:20:02 arseniy Exp $
+ * $Id: PathElement.java,v 1.100.2.2 2006/03/15 15:47:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,6 +62,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlSchemeElementData;
 import com.syrus.AMFICOM.scheme.xml.XmlPathElement;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -73,12 +74,12 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.100.2.1 $, $Date: 2006/02/28 15:20:02 $
+ * @version $Revision: 1.100.2.2 $, $Date: 2006/03/15 15:47:49 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
  */
-public final class PathElement extends StorableObject<PathElement>
+public final class PathElement extends StorableObject
 		implements Describable, Comparable<PathElement>,
 		PathMember<SchemePath, PathElement>, ReverseDependencyContainer,
 		XmlTransferableObject<XmlPathElement>{
@@ -166,8 +167,8 @@ public final class PathElement extends StorableObject<PathElement>
 			final Identifier modifierId,
 			final StorableObjectVersion version,
 			final SchemePath parentSchemePath,
-			final AbstractSchemePort<?> startAbstractSchemePort,
-			final AbstractSchemePort<?> endSbstractSchemePort)
+			final AbstractSchemePort startAbstractSchemePort,
+			final AbstractSchemePort endSbstractSchemePort)
 	throws ApplicationException {
 		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
 		/*
@@ -286,8 +287,8 @@ public final class PathElement extends StorableObject<PathElement>
 			final SchemePath parentSchemePath,
 			final int sequentialNumber,
 			final IdlKind kind,
-			final AbstractSchemePort<?> startAbstractSchemePort,
-			final AbstractSchemePort<?> endAbstractSchemePort,
+			final AbstractSchemePort startAbstractSchemePort,
+			final AbstractSchemePort endAbstractSchemePort,
 			final SchemeCableThread schemeCableThread,
 			final SchemeLink schemeLink) {
 		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
@@ -301,9 +302,14 @@ public final class PathElement extends StorableObject<PathElement>
 
 	/**
 	 * @param transferable
+	 * @throws CreateObjectException
 	 */
-	public PathElement(final IdlPathElement transferable) {
-		fromTransferable(transferable);
+	public PathElement(final IdlPathElement transferable) throws CreateObjectException {
+		try {
+			fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -318,8 +324,8 @@ public final class PathElement extends StorableObject<PathElement>
 	@ParameterizationPending(value = {"final boolean usePool"})
 	public static PathElement createInstance(final Identifier creatorId,
 			final SchemePath parentSchemePath,
-			final AbstractSchemePort<?> startAbstractSchemePort,
-			final AbstractSchemePort<?> endAbstractSchemePort)
+			final AbstractSchemePort startAbstractSchemePort,
+			final AbstractSchemePort endAbstractSchemePort)
 	throws CreateObjectException {
 		final boolean usePool = false;
 
@@ -475,8 +481,8 @@ public final class PathElement extends StorableObject<PathElement>
 		return abstractSchemeElementId;
 	}
 
-	public AbstractSchemeElement<?> getAbstractSchemeElement() {
-		final AbstractSchemeElement<?> abstractSchemeElement;
+	public AbstractSchemeElement getAbstractSchemeElement() {
+		final AbstractSchemeElement abstractSchemeElement;
 		
 		switch (this.getKind().value()) {
 		case _SCHEME_CABLE_LINK:
@@ -587,7 +593,7 @@ public final class PathElement extends StorableObject<PathElement>
 	/**
 	 * A wrapper around {@link #getEndAbstractSchemePortId()}.
 	 */
-	public AbstractSchemePort<?> getEndAbstractSchemePort() {
+	public AbstractSchemePort getEndAbstractSchemePort() {
 		if (this.getKind() != SCHEME_ELEMENT) {
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
 		}
@@ -768,7 +774,7 @@ public final class PathElement extends StorableObject<PathElement>
 	/**
 	 * A wrapper around {@link #getStartAbstractSchemePortId()}.
 	 */
-	public AbstractSchemePort<?> getStartAbstractSchemePort() {
+	public AbstractSchemePort getStartAbstractSchemePort() {
 		if (this.getKind() != SCHEME_ELEMENT) {
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
 		}
@@ -932,7 +938,7 @@ public final class PathElement extends StorableObject<PathElement>
 	 *
 	 * @param endAbstractSchemePort
 	 */
-	public void setEndAbstractSchemePort(final AbstractSchemePort<?> endAbstractSchemePort) {
+	public void setEndAbstractSchemePort(final AbstractSchemePort endAbstractSchemePort) {
 		/*
 		 * The two following checks are doubled in the modifier method
 		 * for id.
@@ -1161,7 +1167,7 @@ public final class PathElement extends StorableObject<PathElement>
 	 *
 	 * @param startAbstractSchemePort
 	 */
-	public void setStartAbstractSchemePort(final AbstractSchemePort<?> startAbstractSchemePort) {
+	public void setStartAbstractSchemePort(final AbstractSchemePort startAbstractSchemePort) {
 		/*
 		 * The two following checks are doubled in the modifier method
 		 * for id.
@@ -1187,20 +1193,15 @@ public final class PathElement extends StorableObject<PathElement>
 
 	/**
 	 * @param transferable
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
+	 * @throws IdlConversionException
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlPathElement pathElement = (IdlPathElement) transferable;
-			try {
-				super.fromTransferable(pathElement);
-			} catch (final ApplicationException ae) {
-				/*
-				 * Never.
-				 */
-				assert false;
-			}
+			super.fromIdlTransferable(pathElement);
 			this.parentSchemePathId = new Identifier(pathElement.parentSchemePathId);
 			this.sequentialNumber = pathElement.sequentialNumber;
 			final IdlData data = pathElement.data;
@@ -1371,7 +1372,7 @@ public final class PathElement extends StorableObject<PathElement>
 		switch (this.getKind().value()) {
 		case _SCHEME_CABLE_LINK:
 		case _SCHEME_LINK:
-			return ((AbstractSchemeLink<?>) this.getAbstractSchemeElement()).getOpticalLength();
+			return ((AbstractSchemeLink) this.getAbstractSchemeElement()).getOpticalLength();
 		case _SCHEME_ELEMENT:
 		default:
 			return 0;
@@ -1382,7 +1383,7 @@ public final class PathElement extends StorableObject<PathElement>
 		switch (this.getKind().value()) {
 		case _SCHEME_CABLE_LINK:
 		case _SCHEME_LINK:
-			((AbstractSchemeLink<?>) this.getAbstractSchemeElement()).setOpticalLength(opticalLength);
+			((AbstractSchemeLink) this.getAbstractSchemeElement()).setOpticalLength(opticalLength);
 			break;
 		case _SCHEME_ELEMENT:
 		default:
@@ -1394,7 +1395,7 @@ public final class PathElement extends StorableObject<PathElement>
 		switch (this.getKind().value()) {
 		case _SCHEME_CABLE_LINK:
 		case _SCHEME_LINK:
-			return ((AbstractSchemeLink<?>) this.getAbstractSchemeElement()).getPhysicalLength();
+			return ((AbstractSchemeLink) this.getAbstractSchemeElement()).getPhysicalLength();
 		case _SCHEME_ELEMENT:
 		default:
 			return 0;
@@ -1405,7 +1406,7 @@ public final class PathElement extends StorableObject<PathElement>
 		switch (this.getKind().value()) {
 		case _SCHEME_CABLE_LINK:
 		case _SCHEME_LINK:
-			((AbstractSchemeLink<?>) this.getAbstractSchemeElement()).setPhysicalLength(physicalLength);
+			((AbstractSchemeLink) this.getAbstractSchemeElement()).setPhysicalLength(physicalLength);
 			break;
 		case _SCHEME_ELEMENT:
 		default:

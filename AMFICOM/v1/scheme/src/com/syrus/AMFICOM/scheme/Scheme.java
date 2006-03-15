@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.126.2.1 2006/02/28 15:20:01 arseniy Exp $
+ * $Id: Scheme.java,v 1.126.2.2 2006/03/15 15:47:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -88,11 +88,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #03 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.126.2.1 $, $Date: 2006/02/28 15:20:01 $
+ * @version $Revision: 1.126.2.2 $, $Date: 2006/03/15 15:47:49 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
-public final class Scheme extends AbstractCloneableDomainMember<Scheme>
+public final class Scheme extends AbstractCloneableDomainMember
 		implements Describable, SchemeCellContainer,
 		ReverseDependencyContainer, XmlTransferableObject<XmlScheme> {
 	private static final long serialVersionUID = 3257289136389173298L;
@@ -208,7 +208,7 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 	 * @param transferable
 	 */
 	public Scheme(final IdlScheme transferable) {
-		fromTransferable(transferable);
+		fromIdlTransferable(transferable);
 	}
 
 	/**
@@ -358,7 +358,7 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 		final boolean usePool = false;
 
 		try {
-			final Scheme clone = super.clone();
+			final Scheme clone = (Scheme) super.clone();
 
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
@@ -1144,10 +1144,10 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 
 	/**
 	 * @param transferable
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected void fromIdlTransferable(final IdlStorableObject transferable) {
 		synchronized (this) {
 			final IdlScheme scheme = (IdlScheme) transferable;
 			super.fromTransferable(scheme, new Identifier(scheme.domainId));

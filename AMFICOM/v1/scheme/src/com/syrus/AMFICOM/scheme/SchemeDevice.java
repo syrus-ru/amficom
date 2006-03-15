@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.118.2.1 2006/02/28 15:20:02 arseniy Exp $
+ * $Id: SchemeDevice.java,v 1.118.2.2 2006/03/15 15:47:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,6 +72,7 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeDevice;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemePort;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemePortSeq;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -79,11 +80,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #09 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.118.2.1 $, $Date: 2006/02/28 15:20:02 $
+ * @version $Revision: 1.118.2.2 $, $Date: 2006/03/15 15:47:49 $
  * @module scheme
  */
 public final class SchemeDevice
-		extends AbstractCloneableStorableObject<SchemeDevice>
+		extends AbstractCloneableStorableObject
 		implements Describable, Characterizable,
 		ReverseDependencyContainer,
 		XmlTransferableObject<XmlSchemeDevice> {
@@ -150,7 +151,11 @@ public final class SchemeDevice
 	 * @throws CreateObjectException
 	 */
 	public SchemeDevice(final IdlSchemeDevice transferable) throws CreateObjectException {
-		fromTransferable(transferable);
+		try {
+			fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -349,7 +354,7 @@ public final class SchemeDevice
 			}
 		}
 		try {
-			final SchemeDevice clone = super.clone();
+			final SchemeDevice clone = (SchemeDevice) super.clone();
 	
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
@@ -781,21 +786,15 @@ public final class SchemeDevice
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
+	 * @throws IdlConversionException
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable)
-	throws CreateObjectException {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlSchemeDevice schemeDevice = (IdlSchemeDevice) transferable;
-			try {
-				super.fromTransferable(schemeDevice);
-			} catch (final CreateObjectException coe) {
-				throw coe;
-			} catch (final ApplicationException ae) {
-				throw new CreateObjectException(ae);
-			}
+			super.fromIdlTransferable(schemeDevice);
 			this.name = schemeDevice.name;
 			this.description = schemeDevice.description;
 			this.parentSchemeProtoElementId = new Identifier(schemeDevice.parentSchemeProtoElementId);

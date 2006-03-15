@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.90.2.1 2006/02/28 15:20:02 arseniy Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.90.2.2 2006/03/15 15:47:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,6 +50,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeMonitoringSolution;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeMonitoringSolutionHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeMonitoringSolution;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -57,11 +58,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #08 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.90.2.1 $, $Date: 2006/02/28 15:20:02 $
+ * @version $Revision: 1.90.2.2 $, $Date: 2006/03/15 15:47:49 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
-		extends StorableObject<SchemeMonitoringSolution>
+		extends StorableObject
 		implements Describable, ReverseDependencyContainer,
 		XmlTransferableObject<XmlSchemeMonitoringSolution> {
 	private static final long serialVersionUID = 3906364939487949361L;
@@ -124,9 +125,14 @@ public final class SchemeMonitoringSolution
 
 	/**
 	 * @param transferable
+	 * @throws CreateObjectException
 	 */
-	public SchemeMonitoringSolution(final IdlSchemeMonitoringSolution transferable) {
-		fromTransferable(transferable);
+	public SchemeMonitoringSolution(final IdlSchemeMonitoringSolution transferable) throws CreateObjectException {
+		try {
+			fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -692,20 +698,15 @@ public final class SchemeMonitoringSolution
 
 	/**
 	 * @param transferable
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
+	 * @throws IdlConversionException
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlSchemeMonitoringSolution schemeMonitoringSolution = (IdlSchemeMonitoringSolution) transferable;
-			try {
-				super.fromTransferable(schemeMonitoringSolution);
-			} catch (final ApplicationException ae) {
-				/*
-				 * Never.
-				 */
-				assert false;
-			}
+			super.fromIdlTransferable(schemeMonitoringSolution);
 			this.name = schemeMonitoringSolution.name;
 			this.description = schemeMonitoringSolution.description;
 			this.price = schemeMonitoringSolution.priceUsd;

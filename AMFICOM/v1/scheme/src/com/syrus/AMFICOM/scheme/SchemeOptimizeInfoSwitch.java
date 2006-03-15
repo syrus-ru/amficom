@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitch.java,v 1.39.2.1 2006/02/28 15:20:02 arseniy Exp $
+ * $Id: SchemeOptimizeInfoSwitch.java,v 1.39.2.2 2006/03/15 15:47:49 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoSwitch;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoSwitchHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfoSwitch;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -51,11 +52,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.39.2.1 $, $Date: 2006/02/28 15:20:02 $
+ * @version $Revision: 1.39.2.2 $, $Date: 2006/03/15 15:47:49 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitch
-		extends StorableObject<SchemeOptimizeInfoSwitch>
+		extends StorableObject
 		implements Namable, ReverseDependencyContainer,
 		XmlTransferableObject<XmlSchemeOptimizeInfoSwitch> {
 	private static final long serialVersionUID = 2583191675321445786L;
@@ -85,8 +86,12 @@ public final class SchemeOptimizeInfoSwitch
 		this.parentSchemeOptimizeInfoId = Identifier.possiblyVoid(parentSchemeOptimizeInfo);
 	}
 
-	public SchemeOptimizeInfoSwitch(final IdlSchemeOptimizeInfoSwitch transferable) {
-		this.fromTransferable(transferable);
+	public SchemeOptimizeInfoSwitch(final IdlSchemeOptimizeInfoSwitch transferable) throws CreateObjectException {
+		try {
+			this.fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -325,20 +330,14 @@ public final class SchemeOptimizeInfoSwitch
 
 	/**
 	 * @param transferable
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlSchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch = (IdlSchemeOptimizeInfoSwitch) transferable;
-			try {
-				super.fromTransferable(schemeOptimizeInfoSwitch);
-			} catch (final ApplicationException ae) {
-				/*
-				 * Never.
-				 */
-				assert false;
-			}
+			super.fromIdlTransferable(schemeOptimizeInfoSwitch);
 			this.name = schemeOptimizeInfoSwitch.name;
 			this.priceUsd = schemeOptimizeInfoSwitch.priceUsd;
 			this.noOfPorts = schemeOptimizeInfoSwitch.noOfPorts;

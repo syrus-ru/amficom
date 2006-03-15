@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.113.2.1 2006/02/28 15:20:02 arseniy Exp $
+ * $Id: SchemeCableThread.java,v 1.113.2.2 2006/03/15 15:47:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,6 +70,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThread;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThreadHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableThread;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -77,11 +78,11 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #14 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.113.2.1 $, $Date: 2006/02/28 15:20:02 $
+ * @version $Revision: 1.113.2.2 $, $Date: 2006/03/15 15:47:49 $
  * @module scheme
  */
 public final class SchemeCableThread
-		extends AbstractCloneableStorableObject<SchemeCableThread>
+		extends AbstractCloneableStorableObject
 		implements Describable, Characterizable,
 		ReverseDependencyContainer,
 		XmlTransferableObject<XmlSchemeCableThread> {
@@ -163,7 +164,11 @@ public final class SchemeCableThread
 	 * @throws CreateObjectException
 	 */
 	public SchemeCableThread(final IdlSchemeCableThread transferable) throws CreateObjectException {
-		fromTransferable(transferable);
+		try {
+			fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -315,7 +320,7 @@ public final class SchemeCableThread
 			}
 		}
 		try {
-			final SchemeCableThread clone = super.clone();
+			final SchemeCableThread clone = (SchemeCableThread) super.clone();
 
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
@@ -831,21 +836,15 @@ public final class SchemeCableThread
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
+	 * @throws IdlConversionException
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable)
-	throws CreateObjectException {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlSchemeCableThread schemeCableThread = (IdlSchemeCableThread) transferable;
-			try {
-				super.fromTransferable(schemeCableThread);
-			} catch (final CreateObjectException coe) {
-				throw coe;
-			} catch (final ApplicationException ae) {
-				throw new CreateObjectException(ae);
-			}
+			super.fromIdlTransferable(schemeCableThread);
 			this.name = schemeCableThread.name;
 			this.description = schemeCableThread.description;
 			this.linkTypeId = new Identifier(schemeCableThread.linkTypeId);

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.84.2.1 2006/02/28 15:20:02 arseniy Exp $
+ * $Id: SchemeCablePort.java,v 1.84.2.2 2006/03/15 15:47:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,6 +56,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeCablePortHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCablePort;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -63,10 +64,10 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #11 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.84.2.1 $, $Date: 2006/02/28 15:20:02 $
+ * @version $Revision: 1.84.2.2 $, $Date: 2006/03/15 15:47:49 $
  * @module scheme
  */
-public final class SchemeCablePort extends AbstractSchemePort<SchemeCablePort>
+public final class SchemeCablePort extends AbstractSchemePort
 		implements XmlTransferableObject<XmlSchemeCablePort> {
 	private static final long serialVersionUID = 4050767078690534455L;
 
@@ -138,7 +139,11 @@ public final class SchemeCablePort extends AbstractSchemePort<SchemeCablePort>
 	 * @throws CreateObjectException
 	 */
 	public SchemeCablePort(final IdlSchemeCablePort transferable) throws CreateObjectException {
-		fromTransferable(transferable);
+		try {
+			fromIdlTransferable(transferable);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -264,6 +269,11 @@ public final class SchemeCablePort extends AbstractSchemePort<SchemeCablePort>
 		}
 	}
 
+	@Override
+	public SchemeCablePort clone() throws CloneNotSupportedException {
+		return (SchemeCablePort) super.clone();
+	}
+
 	/**
 	 * @see AbstractSchemePort#getAbstractSchemeLink()
 	 */
@@ -360,12 +370,12 @@ public final class SchemeCablePort extends AbstractSchemePort<SchemeCablePort>
 
 	/**
 	 * @param transferable
-	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
+	 * @throws IdlConversionException
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable)
-	throws CreateObjectException {
+	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	throws IdlConversionException {
 		synchronized (this) {
 			final IdlSchemeCablePort schemeCablePort = (IdlSchemeCablePort) transferable;
 			super.fromTransferable(schemeCablePort,
