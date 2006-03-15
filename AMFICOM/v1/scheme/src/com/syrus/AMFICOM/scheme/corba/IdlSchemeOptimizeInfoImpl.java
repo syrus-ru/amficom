@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeOptimizeInfoImpl.java,v 1.4 2006/03/15 15:49:11 arseniy Exp $
+ * $Id: IdlSchemeOptimizeInfoImpl.java,v 1.5 2006/03/15 16:42:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.scheme.SchemeOptimizeInfo;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2006/03/15 15:49:11 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2006/03/15 16:42:48 $
  * @module scheme
  */
 final class IdlSchemeOptimizeInfoImpl extends IdlSchemeOptimizeInfo {

@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlDeliveryAttributesImpl.java,v 1.3 2006/03/15 15:47:20 arseniy Exp $
+ * $Id: IdlDeliveryAttributesImpl.java,v 1.4 2006/03/15 16:44:30 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2006/03/15 15:47:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2006/03/15 16:44:30 $
  * @module event
  */
 final class IdlDeliveryAttributesImpl extends IdlDeliveryAttributes {
