@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameter.java,v 1.1.2.10 2006/03/01 12:08:08 arseniy Exp $
+ * $Id: ActionParameter.java,v 1.1.2.11 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,14 +35,15 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterHelper;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.1.2.10 $, $Date: 2006/03/01 12:08:08 $
+ * @version $Revision: 1.1.2.11 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class ActionParameter extends Parameter<ActionParameter> {
+public final class ActionParameter extends Parameter {
 	private static final long serialVersionUID = -7695430559152990049L;
 
 	private Identifier bindingId;
@@ -145,9 +146,9 @@ public final class ActionParameter extends Parameter<ActionParameter> {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlActionParameter idlActionParameter = (IdlActionParameter) transferable;
-		super.fromTransferable(transferable);
+		super.fromIdlTransferable(transferable);
 
 		this.bindingId = Identifier.valueOf(idlActionParameter.bindingId);
 

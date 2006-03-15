@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTypeWrapper.java,v 1.1.2.1 2006/02/11 18:40:45 arseniy Exp $
+ * $Id: ActionTypeWrapper.java,v 1.1.2.2 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,12 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/11 18:40:45 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public abstract class ActionTypeWrapper<T extends ActionType<T>> extends StorableObjectWrapper<T> {
+public abstract class ActionTypeWrapper<T extends ActionType> extends StorableObjectWrapper<T> {
 
 	private List<String> keys;
 
@@ -80,8 +80,8 @@ public abstract class ActionTypeWrapper<T extends ActionType<T>> extends Storabl
 	}
 
 	@Override
-	public final Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key);
+	public final Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key);
 		if (clazz != null) {
 			return clazz;
 		}

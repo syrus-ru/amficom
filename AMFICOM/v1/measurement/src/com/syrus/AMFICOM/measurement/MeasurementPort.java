@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.19.2.2 2006/02/28 15:20:04 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.19.2.3 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,9 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
@@ -38,16 +40,15 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPort;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortHelper;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.19.2.2 $, $Date: 2006/02/28 15:20:04 $
+ * @version $Revision: 1.19.2.3 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class MeasurementPort extends StorableObject<MeasurementPort>
-		implements Characterizable,
-		TypedObject<MeasurementPortType> {
+public final class MeasurementPort extends StorableObject implements Characterizable, TypedObject<MeasurementPortType> {
 	private static final long serialVersionUID = -5100885507408715167L;
 
 	private MeasurementPortType type;
@@ -60,9 +61,9 @@ public final class MeasurementPort extends StorableObject<MeasurementPort>
 
 	public MeasurementPort(final IdlMeasurementPort mpt) throws CreateObjectException {
 		try {
-			this.fromTransferable(mpt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(mpt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -128,11 +129,15 @@ public final class MeasurementPort extends StorableObject<MeasurementPort>
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlMeasurementPort mpt = (IdlMeasurementPort) transferable;
-		super.fromTransferable(mpt);
+		super.fromIdlTransferable(mpt);
 
-		this.type = StorableObjectPool.getStorableObject(Identifier.valueOf(mpt._typeId), true);
+		try {
+			this.type = StorableObjectPool.getStorableObject(Identifier.valueOf(mpt._typeId), true);
+		} catch (final ApplicationException ae) {
+			throw new IdlConversionException(ae);
+		}
 
 		this.name = mpt.name;
 		this.description = mpt.description;
@@ -258,6 +263,18 @@ public final class MeasurementPort extends StorableObject<MeasurementPort>
 	}
 
 	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	protected boolean isValid() {
+		return super.isValid()
+				&& this.type != null
+				&& this.name != null
+				&& this.kisId != null && this.kisId.getMajor() == KIS_CODE
+				&& this.portId != null && this.portId.getMajor() == PORT_CODE;
+	}
+
+	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
 	 */
 	@Override
@@ -276,19 +293,19 @@ public final class MeasurementPort extends StorableObject<MeasurementPort>
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)
-				? this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE)
-				: this.characteristicContainerWrappee;
+				? this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this,
+						CHARACTERISTIC_CODE)
+					: this.characteristicContainerWrappee;
 	}
 
 	/**
 	 * @param characteristic
 	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic,
+	 *      boolean)
 	 */
-	public void addCharacteristic(final Characteristic characteristic,
-			final boolean usePool)
-	throws ApplicationException {
+	public void addCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		characteristic.setParentCharacterizable(this, usePool);
 	}
@@ -297,12 +314,10 @@ public final class MeasurementPort extends StorableObject<MeasurementPort>
 	 * @param characteristic
 	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic,
+	 *      boolean)
 	 */
-	public void removeCharacteristic(
-			final Characteristic characteristic,
-			final boolean usePool)
-	throws ApplicationException {
+	public void removeCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		characteristic.setParentCharacterizable(this, usePool);
@@ -313,8 +328,7 @@ public final class MeasurementPort extends StorableObject<MeasurementPort>
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
 	 */
-	public Set<Characteristic> getCharacteristics(boolean usePool)
-	throws ApplicationException {
+	public Set<Characteristic> getCharacteristics(boolean usePool) throws ApplicationException {
 		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
 	}
 
@@ -322,8 +336,7 @@ public final class MeasurementPort extends StorableObject<MeasurementPort>
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	Set<Characteristic> getCharacteristics0(final boolean usePool)
-	throws ApplicationException {
+	Set<Characteristic> getCharacteristics0(final boolean usePool) throws ApplicationException {
 		return this.getCharacteristicContainerWrappee().getContainees(usePool);
 	}
 
@@ -331,11 +344,10 @@ public final class MeasurementPort extends StorableObject<MeasurementPort>
 	 * @param characteristics
 	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set,
+	 *      boolean)
 	 */
-	public void setCharacteristics(final Set<Characteristic> characteristics,
-			final boolean usePool)
-	throws ApplicationException {
+	public void setCharacteristics(final Set<Characteristic> characteristics, final boolean usePool) throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;
 
 		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);

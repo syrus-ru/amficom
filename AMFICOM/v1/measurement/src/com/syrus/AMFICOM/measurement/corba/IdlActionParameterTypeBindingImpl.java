@@ -44,7 +44,7 @@ final class IdlActionParameterTypeBindingImpl extends IdlActionParameterTypeBind
 			return new ActionParameterTypeBinding(this);
 		} catch (final CreateObjectException coe) {
 			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
+			throw coe.getIdlTransferable();
 		}
 	}
 

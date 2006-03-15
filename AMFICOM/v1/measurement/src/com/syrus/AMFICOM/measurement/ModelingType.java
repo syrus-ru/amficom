@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingType.java,v 1.65.2.5 2006/02/28 12:03:55 arseniy Exp $
+ * $Id: ModelingType.java,v 1.65.2.6 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,14 +32,15 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingTypeHelper;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.65.2.5 $, $Date: 2006/02/28 12:03:55 $
+ * @version $Revision: 1.65.2.6 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class ModelingType extends ActionType<ModelingType> {
+public final class ModelingType extends ActionType {
 	private static final long serialVersionUID = 1150540687087689211L;
 
 	private static TypicalCondition codenameCondition;
@@ -96,7 +97,7 @@ public final class ModelingType extends ActionType<ModelingType> {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlModelingType idlModelingType = (IdlModelingType) transferable;
 		super.fromTransferable(idlModelingType, idlModelingType.codename, idlModelingType.description);
 

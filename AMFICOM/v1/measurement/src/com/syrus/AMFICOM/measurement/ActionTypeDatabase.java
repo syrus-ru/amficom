@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTypeDatabase.java,v 1.17.2.1 2006/02/11 18:40:45 arseniy Exp $
+ * $Id: ActionTypeDatabase.java,v 1.17.2.2 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17.2.1 $, $Date: 2006/02/11 18:40:45 $
+ * @version $Revision: 1.17.2.2 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public abstract class ActionTypeDatabase<T extends ActionType<T>> extends StorableObjectDatabase<T> {
+public abstract class ActionTypeDatabase<T extends ActionType> extends StorableObjectDatabase<T> {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 

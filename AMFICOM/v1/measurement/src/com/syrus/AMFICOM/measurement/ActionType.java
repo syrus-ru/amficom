@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionType.java,v 1.26.2.3 2006/02/28 15:20:03 arseniy Exp $
+ * $Id: ActionType.java,v 1.26.2.4 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,21 +11,21 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.26.2.3 $, $Date: 2006/02/28 15:20:03 $
+ * @version $Revision: 1.26.2.4 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public abstract class ActionType<T extends ActionType<T>> extends StorableObjectType<T> {
+public abstract class ActionType extends StorableObjectType {
 
 	ActionType(final Identifier id,
 			final Identifier creatorId,
@@ -44,9 +44,9 @@ public abstract class ActionType<T extends ActionType<T>> extends StorableObject
 
 	ActionType(final IdlStorableObject idlStorableObject) throws CreateObjectException {
 		try {
-			this.fromTransferable(idlStorableObject);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(idlStorableObject);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 

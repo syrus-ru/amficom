@@ -1,5 +1,5 @@
 /*-
- * $Id: Parameter.java,v 1.24.2.5 2006/03/06 12:22:48 arseniy Exp $
+ * $Id: Parameter.java,v 1.24.2.6 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,14 +28,15 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlParameter;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.24.2.5 $, $Date: 2006/03/06 12:22:48 $
+ * @version $Revision: 1.24.2.6 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public abstract class Parameter<T extends Parameter<T>> extends StorableObject<T> {
+public abstract class Parameter extends StorableObject {
 	private byte[] value;
 
 	private transient ByteArray byteArrayValue;
@@ -55,16 +56,16 @@ public abstract class Parameter<T extends Parameter<T>> extends StorableObject<T
 
 	Parameter(final IdlStorableObject idlStorableObject) throws CreateObjectException {
 		try {
-			this.fromTransferable(idlStorableObject);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(idlStorableObject);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlParameter idlParameter = (IdlParameter) transferable;
-		super.fromTransferable(transferable);
+		super.fromIdlTransferable(transferable);
 		this.value = idlParameter.value;
 	}
 

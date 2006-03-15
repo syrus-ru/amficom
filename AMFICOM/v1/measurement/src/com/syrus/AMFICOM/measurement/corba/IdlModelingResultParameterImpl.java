@@ -42,7 +42,7 @@ final class IdlModelingResultParameterImpl extends IdlModelingResultParameter {
 			return new ModelingResultParameter(this);
 		} catch (CreateObjectException coe) {
 			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
+			throw coe.getIdlTransferable();
 		}
 	}
 

@@ -42,7 +42,7 @@ final class IdlAnalysisResultParameterImpl extends IdlAnalysisResultParameter {
 			return new AnalysisResultParameter(this);
 		} catch (CreateObjectException coe) {
 			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
+			throw coe.getIdlTransferable();
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionResultParameterDatabase.java,v 1.1.2.3 2006/03/02 16:11:34 arseniy Exp $
+ * $Id: ActionResultParameterDatabase.java,v 1.1.2.4 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,12 +16,12 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/03/02 16:11:34 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public abstract class ActionResultParameterDatabase<R extends ActionResultParameter<R, A>, A extends Action<A, R>> extends ParameterDatabase<R> {
+public abstract class ActionResultParameterDatabase<R extends ActionResultParameter<A>, A extends Action<R>> extends ParameterDatabase<R> {
 
 	@Override
 	protected String getColumnsTmplTmpl() {

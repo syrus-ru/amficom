@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.43.2.7 2006/03/06 12:19:14 arseniy Exp $
+ * $Id: Action.java,v 1.43.2.8 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,15 +25,16 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlAction;
 import com.syrus.AMFICOM.measurement.corba.IdlActionStatus;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.43.2.7 $, $Date: 2006/03/06 12:19:14 $
+ * @version $Revision: 1.43.2.8 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public abstract class Action<A extends Action<A, R>, R extends ActionResultParameter<R, A>> extends StorableObject<A> {
+public abstract class Action<R extends ActionResultParameter> extends StorableObject {
 
 	public static enum ActionStatus {
 		ACTION_STATUS_NEW,
@@ -99,14 +100,14 @@ public abstract class Action<A extends Action<A, R>, R extends ActionResultParam
 
 	Action(final IdlStorableObject idlStorableObject) throws CreateObjectException {
 		try {
-			this.fromTransferable(idlStorableObject);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(idlStorableObject);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
-	void fromTransferable(final IdlAction idlAction) throws ApplicationException {
-		super.fromTransferable(idlAction);
+	final void fromIdlTransferable(final IdlAction idlAction) throws IdlConversionException {
+		super.fromIdlTransferable(idlAction);
 		this.typeId = Identifier.valueOf(idlAction._typeId);
 		this.monitoredElementId = Identifier.valueOf(idlAction.monitoredElementId);
 		this.actionTemplateId = Identifier.valueOf(idlAction.actionTemplateId);
@@ -172,7 +173,7 @@ public abstract class Action<A extends Action<A, R>, R extends ActionResultParam
 
 	public final String getTypeCodename() throws ApplicationException {
 		if (this.typeCodename == null) {
-			final ActionType<? extends ActionType> actionType = StorableObjectPool.getStorableObject(this.typeId, true);
+			final ActionType actionType = StorableObjectPool.getStorableObject(this.typeId, true);
 			this.typeCodename = actionType.getCodename();
 		}
 		return this.typeCodename;

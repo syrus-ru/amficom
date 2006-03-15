@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMeasurementImpl.java,v 1.7.2.3 2006/02/14 01:26:42 arseniy Exp $
+ * $Id: IdlMeasurementImpl.java,v 1.7.2.4 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.7.2.3 $, $Date: 2006/02/14 01:26:42 $
+ * @version $Revision: 1.7.2.4 $, $Date: 2006/03/15 15:50:02 $
  * @module measurement
  */
 final class IdlMeasurementImpl extends IdlMeasurement {
@@ -69,7 +69,7 @@ final class IdlMeasurementImpl extends IdlMeasurement {
 			return new Measurement(this);
 		} catch (final CreateObjectException coe) {
 			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
+			throw coe.getIdlTransferable();
 		}
 	}
 }

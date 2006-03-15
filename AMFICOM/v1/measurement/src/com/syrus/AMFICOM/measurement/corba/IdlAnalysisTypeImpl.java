@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlAnalysisTypeImpl.java,v 1.6.2.2 2006/02/14 01:26:42 arseniy Exp $
+ * $Id: IdlAnalysisTypeImpl.java,v 1.6.2.3 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6.2.2 $, $Date: 2006/02/14 01:26:42 $
+ * @version $Revision: 1.6.2.3 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -57,7 +57,7 @@ final class IdlAnalysisTypeImpl extends IdlAnalysisType {
 			return new AnalysisType(this);
 		} catch (final CreateObjectException coe) {
 			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
+			throw coe.getIdlTransferable();
 		}
 	}
 

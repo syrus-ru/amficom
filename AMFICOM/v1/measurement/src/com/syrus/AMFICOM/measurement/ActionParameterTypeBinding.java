@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.11 2006/03/06 12:19:38 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.12 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,14 +44,15 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBinding;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBindingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterValueKind;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.1.2.11 $, $Date: 2006/03/06 12:19:38 $
+ * @version $Revision: 1.1.2.12 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class ActionParameterTypeBinding extends StorableObject<ActionParameterTypeBinding> {
+public final class ActionParameterTypeBinding extends StorableObject {
 	private static final long serialVersionUID = 8851510439449075891L;
 
 	static enum ParameterValueKind {
@@ -108,9 +109,9 @@ public final class ActionParameterTypeBinding extends StorableObject<ActionParam
 
 	public ActionParameterTypeBinding(final IdlActionParameterTypeBinding idlActionParameterTypeBinding) throws CreateObjectException {
 		try {
-			this.fromTransferable(idlActionParameterTypeBinding);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(idlActionParameterTypeBinding);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -164,9 +165,9 @@ public final class ActionParameterTypeBinding extends StorableObject<ActionParam
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlActionParameterTypeBinding idlActionParameterTypeBinding = (IdlActionParameterTypeBinding) transferable;
-		super.fromTransferable(idlActionParameterTypeBinding);
+		super.fromIdlTransferable(idlActionParameterTypeBinding);
 
 		this.parameterValueKind = ParameterValueKind.valueOf(idlActionParameterTypeBinding.parameterValueKind);
 		this.parameterTypeId = Identifier.valueOf(idlActionParameterTypeBinding.parameterTypeId);

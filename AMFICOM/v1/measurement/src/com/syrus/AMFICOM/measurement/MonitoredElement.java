@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.13.2.3 2006/03/06 19:00:09 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.13.2.4 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,15 +32,16 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElement;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.IdlMonitoredElementKind;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.13.2.3 $, $Date: 2006/03/06 19:00:09 $
+ * @version $Revision: 1.13.2.4 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class MonitoredElement extends DomainMember<MonitoredElement> {
+public final class MonitoredElement extends DomainMember {
 	private static final long serialVersionUID = 5689746173688711494L;
 
 	private Identifier measurementPortId;
@@ -52,7 +53,11 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 
 
 	public MonitoredElement(final IdlMonitoredElement met) throws CreateObjectException {
-		this.fromTransferable(met);
+		try {
+			this.fromIdlTransferable(met);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 	
 	MonitoredElement(final Identifier id,
@@ -126,7 +131,7 @@ public final class MonitoredElement extends DomainMember<MonitoredElement> {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlMonitoredElement met = (IdlMonitoredElement) transferable;
 		super.fromTransferable(met, Identifier.valueOf(met.domainId));
 		this.measurementPortId = Identifier.valueOf(met.measurementPortId);

@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterWrapper.java,v 1.1.2.2 2006/02/16 12:50:09 arseniy Exp $
+ * $Id: ActionParameterWrapper.java,v 1.1.2.3 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.measurement;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/16 12:50:09 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -43,8 +43,8 @@ public final class ActionParameterWrapper extends ParameterWrapper<ActionParamet
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key); 
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

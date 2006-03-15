@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterDatabase.java,v 1.1.2.1 2006/02/16 12:47:45 arseniy Exp $
+ * $Id: ParameterDatabase.java,v 1.1.2.2 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,12 +25,12 @@ import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/16 12:47:45 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public abstract class ParameterDatabase<T extends Parameter<T>> extends StorableObjectDatabase<T> {
+public abstract class ParameterDatabase<T extends Parameter> extends StorableObjectDatabase<T> {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 

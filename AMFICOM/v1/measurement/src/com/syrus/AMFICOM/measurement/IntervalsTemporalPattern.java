@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.42.2.3 2006/03/01 10:30:05 arseniy Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.42.2.4 2006/03/15 15:50:02 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -45,18 +45,16 @@ import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPatternHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPatternPackage.IntervalDuration;
 import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPatternPackage.IntervalTemporalPatternId;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 
 /**
- * @version $Revision: 1.42.2.3 $, $Date: 2006/03/01 10:30:05 $
+ * @version $Revision: 1.42.2.4 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
-public final class IntervalsTemporalPattern
-		extends AbstractTemporalPattern<IntervalsTemporalPattern>
-		implements Undoable {
-
+public final class IntervalsTemporalPattern extends AbstractTemporalPattern implements Undoable {
 	private static final long serialVersionUID = 3257567312898175032L;
 
 	/** SortedMap <Long milliseconds, Identifier <AbstractTemporalPattern>> */
@@ -124,18 +122,17 @@ public final class IntervalsTemporalPattern
 	}
 
 	public IntervalsTemporalPattern(final IdlIntervalsTemporalPattern itpt) throws CreateObjectException {
-
 		try {
-			this.fromTransferable(itpt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(itpt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlIntervalsTemporalPattern itpt = (IdlIntervalsTemporalPattern) transferable;
-		super.fromTransferable(itpt);
+		super.fromIdlTransferable(itpt);
 
 		{
 			final SortedMap<Long, Identifier> map = new TreeMap<Long, Identifier>();
@@ -172,7 +169,7 @@ public final class IntervalsTemporalPattern
 	
 	@Override
 	protected void fillTimes() {
-		AbstractTemporalPattern<? extends AbstractTemporalPattern> previousTemporalPattern = null;
+		AbstractTemporalPattern previousTemporalPattern = null;
 
 		Long previousDuration = null;
 		Date previousDate = null;
@@ -183,7 +180,7 @@ public final class IntervalsTemporalPattern
 			final Long milliseconds = it.next();
 			final Identifier abstractTemporalPatternId = this.intervalsAbstractTemporalPatternMap.get(milliseconds);
 
-			AbstractTemporalPattern<? extends AbstractTemporalPattern> temporalPattern = null;
+			AbstractTemporalPattern temporalPattern = null;
 			if (abstractTemporalPatternId != null && !abstractTemporalPatternId.isVoid()) {
 				try {
 					temporalPattern = StorableObjectPool.getStorableObject(abstractTemporalPatternId, true);
@@ -223,7 +220,7 @@ public final class IntervalsTemporalPattern
 	private void addTimeItem(final Date startDate,
 			final Date endDate,
 			final Long duration,
-			final AbstractTemporalPattern<? extends AbstractTemporalPattern> temporalPattern) {
+			final AbstractTemporalPattern temporalPattern) {
 		if (startDate != null) {
 			if (temporalPattern == null) {
 				super.times.add(startDate);
@@ -803,7 +800,7 @@ public final class IntervalsTemporalPattern
 					}
 					break;
 				case PERIODICALTEMPORALPATTERN_CODE:
-					PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId,
+					PeriodicalTemporalPattern periodicalTemporalPattern = StorableObjectPool.getStorableObject(temporalPatternId,
 							true);
 					// Log.debugMessage("PERIODICAL duration: " + duration, Log.FINEST);
 					SortedSet times2 = periodicalTemporalPattern.getTimes(0, duration != null ? duration.longValue() : 0);

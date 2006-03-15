@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionResultParameter.java,v 1.1.2.9 2006/03/03 09:21:15 arseniy Exp $
+ * $Id: ActionResultParameter.java,v 1.1.2.10 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,14 +23,15 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlActionResultParameter;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.1.2.9 $, $Date: 2006/03/03 09:21:15 $
+ * @version $Revision: 1.1.2.10 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public abstract class ActionResultParameter<R extends ActionResultParameter<R, A>, A extends Action<A, R>> extends Parameter<R> {
+public abstract class ActionResultParameter<A extends Action> extends Parameter {
 	private Identifier typeId;
 	private Identifier actionId;
 
@@ -52,9 +53,9 @@ public abstract class ActionResultParameter<R extends ActionResultParameter<R, A
 	}
 
 	@Override
-	protected final void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected final void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlActionResultParameter idlActionResultParameter = (IdlActionResultParameter) transferable;
-		super.fromTransferable(transferable);
+		super.fromIdlTransferable(transferable);
 		this.typeId = Identifier.valueOf(idlActionResultParameter._typeId);
 		this.actionId = Identifier.valueOf(idlActionResultParameter.actionId);
 

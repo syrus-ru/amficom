@@ -44,7 +44,7 @@ final class IdlActionTemplateImpl extends IdlActionTemplate {
 			return new ActionTemplate(this);
 		} catch (final CreateObjectException coe) {
 			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
+			throw coe.getIdlTransferable();
 		}
 	}
 

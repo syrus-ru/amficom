@@ -7,7 +7,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
-public abstract class ParameterWrapper<T extends Parameter<T>> extends StorableObjectWrapper<T> {
+public abstract class ParameterWrapper<T extends Parameter> extends StorableObjectWrapper<T> {
 	public static final String COLUMN_VALUE = "value";
 
 	private List<String> keys;
@@ -55,8 +55,8 @@ public abstract class ParameterWrapper<T extends Parameter<T>> extends StorableO
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key);
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key);
 		if (clazz != null) {
 			return clazz;
 		}

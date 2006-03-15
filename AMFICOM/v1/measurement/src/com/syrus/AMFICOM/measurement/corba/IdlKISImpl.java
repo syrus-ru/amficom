@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlKISImpl.java,v 1.5.2.1 2006/03/07 10:42:49 arseniy Exp $
+ * $Id: IdlKISImpl.java,v 1.5.2.2 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.5.2.1 $, $Date: 2006/03/07 10:42:49 $
+ * @version $Revision: 1.5.2.2 $, $Date: 2006/03/15 15:50:02 $
  * @module measurement
  */
 final class IdlKISImpl extends IdlKIS {
@@ -70,7 +70,7 @@ final class IdlKISImpl extends IdlKIS {
 			return new KIS(this);
 		} catch (final CreateObjectException coe) {
 			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
+			throw coe.getIdlTransferable();
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplate.java,v 1.1.2.7 2006/03/06 12:23:49 arseniy Exp $
+ * $Id: ActionTemplate.java,v 1.1.2.8 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,14 +35,15 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlActionTemplate;
 import com.syrus.AMFICOM.measurement.corba.IdlActionTemplateHelper;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.1.2.7 $, $Date: 2006/03/06 12:23:49 $
+ * @version $Revision: 1.1.2.8 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class ActionTemplate extends StorableObject<ActionTemplate> {
+public final class ActionTemplate extends StorableObject {
 	private static final long serialVersionUID = 725853453958152504L;
 
 	private String description;
@@ -73,9 +74,9 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 
 	public ActionTemplate(final IdlActionTemplate idlActionTemplate) throws CreateObjectException {
 		try {
-			this.fromTransferable(idlActionTemplate);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(idlActionTemplate);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -128,9 +129,9 @@ public final class ActionTemplate extends StorableObject<ActionTemplate> {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlActionTemplate idlActionTemplate = (IdlActionTemplate) transferable;
-		super.fromTransferable(idlActionTemplate);
+		super.fromIdlTransferable(idlActionTemplate);
 		this.description = idlActionTemplate.description;
 		this.approximateActionDuration = idlActionTemplate.approximateActionDuration;
 		this.setActionParameterIds0(Identifier.fromTransferables(idlActionTemplate.actionParameterIds));

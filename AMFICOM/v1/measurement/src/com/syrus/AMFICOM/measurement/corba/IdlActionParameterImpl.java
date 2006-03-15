@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlActionParameterImpl.java,v 1.1.2.5 2006/02/22 11:26:42 arseniy Exp $
+ * $Id: IdlActionParameterImpl.java,v 1.1.2.6 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.measurement.ActionParameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1.2.5 $, $Date: 2006/02/22 11:26:42 $
+ * @version $Revision: 1.1.2.6 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -53,7 +53,7 @@ final class IdlActionParameterImpl extends IdlActionParameter {
 			return new ActionParameter(this);
 		} catch (final CreateObjectException coe) {
 			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
+			throw coe.getIdlTransferable();
 		}
 	}
 

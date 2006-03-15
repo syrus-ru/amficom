@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.21.2.4 2006/02/28 15:20:05 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.21.2.5 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,15 +38,16 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortTypeHelper;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.21.2.4 $, $Date: 2006/02/28 15:20:05 $
+ * @version $Revision: 1.21.2.5 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class MeasurementPortType extends StorableObjectType<MeasurementPortType> implements Namable {
+public final class MeasurementPortType extends StorableObjectType implements Namable {
 	private static final long serialVersionUID = 8744021573090885674L;
 
 	private String name;
@@ -72,9 +73,9 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 
 	public MeasurementPortType(final IdlMeasurementPortType mptt) throws CreateObjectException {
 		try {
-			this.fromTransferable(mptt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(mptt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 	
@@ -133,7 +134,7 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlMeasurementPortType mptt = (IdlMeasurementPortType) transferable;
 		super.fromTransferable(mptt, mptt.codename, mptt.description);
 		this.name = mptt.name;

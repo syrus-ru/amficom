@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionResultParameterWrapper.java,v 1.1.2.3 2006/03/02 16:11:34 arseniy Exp $
+ * $Id: ActionResultParameterWrapper.java,v 1.1.2.4 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/03/02 16:11:34 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public abstract class ActionResultParameterWrapper<R extends ActionResultParameter<R, A>, A extends Action<A, R>> extends ParameterWrapper<R> {
+public abstract class ActionResultParameterWrapper<R extends ActionResultParameter<A>, A extends Action<R>> extends ParameterWrapper<R> {
 
 	ActionResultParameterWrapper(final String[] keysArray) {
 		super(keysArray);
@@ -39,8 +39,8 @@ public abstract class ActionResultParameterWrapper<R extends ActionResultParamet
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key);
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key);
 		if (clazz != null) {
 			return clazz;
 		}

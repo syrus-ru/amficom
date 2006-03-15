@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.7 2006/03/06 12:22:19 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.8 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -52,16 +52,17 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPacka
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.IdlTestTemporalType;
 import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.183.2.7 $, $Date: 2006/03/06 12:22:19 $
+ * @version $Revision: 1.183.2.8 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Test extends StorableObject<Test> implements Describable {
+public final class Test extends StorableObject implements Describable {
 	private static final long serialVersionUID = -6387317612272518101L;
 
 	private String description;
@@ -120,9 +121,9 @@ public final class Test extends StorableObject<Test> implements Describable {
 
 	public Test(final IdlTest idlTest) throws CreateObjectException {
 		try {
-			this.fromTransferable(idlTest);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(idlTest);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -367,9 +368,9 @@ public final class Test extends StorableObject<Test> implements Describable {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public void fromTransferable(final IdlStorableObject idlStorableObject) throws ApplicationException {
+	public void fromIdlTransferable(final IdlStorableObject idlStorableObject) throws IdlConversionException {
 		final IdlTest idlTest = (IdlTest) idlStorableObject;
-		super.fromTransferable(idlTest);
+		super.fromIdlTransferable(idlTest);
 		this.description = idlTest.description;
 		this.groupTestId = Identifier.valueOf(idlTest.groupTestId);
 		this.monitoredElementId = Identifier.valueOf(idlTest.monitoredElementId);

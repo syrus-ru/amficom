@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.90.2.6 2006/03/02 16:10:42 arseniy Exp $
+ * $Id: Analysis.java,v 1.90.2.7 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,15 +32,16 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisHelper;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.90.2.6 $, $Date: 2006/03/02 16:10:42 $
+ * @version $Revision: 1.90.2.7 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Analysis extends Action<Analysis, AnalysisResultParameter> {
+public final class Analysis extends Action<AnalysisResultParameter> {
 	private static final long serialVersionUID = 2935808157242604848L;
 
 	private Identifier measurementId;
@@ -136,9 +137,9 @@ public final class Analysis extends Action<Analysis, AnalysisResultParameter> {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlAnalysis idlAnalysis = (IdlAnalysis) transferable;
-		super.fromTransferable(idlAnalysis);
+		super.fromIdlTransferable(idlAnalysis);
 		this.measurementId = Identifier.valueOf(idlAnalysis.measurementId);
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;

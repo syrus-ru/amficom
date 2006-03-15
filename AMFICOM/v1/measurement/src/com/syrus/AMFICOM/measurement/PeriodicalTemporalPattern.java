@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.30.2.1 2006/02/28 15:20:04 arseniy Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.30.2.2 2006/03/15 15:50:02 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,7 +20,6 @@ import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -30,17 +29,16 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 
 /**
- * @version $Revision: 1.30.2.1 $, $Date: 2006/02/28 15:20:04 $
+ * @version $Revision: 1.30.2.2 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
-public final class PeriodicalTemporalPattern
-		extends AbstractTemporalPattern<PeriodicalTemporalPattern> {
-
+public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	private static final long serialVersionUID = 3257567312898175032L;
 
 	private long period;
@@ -71,25 +69,27 @@ public final class PeriodicalTemporalPattern
 			version);
 		this.period = period;
 	}	
-	
+
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	public PeriodicalTemporalPattern(final IdlPeriodicalTemporalPattern itpt) throws CreateObjectException {
 		try {
-			this.fromTransferable(itpt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(itpt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}	
-	
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlPeriodicalTemporalPattern ptpt = (IdlPeriodicalTemporalPattern)transferable;
-		super.fromTransferable(ptpt);
+		super.fromIdlTransferable(ptpt);
 		this.period = ptpt.period;
 		
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;

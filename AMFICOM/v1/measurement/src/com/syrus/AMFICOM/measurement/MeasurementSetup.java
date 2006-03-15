@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementSetup.java,v 1.100.2.4 2006/03/02 16:08:41 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.100.2.5 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,14 +35,15 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetup;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.100.2.4 $, $Date: 2006/03/02 16:08:41 $
+ * @version $Revision: 1.100.2.5 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
+public final class MeasurementSetup extends StorableObject {
 	private static final long serialVersionUID = -2848488077315796037L;
 
 	private Identifier measurementTemplateId;
@@ -77,9 +78,9 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 
 	public MeasurementSetup(final IdlMeasurementSetup idlMeasurementSetup) throws CreateObjectException {
 		try {
-			this.fromTransferable(idlMeasurementSetup);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(idlMeasurementSetup);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -133,9 +134,9 @@ public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlMeasurementSetup idlMeasurementSetup = (IdlMeasurementSetup) transferable;
-		super.fromTransferable(idlMeasurementSetup);
+		super.fromIdlTransferable(idlMeasurementSetup);
 		this.measurementTemplateId = Identifier.valueOf(idlMeasurementSetup.measurementTemplateId);
 		this.analysisTemplateId = Identifier.valueOf(idlMeasurementSetup.analysisTemplateId);
 		this.description = idlMeasurementSetup.description;

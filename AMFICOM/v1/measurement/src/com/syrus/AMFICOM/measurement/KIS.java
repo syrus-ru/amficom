@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.14.2.3 2006/03/07 10:42:49 arseniy Exp $
+ * $Id: KIS.java,v 1.14.2.4 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
@@ -36,14 +38,15 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlKIS;
 import com.syrus.AMFICOM.measurement.corba.IdlKISHelper;
 import com.syrus.util.Log;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.14.2.3 $, $Date: 2006/03/07 10:42:49 $
+ * @version $Revision: 1.14.2.4 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class KIS extends DomainMember<KIS> implements Namable {
+public final class KIS extends DomainMember implements Namable {
 	private static final long serialVersionUID = -7396074492931314603L;
 
 	private String name;
@@ -56,9 +59,9 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 
 	public KIS(final IdlKIS kt) throws CreateObjectException {
 		try {
-			this.fromTransferable(kt);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+			this.fromIdlTransferable(kt);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
 	}
 
@@ -134,7 +137,7 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlKIS idlKIS = (IdlKIS) transferable;
 		super.fromTransferable(idlKIS, Identifier.valueOf(idlKIS.domainId));
 
@@ -296,12 +299,23 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 	 */
 	public Set<MeasurementPort> getMeasurementPorts(final boolean breakOnLoadError) {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id,
-					MEASUREMENTPORT_CODE), true, breakOnLoadError);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, MEASUREMENTPORT_CODE),
+					true,
+					breakOnLoadError);
 		} catch (final ApplicationException ae) {
 			Log.debugMessage(ae, Level.SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	@Override
+	protected boolean isValid() {
+		return super.isValid()
+				&& this.name != null
+				&& this.hostname != null
+				&& this.tcpPort != 0
+				&& this.equipmentId != null && this.equipmentId.getMajor() == EQUIPMENT_CODE
+				&& this.mcmId != null && this.mcmId.getMajor() == MCM_CODE;
 	}
 
 	/**

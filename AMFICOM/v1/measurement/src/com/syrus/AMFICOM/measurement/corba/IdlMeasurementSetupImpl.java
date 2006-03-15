@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.measurement.corba;
 import static java.util.logging.Level.SEVERE;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -39,12 +38,12 @@ final class IdlMeasurementSetupImpl extends IdlMeasurementSetup {
 	}
 
 	@Override
-	public StorableObject getNative() throws IdlCreateObjectException {
+	public MeasurementSetup getNative() throws IdlCreateObjectException {
 		try {
 			return new MeasurementSetup(this);
 		} catch (final CreateObjectException coe) {
 			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
+			throw coe.getIdlTransferable();
 		}
 	}
 

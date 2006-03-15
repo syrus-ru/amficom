@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisType.java,v 1.107.2.5 2006/02/28 12:03:55 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.107.2.6 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,14 +32,15 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisTypeHelper;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.107.2.5 $, $Date: 2006/02/28 12:03:55 $
+ * @version $Revision: 1.107.2.6 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class AnalysisType extends ActionType<AnalysisType> {
+public final class AnalysisType extends ActionType {
 	private static final long serialVersionUID = 3770601862577867745L;
 
 	private static TypicalCondition codenameCondition;
@@ -96,7 +97,7 @@ public final class AnalysisType extends ActionType<AnalysisType> {
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
 		final IdlAnalysisType idlAnalysisType = (IdlAnalysisType) transferable;
 		super.fromTransferable(idlAnalysisType, idlAnalysisType.codename, idlAnalysisType.description);
 

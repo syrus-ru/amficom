@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBindingWrapper.java,v 1.1.2.2 2006/02/22 15:49:27 arseniy Exp $
+ * $Id: ActionParameterTypeBindingWrapper.java,v 1.1.2.3 2006/03/15 15:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/22 15:49:27 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/03/15 15:50:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -97,8 +97,8 @@ public class ActionParameterTypeBindingWrapper extends StorableObjectWrapper<Act
 	}
 
 	@Override
-	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key);
+	public Class<?> getPropertyClass(final String key) {
+		final Class<?> clazz = super.getPropertyClass(key);
 		if (clazz != null) {
 			return clazz;
 		}

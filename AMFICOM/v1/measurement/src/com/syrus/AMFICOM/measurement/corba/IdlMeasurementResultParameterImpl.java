@@ -42,7 +42,7 @@ final class IdlMeasurementResultParameterImpl extends IdlMeasurementResultParame
 			return new MeasurementResultParameter(this);
 		} catch (CreateObjectException coe) {
 			Log.debugMessage(coe, SEVERE);
-			throw new IdlCreateObjectException(coe.getMessage());
+			throw coe.getIdlTransferable();
 		}
 	}
 
