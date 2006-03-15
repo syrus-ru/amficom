@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.94 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.93 2006/03/15 14:47:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -51,20 +50,22 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeMonitoringSolutionHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeMonitoringSolution;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * #08 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.94 $, $Date: 2006/03/15 15:49:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.93 $, $Date: 2006/03/15 14:47:28 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
 		extends StorableObject
 		implements Describable, ReverseDependencyContainer,
-		XmlTransferableObject<XmlSchemeMonitoringSolution> {
+		XmlTransferableObject<XmlSchemeMonitoringSolution>,
+		IdlTransferableObjectExt<IdlSchemeMonitoringSolution> {
 	private static final long serialVersionUID = 3906364939487949361L;
 
 	private String name;
@@ -196,7 +197,7 @@ public final class SchemeMonitoringSolution
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					price,
@@ -245,7 +246,7 @@ public final class SchemeMonitoringSolution
 					created,
 					creatorId,
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					name,
 					description,
 					price,
@@ -697,15 +698,13 @@ public final class SchemeMonitoringSolution
 	}
 
 	/**
-	 * @param transferable
+	 * @param schemeMonitoringSolution
 	 * @throws IdlConversionException
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
-	@Override
-	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	public void fromIdlTransferable(final IdlSchemeMonitoringSolution schemeMonitoringSolution)
 	throws IdlConversionException {
 		synchronized (this) {
-			final IdlSchemeMonitoringSolution schemeMonitoringSolution = (IdlSchemeMonitoringSolution) transferable;
 			super.fromIdlTransferable(schemeMonitoringSolution);
 			this.name = schemeMonitoringSolution.name;
 			this.description = schemeMonitoringSolution.description;

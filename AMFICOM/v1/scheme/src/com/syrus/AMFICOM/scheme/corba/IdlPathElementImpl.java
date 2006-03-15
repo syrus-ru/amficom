@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPathElementImpl.java,v 1.6 2006/03/15 16:42:48 bass Exp $
+ * $Id: IdlPathElementImpl.java,v 1.4 2006/03/14 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlData;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2006/03/15 16:42:48 $
+ * @version $Revision: 1.4 $, $Date: 2006/03/14 10:47:55 $
  * @module scheme
  */
 final class IdlPathElementImpl extends IdlPathElement {

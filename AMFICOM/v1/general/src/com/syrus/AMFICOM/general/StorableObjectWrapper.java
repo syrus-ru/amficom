@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.22 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: StorableObjectWrapper.java,v 1.21 2006/03/13 15:54:27 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.util.Wrapper;
  * wrapper's constructor must be private and its instance must be obtained using
  * a static method <code>getInstance()</code>.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.22 $, $Date: 2006/03/15 15:17:43 $
+ * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2006/03/13 15:54:27 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
@@ -52,7 +52,6 @@ public abstract class StorableObjectWrapper<T extends StorableObject> implements
 	public static final String COLUMN_TYPE_CODE = "type_code";
 
 	public static final String LINK_COLUMN_PARAMETER_MODE = "parameter_mode";
-	public static final String LINK_COLUMN_PARAMETER_TYPE_ID = "parameter_type_id";
 	public static final String LINK_COLUMN_PARAMETER_TYPE_CODE = "parameter_type_code";
 	
 	public static final String VIEW_NAME = "view_name";
@@ -82,35 +81,34 @@ public abstract class StorableObjectWrapper<T extends StorableObject> implements
 			final Throwable cause = e.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
-				if (message == null) {
+				if (message == null)
 					assert false;
-				} else {
-					assert false : message;
-				}
-			} else {
+				else
+					assert false: message;
+			} else				
 				throw new IllegalDataException("StorableObjectWrapper.getWrapper | Caught " + e.getMessage());
-			}
 		}
 		return wrapper;
-	}
-
-	public Object getValue(final T object, final String key) {
+	}	
+	
+	public Object getValue(	T object,
+							String key) {
 		if (object != null) {
 			if (key.equals(COLUMN_ID)) {
 				return object.getId();
-			} else if (key.equals(COLUMN_CREATED)) {
+			} else if(key.equals(COLUMN_CREATED)) {
 				return object.getCreated();
-			} else if (key.equals(COLUMN_CREATOR_ID)) {
+			} else if(key.equals(COLUMN_CREATOR_ID)) {
 				return object.getCreatorId();
-			} else if (key.equals(COLUMN_MODIFIED)) {
+			} else if(key.equals(COLUMN_MODIFIED)) {
 				return object.getModified();
-			} else if (key.equals(COLUMN_MODIFIER_ID)) {
+			} else if(key.equals(COLUMN_MODIFIER_ID)) {
 				return object.getCreatorId();
 			}
 		}
 		return null;
 	}
-
+	
 	/**
 	 * @param storableObject
 	 * @param key
@@ -118,14 +116,17 @@ public abstract class StorableObjectWrapper<T extends StorableObject> implements
 	 * @throws PropertyChangeException
 	 * @see Wrapper#setValue(Object, String, Object)
 	 */
-	public abstract void setValue(final T storableObject, final String key, final Object value) throws PropertyChangeException;
+	public abstract void setValue(final T storableObject,
+			final String key,
+			final Object value)
+	throws PropertyChangeException;
 
 	public Class<?> getPropertyClass(String key) {
-		if (key.equals(COLUMN_ID)
+		if (key.equals(COLUMN_ID) 
 				|| key.equals(COLUMN_CREATOR_ID)
 				|| key.equals(COLUMN_MODIFIER_ID)) {
 			return Identifier.class;
-		} else if (key.equals(COLUMN_CREATED)
+		} else if(key.equals(COLUMN_CREATED) 
 				|| key.equals(COLUMN_MODIFIED)) {
 			return Date.class;
 		}

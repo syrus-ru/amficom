@@ -1,5 +1,5 @@
 /*-
- * $Id: EmptySchemeObjectLoader.java,v 1.10 2006/03/15 16:41:40 bass Exp $
+ * $Id: EmptySchemeObjectLoader.java,v 1.8 2006/03/13 13:54:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2006/03/15 16:41:40 $
+ * @version $Revision: 1.8 $, $Date: 2006/03/13 13:54:01 $
  * @module scheme
  */
 final class EmptySchemeObjectLoader implements ObjectLoader {

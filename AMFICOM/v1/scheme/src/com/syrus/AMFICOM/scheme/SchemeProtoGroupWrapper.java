@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupWrapper.java,v 1.15 2006/03/15 16:58:21 bass Exp $
+ * $Id: SchemeProtoGroupWrapper.java,v 1.13 2006/03/13 15:54:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2006/03/15 16:58:21 $
+ * @version $Revision: 1.13 $, $Date: 2006/03/13 15:54:26 $
  * @author $Author: bass $
  * @module scheme
  */
