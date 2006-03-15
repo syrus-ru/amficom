@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortWrapper.java,v 1.15 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: SchemeCablePortWrapper.java,v 1.16 2006/03/15 17:31:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2006/03/15 15:49:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2006/03/15 17:31:13 $
+ * @author $Author: bass $
  * @module scheme
  */
 public final class SchemeCablePortWrapper extends StorableObjectWrapper<SchemeCablePort> {

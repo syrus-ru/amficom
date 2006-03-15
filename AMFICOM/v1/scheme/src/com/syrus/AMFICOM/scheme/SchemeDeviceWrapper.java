@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceWrapper.java,v 1.12 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: SchemeDeviceWrapper.java,v 1.13 2006/03/15 17:31:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2006/03/15 15:49:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2006/03/15 17:31:13 $
+ * @author $Author: bass $
  * @module scheme
  */
 public final class SchemeDeviceWrapper extends StorableObjectWrapper<SchemeDevice> {
