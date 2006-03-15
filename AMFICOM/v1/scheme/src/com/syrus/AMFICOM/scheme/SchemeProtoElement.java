@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.135 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: SchemeProtoElement.java,v 1.136 2006/03/15 19:50:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,6 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -79,21 +78,23 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElement;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElementSeq;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
  * #02 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.135 $, $Date: 2006/03/15 15:49:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.136 $, $Date: 2006/03/15 19:50:28 $
  * @module scheme
  */
 public final class SchemeProtoElement
 		extends AbstractCloneableStorableObject
 		implements Describable, SchemeCellContainer,
 		Characterizable, ReverseDependencyContainer,
-		XmlTransferableObject<XmlSchemeProtoElement> {
+		XmlTransferableObject<XmlSchemeProtoElement>,
+		IdlTransferableObjectExt<IdlSchemeProtoElement> {
 	private static final long serialVersionUID = 3689348806202569782L;
 
 	private String name;
@@ -1195,15 +1196,13 @@ public final class SchemeProtoElement
 	}
 
 	/**
-	 * @param transferable
+	 * @param schemeProtoElement
 	 * @throws IdlConversionException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
-	@Override
-	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	public void fromIdlTransferable(final IdlSchemeProtoElement schemeProtoElement)
 	throws IdlConversionException {
 		synchronized (this) {
-			final IdlSchemeProtoElement schemeProtoElement = (IdlSchemeProtoElement) transferable;
 			super.fromIdlTransferable(schemeProtoElement);
 			this.name = schemeProtoElement.name;
 			this.description = schemeProtoElement.description;
