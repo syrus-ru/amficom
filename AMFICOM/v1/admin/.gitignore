@@ -19,3 +19,4 @@ build.xml
 nbproject
 .nbintdb
 .pmd
+.refactorings
