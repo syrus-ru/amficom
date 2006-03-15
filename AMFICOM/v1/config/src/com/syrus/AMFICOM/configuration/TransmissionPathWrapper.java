@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathWrapper.java,v 1.23 2006/03/15 15:35:12 arseniy Exp $
+ * $Id: TransmissionPathWrapper.java,v 1.24 2006/03/15 16:49:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TableNames;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2006/03/15 15:35:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2006/03/15 16:49:52 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */

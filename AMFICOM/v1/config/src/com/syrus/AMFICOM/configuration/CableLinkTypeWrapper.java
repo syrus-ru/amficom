@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeWrapper.java,v 1.24 2006/03/15 15:35:12 arseniy Exp $
+ * $Id: CableLinkTypeWrapper.java,v 1.25 2006/03/15 16:50:23 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2006/03/15 15:35:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2006/03/15 16:50:23 $
+ * @author $Author: bass $
  * @module config
  */
 public final class CableLinkTypeWrapper extends StorableObjectWrapper<CableLinkType> {
