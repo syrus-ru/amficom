@@ -1,5 +1,5 @@
 /*
- * $Id: LoginRestorer.java,v 1.6 2005/10/20 14:15:54 arseniy Exp $
+ * $Id: LoginRestorer.java,v 1.7 2006/03/16 11:30:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/20 14:15:54 $
+ * @version $Revision: 1.7 $, $Date: 2006/03/16 11:30:21 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -27,6 +27,4 @@ public interface LoginRestorer {
 	String getLogin();
 
 	String getPassword();
-
-	Identifier getDomainId();
 }
