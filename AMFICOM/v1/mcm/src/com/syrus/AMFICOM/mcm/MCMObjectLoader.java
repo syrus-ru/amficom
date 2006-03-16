@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.36 2006/03/13 13:53:59 bass Exp $
+ * $Id: MCMObjectLoader.java,v 1.37 2006/03/16 12:16:35 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2006/03/13 13:53:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2006/03/16 12:16:35 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -184,7 +184,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 				final Identifier idDependency = dependency.getId();
 				boolean needLoad = true;
 				try {
-					needLoad = !StorableObjectDatabase.isPresentInDatabase(dependency.getId());
+					needLoad = !StorableObjectDatabase.isObjectPresentInDatabase(dependency.getId());
 				} catch (ApplicationException ae) {
 					Log.errorMessage(ae);
 				}
