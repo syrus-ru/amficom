@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.149 2006/03/15 15:16:16 arseniy Exp $
+ * $Id: StorableObject.java,v 1.150 2006/03/16 11:28:12 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.149 $, $Date: 2006/03/15 15:16:16 $
+ * @version $Revision: 1.150 $, $Date: 2006/03/16 11:28:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -692,7 +692,7 @@ public abstract class StorableObject implements Identifiable,
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.149 $, $Date: 2006/03/15 15:16:16 $
+	 * @version $Revision: 1.150 $, $Date: 2006/03/16 11:28:12 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -801,7 +801,7 @@ public abstract class StorableObject implements Identifiable,
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.149 $, $Date: 2006/03/15 15:16:16 $
+	 * @version $Revision: 1.150 $, $Date: 2006/03/16 11:28:12 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
@@ -813,7 +813,7 @@ public abstract class StorableObject implements Identifiable,
 	/**
 	 * @see com.syrus.util.LRUMap.Retainable#retain()
 	 */
-	public boolean retain() {
+	public final boolean retain() {
 		return this.isChanged();
 	}
 }
