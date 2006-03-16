@@ -1,11 +1,10 @@
-/*
- * $Id: MeasurementControlModule.java,v 1.146.2.3 2006/03/09 17:37:52 arseniy Exp $
+/*-
+ * $Id: MeasurementControlModule.java,v 1.146.2.4 2006/03/16 12:00:43 arseniy Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
-
 package com.syrus.AMFICOM.mcm;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
@@ -16,13 +15,16 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.OR;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
+import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_NEW;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_PROCESSING;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_SCHEDULED;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_STOPPED;
+import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_STOPPING;
+import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_ABORTED;
 import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_STATUS;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -36,6 +38,8 @@ import java.util.Set;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.eventv2.Event;
+import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -45,30 +49,27 @@ import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.Test.TestStatus;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146.2.3 $, $Date: 2006/03/09 17:37:52 $
+ * @version $Revision: 1.146.2.4 $, $Date: 2006/03/16 12:00:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
-
 final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String APPLICATION_NAME = "mcm";
 	public static final String SETUP_OPTION = "-setup";
-
-	/*-********************************************************************
-	 * Keys.                                                              *
-	 **********************************************************************/
 
 	public static final String KEY_MCM_ID = "MCMID";
 	public static final String KEY_DB_HOST_NAME = "DBHostName";
@@ -78,100 +79,158 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String KEY_TICK_TIME = "TickTime";
 	public static final String KEY_MAX_FALLS = "MaxFalls";
 	public static final String KEY_FORWARD_PROCESSING = "ForwardProcessing";
-	public static final String KEY_WAIT_MRESULT_TIMEOUT = "WaitMResultTimeout";
-	public static final String KEY_MSERVER_SERVANT_NAME = "MServerServantName";
-	public static final String KEY_MSERVER_CHECK_TIMEOUT = "MServerCheckTimeout";
 	public static final String KEY_KIS_TICK_TIME = "KISTickTime";
 	public static final String KEY_KIS_MAX_FALLS = "KISMaxFalls";
-	public static final String KEY_KIS_HOST_NAME = "KISHostName";
-	public static final String KEY_KIS_TCP_PORT = "KISTCPPort";
 	public static final String KEY_KIS_MAX_OPENED_CONNECTIONS = "KISMaxOpenedConnections";
 	public static final String KEY_KIS_CONNECTION_TIMEOUT = "KISConnectionTimeout";
-
-	/*-********************************************************************
-	 * Default values.                                                    *
-	 **********************************************************************/
+	public static final String KEY_KIS_HOST_NAME = "KISHostName";
+	public static final String KEY_KIS_TCP_PORT = "KISTCPPort";
 
 	public static final String MCM_ID = "MCM_1";
 	public static final String DB_SID = "amficom";
-	/**
-	 * Database connection timeout, in seconds.
-	 */
 	public static final int DB_CONNECTION_TIMEOUT = 120;	//sec
 	public static final String DB_LOGIN_NAME = "amficom";
-	/**
-	 * Tick time, in seconds.
-	 */
 	public static final int TICK_TIME = 5;	//sec
-	public static final int FORWARD_PROCESSING = 2;
-	public static final int WAIT_MRESULT_TIMEOUT = 24 * 60 * 60;	//sec
-	public static final String MSERVER_SERVANT_NAME = "MServer";
-	public static final int MSERVER_CHECK_TIMEOUT = 10;		//min
+	public static final int FORWARD_PROCESSING = 0;	//sec
 	public static final int KIS_TICK_TIME = 1;	//sec
 	public static final int KIS_MAX_FALLS = 10;
-	public static final String KIS_HOST_NAME = "127.0.0.1";
-	public static final short KIS_TCP_PORT = 7501;
 	public static final int KIS_MAX_OPENED_CONNECTIONS = 1;
 	public static final int KIS_CONNECTION_TIMEOUT = 120;	//sec
+	public static final String KIS_HOST_NAME = "127.0.0.1";
+	public static final short KIS_TCP_PORT = 7501;
 
 	private static final String PASSWORD = "mcm";
 
 
 	/**
-	 * Identifier of this MCM.
+	 * Реализация интерфейса {@link Comparator} для сравнения заданий по времени
+	 * начала. Используется в {@link #sortTestsByStartTime(List)}.
 	 */
-	protected static Identifier mcmId;
+	private static class TestStartTimeComparator implements Comparator<Test> {
+
+		public int compare(final Test test1, final Test test2) {
+			return test1.getStartTime().compareTo(test2.getStartTime());
+		}
+	}
 
 	/**
-	 * Login of the corresponding user.
-	 * */
-	static String login;
+	 * Реализация интерфейса {@link LoginRestorer} для восстановления сессии в
+	 * системе.
+	 */
+	private static class MCMLoginRestorer implements LoginRestorer {
+
+		public boolean restoreLogin() {
+			return true;
+		}
+
+		public String getLogin() {
+			return getInstance().getSystemUserLogin();
+		}
+
+		public String getPassword() {
+			return PASSWORD;
+		}
+	}
+
 
 	/**
-	 * Identifier of domain to log in
-	 * */
-	static Identifier domainId;
+	 * Единственный в пределах приложения объект данного класса. Таким образом,
+	 * {@link MeasContrModule} является "Одиночкой" (Singletone).
+	 */
+	private static MeasurementControlModule instance;
+
 
 	/**
-	 * Scheduled tests transferred from server
-	 * */
-	static List<Test> testList;
-
-	/**	
-	 * key - test_id, value - corresponding test processor
-	 * */
-	static Map<Identifier, TestProcessor> testProcessors;
+	 * Уникальный идентификатор данного модуля в системе.
+	 */
+	private final Identifier moduleId;
 
 	/**
-	 * Reference to KISConnectionManager
-	 * */
-	static KISConnectionManager kisConnectionManager;
+	 * Имя пользователя, от имени которого данный модуль работает в системе.
+	 * Нужно для восстановления сеанса средствами
+	 * {@link com.syrus.AMFICOM.general.LoginRestorer}. См.
+	 * {@link MCMLoginRestorer#getLogin()}.
+	 */
+	private final String systemUserLogin;
 
 	/**
-	 * Key - kisId, value - corresponding transmitter-receiver
-	 * */
-	static Map<Identifier, Transceiver> transceivers;
+	 * Набор идентификаторов заданий, которые необходимо поставить в очередь на
+	 * исполнение, согласно времени начала каждого из них. Состояние каждого из
+	 * этих заданий - НОВЫЙ.
+	 */
+	private final Set<Identifier> newTestIds;
 
 	/**
-	 * Thread with event queue
-	 * */
-	static EventQueue eventQueue;
+	 * Набор идентификаторов заданий, исполнение которых необходимо прекратить.
+	 */
+	private final Set<Identifier> stoppingTestIds;
 
-	private long forwardProcessing;
+	/**
+	 * Список заданий, ожидающих в очереди своего начала. Состояние каждого из
+	 * них - НАЗНАЧЕН. Они упорядочены по времени начала. Когда подходит время,
+	 * крайнее заданее из очереди отправляется на исполнение.
+	 */
+	private final List<Test> scheduledTests;
+
+	/**
+	 * Карта исполнителей заданий. Ключ - идентификатор задания, величина -
+	 * исполнитель.
+	 */
+	private final Map<Identifier, TestProcessor> testProcessors;
+
+	/**
+	 * Управляющий соединениями с контрольно-измерительными средствами (КИС).
+	 */
+	private final KISConnectionManager kisConnectionManager;
+
+	/**
+	 * Карта приёмопередатчиков, обеспечивающих связь с
+	 * контрольно-измерительными средствами (КИС). Ключ - идентификатор КИС,
+	 * величина - приёмопередатчик.
+	 */
+	private final Map<Identifier, Transceiver> transceivers;
+
+	/**
+	 * Синхронизатор объектов. Отвечает за подгрузку объектов с сервера.
+	 */
+	private final MCMObjectSynchronizer objectSynchronizer;
+
+	/**
+	 * Очередь событий, а также поток, обрабатывающий эту очередь.
+	 */
+	private final EventQueue eventQueue;
+
+	/**
+	 * Поправка на "заторможенность" - систематическую погрешность времени
+	 * начала выполнения заданий. Если вам кажется, что выполнение заданий
+	 * постоянно запаздывает на какую-то постоянную величину, попробуйте
+	 * выставить <code>{@link #forwardProcessing} > 0</code>. Измеряется в
+	 * секундах.
+	 */
+	private final long forwardProcessing;
+
+	/**
+	 * Знак работы главного цикла.
+	 */
 	private boolean running;
 
-	private MeasurementControlModule() {
-		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000, ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
-		super.setName("MeasurementControlModule");
+	/**
+	 * Переменная для реализации интерфейса {@link Comparator}. Нужна для того,
+	 * чтобы не создавать новый объект при каждом вызове
+	 * {@link #sortTestsByStartTime(List)}.
+	 */
+	private static TestStartTimeComparator testStartTimeComparator;
 
-		this.forwardProcessing = ApplicationProperties.getInt(KEY_FORWARD_PROCESSING, FORWARD_PROCESSING)*1000;
-		this.running = true;
-	}
+	/**
+	 * Восстановитель сессии. См. {@link #getLoginRestorer()}.
+	 */
+	private static  MCMLoginRestorer loginRestorer;
+
 
 	public static void main(String[] args) {
 		Application.init(APPLICATION_NAME);
 
-		/*	Parse command-line options*/
+		/* Разобрать параметры командной строки. */
 		if (args.length > 0) {
 			if (args[0].equalsIgnoreCase(SETUP_OPTION)) {
 				MCMSetup.setup();
@@ -182,80 +241,71 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			}
 		}
 
-		/*	All preparations on startup*/
-		startup();
+		/* Поготовка к работе. */
+		try {
+			startup();
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+			System.exit(0);
+		}
 
-		/*	Start main loop	*/
-		final MeasurementControlModule measurementControlModule = new MeasurementControlModule();
-		measurementControlModule.start();
+		/* Запустить главный поток. */
+		instance.start();
 
-		/*	Add shutdown hook	*/
+		/* Обеспечить правильное выключение в случае прерывания приложения. */
 		Runtime.getRuntime().addShutdownHook(new Thread("MeasurementControlModule -- shutdown hook") {
 			@Override
 			public void run() {
-				measurementControlModule.shutdown();
+				getInstance().shutdown();
 			}
 		});
 	}
 
-	private static void startup() {
-		/*	Establish connection with database	*/
+	/**
+	 * Возвращает ссылку на объект-одиночку, представляющий данный модуль.
+	 * 
+	 * @return {@link #instance}.
+	 */
+	static MeasurementControlModule getInstance() {
+		return instance;
+	}
+
+	private static void startup() throws ApplicationException {
+
+		/* Установить соединение с базой данных. */
 		establishDatabaseConnection();
 
-		/*	Initialize object drivers
-		 * 	for work with database*/
+		/* Создать контекст драйверов базы данных. */
 		DatabaseContextSetup.initDatabaseContext();
 
-		/*	Retrieve information about MCM, it's user and server*/
-		mcmId = new Identifier(ApplicationProperties.getString(KEY_MCM_ID, MCM_ID));
+		/*
+		 * Получить из БД данные о самом модуле, его сервере и пользователе, от
+		 * имени которого он работает в системе.
+		 */
+		final Identifier mcmId = new Identifier(ApplicationProperties.getString(KEY_MCM_ID, MCM_ID));
+
+		final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(MCM_CODE);
+		final MCM mcm = mcmDatabase.retrieveForId(mcmId);
+
+		final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);
+		final Server server = serverDatabase.retrieveForId(mcm.getServerId());
+
+		final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(SYSTEMUSER_CODE);
+		final SystemUser systemUser = systemUserDatabase.retrieveForId(mcm.getUserId());
+
+		/* Создать окружение сеанса. */
+		MCMSessionEnvironment.createInstance(server.getHostName(), mcmId.toString());
+
+		/* Войти в систему. */
+		final String systemUserLogin = systemUser.getLogin();
 		try {
-			final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(MCM_CODE);
-			final MCM mcm = mcmDatabase.retrieveForId(mcmId);
-
-			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(SYSTEMUSER_CODE);
-			final SystemUser user = systemUserDatabase.retrieveForId(mcm.getUserId());
-
-			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);
-			final Server server = serverDatabase.retrieveForId(mcm.getServerId());
-
-			login = user.getLogin();
-			domainId = mcm.getDomainId();
-
-			/*	Create session environment*/
-			MCMSessionEnvironment.createInstance(server.getHostName(), mcmId.toString());
-
-			/*	Login*/
-			final MCMSessionEnvironment sessionEnvironment = MCMSessionEnvironment.getInstance();
-			try {
-				sessionEnvironment.login(login, PASSWORD, domainId);
-			} catch (final LoginException le) {
-				Log.errorMessage(le);
-			}
-
-			/*	Create and start object synchronizer*/
-			final MCMObjectSynchronizer objectSynchronizer = new MCMObjectSynchronizer(sessionEnvironment.getMCMServantManager());
-			objectSynchronizer.start();
-
-			/*	Create map of test processors*/
-			testProcessors = Collections.synchronizedMap(new HashMap<Identifier, TestProcessor>());
-
-			/*	Create (and start - ?) KIS connection manager*/
-			activateKISConnectionManager();
-
-			/*	Create and start transceiver for every KIS*/
-			activateKISTransceivers();
-
-			/*	Create and fill testList - sheduled tests ordered by start_time;	*/
-			prepareTestList();
-
-			/*	Create and start event thread*/
-			eventQueue = new EventQueue();
-			eventQueue.start();
-
-		} catch (final ApplicationException ae) {
-			Log.errorMessage(ae);
-			System.exit(0);
+			MCMSessionEnvironment.getInstance().login(systemUserLogin, PASSWORD, mcm.getDomainId());
+		} catch (final LoginException le) {
+			Log.errorMessage(le);
 		}
+
+		/* Создать объект главного класса. */
+		instance = new MeasurementControlModule(mcmId, systemUserLogin);
 	}
 
 	static void establishDatabaseConnection() {
@@ -271,87 +321,263 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}
 	}
 
-	private static void activateKISConnectionManager() {
-		kisConnectionManager = new KISConnectionManager();
+
+	private MeasurementControlModule(final Identifier moduleId, final String systemUserLogin) {
+		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000, ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
+		super.setName("MeasurementControlModule");
+
+		this.moduleId = moduleId;
+		this.systemUserLogin = systemUserLogin;
+
+		this.newTestIds = Collections.synchronizedSet(new HashSet<Identifier>());
+		this.stoppingTestIds = Collections.synchronizedSet(new HashSet<Identifier>());
+
+		this.scheduledTests = Collections.synchronizedList(new LinkedList<Test>());
+		this.searchScheduledAndProcessingTests();
+
+		this.testProcessors = Collections.synchronizedMap(new HashMap<Identifier, TestProcessor>());
+
+		this.kisConnectionManager = new KISConnectionManager();
+
+		this.transceivers = Collections.synchronizedMap(new HashMap<Identifier, Transceiver>());
+		this.setupKISTransceivers();
+
+		this.objectSynchronizer = new MCMObjectSynchronizer(MCMSessionEnvironment.getInstance().getMCMServantManager());
+		this.objectSynchronizer.start();
+
+		this.eventQueue = new EventQueue();
+		this.eventQueue.start();
+
+		this.forwardProcessing = ApplicationProperties.getInt(KEY_FORWARD_PROCESSING, FORWARD_PROCESSING) * 1000;
+		this.running = true;
 	}
 
-	private static void activateKISTransceivers() {
-		try {
-			final LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, KIS_CODE);
-			final Set<KIS> kiss = StorableObjectPool.getStorableObjectsByCondition(lic, true, false);
+	/**
+	 * Найти в БД задания в состояниях НАЗНАЧЕН и ВЫПОЛНЯЕТСЯ. Первые -
+	 * поставить в очередь назначенных заданий {@link #scheduledTests} (с
+	 * обязательным упорядочиванием по времени начала), а вторые - запустить на
+	 * исполнение.
+	 */
+	private void searchScheduledAndProcessingTests() {
+		final LinkedIdsCondition mcmTestCondition = new LinkedIdsCondition(this.moduleId, TEST_CODE);
+		final TypicalCondition scheduledTestCondition = new TypicalCondition(TEST_STATUS_SCHEDULED,
+				OPERATION_EQUALS,
+				TEST_CODE,
+				COLUMN_STATUS);
+		final TypicalCondition processingTestCondition = new TypicalCondition(TEST_STATUS_PROCESSING,
+				OPERATION_EQUALS,
+				TEST_CODE,
+				COLUMN_STATUS);
+		final CompoundCondition testCondition = new CompoundCondition(mcmTestCondition,
+				AND,
+				new CompoundCondition(scheduledTestCondition, OR, processingTestCondition));
 
-			transceivers = Collections.synchronizedMap(new HashMap<Identifier, Transceiver>(kiss.size()));
-			for (final KIS kis : kiss) {
-				if (!kis.isOnService()) {
-					continue;
-				}
-				final Identifier kisId = kis.getId();
-				final Transceiver transceiver = new Transceiver(kis);
+		final Set<Test> tests;
+		try {
+			tests = StorableObjectPool.getStorableObjectsByCondition(testCondition, true, false);
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+			return;
+		}
+		if (tests.isEmpty()) {
+			return;
+		}
+
+		for (final Test test : tests) {
+			switch (test.getStatus()) {
+				case TEST_STATUS_SCHEDULED:
+					this.scheduledTests.add(test);
+					break;
+				case TEST_STATUS_PROCESSING:
+					this.startTestProcessor(test);
+					break;
+				default:
+					Log.errorMessage("Illegal status: " + test.getStatus() + " of test '" + test.getId() + "'");
+			}
+		}
+
+		/*
+		 * Не забыть упорядочить по времени очередь заданий в состоянии
+		 * НАЗНАЧЕН.
+		 */
+		if (!this.scheduledTests.isEmpty()) {
+			sortTestsByStartTime(this.scheduledTests);
+		}
+	}
+
+	private void setupKISTransceivers() {
+		final LinkedIdsCondition kisCondition = new LinkedIdsCondition(this.moduleId, KIS_CODE);
+		final Set<KIS> kiss;
+		try {
+			kiss = StorableObjectPool.getStorableObjectsByCondition(kisCondition, true, false);
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+			return;
+		}
+
+		for (final KIS kis : kiss) {
+			if (!kis.isOnService()) {
+				continue;
+			}
+
+			final Identifier kisId = kis.getId();
+			try {
+				final Transceiver transceiver = new Transceiver(kisId);
 				transceiver.start();
 				Log.debugMessage("Started transceiver for KIS '" + kisId + "'", Log.DEBUGLEVEL07);
-				transceivers.put(kisId, transceiver);
+				this.transceivers.put(kisId, transceiver);
+			} catch (ApplicationException ae) {
+				Log.errorMessage(ae);
 			}
-		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
 		}
 	}
 
-	private static void prepareTestList() {
-		testList = Collections.synchronizedList(new ArrayList<Test>());
-		TypicalCondition tc;
-
-		final LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, TEST_CODE);
-
-		tc = new TypicalCondition(TEST_STATUS_SCHEDULED,
-				OPERATION_EQUALS,
-				TEST_CODE,
-				COLUMN_STATUS);
-		CompoundCondition cc = new CompoundCondition(lic, AND, tc);
-
-		final Set<Identifier> scheduledTestIds = new HashSet<Identifier>();
-		try {
-			final Set<Test> tests = StorableObjectPool.getStorableObjectsByCondition(cc, true, false);
-			Log.debugMessage("Found " + tests.size() + " tests of status SCHEDULED", Log.DEBUGLEVEL07);
-
-			final List<Test> testsL = new LinkedList<Test>(tests);
-			sortTestsByStartTime(testsL);
-			testList.addAll(testsL);
-
-			scheduledTestIds.addAll(Identifier.createIdentifiers(tests));
-		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
-		}
-
-		tc = new TypicalCondition(TEST_STATUS_PROCESSING,
-				OPERATION_EQUALS,
-				TEST_CODE,
-				COLUMN_STATUS);
-		cc = new CompoundCondition(lic, AND, tc);
-
-		try {
-			final Set<Test> tests = StorableObjectPool.getStorableObjectsButIdsByCondition(scheduledTestIds, cc, true, false);
-			Log.debugMessage("Found " + tests.size() + " tests of status PROCESSING", Log.DEBUGLEVEL07);
-			for (final Test test : tests) {
-				startTestProcessor(test);
-			}
-		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
-		}
+	/**
+	 * Получить уникальный идентификатор данного модуля в системе.
+	 * 
+	 * @return Идентификатор данного модуля
+	 */
+	Identifier getModuleId() {
+		return this.moduleId;
 	}
 
+	/**
+	 * Получить имя пользователя, под которым данный модуль работает в системе.
+	 * 
+	 * @return Имя пользователя
+	 */
+	String getSystemUserLogin() {
+		return this.systemUserLogin;
+	}
+
+	/**
+	 * Получить ссылку на объект-исполнитель данного задания.
+	 * 
+	 * @param testId
+	 *        Идентификатор задания
+	 * @return Исполнитель задания
+	 */
+	TestProcessor getTestProcessor(final Identifier testId) {
+		assert testId.getMajor() == TEST_CODE : ILLEGAL_ENTITY_CODE;
+		return this.testProcessors.get(testId);
+	}
+
+	/**
+	 * Получить объект соединения с данным КИС.
+	 * 
+	 * @param kisId
+	 *        Идентификатор КИС
+	 * @return Соединение с КИС
+	 * @throws ApplicationException
+	 *         {@link com.syrus.AMFICOM.general.CommunicationException}, если
+	 *         нет возможности установить соединение;
+	 *         {@link ApplicationException}, если не удалось подгрузить данные
+	 *         из БД.
+	 */
+	KISConnection getKISConnection(final Identifier kisId) throws ApplicationException {
+		assert kisId.getMajor() == KIS_CODE : ILLEGAL_ENTITY_CODE;
+
+		final KIS kis = StorableObjectPool.getStorableObject(kisId, true);
+		return this.kisConnectionManager.getConnection(kis);
+	}
+
+	/**
+	 * Получить ссылку на приёмопередатчик данного КИС.
+	 * 
+	 * @param kisId
+	 *        Идентификатор КИС
+	 * @return Приёмопередатчик
+	 */
+	Transceiver getTransceiver(final Identifier kisId) {
+		assert kisId.getMajor() == KIS_CODE : ILLEGAL_ENTITY_CODE;
+		return this.transceivers.get(kisId);
+	}
+
+	/**
+	 * Добавить идентификаторы объектов, которые должен подгрузить с сервера
+	 * синхронизатор.
+	 * 
+	 * @param ids
+	 */
+	void addIdsToSynchronizer(final Set<Identifier> ids) {
+		this.objectSynchronizer.addIdentifiers(ids);
+	}
+
+	/**
+	 * Добавить событие в очереть.
+	 * @param event
+	 * @throws EventQueueFullException
+	 */
+	void addEventToQueue(final Event<? extends IdlEvent> event) throws EventQueueFullException {
+		assert event != null : NON_NULL_EXPECTED;
+		this.eventQueue.addEvent(event);
+	}
+
+	/**
+	 * Добавить идентификаторы новых заданий. Все эти задания должны иметь
+	 * состояние НОВЫЙ. См. {@link #scheduleNewTests()}.
+	 * 
+	 * @param testIds
+	 */
+	void addNewTestIds(final Set<Identifier> testIds) {
+		assert testIds != null : NON_NULL_EXPECTED;
+		assert StorableObject.getEntityCodeOfIdentifiables(testIds) == TEST_CODE : ILLEGAL_ENTITY_CODE;
+
+		this.newTestIds.addAll(testIds);
+	}
+
+	/**
+	 * Добавить идентификаторы заданий, подлежащих остановке. Все эти задания должны иметь
+	 * состояние ОСТАНАВЛИВАЕТСЯ. См. {@link #stopTests()}.
+	 * @param testIds
+	 */
+	void addStoppingTestIds(final Set<Identifier> testIds) {
+		assert testIds != null : NON_NULL_EXPECTED;
+		assert StorableObject.getEntityCodeOfIdentifiables(testIds) == TEST_CODE : ILLEGAL_ENTITY_CODE;
+
+		this.stoppingTestIds.addAll(testIds);
+	}
+
+	/**
+	 * Получить ссылку на восстановитель сессии. Объект создаётся только один
+	 * раз при первом обращении.
+	 * 
+	 * @return {@link #loginRestorer}
+	 */
+	static MCMLoginRestorer getLoginRestorer() {
+		if (loginRestorer == null) {
+			loginRestorer = new MCMLoginRestorer();
+		}
+		return loginRestorer;
+	}
+
+	/**
+	 * Удалить исполнитель задания из карты исполнителей {@link #testProcessors}.
+	 * Предназначен для вызова из {@link TestProcessor#shutdown()} и только.
+	 * 
+	 * @param testId
+	 */
+	void testProcessorShutdown(final Identifier testId) {
+		assert testId != null : NON_NULL_EXPECTED;
+		assert testId.getMajor() == TEST_CODE : ILLEGAL_ENTITY_CODE;
+
+		this.testProcessors.remove(testId);
+	}
+
+	/**
+	 * Главнй цикл.
+	 */
 	@Override
 	public void run() {
 		while (this.running) {
-			if (!testList.isEmpty()) {
-				if (testList.get(0).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing) {
-					final Test test = testList.remove(0);
-					final Identifier testId = test.getId();
-					if (!testProcessors.containsKey(testId)) {
-						Log.debugMessage("Starting test processor for test '" + testId + "'", Log.DEBUGLEVEL07);
-						startTestProcessor(test);
-					} else {
-						Log.errorMessage("Test processor for test '" + testId + "' already started");
-					}
+			this.scheduleNewTests();
+
+			this.stopTests();
+
+			if (!this.scheduledTests.isEmpty()) {
+				if (this.scheduledTests.get(0).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing) {
+					final Test test = this.scheduledTests.remove(0);
+					this.startTestProcessor(test);
 				}
 			}
 
@@ -360,154 +586,196 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			} catch (InterruptedException ie) {
 				Log.errorMessage(ie);
 			}
-
-		}//while
-	}
-
-	static void putTestProcessor(final TestProcessor testProcessor) {
-		assert testProcessor != null : NON_NULL_EXPECTED;
-		testProcessors.put(testProcessor.getTestId(), testProcessor);
-	}
-
-	static void removeTestProcessor(final Identifier testId) {
-		assert testId != null : NON_NULL_EXPECTED;
-		assert testId.getMajor() == TEST_CODE : ILLEGAL_ENTITY_CODE;
-		testProcessors.remove(testId);
-	}
-
-	private static void startTestProcessor(final Test test) {
-		switch (test.getTemporalType()) {
-			case TEST_TEMPORAL_TYPE_ONETIME:
-				(new OnetimeTestProcessor(test)).start();
-				break;
-			case TEST_TEMPORAL_TYPE_PERIODICAL:
-				(new PeriodicalTestProcessor(test)).start();
-				break;
-			default:
-				Log.errorMessage("Incorrect temporal type " + test.getTemporalType() + " of test '" + test.getId().toString() + "'");
 		}
 	}
 
-	private static class TestStartTimeComparator implements Comparator<Test> {
-
-		public int compare(final Test test1, final Test test2) {
-			return test1.getStartTime().compareTo(test2.getStartTime());
+	/**
+	 * Новые задания упорядочиваются по времени начала, а затем помещаются в
+	 * очередь назначенных заданий. При этом очередь назначенных заданий ({@link #scheduledTests})
+	 * сохраняет свою упорядоченность по времени начала. Каждому добавленному в
+	 * очередь заданию выставляется состояние НАЗНАЧЕН.
+	 */
+	private void scheduleNewTests() {
+		if (this.newTestIds.isEmpty()) {
+			return;
 		}
+
+		final Set<Test> newTests;
+		try {
+			newTests = StorableObjectPool.getStorableObjects(this.newTestIds, true);
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+			return;
+		}
+
+		final List<Test> newTestsList = new LinkedList<Test>(newTests);
+		sortTestsByStartTime(newTestsList);
+
+		synchronized (this.scheduledTests) {
+			final ListIterator<Test> scheduledTestIterator = this.scheduledTests.listIterator();
+			final ListIterator<Test> newTestIterator = newTestsList.listIterator();
+			Test scheduledTest = scheduledTestIterator.hasNext() ? scheduledTestIterator.next() : null;
+			Test newTest = newTestIterator.hasNext() ? newTestIterator.next() : null;
+			while (newTest != null) {
+				while (scheduledTest != null && scheduledTest.getStartTime().before(newTest.getStartTime())) {
+					scheduledTest = scheduledTestIterator.hasNext() ? scheduledTestIterator.next() : null;
+				}
+
+				if (scheduledTest != null) {
+					scheduledTestIterator.previous();
+				}
+
+				if (newTest.getStatus() == TEST_STATUS_NEW) {
+					scheduledTestIterator.add(newTest);
+					newTest.setStatus(TEST_STATUS_SCHEDULED);
+				} else {
+					Log.errorMessage("Status of new test '" + newTest.getId() + "': " + newTest.getStatus() + " -- not TEST_STATUS_NEW");
+				}
+
+				newTest = newTestIterator.hasNext() ? newTestIterator.next() : null;
+			}
+		}
+
+		try {
+			StorableObjectPool.flush(this.newTestIds, LoginManager.getUserId(), false);
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+		}
+		this.newTestIds.clear();
 	}
 
 	private static void sortTestsByStartTime(final List<Test> tests) {
-		Collections.sort(tests, new TestStartTimeComparator());
+		if (testStartTimeComparator == null) {
+			testStartTimeComparator = new TestStartTimeComparator();
+		}
+		Collections.sort(tests, testStartTimeComparator);
 	}
 
-	static void addTests(final List<Test> newTests) {
-		sortTestsByStartTime(newTests);
+	/**
+	 * Задания, помеченные на остановку ищутся в списке назначенных заданий
+	 * {@link #scheduledTests} и в карте исполнителей заданий
+	 * {@link #testProcessors}, в случае обнаружения - удаляются. Все задания,
+	 * обрабатываемые этим методом, должны иметь состояние ОСТАНАВЛИВАЕТСЯ.
+	 * Каждому заданию проставляется состояние ОСТАНОВЛЕН.
+	 */
+	private void stopTests() {
+		if (this.stoppingTestIds.isEmpty()) {
+			return;
+		}
 
-		synchronized (testList) {
-			final ListIterator<Test> testIt = testList.listIterator();
-			final ListIterator<Test> newTestIt = newTests.listIterator();
-			Test test = testIt.hasNext() ? testIt.next() : null;
-			Test newTest = newTestIt.hasNext() ? newTestIt.next() : null;
-			while (newTest != null) {
-				while (test != null && test.getStartTime().before(newTest.getStartTime())) {
-					test = testIt.hasNext() ? (Test) testIt.next() : null;
-				}
+		final Set<Test> stoppingTests;
+		try {
+			stoppingTests = StorableObjectPool.getStorableObjects(this.stoppingTestIds, true);
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+			return;
+		}
 
-				if (test != null) {
-					testIt.previous();
-				}
-				testIt.add(newTest);
-
-				newTest.setStatus(TEST_STATUS_SCHEDULED);
-
-				newTest = newTestIt.hasNext() ? newTestIt.next() : null;
+		for (final Test test : stoppingTests) {
+			final Identifier testId = test.getId();
+			final TestStatus testStatus = test.getStatus();
+			if (this.scheduledTests.contains(test)) {
+				Log.debugMessage("Test '" + testId + "': removing from list of scheduled tests", Log.DEBUGLEVEL07);
+				this.scheduledTests.remove(test);
+			} else if (this.testProcessors.containsKey(testId)) {
+				Log.debugMessage("Test '" + testId + "': stopping test processor", Log.DEBUGLEVEL07);
+				final TestProcessor testProcessor = this.testProcessors.get(testId);
+				testProcessor.finishTest();
+			} else {
+				Log.errorMessage("Test '" + testId + "', status " + testStatus
+						+ " -- not found scheduled list and in processing list. Will stop anyway.");
 			}
 
+			if (testStatus != TEST_STATUS_STOPPING) {
+				Log.errorMessage("Illegal status: " + testStatus + " of test '" + testId + "' -- not STOPPING. Will stop anyway.");
+			}
+			test.setStatus(TEST_STATUS_STOPPED);
+		}
+
+		try {
+			StorableObjectPool.flush(this.stoppingTestIds, LoginManager.getUserId(), false);
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+		}
+		this.stoppingTestIds.clear();
+	}
+
+	/**
+	 * Создать для данного задания исполнитель и запустить его. При этом
+	 * создаётся новая запись в {@link #testProcessors}. Если создать
+	 * исполнитель задания не удалось, задание прерывается.
+	 * 
+	 * @param test
+	 */
+	private void startTestProcessor(final Test test) {
+		final Identifier testId = test.getId();
+		if (this.testProcessors.containsKey(testId)) {
+			Log.errorMessage("Test processor for test '" + testId + "' already started");
+			return;
+		}
+
+		try {
+			final TestProcessor testProcessor;
+			switch (test.getTemporalType()) {
+				case TEST_TEMPORAL_TYPE_ONETIME:
+					testProcessor = new OnetimeTestProcessor(test);
+					break;
+				case TEST_TEMPORAL_TYPE_PERIODICAL:
+					testProcessor = new PeriodicalTestProcessor(test);
+					break;
+				default:
+					Log.errorMessage("Incorrect temporal type " + test.getTemporalType() + " of test '" + testId.toString() + "'");
+					return;
+			}
+			this.testProcessors.put(testId, testProcessor);
+			testProcessor.start();
+		} catch (TestProcessingException tpe) {
+			Log.errorMessage(tpe);
+			test.setStatus(TEST_STATUS_ABORTED);
 			try {
-				StorableObjectPool.flush(new HashSet<Test>(newTests), LoginManager.getUserId(), false);
+				StorableObjectPool.flush(test, LoginManager.getUserId(), true);
 			} catch (ApplicationException ae) {
 				Log.errorMessage(ae);
 			}
-
-		}	//synchronized (testList)
-	}
-
-	static void stopTests(final Set<Identifier> testIds) {
-		try {
-			final Set<Test> tests = StorableObjectPool.getStorableObjects(testIds, true);
-			for (final Test test : tests) {
-				stopTest(test);
-				test.setStatus(TEST_STATUS_STOPPED);
-			}
-		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
-		}
-
-		try {
-			StorableObjectPool.flush(testIds, LoginManager.getUserId(), true);
-		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
 		}
 	}
 
-	private static void stopTest(final Test test) {
-		final Identifier id = test.getId();
-		if (testList.contains(test)) {
-			Log.debugMessage("Test '" + id + "' found in testList -- removing and stopping ", Log.DEBUGLEVEL07);
-			testList.remove(test);
-		} else if (testProcessors.containsKey(id)) {
-			Log.debugMessage("Test '" + id + "' has test processor -- shutting down", Log.DEBUGLEVEL07);
-			final TestProcessor testProcessor = testProcessors.get(id);
-			testProcessor.stopTest();
-		}
-	}
-
+	/**
+	 * @inheritDoc
+	 */
 	@Override
 	protected void processFall() {
 		switch (super.fallCode) {
 			case FALL_CODE_NO_ERROR:
 				break;
 			default:
-				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
+				Log.errorMessage("Unknown error code: " + super.fallCode);
 		}
 	}
 
+	/**
+	 * Выключение главного цикла.
+	 */
 	void shutdown() {
 		this.running = false;
 
-		for (final Identifier kisId : transceivers.keySet()) {
-			transceivers.get(kisId).shutdown();
+		this.eventQueue.shutdown();
+
+		this.objectSynchronizer.shutdown();
+
+		synchronized (this.transceivers) {
+			for (final Transceiver transceiver : this.transceivers.values()) {
+				transceiver.shutdown();
+			}
 		}
 
-		synchronized (testProcessors) {
-			for (final Identifier testId : testProcessors.keySet()) {
-				final TestProcessor testProcessor = testProcessors.get(testId);
+		synchronized (this.testProcessors) {
+			for (final TestProcessor testProcessor : this.testProcessors.values()) {
 				testProcessor.shutdown();
 			}
 		}
 
-		eventQueue.shutdown();
-
 		DatabaseConnection.closeConnection();
-	}
-
-
-	static class MCMLoginRestorer implements LoginRestorer {
-
-		public boolean restoreLogin() {
-			return true;
-		}
-
-		public String getLogin() {
-			return login;
-		}
-
-		public String getPassword() {
-			return PASSWORD;
-		}
-
-		public Identifier getDomainId() {
-			return domainId;
-		}
 	}
 
 }

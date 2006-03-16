@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.80.2.1 2006/03/06 14:15:26 arseniy Exp $
+ * $Id: Transceiver.java,v 1.80.2.2 2006/03/16 12:02:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,36 +8,43 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
+import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KEY_KIS_CONNECTION_TIMEOUT;
+import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KEY_KIS_MAX_FALLS;
+import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KEY_KIS_TICK_TIME;
+import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KIS_CONNECTION_TIMEOUT;
+import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KIS_MAX_FALLS;
+import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KIS_TICK_TIME;
 import static com.syrus.AMFICOM.measurement.Action.ActionStatus.ACTION_STATUS_ABORTED;
 import static com.syrus.AMFICOM.measurement.Action.ActionStatus.ACTION_STATUS_COMPLETED;
 import static com.syrus.AMFICOM.measurement.Action.ActionStatus.ACTION_STATUS_NEW;
 import static com.syrus.AMFICOM.measurement.Action.ActionStatus.ACTION_STATUS_RUNNING;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementResultParameter;
+import com.syrus.AMFICOM.measurement.Action.ActionStatus;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.80.2.1 $, $Date: 2006/03/06 14:15:26 $
+ * @version $Revision: 1.80.2.2 $, $Date: 2006/03/16 12:02:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -50,85 +57,161 @@ final class Transceiver extends SleepButWorkThread {
 	private static final int FALL_CODE_RECEIVE_KIS_REPORT = 3;
 	private static final int FALL_CODE_CREATE_RESULT = 4;
 
-	private KIS kis;
-	private KISConnection kisConnection;
-	private List<Measurement> scheduledMeasurements;
-	private Map<Identifier, TestProcessor> testProcessors;
+	/**
+	 * Идентификатор КИС, который обслуживает данный приёмопередатчик.
+	 */
+	private final Identifier kisId;
 
+	/**
+	 * Соединение с КИС.
+	 */
+	private final KISConnection kisConnection;
+
+	/**
+	 * Список новых измерений. Состояние каждого из них должно быть НОВЫЙ.
+	 */
+	private final List<Measurement> newMeasurements;
+
+	/**
+	 * Набор идентификаторов выполняемых измерений. Состояние каждого из них
+	 * должно быть ВЫПОЛНЯЕТСЯ.
+	 */
+	private final Set<Identifier> runningMeasurementIds;
+
+	/**
+	 * Ответ КИС, который приходит с КИС по завершении измерения.
+	 */
 	private KISReport kisReport;
+
+	/**
+	 * Измерение, которое не удалось начать. Его необходимо перевести в
+	 * состояние ПРЕРВАН. См. {@link #removeMeasurement()} и
+	 * {@link #abortMeasurementAndReport()}
+	 */
 	private Measurement measurementToRemove;
 
+	/**
+	 * Знак работы главного цикла.
+	 */
 	private boolean running;
 
-	public Transceiver(final KIS kis) {
-		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_TICK_TIME, MeasurementControlModule.KIS_TICK_TIME) * 1000,
-				ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_MAX_FALLS, MeasurementControlModule.KIS_MAX_FALLS));
-		super.setName("Transceiver " + kis.getId());
+	public Transceiver(final Identifier kisId) throws ApplicationException {
+		super(ApplicationProperties.getInt(KEY_KIS_TICK_TIME, KIS_TICK_TIME) * 1000,
+				ApplicationProperties.getInt(KEY_KIS_MAX_FALLS, KIS_MAX_FALLS));
+		super.setName("Transceiver " + kisId);
 
-		this.kis = kis;
+		assert kisId != null : NON_NULL_EXPECTED;
+		assert kisId.getMajor() == KIS_CODE : ILLEGAL_ENTITY_CODE;
+		this.kisId = kisId;
 
-		this.scheduledMeasurements = Collections.synchronizedList(new ArrayList<Measurement>());
-		this.testProcessors = Collections.synchronizedMap(new HashMap<Identifier, TestProcessor>());
+		this.kisConnection = MeasurementControlModule.getInstance().getKISConnection(this.kisId);
+		this.newMeasurements = Collections.synchronizedList(new LinkedList<Measurement>());
+		this.runningMeasurementIds = Collections.synchronizedSet(new HashSet<Identifier>());
 
-		try {
-			this.kisConnection = MeasurementControlModule.kisConnectionManager.getConnection(this.kis);
-		} catch (CommunicationException ce) {
-			Log.errorMessage(ce);
-		}
 		this.running = true;
 	}
 
-	synchronized void addMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
-		final Identifier measurementId = measurement.getId();
-		if (measurement.getStatus() == ACTION_STATUS_NEW) {
-			Log.debugMessage("Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
-			this.scheduledMeasurements.add(measurement);
-			this.testProcessors.put(measurementId, testProcessor);
+	/**
+	 * Добавить новое измерение для отправки на КИС. Состояние измерения должно
+	 * быть НОВЫЙ.
+	 * 
+	 * @param measurement
+	 *        Новое измерение для отправки на КИС
+	 */
+	synchronized void addMeasurement(final Measurement measurement) {
+		assert measurement != null : NON_NULL_EXPECTED;
 
-			this.notifyAll();
-		} else {
-			Log.errorMessage("ERROR: Status: " + measurement.getStatus()
-					+ " of measurement '" + measurementId + "' not SCHEDULED -- cannot add to queue");
+		final Identifier measurementId = measurement.getId();
+		final ActionStatus measurementStatus = measurement.getStatus();
+		if (measurementStatus != ACTION_STATUS_NEW) {
+			Log.errorMessage("Status: " + measurementStatus
+					+ " of measurement '" + measurementId + "' not NEW -- cannot add to queue");
+			return;
 		}
+		if (this.newMeasurements.contains(measurement)) {
+			Log.errorMessage("Measurement '" + measurementId + "' of status " + measurementStatus
+					+ " already presents in the list of new measurements");
+			return;
+		}
+		if (this.runningMeasurementIds.contains(measurementId)) {
+			Log.errorMessage("Measurement '" + measurementId + "' of status " + measurementStatus
+					+ " already presents in the set of running measurements");
+			return;
+		}
+
+		Log.debugMessage("Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+		this.newMeasurements.add(measurement);
+
+		this.notifyAll();
 	}
 
-	synchronized void addAcquiringMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
-		final Identifier measurementId = measurement.getId();
-		if (measurement.getStatus() == ACTION_STATUS_RUNNING) {
-			Log.debugMessage("Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
-			this.testProcessors.put(measurementId, testProcessor);
+	/**
+	 * Добавить выполняемое измерение, которое уже проводится на КИС. Состояние
+	 * измерения должно быть ВЫПОЛНЯЕТСЯ. Этот метод нужен для восстановления
+	 * состояния приёмопередатчика после перезапуска модуля.
+	 * 
+	 * @param measurement
+	 *        Измерение, проводимое на КИС.
+	 */
+	synchronized void addRunningMeasurement(final Measurement measurement) {
+		assert measurement != null : NON_NULL_EXPECTED;
 
-			this.notifyAll();
-		} else {
-			Log.errorMessage("ERROR: Status: " + measurement.getStatus()
-					+ " of measurement '" + measurementId + "' not ACQUIRING -- cannot add to queue");
+		final Identifier measurementId = measurement.getId();
+		final ActionStatus measurementStatus = measurement.getStatus();
+		if (measurementStatus != ACTION_STATUS_RUNNING) {
+			Log.errorMessage("Status: " + measurementStatus
+					+ " of measurement '" + measurementId + "' not RUNNING -- cannot add to queue");
+			return;
 		}
+		if (this.newMeasurements.contains(measurement)) {
+			Log.errorMessage("Measurement '" + measurementId + "' of status " + measurementStatus
+					+ " already presents in the list of new measurements");
+			return;
+		}
+		if (this.runningMeasurementIds.contains(measurementId)) {
+			Log.errorMessage("Measurement '" + measurementId + "' of status " + measurementStatus
+					+ " already presents in the set of running measurements");
+			return;
+		}
+
+		Log.debugMessage("Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+		this.runningMeasurementIds.add(measurementId);
+
+		this.notifyAll();
 	}
 
-	void removeMeasurementsOfTestProcessor(final TestProcessor testProcessor) {
-		synchronized (this.testProcessors) {
-			for (final Iterator<Identifier> it = this.testProcessors.keySet().iterator(); it.hasNext();) {
-				final Identifier measurementId = it.next();
-				final TestProcessor tProcessor = this.testProcessors.get(measurementId);
-				if (tProcessor.getTestId().equals(testProcessor.getTestId())) {
-					try {
-						final Measurement measurement = StorableObjectPool.getStorableObject(measurementId, true);
-						this.scheduledMeasurements.remove(measurement);
-					} catch (ApplicationException ae) {
-						Log.errorMessage(ae);
-					}
-					it.remove();
-				}
+	/**
+	 * Отменить проведение измерения. Этот метод не менят состояние измерения,
+	 * он лишь удаляет измерение из очереди.
+	 * 
+	 * @todo Реализовать прерывание измерения на КИС.
+	 * @param measurementId
+	 *        Идентификатор измерения
+	 */
+	void cancelMeasurement(final Identifier measurementId) {
+		assert measurementId != null : NON_NULL_EXPECTED;
+		assert measurementId.getMajor() == MEASUREMENT_CODE : ILLEGAL_ENTITY_CODE;
+
+		if (this.newMeasurements.remove(measurementId)) {
+			Log.debugMessage("Removed measurement '" + measurementId + "' from list of new measurements", Log.DEBUGLEVEL07);
+		} else {
+			if (this.runningMeasurementIds.contains(measurementId)) {
+				/* @todo Послать команду прерывания измерения на КИС. */
+				this.runningMeasurementIds.remove(measurementId);
+				Log.debugMessage("Cancelled running measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 			}
 		}
 	}
 
+	/**
+	 * Главный цикл.
+	 */
 	@Override
 	public void run() {
 		while (this.running) {
 
 			synchronized (this) {
-				while (this.testProcessors.isEmpty()) {
+				while (this.newMeasurements.isEmpty() && this.runningMeasurementIds.isEmpty()) {
 					try {
 						this.wait(10000);
 					} catch (InterruptedException ie) {
@@ -137,127 +220,118 @@ final class Transceiver extends SleepButWorkThread {
 				}
 			}
 
-			if (this.kisConnection != null) {
-				if (this.kisConnection.isEstablished()) {
+			if (this.kisConnection.isEstablished()) {
 
-					if (!this.scheduledMeasurements.isEmpty()) {
-						final Measurement measurement = this.scheduledMeasurements.get(0);
-						final Identifier measurementId = measurement.getId();
-						try {
-							this.kisConnection.transmitMeasurement(measurement, super.initialTimeToSleep);
-
-							Log.debugMessage("Successfully transferred measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
-							this.scheduledMeasurements.remove(measurement);
-							measurement.setStatus(ACTION_STATUS_RUNNING);
-							StorableObjectPool.flush(measurementId, LoginManager.getUserId(), false);
-
-							super.clearFalls();
-						} catch (CommunicationException ce) {
-							Log.errorMessage(ce);
-							this.kisConnection.drop();
-							super.fallCode = FALL_CODE_TRANSMIT_MEASUREMENT;
-							this.measurementToRemove = measurement;
-							super.sleepCauseOfFall();
-							continue;
-						} catch (ApplicationException ae) {
-							Log.errorMessage(ae);
-						}
-					}// if (! this.scheduledMeasurements.isEmpty())
-
-					if (this.kisReport == null) {
-						try {
-							this.kisReport = this.kisConnection.receiveKISReport(super.initialTimeToSleep);
-							super.clearFalls();
-						} catch (CommunicationException ce) {
-							Log.errorMessage(ce);
-							this.kisConnection.drop();
-							super.fallCode = FALL_CODE_RECEIVE_KIS_REPORT;
-							super.sleepCauseOfFall();
-						}
-					} else {// if (this.kisReport == null)
-						// Additional assert to prove, that measurements not leak
-						assert !this.testProcessors.isEmpty() :  ErrorMessages.NON_EMPTY_EXPECTED;
-
-						final Identifier measurementId = this.kisReport.getMeasurementId();
-						Log.debugMessage("Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
-						Measurement measurement = null;
-						try {
-							measurement = StorableObjectPool.getStorableObject(measurementId, true);
-						} catch (ApplicationException ae) {
-							Log.errorMessage(ae);
-						}
-						if (measurement != null) {
-
-							Set<MeasurementResultParameter> measurementResultParameters = null;
-							try {
-								measurementResultParameters = this.kisReport.getResult();
-								measurement.setStatus(ACTION_STATUS_COMPLETED);
-								final Set<Identifiable> saveObjects = new HashSet<Identifiable>();
-								saveObjects.add(measurement);
-								saveObjects.addAll(measurementResultParameters);
-								StorableObjectPool.flush(saveObjects, LoginManager.getUserId(), false);
-							} catch (ApplicationException ae) {
-								Log.errorMessage(ae);
-								Log.debugMessage("Cannot create result -- trying to wait", Log.DEBUGLEVEL07);
-								try {
-									MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-								} catch (CommunicationException ce) {
-									Log.errorMessage(ce);
-								}
-								measurementResultParameters = null;
-								super.fallCode = FALL_CODE_CREATE_RESULT;
-								this.measurementToRemove = measurement;
-								super.sleepCauseOfFall();
-							}
-
-							if (measurementResultParameters != null) {
-								TestProcessor testProcessor = this.testProcessors.remove(measurementId);
-								if (testProcessor == null) {
-									Log.errorMessage("WARNING: Cannot find test processor for measurement '" + measurementId
-											+ "'; searching in global MCM map");
-									testProcessor = MeasurementControlModule.testProcessors.get(measurement.getTestId());
-								}
-								if (testProcessor != null) {
-									testProcessor.addMeasurementResultParameters(measurementResultParameters);
-									this.kisReport = null;
-								} else {// if (testProcessor != null)
-									Log.errorMessage("ERROR: Test processor for measurement '" + measurementId + "' + not found");
-									this.throwAwayKISReport();
-								}// else if (testProcessor != null)
-							}
-
-						} else {// if (measurement != null)
-							Log.errorMessage("ERROR: Measurement for id '" + measurementId + "' + not found");
-							this.throwAwayKISReport();
-						}// else if (measurement != null)
-					}// else if (this.kisReport == null)
-
-				} else {// if (this.kisConnection.isEstablished())
-					final long kisConnectionTimeout = ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_CONNECTION_TIMEOUT,
-							MeasurementControlModule.KIS_CONNECTION_TIMEOUT) * 1000;
+				if (!this.newMeasurements.isEmpty()) {
+					final Measurement measurement = this.newMeasurements.get(0);
+					final Identifier measurementId = measurement.getId();
 					try {
-						this.kisConnection.establish(kisConnectionTimeout, true);
+						this.kisConnection.transmitMeasurement(measurement, super.initialTimeToSleep);
+
+						Log.debugMessage("Successfully transferred measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+						this.newMeasurements.remove(measurement);
+						this.runningMeasurementIds.add(measurementId);
+						measurement.setStatus(ACTION_STATUS_RUNNING);
+						StorableObjectPool.flush(measurementId, LoginManager.getUserId(), false);
+
 						super.clearFalls();
 					} catch (CommunicationException ce) {
 						Log.errorMessage(ce);
-						super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
+						this.kisConnection.drop();
+						super.fallCode = FALL_CODE_TRANSMIT_MEASUREMENT;
+						this.measurementToRemove = measurement;
+						super.sleepCauseOfFall();
+						continue;
+					} catch (ApplicationException ae) {
+						Log.errorMessage(ae);
+					}
+				}// if (! this.scheduledMeasurements.isEmpty())
+
+				if (this.kisReport == null) {
+					try {
+						this.kisReport = this.kisConnection.receiveKISReport(super.initialTimeToSleep);
+						super.clearFalls();
+					} catch (CommunicationException ce) {
+						Log.errorMessage(ce);
+						this.kisConnection.drop();
+						super.fallCode = FALL_CODE_RECEIVE_KIS_REPORT;
 						super.sleepCauseOfFall();
 					}
-				}// else if (this.kisConnection.isEstablished())
-			} else {// if (this.kisConnection != null)
+				} else {// if (this.kisReport == null)
+					final Identifier measurementId = this.kisReport.getMeasurementId();
+					Log.debugMessage("Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+					if (!this.runningMeasurementIds.remove(measurementId)) {
+						Log.errorMessage("Measurement '" + measurementId + "' not found in set of running measurements");
+					}
+					Measurement measurement = null;
+					try {
+						measurement = StorableObjectPool.getStorableObject(measurementId, true);
+					} catch (ApplicationException ae) {
+						Log.errorMessage(ae);
+					}
+					if (measurement != null) {
+
+						Set<MeasurementResultParameter> measurementResultParameters = null;
+						try {
+							measurementResultParameters = this.kisReport.getResult();
+							measurement.setStatus(ACTION_STATUS_COMPLETED);
+							final Set<Identifiable> saveObjects = new HashSet<Identifiable>();
+							saveObjects.add(measurement);
+							saveObjects.addAll(measurementResultParameters);
+							StorableObjectPool.flush(saveObjects, LoginManager.getUserId(), false);
+						} catch (CreateObjectException coe) {
+							Log.errorMessage(coe);
+							Log.debugMessage("Cannot create result -- trying to wait", Log.DEBUGLEVEL07);
+							try {
+								MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
+							} catch (CommunicationException ce) {
+								Log.errorMessage(ce);
+							}
+							measurementResultParameters = null;
+							super.fallCode = FALL_CODE_CREATE_RESULT;
+							this.measurementToRemove = measurement;
+							super.sleepCauseOfFall();
+						} catch (ApplicationException ae) {
+							Log.errorMessage(ae);
+						}
+
+						if (measurementResultParameters != null) {
+							final Identifier testId = measurement.getTestId();
+							final TestProcessor testProcessor = MeasurementControlModule.getInstance().getTestProcessor(testId);
+							assert testProcessor.getTestId().equals(testId) : "Test: '" + testId + "', test processor: '" + testProcessor.getTestId() + "'";
+							if (testProcessor != null) {
+								testProcessor.addMeasurementResultParameters(measurementResultParameters);
+								this.kisReport = null;
+							} else {// if (testProcessor != null)
+								Log.errorMessage("ERROR: Test processor for measurement '" + measurementId + "' + not found");
+								this.throwAwayKISReport();
+							}// else if (testProcessor != null)
+						}
+
+					} else {// if (measurement != null)
+						Log.errorMessage("ERROR: Measurement for id '" + measurementId + "' + not found");
+						this.throwAwayKISReport();
+					}// else if (measurement != null)
+				}// else if (this.kisReport == null)
+
+			} else {// if (this.kisConnection.isEstablished())
+				final long kisConnectionTimeout = ApplicationProperties.getInt(KEY_KIS_CONNECTION_TIMEOUT, KIS_CONNECTION_TIMEOUT) * 1000;
 				try {
-					this.kisConnection = MeasurementControlModule.kisConnectionManager.getConnection(this.kis);
+					this.kisConnection.establish(kisConnectionTimeout, true);
 					super.clearFalls();
 				} catch (CommunicationException ce) {
 					Log.errorMessage(ce);
 					super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
 					super.sleepCauseOfFall();
 				}
-			}// else if (this.kisConnection != null)
+			}// else if (this.kisConnection.isEstablished())
 
 		}// while
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	@Override
 	protected void processFall() {
 		switch (super.fallCode) {
@@ -267,25 +341,32 @@ final class Transceiver extends SleepButWorkThread {
 				Log.errorMessage("ERROR: Many errors during establishing connection");
 				break;
 			case FALL_CODE_TRANSMIT_MEASUREMENT:
-				this.removeMeasurement();
+				this.cancelAndAbortNewMeasurement();
 				break;
 			case FALL_CODE_RECEIVE_KIS_REPORT:
 				Log.errorMessage("ERROR: Many errors during readig KIS report");
 				break;
 			case FALL_CODE_CREATE_RESULT:
-				this.abortMeasurementAndReport();
+				this.abortCompletedMeasurementAndReport();
+				this.throwAwayKISReport();
 				break;
 		default:
 				Log.errorMessage("ERROR: Unknown error code: " + super.fallCode);
 		}
 	}
 
-	private void removeMeasurement() {
+	/**
+	 * Измерение, которое не удалось запустить на КИС,
+	 * {@link #measurementToRemove} удаляется из списка новых измерений
+	 * {@link #newMeasurements}. Его состояние выставляется в ПРЕРВАН. Поле
+	 * {@link #measurementToRemove} выставляется в null, чем обеспечивается его
+	 * повторное использование.
+	 */
+	private void cancelAndAbortNewMeasurement() {
 		if (this.measurementToRemove != null) {
-			Log.debugMessage("Removing measurement '" + this.measurementToRemove.getId() + "' from KIS '" + this.kis.getId() + "'",
+			Log.debugMessage("Removing measurement '" + this.measurementToRemove.getId() + "' from KIS '" + this.kisId + "'",
 					Log.DEBUGLEVEL07);
-			this.scheduledMeasurements.remove(this.measurementToRemove);
-			this.testProcessors.remove(this.measurementToRemove.getId());
+			this.newMeasurements.remove(this.measurementToRemove);
 
 			this.measurementToRemove.setStatus(ACTION_STATUS_ABORTED);
 			try {
@@ -300,7 +381,13 @@ final class Transceiver extends SleepButWorkThread {
 		}
 	}
 
-	private void abortMeasurementAndReport() {
+	/**
+	 * Измерение, для которого не удалось создать результат,
+	 * {@link #measurementToRemove} переводится в состояние ПРЕРВАН. Поле
+	 * {@link #measurementToRemove} выставляется в null, чем обеспечивается его
+	 * повторное использование.
+	 */
+	private void abortCompletedMeasurementAndReport() {
 		Log.errorMessage("ERROR: Cannot create result");
 		if (this.measurementToRemove != null) {
 			this.measurementToRemove.setStatus(ACTION_STATUS_ABORTED);
@@ -313,25 +400,31 @@ final class Transceiver extends SleepButWorkThread {
 		} else {
 			Log.errorMessage("ERROR: Measurement to abort is null -- nothing to abort");
 		}
-		this.throwAwayKISReport();
 	}
 
+	/**
+	 * Сбросить последний ответ КИС. Поле {@link #kisReport} сбрасывается в
+	 * null, т. е. ответ КИС теряется.
+	 */
 	private void throwAwayKISReport() {
 		if (this.kisReport != null) {
 			Log.debugMessage("Throwing away report of measurement '" + this.kisReport.getMeasurementId()
-					+ "' from KIS '" + this.kis.getId() + "'", Log.DEBUGLEVEL07);
+					+ "' from KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
 			this.kisReport = null;
 		} else {
 			Log.errorMessage("ERROR: KIS report is null -- nothing to throw away");
 		}
 	}
 
+	/**
+	 * Выключение главного цикла.
+	 * 
+	 * @todo Реализовать прерывание измерения на КИС.
+	 */
 	synchronized void shutdown() {
-		this.scheduledMeasurements.clear();
 		this.running = false;
-		if (this.kisConnection != null) {
-			this.kisConnection.drop();
-		}
+		/* @todo Послать команду прерывания измерения на КИС. */
+		this.kisConnection.drop();
 		this.notifyAll();
 	}
 }

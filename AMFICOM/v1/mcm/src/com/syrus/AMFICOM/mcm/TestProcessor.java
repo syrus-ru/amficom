@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.90.2.2 2006/03/06 14:15:26 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.90.2.3 2006/03/16 12:01:22 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,10 +10,16 @@ package com.syrus.AMFICOM.mcm;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTRESULTPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_NOT_EQUALS;
+import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KEY_MAX_FALLS;
+import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KEY_TICK_TIME;
+import static com.syrus.AMFICOM.mcm.MeasurementControlModule.TICK_TIME;
 import static com.syrus.AMFICOM.measurement.Action.ActionStatus.ACTION_STATUS_ABORTED;
 import static com.syrus.AMFICOM.measurement.Action.ActionStatus.ACTION_STATUS_COMPLETED;
 import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_STATUS;
+import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_ABORTED;
+import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_COMPLETED;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_PROCESSING;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_SCHEDULED;
 
@@ -36,11 +42,9 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.measurement.AnalysisResultParameter;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
@@ -52,7 +56,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.90.2.2 $, $Date: 2006/03/06 14:15:26 $
+ * @version $Revision: 1.90.2.3 $, $Date: 2006/03/16 12:01:22 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -80,55 +84,47 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 	private boolean running;
 
-	public TestProcessor(final Test test) {
-		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, MeasurementControlModule.TICK_TIME) * 1000,
-				ApplicationProperties.getInt(MeasurementControlModule.KEY_MAX_FALLS, SleepButWorkThread.MAX_FALLS));
+	public TestProcessor(final Test test) throws TestProcessingException {
+		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000,
+				ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
 		super.setName("TestProcessor " + test.getId());
 
 		this.test = test;
 
-		MeasurementControlModule.putTestProcessor(this);
-
 		this.measurementResults = new LinkedList<MeasurementResultParameter>();
 
-		this.running = true;
-
+		final Identifier kisId;
 		try {
-			final Identifier kisId = test.getKISId();
-			this.transceiver = MeasurementControlModule.transceivers.get(kisId);
-			if (this.transceiver == null) {
-				Log.errorMessage("Cannot find transceiver for kis '" + kisId + "'");
-				this.shutdown();
-				return;
-			}			
+			kisId = test.getKISId();
 		} catch (ApplicationException ae) {
-			Log.errorMessage("Cannot load data for test '" + this.test.getId() + "'");
-			Log.errorMessage(ae);
-			this.shutdown();
-			return;
+			throw new TestProcessingException("Cannot get KIS id for test '" + this.test.getId());
+		}
+		this.transceiver = MeasurementControlModule.getInstance().getTransceiver(kisId);
+		if (this.transceiver == null) {
+			throw new TestProcessingException("Cannot find transceiver for kis '" + kisId + "'");
 		}
 
 		this.setupMeasurements();
 
-		if (this.test.getStatus() != TestStatus.TEST_STATUS_PROCESSING) {
-			test.setStatus(TestStatus.TEST_STATUS_PROCESSING);
+		if (this.test.getStatus() != TEST_STATUS_PROCESSING) {
+			test.setStatus(TEST_STATUS_PROCESSING);
 			try {
 				StorableObjectPool.flush(test, LoginManager.getUserId(), false);
 			} catch (ApplicationException ae) {
 				Log.errorMessage(ae);
 			}
 		}
+
+		this.running = true;
 	}
 
-	private void setupMeasurements() {
+	private void setupMeasurements() throws TestProcessingException {
 		final Identifier testId = this.test.getId();
 
 		final TestStatus testStatus = this.test.getStatus();
 		if (testStatus != TEST_STATUS_SCHEDULED && testStatus != TEST_STATUS_PROCESSING) {
-			Log.errorMessage("ERROR: Test '" + testId + "' has status " + testStatus
-					+ " -- not SCHEDULED or PROCESSING; shutting down");
-			this.shutdown();
-			return;
+			throw new TestProcessingException("Test '" + testId + "' has status " + testStatus
+					+ " -- not SCHEDULED or PROCESSING");
 		}
 
 		final int numberOfMeasurements = this.test.getNumberOfMeasurements();
@@ -145,8 +141,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		try {
 			lastMeasurement = measurementDatabase.retrieveLast(this.test.getId());
 		} catch (RetrieveObjectException roe) {
-			Log.errorMessage(roe);
-			this.abort(ABORT_REASON_DATABASE_ERROR);
+			throw new TestProcessingException(ABORT_REASON_DATABASE_ERROR, roe);
 		} catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Last measurement for test '" + testId + "' not found; assume test has none measurements",
 					Log.DEBUGLEVEL06);
@@ -162,8 +157,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 			final Set<Identifier> measurementResultParameterIds = StorableObjectPool.getIdentifiersByCondition(measurementResultParameterCondition, true);
 			this.numberOfMResults = measurementResultParameterIds.size();
 		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
-			this.abort(ABORT_REASON_DATABASE_ERROR);
+			throw new TestProcessingException(ABORT_REASON_DATABASE_ERROR, ae);
 		}
 		Log.debugMessage("Test '" + testId + "' -- last measurement: " + lastMeasurement.getId()
 				+ " (status: " + lastMeasurementStatus
@@ -172,16 +166,19 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 		switch (lastMeasurementStatus) {
 			case ACTION_STATUS_NEW:
-				this.transceiver.addMeasurement(lastMeasurement, this);
+				this.transceiver.addMeasurement(lastMeasurement);
 				break;
 			case ACTION_STATUS_RUNNING:
-				this.transceiver.addAcquiringMeasurement(lastMeasurement, this);
+				this.transceiver.addRunningMeasurement(lastMeasurement);
 				break;
 			case ACTION_STATUS_COMPLETED:
 				try {
 					final Set<MeasurementResultParameter> lastMeasurementResultParameters = lastMeasurement.getActionResultParameters();
 					if (!lastMeasurementResultParameters.isEmpty()) {
-						//-Число результатов измерений уже вычислено, не нужно позволять методу addMeasurementResult его изменять
+						/*
+						 * Число результатов измерений уже вычислено, не нужно
+						 * позволять методу addMeasurementResult его изменять.
+						 */
 						final int numberOfMResultsSave = this.numberOfMResults;
 						for (final MeasurementResultParameter measurementResultParameter : lastMeasurementResultParameters) {
 							this.addMeasurementResult(measurementResultParameter);
@@ -286,7 +283,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 	private final void newMeasurementCreation(final Date startTime) throws CreateObjectException {
 		final Measurement measurement = this.test.createMeasurement(LoginManager.getUserId(), startTime);
-		this.transceiver.addMeasurement(measurement, this);
+		this.transceiver.addMeasurement(measurement);
 		this.lastMeasurementStartTime = startTime;
 		this.measurementDuration = measurement.getDuration();
 		try {
@@ -390,70 +387,86 @@ abstract class TestProcessor extends SleepButWorkThread {
 	}
 
 	private void complete() {
-		Log.debugMessage("Test '" + this.test.getId() + "' is completed", Log.DEBUGLEVEL07);
-		this.transceiver.removeMeasurementsOfTestProcessor(this);
-
-		this.test.setStatus(TestStatus.TEST_STATUS_COMPLETED);
+		Log.debugMessage("Test '" + this.test.getId() + "' setting as completed", Log.DEBUGLEVEL07);
+		this.test.setStatus(TEST_STATUS_COMPLETED);
 		try {
 			StorableObjectPool.flush(this.test, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
 		}
-		this.shutdown();
+		this.finishTest();
 	}
 
 	void abort(final String abortReason) {
+		Log.debugMessage("Test '" + this.test.getId() + "' setting as aborted", Log.DEBUGLEVEL07);
 		this.test.addStop(abortReason);
-		this.test.setStatus(TestStatus.TEST_STATUS_ABORTED);
+		this.test.setStatus(TEST_STATUS_ABORTED);
 		try {
 			StorableObjectPool.flush(this.test, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
 		}
-		this.stopTest();
+		this.finishTest();
 	}
 
-	void stopTest() {
-		if (this.transceiver != null) {
-			this.transceiver.removeMeasurementsOfTestProcessor(this);
+	/**
+	 * Прекратить все измерения по данному заданию. Все измерения, у которых
+	 * состояние не ВЫПОЛНЕН и не ПРЕРВАН, переводятся в состояние ПРЕРВАН.
+	 * Затем прекращается работа главного потока и данный исполнитель задания
+	 * прекращает своё существование. Состояние задания не затрагивается, за его
+	 * изменение ответственен код, вызывающий этот метод.
+	 */
+	void finishTest() {
+		/* Проверить, может уже остановлен. */
+		if (!this.running) {
+			return;
 		}
 
+		/* Найти все измерения теста в состояниях не ВЫПОЛНЕН и не ПРЕРВАН. */
+		final LinkedIdsCondition testMeasurementCondition = new LinkedIdsCondition(this.test, MEASUREMENT_CODE);
+		final TypicalCondition notCompletedMeasurementCondition = new TypicalCondition(ACTION_STATUS_COMPLETED,
+				OPERATION_NOT_EQUALS,
+				MEASUREMENT_CODE,
+				COLUMN_STATUS);
+		final TypicalCondition notAbortedMeasurementCondition = new TypicalCondition(ACTION_STATUS_ABORTED,
+				OPERATION_NOT_EQUALS,
+				MEASUREMENT_CODE,
+				COLUMN_STATUS);
+		final CompoundCondition measurementCondition = new CompoundCondition(AND,
+				testMeasurementCondition,
+				notCompletedMeasurementCondition,
+				notAbortedMeasurementCondition);
+		Set<Measurement> aliveMeasurements = null;
 		try {
-			final LinkedIdsCondition lic = new LinkedIdsCondition(this.test.getId(), MEASUREMENT_CODE);
-			final TypicalCondition tc1 = new TypicalCondition(ACTION_STATUS_COMPLETED,
-					OPERATION_NOT_EQUALS,
-					MEASUREMENT_CODE,
-					COLUMN_STATUS);
-			final TypicalCondition tc2 = new TypicalCondition(ACTION_STATUS_ABORTED,
-					OPERATION_NOT_EQUALS,
-					MEASUREMENT_CODE,
-					COLUMN_STATUS);
-			final Set<StorableObjectCondition> conditions = new HashSet<StorableObjectCondition>();
-			conditions.add(lic);
-			conditions.add(tc1);
-			conditions.add(tc2);
-			final CompoundCondition condition = new CompoundCondition(conditions, CompoundConditionSort.AND);
-			final Set<Measurement> measurements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-			for (final Measurement measurement : measurements) {
-				measurement.setStatus(ACTION_STATUS_ABORTED);
-			}
-			StorableObjectPool.flush(measurements, LoginManager.getUserId(), false);
+			aliveMeasurements = StorableObjectPool.getStorableObjectsByCondition(measurementCondition, true);
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
+		}
+
+		if (aliveMeasurements != null) {
+			for (final Measurement measurement : aliveMeasurements) {
+				this.transceiver.cancelMeasurement(measurement.getId());
+				measurement.setStatus(ACTION_STATUS_ABORTED);
+			}
+
+			try {
+				StorableObjectPool.flush(aliveMeasurements, LoginManager.getUserId(), false);
+			} catch (ApplicationException ae) {
+				Log.errorMessage(ae);
+			}
 		}
 
 		this.shutdown();
 	}
 
+	/**
+	 * Прекратить работу главного потока и уничтожить данный исполнитель
+	 * задания. Этот метод не прерывает никаких измерений, чтобы после
+	 * перезагрузки можно было подхватить их "на лету".
+	 */
 	void shutdown() {
 		this.running = false;
-		this.cleanup();
-	}
-
-	private void cleanup() {
-		this.measurementResults.clear();
-		MeasurementControlModule.removeTestProcessor(this.test.getId());
-		this.test = null;
+		MeasurementControlModule.getInstance().testProcessorShutdown(this.getTestId());
 	}
 
 }
