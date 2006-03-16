@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.8 2005/10/31 07:21:21 bass Exp $
+# $Id: Makefile,v 1.9 2006/03/16 12:53:45 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -20,13 +20,13 @@ util
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/reflectometry/*.java)
 
 $(LIBNAME): .mach
+	$(CP) \
+		$(SRCDIR)/com/syrus/AMFICOM/reflectometry/reflectometry*.properties \
+		$(CLASSDIR)/com/syrus/AMFICOM/reflectometry
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com/syrus/AMFICOM/reflectometry
 
 .mach: .corba $(CLASSDIR) $(CLASSDIR)/com/syrus/AMFICOM/reflectometry
-	$(CP) \
-		$(SRCDIR)/com/syrus/AMFICOM/reflectometry/reflectometry*.properties \
-		$(CLASSDIR)/com/syrus/AMFICOM/reflectometry
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
