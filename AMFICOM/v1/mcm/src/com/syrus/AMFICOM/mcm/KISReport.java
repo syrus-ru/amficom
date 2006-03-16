@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.56.2.3 2006/03/06 14:15:26 arseniy Exp $
+ * $Id: KISReport.java,v 1.56.2.4 2006/03/16 11:59:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,9 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_FOUND;
+import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -24,7 +26,7 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementResultParameter;
 
 /**
- * @version $Revision: 1.56.2.3 $, $Date: 2006/03/06 14:15:26 $
+ * @version $Revision: 1.56.2.4 $, $Date: 2006/03/16 11:59:21 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -46,6 +48,8 @@ final class KISReport {
 	}
 
 	Set<MeasurementResultParameter> getResult() throws ApplicationException {
+		assert this.measurementId.getMajor() == MEASUREMENT_CODE : ILLEGAL_ENTITY_CODE;
+
 		if (this.measurementResultParameters != null) {
 			return this.measurementResultParameters;
 		}
