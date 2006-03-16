@@ -1,5 +1,5 @@
 /*-
-* $Id: LoginRestoreCommand.java,v 1.14 2005/11/29 08:17:23 bob Exp $
+* $Id: LoginRestoreCommand.java,v 1.15 2006/03/16 11:31:29 arseniy Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -21,8 +20,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/11/29 08:17:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2006/03/16 11:31:29 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -56,14 +55,6 @@ public final class LoginRestoreCommand extends OpenSessionCommand implements Log
 
 		final String value = super.password;
 		super.password = null;
-		return value;
-	}
-
-	public Identifier getDomainId() {
-		assert super.logged : ErrorMessages.NATURE_INVALID;
-
-		final Identifier value = super.domainId;
-		super.domainId = null;
 		return value;
 	}
 

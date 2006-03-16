@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.25 2006/02/28 15:19:58 arseniy Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.26 2006/03/16 11:32:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2006/02/28 15:19:58 $
+ * @version $Revision: 1.26 $, $Date: 2006/03/16 11:32:48 $
  * @author $Author: arseniy $
  * @module mscharserver
  */
@@ -79,11 +79,6 @@ final class MapSchemeAdministrationResourceServer {
 	 * Login of the corresponding user.
 	 */
 	static String login;
-
-	/**
-	 * Identifier of domain to log in 
-	 */
-	static Identifier domainId;
 
 	/**
 	 * Process codename.
@@ -140,7 +135,6 @@ final class MapSchemeAdministrationResourceServer {
 			final SystemUser user = ((SystemUserDatabase) systemUserDatabase).retrieveForId(serverProcess.getUserId());
 
 			login = user.getLogin();
-			domainId = server.getDomainId();
 
 			/*
 			 * Mapinfo pool init.
@@ -157,7 +151,7 @@ final class MapSchemeAdministrationResourceServer {
 			 */
 			final MscharServerSessionEnvironment sessionEnvironment = MscharServerSessionEnvironment.getInstance();
 			try {
-				sessionEnvironment.login(login, PASSWORD, domainId);
+				sessionEnvironment.login(login, PASSWORD, server.getDomainId());
 			} catch (final LoginException le) {
 				Log.errorMessage(le);
 			}
@@ -184,10 +178,6 @@ final class MapSchemeAdministrationResourceServer {
 
 		public String getPassword() {
 			return PASSWORD;
-		}
-
-		public Identifier getDomainId() {
-			return domainId;
 		}
 	}
 }
