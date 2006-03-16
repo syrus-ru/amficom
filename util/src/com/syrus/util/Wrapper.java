@@ -1,5 +1,5 @@
 /*
-* $Id: Wrapper.java,v 1.10 2006/03/13 15:54:24 bass Exp $
+* $Id: Wrapper.java,v 1.11 2006/03/16 12:21:48 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import java.util.List;
  * wrapper's constructor must be private and its instance must be obtained
  * using a static method <code>getInstance()</code>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2006/03/13 15:54:24 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2006/03/16 12:21:48 $
  * @see <a href = "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter Java&raquo; by Bruce A. Tate</a>
  * @module util
  */
@@ -93,11 +93,12 @@ public interface Wrapper<T> {
 
 	/**
 	 * Sets the value for Model entity.
-	 *
+	 * 
 	 * @param object
-	 * @param key entity key
-	 * @param value value, which will be assigned to Model
+	 * @param key
+	 *        entity key
+	 * @param value
+	 *        value, which will be assigned to Model
 	 */
-	void setValue(final T object, final String key, final Object value)
-	throws PropertyChangeException;
+	void setValue(final T object, final String key, final Object value) throws PropertyChangeException;
 }
