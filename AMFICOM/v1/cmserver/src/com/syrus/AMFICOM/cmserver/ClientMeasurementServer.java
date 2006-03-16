@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.72 2006/02/28 15:20:00 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.73 2006/03/16 12:09:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2006/02/28 15:20:00 $
+ * @version $Revision: 1.73 $, $Date: 2006/03/16 12:09:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -68,11 +68,6 @@ final class ClientMeasurementServer {
 	 * Login of the corresponding user
 	 */
 	static String login;
-
-	/**
-	 * Identifier of domain to log in 
-	 */
-	static Identifier domainId;
 
 	/**
 	 * Process codename.
@@ -125,7 +120,6 @@ final class ClientMeasurementServer {
 			final SystemUser user = ((SystemUserDatabase) systemUserDatabase).retrieveForId(serverProcess.getUserId());
 
 			login = user.getLogin();
-			domainId = server.getDomainId();
 
 			/*	Create session environment*/
 			CMServerSessionEnvironment.createInstance(server.getHostName(), processCodename);
@@ -133,7 +127,7 @@ final class ClientMeasurementServer {
 			/*	Login*/
 			final CMServerSessionEnvironment sessionEnvironment = CMServerSessionEnvironment.getInstance();
 			try {
-				sessionEnvironment.login(login, PASSWORD, domainId);
+				sessionEnvironment.login(login, PASSWORD, server.getDomainId());
 			} catch (final LoginException le) {
 				Log.errorMessage(le);
 			}
@@ -172,10 +166,6 @@ final class ClientMeasurementServer {
 
 		public String getPassword() {
 			return PASSWORD;
-		}
-
-		public Identifier getDomainId() {
-			return domainId;
 		}
 	}
 }
