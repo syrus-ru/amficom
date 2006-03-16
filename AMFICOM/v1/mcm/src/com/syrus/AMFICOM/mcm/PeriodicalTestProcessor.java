@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTestProcessor.java,v 1.54 2005/10/31 10:47:23 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.54.2.1 2006/03/16 12:01:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,13 +18,13 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/10/31 10:47:23 $
+ * @version $Revision: 1.54.2.1 $, $Date: 2006/03/16 12:01:54 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 final class PeriodicalTestProcessor extends TestProcessor {
-	private static final long FRAME = 24*60*60*1000;//ms
+	private static final long FRAME = 24 * 60 * 60 * 1000;//ms
 
 	private static final String ABORT_REASON_TEMPORAL_PATTERN = "Failed to load temporal pattern";
 
@@ -32,15 +32,14 @@ final class PeriodicalTestProcessor extends TestProcessor {
 	private AbstractTemporalPattern<? extends AbstractTemporalPattern> temporalPattern;
 	private SortedSet<Date> timeStampsList;
 
-	public PeriodicalTestProcessor(Test test) {
+	public PeriodicalTestProcessor(Test test) throws TestProcessingException {
 		super(test);
 
 		this.endTime = test.getEndTime();
 		try {
 			this.temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
 		} catch (ApplicationException ae) {
-			Log.errorMessage("Cannot load temporal pattern '" + test.getTemporalPatternId() + "' for test '" + test.getId() + "'");
-			this.abort(ABORT_REASON_TEMPORAL_PATTERN);
+			throw new TestProcessingException(ABORT_REASON_TEMPORAL_PATTERN + " '" + test.getTemporalPatternId() + "' for test '" + test.getId() + "'");
 		}
 		this.timeStampsList = new TreeSet<Date>();
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: OnetimeTestProcessor.java,v 1.34 2005/09/20 10:02:41 arseniy Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.34.2.1 2006/03/16 12:01:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.Date;
 import com.syrus.AMFICOM.measurement.Test;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/09/20 10:02:41 $
+ * @version $Revision: 1.34.2.1 $, $Date: 2006/03/16 12:01:54 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.measurement.Test;
 final class OnetimeTestProcessor extends TestProcessor {
 	private boolean first;
 
-	public OnetimeTestProcessor(final Test test) {
+	public OnetimeTestProcessor(final Test test) throws TestProcessingException {
 		super(test);
 
 		this.first = true;
