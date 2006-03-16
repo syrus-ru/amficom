@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.7.2.1 2006/03/07 08:26:46 arseniy Exp $
+ * $Id: EventQueue.java,v 1.7.2.2 2006/03/16 11:58:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,9 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KEY_MAX_FALLS;
+import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KEY_TICK_TIME;
+import static com.syrus.AMFICOM.mcm.MeasurementControlModule.TICK_TIME;
 import static java.util.logging.Level.INFO;
 
 import java.util.Collections;
@@ -27,7 +30,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7.2.1 $, $Date: 2006/03/07 08:26:46 $
+ * @version $Revision: 1.7.2.2 $, $Date: 2006/03/16 11:58:20 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -41,8 +44,8 @@ final class EventQueue extends SleepButWorkThread {
 	private volatile boolean running;
 
 	public EventQueue() {
-		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, MeasurementControlModule.TICK_TIME) * 1000,
-				ApplicationProperties.getInt(MeasurementControlModule.KEY_MAX_FALLS, SleepButWorkThread.MAX_FALLS));
+		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000,
+				ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
 
 		super.setName("EventQueue");
 
