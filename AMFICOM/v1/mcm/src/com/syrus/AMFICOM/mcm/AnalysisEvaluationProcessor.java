@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.57.2.2 2006/03/06 14:15:26 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.57.2.3 2006/03/16 12:05:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57.2.2 $, $Date: 2006/03/06 14:15:26 $
+ * @version $Revision: 1.57.2.3 $, $Date: 2006/03/16 12:05:23 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -148,7 +148,7 @@ final class AnalysisEvaluationProcessor {
 				}
 
 				for (final ReflectogramMismatch reflectogramMismatch : ReflectogramMismatchImpl.alarmsFromByteArray(analysisResultParameter.getValue())) {
-					MeasurementControlModule.eventQueue.addEvent(DefaultReflectogramMismatchEvent.valueOf(reflectogramMismatch,
+					MeasurementControlModule.getInstance().addEventToQueue(DefaultReflectogramMismatchEvent.valueOf(reflectogramMismatch,
 							resultId,
 							monitoredElementId));
 				}
