@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMObjectSynchronizer.java,v 1.1.2.2 2006/03/10 16:19:49 arseniy Exp $
+ * $Id: MCMObjectSynchronizer.java,v 1.1.2.3 2006/03/16 12:03:48 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/03/10 16:19:49 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/03/16 12:03:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -63,6 +63,12 @@ final class MCMObjectSynchronizer extends Thread {
 	 */
 	private final Map<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap;
 
+	/**
+	 * Знак работы цикла.
+	 */
+	private boolean running;
+
+
 	public MCMObjectSynchronizer(final ServerConnectionManager serverConnectionManager) {
 		super.setName("MCMObjectSynchronizer");
 
@@ -71,6 +77,8 @@ final class MCMObjectSynchronizer extends Thread {
 
 		this.loadIdsQueue = Collections.synchronizedSet(new HashSet<Identifier>());
 		this.loadObjectsMap = Collections.synchronizedMap(new HashMap<Integer, Map<Short, Set<StorableObject>>>());
+
+		this.running = true;
 	}
 
 	public synchronized void addIdentifier(final Identifier id) {
@@ -85,39 +93,45 @@ final class MCMObjectSynchronizer extends Thread {
 		this.notifyAll();
 	}
 
+	public boolean isFree() {
+		return this.loadIdsQueue.isEmpty();
+	}
+
 	@Override
 	public void run() {
-		synchronized (this) {
-			while (this.loadIdsQueue.isEmpty()) {
-				try {
-					this.wait(SLEEP_TIMEOUT);
-				} catch (InterruptedException e) {
-					Log.debugMessage(this.getName() + " -- interrupted", Log.DEBUGLEVEL07);
+		while (this.running) {
+			synchronized (this) {
+				while (this.loadIdsQueue.isEmpty()) {
+					try {
+						this.wait(SLEEP_TIMEOUT);
+					} catch (InterruptedException e) {
+						Log.debugMessage(this.getName() + " -- interrupted", Log.DEBUGLEVEL07);
+					}
 				}
 			}
-		}
 
-		final Map<Short, Set<Identifier>> entityIdsMap;
-		synchronized (this.loadIdsQueue) {
-			entityIdsMap = Identifier.createEntityIdsMap(this.loadIdsQueue);
-		}
-
-		for (final Short entityKey : entityIdsMap.keySet()) {
-			final Set<Identifier> entityLoadIds = entityIdsMap.get(entityKey);
-			this.loadObjectsMap.clear();
-			try {
-				this.loadStorableObjectsWithDependencies(0, entityLoadIds);
-			} catch (ApplicationException ae) {
-				Log.errorMessage(ae);
+			final Map<Short, Set<Identifier>> entityIdsMap;
+			synchronized (this.loadIdsQueue) {
+				entityIdsMap = Identifier.createEntityIdsMap(this.loadIdsQueue);
 			}
-			this.insertWithDependencies();
 
-			final Set<StorableObject> loadedObjects = this.loadObjectsMap.get(Integer.valueOf(0)).get(entityKey);
-			if (loadedObjects == null || loadedObjects.isEmpty()) {
-				continue;
+			for (final Short entityKey : entityIdsMap.keySet()) {
+				final Set<Identifier> entityLoadIds = entityIdsMap.get(entityKey);
+				this.loadObjectsMap.clear();
+				try {
+					this.loadStorableObjectsWithDependencies(0, entityLoadIds);
+				} catch (ApplicationException ae) {
+					Log.errorMessage(ae);
+				}
+				this.insertWithDependencies();
+
+				final Set<StorableObject> loadedObjects = this.loadObjectsMap.get(Integer.valueOf(0)).get(entityKey);
+				if (loadedObjects == null || loadedObjects.isEmpty()) {
+					continue;
+				}
+				assert StorableObject.getEntityCodeOfIdentifiables(loadedObjects) == entityKey.shortValue() : ILLEGAL_ENTITY_CODE;
+				Identifier.subtractFromIdentifiers(this.loadIdsQueue, loadedObjects);
 			}
-			assert StorableObject.getEntityCodeOfIdentifiables(loadedObjects) == entityKey.shortValue() : ILLEGAL_ENTITY_CODE;
-			Identifier.subtractFromIdentifiers(this.loadIdsQueue, loadedObjects);
 		}
 	}
 
@@ -250,5 +264,10 @@ final class MCMObjectSynchronizer extends Thread {
 				}
 			}
 		}
+	}
+
+	synchronized void shutdown() {
+		this.running = false;
+		this.notifyAll();
 	}
 }
