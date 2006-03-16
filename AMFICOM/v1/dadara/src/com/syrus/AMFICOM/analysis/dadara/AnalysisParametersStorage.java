@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersStorage.java,v 1.10 2005/12/22 14:37:28 saa Exp $
+ * $Id: AnalysisParametersStorage.java,v 1.11 2006/03/16 09:15:41 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.io.SignatureMismatchException;
  * а {@link AnalysisParametersStorage} использовать тогда, когда нужно изменить
  * сразу несколько параметров.
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/12/22 14:37:28 $
+ * @version $Revision: 1.11 $, $Date: 2006/03/16 09:15:41 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
@@ -35,7 +35,7 @@ implements DataStreamable, Cloneable
 			* DEFAULT_EVENT_TO_SPLICE_RATIO * 0.9; // 0.9 - запас на ошибку округления
 
 	private static final double[] RECOMMENDED_NOISE_FACTORS = new double[] {
-		1.0, 1.3, 1.5, 2.0, 2.5 };
+		0.5, 0.7, 1.0, 1.3, 1.5, 2.0, 2.5 };
 
 	// основные параметры анализа
 	private double[] param;
