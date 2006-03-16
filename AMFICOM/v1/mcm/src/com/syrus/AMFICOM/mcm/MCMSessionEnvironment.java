@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMSessionEnvironment.java,v 1.11.2.1 2006/03/09 17:37:24 arseniy Exp $
+ * $Id: MCMSessionEnvironment.java,v 1.11.2.2 2006/03/16 12:02:47 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.mcm.corba.MCMPOA;
 import com.syrus.AMFICOM.mcm.corba.MCMPOATie;
 
 /**
- * @version $Revision: 1.11.2.1 $, $Date: 2006/03/09 17:37:24 $
+ * @version $Revision: 1.11.2.2 $, $Date: 2006/03/16 12:02:47 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -27,7 +27,7 @@ final class MCMSessionEnvironment extends BaseSessionEnvironment {
 	private static MCMSessionEnvironment instance;
 
 	private MCMSessionEnvironment(final MCMServantManager mcmServantManager, final MCMPoolContext mcmPoolContext, final MCM mcm) {
-		super(mcmServantManager, mcmPoolContext, mcm, new MeasurementControlModule.MCMLoginRestorer());
+		super(mcmServantManager, mcmPoolContext, mcm, MeasurementControlModule.getLoginRestorer());
 	}
 
 	public MCMServantManager getMCMServantManager() {
