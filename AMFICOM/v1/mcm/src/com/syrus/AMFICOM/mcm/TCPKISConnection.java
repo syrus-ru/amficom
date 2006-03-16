@@ -1,5 +1,5 @@
 /*-
- * $Id: TCPKISConnection.java,v 1.27.2.2 2006/03/06 14:15:26 arseniy Exp $
+ * $Id: TCPKISConnection.java,v 1.27.2.3 2006/03/16 12:00:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,18 +8,23 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KEY_KIS_HOST_NAME;
+import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KEY_KIS_TCP_PORT;
+import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KIS_HOST_NAME;
+import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KIS_TCP_PORT;
+
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27.2.2 $, $Date: 2006/03/06 14:15:26 $
+ * @version $Revision: 1.27.2.3 $, $Date: 2006/03/16 12:00:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -41,17 +46,15 @@ final class TCPKISConnection implements KISConnection {
 
 	public TCPKISConnection(final KIS kis) {
 		this.kisId = kis.getId();
-		
+
 		this.kisHostName = kis.getHostName();
 		if (this.kisHostName == null) {
-			this.kisHostName = ApplicationProperties.getString(MeasurementControlModule.KEY_KIS_HOST_NAME,
-					MeasurementControlModule.KIS_HOST_NAME);
+			this.kisHostName = ApplicationProperties.getString(KEY_KIS_HOST_NAME, KIS_HOST_NAME);
 		}
 
 		this.kisTCPPort = kis.getTCPPort();
 		if (this.kisTCPPort <= 0) {
-			this.kisTCPPort = (short) ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_TCP_PORT,
-					MeasurementControlModule.KIS_TCP_PORT);
+			this.kisTCPPort = (short) ApplicationProperties.getInt(KEY_KIS_TCP_PORT, KIS_TCP_PORT);
 		}
 
 		this.kisTCPSocket = KIS_TCP_SOCKET_DISCONNECTED;
