@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.95.2.1 2006/02/28 15:44:22 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.95.2.2 2006/03/16 11:32:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.95.2.1 $, $Date: 2006/02/28 15:44:22 $
+ * @version $Revision: 1.95.2.2 $, $Date: 2006/03/16 11:32:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -104,11 +104,6 @@ final class MeasurementServer extends SleepButWorkThread {
 	/**
 	 * Login of the corresponding user */
 	static String login;
-
-	/**
-	 * Identifier of domain to log in 
-	 */
-	static Identifier domainId;
 
 	/**
 	 * Map of tests to transmit to MCMs	*/
@@ -187,7 +182,6 @@ final class MeasurementServer extends SleepButWorkThread {
 			final Set<Identifier> mcmIds = Identifier.createIdentifiers(((MCMDatabase) mcmDatabase).retrieveForServer(serverId));
 
 			login = user.getLogin();
-			domainId = server.getDomainId();
 
 			/*	Create map of test ids to start*/
 			startTestIdMap = Collections.synchronizedMap(new HashMap<Identifier, Set<Identifier>>(mcmIds.size()));
@@ -210,7 +204,7 @@ final class MeasurementServer extends SleepButWorkThread {
 			/*	Login*/
 			final MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
 			try {
-				sessionEnvironment.login(login, PASSWORD, domainId);
+				sessionEnvironment.login(login, PASSWORD, server.getDomainId());
 			}
 			catch (final LoginException le) {
 				Log.errorMessage(le);
@@ -459,10 +453,6 @@ final class MeasurementServer extends SleepButWorkThread {
 
 		public String getPassword() {
 			return PASSWORD;
-		}
-
-		public Identifier getDomainId() {
-			return domainId;
 		}
 	}
 
