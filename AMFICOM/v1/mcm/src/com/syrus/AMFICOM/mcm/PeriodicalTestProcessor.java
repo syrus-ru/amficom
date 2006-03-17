@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTestProcessor.java,v 1.54.2.1 2006/03/16 12:01:54 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.54.2.2 2006/03/17 12:36:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.54.2.1 $, $Date: 2006/03/16 12:01:54 $
+ * @version $Revision: 1.54.2.2 $, $Date: 2006/03/17 12:36:39 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -29,7 +29,7 @@ final class PeriodicalTestProcessor extends TestProcessor {
 	private static final String ABORT_REASON_TEMPORAL_PATTERN = "Failed to load temporal pattern";
 
 	private Date endTime;
-	private AbstractTemporalPattern<? extends AbstractTemporalPattern> temporalPattern;
+	private AbstractTemporalPattern temporalPattern;
 	private SortedSet<Date> timeStampsList;
 
 	public PeriodicalTestProcessor(Test test) throws TestProcessingException {

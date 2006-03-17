@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.35.2.2 2006/03/09 17:36:09 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.35.2.3 2006/03/17 12:36:39 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35.2.2 $, $Date: 2006/03/09 17:36:09 $
+ * @version $Revision: 1.35.2.3 $, $Date: 2006/03/17 12:36:39 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -50,7 +50,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 	}
 
 	@Override
-	public <T extends StorableObject<T>> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
@@ -99,7 +99,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 
 
 	@Override
-	public final <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+	public final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 
@@ -267,7 +267,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 			for (final Short entityKey : levelLoadObjectsMap.keySet()) {
 				final Set<StorableObject> entityLevelLoadObjects = levelLoadObjectsMap.get(entityKey);
 				try {
-					final StorableObjectDatabase<? extends StorableObject<?>> database = DatabaseContext.getDatabase(entityKey);
+					final StorableObjectDatabase<? extends StorableObject> database = DatabaseContext.getDatabase(entityKey);
 					((StorableObjectDatabase) database).save(entityLevelLoadObjects);
 				} catch (ApplicationException ae) {
 					Log.errorMessage(ae);
