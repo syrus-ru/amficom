@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.125 2006/03/15 20:28:23 bass Exp $
+ * $Id: SchemePath.java,v 1.126 2006/03/17 09:33:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.125 $, $Date: 2006/03/15 20:28:23 $
+ * @version $Revision: 1.126 $, $Date: 2006/03/17 09:33:46 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -990,9 +990,11 @@ public final class SchemePath extends StorableObject
 		assert assertContains(startPathElement): CHILDREN_ALIEN;
 		assert assertContains(endPathElement): CHILDREN_ALIEN;
 		
-		final SortedSet<PathElement> pathElements = getPathMembers();
+		final Set<PathElement> pathElements = new HashSet<PathElement>();
+
 		double oldOpticalLength1 = 0;
-		for (final PathElement pathElement1 : pathElements.tailSet(startPathElement)) {
+		for (final PathElement pathElement1 : getPathMembers().tailSet(startPathElement)) {
+			pathElements.add(pathElement1);
 			oldOpticalLength1 += pathElement1.getOpticalLength();
 			if (pathElement1.equals(endPathElement)) {
 				assert pathElement1 == endPathElement;
@@ -1005,12 +1007,14 @@ public final class SchemePath extends StorableObject
 			return;
 		}
 
+		final Set<AbstractSchemeElement> abstractSchemeElements = new HashSet<AbstractSchemeElement>();
 		final double k = (oldOpticalLength + increment) / oldOpticalLength;
 		if (k > 0) {
-			for (final PathElement pathElement : pathElements.tailSet(startPathElement)) {
-				pathElement.setOpticalLength(pathElement.getOpticalLength() * k);
-				if (pathElement.equals(endPathElement)) {
-					break;
+			for (final PathElement pathElement : pathElements) {
+				final AbstractSchemeElement abstractSchemeElement = pathElement.getAbstractSchemeElement();
+				if (!abstractSchemeElements.contains(abstractSchemeElement)) {
+					abstractSchemeElements.add(abstractSchemeElement);
+					pathElement.setOpticalLength(pathElement.getOpticalLength() * k);
 				}
 			}
 		}
