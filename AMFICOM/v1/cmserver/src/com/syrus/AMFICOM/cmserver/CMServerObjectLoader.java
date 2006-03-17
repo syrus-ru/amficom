@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerObjectLoader.java,v 1.21.2.1 2006/03/13 07:10:13 arseniy Exp $
+ * $Id: CMServerObjectLoader.java,v 1.21.2.2 2006/03/17 12:33:05 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21.2.1 $, $Date: 2006/03/13 07:10:13 $
+ * @version $Revision: 1.21.2.2 $, $Date: 2006/03/17 12:33:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -48,7 +48,7 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 	}
 
 	@Override
-	public final <T extends StorableObject<T>> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+	public final <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
@@ -68,7 +68,7 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 	}
 
 	@Override
-	public final <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+	public final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws ApplicationException {
 		assert ids != null && condition != null: NON_NULL_EXPECTED;
 
@@ -86,7 +86,7 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 		}
 	}
 
-	private final <T extends StorableObject<T>> Set<T> loadStorableObjectsCustom(final Set<Identifier> ids) throws ApplicationException {
+	private final <T extends StorableObject> Set<T> loadStorableObjectsCustom(final Set<Identifier> ids) throws ApplicationException {
 		final Set<T> objects = super.loadStorableObjects(ids);
 
 		final Set<Identifier> loadIds = Identifier.createSubtractionIdentifiers(ids, objects);
@@ -118,7 +118,7 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 		return objects;
 	}
 
-	private final <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByConditionCustom(final Set<Identifier> ids,
+	private final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByConditionCustom(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws ApplicationException {
 		final Set<T> objects = super.loadStorableObjectsButIdsByCondition(ids, condition);
 

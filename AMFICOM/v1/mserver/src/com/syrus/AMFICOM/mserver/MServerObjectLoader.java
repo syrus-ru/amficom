@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerObjectLoader.java,v 1.19.2.1 2006/02/28 15:44:22 arseniy Exp $
+ * $Id: MServerObjectLoader.java,v 1.19.2.2 2006/03/17 12:33:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19.2.1 $, $Date: 2006/02/28 15:44:22 $
+ * @version $Revision: 1.19.2.2 $, $Date: 2006/03/17 12:33:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -50,7 +50,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 	}
 
 	@Override
-	public <T extends StorableObject<T>> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
@@ -70,7 +70,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 	}
 
 	@Override
-	public <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+	public <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 
@@ -88,7 +88,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 		}
 	}
 
-	private final <T extends StorableObject<T>> Set<T> loadStorableObjectsCustom(final Set<Identifier> ids) throws ApplicationException {
+	private final <T extends StorableObject> Set<T> loadStorableObjectsCustom(final Set<Identifier> ids) throws ApplicationException {
 		final Set<T> objects = super.loadStorableObjects(ids);
 
 		final Set<Identifier> loadIds = Identifier.createSubtractionIdentifiers(ids, objects);
@@ -141,7 +141,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 		return objects;
 	}
 
-	private final <T extends StorableObject<T>> Set<T> loadStorableObjectsButIdsByConditionCustom(final Set<Identifier> ids,
+	private final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByConditionCustom(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws ApplicationException {
 		final Set<T> objects = super.loadStorableObjectsButIdsByCondition(ids, condition);
 
