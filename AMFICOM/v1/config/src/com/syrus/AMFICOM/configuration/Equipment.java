@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.156.2.3 2006/03/17 10:43:03 arseniy Exp $
+ * $Id: Equipment.java,v 1.156.2.4 2006/03/17 12:08:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -62,7 +62,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.156.2.3 $, $Date: 2006/03/17 10:43:03 $
+ * @version $Revision: 1.156.2.4 $, $Date: 2006/03/17 12:08:46 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -283,8 +283,7 @@ public final class Equipment extends DomainMember
 	 * @throws XmlConversionException
 	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
-	public void fromXmlTransferable(final XmlEquipment equipment, final String importType)
-	throws XmlConversionException {
+	public void fromXmlTransferable(final XmlEquipment equipment, final String importType) throws XmlConversionException {
 		try {
 			XmlComplementorRegistry.complementStorableObject(equipment, EQUIPMENT_CODE, importType, PRE_IMPORT);
 
