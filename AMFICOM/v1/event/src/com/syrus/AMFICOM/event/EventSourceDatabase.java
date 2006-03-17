@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.27.2.1 2006/02/28 15:19:59 arseniy Exp $
+ * $Id: EventSourceDatabase.java,v 1.27.2.2 2006/03/17 12:07:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,12 @@
  */
 package com.syrus.AMFICOM.event;
 
+import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_EQUIPMENT_ID;
+import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_LINK_ID;
+import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_MCM_ID;
+import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_PORT_ID;
+import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_SOURCE_ENTITY_CODE;
+import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_TRANSMISSION_PATH_ID;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EVENTSOURCE_CODE;
@@ -20,12 +26,6 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
-import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_TRANSMISSION_PATH_ID;
-import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_EQUIPMENT_ID;
-import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_LINK_ID;
-import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_MCM_ID;
-import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_PORT_ID;
-import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_SOURCE_ENTITY_CODE;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.27.2.1 $, $Date: 2006/02/28 15:19:59 $
+ * @version $Revision: 1.27.2.2 $, $Date: 2006/03/17 12:07:13 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
