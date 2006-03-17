@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.91 2006/03/13 13:53:59 bass Exp $
+ * $Id: TestProcessor.java,v 1.92 2006/03/17 15:27:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.syrus.AMFICOM.eventv2.DefaultMeasurementCompletedEvent;
+import com.syrus.AMFICOM.eventv2.MeasurementCompletedEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -34,7 +36,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -49,8 +50,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2006/03/13 13:53:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.92 $, $Date: 2006/03/17 15:27:27 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -300,13 +301,26 @@ abstract class TestProcessor extends SleepButWorkThread {
 			final Result measurementResult = it.next();
 			final Measurement measurement = (Measurement) measurementResult.getAction();
 			try {
-				final Result[] aeResults = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
+				final AnalysisResult analysisResult = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
+				final Result[] aeResults = analysisResult.getResults();
 				for (int i = 0; i < aeResults.length; i++) {
 					if (aeResults[i] != null) {
 						Log.debugMessage("Analysis result: '" + aeResults[i].getId() + "' of measurement '" + measurement.getId() + "'",
 								Log.DEBUGLEVEL07);
 						objectsToFlush.add(aeResults[i]);
 					}
+				}
+
+				final MeasurementCompletedEvent measurementCompletedEvent;
+				if (analysisResult.hasQ()) {
+					measurementCompletedEvent = DefaultMeasurementCompletedEvent.valueOf(measurement.getId(), analysisResult.getQ());
+				} else {
+					measurementCompletedEvent = DefaultMeasurementCompletedEvent.valueOf(measurement.getId(), Double.NaN);
+				}
+				try {
+					MeasurementControlModule.eventQueue.addEvent(measurementCompletedEvent);
+				} catch (EventQueueFullException eqfe) {
+					Log.errorMessage(eqfe);
 				}
 			} catch (AnalysisException ae) {
 				Log.errorMessage(ae);

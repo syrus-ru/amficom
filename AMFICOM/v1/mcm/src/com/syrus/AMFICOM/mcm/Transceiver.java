@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.80 2006/02/20 17:11:12 arseniy Exp $
+ * $Id: Transceiver.java,v 1.81 2006/03/17 15:27:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.syrus.AMFICOM.eventv2.DefaultMeasurementStartedEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -33,7 +34,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2006/02/20 17:11:12 $
+ * @version $Revision: 1.81 $, $Date: 2006/03/17 15:27:27 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -146,6 +147,12 @@ final class Transceiver extends SleepButWorkThread {
 							this.scheduledMeasurements.remove(measurement);
 							measurement.setStatus(IdlMeasurementStatus.MEASUREMENT_STATUS_ACQUIRING);
 							StorableObjectPool.flush(measurementId, LoginManager.getUserId(), false);
+
+							try {
+								MeasurementControlModule.eventQueue.addEvent(DefaultMeasurementStartedEvent.valueOf(measurementId));
+							} catch (EventQueueFullException eqfe) {
+								Log.errorMessage(eqfe);
+							}
 
 							super.clearFalls();
 						} catch (CommunicationException ce) {

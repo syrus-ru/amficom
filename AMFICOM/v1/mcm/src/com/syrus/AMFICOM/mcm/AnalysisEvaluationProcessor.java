@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.58 2006/03/13 13:53:59 bass Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.59 2006/03/17 15:26:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,9 +9,11 @@
 package com.syrus.AMFICOM.mcm;
 
 import static com.syrus.AMFICOM.general.ParameterType.DADARA_ALARMS;
+import static com.syrus.AMFICOM.general.ParameterType.DADARA_QUALITY_OVERALL_Q;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -32,11 +34,12 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 import com.syrus.io.DataFormatException;
+import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2006/03/13 13:53:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.59 $, $Date: 2006/03/17 15:26:29 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -50,12 +53,14 @@ final class AnalysisEvaluationProcessor {
 
 	private static AnalysisManager analysisManager;
 
+	private static Result[] EMPTY_RESULTS = new Result[0];
+
 	private AnalysisEvaluationProcessor() {
 		//singleton
 		assert false;
 	}
 
-	public static Result[] analyseEvaluate(final Result measurementResult) throws AnalysisException {
+	public static AnalysisResult analyseEvaluate(final Result measurementResult) throws AnalysisException {
 		final Measurement measurement = (Measurement) measurementResult.getAction();
 		final Test test;
 		try {
@@ -69,11 +74,11 @@ final class AnalysisEvaluationProcessor {
 		final AnalysisType analysisType = test.getAnalysisType();
 		if (!analysisType.equals(AnalysisType.UNKNOWN)) {
 			final Analysis analysis = createAnalysis(analysisType, monitoredElementId, measurement.getId(), measurementSetup.getCriteriaSet());
-			return new Result[] { analyseAndEvaluate(measurementResult, analysis, measurementSetup.getEtalon()) };
+			return analyseAndEvaluate(measurementResult, analysis, measurementSetup.getEtalon());
 		}
 
 		Log.debugMessage("UNKNOWN AnalysisType for test '" + test.getId() + "'", SEVERE);
-		return new Result[0];
+		return new AnalysisResult(EMPTY_RESULTS);
 	}
 
 	private static Analysis createAnalysis(final AnalysisType analysisType,
@@ -139,7 +144,7 @@ final class AnalysisEvaluationProcessor {
 		}
 	}
 
-	private static Result analyseAndEvaluate(final Result measurementResult,
+	private static AnalysisResult analyseAndEvaluate(final Result measurementResult,
 			final Analysis analysis,
 			final ParameterSet etalon)
 	throws AnalysisException {
@@ -152,28 +157,45 @@ final class AnalysisEvaluationProcessor {
 			final Identifier resultId = measurementResult.getId();
 			final Identifier monitoredElementId = measurementResult.getAction().getMonitoredElementId();
 
+			double q = Double.NaN;
 			int dadaraAlarmsOccurenceCount = 0;
 			for (final Parameter parameter : arParameters) {
-				if (parameter.getType() != DADARA_ALARMS) {
+				if (parameter.getType() == DADARA_QUALITY_OVERALL_Q) {
+					try {
+						q = (new ByteArray(parameter.getValue())).toDouble();
+					} catch (IOException ioe) {
+						Log.errorMessage(ioe);
+					}
+				} else if (parameter.getType() == DADARA_ALARMS) {
+					if (++dadaraAlarmsOccurenceCount != 1) {
+						Log.debugMessage("WARNING: dadaraAlarmsOccurenceCount = "
+								+ dadaraAlarmsOccurenceCount
+								+ "; should be 1", WARNING);
+					}
+					for (final ReflectogramMismatch reflectogramMismatch : ReflectogramMismatchImpl.alarmsFromByteArray(parameter.getValue())) {
+						MeasurementControlModule.eventQueue.addEvent(
+								DefaultReflectogramMismatchEvent.valueOf(
+										reflectogramMismatch,
+										resultId,
+										monitoredElementId));
+					}
+
+				} else {
 					continue;
-				}
-
-				if (++dadaraAlarmsOccurenceCount != 1) {
-					Log.debugMessage("WARNING: dadaraAlarmsOccurenceCount = "
-							+ dadaraAlarmsOccurenceCount
-							+ "; should be 1", WARNING);
-				}
-
-				for (final ReflectogramMismatch reflectogramMismatch : ReflectogramMismatchImpl.alarmsFromByteArray(parameter.getValue())) {
-					MeasurementControlModule.eventQueue.addEvent(
-							DefaultReflectogramMismatchEvent.valueOf(
-									reflectogramMismatch,
-									resultId,
-									monitoredElementId));
 				}
 			}
 
-			return analysis.createResult(LoginManager.getUserId(), arParameters);
+			final Result result = analysis.createResult(LoginManager.getUserId(), arParameters);
+			final Result[] results = new Result[] { result };
+
+			final AnalysisResult analysisResult;
+			if (!Double.isNaN(q)) {
+				analysisResult = new AnalysisResult(results, q);
+			} else {
+				analysisResult = new AnalysisResult(results);
+			}
+
+			return analysisResult;
 		} catch (final EventQueueFullException eqfe) {
 			Log.debugMessage(eqfe, SEVERE);
 			throw new AnalysisException(eqfe);
