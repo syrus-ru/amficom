@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.84.2.2 2006/03/15 15:47:49 arseniy Exp $
+ * $Id: SchemeCablePort.java,v 1.84.2.3 2006/03/17 12:25:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,6 @@ import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCablePort;
@@ -57,6 +56,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCablePort;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -64,11 +64,12 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #11 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.84.2.2 $, $Date: 2006/03/15 15:47:49 $
+ * @version $Revision: 1.84.2.3 $, $Date: 2006/03/17 12:25:11 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort
-		implements XmlTransferableObject<XmlSchemeCablePort> {
+		implements XmlTransferableObject<XmlSchemeCablePort>,
+		IdlTransferableObjectExt<IdlSchemeCablePort> {
 	private static final long serialVersionUID = 4050767078690534455L;
 
 	/**
@@ -369,16 +370,14 @@ public final class SchemeCablePort extends AbstractSchemePort
 	}
 
 	/**
-	 * @param transferable
+	 * @param schemeCablePort
 	 * @throws IdlConversionException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
-	@Override
-	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	public void fromIdlTransferable(final IdlSchemeCablePort schemeCablePort)
 	throws IdlConversionException {
 		synchronized (this) {
-			final IdlSchemeCablePort schemeCablePort = (IdlSchemeCablePort) transferable;
-			super.fromTransferable(schemeCablePort,
+			super.fromIdlTransferable(schemeCablePort,
 					schemeCablePort.cablePortTypeId,
 					schemeCablePort.cablePortId);
 		}

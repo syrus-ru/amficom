@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.93.2.2 2006/03/15 15:47:49 arseniy Exp $
+ * $Id: SchemeProtoGroup.java,v 1.93.2.3 2006/03/17 12:25:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,6 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoGroup;
@@ -60,6 +59,7 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroupSeq;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -67,13 +67,14 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #01 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.93.2.2 $, $Date: 2006/03/15 15:47:49 $
+ * @version $Revision: 1.93.2.3 $, $Date: 2006/03/17 12:25:11 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
 		implements Describable, SchemeSymbolContainer,
 		ReverseDependencyContainer,
-		XmlTransferableObject<XmlSchemeProtoGroup> {
+		XmlTransferableObject<XmlSchemeProtoGroup>,
+		IdlTransferableObjectExt<IdlSchemeProtoGroup> {
 	private static final long serialVersionUID = 3256721788422862901L;
 
 	private String name;
@@ -558,14 +559,12 @@ public final class SchemeProtoGroup extends StorableObject
 	}
 
 	/**
-	 * @param transferable
+	 * @param schemeProtoGroup
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
 	 */
-	@Override
-	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	public void fromIdlTransferable(final IdlSchemeProtoGroup schemeProtoGroup)
 	throws IdlConversionException {
 		synchronized (this) {
-			final IdlSchemeProtoGroup schemeProtoGroup = (IdlSchemeProtoGroup) transferable;
 			super.fromIdlTransferable(schemeProtoGroup);
 			this.name = schemeProtoGroup.name;
 			this.description = schemeProtoGroup.description;

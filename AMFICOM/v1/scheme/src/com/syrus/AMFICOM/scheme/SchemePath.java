@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.119.2.3 2006/03/15 15:47:49 arseniy Exp $
+ * $Id: SchemePath.java,v 1.119.2.4 2006/03/17 12:25:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,6 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePath;
@@ -67,6 +66,7 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemePath;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -74,13 +74,14 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #16 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.119.2.3 $, $Date: 2006/03/15 15:47:49 $
+ * @version $Revision: 1.119.2.4 $, $Date: 2006/03/17 12:25:11 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
 		implements Describable, Characterizable,
 		PathOwner<PathElement>, ReverseDependencyContainer,
-		XmlTransferableObject<XmlSchemePath> {
+		XmlTransferableObject<XmlSchemePath>,
+		IdlTransferableObjectExt<IdlSchemePath> {
 	private static final long serialVersionUID = 3257567312831132469L;
 
 	private String name;
@@ -452,15 +453,13 @@ public final class SchemePath extends StorableObject
 	}
 
 	/**
-	 * @param transferable
+	 * @param schemePath
 	 * @throws IdlConversionException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
-	@Override
-	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	public void fromIdlTransferable(final IdlSchemePath schemePath)
 	throws IdlConversionException {
 		synchronized (this) {
-			final IdlSchemePath schemePath = (IdlSchemePath) transferable;
 			super.fromIdlTransferable(schemePath);
 			this.name = schemePath.name;
 			this.description = schemePath.description;
@@ -991,9 +990,11 @@ public final class SchemePath extends StorableObject
 		assert assertContains(startPathElement): CHILDREN_ALIEN;
 		assert assertContains(endPathElement): CHILDREN_ALIEN;
 		
-		final SortedSet<PathElement> pathElements = getPathMembers();
+		final Set<PathElement> pathElements = new HashSet<PathElement>();
+
 		double oldOpticalLength1 = 0;
-		for (final PathElement pathElement1 : pathElements.tailSet(startPathElement)) {
+		for (final PathElement pathElement1 : getPathMembers().tailSet(startPathElement)) {
+			pathElements.add(pathElement1);
 			oldOpticalLength1 += pathElement1.getOpticalLength();
 			if (pathElement1.equals(endPathElement)) {
 				assert pathElement1 == endPathElement;
@@ -1006,12 +1007,14 @@ public final class SchemePath extends StorableObject
 			return;
 		}
 
+		final Set<AbstractSchemeElement> abstractSchemeElements = new HashSet<AbstractSchemeElement>();
 		final double k = (oldOpticalLength + increment) / oldOpticalLength;
 		if (k > 0) {
-			for (final PathElement pathElement : pathElements.tailSet(startPathElement)) {
-				pathElement.setOpticalLength(pathElement.getOpticalLength() * k);
-				if (pathElement.equals(endPathElement)) {
-					break;
+			for (final PathElement pathElement : pathElements) {
+				final AbstractSchemeElement abstractSchemeElement = pathElement.getAbstractSchemeElement();
+				if (!abstractSchemeElements.contains(abstractSchemeElement)) {
+					abstractSchemeElements.add(abstractSchemeElement);
+					pathElement.setOpticalLength(pathElement.getOpticalLength() * k);
 				}
 			}
 		}

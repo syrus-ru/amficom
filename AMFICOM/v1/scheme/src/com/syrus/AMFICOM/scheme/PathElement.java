@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.100.2.2 2006/03/15 15:47:49 arseniy Exp $
+ * $Id: PathElement.java,v 1.100.2.3 2006/03/17 12:25:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,6 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElement;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlData;
@@ -63,6 +62,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlSc
 import com.syrus.AMFICOM.scheme.xml.XmlPathElement;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -74,7 +74,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.100.2.2 $, $Date: 2006/03/15 15:47:49 $
+ * @version $Revision: 1.100.2.3 $, $Date: 2006/03/17 12:25:11 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -82,7 +82,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 public final class PathElement extends StorableObject
 		implements Describable, Comparable<PathElement>,
 		PathMember<SchemePath, PathElement>, ReverseDependencyContainer,
-		XmlTransferableObject<XmlPathElement>{
+		XmlTransferableObject<XmlPathElement>,
+		IdlTransferableObjectExt<IdlPathElement> {
 	private static final long serialVersionUID = 3905799768986038576L;
 
 	Identifier parentSchemePathId;
@@ -1192,15 +1193,13 @@ public final class PathElement extends StorableObject
 	}
 
 	/**
-	 * @param transferable
+	 * @param pathElement
 	 * @throws IdlConversionException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
-	@Override
-	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	public void fromIdlTransferable(final IdlPathElement pathElement)
 	throws IdlConversionException {
 		synchronized (this) {
-			final IdlPathElement pathElement = (IdlPathElement) transferable;
 			super.fromIdlTransferable(pathElement);
 			this.parentSchemePathId = new Identifier(pathElement.parentSchemePathId);
 			this.sequentialNumber = pathElement.sequentialNumber;

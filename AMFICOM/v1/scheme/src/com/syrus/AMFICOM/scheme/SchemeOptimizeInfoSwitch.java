@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitch.java,v 1.39.2.2 2006/03/15 15:47:49 arseniy Exp $
+ * $Id: SchemeOptimizeInfoSwitch.java,v 1.39.2.3 2006/03/17 12:25:11 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,12 +38,12 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoSwitch;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoSwitchHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfoSwitch;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -52,13 +52,14 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.39.2.2 $, $Date: 2006/03/15 15:47:49 $
+ * @version $Revision: 1.39.2.3 $, $Date: 2006/03/17 12:25:11 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitch
 		extends StorableObject
 		implements Namable, ReverseDependencyContainer,
-		XmlTransferableObject<XmlSchemeOptimizeInfoSwitch> {
+		XmlTransferableObject<XmlSchemeOptimizeInfoSwitch>,
+		IdlTransferableObjectExt<IdlSchemeOptimizeInfoSwitch> {
 	private static final long serialVersionUID = 2583191675321445786L;
 
 	private String name;
@@ -329,14 +330,12 @@ public final class SchemeOptimizeInfoSwitch
 	}
 
 	/**
-	 * @param transferable
+	 * @param schemeOptimizeInfoSwitch
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
-	@Override
-	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	public void fromIdlTransferable(final IdlSchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch)
 	throws IdlConversionException {
 		synchronized (this) {
-			final IdlSchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch = (IdlSchemeOptimizeInfoSwitch) transferable;
 			super.fromIdlTransferable(schemeOptimizeInfoSwitch);
 			this.name = schemeOptimizeInfoSwitch.name;
 			this.priceUsd = schemeOptimizeInfoSwitch.priceUsd;

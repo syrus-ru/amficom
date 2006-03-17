@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.154.2.2 2006/03/15 15:47:49 arseniy Exp $
+ * $Id: SchemeElement.java,v 1.154.2.3 2006/03/17 12:25:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.measurement.KIS;
@@ -92,6 +91,7 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeElement.Kind.Enum;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -99,12 +99,13 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #04 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.154.2.2 $, $Date: 2006/03/15 15:47:49 $
+ * @version $Revision: 1.154.2.3 $, $Date: 2006/03/17 12:25:11 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
 		implements SchemeCellContainer,
-		XmlTransferableObject<XmlSchemeElement> {
+		XmlTransferableObject<XmlSchemeElement>,
+		IdlTransferableObjectExt<IdlSchemeElement> {
 	private static final long serialVersionUID = 3618977875802797368L;
 
 	private int kind;
@@ -215,7 +216,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 */
 	public SchemeElement(final IdlSchemeElement transferable) throws CreateObjectException {
 		try {
-			this.fromIdlTransferable((IdlStorableObject) transferable);
+			this.fromIdlTransferable(transferable);
 		} catch (final IdlConversionException ice) {
 			throw new CreateObjectException(ice);
 		}
@@ -1512,16 +1513,14 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	/**
-	 * @param transferable
+	 * @param schemeElement
 	 * @throws IdlConversionException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
-	@Override
-	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	public void fromIdlTransferable(final IdlSchemeElement schemeElement)
 	throws IdlConversionException {
 		synchronized (this) {
-			final IdlSchemeElement schemeElement = (IdlSchemeElement) transferable;
-			super.fromTransferable(schemeElement);
+			super.fromIdlTransferable(schemeElement);
 			this.label = schemeElement.label;
 			this.kind = schemeElement.kind.value();
 			this.protoEquipmentId = new Identifier(schemeElement.protoEquipmentId);

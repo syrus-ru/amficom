@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemWrapper.java,v 1.15.2.1 2006/03/15 15:47:49 arseniy Exp $
+ * $Id: CableChannelingItemWrapper.java,v 1.15.2.2 2006/03/17 12:25:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.15.2.1 $, $Date: 2006/03/15 15:47:49 $
+ * @version $Revision: 1.15.2.2 $, $Date: 2006/03/17 12:25:11 $
  * @author $Author: arseniy $
  * @module scheme
  */

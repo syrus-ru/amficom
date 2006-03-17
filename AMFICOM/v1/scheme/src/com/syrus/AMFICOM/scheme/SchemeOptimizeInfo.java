@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.84.2.2 2006/03/15 15:47:49 arseniy Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.84.2.3 2006/03/17 12:25:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,12 +43,12 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfo;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfo;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -56,12 +56,13 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #05 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.84.2.2 $, $Date: 2006/03/15 15:47:49 $
+ * @version $Revision: 1.84.2.3 $, $Date: 2006/03/17 12:25:11 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
 		implements Describable, ReverseDependencyContainer,
-		XmlTransferableObject<XmlSchemeOptimizeInfo> {
+		XmlTransferableObject<XmlSchemeOptimizeInfo>,
+		IdlTransferableObjectExt<IdlSchemeOptimizeInfo> {
 	private static final long serialVersionUID = 3761127137155232822L;
 
 	private String name;
@@ -648,15 +649,13 @@ public final class SchemeOptimizeInfo extends StorableObject
 	}
 
 	/**
-	 * @param transferable
+	 * @param schemeOptimizeInfo
 	 * @throws IdlConversionException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
-	@Override
-	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	public void fromIdlTransferable(final IdlSchemeOptimizeInfo schemeOptimizeInfo)
 	throws IdlConversionException {
 		synchronized (this) {
-			final IdlSchemeOptimizeInfo schemeOptimizeInfo = (IdlSchemeOptimizeInfo) transferable;
 			super.fromIdlTransferable(schemeOptimizeInfo);
 			this.name = schemeOptimizeInfo.name;
 			this.description = schemeOptimizeInfo.description;

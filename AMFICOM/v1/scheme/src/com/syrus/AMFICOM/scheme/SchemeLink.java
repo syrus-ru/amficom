@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.107.2.2 2006/03/15 15:47:49 arseniy Exp $
+ * $Id: SchemeLink.java,v 1.107.2.3 2006/03/17 12:25:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,6 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeLink;
@@ -70,6 +69,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeLinkHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeLink;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -77,11 +77,12 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #12 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.107.2.2 $, $Date: 2006/03/15 15:47:49 $
+ * @version $Revision: 1.107.2.3 $, $Date: 2006/03/17 12:25:11 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
-		implements XmlTransferableObject<XmlSchemeLink> {
+		implements XmlTransferableObject<XmlSchemeLink>,
+		IdlTransferableObjectExt<IdlSchemeLink> {
 	private static final long serialVersionUID = 3834587703751947064L;
 
 	private Identifier siteNodeId;
@@ -173,7 +174,7 @@ public final class SchemeLink extends AbstractSchemeLink
 	 */
 	public SchemeLink(final IdlSchemeLink transferable) throws CreateObjectException {
 		try {
-			this.fromIdlTransferable((IdlStorableObject) transferable);
+			this.fromIdlTransferable(transferable);
 		} catch (final IdlConversionException ice) {
 			throw new CreateObjectException(ice);
 		}
@@ -1225,16 +1226,14 @@ public final class SchemeLink extends AbstractSchemeLink
 	}
 
 	/**
-	 * @param transferable
+	 * @param schemeLink
 	 * @throws IdlConversionException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(IdlStorableObject)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
-	@Override
-	protected void fromIdlTransferable(final IdlStorableObject transferable)
+	public void fromIdlTransferable(final IdlSchemeLink schemeLink)
 	throws IdlConversionException {
 		synchronized (this) {
-			final IdlSchemeLink schemeLink = (IdlSchemeLink) transferable;
-			super.fromTransferable(schemeLink,
+			super.fromIdlTransferable(schemeLink,
 					schemeLink.linkTypeId,
 					schemeLink.linkId,
 					schemeLink.sourceSchemePortId,
