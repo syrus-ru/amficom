@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceView.java,v 1.8 2005/10/12 10:08:41 stas Exp $
+ * $Id: DeviceView.java,v 1.9 2006/03/17 10:29:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.objects;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -20,6 +21,7 @@ import java.util.Map;
 import com.jgraph.JGraph;
 import com.jgraph.graph.CellHandle;
 import com.jgraph.graph.CellMapper;
+import com.jgraph.graph.CellView;
 import com.jgraph.graph.CellViewRenderer;
 import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultPort;
@@ -33,23 +35,17 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/10/12 10:08:41 $
+ * @version $Revision: 1.9 $, $Date: 2006/03/17 10:29:10 $
  * @module schemeclient
  */
 
-public class DeviceView extends VertexView {
+public class DeviceView extends SchemeVertexView {
 	private static final long serialVersionUID = 3763093055304970547L;
 
 	protected Rectangle _bounds;
-	private static VertexRenderer schemerenderer = new SchemeVertexRenderer();
 
 	public DeviceView(Object cell, JGraph graph, CellMapper mapper) {
 		super(cell, graph, mapper);
-	}
-
-	@Override
-	public CellViewRenderer getRenderer() {
-		return schemerenderer;
 	}
 
 	@Override
@@ -123,25 +119,6 @@ public class DeviceView extends VertexView {
 					}
 				}
 				DeviceView.this._bounds = bounds1;
-			}
-		}
-	}
-
-	public static class SchemeVertexRenderer extends VertexRenderer {
-		private static final long serialVersionUID = 3257003246202466869L;
-
-		@Override
-		protected void paintSelectionBorder(Graphics g) {
-			((Graphics2D) g).setStroke(GraphConstants.SELECTION_STROKE);
-			if (this.childrenSelected)
-				g.setColor(this.graph.getGridColor());
-			//		else if (hasFocus && selected)
-			//			g.setColor(graph.getLockedHandleColor());
-			else if (this.selected)
-				g.setColor(this.graph.getHighlightColor());
-			if (this.childrenSelected || this.selected) {
-				Dimension d = getSize();
-				g.drawRect(0, 0, d.width - 1, d.height - 1);
 			}
 		}
 	}

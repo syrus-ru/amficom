@@ -1,5 +1,5 @@
 /*
- * $Id: UgoPanel.java,v 1.22 2006/02/15 12:18:10 stas Exp $
+ * $Id: UgoPanel.java,v 1.23 2006/03/17 10:29:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -44,7 +45,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2006/02/15 12:18:10 $
+ * @version $Revision: 1.23 $, $Date: 2006/03/17 10:29:10 $
  * @module schemeclient
  */
 
@@ -121,19 +122,39 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 						SchemeElement se = (SchemeElement)see.getStorableObject();
 						DefaultGraphCell group = SchemeActions.findGroupById(this.graph, se.getId());
 						if (group != null) {
-							if (se.getLabel() != null)
-								GraphActions.updateGroup(this.graph, group, se.getLabel());
-							if (se.getSymbol() != null)
+							GraphActions.updateGroup(this.graph, group, se.getLabel());
+							if (se.getSymbol() != null) {
 								GraphActions.updateGroup(this.graph, group, new ImageIcon(se.getSymbol().getImage()));
+							} else {
+								GraphActions.updateGroup(this.graph, group, (ImageIcon)null);
+							} 
 						}
 					} else if (id.getMajor() == ObjectEntities.SCHEMEPROTOELEMENT_CODE) {
 						SchemeProtoElement proto = (SchemeProtoElement)see.getStorableObject();
 						DefaultGraphCell group = SchemeActions.findGroupById(this.graph, proto.getId());
 						if (group != null) {
-							if (proto.getLabel() != null)
-								GraphActions.updateGroup(this.graph, group, proto.getLabel());
-							if (proto.getSymbol() != null)
+							GraphActions.updateGroup(this.graph, group, proto.getLabel());
+							if (proto.getSymbol() != null) {
 								GraphActions.updateGroup(this.graph, group, new ImageIcon(proto.getSymbol().getImage()));
+							} else {
+								GraphActions.updateGroup(this.graph, group, (ImageIcon)null);
+							}
+						}
+					} else if (id.getMajor() == ObjectEntities.SCHEME_CODE) {
+						Scheme scheme = (Scheme)see.getStorableObject();
+						final SchemeElement parentSchemeElement = scheme.getParentSchemeElement();
+						if (parentSchemeElement != null) {
+							parentSchemeElement.setLabel(scheme.getLabel());
+							parentSchemeElement.setSymbol(scheme.getSymbol());
+							DefaultGraphCell group = SchemeActions.findGroupById(this.graph, parentSchemeElement.getId());
+							if (group != null) {
+								GraphActions.updateGroup(this.graph, group, scheme.getLabel());
+								if (scheme.getSymbol() != null) {
+									GraphActions.updateGroup(this.graph, group, new ImageIcon(scheme.getSymbol().getImage()));
+								} else {
+									GraphActions.updateGroup(this.graph, group, (ImageIcon)null);
+								}
+							}
 						}
 					} else if (id.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE) {
 						SchemeCableLink link = (SchemeCableLink)see.getStorableObject();
@@ -181,6 +202,7 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
 				}
+				this.graph.repaint();
 			}
 		}
 	}

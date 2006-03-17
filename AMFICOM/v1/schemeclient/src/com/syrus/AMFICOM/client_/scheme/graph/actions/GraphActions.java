@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.27 2006/02/15 12:58:34 stas Exp $
+ * $Id: GraphActions.java,v 1.28 2006/03/17 10:29:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.27 $, $Date: 2006/02/15 12:58:34 $
+ * @version $Revision: 1.28 $, $Date: 2006/03/17 10:29:10 $
  * @module schemeclient
  */
 
@@ -436,6 +436,8 @@ public class GraphActions {
 	}
 	
 	public static void updateGroup(SchemeGraph graph, DefaultGraphCell group, String text) {
+		group.setUserObject(text);
+		/*
 		if (group.getChildCount() > 0) {
 			for (Enumeration en = group.children(); en.hasMoreElements();) {
 				Object child = en.nextElement();
@@ -447,7 +449,7 @@ public class GraphActions {
 		} 
 		else {
 			setText(graph, group, text);
-		}
+		}*/
 	}
 	
 	public static void updateGroup(SchemeGraph graph, DefaultGraphCell group, ImageIcon icon) {

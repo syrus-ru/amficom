@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.67 2006/02/21 08:04:23 stas Exp $
+ * $Id: SchemeActions.java,v 1.68 2006/03/17 10:29:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -103,7 +103,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.67 $, $Date: 2006/02/21 08:04:23 $
+ * @version $Revision: 1.68 $, $Date: 2006/03/17 10:29:10 $
  * @module schemeclient
  */
 
@@ -115,47 +115,87 @@ public class SchemeActions {
 		// empty
 	}
 	
-	public static void fixImages(SchemeGraph graph) {
-		try {
-		DeviceGroup[] groups = GraphActions.findAllGroups(graph, graph.getRoots());
-		for (int i = 0; i < groups.length; i++) {
-			switch (groups[i].getType()) {
-			case DeviceGroup.SCHEME_ELEMENT:
-				SchemeElement se = groups[i].getSchemeElement();
-				DeviceCell cell = GraphActions.getMainCell(groups[i]);
-				if (cell != null && se != null) {
-					GraphActions.setText(graph, cell, se.getLabel());
-					ImageIcon icon = null;
-					if (se.getSymbol() != null)
-						icon = new ImageIcon(se.getSymbol().getImage());
-					GraphActions.setImage(graph, cell, icon);
-				}
-				break;
-			case DeviceGroup.PROTO_ELEMENT:
-				SchemeProtoElement proto = groups[i].getProtoElement();
-				cell = GraphActions.getMainCell(groups[i]);
-				if (cell != null && proto != null) {
-					GraphActions.setText(graph, cell, proto.getLabel());
-					ImageIcon icon = null;
-					if (proto.getSymbol() != null)
-						icon = new ImageIcon(proto.getSymbol().getImage());
-					GraphActions.setImage(graph, cell, icon);
-				}
-				break;
-			case DeviceGroup.SCHEME:
-				Scheme scheme = groups[i].getScheme();
-				cell = GraphActions.getMainCell(groups[i]);
-				if (cell != null && scheme != null) {
-					GraphActions.setText(graph, cell, scheme.getLabel());
-					ImageIcon icon = null;
-					if (scheme.getSymbol() != null)
-						icon = new ImageIcon(scheme.getSymbol().getImage());
-					GraphActions.setImage(graph, cell, icon);
-				}
-				break;
+	public static void fixText(DeviceGroup group) {
+		switch (group.getType()) {
+		case DeviceGroup.SCHEME_ELEMENT:
+			SchemeElement se = group.getSchemeElement();
+			if (se != null) {
+				group.setUserObject(se.getLabel());
+			}
+			break;
+		case DeviceGroup.PROTO_ELEMENT:
+			SchemeProtoElement proto = group.getProtoElement();
+			if (proto != null) {
+				group.setUserObject(proto.getLabel());
+			}
+			break;
+		case DeviceGroup.SCHEME:
+			Scheme scheme = group.getScheme();
+			if (scheme != null) {
+				group.setUserObject(scheme.getLabel());
 			}
 		}
-		}catch (Exception e) {
+	}
+	
+	public static void fixImage(SchemeGraph graph, DeviceGroup group) {
+		switch (group.getType()) {
+		case DeviceGroup.SCHEME_ELEMENT:
+			SchemeElement se = group.getSchemeElement();
+			if (se != null) {
+				group.setUserObject(se.getLabel());
+				DeviceCell cell = GraphActions.getMainCell(group);
+				if (cell != null) {
+					if (!cell.getUserObject().equals("")) {
+						GraphActions.setText(graph, cell, "");
+					}
+					if (se.getSymbol() != null) {
+						ImageIcon icon = new ImageIcon(se.getSymbol().getImage());
+						GraphActions.setImage(graph, cell, icon);
+					}
+				}
+			}
+			break;
+		case DeviceGroup.PROTO_ELEMENT:
+			SchemeProtoElement proto = group.getProtoElement();
+			if (proto != null) {
+				group.setUserObject(proto.getLabel());
+				DeviceCell cell = GraphActions.getMainCell(group);
+				if (cell != null) {
+					if (!cell.getUserObject().equals("")) {
+						GraphActions.setText(graph, cell, "");
+					}
+					if (proto.getSymbol() != null) {
+						ImageIcon icon = new ImageIcon(proto.getSymbol().getImage());
+						GraphActions.setImage(graph, cell, icon);
+					}
+				}
+			}
+			break;
+		case DeviceGroup.SCHEME:
+			Scheme scheme = group.getScheme();
+			if (scheme != null) {
+				group.setUserObject(scheme.getLabel());
+				DeviceCell cell = GraphActions.getMainCell(group);
+				if (cell != null) {
+					if (!cell.getUserObject().equals("")) {
+						GraphActions.setText(graph, cell, "");
+					}
+					if (scheme.getSymbol() != null) {
+						ImageIcon icon = new ImageIcon(scheme.getSymbol().getImage());
+						GraphActions.setImage(graph, cell, icon);
+					}
+				}
+			}
+		}
+	}
+	
+	public static void fixImages(SchemeGraph graph) {
+		try {
+			DeviceGroup[] groups = GraphActions.findAllGroups(graph, graph.getRoots());
+			for (int i = 0; i < groups.length; i++) {
+				fixImage(graph, groups[i]);
+			}
+		} catch (Exception e) {
 			Log.errorMessage(e);
 		}
 	}
@@ -1637,13 +1677,13 @@ public class SchemeActions {
 		return ports;
 	}
 	
-	private static String validationMessage;
+	private static List<String> validationMessages = new LinkedList<String>();
 	public static boolean isValid(SchemeGraph graph) {
-		validationMessage = LangModelScheme.getString("Message.information.scheme_valid");
+		validationMessages.clear();
 		// must be non-empty
 		Object[] objs = graph.getAll();
 		if (objs.length == 0) {
-			validationMessage = LangModelScheme.getString("Message.error.empty_scheme");
+			validationMessages.add(LangModelScheme.getString("Message.error.empty_scheme"));
 			return false;
 		}
 		
@@ -1652,17 +1692,17 @@ public class SchemeActions {
 			if (obj instanceof DefaultCableLink) {
 				DefaultCableLink link = (DefaultCableLink)obj;
 				if (link.getSource() == null || link.getTarget() == null) {
-					validationMessage = LangModelScheme.getString(SchemeResourceKeys.SCHEME_CABLELINK) 
+					validationMessages.add(LangModelScheme.getString(SchemeResourceKeys.SCHEME_CABLELINK) 
 							+ " '" + link.getUserObject() + "' "
-							+ LangModelScheme.getString("Message.error.unattached_source_or_target"); 
+							+ LangModelScheme.getString("Message.error.unattached_source_or_target")); 
 					return false; 
 				}
 			} else if (obj instanceof DefaultLink) {
 				DefaultLink link = (DefaultLink)obj;
 				if (link.getSource() == null || link.getTarget() == null) {
-					validationMessage = LangModelScheme.getString(SchemeResourceKeys.SCHEME_LINK) 
+					validationMessages.add(LangModelScheme.getString(SchemeResourceKeys.SCHEME_LINK) 
 							+ " '" + link.getUserObject() + "' "
-							+ LangModelScheme.getString("Message.error.unattached_source_or_target");
+							+ LangModelScheme.getString("Message.error.unattached_source_or_target"));
 					return false; 
 				}
 			}
@@ -1670,7 +1710,7 @@ public class SchemeActions {
 		return true;
 	}
 	
-	public static String getValidationMessage() {
-		return validationMessage;
+	public static List<String> getValidationMessages() {
+		return validationMessages;
 	}
 }

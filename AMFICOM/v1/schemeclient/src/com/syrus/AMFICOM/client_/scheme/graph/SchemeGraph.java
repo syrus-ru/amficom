@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.25 2006/02/22 07:08:11 stas Exp $
+ * $Id: SchemeGraph.java,v 1.26 2006/03/17 10:29:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.25 $, $Date: 2006/02/22 07:08:11 $
+ * @version $Revision: 1.26 $, $Date: 2006/03/17 10:29:10 $
  * @module schemeclient
  */
 
@@ -75,6 +75,8 @@ public class SchemeGraph extends GPGraph {
 	 */
 	private static String mode = Constants.LINK_MODE;
 
+	private static boolean showTitles = true;
+	
 	public SchemeGraph(ApplicationContext aContext) {
 		this(null, aContext);
 	}
@@ -132,6 +134,14 @@ public class SchemeGraph extends GPGraph {
 		return new LinkView(e, this, cm);
 	}
 	
+	public static boolean isShowTitles() {
+		return showTitles;
+	}
+
+	public static void setShowTitles(boolean showTitles) {
+		SchemeGraph.showTitles = showTitles;
+	}
+
 	public int snap(int coord) {
 		if (this.gridEnabled) {
 			coord = Math.round(((float)coord / (float)this.gridSize)) * this.gridSize;
