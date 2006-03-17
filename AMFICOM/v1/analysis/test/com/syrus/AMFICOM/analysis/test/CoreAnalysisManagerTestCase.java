@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.17 2005/12/22 14:37:57 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.18 2006/03/17 16:22:00 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -463,6 +463,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 				cc.distHalf,
 				cc.deltaReflectiveEotAtLinear); // ƒистанци€ событи€, где произошел обрыв
 	}
+
 	// ѕровер€ем тип и дистанцию при обрыве без отражени€, на лин. участке
 	public final void testTraceComparisonNonReflectiveBreakAtLinear()
 	throws IncompatibleTracesException {
@@ -471,7 +472,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		int etLength = cc.getEtLength0();
 		ReflectogramMismatchImpl res;
 
-		PFTrace traceLossBreak2 = generateTestTrace(cc.N, cc.distHalf, cc.connPosDZOnly, false, 0.0);
+		PFTrace traceLossBreak2 = generateTestTrace(cc.N, cc.distHalf, cc.connPos2Half, false, 0.0);
 		{
 			// “ут мы еще проверим результат собственно анализа, что длина трассы получена правильно
 			AnalysisResult aResult =
@@ -491,6 +492,47 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 				res.getCoord(),
 				cc.distHalf,
 				cc.deltaLossyEotAtLinear); // ƒистанци€ событи€, где произошел обрыв
+	}
+
+	// —равниваем приоритетность аларма в обрыве и выходе из масок
+	public final void testTraceComparisonNonReflectiveBreakAtLinearVsHardAlarm()
+	throws IncompatibleTracesException {
+		ModelTraceManager mtm = cc.getMtm0();
+		double breakThresh = cc.getBreakThresh0();
+		int etLength = cc.getEtLength0();
+		ReflectogramMismatchImpl res;
+
+		PFTrace traceLossBreak2 = generateTestTrace(cc.N, cc.distHalf, cc.connPosDZOnly, true, 0.0);
+		{
+			// “ут мы еще проверим результат собственно анализа, что длина трассы получена правильно
+			AnalysisResult aResult =
+				CoreAnalysisManager.performAnalysis(traceLossBreak2, defaultAP);
+			int len = aResult.getMTAE().getModelTrace().getLength();
+			assertTrue("Too short trace length: " + len, len >= cc.distHalf);
+		}
+		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
+				traceLossBreak2,
+				defaultAP, breakThresh, mtm, null));
+		System.out.println("compare diff: " + res);
+		assertTrue(res != null); // должен быть обнаружен аларм
+		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
+		if (true) { // ѕереключаем, что требуем от результатов сравнени€
+			// требуем аларм на выходе из масок (самый левый HARD аларм)
+			assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK); // тип аларма
+			assertTrue(res.getCoord() <= etLength);
+			assertEquals("Alarm coord",
+					res.getCoord(),
+					cc.dist1,
+					cc.deltaLossyEotAtLinear); // ƒистанци€ событи€, где произошел обрыв
+		} else {
+			// требуем аларм на обрыве (правее, чем HARD выход из масок)
+			assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_LINEBREAK); // тип аларма
+			assertTrue(res.getCoord() <= etLength);
+			assertEquals("Alarm coord",
+					res.getCoord(),
+					cc.distHalf,
+					cc.deltaLossyEotAtLinear); // ƒистанци€ событи€, где произошел обрыв
+		}
 	}
 
 	public final void testMismatchRounding() throws IncompatibleTracesException {
