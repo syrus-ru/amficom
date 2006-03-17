@@ -1,5 +1,5 @@
 /*-
- * $Id: Event.java,v 1.49.2.3 2006/03/15 15:45:33 arseniy Exp $
+ * $Id: Event.java,v 1.49.2.4 2006/03/17 12:08:11 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,18 +33,17 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.49.2.3 $, $Date: 2006/03/15 15:45:33 $
+ * @version $Revision: 1.49.2.4 $, $Date: 2006/03/17 12:08:11 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
-
-public final class Event extends StorableObject implements TypedObject<EventType> {
-	private static final long serialVersionUID = 8312515167821319496L;
+public final class Event extends StorableObject implements TypedObject<EventType>, IdlTransferableObjectExt<IdlEvent> {
+	private static final long serialVersionUID = 3977015150102788401L;
 
 	private EventType type;
 	private String description;
@@ -120,28 +119,25 @@ public final class Event extends StorableObject implements TypedObject<EventType
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlEvent event = (IdlEvent) transferable;
-
-		super.fromIdlTransferable(event);
-
+	public synchronized void fromIdlTransferable(final IdlEvent event) throws IdlConversionException {
 		try {
+			super.fromIdlTransferable(event);
+
 			this.type = StorableObjectPool.getStorableObject(new Identifier(event._typeId), true);
+
+			this.description = event.description;
+
+			this.eventParameters = new HashSet<EventParameter>(event.parameters.length);
+			for (final IdlEventParameter eventParameter : event.parameters) {
+				this.eventParameters.add(new EventParameter(eventParameter));
+			}
+
+			this.setEventSourceIds0(Identifier.fromTransferables(event.eventSourceIds));
+
+			assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}
-
-		this.description = event.description;
-
-		this.eventParameters = new HashSet<EventParameter>(event.parameters.length);
-		for (final IdlEventParameter eventParameter : event.parameters) {
-			this.eventParameters.add(new EventParameter(eventParameter));
-		}
-
-		this.setEventSourceIds0(Identifier.fromTransferables(event.eventSourceIds));
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
