@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.50 2005/12/22 11:51:48 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.51 2006/03/17 16:18:37 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.analysis.dadara;
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType.TYPE_EVENTLISTCHANGED;
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK;
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_NONE;
-import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_SOFT;
 import static java.util.logging.Level.INFO;
 
 import java.util.logging.Level;
@@ -38,17 +37,17 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.50 $, $Date: 2005/12/22 11:51:48 $
+ * @version $Revision: 1.51 $, $Date: 2006/03/17 16:18:37 $
  * @module
  */
 public class ModelTraceComparer
 {
 	private static final Severity ALARM_LEVEL_FOR_EVENT_CHANGE =
-		SEVERITY_SOFT;
+		Severity.SEVERITY_SOFT;
 	private static final Severity ALARM_LEVEL_FOR_SOFT_MASKS =
-		SEVERITY_SOFT;
+		Severity.SEVERITY_SOFT;
 	private static final Severity ALARM_LEVEL_FOR_HARD_MASKS =
-		SEVERITY_SOFT;
+		Severity.SEVERITY_SOFT;
 
 	private ModelTraceComparer() {
 		// non-instantiable

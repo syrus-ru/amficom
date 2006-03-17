@@ -20,11 +20,11 @@ import com.syrus.io.SignatureMismatchException;
  * @see ReflectogramMismatch
  * 
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/10/14 07:59:13 $
+ * @version $Revision: 1.10 $, $Date: 2006/03/17 16:18:37 $
  * @module dadara
  */
 public class ReflectogramMismatchImpl
-implements ReflectogramMismatch, Cloneable {
+implements ReflectogramMismatch, Cloneable, Comparable<ReflectogramMismatchImpl> {
 	private static final long SIGNATURE = 5490879050929171200L;
 
 	private Severity severity = SEVERITY_NONE;
@@ -290,20 +290,12 @@ implements ReflectogramMismatch, Cloneable {
 	/**
 	 * Если аларм that более приоритетен, чем this,
 	 * загружает параметры that в this.
-	 * <p>Приоритет определяется в таком порядке:
-	 * <ol>
-	 * <li> бОльший level
-	 * <li> меньший pointCoord
-	 * <li> сравнение остальных параметров пока не определено 
-	 * </ol>
 	 * 
-	 * @param that
+	 * @param that аларм that
 	 */
 	public void toHardest(ReflectogramMismatchImpl that)
 	{
-		if (that.severity.compareTo(this.severity) > 0
-				|| that.severity == this.severity && that.getCoord() < this.getCoord())
-		{
+		if (compareTo(that) < 0) {
 			this.severity = that.severity;
 			this.setCoord(that.getCoord());
 			this.setEndCoord(that.getEndCoord());
@@ -356,5 +348,27 @@ implements ReflectogramMismatch, Cloneable {
 
 	public double getDeltaX() {
 		return this.deltaX;
+	}
+
+	/**
+	 * Сравнивает по приоритету.
+	 * Приоритет определяется в таком порядке:
+	 * <ol>
+	 * <li> больший level
+	 * <li> меньший pointCoord
+	 * <li> сравнение остальных параметров пока не определено 
+	 * </ol>
+	 * @param that
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	public int compareTo(ReflectogramMismatchImpl that) {
+		int delta = 0;
+		if (delta == 0) {
+			delta = this.severity.compareTo(that.severity);
+		}
+		if (delta == 0) {
+			delta = -(getCoord() - that.getCoord());
+		}
+		return delta;
 	}
 }

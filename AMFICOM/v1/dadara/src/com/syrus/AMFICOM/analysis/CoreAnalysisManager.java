@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.144 2006/01/17 12:22:28 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.145 2006/03/17 16:18:37 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.144 $, $Date: 2006/01/17 12:22:28 $
+ * @version $Revision: 1.145 $, $Date: 2006/03/17 16:18:37 $
  * @module
  */
 
@@ -20,6 +20,7 @@ import static java.util.logging.Level.FINEST;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -989,6 +990,7 @@ public class CoreAnalysisManager
 				? mtae.getSimpleEvent(nEvents - 1).getBegin() : 0;
 		}
 
+		final boolean hasBreak;
 		// [fixed] проблема - breakPos случится при первом же уходе ниже minTraceLevel,
 		// что очень вероятно на последних километрах абс. нормальной р/г
 		// при работе на пределе динамического дипазона (see traces #38, #65)
@@ -1011,28 +1013,18 @@ public class CoreAnalysisManager
 
 			alarmList.add(alarm);
 
-			final QualityComparer qcomp =
-				new QualityComparer(mtae, etMTM, null, true);
-			return new EtalonComparison() {
-				public List<ReflectogramMismatchImpl> getAlarms() {
-					return alarmList;
-				}
-				public ReflectometryEvaluationOverallResult getOverallResult() {
-					return qcomp;
-				}
-				public EvaluationPerEventResult getPerEventResult() {
-					return qcomp;
-				}
-			};
+			hasBreak = true;
+		} else {
+			hasBreak = false;
 		}
-		else // обрыв не обнаружен
+
+		final SimpleReflectogramEventComparer rcomp;
 		{
 			ReliabilitySimpleReflectogramEvent[] arEvents =
 				mtae.getSimpleEvents();
 			ReliabilitySimpleReflectogramEvent[] etEvents =
 				etMTM.getMTAE().getSimpleEvents();
-			SimpleReflectogramEventComparer rcomp =
-				new SimpleReflectogramEventComparer(arEvents, etEvents);
+			rcomp = new SimpleReflectogramEventComparer(arEvents, etEvents);
 			ReflectogramMismatchImpl alarm =
 					ModelTraceComparer.compareMTAEToMTM(mtae,
 							etMTM, rcomp);
@@ -1048,20 +1040,38 @@ public class CoreAnalysisManager
 			if (alarm != null) {
 				alarmList.add(alarm);
 			}
-
-			final QualityComparer qcomp =
-				new QualityComparer(mtae, etMTM, rcomp, false);
-			return new EtalonComparison() {
-				public List<ReflectogramMismatchImpl> getAlarms() {
-					return alarmList;
-				}
-				public ReflectometryEvaluationOverallResult getOverallResult() {
-					return qcomp;
-				}
-				public EvaluationPerEventResult getPerEventResult() {
-					return qcomp;
-				}
-			};
 		}
+
+		// сортируем алармы по убыванию приоритета
+		Collections.sort(alarmList); // сначала по возрастанию
+		Collections.reverse(alarmList); // потом переворачиваем
+
+		// берем только один самый приоритетный аларм
+		// (таков сейчас внешний контракт)
+		final List<ReflectogramMismatchImpl> alarmList1;
+		if (alarmList.size() <= 1) {
+			alarmList1 = alarmList;
+		} else {
+			alarmList1 = new ArrayList<ReflectogramMismatchImpl>();
+			alarmList1.add(alarmList.get(0));
+		}
+
+		final QualityComparer qcomp;
+		if (hasBreak) {
+			qcomp = new QualityComparer(mtae, etMTM, null, true);
+		} else {
+			qcomp = new QualityComparer(mtae, etMTM, rcomp, false);
+		}
+		return new EtalonComparison() {
+			public List<ReflectogramMismatchImpl> getAlarms() {
+				return alarmList1;
+			}
+			public ReflectometryEvaluationOverallResult getOverallResult() {
+				return qcomp;
+			}
+			public EvaluationPerEventResult getPerEventResult() {
+				return qcomp;
+			}
+		};
 	}
 }
