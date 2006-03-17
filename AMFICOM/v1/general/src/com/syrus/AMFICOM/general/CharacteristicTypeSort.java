@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicTypeSort.java,v 1.4.2.2 2006/03/06 12:18:00 arseniy Exp $
+ * $Id: CharacteristicTypeSort.java,v 1.4.2.3 2006/03/17 10:11:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.4.2.2 $, $Date: 2006/03/06 12:18:00 $
+ * @version $Revision: 1.4.2.3 $, $Date: 2006/03/17 10:11:31 $
  * @module general
  */
 public enum CharacteristicTypeSort {
@@ -62,7 +62,7 @@ public enum CharacteristicTypeSort {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.4.2.2 $, $Date: 2006/03/06 12:18:00 $
+	 * @version $Revision: 1.4.2.3 $, $Date: 2006/03/17 10:11:31 $
 	 * @module general
 	 */
 	public static final class Proxy
@@ -101,7 +101,7 @@ public enum CharacteristicTypeSort {
 
 		/**
 		 * @param characteristicTypeSort
-		 * @see IdlTransferableObjectExt#fromIdlTransferable(IDLEntity)
+		 * @see IdlTransferableObjectExt#fromIdlTransferable(org.omg.CORBA.portable.IDLEntity)
 		 */
 		public void fromIdlTransferable(final IdlCharacteristicTypeSort characteristicTypeSort) {
 			this.value = valueOf(characteristicTypeSort);
