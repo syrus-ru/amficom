@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.51 2006/03/17 16:18:37 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.52 2006/03/17 16:34:40 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.51 $, $Date: 2006/03/17 16:18:37 $
+ * @version $Revision: 1.52 $, $Date: 2006/03/17 16:34:40 $
  * @module
  */
 public class ModelTraceComparer
@@ -47,7 +47,7 @@ public class ModelTraceComparer
 	private static final Severity ALARM_LEVEL_FOR_SOFT_MASKS =
 		Severity.SEVERITY_SOFT;
 	private static final Severity ALARM_LEVEL_FOR_HARD_MASKS =
-		Severity.SEVERITY_SOFT;
+		Severity.SEVERITY_HARD;
 
 	private ModelTraceComparer() {
 		// non-instantiable
