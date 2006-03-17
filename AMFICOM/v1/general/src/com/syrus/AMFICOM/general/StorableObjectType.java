@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectType.java,v 1.34.2.2 2006/03/15 13:28:07 arseniy Exp $
+ * $Id: StorableObjectType.java,v 1.34.2.3 2006/03/17 10:10:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,10 +15,9 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.34.2.2 $, $Date: 2006/03/15 13:28:07 $
+ * @version $Revision: 1.34.2.3 $, $Date: 2006/03/17 10:10:22 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -64,17 +63,29 @@ public abstract class StorableObjectType
 	 * @throws IdentifierGenerationException
 	 */
 	protected StorableObjectType(final XmlIdentifier id,
-			final String importType, final short entityCode,
-			final Date created, final Identifier creatorId)
-	throws IdentifierGenerationException {
+			final String importType,
+			final short entityCode,
+			final Date created,
+			final Identifier creatorId) throws IdentifierGenerationException {
 		super(id, importType, entityCode, created, creatorId);
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 *
+	 * <p>
+	 * Non-synchronized.
+	 * Non-overriding.
+	 * Non-overridable.
+	 * </p>
+	 *
+	 * @param transferable
+	 * @param codename1
+	 * @param description1
 	 */
-	protected synchronized void fromTransferable(final IdlStorableObject transferable, final String codename1, final String description1)
-			throws IdlConversionException {
+	protected final void fromIdlTransferable(final IdlStorableObject transferable,
+			final String codename1,
+			final String description1) {
 		super.fromIdlTransferable(transferable);
 		this.codename = codename1;
 		this.description = description1;

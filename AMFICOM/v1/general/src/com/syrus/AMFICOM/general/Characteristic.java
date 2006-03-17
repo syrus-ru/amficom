@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.89.2.3 2006/03/15 13:28:07 arseniy Exp $
+ * $Id: Characteristic.java,v 1.89.2.4 2006/03/17 10:09:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,28 +29,27 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlCharacteristic;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.89.2.3 $, $Date: 2006/03/15 13:28:07 $
+ * @version $Revision: 1.89.2.4 $, $Date: 2006/03/17 10:09:55 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public final class Characteristic extends AbstractCloneableStorableObject
-		implements TypedObject<CharacteristicType>,
-		ReverseDependencyContainer,
-		XmlTransferableObject<XmlCharacteristic> {
+		implements TypedObject<CharacteristicType>, ReverseDependencyContainer, XmlTransferableObject<XmlCharacteristic>,
+		IdlTransferableObjectExt<IdlCharacteristic> {
 	private static final long serialVersionUID = -2746555753961778403L;
 
 	/**
 	 * Can&apos;t be {@code null}.
-	 *
+	 * 
 	 * @serial include
 	 */
 	private CharacteristicType type;
@@ -140,7 +139,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 
 	/**
 	 * Minimalistic constructor used when importing from XML.
-	 * 
+	 *
 	 * @param id
 	 * @param importType
 	 * @param created
@@ -197,7 +196,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		checkParentCaharacterizableIdValid(parentCharacterizableId);
 
 		try {
-			final Characteristic characteristic = new Characteristic(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_CODE),
+			final Characteristic characteristic = new Characteristic(IdentifierPool.getGeneratedIdentifier(CHARACTERISTIC_CODE),
 					creatorId,
 					INITIAL_VERSION,
 					type,
@@ -267,25 +266,22 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	 * <b>Clients must never explicitly call this method.</b>
 	 * </p>
 	 */
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlCharacteristic ct = (IdlCharacteristic) transferable;
-		super.fromIdlTransferable(ct);
-
+	public synchronized void fromIdlTransferable(final IdlCharacteristic ct) throws IdlConversionException {
 		try {
-			this.type = StorableObjectPool.getStorableObject(Identifier.valueOf(ct._typeId), true);
+			super.fromIdlTransferable(ct);
+
+			this.type = StorableObjectPool.getStorableObject(new Identifier(ct._typeId), true);
+			this.name = ct.name;
+			this.description = ct.description;
+			this.value = ct.value;
+			this.parentCharacterizableId = new Identifier(ct.characterizableId);
+			this.editable = ct.editable;
+			this.visible = ct.visible;
+
+			assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}
-
-		this.name = ct.name;
-		this.description = ct.description;
-		this.value = ct.value;
-		this.parentCharacterizableId = Identifier.valueOf(ct.characterizableId);
-		this.editable = ct.editable;
-		this.visible = ct.visible;
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -295,9 +291,8 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject,
 	 *      String)
 	 */
-	public void fromXmlTransferable(final XmlCharacteristic characteristic,
-			final String importType)
-	throws XmlConversionException {
+	public void fromXmlTransferable(final XmlCharacteristic characteristic, final String importType)
+			throws XmlConversionException {
 		try {
 			XmlComplementorRegistry.complementStorableObject(characteristic, CHARACTERISTIC_CODE, importType, PRE_IMPORT);
 
@@ -357,8 +352,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject,
-	 *      String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlCharacteristic characteristic, final String importType, final boolean usePool)
 			throws XmlConversionException {
@@ -525,7 +519,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 
 	/**
 	 * A wrapper around {@link #getParentCharacterizableId()}.
-	 * 
+	 *
 	 * @throws ApplicationException
 	 * @todo add check whether parentCharacterizable is non-null.
 	 */
@@ -602,7 +596,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	 * <b>Clients must never explicitly call this method.</b>
 	 * </p>
 	 */
-	protected void setAttributes(final Date created,
+	protected synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
@@ -614,16 +608,14 @@ public final class Characteristic extends AbstractCloneableStorableObject
 			final Identifier parentCharacterizableId,
 			final boolean editable,
 			final boolean visible) {
-		synchronized (this) {
-			super.setAttributes(created, modified, creatorId, modifierId, version);
-			this.type = type;
-			this.name = name;
-			this.description = description;
-			this.value = value;
-			this.parentCharacterizableId = parentCharacterizableId;
-			this.editable = editable;
-			this.visible = visible;
-		}
+		super.setAttributes(created, modified, creatorId, modifierId, version);
+		this.type = type;
+		this.name = name;
+		this.description = description;
+		this.value = value;
+		this.parentCharacterizableId = parentCharacterizableId;
+		this.editable = editable;
+		this.visible = visible;
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
