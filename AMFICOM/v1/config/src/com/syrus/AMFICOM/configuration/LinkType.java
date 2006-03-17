@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.97.2.2 2006/03/15 13:53:17 arseniy Exp $
+ * $Id: LinkType.java,v 1.97.2.3 2006/03/17 10:43:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,24 +44,25 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.97.2.2 $, $Date: 2006/03/15 13:53:17 $
+ * @version $Revision: 1.97.2.3 $, $Date: 2006/03/17 10:43:03 $
  * @author $Author: arseniy $
  * @module config
  */
 
-public final class LinkType extends AbstractLinkType implements XmlTransferableObject<XmlLinkType> {
-	private static final long	serialVersionUID	= 3257007652839372857L;
+public final class LinkType extends AbstractLinkType
+		implements XmlTransferableObject<XmlLinkType>, IdlTransferableObjectExt<IdlLinkType> {
+	private static final long serialVersionUID = 3257007652839372857L;
 
 	private String name;
 	private int sort;
@@ -111,11 +112,8 @@ public final class LinkType extends AbstractLinkType implements XmlTransferableO
 	 * @param creatorId
 	 * @throws IdentifierGenerationException
 	 */
-	private LinkType(final XmlIdentifier id,
-			final String importType,
-			final Date created,
-			final Identifier creatorId)
-	throws IdentifierGenerationException {
+	private LinkType(final XmlIdentifier id, final String importType, final Date created, final Identifier creatorId)
+			throws IdentifierGenerationException {
 		super(id, importType, LINK_TYPE_CODE, created, creatorId);
 	}
 
@@ -125,11 +123,8 @@ public final class LinkType extends AbstractLinkType implements XmlTransferableO
 	 * @param xmlLinkType
 	 * @throws CreateObjectException
 	 */
-	public static LinkType createInstance(
-			final Identifier creatorId,
-			final String importType,
-			final XmlLinkType xmlLinkType)
-	throws CreateObjectException {
+	public static LinkType createInstance(final Identifier creatorId, final String importType, final XmlLinkType xmlLinkType)
+			throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
@@ -264,10 +259,8 @@ public final class LinkType extends AbstractLinkType implements XmlTransferableO
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlLinkType ltt = (IdlLinkType) transferable;
-		super.fromTransferable(ltt, ltt.codename, ltt.description);
+	public synchronized void fromIdlTransferable(final IdlLinkType ltt) throws IdlConversionException {
+		super.fromIdlTransferable(ltt, ltt.codename, ltt.description);
 
 		this.sort = ltt.sort.value();
 		this.manufacturer = ltt.manufacturer;
@@ -283,9 +276,7 @@ public final class LinkType extends AbstractLinkType implements XmlTransferableO
 	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	@Shitlet
-	public void fromXmlTransferable(final XmlLinkType linkType,
-			final String importType)
-	throws XmlConversionException {
+	public void fromXmlTransferable(final XmlLinkType linkType, final String importType) throws XmlConversionException {
 		try {
 			XmlComplementorRegistry.complementStorableObject(linkType, LINK_TYPE_CODE, importType, PRE_IMPORT);
 
@@ -344,10 +335,8 @@ public final class LinkType extends AbstractLinkType implements XmlTransferableO
 	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	@Shitlet
-	public void getXmlTransferable(final XmlLinkType linkType,
-			final String importType,
-			final boolean usePool)
-	throws XmlConversionException {
+	public void getXmlTransferable(final XmlLinkType linkType, final String importType, final boolean usePool)
+			throws XmlConversionException {
 		try {
 			this.id.getXmlTransferable(linkType.addNewId(), importType);
 			linkType.setName(this.name);

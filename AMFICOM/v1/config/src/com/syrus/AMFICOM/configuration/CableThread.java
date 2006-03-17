@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.48.2.2 2006/03/15 13:53:17 arseniy Exp $
+ * $Id: CableThread.java,v 1.48.2.3 2006/03/17 10:43:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,17 +29,16 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.48.2.2 $, $Date: 2006/03/15 13:53:17 $
+ * @version $Revision: 1.48.2.3 $, $Date: 2006/03/17 10:43:03 $
  * @author $Author: arseniy $
  * @module config
  */
 public final class CableThread extends DomainMember
-		implements TypedObject<CableThreadType> {
-
+		implements TypedObject<CableThreadType>, IdlTransferableObjectExt<IdlCableThread> {
 	private static final long serialVersionUID = 3258415027823063600L;
 
 	private String name;
@@ -78,8 +77,9 @@ public final class CableThread extends DomainMember
 			final String name,
 			final String description,
 			final CableThreadType type) throws CreateObjectException {
-		if (creatorId == null || domainId == null || name == null || description == null || type == null)
+		if (creatorId == null || domainId == null || name == null || description == null || type == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
+		}
 
 		try {
 			final CableThread cableThread = new CableThread(IdentifierPool.getGeneratedIdentifier(CABLETHREAD_CODE),
@@ -100,21 +100,16 @@ public final class CableThread extends DomainMember
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlCableThread ctt = (IdlCableThread) transferable;
-		super.fromTransferable(ctt, new Identifier(ctt.domainId));
-
+	public synchronized void fromIdlTransferable(final IdlCableThread ctt) throws IdlConversionException {
 		try {
-			this.type = StorableObjectPool.getStorableObject(new Identifier(ctt._typeId), true);
+			super.fromIdlTransferable(ctt, new Identifier(ctt.domainId));
+
+			this.name = ctt.name;
+			this.description = ctt.description;
+			this.type = (CableThreadType) StorableObjectPool.getStorableObject(new Identifier(ctt._typeId), true);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}
-
-		this.name = ctt.name;
-		this.description = ctt.description;
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.106.2.2 2006/03/15 13:53:17 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.106.2.3 2006/03/17 10:43:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,19 +39,17 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 /**
- * @version $Revision: 1.106.2.2 $, $Date: 2006/03/15 13:53:17 $
+ * @version $Revision: 1.106.2.3 $, $Date: 2006/03/17 10:43:03 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
-
 public final class TransmissionPath extends DomainMember
-		implements MonitoredDomainMember,
-		Characterizable,
-		TypedObject<TransmissionPathType>, ReverseDependencyContainer {
+		implements MonitoredDomainMember, Characterizable, TypedObject<TransmissionPathType>, ReverseDependencyContainer,
+		IdlTransferableObjectExt<IdlTransmissionPath> {
 	private static final long serialVersionUID = 8129503678304843903L;
 
 	private TransmissionPathType type;
@@ -87,7 +85,7 @@ public final class TransmissionPath extends DomainMember
 
 	/**
 	 * create new instance for client
-	 *
+	 * 
 	 * @param creatorId
 	 * @param domainId
 	 * @param name
@@ -103,9 +101,15 @@ public final class TransmissionPath extends DomainMember
 			final TransmissionPathType type,
 			final Identifier startPortId,
 			final Identifier finishPortId) throws CreateObjectException {
-		if (creatorId == null || domainId == null || name == null || description == null ||
-				type == null || startPortId == null || finishPortId == null)
+		if (creatorId == null
+				|| domainId == null
+				|| name == null
+				|| description == null
+				|| type == null
+				|| startPortId == null
+				|| finishPortId == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
+		}
 
 		try {
 			final TransmissionPath transmissionPath = new TransmissionPath(IdentifierPool.getGeneratedIdentifier(TRANSMISSIONPATH_CODE),
@@ -128,23 +132,19 @@ public final class TransmissionPath extends DomainMember
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlTransmissionPath tpt = (IdlTransmissionPath) transferable;
-		super.fromTransferable(tpt, new Identifier(tpt.domainId));
-
+	public synchronized void fromIdlTransferable(final IdlTransmissionPath tpt) throws IdlConversionException {
 		try {
-			this.type = StorableObjectPool.getStorableObject(new Identifier(tpt._typeId), true);
+			super.fromIdlTransferable(tpt, new Identifier(tpt.domainId));
+
+			this.type = (TransmissionPathType) StorableObjectPool.getStorableObject(new Identifier(tpt._typeId), true);
+
+			this.name = tpt.name;
+			this.description = tpt.description;
+			this.startPortId = new Identifier(tpt.startPortId);
+			this.finishPortId = new Identifier(tpt.finishPortId);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}
-
-		this.name = tpt.name;
-		this.description = tpt.description;
-		this.startPortId = new Identifier(tpt.startPortId);
-		this.finishPortId = new Identifier(tpt.finishPortId);
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -295,8 +295,7 @@ public final class TransmissionPath extends DomainMember
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool)
-	throws ApplicationException {
+	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(this.id);
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
@@ -328,9 +327,7 @@ public final class TransmissionPath extends DomainMember
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
 	 */
-	public void addCharacteristic(final Characteristic characteristic,
-			final boolean usePool)
-	throws ApplicationException {
+	public void addCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		characteristic.setParentCharacterizable(this, usePool);
 	}
@@ -341,10 +338,7 @@ public final class TransmissionPath extends DomainMember
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
 	 */
-	public void removeCharacteristic(
-			final Characteristic characteristic,
-			final boolean usePool)
-	throws ApplicationException {
+	public void removeCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		characteristic.setParentCharacterizable(this, usePool);
@@ -355,8 +349,7 @@ public final class TransmissionPath extends DomainMember
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
 	 */
-	public Set<Characteristic> getCharacteristics(boolean usePool)
-	throws ApplicationException {
+	public Set<Characteristic> getCharacteristics(boolean usePool) throws ApplicationException {
 		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
 	}
 
@@ -364,8 +357,7 @@ public final class TransmissionPath extends DomainMember
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	Set<Characteristic> getCharacteristics0(final boolean usePool)
-	throws ApplicationException {
+	Set<Characteristic> getCharacteristics0(final boolean usePool) throws ApplicationException {
 		return this.getCharacteristicContainerWrappee().getContainees(usePool);
 	}
 
@@ -375,9 +367,7 @@ public final class TransmissionPath extends DomainMember
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
 	 */
-	public void setCharacteristics(final Set<Characteristic> characteristics,
-			final boolean usePool)
-	throws ApplicationException {
+	public void setCharacteristics(final Set<Characteristic> characteristics, final boolean usePool) throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;
 
 		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.17.2.2 2006/03/15 13:53:17 arseniy Exp $
+ * $Id: CableLink.java,v 1.17.2.3 2006/03/17 10:43:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,10 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.ErrorMessages.NATURE_INVALID;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Date;
 
@@ -26,16 +26,16 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.17.2.2 $, $Date: 2006/03/15 13:53:17 $
+ * @version $Revision: 1.17.2.3 $, $Date: 2006/03/17 10:43:03 $
  * @module config
  */
-public final class CableLink extends AbstractLink {
+public final class CableLink extends AbstractLink implements IdlTransferableObjectExt<IdlCableLink> {
 	private static final long serialVersionUID = 7733720151418798562L;
 
 	public CableLink(final IdlCableLink idlCableLink) throws CreateObjectException {
@@ -99,8 +99,9 @@ public final class CableLink extends AbstractLink {
 				|| inventoryNo == null
 				|| supplier == null
 				|| supplierCode == null
-				|| mark == null)
+				|| mark == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
+		}
 
 		try {
 			final CableLink cableLink = new CableLink(IdentifierPool.getGeneratedIdentifier(CABLELINK_CODE),
@@ -126,24 +127,20 @@ public final class CableLink extends AbstractLink {
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlCableLink idlCableLink = (IdlCableLink) transferable;
-		super.fromTransferable(idlCableLink, new Identifier(idlCableLink.domainId));
-
+	public synchronized void fromIdlTransferable(final IdlCableLink idlCableLink) throws IdlConversionException {
 		try {
-			super.type = StorableObjectPool.getStorableObject(new Identifier(idlCableLink._typeId), true);
+			super.fromIdlTransferable(idlCableLink, new Identifier(idlCableLink.domainId));
+
+			this.name = idlCableLink.name;
+			this.description = idlCableLink.description;
+			this.inventoryNo = idlCableLink.inventoryNo;
+			this.supplier = idlCableLink.supplier;
+			this.supplierCode = idlCableLink.supplierCode;
+
+			super.type = (CableLinkType) StorableObjectPool.getStorableObject(new Identifier(idlCableLink._typeId), true);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}
-
-		this.name = idlCableLink.name;
-		this.description = idlCableLink.description;
-		this.inventoryNo = idlCableLink.inventoryNo;
-		this.supplier = idlCableLink.supplier;
-		this.supplierCode = idlCableLink.supplierCode;
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**

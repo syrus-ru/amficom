@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.26.2.6 2006/03/15 13:53:17 arseniy Exp $
+ * $Id: ProtoEquipment.java,v 1.26.2.7 2006/03/17 10:43:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,25 +47,27 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Shitlet;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.26.2.6 $, $Date: 2006/03/15 13:53:17 $
+ * @version $Revision: 1.26.2.7 $, $Date: 2006/03/17 10:43:03 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class ProtoEquipment extends StorableObject
 		implements Characterizable, Namable,
-		XmlTransferableObject<XmlProtoEquipment>, ReverseDependencyContainer {
-	private static final long serialVersionUID = 6439194616441623786L;
+		XmlTransferableObject<XmlProtoEquipment>,
+		ReverseDependencyContainer,
+		IdlTransferableObjectExt<IdlProtoEquipment> {
+	private static final long serialVersionUID = 7066410483749919904L;
 
 	private Identifier typeId;
 
@@ -158,6 +160,7 @@ public final class ProtoEquipment extends StorableObject
 
 	/**
 	 * Create new instance on import/export from XML
+	 * 
 	 * @param creatorId
 	 * @param xmlProtoEquipment
 	 * @param importType
@@ -166,8 +169,7 @@ public final class ProtoEquipment extends StorableObject
 	 */
 	public static ProtoEquipment createInstance(final Identifier creatorId,
 			final XmlProtoEquipment xmlProtoEquipment,
-			final String importType)
-	throws CreateObjectException {
+			final String importType) throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
@@ -203,28 +205,27 @@ public final class ProtoEquipment extends StorableObject
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlProtoEquipment idlProtoEquipment = (IdlProtoEquipment) transferable;
-		super.fromIdlTransferable(idlProtoEquipment);
-		this.typeId = Identifier.valueOf(idlProtoEquipment._typeId);
-		this.name = idlProtoEquipment.name;
-		this.description = idlProtoEquipment.description;
-		this.manufacturer = idlProtoEquipment.manufacturer;
-		this.manufacturerCode = idlProtoEquipment.manufacturerCode;
+	public synchronized void fromIdlTransferable(final IdlProtoEquipment pet) throws IdlConversionException {
+		super.fromIdlTransferable(pet);
+		this.typeId = Identifier.valueOf(pet._typeId);
+		this.name = pet.name;
+		this.description = pet.description;
+		this.manufacturer = pet.manufacturer;
+		this.manufacturerCode = pet.manufacturerCode;
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
-	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject,
+	 *      String)
 	 * @param protoEquipment
 	 * @param importType
 	 * @throws XmlConversionException
 	 */
 	@Shitlet
 	public void fromXmlTransferable(final XmlProtoEquipment protoEquipment, final String importType)
-	throws XmlConversionException {
+			throws XmlConversionException {
 		try {
 			XmlComplementorRegistry.complementStorableObject(protoEquipment, PROTOEQUIPMENT_CODE, importType, PRE_IMPORT);
 	
@@ -278,12 +279,11 @@ public final class ProtoEquipment extends StorableObject
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject,
+	 *      String, boolean)
 	 */
-	public void getXmlTransferable(final XmlProtoEquipment protoEquipment,
-			final String importType,
-			final boolean usePool)
-	throws XmlConversionException {
+	public void getXmlTransferable(final XmlProtoEquipment protoEquipment, final String importType, final boolean usePool)
+			throws XmlConversionException {
 		try {
 			super.id.getXmlTransferable(protoEquipment.addNewId(), importType);
 
@@ -410,8 +410,7 @@ public final class ProtoEquipment extends StorableObject
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool)
-	throws ApplicationException {
+	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(this.id);
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
