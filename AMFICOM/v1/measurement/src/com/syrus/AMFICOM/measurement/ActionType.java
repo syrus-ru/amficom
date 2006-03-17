@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionType.java,v 1.26.2.4 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: ActionType.java,v 1.26.2.5 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,16 +11,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.AMFICOM.measurement.corba.IdlActionType;
 
 /**
- * @version $Revision: 1.26.2.4 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.26.2.5 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -42,12 +40,24 @@ public abstract class ActionType extends StorableObjectType {
 				description);
 	}
 
-	ActionType(final IdlStorableObject idlStorableObject) throws CreateObjectException {
-		try {
-			this.fromIdlTransferable(idlStorableObject);
-		} catch (final IdlConversionException ice) {
-			throw new CreateObjectException(ice);
-		}
+	ActionType() {
+		//Empty
+	}
+
+	/**
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
+	 * <p>
+	 * Non-synchronized.
+	 * Non-overriding.
+	 * Non-overridable.
+	 * </p>
+	 * 
+	 * @param idlActionType
+	 */
+	final void fromIdlTransferable(final IdlActionType idlActionType) {
+		super.fromIdlTransferable(idlActionType, idlActionType.codename, idlActionType.description);
 	}
 
 	/**

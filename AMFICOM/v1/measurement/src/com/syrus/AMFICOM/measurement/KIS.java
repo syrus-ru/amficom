@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.14.2.4 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: KIS.java,v 1.14.2.5 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
-import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
@@ -34,19 +34,19 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlKIS;
 import com.syrus.AMFICOM.measurement.corba.IdlKISHelper;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.14.2.4 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.14.2.5 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class KIS extends DomainMember implements Namable {
+public final class KIS extends DomainMember implements IdlTransferableObjectExt<IdlKIS>, Namable {
 	private static final long serialVersionUID = -7396074492931314603L;
 
 	private String name;
@@ -136,10 +136,8 @@ public final class KIS extends DomainMember implements Namable {
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlKIS idlKIS = (IdlKIS) transferable;
-		super.fromTransferable(idlKIS, Identifier.valueOf(idlKIS.domainId));
+	public synchronized void fromIdlTransferable(final IdlKIS idlKIS) throws IdlConversionException {
+		super.fromIdlTransferable(idlKIS, Identifier.valueOf(idlKIS.domainId));
 
 		this.name = idlKIS.name;
 		this.description = idlKIS.description;

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.19.2.3 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.19.2.4 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,18 +37,19 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPort;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortHelper;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.19.2.3 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.19.2.4 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class MeasurementPort extends StorableObject implements Characterizable, TypedObject<MeasurementPortType> {
+public final class MeasurementPort extends StorableObject
+		implements Characterizable, TypedObject<MeasurementPortType>, IdlTransferableObjectExt<IdlMeasurementPort> {
 	private static final long serialVersionUID = -5100885507408715167L;
 
 	private MeasurementPortType type;
@@ -128,22 +129,20 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlMeasurementPort mpt = (IdlMeasurementPort) transferable;
-		super.fromIdlTransferable(mpt);
+	public synchronized void fromIdlTransferable(final IdlMeasurementPort idlMeasurementPort) throws IdlConversionException {
+		super.fromIdlTransferable(idlMeasurementPort);
 
 		try {
-			this.type = StorableObjectPool.getStorableObject(Identifier.valueOf(mpt._typeId), true);
+			this.type = StorableObjectPool.getStorableObject(Identifier.valueOf(idlMeasurementPort._typeId), true);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}
 
-		this.name = mpt.name;
-		this.description = mpt.description;
+		this.name = idlMeasurementPort.name;
+		this.description = idlMeasurementPort.description;
 
-		this.kisId = Identifier.valueOf(mpt.kisId);
-		this.portId = Identifier.valueOf(mpt.portId);
+		this.kisId = Identifier.valueOf(idlMeasurementPort.kisId);
+		this.portId = Identifier.valueOf(idlMeasurementPort.portId);
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 }

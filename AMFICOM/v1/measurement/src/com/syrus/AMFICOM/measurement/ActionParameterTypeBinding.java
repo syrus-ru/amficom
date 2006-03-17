@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.12 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.13 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,19 +40,19 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBinding;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterTypeBindingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterValueKind;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.1.2.12 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.1.2.13 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class ActionParameterTypeBinding extends StorableObject {
+public final class ActionParameterTypeBinding extends StorableObject implements IdlTransferableObjectExt<IdlActionParameterTypeBinding> {
 	private static final long serialVersionUID = 8851510439449075891L;
 
 	static enum ParameterValueKind {
@@ -164,9 +164,7 @@ public final class ActionParameterTypeBinding extends StorableObject {
 				this.measurementPortTypeId.getIdlTransferable(orb));
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlActionParameterTypeBinding idlActionParameterTypeBinding = (IdlActionParameterTypeBinding) transferable;
+	public synchronized void fromIdlTransferable(final IdlActionParameterTypeBinding idlActionParameterTypeBinding) throws IdlConversionException {
 		super.fromIdlTransferable(idlActionParameterTypeBinding);
 
 		this.parameterValueKind = ParameterValueKind.valueOf(idlActionParameterTypeBinding.parameterValueKind);

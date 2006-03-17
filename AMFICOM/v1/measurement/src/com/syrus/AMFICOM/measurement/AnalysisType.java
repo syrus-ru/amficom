@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisType.java,v 1.107.2.6 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.107.2.7 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,18 +29,18 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisTypeHelper;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.107.2.6 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.107.2.7 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class AnalysisType extends ActionType {
+public final class AnalysisType extends ActionType implements IdlTransferableObjectExt<IdlAnalysisType> {
 	private static final long serialVersionUID = 3770601862577867745L;
 
 	private static TypicalCondition codenameCondition;
@@ -54,7 +54,11 @@ public final class AnalysisType extends ActionType {
 	}
 
 	public AnalysisType(final IdlAnalysisType idlAnalysisType) throws CreateObjectException {
-		super(idlAnalysisType);
+		try {
+			this.fromIdlTransferable(idlAnalysisType);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	public static AnalysisType createInstance(final Identifier creatorId,
@@ -96,10 +100,8 @@ public final class AnalysisType extends ActionType {
 				super.description != null ? super.description : "");
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlAnalysisType idlAnalysisType = (IdlAnalysisType) transferable;
-		super.fromTransferable(idlAnalysisType, idlAnalysisType.codename, idlAnalysisType.description);
+	public synchronized void fromIdlTransferable(final IdlAnalysisType idlAnalysisType) throws IdlConversionException {
+		super.fromIdlTransferable(idlAnalysisType);
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}

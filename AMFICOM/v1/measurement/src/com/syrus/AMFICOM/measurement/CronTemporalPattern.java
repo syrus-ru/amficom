@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.33.2.2 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: CronTemporalPattern.java,v 1.33.2.3 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,19 +34,19 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPatternHelper;
 import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.33.2.2 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.33.2.3 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @module measurement
  */
 
-public final class CronTemporalPattern extends AbstractTemporalPattern {
+public final class CronTemporalPattern extends AbstractTemporalPattern implements IdlTransferableObjectExt<IdlCronTemporalPattern> {
 	private static final long serialVersionUID = 3256437014894163509L;
 
 	private static final String I18N_KEY_MIN = "min";
@@ -923,13 +923,11 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 		return this.description;
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlCronTemporalPattern ctpt = (IdlCronTemporalPattern) transferable;
-		super.fromIdlTransferable(ctpt);
+	public synchronized void fromIdlTransferable(final IdlCronTemporalPattern idlCronTemporalPattern) throws IdlConversionException {
+		super.fromIdlTransferable(idlCronTemporalPattern);
 
-		this.description = ctpt.description;
-		this.setTemplates0(ctpt.cronStrings);
+		this.description = idlCronTemporalPattern.description;
+		this.setTemplates0(idlCronTemporalPattern.cronStrings);
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}

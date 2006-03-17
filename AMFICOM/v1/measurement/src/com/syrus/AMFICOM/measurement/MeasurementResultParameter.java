@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementResultParameter.java,v 1.1.2.7 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: MeasurementResultParameter.java,v 1.1.2.8 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,14 +21,16 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementResultParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementResultParameterHelper;
+import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.1.2.7 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.1.2.8 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class MeasurementResultParameter extends ActionResultParameter<Measurement> {
+public final class MeasurementResultParameter extends ActionResultParameter<Measurement> implements IdlTransferableObjectExt<IdlMeasurementResultParameter> {
 	private static final long serialVersionUID = -5324135974911914875L;
 
 	MeasurementResultParameter(final Identifier id,
@@ -44,7 +46,11 @@ public final class MeasurementResultParameter extends ActionResultParameter<Meas
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public MeasurementResultParameter(final IdlMeasurementResultParameter idlMeasurementResultParameter) throws CreateObjectException {
-		super(idlMeasurementResultParameter);
+		try {
+			this.fromIdlTransferable(idlMeasurementResultParameter);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	static MeasurementResultParameter createInstance(final Identifier creatorId,
@@ -86,6 +92,12 @@ public final class MeasurementResultParameter extends ActionResultParameter<Meas
 				super.getValue(),
 				super.getTypeId().getIdlTransferable(orb),
 				this.getMeasurementId().getIdlTransferable(orb));
+	}
+
+	public synchronized void fromIdlTransferable(final IdlMeasurementResultParameter idlMeasurementResultParameter) throws IdlConversionException {
+		super.fromIdlTransferable(idlMeasurementResultParameter);
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	public Identifier getMeasurementId() {

@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.43.2.8 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: Action.java,v 1.43.2.9 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,13 +22,11 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlAction;
 import com.syrus.AMFICOM.measurement.corba.IdlActionStatus;
-import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.43.2.8 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.43.2.9 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -98,15 +96,23 @@ public abstract class Action<R extends ActionResultParameter> extends StorableOb
 		this.status = status;
 	}
 
-	Action(final IdlStorableObject idlStorableObject) throws CreateObjectException {
-		try {
-			this.fromIdlTransferable(idlStorableObject);
-		} catch (final IdlConversionException ice) {
-			throw new CreateObjectException(ice);
-		}
+	Action() {
+		//Empty
 	}
 
-	final void fromIdlTransferable(final IdlAction idlAction) throws IdlConversionException {
+	/**
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
+	 * <p>
+	 * Non-synchronized.
+	 * Non-overriding.
+	 * Non-overridable.
+	 * </p>
+	 * 
+	 * @param idlAction
+	 */
+	final void fromIdlTransferable(final IdlAction idlAction) {
 		super.fromIdlTransferable(idlAction);
 		this.typeId = Identifier.valueOf(idlAction._typeId);
 		this.monitoredElementId = Identifier.valueOf(idlAction.monitoredElementId);

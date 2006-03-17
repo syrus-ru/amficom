@@ -1,5 +1,5 @@
 /*-
- * $Id: Parameter.java,v 1.24.2.6 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: Parameter.java,v 1.24.2.7 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,21 +17,18 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlParameter;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
-import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.24.2.6 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.24.2.7 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -54,18 +51,24 @@ public abstract class Parameter extends StorableObject {
 		this.value = value;
 	}
 
-	Parameter(final IdlStorableObject idlStorableObject) throws CreateObjectException {
-		try {
-			this.fromIdlTransferable(idlStorableObject);
-		} catch (final IdlConversionException ice) {
-			throw new CreateObjectException(ice);
-		}
+	Parameter() {
+		//Empty
 	}
 
-	@Override
-	protected void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlParameter idlParameter = (IdlParameter) transferable;
-		super.fromIdlTransferable(transferable);
+	/**
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
+	 * <p>
+	 * Non-synchronized.
+	 * Non-overriding.
+	 * Non-overridable.
+	 * </p>
+	 * 
+	 * @param idlParameter
+	 */
+	final void fromIdlTransferable(final IdlParameter idlParameter) {
+		super.fromIdlTransferable(idlParameter);
 		this.value = idlParameter.value;
 	}
 

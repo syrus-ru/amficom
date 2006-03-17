@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementType.java,v 1.111.2.6 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.111.2.7 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,18 +29,18 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementTypeHelper;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.111.2.6 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.111.2.7 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class MeasurementType extends ActionType {
+public final class MeasurementType extends ActionType implements IdlTransferableObjectExt<IdlMeasurementType> {
 	private static final long serialVersionUID = -5293028501528188012L;
 
 	private static TypicalCondition codenameCondition;
@@ -54,7 +54,11 @@ public final class MeasurementType extends ActionType {
 	}
 
 	public MeasurementType(final IdlMeasurementType idlMeasurementType) throws CreateObjectException {
-		super(idlMeasurementType);
+		try {
+			this.fromIdlTransferable(idlMeasurementType);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	public static MeasurementType createInstance(final Identifier creatorId,
@@ -96,10 +100,8 @@ public final class MeasurementType extends ActionType {
 				super.description != null ? super.description : "");
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlMeasurementType idlMeasurementType = (IdlMeasurementType) transferable;
-		super.fromTransferable(idlMeasurementType, idlMeasurementType.codename, idlMeasurementType.description);
+	public synchronized void fromIdlTransferable(final IdlMeasurementType idlMeasurementType) throws IdlConversionException {
+		super.fromIdlTransferable(idlMeasurementType);
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}

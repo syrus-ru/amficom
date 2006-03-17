@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.13.2.4 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.13.2.5 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,20 +28,20 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElement;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.IdlMonitoredElementKind;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.13.2.4 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.13.2.5 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class MonitoredElement extends DomainMember {
+public final class MonitoredElement extends DomainMember implements IdlTransferableObjectExt<IdlMonitoredElement> {
 	private static final long serialVersionUID = 5689746173688711494L;
 
 	private Identifier measurementPortId;
@@ -130,10 +130,9 @@ public final class MonitoredElement extends DomainMember {
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlMonitoredElement met = (IdlMonitoredElement) transferable;
-		super.fromTransferable(met, Identifier.valueOf(met.domainId));
+	public synchronized void fromIdlTransferable(final IdlMonitoredElement met) throws IdlConversionException {
+		super.fromIdlTransferable(met, Identifier.valueOf(met.domainId));
+
 		this.measurementPortId = Identifier.valueOf(met.measurementPortId);
 		this.kind = met.kind.value();
 		this.localAddress = met.localAddress;

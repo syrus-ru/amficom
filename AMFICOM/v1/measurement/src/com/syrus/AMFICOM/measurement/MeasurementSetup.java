@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementSetup.java,v 1.100.2.5 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.100.2.6 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,19 +31,19 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetup;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.100.2.5 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.100.2.6 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class MeasurementSetup extends StorableObject {
+public final class MeasurementSetup extends StorableObject implements IdlTransferableObjectExt<IdlMeasurementSetup> {
 	private static final long serialVersionUID = -2848488077315796037L;
 
 	private Identifier measurementTemplateId;
@@ -133,10 +133,9 @@ public final class MeasurementSetup extends StorableObject {
 				Identifier.createTransferables(this.monitoredElementIds));
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlMeasurementSetup idlMeasurementSetup = (IdlMeasurementSetup) transferable;
+	public synchronized void fromIdlTransferable(final IdlMeasurementSetup idlMeasurementSetup) throws IdlConversionException {
 		super.fromIdlTransferable(idlMeasurementSetup);
+
 		this.measurementTemplateId = Identifier.valueOf(idlMeasurementSetup.measurementTemplateId);
 		this.analysisTemplateId = Identifier.valueOf(idlMeasurementSetup.analysisTemplateId);
 		this.description = idlMeasurementSetup.description;

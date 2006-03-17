@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.90.2.7 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: Analysis.java,v 1.90.2.8 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,19 +29,19 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisHelper;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.90.2.7 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.90.2.8 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Analysis extends Action<AnalysisResultParameter> {
+public final class Analysis extends Action<AnalysisResultParameter> implements IdlTransferableObjectExt<IdlAnalysis> {
 	private static final long serialVersionUID = 2935808157242604848L;
 
 	private Identifier measurementId;
@@ -74,7 +74,11 @@ public final class Analysis extends Action<AnalysisResultParameter> {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public Analysis(final IdlAnalysis idlAnalysis) throws CreateObjectException {
-		super(idlAnalysis);
+		try {
+			this.fromIdlTransferable(idlAnalysis);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	public static Analysis createInstance(final Identifier creatorId,
@@ -136,9 +140,7 @@ public final class Analysis extends Action<AnalysisResultParameter> {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlAnalysis idlAnalysis = (IdlAnalysis) transferable;
+	public synchronized void fromIdlTransferable(final IdlAnalysis idlAnalysis) throws IdlConversionException {
 		super.fromIdlTransferable(idlAnalysis);
 		this.measurementId = Identifier.valueOf(idlAnalysis.measurementId);
 

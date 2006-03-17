@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisResultParameter.java,v 1.1.2.7 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: AnalysisResultParameter.java,v 1.1.2.8 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,14 +21,16 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisResultParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisResultParameterHelper;
+import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.1.2.7 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.1.2.8 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class AnalysisResultParameter extends ActionResultParameter<Analysis> {
+public final class AnalysisResultParameter extends ActionResultParameter<Analysis> implements IdlTransferableObjectExt<IdlAnalysisResultParameter> {
 	private static final long serialVersionUID = 8384993460596854206L;
 
 	AnalysisResultParameter(final Identifier id,
@@ -44,7 +46,11 @@ public final class AnalysisResultParameter extends ActionResultParameter<Analysi
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public AnalysisResultParameter(final IdlAnalysisResultParameter idlAnalysisResultParameter) throws CreateObjectException {
-		super(idlAnalysisResultParameter);
+		try {
+			this.fromIdlTransferable(idlAnalysisResultParameter);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	static AnalysisResultParameter createInstance(final Identifier creatorId,
@@ -86,6 +92,12 @@ public final class AnalysisResultParameter extends ActionResultParameter<Analysi
 				super.getValue(),
 				super.getTypeId().getIdlTransferable(orb),
 				this.getAnalysisId().getIdlTransferable(orb));
+	}
+
+	public synchronized void fromIdlTransferable(final IdlAnalysisResultParameter idlAnalysisResultParameter) throws IdlConversionException {
+		super.fromIdlTransferable(idlAnalysisResultParameter);
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	public Identifier getAnalysisId() {

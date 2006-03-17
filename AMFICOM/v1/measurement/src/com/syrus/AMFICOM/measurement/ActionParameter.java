@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameter.java,v 1.1.2.11 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: ActionParameter.java,v 1.1.2.12 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,19 +31,19 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterHelper;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.1.2.11 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.1.2.12 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class ActionParameter extends Parameter {
+public final class ActionParameter extends Parameter implements IdlTransferableObjectExt<IdlActionParameter> {
 	private static final long serialVersionUID = -7695430559152990049L;
 
 	private Identifier bindingId;
@@ -63,7 +63,11 @@ public final class ActionParameter extends Parameter {
 	}
 
 	public ActionParameter(final IdlActionParameter idlActionParameter) throws CreateObjectException {
-		super(idlActionParameter);
+		try {
+			this.fromIdlTransferable(idlActionParameter);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	/**
@@ -145,10 +149,8 @@ public final class ActionParameter extends Parameter {
 				this.bindingId.getIdlTransferable());
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlActionParameter idlActionParameter = (IdlActionParameter) transferable;
-		super.fromIdlTransferable(transferable);
+	public synchronized void fromIdlTransferable(final IdlActionParameter idlActionParameter) throws IdlConversionException {
+		super.fromIdlTransferable(idlActionParameter);
 
 		this.bindingId = Identifier.valueOf(idlActionParameter.bindingId);
 

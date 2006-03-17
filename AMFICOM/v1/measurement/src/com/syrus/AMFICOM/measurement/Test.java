@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.8 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.9 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,6 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.measurement.corba.IdlTestHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestStatus;
@@ -54,15 +53,16 @@ import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObject;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.8 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.183.2.9 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Test extends StorableObject implements Describable {
+public final class Test extends StorableObject implements IdlTransferableObjectExt<IdlTest>, Describable {
 	private static final long serialVersionUID = -6387317612272518101L;
 
 	private String description;
@@ -367,10 +367,9 @@ public final class Test extends StorableObject implements Describable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	@Override
-	public void fromIdlTransferable(final IdlStorableObject idlStorableObject) throws IdlConversionException {
-		final IdlTest idlTest = (IdlTest) idlStorableObject;
+	public synchronized void fromIdlTransferable(final IdlTest idlTest) throws IdlConversionException {
 		super.fromIdlTransferable(idlTest);
+
 		this.description = idlTest.description;
 		this.groupTestId = Identifier.valueOf(idlTest.groupTestId);
 		this.monitoredElementId = Identifier.valueOf(idlTest.monitoredElementId);

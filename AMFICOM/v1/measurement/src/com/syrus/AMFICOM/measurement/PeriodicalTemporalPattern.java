@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.30.2.2 2006/03/15 15:50:02 arseniy Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.30.2.3 2006/03/17 11:54:48 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,19 +26,19 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 
 /**
- * @version $Revision: 1.30.2.2 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.30.2.3 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
-public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
+public final class PeriodicalTemporalPattern extends AbstractTemporalPattern implements IdlTransferableObjectExt<IdlPeriodicalTemporalPattern> {
 	private static final long serialVersionUID = 3257567312898175032L;
 
 	private long period;
@@ -86,11 +86,9 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlPeriodicalTemporalPattern ptpt = (IdlPeriodicalTemporalPattern)transferable;
-		super.fromIdlTransferable(ptpt);
-		this.period = ptpt.period;
+	public synchronized void fromIdlTransferable(final IdlPeriodicalTemporalPattern idlPeriodicalTemporalPattern) throws IdlConversionException {
+		super.fromIdlTransferable(idlPeriodicalTemporalPattern);
+		this.period = idlPeriodicalTemporalPattern.period;
 		
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}	

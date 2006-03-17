@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.68.2.7 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: Modeling.java,v 1.68.2.8 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,18 +24,18 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlModeling;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingHelper;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.68.2.7 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.68.2.8 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class Modeling extends Action<ModelingResultParameter> {
+public final class Modeling extends Action<ModelingResultParameter> implements IdlTransferableObjectExt<IdlModeling> {
 	private static final long serialVersionUID = 622710280466286589L;
 
 	Modeling(final Identifier id,
@@ -64,7 +64,11 @@ public final class Modeling extends Action<ModelingResultParameter> {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public Modeling(final IdlModeling idlModeling) throws CreateObjectException {
-		super(idlModeling);
+		try {
+			this.fromIdlTransferable(idlModeling);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	public static Modeling createInstance(final Identifier creatorId,
@@ -122,9 +126,7 @@ public final class Modeling extends Action<ModelingResultParameter> {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlModeling idlModeling = (IdlModeling) transferable;
+	public synchronized void fromIdlTransferable(final IdlModeling idlModeling) throws IdlConversionException {
 		super.fromIdlTransferable(idlModeling);
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;

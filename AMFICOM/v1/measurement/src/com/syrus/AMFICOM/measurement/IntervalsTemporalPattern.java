@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.42.2.4 2006/03/15 15:50:02 arseniy Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.42.2.5 2006/03/17 11:54:48 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -39,22 +39,22 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.Undoable;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPatternHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPatternPackage.IntervalDuration;
 import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPatternPackage.IntervalTemporalPatternId;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 
 /**
- * @version $Revision: 1.42.2.4 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.42.2.5 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
-public final class IntervalsTemporalPattern extends AbstractTemporalPattern implements Undoable {
+public final class IntervalsTemporalPattern extends AbstractTemporalPattern implements IdlTransferableObjectExt<IdlIntervalsTemporalPattern>, Undoable {
 	private static final long serialVersionUID = 3257567312898175032L;
 
 	/** SortedMap <Long milliseconds, Identifier <AbstractTemporalPattern>> */
@@ -129,24 +129,22 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlIntervalsTemporalPattern itpt = (IdlIntervalsTemporalPattern) transferable;
-		super.fromIdlTransferable(itpt);
+	public synchronized void fromIdlTransferable(final IdlIntervalsTemporalPattern idlIntervalsTemporalPattern) throws IdlConversionException {
+		super.fromIdlTransferable(idlIntervalsTemporalPattern);
 
 		{
 			final SortedMap<Long, Identifier> map = new TreeMap<Long, Identifier>();
-			for (int i = 0; i < itpt.intervalsTemporalPatternId.length; i++) {
-				map.put(new Long(itpt.intervalsTemporalPatternId[i].ms),
-						Identifier.valueOf(itpt.intervalsTemporalPatternId[i].temporalPatternId));
+			for (int i = 0; i < idlIntervalsTemporalPattern.intervalsTemporalPatternId.length; i++) {
+				map.put(new Long(idlIntervalsTemporalPattern.intervalsTemporalPatternId[i].ms),
+						Identifier.valueOf(idlIntervalsTemporalPattern.intervalsTemporalPatternId[i].temporalPatternId));
 			}
 			this.setIntervalsAbstractTemporalPatternMap0(map);
 		}
 
 		{
 			final SortedMap<Long, Long> map = new TreeMap<Long, Long>();
-			for (int i = 0; i < itpt.intervalsDuration.length; i++) {
-				map.put(new Long(itpt.intervalsDuration[i].ms), new Long(itpt.intervalsDuration[i].duration));
+			for (int i = 0; i < idlIntervalsTemporalPattern.intervalsDuration.length; i++) {
+				map.put(new Long(idlIntervalsTemporalPattern.intervalsDuration[i].ms), new Long(idlIntervalsTemporalPattern.intervalsDuration[i].duration));
 			}
 			this.setIntervalsDuration0(map);
 		}

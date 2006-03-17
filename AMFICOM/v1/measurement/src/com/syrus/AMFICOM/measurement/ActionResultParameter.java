@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionResultParameter.java,v 1.1.2.10 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: ActionResultParameter.java,v 1.1.2.11 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,7 +7,6 @@
  */
 package com.syrus.AMFICOM.measurement;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE_CODE;
 
 import java.util.Date;
@@ -15,18 +14,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlActionResultParameter;
-import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.1.2.10 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.1.2.11 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -48,18 +44,27 @@ public abstract class ActionResultParameter<A extends Action> extends Parameter 
 		this.actionId = actionId;
 	}
 
-	ActionResultParameter(final IdlActionResultParameter idlActionResultParameter) throws CreateObjectException {
-		super(idlActionResultParameter);
+	ActionResultParameter() {
+		//Empty
 	}
 
-	@Override
-	protected final void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlActionResultParameter idlActionResultParameter = (IdlActionResultParameter) transferable;
-		super.fromIdlTransferable(transferable);
+	/**
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
+	 * <p>
+	 * Non-synchronized.
+	 * Non-overriding.
+	 * Non-overridable.
+	 * </p>
+	 * 
+	 * @param idlActionResultParameter
+	 * @throws IdlConversionException
+	 */
+	final void fromIdlTransferable(final IdlActionResultParameter idlActionResultParameter) {
+		super.fromIdlTransferable(idlActionResultParameter);
 		this.typeId = Identifier.valueOf(idlActionResultParameter._typeId);
 		this.actionId = Identifier.valueOf(idlActionResultParameter.actionId);
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	@Override

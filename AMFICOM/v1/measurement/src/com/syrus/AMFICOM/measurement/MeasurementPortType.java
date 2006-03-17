@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.21.2.5 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.21.2.6 2006/03/17 11:54:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,19 +35,20 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortTypeHelper;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.21.2.5 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.21.2.6 $, $Date: 2006/03/17 11:54:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class MeasurementPortType extends StorableObjectType implements Namable {
+public final class MeasurementPortType extends StorableObjectType
+		implements IdlTransferableObjectExt<IdlMeasurementPortType>, Namable {
 	private static final long serialVersionUID = 8744021573090885674L;
 
 	private String name;
@@ -133,11 +134,9 @@ public final class MeasurementPortType extends StorableObjectType implements Nam
 				this.name != null ? this.name : "");
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlMeasurementPortType mptt = (IdlMeasurementPortType) transferable;
-		super.fromTransferable(mptt, mptt.codename, mptt.description);
-		this.name = mptt.name;
+	public synchronized void fromIdlTransferable(final IdlMeasurementPortType idlMeasurementPortType) throws IdlConversionException {
+		super.fromIdlTransferable(idlMeasurementPortType, idlMeasurementPortType.codename, idlMeasurementPortType.description);
+		this.name = idlMeasurementPortType.name;
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
