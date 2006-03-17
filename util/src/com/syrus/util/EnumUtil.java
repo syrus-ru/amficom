@@ -1,5 +1,5 @@
 /*-
- * $Id: EnumUtil.java,v 1.9 2006/03/16 08:48:11 arseniy Exp $
+ * $Id: EnumUtil.java,v 1.8.6.1 2006/03/17 08:06:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2006/03/16 08:48:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8.6.1 $, $Date: 2006/03/17 08:06:45 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -25,6 +25,16 @@ public final class EnumUtil {
 	private EnumUtil() {
 		//singleton
 		assert false;
+	}
+
+	/**
+	 * @param e
+	 * @return {@link Enum#ordinal()}
+	 * @deprecated removed in HEAD revision.
+	 */
+	@Deprecated
+	public static int getCode(final Enum<?> e) {
+		return e.ordinal();
 	}
 
 	public static <E extends Enum<E>> E valueOf(final Class<E> enumClass, final int intValue) {
