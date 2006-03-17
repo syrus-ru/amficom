@@ -1,11 +1,12 @@
-AKP_DIR := ../../../HW/akp
-TCPCONNECT_DIR := ../../../HW/tcpconnect
+AKP_DIR := ../../../hardware/akp
+TCPCONNECT_DIR := ../../../hardware/tcpconnect
 
 AKP_LIBAR = akp$(LIBAR_SUFFIX)
 TCPCONNECT_LIBAR = tcpconnect$(LIBAR_SUFFIX)
 
 MODULE := mcmtransceiver
 CXX_SOURCES := tcpkisconnection
+CXXFLAGS = -fPIC
 INCLUDE_DIRS := $(AKP_DIR) \
 	$(TCPCONNECT_DIR)
 ADD_LIBARS = $(LIBAR_SOCKET) \
