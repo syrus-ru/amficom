@@ -1,5 +1,5 @@
 /*-
- * $Id: ValidateSchemeCommand.java,v 1.3 2006/03/07 13:31:28 stas Exp $
+ * $Id: ValidateSchemeCommand.java,v 1.4 2006/03/17 10:40:53 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,13 @@
 
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
@@ -27,12 +30,14 @@ import com.syrus.AMFICOM.scheme.AbstractSchemeElement;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 import com.syrus.util.Log;
 
 public class ValidateSchemeCommand extends AbstractCommand {
 	SchemeTabbedPane cellPane;
+	List<String> messages = new LinkedList<String>();
 	
 	public ValidateSchemeCommand(SchemeTabbedPane cellPane) {
 		this.cellPane = cellPane;
@@ -40,6 +45,7 @@ public class ValidateSchemeCommand extends AbstractCommand {
 	
 	@Override
 	public void execute() {
+		messages.clear();
 		ElementsPanel panel = this.cellPane.getCurrentPanel();
 		if (panel != null) {
 			SchemeResource res = panel.getSchemeResource();
@@ -80,6 +86,11 @@ public class ValidateSchemeCommand extends AbstractCommand {
 							scl.setParentScheme(null, false);
 						}
 					}
+					
+					for (SchemeElement se : scheme.getSchemeElements(false)) {
+						se.setLabel(se.getName());
+					}
+						
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
 				}
@@ -87,11 +98,21 @@ public class ValidateSchemeCommand extends AbstractCommand {
 			}
 			
 			SchemeActions.isValid(graph);
+			this.messages.addAll(SchemeActions.getValidationMessages());
 		
-			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
-					SchemeActions.getValidationMessage(), 
-					LangModelScheme.getString("Message.information"),
-					JOptionPane.INFORMATION_MESSAGE);
+			if (this.messages.isEmpty()) {
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+						LangModelScheme.getString("Message.information.scheme_valid"), 
+						LangModelScheme.getString("Message.information"),
+						JOptionPane.INFORMATION_MESSAGE);	
+			} else {
+				JList messagesList = new JList(this.messages.toArray(new String[this.messages.size()]));
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+						new JScrollPane(messagesList), 
+						LangModelScheme.getString("Message.information"),
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+
 		}
 	}
 }
