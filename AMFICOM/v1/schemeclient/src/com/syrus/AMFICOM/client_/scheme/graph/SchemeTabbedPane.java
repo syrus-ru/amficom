@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.41 2006/02/15 12:18:10 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.42 2006/03/17 10:42:07 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.UI.ProcessingDialog;
+import com.syrus.AMFICOM.client.UI.ProcessingDialogDummy;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.41 $, $Date: 2006/02/15 12:18:10 $
+ * @version $Revision: 1.42 $, $Date: 2006/03/17 10:42:07 $
  * @module schemeclient
  */
 
@@ -608,7 +608,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		final SchemeGraph graph = panel1.getGraph();
 		graph.addMouseWheelListener(this.marqueeHandler);
 		
-		new ProcessingDialog(new Runnable() {
+		new ProcessingDialogDummy(new Runnable() {
 			public void run() {
 				SchemeActions.openSchemeImageResource(graph, sch.getSchemeCell(), false);		
 			}
