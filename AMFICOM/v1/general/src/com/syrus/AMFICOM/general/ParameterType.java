@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.74.2.8 2006/03/15 13:28:07 arseniy Exp $
+ * $Id: ParameterType.java,v 1.74.2.9 2006/03/17 10:10:41 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,17 +29,17 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.general.corba.IdlParameterTypeHelper;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.74.2.8 $, $Date: 2006/03/15 13:28:07 $
+ * @version $Revision: 1.74.2.9 $, $Date: 2006/03/17 10:10:41 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public final class ParameterType extends StorableObjectType {
+public final class ParameterType extends StorableObjectType implements IdlTransferableObjectExt<IdlParameterType> {
 	private static final long serialVersionUID = -2843753663001680790L;
 
 	private DataType dataType;
@@ -130,10 +130,8 @@ public final class ParameterType extends StorableObjectType {
 				this.measurementUnit.getIdlTransferable(orb));
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlParameterType idlParameterType = (IdlParameterType) transferable;
-		super.fromTransferable(idlParameterType, idlParameterType.codename, idlParameterType.description);
+	public synchronized void fromIdlTransferable(final IdlParameterType idlParameterType) throws IdlConversionException {
+		super.fromIdlTransferable(idlParameterType, idlParameterType.codename, idlParameterType.description);
 		this.dataType = DataType.valueOf(idlParameterType.idlDataType);
 		this.measurementUnit = MeasurementUnit.valueOf(idlParameterType.idlMeasurementUnit);
 
