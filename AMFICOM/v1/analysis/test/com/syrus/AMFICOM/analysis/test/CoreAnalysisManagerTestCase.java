@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.18 2006/03/17 16:22:00 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.19 2006/03/17 16:33:17 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -516,7 +516,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		System.out.println("compare diff: " + res);
 		assertTrue(res != null); // должен быть обнаружен аларм
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
-		if (true) { // Переключаем, что требуем от результатов сравнения
+		if (false) { // Переключаем, что требуем от результатов сравнения
 			// требуем аларм на выходе из масок (самый левый HARD аларм)
 			assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK); // тип аларма
 			assertTrue(res.getCoord() <= etLength);
