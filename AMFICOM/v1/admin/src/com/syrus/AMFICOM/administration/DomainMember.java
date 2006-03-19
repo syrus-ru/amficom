@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.34 2006/03/19 15:11:36 bass Exp $
+ * $Id: DomainMember.java,v 1.35 2006/03/19 15:12:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2006/03/19 15:11:36 $
+ * @version $Revision: 1.35 $, $Date: 2006/03/19 15:12:20 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -88,13 +88,10 @@ public abstract class DomainMember extends StorableObject {
 		this.domainId = domainId1;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
-	 */
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 *
+	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
 	 */
 	@Override
 	protected boolean isValid() {
