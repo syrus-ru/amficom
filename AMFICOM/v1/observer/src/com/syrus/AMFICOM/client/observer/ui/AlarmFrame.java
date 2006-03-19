@@ -6,6 +6,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
+import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -34,6 +35,8 @@ import com.syrus.AMFICOM.client.observer.alarm.Alarm;
 import com.syrus.AMFICOM.client.observer.alarm.AlarmConditionWrapper;
 import com.syrus.AMFICOM.client.observer.alarm.AlarmWrapper;
 import com.syrus.AMFICOM.eventv2.Event;
+import com.syrus.AMFICOM.eventv2.MeasurementCompletedEvent;
+import com.syrus.AMFICOM.eventv2.MeasurementStartedEvent;
 import com.syrus.AMFICOM.eventv2.PopupNotificationEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
@@ -89,64 +92,108 @@ public class AlarmFrame extends JInternalFrame {
 		 * @param event
 		 * @see EventReceiver#receiveEvent(Event)
 		 */
+		@SuppressWarnings("unchecked")
 		public void receiveEvent(final Event<?> event) {
-			if (!(event instanceof PopupNotificationEvent)) {
-				return;
-			}
-
-			@SuppressWarnings("unchecked")
-			final PopupNotificationEvent popupNotificationEvent = (PopupNotificationEvent) event;
-
-			Alarm alarm = new Alarm(popupNotificationEvent);
-			AlarmFrame.this.model.addObject(alarm);
-			
-			Identifier resultId = popupNotificationEvent.getResultId();
-			Identifier peId = popupNotificationEvent.getAffectedPathElementId();
-			double optDistance = popupNotificationEvent.getMismatchOpticalDistance();
-			
-			try {
-				Result result = StorableObjectPool.getStorableObject(resultId, true);
-				if (result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
-					final Action action = result.getAction();
-					Measurement m = (Measurement) action;
+			if (event instanceof PopupNotificationEvent) {
+				final PopupNotificationEvent popupNotificationEvent = (PopupNotificationEvent) event;
 				
-					Identifier meId = m.getMonitoredElementId();
-					PathElement pe = StorableObjectPool.getStorableObject(peId, true);
-					SchemePath path = null;
-					
-					if (pe == null) {
-						MonitoredElement me = StorableObjectPool.getStorableObject(meId, true);
-						Set<Identifier> tpathIds = me.getMonitoredDomainMemberIds();
+				Alarm alarm = new Alarm(popupNotificationEvent);
+				AlarmFrame.this.model.addObject(alarm);
+				
+				Identifier resultId = popupNotificationEvent.getResultId();
+				Identifier peId = popupNotificationEvent.getAffectedPathElementId();
+				double optDistance = popupNotificationEvent.getMismatchOpticalDistance();
+				
+				try {
+					Result result = StorableObjectPool.getStorableObject(resultId, true);
+					if (result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
+						final Action action = result.getAction();
+						Measurement m = (Measurement) action;
 						
-						if (!tpathIds.isEmpty()) {
-							Set<SchemePath> schemePaths = StorableObjectPool.getStorableObjectsByCondition(
-									new LinkedIdsCondition(tpathIds.iterator().next(), ObjectEntities.SCHEMEPATH_CODE), true);
+						Identifier meId = m.getMonitoredElementId();
+						PathElement pe = StorableObjectPool.getStorableObject(peId, true);
+						SchemePath path = null;
+						
+						if (pe == null) {
+							MonitoredElement me = StorableObjectPool.getStorableObject(meId, true);
+							Set<Identifier> tpathIds = me.getMonitoredDomainMemberIds();
 							
-							if (!schemePaths.isEmpty()) {
-								path = schemePaths.iterator().next();
-								pe = path.getPathElementByOpticalDistance(optDistance);
+							if (!tpathIds.isEmpty()) {
+								Set<SchemePath> schemePaths = StorableObjectPool.getStorableObjectsByCondition(
+										new LinkedIdsCondition(tpathIds.iterator().next(), ObjectEntities.SCHEMEPATH_CODE), true);
+								
+								if (!schemePaths.isEmpty()) {
+									path = schemePaths.iterator().next();
+									pe = path.getPathElementByOpticalDistance(optDistance);
+								}
 							}
+						} else {
+							path = pe.getParentPathOwner();
 						}
-					} else {
-						path = pe.getParentPathOwner();
+						
+						Identifier markerId = LocalIdentifierGenerator.generateIdentifier(ObjectEntities.MARK_CODE);
+						AlarmFrame.this.alarmMarkerMapping.put(alarm.getId(), markerId);
+						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
+								markerId, optDistance, path.getId(), meId, pe.getId());
+						
+						AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
+						
+						AlarmFrame.this.table.setSelectedValue(alarm);
 					}
-					
-					Identifier markerId = LocalIdentifierGenerator.generateIdentifier(ObjectEntities.MARK_CODE);
-					AlarmFrame.this.alarmMarkerMapping.put(alarm.getId(), markerId);
-					MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-							markerId, optDistance, path.getId(), meId, pe.getId());
-
-					AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
-					
-					AlarmFrame.this.table.setSelectedValue(alarm);
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
 				}
-			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+			} else if (event instanceof MeasurementStartedEvent) {
+				final MeasurementStartedEvent msEvent = (MeasurementStartedEvent)event;
+				Identifier measurentId = msEvent.getMeasurementId();
+				try {
+					Measurement m = StorableObjectPool.getStorableObject(measurentId, true);
+					AlarmFrame.this.aContext.getDispatcher().firePropertyChange(new PropertyChangeEvent(this, "MeasurementStarted", null, m.getMonitoredElementId()));
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
+				}
+				
+			} else if (event instanceof MeasurementCompletedEvent) {
+				final MeasurementCompletedEvent mcEvent = (MeasurementCompletedEvent)event;
+				Identifier measurentId = mcEvent.getMeasurementId();
+				try {
+					Measurement m = StorableObjectPool.getStorableObject(measurentId, true);
+					AlarmFrame.this.aContext.getDispatcher().firePropertyChange(new PropertyChangeEvent(this, "MeasurementStoped", null, m.getMonitoredElementId()));
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
+				}
 			}
 		}
 	}
 	
-	public AlarmFrame(ApplicationContext aContext) {
+	public AlarmFrame(final ApplicationContext aContext) {
+		
+		new Thread() {
+			@Override
+			public void run() {
+				Identifier meId = new Identifier("MonitoredElement_1");
+				while (true) {
+					aContext.getDispatcher().firePropertyChange(new PropertyChangeEvent(this, "MeasurementStarted", null, meId));
+					
+					try {
+						sleep(5000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+
+					aContext.getDispatcher().firePropertyChange(new PropertyChangeEvent(this, "MeasurementStoped", null, meId));
+					
+					try {
+						sleep(5000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				
+			}
+		}.start();
+		
+		
 		this.wrapper = new AlarmWrapper();
 		this.model = new WrapperedTableModel<Alarm>(
 				this.wrapper,
