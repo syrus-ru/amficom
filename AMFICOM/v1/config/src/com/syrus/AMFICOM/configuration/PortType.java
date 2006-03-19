@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.119 2006/03/15 15:18:30 arseniy Exp $
+ * $Id: PortType.java,v 1.118 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
@@ -54,26 +53,27 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.119 $, $Date: 2006/03/15 15:18:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.118 $, $Date: 2006/03/15 14:47:32 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 
 public final class PortType extends StorableObjectType
 		implements Characterizable, Namable,
-		XmlTransferableObject<XmlPortType>, ReverseDependencyContainer {
+		XmlTransferableObject<XmlPortType>, ReverseDependencyContainer,
+		IdlTransferableObjectExt<IdlPortType> {
 	private static final long serialVersionUID = -115251480084275101L;
 
 	private String name;
@@ -250,7 +250,7 @@ public final class PortType extends StorableObjectType
 		try {
 			final PortType portType = new PortType(IdentifierPool.getGeneratedIdentifier(PORT_TYPE_CODE),
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					codename,
 					description,
 					name,
@@ -267,10 +267,9 @@ public final class PortType extends StorableObjectType
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlPortType ptt = (IdlPortType) transferable;
-		super.fromTransferable(ptt, ptt.codename, ptt.description);
+	public synchronized void fromIdlTransferable(final IdlPortType ptt)
+	throws IdlConversionException {
+		super.fromIdlTransferable(ptt, ptt.codename, ptt.description);
 		this.name = ptt.name;
 		this.sort = ptt.sort.value();
 		this.kind = ptt.kind.value();
