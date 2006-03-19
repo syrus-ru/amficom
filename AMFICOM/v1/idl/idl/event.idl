@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.52 2006/03/06 12:57:45 arseniy Exp $
+ * $Id: event.idl,v 1.53 2006/03/19 12:58:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -311,23 +311,32 @@ module eventv2 {
 		};
 
 		abstract valuetype IdlMeasurementStatusChangedEvent : IdlEvent {
+			long long getCreated();
 			general::corba::IdlIdentifier getMeasurementId();
 		};
 
 		valuetype IdlMeasurementStartedEvent : general::corba::IdlStorableObject, IdlMeasurementStatusChangedEvent {
 			private general::corba::IdlIdentifier measurementId;
 
-			factory init(in general::corba::IdlIdentifier measurementId);
+			factory init(in long long created,
+					in general::corba::IdlIdentifier measurementId);
 		};
 
 		valuetype IdlMeasurementCompletedEvent : general::corba::IdlStorableObject, IdlMeasurementStatusChangedEvent {
+			union QClause switch (enum QPresence { YES, NO }) {
+				case YES:
+					double quality;
+			};
+
 			private general::corba::IdlIdentifier measurementId;
-			private double quality;
+			private QClause qClause;
 
-			double getQuality();
+			boolean hasQ();
+			double getQ();
 
-			factory init(in general::corba::IdlIdentifier measurementId,
-					in double quality);
+			factory init(in long long created,
+					in general::corba::IdlIdentifier measurementId,
+					in QClause qClause);
 		};
 
 
