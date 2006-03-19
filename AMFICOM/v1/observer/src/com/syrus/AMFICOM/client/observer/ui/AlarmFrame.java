@@ -25,8 +25,8 @@ import javax.swing.event.ListSelectionListener;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
-import com.syrus.AMFICOM.client.event.MarkerEvent;
 import com.syrus.AMFICOM.client.event.EventReceiver;
+import com.syrus.AMFICOM.client.event.MarkerEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
@@ -167,33 +167,6 @@ public class AlarmFrame extends JInternalFrame {
 	}
 	
 	public AlarmFrame(final ApplicationContext aContext) {
-		
-		new Thread() {
-			@Override
-			public void run() {
-				Identifier meId = new Identifier("MonitoredElement_1");
-				while (true) {
-					aContext.getDispatcher().firePropertyChange(new PropertyChangeEvent(this, "MeasurementStarted", null, meId));
-					
-					try {
-						sleep(5000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-
-					aContext.getDispatcher().firePropertyChange(new PropertyChangeEvent(this, "MeasurementStoped", null, meId));
-					
-					try {
-						sleep(5000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				
-			}
-		}.start();
-		
-		
 		this.wrapper = new AlarmWrapper();
 		this.model = new WrapperedTableModel<Alarm>(
 				this.wrapper,
