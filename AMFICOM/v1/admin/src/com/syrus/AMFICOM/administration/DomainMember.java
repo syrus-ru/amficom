@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.32 2006/03/15 14:47:31 bass Exp $
+ * $Id: DomainMember.java,v 1.33 2006/03/19 12:57:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,16 +20,15 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2006/03/15 14:47:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2006/03/19 12:57:05 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 
 public abstract class DomainMember extends StorableObject {
-	private static final long serialVersionUID = -5921180280594867215L;
 
-	public static final String	COLUMN_DOMAIN_ID	= "domain_id";
+	public static final String COLUMN_DOMAIN_ID = "domain_id";
 
 	Identifier domainId;
 
@@ -56,7 +55,7 @@ public abstract class DomainMember extends StorableObject {
 
 	/**
 	 * Minimalistic constructor used when importing from XML.
-	 *
+	 * 
 	 * @param id
 	 * @param importType
 	 * @param entityCode
@@ -65,31 +64,32 @@ public abstract class DomainMember extends StorableObject {
 	 * @throws IdentifierGenerationException
 	 */
 	protected DomainMember(final XmlIdentifier id,
-			final String importType, final short entityCode,
-			final Date created, final Identifier creatorId)
-	throws IdentifierGenerationException {
+			final String importType,
+			final short entityCode,
+			final Date created,
+			final Identifier creatorId) throws IdentifierGenerationException {
 		super(id, importType, entityCode, created, creatorId);
 	}
 
 	/**
-	 * <p>Clients must never explicitly call this method.</p>
-	 *
 	 * <p>
-	 * Non-synchronized.
-	 * Non-overriding.
-	 * Non-overridable.
+	 * Clients must never explicitly call this method.
 	 * </p>
-	 *
+	 * <p>
+	 * Non-synchronized. Non-overriding. Non-overridable.
+	 * </p>
+	 * 
 	 * @param header
 	 * @param domainId1
 	 */
-	protected final void fromIdlTransferable(final IdlStorableObject header,
-			final Identifier domainId1) {
+	protected final void fromIdlTransferable(final IdlStorableObject header, final Identifier domainId1) {
 		super.fromIdlTransferable(header);
 		this.domainId = domainId1;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
 	 */
 	/**
