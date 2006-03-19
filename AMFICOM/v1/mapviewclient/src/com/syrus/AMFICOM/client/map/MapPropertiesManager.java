@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPropertiesManager.java,v 1.61 2006/02/22 13:51:35 stas Exp $$
+ * $$Id: MapPropertiesManager.java,v 1.62 2006/03/19 14:43:58 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
  * <li>center
  * <li>zoom
  * 
- * @version $Revision: 1.61 $, $Date: 2006/02/22 13:51:35 $
+ * @version $Revision: 1.62 $, $Date: 2006/03/19 14:43:58 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -150,13 +150,28 @@ public final class MapPropertiesManager {
 	public static final String DEFAULT_ALARMED_ANIMATION = "blink"; //$NON-NLS-1$
 	public static final String DEFAULT_SELECTION_THICKNESS = String.valueOf(4);
 	public static final String DEFAULT_SELECTION_STYLE = "Solid line"; //$NON-NLS-1$
-	public static final BasicStroke DEFAULT_SELECTION_STROKE = new BasicStroke( 
+	public static final BasicStroke DEFAULT_SELECTION_STROKE = new BasicStroke(
 			1,
 			BasicStroke.CAP_BUTT,
 			BasicStroke.JOIN_BEVEL,
 			(float)0.0,
 			new float[] {5, 5},
 			(float)0.0);
+	public static final BasicStroke MOVED_STROKE_1 = new BasicStroke( 
+			2,
+			BasicStroke.CAP_BUTT,
+			BasicStroke.JOIN_BEVEL,
+			(float)0.0,
+			new float[] {5, 5},
+			(float)0.0);
+	public static final BasicStroke MOVED_STROKE_2 = new BasicStroke( 
+			2,
+			BasicStroke.CAP_BUTT,
+			BasicStroke.JOIN_BEVEL,
+			(float)0.0,
+			new float[] {5, 5},
+			(float)5);
+	
 	public static final String DEFAULT_SELECTION_COLOR = String.valueOf(Color.GREEN.getRGB());
 	public static final String DEFAULT_SELECTION_FIRST_COLOR = String.valueOf(Color.BLACK.getRGB());
 	public static final String DEFAULT_SELECTION_SECOND_COLOR = String.valueOf(Color.RED.getRGB());
@@ -1044,6 +1059,30 @@ public final class MapPropertiesManager {
 
 	public static BasicStroke getSelectionStroke() {
 		return selectionStroke;
+	}
+	
+	private static BasicStroke[] movingStrokes = new BasicStroke[] {
+		MOVED_STROKE_1, MOVED_STROKE_2
+	};
+	private static int lastStroke = 0;
+	public static BasicStroke getMovingStroke() {
+		lastStroke++;
+		if (lastStroke == movingStrokes.length) {
+			lastStroke = 0;
+		}
+		return movingStrokes[lastStroke];
+	}
+	
+	private static Color[] measureColors = new Color[] {
+		Color.ORANGE, Color.ORANGE, Color.GREEN, Color.GREEN
+	};
+	private static int lastColor = 0;
+	public static Color getMeasureColor() {
+		lastColor++;
+		if (lastColor == measureColors.length) {
+			lastColor = 0;
+		}
+		return measureColors[lastColor];
 	}
 
 	public static void setSelectionColor(Color _selectionColor) {

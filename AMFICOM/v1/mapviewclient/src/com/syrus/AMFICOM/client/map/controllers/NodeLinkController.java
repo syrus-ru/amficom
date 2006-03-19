@@ -1,5 +1,5 @@
 /*-
- * $$Id: NodeLinkController.java,v 1.30 2006/02/14 10:20:06 stas Exp $$
+ * $$Id: NodeLinkController.java,v 1.31 2006/03/19 14:43:58 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер фрагмента линии.
  * 
- * @version $Revision: 1.30 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.31 $, $Date: 2006/03/19 14:43:58 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -256,15 +256,14 @@ public final class NodeLinkController extends AbstractLinkController {
 
 		final Graphics2D p = (Graphics2D) g;
 
-		p.setStroke(stroke);
-
 		// Если alarm есть то специальный thread будет менять showAlarmState и
 		// NodeLink будет мигать
 		if ((nodeLink.getAlarmState()) && MapPropertiesManager.isDrawAlarmed()) {
-			p.setColor(getAlarmedColor(nodeLink));
-		} else {
-			p.setColor(color);
-		}
+			paintOutline(nodeLink, p, visibleBounds, MapPropertiesManager.DEFAULT_STROKE, getAlarmedColor(nodeLink), -4);
+		} 
+		
+		p.setStroke(stroke);
+		p.setColor(color);
 
 		if (selectionVisible) {
 			p.setColor(MapPropertiesManager.getSelectionColor());
@@ -307,6 +306,37 @@ public final class NodeLinkController extends AbstractLinkController {
 			p.drawLine(from.x - l1xshift, from.y + l1yshift, to.x - l1xshift, to.y + l1yshift);
 		}
 
+	}
+	
+	public void paintOutline(final NodeLink nodeLink, final Graphics2D p, final Rectangle2D.Double visibleBounds, 
+			final Stroke stroke, final Color color, double shift) throws MapConnectionException, MapDataException {
+		
+		if (!isElementVisible(nodeLink, visibleBounds)) {
+			return;
+		}
+		final MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
+		
+		final Point from = converter.convertMapToScreen(nodeLink.getStartNode().getLocation());
+		final Point to = converter.convertMapToScreen(nodeLink.getEndNode().getLocation());
+		
+		final double dx = (to.x - from.x);
+		final double dy = (to.y - from.y);
+
+		final double length = Math.sqrt(dx * dx + dy * dy);
+
+		// рисуем по линии выделения, которые идут параллельно фрагменту
+
+		// a - угол наклона nodelink
+		final double sinA = dy / length;
+		final double cosA = dx / length;
+
+		// смещение по x и по y для линии выделения
+		final int lxshift = (int) (shift * sinA);
+		final int lyshift = (int) (shift * cosA);
+
+		p.setStroke(stroke);
+		p.setColor(color);
+		p.drawLine(from.x + lxshift, from.y - lyshift, to.x + lxshift, to.y - lyshift);
 	}
 
 	/**

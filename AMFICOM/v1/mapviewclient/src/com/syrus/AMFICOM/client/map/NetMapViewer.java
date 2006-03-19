@@ -1,5 +1,5 @@
 /*-
- * $$Id: NetMapViewer.java,v 1.71 2006/03/15 13:04:01 stas Exp $$
+ * $$Id: NetMapViewer.java,v 1.72 2006/03/19 14:43:58 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,12 +43,14 @@ import com.syrus.AMFICOM.client.map.ui.MapKeyAdapter;
 import com.syrus.AMFICOM.client.map.ui.MapMouseListener;
 import com.syrus.AMFICOM.client.map.ui.MapMouseMotionListener;
 import com.syrus.AMFICOM.client.map.ui.MapToolTippedPanel;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -84,7 +86,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * 
- * @version $Revision: 1.71 $, $Date: 2006/03/15 13:04:01 $
+ * @version $Revision: 1.72 $, $Date: 2006/03/19 14:43:58 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -116,6 +118,8 @@ public abstract class NetMapViewer {
 	public AlarmIndicationTimer animateTimer;
 	//TODO make animateTimer private
 	
+	private MeasurementNotifier measurementNotifier;
+		
 	public NetMapViewer(
 			LogicalNetLayer logicalNetLayer,
 			MapContext mapContext,
@@ -148,6 +152,7 @@ public abstract class NetMapViewer {
 				if (this.logicalNetLayer.aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_INDICATION)) {
 					this.animateTimer = new AlarmIndicationTimer(this);
 		}
+		this.measurementNotifier = new MeasurementNotifier(this.logicalNetLayer.aContext);
 	}
 
 	public void dispose() {
@@ -448,10 +453,6 @@ public abstract class NetMapViewer {
 					this.logicalNetLayer.calculateVisualElements();
 					repaint(true);
 				}
-				else if(mapEventType.equals(MapEvent.NEED_FULL_REPAINT)) {
-					this.logicalNetLayer.calculateVisualElements();
-					repaint(true);
-				}
 				else if(mapEventType.equals(MapEvent.NEED_REPAINT)) {
 					repaint(false);
 				}
@@ -688,41 +689,95 @@ public abstract class NetMapViewer {
 
 				repaint(false);
 			}
-			else
-			if(pce.getPropertyName().equals(ObjectSelectedEvent.TYPE))
-			{
+			else if(pce.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 				ObjectSelectedEvent selectEvent = (ObjectSelectedEvent )pce;
-				if(selectEvent.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT))
-				{
+				if(selectEvent.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT)) {
 					SchemeElement schemeElement = (SchemeElement )selectEvent.getSelectedObject();
 
 					SiteNode site = mapView.findElement(schemeElement);
-					if(site != null)
+					if(site != null) {
 						mapView.getMap().setSelected(site, true);
-				}
-				else
-				if(selectEvent.isSelected(ObjectSelectedEvent.SCHEME_PATH))
-				{
+					}
+				} else if (selectEvent.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
 					SchemePath schemePath = (SchemePath )selectEvent.getSelectedObject();
 					
 					MeasurementPath measurementPath = mapView.findMeasurementPath(schemePath);
 					if(measurementPath != null)
 						mapView.getMap().setSelected(measurementPath, true);
-				}
-				else
-				if(selectEvent.isSelected(ObjectSelectedEvent.SCHEME_CABLELINK))
-				{
+				} else if(selectEvent.isSelected(ObjectSelectedEvent.SCHEME_CABLELINK)) {
 					SchemeCableLink schemeCableLink = (SchemeCableLink )selectEvent.getSelectedObject();
 					CablePath cablePath = mapView.findCablePath(schemeCableLink);
-					if(cablePath != null)
+					if(cablePath != null) {
 						mapView.getMap().setSelected(cablePath, true);
+					}
 				}
 				repaint(false);
+			} else if (pce.getPropertyName().equals("MeasurementStarted")) {
+				Identifier meId = (Identifier)pce.getNewValue();
+				MeasurementPath path = mapViewController.getMeasurementPathByMonitoredElementId(meId);
+				if (path != null) {
+					for (CablePath cp : path.getSortedCablePaths()) {
+						for (PhysicalLink pl : cp.getLinks()) {
+							this.logicalNetLayer.addMeasuringElement(pl);
+						}
+					}
+					this.logicalNetLayer.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.NEED_REPAINT));
+				}
+				if (this.logicalNetLayer.hasMeasuringElements() 
+						&& !this.measurementNotifier.isStarted()) {
+					this.measurementNotifier = new MeasurementNotifier(this.logicalNetLayer.getContext());
+					this.measurementNotifier.start();
+				}
+			} else if (pce.getPropertyName().equals("MeasurementStoped")) {
+				Identifier meId = (Identifier)pce.getNewValue();
+				MeasurementPath path = mapViewController.getMeasurementPathByMonitoredElementId(meId);
+				if (path != null) {
+					for (CablePath cp : path.getSortedCablePaths()) {
+						for (PhysicalLink pl : cp.getLinks()) {
+							this.logicalNetLayer.removeMeasuringElement(pl);
+						}
+					}
+					this.logicalNetLayer.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.NEED_REPAINT));
+				}
+				if (!this.logicalNetLayer.hasMeasuringElements() 
+						&& this.measurementNotifier.isStarted()) {
+					this.measurementNotifier.terminate();
+				}
 			}
 		} catch(MapException e) {
 			Log.errorMessage(e);
 		} catch(ApplicationException e) {
 			Log.errorMessage(e);
+		}
+	}
+	
+	class MeasurementNotifier extends Thread {
+		private ApplicationContext aContext;
+		private boolean proceed = true;
+		
+		MeasurementNotifier(ApplicationContext aContext1) {
+			this.aContext = aContext1;
+		}
+		
+		public boolean isStarted() {
+			return this.proceed;
+		}
+		
+		public synchronized void terminate() {
+			this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.NEED_REPAINT));
+			this.proceed = false;
+		}
+		
+		@Override
+		public void run() {
+			while (this.proceed) {
+				this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.NEED_REPAINT));
+				try {
+					sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 

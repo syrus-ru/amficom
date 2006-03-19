@@ -1,5 +1,5 @@
 /*-
- * $$Id: LogicalNetLayer.java,v 1.143 2006/02/15 11:27:31 stas Exp $$
+ * $$Id: LogicalNetLayer.java,v 1.144 2006/03/19 14:43:58 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
 /**
  * Управляет отображением логической структуры сети.
  * 
- * @version $Revision: 1.143 $, $Date: 2006/02/15 11:27:31 $
+ * @version $Revision: 1.144 $, $Date: 2006/03/19 14:43:58 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -1088,7 +1088,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: stas $
-	 * @version $Revision: 1.143 $, $Date: 2006/02/15 11:27:31 $
+	 * @version $Revision: 1.144 $, $Date: 2006/03/19 14:43:58 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
@@ -1125,6 +1125,8 @@ public final class LogicalNetLayer {
 	 * Список VisualMapElement'ов, которые будут отображаться при текущем масштабе
 	 */
 	private Set<Object> visualElements = new HashSet<Object>();
+	
+	private Set<NodeLink> measuringElements = new HashSet<NodeLink>();
 
 	/**
 	 * Линки с экранной длиной меньшей, этого параметра сливаются с соседними в
@@ -1226,6 +1228,20 @@ public final class LogicalNetLayer {
 				+ "			" + MapViewController.getTime4() + " ms (create VisualElements)\n" //$NON-NLS-1$ //$NON-NLS-2$
 				+ "			" + MapViewController.getTime6() + " ns (getCharacteristics)\n" //$NON-NLS-1$ //$NON-NLS-2$
 				+ "			" + MapViewController.getTime5() + " ms (calculate distance)\n", Log.DEBUGLEVEL09); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+	
+	public void removeMeasuringElement(PhysicalLink measuringElement) {
+		final List<NodeLink> nodeLinks = measuringElement.getNodeLinks();
+		this.measuringElements.removeAll(nodeLinks);
+	}
+
+	public void addMeasuringElement(PhysicalLink measuringElement) {
+		final List<NodeLink> nodeLinks = measuringElement.getNodeLinks();
+		this.measuringElements.addAll(nodeLinks);
+	}
+	
+	public boolean hasMeasuringElements() {
+		return !this.measuringElements.isEmpty();
 	}
 
 	private void fillOptimizationSets(final CablePath cablePath,
@@ -1613,6 +1629,8 @@ public final class LogicalNetLayer {
 			aModel.fireModelChanged();
 		}
 
+		Color measureColor = MapPropertiesManager.getMeasureColor();
+		BasicStroke movingStroke = MapPropertiesManager.getMovingStroke();
 		for (final Object veElement : this.visualElements) {
 			if (veElement instanceof SiteNode) {
 				continue;
@@ -1627,12 +1645,15 @@ public final class LogicalNetLayer {
 						if(!controller.isElementVisible(nodeLink, visibleBounds)) {
 							continue;
 						}
+						
+						if (this.measuringElements.contains(nodeLink)){ 
+							controller.paintOutline(nodeLink, (Graphics2D)g, visibleBounds, movingStroke, measureColor, 4);
+						} 
 						Color color = vme.color;
 						Stroke stroke = vme.stroke;
 						if (this.getMapState().getShowMode() == MapState.SHOW_NODE_LINK) {
 							controller.paint(nodeLink, g, visibleBounds);
-						}
-						else {
+						} else {
 							final boolean selectionVisible = false;
 							if(color == null) {
 								color = controller.getColor(nodeLink);
