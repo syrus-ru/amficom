@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.14.2.1 2006/03/19 12:59:07 arseniy Exp $
+ * $Id: DeliveryAttributes.java,v 1.14.2.2 2006/03/19 15:09:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,8 +43,8 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.14.2.1 $, $Date: 2006/03/19 12:59:07 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14.2.2 $, $Date: 2006/03/19 15:09:06 $
  * @module event
  */
 public final class DeliveryAttributes extends StorableObject
@@ -111,7 +111,7 @@ public final class DeliveryAttributes extends StorableObject
 	/**
 	 * @param deliveryAttributes
 	 * @throws IdlConversionException
-	 * @see StorableObject#fromIdlTransferable(IdlStorableObject)
+	 * @see StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
 	public synchronized void fromIdlTransferable(final IdlDeliveryAttributes deliveryAttributes)
 	throws IdlConversionException {
