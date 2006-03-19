@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.7 2006/02/20 17:08:56 arseniy Exp $
+ * $Id: EventQueue.java,v 1.8 2006/03/19 13:10:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2006/02/20 17:08:56 $
+ * @version $Revision: 1.8 $, $Date: 2006/03/19 13:10:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -111,10 +111,13 @@ final class EventQueue extends SleepButWorkThread {
 
 	private IdlEvent[] createIdlEventArray(final BaseConnectionManager connectionManager) {
 		final ORB orb = connectionManager.getCORBAServer().getOrb();
-		final IdlEvent[] idlEvents = new IdlEvent[this.eventEqueue.size()];
-		int i = 0;
-		for (final Event<IdlEvent> event : this.eventEqueue) {
-			idlEvents[i++] = event.getIdlTransferable(orb);
+		final IdlEvent[] idlEvents;
+		synchronized (this.eventEqueue) {
+			idlEvents = new IdlEvent[this.eventEqueue.size()];
+			int i = 0;
+			for (final Event<IdlEvent> event : this.eventEqueue) {
+				idlEvents[i++] = event.getIdlTransferable(orb);
+			}
 		}
 		return idlEvents;
 	}
