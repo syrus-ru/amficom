@@ -56,12 +56,6 @@ public class FileSaveCommand extends AbstractCommand
 				fos.write(bw.write(bs));
 				fos.close();
 
-				if (!chooser.getSelectedFile().getAbsolutePath().equals(bs.title))
-				{
-					bs.title = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
-					Heap.setCurrentTracePrimary();
-				}
-
 				try
 				{
 					properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
