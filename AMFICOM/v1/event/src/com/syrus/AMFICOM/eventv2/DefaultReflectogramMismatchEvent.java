@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultReflectogramMismatchEvent.java,v 1.13 2006/02/16 13:34:26 arseniy Exp $
+ * $Id: DefaultReflectogramMismatchEvent.java,v 1.13.4.1 2006/03/20 13:26:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,18 +31,13 @@ import com.syrus.AMFICOM.reflectometry.SOAnchor;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2006/02/16 13:34:26 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13.4.1 $, $Date: 2006/03/20 13:26:14 $
  * @module event
  */
 public final class DefaultReflectogramMismatchEvent extends
 		AbstractReflectogramMismatchEvent {
 	private static final long serialVersionUID = -1232479623372509377L;
-
-	/**
-	 * @serial include
-	 */
-	private Date created;
 
 	/**
 	 * @serial include
@@ -205,16 +200,10 @@ public final class DefaultReflectogramMismatchEvent extends
 	}
 
 	/**
-	 * @see ReflectogramMismatchEvent#getCreated()
-	 */
-	public Date getCreated() {
-		return (Date) this.created.clone();
-	}
-
-	/**
 	 * @param orb
 	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
 	 */
+	@Override
 	public IdlReflectogramMismatchEvent getIdlTransferable(final ORB orb) {
 		final IdlMismatchData mismatchData = new IdlMismatchData();
 		if (this.hasMismatch()) {
@@ -398,8 +387,8 @@ public final class DefaultReflectogramMismatchEvent extends
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.13 $, $Date: 2006/02/16 13:34:26 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.13.4.1 $, $Date: 2006/03/20 13:26:14 $
 	 * @module event
 	 */
 	private class SoAnchorImpl implements SOAnchor, Identifiable, Serializable {
