@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.BorderLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -156,17 +157,40 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 			tr.setTitle(Heap.getAnyPFTraceByKey(key).getBS().title);
 		}
 
-		if (Heap.PRIMARY_TRACE_KEY.equals(key)) {
-			this.tModel.addObject(0, tr);
-			traces.add(0, id);
-		} else if (Heap.ETALON_TRACE_KEY.equals(key)) {
-			final int index = traces.isEmpty() ? 0 : 1;
-			this.tModel.addObject(index, tr);
-			traces.add(index, id);
-		} else {
-			this.tModel.addObject(tr);
-			traces.add(id);
-		}
+//		if (Heap.PRIMARY_TRACE_KEY.equals(key)) {
+//			this.tModel.addObject(0, tr);
+//			traces.add(0, id);
+//		} else if (Heap.ETALON_TRACE_KEY.equals(key)) {
+//			final int index = traces.isEmpty() ? 0 : 1;
+//			this.tModel.addObject(index, tr);
+//			traces.add(index, id);
+//		} else {
+//			this.tModel.addObject(tr);
+//			traces.add(id);
+//		}
+
+		// XXX: PERFORMANCE: sorts each time a trace is added. Not very nice.
+		this.tModel.addObject(tr);
+		traces.add(id);
+		this.tModel.sortRows(new Comparator<TraceResource>() {
+			public int compare(TraceResource o1, TraceResource o2) {
+				final String id1 = o1.getId();
+				final String id2 = o2.getId();
+				if (Heap.PRIMARY_TRACE_KEY.equals(id1)) {
+					return -1;
+				}
+				if (Heap.PRIMARY_TRACE_KEY.equals(id2)) {
+					return 1;
+				}
+				if (Heap.ETALON_TRACE_KEY.equals(id1)) {
+					return -1;
+				}
+				if (Heap.ETALON_TRACE_KEY.equals(id2)) {
+					return 1;
+				}
+				return o1.getTitle().compareTo(o2.getTitle());
+			}});
+
 		super.setVisible(true);
 	}
 
