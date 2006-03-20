@@ -1,5 +1,5 @@
 /*
- * $Id: TestSqlNotTooLong.java,v 1.4 2006/02/21 11:30:27 saa Exp $
+ * $Id: TestSqlNotTooLong.java,v 1.5 2006/03/20 16:06:45 saa Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2006/02/21 11:30:27 $
+ * @version $Revision: 1.5 $, $Date: 2006/03/20 16:06:45 $
  * @author $Author: saa $
  * @module test
  */
@@ -63,7 +63,18 @@ public final class TestSqlNotTooLong extends TestCase {
 	public void testDbQuery() throws SQLException, InterruptedException {
 		verifyHostName();
 
+		final Connection connection = DatabaseConnection.getConnection();
+		try {
+			doTestDbQuery(connection);
+		} finally {
+			DatabaseConnection.releaseConnection(connection);
+		}
+	}
+
+	private void doTestDbQuery(Connection connection)
+	throws SQLException, InterruptedException {
 		String query = "SELECT id , TO_CHAR(created, 'YYYYMMDD HH24MISS') created , TO_CHAR(modified, 'YYYYMMDD HH24MISS') modified , creator_id , modifier_id , version , type_code , monitored_element_id , measurement_id , name , criteria_set_id FROM Analysis WHERE 1=1 AND  (  ( measurement_id IN  ( 145241087982707182 )  )  )";
+		Statement statement = connection.createStatement();
 
 		long sleepTime = 100; // this is important
 		double maxDelay = 500.0;
@@ -72,8 +83,6 @@ public final class TestSqlNotTooLong extends TestCase {
 
 		System.out.println("Please be patient, I need up to " +
 				Math.max(maxDelay, sleepTime) * count / 1000 + " sec");
-		final Connection connection = DatabaseConnection.getConnection();
-		Statement statement = connection.createStatement();
 		for (int i = 0; i < count; i++) {
 
 			long t0 = System.nanoTime();
@@ -103,6 +112,5 @@ public final class TestSqlNotTooLong extends TestCase {
 				Thread.sleep(sleepTime); // this is important
 			}
 		}
-		DatabaseConnection.releaseConnection(connection);
 	}
 }
