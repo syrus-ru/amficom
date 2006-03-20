@@ -32,7 +32,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
-import com.syrus.AMFICOM.client.UI.ProcessingDialog;
+import com.syrus.AMFICOM.client.UI.ProcessingDialogDummy;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -225,7 +225,7 @@ final class TestLine extends TimeLine {
 					
 					this.selectedTestIds.add(testTimeItem.testTimeLine.testId);
 					final Test test = TestView.valueOf(testTimeItem.testTimeLine.testId).getTest();
-					new ProcessingDialog(new Runnable() {
+					new ProcessingDialogDummy(new Runnable() {
 
 						public void run() {
 							TestLine.this.skip = true;

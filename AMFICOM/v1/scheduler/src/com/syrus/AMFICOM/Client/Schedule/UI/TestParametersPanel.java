@@ -28,7 +28,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.client.UI.ProcessingDialog;
+import com.syrus.AMFICOM.client.UI.ProcessingDialogDummy;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.UI.WrapperedListModel;
@@ -487,7 +487,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 		if (this.allAvailableCheckBox.isSelected()) {
 			if (this.schedulerModel.getSelectedMeasurementType() != MeasurementType.UNKNOWN
 					|| this.schedulerModel.getSelectedMonitoredElement() != null) {
-				new ProcessingDialog(new Runnable() {
+				new ProcessingDialogDummy(new Runnable() {
 
 					@SuppressWarnings("unqualified-field-access")
 					public void run() {

@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.84 2006/02/10 11:21:10 bob Exp $
+ * $Id: TableFrame.java,v 1.85 2006/03/20 13:15:02 saa Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import javax.swing.table.JTableHeader;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
-import com.syrus.AMFICOM.client.UI.ProcessingDialog;
+import com.syrus.AMFICOM.client.UI.ProcessingDialogDummy;
 import com.syrus.AMFICOM.client.UI.StubLabelCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2006/02/10 11:21:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.85 $, $Date: 2006/03/20 13:15:02 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -238,7 +238,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 					final TestView selectedValue = TableFrame.this.listTable.getSelectedValue();
 					assert Log.debugMessage(selectedValue, Log.DEBUGLEVEL03);
 					if (selectedValue != null) {
-						new ProcessingDialog(new Runnable() {
+						new ProcessingDialogDummy(new Runnable() {
 
 							public void run() {
 								TableFrame.this.schedulerModel.unselectTests(TableFrame.this);

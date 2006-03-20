@@ -35,7 +35,7 @@ import javax.swing.event.ChangeListener;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.LazyChangeListener;
-import com.syrus.AMFICOM.client.UI.ProcessingDialog;
+import com.syrus.AMFICOM.client.UI.ProcessingDialogDummy;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -475,7 +475,7 @@ public class TimeParametersFrame extends JInternalFrame {
 				
 				public void actionPerformed(final ActionEvent event) {
 					TimeParametersPanel.this.choosedButton = (JButton)event.getSource();
-					new ProcessingDialog(new Runnable() {
+					new ProcessingDialogDummy(new Runnable() {
 						public void run() {
 							try {
 								if (!TimeParametersPanel.this.groupRadioButton.isSelected()) { 
