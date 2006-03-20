@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.37 2006/03/20 12:30:07 bass Exp $
+ * $Id: DomainMember.java,v 1.38 2006/03/20 12:39:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2006/03/20 12:30:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2006/03/20 12:39:40 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -55,7 +55,7 @@ public abstract class DomainMember extends StorableObject {
 
 	/**
 	 * Minimalistic constructor used when importing from XML.
-	 *
+	 * 
 	 * @param id
 	 * @param importType
 	 * @param entityCode
@@ -64,9 +64,10 @@ public abstract class DomainMember extends StorableObject {
 	 * @throws IdentifierGenerationException
 	 */
 	protected DomainMember(final XmlIdentifier id,
-			final String importType, final short entityCode,
-			final Date created, final Identifier creatorId)
-	throws IdentifierGenerationException {
+			final String importType,
+			final short entityCode,
+			final Date created,
+			final Identifier creatorId) throws IdentifierGenerationException {
 		super(id, importType, entityCode, created, creatorId);
 	}
 
@@ -82,8 +83,7 @@ public abstract class DomainMember extends StorableObject {
 	 * @param header
 	 * @param domainId1
 	 */
-	protected final void fromIdlTransferable(final IdlStorableObject header,
-			final Identifier domainId1) {
+	protected final void fromIdlTransferable(final IdlStorableObject header, final Identifier domainId1) {
 		super.fromIdlTransferable(header);
 		this.domainId = domainId1;
 	}
