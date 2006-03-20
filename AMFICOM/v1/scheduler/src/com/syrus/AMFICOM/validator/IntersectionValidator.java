@@ -1,5 +1,5 @@
 /*-
-* $Id: IntersectionValidator.java,v 1.9 2006/03/13 13:53:59 bass Exp $
+* $Id: IntersectionValidator.java,v 1.10 2006/03/20 15:10:40 saa Exp $
 *
 * Copyright ¿ 2006 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2006/03/13 13:53:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2006/03/20 15:10:40 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -264,14 +264,14 @@ public class IntersectionValidator {
 			test.getEndTime(), 
 			testPattern, 
 			testMeasurementSetup.getMeasurementDuration());
-		if (testTimeLabel.intersects(timeLabel)) {
-			final TestView view = TestView.valueOf(test);			
+		if (TimeLabel.patternsIntersect(testTimeLabel, timeLabel)) {
+			final TestView view = TestView.valueOf(test);
 			return I18N.getString("Scheduler.Text.Scheduler.Model.TestIntersection")
 				+ (view != null ? " "  + view.getExtendedDescription() : test.getId());
 		}
 		return null;
 	}
-	
+
 	private final TimeLabel getTimeLabel(final Date startDate,
     		final Date endDate,
        		final AbstractTemporalPattern temporalPattern,
