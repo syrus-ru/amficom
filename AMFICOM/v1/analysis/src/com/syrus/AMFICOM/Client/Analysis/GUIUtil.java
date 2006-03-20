@@ -1,5 +1,5 @@
 /*-
- * $Id: GUIUtil.java,v 1.19 2005/12/22 15:29:44 saa Exp $
+ * $Id: GUIUtil.java,v 1.20 2006/03/20 09:25:51 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.19 $, $Date: 2005/12/22 15:29:44 $
+ * @version $Revision: 1.20 $, $Date: 2006/03/20 09:25:51 $
  * @module
  */
 public class GUIUtil {
@@ -49,6 +49,11 @@ public class GUIUtil {
 	public static final String MSG_WARNING_SOME_TRACES_ARE_ALREADY_LOADED = "warningSomeTracesAlreadyLoaded";
 
 	public static final String MSG_ERROR_INVALID_AP = "errorInvalidAP";
+
+	public static final String MSG_ERROR_NOT_A_DIRECTORY = "errorNeedChooseFolder";
+	public static final String MSG_ERROR_FAILED_TO_SAVE_ALL_FILES = "errorFailedToSaveAllFiles";
+	public static final String MSG_WARNING_FAILED_TO_SAVE_SOME_FILES = "warningFailedToSaveSomeFiles";
+	public static final String MSG_INFO_FILES_SAVED = "infomsgFilesSaved";
 
 	private GUIUtil() {
 		// non-instantiable
@@ -93,6 +98,13 @@ public class GUIUtil {
 				LangModelAnalyse.getString(codestring),
 				LangModelAnalyse.getString("warning"),
 				JOptionPane.WARNING_MESSAGE);
+	}
+
+	public static void showInfoMessage(String codename) {
+		JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				LangModelAnalyse.getString(codename),
+				LangModelAnalyse.getString("ok"),
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public static Color getColor(final String id) {
