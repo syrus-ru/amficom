@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.188 2006/03/15 14:47:30 bass Exp $
+ * $Id: Test.java,v 1.189 2006/03/20 15:08:44 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.188 $, $Date: 2006/03/15 14:47:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.189 $, $Date: 2006/03/20 15:08:44 $
+ * @author $Author: saa $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -715,10 +715,10 @@ public final class Test extends StorableObject
 				
 				final long period = periodicalTemporalPattern.getPeriod();
 				final long end = this.endTime.getTime();
-				final long expectedEndTime = start 
-					+ period * ((int)(end - start)/period) 
+				final long expectedEndTime = start
+					+ period * ((end - start)/period) 
 					+ measurementDuration;
-				
+
 				if (end != expectedEndTime) {
 					this.endTime = new Date(expectedEndTime);
 					return true;
