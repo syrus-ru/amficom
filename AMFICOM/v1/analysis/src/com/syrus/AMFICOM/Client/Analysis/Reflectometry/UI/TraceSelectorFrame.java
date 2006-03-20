@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Comparator;
@@ -14,6 +15,7 @@ import javax.swing.Icon;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
@@ -29,8 +31,10 @@ import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.TraceResource;
 import com.syrus.AMFICOM.analysis.TraceResourceWrapper;
+import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -89,6 +93,31 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 		this.jTable = new WrapperedTable<TraceResource>(this.tModel);
 		this.jTable.setAllowSorting(false);
 		this.jTable.setTableHeader(null);
+		
+		this.jTable.setRenderer(new ADefaultTableCellRenderer.ObjectRenderer() {
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected1, boolean hasFocus, int row, int column) {
+				TraceResource traceResource = TraceSelectorFrame.this.tModel.getObject(row);
+				Component component = super.getTableCellRendererComponent(table, value, isSelected1, hasFocus, row, column);
+				if (traceResource.isAlarm()) {
+					component.setBackground(UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_ALARM));
+				}
+				return component;
+			}
+		}, TraceResourceWrapper.KEY_TITLE);
+		
+		this.jTable.setRenderer(new ADefaultTableCellRenderer.BooleanRenderer() {
+			private static final long serialVersionUID = -6542942610617832169L;
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected1, boolean hasFocus, int row, int column) {
+				TraceResource traceResource = TraceSelectorFrame.this.tModel.getObject(row);
+				Component component = super.getTableCellRendererComponent(table, value, isSelected1, hasFocus, row, column);
+				if (traceResource.isAlarm()) {
+					component.setBackground(UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_ALARM));
+				}
+				return component;
+			}
+		}, TraceResourceWrapper.KEY_IS_SHOWN);
 
 		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(20);
 		this.jTable.getColumnModel().getColumn(1).setPreferredWidth(250);
