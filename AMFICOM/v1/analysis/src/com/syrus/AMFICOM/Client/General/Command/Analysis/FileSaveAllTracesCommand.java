@@ -75,6 +75,7 @@ public class FileSaveAllTracesCommand extends AbstractCommand {
 					FileOutputStream fos = new FileOutputStream(file);
 					BellcoreWriter bw = new BellcoreWriter();
 					fos.write(bw.write(bs));
+					fos.close();
 					hasSuccesses = true;
 				} catch (IOException ex) {
 					ex.printStackTrace();

@@ -54,6 +54,7 @@ public class FileSaveCommand extends AbstractCommand
 				FileOutputStream fos = new FileOutputStream(chooser.getSelectedFile());
 				BellcoreWriter bw = new BellcoreWriter();
 				fos.write(bw.write(bs));
+				fos.close();
 
 				if (!chooser.getSelectedFile().getAbsolutePath().equals(bs.title))
 				{
