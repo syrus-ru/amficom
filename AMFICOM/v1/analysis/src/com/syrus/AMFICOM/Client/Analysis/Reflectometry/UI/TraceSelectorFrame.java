@@ -4,8 +4,9 @@ import java.awt.BorderLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
@@ -41,9 +42,15 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 	private static final long serialVersionUID = -2281313783873630551L;
 
 	Dispatcher dispatcher;
-	protected List<String> traces = new LinkedList<String>();
 	private WrapperedTable jTable;
-	private WrapperedTableModel<TraceResource> tModel;
+	WrapperedTableModel<TraceResource> tModel;
+
+	/*
+	 * С помощью этого Map можно по id р/г найти ее TraceResource,
+	 * а затем с помощью tModel по TraceResource идентифицировать строку
+	 * и, например, определять ее текущий номер строки в таблице.
+	 */
+	protected Map<String, TraceResource> traceMap = new HashMap<String, TraceResource>();
 
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
@@ -123,8 +130,8 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 						// ArrayIndexOutOfBoundsException
 						// при вызове traces.get(selectedRow).
 						// Поэтому принимаем только значения < traces.size()
-						if (selectedRow < traces.size()) { 
-							Heap.setCurrentTrace(traces.get(selectedRow));
+						if (selectedRow < tModel.getRowCount()) {
+							Heap.setCurrentTrace(tModel.getObject(selectedRow).getId());
 						}
 					}
 				}
@@ -139,7 +146,7 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 
 	private void traceAdded(final String key) {
 		final String id = key;
-		if (traces.contains(id)) {
+		if (this.traceMap.containsKey(id)) {
 			return;
 		}
 		Log.debugMessage("id is '" + id + '\'', Level.FINEST);
@@ -171,7 +178,7 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 
 		// XXX: PERFORMANCE: sorts each time a trace is added. Not very nice.
 		this.tModel.addObject(tr);
-		traces.add(id);
+		traceMap.put(id, tr);
 		this.tModel.sortRows(new Comparator<TraceResource>() {
 			public int compare(TraceResource o1, TraceResource o2) {
 				final String id1 = o1.getId();
@@ -195,12 +202,11 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 	}
 
 	private void traceRemoved(final String key) {
-		int index = traces.indexOf(key);
-		if (index != -1) {
-			final TraceResource tr = this.tModel.getObject(index);
+		TraceResource tr = this.traceMap.get(key);
+		if (tr != null) {
 			tr.removePropertyChangeListener(this);
 			this.tModel.removeObject(tr);
-			traces.remove(key);
+			this.traceMap.remove(key);
 		}
 	}
 
@@ -222,7 +228,7 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 			tr.removePropertyChangeListener(this);
 			this.tModel.removeObject(tr);
 		}
-		traces.clear();
+		this.traceMap.clear();
 		super.setVisible(false);
 	}
 
@@ -236,8 +242,9 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 
 	public void currentTraceChanged(final String id) {
 		this.here = true;
-		int selected = traces.indexOf(id);
-		if (selected != -1) {
+		TraceResource tr = this.traceMap.get(id);
+		if (tr != null) {
+			int selected = this.tModel.getIndexOfObject(tr);
 			this.jTable.setRowSelectionInterval(selected, selected);
 		}
 		this.here = false;
@@ -251,9 +258,9 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 	}
 
 	private void updMismatchmark() {
-		int index = traces.indexOf(Heap.PRIMARY_TRACE_KEY);
-		if (index >= 0) {
-			this.tModel.getObject(index).setAlarm(Heap.getRefMismatch() != null);
+		TraceResource tr = this.traceMap.get(Heap.PRIMARY_TRACE_KEY);
+		if (tr != null) {
+			tr.setAlarm(Heap.getRefMismatch() != null);
 		}
 		this.jTable.repaint(); // XXX: is this correct way of refreshing?
 	}
