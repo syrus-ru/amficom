@@ -1,5 +1,8 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
@@ -14,6 +17,8 @@ public class HistogrammFrame
 extends ScalableFrame
 implements BsHashChangeListener, AnalysisParametersListener {
 	Dispatcher dispatcher;
+	private Map<String, HistogrammPanel> currentPanels =
+		new HashMap<String, HistogrammPanel>();
 	public HistogrammFrame(Dispatcher dispatcher) {
 		super (new HistogrammLayeredPanel(dispatcher));
 
@@ -40,6 +45,25 @@ implements BsHashChangeListener, AnalysisParametersListener {
 		Heap.addAnalysisParametersListener(this);
 	}
 
+	/**
+	 * If id is present, removes panel with id id.
+	 * Then, if hp is not null, adds panel hp.
+	 * @param id key
+	 * @param hp new HistogramPanel or null
+	 */
+	private void setHistogramPanel(String id, HistogrammPanel hp) {
+		final HistogrammPanel old = this.currentPanels.get(id);
+		if (old != null) {
+			((ScalableLayeredPanel)this.panel).removeGraphPanel(old);
+			this.currentPanels.remove(id);
+		}
+
+		if (hp != null) {
+			this.currentPanels.put(id, hp);
+			((ScalableLayeredPanel)this.panel).addGraphPanel(hp);
+		}
+	}
+
 	public void addTrace (String id) {
 		if (id.equals(Heap.PRIMARY_TRACE_KEY) || id.equals(Heap.MODELED_TRACE_KEY))
 		{
@@ -54,20 +78,27 @@ implements BsHashChangeListener, AnalysisParametersListener {
 
 			p = new HistogrammPanel(panel, y, deltaX);
 			p.setColorModel(id);
-			((ScalableLayeredPanel)panel).addGraphPanel(p);
+			setHistogramPanel(id, p);
 			panel.updScale2fit();
 
 			setVisible(true);
 		}
 	}
 
+	private void removeTrace(String id) {
+		setHistogramPanel(id, null);
+	}
+
 	public void bsHashAdded(String key) {
-			addTrace (key);
+			addTrace(key);
 			setVisible(true);
 	}
 
 	public void bsHashRemoved(String key) {
-		// FIXME: modeled trace removal is not implemented now
+		removeTrace(key);
+		// Need not update visibility in this case,
+		// only bsHashRemovedAll() requires we hide window;
+		// This is a contract of Heap.
 	}
 
 	public void bsHashRemovedAll() {
