@@ -1,5 +1,5 @@
 /*-
- * $Id: Event.java,v 1.55 2006/03/15 15:47:20 arseniy Exp $
+ * $Id: Event.java,v 1.54 2006/03/15 14:47:31 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.event;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.EVENT_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -24,6 +23,7 @@ import com.syrus.AMFICOM.event.corba.IdlEventHelper;
 import com.syrus.AMFICOM.event.corba.IdlEventPackage.IdlEventParameter;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -33,18 +33,20 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2006/03/15 15:47:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.54 $, $Date: 2006/03/15 14:47:31 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 
-public final class Event extends StorableObject implements TypedObject<EventType> {
-	private static final long serialVersionUID = 8312515167821319496L;
+public final class Event extends StorableObject
+		implements TypedObject<EventType>,
+		IdlTransferableObjectExt<IdlEvent> {
+	private static final long serialVersionUID = 3977015150102788401L;
 
 	private EventType type;
 	private String description;
@@ -105,7 +107,7 @@ public final class Event extends StorableObject implements TypedObject<EventType
 		try {
 			final Event event = new Event(IdentifierPool.getGeneratedIdentifier(EVENT_CODE),
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					type,
 					description,
 					eventParameters,
@@ -120,28 +122,26 @@ public final class Event extends StorableObject implements TypedObject<EventType
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlEvent event = (IdlEvent) transferable;
-
-		super.fromIdlTransferable(event);
-
+	public synchronized void fromIdlTransferable(final IdlEvent event)
+	throws IdlConversionException {
 		try {
+			super.fromIdlTransferable(event);
+	
 			this.type = StorableObjectPool.getStorableObject(new Identifier(event._typeId), true);
+	
+			this.description = event.description;
+	
+			this.eventParameters = new HashSet<EventParameter>(event.parameters.length);
+			for (final IdlEventParameter eventParameter : event.parameters) {
+				this.eventParameters.add(new EventParameter(eventParameter));
+			}
+	
+			this.setEventSourceIds0(Identifier.fromTransferables(event.eventSourceIds));
+	
+			assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}
-
-		this.description = event.description;
-
-		this.eventParameters = new HashSet<EventParameter>(event.parameters.length);
-		for (final IdlEventParameter eventParameter : event.parameters) {
-			this.eventParameters.add(new EventParameter(eventParameter));
-		}
-
-		this.setEventSourceIds0(Identifier.fromTransferables(event.eventSourceIds));
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -281,6 +281,8 @@ public final class Event extends StorableObject implements TypedObject<EventType
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.type);
 		for(EventParameter eventParameter: this.eventParameters) {
