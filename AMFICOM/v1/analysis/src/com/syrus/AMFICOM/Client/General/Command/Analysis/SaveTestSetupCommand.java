@@ -130,6 +130,7 @@ public class SaveTestSetupCommand extends AbstractCommand
 		}
 
 		// Показываем юзеру, что его шаблон сохранен и здравствует
+		// @todo: use GUIUtil.showInfoMessage instead of direct call to JOptionPane
 		JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 				LangModelAnalyse.getString("testSetupSaved"),
 				LangModelAnalyse.getString("ok"),
