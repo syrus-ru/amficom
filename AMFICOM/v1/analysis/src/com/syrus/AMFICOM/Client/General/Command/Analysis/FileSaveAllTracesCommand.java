@@ -35,7 +35,20 @@ public class FileSaveAllTracesCommand extends AbstractCommand {
 		}
 
 		JFileChooser chooser = new JFileChooser(lastDir);
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		/*
+		 * Нам нужны только каталоги, однако в режиме DIRECTORIES_ONLY
+		 * эта штука (JFileChooser) почему-то интерпретирует выбор файла
+		 * как нажатие Cancel - и в таком случае нам кажется, что
+		 * пользователю передумал сохранять.
+		 * Такое поведение может вызывать недоумение пользователя -
+		 * он выбрал файл, нажал OK, программа "проглотила" команду,
+		 * а файлы не были сохранены.
+		 * Поскольку я не знаю, как с этим бороться, использую
+		 * режим FILES_AND_DIRECTORIES и сам анализирую, файл ли выбран
+		 * (тогда объясняем пользователю, что он не прав), или
+		 * каталог (тогда собственно сохраняем).
+		 */
+		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		int returnVal = chooser.showSaveDialog(null);
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			File directory = chooser.getSelectedFile();
