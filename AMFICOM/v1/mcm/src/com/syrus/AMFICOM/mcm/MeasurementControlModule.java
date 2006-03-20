@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementControlModule.java,v 1.146.2.4 2006/03/16 12:00:43 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146.2.5 2006/03/20 08:15:46 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146.2.4 $, $Date: 2006/03/16 12:00:43 $
+ * @version $Revision: 1.146.2.5 $, $Date: 2006/03/20 08:15:46 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -135,7 +135,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 	/**
 	 * Единственный в пределах приложения объект данного класса. Таким образом,
-	 * {@link MeasContrModule} является "Одиночкой" (Singletone).
+	 * {@link MeasurementControlModule} является "Одиночкой" (Singletone).
 	 */
 	private static MeasurementControlModule instance;
 
