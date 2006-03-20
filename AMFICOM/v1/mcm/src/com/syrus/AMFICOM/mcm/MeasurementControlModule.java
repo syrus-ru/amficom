@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementControlModule.java,v 1.146.2.6 2006/03/20 08:33:48 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146.2.7 2006/03/20 08:36:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,12 @@ import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.OR;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
+import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_ABORTED;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_NEW;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_PROCESSING;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_SCHEDULED;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_STOPPED;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_STOPPING;
-import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_ABORTED;
 import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_STATUS;
 
 import java.util.Collections;
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146.2.6 $, $Date: 2006/03/20 08:33:48 $
+ * @version $Revision: 1.146.2.7 $, $Date: 2006/03/20 08:36:13 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
