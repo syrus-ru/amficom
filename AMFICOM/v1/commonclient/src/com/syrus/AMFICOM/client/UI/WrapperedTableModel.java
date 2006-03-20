@@ -4,6 +4,7 @@ package com.syrus.AMFICOM.client.UI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +16,8 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2006/03/06 13:03:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2006/03/20 06:45:26 $
+ * @author $Author: saa $
  * @module commonclient
  */
 public class WrapperedTableModel<T> extends AbstractTableModel {
@@ -196,9 +197,7 @@ public class WrapperedTableModel<T> extends AbstractTableModel {
 	@Override
 	public void setValueAt(final Object obj, final int rowIndex, final int columnIndex) {
 		final String key = this.keys[columnIndex];
-		final Object object;
-		object = this.list.get(rowIndex);
-		final T t = (T) object;
+		final T t = this.list.get(rowIndex);
 		if (this.wrapper.getPropertyValue(key) instanceof Map) {
 			final Map map = (Map) this.wrapper.getPropertyValue(key);
 			this.wrapper.setValue(t, key, map.get(obj));
@@ -228,6 +227,21 @@ public class WrapperedTableModel<T> extends AbstractTableModel {
 			this.lastSortedModelIndex = columnIndex;
 			final String sortedKey = this.keys[columnIndex];
 			Collections.sort(this.list, new WrapperComparator<T>(this.wrapper, sortedKey, ascending));
+			super.fireTableDataChanged();
+		}
+	}
+
+	/**
+	 * Сортирует строки по заданному извне компаратору.
+	 * В данной версии после добавления
+	 * новых строк эта сортировка не восстанавливается.
+	 * 
+	 * @param comparator заданный извне компаратор.
+	 */
+	public void sortRows(Comparator<? super T> comparator) {
+		if (this.list != null) {
+			this.lastSortedModelIndex = -1;
+			Collections.sort(this.list, comparator);
 			super.fireTableDataChanged();
 		}
 	}
