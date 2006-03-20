@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceResourceWrapper.java,v 1.7 2006/03/13 15:54:24 bass Exp $
+ * $Id: TraceResourceWrapper.java,v 1.8 2006/03/20 14:00:48 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.List;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2006/03/13 15:54:24 $
+ * @author $Author: stas $
+ * @version $Revision: 1.8 $, $Date: 2006/03/20 14:00:48 $
  * @module analysis
  */
 
@@ -84,10 +84,9 @@ public class TraceResourceWrapper implements Wrapper<TraceResource> {
 
 	public Object getValue(final TraceResource traceResource, final String key) {
 		if (key.equals(KEY_IS_SHOWN)) {
-			return new Boolean(traceResource.isShown());
+			return Boolean.valueOf(traceResource.isShown());
 		} else if (key.equals(KEY_TITLE)) {
-			// @todo: помечать несоответствие не словом mismatch, а цветом
-			return traceResource.isAlarm() ? traceResource.getTitle() + " <mismatch>" : traceResource.getTitle();
+			return traceResource.getTitle();
 		} else if (key.equals(KEY_COLOR)) {
 			return traceResource.getColor();
 		}
