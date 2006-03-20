@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.35 2006/03/19 15:12:20 bass Exp $
+ * $Id: DomainMember.java,v 1.36 2006/03/20 07:24:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2006/03/19 15:12:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2006/03/20 07:24:39 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -55,7 +55,7 @@ public abstract class DomainMember extends StorableObject {
 
 	/**
 	 * Minimalistic constructor used when importing from XML.
-	 *
+	 * 
 	 * @param id
 	 * @param importType
 	 * @param entityCode
@@ -64,26 +64,25 @@ public abstract class DomainMember extends StorableObject {
 	 * @throws IdentifierGenerationException
 	 */
 	protected DomainMember(final XmlIdentifier id,
-			final String importType, final short entityCode,
-			final Date created, final Identifier creatorId)
-	throws IdentifierGenerationException {
+			final String importType,
+			final short entityCode,
+			final Date created,
+			final Identifier creatorId) throws IdentifierGenerationException {
 		super(id, importType, entityCode, created, creatorId);
 	}
 
 	/**
-	 * <p>Clients must never explicitly call this method.</p>
-	 *
 	 * <p>
-	 * Non-synchronized.
-	 * Non-overriding.
-	 * Non-overridable.
+	 * Clients must never explicitly call this method.
 	 * </p>
-	 *
+	 * <p>
+	 * Non-synchronized. Non-overriding. Non-overridable.
+	 * </p>
+	 * 
 	 * @param header
 	 * @param domainId1
 	 */
-	protected final void fromIdlTransferable(final IdlStorableObject header,
-			final Identifier domainId1) {
+	protected final void fromIdlTransferable(final IdlStorableObject header, final Identifier domainId1) {
 		super.fromIdlTransferable(header);
 		this.domainId = domainId1;
 	}
