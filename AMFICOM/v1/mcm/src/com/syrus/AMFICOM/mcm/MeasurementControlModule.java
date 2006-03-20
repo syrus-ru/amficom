@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementControlModule.java,v 1.146.2.5 2006/03/20 08:15:46 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146.2.6 2006/03/20 08:33:48 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146.2.5 $, $Date: 2006/03/20 08:15:46 $
+ * @version $Revision: 1.146.2.6 $, $Date: 2006/03/20 08:33:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -270,6 +270,15 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		return instance;
 	}
 
+	/**
+	 * Выполнить все необходимые приготовления к работе. Сюда входят:
+	 * установление соединения с базой данных, создание контекста драйверов базы
+	 * данных, извлечение из БД сведений о данном модуле, создание сеанса CORBA
+	 * и вход в систему AMFICOM. Также этот метод создаёт единственный в
+	 * пределах приложения экземпляр класса {@link MeasurementControlModule}.
+	 * 
+	 * @throws ApplicationException
+	 */
 	private static void startup() throws ApplicationException {
 
 		/* Установить соединение с базой данных. */
@@ -308,6 +317,9 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		instance = new MeasurementControlModule(mcmId, systemUserLogin);
 	}
 
+	/**
+	 * Установить соединение с базой данных.
+	 */
 	static void establishDatabaseConnection() {
 		final String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
 		final String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
@@ -322,6 +334,16 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	}
 
 
+	/**
+	 * Закрытый конструктор. Предназначен для создания "одиночки". Создаёт и
+	 * подготавливает все объекты, необходимые для работы. Выполняет поиск
+	 * заданий, запланированных и выполнявшихся во время предыдущей остановки
+	 * модуля. Устанавливает соединение с каждым из КИС. Запускает потоки
+	 * синхронизатора объектов и очереди событий.
+	 * 
+	 * @param moduleId
+	 * @param systemUserLogin
+	 */
 	private MeasurementControlModule(final Identifier moduleId, final String systemUserLogin) {
 		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000, ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
 		super.setName("MeasurementControlModule");
@@ -405,6 +427,9 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}
 	}
 
+	/**
+	 * Создать и запустить поток приёмопередатчика для каждого КИС.
+	 */
 	private void setupKISTransceivers() {
 		final LinkedIdsCondition kisCondition = new LinkedIdsCondition(this.moduleId, KIS_CODE);
 		final Set<KIS> kiss;
@@ -505,6 +530,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 	/**
 	 * Добавить событие в очереть.
+	 * 
 	 * @param event
 	 * @throws EventQueueFullException
 	 */
@@ -527,8 +553,9 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	}
 
 	/**
-	 * Добавить идентификаторы заданий, подлежащих остановке. Все эти задания должны иметь
-	 * состояние ОСТАНАВЛИВАЕТСЯ. См. {@link #stopTests()}.
+	 * Добавить идентификаторы заданий, подлежащих остановке. Все эти задания
+	 * должны иметь состояние ОСТАНАВЛИВАЕТСЯ. См. {@link #stopTests()}.
+	 * 
 	 * @param testIds
 	 */
 	void addStoppingTestIds(final Set<Identifier> testIds) {
@@ -644,6 +671,11 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		this.newTestIds.clear();
 	}
 
+	/**
+	 * Упорядочить задания по времени начала.
+	 * 
+	 * @param tests
+	 */
 	private static void sortTestsByStartTime(final List<Test> tests) {
 		if (testStartTimeComparator == null) {
 			testStartTimeComparator = new TestStartTimeComparator();
