@@ -335,7 +335,6 @@ final class TestLine extends TimeLine {
 			return;
 		}
 
-		System.err.println("updateTest: " + this.hashCode());
 //		assert Log.debugMessage(this.title, Log.DEBUGLEVEL03);
 
 		final Set<Identifier> selectedTestIds2 =
