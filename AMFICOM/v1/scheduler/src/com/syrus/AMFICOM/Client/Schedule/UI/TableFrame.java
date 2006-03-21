@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.85 2006/03/20 13:15:02 saa Exp $
+ * $Id: TableFrame.java,v 1.86 2006/03/21 11:46:20 saa Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2006/03/20 13:15:02 $
+ * @version $Revision: 1.86 $, $Date: 2006/03/21 11:46:20 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -226,6 +226,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 			this.listTable.setAllowAutoResize(true);
 			this.listTable.setAutoscrolls(true);
 			final ListSelectionModel rowSM = this.listTable.getSelectionModel();
+			rowSM.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			rowSM.addListSelectionListener(new ListSelectionListener() {
 
 				public void valueChanged(final ListSelectionEvent e) {
