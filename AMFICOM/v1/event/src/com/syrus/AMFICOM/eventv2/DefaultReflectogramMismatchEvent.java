@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultReflectogramMismatchEvent.java,v 1.13.4.2 2006/03/21 08:36:00 bass Exp $
+ * $Id: DefaultReflectogramMismatchEvent.java,v 1.13.4.3 2006/03/21 10:09:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.13.4.2 $, $Date: 2006/03/21 08:36:00 $
+ * @version $Revision: 1.13.4.3 $, $Date: 2006/03/21 10:09:19 $
  * @module event
  */
 public final class DefaultReflectogramMismatchEvent extends
@@ -205,16 +205,35 @@ public final class DefaultReflectogramMismatchEvent extends
 	}
 
 	/**
+	 * This contructor is invoked from both
+	 * {@link com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventImpl#getNativeEvent()}
+	 * and {@link com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventImpl#getNative()}.
+	 * However, it is assumed that the former invocation occurs on the event
+	 * server, and the object should be stored in the database, while the
+	 * latter one is made client-side, when the object has already been
+	 * stored.
+	 *
 	 * @param reflectogramMismatchEvent
+	 * @param store {@code true} if object should be stored in the database;
+	 *              {@code false} otherwise.
 	 * @throws CreateObjectException
 	 */
 	public DefaultReflectogramMismatchEvent(
-			final IdlReflectogramMismatchEvent reflectogramMismatchEvent)
+			final IdlReflectogramMismatchEvent reflectogramMismatchEvent,
+			final boolean store)
 	throws CreateObjectException {
 		try {
 			this.fromIdlTransferable(reflectogramMismatchEvent);
+			if (store) {
+				this.markAsChanged();
+				StorableObjectPool.flush(this, this.creatorId, false);
+			}
 		} catch (final IdlConversionException ice) {
 			throw new CreateObjectException(ice);
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -349,6 +368,10 @@ public final class DefaultReflectogramMismatchEvent extends
 	}
 
 	/**
+	 * This method should be invoked agent-side when no database storing
+	 * is needed (let event server take care of this), so the newly-created
+	 * object is not marked as changed.
+	 *
 	 * @param creatorId
 	 * @param reflectogramMismatch
 	 * @param resultId
@@ -377,11 +400,7 @@ public final class DefaultReflectogramMismatchEvent extends
 					reflectogramMismatch,
 					resultId, 
 					monitoredElementId);
-			reflectogramMismatchEvent.markAsChanged();
-			StorableObjectPool.flush(reflectogramMismatchEvent, creatorId, false);
 			return reflectogramMismatchEvent;
-		} catch (final CreateObjectException coe) {
-			throw coe;
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

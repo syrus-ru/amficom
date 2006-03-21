@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlReflectogramMismatchEventImpl.java,v 1.10.2.1 2006/03/21 08:36:00 bass Exp $
+ * $Id: IdlReflectogramMismatchEventImpl.java,v 1.10.2.2 2006/03/21 10:09:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10.2.1 $, $Date: 2006/03/21 08:36:00 $
+ * @version $Revision: 1.10.2.2 $, $Date: 2006/03/21 10:09:19 $
  * @module event
  */
 final class IdlReflectogramMismatchEventImpl
@@ -194,15 +194,25 @@ final class IdlReflectogramMismatchEventImpl
 	 * @see com.syrus.AMFICOM.general.corba.IdlStorableObject#getNative()
 	 */
 	@Override
-	public DefaultReflectogramMismatchEvent getNative() throws IdlCreateObjectException {
+	public DefaultReflectogramMismatchEvent getNative()
+	throws IdlCreateObjectException {
 		try {
-			return new DefaultReflectogramMismatchEvent(this);
+			return new DefaultReflectogramMismatchEvent(this, false);
 		} catch (final CreateObjectException coe) {
 			throw coe.getIdlTransferable();
 		}
 	}
 
-	public ReflectogramMismatchEvent getNativeEvent() throws IdlCreateObjectException {
-		return this.getNative();
+	/**
+	 * @throws IdlCreateObjectException
+	 * @see com.syrus.AMFICOM.eventv2.corba.IdlEvent#getNativeEvent()
+	 */
+	public ReflectogramMismatchEvent getNativeEvent()
+	throws IdlCreateObjectException {
+		try {
+			return new DefaultReflectogramMismatchEvent(this, true);
+		} catch (final CreateObjectException coe) {
+			throw coe.getIdlTransferable();
+		}
 	}
 }
