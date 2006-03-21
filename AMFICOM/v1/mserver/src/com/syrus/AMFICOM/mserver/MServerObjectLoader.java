@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerObjectLoader.java,v 1.19.2.2 2006/03/17 12:33:05 arseniy Exp $
+ * $Id: MServerObjectLoader.java,v 1.19.2.3 2006/03/21 09:39:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19.2.2 $, $Date: 2006/03/17 12:33:05 $
+ * @version $Revision: 1.19.2.3 $, $Date: 2006/03/21 09:39:39 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -111,7 +111,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 
 		if (!loadIds.isEmpty()) {
 			Log.debugMessage("Searching on all MCMs", Log.DEBUGLEVEL08);
-			for (final Iterator<Identifier> it = MeasurementServer.getMCMIds().iterator(); it.hasNext() && !loadIds.isEmpty();) {
+			for (final Iterator<Identifier> it = MeasurementServer.getInstance().getMCMIds().iterator(); it.hasNext() && !loadIds.isEmpty();) {
 				final Identifier mcmId = it.next();
 				if (this.preferredMCMId != null && mcmId.equals(this.preferredMCMId)) {
 					continue;
@@ -147,7 +147,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 
 		final Set<Identifier> loadButIds = Identifier.createSumIdentifiers(ids, objects);
 		final Set<T> loadedObjects = new HashSet<T>();
-		for (final Identifier mcmId : MeasurementServer.getMCMIds()) {
+		for (final Identifier mcmId : MeasurementServer.getInstance().getMCMIds()) {
 			try {
 				this.loadStorableObjectsButIdsByConditionFromMCM(mcmId, loadButIds, condition, loadedObjects);
 			}

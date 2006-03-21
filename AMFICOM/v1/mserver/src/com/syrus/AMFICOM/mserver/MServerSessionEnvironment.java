@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerSessionEnvironment.java,v 1.10 2005/11/28 12:35:30 arseniy Exp $
+ * $Id: MServerSessionEnvironment.java,v 1.10.2.1 2006/03/21 09:39:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.AMFICOM.mserver.corba.MServerPOATie;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/11/28 12:35:30 $
+ * @version $Revision: 1.10.2.1 $, $Date: 2006/03/21 09:39:39 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -30,7 +30,7 @@ final class MServerSessionEnvironment extends BaseSessionEnvironment {
 	private MServerSessionEnvironment(final MServerServantManager mServerServantManager,
 			final MServerPoolContext mServerPoolContext,
 			final MServer mServer) {
-		super(mServerServantManager, mServerPoolContext, mServer, new MeasurementServer.MServerLoginRestorer());
+		super(mServerServantManager, mServerPoolContext, mServer, MeasurementServer.getLoginRestorer());
 	}
 
 	public MServerServantManager getMServerServantManager() {
