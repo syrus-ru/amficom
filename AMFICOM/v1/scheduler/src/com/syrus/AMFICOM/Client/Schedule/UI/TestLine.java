@@ -196,6 +196,7 @@ final class TestLine extends TimeLine {
 			final SortedSet<TestTimeItem> testTimeItems,
 			final boolean unselect) {
 		boolean selected = false;
+
 		synchronized (this) {
 		for (final TestTimeItem testTimeItem : testTimeItems) {
 			if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.width) {
@@ -223,7 +224,7 @@ final class TestLine extends TimeLine {
 
 				if (!selectTheSameTest) {
 //					if (unselect) {
-						this.unselect();
+//						this.unselect();
 //					}
 
 					this.selectedTestIds.add(testTimeItem.testTimeLine.testId);
@@ -334,6 +335,7 @@ final class TestLine extends TimeLine {
 			return;
 		}
 
+		System.err.println("updateTest: " + this.hashCode());
 //		assert Log.debugMessage(this.title, Log.DEBUGLEVEL03);
 
 		final Set<Identifier> selectedTestIds2 =
@@ -391,6 +393,7 @@ final class TestLine extends TimeLine {
 			}
 		} // if
 		} // synchronized
+
 		super.repaint();
 		super.revalidate();
 	}
@@ -452,32 +455,69 @@ final class TestLine extends TimeLine {
 				}
 			}
 
+//// исходный Вовкин код. Что с ним делать и как он работал - не знаю
+//
+//			@Override
+//			public void mousePressed(MouseEvent e) {
+//				final int x = e.getX();
+//				final int y = e.getY();
+//				if (SwingUtilities.isLeftMouseButton(e)) {
+//
+//					boolean unselect = false;
+//					boolean selected = false;
+//
+//					if (TestLine.this.selectedItems != null && !e.isShiftDown()) {
+//						unselect = true;
+//					}
+//					if (!TestLine.this.timeItems.isEmpty() && y > getItemY()) {
+//						if (!(selected = selectTest(x, TestLine.this.timeItems, unselect))) {
+//							if (!(selected = selectTest(x, TestLine.this.unsavedTestTimeItems, unselect))) {
+////								TestLine.this.schedulerModel.unselectTests(TestLine.this);
+//								this.forwardMousePressedToParent(e);
+//							}
+//						}
+//					} else if (!(selected = selectTest(x, TestLine.this.unsavedTestTimeItems, unselect))) {
+//						this.forwardMousePressedToParent(e);
+//					}
+//
+//					if (unselect && !selected) {
+//						unselect();
+//					}
+//				} else if (SwingUtilities.isRightMouseButton(e)) {
+//					// popupRelativeX = x;
+//					// popupMenu.show(TimeStampsEditor.this, x, y);
+//				}
+//			}
+
 			@Override
 			public void mousePressed(MouseEvent e) {
 				final int x = e.getX();
 				final int y = e.getY();
 				if (SwingUtilities.isLeftMouseButton(e)) {
 
-					boolean unselect = false;
+					final boolean unselect = true;
+//						TestLine.this.selectedItems != null && !e.isShiftDown();
+
+					// сбрасываем выделение со всех тестов
+					System.err.println("unselect " + unselect
+							+ ", instanceof " + (TestLine.this.getParent() instanceof PlanPanel));
+					if (unselect && TestLine.this.getParent() instanceof PlanPanel) {
+						PlanPanel planPanel = (PlanPanel) TestLine.this.getParent();
+						planPanel.schedulerModel.unselectTests(this); // NB: source=TestLine.this не годится - чудесный PlanPanel не сбросит выделение; используем this MouseAdaper'а 
+					}
+
 					boolean selected = false;
 
-					if (TestLine.this.selectedItems != null && !e.isShiftDown()) {
-						unselect = true;
-					}
-					if (!TestLine.this.timeItems.isEmpty() && y > getItemY()) {
-						if (!(selected = selectTest(x, TestLine.this.timeItems, unselect))) {
-							if (!(selected = selectTest(x, TestLine.this.unsavedTestTimeItems, unselect))) {
-//								TestLine.this.schedulerModel.unselectTests(TestLine.this);
-								this.forwardMousePressedToParent(e);
-							}
+					if (y > getItemY()) {
+						selected =
+							selectTest(x, TestLine.this.timeItems, unselect) ||
+							selectTest(x, TestLine.this.unsavedTestTimeItems, unselect);
 						}
-					} else if (!(selected = selectTest(x, TestLine.this.unsavedTestTimeItems, unselect))) {
+					if (!selected) {
+						// тут может произойти лишняя работа по сбросу выделения теста - ну да ладно
 						this.forwardMousePressedToParent(e);
 					}
 
-					if (unselect && !selected) {
-						unselect();
-					}
 				} else if (SwingUtilities.isRightMouseButton(e)) {
 					// popupRelativeX = x;
 					// popupMenu.show(TimeStampsEditor.this, x, y);
