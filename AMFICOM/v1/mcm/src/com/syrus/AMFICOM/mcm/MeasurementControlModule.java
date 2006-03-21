@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementControlModule.java,v 1.146.2.7 2006/03/20 08:36:13 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146.2.8 2006/03/21 09:43:30 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146.2.7 $, $Date: 2006/03/20 08:36:13 $
+ * @version $Revision: 1.146.2.8 $, $Date: 2006/03/21 09:43:30 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -70,6 +70,11 @@ import com.syrus.util.database.DatabaseConnection;
 final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String APPLICATION_NAME = "mcm";
 	public static final String SETUP_OPTION = "-setup";
+
+
+	/*-********************************************************************
+	 * Keys.                                                              *
+	 **********************************************************************/
 
 	public static final String KEY_MCM_ID = "MCMID";
 	public static final String KEY_DB_HOST_NAME = "DBHostName";
@@ -86,6 +91,11 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String KEY_KIS_HOST_NAME = "KISHostName";
 	public static final String KEY_KIS_TCP_PORT = "KISTCPPort";
 
+
+	/*-********************************************************************
+	 * Default values.                                                    *
+	 **********************************************************************/
+
 	public static final String MCM_ID = "MCM_1";
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;	//sec
@@ -98,6 +108,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	public static final int KIS_CONNECTION_TIMEOUT = 120;	//sec
 	public static final String KIS_HOST_NAME = "127.0.0.1";
 	public static final short KIS_TCP_PORT = 7501;
+
 
 	private static final String PASSWORD = "mcm";
 
@@ -210,7 +221,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	private final long forwardProcessing;
 
 	/**
-	 * Знак работы главного цикла.
+	 * Знак работы главного цикла {@link #run()}.
 	 */
 	private boolean running;
 
@@ -224,7 +235,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	/**
 	 * Восстановитель сессии. См. {@link #getLoginRestorer()}.
 	 */
-	private static  MCMLoginRestorer loginRestorer;
+	private static MCMLoginRestorer loginRestorer;
 
 
 	public static void main(String[] args) {
@@ -342,7 +353,10 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	 * синхронизатора объектов и очереди событий.
 	 * 
 	 * @param moduleId
+	 *        Идентификатор данного модуля в системе.
 	 * @param systemUserLogin
+	 *        Имя пользователя, под которым данный модуль должен работать в
+	 *        системе.
 	 */
 	private MeasurementControlModule(final Identifier moduleId, final String systemUserLogin) {
 		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000, ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
@@ -545,11 +559,12 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	 * 
 	 * @param testIds
 	 */
-	void addNewTestIds(final Set<Identifier> testIds) {
+	synchronized void addNewTestIds(final Set<Identifier> testIds) {
 		assert testIds != null : NON_NULL_EXPECTED;
 		assert StorableObject.getEntityCodeOfIdentifiables(testIds) == TEST_CODE : ILLEGAL_ENTITY_CODE;
 
 		this.newTestIds.addAll(testIds);
+		this.notifyAll();
 	}
 
 	/**
@@ -558,11 +573,12 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	 * 
 	 * @param testIds
 	 */
-	void addStoppingTestIds(final Set<Identifier> testIds) {
+	synchronized void addStoppingTestIds(final Set<Identifier> testIds) {
 		assert testIds != null : NON_NULL_EXPECTED;
 		assert StorableObject.getEntityCodeOfIdentifiables(testIds) == TEST_CODE : ILLEGAL_ENTITY_CODE;
 
 		this.stoppingTestIds.addAll(testIds);
+		this.notifyAll();
 	}
 
 	/**
@@ -592,27 +608,27 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	}
 
 	/**
-	 * Главнй цикл.
+	 * Главный цикл.
 	 */
 	@Override
 	public void run() {
 		while (this.running) {
+
+			synchronized (this) {
+				while (this.newTestIds.isEmpty() && this.stoppingTestIds.isEmpty() && this.scheduledTests.isEmpty()) {
+					try {
+						sleep(super.initialTimeToSleep);
+					} catch (InterruptedException ie) {
+						Log.errorMessage(ie);
+					}
+				}
+			}
+
 			this.scheduleNewTests();
 
 			this.stopTests();
 
-			if (!this.scheduledTests.isEmpty()) {
-				if (this.scheduledTests.get(0).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing) {
-					final Test test = this.scheduledTests.remove(0);
-					this.startTestProcessor(test);
-				}
-			}
-
-			try {
-				sleep(super.initialTimeToSleep);
-			} catch (InterruptedException ie) {
-				Log.errorMessage(ie);
-			}
+			this.startScheduledTest();
 		}
 	}
 
@@ -730,6 +746,21 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			Log.errorMessage(ae);
 		}
 		this.stoppingTestIds.clear();
+	}
+
+	/**
+	 * Проверить, время начало ближайшего по времени назначенного задания. Если
+	 * оно меньше текущего времени - запустить это задание на выполнение.
+	 */
+	private void startScheduledTest() {
+		if (this.scheduledTests.isEmpty()) {
+			return;
+		}
+
+		if (this.scheduledTests.get(0).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing) {
+			final Test test = this.scheduledTests.remove(0);
+			this.startTestProcessor(test);
+		}
 	}
 
 	/**
