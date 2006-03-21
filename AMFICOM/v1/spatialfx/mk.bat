@@ -1,1 +1,0 @@
-nmake /f makespatialfx %1
