@@ -1,5 +1,5 @@
 /*-
- * $Id: EventServerImplementation.java,v 1.27 2006/03/15 16:20:34 bass Exp $
+ * $Id: EventServerImplementation.java,v 1.28 2006/03/21 08:45:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,13 @@ import static java.util.logging.Level.WARNING;
 
 import com.syrus.AMFICOM.eventv2.Event;
 import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
+import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.leserver.corba.EventServerPOA;
 import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2006/03/15 16:20:34 $
+ * @version $Revision: 1.28 $, $Date: 2006/03/21 08:45:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -45,14 +46,15 @@ final class EventServerImplementation extends EventServerPOA {
 		Log.debugMessage("Received " + idlEvents.length + " event(s)",
 				INFO);
 		for (final IdlEvent idlEvent : idlEvents) {
-			@SuppressWarnings(value = {"unchecked"})
-			final Event<? extends IdlEvent> event = idlEvent.getNativeEvent();
 			try {
+				final Event<?> event = idlEvent.getNativeEvent();
 				EventProcessorRegistry.processEvent(event);
 				Log.debugMessage("Event: " + event + " delivered successfully",
 						INFO);
 			} catch (final EventProcessingException epe) {
 				Log.debugMessage(epe, WARNING);
+			} catch (final IdlCreateObjectException coe) {
+				Log.debugMessage(coe, WARNING);
 			} catch (final Throwable t) {
 				Log.debugMessage(t, SEVERE);
 			}
