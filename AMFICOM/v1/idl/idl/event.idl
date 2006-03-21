@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.45.2.4 2006/03/20 08:02:20 arseniy Exp $
+ * $Id: event.idl,v 1.45.2.5 2006/03/21 13:45:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -136,7 +136,7 @@ module eventv2 {
 
 			IdlEventType getType();
 
-			eventv2::Event getNativeEvent();
+			eventv2::Event getNativeEvent() raises (general::corba::IdlCreateObjectException);
 		};
 		typedef sequence <IdlEvent> IdlEventSeq;
 
@@ -193,7 +193,12 @@ module eventv2 {
 			general::corba::IdlIdentifier getResultId();
 			general::corba::IdlIdentifier getMonitoredElementId();
 
-			factory init(in long long created,
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
 					in IdlMismatchData mismatchData,
 					in reflectometry::corba::IdlSeverity severity,
 					in IdlAnchorData anchorData,
