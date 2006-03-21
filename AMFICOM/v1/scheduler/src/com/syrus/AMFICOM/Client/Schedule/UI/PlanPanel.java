@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.81 2006/03/01 11:58:20 saa Exp $
+ * $Id: PlanPanel.java,v 1.82 2006/03/21 06:48:30 saa Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2006/03/01 11:58:20 $
+ * @version $Revision: 1.82 $, $Date: 2006/03/21 06:48:30 $
  * @author $Author: saa $
  * @module scheduler
  */
@@ -399,8 +399,8 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 
 	@Override
 	public String getToolTipText(final MouseEvent event) {
-		final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-		return sdf.format(this.getDateByMousePosition(event))
+		final SimpleDateFormat sdf1 = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+		return sdf1.format(this.getDateByMousePosition(event))
 //			+ ", (" + event.getX() + ", " + event.getY()+")"
 			;
 	}
@@ -433,11 +433,11 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		}
 	}
 
-	void update(	Date startDate,
-					int scale) {
+	void update(	Date startDate1,
+					int scale1) {
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		this.setScale(scale);
-		this.setStartDate(startDate);
+		this.setScale(scale1);
+		this.setStartDate(startDate1);
 		final SchedulerModel model = (SchedulerModel) this.aContext.getApplicationModel();
 		try {
 			model.updateTests(this.scaleStart, this.scaleEnd);
