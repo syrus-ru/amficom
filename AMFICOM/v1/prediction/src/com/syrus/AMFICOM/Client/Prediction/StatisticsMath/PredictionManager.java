@@ -1,5 +1,5 @@
 /*-
- * $Id: PredictionManager.java,v 1.5 2005/12/19 15:36:15 saa Exp $
+ * $Id: PredictionManager.java,v 1.6 2006/03/21 11:11:32 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
  * </p>
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/12/19 15:36:15 $
+ * @version $Revision: 1.6 $, $Date: 2006/03/21 11:11:32 $
  * @module prediction
  */
 public interface PredictionManager {
@@ -58,7 +58,9 @@ public interface PredictionManager {
 	MonitoredElement getMonitoredElement();
 
 	/**
-	 * ќпредел€ет AttenuationInformation
+	 * ќпредел€ет AttenuationInformation.
+	 * ќпределен, если {@link #hasAttenuationInfo} возвращает true,
+	 * но и в этом случае нет гарантии, что временной р€д будет непуст.
 	 * @param nEvent номер событи€
 	 * @return AttenuationInformation
 	 */
@@ -71,6 +73,21 @@ public interface PredictionManager {
 	Statistics getEnergyLossInfo(int nEvent);
 
 	Statistics getReflectanceInfo(int nEvent);
+
+	/**
+	 * ќпредел€ет наличие AttenuationInformation дл€ указанного событи€.
+	 * @param nEvent номер событи€
+	 * @return true, если AttenuationInformation определена.
+	 */
+	boolean hasAttenuationInfo(int nEvent);
+
+	boolean hasSplashAmplitudeInfo(int nEvent);
+
+	boolean hasAmplitudeInfo(int nEvent);
+
+	boolean hasEnergyLossInfo(int nEvent);
+
+	boolean hasReflectanceInfo(int nEvent);
 
 	/**
 	 * –ассчитать предсказанную р/г на заданную дату

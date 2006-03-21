@@ -1,5 +1,5 @@
 /*-
- * $Id: MTAEPredictionManager.java,v 1.3 2005/12/20 15:54:33 saa Exp $
+ * $Id: MTAEPredictionManager.java,v 1.4 2006/03/21 11:11:32 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 /**
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/12/20 15:54:33 $
+ * @version $Revision: 1.4 $, $Date: 2006/03/21 11:11:32 $
  * @module prediction
  */
 public class MTAEPredictionManager implements PredictionManager {
@@ -147,11 +147,25 @@ public class MTAEPredictionManager implements PredictionManager {
 	}
 
 	/**
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasAmplitudeInfo(int)
+	 */
+	public boolean hasAmplitudeInfo(int nEvent) {
+		return false;
+	}
+
+	/**
 	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#getAmplitudeInfo(int)
 	 * @throws UnsupportedOperationException not supported
 	 */
 	public Statistics getAmplitudeInfo(int nEvent) {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasSplashAmplitudeInfo(int)
+	 */
+	public boolean hasSplashAmplitudeInfo(int nEvent) {
+		return false;
 	}
 
 	/**
@@ -163,6 +177,13 @@ public class MTAEPredictionManager implements PredictionManager {
 	}
 
 	/**
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasAttenuationInfo(int)
+	 */
+	public boolean hasAttenuationInfo(int nEvent) {
+		return hasInfo(nEvent, attenuationExtractor);
+	}
+
+	/**
 	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#getAttenuationInfo(int)
 	 */
 	public Statistics getAttenuationInfo(int nEvent) {
@@ -170,10 +191,24 @@ public class MTAEPredictionManager implements PredictionManager {
 	}
 
 	/**
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasEnergyLossInfo(int)
+	 */
+	public boolean hasEnergyLossInfo(int nEvent) {
+		return hasInfo(nEvent, lossExtractor);
+	}
+
+	/**
 	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#getEnergyLossInfo(int)
 	 */
 	public Statistics getEnergyLossInfo(int nEvent) {
 		return getInfo(nEvent, lossExtractor, this.lossStatsCache, "db");
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasReflectanceInfo(int)
+	 */
+	public boolean hasReflectanceInfo(int nEvent) {
+		return false;
 	}
 
 	/**
@@ -254,7 +289,16 @@ public class MTAEPredictionManager implements PredictionManager {
 		double getParameter(DetailedEvent event);
 	}
 
-	public Statistics getInfo(int nEvent,
+	private boolean hasInfo(int nEvent,
+			InfoExtractor extractor) {
+		if (nEvent < 0 || nEvent >= this.base.getNEvents()) {
+			throw new IllegalArgumentException(
+					"nEvent " + nEvent + " / " + this.base.getNEvents());
+		}
+		return extractor.hasParameter(this.base.getDetailedEvent(nEvent));
+	}
+
+	private Statistics getInfo(int nEvent,
 			InfoExtractor extractor,
 			Statistics[] statsCache,
 			String dimension) {
@@ -270,7 +314,7 @@ public class MTAEPredictionManager implements PredictionManager {
 				if (nEv2 < 0)
 					continue; // no event
 				final DetailedEvent event =
-					this.data[i].getMtae().getDetailedEvent(nEvent);
+					this.data[i].getMtae().getDetailedEvent(nEvent); // FIXME: bug? nEv2 instead of nEvent
 				if (!extractor.hasParameter(event))
 					continue;
 				final double value = extractor.getParameter(event);

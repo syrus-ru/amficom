@@ -1,5 +1,5 @@
 /*-
- * $Id: RESPredictionManager.java,v 1.1 2005/12/19 15:36:15 saa Exp $
+ * $Id: RESPredictionManager.java,v 1.2 2006/03/21 11:11:32 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
  * Реализация {@link PredictionManager} через старые классы RE/SRE/REC/RES/RP
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/12/19 15:36:15 $
+ * @version $Revision: 1.2 $, $Date: 2006/03/21 11:11:32 $
  * @module prediction
  */
 public class RESPredictionManager implements PredictionManager {
@@ -114,5 +114,40 @@ public class RESPredictionManager implements PredictionManager {
 	}
 	private long getDate(int nTrace) {
         return this.res.statData[nTrace].date;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasAttenuationInfo(int)
+	 */
+	public boolean hasAttenuationInfo(int nEvent) {
+		return true;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasSplashAmplitudeInfo(int)
+	 */
+	public boolean hasSplashAmplitudeInfo(int nEvent) {
+		return true;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasAmplitudeInfo(int)
+	 */
+	public boolean hasAmplitudeInfo(int nEvent) {
+		return true;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasEnergyLossInfo(int)
+	 */
+	public boolean hasEnergyLossInfo(int nEvent) {
+		return true;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasReflectanceInfo(int)
+	 */
+	public boolean hasReflectanceInfo(int nEvent) {
+		return true;
 	}
 }
