@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.96.2.4 2006/02/15 19:33:05 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.96.2.5 2006/03/21 13:46:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import gnu.trove.TShortObjectHashMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.96.2.4 $, $Date: 2006/02/15 19:33:05 $
+ * @version $Revision: 1.96.2.5 $, $Date: 2006/03/21 13:46:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -103,6 +103,8 @@ public final class ObjectEntities {
 	public static final String EVENTSOURCE = "EventSource";
 	public static final String EVENT = "Event";
 	public static final String DELIVERYATTRIBUTES = "DeliveryAttributes";
+	public static final String REFLECTOGRAMMISMATCHEVENT = "ReflectogramMismatchEvent";
+	public static final String LINEMISMATCHEVENT = "LineMismatchEvent";
 
 
 	/*	##################################### Scheme ##################################### */
@@ -202,6 +204,8 @@ public final class ObjectEntities {
 	public static final short EVENTSOURCE_CODE = 0x0082;
 	public static final short EVENT_CODE = 0x0083;
 	public static final short DELIVERYATTRIBUTES_CODE = 0x0084;
+	public static final short REFLECTOGRAMMISMATCHEVENT_CODE = 0x0085;
+	public static final short LINEMISMATCHEVENT_CODE = 0x0086;
 
 	public static final short EVENT_TYPE_CODE = 0x00C1;
 
@@ -424,6 +428,8 @@ public final class ObjectEntities {
 		registerEntity(EVENTSOURCE_CODE, EVENTSOURCE);
 		registerEntity(EVENT_CODE, EVENT);
 		registerEntity(DELIVERYATTRIBUTES_CODE, DELIVERYATTRIBUTES);
+		registerEntity(REFLECTOGRAMMISMATCHEVENT_CODE, REFLECTOGRAMMISMATCHEVENT);
+		registerEntity(LINEMISMATCHEVENT_CODE, LINEMISMATCHEVENT);
 
 		registerEntity(SYSTEMUSER_CODE, SYSTEMUSER);
 		registerEntity(DOMAIN_CODE, DOMAIN);
