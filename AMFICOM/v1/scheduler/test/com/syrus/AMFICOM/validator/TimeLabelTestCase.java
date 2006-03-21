@@ -1,12 +1,12 @@
 /*-
- * $Id: TimeLabelTestCase.java,v 1.1 2006/02/16 12:33:28 bob Exp $
+ * $Id: TimeLabelTestCase.java,v 1.1 2006/03/21 16:04:29 bass Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheduler;
+package com.syrus.AMFICOM.validator;
 
 import com.syrus.AMFICOM.validator.OnceTimeLabel;
 import com.syrus.AMFICOM.validator.PeriodicalTimeLabel;
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.validator.TimeLabel;
 import junit.framework.TestCase;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2006/02/16 12:33:28 $
+ * @author $Author: bass $
+ * @version $Revision: 1.1 $, $Date: 2006/03/21 16:04:29 $
  * @module
  */
 public class TimeLabelTestCase extends TestCase {
