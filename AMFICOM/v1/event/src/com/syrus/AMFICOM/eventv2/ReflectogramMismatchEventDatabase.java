@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventDatabase.java,v 1.1.2.1 2006/03/21 15:49:03 bass Exp $
+ * $Id: ReflectogramMismatchEventDatabase.java,v 1.1.2.2 2006/03/21 16:27:29 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1.2.1 $, $Date: 2006/03/21 15:49:03 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/03/21 16:27:29 $
  * @module event
  */
 public final class ReflectogramMismatchEventDatabase extends
@@ -289,7 +289,7 @@ public final class ReflectogramMismatchEventDatabase extends
 				mismatch,
 				minMismatch,
 				maxMismatch,
-				anchor1 || anchor2,
+				anchor1 && anchor2,
 				anchor1Id,
 				anchor2Id,
 				anchor1Coord,
