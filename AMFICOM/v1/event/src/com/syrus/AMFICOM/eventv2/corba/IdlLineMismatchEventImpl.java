@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlLineMismatchEventImpl.java,v 1.6 2005/12/06 09:42:28 bass Exp $
+ * $Id: IdlLineMismatchEventImpl.java,v 1.6.2.1 2006/03/21 08:38:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialDat
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialDataPackage.IdlAffectedPathElementSpatious;
 import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchData;
 import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatch;
-import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.reflectometry.corba.IdlAlarmType;
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/12/06 09:42:28 $
+ * @version $Revision: 1.6.2.1 $, $Date: 2006/03/21 08:38:42 $
  * @module event
  */
 final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
@@ -190,14 +190,19 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	 * @see com.syrus.AMFICOM.general.corba.IdlStorableObject#getNative()
 	 */
 	@Override
-	public StorableObject getNative() throws IdlCreateObjectException {
-		throw new UnsupportedOperationException();
+	public DefaultLineMismatchEvent getNative() throws IdlCreateObjectException {
+		try {
+			return new DefaultLineMismatchEvent(this);
+		} catch (final CreateObjectException coe) {
+			throw coe.getIdlTransferable();
+		}
 	}
 
 	/**
+	 * @throws IdlCreateObjectException
 	 * @see IdlEvent#getNativeEvent()
 	 */
-	public LineMismatchEvent getNativeEvent() {
-		return DefaultLineMismatchEvent.valueOf(this);
+	public LineMismatchEvent getNativeEvent() throws IdlCreateObjectException {
+		return this.getNative();
 	}
 }

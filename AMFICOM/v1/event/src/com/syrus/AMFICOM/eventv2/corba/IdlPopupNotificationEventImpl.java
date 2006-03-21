@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPopupNotificationEventImpl.java,v 1.10 2006/03/15 16:44:45 bass Exp $
+ * $Id: IdlPopupNotificationEventImpl.java,v 1.10.2.1 2006/03/21 08:43:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.eventv2.DefaultPopupNotificationEvent;
 import com.syrus.AMFICOM.eventv2.PopupNotificationEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlEventPackage.IdlEventType;
 import com.syrus.AMFICOM.eventv2.corba.IdlNotificationEventPackage.IdlDeliveryMethod;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -22,7 +23,7 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2006/03/15 16:44:45 $
+ * @version $Revision: 1.10.2.1 $, $Date: 2006/03/21 08:43:00 $
  * @module event
  */
 final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
@@ -142,9 +143,15 @@ final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
 	}
 
 	/**
+	 * @throws IdlCreateObjectException
 	 * @see IdlEvent#getNativeEvent()
 	 */
-	public PopupNotificationEvent getNativeEvent() {
-		return DefaultPopupNotificationEvent.valueOf(this);
+	public PopupNotificationEvent getNativeEvent()
+	throws IdlCreateObjectException {
+		try {
+			return DefaultPopupNotificationEvent.valueOf(this);
+		} catch (final CreateObjectException coe) {
+			throw coe.getIdlTransferable();
+		}
 	}
 }
