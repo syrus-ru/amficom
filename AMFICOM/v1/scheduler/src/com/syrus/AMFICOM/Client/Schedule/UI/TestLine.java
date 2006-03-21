@@ -498,8 +498,6 @@ final class TestLine extends TimeLine {
 //						TestLine.this.selectedItems != null && !e.isShiftDown();
 
 					// сбрасываем выделение со всех тестов
-					System.err.println("unselect " + unselect
-							+ ", instanceof " + (TestLine.this.getParent() instanceof PlanPanel));
 					if (unselect && TestLine.this.getParent() instanceof PlanPanel) {
 						PlanPanel planPanel = (PlanPanel) TestLine.this.getParent();
 						planPanel.schedulerModel.unselectTests(this); // NB: source=TestLine.this не годится - чудесный PlanPanel не сбросит выделение; используем this MouseAdaper'а 
