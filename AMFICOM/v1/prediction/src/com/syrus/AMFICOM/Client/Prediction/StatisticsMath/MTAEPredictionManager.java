@@ -1,5 +1,5 @@
 /*-
- * $Id: MTAEPredictionManager.java,v 1.4 2006/03/21 11:11:32 saa Exp $
+ * $Id: MTAEPredictionManager.java,v 1.5 2006/03/21 11:36:53 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 /**
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2006/03/21 11:11:32 $
+ * @version $Revision: 1.5 $, $Date: 2006/03/21 11:36:53 $
  * @module prediction
  */
 public class MTAEPredictionManager implements PredictionManager {
@@ -314,7 +314,7 @@ public class MTAEPredictionManager implements PredictionManager {
 				if (nEv2 < 0)
 					continue; // no event
 				final DetailedEvent event =
-					this.data[i].getMtae().getDetailedEvent(nEvent); // FIXME: bug? nEv2 instead of nEvent
+					this.data[i].getMtae().getDetailedEvent(nEv2);
 				if (!extractor.hasParameter(event))
 					continue;
 				final double value = extractor.getParameter(event);
