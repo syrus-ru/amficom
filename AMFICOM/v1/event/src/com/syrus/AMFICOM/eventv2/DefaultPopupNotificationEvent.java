@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultPopupNotificationEvent.java,v 1.16 2006/02/22 08:44:04 bass Exp $
+ * $Id: DefaultPopupNotificationEvent.java,v 1.16.4.1 2006/03/21 08:37:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,13 +14,15 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlPopupNotificationEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlPopupNotificationEventHelper;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2006/02/22 08:44:04 $
+ * @version $Revision: 1.16.4.1 $, $Date: 2006/03/21 08:37:50 $
  * @module event
  */
 public final class DefaultPopupNotificationEvent extends
@@ -68,20 +70,13 @@ public final class DefaultPopupNotificationEvent extends
 	private Identifier affectedPathElementId;
 
 	private DefaultPopupNotificationEvent(
-			final IdlPopupNotificationEvent popupNotificationEvent) {
-		this.targetUserId = Identifier.valueOf(
-				popupNotificationEvent.getTargetUserId());
-		this.message = popupNotificationEvent.getMessage();
-		this.resultId = Identifier.valueOf(
-				popupNotificationEvent.getResultId());
-		this.mismatchOpticalDistance =
-				popupNotificationEvent.getMismatchOpticalDistance();
-		this.mismatchPhysicalDistance =
-				popupNotificationEvent.getMismatchPhysicalDistance();
-		this.mismatchCreated = new Date(popupNotificationEvent.getMismatchCreated());
-		this.severity = Severity.valueOf(popupNotificationEvent.getSeverity());
-		this.affectedPathElementId = Identifier.valueOf(
-				popupNotificationEvent.getAffectedPathElementId());
+			final IdlPopupNotificationEvent popupNotificationEvent)
+	throws CreateObjectException {
+		try {
+			this.fromIdlTransferable(popupNotificationEvent);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	private DefaultPopupNotificationEvent(
@@ -114,8 +109,29 @@ public final class DefaultPopupNotificationEvent extends
 				this.getAffectedPathElementId().getIdlTransferable(orb));
 	}
 
+	public void fromIdlTransferable(
+			final IdlPopupNotificationEvent popupNotificationEvent)
+	throws IdlConversionException {
+		synchronized (this) {
+			this.targetUserId = Identifier.valueOf(
+					popupNotificationEvent.getTargetUserId());
+			this.message = popupNotificationEvent.getMessage();
+			this.resultId = Identifier.valueOf(
+					popupNotificationEvent.getResultId());
+			this.mismatchOpticalDistance =
+					popupNotificationEvent.getMismatchOpticalDistance();
+			this.mismatchPhysicalDistance =
+					popupNotificationEvent.getMismatchPhysicalDistance();
+			this.mismatchCreated = new Date(popupNotificationEvent.getMismatchCreated());
+			this.severity = Severity.valueOf(popupNotificationEvent.getSeverity());
+			this.affectedPathElementId = Identifier.valueOf(
+					popupNotificationEvent.getAffectedPathElementId());
+		}
+	}
+
 	public static PopupNotificationEvent valueOf(
-			final IdlPopupNotificationEvent popupNotificationEvent) {
+			final IdlPopupNotificationEvent popupNotificationEvent)
+	throws CreateObjectException {
 		return new DefaultPopupNotificationEvent(popupNotificationEvent);
 	}
 

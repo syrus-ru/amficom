@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.8.2.1 2006/03/20 13:26:14 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.8.2.2 2006/03/21 08:37:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,14 +20,17 @@ import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialDat
 import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchData;
 import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatch;
 import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatchPair;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8.2.1 $, $Date: 2006/03/20 13:26:14 $
+ * @version $Revision: 1.8.2.2 $, $Date: 2006/03/21 08:37:50 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -98,36 +101,17 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	 */
 	private Date mismatchCreated;
 
-	private DefaultLineMismatchEvent(final IdlLineMismatchEvent lineMismatchEvent) {
-		this.alarmType = AlarmType.valueOf(lineMismatchEvent.getAlarmType());
-		this.severity = Severity.valueOf(lineMismatchEvent.getSeverity());
-
-		if (!!(this.mismatch = lineMismatchEvent.hasMismatch())) {
-			this.minMismatch = lineMismatchEvent.getMinMismatch();
-			this.maxMismatch = lineMismatchEvent.getMaxMismatch();
-
-			if (this.minMismatch > this.maxMismatch) {
-				throw new IllegalArgumentException();
-			}
+	/**
+	 * @param lineMismatchEvent
+	 * @throws CreateObjectException
+	 */
+	public DefaultLineMismatchEvent(final IdlLineMismatchEvent lineMismatchEvent)
+	throws CreateObjectException {
+		try {
+			this.fromIdlTransferable(lineMismatchEvent);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
 		}
-
-		this.affectedPathElementId = Identifier.valueOf(lineMismatchEvent.getAffectedPathElementId());
-
-		if (!!(this.affectedPathElementSpatious = lineMismatchEvent.isAffectedPathElementSpatious())) {
-			this.physicalDistanceToStart = lineMismatchEvent.getPhysicalDistanceToStart();
-			this.physicalDistanceToEnd = lineMismatchEvent.getPhysicalDistanceToEnd();
-
-			if (this.physicalDistanceToStart < 0) {
-				throw new IllegalArgumentException(String.valueOf(this.physicalDistanceToStart));
-			} else if (this.physicalDistanceToEnd < 0) {
-				throw new IllegalArgumentException(String.valueOf(this.physicalDistanceToEnd));
-			}
-		}
-
-		this.resultId = Identifier.valueOf(lineMismatchEvent.getResultId());
-		this.mismatchOpticalDistance = lineMismatchEvent.getMismatchOpticalDistance();
-		this.mismatchPhysicalDistance = lineMismatchEvent.getMismatchPhysicalDistance();
-		this.mismatchCreated = new Date(lineMismatchEvent.getMismatchCreated());
 	}
 
 	private DefaultLineMismatchEvent(final AlarmType alarmType,
@@ -212,9 +196,41 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 				this.mismatchCreated.getTime());
 	}
 
-	public static LineMismatchEvent valueOf(
-			final IdlLineMismatchEvent lineMismatchEvent) {
-		return new DefaultLineMismatchEvent(lineMismatchEvent);
+	public void fromIdlTransferable(final IdlLineMismatchEvent lineMismatchEvent)
+	throws IdlConversionException {
+		synchronized (this) {
+			super.fromIdlTransferable((IdlStorableObject) lineMismatchEvent);
+
+			this.alarmType = AlarmType.valueOf(lineMismatchEvent.getAlarmType());
+			this.severity = Severity.valueOf(lineMismatchEvent.getSeverity());
+
+			if (!!(this.mismatch = lineMismatchEvent.hasMismatch())) {
+				this.minMismatch = lineMismatchEvent.getMinMismatch();
+				this.maxMismatch = lineMismatchEvent.getMaxMismatch();
+
+				if (this.minMismatch > this.maxMismatch) {
+					throw new IllegalArgumentException();
+				}
+			}
+
+			this.affectedPathElementId = Identifier.valueOf(lineMismatchEvent.getAffectedPathElementId());
+
+			if (!!(this.affectedPathElementSpatious = lineMismatchEvent.isAffectedPathElementSpatious())) {
+				this.physicalDistanceToStart = lineMismatchEvent.getPhysicalDistanceToStart();
+				this.physicalDistanceToEnd = lineMismatchEvent.getPhysicalDistanceToEnd();
+
+				if (this.physicalDistanceToStart < 0) {
+					throw new IllegalArgumentException(String.valueOf(this.physicalDistanceToStart));
+				} else if (this.physicalDistanceToEnd < 0) {
+					throw new IllegalArgumentException(String.valueOf(this.physicalDistanceToEnd));
+				}
+			}
+
+			this.resultId = Identifier.valueOf(lineMismatchEvent.getResultId());
+			this.mismatchOpticalDistance = lineMismatchEvent.getMismatchOpticalDistance();
+			this.mismatchPhysicalDistance = lineMismatchEvent.getMismatchPhysicalDistance();
+			this.mismatchCreated = new Date(lineMismatchEvent.getMismatchCreated());
+		}
 	}
 
 	public static LineMismatchEvent valueOf(final AlarmType alarmType,
