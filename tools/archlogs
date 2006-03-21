@@ -115,7 +115,7 @@ do
 			;;
 		-p)
 			shift
-			if [ $# -gt 0 -a "$1" = `echo "$1" | $SED 's|-[a-zA-Z]||'` ]
+			if [ $# -gt 0 -a -d $1 ]
 			then
 				LOGS_DIR=$1
 			else
