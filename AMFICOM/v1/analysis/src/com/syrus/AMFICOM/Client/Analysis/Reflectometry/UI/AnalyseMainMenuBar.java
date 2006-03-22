@@ -36,6 +36,7 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 		final JMenuItem					menuTraceAddCompare				= new JMenuItem();
 		final JMenuItem					menuTraceRemoveCompare			= new JMenuItem();
 		final JMenuItem					menuTraceDownload				= new JMenuItem();
+		final JMenuItem					menuModelDownload				= new JMenuItem();
 //		final JMenuItem					menuTraceDownloadEtalon			= new JMenuItem();
 //		final JMenuItem					menuTraceCloseEtalon			= new JMenuItem();
 		final JMenuItem					menuTraceClose					= new JMenuItem();
@@ -133,6 +134,9 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 		menuTraceDownload.setText(LangModelAnalyse.getString("menuTraceDownload"));
 		menuTraceDownload.setName(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD);
 		menuTraceDownload.addActionListener(this.actionAdapter);
+		menuModelDownload.setText(LangModelAnalyse.getString("menuModelDownload"));
+		menuModelDownload.setName(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD);
+		menuModelDownload.addActionListener(this.actionAdapter);
 //		menuTraceDownloadEtalon.setText(LangModelAnalyse.getString("menuTraceDownloadEtalon"));
 //		menuTraceDownloadEtalon.setName("menuTraceDownloadEtalon");
 //		menuTraceDownloadEtalon.addActionListener(this.actionAdapter);
@@ -152,6 +156,7 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 		menuTraceSavePES.addActionListener(this.actionAdapter);
 
 		menuTrace.add(menuTraceDownload);
+		menuTrace.add(menuModelDownload);
 //		menuTrace.add(menuTraceDownloadEtalon);
 		menuTrace.add(menuTraceAddCompare);
 		menuTrace.addSeparator();
@@ -311,6 +316,8 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 
 				menuTraceDownload.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD));
 				menuTraceDownload.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD));
+				menuModelDownload.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD));
+				menuModelDownload.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD));
 //				menuTraceDownloadEtalon.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceDownloadEtalon"));
 //				menuTraceDownloadEtalon.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceDownloadEtalon"));
 				menuMakeCurrentTracePrimary.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible(AnalyseApplicationModel.MENU_TRACE_CURRENT_MAKE_PRIMARY));
