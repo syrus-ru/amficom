@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.179 2006/03/13 13:53:59 bass Exp $
+ * $Id: SchedulerModel.java,v 1.180 2006/03/22 09:41:14 saa Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,8 +73,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.179 $, $Date: 2006/03/13 13:53:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.180 $, $Date: 2006/03/22 09:41:14 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -978,7 +978,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_REFRESH_TESTS, null, changedTestId));
 	}
 
-	
 	private void generateTest() throws ApplicationException {
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 
@@ -991,11 +990,14 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 			final Date startTime = this.testTimeStamps.getStartTime();
 			
-			final Date endTime = this.testTimeStamps.getEndTime() != null ?
+			final Date endTime0 = this.testTimeStamps.getEndTime() != null ?
 					this.testTimeStamps.getEndTime() : this.testTimeStamps.getStartTime();
-				
+
 			final TestTemporalType temporalType = this.testTimeStamps.getTestTemporalType();
 			final AbstractTemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
+
+			final Date endTime = Test.normalizeEndDate(startTime, endTime0, temporalPattern, this.measurementSetup);
+
 			if (test == null) {
 				final String reason;
 				if ((reason = this.isValid(this.monitoredElement.getId(), 

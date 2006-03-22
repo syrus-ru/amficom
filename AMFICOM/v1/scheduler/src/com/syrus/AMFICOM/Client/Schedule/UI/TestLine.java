@@ -787,8 +787,7 @@ final class TestLine extends TimeLine {
 					testTimeLine.title = testTitle;
 					testTimeLine.startTime = time;
 					testTimeLine.duration = test.getEndTime().getTime()
-							- testTimeLine.startTime
-							+ measurementSetup.getMeasurementDuration();
+							- testTimeLine.startTime;
 
 					testTimeLine.color = color;
 					testTimeLine.selectedColor = selectedColor;
