@@ -1,7 +1,9 @@
--- $Id: DROP.sql,v 1.10 2005/07/24 15:42:19 bass Exp $
+-- $Id: DROP.sql,v 1.11 2006/03/22 08:53:27 bass Exp $
 
 -- 17. PathElement
 PROMPT 17. Dropping table PathElement...;
+ALTER TABLE ReflectogramMismatchEvent DROP CONSTRAINT rm_event_anchor1_fk;
+ALTER TABLE ReflectogramMismatchEvent DROP CONSTRAINT rm_event_anchor2_fk;
 DROP TABLE PathElement;
 DROP SEQUENCE PathElement_Seq;
 
