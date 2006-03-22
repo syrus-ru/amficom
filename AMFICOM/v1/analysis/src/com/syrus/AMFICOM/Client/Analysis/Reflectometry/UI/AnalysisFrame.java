@@ -13,9 +13,11 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.TraceResource;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
+import com.syrus.util.Log;
 
 public class AnalysisFrame extends ScalableFrame
 implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
@@ -95,15 +97,22 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 
 		if (id.equals(Heap.PRIMARY_TRACE_KEY) || id.equals(Heap.MODELED_TRACE_KEY))
 		{
-			try
-			{
-				MonitoredElement me = StorableObjectPool.getStorableObject(
-								new Identifier(pf.getBS().monitoredElementId), true);
-				setTitle(me.getName());
-			} catch(Exception ex)
-			{
-				setTitle(LangModelAnalyse.getString("analysisTitle"));
+			String title1;
+			final String meId = pf.getBS().monitoredElementId;
+			if (meId != null) {
+				try {
+					MonitoredElement me = StorableObjectPool.getStorableObject(new Identifier(meId), true);
+					title1 = me.getName();
+				} catch(ApplicationException ex) {
+					Log.errorMessage(ex);
+					title1 = LangModelAnalyse.getString("analysisTitle");
+				} catch (RuntimeException ex) {
+					title1 = LangModelAnalyse.getString("analysisTitle");
+				}
+			} else {
+				title1 = LangModelAnalyse.getString("analysisTitle");
 			}
+			setTitle(title1);
 
 			p = createSpecificAnalysisPanel(pf);
 			((AnalysisPanel)p).updEvents(id);
