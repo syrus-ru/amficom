@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementSetup.java,v 1.100.2.7 2006/03/22 16:51:32 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.100.2.8 2006/03/22 17:51:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.100.2.7 $, $Date: 2006/03/22 16:51:32 $
+ * @version $Revision: 1.100.2.8 $, $Date: 2006/03/22 17:51:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -206,7 +206,7 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 	protected boolean isValid() {
 		final boolean valid = super.isValid()
 				&& this.measurementTemplateId != null && this.measurementTemplateId.getMajor() == ACTIONTEMPLATE_CODE
-				&& this.analysisTemplateId != null && this.analysisTemplateId.getMajor() == ACTIONTEMPLATE_CODE;
+				&& this.analysisTemplateId != null && (this.analysisTemplateId.isVoid() || this.analysisTemplateId.getMajor() == ACTIONTEMPLATE_CODE);
 		if (!valid) {
 			return false;
 		}
@@ -214,7 +214,9 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 		if (this.actionTemplateIds == null) {
 			this.actionTemplateIds = new HashSet<Identifier>();
 			this.actionTemplateIds.add(this.measurementTemplateId);
-			this.actionTemplateIds.add(this.analysisTemplateId);
+			if (!this.analysisTemplateId.isVoid()) {
+				this.actionTemplateIds.add(this.analysisTemplateId);
+			}
 		}
 		try {
 			final Set<ActionTemplate> actionTemplates = StorableObjectPool.getStorableObjects(this.actionTemplateIds, true);
