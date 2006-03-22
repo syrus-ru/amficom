@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41.2.6 2006/03/22 13:08:47 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41.2.7 2006/03/22 16:55:47 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,7 @@ import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_IN;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_SELECT;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_TYPE_ID;
 import static com.syrus.AMFICOM.general.TableNames.ACTMPL_ME_LINK;
 import static com.syrus.AMFICOM.general.TableNames.MS_ME_LINK;
 import static com.syrus.AMFICOM.general.TableNames.TEST_MS_LINK;
@@ -72,7 +73,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 /**
- * @version $Revision: 1.41.2.6 $, $Date: 2006/03/22 13:08:47 $
+ * @version $Revision: 1.41.2.7 $, $Date: 2006/03/22 16:55:47 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -239,6 +240,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				}
 			case MEASUREMENTPORT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
+					case MEASUREMENTPORT_TYPE_CODE:
+						return super.getQuery(COLUMN_TYPE_ID);
 					case PORT_CODE:
 						return super.getQuery(COLUMN_PORT_ID);
 					case KIS_CODE:
