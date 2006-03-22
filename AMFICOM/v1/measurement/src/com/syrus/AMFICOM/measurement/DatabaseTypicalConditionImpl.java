@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.28.2.3 2006/02/22 15:48:56 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.28.2.4 2006/03/22 11:42:50 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
@@ -20,6 +21,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_HOSTNAME;
 import static com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternWrapper.COLUMN_PERIOD;
 import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_END_TIME;
 import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_START_TIME;
@@ -32,7 +34,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.28.2.3 $, $Date: 2006/02/22 15:48:56 $
+ * @version $Revision: 1.28.2.4 $, $Date: 2006/03/22 11:42:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -84,6 +86,9 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 				return key == COLUMN_CODENAME;
 			case ACTIONTEMPLATE_CODE:
 				return key == COLUMN_DESCRIPTION;
+			case KIS_CODE:
+				return key == COLUMN_NAME
+						|| key == COLUMN_HOSTNAME;
 			case MONITOREDELEMENT_CODE:
 				return key == COLUMN_NAME;
 			default:
