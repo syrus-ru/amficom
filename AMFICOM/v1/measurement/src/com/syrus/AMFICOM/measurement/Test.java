@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.189 2006/03/20 15:08:44 saa Exp $
+ * $Id: Test.java,v 1.190 2006/03/22 09:33:48 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.189 $, $Date: 2006/03/20 15:08:44 $
+ * @version $Revision: 1.190 $, $Date: 2006/03/22 09:33:48 $
  * @author $Author: saa $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -109,6 +109,7 @@ public final class Test extends StorableObject
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * XXX: предполагаем, что вызывающая сторона позаботится о нормализации
 	 */
 	Test(final Identifier id,
 			final Identifier creatorId,
@@ -150,7 +151,9 @@ public final class Test extends StorableObject
 	 * create new instance for client
 	 * @param creatorId
 	 * @param startTime
-	 * @param endTime
+	 * @param endTime ожидаемое время окончания измерений.
+	 *   Если оно еще не нормализовано, то вызывающей стороне придется самой
+	 *   позаботиться о нормализации.
 	 * @param temporalPatternId
 	 * @param temporalType
 	 * @param measurementType
@@ -243,7 +246,7 @@ public final class Test extends StorableObject
 			for(int index = 0; index < tt.stoppings.length; index++) {
 				this.stoppingMap.put(new Date(tt.stoppings[index].time), tt.stoppings[index].reason);
 			}
-			
+			this.timeStamps.normalize(this.mainMeasurementSetup); // XXX: вынужденная мера: для одноразовых тестов endTime по CORBA не передается
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
@@ -648,12 +651,57 @@ public final class Test extends StorableObject
 		}
 	}
 
+	/**
+	 * Нормализует конечную дату.
+	 * На данный момент поддерживает только одноразовые тесты и тесты
+	 * с периодическим временным шаблоном.
+	 * @param startTime начальная дата, not null
+	 * @param endTime ненормализованная конечная дате, не раньше startTime, not null
+	 * @param temporalPattern временной шаблон либо null для одноразового теста
+	 * @param measurementSetup параметры измерения (для определения
+	 *   продолжительности измерения)
+	 * @return нормализованная конечная дата. Если параметр endTime
+	 *   уже нормализован, то может возвращать тот же объект endTime.
+	 */
+	public static Date normalizeEndDate(Date startTime,
+			Date endTime,
+			AbstractTemporalPattern temporalPattern,
+			MeasurementSetup measurementSetup) {
+		assert startTime != null;
+		assert endTime != null;
+		assert measurementSetup != null;
+		assert !endTime.before(startTime);
+
+		long duration = measurementSetup.getMeasurementDuration();
+
+		final long start = startTime.getTime();
+		final long end = endTime.getTime();
+
+		final long normalizedEnd;
+		if (temporalPattern == null) {
+			normalizedEnd = start + duration;
+		} else {
+			assert (temporalPattern instanceof PeriodicalTemporalPattern) :
+				"Normalization of end time for " + temporalPattern.getClass().getName() + " is not supported";
+			final long period = ((PeriodicalTemporalPattern)temporalPattern)
+					.getPeriod();
+			normalizedEnd = start
+				+ period * ((end - start) / period)
+				+ duration;
+		}
+
+		if (end == normalizedEnd) {
+			return endTime;
+		}
+		return new Date(normalizedEnd);
+	}
+
 	public final class TestTimeStamps
 			implements IdlTransferableObject<IdlTestTimeStamps> {
 		private static final long serialVersionUID = -3560328752462377043L;
 
-		Date startTime;
-		Date endTime;
+		Date startTime; // not null
+		Date endTime; // not null
 		Identifier temporalPatternId;
 
 		private int	discriminator;		
@@ -663,10 +711,11 @@ public final class Test extends StorableObject
 				final Date endTime,
 				final Identifier temporalPatternId) {
 			this.discriminator = temporalType;
+			assert startTime != null;
 			switch (temporalType) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 					this.startTime = startTime;
-					this.endTime = this.startTime;
+					this.endTime = endTime != null ? endTime : startTime; // support for old contract
 					this.temporalPatternId = VOID_IDENTIFIER;
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
@@ -688,46 +737,28 @@ public final class Test extends StorableObject
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		}
 
-		boolean normalize(final MeasurementSetup measurementSetup) throws ApplicationException {
-			final long measurementDuration = 
-				measurementSetup.getMeasurementDuration();
-			final long start = this.startTime.getTime();
-			
+		boolean normalize(final MeasurementSetup measurementSetup)
+		throws ApplicationException {
+			final AbstractTemporalPattern temporalPattern;
 			switch (this.discriminator) {
 			case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-				{					
-					final long expectedEndTime = start + measurementDuration;
-					if (this.endTime == null || this.endTime.getTime() != expectedEndTime) {
-						this.endTime = new Date(expectedEndTime);
-						return true;
-					}
-				}
-				break;
-			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-				final AbstractTemporalPattern temporalPattern = 
-					StorableObjectPool.getStorableObject(this.temporalPatternId, true);
-				
-				assert (temporalPattern instanceof PeriodicalTemporalPattern) : 
-					temporalPattern.getClass().getName() + " doesn't support.";
-					
-				final PeriodicalTemporalPattern periodicalTemporalPattern = 
-					(PeriodicalTemporalPattern) temporalPattern;
-				
-				final long period = periodicalTemporalPattern.getPeriod();
-				final long end = this.endTime.getTime();
-				final long expectedEndTime = start
-					+ period * ((end - start)/period) 
-					+ measurementDuration;
-
-				if (end != expectedEndTime) {
-					this.endTime = new Date(expectedEndTime);
-					return true;
-				}
+				temporalPattern = null;
 				break;
 			default:
-				Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
-		}
-			return false;
+				temporalPattern = StorableObjectPool.getStorableObject(this.temporalPatternId, true);
+				assert(temporalPattern != null);
+			}
+			Date normalizedEnd = Test.normalizeEndDate(
+					this.startTime,
+					this.endTime,
+					temporalPattern,
+					measurementSetup);
+
+			if (normalizedEnd.equals(this.endTime)) {
+				return false;
+			}
+			this.endTime = normalizedEnd;
+			return true;
 		}
 
 		TestTimeStamps(final IdlTestTimeStamps ttst) {
@@ -735,7 +766,7 @@ public final class Test extends StorableObject
 			switch (this.discriminator) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 					this.startTime = new Date(ttst.startTime());
-					this.endTime = this.startTime;
+					this.endTime = this.startTime; // XXX: будет нормализован позднее
 					this.temporalPatternId = VOID_IDENTIFIER;
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
