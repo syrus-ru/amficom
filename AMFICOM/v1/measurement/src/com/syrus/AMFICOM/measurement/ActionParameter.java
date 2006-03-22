@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameter.java,v 1.1.2.12 2006/03/17 11:54:48 arseniy Exp $
+ * $Id: ActionParameter.java,v 1.1.2.13 2006/03/22 14:02:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@ package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_FOUND;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETERTYPEBINDING_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETER_CODE;
@@ -26,9 +27,8 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind;
@@ -38,7 +38,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.1.2.12 $, $Date: 2006/03/17 11:54:48 $
+ * @version $Revision: 1.1.2.13 $, $Date: 2006/03/22 14:02:26 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -220,15 +220,17 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 	public static Set<ActionParameter> getValues(final ActionParameterTypeBinding actionParameterTypeBinding) throws ApplicationException {
 		assert actionParameterTypeBinding != null : NON_NULL_EXPECTED;
 
-		return getValues(actionParameterTypeBinding.getId());
+		return actionParameterTypeBinding.getActionParameters();
 	}
 
 	public static Set<ActionParameter> getValues(final Identifier actionParameterTypeBindingId) throws ApplicationException {
 		assert actionParameterTypeBindingId != null : NON_NULL_EXPECTED;
 		assert actionParameterTypeBindingId.getMajor() == ACTIONPARAMETERTYPEBINDING_CODE : ILLEGAL_ENTITY_CODE;
 
-		final StorableObjectCondition condition = new LinkedIdsCondition(actionParameterTypeBindingId, ACTIONPARAMETER_CODE);
-		final Set<ActionParameter> actionParameters = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-		return actionParameters;
+		final ActionParameterTypeBinding actionParameterTypeBinding = StorableObjectPool.getStorableObject(actionParameterTypeBindingId, true);
+		if (actionParameterTypeBinding == null) {
+			throw new ObjectNotFoundException(OBJECT_NOT_FOUND + ": '" + actionParameterTypeBindingId + "'");
+		}
+		return getValues(actionParameterTypeBinding);
 	}
 }
