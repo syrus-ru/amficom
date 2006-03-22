@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractReflectogramMismatchEvent.java,v 1.5.2.2 2006/03/21 08:36:00 bass Exp $
+ * $Id: AbstractReflectogramMismatchEvent.java,v 1.5.2.3 2006/03/22 12:56:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.eventv2;
 import static com.syrus.AMFICOM.eventv2.EventType.REFLECTORGAM_MISMATCH;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.reflectometry.SOAnchor;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5.2.2 $, $Date: 2006/03/21 08:36:00 $
+ * @version $Revision: 1.5.2.3 $, $Date: 2006/03/22 12:56:56 $
  * @module event
  */
 public abstract class AbstractReflectogramMismatchEvent extends StorableObject
@@ -114,7 +114,14 @@ public abstract class AbstractReflectogramMismatchEvent extends StorableObject
 
 	@Override
 	protected final Set<Identifiable> getDependenciesTmpl() {
-		return Collections.emptySet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		if (this.hasAnchors()) {
+			dependencies.add(Identifier.valueOf(this.getAnchor1Id().getValue()));
+			dependencies.add(Identifier.valueOf(this.getAnchor2Id().getValue()));
+		}
+		dependencies.add(this.getResultId());
+		dependencies.add(this.getMonitoredElementId());
+		return dependencies;
 	}
 
 	@Override
@@ -125,7 +132,7 @@ public abstract class AbstractReflectogramMismatchEvent extends StorableObject
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.5.2.2 $, $Date: 2006/03/21 08:36:00 $
+	 * @version $Revision: 1.5.2.3 $, $Date: 2006/03/22 12:56:56 $
 	 * @module event
 	 */
 	final class SoAnchorImpl implements SOAnchor, Identifiable, Serializable {
