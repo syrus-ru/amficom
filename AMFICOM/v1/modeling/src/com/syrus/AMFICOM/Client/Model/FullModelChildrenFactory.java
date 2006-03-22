@@ -1,5 +1,5 @@
 /*-
- * $Id: FullModelChildrenFactory.java,v 1.1 2005/11/28 11:51:23 stas Exp $
+ * $Id: FullModelChildrenFactory.java,v 1.2 2006/03/22 14:39:54 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.util.Collection;
 
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.Analysis.UI.ModelChildrenFactory;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
-import com.syrus.AMFICOM.client.map.ui.MapEditorTreeModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
