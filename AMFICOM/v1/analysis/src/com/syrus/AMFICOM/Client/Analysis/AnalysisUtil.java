@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -284,7 +283,7 @@ public class AnalysisUtil
 	 */
 	public static boolean loadEtalon(MeasurementSetup ms)
 	throws DataFormatException, ApplicationException {
-		return loadEtalonEx(ms, false);
+		return loadEtalonEx(ms, true, false);
 	}
 
 	/**
@@ -298,7 +297,19 @@ public class AnalysisUtil
 	 */
 	public static boolean loadEtalonAsPrimary(MeasurementSetup ms)
 	throws DataFormatException, ApplicationException {
-		return loadEtalonEx(ms, true);
+		return loadEtalonEx(ms, false, true);
+	}
+
+	/**
+	 * «агружает эталон дважды - как первичную р/г и как эталон.
+	 *   использованию не рекомендуетс€ (но приходитс€).
+	 * @param ms
+	 * @throws ApplicationException 
+	 * @throws DataFormatException 
+	 */
+	public static boolean loadEtalonAsEtalonAndAsPrimary(MeasurementSetup ms)
+	throws DataFormatException, ApplicationException {
+		return loadEtalonEx(ms, true, true);
 	}
 
 	/**
@@ -316,7 +327,7 @@ public class AnalysisUtil
 	 * @throws DataFormatException Etalon object decoding failed
 	 * @throws ApplicationException Error while getting ME
 	 */
-	private static boolean loadEtalonEx(MeasurementSetup ms, boolean asPrimary)
+	private static boolean loadEtalonEx(MeasurementSetup ms, boolean asEtalon, boolean asPrimary)
 	throws DataFormatException, ApplicationException {
 		ReflectometryMeasurementSetup rms = new ReflectometryMeasurementSetup(ms);
 
@@ -340,19 +351,21 @@ public class AnalysisUtil
 			return false;
 		}
 		etalonBS.title =  makeEtalonRefName(getMEbyMS(ms), ms.getModified());// XXX: ms.getCreated()?
+		final PFTrace pfTrace = new PFTrace(etalonBS);
 		if (asPrimary) {
 			// загружаем как первичную р/г (не совсем корректно)
 			ModelTraceAndEventsImpl mtae = etalonObj.getMTM().getMTAE();
 			int traceLen = mtae.getModelTrace().getLength();
-			Heap.openPrimaryTrace(new Trace(new PFTrace(etalonBS),
+			Heap.openPrimaryTrace(new Trace(pfTrace,
 					etalonBS.title,
 					new AnalysisResult(traceLen, traceLen, mtae) // XXX: не знаем длину исходной рефлектограмм и используем то, что можно получить из MTAE
 					));
 			// устанавливаем refAnalysis и рассылаем сообщени€ об открытии
 			// primary trace + ref analysis
 			Heap.updatePrimaryAnalysis();
-		} else {
-			Heap.setEtalonPair(new PFTrace(etalonBS), etalonObj, etalonBS.title);
+		}
+		if (asEtalon) {
+			Heap.setEtalonPair(pfTrace, etalonObj, etalonBS.title);
 			//Heap.setEtalonEtalonMetas(metas);
 		}
 		return true;
