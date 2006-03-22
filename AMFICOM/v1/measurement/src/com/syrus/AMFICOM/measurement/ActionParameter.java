@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameter.java,v 1.1.2.13 2006/03/22 14:02:26 arseniy Exp $
+ * $Id: ActionParameter.java,v 1.1.2.14 2006/03/22 16:50:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETERTYPEBINDING_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
+import static com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind.ENUMERATED;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -38,7 +39,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.1.2.13 $, $Date: 2006/03/22 14:02:26 $
+ * @version $Revision: 1.1.2.14 $, $Date: 2006/03/22 16:50:11 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -112,7 +113,7 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 				throw new CreateObjectException(ae);
 			}
 			final ParameterValueKind valueKind = binding.getParameterValueKind();
-			if (valueKind == ParameterValueKind.ENUMERATED) {
+			if (valueKind == ENUMERATED) {
 				throw new CreateObjectException("Cannot create new ENUMERATED action parameter; binding :'" + bindingId + "'");
 			}
 		}
