@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.28.2.4 2006/03/22 11:42:50 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.28.2.5 2006/03/22 13:09:36 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.28.2.4 $, $Date: 2006/03/22 11:42:50 $
+ * @version $Revision: 1.28.2.5 $, $Date: 2006/03/22 13:09:36 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -85,6 +86,8 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 			case MEASUREMENTPORT_TYPE_CODE:
 				return key == COLUMN_CODENAME;
 			case ACTIONTEMPLATE_CODE:
+				return key == COLUMN_DESCRIPTION;
+			case MEASUREMENTPORT_CODE:
 				return key == COLUMN_DESCRIPTION;
 			case KIS_CODE:
 				return key == COLUMN_NAME
