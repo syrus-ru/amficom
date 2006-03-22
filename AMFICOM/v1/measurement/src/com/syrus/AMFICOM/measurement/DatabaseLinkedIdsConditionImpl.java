@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41.2.5 2006/03/02 16:07:08 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41.2.6 2006/03/22 13:08:47 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTRESULTPARAMETER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MODELINGRESULTPARAMETER_CODE;
@@ -43,6 +44,7 @@ import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_SELECT;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
 import static com.syrus.AMFICOM.general.TableNames.ACTMPL_ME_LINK;
+import static com.syrus.AMFICOM.general.TableNames.MS_ME_LINK;
 import static com.syrus.AMFICOM.general.TableNames.TEST_MS_LINK;
 import static com.syrus.AMFICOM.measurement.ActionParameterTypeBindingWrapper.COLUMN_ANALYSIS_TYPE_ID;
 import static com.syrus.AMFICOM.measurement.ActionParameterTypeBindingWrapper.COLUMN_MEASUREMENT_PORT_TYPE_ID;
@@ -70,7 +72,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 /**
- * @version $Revision: 1.41.2.5 $, $Date: 2006/03/02 16:07:08 $
+ * @version $Revision: 1.41.2.6 $, $Date: 2006/03/22 13:08:47 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -136,6 +138,15 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 						return super.getLinkedQuery(LINK_COLUMN_ACTION_TEMPLATE_ID,
 								LINK_COLUMN_MONITORED_ELEMENT_ID,
 								ACTMPL_ME_LINK);
+					default:
+						throw super.newExceptionLinkedEntityIllegal();
+				}
+			case MEASUREMENTSETUP_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+					case MONITOREDELEMENT_CODE:
+						return super.getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
+								MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID,
+								MS_ME_LINK);
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}

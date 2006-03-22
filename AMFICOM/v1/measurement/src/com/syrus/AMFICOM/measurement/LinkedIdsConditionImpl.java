@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.71.2.5 2006/03/02 16:07:08 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.71.2.6 2006/03/22 13:08:47 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.Domain;
@@ -47,7 +46,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71.2.5 $, $Date: 2006/03/02 16:07:08 $
+ * @version $Revision: 1.71.2.6 $, $Date: 2006/03/22 13:08:47 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -187,9 +186,19 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				final ActionTemplate actionTemplate = (ActionTemplate) storableObject;
 				switch (this.linkedEntityCode) {
 					case MONITOREDELEMENT_CODE:
-						final Set<Identifier> params = new HashSet<Identifier>();
-						params.addAll(actionTemplate.getMonitoredElementIds());
-						condition = super.conditionTest(params);
+						condition = super.conditionTest(actionTemplate.getMonitoredElementIds());
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
+				break;
+			case MEASUREMENTSETUP_CODE:
+				final MeasurementSetup measurementSetup = (MeasurementSetup) storableObject;
+				switch (this.linkedEntityCode) {
+					case MONITOREDELEMENT_CODE:
+						condition = super.conditionTest(measurementSetup.getMonitoredElementIds());
 						break;
 					default:
 						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
