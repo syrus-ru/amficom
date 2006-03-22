@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.13 2006/03/17 11:54:48 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.14 2006/03/22 14:01:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_FOUND;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.ONLY_ONE_EXPECTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETERTYPEBINDING_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
@@ -47,7 +48,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.1.2.13 $, $Date: 2006/03/17 11:54:48 $
+ * @version $Revision: 1.1.2.14 $, $Date: 2006/03/22 14:01:28 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -83,6 +84,8 @@ public final class ActionParameterTypeBinding extends StorableObject implements 
 	private Identifier parameterTypeId;
 	private Identifier actionTypeId;
 	private Identifier measurementPortTypeId;
+
+	private transient LinkedIdsCondition actionParameterCondition;
 
 	private static LinkedIdsCondition parameterTypeIdCondition;
 	private static LinkedIdsCondition actionTypeIdCondition;
@@ -238,6 +241,14 @@ public final class ActionParameterTypeBinding extends StorableObject implements 
 		return ActionParameterTypeBindingWrapper.getInstance();
 	}
 
+	public Set<ActionParameter> getActionParameters() throws ApplicationException {
+		if (this.actionParameterCondition == null) {
+			this.actionParameterCondition = new LinkedIdsCondition(this, ACTIONPARAMETER_CODE);
+		}
+
+		return StorableObjectPool.getStorableObjectsByCondition(this.actionParameterCondition, true);
+	}
+
 	public static ActionParameterTypeBinding valueOf(final ParameterType parameterType,
 			final ActionType actionType,
 			final MeasurementPortType measurementPortType) throws ApplicationException {
@@ -290,5 +301,4 @@ public final class ActionParameterTypeBinding extends StorableObject implements 
 		assert actionParameterTypeBindings.size() == 1 : ONLY_ONE_EXPECTED;
 		return actionParameterTypeBindings.iterator().next();
 	}
-
 }
