@@ -1,11 +1,13 @@
 /*
- * $Id: TestLoadTiming.java,v 1.3 2006/01/13 13:25:58 bass Exp $
+ * $Id: TestLoadTiming.java,v 1.3.2.1 2006/03/22 08:53:59 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.profiling;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTRESULTPARAMETER_CODE;
 
 import java.util.Set;
 
@@ -16,17 +18,15 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.Parameter;
-import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.MeasurementResultParameter;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2006/01/13 13:25:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.3.2.1 $, $Date: 2006/03/22 08:53:59 $
+ * @author $Author: arseniy $
  * @module test
  */
 public final class TestLoadTiming extends TestCase {
@@ -64,14 +64,13 @@ public final class TestLoadTiming extends TestCase {
 		public long profile(Identifier id) throws ApplicationException {
 			long t0 = System.nanoTime();
 			LinkedIdsCondition lic =
-				new LinkedIdsCondition(id, ObjectEntities.RESULT_CODE);
+				new LinkedIdsCondition(id, MEASUREMENTRESULTPARAMETER_CODE);
 			long t1 = System.nanoTime();
 			Set set = StorableObjectPool.getStorableObjectsByCondition(lic, true);
 			long t2 = System.nanoTime();
-			Result result = (Result) set.iterator().next();
+			MeasurementResultParameter measurementResultParameter = (MeasurementResultParameter) set.iterator().next();
 			long t3 = System.nanoTime();
-			Parameter[] parameters = result.getParameters();
-			System.out.println("nParams: " + parameters.length + "; "
+			System.out.println("nParams: " + measurementResultParameter.getTypeCodename() + "; "
 					+ "lic: " + (t1 - t0) / 1e6 + " ms; "
 					+ "getSOByC: " + (t2 - t1) / 1e6 + " ms; "
 					+ "iterator: " + (t3 - t2) / 1e6 + " ms");
@@ -101,7 +100,7 @@ public final class TestLoadTiming extends TestCase {
 			long t1 = System.nanoTime();
 			Measurement m = ((Analysis)ret).getMeasurement();
 			long t2 = System.nanoTime();
-			final Set<Result> results = m.getResults();
+			final Set<MeasurementResultParameter> results = m.getActionResultParameters();
 			long t3 = System.nanoTime();
 			System.out.println("getSO:   " + (t1 - t0) / 1e6 + " ms; "
 					+ "getMeas: " + (t2 - t1) / 1e6 + " ms; "

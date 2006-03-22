@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTestContext.java,v 1.4 2006/02/03 13:22:59 arseniy Exp $
+ * $Id: DatabaseTestContext.java,v 1.4.2.1 2006/03/22 08:53:59 arseniy Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,20 +63,24 @@ import com.syrus.AMFICOM.event.DeliveryAttributesDatabase;
 import com.syrus.AMFICOM.event.EventDatabase;
 import com.syrus.AMFICOM.event.EventSourceDatabase;
 import com.syrus.AMFICOM.event.EventTypeDatabase;
-import com.syrus.AMFICOM.general.ClientSessionEnvironment.SessionKind;
+import com.syrus.AMFICOM.measurement.ActionParameterDatabase;
+import com.syrus.AMFICOM.measurement.ActionParameterTypeBindingDatabase;
+import com.syrus.AMFICOM.measurement.ActionTemplateDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
-import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
-import com.syrus.AMFICOM.measurement.IntervalsTemporalPatternDatabase;
+import com.syrus.AMFICOM.measurement.AnalysisResultParameterDatabase;
+import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
 import com.syrus.AMFICOM.measurement.KISDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementPortDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementPortTypeDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementResultParameterDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.ModelingDatabase;
+import com.syrus.AMFICOM.measurement.ModelingResultParameterDatabase;
+import com.syrus.AMFICOM.measurement.ModelingTypeDatabase;
 import com.syrus.AMFICOM.measurement.MonitoredElementDatabase;
-import com.syrus.AMFICOM.measurement.ParameterSetDatabase;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
-import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.scheme.CableChannelingItemDatabase;
 import com.syrus.AMFICOM.scheme.PathElementDatabase;
@@ -102,7 +106,7 @@ import com.syrus.util.database.DatabaseConnection;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2006/02/03 13:22:59 $
+ * @version $Revision: 1.4.2.1 $, $Date: 2006/03/22 08:53:59 $
  * @module
  */
 public class DatabaseTestContext implements TestContext {
@@ -154,19 +158,24 @@ public class DatabaseTestContext implements TestContext {
 		DatabaseContext.registerDatabase(new CableThreadDatabase());
 
 		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
+		DatabaseContext.registerDatabase(new MeasurementTypeDatabase());
+		DatabaseContext.registerDatabase(new AnalysisTypeDatabase());
+		DatabaseContext.registerDatabase(new ModelingTypeDatabase());
+		DatabaseContext.registerDatabase(new ActionParameterTypeBindingDatabase());
+		DatabaseContext.registerDatabase(new KISDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
+		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
+		DatabaseContext.registerDatabase(new ActionParameterDatabase());
+		DatabaseContext.registerDatabase(new ActionTemplateDatabase());
+		DatabaseContext.registerDatabase(new PeriodicalTemporalPatternDatabase());
+		DatabaseContext.registerDatabase(new TestDatabase());
+		DatabaseContext.registerDatabase(new MeasurementSetupDatabase());
 		DatabaseContext.registerDatabase(new MeasurementDatabase());
 		DatabaseContext.registerDatabase(new AnalysisDatabase());
 		DatabaseContext.registerDatabase(new ModelingDatabase());
-		DatabaseContext.registerDatabase(new MeasurementSetupDatabase());
-		DatabaseContext.registerDatabase(new ResultDatabase());
-		DatabaseContext.registerDatabase(new ParameterSetDatabase());
-		DatabaseContext.registerDatabase(new TestDatabase());
-		DatabaseContext.registerDatabase(new CronTemporalPatternDatabase());
-		DatabaseContext.registerDatabase(new IntervalsTemporalPatternDatabase());
-		DatabaseContext.registerDatabase(new PeriodicalTemporalPatternDatabase());
-		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
-		DatabaseContext.registerDatabase(new KISDatabase());
-		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
+		DatabaseContext.registerDatabase(new MeasurementResultParameterDatabase());
+		DatabaseContext.registerDatabase(new AnalysisResultParameterDatabase());
+		DatabaseContext.registerDatabase(new ModelingResultParameterDatabase());
 
 		DatabaseContext.registerDatabase(new EventTypeDatabase());
 		DatabaseContext.registerDatabase(new EventSourceDatabase());

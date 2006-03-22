@@ -1,11 +1,13 @@
 /*
- * $Id: TestLoadTiming2.java,v 1.3 2006/01/20 17:08:24 saa Exp $
+ * $Id: TestLoadTiming2.java,v 1.3.2.1 2006/03/22 08:53:59 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.profiling;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTRESULTPARAMETER_CODE;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -27,11 +29,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.UniCommonTest;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.MeasurementResultParameter;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2006/01/20 17:08:24 $
- * @author $Author: saa $
+ * @version $Revision: 1.3.2.1 $, $Date: 2006/03/22 08:53:59 $
+ * @author $Author: arseniy $
  * @module test
  */
 public final class TestLoadTiming2 extends TestCase {
@@ -193,9 +195,9 @@ public final class TestLoadTiming2 extends TestCase {
 			for(Measurement m: TestLoadTiming2.this.measurements) {
 				long t0 = System.nanoTime();
 				LinkedIdsCondition lic =
-					new LinkedIdsCondition(m.getId(), ObjectEntities.RESULT_CODE);
+					new LinkedIdsCondition(m.getId(), MEASUREMENTRESULTPARAMETER_CODE);
 //				long t1 = System.nanoTime();
-				Set<Result> set =
+				Set<MeasurementResultParameter> set =
 					StorableObjectPool.getStorableObjectsByCondition(lic, true);
 				long t2 = System.nanoTime();
 				if (m.getId().getIdentifierCode() == 145241087982705227L)
@@ -228,9 +230,9 @@ public final class TestLoadTiming2 extends TestCase {
 					Arrays.asList(TestLoadTiming2.this.measurements));
 			LinkedIdsCondition lic =
 				new LinkedIdsCondition(Identifier.createIdentifiers(mset),
-						ObjectEntities.RESULT_CODE);
+						MEASUREMENTRESULTPARAMETER_CODE);
 			long t1 = System.nanoTime();
-			Set<Result> set =
+			Set<MeasurementResultParameter> set =
 				StorableObjectPool.getStorableObjectsByCondition(lic, true);
 			long t2 = System.nanoTime();
 			int setSize = set.size();
@@ -273,7 +275,7 @@ public final class TestLoadTiming2 extends TestCase {
 	private void operation1() throws ApplicationException {
 		final LinkedIdsCondition condition = new LinkedIdsCondition(
 				Identifier.valueOf(145241087982705227L),
-				ObjectEntities.RESULT_CODE);
+				MEASUREMENTRESULTPARAMETER_CODE);
 		Set set = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		System.out.println("test1()| set.size = " + set.size());
 	}

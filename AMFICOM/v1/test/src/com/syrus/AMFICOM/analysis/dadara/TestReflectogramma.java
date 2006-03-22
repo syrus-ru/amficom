@@ -1,11 +1,24 @@
 /*
- * $Id: TestReflectogramma.java,v 1.3 2005/12/15 13:42:41 arseniy Exp $
+ * $Id: TestReflectogramma.java,v 1.3.2.1 2006/03/22 08:53:59 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.analysis.dadara;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTRESULTPARAMETER;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.COMMA;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FROM;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_IN;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_SELECT;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.measurement.MeasurementResultParameterWrapper.COLUMN_MEASUREMENT_ID;
+import static com.syrus.AMFICOM.measurement.ParameterWrapper.COLUMN_VALUE;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,10 +29,7 @@ import java.sql.Statement;
 
 import junit.framework.TestCase;
 
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.AnalysisWrapper;
-import com.syrus.AMFICOM.measurement.ResultWrapper;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
@@ -27,7 +37,7 @@ import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/15 13:42:41 $
+ * @version $Revision: 1.3.2.1 $, $Date: 2006/03/22 08:53:59 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -72,22 +82,20 @@ public final class TestReflectogramma extends TestCase {
 	}
 
 	public void testRetrieve() throws SQLException, IOException {
-		final String sql = "SELECT " + StorableObjectWrapper.COLUMN_ID + ", " + ResultWrapper.LINK_COLUMN_PARAMETER_VALUE
-				+ " FROM " + ObjectEntities.RESULTPARAMETER
-				+ " WHERE " + ResultWrapper.LINK_COLUMN_RESULT_ID + " IN ("
-					+ "SELECT " + StorableObjectWrapper.COLUMN_ID
-					+ " FROM " + ObjectEntities.RESULT
-					+ " WHERE " + ResultWrapper.COLUMN_MEASUREMENT_ID + " IN ("
-						+ "SELECT " + AnalysisWrapper.COLUMN_MEASUREMENT_ID
-							+ " FROM " + ObjectEntities.ANALYSIS
-						+ ")"
-					+ ")";
+		final String sql = SQL_SELECT
+				+ COLUMN_ID + COMMA
+				+ COLUMN_VALUE
+				+ SQL_FROM + MEASUREMENTRESULTPARAMETER
+				+ SQL_WHERE + COLUMN_MEASUREMENT_ID + SQL_IN + OPEN_BRACKET
+					+ SQL_SELECT + AnalysisWrapper.COLUMN_MEASUREMENT_ID
+					+ SQL_FROM + ANALYSIS
+				+ CLOSE_BRACKET;
 		Connection connection = DatabaseConnection.getConnection();
 		Statement statement = connection.createStatement();
 		ResultSet resultSet = statement.executeQuery(sql);
 		while (resultSet.next()) {
-			final String idStr = resultSet.getString(StorableObjectWrapper.COLUMN_ID);
-			final byte[] ba = ByteArrayDatabase.toByteArray(resultSet.getBlob(ResultWrapper.LINK_COLUMN_PARAMETER_VALUE));
+			final String idStr = resultSet.getString(COLUMN_ID);
+			final byte[] ba = ByteArrayDatabase.toByteArray(resultSet.getBlob(COLUMN_VALUE));
 			final FileOutputStream fos = new FileOutputStream("ref" + idStr);
 			fos.write(ba, 0, ba.length);
 			fos.close();
