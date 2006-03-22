@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.13.2.6 2006/03/22 09:12:20 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.13.2.7 2006/03/22 16:49:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.13.2.6 $, $Date: 2006/03/22 09:12:20 $
+ * @version $Revision: 1.13.2.7 $, $Date: 2006/03/22 16:49:00 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -53,6 +53,7 @@ public final class MonitoredElement extends DomainMember implements IdlTransfera
 
 
 	public MonitoredElement(final IdlMonitoredElement met) throws CreateObjectException {
+		this.monitoredDomainMemberIds = new HashSet<Identifier>();
 		try {
 			this.fromIdlTransferable(met);
 		} catch (final IdlConversionException ice) {
@@ -139,7 +140,7 @@ public final class MonitoredElement extends DomainMember implements IdlTransfera
 
 		this.name = met.name;
 
-		this.monitoredDomainMemberIds = Identifier.fromTransferables(met.monitoredDomainMemberIds);
+		this.setMonitoredDomainMemberIds0(Identifier.fromTransferables(met.monitoredDomainMemberIds));
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}

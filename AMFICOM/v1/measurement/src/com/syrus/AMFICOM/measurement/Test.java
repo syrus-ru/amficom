@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.9 2006/03/17 11:54:48 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.10 2006/03/22 16:48:43 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -56,7 +56,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.9 $, $Date: 2006/03/17 11:54:48 $
+ * @version $Revision: 1.183.2.10 $, $Date: 2006/03/22 16:48:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -120,6 +120,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	public Test(final IdlTest idlTest) throws CreateObjectException {
+		this.measurementSetupIds = new HashSet<Identifier>();
 		try {
 			this.fromIdlTransferable(idlTest);
 		} catch (final IdlConversionException ice) {
@@ -376,7 +377,6 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		this.status = TestStatus.valueOf(idlTest.status);
 		this.temporalType = TestTemporalType.valueOf(idlTest.timeStamps.discriminator());
 		this.timeStamps = new TestTimeStamps(idlTest.timeStamps);
-		this.measurementSetupIds = new HashSet<Identifier>();
 		this.setMeasurementSetupIds0(Identifier.fromTransferables(idlTest.measurementSetupIds));
 		this.measurementTypeId = Identifier.valueOf(idlTest.measurementTypeId);
 		this.numberOfMeasurements = idlTest.numberOfMeasurements;
