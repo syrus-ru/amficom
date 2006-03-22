@@ -35,6 +35,7 @@ public class AnalyseApplicationModel extends ApplicationModel {
 	public static final String MENU_TRACE_SAVE_PATHELEMENTS = MENU_TRACE + ".Save_PES";
 	public static final String MENU_TRACE_CURRENT_MAKE_PRIMARY = MENU_TRACE + ".CurrentMakePrimary";
 	public static final String MENU_TRACE_CHECK_MISMATCH = MENU_TRACE + ".CheckMismatch";
+	public static final String MENU_MODELING_DOWNLOAD = MENU_TRACE + ".DownloadModeling";
 	
 	public static final String MENU_MEASUREMENTSETUP = MENU + ".Measurementsetup";
 	public static final String MENU_MEASUREMENTSETUP_CREATE = MENU_MEASUREMENTSETUP + ".Create";
@@ -90,6 +91,7 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		add(MENU_TRACE_ADD_COMPARE);
 		add(MENU_TRACE_REMOVE_COMPARE);
 		add(MENU_TRACE_DOWNLOAD);
+		add(MENU_MODELING_DOWNLOAD);
 //		add("menuTraceDownloadEtalon"); // нет
 //		add("menuTraceCloseEtalon"); // нет
 //		add("menuTraceReferenceClose"); // нет
@@ -136,6 +138,7 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		add(MENU_TRACE_CURRENT_MAKE_PRIMARY);
 		this.initUIConstats();
 		I18N.addResourceBundle("com.syrus.AMFICOM.client.report.report");
+		I18N.addResourceBundle("com.syrus.AMFICOM.resource.analysis");
 	}
 
 	private void initUIConstats() {

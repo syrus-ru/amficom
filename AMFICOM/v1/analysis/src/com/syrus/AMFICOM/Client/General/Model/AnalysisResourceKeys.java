@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.28 2006/03/14 12:19:24 saa Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.29 2006/03/22 14:12:30 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,17 @@
 
 package com.syrus.AMFICOM.Client.General.Model;
 
+import java.awt.Image;
+import java.awt.Toolkit;
+
+import javax.swing.ImageIcon;
+
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.28 $, $Date: 2006/03/14 12:19:24 $
- * @author $Author: saa $
+ * @version $Revision: 1.29 $, $Date: 2006/03/22 14:12:30 $
+ * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module analysis
  */
@@ -67,6 +72,7 @@ public interface AnalysisResourceKeys extends ResourceKeys {
 	String	ICON_ANALYSIS_INITIAL_ANALYSIS			= "com.syrus.AMFICOM.icon.analisys.initailAnalysis";
 	String	ICON_ANALYSIS_DEFAULT_ANALYSIS			= "com.syrus.AMFICOM.icon.analisys.defaultAnalysis";
 	String	ICON_ANALYSIS_DOWNLOAD_TRACE			= "com.syrus.AMFICOM.icon.analisys.downloadTrace";
+	String	ICON_ANALYSIS_DOWNLOAD_MODEL			= "com.syrus.AMFICOM.icon.analisys.downloadModel";
 	String	ICON_ANALYSIS_DOWNLOAD_ADD				= "com.syrus.AMFICOM.icon.analisys.downloadAdd";
 	String	ICON_ANALYSIS_DOWNLOAD_REMOVE			= "com.syrus.AMFICOM.icon.analisys.downloadRemove";
 	String	ICON_ANALYSIS_CHECK_MISMATCH			= "com.syrus.AMFICOM.icon.analisys.checkMismatch";
