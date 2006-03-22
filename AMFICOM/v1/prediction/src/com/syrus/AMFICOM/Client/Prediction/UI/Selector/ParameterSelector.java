@@ -2,15 +2,16 @@ package com.syrus.AMFICOM.Client.Prediction.UI.Selector;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
-import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import oracle.jdeveloper.layout.VerticalFlowLayout;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.WindowConstants;
 
-public class ParameterSelector extends JInternalFrame
-{
+import com.syrus.AMFICOM.client.event.Dispatcher;
+
+public class ParameterSelector extends JInternalFrame {
 	private JPanel jPanel1 = new JPanel();
-	private VerticalFlowLayout verticalFlowLayout1 = new VerticalFlowLayout();
 	private JRadioButton buttonAttenuation = new JRadioButton();
 	private JRadioButton buttonReflection = new JRadioButton();
 	private JRadioButton buttonAmplitude = new JRadioButton();
@@ -20,8 +21,7 @@ public class ParameterSelector extends JInternalFrame
 	public boolean attenuation=true;
 	public boolean reflection=false;
 
-	public ParameterSelector(Dispatcher dispatcher)
-	{
+	public ParameterSelector(Dispatcher dispatcher) {
 		setDispatcher(dispatcher);
 		try
 		{
@@ -34,7 +34,6 @@ public class ParameterSelector extends JInternalFrame
 	}
 	private void jbInit() throws Exception
 	{
-		jPanel1.setLayout(verticalFlowLayout1);
 		buttonAttenuation.setText("Затухание");
 		buttonAttenuation.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {

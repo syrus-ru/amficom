@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.Prediction.StatisticsMath;
 
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 
@@ -92,13 +91,37 @@ public class ReflectogrammPredictor
 			}
 		}
 
-		double []tmp =  ReflectogramMath.getReflectogrammFromEvents(prediction, prediction[prediction.length-1].end);
-
+//		double []tmp =  ReflectogramMath.getReflectogrammFromEvents(prediction, prediction[prediction.length-1].end);
+		double []tmp = setRefArray(prediction);  
 		predictedReflectogramm = new double[referenceArray.length];
 		for(int i=0; i<tmp.length; i++)
 		{
 			predictedReflectogramm[i] = tmp[i];
 		}
+	}
+	
+	double[] setRefArray(ReflectogramEvent[] eventParams)
+	{
+		double[] modelArray = new double[eventParams[eventParams.length-1].end];
+		double noise_ = 0.;
+
+		for(int i=0; i<eventParams.length; i++)
+		{
+			if(eventParams[i].getType() == ReflectogramEvent.CONNECTOR && i!=0)
+			{
+				noise_ += Math.abs(eventParams[i].a1_connector-eventParams[i].a2_connector)/50.;
+			}
+//      else if(eventParams[i].weldEvent ==1)
+//      {
+//        noise_ += Math.abs(eventParams[i].boost_weld)/10.;
+//      }
+
+			for(int j=eventParams[i].begin; j<=eventParams[i].end && j<modelArray.length; j++)
+			{
+				modelArray[j] = eventParams[i].refAmpl(j)[0];
+			}
+		}
+		return modelArray;
 	}
 
 	private void siewEvents(int n, double dA)

@@ -1,29 +1,35 @@
 package com.syrus.AMFICOM.Client.Prediction.UI.TimeDependence;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.table.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
 
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ATableFrame;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import javax.swing.ImageIcon;
+import javax.swing.JInternalFrame;
+import javax.swing.JScrollPane;
+import javax.swing.WindowConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ReportTable;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelPrediction;
-import com.syrus.AMFICOM.Client.General.UI.ATable;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionModel;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.Statistics;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.TimeDependenceData;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.client.UI.ATable;
 
 /**
- * @author: Levchenko Alexandre S.
+ * @author Levchenko Alexandre S.
  */
-public class TimeDependenceTable extends ATableFrame implements OperationListener
-{
-	Dispatcher dispatcher;
+public class TimeDependenceTable extends JInternalFrame implements ReportTable, ChangeListener {
 	JScrollPane scrollPane = new JScrollPane();
 	ATable dataTable = new ATable();
 	TimeDependenceTableModel timeDependenceTableModel;
 
-	public TimeDependenceTable(Dispatcher dispatcher)
-	{
-		this.setDispatcher(dispatcher);
+	public TimeDependenceTable() {
 		try
 		{
 			jbInit();
@@ -32,12 +38,14 @@ public class TimeDependenceTable extends ATableFrame implements OperationListene
 		{
 			e.printStackTrace();
 		}
+		
+		PredictionModel.addChangeListener(this);
 	}
 
 	private void jbInit() throws Exception
 	{
 		this.setClosable(true);
-		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setIconifiable(true);
 		this.setResizable(true);
 		this.getContentPane().setBackground(Color.white);
@@ -51,8 +59,6 @@ public class TimeDependenceTable extends ATableFrame implements OperationListene
 		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().
 		getImage("images/general.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		setTitle(LangModelPrediction.getString("TimedTableTitle"));
-
-//jTable.getColumnModel().getColumn(0).setPreferredWidth(120);
 
 		dataTable.getColumnModel().getColumn(0).setPreferredWidth(130);
 		dataTable.getColumnModel().getColumn(1).setPreferredWidth(40);
@@ -68,28 +74,13 @@ public class TimeDependenceTable extends ATableFrame implements OperationListene
 		return timeDependenceTableModel;
 	}
 
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, "timeDependentDataIsSet");
-	}
-
-	public void operationPerformed(OperationEvent oe)
-	{
-		if(oe.getActionCommand().equals("timeDependentDataIsSet"))
-		{
-			Object o = Pool.get("timeDependentDataId", "timeDependentDataId");
-			Object o2 = Pool.get("linearCoeffs", "MyLinearCoeffs");
-			Object o3 = Pool.get("dimension", "dimension");
-			if(o!=null && o2!=null)
-			{
-				setData((TimeDependenceData [])o, (com.syrus.AMFICOM.Client.Prediction.StatisticsMath.LinearCoeffs)o2, (String)o3);
-			}
-		}
-	}
-
 	private void setData(TimeDependenceData [] tdd, com.syrus.AMFICOM.Client.Prediction.StatisticsMath.LinearCoeffs linearCoeffs, String dim)
 	{
+		if (tdd.length == 0) {
+			timeDependenceTableModel.clearTable();
+			return;
+		}
+		
 		if(dim == null)
 			dim = "";
 		else if(dim.equals("connector_db"))
@@ -151,6 +142,13 @@ public class TimeDependenceTable extends ATableFrame implements OperationListene
 	};
 
 		this.timeDependenceTableModel.setTableData(data);
+	}
+
+	public void stateChanged(ChangeEvent e) {
+		if (e.getSource().equals(PredictionModel.class)) {
+			Statistics statistics = PredictionModel.getCurrentStatistics();
+			setData(statistics.getTimeDependence(), statistics.getLc(), statistics.getDimension());
+		}
 	}
 }
 

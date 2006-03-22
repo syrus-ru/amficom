@@ -1,174 +1,104 @@
 package com.syrus.AMFICOM.Client.General.Command.Prediction;
 
-import java.io.IOException;
-import java.util.*;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.measurement.*;
-import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.corba.*;
-import com.syrus.io.*;
-import com.syrus.util.ByteArray;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionModel;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.Modeling;
+import com.syrus.AMFICOM.measurement.ModelingType;
+import com.syrus.AMFICOM.measurement.Parameter;
+import com.syrus.AMFICOM.measurement.ParameterSet;
+import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
+import com.syrus.io.BellcoreStructure;
+import com.syrus.io.BellcoreWriter;
+import com.syrus.util.Log;
 
-public class SavePredictionCommand extends VoidCommand
-{
-	private Dispatcher dispatcher;
+public class SavePredictionCommand extends AbstractCommand {
 	ApplicationContext aContext;
-	String traceid;
-	Checker checker;
-
-	public SavePredictionCommand()
-	{
-	}
-
-	public SavePredictionCommand(Dispatcher dispatcher, ApplicationContext aContext)
-	{
-		this.dispatcher = dispatcher;
+	
+	public SavePredictionCommand(ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 
-	public Object clone()
-	{
-		return new SavePredictionCommand(dispatcher, aContext);
-	}
-
-	public void execute()
-	{
-		traceid = (String)Pool.get("predictedModel", "id");
-		if(traceid == null)
-		{
+	@Override
+	public void execute() {
+		BellcoreStructure bs = Heap.getPFTracePrimary().getBS();
+		if(bs == null) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка при сохранении модели.", "Ошибка", JOptionPane.OK_OPTION);
+			return;
+		}
+		
+		if(bs.monitoredElementId == null) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					"Нельзя сохранить модель, не связанную с измерительным устройством", 
+					"Ошибка", 
+					JOptionPane.OK_OPTION);
+			return;
+		}
+		
+		PredictionManager refStat = PredictionModel.getPredictionManager();
+		if(refStat == null) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка при сохранении модели.", "Ошибка", JOptionPane.OK_OPTION);
 			return;
 		}
 
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", traceid);
-		if(bs == null)
-		{
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка при сохранении модели.", "Ошибка", JOptionPane.OK_OPTION);
-			return;
-		}
-		PredictionManager refStat =
-			(PredictionManager)Pool.get("statData", "pmStatData");
-		if(refStat == null)
-		{
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка при сохранении модели.", "Ошибка", JOptionPane.OK_OPTION);
-			return;
-		}
-		if(Pool.get("predictionTime", bs.title) == null)
-		{
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка при сохранении модели.", "Ошибка", JOptionPane.OK_OPTION);
-			return;
-		}
+		Identifier userId = LoginManager.getUserId();
 
-		if(Pool.get("theModels", "savedModels") == null)
-		{
-			Pool.put("theModels", "savedModels", new Vector());
-		}
-
-		Vector savedModels = (Vector)Pool.get("theModels", "savedModels");
-		if(savedModels.contains(bs.title))
-		{
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Выбранная модель предсказания уже была сохранена.", "Ошибка", JOptionPane.OK_OPTION);
-			return;
-		}
-		else
-		{
-			savedModels.add(bs.title);
-		}
-
-//		String s = (String)JOptionPane.showInputDialog(null, "Название модели:", "", JOptionPane.OK_CANCEL_OPTION, null, new Object[] {bs.title}, bs.title);
-//    String s = JOptionPane.showInputDialog(null, "Название модели:", bs.title, JOptionPane.OK_CANCEL_OPTION);
-//    if (s == null || s.equals(""))
-//			return;
-
-//		Identifier modelingId = IdentifierPool.generateId(ObjectEntities.MODELING_ENTITY_CODE);
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
-		List meIds = new ArrayList(1);
-		meIds.add(bs.monitoredElementId);
+		Set<Identifier> meIds = new HashSet<Identifier>();
+		meIds.add(new Identifier(bs.monitoredElementId));
 
 		try {
-			SetParameter[] parameters = new SetParameter[3];
-
-			ParameterType ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.PREDICTION_TIME);
-			Long predictionTime = ((Long)Pool.get("predictionTime", bs.title));
-			parameters[0] = SetParameter.createInstance(
-					ptype,
-					ByteArray.toByteArray(predictionTime.longValue()));
-
-			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.PREDICTION_DATA_FROM);
-			parameters[1] = SetParameter.createInstance(
-					ptype,
-					ByteArray.toByteArray(refStat.getLowerTime()));
-
-			ptype = AnalysisUtil.getParameterType(userId,	ParameterTypeCodenames.PREDICTION_DATA_TO);
-			parameters[2] = SetParameter.createInstance(
-					ptype,
-					ByteArray.toByteArray(refStat.getUpperTime()));
-
-			Set argumentSet = Set.createInstance(
+			Parameter[] parameters = new Parameter[1];
+			parameters[0] = Parameter.createInstance(
+					ParameterType.REFLECTOGRAMMA,
+					new BellcoreWriter().write(bs));
+			
+			ParameterSet argumentSet = ParameterSet.createInstance(
 					userId,
-					SetSort.SET_SORT_ANALYSIS_CRITERIA,
+					ParameterSetSort.SET_SORT_MODELING_PARAMETERS,
 					"",
 					parameters,
 					meIds);
-
-			String name = bs.title;
+			
+			String title = bs.title + " (" + DateFormat.getDateTimeInstance().format(new Date(System.currentTimeMillis()))+ ")";
 			Modeling m = Modeling.createInstance(
 					userId,
-					new Identifier(bs.schemePathId),
+					ModelingType.DADARA_MODELING,
 					new Identifier(bs.monitoredElementId),
-					name,
-					argumentSet,
-					ModelingSort.MODELINGSORT_PREDICTION);
-
-			parameters = new SetParameter[1];
-			ptype = AnalysisUtil.getParameterType(userId,
-					ParameterTypeCodenames.REFLECTOGRAMMA);
-			parameters[0] = SetParameter.createInstance(
-					ptype,
-					new BellcoreWriter().write(bs));
-
-			m.createResult(
+					title,
+					argumentSet);
+			
+			Result r = m.createResult(
 					userId,
 					parameters);
-
-			MeasurementStorableObjectPool.putStorableObject(m);
-			MeasurementStorableObjectPool.flush(true);
-
-//		m.setTypeId("optprognosis");
-
+			
+			StorableObjectPool.putStorableObject(m);
+			StorableObjectPool.putStorableObject(r);
+			StorableObjectPool.flush(m, userId, false);
+			StorableObjectPool.flush(r, userId, false);
+			
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					"Модель сохранена под именем " + bs.title,
+					"Прогноз сохранен под именем :" + title,
 					"Сообщение",
 					JOptionPane.INFORMATION_MESSAGE);
-		}
-		catch (ApplicationException ex)
-		{
-			ex.printStackTrace();
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					"Ошибка сохранения прогнозируемой рефлектограммы на сервере",
-					"Ошибка",
-					JOptionPane.ERROR_MESSAGE);
-		}
-		catch (IOException ex)
-		{
-			ex.printStackTrace();
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					"Ошибка сохранения параметров прогнозирования",
-					"Ошибка",
-					JOptionPane.ERROR_MESSAGE);
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
 		}
 	}
 }

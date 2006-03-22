@@ -5,10 +5,10 @@ import java.util.Hashtable;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.analysis.dadara.Histogramm;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.ShortReflectogramEvent;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.io.BellcoreStructure;
 // Author: Alexandre S. Levchenko
@@ -137,7 +137,7 @@ public class ReflectoEventStatistics
 
 		if(reference.sre!= null && reference.sre[0].getType() == ReflectogramEvent.CONNECTOR) //connector;
 		{
-			maxRefValue = reference.sre[0].aLet + reference.sre[0].A1;
+			maxRefValue = reference.sre[0].aLet + reference.sre[0].a1;
 		}
 		else if(reference.re != null && reference.re[0].getType() == ReflectogramEvent.CONNECTOR)
 		{
@@ -158,7 +158,7 @@ public class ReflectoEventStatistics
 	public void getAmplitudeInformation(int nEvent) {
 		if(reference.re == null || nEvent<0 || nEvent>reference.re.length-1)
 			return;
-		trueGetAmplitudeInformation(nEvent).putIntoPool();
+//		trueGetAmplitudeInformation(nEvent).putIntoPool();
 	}
 
 	public Statistics trueGetAmplitudeInformation(int nEvent) {
@@ -212,14 +212,14 @@ public class ReflectoEventStatistics
 			{
 				if(statData[i].sre[0].getType() == ReflectogramEvent.CONNECTOR)
 				{
-					ampl = statData[i].sre[0].aLet + statData[i].sre[0].A1;
+					ampl = statData[i].sre[0].aLet + statData[i].sre[0].a1;
 				}
 				else
 				{
 					ampl = maxRefValue;
 				}
 
-				values[counter] = ampl - statData[i].sre[n].A1;
+				values[counter] = ampl - statData[i].sre[n].a1;
 				if(type == ReflectogramEvent.WELD) //Weld;
 				{
 					values[counter] = values[counter]+statData[i].sre[n].attenuation/2.;
@@ -231,7 +231,7 @@ public class ReflectoEventStatistics
 			{
 				if(statData[i].sre[0].getType() == ReflectogramEvent.CONNECTOR)
 				{
-					ampl = statData[i].sre[0].aLet + statData[i].sre[0].A1;
+					ampl = statData[i].sre[0].aLet + statData[i].sre[0].a1;
 				}
 				else
 				{
@@ -240,7 +240,7 @@ public class ReflectoEventStatistics
 
 				double tmp = (statData[i].sre[0].end - statData[i].sre[0].begin);
 				if(statData[i].sre.length>1 && statData[i].sre[1].getType() == ReflectogramEvent.LINEAR) //linear
-					tmp = statData[i].sre[1].A1 - tmp*statData[i].sre[1].attenuation;
+					tmp = statData[i].sre[1].a1 - tmp*statData[i].sre[1].attenuation;
 				else
 					tmp = 0;
 				values[counter] = ampl - tmp;
@@ -673,7 +673,7 @@ public class ReflectoEventStatistics
 		message += "Статистическая ошибка усреднения составляет " +
 							 String.valueOf((int)(Math.sqrt(nReflectogrammsForAveraging)*100)) +
 							 "%.";
-		JOptionPane.showMessageDialog(Environment.getActiveWindow(), message, "", JOptionPane.OK_OPTION);
+		JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), message, "", JOptionPane.OK_OPTION);
 
 		return meanReflectogramm;
 	}

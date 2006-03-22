@@ -1,10 +1,11 @@
 package com.syrus.AMFICOM.Client.Prediction.Report;
-
+/*
 import java.util.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelPrediction;
 import com.syrus.AMFICOM.Client.Analysis.Report.*;
+*/
 
 /**
  * <p>Title: </p>
@@ -15,6 +16,7 @@ import com.syrus.AMFICOM.Client.Analysis.Report.*;
  * @version 1.0
  */
 
+/*
 public class PredictionReportModel extends ESAPEReportModel
 {
 	public PredictionReportModel()
@@ -58,4 +60,4 @@ public class PredictionReportModel extends ESAPEReportModel
 
 		return strToReturn;
 	}
-}
+}*/

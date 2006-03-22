@@ -1,36 +1,28 @@
 package com.syrus.AMFICOM.Client.Prediction;
 
+import java.awt.Image;
 import java.awt.Toolkit;
-import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.DefaultPredictionApplicationModelFactory;
+import com.syrus.AMFICOM.client.model.AbstractApplication;
 
-public class Prediction
-{
-	ApplicationContext aContext = new ApplicationContext();
+public class Prediction extends AbstractApplication {
 
-	public Prediction(PredictionApplicationModelFactory factory)
-	{
-		if(!Environment.canRun(Environment.MODULE_PROGNOSIS))
-			return;
-
-		aContext.setApplicationModel(factory.create());
-
-		PredictionMDIMain frame = new PredictionMDIMain(aContext);
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("images/main/prognosis_mini.gif"));
-		frame.setVisible(true);
+	public static final String APPLICATION_NAME = "prediction";
+	
+	public Prediction() {
+		super(APPLICATION_NAME);
+	}		
+	
+	@Override
+	protected void init() {
+		super.aContext.setApplicationModel(new DefaultPredictionApplicationModelFactory().create());
+		Image image = Toolkit.getDefaultToolkit().getImage("images/main/prognosis_mini.gif");
+		// (Image) UIManager.get(ModelResourceKeys.ICON_MODEL_MAIN)
+		super.startMainFrame(new PredictionMDIMain(super.aContext), image);
 	}
-
-	public static void main(String[] args)
-	{
-		try
-		{
-			UIManager.setLookAndFeel(Environment.getLookAndFeel());
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		new Prediction(new DefaultPredictionApplicationModelFactory());
+	
+	public static void main(String[] args) {
+		new Prediction();
 	}
 }

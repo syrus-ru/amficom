@@ -5,82 +5,70 @@ import java.util.Date;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.Trace;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager;
-import com.syrus.AMFICOM.Client.Prediction.UI.Calendar.DateSelectionDialog;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionModel;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
+import com.syrus.AMFICOM.newFilter.DateSpinner;
 import com.syrus.io.BellcorePredictionWriter;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreWriter;
 
-public class CountPredictedReflectogramm
-		extends VoidCommand
-{
-	Dispatcher dispatcher;
+public class CountPredictedReflectogramm extends AbstractCommand {
 	ApplicationContext aContext;
-	PredictionManager pm;
+	
 	static SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy");
 
-	public CountPredictedReflectogramm(ApplicationContext aContext,
-																		 Dispatcher dispatcher)
-	{
+	public CountPredictedReflectogramm(ApplicationContext aContext) {
 		this.aContext = aContext;
-		this.dispatcher = dispatcher;
 	}
 
-	public Object clone()
-	{
-		return new CountPredictedReflectogramm(aContext, dispatcher);
-	}
+	public void execute() {
+		PredictionManager pm = PredictionModel.getPredictionManager();
 
-	public void execute()
-	{
-		pm = (PredictionManager)Pool.get("statData", "pmStatData");
-		if (pm == null) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					"Статистические данные не найдены",
-					"Ошибка",
-					JOptionPane.OK_OPTION);
+		DateSpinner dateSpinner = new DateSpinner();
+		int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), 
+				dateSpinner, "Дата прогнозирования", JOptionPane.OK_CANCEL_OPTION);
+		
+		if (res == JOptionPane.CANCEL_OPTION) {
 			return;
 		}
 
-		DateSelectionDialog dsd = new DateSelectionDialog(Environment.getActiveWindow(), "Дата прогнозирования");
-		if (dsd.retCode == DateSelectionDialog.CANCEL)
+		Date date = (Date)dateSpinner.getValue();
+
+		final double[] predictedReflectogramm = pm.getPredictedReflectogram(date.getTime());
+
+		if (predictedReflectogramm == null) {
+			
 			return;
+		}
 
-		long date = dsd.getDate();
-
-		final double[] predictedReflectogramm =
-			pm.getPredictedReflectogram(date);
-
-		if (predictedReflectogramm == null)
-			return;
-
-		String title = "Ожидание на " + sdf.format(new Date(date));
+		String title = "Ожидание на " + sdf.format(date);
 		MonitoredElement me = pm.getMonitoredElement();
 		title = title + ", трасса: " + me.getName();
 
-		BellcoreStructure main = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
+		BellcoreStructure main = Heap.getPrimaryTrace().getPFTrace().getBS();
+		
 		byte[] tmp = new BellcoreWriter().write(main);
 		BellcoreStructure bs = new BellcoreReader().getData(tmp);
-//		 bs.title = "(Идентификатор: "+String.valueOf(aContext.getDataSourceInterface().GetUId(Modeling.typ))+")  "+
-//              "Ожидание на" + sdf.format(new Date(date));
 
 		bs.title = title;
+		bs.monitoredElementId = me.getId().getIdentifierString();
 
 		BellcorePredictionWriter writer = new BellcorePredictionWriter(bs);
 		writer.setDataPoints(predictedReflectogramm);
 		writer.setTime(System.currentTimeMillis() / 1000);
 
-		Pool.put("bellcorestructure", bs.title, bs);
-		Pool.put("predictionTime", bs.title, new Long(date));
+		Trace tr = new Trace(bs, Heap.MODELED_TRACE_KEY, Heap.getMinuitAnalysisParams());
 
-		dispatcher.notify(new RefChangeEvent(bs.title, RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
+		Heap.putSecondaryTrace(tr);
+		Heap.setCurrentTrace(Heap.MODELED_TRACE_KEY);
+		Heap.setSecondaryTraceAsPrimary(Heap.MODELED_TRACE_KEY, true);
+		Heap.getPFTracePrimary();
 	}
 }

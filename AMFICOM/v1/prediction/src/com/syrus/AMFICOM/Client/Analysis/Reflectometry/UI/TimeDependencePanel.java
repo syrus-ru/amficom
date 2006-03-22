@@ -1,12 +1,18 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
 
-import java.awt.*;
+import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.*;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.LinearCoeffs;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.TimeDependenceData;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.util.Log;
 
 public class TimeDependencePanel extends TraceEventsPanel
 {
@@ -16,7 +22,6 @@ public class TimeDependencePanel extends TraceEventsPanel
 	protected TimeDependenceData[] data;
 	protected LinearCoeffs linearCoeffs;
 	public int c_event = 0;
-	public int type = 0;
 	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm");
 
 	protected boolean show_points = true;
@@ -44,7 +49,11 @@ public class TimeDependencePanel extends TraceEventsPanel
 	public void init (TimeDependenceData[] data)
 	{
 		this.data = data;
-
+		if (data.length == 0) {
+			Log.debugMessage("No TimeDependenceData", Level.FINER);
+			return;
+		}
+		
 		min_x = data[0].date;
 		max_x = data[0].date;
 		minY = data[0].value;
@@ -91,12 +100,13 @@ public class TimeDependencePanel extends TraceEventsPanel
 		c_event = num;
 	}
 
+	@Override
 	protected void paint_scales(Graphics g)
 	{
 		int jh = getHeight();
 		int jw = getWidth();
 
-		g.setColor(scaleColor);
+		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_SCALE));
 
 		double m = calcTimeDistance (cell_w / scaleX * Kx); // единиц на одно деление
 		double delta =	m * scaleX / Kx; // число экранных точек на одно деление
@@ -121,13 +131,50 @@ public class TimeDependencePanel extends TraceEventsPanel
 				g.drawLine(0, (int)(jh - (i * delta + x) - 1), jw,	(int)(jh - (i * delta + x) - 1));
 		}
 	}
+	
+	@Override
+	protected double calcNodeDistance(double d)
+	{
+		if (d < .000001) return .000001;
+		if (d < .000002) return .000002;
+		if (d < .000005) return .000005;
+		if (d < .00001) return .00001;
+		if (d < .00002) return .00002;
+		if (d < .00005) return .00005;
+		if (d < .0001) return .0001;
+		if (d < .0002) return .0002;
+		if (d < .0005) return .0005;
+		if (d < .001) return .001;
+		if (d < .002) return .002;
+		if (d < .005) return .005;
+		if (d < .01) return .01;
+		if (d < .02) return .02;
+		if (d < .05) return .05;
+		if (d < .1) return .1;
+		if (d < .2) return .2;
+		if (d < .5) return .5;
+		if (d < 1.) return 1.;
+		if (d < 2.) return 2.;
+		if (d < 5.) return 5.;
+		if (d < 10.) return 10.;
+		if (d < 20.) return 20.;
+		if (d < 50.) return 50.;
+		if (d < 100.) return 100.;
+		if (d < 200.) return 200.;
+		if (d < 500.) return 500.;
+		if (d < 1000.) return 1000.;
+		if (d < 2000.) return 2000.;
+		if (d < 5000.) return 5000.;
+		return 10000.;
+	}
 
+	@Override
 	protected void paint_scale_digits(Graphics g)
 	{
 		int jh = getHeight();
 		int jw = getWidth();
 
-		g.setColor(scaleDigitColor);
+		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_SCALE_DIGITS));
 
 		double m = calcTimeDistance (cell_w / scaleX * Kx); // единиц на одно деление
 		double delta =	m * scaleX / Kx; // число экранных точек на одно деление
@@ -151,7 +198,7 @@ public class TimeDependencePanel extends TraceEventsPanel
 			for (int i=0; i < jh / delta + 1; i++)
 			{
 				double d = (int)(((minY * Ky) + (top * Ky)) / m + i) * m;
-				g.drawString(String.valueOf(MathRef.round_4 (d)), 1, (int)(i * delta + x + 10));
+				g.drawString(String.valueOf(MathRef.floatRound(d, 6)), 1, (int)(i * delta + x + 10));
 			}
 		}
 		else
@@ -160,7 +207,7 @@ public class TimeDependencePanel extends TraceEventsPanel
 			for (int i=0; i < jh / delta + 2; i++)
 			{
 				double d = ((int)((minY * Ky) / m) * m) + (i + (int)(bottom * Ky / m) ) * m;
-				g.drawString(String.valueOf(MathRef.round_4 (d)), 1, (int)(jh - (i * delta + x) + 10));
+				g.drawString(String.valueOf(MathRef.floatRound(d, 6)), 1, (int)(jh - (i * delta + x) + 10));
 			}
 		}
 	}
