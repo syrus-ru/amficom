@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.132 2006/01/11 12:19:06 saa Exp $
+ * $Id: Heap.java,v 1.133 2006/03/22 09:41:37 stas Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -103,8 +103,8 @@ import com.syrus.util.Log;
  * 
  * 3. anchorer не может существовать без эталона
  * 
- * @author $Author: saa $
- * @version $Revision: 1.132 $, $Date: 2006/01/11 12:19:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.133 $, $Date: 2006/03/22 09:41:37 $
  * @module analysis
  */
 public class Heap
@@ -1318,9 +1318,22 @@ public class Heap
 	/**
 	 * Делает указанную вторичную рефлектограму первичной,
 	 * а старую первичную рефлектограмму - вторичной.
+	 * @deprecated use {@link #setSecondaryTraceAsPrimary(String, boolean) } instead
+	 * @throws IllegalArgumentException если указанной вторичной рефлектограммы нет
+	 */
+	@Deprecated
+	public static void setSecondaryTraceAsPrimary(String key) {
+		setSecondaryTraceAsPrimary(key, false);
+	}
+
+	/**
+	 * Делает указанную вторичную рефлектограму первичной.
+	 * @param replaceMode
+	 *   true чтобы удалить старую первичную рефлектограмму,
+	 *   false чтобы сделать старую первичную рефлектограмму вторичной.
 	 * @throws IllegalArgumentException если указанной вторичной рефлектограммы нет
 	 */ 
-	public static void setSecondaryTraceAsPrimary(String key) {
+	public static void setSecondaryTraceAsPrimary(String key, boolean replaceMode) {
 		Trace trace = Heap.getAnyTraceByKey(key);
 		if (! isTraceSecondary(key))
 			throw new IllegalArgumentException("There is no such secondary trace: " + key);
@@ -1344,8 +1357,10 @@ public class Heap
 		// проводим анализ первичной с оповещениеями
 		makePrimaryAnalysis();
 
-		// устанавливаем вторичную
-		putSecondaryTrace(oldPrimary);
+		if (!replaceMode) {
+			// устанавливаем вторичную
+			putSecondaryTrace(oldPrimary);
+		}
 	}
 
 	public static String getEtalonName() {
