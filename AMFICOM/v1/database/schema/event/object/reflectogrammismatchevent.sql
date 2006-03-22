@@ -1,4 +1,4 @@
--- $Id: reflectogrammismatchevent.sql,v 1.1 2006/03/22 08:53:27 bass Exp $
+-- $Id: reflectogrammismatchevent.sql,v 1.2 2006/03/22 17:04:32 bass Exp $
 
 CREATE TABLE ReflectogramMismatchEvent (
 	id NUMBER(19) NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE ReflectogramMismatchEvent (
 		AND anchor2_coord IS NOT NULL))),
 --
 	CONSTRAINT rm_event_result_fk FOREIGN KEY(result_id)
-		REFERENCES Result(id) ON DELETE SET NULL,
+		REFERENCES Result(id) ON DELETE SET NULL DISABLE,
 	CONSTRAINT rm_event_monitored_element_fk FOREIGN KEY(monitored_element_id)
 		REFERENCES MonitoredElement(id) ON DELETE SET NULL
 );
