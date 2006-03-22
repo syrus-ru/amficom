@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.96.2.5 2006/03/21 13:46:12 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.96.2.6 2006/03/22 08:34:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import gnu.trove.TShortObjectHashMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.96.2.5 $, $Date: 2006/03/21 13:46:12 $
+ * @version $Revision: 1.96.2.6 $, $Date: 2006/03/22 08:34:27 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -82,7 +82,6 @@ public final class ObjectEntities {
 	public static final String MODELING = "Modeling";
 	public static final String TEST = "Test";
 	public static final String MEASUREMENTSETUP = "MeasurementSetup";
-	public static final String RESULTPARAMETER = "ResultParameter";
 	public static final String CRONTEMPORALPATTERN = "CronTemporalPattern";
 	public static final String INTERVALSTEMPORALPATTERN = "ITempPattern";
 	public static final String PERIODICALTEMPORALPATTERN = "PeriodicalTemporalPattern";
