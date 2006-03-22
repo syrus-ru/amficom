@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplate.java,v 1.1.2.9 2006/03/17 11:54:48 arseniy Exp $
+ * $Id: ActionTemplate.java,v 1.1.2.10 2006/03/22 16:51:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.1.2.9 $, $Date: 2006/03/17 11:54:48 $
+ * @version $Revision: 1.1.2.10 $, $Date: 2006/03/22 16:51:32 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -73,6 +73,8 @@ public final class ActionTemplate extends StorableObject implements IdlTransfera
 	}
 
 	public ActionTemplate(final IdlActionTemplate idlActionTemplate) throws CreateObjectException {
+		this.actionParameterIds = new HashSet<Identifier>();
+		this.monitoredElementIds = new HashSet<Identifier>();
 		try {
 			this.fromIdlTransferable(idlActionTemplate);
 		} catch (final IdlConversionException ice) {

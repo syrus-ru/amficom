@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementSetup.java,v 1.100.2.6 2006/03/17 11:54:48 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.100.2.7 2006/03/22 16:51:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.100.2.6 $, $Date: 2006/03/17 11:54:48 $
+ * @version $Revision: 1.100.2.7 $, $Date: 2006/03/22 16:51:32 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -77,6 +77,7 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 	}
 
 	public MeasurementSetup(final IdlMeasurementSetup idlMeasurementSetup) throws CreateObjectException {
+		this.monitoredElementIds = new HashSet<Identifier>();
 		try {
 			this.fromIdlTransferable(idlMeasurementSetup);
 		} catch (final IdlConversionException ice) {
