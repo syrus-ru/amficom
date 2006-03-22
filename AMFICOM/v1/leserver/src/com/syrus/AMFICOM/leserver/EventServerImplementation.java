@@ -1,5 +1,5 @@
 /*-
- * $Id: EventServerImplementation.java,v 1.28 2006/03/21 08:45:21 bass Exp $
+ * $Id: EventServerImplementation.java,v 1.29 2006/03/22 12:21:14 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingExc
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2006/03/21 08:45:21 $
+ * @version $Revision: 1.29 $, $Date: 2006/03/22 12:21:14 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -54,6 +54,7 @@ final class EventServerImplementation extends EventServerPOA {
 			} catch (final EventProcessingException epe) {
 				Log.debugMessage(epe, WARNING);
 			} catch (final IdlCreateObjectException coe) {
+				Log.debugMessage(coe.detailMessage, WARNING);
 				Log.debugMessage(coe, WARNING);
 			} catch (final Throwable t) {
 				Log.debugMessage(t, SEVERE);
