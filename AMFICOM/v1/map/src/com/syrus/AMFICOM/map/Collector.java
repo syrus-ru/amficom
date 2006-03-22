@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.110 2006/03/15 14:47:33 bass Exp $
+ * $Id: Collector.java,v 1.111 2006/03/22 16:47:15 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,8 +56,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: bass $
- * @version $Revision: 1.110 $, $Date: 2006/03/15 14:47:33 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.111 $, $Date: 2006/03/22 16:47:15 $
  * @module map
  */
 public final class Collector extends StorableObject
@@ -76,6 +76,7 @@ public final class Collector extends StorableObject
 	private transient boolean alarmState = false;
 
 	public Collector(final IdlCollector ct) throws CreateObjectException {
+		this.physicalLinkIds = new HashSet<Identifier>();
 		try {
 			this.fromIdlTransferable(ct);
 		} catch (final IdlConversionException ice) {
@@ -130,8 +131,7 @@ public final class Collector extends StorableObject
 		this.name = ct.name;
 		this.description = ct.description;
 
-		final Set<Identifier> ids = Identifier.fromTransferables(ct.physicalLinkIds);
-		this.physicalLinkIds = ids;
+		this.setPhysicalLinkIds0(Identifier.fromTransferables(ct.physicalLinkIds));
 	}
 
 	@Override

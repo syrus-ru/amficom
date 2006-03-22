@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.130 2006/03/22 16:25:01 arseniy Exp $
+ * $Id: Map.java,v 1.131 2006/03/22 16:47:15 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.130 $, $Date: 2006/03/22 16:25:01 $
+ * @version $Revision: 1.131 $, $Date: 2006/03/22 16:47:15 $
  * @module map
  */
 public final class Map extends DomainMember
@@ -156,6 +156,17 @@ public final class Map extends DomainMember
 	}
 	
 	public Map(final IdlMap mt) throws CreateObjectException {
+		this.siteNodeIds = new HashSet<Identifier>();
+		this.topologicalNodeIds = new HashSet<Identifier>();
+		this.nodeLinkIds = new HashSet<Identifier>();
+		this.physicalLinkIds = new HashSet<Identifier>();
+		this.markIds = new HashSet<Identifier>();
+		this.collectorIds = new HashSet<Identifier>();
+
+		this.mapIds = new HashSet<Identifier>();
+		this.mapLibraryIds = new HashSet<Identifier>();
+		this.externalNodeIds = new HashSet<Identifier>();
+
 		try {
 			this.fromIdlTransferable(mt);
 		} catch (final IdlConversionException ice) {
@@ -218,15 +229,17 @@ public final class Map extends DomainMember
 		this.name = mt.name;
 		this.description = mt.description;
 
-		this.siteNodeIds = Identifier.fromTransferables(mt.siteNodeIds);
-		this.topologicalNodeIds = Identifier.fromTransferables(mt.topologicalNodeIds);
-		this.nodeLinkIds = Identifier.fromTransferables(mt.nodeLinkIds);
-		this.physicalLinkIds = Identifier.fromTransferables(mt.physicalLinkIds);
-		this.markIds = Identifier.fromTransferables(mt.markIds);
-		this.collectorIds = Identifier.fromTransferables(mt.collectorIds);
-		this.mapIds = Identifier.fromTransferables(mt.mapIds);
-		this.externalNodeIds = Identifier.fromTransferables(mt.externalNodeIds);
-		this.mapLibraryIds = Identifier.fromTransferables(mt.mapLibraryIds);
+		this.setSiteNodeIds0(Identifier.fromTransferables(mt.siteNodeIds));
+		this.setTopologicalNodeIds0(Identifier.fromTransferables(mt.topologicalNodeIds));
+		this.setNodeLinkIds0(Identifier.fromTransferables(mt.nodeLinkIds));
+		this.setPhysicalLinkIds0(Identifier.fromTransferables(mt.physicalLinkIds));
+		this.setMarkIds0(Identifier.fromTransferables(mt.markIds));
+		this.setCollectorIds0(Identifier.fromTransferables(mt.collectorIds));
+
+		this.setMapIds0(Identifier.fromTransferables(mt.mapIds));
+		this.setExternalNodeIds0(Identifier.fromTransferables(mt.externalNodeIds));
+		this.setMapLibraryIds0(Identifier.fromTransferables(mt.mapLibraryIds));
+
 		this.transientFieldsInitialized = false;
 	}
 	
