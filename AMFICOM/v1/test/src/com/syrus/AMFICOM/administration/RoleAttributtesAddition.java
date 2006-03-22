@@ -1,5 +1,5 @@
 /*
- * $Id: RoleAttributtesAddition.java,v 1.4 2006/02/17 12:04:55 arseniy Exp $
+ * $Id: RoleAttributtesAddition.java,v 1.5 2006/03/22 11:12:38 stas Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -50,8 +50,8 @@ import com.syrus.util.Log;
  * 
  * Sets Administration permission to Media Monitoring Administrator role added on 14/12/2005
  * 
- * @version $Revision: 1.4 $, $Date: 2006/02/17 12:04:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2006/03/22 11:12:38 $
+ * @author $Author: stas $
  * @module test
  */
 public class RoleAttributtesAddition extends TestCase {
@@ -69,7 +69,7 @@ public class RoleAttributtesAddition extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testCreateDefaultDeliveryRule() throws ApplicationException {
+	public void _testCreateDefaultDeliveryRule() throws ApplicationException {
 		final Identifier systemUserId = LoginManager.getUserId();
 		final SystemUser systemUser = StorableObjectPool.getStorableObject(systemUserId, true);
 
@@ -109,8 +109,112 @@ public class RoleAttributtesAddition extends TestCase {
 			fail(size + " e-mail addresses found");
 		}
 	}
+	
+	public void testCreateRoleAttributtesPrediction() throws ApplicationException {
+		final Identifier userId = LoginManager.getUserId();
 
-	public void testCreateAdditionalRoleAttributtes() throws ApplicationException {
+		{
+			final Set<Role> roles = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(RoleCodename.ANALYST.getCodename(), 
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.ROLE_CODE,
+						StorableObjectWrapper.COLUMN_CODENAME), true);
+			
+			assert !roles.isEmpty();
+			
+			final Role analyst = roles.iterator().next(); 
+			final Set<PermissionAttributes> attributes = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new CompoundCondition(
+						new TypicalCondition(Module.PREDICTION,
+							OperationSort.OPERATION_EQUALS,
+							ObjectEntities.PERMATTR_CODE,
+							PermissionAttributesWrapper.COLUMN_MODULE),
+						CompoundConditionSort.AND,
+						new LinkedIdsCondition(analyst, 
+							ObjectEntities.PERMATTR_CODE)), 
+					true);
+			
+			PermissionAttributes permissionAttributes; 
+			if (attributes.isEmpty()) {
+				permissionAttributes = 
+					PermissionAttributes.createInstance(userId, 
+						Identifier.VOID_IDENTIFIER, 
+						analyst.getId(), 
+						Module.PREDICTION);
+			} else { 
+				permissionAttributes = attributes.iterator().next();
+			}
+			
+			final PermissionAttributes.PermissionCodename[] codenames = new PermissionAttributes.PermissionCodename[]{		
+				PermissionAttributes.PermissionCodename.PREDICTION_ENTER,
+				PermissionAttributes.PermissionCodename.PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM,
+			};
+			
+			for (final PermissionAttributes.PermissionCodename codename : codenames) {
+				permissionAttributes.setPermissionEnable(codename, true);
+			}
+		}
+		
+		StorableObjectPool.flush(ObjectEntities.PERMATTR_CODE, userId, true);
+		StorableObjectPool.flush(ObjectEntities.ROLE_CODE, userId, true);
+		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, userId, true);
+	}
+	
+	public void testCreateRoleAttributtesModeling() throws ApplicationException {
+		final Identifier userId = LoginManager.getUserId();
+
+		{
+			final Set<Role> roles = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(RoleCodename.PLANNER.getCodename(), 
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.ROLE_CODE,
+						StorableObjectWrapper.COLUMN_CODENAME), true);
+			
+			assert !roles.isEmpty();
+			
+			final Role analyst = roles.iterator().next(); 
+			final Set<PermissionAttributes> attributes = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new CompoundCondition(
+						new TypicalCondition(Module.MODELING,
+							OperationSort.OPERATION_EQUALS,
+							ObjectEntities.PERMATTR_CODE,
+							PermissionAttributesWrapper.COLUMN_MODULE),
+						CompoundConditionSort.AND,
+						new LinkedIdsCondition(analyst, 
+							ObjectEntities.PERMATTR_CODE)), 
+					true);
+			
+			PermissionAttributes permissionAttributes; 
+			if (attributes.isEmpty()) {
+				permissionAttributes = 
+					PermissionAttributes.createInstance(userId, 
+						Identifier.VOID_IDENTIFIER, 
+						analyst.getId(), 
+						Module.PREDICTION);
+			} else { 
+				permissionAttributes = attributes.iterator().next();
+			}
+			
+			final PermissionAttributes.PermissionCodename[] codenames = new PermissionAttributes.PermissionCodename[]{		
+				PermissionAttributes.PermissionCodename.PREDICTION_ENTER,
+				PermissionAttributes.PermissionCodename.PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM,
+			};
+			
+			for (final PermissionAttributes.PermissionCodename codename : codenames) {
+				permissionAttributes.setPermissionEnable(codename, true);
+			}
+		}
+		
+		StorableObjectPool.flush(ObjectEntities.PERMATTR_CODE, userId, true);
+		StorableObjectPool.flush(ObjectEntities.ROLE_CODE, userId, true);
+		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, userId, true);
+	}
+
+	public void _testCreateAdditionalRoleAttributtes() throws ApplicationException {
 		final Identifier userId = LoginManager.getUserId();
 
 		{
