@@ -10,6 +10,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelPrediction;
 import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.Model.PredictionApplicationModel;
 import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
@@ -45,6 +46,20 @@ public class PredictionToolBar extends AbstractMainToolBar {
 		traceRemoveCompare.setName(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE);
 		traceRemoveCompare.addActionListener(super.actionListener);
 		
+		final JButton traceDownload = new JButton();
+		traceDownload.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_TRACE));
+		traceDownload.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		traceDownload.setToolTipText(LangModelAnalyse.getString("menuTraceDownload"));
+		traceDownload.setName(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD);
+		traceDownload.addActionListener(super.actionListener);
+		
+		final JButton modelDownload = new JButton();
+		modelDownload.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_MODEL));
+		modelDownload.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		modelDownload.setToolTipText(LangModelAnalyse.getString("menuModelDownload"));
+		modelDownload.setName(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD);
+		modelDownload.addActionListener(super.actionListener);
+		
 		final JButton countPrediction = new JButton();
 		countPrediction.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/perform_analysis.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		countPrediction.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
@@ -61,6 +76,9 @@ public class PredictionToolBar extends AbstractMainToolBar {
 		
 		addSeparator();
 		add(loadStatistics);
+		addSeparator();
+		add(traceDownload);
+		add(modelDownload);
 		add(traceAddCompare);
 		add(traceRemoveCompare);
 		addSeparator();
@@ -76,6 +94,10 @@ public class PredictionToolBar extends AbstractMainToolBar {
 				ApplicationModel aModel = PredictionToolBar.this.getApplicationModel();
 				loadStatistics.setVisible(aModel.isVisible(PredictionApplicationModel.MENU_VIEW_DATA_LOAD));
 				loadStatistics.setEnabled(aModel.isEnabled(PredictionApplicationModel.MENU_VIEW_DATA_LOAD));
+				traceDownload.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD));
+				traceDownload.setEnabled(aModel.isEnabled(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD));
+				modelDownload.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD));
+				modelDownload.setEnabled(aModel.isEnabled(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD));
 				traceAddCompare.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE));
 				traceAddCompare.setEnabled(aModel.isEnabled(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE));
 				traceRemoveCompare.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE));

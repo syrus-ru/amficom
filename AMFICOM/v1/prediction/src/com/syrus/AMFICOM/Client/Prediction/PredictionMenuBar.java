@@ -22,11 +22,14 @@ public class PredictionMenuBar extends AbstractMainMenuBar {
 	protected void addMenuItems() {
 		final JMenu menuView = new JMenu();
 		final JMenuItem menuViewDataLoad = new JMenuItem();
-		final JMenuItem menuTraceAddCompare = new JMenuItem();
-		final JMenuItem menuTraceRemoveCompare = new JMenuItem();
-		final JMenuItem menuTraceClose = new JMenuItem();
 		final JMenuItem menuViewCountPrediction = new JMenuItem();
 		final JMenuItem menuViewSavePrediction = new JMenuItem();
+
+		final JMenu						menuTrace						= new JMenu();
+		final JMenuItem					menuTraceAddCompare				= new JMenuItem();
+		final JMenuItem					menuTraceRemoveCompare			= new JMenuItem();
+		final JMenuItem					menuTraceDownload				= new JMenuItem();
+		final JMenuItem					menuModelDownload				= new JMenuItem();
 		
 		final JMenu menuReport = new JMenu();
 		final JMenuItem menuReportCreate = new JMenuItem();
@@ -38,15 +41,20 @@ public class PredictionMenuBar extends AbstractMainMenuBar {
 		menuViewDataLoad.setName(PredictionApplicationModel.MENU_VIEW_DATA_LOAD);
 		menuViewDataLoad.addActionListener(super.actionAdapter);
 		
+		menuTrace.setText(LangModelAnalyse.getString("menuTrace"));
+		menuTrace.setName(AnalyseApplicationModel.MENU_TRACE);
 		menuTraceAddCompare.setText(LangModelAnalyse.getString("menuTraceAddCompare"));
 		menuTraceAddCompare.setName(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE);
-		menuTraceAddCompare.addActionListener(super.actionAdapter);
+		menuTraceAddCompare.addActionListener(this.actionAdapter);
 		menuTraceRemoveCompare.setText(LangModelAnalyse.getString("menuTraceRemoveCompare"));
 		menuTraceRemoveCompare.setName(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE);
-		menuTraceRemoveCompare.addActionListener(super.actionAdapter);
-		menuTraceClose.setText(LangModelAnalyse.getString("menuFileClose"));
-		menuTraceClose.setName(AnalyseApplicationModel.MENU_FILE_CLOSE);
-		menuTraceClose.addActionListener(super.actionAdapter);
+		menuTraceRemoveCompare.addActionListener(this.actionAdapter);
+		menuTraceDownload.setText(LangModelAnalyse.getString("menuTraceDownload"));
+		menuTraceDownload.setName(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD);
+		menuTraceDownload.addActionListener(this.actionAdapter);
+		menuModelDownload.setText(LangModelAnalyse.getString("menuModelDownload"));
+		menuModelDownload.setName(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD);
+		menuModelDownload.addActionListener(this.actionAdapter);
 		
 		menuViewCountPrediction.setText(LangModelPrediction.getString("menuViewCountPrediction"));
 		menuViewCountPrediction.setName(PredictionApplicationModel.MENU_VIEW_COUNT_PREDICTION);
@@ -64,15 +72,19 @@ public class PredictionMenuBar extends AbstractMainMenuBar {
 		menuReport.add(menuReportCreate);
 		
 		menuView.add(menuViewDataLoad);
-		menuView.add(menuTraceAddCompare);
-		menuView.addSeparator();
-		menuView.add(menuTraceClose);
-		menuView.add(menuTraceRemoveCompare);
 		menuView.addSeparator();
 		menuView.add(menuViewCountPrediction);
 		menuView.add(menuViewSavePrediction);
+
+		menuTrace.add(menuTraceDownload);
+		menuTrace.add(menuModelDownload);
+		menuTrace.add(menuTraceAddCompare);
+		menuTrace.addSeparator();
+		menuTrace.add(menuTraceRemoveCompare);
+
 		
 		add(menuView);
+		add(menuTrace);
 		add(menuReport);
 		
 		this.addApplicationModelListener(new ApplicationModelListener() {
@@ -98,8 +110,10 @@ public class PredictionMenuBar extends AbstractMainMenuBar {
 				menuTraceAddCompare.setEnabled(aModel.isEnabled(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE));
 				menuTraceRemoveCompare.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE));
 				menuTraceRemoveCompare.setEnabled(aModel.isEnabled(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE));
-				menuTraceClose.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_FILE_CLOSE));
-				menuTraceClose.setEnabled(aModel.isEnabled(AnalyseApplicationModel.MENU_FILE_CLOSE));
+				menuTraceDownload.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD));
+				menuTraceDownload.setEnabled(aModel.isEnabled(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD));
+				menuModelDownload.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD));
+				menuModelDownload.setEnabled(aModel.isEnabled(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD));
 				
 				menuReport.setVisible(aModel.isVisible(PredictionApplicationModel.MENU_REPORT));
 				menuReport.setEnabled(aModel.isEnabled(PredictionApplicationModel.MENU_REPORT));

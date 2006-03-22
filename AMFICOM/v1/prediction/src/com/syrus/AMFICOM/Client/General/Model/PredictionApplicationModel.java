@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
 import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.resource.I18N;
 
 public class PredictionApplicationModel extends ApplicationModel {
 
@@ -45,6 +46,10 @@ public class PredictionApplicationModel extends ApplicationModel {
     
     add(ApplicationModel.MENU_VIEW_ARRANGE);
 
+		add(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE);
+		add(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE);
+		add(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD);
+		add(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD);
 
 		add(ApplicationModel.MENU_VIEW);
 		add(MENU_VIEW_DATA_LOAD);
@@ -64,5 +69,7 @@ public class PredictionApplicationModel extends ApplicationModel {
 		add(MENU_WINDOW_HISTOGRAMM);
 		add(MENU_WINDOW_TD_FRAME);
 		add(MENU_WINDOW_TD_TABLE);
+		
+		I18N.addResourceBundle("com.syrus.AMFICOM.resource.predictionMessages");
 	}
 }

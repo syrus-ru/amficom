@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.General.Command.Prediction;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
 
 import javax.swing.JOptionPane;
 
@@ -18,6 +19,7 @@ import com.syrus.io.BellcorePredictionWriter;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreWriter;
+import com.syrus.util.Log;
 
 public class CountPredictedReflectogramm extends AbstractCommand {
 	ApplicationContext aContext;
@@ -30,6 +32,10 @@ public class CountPredictedReflectogramm extends AbstractCommand {
 
 	public void execute() {
 		PredictionManager pm = PredictionModel.getPredictionManager();
+		if (pm == null) {
+			Log.debugMessage("PredictionModel not initialyzed yet", Level.WARNING);
+			return;
+		}
 
 		DateSpinner dateSpinner = new DateSpinner();
 		int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), 

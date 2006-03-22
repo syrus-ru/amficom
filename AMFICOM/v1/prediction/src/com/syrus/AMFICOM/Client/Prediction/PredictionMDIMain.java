@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleResizableFrame;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.TraceSelectorFrame;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateAnalysisReportCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileCloseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadModelingCommand;
 import com.syrus.AMFICOM.Client.General.Command.Prediction.CountPredictedReflectogramm;
 import com.syrus.AMFICOM.Client.General.Command.Prediction.LoadTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Prediction.SavePredictionCommand;
@@ -302,10 +302,12 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 		aModel.setCommand(PredictionApplicationModel.MENU_VIEW_DATA_LOAD, new LoadTraceFromDatabaseCommand(this.aContext));
 		aModel.setCommand(PredictionApplicationModel.MENU_VIEW_COUNT_PREDICTION, new CountPredictedReflectogramm(this.aContext));
 		aModel.setCommand(PredictionApplicationModel.MENU_VIEW_SAVE_PREDICTION,  new SavePredictionCommand(this.aContext));
+		
+		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD, new com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand(this.dispatcher, this.aContext));
+		aModel.setCommand(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD, new LoadModelingCommand(this.aContext));
 		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE, new AddTraceFromDatabaseCommand(this.aContext));
 		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE, new FileRemoveCommand(null, this.aContext));
-		aModel.setCommand(AnalyseApplicationModel.MENU_FILE_CLOSE, new FileCloseCommand());
-
+		
 		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(this.aContext, DestinationModules.PREDICTION);
 		rc.setParameter(CreateAnalysisReportCommand.TABLE, this.tables);
 		rc.setParameter(CreateAnalysisReportCommand.PANEL, this.graphs);
@@ -364,6 +366,8 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 //		aModel.setEnabled("menuNetStudy", true);
 		
 		aModel.setEnabled(PredictionApplicationModel.MENU_VIEW_DATA_LOAD, true);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD, true);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD, true);
 		
 		aModel.fireModelChanged("");
 	}
@@ -371,9 +375,37 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 	@Override
 	public void loggedOut() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
+		
+		aModel.setEnabled(PredictionApplicationModel.MENU_VIEW_DATA_LOAD, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD, false);
+		
 		setDefaultModel(aModel);
-		// TODO hide frames
 		aModel.fireModelChanged("");
+		
+		PredictionMDIMain f = this;
+		
+		JInternalFrame selectFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.SELECTOR_FRAME);
+		JInternalFrame paramFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.PRIMARY_PARAMETERS_FRAME);
+		JInternalFrame statsFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.STATS_FRAME);
+		JInternalFrame eventsFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.EVENTS_FRAME);
+		JInternalFrame detailedEvFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.DETAILED_EVENTS_FRAME);
+		JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.ANALYSIS_FRAME);
+		JInternalFrame mInfoFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.MARKERS_INFO_FRAME);
+		JInternalFrame dhf = (JInternalFrame) f.frames.get(PredictionMDIMain.HISTOGRAMM_FRAME);
+		JInternalFrame tdf = (JInternalFrame) f.frames.get(PredictionMDIMain.TD_FRAME);
+		JInternalFrame tdt = (JInternalFrame) f.frames.get(PredictionMDIMain.TD_TABLE);
+		
+		selectFrame.setVisible(false);
+		paramFrame.setVisible(false);
+		statsFrame.setVisible(false);
+		eventsFrame.setVisible(false);
+		detailedEvFrame.setVisible(false);
+		analysisFrame.setVisible(false);
+		mInfoFrame.setVisible(false);
+		dhf.setVisible(false);
+		tdf.setVisible(false);
+		tdt.setVisible(false);;
 	}
 
 	public void bsHashAdded(String key) {
@@ -408,6 +440,9 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 	}
 	
 	public void bsHashRemovedAll() {
+		TimeDependenceTable tdTable = (TimeDependenceTable) PredictionMDIMain.this.frames.get(PredictionMDIMain.TD_TABLE);
+		tdTable.setVisible(false);
+		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		
 		aModel.setEnabled(PredictionApplicationModel.MENU_VIEW_COUNT_PREDICTION, false);
