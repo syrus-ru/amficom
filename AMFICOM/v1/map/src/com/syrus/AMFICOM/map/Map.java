@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.129 2006/03/15 14:47:33 bass Exp $
+ * $Id: Map.java,v 1.130 2006/03/22 16:25:01 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: bass $
- * @version $Revision: 1.129 $, $Date: 2006/03/15 14:47:33 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.130 $, $Date: 2006/03/22 16:25:01 $
  * @module map
  */
 public final class Map extends DomainMember
@@ -352,7 +352,7 @@ public final class Map extends DomainMember
 		return Collections.unmodifiableSet(this.collectors);
 	}
 	
-	void setCollectorIds(Set<Identifier> collectorIds) {
+	void setCollectorIds0(Set<Identifier> collectorIds) {
 		this.collectorIds = collectorIds;
 	}
 
@@ -407,7 +407,7 @@ public final class Map extends DomainMember
 		super.markAsChanged();
 	}
 	
-	void setMapLibraryIds(Set<Identifier> mapLibraryIds) {
+	void setMapLibraryIds0(Set<Identifier> mapLibraryIds) {
 		this.mapLibraryIds = mapLibraryIds;
 	}
 	
@@ -425,7 +425,7 @@ public final class Map extends DomainMember
 		return Collections.unmodifiableSet(this.marks);
 	}
 
-	void setMarkIds(Set<Identifier> markIds) {
+	void setMarkIds0(Set<Identifier> markIds) {
 		this.markIds = markIds;
 	}
 	
@@ -468,7 +468,7 @@ public final class Map extends DomainMember
 		return Collections.unmodifiableSet(this.nodeLinks);
 	}
 
-	void setNodeLinkIds(Set<Identifier> nodeLinkIds) {
+	void setNodeLinkIds0(Set<Identifier> nodeLinkIds) {
 		this.nodeLinkIds = nodeLinkIds;
 	}
 	
@@ -498,7 +498,7 @@ public final class Map extends DomainMember
 		return Collections.unmodifiableSet(this.physicalLinks);
 	}
 
-	void setPhysicalLinkIds(Set<Identifier> physicalLinkIds) {
+	void setPhysicalLinkIds0(Set<Identifier> physicalLinkIds) {
 		this.physicalLinkIds = physicalLinkIds;
 	}
 	
@@ -528,7 +528,7 @@ public final class Map extends DomainMember
 		return Collections.unmodifiableSet(this.siteNodes);
 	}
 
-	void setSiteNodeIds(Set<Identifier> siteNodeIds) {
+	void setSiteNodeIds0(Set<Identifier> siteNodeIds) {
 		this.siteNodeIds = siteNodeIds;
 	}
 	
@@ -558,7 +558,7 @@ public final class Map extends DomainMember
 		return Collections.unmodifiableSet(this.topologicalNodes);
 	}
 
-	void setTopologicalNodeIds(Set<Identifier> topologicalNodeIds) {
+	void setTopologicalNodeIds0(Set<Identifier> topologicalNodeIds) {
 		this.topologicalNodeIds = topologicalNodeIds;
 	}
 	
@@ -588,7 +588,7 @@ public final class Map extends DomainMember
 		return Collections.unmodifiableSet(this.maps);
 	}
 
-	void setMapIds(Set<Identifier> mapIds) {
+	void setMapIds0(Set<Identifier> mapIds) {
 		this.mapIds = mapIds;
 	}
 	
@@ -618,7 +618,7 @@ public final class Map extends DomainMember
 		return Collections.unmodifiableSet(this.externalNodes);
 	}
 
-	void setExternalNodeIds(Set<Identifier> externalNodeIds) {
+	void setExternalNodeIds0(Set<Identifier> externalNodeIds) {
 		this.externalNodeIds = externalNodeIds;
 	}
 	

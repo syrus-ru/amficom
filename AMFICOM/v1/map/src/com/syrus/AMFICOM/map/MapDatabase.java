@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.65 2006/03/13 13:54:02 bass Exp $
+ * $Id: MapDatabase.java,v 1.66 2006/03/22 16:25:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.65 $, $Date: 2006/03/13 13:54:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.66 $, $Date: 2006/03/22 16:25:01 $
+ * @author $Author: arseniy $
  * @module map
  */
 public final class MapDatabase extends StorableObjectDatabase<Map> {
@@ -140,31 +140,31 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 		public static void setLinkedEntities(Map map, Set<Identifier> linkedIds, LinkedEntities linkedEntities) throws IllegalDataException {
 			switch (linkedEntities) {
 			case MAP_COLLECTORS:
-				map.setCollectorIds(linkedIds);
+				map.setCollectorIds0(linkedIds);
 				break;
 			case MAP_MARKS:
-				map.setMarkIds(linkedIds);
+				map.setMarkIds0(linkedIds);
 				break;
 			case MAP_NODE_LINKS:
-				map.setNodeLinkIds(linkedIds);
+				map.setNodeLinkIds0(linkedIds);
 				break;
 			case MAP_PHYSICAL_LINKS:
-				map.setPhysicalLinkIds(linkedIds);
+				map.setPhysicalLinkIds0(linkedIds);
 				break;
 			case MAP_SITE_NODES:
-				map.setSiteNodeIds(linkedIds);
+				map.setSiteNodeIds0(linkedIds);
 				break;
 			case MAP_TOPOLOGICAL_NODES:
-				map.setTopologicalNodeIds(linkedIds);
+				map.setTopologicalNodeIds0(linkedIds);
 				break;
 			case MAP_MAPS:
-				map.setMapIds(linkedIds);
+				map.setMapIds0(linkedIds);
 				break;
 			case MAP_EXTERNAL_NODES:
-				map.setExternalNodeIds(linkedIds);
+				map.setExternalNodeIds0(linkedIds);
 				break;
 			case MAP_MAP_LIBRARYS:
-				map.setMapLibraryIds(linkedIds);
+				map.setMapLibraryIds0(linkedIds);
 				break;
 			default:
 				throw new IllegalDataException("MapDatabase.updateLinkedObjectIds " +
