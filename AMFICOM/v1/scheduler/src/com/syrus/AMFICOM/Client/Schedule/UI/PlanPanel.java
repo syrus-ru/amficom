@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.82 2006/03/21 06:48:30 saa Exp $
+ * $Id: PlanPanel.java,v 1.83 2006/03/22 12:46:59 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2006/03/21 06:48:30 $
+ * @version $Revision: 1.83 $, $Date: 2006/03/22 12:46:59 $
  * @author $Author: saa $
  * @module scheduler
  */
@@ -146,7 +146,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	protected SimpleDateFormat		sdf					= new SimpleDateFormat();
 
 	// real start time including minutes and seconds
-	protected Date					startDate			= new Date();
+	private Date					startDate			= new Date(); // это "плохое" значение, в нем есть секунды и миллисекунды, но в конструкторе все равно будет вызван setStartDate()
 
 	protected Point					startPosition;
 	protected Point					currentPosition;
@@ -196,7 +196,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		this.timer.start();
 
 		this.setToolTipText("");
-		this.setStartDate(new Date(System.currentTimeMillis()));
+		this.setStartDate(new Date());
 		this.updateRealScale();
 		this.setBackground(UIManager.getColor(ResourceKeys.COLOR_GRAPHICS_BACKGROUND));
 	}
@@ -362,24 +362,17 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	}
 
 	public void setStartDate(final Date start) {
-		assert Log.debugMessage(start, Log.DEBUGLEVEL03);
-		this.startDate = start;
-		if (start != null) {
+		assert(start != null);
+		assert Log.debugMessage("setStartDate: " +  start, Log.DEBUGLEVEL03);
+		{ // if (start != null) {
 			synchronized (this.cal) {
 			this.cal.setTime(start);
-//			if (this.scale > 1) {
-//				this.cal.set(Calendar.MINUTE, 0);
-//			}
+			this.cal.set(Calendar.MILLISECOND, 0);
 			this.cal.set(Calendar.SECOND, 0);
-//			// НЙПСЦКЪЕЛ ДН ЬЮЦЮ
-//			int num = this.cal.get(STEPS[this.scale].scale);
-//			while (num / STEPS[this.scale].align * STEPS[this.scale].align != num) {
-//				this.cal.add(STEPS[this.scale].scale, -1);
-//				num = this.cal.get(STEPS[this.scale].scale);
-//			}
+			this.startDate = this.cal.getTime(); // set value rounded to 1 minute (without seconds and milliseconds)
 
 			this.scaleStart = this.cal.getTime();
-			assert Log.debugMessage("scaleStart:" + scaleStart, Log.DEBUGLEVEL03);
+			assert Log.debugMessage("scaleStart: " + this.scaleStart, Log.DEBUGLEVEL03);
 			// scroll calendar to end of period
 			this.cal.add(STEPS[this.scale].scale, STEPS[this.scale].total);
 			this.scaleEnd = this.cal.getTime();
@@ -392,7 +385,6 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		}
 		
 	}

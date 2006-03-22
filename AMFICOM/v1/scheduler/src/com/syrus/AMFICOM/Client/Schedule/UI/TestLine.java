@@ -621,7 +621,7 @@ final class TestLine extends TimeLine {
 
 	private void acqureTest(final Test test) throws ApplicationException {
 		final PlanPanel planPanel = (PlanPanel) this.getParent();
-		final Date start1 = planPanel.startDate;
+		final Date start1 = planPanel.getStartDate();
 		final Date end1 = planPanel.scaleEnd;
 
 		final Identifier testId = test.getId();
