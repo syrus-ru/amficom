@@ -1,11 +1,14 @@
 /*
- * $Id: TestEvent.java,v 1.6.2.1 2006/02/17 12:28:06 arseniy Exp $
+ * $Id: TestEvent.java,v 1.6.2.2 2006/03/22 08:32:04 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.event;
+
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_ALARMS;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_ANALYSIS_RESULT;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +29,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.6.2.1 $, $Date: 2006/02/17 12:28:06 $
+ * @version $Revision: 1.6.2.2 $, $Date: 2006/03/22 08:32:04 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -56,8 +59,8 @@ public class TestEvent extends TestCase {
 		final String description = "test event";
 
 		final Set<EventParameter> eventParameters = new HashSet<EventParameter>(2);
-		eventParameters.add(EventParameter.createInstance(ParameterType.DADARA_ALARMS, Integer.toString(0)));
-		eventParameters.add(EventParameter.createInstance(ParameterType.DADARA_ANALYSIS_RESULT, "1, 2, 3, 4, 5, 6, 7, 8"));
+		eventParameters.add(EventParameter.createInstance(ParameterType.valueOf(DADARA_ALARMS.stringValue()).getId(), Integer.toString(0)));
+		eventParameters.add(EventParameter.createInstance(ParameterType.valueOf(DADARA_ANALYSIS_RESULT.stringValue()).getId(), "1, 2, 3, 4, 5, 6, 7, 8"));
 
 		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.EVENTSOURCE_CODE);
 		final Set<EventSource> eventSources = StorableObjectPool.getStorableObjectsByCondition(ec, true);
