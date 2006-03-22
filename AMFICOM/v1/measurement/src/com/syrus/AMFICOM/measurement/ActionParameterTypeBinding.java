@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.14 2006/03/22 14:01:28 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.15 2006/03/22 16:54:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.1.2.14 $, $Date: 2006/03/22 14:01:28 $
+ * @version $Revision: 1.1.2.15 $, $Date: 2006/03/22 16:54:27 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -187,12 +187,24 @@ public final class ActionParameterTypeBinding extends StorableObject implements 
 		return this.parameterTypeId;
 	}
 
+	public ParameterType getParameterType() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.parameterTypeId, true);
+	}
+
 	public Identifier getActionTypeId() {
 		return this.actionTypeId;
 	}
 
+	public ActionType getActionType() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.actionTypeId, true);
+	}
+
 	public Identifier getMeasurementPortTypeId() {
 		return this.measurementPortTypeId;
+	}
+
+	public MeasurementPortType getMeasurementPortType() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.measurementPortTypeId, true);
 	}
 
 	protected synchronized void setAttributes(final Date created,
@@ -249,6 +261,40 @@ public final class ActionParameterTypeBinding extends StorableObject implements 
 		return StorableObjectPool.getStorableObjectsByCondition(this.actionParameterCondition, true);
 	}
 
+	public static Set<ActionParameterTypeBinding> getValues(final ActionType actionType,
+			final MeasurementPortType measurementPortType) throws ApplicationException {
+		assert actionType != null : NON_NULL_EXPECTED;
+		assert measurementPortType != null : NON_NULL_EXPECTED;
+
+		return getValues(actionType.getId(), measurementPortType.getId());
+	}
+
+	public static Set<ActionParameterTypeBinding> getValues(final Identifier actionTypeId,
+			final Identifier measurementPortTypeId) throws ApplicationException {
+		assert actionTypeId != null : NON_NULL_EXPECTED;
+		assert measurementPortTypeId != null : NON_NULL_EXPECTED;
+
+		assert actionTypeId.getMajor() == MEASUREMENT_TYPE_CODE
+				|| actionTypeId.getMajor() == ANALYSIS_TYPE_CODE
+				|| actionTypeId.getMajor() == MODELING_TYPE_CODE : ILLEGAL_ENTITY_CODE;
+		assert measurementPortTypeId.getMajor() == MEASUREMENTPORT_TYPE_CODE : ILLEGAL_ENTITY_CODE;
+
+		if (actionTypeIdCondition == null) {
+			actionTypeIdCondition = new LinkedIdsCondition(actionTypeId, ACTIONPARAMETERTYPEBINDING_CODE);
+		} else {
+			actionTypeIdCondition.setLinkedIdentifiable(actionTypeId);
+		}
+
+		if (measurementPortTypeIdCondition == null) {
+			measurementPortTypeIdCondition = new LinkedIdsCondition(measurementPortTypeId, ACTIONPARAMETERTYPEBINDING_CODE);
+		} else {
+			measurementPortTypeIdCondition.setLinkedIdentifiable(measurementPortTypeId);
+		}
+
+		final CompoundCondition condition = new CompoundCondition(actionTypeIdCondition, AND, measurementPortTypeIdCondition);
+		return StorableObjectPool.getStorableObjectsByCondition(condition, true);
+	}
+
 	public static ActionParameterTypeBinding valueOf(final ParameterType parameterType,
 			final ActionType actionType,
 			final MeasurementPortType measurementPortType) throws ApplicationException {
@@ -290,10 +336,10 @@ public final class ActionParameterTypeBinding extends StorableObject implements 
 			measurementPortTypeIdCondition.setLinkedIdentifiable(measurementPortTypeId);
 		}
 
-		final CompoundCondition condition = new CompoundCondition(parameterTypeIdCondition,
-				AND,
-				actionTypeIdCondition);
-		condition.addCondition(measurementPortTypeIdCondition);
+		final CompoundCondition condition = new CompoundCondition(AND,
+				parameterTypeIdCondition,
+				actionTypeIdCondition,
+				measurementPortTypeIdCondition);
 		final Set<ActionParameterTypeBinding> actionParameterTypeBindings = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		if (actionParameterTypeBindings.isEmpty()) {
 			throw new ObjectNotFoundException(OBJECT_NOT_FOUND + ": for '" + parameterTypeId + "', '" + actionTypeId + "', '" + measurementPortTypeId + "'");
