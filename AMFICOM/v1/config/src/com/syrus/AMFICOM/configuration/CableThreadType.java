@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThreadType.java,v 1.89 2006/03/15 15:18:30 arseniy Exp $
+ * $Id: CableThreadType.java,v 1.88 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
@@ -48,10 +47,10 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
@@ -61,12 +60,13 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * optical fiber (or an <i>abstract</i> optical fiber), the latter is a type of
  * cable (or an <i>abstract</i> cable containing this thread).
  *
- * @version $Revision: 1.89 $, $Date: 2006/03/15 15:18:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.88 $, $Date: 2006/03/15 14:47:32 $
+ * @author $Author: bass $
  * @module configuration
  */
 public final class CableThreadType extends StorableObjectType
-		implements Namable, XmlTransferableObject<XmlCableThreadType> {
+		implements Namable, XmlTransferableObject<XmlCableThreadType>,
+		IdlTransferableObjectExt<IdlCableThreadType>{
 	private static final long  serialVersionUID	= 3689355429075628086L;
 
 	/**
@@ -323,7 +323,7 @@ public final class CableThreadType extends StorableObjectType
 		try {
 			final CableThreadType cableThreadType = new CableThreadType(IdentifierPool.getGeneratedIdentifier(CABLETHREAD_TYPE_CODE),
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					codename,
 					description,
 					name,
@@ -341,11 +341,10 @@ public final class CableThreadType extends StorableObjectType
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlCableThreadType idlCableThreadType = (IdlCableThreadType) transferable;
-
-		super.fromTransferable(idlCableThreadType, idlCableThreadType.codename, idlCableThreadType.description);
+	public synchronized void fromIdlTransferable(
+			final IdlCableThreadType idlCableThreadType)
+	throws IdlConversionException {
+		super.fromIdlTransferable(idlCableThreadType, idlCableThreadType.codename, idlCableThreadType.description);
 
 		this.name = idlCableThreadType.name;
 		this.color = idlCableThreadType.color;
@@ -359,8 +358,7 @@ public final class CableThreadType extends StorableObjectType
 	 * @param cableThreadType
 	 * @param importType
 	 * @throws XmlConversionException
-	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject,
-	 *      String)
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void fromXmlTransferable(final XmlCableThreadType cableThreadType,
 			final String importType)

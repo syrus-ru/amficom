@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultReflectogramMismatchEvent.java,v 1.14 2006/03/15 15:47:20 arseniy Exp $
+ * $Id: DefaultReflectogramMismatchEvent.java,v 1.13.4.3 2006/03/21 10:09:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,41 +8,37 @@
 
 package com.syrus.AMFICOM.eventv2;
 
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSISRESULTPARAMETER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.REFLECTOGRAMMISMATCHEVENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import org.omg.CORBA.ORB;
-
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEvent;
-import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventHelper;
-import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchData;
-import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatch;
-import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatchPair;
-import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlAnchorData;
-import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlAnchorDataPackage.IdlAnchor;
-import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlAnchorDataPackage.IdlAnchorPair;
-import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 import com.syrus.AMFICOM.reflectometry.SOAnchor;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2006/03/15 15:47:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13.4.3 $, $Date: 2006/03/21 10:09:19 $
  * @module event
  */
 public final class DefaultReflectogramMismatchEvent extends
 		AbstractReflectogramMismatchEvent {
 	private static final long serialVersionUID = -1232479623372509377L;
-
-	/**
-	 * @serial include
-	 */
-	private Date created;
 
 	/**
 	 * @serial include
@@ -119,29 +115,63 @@ public final class DefaultReflectogramMismatchEvent extends
 	 */
 	private Identifier monitoredElementId;
 
-	private DefaultReflectogramMismatchEvent(
+	/**
+	 * Ctor used solely by database driver.
+	 *
+	 * @param id
+	 */
+	DefaultReflectogramMismatchEvent(final Identifier id) {
+		super(id, VOID_IDENTIFIER, null, ILLEGAL_VERSION);
+	}
+
+	/**
+	 * @param id
+	 * @param creatorId
+	 * @param created
+	 * @param version
+	 * @param reflectogramMismatch
+	 * @param resultId
+	 * @param monitoredElementId
+	 */
+	private DefaultReflectogramMismatchEvent(final Identifier id,
+			final Identifier creatorId,
+			final Date created,
+			final StorableObjectVersion version,
 			final ReflectogramMismatch reflectogramMismatch,
 			final Identifier resultId,
 			final Identifier monitoredElementId) {
-		this.created = new Date();
+		super(id, creatorId, created, version);
 
+		/*
+		 * resultId: strict check (void not permitted at object creation
+		 * stage)
+		 */
 		if (resultId == null) {
 			throw new NullPointerException("resultId is null");
 		}
+		final short resultIdMajor = resultId.getMajor();
+		if (resultIdMajor != RESULT_CODE) {
+			throw new IllegalArgumentException(resultId.isVoid()
+					? "resultId is void"
+					: "Type of resultId: ``"
+							+ ObjectEntities.codeToString(resultIdMajor)
+							+ "'' is invalid");
+		}
+
+		/*
+		 * monitoredElementId: strict check (void not permitted at
+		 * object creation stage)
+		 */
 		if (monitoredElementId == null) {
 			throw new NullPointerException("monitoredElementId is null");
 		}
-		/*
-		 * Currently, the second check is unnecessary. But
-		 * implementation may eventually change.
-		 */
-		if (resultId.getMajor() != ANALYSISRESULTPARAMETER_CODE
-				|| resultId.isVoid()) {
-			throw new IllegalArgumentException("Either resultId is void or its type is invalid");
-		}
-		if (monitoredElementId.getMajor() != MONITOREDELEMENT_CODE
-				|| monitoredElementId.isVoid()) {
-			throw new IllegalArgumentException("Either monitoredElementId is void or its type is invalid");
+		final short monitoredElementIdMajor = monitoredElementId.getMajor();
+		if (monitoredElementIdMajor != MONITOREDELEMENT_CODE) {
+			throw new IllegalArgumentException(monitoredElementId.isVoid()
+					? "monitoredElementId is void"
+					: "Type of monitoredElementId: ``"
+							+ ObjectEntities.codeToString(monitoredElementIdMajor)
+							+ "'' is invalid");
 		}
 
 
@@ -174,90 +204,206 @@ public final class DefaultReflectogramMismatchEvent extends
 		this.monitoredElementId = monitoredElementId;
 	}
 
-	private DefaultReflectogramMismatchEvent(
-			final IdlReflectogramMismatchEvent reflectogramMismatchEvent) {
-		this.created = new Date(reflectogramMismatchEvent.getCreated());
+	/**
+	 * This contructor is invoked from both
+	 * {@link com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventImpl#getNativeEvent()}
+	 * and {@link com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventImpl#getNative()}.
+	 * However, it is assumed that the former invocation occurs on the event
+	 * server, and the object should be stored in the database, while the
+	 * latter one is made client-side, when the object has already been
+	 * stored.
+	 *
+	 * @param reflectogramMismatchEvent
+	 * @param store {@code true} if object should be stored in the database;
+	 *              {@code false} otherwise.
+	 * @throws CreateObjectException
+	 */
+	public DefaultReflectogramMismatchEvent(
+			final IdlReflectogramMismatchEvent reflectogramMismatchEvent,
+			final boolean store)
+	throws CreateObjectException {
+		try {
+			this.fromIdlTransferable(reflectogramMismatchEvent);
+			if (store) {
+				this.markAsChanged();
+				StorableObjectPool.flush(this, this.creatorId, false);
+			}
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+	}
 
-		if (!!(this.mismatch = reflectogramMismatchEvent.hasMismatch())) {
-			this.minMismatch = reflectogramMismatchEvent.getMinMismatch();
-			this.maxMismatch = reflectogramMismatchEvent.getMaxMismatch();
+	public void fromIdlTransferable(final IdlReflectogramMismatchEvent reflectogramMismatchEvent)
+	throws IdlConversionException {
+		synchronized (this) {
+			super.fromIdlTransferable((IdlStorableObject) reflectogramMismatchEvent);
+
+			/*
+			 * resultId: loose check (void permitted)
+			 */
+			@SuppressWarnings("hiding")
+			final Identifier resultId = Identifier.valueOf(reflectogramMismatchEvent.getResultId());
+			final short resultIdMajor = resultId.getMajor();
+			if (!(resultIdMajor == RESULT_CODE
+					|| resultId.isVoid())) {
+				throw new IllegalArgumentException("Type of resultId: ``"
+						+ ObjectEntities.codeToString(resultIdMajor)
+						+ "'' is invalid");
+			}
+
+			/*
+			 * monitoredElementId: loose check (void permitted)
+			 */
+			@SuppressWarnings("hiding")
+			final Identifier monitoredElementId = Identifier.valueOf(reflectogramMismatchEvent.getMonitoredElementId());
+			final short monitoredElementIdMajor = monitoredElementId.getMajor();
+			if (!(monitoredElementIdMajor == MONITOREDELEMENT_CODE
+					|| monitoredElementId.isVoid())) {
+				throw new IllegalArgumentException("Type of monitoredElementId: ``"
+						+ ObjectEntities.codeToString(monitoredElementIdMajor)
+						+ "'' is invalid");
+			}
+
+
+			if (!!(this.mismatch = reflectogramMismatchEvent.hasMismatch())) {
+				this.minMismatch = reflectogramMismatchEvent.getMinMismatch();
+				this.maxMismatch = reflectogramMismatchEvent.getMaxMismatch();
+
+				if (this.minMismatch > this.maxMismatch) {
+					throw new IllegalArgumentException();
+				}
+			}
+
+			this.severity = Severity.valueOf(reflectogramMismatchEvent.getSeverity());
+
+			if (!!(this.anchors = reflectogramMismatchEvent.hasAnchors())) {
+				this.anchor1Id = new SoAnchorImpl(Identifier.valueOf(reflectogramMismatchEvent.getAnchor1Id()));
+				this.anchor2Id = new SoAnchorImpl(Identifier.valueOf(reflectogramMismatchEvent.getAnchor2Id()));
+				this.anchor1Coord = reflectogramMismatchEvent.getAnchor1Coord();
+				this.anchor2Coord = reflectogramMismatchEvent.getAnchor2Coord();
+			}
+
+			this.coord = reflectogramMismatchEvent.getCoord();
+			this.endCoord = reflectogramMismatchEvent.getEndCoord();
+			this.alarmType = AlarmType.valueOf(reflectogramMismatchEvent.getAlarmType());
+			this.deltaX = reflectogramMismatchEvent.getDeltaX();
+			this.resultId = resultId;
+			this.monitoredElementId = monitoredElementId;
+		}
+	}
+
+	void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final AlarmType alarmType,
+			final Severity severity,
+			final int coord,
+			final int endCoord,
+			final double deltaX,
+			final boolean mismatch,
+			final double minMismatch,
+			final double maxMismatch,
+			final boolean anchors,
+			final Identifier anchor1Id,
+			final Identifier anchor2Id,
+			final int anchor1Coord,
+			final int anchor2Coord,
+			final Identifier resultId,
+			final Identifier monitoredElementId) {
+		super.setAttributes(created, modified, creatorId, modifierId, version);
+
+		/*
+		 * resultId: loose check (void permitted)
+		 */
+		final short resultIdMajor = resultId.getMajor();
+		if (!(resultIdMajor == RESULT_CODE
+				|| resultId.isVoid())) {
+			throw new IllegalArgumentException("Type of resultId: ``"
+					+ ObjectEntities.codeToString(resultIdMajor)
+					+ "'' is invalid");
+		}
+
+		/*
+		 * monitoredElementId: loose check (void permitted)
+		 */
+		final short monitoredElementIdMajor = monitoredElementId.getMajor();
+		if (!(monitoredElementIdMajor == MONITOREDELEMENT_CODE
+				|| monitoredElementId.isVoid())) {
+			throw new IllegalArgumentException("Type of monitoredElementId: ``"
+					+ ObjectEntities.codeToString(monitoredElementIdMajor)
+					+ "'' is invalid");
+		}
+
+
+		if (!!(this.mismatch = mismatch)) {
+			this.minMismatch = minMismatch;
+			this.maxMismatch = maxMismatch;
 
 			if (this.minMismatch > this.maxMismatch) {
 				throw new IllegalArgumentException();
 			}
 		}
 
-		this.severity = Severity.valueOf(reflectogramMismatchEvent.getSeverity());
+		this.severity = severity;
 
-		if (!!(this.anchors = reflectogramMismatchEvent.hasAnchors())) {
-			this.anchor1Id = new SoAnchorImpl(Identifier.valueOf(reflectogramMismatchEvent.getAnchor1Id()));
-			this.anchor2Id = new SoAnchorImpl(Identifier.valueOf(reflectogramMismatchEvent.getAnchor2Id()));
-			this.anchor1Coord = reflectogramMismatchEvent.getAnchor1Coord();
-			this.anchor2Coord = reflectogramMismatchEvent.getAnchor2Coord();
+		if (!!(this.anchors = anchors)) {
+			this.anchor1Id = new SoAnchorImpl(anchor1Id);
+			this.anchor2Id = new SoAnchorImpl(anchor2Id);
+			this.anchor1Coord = anchor1Coord;
+			this.anchor2Coord = anchor2Coord;
 		}
 
-		this.coord = reflectogramMismatchEvent.getCoord();
-		this.endCoord = reflectogramMismatchEvent.getEndCoord();
-		this.alarmType = AlarmType.valueOf(reflectogramMismatchEvent.getAlarmType());
-		this.deltaX = reflectogramMismatchEvent.getDeltaX();
-		this.resultId = Identifier.valueOf(reflectogramMismatchEvent.getResultId());
-		this.monitoredElementId = Identifier.valueOf(reflectogramMismatchEvent.getMonitoredElementId());
+		this.coord = coord;
+		this.endCoord = endCoord;
+		this.alarmType = alarmType;
+		this.deltaX = deltaX;
+		this.resultId = resultId;
+		this.monitoredElementId = monitoredElementId;
 	}
 
 	/**
-	 * @see ReflectogramMismatchEvent#getCreated()
+	 * This method should be invoked agent-side when no database storing
+	 * is needed (let event server take care of this), so the newly-created
+	 * object is not marked as changed.
+	 *
+	 * @param creatorId
+	 * @param reflectogramMismatch
+	 * @param resultId
+	 * @param monitoredElementId
+	 * @throws CreateObjectException
 	 */
-	public Date getCreated() {
-		return (Date) this.created.clone();
-	}
-
-	/**
-	 * @param orb
-	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
-	 */
-	public IdlReflectogramMismatchEvent getIdlTransferable(final ORB orb) {
-		final IdlMismatchData mismatchData = new IdlMismatchData();
-		if (this.hasMismatch()) {
-			mismatchData.mismatchPair(IdlMismatch._TRUE, new IdlMismatchPair(this.getMinMismatch(), this.getMaxMismatch()));
-		} else {
-			mismatchData._default(IdlMismatch._FALSE);
-		}
-
-		final IdlAnchorData anchorData = new IdlAnchorData();
-		if (this.hasAnchors()) {
-			anchorData.anchorPair(IdlAnchor._TRUE, new IdlAnchorPair(
-					this.anchor1Id.getId().getIdlTransferable(orb),
-					this.anchor2Id.getId().getIdlTransferable(orb),
-					this.getAnchor1Coord(),
-					this.getAnchor2Coord()));
-		} else {
-			anchorData._default(IdlAnchor._FALSE);
-		}
-
-		return IdlReflectogramMismatchEventHelper.init(orb,
-				this.created.getTime(),
-				mismatchData,
-				this.getSeverity().getIdlTransferable(orb),
-				anchorData,
-				this.getCoord(),
-				this.getEndCoord(),
-				this.getAlarmType().getIdlTransferable(orb),
-				this.getDeltaX(),
-				this.getResultId().getIdlTransferable(orb),
-				this.getMonitoredElementId().getIdlTransferable(orb));
-	}
-
-	public static ReflectogramMismatchEvent valueOf(
+	public static ReflectogramMismatchEvent newInstance(
+			final Identifier creatorId,
 			final ReflectogramMismatch reflectogramMismatch,
 			final Identifier resultId,
-			final Identifier monitoredElementId) {
-		return new DefaultReflectogramMismatchEvent(reflectogramMismatch,
-				resultId, monitoredElementId);
-	}
+			final Identifier monitoredElementId)
+	throws CreateObjectException {
+		if (creatorId == null) {
+			throw new NullPointerException("creatorId is null");
+		}
+		if (creatorId.isVoid()) {
+			throw new IllegalArgumentException("creatorId is void");
+		}
 
-	public static ReflectogramMismatchEvent valueOf(
-			final IdlReflectogramMismatchEvent reflectogramMismatchEvent) {
-		return new DefaultReflectogramMismatchEvent(reflectogramMismatchEvent);
+		try {
+			final DefaultReflectogramMismatchEvent reflectogramMismatchEvent = new DefaultReflectogramMismatchEvent(
+					IdentifierPool.getGeneratedIdentifier(REFLECTOGRAMMISMATCHEVENT_CODE),
+					creatorId,
+					new Date(),
+					INITIAL_VERSION,
+					reflectogramMismatch,
+					resultId, 
+					monitoredElementId);
+			return reflectogramMismatchEvent;
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	/**
@@ -394,45 +540,5 @@ public final class DefaultReflectogramMismatchEvent extends
 	 */
 	public Identifier getMonitoredElementId() {
 		return this.monitoredElementId;
-	}
-
-	/**
-	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.14 $, $Date: 2006/03/15 15:47:20 $
-	 * @module event
-	 */
-	private class SoAnchorImpl implements SOAnchor, Identifiable, Serializable {
-		private static final long serialVersionUID = -3382445238828239272L;
-
-		private Identifier anchorId;
-
-		/**
-		 * @param anchor
-		 */
-		private SoAnchorImpl(final SOAnchor anchor) {
-			this.anchorId = Identifier.valueOf(anchor.getValue());
-		}
-
-		/**
-		 * @param anchorId
-		 */
-		private SoAnchorImpl(final Identifier anchorId) {
-			this.anchorId = anchorId;
-		}
-
-		/**
-		 * @see Identifiable#getId()
-		 */
-		public Identifier getId() {
-			return this.anchorId;
-		}
-
-		/**
-		 * @see SOAnchor#getValue()
-		 */
-		public long getValue() {
-			return this.anchorId.getIdentifierCode();
-		}
 	}
 }

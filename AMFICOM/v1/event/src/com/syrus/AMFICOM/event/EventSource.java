@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.46 2006/03/15 15:47:20 arseniy Exp $
+ * $Id: EventSource.java,v 1.45 2006/03/15 14:47:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,6 @@
 
 package com.syrus.AMFICOM.event;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
-import static com.syrus.AMFICOM.general.ObjectEntities.EVENTSOURCE_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Date;
@@ -22,23 +19,26 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.event.corba.IdlEventSource;
 import com.syrus.AMFICOM.event.corba.IdlEventSourceHelper;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2006/03/15 15:47:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2006/03/15 14:47:31 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
-public final class EventSource extends StorableObject {
+public final class EventSource extends StorableObject
+		implements IdlTransferableObjectExt<IdlEventSource> {
 	private static final long serialVersionUID = 3833179220682682674L;
 
 	private Identifier sourceEntityId;
@@ -68,12 +68,12 @@ public final class EventSource extends StorableObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final EventSource eventSource = new EventSource(IdentifierPool.getGeneratedIdentifier(EVENTSOURCE_CODE),
+			final EventSource eventSource = new EventSource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTSOURCE_CODE),
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					sourceEntityId);
 
-			assert eventSource.isValid() : OBJECT_STATE_ILLEGAL;
+			assert eventSource.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 			eventSource.markAsChanged();
 
@@ -83,13 +83,10 @@ public final class EventSource extends StorableObject {
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlEventSource est = (IdlEventSource) transferable;
+	public synchronized void fromIdlTransferable(final IdlEventSource est)
+	throws IdlConversionException {
 		super.fromIdlTransferable(est);
 		this.sourceEntityId = new Identifier(est.sourceEntityId);
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -98,8 +95,6 @@ public final class EventSource extends StorableObject {
 	 */
 	@Override
 	public IdlEventSource getIdlTransferable(final ORB orb) {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		return IdlEventSourceHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -131,6 +126,8 @@ public final class EventSource extends StorableObject {
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.sourceEntityId);
 		return dependencies;

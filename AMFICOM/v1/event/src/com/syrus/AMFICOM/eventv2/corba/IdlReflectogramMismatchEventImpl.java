@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlReflectogramMismatchEventImpl.java,v 1.10 2005/12/06 09:42:28 bass Exp $
+ * $Id: IdlReflectogramMismatchEventImpl.java,v 1.10.2.2 2006/03/21 10:09:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,6 @@
 
 package com.syrus.AMFICOM.eventv2.corba;
 
-import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
-
 import com.syrus.AMFICOM.eventv2.DefaultReflectogramMismatchEvent;
 import com.syrus.AMFICOM.eventv2.ReflectogramMismatchEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlEventPackage.IdlEventType;
@@ -17,7 +15,7 @@ import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDa
 import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatch;
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlAnchorData;
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlAnchorDataPackage.IdlAnchor;
-import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.reflectometry.corba.IdlAlarmType;
@@ -26,7 +24,7 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/12/06 09:42:28 $
+ * @version $Revision: 1.10.2.2 $, $Date: 2006/03/21 10:09:19 $
  * @module event
  */
 final class IdlReflectogramMismatchEventImpl
@@ -38,7 +36,12 @@ final class IdlReflectogramMismatchEventImpl
 	}
 
 	/**
+	 * @param id
 	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
 	 * @param mismatchData
 	 * @param severity
 	 * @param anchorData
@@ -49,7 +52,10 @@ final class IdlReflectogramMismatchEventImpl
 	 * @param resultId
 	 * @param monitoredElementId
 	 */
-	IdlReflectogramMismatchEventImpl(final long created,
+	IdlReflectogramMismatchEventImpl(final IdlIdentifier id,
+			final long created, final long modified,
+			final IdlIdentifier creatorId,
+			final IdlIdentifier modifierId, final long version,
 			final IdlMismatchData mismatchData,
 			final IdlSeverity severity,
 			final IdlAnchorData anchorData, final int coord,
@@ -57,12 +63,12 @@ final class IdlReflectogramMismatchEventImpl
 			final double deltaX,
 			final IdlIdentifier resultId,
 			final IdlIdentifier monitoredElementId) {
-		final IdlIdentifier voidId = VOID_IDENTIFIER.getIdlTransferable();
-
-		this.id = voidId;
+		this.id = id;
 		this.created = created;
-		this.creatorId = voidId;
-		this.modifierId = voidId;
+		this.modified = modified;
+		this.creatorId = creatorId;
+		this.modifierId = modifierId;
+		this.version = version;
 
 		this.mismatchData = mismatchData;
 		this.severity = severity;
@@ -188,11 +194,25 @@ final class IdlReflectogramMismatchEventImpl
 	 * @see com.syrus.AMFICOM.general.corba.IdlStorableObject#getNative()
 	 */
 	@Override
-	public StorableObject getNative() throws IdlCreateObjectException {
-		throw new UnsupportedOperationException();
+	public DefaultReflectogramMismatchEvent getNative()
+	throws IdlCreateObjectException {
+		try {
+			return new DefaultReflectogramMismatchEvent(this, false);
+		} catch (final CreateObjectException coe) {
+			throw coe.getIdlTransferable();
+		}
 	}
 
-	public ReflectogramMismatchEvent getNativeEvent() {
-		return DefaultReflectogramMismatchEvent.valueOf(this);
+	/**
+	 * @throws IdlCreateObjectException
+	 * @see com.syrus.AMFICOM.eventv2.corba.IdlEvent#getNativeEvent()
+	 */
+	public ReflectogramMismatchEvent getNativeEvent()
+	throws IdlCreateObjectException {
+		try {
+			return new DefaultReflectogramMismatchEvent(this, true);
+		} catch (final CreateObjectException coe) {
+			throw coe.getIdlTransferable();
+		}
 	}
 }

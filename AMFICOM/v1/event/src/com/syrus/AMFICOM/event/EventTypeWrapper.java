@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeWrapper.java,v 1.24 2006/03/15 15:47:20 arseniy Exp $
+ * $Id: EventTypeWrapper.java,v 1.23 2006/03/13 15:54:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,14 +15,15 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2006/03/15 15:47:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2006/03/13 15:54:25 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 public final class EventTypeWrapper extends StorableObjectWrapper<EventType> {
 
 	public static final String LINK_COLUMN_EVENT_TYPE_ID = "event_type_id";
+	public static final String LINK_FIELD_PARAMETER_TYPES = "parameter_types";
 	public static final String LINK_COLUMN_USER_ID = "user_id";
 	public static final String LINK_COLUMN_ALERT_KIND = "alert_kind";
 
@@ -32,7 +33,7 @@ public final class EventTypeWrapper extends StorableObjectWrapper<EventType> {
 
 	private EventTypeWrapper() {
 		//	private constructor
-		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, LINK_COLUMN_PARAMETER_TYPE_ID };
+		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, LINK_FIELD_PARAMETER_TYPES };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -63,8 +64,8 @@ public final class EventTypeWrapper extends StorableObjectWrapper<EventType> {
 			if (key.equals(COLUMN_DESCRIPTION)) {
 				return eventType.getDescription();
 			}
-			if (key.equals(LINK_COLUMN_PARAMETER_TYPE_ID)) {
-				return eventType.getParameterTypeIds();
+			if (key.equals(LINK_FIELD_PARAMETER_TYPES)) {
+				return eventType.getParameterTypes();
 			}
 		}
 		return value;
@@ -107,7 +108,7 @@ public final class EventTypeWrapper extends StorableObjectWrapper<EventType> {
 		if (key.equals(COLUMN_CODENAME) || key.equals(COLUMN_DESCRIPTION)) {
 			return String.class;
 		}
-		if (key.equals(LINK_COLUMN_PARAMETER_TYPE_ID)) {
+		if (key.equals(LINK_FIELD_PARAMETER_TYPES)) {
 			return Set.class;
 		}
 		return null;
