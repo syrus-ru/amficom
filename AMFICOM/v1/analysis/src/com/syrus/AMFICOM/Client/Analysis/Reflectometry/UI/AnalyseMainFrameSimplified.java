@@ -220,6 +220,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		
 		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_OPEN, AnalyseMainFrameSimplified.DEBUG);
 
+		aModel.setVisible(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD, false);
 		aModel.setVisible(AnalyseApplicationModel.MENU_MEASUREMENTSETUP, false);
 		aModel.setVisible(AnalyseApplicationModel.MENU_WINDOW_THRESHOLDSSELECTION, false);
 		aModel.setVisible(AnalyseApplicationModel.MENU_WINDOW_THRESHOLDS, false);

@@ -21,6 +21,7 @@ public class AnalyseMainToolBar extends AbstractMainToolBar {
 
 	private void initItems() {
 		final JButton traceDownload = new JButton();
+		final JButton modelDownload = new JButton();
 		final JButton traceAddCompare = new JButton();
 		final JButton traceRemoveCompare = new JButton();
 
@@ -38,6 +39,12 @@ public class AnalyseMainToolBar extends AbstractMainToolBar {
 		traceDownload.setToolTipText(LangModelAnalyse.getString("menuTraceDownload"));
 		traceDownload.setName(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD);
 		traceDownload.addActionListener(super.actionListener);
+		
+		modelDownload.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_MODEL));
+		modelDownload.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		modelDownload.setToolTipText(LangModelAnalyse.getString("menuModelDownload"));
+		modelDownload.setName(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD);
+		modelDownload.addActionListener(super.actionListener);
 
 		traceAddCompare.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_ADD));
 		traceAddCompare.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
@@ -89,6 +96,8 @@ public class AnalyseMainToolBar extends AbstractMainToolBar {
 				
 				traceDownload.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD));
 				traceDownload.setEnabled(aModel.isEnabled(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD));
+				modelDownload.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD));
+				modelDownload.setEnabled(aModel.isEnabled(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD));
 				traceAddCompare.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE));
 				traceAddCompare.setEnabled(aModel.isEnabled(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE));
 				traceRemoveCompare.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE));
@@ -115,6 +124,7 @@ public class AnalyseMainToolBar extends AbstractMainToolBar {
 		super.add(fileRemove);
 		super.addSeparator();
 		super.add(traceDownload);
+		super.add(modelDownload);
 		super.add(traceAddCompare);
 		super.add(traceRemoveCompare);
 		if (checkMismatch != null) {

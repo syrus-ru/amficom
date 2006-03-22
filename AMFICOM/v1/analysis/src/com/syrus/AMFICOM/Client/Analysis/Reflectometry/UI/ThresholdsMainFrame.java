@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAllTracesCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadModelingCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.MakeCurrentTracePrimaryCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.SavePathElementsCommand;
@@ -223,6 +224,7 @@ implements BsHashChangeListener, EtalonMTMListener,
 				new SaveTestSetupAsCommand(this.aContext, SaveTestSetupCommand.CRITERIA + SaveTestSetupCommand.ETALON));
 
 		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD, new LoadTraceFromDatabaseCommand(this.dispatcher, this.aContext));
+		aModel.setCommand(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD, new LoadModelingCommand(this.aContext));
 		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE, new AddTraceFromDatabaseCommand(this.aContext));
 		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE, new FileRemoveCommand(null, this.aContext));
 
@@ -291,6 +293,8 @@ implements BsHashChangeListener, EtalonMTMListener,
 		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_OPEN_WAVETEK, readFilePermitted);
 		aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD,
 				PermissionManager.isPermitted(Operation.LOAD_TRACE));
+		aModel.setEnabled(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD,
+				PermissionManager.isPermitted(Operation.LOAD_TRACE));
 		
 		aModel.fireModelChanged("");
 	}
@@ -307,6 +311,7 @@ implements BsHashChangeListener, EtalonMTMListener,
 		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_OPEN_WAVETEK, false);
 		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_ADD_COMPARE, false);
 		aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD, false);
 		aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE, false);
 
 		aModel.setEnabled(AnalyseApplicationModel.MENU_MEASUREMENTSETUP_SAVE, false);

@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAllTracesCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadModelingCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.MakeCurrentTracePrimaryCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.SavePathElementsCommand;
@@ -405,6 +406,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 //		aModel.setCommand("menuNetStudy", new NetStudyCommand());
 
 		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD, new LoadTraceFromDatabaseCommand(this.dispatcher, this.aContext));
+		aModel.setCommand(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD, new LoadModelingCommand(this.aContext));
 //		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand());
 		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE, new AddTraceFromDatabaseCommand(this.aContext));
 		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE, new FileRemoveCommand(null, this.aContext));
@@ -496,6 +498,9 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_OPEN_WAVETEK, readFilePermitted);
 		aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD,
 				PermissionManager.isPermitted(Operation.LOAD_TRACE));
+		aModel.setEnabled(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD,
+				PermissionManager.isPermitted(Operation.LOAD_TRACE));
+		
 //		aModel.setEnabled("menuNetStudy", true);
 		aModel.fireModelChanged("");
 	}
@@ -512,6 +517,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_OPEN_WAVETEK, false);
 		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_ADD_COMPARE, false);
 		aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD, false);
 		aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE, false);
 //		aModel.setEnabled("menuTraceDownloadEtalon", false);
 
