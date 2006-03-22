@@ -8,6 +8,9 @@
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.downloadTrace">
       <res:filename>images/download_trace.gif</res:filename>
     </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.downloadModel">
+      <res:filename>images/download_model.gif</res:filename>
+    </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.anchored">
       <res:filename>images/opt_start.gif</res:filename>
     </res:resource>
