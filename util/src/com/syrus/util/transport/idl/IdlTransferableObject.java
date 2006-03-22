@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlTransferableObject.java,v 1.1 2005/12/07 17:15:29 bass Exp $
+ * $Id: IdlTransferableObject.java,v 1.2 2006/03/22 08:12:19 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,17 +8,15 @@
 
 package com.syrus.util.transport.idl;
 
-import java.io.Serializable;
-
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * @author Tashoyan Arseniy Feliksovich
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/12/07 17:15:29 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2006/03/22 08:12:19 $
  * @module util
  */
-public interface IdlTransferableObject<T extends IDLEntity> extends Serializable {
+public interface IdlTransferableObject<T extends IDLEntity> {
 	T getIdlTransferable(final ORB orb);
 }
