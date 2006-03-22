@@ -1,5 +1,5 @@
 /*-
- * $Id: TestActionParameter.java,v 1.1.2.3 2006/03/06 12:25:05 arseniy Exp $
+ * $Id: TestActionParameter.java,v 1.1.2.4 2006/03/22 08:22:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKi
 import com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/03/06 12:25:05 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/03/22 08:22:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -54,7 +54,13 @@ public final class TestActionParameter extends TestCase {
 		}
 	}
 
-	public void testCodenameIdentifierMap() throws ApplicationException {
+	public void testSingularCodenameIdentifierMap() throws ApplicationException {
+		final String[] codenames = new String[] { ReflectometryParameterTypeCodename.PULSE_WIDTH_M.stringValue() };
+		final Map<String, Identifier> typeCodenameIdMap = ParameterType.getCodenameIdentifierMap(codenames);
+		System.out.println("Map: " + typeCodenameIdMap);
+	}
+
+	public void testMultipleCodenameIdentifierMap() throws ApplicationException {
 		final String[] codenames = new String[] { ReflectometryParameterTypeCodename.PULSE_WIDTH_M.stringValue(),
 				ReflectometryParameterTypeCodename.PULSE_WIDTH_NS.stringValue(),
 				ReflectometryParameterTypeCodename.DADARA_ANALYSIS_RESULT.stringValue(),
