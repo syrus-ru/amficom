@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.10 2006/03/22 16:48:43 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.11 2006/03/22 17:53:01 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PERIODICALTEMPORALPATTERN
 import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -56,7 +57,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.10 $, $Date: 2006/03/22 16:48:43 $
+ * @version $Revision: 1.183.2.11 $, $Date: 2006/03/22 17:53:01 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -854,7 +855,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		}
 	}
 
-	private final class TestTimeStamps implements IdlTransferableObject<IdlTestTimeStamps> {
+	private final class TestTimeStamps implements IdlTransferableObject<IdlTestTimeStamps>, Serializable {
 		private static final long serialVersionUID = -3560328752462377043L;
 
 		private Date startTime;
