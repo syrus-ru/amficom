@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.13.2.5 2006/03/17 11:54:48 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.13.2.6 2006/03/22 09:12:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.13.2.5 $, $Date: 2006/03/17 11:54:48 $
+ * @version $Revision: 1.13.2.6 $, $Date: 2006/03/22 09:12:20 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -229,8 +229,28 @@ public final class MonitoredElement extends DomainMember implements IdlTransfera
 		this.localAddress = localAddress;
 	}
 
+	/**
+	 * Возвращает свое базовое название 
+	 * @return свое базовое название
+	 */
 	public String getName() {
 		return this.name;
+	}
+
+	public static String getNamePrefix() {
+		// @todo: move the construction code to module util
+		// the same may be done for "RR"
+		// XXX: cache?
+		return LangModelMeasurement.getString("ME");
+	}
+
+	/**
+	 * Возвращает название, отображаемое пользователю
+	 * @return название, отображаемое пользователю
+	 */
+	public String getDisplayedName() {
+		// XXX: not cached yet; creates new string every invocation
+		return getNamePrefix() + " " + this.getName();
 	}
 
 	public void setName(final String name) {
