@@ -1,4 +1,4 @@
--- $Id: reflectogrammismatchevent.sql,v 1.2 2006/03/22 17:04:32 bass Exp $
+-- $Id: reflectogrammismatchevent.sql,v 1.3 2006/03/23 15:28:26 bass Exp $
 
 CREATE TABLE ReflectogramMismatchEvent (
 	id NUMBER(19) NOT NULL,
@@ -66,6 +66,6 @@ CREATE TABLE ReflectogramMismatchEvent (
 		REFERENCES MonitoredElement(id) ON DELETE SET NULL
 );
 
-COMMENT ON TABLE ReflectogramMismatchEvent IS '$id$';
+COMMENT ON TABLE ReflectogramMismatchEvent IS '$Id: reflectogrammismatchevent.sql,v 1.3 2006/03/23 15:28:26 bass Exp $';
 
 CREATE SEQUENCE ReflectogramMismatchEvent_Seq ORDER;
