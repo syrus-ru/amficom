@@ -1,5 +1,5 @@
 /*-
- * $Id: MSChooserUI.java,v 1.1 2006/03/22 10:56:10 stas Exp $
+ * $Id: MSChooserUI.java,v 1.2 2006/03/23 14:58:54 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -88,6 +88,7 @@ public final class MSChooserUI {
 			dialog.setModal(true);
 			dialog.setResizable(true);
 		}
+		retCode = Command.RESULT_CANCEL;
 		dialog.setVisible(true);
 	}
 
