@@ -224,7 +224,7 @@ public class TimeDependencePanel extends TraceEventsPanel
 		{
 			int x1 = (int)((data[i+start].date - min_x - left) * scaleX + 1);
 			int y1 = (int)((maxY - data[i+start].value - top) * scaleY - 1);
-			g.fillOval(x1 - 4, y1 - 3, 8, 8);
+			g.fillOval(x1 - 2, y1 - 2, 4, 4);
 		}
 	}
 
