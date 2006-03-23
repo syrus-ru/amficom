@@ -21,5 +21,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/map"/>
 	<classpathentry kind="var" path="JAF_HOME/activation.jar"/>
 	<classpathentry sourcepath="/JAVAMAIL_HOME/src" kind="var" path="JAVAMAIL_HOME/mail.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/bugs"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

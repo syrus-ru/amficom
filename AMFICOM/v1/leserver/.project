@@ -4,6 +4,7 @@
 	<comment></comment>
 	<projects>
 		<project>administration</project>
+		<project>bugs</project>
 		<project>csbridge</project>
 		<project>event</project>
 		<project>general</project>
