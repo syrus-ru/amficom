@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementControlModule.java,v 1.146.2.8 2006/03/21 09:43:30 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146.2.9 2006/03/23 15:27:12 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146.2.8 $, $Date: 2006/03/21 09:43:30 $
+ * @version $Revision: 1.146.2.9 $, $Date: 2006/03/23 15:27:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -326,6 +326,17 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 		/* Создать объект главного класса. */
 		instance = new MeasurementControlModule(mcmId, systemUserLogin);
+
+		/*
+		 * Настроить приёмопередатчики КИС. В конструкторе этого делать нельзя,
+		 * т. к. конструктор Transceiver обращается к объекту-одиночке
+		 * MeasurementControlModule, который к моменту этого обращения уже
+		 * должен существовать.
+		 */
+		instance.setupKISTransceivers();
+
+		/* Найти задания в состояниях НАЗНАЧЕН и ВЫПОЛНЯЕТСЯ и обработать их. */
+		instance.searchScheduledAndProcessingTests();
 	}
 
 	/**
@@ -369,14 +380,12 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		this.stoppingTestIds = Collections.synchronizedSet(new HashSet<Identifier>());
 
 		this.scheduledTests = Collections.synchronizedList(new LinkedList<Test>());
-		this.searchScheduledAndProcessingTests();
 
 		this.testProcessors = Collections.synchronizedMap(new HashMap<Identifier, TestProcessor>());
 
 		this.kisConnectionManager = new KISConnectionManager();
 
 		this.transceivers = Collections.synchronizedMap(new HashMap<Identifier, Transceiver>());
-		this.setupKISTransceivers();
 
 		this.objectSynchronizer = new MCMObjectSynchronizer(MCMSessionEnvironment.getInstance().getMCMServantManager());
 		this.objectSynchronizer.start();
