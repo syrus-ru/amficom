@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlLineMismatchEventImpl.java,v 1.6.2.4 2006/03/23 13:07:23 bass Exp $
+ * $Id: IdlLineMismatchEventImpl.java,v 1.6.2.5 2006/03/23 15:48:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.eventv2.corba;
 import com.syrus.AMFICOM.eventv2.DefaultLineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.LineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlEventPackage.IdlEventType;
-import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialData;
-import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialDataPackage.IdlAffectedPathElementSpatious;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialData;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialDataPackage.IdlAffectedPathElementSpacious;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6.2.4 $, $Date: 2006/03/23 13:07:23 $
+ * @version $Revision: 1.6.2.5 $, $Date: 2006/03/23 15:48:42 $
  * @module event
  */
 final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
@@ -38,7 +38,7 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	 * @param modifierId
 	 * @param version
 	 * @param affectedPathElementId
-	 * @param spatialData
+	 * @param spacialData
 	 * @param mismatchOpticalDistance
 	 * @param mismatchPhysicalDistance
 	 * @param message
@@ -49,7 +49,7 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 			final IdlIdentifier creatorId,
 			final IdlIdentifier modifierId, final long version,
 			final IdlIdentifier affectedPathElementId,
-			final IdlSpatialData spatialData,
+			final IdlSpacialData spacialData,
 			final double mismatchOpticalDistance,
 			final double mismatchPhysicalDistance,
 			final String message,
@@ -62,7 +62,7 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 		this.version = version;
 
 		this.affectedPathElementId = affectedPathElementId;
-		this.spatialData = spatialData;
+		this.spacialData = spacialData;
 
 		this.mismatchOpticalDistance = mismatchOpticalDistance;
 		this.mismatchPhysicalDistance = mismatchPhysicalDistance;
@@ -80,11 +80,11 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	}
 
 	/**
-	 * @see IdlLineMismatchEvent#isAffectedPathElementSpatious()
+	 * @see IdlLineMismatchEvent#isAffectedPathElementSpacious()
 	 */
 	@Override
-	public boolean isAffectedPathElementSpatious() {
-		return this.spatialData.discriminator() == IdlAffectedPathElementSpatious._TRUE;
+	public boolean isAffectedPathElementSpacious() {
+		return this.spacialData.discriminator() == IdlAffectedPathElementSpacious._TRUE;
 	}
 
 	/**
@@ -92,8 +92,8 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	 */
 	@Override
 	public double getPhysicalDistanceToStart() {
-		if (this.isAffectedPathElementSpatious()) {
-			return this.spatialData.physicalDistancePair().physicalDistanceToStart;
+		if (this.isAffectedPathElementSpacious()) {
+			return this.spacialData.physicalDistancePair().physicalDistanceToStart;
 		}
 		throw new IllegalStateException();
 	}
@@ -103,8 +103,8 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	 */
 	@Override
 	public double getPhysicalDistanceToEnd() {
-		if (this.isAffectedPathElementSpatious()) {
-			return this.spatialData.physicalDistancePair().physicalDistanceToEnd;
+		if (this.isAffectedPathElementSpacious()) {
+			return this.spacialData.physicalDistancePair().physicalDistanceToEnd;
 		}
 		throw new IllegalStateException();
 	}

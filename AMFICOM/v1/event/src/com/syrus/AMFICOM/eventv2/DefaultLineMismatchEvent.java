@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.8.2.5 2006/03/23 13:07:23 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.8.2.6 2006/03/23 15:48:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8.2.5 $, $Date: 2006/03/23 13:07:23 $
+ * @version $Revision: 1.8.2.6 $, $Date: 2006/03/23 15:48:42 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -42,7 +42,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	/**
 	 * @serial include
 	 */
-	private boolean affectedPathElementSpatious;
+	private boolean affectedPathElementSpacious;
 
 	/**
 	 * @serial include
@@ -87,7 +87,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	 * @param id
 	 * @param creatorId
 	 * @param affectedPathElementId
-	 * @param affectedPathElementSpatious
+	 * @param affectedPathElementSpacious
 	 * @param physicalDistanceToStart
 	 * @param physicalDistanceToEnd
 	 * @param mismatchOpticalDistance
@@ -98,7 +98,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	private DefaultLineMismatchEvent(final Identifier id,
 			final Identifier creatorId,
 			final Identifier affectedPathElementId,
-			final boolean affectedPathElementSpatious,
+			final boolean affectedPathElementSpacious,
 			final double physicalDistanceToStart,
 			final double physicalDistanceToEnd,
 			final double mismatchOpticalDistance,
@@ -109,7 +109,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 
 		this.affectedPathElementId = affectedPathElementId;
 
-		if (!!(this.affectedPathElementSpatious = affectedPathElementSpatious)) {
+		if (!!(this.affectedPathElementSpacious = affectedPathElementSpacious)) {
 			this.physicalDistanceToStart = physicalDistanceToStart;
 			this.physicalDistanceToEnd = physicalDistanceToEnd;
 
@@ -150,7 +150,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 
 			this.affectedPathElementId = Identifier.valueOf(lineMismatchEvent.getAffectedPathElementId());
 
-			if (!!(this.affectedPathElementSpatious = lineMismatchEvent.isAffectedPathElementSpatious())) {
+			if (!!(this.affectedPathElementSpacious = lineMismatchEvent.isAffectedPathElementSpacious())) {
 				this.physicalDistanceToStart = lineMismatchEvent.getPhysicalDistanceToStart();
 				this.physicalDistanceToEnd = lineMismatchEvent.getPhysicalDistanceToEnd();
 
@@ -174,7 +174,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			final Identifier modifierId,
 			final StorableObjectVersion version,
 			final Identifier affectedPathElementId,
-			final boolean affectedPathElementSpatious,
+			final boolean affectedPathElementSpacious,
 			final double physicalDistanceToStart,
 			final double physicalDistanceToEnd,
 			final double mismatchOpticalDistance,
@@ -185,7 +185,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		
 		this.affectedPathElementId = affectedPathElementId;
 
-		if (!!(this.affectedPathElementSpatious = affectedPathElementSpatious)) {
+		if (!!(this.affectedPathElementSpacious = affectedPathElementSpacious)) {
 			this.physicalDistanceToStart = physicalDistanceToStart;
 			this.physicalDistanceToEnd = physicalDistanceToEnd;
 
@@ -209,7 +209,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	 *
 	 * @param creatorId
 	 * @param affectedPathElementId
-	 * @param affectedPathElementSpatious
+	 * @param affectedPathElementSpacious
 	 * @param physicalDistanceToStart
 	 * @param physicalDistanceToEnd
 	 * @param mismatchOpticalDistance
@@ -221,7 +221,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	public static LineMismatchEvent newInstance(
 			final Identifier creatorId,
 			final Identifier affectedPathElementId,
-			final boolean affectedPathElementSpatious,
+			final boolean affectedPathElementSpacious,
 			final double physicalDistanceToStart,
 			final double physicalDistanceToEnd,
 			final double mismatchOpticalDistance,
@@ -241,7 +241,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 					IdentifierPool.getGeneratedIdentifier(LINEMISMATCHEVENT_CODE),
 					creatorId,
 					affectedPathElementId,
-					affectedPathElementSpatious, physicalDistanceToStart,
+					affectedPathElementSpacious, physicalDistanceToStart,
 					physicalDistanceToEnd, mismatchOpticalDistance,
 					mismatchPhysicalDistance, message,
 					reflectogramMismatchEventId);
@@ -266,7 +266,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	 * @see LineMismatchEvent#isAffectedPathElementSpacious()
 	 */
 	public boolean isAffectedPathElementSpacious() {
-		return this.affectedPathElementSpatious;
+		return this.affectedPathElementSpacious;
 	}
 
 	/**

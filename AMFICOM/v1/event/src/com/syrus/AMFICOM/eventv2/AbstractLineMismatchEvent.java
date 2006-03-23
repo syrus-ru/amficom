@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLineMismatchEvent.java,v 1.4.2.3 2006/03/23 13:07:23 bass Exp $
+ * $Id: AbstractLineMismatchEvent.java,v 1.4.2.4 2006/03/23 15:48:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,9 +18,9 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventHelper;
-import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialData;
-import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialDataPackage.IdlAffectedPathElementSpatious;
-import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialDataPackage.IdlPhysicalDistancePair;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialData;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialDataPackage.IdlAffectedPathElementSpacious;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialDataPackage.IdlPhysicalDistancePair;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4.2.3 $, $Date: 2006/03/23 13:07:23 $
+ * @version $Revision: 1.4.2.4 $, $Date: 2006/03/23 15:48:42 $
  * @module event
  */
 public abstract class AbstractLineMismatchEvent extends StorableObject
@@ -64,15 +64,15 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 	 */
 	@Override
 	public final IdlLineMismatchEvent getIdlTransferable(final ORB orb) {
-		final IdlSpatialData spatialData = new IdlSpatialData();
+		final IdlSpacialData spacialData = new IdlSpacialData();
 		if (this.isAffectedPathElementSpacious()) {
-			spatialData.physicalDistancePair(
-					IdlAffectedPathElementSpatious._TRUE,
+			spacialData.physicalDistancePair(
+					IdlAffectedPathElementSpacious._TRUE,
 					new IdlPhysicalDistancePair(
 							this.getPhysicalDistanceToStart(),
 							this.getPhysicalDistanceToEnd()));
 		} else {
-			spatialData._default(IdlAffectedPathElementSpatious._FALSE);
+			spacialData._default(IdlAffectedPathElementSpacious._FALSE);
 		}
 
 		return IdlLineMismatchEventHelper.init(orb,
@@ -83,7 +83,7 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 				this.modifierId.getIdlTransferable(orb),
 				this.version.longValue(),
 				this.getAffectedPathElementId().getIdlTransferable(orb),
-				spatialData,
+				spacialData,
 				this.getMismatchOpticalDistance(),
 				this.getMismatchPhysicalDistance(),
 				this.getMessage(),
