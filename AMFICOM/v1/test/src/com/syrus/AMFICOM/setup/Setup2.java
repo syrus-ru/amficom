@@ -1,11 +1,14 @@
 /*-
- * $Id: Setup2.java,v 1.1.2.2 2006/03/06 15:14:34 arseniy Exp $
+ * $Id: Setup2.java,v 1.1.2.3 2006/03/23 15:28:14 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.setup;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.configuration.SetupEquipmentType;
 import com.syrus.AMFICOM.configuration.SetupPortType;
@@ -17,11 +20,8 @@ import com.syrus.AMFICOM.measurement.SetupMeasurementPortType;
 import com.syrus.AMFICOM.reflectometry.SetupActionParameter;
 import com.syrus.AMFICOM.reflectometry.SetupParameterType;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/03/06 15:14:34 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/03/23 15:28:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test

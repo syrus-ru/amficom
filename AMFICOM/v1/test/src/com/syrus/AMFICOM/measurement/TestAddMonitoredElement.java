@@ -1,5 +1,5 @@
 /*-
- * $Id: TestAddMonitoredElement.java,v 1.1.2.2 2006/03/06 19:03:56 arseniy Exp $
+ * $Id: TestAddMonitoredElement.java,v 1.1.2.3 2006/03/23 15:27:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,9 +7,14 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.IdlMonitoredElementKind.MONITOREDELEMENT_KIND_TRANSMISSION_PATH;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
@@ -22,13 +27,9 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import static com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.IdlMonitoredElementKind.MONITOREDELEMENT_KIND_TRANSMISSION_PATH;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/03/06 19:03:56 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/03/23 15:27:54 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
