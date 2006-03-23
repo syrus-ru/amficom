@@ -1,6 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Command.Prediction;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 
@@ -13,6 +15,7 @@ import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionModel;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.newFilter.DateSpinner;
 import com.syrus.io.BellcorePredictionWriter;
@@ -30,21 +33,58 @@ public class CountPredictedReflectogramm extends AbstractCommand {
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void execute() {
 		PredictionManager pm = PredictionModel.getPredictionManager();
 		if (pm == null) {
 			Log.debugMessage("PredictionModel not initialyzed yet", Level.WARNING);
 			return;
 		}
-
-		DateSpinner dateSpinner = new DateSpinner();
-//		dateSpinner.setValue(new Date(105, 11, 8)); // FIXME: debug
-
-		int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), 
-				dateSpinner, "Дата прогнозирования", JOptionPane.OK_CANCEL_OPTION);
 		
-		if (res == JOptionPane.CANCEL_OPTION) {
+		if (pm.getMaxTime() <= pm.getMinTime()) {
+			Log.errorMessage("Incorrect state of PredictionManager: pm.getMaxTime() <= pm.getMinTime()");
 			return;
+		}
+		
+		DateSpinner dateSpinner = new DateSpinner();
+		Calendar defaultTime = Calendar.getInstance();
+		defaultTime.setTime(new Date(2 * pm.getMaxTime() - pm.getMinTime()));
+		defaultTime.set(Calendar.HOUR_OF_DAY, 0);
+		defaultTime.set(Calendar.MINUTE, 0);
+		defaultTime.set(Calendar.SECOND, 0);
+		defaultTime.set(Calendar.MILLISECOND, 0);
+		defaultTime.add(Calendar.DAY_OF_MONTH, 1);
+		dateSpinner.setValue(defaultTime.getTime());
+		
+		final long maxTime = pm.getMaxTime() + (pm.getMaxTime() - pm.getMinTime()) * 2;
+		
+		while (true) {
+			int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), 
+					dateSpinner, I18N.getString("Label.predictionDate"), JOptionPane.OK_CANCEL_OPTION);
+			
+			if (res != JOptionPane.OK_OPTION) {
+				return;
+			}
+
+			final long time = ((Date)dateSpinner.getValue()).getTime();
+			if (time < pm.getMaxTime()) {
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+						I18N.getString("Message.error.priorDate"), 
+						I18N.getString("Message.error"),
+						JOptionPane.ERROR_MESSAGE);
+				dateSpinner.setValue(new Date(pm.getMaxTime()));
+			} else if (time > maxTime) {
+				final Date maxDate = new Date(maxTime);
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+						I18N.getString("Message.error.tooFarPrediction")+ "\n" + 
+						I18N.getString("Message.error.maximalPrediction") +
+						DateFormat.getDateInstance().format(maxDate), 
+						I18N.getString("Message.error"),
+						JOptionPane.ERROR_MESSAGE);
+				dateSpinner.setValue(maxDate);
+			} else {
+				break;	
+			}
 		}
 
 		Date date = (Date)dateSpinner.getValue();

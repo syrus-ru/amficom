@@ -68,24 +68,12 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand {
 			LinkedIdsCondition mcond  = new LinkedIdsCondition(me.getId(), ObjectEntities.MEASUREMENT_CODE);
 			Set<Measurement> measurements = StorableObjectPool.getStorableObjectsByCondition(
 					new CompoundCondition(condition1, CompoundConditionSort.AND, mcond), true);
-		
 			if (measurements.isEmpty()) {
 				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 						I18N.getString("Message.error.noMeasurementsFound"), 
 						I18N.getString("Message.error"),
 						JOptionPane.ERROR_MESSAGE);
 				return;
-			}
-			
-			// Загружаем эталон в Heap как первичную р/г
-			try {
-				if (!AnalysisUtil.loadEtalonAsEtalonAndAsPrimary(ms)) {
-					return;
-				}
-			} catch (DataFormatException e) {
-				Log.errorMessage(e);
-			} catch (ApplicationException e) {
-				Log.errorMessage(e);
 			}
 			
 			Collection<PredictionMtaeAndDate> pmads = new ArrayList<PredictionMtaeAndDate>();
@@ -110,6 +98,25 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand {
 				}
 				traces.remove(null);
 			}
+			if (traces.size() < 2) {
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+						I18N.getString("Message.error.infufficientAnalysesFound"), 
+						I18N.getString("Message.error"),
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			// Загружаем эталон в Heap как первичную р/г
+			try {
+				if (!AnalysisUtil.loadEtalonAsEtalonAndAsPrimary(ms)) {
+					return;
+				}
+			} catch (DataFormatException e) {
+				Log.errorMessage(e);
+			} catch (ApplicationException e) {
+				Log.errorMessage(e);
+			}
+
 			for (Trace tr: traces) {
 				if (!Heap.hasSecondaryBSKey(tr.getKey()) && !Heap.getPrimaryTrace().getKey().equals(tr.getKey())) {
 					Heap.putSecondaryTrace(tr);
