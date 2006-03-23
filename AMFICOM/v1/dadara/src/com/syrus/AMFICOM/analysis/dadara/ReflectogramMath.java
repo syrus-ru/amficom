@@ -216,6 +216,8 @@ public class ReflectogramMath
 		if (se[i].getEventType() == SimpleReflectogramEvent.DEADZONE)
 		{
 			for (int j = i + 1; j < se.length; j++) {
+				// XXX: быть может, если (i + 1)-е событие - не лин. участок
+				// то в качестве Po надо просто брать y1 DZ.
 				if (se[j].getEventType() == SimpleReflectogramEvent.LINEAR) {
 					int x1 = se[j].getBegin() + 1;
 					int x2 = se[j].getEnd() - 1;
@@ -231,6 +233,7 @@ public class ReflectogramMath
 					}
 				}
 			}
+			// XXX: пожалуй, если лин. участка нет, надо вернуть y1, а не y0.
 		}
 		return mt.getY(se[i].getBegin());
 	}
