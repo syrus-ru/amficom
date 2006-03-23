@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.12.2.2 2006/03/23 07:58:01 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.12.2.3 2006/03/23 08:18:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,8 @@
 
 package com.syrus.AMFICOM.eventv2;
 
-import java.util.Date;
-
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType;
-import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
  * Generation of this one may be triggered upon receipt of a
@@ -21,7 +17,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.12.2.2 $, $Date: 2006/03/23 07:58:01 $
+ * @version $Revision: 1.12.2.3 $, $Date: 2006/03/23 08:18:47 $
  * @module event
  */
 public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
@@ -36,8 +32,8 @@ public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
 	 * {@link #isAffectedPathElementSpacious() affectedPathElementSpacious}
 	 * property is preserved if the {@code PathElement} is deleted.</p>
 	 *
-	 * <p>See also the note on nullability of {@link #getResultId() resultId}
-	 * property.</p>
+	 * <p>See also the note on nullability of
+	 * {@link #getReflectogramMismatchEventId() resultId} property.</p>
 	 *
 	 * @return identifier of the {@code PathElement} affected.
 	 */
@@ -123,5 +119,18 @@ public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
 	 */
 	double getMismatchPhysicalDistance();
 
+	/**
+	 * <p>{@code reflectogramMismatchEventId} is guaranteed to be
+	 * non-{@code null} and non-void during this event&apos;s transfer from
+	 * an agent to the event server, but later on, if the
+	 * {@link ReflectogramMismatchEvent} referenced by this
+	 * {@code reflectogramMismatchEventId} is deleted, a void identifier
+	 * will be returned by this method.</p>
+	 *
+	 * <p>See also the note on nullability of
+	 * {@link #getAffectedPathElementId() affectedPathElementId} property.</p>
+	 *
+	 * @see PopupNotificationEvent#getResultId()
+	 */
 	Identifier getReflectogramMismatchEventId();
 }
