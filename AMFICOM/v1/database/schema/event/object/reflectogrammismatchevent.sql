@@ -1,4 +1,4 @@
--- $Id: reflectogrammismatchevent.sql,v 1.3 2006/03/23 15:28:26 bass Exp $
+-- $Id: reflectogrammismatchevent.sql,v 1.4 2006/03/23 15:33:33 bass Exp $
 
 CREATE TABLE ReflectogramMismatchEvent (
 	id NUMBER(19) NOT NULL,
@@ -23,8 +23,8 @@ CREATE TABLE ReflectogramMismatchEvent (
 	anchor1_coord NUMBER(10), -- nullable
 	anchor2_coord NUMBER(10), -- nullable
 --
-	result_id NUMBER(19),
-	monitored_element_id NUMBER(19),
+	result_id,
+	monitored_element_id,
 --
 	CONSTRAINT rm_event_pk PRIMARY KEY(id),
 --
@@ -66,6 +66,6 @@ CREATE TABLE ReflectogramMismatchEvent (
 		REFERENCES MonitoredElement(id) ON DELETE SET NULL
 );
 
-COMMENT ON TABLE ReflectogramMismatchEvent IS '$Id: reflectogrammismatchevent.sql,v 1.3 2006/03/23 15:28:26 bass Exp $';
+COMMENT ON TABLE ReflectogramMismatchEvent IS '$Id: reflectogrammismatchevent.sql,v 1.4 2006/03/23 15:33:33 bass Exp $';
 
 CREATE SEQUENCE ReflectogramMismatchEvent_Seq ORDER;
