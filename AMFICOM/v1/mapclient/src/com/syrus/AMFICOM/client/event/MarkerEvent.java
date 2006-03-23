@@ -1,5 +1,5 @@
 /*-
- * $Id: MarkerEvent.java,v 1.4 2005/09/29 11:32:36 krupenn Exp $
+ * $Id: MarkerEvent.java,v 1.5 2006/03/23 19:54:25 stas Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,9 @@ import com.syrus.AMFICOM.general.Identifier;
 /**
  * Событие выделения/снятия выделения элемента(-ов) карты
  *
- * @version $Revision: 1.4 $, $Date: 2005/09/29 11:32:36 $
+ * @version $Revision: 1.5 $, $Date: 2006/03/23 19:54:25 $
  * @module mapclient
- * @author $Author: krupenn $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  */
 public class MarkerEvent extends PropertyChangeEvent {
@@ -76,11 +76,6 @@ public class MarkerEvent extends PropertyChangeEvent {
 	protected double opticalDistance;
 
 	/**
-	 * Идентификаторы схемного пути.
-	 */
-	protected Identifier schemePathId;
-
-	/**
 	 * Идентификаторы исследуемого объекта.
 	 */
 	protected Identifier meId;
@@ -89,11 +84,6 @@ public class MarkerEvent extends PropertyChangeEvent {
 	 * Идентификатор схемной Линии.
 	 */
 	protected Identifier schemePathElementId;
-
-	/**
-	 * Декомпозитор пути измерений.
-	 */
-	protected Object schemePath = null;
 
 	/** Управление элементами на карте. */
 	public static final String MARKER_EVENT_TYPE = "markerevent"; //$NON-NLS-1$
@@ -113,31 +103,13 @@ public class MarkerEvent extends PropertyChangeEvent {
 			int markerEventType,
 			Identifier markerId,
 			double opticalDistance,
-			Identifier schemePathId,
+			Identifier pathElementId,
 			Identifier meId) {
 		this(source, markerEventType);
 		this.markerId = markerId;
 		this.opticalDistance = opticalDistance;
-		this.schemePathId = schemePathId;
+		this.schemePathElementId = pathElementId;
 		this.meId = meId;
-	}
-
-	public MarkerEvent(
-			Object source,
-			int markerEventType,
-			Identifier markerId,
-			double opticalDistance,
-			Identifier schemePathId,
-			Identifier meId,
-			Identifier schemePathElementId) {
-		this(
-				source,
-				markerEventType,
-				markerId,
-				opticalDistance,
-				schemePathId,
-				meId);
-		this.schemePathElementId = schemePathElementId;
 	}
 
 	public Identifier getMarkerId() {
@@ -150,14 +122,6 @@ public class MarkerEvent extends PropertyChangeEvent {
 
 	public double getOpticalDistance() {
 		return this.opticalDistance;
-	}
-
-	public void setSchemePathId(Identifier schemePathId) {
-		this.schemePathId = schemePathId;
-	}
-
-	public Identifier getSchemePathId() {
-		return this.schemePathId;
 	}
 
 	public void setMeId(Identifier meId) {
@@ -174,14 +138,6 @@ public class MarkerEvent extends PropertyChangeEvent {
 
 	public Identifier getSchemePathElementId() {
 		return this.schemePathElementId;
-	}
-
-	public void setSchemePath(final Object schemePath) {
-		this.schemePath = schemePath;
-	}
-
-	public Object getSchemePath() {
-		return this.schemePath;
 	}
 
 	public int getMarkerEventType() {
