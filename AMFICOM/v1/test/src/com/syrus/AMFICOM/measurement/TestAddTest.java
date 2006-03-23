@@ -1,5 +1,5 @@
 /*-
- * $Id: TestAddTest.java,v 1.1.2.2 2006/03/23 09:46:43 arseniy Exp $
+ * $Id: TestAddTest.java,v 1.1.2.3 2006/03/23 15:28:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,13 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
 import static com.syrus.AMFICOM.measurement.MeasurementTypeCodename.REFLECTOMETRY;
+import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_SCHEDULED;
 
 import java.util.Collections;
 import java.util.Date;
@@ -27,6 +29,7 @@ import junit.framework.TestCase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBACommonTest;
 import com.syrus.AMFICOM.general.CompoundCondition;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -36,7 +39,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/03/23 09:46:43 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/03/23 15:28:38 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -53,7 +56,7 @@ public final class TestAddTest extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testAdd() throws ApplicationException {
+	public void _testAdd() throws ApplicationException {
 		final Identifier creatorId = LoginManager.getUserId();
 
 		final MeasurementType measurementType = MeasurementType.valueOf(REFLECTOMETRY.stringValue());
@@ -98,10 +101,19 @@ public final class TestAddTest extends TestCase {
 				"test",
 				VOID_IDENTIFIER,
 				monitoredElement.getId(),
-				new Date(),
+				new Date(System.currentTimeMillis() + 60L * 1000L),
 				Collections.singleton(measurementSetup.getId()),
 				measurementType.getId());
+		test.setStatus(TEST_STATUS_SCHEDULED);
 
 		StorableObjectPool.flush(test, creatorId, false);
+	}
+
+	public void testRetrieve() throws ApplicationException {
+		final StorableObjectCondition testCondition = new EquivalentCondition(TEST_CODE);
+		final Set<Test> tests = StorableObjectPool.getStorableObjectsByCondition(testCondition, true);
+		for (final Test test : tests) {
+			System.out.println("Test: " + test.getId() + ", temporal type: " + test.getTemporalType() + ", status: " + test.getStatus());
+		}
 	}
 }
