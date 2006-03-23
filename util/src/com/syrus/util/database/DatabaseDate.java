@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseDate.java,v 1.20 2005/10/31 12:29:58 bass Exp $
+ * $Id: DatabaseDate.java,v 1.20.4.1 2006/03/23 15:05:04 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,15 +10,12 @@ package com.syrus.util.database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.syrus.util.Log;
-
 /**
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/10/31 12:29:58 $
+ * @version $Revision: 1.20.4.1 $, $Date: 2006/03/23 15:05:04 $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -30,17 +27,12 @@ public class DatabaseDate {
 		assert false;
 	}
 
+	/**
+	 * @deprecated Use {@link java.sql.ResultSet#getTimestamp(String)} instead.
+	 */
+	@Deprecated
 	public static Date fromQuerySubString(final ResultSet resultSet, final String column) throws SQLException {
-		Date date = null;
-		try {
-			final String dateStr = resultSet.getString(column);
-			if (dateStr != null) {
-				date = SDF.parse(dateStr);
-			}
-		} catch (ParseException pe) {
-			Log.errorMessage("parse exception '" + pe.getMessage() + '\'');
-		}
-		return date;
+		return resultSet.getTimestamp(column);
 	}
 
 	public static String toQuerySubString(final String column) {
