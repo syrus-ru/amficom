@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.54 2006/03/21 09:05:21 bass Exp $
+ * $Id: event.idl,v 1.55 2006/03/23 07:58:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -140,7 +140,7 @@ module eventv2 {
 		};
 		typedef sequence <IdlEvent> IdlEventSeq;
 
-		abstract valuetype IdlMismatchContainer {
+		valuetype IdlReflectogramMismatchEvent : general::corba::IdlStorableObject, IdlEvent {
 			union IdlMismatchData switch (
 				enum IdlMismatch {
 					_FALSE,
@@ -151,9 +151,6 @@ module eventv2 {
 						double maxMismatch;
 					} mismatchPair;
 			};
-		};
-
-		valuetype IdlReflectogramMismatchEvent : general::corba::IdlStorableObject, IdlEvent, IdlMismatchContainer {
 			private IdlMismatchData mismatchData;
 			private reflectometry::corba::IdlSeverity severity;
 			union IdlAnchorData switch (
@@ -210,10 +207,7 @@ module eventv2 {
 					in general::corba::IdlIdentifier monitoredElementId);
 		};
 
-		valuetype IdlLineMismatchEvent : general::corba::IdlStorableObject, IdlEvent, IdlMismatchContainer {
-			private reflectometry::corba::IdlAlarmType alarmType;
-			private reflectometry::corba::IdlSeverity severity;
-			private IdlMismatchData mismatchData;
+		valuetype IdlLineMismatchEvent : general::corba::IdlStorableObject, IdlEvent {
 			private general::corba::IdlIdentifier affectedPathElementId;
 			union IdlSpatialData switch (
 				enum IdlAffectedPathElementSpatious {
@@ -226,34 +220,23 @@ module eventv2 {
 					} physicalDistancePair;
 			};
 			private IdlSpatialData spatialData;
-			private general::corba::IdlIdentifier resultId;
 			private double mismatchOpticalDistance;
 			private double mismatchPhysicalDistance;
-			private long long mismatchCreated;
+			private general::corba::IdlIdentifier reflectogramMismatchEventId;
 
-			reflectometry::corba::IdlAlarmType getAlarmType();
-			reflectometry::corba::IdlSeverity getSeverity();
-			boolean hasMismatch();
-			double getMinMismatch();
-			double getMaxMismatch();
 			general::corba::IdlIdentifier getAffectedPathElementId();
 			boolean isAffectedPathElementSpatious();
 			double getPhysicalDistanceToStart();
 			double getPhysicalDistanceToEnd();
-			general::corba::IdlIdentifier getResultId();
 			double getMismatchOpticalDistance();
 			double getMismatchPhysicalDistance();
-			long long getMismatchCreated();
+			general::corba::IdlIdentifier getReflectogramMismatchEventId();
 
-			factory init(in reflectometry::corba::IdlAlarmType alarmType,
-					in reflectometry::corba::IdlSeverity severity,
-					in IdlMismatchData mismatchData,
-					in general::corba::IdlIdentifier affectedPathElementId,
+			factory init(in general::corba::IdlIdentifier affectedPathElementId,
 					in IdlSpatialData spatialData,
-					in general::corba::IdlIdentifier resultId,
 					in double mismatchOpticalDistance,
 					in double mismatchPhysicalDistance,
-					in long long mismatchCreated);
+					in general::corba::IdlIdentifier reflectogramMismatchEventId);
 		};
 
 		abstract valuetype IdlNotificationEvent : IdlEvent {

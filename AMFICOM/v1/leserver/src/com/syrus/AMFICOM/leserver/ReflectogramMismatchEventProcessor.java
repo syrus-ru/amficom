@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.12 2006/02/21 11:20:22 bass Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.13 2006/03/23 07:58:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.leserver;
 
 import static com.syrus.AMFICOM.eventv2.EventType.REFLECTORGAM_MISMATCH;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -25,6 +26,7 @@ import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
@@ -37,7 +39,7 @@ import com.syrus.util.Log;
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2006/02/21 11:20:22 $
+ * @version $Revision: 1.13 $, $Date: 2006/03/23 07:58:00 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor implements
@@ -165,25 +167,16 @@ final class ReflectogramMismatchEventProcessor implements
 						+ schemePathId + " is empty");
 			}
 
-			final boolean mismatch;
-			double minMismatch = 0.0;
-			double maxMismatch = 0.0;
-			if (!!(mismatch = reflectogramMismatchEvent.hasMismatch())) {
-				minMismatch = reflectogramMismatchEvent.getMinMismatch();
-				maxMismatch = reflectogramMismatchEvent.getMaxMismatch();
-			}
-
 			final LineMismatchEvent lineMismatchEvent = DefaultLineMismatchEvent.valueOf(
-					reflectogramMismatchEvent.getAlarmType(),
-					reflectogramMismatchEvent.getSeverity(),
-					mismatch, minMismatch, maxMismatch,
 					affectedPathElement.getId(),
 					affectedPathElement.isSpacious(),
 					physicalDistanceFromStart,
-					physicalDistanceFromEnd, resultId,
+					physicalDistanceFromEnd,
 					eventOpticalDistance,
 					eventPhysicalDistance,
-					reflectogramMismatchEvent.getCreated());
+					reflectogramMismatchEvent instanceof StorableObject
+							? ((StorableObject) reflectogramMismatchEvent).getId()
+							: VOID_IDENTIFIER);
 			final LEServerServantManager servantManager = LEServerSessionEnvironment.getInstance().getLEServerServantManager();
 			servantManager.getEventServerReference().receiveEvents(new IdlEvent[] {
 					lineMismatchEvent.getIdlTransferable(servantManager.getCORBAServer().getOrb())});

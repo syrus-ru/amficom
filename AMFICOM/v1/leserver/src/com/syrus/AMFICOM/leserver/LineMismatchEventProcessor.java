@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.21 2006/03/13 09:55:52 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.22 2006/03/23 07:58:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,6 +39,7 @@ import com.syrus.AMFICOM.eventv2.Event;
 import com.syrus.AMFICOM.eventv2.EventType;
 import com.syrus.AMFICOM.eventv2.LineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.PopupNotificationEvent;
+import com.syrus.AMFICOM.eventv2.ReflectogramMismatchEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -50,6 +51,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
@@ -57,7 +59,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2006/03/13 09:55:52 $
+ * @version $Revision: 1.22 $, $Date: 2006/03/23 07:58:00 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
@@ -133,8 +135,16 @@ final class LineMismatchEventProcessor implements EventProcessor {
 			final LEServerServantManager servantManager = LEServerSessionEnvironment.getInstance().getLEServerServantManager();
 			final ORB orb = servantManager.getCORBAServer().getOrb();
 
+			/*
+			 * Cast here is ok: RME may not always be a storable
+			 * object, but storable object pulled by id with an
+			 * appropriate major is always a RME.
+			 */
+			final ReflectogramMismatchEvent reflectogramMismatchEvent =
+					(ReflectogramMismatchEvent) StorableObjectPool.getStorableObject(lineMismatchEvent.getReflectogramMismatchEventId(), true);
+			final Severity severity = reflectogramMismatchEvent.getSeverity();
 			final Set<SystemUser> systemUsers = DeliveryAttributes
-					.getInstance(getCreatorId(), lineMismatchEvent.getSeverity())
+					.getInstance(getCreatorId(), severity)
 					.getSystemUsersRecursively();
 			final Set<Identifier> systemUserIds = Identifier.createIdentifiers(systemUsers);
 
@@ -146,16 +156,19 @@ final class LineMismatchEventProcessor implements EventProcessor {
 				final PopupNotificationEvent popupNotificationEvent =
 						DefaultPopupNotificationEvent.valueOf(
 								lineMismatchEvent,
-								createMessage(lineMismatchEvent),
-								systemUserId);
+								createMessage(reflectogramMismatchEvent, lineMismatchEvent),
+								systemUserId,
+								reflectogramMismatchEvent.getResultId(),
+								reflectogramMismatchEvent.getCreated(),
+								severity);
 				notificationEvents[i++] = popupNotificationEvent.getIdlTransferable(orb);
 			}
 			for (final String address : addresses) {
 				final EmailNotificationEvent emailNotificationEvent =
 							DefaultEmailNotificationEvent.valueOf(
-									lineMismatchEvent,
 									address,
-									createMessage(lineMismatchEvent));
+									severity.getLocalizedName(),
+									createMessage(reflectogramMismatchEvent, lineMismatchEvent));
 				notificationEvents[i++] = emailNotificationEvent.getIdlTransferable(orb);
 			}
 
@@ -200,11 +213,13 @@ final class LineMismatchEventProcessor implements EventProcessor {
 	 *         {@link com.syrus.AMFICOM.reflectometry.ReflectogramMismatch mismatch}
 	 *         that triggerred this event's generation.
 	 */
-	private static String createMessage(final LineMismatchEvent lineMismatchEvent) {
-		return MISMATCH_CREATED + COLON_TAB + EasyDateFormatter.formatDate(lineMismatchEvent.getMismatchCreated())
+	private static String createMessage(
+			final ReflectogramMismatchEvent reflectogramMismatchEvent,
+			final LineMismatchEvent lineMismatchEvent) {
+		return MISMATCH_CREATED + COLON_TAB + EasyDateFormatter.formatDate(reflectogramMismatchEvent.getCreated())
 				+ NEWLINE
-				+ lineMismatchEvent.getSeverity().getLocalizedDescription() + NEWLINE
-				+ lineMismatchEvent.getAlarmType().getLocalizedDescription() + NEWLINE
+				+ reflectogramMismatchEvent.getSeverity().getLocalizedDescription() + NEWLINE
+				+ reflectogramMismatchEvent.getAlarmType().getLocalizedDescription() + NEWLINE
 				+ NEWLINE
 				+ AFFECTED + SPACE + PATH_ELEMENT + COLON_TAB + getExtendedName(lineMismatchEvent.getAffectedPathElementId()) + NEWLINE
 				+ (lineMismatchEvent.isAffectedPathElementSpacious()
@@ -212,8 +227,8 @@ final class LineMismatchEventProcessor implements EventProcessor {
 						+ PHYSICAL_DISTANCE_TO + SPACE + END_OF + SPACE + PATH_ELEMENT_GENITIVE + COLON_TAB + getLocalizedDistance((int) lineMismatchEvent.getPhysicalDistanceToEnd()) + NEWLINE
 						: "")
 				+ NEWLINE
-				+ (lineMismatchEvent.hasMismatch()
-						? MISMATCH_LEVEL + COLON_TAB + lineMismatchEvent.getMinMismatch() + RANGE + lineMismatchEvent.getMaxMismatch() + NEWLINE
+				+ (reflectogramMismatchEvent.hasMismatch()
+						? MISMATCH_LEVEL + COLON_TAB + reflectogramMismatchEvent.getMinMismatch() + RANGE + reflectogramMismatchEvent.getMaxMismatch() + NEWLINE
 						: "");
 	}
 
