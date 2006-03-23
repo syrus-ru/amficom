@@ -1,5 +1,5 @@
 /*-
- * $Id: PredictionManager.java,v 1.6 2006/03/21 11:11:32 saa Exp $
+ * $Id: PredictionManager.java,v 1.7 2006/03/23 08:51:02 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
  * </p>
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2006/03/21 11:11:32 $
+ * @version $Revision: 1.7 $, $Date: 2006/03/23 08:51:02 $
  * @module prediction
  */
 public interface PredictionManager {
@@ -58,20 +58,41 @@ public interface PredictionManager {
 	MonitoredElement getMonitoredElement();
 
 	/**
-	 * ќпредел€ет AttenuationInformation.
+	 * ¬озвращает статистику по затуханию.
 	 * ќпределен, если {@link #hasAttenuationInfo} возвращает true,
 	 * но и в этом случае нет гарантии, что временной р€д будет непуст.
 	 * @param nEvent номер событи€
-	 * @return AttenuationInformation
 	 */
 	Statistics getAttenuationInfo(int nEvent);
 
+	/**
+	 * "’рен знает" (мы со —тасом не знаем)
+	 * @todo пон€ть либо удалить
+	 */
 	Statistics getSplashAmplitudeInfo(int nEvent);
 
+	/**
+	 * ¬озвращает статистику уровен€ падающего сигнала (y0).
+	 * ќпределен, если {@link #hasAmplitudeInfo} возвращает true.
+	 * @todo переименовать в getIncidentLevelInfo (и метод has... тоже)
+	 * @param nEvent номер событи€
+	 */
 	Statistics getAmplitudeInfo(int nEvent);
 
+	/**
+	 * ¬озвращает статистику по потер€м на данном событии
+	 * ќпределен, если {@link #hasEnergyLossInfo} возвращает true.
+	 * @param nEvent номер событи€
+	 */
 	Statistics getEnergyLossInfo(int nEvent);
 
+	/**
+	 * ¬озвращает статистику по амплитуде отражательного всплеска
+	 * на данном событии.
+	 * ќпределен, если {@link #hasReflectanceInfo} возвращает true.
+	 * @todo переименовать в getReflectiveAmplInfo или типа того (и метод has... тоже)
+	 * @param nEvent номер событи€
+	 */
 	Statistics getReflectanceInfo(int nEvent);
 
 	/**
