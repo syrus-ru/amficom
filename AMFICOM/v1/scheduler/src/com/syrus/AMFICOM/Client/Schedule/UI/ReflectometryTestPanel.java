@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,8 +65,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2006/02/20 12:31:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.102 $, $Date: 2006/03/23 14:25:58 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -133,10 +134,25 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 
 	private synchronized ParameterSet getSet() {
 		ParameterSet parameterSet = null;
-			synchronized (this) {
+		synchronized (this) { // XXX: synchronize(this) внутри synchronized-метода не имеет смысла
 			if (this.setId != null) {
+				/*
+				 * проверяем, действителен ли setId.
+				 * Если нет - обнуляем его (bug 517)
+				 */
 				try {
 					parameterSet = (ParameterSet) StorableObjectPool.getStorableObject(this.setId, true);
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
+					// ignore the problem, leave null parameterSet
+				}
+				if (parameterSet == null) {
+					Log.debugMessage("RTP.getSet(): failed to get parameterSet by id. Ok.", Level.WARNING);
+					this.setId = null;
+				}
+			}
+			if (this.setId != null) {
+				{ // тут был 'try'
 					if (!parameterSet.isChanged()) {
 	//					System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " !set.isChanged()");
 						final Parameter[] parameters = parameterSet.getParameters();
@@ -251,9 +267,6 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 						parameterSet.setParameters(parameters);
 					
 					}
-				} catch (final ApplicationException e) {
-					AbstractMainFrame.showErrorMessage(this, e);
-					this.setId = null;
 				}
 			} else  {
 	//			System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " == null");
@@ -359,7 +372,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 					this.schedulerModel.setBreakData();
 				}
 			} 
-			}
+		}
 		return parameterSet;
 	}
 
