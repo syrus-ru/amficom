@@ -1,5 +1,5 @@
 /*-
- * $Id: MTAEPredictionManager.java,v 1.6 2006/03/23 09:02:18 saa Exp $
+ * $Id: MTAEPredictionManager.java,v 1.7 2006/03/23 09:29:03 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 /**
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2006/03/23 09:02:18 $
+ * @version $Revision: 1.7 $, $Date: 2006/03/23 09:29:03 $
  * @module prediction
  */
 public class MTAEPredictionManager implements PredictionManager {
@@ -196,15 +196,14 @@ public class MTAEPredictionManager implements PredictionManager {
 	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasSplashAmplitudeInfo(int)
 	 */
 	public boolean hasSplashAmplitudeInfo(int nEvent) {
-		return false;
+		return hasInfo(nEvent, amplExtractor);
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#getSplashAmplitudeInfo(int)
-	 * @throws UnsupportedOperationException not supported
 	 */
 	public Statistics getSplashAmplitudeInfo(int nEvent) {
-		throw new UnsupportedOperationException();
+		return getInfo(nEvent, amplExtractor, this.amplStatsCache, "db");
 	}
 
 	/**
@@ -239,14 +238,15 @@ public class MTAEPredictionManager implements PredictionManager {
 	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasReflectanceInfo(int)
 	 */
 	public boolean hasReflectanceInfo(int nEvent) {
-		return hasInfo(nEvent, amplExtractor);
+		return false;
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#getReflectanceInfo(int)
+	 * @throws UnsupportedOperationException not supported
 	 */
 	public Statistics getReflectanceInfo(int nEvent) {
-		return getInfo(nEvent, amplExtractor, this.amplStatsCache, "db");
+		throw new UnsupportedOperationException();
 	}
 
 	/**
