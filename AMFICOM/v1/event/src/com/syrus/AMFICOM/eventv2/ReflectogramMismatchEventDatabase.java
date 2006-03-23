@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventDatabase.java,v 1.1.2.3 2006/03/23 13:15:56 bass Exp $
+ * $Id: ReflectogramMismatchEventDatabase.java,v 1.1.2.4 2006/03/23 15:09:34 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,12 +43,11 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
-import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1.2.3 $, $Date: 2006/03/23 13:15:56 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/03/23 15:09:34 $
  * @module event
  */
 public final class ReflectogramMismatchEventDatabase
@@ -276,8 +275,8 @@ public final class ReflectogramMismatchEventDatabase
 		}
 
 
-		reflectogramMismatchEvent.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+		reflectogramMismatchEvent.setAttributes(resultSet.getTimestamp(COLUMN_CREATED),
+				resultSet.getTimestamp(COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
