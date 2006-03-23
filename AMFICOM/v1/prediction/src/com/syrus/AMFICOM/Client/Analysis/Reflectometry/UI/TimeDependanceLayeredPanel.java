@@ -207,18 +207,14 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements
 	void updateToolbarButtons(int nEvent) {
 		final PredictionManager predictionManager = PredictionModel.getPredictionManager();
 		final TimedToolBar toolBar = (TimedToolBar)this.toolbar;
-		final boolean hasAttenuationInfo = (predictionManager != null && nEvent != -1) 
-				? predictionManager.hasAttenuationInfo(nEvent) 
-						: false;
-		final boolean hasEnergyLossInfo = (predictionManager != null && nEvent != -1) 
-				? predictionManager.hasEnergyLossInfo(nEvent) 
-						: false;
-		final boolean hasSplashAmplitudeInfo = (predictionManager != null && nEvent != -1) 
-				? predictionManager.hasSplashAmplitudeInfo(nEvent) 
-						: false;
-		final boolean hasAmplitudeInfo = (predictionManager != null && nEvent != -1) 
-				? predictionManager.hasAmplitudeInfo(nEvent) 
-						: false;
+		final boolean hasAttenuationInfo = predictionManager != null && nEvent != -1 
+				&& predictionManager.hasAttenuationInfo(nEvent); 
+		final boolean hasEnergyLossInfo = predictionManager != null && nEvent != -1 
+				&& predictionManager.hasEnergyLossInfo(nEvent); 
+		final boolean hasSplashAmplitudeInfo = predictionManager != null && nEvent != -1 
+				&& predictionManager.hasSplashAmplitudeInfo(nEvent);
+		final boolean hasAmplitudeInfo = predictionManager != null && nEvent != -1 
+				&& predictionManager.hasAmplitudeInfo(nEvent);
 		
 		toolBar.lossButton.setEnabled(hasEnergyLossInfo);
 		toolBar.attButton.setEnabled(hasAttenuationInfo);
