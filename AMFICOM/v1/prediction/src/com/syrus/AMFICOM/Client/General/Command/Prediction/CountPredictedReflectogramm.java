@@ -52,10 +52,18 @@ public class CountPredictedReflectogramm extends AbstractCommand {
 		final double[] predictedReflectogramm = pm.getPredictedReflectogram(date.getTime());
 
 		if (predictedReflectogramm == null) {
-			
 			return;
 		}
 
+		// XXX предполагаетс€, что предсказанна€ р/г не может превышать нулевой уровень.
+		// поэтому здесь отсекаем такие значени€.
+		// ≈сли этого не сделать, то BS при нормировке уедет вниз 
+		for (int i = 0; i < predictedReflectogramm.length; i++) {
+			if (predictedReflectogramm[i] > 0) {
+				predictedReflectogramm[i] = 0;
+			}
+		}
+		
 		String title = "ќжидание на " + sdf.format(date);
 		MonitoredElement me = pm.getMonitoredElement();
 		title = title + ", трасса: " + me.getName();
