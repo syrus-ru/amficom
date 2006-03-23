@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultReflectogramMismatchEvent.java,v 1.13.4.3 2006/03/21 10:09:19 bass Exp $
+ * $Id: DefaultReflectogramMismatchEvent.java,v 1.13.4.4 2006/03/23 13:06:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.13.4.3 $, $Date: 2006/03/21 10:09:19 $
+ * @version $Revision: 1.13.4.4 $, $Date: 2006/03/23 13:06:22 $
  * @module event
  */
 public final class DefaultReflectogramMismatchEvent extends
@@ -127,20 +127,16 @@ public final class DefaultReflectogramMismatchEvent extends
 	/**
 	 * @param id
 	 * @param creatorId
-	 * @param created
-	 * @param version
 	 * @param reflectogramMismatch
 	 * @param resultId
 	 * @param monitoredElementId
 	 */
 	private DefaultReflectogramMismatchEvent(final Identifier id,
 			final Identifier creatorId,
-			final Date created,
-			final StorableObjectVersion version,
 			final ReflectogramMismatch reflectogramMismatch,
 			final Identifier resultId,
 			final Identifier monitoredElementId) {
-		super(id, creatorId, created, version);
+		super(id, creatorId, new Date(), INITIAL_VERSION);
 
 		/*
 		 * resultId: strict check (void not permitted at object creation
@@ -395,8 +391,6 @@ public final class DefaultReflectogramMismatchEvent extends
 			final DefaultReflectogramMismatchEvent reflectogramMismatchEvent = new DefaultReflectogramMismatchEvent(
 					IdentifierPool.getGeneratedIdentifier(REFLECTOGRAMMISMATCHEVENT_CODE),
 					creatorId,
-					new Date(),
-					INITIAL_VERSION,
 					reflectogramMismatch,
 					resultId, 
 					monitoredElementId);
