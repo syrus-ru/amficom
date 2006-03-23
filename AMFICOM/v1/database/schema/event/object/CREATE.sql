@@ -1,4 +1,4 @@
--- $Id: CREATE.sql,v 1.4 2006/03/22 08:53:27 bass Exp $
+-- $Id: CREATE.sql,v 1.5 2006/03/23 16:12:24 bass Exp $
 
 -- 01. Event
 PROMPT 01. Creating table Event...;
@@ -19,3 +19,7 @@ PROMPT 04. Creating table DeliveryAttributes...;
 -- 05. ReflectogramMismatchEvent
 PROMPT 04. Creating table ReflectogramMismatchEvent...;
 @@reflectogrammismatchevent;
+
+-- 06. LineMismatchEvent
+PROMPT 05. Creating table LineMismatchEvent...;
+@@linemismatchevent;

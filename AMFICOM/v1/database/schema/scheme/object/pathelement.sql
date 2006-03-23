@@ -1,4 +1,4 @@
--- $Id: pathelement.sql,v 1.11 2006/03/22 08:53:27 bass Exp $
+-- $Id: pathelement.sql,v 1.12 2006/03/23 16:12:24 bass Exp $
 
 CREATE TABLE PathElement (
 	id NUMBER(19) NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE PathElement (
 		AND scheme_link_id IS NOT NULL))
 );
 
-COMMENT ON TABLE PathElement IS '$Id: pathelement.sql,v 1.11 2006/03/22 08:53:27 bass Exp $';
+COMMENT ON TABLE PathElement IS '$Id: pathelement.sql,v 1.12 2006/03/23 16:12:24 bass Exp $';
 
 ALTER TABLE ReflectogramMismatchEvent ADD (
 	CONSTRAINT rm_event_anchor1_fk FOREIGN KEY(anchor1_id)
@@ -59,6 +59,10 @@ ALTER TABLE ReflectogramMismatchEvent ADD (
 
 ALTER TABLE ReflectogramMismatchEvent ADD (
 	CONSTRAINT rm_event_anchor2_fk FOREIGN KEY(anchor2_id)
+		REFERENCES PathElement(id) ON DELETE SET NULL);
+
+ALTER TABLE LineMismatchEvent ADD (
+	CONSTRAINT lm_event_affected_path_lmnt_fk FOREIGN KEY(affected_path_element_id)
 		REFERENCES PathElement(id) ON DELETE SET NULL);
 
 CREATE SEQUENCE PathElement_Seq ORDER;
