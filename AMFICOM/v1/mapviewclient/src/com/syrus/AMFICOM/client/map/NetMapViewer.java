@@ -1,5 +1,5 @@
 /*-
- * $$Id: NetMapViewer.java,v 1.72 2006/03/19 14:43:58 stas Exp $$
+ * $$Id: NetMapViewer.java,v 1.73 2006/03/23 19:57:38 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,6 +70,7 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
@@ -86,7 +87,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * 
- * @version $Revision: 1.72 $, $Date: 2006/03/19 14:43:58 $
+ * @version $Revision: 1.73 $, $Date: 2006/03/23 19:57:38 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -517,8 +518,8 @@ public abstract class NetMapViewer {
 						return;
 					}
 					if(path == null) {
-						path = mapViewController
-							.getMeasurementPathBySchemePathId(mne.getSchemePathId());
+						PathElement pe = StorableObjectPool.getStorableObject(mne.getSchemePathElementId(), true);
+						path = mapViewController.getMeasurementPathBySchemePathId(pe.getParentPathOwner().getId());
 					}
 
 					if(path != null) {
@@ -644,7 +645,8 @@ public abstract class NetMapViewer {
 						mapView.getMap().setSelected(marker, true);
 						final MeasurementPath measurementPath = marker.getMeasurementPath();
 						
-						final SchemePath schemePath = StorableObjectPool.getStorableObject(mne.getSchemePathId(), true);
+						final PathElement pe = StorableObjectPool.getStorableObject(mne.getSchemePathElementId(), true);
+						final SchemePath schemePath = pe.getParentPathOwner();
 						if(measurementPath.getSchemePath() == null)
 							measurementPath.setSchemePath(schemePath);
 

@@ -18,6 +18,11 @@ import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MarkerEvent;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.scheme.PathElement;
+import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.util.Log;
 
 public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements PropertyChangeListener
 {
@@ -62,33 +67,49 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements P
 				if (panel instanceof MapMarkersPanel)
 				{
 					if(mne.getMarkerEventType() == MarkerEvent.MARKER_CREATED_EVENT) {
-						if (((mne.getMeId() == null && mne.getSchemePathId() == null) || 
-								(mne.getMeId() != null && mne.getMeId().equals(((MapMarkersPanel)panel).monitored_element_id))) ||
-								 (mne.getSchemePathId() != null && mne.getSchemePathId().equals(((MapMarkersPanel)panel).scheme_path_id))) {
+						try {
+							final PathElement pe = mne.getSchemePathElementId() != null ? 
+									(PathElement)StorableObjectPool.getStorableObject(mne.getSchemePathElementId(), true) : null;
+							final SchemePath path = pe != null ? pe.getParentPathOwner() : null;  
+							
+							if (((mne.getMeId() == null && path == null) || 
+									(mne.getMeId() != null && mne.getMeId().equals(((MapMarkersPanel)panel).monitored_element_id))) ||
+									 (path != null && path.getId().equals(((MapMarkersPanel)panel).scheme_path_id))) {
 //							double d = WorkWithReflectoArray.getDistanceTillLastSplash(panel.y, panel.deltaX, 1);
 //							mne.spd.setMeasurement (new LengthParameters (((MapMarkersPanel)panel).ep, panel.deltaX, "", d));
 //							double dist = mne.spd.getMeasuredDistance(mne.distance);
-							double dist = mne.getOpticalDistance();
-							Marker m = ((MapMarkersPanel)panel).createMarker("", dist);
-							m.setId(mne.getMarkerId());
-							((MapMarkersPanel)panel).move_notify();
-							((MapMarkersToolBar)this.toolbar).deleteMarkerButton.setEnabled(true);
-							this.jLayeredPane.repaint();
+								double dist = mne.getOpticalDistance();
+								Marker m = ((MapMarkersPanel)panel).createMarker("", dist);
+								m.setId(mne.getMarkerId());
+								((MapMarkersPanel)panel).move_notify();
+								((MapMarkersToolBar)this.toolbar).deleteMarkerButton.setEnabled(true);
+								this.jLayeredPane.repaint();
+							}
+						} catch (ApplicationException e) {
+							Log.errorMessage(e);
 						}
 					} else if(mne.getMarkerEventType() == MarkerEvent.ALARMMARKER_CREATED_EVENT) {
-						if ((mne.getMeId() != null && mne.getMeId().equals(((MapMarkersPanel)panel).monitored_element_id)) ||
-								(mne.getSchemePathId() != null && mne.getSchemePathId().equals(((MapMarkersPanel)panel).scheme_path_id))) {
-							double dist = mne.getOpticalDistance();
-							AlarmMarker am = ((MapMarkersPanel)panel).get_alarm_marker();
-							if(am == null) {
-								((MapMarkersPanel)panel).createAlarmMarker("", mne.getMarkerId(), dist);
-							} else {
-								am.setId(mne.getMarkerId());
-								((MapMarkersPanel)panel).moveMarker(mne.getMarkerId(), dist);
+						try {
+							final PathElement pe = mne.getSchemePathElementId() != null ? 
+									(PathElement)StorableObjectPool.getStorableObject(mne.getSchemePathElementId(), true) : null;
+							final SchemePath path = pe != null ? pe.getParentPathOwner() : null;
+							
+							if ((mne.getMeId() != null && mne.getMeId().equals(((MapMarkersPanel)panel).monitored_element_id)) ||
+									(path != null && path.getId().equals(((MapMarkersPanel)panel).scheme_path_id))) {
+								double dist = mne.getOpticalDistance();
+								AlarmMarker am = ((MapMarkersPanel)panel).get_alarm_marker();
+								if(am == null) {
+									((MapMarkersPanel)panel).createAlarmMarker("", mne.getMarkerId(), dist);
+								} else {
+									am.setId(mne.getMarkerId());
+									((MapMarkersPanel)panel).moveMarker(mne.getMarkerId(), dist);
+								}
+								// we should not delete alarm marker by hand
+								((MapMarkersToolBar)this.toolbar).deleteMarkerButton.setEnabled(false);
+								this.jLayeredPane.repaint();
 							}
-							// we should not delete alarm marker by hand
-							((MapMarkersToolBar)this.toolbar).deleteMarkerButton.setEnabled(false);
-							this.jLayeredPane.repaint();
+						} catch (ApplicationException e) {
+							Log.errorMessage(e);
 						}
 					}
 					if(mne.getMarkerEventType() == MarkerEvent.MARKER_SELECTED_EVENT)
