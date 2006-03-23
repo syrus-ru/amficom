@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.14 2006/03/23 10:50:35 bass Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.15 2006/03/23 13:07:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
@@ -39,7 +40,7 @@ import com.syrus.util.Log;
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2006/03/23 10:50:35 $
+ * @version $Revision: 1.15 $, $Date: 2006/03/23 13:07:23 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor
@@ -210,7 +211,8 @@ final class ReflectogramMismatchEventProcessor
 						+ schemePathId + " is empty");
 			}
 
-			final LineMismatchEvent lineMismatchEvent = DefaultLineMismatchEvent.valueOf(
+			final LineMismatchEvent lineMismatchEvent = DefaultLineMismatchEvent.newInstance(
+					LoginManager.getUserId(),
 					affectedPathElement.getId(),
 					affectedPathElement.isSpacious(),
 					physicalDistanceFromStart,

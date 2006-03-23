@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.56 2006/03/23 10:49:27 bass Exp $
+ * $Id: event.idl,v 1.57 2006/03/23 13:07:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -234,7 +234,13 @@ module eventv2 {
 			wstring getMessage();
 			general::corba::IdlIdentifier getReflectogramMismatchEventId();
 
-			factory init(in general::corba::IdlIdentifier affectedPathElementId,
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::IdlIdentifier affectedPathElementId,
 					in IdlSpatialData spatialData,
 					in double mismatchOpticalDistance,
 					in double mismatchPhysicalDistance,
