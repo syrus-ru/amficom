@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventAlarmWrapper.java,v 1.1 2006/03/23 11:09:40 stas Exp $
+ * $Id: LineMismatchEventAlarmWrapper.java,v 1.2 2006/03/23 18:41:16 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import java.util.Map;
 
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.eventv2.AbstractLineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.AbstractReflectogramMismatchEvent;
@@ -40,6 +41,7 @@ public class LineMismatchEventAlarmWrapper implements Wrapper<AbstractLineMismat
 	
 	private static final LineMismatchEventWrapper WRAPPER = LineMismatchEventWrapper.getInstance();
 	private static LineMismatchEventAlarmWrapper instance;
+	private static final String WRAPPER_KEY = "Wrapper.Keys.";
 
 	// caching
 	private static Map<Identifiable, String> linkedPathElementNames = new HashMap<Identifiable, String>();
@@ -66,7 +68,7 @@ public class LineMismatchEventAlarmWrapper implements Wrapper<AbstractLineMismat
 	}
 
 	public String getName(final String key) {
-		return key;
+		return I18N.getString(WRAPPER_KEY + key);
 	}
 
 	public Class< ? > getPropertyClass(final String key) {
