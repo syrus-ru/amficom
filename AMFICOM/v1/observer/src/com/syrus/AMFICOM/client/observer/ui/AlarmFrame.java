@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -112,6 +113,7 @@ public class AlarmFrame extends JInternalFrame {
 		@SuppressWarnings("unchecked")
 		public void receiveEvent(final Event<?> event) {
 			if (event instanceof PopupNotificationEvent) {
+				Log.debugMessage("PopupNotificationEvent received", Level.FINER);
 				final PopupNotificationEvent popupNotificationEvent = (PopupNotificationEvent) event;
 				try {
 					final Identifier lmeId = popupNotificationEvent.getLineMismatchEventId(); 
@@ -166,6 +168,7 @@ public class AlarmFrame extends JInternalFrame {
 					Log.errorMessage(e);
 				}
 			} else if (event instanceof MeasurementStartedEvent) {
+				Log.debugMessage("MeasurementStartedEvent received", Level.FINER);
 				final MeasurementStartedEvent msEvent = (MeasurementStartedEvent)event;
 				Identifier measurentId = msEvent.getMeasurementId();
 				try {
@@ -176,6 +179,7 @@ public class AlarmFrame extends JInternalFrame {
 				}
 				
 			} else if (event instanceof MeasurementCompletedEvent) {
+				Log.debugMessage("MeasurementCompletedEvent received", Level.FINER);
 				final MeasurementCompletedEvent mcEvent = (MeasurementCompletedEvent)event;
 				Identifier measurentId = mcEvent.getMeasurementId();
 				try {
@@ -368,9 +372,9 @@ public class AlarmFrame extends JInternalFrame {
 		// this.getContentPane().add(toolBar, BorderLayout.NORTH);
 		JScrollPane scrollPane = new JScrollPane(this.table);
 		this.getContentPane().add(scrollPane, BorderLayout.CENTER);
-		this.actionPanel.add(this.buttonAcknowledge);
+//		this.actionPanel.add(this.buttonAcknowledge);
 		this.actionPanel.add(this.buttonFix);
-		this.actionPanel.add(this.buttonDelete);
+//		this.actionPanel.add(this.buttonDelete);
 //		this.actionPanel.add(this.filterButton);
 		this.actionPanel.add(this.buttonDescribe);
 //		this.actionPanel.add(this.buttonClose);
