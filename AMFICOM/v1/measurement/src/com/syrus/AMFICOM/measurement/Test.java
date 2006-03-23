@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.11 2006/03/22 17:53:01 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.12 2006/03/23 15:21:41 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -57,7 +57,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.11 $, $Date: 2006/03/22 17:53:01 $
+ * @version $Revision: 1.183.2.12 $, $Date: 2006/03/23 15:21:41 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -110,7 +110,19 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		this.monitoredElementId = monitoredElementId;
 		this.status = status;
 		this.temporalType = temporalType;
-		this.timeStamps = new TestTimeStamps(startTime, endTime, temporalPatternId);
+
+		/**
+		 * Значение null соответствует случаю, когда конструктор
+		 * {@link Test#Test(Identifier, Identifier, StorableObjectVersion, String, Identifier, Identifier, TestStatus, TestTemporalType, Date, Date, Identifier, Set, Identifier, int, Identifier, SortedMap)}
+		 * вызывается из
+		 * {@link TestDatabase#updateEntityFromResultSet(Test, ResultSet)}. В
+		 * этом случае объект должен быть заполнен с помощью метода
+		 * {@link Test#setAttributes(Date, Date, Identifier, Identifier, StorableObjectVersion, String, Identifier, Identifier, TestStatus, TestTemporalType, Date, Date, Identifier, Identifier, int, Identifier)}.
+		 */
+		if (this.temporalType != null) {
+			this.timeStamps = new TestTimeStamps(startTime, endTime, temporalPatternId);
+		}
+
 		this.measurementSetupIds = new HashSet<Identifier>();
 		this.setMeasurementSetupIds0(measurementSetupIds);
 		this.measurementTypeId = measurementTypeId;
@@ -863,7 +875,8 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		private Identifier temporalPatternId;
 
 		TestTimeStamps(final Date startTime, final Date endTime, final Identifier temporalPatternId) {
-			switch (this.getTestTemporalType()) {
+			final TestTemporalType testTemporalType = this.getTestTemporalType();
+			switch (testTemporalType) {
 				case TEST_TEMPORAL_TYPE_ONETIME:
 					this.startTime = startTime;
 					this.endTime = this.startTime;
@@ -883,7 +896,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 					}
 					break;
 				default:
-					Log.errorMessage("TestTimeStamps | Illegal temporal type: " + this.getTestTemporalType() + " of test");
+					Log.errorMessage("TestTimeStamps | Illegal temporal type: " + testTemporalType + " of test");
 			}
 			assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		}
