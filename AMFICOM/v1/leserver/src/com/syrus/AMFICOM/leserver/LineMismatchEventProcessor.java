@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.23 2006/03/23 10:50:35 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.24 2006/03/23 18:15:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.bugs.Crutch524;
 import com.syrus.AMFICOM.event.DeliveryAttributes;
 import com.syrus.AMFICOM.eventv2.DefaultEmailNotificationEvent;
 import com.syrus.AMFICOM.eventv2.DefaultPopupNotificationEvent;
@@ -56,10 +57,11 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2006/03/23 10:50:35 $
+ * @version $Revision: 1.24 $, $Date: 2006/03/23 18:15:54 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
+	@Crutch524(notes = "")
 	private static Identifier creatorId = null;
 
 	private static Identifier characteristicTypeId = null;
@@ -197,6 +199,7 @@ final class LineMismatchEventProcessor implements EventProcessor {
 		}
 	}
 
+	@Crutch524(notes = "")
 	private static Identifier getCreatorId() {
 		synchronized (LineMismatchEventProcessor.class) {
 			if (creatorId == null) {
