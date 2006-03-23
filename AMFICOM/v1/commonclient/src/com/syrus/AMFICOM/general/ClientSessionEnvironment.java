@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.43 2006/03/01 20:46:53 bass Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.44 2006/03/23 19:25:01 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.CORBAClient;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2006/03/01 20:46:53 $
+ * @version $Revision: 1.44 $, $Date: 2006/03/23 19:25:01 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -109,6 +109,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		objectLoader.addCORBAObjectLoader(ADMINISTRATION_GROUP_CODE, mClientServantManager, clientCORBAActionProcessor);
 		objectLoader.addCORBAObjectLoader(CONFIGURATION_GROUP_CODE, mClientServantManager, clientCORBAActionProcessor);
 		objectLoader.addCORBAObjectLoader(MEASUREMENT_GROUP_CODE, mClientServantManager, clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(EVENT_GROUP_CODE, mClientServantManager, clientCORBAActionProcessor);
 		objectLoader.addCORBAObjectLoader(REPORT_GROUP_CODE, mClientServantManager, clientCORBAActionProcessor);
 
 		final ClientPoolContext clientPoolContext = new MClientPoolContext(objectLoader);
@@ -129,6 +130,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		objectLoader.addCORBAObjectLoader(ADMINISTRATION_GROUP_CODE, mClientServantManager, clientCORBAActionProcessor);
 		objectLoader.addCORBAObjectLoader(CONFIGURATION_GROUP_CODE, mClientServantManager, clientCORBAActionProcessor);
 		objectLoader.addCORBAObjectLoader(MEASUREMENT_GROUP_CODE, mClientServantManager, clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(EVENT_GROUP_CODE, mClientServantManager, clientCORBAActionProcessor);
 		objectLoader.addCORBAObjectLoader(RESOURCE_GROUP_CODE, mscharClientServantManager, clientCORBAActionProcessor);
 		objectLoader.addCORBAObjectLoader(REPORT_GROUP_CODE, mClientServantManager, clientCORBAActionProcessor);
 		objectLoader.addCORBAObjectLoader(MAP_GROUP_CODE, mscharClientServantManager, clientCORBAActionProcessor);
