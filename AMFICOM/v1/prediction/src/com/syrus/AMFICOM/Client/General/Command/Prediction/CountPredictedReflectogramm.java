@@ -38,6 +38,8 @@ public class CountPredictedReflectogramm extends AbstractCommand {
 		}
 
 		DateSpinner dateSpinner = new DateSpinner();
+//		dateSpinner.setValue(new Date(105, 11, 8)); // FIXME: debug
+
 		int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), 
 				dateSpinner, "Дата прогнозирования", JOptionPane.OK_CANCEL_OPTION);
 		
