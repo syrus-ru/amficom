@@ -1,5 +1,5 @@
 /*-
- * $Id: MTAEPredictionManager.java,v 1.7 2006/03/23 09:29:03 saa Exp $
+ * $Id: MTAEPredictionManager.java,v 1.8 2006/03/23 09:41:03 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 /**
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2006/03/23 09:29:03 $
+ * @version $Revision: 1.8 $, $Date: 2006/03/23 09:41:03 $
  * @module prediction
  */
 public class MTAEPredictionManager implements PredictionManager {
@@ -179,30 +179,30 @@ public class MTAEPredictionManager implements PredictionManager {
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasAmplitudeInfo(int)
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasY0Info(int)
 	 */
-	public boolean hasAmplitudeInfo(int nEvent) {
+	public boolean hasY0Info(int nEvent) {
 		return hasInfo(nEvent, y0Extractor);
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#getAmplitudeInfo(int)
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#getY0Info(int)
 	 */
-	public Statistics getAmplitudeInfo(int nEvent) {
+	public Statistics getY0Info(int nEvent) {
 		return getInfo(nEvent, y0Extractor, this.y0StatsCache, "db");
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasSplashAmplitudeInfo(int)
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasReflectiveAmplitudeInfo(int)
 	 */
-	public boolean hasSplashAmplitudeInfo(int nEvent) {
+	public boolean hasReflectiveAmplitudeInfo(int nEvent) {
 		return hasInfo(nEvent, amplExtractor);
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#getSplashAmplitudeInfo(int)
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#getReflectiveAmplitudeInfo(int)
 	 */
-	public Statistics getSplashAmplitudeInfo(int nEvent) {
+	public Statistics getReflectiveAmplitudeInfo(int nEvent) {
 		return getInfo(nEvent, amplExtractor, this.amplStatsCache, "db");
 	}
 
@@ -221,16 +221,16 @@ public class MTAEPredictionManager implements PredictionManager {
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasEnergyLossInfo(int)
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasLossInfo(int)
 	 */
-	public boolean hasEnergyLossInfo(int nEvent) {
+	public boolean hasLossInfo(int nEvent) {
 		return hasInfo(nEvent, lossExtractor);
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#getEnergyLossInfo(int)
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#getLossInfo(int)
 	 */
-	public Statistics getEnergyLossInfo(int nEvent) {
+	public Statistics getLossInfo(int nEvent) {
 		return getInfo(nEvent, lossExtractor, this.lossStatsCache, "db");
 	}
 

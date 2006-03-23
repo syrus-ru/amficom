@@ -1,5 +1,5 @@
 /*-
- * $Id: PredictionManager.java,v 1.9 2006/03/23 09:37:50 saa Exp $
+ * $Id: PredictionManager.java,v 1.10 2006/03/23 09:41:03 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
  * </p>
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2006/03/23 09:37:50 $
+ * @version $Revision: 1.10 $, $Date: 2006/03/23 09:41:03 $
  * @module prediction
  */
 public interface PredictionManager {
@@ -80,16 +80,16 @@ public interface PredictionManager {
 	 * @param nEvent номер события
 	 * @return true, если статистика по потерям для данного события определена
 	 */
-	boolean hasEnergyLossInfo(int nEvent);
+	boolean hasLossInfo(int nEvent);
 
 	/**
 	 * Возвращает статистику по потерям на данном событии
-	 * Определен, если {@link #hasEnergyLossInfo(int)} возвращает true,
+	 * Определен, если {@link #hasLossInfo(int)} возвращает true,
 	 * но и в этом случае нет гарантии, что временной ряд будет непуст.
 	 * @param nEvent номер события
-	 * @throws IllegalStateException {@link #hasEnergyLossInfo(int)} == false
+	 * @throws IllegalStateException {@link #hasLossInfo(int)} == false
 	 */
-	Statistics getEnergyLossInfo(int nEvent);
+	Statistics getLossInfo(int nEvent);
 
 	/**
 	 * Определяет возможность определения
@@ -98,17 +98,17 @@ public interface PredictionManager {
 	 * @return true, если статистика по амплитуде отражательного всплеска
 	 *   для данного события определена
 	 */
-	boolean hasSplashAmplitudeInfo(int nEvent);
+	boolean hasReflectiveAmplitudeInfo(int nEvent);
 
 	/**
 	 * Возвращает статистику по амплитуде отражательного всплеска
 	 *   на данном событии
-	 * Определен, если {@link #hasSplashAmplitudeInfo(int)} возвращает true,
+	 * Определен, если {@link #hasReflectiveAmplitudeInfo(int)} возвращает true,
 	 * но и в этом случае нет гарантии, что временной ряд будет непуст.
 	 * @param nEvent номер события
-	 * @throws IllegalStateException {@link #hasSplashAmplitudeInfo(int)} == false
+	 * @throws IllegalStateException {@link #hasReflectiveAmplitudeInfo(int)} == false
 	 */
-	Statistics getSplashAmplitudeInfo(int nEvent);
+	Statistics getReflectiveAmplitudeInfo(int nEvent);
 
 	/**
 	 * Определяет возможность определения
@@ -117,16 +117,16 @@ public interface PredictionManager {
 	 * @return true, если статистика по уровню падающего сигнала
 	 *   для данного события определена
 	 */
-	boolean hasAmplitudeInfo(int nEvent);
+	boolean hasY0Info(int nEvent);
 
 	/**
 	 * Возвращает статистику по уровню падающего сигнала на данном событии
-	 * Определен, если {@link #hasAmplitudeInfo(int)} возвращает true,
+	 * Определен, если {@link #hasY0Info(int)} возвращает true,
 	 * но и в этом случае нет гарантии, что временной ряд будет непуст.
 	 * @param nEvent номер события
-	 * @throws IllegalStateException {@link #hasAmplitudeInfo(int)} == false
+	 * @throws IllegalStateException {@link #hasY0Info(int)} == false
 	 */
-	Statistics getAmplitudeInfo(int nEvent);
+	Statistics getY0Info(int nEvent);
 
 	/**
 	 * Определяет возможность определения

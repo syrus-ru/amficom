@@ -1,5 +1,5 @@
 /*-
- * $Id: PredictionModel.java,v 1.1 2006/03/22 10:57:42 stas Exp $
+ * $Id: PredictionModel.java,v 1.2 2006/03/23 09:41:03 saa Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,11 +58,11 @@ public class PredictionModel {
 		case PredictionModel.ATTENUATION:
 			return manager.getAttenuationInfo(eventNumber);
 		case PredictionModel.AMPLITUDE:
-			return manager.getSplashAmplitudeInfo(eventNumber);
+			return manager.getReflectiveAmplitudeInfo(eventNumber);
 		case PredictionModel.POWER_LEVEL:
-			return manager.getAmplitudeInfo(eventNumber);
+			return manager.getY0Info(eventNumber);
 		case PredictionModel.LOSS:
-			return manager.getEnergyLossInfo(eventNumber);
+			return manager.getLossInfo(eventNumber);
 		case PredictionModel.REFLECTANCE:
 			return manager.getReflectanceInfo(eventNumber);
 		default:

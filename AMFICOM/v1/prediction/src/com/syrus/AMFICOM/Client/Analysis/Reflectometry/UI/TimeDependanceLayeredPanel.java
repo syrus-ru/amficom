@@ -183,13 +183,13 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements
 				statistics = stats.getAttenuationInfo(event);
 				break;
 			case PredictionModel.AMPLITUDE:
-				statistics = stats.getSplashAmplitudeInfo(event);
+				statistics = stats.getReflectiveAmplitudeInfo(event);
 				break;
 			case PredictionModel.POWER_LEVEL:
-				statistics = stats.getAmplitudeInfo(event);
+				statistics = stats.getY0Info(event);
 				break;
 			case PredictionModel.LOSS:
-				statistics = stats.getEnergyLossInfo(event);
+				statistics = stats.getLossInfo(event);
 				break;
 			case PredictionModel.REFLECTANCE:
 				statistics = stats.getReflectanceInfo(event);
@@ -210,11 +210,11 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements
 		final boolean hasAttenuationInfo = predictionManager != null && nEvent != -1 
 				&& predictionManager.hasAttenuationInfo(nEvent); 
 		final boolean hasEnergyLossInfo = predictionManager != null && nEvent != -1 
-				&& predictionManager.hasEnergyLossInfo(nEvent); 
+				&& predictionManager.hasLossInfo(nEvent); 
 		final boolean hasSplashAmplitudeInfo = predictionManager != null && nEvent != -1 
-				&& predictionManager.hasSplashAmplitudeInfo(nEvent);
+				&& predictionManager.hasReflectiveAmplitudeInfo(nEvent);
 		final boolean hasAmplitudeInfo = predictionManager != null && nEvent != -1 
-				&& predictionManager.hasAmplitudeInfo(nEvent);
+				&& predictionManager.hasY0Info(nEvent);
 		
 		toolBar.lossButton.setEnabled(hasEnergyLossInfo);
 		toolBar.attButton.setEnabled(hasAttenuationInfo);

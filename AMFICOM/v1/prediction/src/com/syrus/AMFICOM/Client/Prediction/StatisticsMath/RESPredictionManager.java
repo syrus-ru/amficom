@@ -1,5 +1,5 @@
 /*-
- * $Id: RESPredictionManager.java,v 1.2 2006/03/21 11:11:32 saa Exp $
+ * $Id: RESPredictionManager.java,v 1.3 2006/03/23 09:41:03 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
  * Реализация {@link PredictionManager} через старые классы RE/SRE/REC/RES/RP
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2006/03/21 11:11:32 $
+ * @version $Revision: 1.3 $, $Date: 2006/03/23 09:41:03 $
  * @module prediction
  */
 public class RESPredictionManager implements PredictionManager {
@@ -88,13 +88,13 @@ public class RESPredictionManager implements PredictionManager {
 	public Statistics getAttenuationInfo(int nEvent) {
 		return this.res.trueGetAttenuationInformation(nEvent);
 	}
-	public Statistics getSplashAmplitudeInfo(int nEvent) {
+	public Statistics getReflectiveAmplitudeInfo(int nEvent) {
 		return this.res.trueGetSplashAmplitudeInformation(nEvent);
 	}
-	public Statistics getAmplitudeInfo(int nEvent) {
+	public Statistics getY0Info(int nEvent) {
 		return this.res.trueGetAmplitudeInformation(nEvent);
 	}
-	public Statistics getEnergyLossInfo(int nEvent) {
+	public Statistics getLossInfo(int nEvent) {
 		return this.res.trueGetEnergyLossInformation(nEvent);
 	}
 	public Statistics getReflectanceInfo(int nEvent) {
@@ -124,23 +124,23 @@ public class RESPredictionManager implements PredictionManager {
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasSplashAmplitudeInfo(int)
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasReflectiveAmplitudeInfo(int)
 	 */
-	public boolean hasSplashAmplitudeInfo(int nEvent) {
+	public boolean hasReflectiveAmplitudeInfo(int nEvent) {
 		return true;
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasAmplitudeInfo(int)
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasY0Info(int)
 	 */
-	public boolean hasAmplitudeInfo(int nEvent) {
+	public boolean hasY0Info(int nEvent) {
 		return true;
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasEnergyLossInfo(int)
+	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasLossInfo(int)
 	 */
-	public boolean hasEnergyLossInfo(int nEvent) {
+	public boolean hasLossInfo(int nEvent) {
 		return true;
 	}
 
