@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventWrapper.java,v 1.1.2.2 2006/03/23 07:58:01 bass Exp $
+ * $Id: LineMismatchEventWrapper.java,v 1.1.2.3 2006/03/23 13:07:23 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,14 +19,14 @@ import com.syrus.util.Wrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1.2.2 $, $Date: 2006/03/23 07:58:01 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/03/23 13:07:23 $
  * @module event
  */
 public final class LineMismatchEventWrapper
 		implements Wrapper<LineMismatchEvent> {
 	public static final String KEY_TYPE = "type";
 	public static final String COLUMN_AFFECTED_PATH_ELEMENT_ID = "affected_path_element_id";
-	public static final String COLUMN_AFFECTED_PATH_ELEMENT_SPACIOUS = "affected_path_element_spacious";
+	public static final String KEY_AFFECTED_PATH_ELEMENT_SPACIOUS = "affected_path_element_spacious";
 	public static final String COLUMN_PHYSICAL_DISTANCE_TO_START = "physical_distance_to_start";
 	public static final String COLUMN_PHYSICAL_DISTANCE_TO_END = "physical_distance_to_end";
 	public static final String COLUMN_MISMATCH_OPTICAL_DISTANCE = "mismatch_optical_distance";
@@ -41,7 +41,7 @@ public final class LineMismatchEventWrapper
 		this.keys = Collections.unmodifiableList(Arrays.asList(
 				KEY_TYPE,
 				COLUMN_AFFECTED_PATH_ELEMENT_ID,
-				COLUMN_AFFECTED_PATH_ELEMENT_SPACIOUS,
+				KEY_AFFECTED_PATH_ELEMENT_SPACIOUS,
 				COLUMN_PHYSICAL_DISTANCE_TO_START,
 				COLUMN_PHYSICAL_DISTANCE_TO_END,
 				COLUMN_MISMATCH_OPTICAL_DISTANCE,
@@ -73,7 +73,7 @@ public final class LineMismatchEventWrapper
 		final String internedKey = key.intern();
 		if (internedKey == KEY_TYPE) {
 			return EventType.class;
-		} else if (internedKey == COLUMN_AFFECTED_PATH_ELEMENT_SPACIOUS) {
+		} else if (internedKey == KEY_AFFECTED_PATH_ELEMENT_SPACIOUS) {
 			return Boolean.class;
 		} else if (internedKey == COLUMN_PHYSICAL_DISTANCE_TO_START
 				|| internedKey == COLUMN_PHYSICAL_DISTANCE_TO_END
@@ -122,7 +122,7 @@ public final class LineMismatchEventWrapper
 			return lineMismatchEvent.getType();
 		} else if (internedKey == COLUMN_AFFECTED_PATH_ELEMENT_ID) {
 			return lineMismatchEvent.getAffectedPathElementId();
-		} else if (internedKey == COLUMN_AFFECTED_PATH_ELEMENT_SPACIOUS) {
+		} else if (internedKey == KEY_AFFECTED_PATH_ELEMENT_SPACIOUS) {
 			return Boolean.valueOf(lineMismatchEvent.isAffectedPathElementSpacious());
 		} else if (internedKey == COLUMN_PHYSICAL_DISTANCE_TO_START) {
 			return Double.valueOf(lineMismatchEvent.getPhysicalDistanceToStart());

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLineMismatchEvent.java,v 1.4.2.2 2006/03/23 07:58:01 bass Exp $
+ * $Id: AbstractLineMismatchEvent.java,v 1.4.2.3 2006/03/23 13:07:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,23 +10,41 @@ package com.syrus.AMFICOM.eventv2;
 
 import static com.syrus.AMFICOM.eventv2.EventType.LINE_MISMATCH;
 
-import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventHelper;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialData;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialDataPackage.IdlAffectedPathElementSpatious;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialDataPackage.IdlPhysicalDistancePair;
 import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4.2.2 $, $Date: 2006/03/23 07:58:01 $
+ * @version $Revision: 1.4.2.3 $, $Date: 2006/03/23 13:07:23 $
  * @module event
  */
 public abstract class AbstractLineMismatchEvent extends StorableObject
 		implements LineMismatchEvent {
+	AbstractLineMismatchEvent(/*IdlLineMismatchEvent*/) {
+		// super();
+	}
+
+	AbstractLineMismatchEvent(final Identifier id,
+			final Identifier creatorId,
+			final Date created,
+			final StorableObjectVersion version) {
+		super(id, created, created, creatorId, creatorId, version);
+	}
+
 	public final EventType getType() {
 		return LINE_MISMATCH;
 	}
@@ -40,12 +58,44 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 		return this.getClass().getName() + "[" + this.paramString() + "]";
 	}
 
+	/**
+	 * @param orb
+	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
+	 */
 	@Override
-	public abstract IdlLineMismatchEvent getIdlTransferable(final ORB orb);
+	public final IdlLineMismatchEvent getIdlTransferable(final ORB orb) {
+		final IdlSpatialData spatialData = new IdlSpatialData();
+		if (this.isAffectedPathElementSpacious()) {
+			spatialData.physicalDistancePair(
+					IdlAffectedPathElementSpatious._TRUE,
+					new IdlPhysicalDistancePair(
+							this.getPhysicalDistanceToStart(),
+							this.getPhysicalDistanceToEnd()));
+		} else {
+			spatialData._default(IdlAffectedPathElementSpatious._FALSE);
+		}
+
+		return IdlLineMismatchEventHelper.init(orb,
+				this.id.getIdlTransferable(orb),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getIdlTransferable(orb),
+				this.modifierId.getIdlTransferable(orb),
+				this.version.longValue(),
+				this.getAffectedPathElementId().getIdlTransferable(orb),
+				spatialData,
+				this.getMismatchOpticalDistance(),
+				this.getMismatchPhysicalDistance(),
+				this.getMessage(),
+				this.getReflectogramMismatchEventId().getIdlTransferable(orb));
+	}
 
 	@Override
 	protected final Set<Identifiable> getDependenciesTmpl() {
-		return Collections.emptySet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.getAffectedPathElementId());
+		dependencies.add(this.getReflectogramMismatchEventId());
+		return dependencies;
 	}
 
 	@Override

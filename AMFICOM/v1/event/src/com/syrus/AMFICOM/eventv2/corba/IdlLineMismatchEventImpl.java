@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlLineMismatchEventImpl.java,v 1.6.2.3 2006/03/23 10:48:43 bass Exp $
+ * $Id: IdlLineMismatchEventImpl.java,v 1.6.2.4 2006/03/23 13:07:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,8 +7,6 @@
  */
 
 package com.syrus.AMFICOM.eventv2.corba;
-
-import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import com.syrus.AMFICOM.eventv2.DefaultLineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.LineMismatchEvent;
@@ -22,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6.2.3 $, $Date: 2006/03/23 10:48:43 $
+ * @version $Revision: 1.6.2.4 $, $Date: 2006/03/23 13:07:23 $
  * @module event
  */
 final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
@@ -32,16 +30,36 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 		// empty
 	}
 
-	IdlLineMismatchEventImpl(final IdlIdentifier affectedPathElementId,
+	/**
+	 * @param id
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param affectedPathElementId
+	 * @param spatialData
+	 * @param mismatchOpticalDistance
+	 * @param mismatchPhysicalDistance
+	 * @param message
+	 * @param reflectogramMismatchEventId
+	 */
+	IdlLineMismatchEventImpl(final IdlIdentifier id,
+			final long created, final long modified,
+			final IdlIdentifier creatorId,
+			final IdlIdentifier modifierId, final long version,
+			final IdlIdentifier affectedPathElementId,
 			final IdlSpatialData spatialData,
 			final double mismatchOpticalDistance,
 			final double mismatchPhysicalDistance,
 			final String message,
 			final IdlIdentifier reflectogramMismatchEventId) {
-		final IdlIdentifier voidId = VOID_IDENTIFIER.getIdlTransferable();
-		this.id = voidId;
-		this.creatorId = voidId;
-		this.modifierId = voidId;
+		this.id = id;
+		this.created = created;
+		this.modified = modified;
+		this.creatorId = creatorId;
+		this.modifierId = modifierId;
+		this.version = version;
 
 		this.affectedPathElementId = affectedPathElementId;
 		this.spatialData = spatialData;
