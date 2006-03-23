@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractPopupNotificationEvent.java,v 1.2 2005/10/19 13:46:13 bass Exp $
+ * $Id: AbstractPopupNotificationEvent.java,v 1.2.2.1 2006/03/23 10:48:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.eventv2.corba.IdlPopupNotificationEvent;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/10/19 13:46:13 $
+ * @version $Revision: 1.2.2.1 $, $Date: 2006/03/23 10:48:43 $
  * @module event
  */
 public abstract class AbstractPopupNotificationEvent
@@ -30,7 +30,7 @@ public abstract class AbstractPopupNotificationEvent
 	}
 
 	protected String paramString() {
-		return "message = " + this.getMessage();
+		return "lineMismatchEventId = " + this.getLineMismatchEventId();
 	}
 
 	@Override

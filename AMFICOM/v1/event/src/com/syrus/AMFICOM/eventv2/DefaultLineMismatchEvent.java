@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.8.2.3 2006/03/23 07:58:00 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.8.2.4 2006/03/23 10:48:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8.2.3 $, $Date: 2006/03/23 07:58:00 $
+ * @version $Revision: 1.8.2.4 $, $Date: 2006/03/23 10:48:43 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -62,6 +62,11 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	/**
 	 * @serial include
 	 */
+	private String message; 
+
+	/**
+	 * @serial include
+	 */
 	private Identifier reflectogramMismatchEventId;
 
 	/**
@@ -83,6 +88,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			final double physicalDistanceToEnd,
 			final double mismatchOpticalDistance,
 			final double mismatchPhysicalDistance,
+			final String message,
 			final Identifier reflectogramMismatchEventId) {
 		this.affectedPathElementId = affectedPathElementId;
 
@@ -99,6 +105,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 
 		this.mismatchOpticalDistance = mismatchOpticalDistance;
 		this.mismatchPhysicalDistance = mismatchPhysicalDistance;
+		this.message = message;
 		this.reflectogramMismatchEventId = reflectogramMismatchEventId;
 	}
 
@@ -124,7 +131,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 				spatialData,
 				this.getMismatchOpticalDistance(),
 				this.getMismatchPhysicalDistance(),
-				this.reflectogramMismatchEventId.getIdlTransferable(orb));
+				this.getMessage(),
+				this.getReflectogramMismatchEventId().getIdlTransferable(orb));
 	}
 
 	public void fromIdlTransferable(final IdlLineMismatchEvent lineMismatchEvent)
@@ -147,6 +155,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 
 			this.mismatchOpticalDistance = lineMismatchEvent.getMismatchOpticalDistance();
 			this.mismatchPhysicalDistance = lineMismatchEvent.getMismatchPhysicalDistance();
+			this.message = lineMismatchEvent.getMessage();
+			this.reflectogramMismatchEventId = Identifier.valueOf(lineMismatchEvent.getReflectogramMismatchEventId());
 		}
 	}
 
@@ -157,11 +167,12 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			final double physicalDistanceToEnd,
 			final double mismatchOpticalDistance,
 			final double mismatchPhysicalDistance,
+			final String message,
 			final Identifier reflectogramMismatchEventId) {
 		return new DefaultLineMismatchEvent(affectedPathElementId,
 				affectedPathElementSpatious, physicalDistanceToStart,
 				physicalDistanceToEnd, mismatchOpticalDistance,
-				mismatchPhysicalDistance,
+				mismatchPhysicalDistance, message,
 				reflectogramMismatchEventId);
 	}
 
@@ -189,7 +200,6 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 
 	/**
 	 * @see LineMismatchEvent#getMismatchOpticalDistance()
-	 * @see PopupNotificationEvent#getMismatchOpticalDistance()
 	 */
 	public double getMismatchOpticalDistance() {
 		return this.mismatchOpticalDistance;
@@ -197,10 +207,16 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 
 	/**
 	 * @see LineMismatchEvent#getMismatchPhysicalDistance()
-	 * @see PopupNotificationEvent#getMismatchPhysicalDistance()
 	 */
 	public double getMismatchPhysicalDistance() {
 		return this.mismatchPhysicalDistance;
+	}
+
+	/**
+	 * @see LineMismatchEvent#getMessage()
+	 */
+	public String getMessage() {
+		return this.message;
 	}
 
 	/**

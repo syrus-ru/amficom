@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlLineMismatchEventImpl.java,v 1.6.2.2 2006/03/23 07:58:00 bass Exp $
+ * $Id: IdlLineMismatchEventImpl.java,v 1.6.2.3 2006/03/23 10:48:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6.2.2 $, $Date: 2006/03/23 07:58:00 $
+ * @version $Revision: 1.6.2.3 $, $Date: 2006/03/23 10:48:43 $
  * @module event
  */
 final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
@@ -36,6 +36,7 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 			final IdlSpatialData spatialData,
 			final double mismatchOpticalDistance,
 			final double mismatchPhysicalDistance,
+			final String message,
 			final IdlIdentifier reflectogramMismatchEventId) {
 		final IdlIdentifier voidId = VOID_IDENTIFIER.getIdlTransferable();
 		this.id = voidId;
@@ -48,6 +49,7 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 		this.mismatchOpticalDistance = mismatchOpticalDistance;
 		this.mismatchPhysicalDistance = mismatchPhysicalDistance;
 
+		this.message = message;
 		this.reflectogramMismatchEventId = reflectogramMismatchEventId;
 	}
 
@@ -113,6 +115,22 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	}
 
 	/**
+	 * @see IdlLineMismatchEvent#getMessage()
+	 */
+	@Override
+	public String getMessage() {
+		return this.message;
+	}
+
+	/**
+	 * @see IdlLineMismatchEvent#getReflectogramMismatchEventId()
+	 */
+	@Override
+	public IdlIdentifier getReflectogramMismatchEventId() {
+		return this.reflectogramMismatchEventId;
+	}
+
+	/**
 	 * @throws IdlCreateObjectException
 	 * @see com.syrus.AMFICOM.general.corba.IdlStorableObject#getNative()
 	 */
@@ -123,14 +141,6 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 		} catch (final CreateObjectException coe) {
 			throw coe.getIdlTransferable();
 		}
-	}
-
-	/**
-	 * @see IdlLineMismatchEvent#getReflectogramMismatchEventId()
-	 */
-	@Override
-	public IdlIdentifier getReflectogramMismatchEventId() {
-		return this.reflectogramMismatchEventId;
 	}
 
 	/**

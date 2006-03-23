@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPopupNotificationEventImpl.java,v 1.10.2.1 2006/03/21 08:43:00 bass Exp $
+ * $Id: IdlPopupNotificationEventImpl.java,v 1.10.2.2 2006/03/23 10:48:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,11 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10.2.1 $, $Date: 2006/03/21 08:43:00 $
+ * @version $Revision: 1.10.2.2 $, $Date: 2006/03/23 10:48:43 $
  * @module event
  */
 final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
@@ -34,26 +33,14 @@ final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
 	}
 
 	IdlPopupNotificationEventImpl(final IdlIdentifier targetUserId,
-			final String message, final IdlIdentifier resultId,
-			final double mismatchOpticalDistance,
-			final double mismatchPhysicalDistance,
-			final long mismatchCreated,
-			final IdlSeverity severity,
-			final IdlIdentifier affectedPathElementId) {
+			final IdlIdentifier lineMismatchEventId) {
 		final IdlIdentifier voidId = VOID_IDENTIFIER.getIdlTransferable();
 		this.id = voidId;
 		this.creatorId = voidId;
 		this.modifierId = voidId;
 
 		this.targetUserId = targetUserId;
-		this.message = message;
-
-		this.resultId = resultId;
-		this.mismatchOpticalDistance = mismatchOpticalDistance;
-		this.mismatchPhysicalDistance = mismatchPhysicalDistance;
-		this.mismatchCreated = mismatchCreated;
-		this.severity = severity;
-		this.affectedPathElementId = affectedPathElementId;
+		this.lineMismatchEventId = lineMismatchEventId;
 	}
 
 	/**
@@ -79,58 +66,11 @@ final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
 	}
 
 	/**
-	 * @see IdlNotificationEvent#getMessage()
-	 */
-	public String getMessage() {
-		return this.message;
-	}
-
-	/**
-	 * @see IdlPopupNotificationEvent#getResultId()
+	 * @see IdlPopupNotificationEvent#getLineMismatchEventId()
 	 */
 	@Override
-	public IdlIdentifier getResultId() {
-		return this.resultId;
-	}
-
-	/**
-	 * @see IdlPopupNotificationEvent#getMismatchOpticalDistance()
-	 */
-	@Override
-	public double getMismatchOpticalDistance() {
-		return this.mismatchOpticalDistance;
-	}
-
-	/**
-	 * @see IdlPopupNotificationEvent#getMismatchPhysicalDistance()
-	 */
-	@Override
-	public double getMismatchPhysicalDistance() {
-		return this.mismatchPhysicalDistance;
-	}
-
-	/**
-	 * @see IdlPopupNotificationEvent#getMismatchCreated()
-	 */
-	@Override
-	public long getMismatchCreated() {
-		return this.mismatchCreated;
-	}
-
-	/**
-	 * @see IdlPopupNotificationEvent#getSeverity()
-	 */
-	@Override
-	public IdlSeverity getSeverity() {
-		return this.severity;
-	}
-
-	/**
-	 * @see IdlPopupNotificationEvent#getAffectedPathElementId()
-	 */
-	@Override
-	public IdlIdentifier getAffectedPathElementId() {
-		return this.affectedPathElementId;
+	public IdlIdentifier getLineMismatchEventId() {
+		return this.lineMismatchEventId;
 	}
 
 	/**

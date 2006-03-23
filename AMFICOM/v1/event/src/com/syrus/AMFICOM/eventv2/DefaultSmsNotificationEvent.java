@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultSmsNotificationEvent.java,v 1.3.2.1 2006/03/21 08:37:50 bass Exp $
+ * $Id: DefaultSmsNotificationEvent.java,v 1.3.2.2 2006/03/23 10:48:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3.2.1 $, $Date: 2006/03/21 08:37:50 $
+ * @version $Revision: 1.3.2.2 $, $Date: 2006/03/23 10:48:43 $
  * @module event
  */
 public final class DefaultSmsNotificationEvent extends
@@ -77,7 +77,7 @@ public final class DefaultSmsNotificationEvent extends
 	}
 
 	/**
-	 * @see NotificationEvent#getMessage()
+	 * @see SmsNotificationEvent#getMessage()
 	 */
 	public String getMessage() {
 		return this.message;

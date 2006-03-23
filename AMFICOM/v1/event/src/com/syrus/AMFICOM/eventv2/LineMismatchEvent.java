@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.12.2.3 2006/03/23 08:18:47 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.12.2.4 2006/03/23 10:48:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.eventv2;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
@@ -17,10 +18,11 @@ import com.syrus.AMFICOM.general.Identifier;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.12.2.3 $, $Date: 2006/03/23 08:18:47 $
+ * @version $Revision: 1.12.2.4 $, $Date: 2006/03/23 10:48:43 $
  * @module event
  */
-public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
+public interface LineMismatchEvent
+		extends Event<IdlLineMismatchEvent>, Identifiable {
 	/**
 	 * <p>Returns identifier of the {@code PathElement} affected. It&apos;s
 	 * guaranteed to be both non-{@code null} and non-void, unless
@@ -109,15 +111,11 @@ public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
 	 */
 	double getPhysicalDistanceToEnd();
 
-	/**
-	 * @see PopupNotificationEvent#getMismatchOpticalDistance()
-	 */
 	double getMismatchOpticalDistance();
 
-	/**
-	 * @see PopupNotificationEvent#getMismatchPhysicalDistance()
-	 */
 	double getMismatchPhysicalDistance();
+
+	String getMessage();
 
 	/**
 	 * <p>{@code reflectogramMismatchEventId} is guaranteed to be
@@ -129,8 +127,6 @@ public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
 	 *
 	 * <p>See also the note on nullability of
 	 * {@link #getAffectedPathElementId() affectedPathElementId} property.</p>
-	 *
-	 * @see PopupNotificationEvent#getResultId()
 	 */
 	Identifier getReflectogramMismatchEventId();
 }

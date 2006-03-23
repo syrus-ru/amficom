@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultEmailNotificationEvent.java,v 1.5.2.2 2006/03/23 07:58:01 bass Exp $
+ * $Id: DefaultEmailNotificationEvent.java,v 1.5.2.3 2006/03/23 10:48:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5.2.2 $, $Date: 2006/03/23 07:58:01 $
+ * @version $Revision: 1.5.2.3 $, $Date: 2006/03/23 10:48:43 $
  * @module event
  */
 public final class DefaultEmailNotificationEvent extends
@@ -113,7 +113,7 @@ public final class DefaultEmailNotificationEvent extends
 	}
 
 	/**
-	 * @see NotificationEvent#getMessage()
+	 * @see EmailNotificationEvent#getMessage()
 	 */
 	public String getMessage() {
 		return this.message;
