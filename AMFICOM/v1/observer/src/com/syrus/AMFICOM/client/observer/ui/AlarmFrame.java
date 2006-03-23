@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
@@ -31,15 +33,18 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.observer.ObserverMainFrame;
-import com.syrus.AMFICOM.client.observer.alarm.Alarm;
-import com.syrus.AMFICOM.client.observer.alarm.AlarmConditionWrapper;
-import com.syrus.AMFICOM.client.observer.alarm.AlarmWrapper;
+import com.syrus.AMFICOM.eventv2.AbstractLineMismatchEvent;
+import com.syrus.AMFICOM.eventv2.AbstractReflectogramMismatchEvent;
 import com.syrus.AMFICOM.eventv2.Event;
+import com.syrus.AMFICOM.eventv2.LineMismatchEventWrapper;
 import com.syrus.AMFICOM.eventv2.MeasurementCompletedEvent;
 import com.syrus.AMFICOM.eventv2.MeasurementStartedEvent;
 import com.syrus.AMFICOM.eventv2.PopupNotificationEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
+import com.syrus.AMFICOM.general.ConditionWrapper;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
@@ -50,6 +55,7 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
+import com.syrus.AMFICOM.newFilter.ConditionKey;
 import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.AMFICOM.resource.LangModelObserver;
 import com.syrus.AMFICOM.scheme.PathElement;
@@ -64,8 +70,8 @@ public class AlarmFrame extends JInternalFrame {
 
 	boolean initial_init = true;
 
-	private Wrapper<Alarm> wrapper;
-	WrapperedTableModel<Alarm> model;
+	private Wrapper<AbstractLineMismatchEvent> wrapper;
+	WrapperedTableModel<AbstractLineMismatchEvent> model;
 	WrapperedTable table;
 
 	JPanel actionPanel = new JPanel();
@@ -79,7 +85,18 @@ public class AlarmFrame extends JInternalFrame {
 
 	boolean perform_processing = true;
 
-	Filter filter = new Filter(new AlarmConditionWrapper());
+	Filter filter = new Filter(new ConditionWrapper(){
+		public List<ConditionKey> getKeys() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public short getEntityCode() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+	});
+	
 	Map<Identifier, Identifier> alarmMarkerMapping = new HashMap<Identifier, Identifier>();
 
 	private final class AlarmUpdater implements EventReceiver {
@@ -96,22 +113,26 @@ public class AlarmFrame extends JInternalFrame {
 		public void receiveEvent(final Event<?> event) {
 			if (event instanceof PopupNotificationEvent) {
 				final PopupNotificationEvent popupNotificationEvent = (PopupNotificationEvent) event;
-				
-				Alarm alarm = new Alarm(popupNotificationEvent);
-				AlarmFrame.this.model.addObject(alarm);
-				
-				Identifier resultId = popupNotificationEvent.getResultId();
-				Identifier peId = popupNotificationEvent.getAffectedPathElementId();
-				double optDistance = popupNotificationEvent.getMismatchOpticalDistance();
-				
 				try {
+					final Identifier lmeId = popupNotificationEvent.getLineMismatchEventId(); 
+					final AbstractLineMismatchEvent lineMismatchEvent = StorableObjectPool.getStorableObject(lmeId, true);
+					
+					AlarmFrame.this.model.addObject(lineMismatchEvent);
+
+					Identifier rmeId = lineMismatchEvent.getReflectogramMismatchEventId();
+					final AbstractReflectogramMismatchEvent reflectogramMismatchEvent = StorableObjectPool.getStorableObject(rmeId, true);
+					
+					Identifier resultId = reflectogramMismatchEvent.getResultId();
 					Result result = StorableObjectPool.getStorableObject(resultId, true);
+					
+					double optDistance = lineMismatchEvent.getMismatchOpticalDistance();
+
 					if (result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
 						final Action action = result.getAction();
 						Measurement m = (Measurement) action;
 						
 						Identifier meId = m.getMonitoredElementId();
-						PathElement pe = StorableObjectPool.getStorableObject(peId, true);
+						PathElement pe = StorableObjectPool.getStorableObject(lineMismatchEvent.getAffectedPathElementId(), true);
 						SchemePath path = null;
 						
 						if (pe == null) {
@@ -132,13 +153,14 @@ public class AlarmFrame extends JInternalFrame {
 						}
 						
 						Identifier markerId = LocalIdentifierGenerator.generateIdentifier(ObjectEntities.MARK_CODE);
-						AlarmFrame.this.alarmMarkerMapping.put(alarm.getId(), markerId);
+						AlarmFrame.this.alarmMarkerMapping.put(lmeId, markerId);
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-								markerId, optDistance, path.getId(), meId, pe.getId());
-						
+								markerId, optDistance, pe.getId(), meId);
+
 						AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
-						
-						AlarmFrame.this.table.setSelectedValue(alarm);
+						AlarmFrame.this.table.setSelectedValue(lineMismatchEvent);
+					} else {
+						throw new IllegalStateException("Result of ReflectogramMismatchEvent.getResultId() must have ResultSort.RESULT_SORT_MEASUREMENT");
 					}
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
@@ -167,16 +189,16 @@ public class AlarmFrame extends JInternalFrame {
 	}
 	
 	public AlarmFrame(final ApplicationContext aContext) {
-		this.wrapper = new AlarmWrapper();
-		this.model = new WrapperedTableModel<Alarm>(
+		this.wrapper = LineMismatchEventAlarmWrapper.getInstance();
+		this.model = new WrapperedTableModel<AbstractLineMismatchEvent>(
 				this.wrapper,
 				new String[] {
-						AlarmWrapper.COLUMN_DATE,
-						AlarmWrapper.COLUMN_OPTICAL_DISTANCE,
-						AlarmWrapper.COLUMN_PHYSICAL_DISTANCE,
-						AlarmWrapper.COLUMN_ELEMENT,
-						AlarmWrapper.COLUMN_PATH });
-		this.table = new WrapperedTable<Alarm>(this.model);
+						LineMismatchEventAlarmWrapper.COLUMN_DATE_CREATED,
+						LineMismatchEventWrapper.COLUMN_MISMATCH_OPTICAL_DISTANCE,
+						LineMismatchEventWrapper.COLUMN_MISMATCH_PHYSICAL_DISTANCE,
+						LineMismatchEventAlarmWrapper.COLUMN_PATHELEMENT_NAME,
+						LineMismatchEventAlarmWrapper.COLUMN_PATH_NAME });
+		this.table = new WrapperedTable<AbstractLineMismatchEvent>(this.model);
 		
 		this.table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -198,49 +220,61 @@ public class AlarmFrame extends JInternalFrame {
 				AlarmFrame.this.buttonDescribe.setEnabled(b);
 				
 				try {
-					Alarm alarm1 = AlarmFrame.this.model.getObject(first);
-					Alarm alarm2 = AlarmFrame.this.model.getObject(last);
+					AbstractLineMismatchEvent lmEvent1 = AlarmFrame.this.model.getObject(first);
+					AbstractLineMismatchEvent lmEvent2 = AlarmFrame.this.model.getObject(last);
+					
+					Identifier rme1Id = lmEvent1.getReflectogramMismatchEventId();
+					Identifier rme2Id = lmEvent2.getReflectogramMismatchEventId();
+					
+					AbstractReflectogramMismatchEvent rmEvent1 = StorableObjectPool.getStorableObject(rme1Id, true);
+					AbstractReflectogramMismatchEvent rmEvent2 = StorableObjectPool.getStorableObject(rme2Id, true);
 					
 					final ApplicationContext aContext1 = AlarmFrame.this.aContext;
 					if (!firstb) {
-						Identifier markerId = AlarmFrame.this.alarmMarkerMapping.get(alarm1.getId());
+						Identifier markerId = AlarmFrame.this.alarmMarkerMapping.get(((Identifiable)lmEvent1).getId());
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-								markerId, alarm1.getEvent().getMismatchOpticalDistance(), alarm1.getPath().getId(), 
-								alarm1.getMonitoredElement().getId(), alarm1.getPathElement().getId());
+								markerId, lmEvent1.getMismatchOpticalDistance(),  
+								lmEvent1.getAffectedPathElementId(), rmEvent1.getMonitoredElementId());
 
 						aContext1.getDispatcher().firePropertyChange(mEvent);
 					}
 					if (!lastb && first != last) {
-						Identifier markerId = AlarmFrame.this.alarmMarkerMapping.get(alarm2.getId());
+						Identifier markerId = AlarmFrame.this.alarmMarkerMapping.get(((Identifiable)lmEvent2).getId());
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-								markerId, alarm2.getEvent().getMismatchOpticalDistance(), alarm2.getPath().getId(), 
-								alarm2.getMonitoredElement().getId(), alarm2.getPathElement().getId());
+								markerId, lmEvent2.getMismatchOpticalDistance(), 
+								lmEvent2.getAffectedPathElementId(), rmEvent2.getMonitoredElementId());
 
 						aContext1.getDispatcher().firePropertyChange(mEvent);
 					}
 					
 					if (firstb) {
-						Identifier markerId = AlarmFrame.this.alarmMarkerMapping.get(alarm1.getId());
+						Identifier markerId = AlarmFrame.this.alarmMarkerMapping.get(((Identifiable)lmEvent1).getId());
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-								markerId, alarm1.getEvent().getMismatchOpticalDistance(), alarm1.getPath().getId(), 
-								alarm1.getMonitoredElement().getId(), alarm1.getPathElement().getId());
+								markerId, lmEvent1.getMismatchOpticalDistance(), 
+								lmEvent1.getAffectedPathElementId(), rmEvent1.getMonitoredElementId());
 
-						// notify about measurement
-						aContext1.getDispatcher().firePropertyChange(
-								new ObjectSelectedEvent(this, alarm1.getMeasurement(), null, ObjectSelectedEvent.MEASUREMENT));
-
+						//	notify about measurement
+						Result result = StorableObjectPool.getStorableObject(rmEvent1.getResultId(), true);
+						if (AnalysisUtil.hasMeasurementByResult(result)) {
+							Measurement m = AnalysisUtil.getMeasurementByResult(result);
+							aContext1.getDispatcher().firePropertyChange(
+									new ObjectSelectedEvent(this, m, null, ObjectSelectedEvent.MEASUREMENT));
+						}
 						aContext1.getDispatcher().firePropertyChange(mEvent);
 					} 
 					if (lastb && first != last) {
-						Identifier markerId = AlarmFrame.this.alarmMarkerMapping.get(alarm2.getId());
+						Identifier markerId = AlarmFrame.this.alarmMarkerMapping.get(((Identifiable)lmEvent2).getId());
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-								markerId, alarm2.getEvent().getMismatchOpticalDistance(), alarm2.getPath().getId(), 
-								alarm2.getMonitoredElement().getId(), alarm2.getPathElement().getId());
+								markerId, lmEvent2.getMismatchOpticalDistance(), 
+								lmEvent2.getAffectedPathElementId(), rmEvent2.getMonitoredElementId());
 						
 						// notify about measurement
-						aContext1.getDispatcher().firePropertyChange(
-								new ObjectSelectedEvent(this, alarm1.getMeasurement(), null, ObjectSelectedEvent.MEASUREMENT));
-						
+						Result result = StorableObjectPool.getStorableObject(rmEvent2.getResultId(), true);
+						if (AnalysisUtil.hasMeasurementByResult(result)) {
+							Measurement m = AnalysisUtil.getMeasurementByResult(result);
+							aContext1.getDispatcher().firePropertyChange(
+									new ObjectSelectedEvent(this, m, null, ObjectSelectedEvent.MEASUREMENT));
+						}
 						aContext1.getDispatcher().firePropertyChange(mEvent);
 					} 
 				} catch (ApplicationException e1) {
@@ -351,11 +385,6 @@ public class AlarmFrame extends JInternalFrame {
 		aModel.fireModelChanged();
 
 		updateContents();
-
-		this.buttonAcknowledge.setEnabled(false);
-		this.buttonFix.setEnabled(false);
-		this.buttonDelete.setEnabled(false);
-		this.buttonDescribe.setEnabled(false);
 	}
 
 	public void setContext(ApplicationContext aContext) {
@@ -371,20 +400,17 @@ public class AlarmFrame extends JInternalFrame {
 	}
 
 	public void updateContents() {
-		
-//		try {
-			// TODO use ObjectEntities.ALARM_CODE
-//			StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.UPDIKE_CODE);
-//			Set<Alarm> alarms = StorableObjectPool.<Alarm>getStorableObjectsByCondition(condition , true);
-//			this.model.setValues(alarms);
-
-			this.buttonAcknowledge.setEnabled(false);
-			this.buttonFix.setEnabled(false);
-			this.buttonDelete.setEnabled(false);
-			this.buttonDescribe.setEnabled(false);
-//		} catch(ApplicationException e) {
-//			e.printStackTrace();
-//		}
+		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINEMISMATCHEVENT_CODE);
+		try {
+			Set<AbstractLineMismatchEvent> limeMismatchEvents = StorableObjectPool.getStorableObjectsByCondition(condition , true);
+			this.model.setValues(limeMismatchEvents);
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
+		}
+		this.buttonAcknowledge.setEnabled(false);
+		this.buttonFix.setEnabled(false);
+		this.buttonDelete.setEnabled(false);
+		this.buttonDescribe.setEnabled(false);
 	}
 
 	void buttonRefresh_actionPerformed(ActionEvent e) {
@@ -394,79 +420,31 @@ public class AlarmFrame extends JInternalFrame {
 	void buttonDescribe_actionPerformed(ActionEvent e) {
 		int selected = this.table.getSelectedRow();
 		if (selected != -1) {
-			Alarm alarm = this.model.getObject(selected);
+			AbstractLineMismatchEvent lineMismatchEvent = this.model.getObject(selected);
 		
 		JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-				alarm.getEvent().getMessage(), 
+				lineMismatchEvent.getMessage(), 
 				LangModelObserver.getString("Message.information"), 
 				JOptionPane.INFORMATION_MESSAGE);
 		}
-/*
-		AlarmDescriptor ad = null;
-		if(alarm.type_id.equals("rtutestalarm")
-				|| alarm.type_id.equals("rtutestwarning")) {
-			ad = new OpticalAlarmDescriptor(alarm);
-		}
-		if(ad != null) {
-			String name;
-
-			try {
-				MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool
-						.getStorableObject(alarm.getMonitoredElementId(), true);
-				name = me.getName();
-			} catch(ApplicationException ex) {
-				name = "' '";
-			}
-
-			AlarmPopupFrame f = new AlarmPopupFrame(
-					"Отклонение в " + name + " возникло "
-							+ sdf.format(new Date(ad.getAlarmTime())),
-					alarm,
-					aContext);
-
-			aContext.getDispatcher().notify(
-					new OperationEvent(
-							f,
-							0,
-							SurveyEvent.ALARM_POPUP_FRAME_DISPLAYED));
-
-			Container desktop = this.getParent();
-			f.setLocation(this.getLocation());
-			f.setSize(this.getSize());
-			f.set(ad);
-			desktop.add(f);
-			f.show();
-			f.toFront();
-		}
-*/
 	}
 
 	void buttonAcknowledge_actionPerformed(ActionEvent e) {
 		int mini = this.table.getSelectionModel().getMinSelectionIndex();
 		int maxi = this.table.getSelectionModel().getMaxSelectionIndex();
-		Alarm[] alarms = new Alarm[maxi - mini + 1];
-		for(int i = 0; i + mini < maxi + 1; i++)
-			alarms[i] = (Alarm) this.model.getObject(i + mini);
-/*
-		for(int i = 0; i < alarms.length; i++) {
-			alarms[i].status = AlarmStatus.ALARM_STATUS_ASSIGNED;
-			alarms[i].assigned = System.currentTimeMillis();
-			alarms[i].assigned_to = aContext.getSessionInterface().getUserId();
-			aContext.getDataSourceInterface().SetAlarm(alarms[i].getId());
-		}
-		updateContents();
-*/
 	}
 
 	void buttonFix_actionPerformed(ActionEvent e) {
+		AbstractLineMismatchEvent lmEvent = this.model.getObject(this.table.getSelectedRow());
+		this.table.setSelectedValue(null);
+		
 		try {
-			Alarm alarm = this.model.getObject(this.table.getSelectedRow());
+			Identifier rme1Id = lmEvent.getReflectogramMismatchEventId();
+			AbstractReflectogramMismatchEvent rmEvent = StorableObjectPool.getStorableObject(rme1Id, true);
 			MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-					this.alarmMarkerMapping.get(alarm.getId()), 
-					alarm.getEvent().getMismatchOpticalDistance(),
-					alarm.getPath().getId(), alarm.getMonitoredElement().getId(),
-					alarm.getPathElement().getId());
-			this.table.setSelectedValue(null);
+					this.alarmMarkerMapping.get(((Identifiable)lmEvent).getId()), 
+					lmEvent.getMismatchOpticalDistance(), lmEvent.getAffectedPathElementId(),
+					rmEvent.getMonitoredElementId());
 			this.aContext.getDispatcher().firePropertyChange(mEvent2);
 		} catch (ApplicationException e1) {
 			Log.errorMessage(e1);
@@ -474,61 +452,24 @@ public class AlarmFrame extends JInternalFrame {
 	}
 
 	void buttonDelete_actionPerformed(ActionEvent e) {
+		AbstractLineMismatchEvent lmEvent = this.model.getObject(this.table.getSelectedRow());
+		this.table.setSelectedValue(null);
+		this.model.removeObject(lmEvent);
+		
 		try {
-			Alarm alarm = this.model.getObject(this.table.getSelectedRow());
+			Identifier rme1Id = lmEvent.getReflectogramMismatchEventId();
+			AbstractReflectogramMismatchEvent rmEvent = StorableObjectPool.getStorableObject(rme1Id, true);
 			MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-					this.alarmMarkerMapping.get(alarm.getId()), 
-					alarm.getEvent().getMismatchOpticalDistance(),
-					alarm.getPath().getId(), alarm.getMonitoredElement().getId(),
-					alarm.getPathElement().getId());
+					this.alarmMarkerMapping.get(((Identifiable)lmEvent).getId()), 
+					lmEvent.getMismatchOpticalDistance(), lmEvent.getAffectedPathElementId(),
+					rmEvent.getMonitoredElementId());
 			this.aContext.getDispatcher().firePropertyChange(mEvent2);
-			AlarmFrame.this.alarmMarkerMapping.remove(alarm.getId());
-			
-			this.table.setSelectedValue(null);
-			this.model.removeObject(alarm);
 		} catch (ApplicationException e1) {
 			Log.errorMessage(e1);
 		}
-
-		updateContents();
-/*
-		for(int i = 0; i < alarms.length; i++) {
-			alarms[i].status = AlarmStatus.ALARM_STATUS_DELETED;
-			alarms[i].fixed_when = System.currentTimeMillis();
-			alarms[i].fixed_by = aContext.getSessionInterface().getUserId();
-			aContext.getDataSourceInterface().SetAlarm(alarms[i].getId());
-		}
-		updateContents();
-*/
 	}
 
 	void filterButton_actionPerformed(ActionEvent e) {
-/*
-		AlarmFilter orf = (AlarmFilter) filter.clone();
-		FilterDialog dlg = new FilterDialog(orf, aContext);
-		dlg.pack();
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = dlg.getSize();
-		frameSize.width = 450;
-		frameSize.height = frameSize.height + 20;
-		dlg.setSize(frameSize);
-
-		if(frameSize.height > screenSize.height)
-			frameSize.height = screenSize.height;
-		if(frameSize.width > screenSize.width)
-			frameSize.width = screenSize.width;
-		dlg.setLocation(
-				(screenSize.width - frameSize.width) / 2,
-				(screenSize.height - frameSize.height) / 2);
-
-		dlg.setModal(true);
-		dlg.setVisible(true);
-
-		if(dlg.retcode == 1) {
-			filter = orf;
-			updateContents();
-		}
-*/
+		// TODO filtration
 	}
 }
