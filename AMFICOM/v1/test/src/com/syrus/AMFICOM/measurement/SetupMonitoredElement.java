@@ -1,5 +1,5 @@
 /*
- * $Id: SetupMonitoredElement.java,v 1.1.2.1 2006/03/06 19:02:21 arseniy Exp $
+ * $Id: SetupMonitoredElement.java,v 1.1.2.2 2006/03/23 14:24:11 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.measurement;
 import static com.syrus.AMFICOM.general.Identifier.SEPARATOR;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 import static com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.IdlMonitoredElementKind.MONITOREDELEMENT_KIND_TRANSMISSION_PATH;
 
 import java.util.Collections;
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/03/06 19:02:21 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/03/23 14:24:11 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -82,7 +82,7 @@ public class SetupMonitoredElement extends TestCase {
 			final String monitoredElementName = MONITOREDELEMENT + SEPARATOR + n
 					+ SEPARATOR
 					+ transmissionPathDescription;
-			final String localAddress = "2:0:" + n;
+			final String localAddress = "0:2:0:" + n;
 			monitoredElements.add(MonitoredElement.createInstance(userId,
 					domain.getId(),
 					monitoredElementName,
