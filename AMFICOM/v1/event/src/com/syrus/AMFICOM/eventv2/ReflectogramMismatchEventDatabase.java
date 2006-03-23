@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventDatabase.java,v 1.1.2.2 2006/03/21 16:27:29 bass Exp $
+ * $Id: ReflectogramMismatchEventDatabase.java,v 1.1.2.3 2006/03/23 13:15:56 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,11 +48,11 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1.2.2 $, $Date: 2006/03/21 16:27:29 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/03/23 13:15:56 $
  * @module event
  */
-public final class ReflectogramMismatchEventDatabase extends
-		StorableObjectDatabase<DefaultReflectogramMismatchEvent> {
+public final class ReflectogramMismatchEventDatabase
+		extends StorableObjectDatabase<DefaultReflectogramMismatchEvent> {
 	private static String columns;
 
 	private static String updateMultipleSQLValues;
