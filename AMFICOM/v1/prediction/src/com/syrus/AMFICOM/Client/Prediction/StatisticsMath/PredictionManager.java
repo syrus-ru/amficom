@@ -1,5 +1,5 @@
 /*-
- * $Id: PredictionManager.java,v 1.7 2006/03/23 08:51:02 saa Exp $
+ * $Id: PredictionManager.java,v 1.8 2006/03/23 09:27:26 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
  * </p>
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2006/03/23 08:51:02 $
+ * @version $Revision: 1.8 $, $Date: 2006/03/23 09:27:26 $
  * @module prediction
  */
 public interface PredictionManager {
@@ -58,7 +58,15 @@ public interface PredictionManager {
 	MonitoredElement getMonitoredElement();
 
 	/**
-	 * Возвращает статистику по затуханию.
+	 * Определяет возможность определения
+	 * статистики по затуханию для данного события (дБ/км)
+	 * @param nEvent номер события
+	 * @return true, если статистика по затуханию для данного события определена
+	 */
+	boolean hasAttenuationInfo(int nEvent);
+
+	/**
+	 * Возвращает статистику по затуханию на данном событии (дБ/км)
 	 * Определен, если {@link #hasAttenuationInfo} возвращает true,
 	 * но и в этом случае нет гарантии, что временной ряд будет непуст.
 	 * @param nEvent номер события
@@ -66,49 +74,76 @@ public interface PredictionManager {
 	Statistics getAttenuationInfo(int nEvent);
 
 	/**
-	 * "Хрен знает" (мы со Стасом не знаем)
-	 * @todo понять либо удалить
-	 */
-	Statistics getSplashAmplitudeInfo(int nEvent);
-
-	/**
-	 * Возвращает статистику уровеня падающего сигнала (y0).
-	 * Определен, если {@link #hasAmplitudeInfo} возвращает true.
-	 * @todo переименовать в getIncidentLevelInfo (и метод has... тоже)
+	 * Определяет возможность определения
+	 * статистики по потерям для данного события
 	 * @param nEvent номер события
+	 * @return true, если статистика по потерям для данного события определена
 	 */
-	Statistics getAmplitudeInfo(int nEvent);
+	boolean hasEnergyLossInfo(int nEvent);
 
 	/**
 	 * Возвращает статистику по потерям на данном событии
-	 * Определен, если {@link #hasEnergyLossInfo} возвращает true.
+	 * Определен, если {@link #hasEnergyLossInfo} возвращает true,
+	 * но и в этом случае нет гарантии, что временной ряд будет непуст.
 	 * @param nEvent номер события
+	 * @throws IllegalStateException {@link #hasEnergyLossInfo} == false
 	 */
 	Statistics getEnergyLossInfo(int nEvent);
 
 	/**
-	 * Возвращает статистику по амплитуде отражательного всплеска
-	 * на данном событии.
-	 * Определен, если {@link #hasReflectanceInfo} возвращает true.
-	 * @todo переименовать в getReflectiveAmplInfo или типа того (и метод has... тоже)
+	 * Определяет возможность определения
+	 * статистики по амплитуде отражательного всплеска для данного события
 	 * @param nEvent номер события
+	 * @return true, если статистика по амплитуде отражательного всплеска
+	 *   для данного события определена
 	 */
-	Statistics getReflectanceInfo(int nEvent);
-
-	/**
-	 * Определяет наличие AttenuationInformation для указанного события.
-	 * @param nEvent номер события
-	 * @return true, если AttenuationInformation определена.
-	 */
-	boolean hasAttenuationInfo(int nEvent);
-
 	boolean hasSplashAmplitudeInfo(int nEvent);
 
+	/**
+	 * Возвращает статистику по амплитуде отражательного всплеска
+	 *   на данном событии
+	 * Определен, если {@link #hasSplashAmplitudeInfo} возвращает true,
+	 * но и в этом случае нет гарантии, что временной ряд будет непуст.
+	 * @param nEvent номер события
+	 * @throws IllegalStateException {@link #hasSplashAmplitudeInfo} == false
+	 */
+	Statistics getSplashAmplitudeInfo(int nEvent);
+
+	/**
+	 * Определяет возможность определения
+	 * статистики по уровню падающего сигнала для данного события
+	 * @param nEvent номер события
+	 * @return true, если статистика по уровню падающего сигнала
+	 *   для данного события определена
+	 */
 	boolean hasAmplitudeInfo(int nEvent);
 
-	boolean hasEnergyLossInfo(int nEvent);
+	/**
+	 * Возвращает статистику по уровню падающего сигнала на данном событии
+	 * Определен, если {@link #hasAmplitudeInfo} возвращает true,
+	 * но и в этом случае нет гарантии, что временной ряд будет непуст.
+	 * @param nEvent номер события
+	 * @throws IllegalStateException {@link #hasAmplitudeInfo} == false
+	 */
+	Statistics getAmplitudeInfo(int nEvent);
 
+	/**
+	 * Определяет возможность определения
+	 * статистики по коэффициенту отражения для данного события
+	 * @param nEvent номер события
+	 * @return true, если статистика по коэффициенту отражения
+	 * для данного события определена
+	 */
 	boolean hasReflectanceInfo(int nEvent);
+
+	/**
+	 * Возвращает статистику по коэффициенту отражения на данном событии
+	 * Определен, если {@link #hasReflectanceInfo} возвращает true,
+	 * но и в этом случае нет гарантии, что временной ряд будет непуст.
+	 * @param nEvent номер события
+	 * @throws IllegalStateException {@link #hasReflectanceInfo} == false
+	 */
+	Statistics getReflectanceInfo(int nEvent);
 
 	/**
 	 * Рассчитать предсказанную р/г на заданную дату
