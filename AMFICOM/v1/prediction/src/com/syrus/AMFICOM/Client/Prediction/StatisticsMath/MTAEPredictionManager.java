@@ -1,5 +1,5 @@
 /*-
- * $Id: MTAEPredictionManager.java,v 1.5 2006/03/21 11:36:53 saa Exp $
+ * $Id: MTAEPredictionManager.java,v 1.6 2006/03/23 09:02:18 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,15 +16,18 @@ import java.util.List;
 
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
+import com.syrus.AMFICOM.analysis.dadara.events.DeadZoneDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.HavingAmpl;
 import com.syrus.AMFICOM.analysis.dadara.events.HavingLoss;
+import com.syrus.AMFICOM.analysis.dadara.events.HavingY0;
 import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 
 /**
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2006/03/21 11:36:53 $
+ * @version $Revision: 1.6 $, $Date: 2006/03/23 09:02:18 $
  * @module prediction
  */
 public class MTAEPredictionManager implements PredictionManager {
@@ -65,6 +68,8 @@ public class MTAEPredictionManager implements PredictionManager {
 	private SimpleReflectogramEventComparer[] srecCache;
 	private Statistics[] lossStatsCache;
 	private Statistics[] attenuationStatsCache;
+	private Statistics[] y0StatsCache;
+	private Statistics[] amplStatsCache;
 
 	private final InfoExtractor lossExtractor = new InfoExtractor() {
 		public boolean hasParameter(DetailedEvent event) {
@@ -81,6 +86,31 @@ public class MTAEPredictionManager implements PredictionManager {
 		}
 		public double getParameter(DetailedEvent event) {
 			return ((LinearDetailedEvent)event).getAttenuation();
+		}
+	};
+
+	private final InfoExtractor amplExtractor = new InfoExtractor() {
+
+		public boolean hasParameter(DetailedEvent event) {
+			return event instanceof HavingAmpl;
+		}
+
+		public double getParameter(DetailedEvent event) {
+			return ((HavingAmpl)event).getAmpl();
+		}
+	};
+
+	private final InfoExtractor y0Extractor = new InfoExtractor() {
+
+		public boolean hasParameter(DetailedEvent event) {
+			return event instanceof HavingY0
+				|| event instanceof DeadZoneDetailedEvent;
+		}
+
+		public double getParameter(DetailedEvent event) {
+			return event instanceof HavingY0
+					? ((HavingY0)event).getY0()
+					: ((DeadZoneDetailedEvent)event).getPo();
 		}
 	};
 
@@ -108,6 +138,8 @@ public class MTAEPredictionManager implements PredictionManager {
 		this.srecCache = new SimpleReflectogramEventComparer[this.data.length];
 		this.lossStatsCache = new Statistics[this.data.length];
 		this.attenuationStatsCache = new Statistics[this.data.length];
+		this.y0StatsCache = new Statistics[this.data.length];
+		this.amplStatsCache = new Statistics[this.data.length];
 		assert(getMinTime() <= getMaxTime());
 	}
 
@@ -150,15 +182,14 @@ public class MTAEPredictionManager implements PredictionManager {
 	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasAmplitudeInfo(int)
 	 */
 	public boolean hasAmplitudeInfo(int nEvent) {
-		return false;
+		return hasInfo(nEvent, y0Extractor);
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#getAmplitudeInfo(int)
-	 * @throws UnsupportedOperationException not supported
 	 */
 	public Statistics getAmplitudeInfo(int nEvent) {
-		throw new UnsupportedOperationException();
+		return getInfo(nEvent, y0Extractor, this.y0StatsCache, "db");
 	}
 
 	/**
@@ -208,15 +239,14 @@ public class MTAEPredictionManager implements PredictionManager {
 	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#hasReflectanceInfo(int)
 	 */
 	public boolean hasReflectanceInfo(int nEvent) {
-		return false;
+		return hasInfo(nEvent, amplExtractor);
 	}
 
 	/**
-	 * @throws UnsupportedOperationException not supported
 	 * @see com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager#getReflectanceInfo(int)
 	 */
 	public Statistics getReflectanceInfo(int nEvent) {
-		throw new UnsupportedOperationException();
+		return getInfo(nEvent, amplExtractor, this.amplStatsCache, "db");
 	}
 
 	/**
