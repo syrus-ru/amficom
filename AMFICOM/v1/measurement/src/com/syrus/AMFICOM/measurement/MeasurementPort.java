@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.19.2.4 2006/03/17 11:54:48 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.19.2.5 2006/03/23 09:37:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.19.2.4 $, $Date: 2006/03/17 11:54:48 $
+ * @version $Revision: 1.19.2.5 $, $Date: 2006/03/23 09:37:46 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -190,17 +190,14 @@ public final class MeasurementPort extends StorableObject
 		return this.kisId;
 	}
 
+	public KIS getKIS() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.kisId, true);
+	}
+
 	public Identifier getPortId() {
 		return this.portId;
 	}
 
-	/**
-	 * Returns the {@link Port} view of this {@link MeasurementPort}. In
-	 * rare cases, this view may be {@code null}.
-	 * 
-	 * @return the {@link Port} view of this {@link MeasurementPort}.
-	 * @throws ApplicationException
-	 */
 	public Port getPort() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.getPortId(), true);
 	}
