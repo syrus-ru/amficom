@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventWrapper.java,v 1.1.2.3 2006/03/23 13:07:23 bass Exp $
+ * $Id: LineMismatchEventWrapper.java,v 1.1.2.4 2006/03/23 14:10:33 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Wrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1.2.3 $, $Date: 2006/03/23 13:07:23 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/03/23 14:10:33 $
  * @module event
  */
 public final class LineMismatchEventWrapper
@@ -31,6 +31,7 @@ public final class LineMismatchEventWrapper
 	public static final String COLUMN_PHYSICAL_DISTANCE_TO_END = "physical_distance_to_end";
 	public static final String COLUMN_MISMATCH_OPTICAL_DISTANCE = "mismatch_optical_distance";
 	public static final String COLUMN_MISMATCH_PHYSICAL_DISTANCE = "mismatch_physical_distance";
+	public static final String COLUMN_MESSAGE = "message";
 	public static final String COLUMN_REFLECTOGRAM_MISMATCH_EVENT_ID = "reflectogram_mismatch_event_id";
 
 	private final List<String> keys;
@@ -46,6 +47,7 @@ public final class LineMismatchEventWrapper
 				COLUMN_PHYSICAL_DISTANCE_TO_END,
 				COLUMN_MISMATCH_OPTICAL_DISTANCE,
 				COLUMN_MISMATCH_PHYSICAL_DISTANCE,
+				COLUMN_MESSAGE,
 				COLUMN_REFLECTOGRAM_MISMATCH_EVENT_ID));
 	}
 
@@ -83,6 +85,8 @@ public final class LineMismatchEventWrapper
 		} else if (internedKey == COLUMN_AFFECTED_PATH_ELEMENT_ID
 				|| internedKey == COLUMN_REFLECTOGRAM_MISMATCH_EVENT_ID) {
 			return Identifier.class;
+		} else if (internedKey == COLUMN_MESSAGE) {
+			return String.class;
 		}
 		return null;
 	}
@@ -132,6 +136,8 @@ public final class LineMismatchEventWrapper
 			return Double.valueOf(lineMismatchEvent.getMismatchOpticalDistance());
 		} else if (internedKey == COLUMN_MISMATCH_PHYSICAL_DISTANCE) {
 			return Double.valueOf(lineMismatchEvent.getMismatchPhysicalDistance());
+		} else if (internedKey == COLUMN_MESSAGE) {
+			return lineMismatchEvent.getMessage();
 		} else if (internedKey == COLUMN_REFLECTOGRAM_MISMATCH_EVENT_ID) {
 			return lineMismatchEvent.getReflectogramMismatchEventId();
 		}
