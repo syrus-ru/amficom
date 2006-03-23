@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.58 2006/03/23 15:10:35 bass Exp $
+ * $Id: event.idl,v 1.59 2006/03/23 15:48:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -209,8 +209,8 @@ module eventv2 {
 
 		valuetype IdlLineMismatchEvent : general::corba::IdlStorableObject, IdlEvent {
 			private general::corba::IdlIdentifier affectedPathElementId;
-			union IdlSpatialData switch (
-				enum IdlAffectedPathElementSpatious {
+			union IdlSpacialData switch (
+				enum IdlAffectedPathElementSpacious {
 					_FALSE,
 					_TRUE}) {
 				case _TRUE:
@@ -219,14 +219,14 @@ module eventv2 {
 						double physicalDistanceToEnd;
 					} physicalDistancePair;
 			};
-			private IdlSpatialData spatialData;
+			private IdlSpacialData spacialData;
 			private double mismatchOpticalDistance;
 			private double mismatchPhysicalDistance;
 			private general::corba::WString4000 message;
 			private general::corba::IdlIdentifier reflectogramMismatchEventId;
 
 			general::corba::IdlIdentifier getAffectedPathElementId();
-			boolean isAffectedPathElementSpatious();
+			boolean isAffectedPathElementSpacious();
 			double getPhysicalDistanceToStart();
 			double getPhysicalDistanceToEnd();
 			double getMismatchOpticalDistance();
@@ -241,7 +241,7 @@ module eventv2 {
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in general::corba::IdlIdentifier affectedPathElementId,
-					in IdlSpatialData spatialData,
+					in IdlSpacialData spacialData,
 					in double mismatchOpticalDistance,
 					in double mismatchPhysicalDistance,
 					in general::corba::WString4000 message,
