@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.12.2.1 2006/03/20 13:21:00 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.12.2.2 2006/03/23 07:58:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,61 +21,10 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.12.2.1 $, $Date: 2006/03/20 13:21:00 $
+ * @version $Revision: 1.12.2.2 $, $Date: 2006/03/23 07:58:01 $
  * @module event
  */
 public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
-	/**
-	 * @return mismatch type; see {@link AlarmType AlarmType},
-	 *         {@link com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#getAlarmType()}.
-	 * @see AlarmType AlarmType
-	 * @see com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#getAlarmType()
-	 */
-	AlarmType getAlarmType();
-	
-	/**
-	 * @return problem severity; see {@link Severity Severity},
-	 *         {@link com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#getSeverity()}.
-	 * @see Severity Severity
-	 * @see com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#getSeverity()
-	 */
-	Severity getSeverity();
-
-	/**
-	 * @return {@code true} if threshold excess factor is defined; see
-	 *         {@link com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#hasMismatch()}.
-	 * @see com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#hasMismatch()
-	 */
-	boolean hasMismatch();
-
-	/**
-	 * @return lower bound of threshold excess factor if
-	 *         {@code mismatch} is defined, i.&nbsp;e.
-	 *         {@link #hasMismatch()}<code>&nbsp;==&nbsp;true</code>.
-	 *         In this case, it&apos;s guaranteed that
-	 *         <code>0.0&nbsp;&lt;=&nbsp;</code>{@link #getMinMismatch()
-	 *         minMismatch}<code>&nbsp;&lt;=&nbsp;</code>{@link
-	 *         #getMaxMismatch() maxMismatch}<code>&nbsp;&lt;=&nbsp;1.0</code>.
-	 * @throws IllegalStateException if threshold excess factor is
-	 *         undefined, i.&nbsp;e. {@link #hasMismatch()}<code>&nbsp;==&nbsp;false</code>.
-	 * @see com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#getMinMismatch()
-	 */
-	double getMinMismatch();
-
-	/**
-	 * @return upper bound of threshold excess factor if
-	 *         {@code mismatch} is defined, i.&nbsp;e.
-	 *         {@link #hasMismatch()}<code>&nbsp;==&nbsp;true</code>.
-	 *         In this case, it&apos;s guaranteed that
-	 *         <code>0.0&nbsp;&lt;=&nbsp;</code>{@link #getMinMismatch()
-	 *         minMismatch}<code>&nbsp;&lt;=&nbsp;</code>{@link
-	 *         #getMaxMismatch() maxMismatch}<code>&nbsp;&lt;=&nbsp;1.0</code>.
-	 * @throws IllegalStateException if threshold excess factor is
-	 *         undefined, i.&nbsp;e. {@link #hasMismatch()}<code>&nbsp;==&nbsp;false</code>.
-	 * @see com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#getMaxMismatch()
-	 */
-	double getMaxMismatch();
-
 	/**
 	 * <p>Returns identifier of the {@code PathElement} affected. It&apos;s
 	 * guaranteed to be both non-{@code null} and non-void, unless
@@ -165,19 +114,6 @@ public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
 	double getPhysicalDistanceToEnd();
 
 	/**
-	 * <p>{@code resultId} is guaranteed to be non-{@code null} and non-void
-	 * during this event&apos;s transfer from an agent to the event server,
-	 * but later on, if the {@code Result} referenced by this {@code resultId}
-	 * is deleted, a void identifier will be returned by this method.</p>
-	 *
-	 * <p>See also the note on nullability of
-	 * {@link #getAffectedPathElementId() affectedPathElementId} property.</p>
-	 *
-	 * @see PopupNotificationEvent#getResultId()
-	 */
-	Identifier getResultId();
-
-	/**
 	 * @see PopupNotificationEvent#getMismatchOpticalDistance()
 	 */
 	double getMismatchOpticalDistance();
@@ -187,8 +123,5 @@ public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
 	 */
 	double getMismatchPhysicalDistance();
 
-	/**
-	 * @see PopupNotificationEvent#getMismatchCreated()
-	 */
-	Date getMismatchCreated();
+	Identifier getReflectogramMismatchEventId();
 }

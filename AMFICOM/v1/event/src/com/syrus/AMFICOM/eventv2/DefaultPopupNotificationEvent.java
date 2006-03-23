@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultPopupNotificationEvent.java,v 1.16.4.1 2006/03/21 08:37:50 bass Exp $
+ * $Id: DefaultPopupNotificationEvent.java,v 1.16.4.2 2006/03/23 07:58:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.16.4.1 $, $Date: 2006/03/21 08:37:50 $
+ * @version $Revision: 1.16.4.2 $, $Date: 2006/03/23 07:58:01 $
  * @module event
  */
 public final class DefaultPopupNotificationEvent extends
@@ -82,14 +82,17 @@ public final class DefaultPopupNotificationEvent extends
 	private DefaultPopupNotificationEvent(
 			final LineMismatchEvent lineMismatchEvent,
 			final String message,
-			final Identifier targetUserId) {
+			final Identifier targetUserId,
+			final Identifier resultId,
+			final Date mismatchCreated,
+			final Severity severity) {
 		this.targetUserId = targetUserId;
 		this.message = message;
-		this.resultId = lineMismatchEvent.getResultId();
+		this.resultId = resultId;
 		this.mismatchOpticalDistance = lineMismatchEvent.getMismatchOpticalDistance();
 		this.mismatchPhysicalDistance = lineMismatchEvent.getMismatchPhysicalDistance();
-		this.mismatchCreated = new Date(lineMismatchEvent.getMismatchCreated().getTime());
-		this.severity = lineMismatchEvent.getSeverity();
+		this.mismatchCreated = new Date(mismatchCreated.getTime());
+		this.severity = severity;
 		this.affectedPathElementId = lineMismatchEvent.getAffectedPathElementId();
 	}
 
@@ -138,10 +141,16 @@ public final class DefaultPopupNotificationEvent extends
 	public static PopupNotificationEvent valueOf(
 			final LineMismatchEvent lineMismatchEvent,
 			final String message,
-			final Identifier targetUserId) {
+			final Identifier targetUserId,
+			final Identifier resultId,
+			final Date mismatchCreated,
+			final Severity severity) {
 		return new DefaultPopupNotificationEvent(lineMismatchEvent,
 				message,
-				targetUserId);
+				targetUserId,
+				resultId,
+				mismatchCreated,
+				severity);
 	}
 
 	/**

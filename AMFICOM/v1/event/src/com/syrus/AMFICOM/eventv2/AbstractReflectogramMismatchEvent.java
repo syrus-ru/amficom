@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractReflectogramMismatchEvent.java,v 1.5.2.3 2006/03/22 12:56:56 bass Exp $
+ * $Id: AbstractReflectogramMismatchEvent.java,v 1.5.2.4 2006/03/23 07:58:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,12 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventHelper;
-import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchData;
-import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatch;
-import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatchPair;
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlAnchorData;
+import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlMismatchData;
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlAnchorDataPackage.IdlAnchor;
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlAnchorDataPackage.IdlAnchorPair;
+import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlMismatchDataPackage.IdlMismatch;
+import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlMismatchDataPackage.IdlMismatchPair;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.reflectometry.SOAnchor;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5.2.3 $, $Date: 2006/03/22 12:56:56 $
+ * @version $Revision: 1.5.2.4 $, $Date: 2006/03/23 07:58:01 $
  * @module event
  */
 public abstract class AbstractReflectogramMismatchEvent extends StorableObject
@@ -132,7 +132,7 @@ public abstract class AbstractReflectogramMismatchEvent extends StorableObject
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.5.2.3 $, $Date: 2006/03/22 12:56:56 $
+	 * @version $Revision: 1.5.2.4 $, $Date: 2006/03/23 07:58:01 $
 	 * @module event
 	 */
 	final class SoAnchorImpl implements SOAnchor, Identifiable, Serializable {

@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultEmailNotificationEvent.java,v 1.5.2.1 2006/03/21 08:37:50 bass Exp $
+ * $Id: DefaultEmailNotificationEvent.java,v 1.5.2.2 2006/03/23 07:58:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5.2.1 $, $Date: 2006/03/21 08:37:50 $
+ * @version $Revision: 1.5.2.2 $, $Date: 2006/03/23 07:58:01 $
  * @module event
  */
 public final class DefaultEmailNotificationEvent extends
@@ -57,15 +57,14 @@ public final class DefaultEmailNotificationEvent extends
 		}
 	}
 
-	private DefaultEmailNotificationEvent(
-			final LineMismatchEvent lineMismatchEvent,
-			final String address,
+	private DefaultEmailNotificationEvent(final String address,
+			final String subject,
 			final String message) {
 		assert address != null : NON_NULL_EXPECTED;
 		assert address.length() != 0 : NON_EMPTY_EXPECTED;
 
 		this.email = address;
-		this.subject = lineMismatchEvent.getSeverity().getLocalizedName();
+		this.subject = subject;
 		this.message = message;
 	}
 
@@ -93,11 +92,10 @@ public final class DefaultEmailNotificationEvent extends
 		return new DefaultEmailNotificationEvent(emailNotificationEvent);
 	}
 
-	public static EmailNotificationEvent valueOf(
-			final LineMismatchEvent lineMismatchEvent,
-			final String address,
+	public static EmailNotificationEvent valueOf(final String address,
+			final String subject,
 			final String message) {
-		return new DefaultEmailNotificationEvent(lineMismatchEvent, address, message);
+		return new DefaultEmailNotificationEvent(address, subject, message);
 	}
 
 	/**

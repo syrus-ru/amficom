@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.8.2.2 2006/03/21 08:37:50 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.8.2.3 2006/03/23 07:58:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,6 @@
 
 package com.syrus.AMFICOM.eventv2;
 
-import java.util.Date;
-
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
@@ -17,49 +15,19 @@ import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventHelper;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialData;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialDataPackage.IdlAffectedPathElementSpatious;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialDataPackage.IdlPhysicalDistancePair;
-import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchData;
-import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatch;
-import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatchPair;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType;
-import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8.2.2 $, $Date: 2006/03/21 08:37:50 $
+ * @version $Revision: 1.8.2.3 $, $Date: 2006/03/23 07:58:00 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	private static final long serialVersionUID = -1651689764279078776L;
-
-	/**
-	 * @serial include
-	 */
-	private AlarmType alarmType;
-
-	/**
-	 * @serial include
-	 */
-	private Severity severity;
-
-	/**
-	 * @serial include
-	 */
-	private boolean mismatch;
-
-	/**
-	 * @serial include
-	 */
-	private double minMismatch;
-
-	/**
-	 * @serial include
-	 */
-	private double maxMismatch;
 
 	/**
 	 * @serial include
@@ -84,11 +52,6 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	/**
 	 * @serial include
 	 */
-	private Identifier resultId;
-
-	/**
-	 * @serial include
-	 */
 	private double mismatchOpticalDistance;
 
 	/**
@@ -99,7 +62,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	/**
 	 * @serial include
 	 */
-	private Date mismatchCreated;
+	private Identifier reflectogramMismatchEventId;
 
 	/**
 	 * @param lineMismatchEvent
@@ -114,31 +77,13 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		}
 	}
 
-	private DefaultLineMismatchEvent(final AlarmType alarmType,
-			final Severity severity,
-			final boolean mismatch,
-			final double minMismatch,
-			final double maxMismatch,
-			final Identifier affectedPathElementId,
+	private DefaultLineMismatchEvent(final Identifier affectedPathElementId,
 			final boolean affectedPathElementSpatious,
 			final double physicalDistanceToStart,
 			final double physicalDistanceToEnd,
-			final Identifier resultId,
 			final double mismatchOpticalDistance,
 			final double mismatchPhysicalDistance,
-			final Date mismatchCreated) {
-		this.alarmType = alarmType;
-		this.severity = severity;
-
-		if (!!(this.mismatch = mismatch)) {
-			this.minMismatch = minMismatch;
-			this.maxMismatch = maxMismatch;
-
-			if (this.minMismatch > this.maxMismatch) {
-				throw new IllegalArgumentException();
-			}
-		}
-
+			final Identifier reflectogramMismatchEventId) {
 		this.affectedPathElementId = affectedPathElementId;
 
 		if (!!(this.affectedPathElementSpatious = affectedPathElementSpatious)) {
@@ -152,10 +97,9 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			}
 		}
 
-		this.resultId = resultId;
 		this.mismatchOpticalDistance = mismatchOpticalDistance;
 		this.mismatchPhysicalDistance = mismatchPhysicalDistance;
-		this.mismatchCreated = new Date(mismatchCreated.getTime());
+		this.reflectogramMismatchEventId = reflectogramMismatchEventId;
 	}
 
 	/**
@@ -164,15 +108,6 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	 */
 	@Override
 	public IdlLineMismatchEvent getIdlTransferable(final ORB orb) {
-		final IdlMismatchData mismatchData = new IdlMismatchData();
-		if (this.hasMismatch()) {
-			mismatchData.mismatchPair(IdlMismatch._TRUE, new IdlMismatchPair(
-					this.getMinMismatch(),
-					this.getMaxMismatch()));
-		} else {
-			mismatchData._default(IdlMismatch._FALSE);
-		}
-
 		final IdlSpatialData spatialData = new IdlSpatialData();
 		if (this.isAffectedPathElementSpacious()) {
 			spatialData.physicalDistancePair(
@@ -185,33 +120,17 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		}
 
 		return IdlLineMismatchEventHelper.init(orb,
-				this.getAlarmType().getIdlTransferable(orb),
-				this.getSeverity().getIdlTransferable(orb),
-				mismatchData,
 				this.getAffectedPathElementId().getIdlTransferable(orb),
 				spatialData,
-				this.getResultId().getIdlTransferable(orb),
 				this.getMismatchOpticalDistance(),
 				this.getMismatchPhysicalDistance(),
-				this.mismatchCreated.getTime());
+				this.reflectogramMismatchEventId.getIdlTransferable(orb));
 	}
 
 	public void fromIdlTransferable(final IdlLineMismatchEvent lineMismatchEvent)
 	throws IdlConversionException {
 		synchronized (this) {
 			super.fromIdlTransferable((IdlStorableObject) lineMismatchEvent);
-
-			this.alarmType = AlarmType.valueOf(lineMismatchEvent.getAlarmType());
-			this.severity = Severity.valueOf(lineMismatchEvent.getSeverity());
-
-			if (!!(this.mismatch = lineMismatchEvent.hasMismatch())) {
-				this.minMismatch = lineMismatchEvent.getMinMismatch();
-				this.maxMismatch = lineMismatchEvent.getMaxMismatch();
-
-				if (this.minMismatch > this.maxMismatch) {
-					throw new IllegalArgumentException();
-				}
-			}
 
 			this.affectedPathElementId = Identifier.valueOf(lineMismatchEvent.getAffectedPathElementId());
 
@@ -226,57 +145,24 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 				}
 			}
 
-			this.resultId = Identifier.valueOf(lineMismatchEvent.getResultId());
 			this.mismatchOpticalDistance = lineMismatchEvent.getMismatchOpticalDistance();
 			this.mismatchPhysicalDistance = lineMismatchEvent.getMismatchPhysicalDistance();
-			this.mismatchCreated = new Date(lineMismatchEvent.getMismatchCreated());
 		}
 	}
 
-	public static LineMismatchEvent valueOf(final AlarmType alarmType,
-			final Severity severity,
-			final boolean mismatch,
-			final double minMismatch,
-			final double maxMismatch,
+	public static LineMismatchEvent valueOf(
 			final Identifier affectedPathElementId,
 			final boolean affectedPathElementSpatious,
 			final double physicalDistanceToStart,
 			final double physicalDistanceToEnd,
-			final Identifier resultId,
 			final double mismatchOpticalDistance,
 			final double mismatchPhysicalDistance,
-			final Date mismatchCreated) {
-		return new DefaultLineMismatchEvent(alarmType, severity, mismatch,
-				minMismatch, maxMismatch, affectedPathElementId,
+			final Identifier reflectogramMismatchEventId) {
+		return new DefaultLineMismatchEvent(affectedPathElementId,
 				affectedPathElementSpatious, physicalDistanceToStart,
-				physicalDistanceToEnd, resultId, mismatchOpticalDistance,
-				mismatchPhysicalDistance, mismatchCreated);
-	}
-
-	public AlarmType getAlarmType() {
-		return this.alarmType;
-	}
-
-	public Severity getSeverity() {
-		return this.severity;
-	}
-
-	public boolean hasMismatch() {
-		return this.mismatch;
-	}
-
-	public double getMinMismatch() {
-		if (this.hasMismatch()) {
-			return this.minMismatch;
-		}
-		throw new IllegalStateException();
-	}
-
-	public double getMaxMismatch() {
-		if (this.hasMismatch()) {
-			return this.maxMismatch;
-		}
-		throw new IllegalStateException();
+				physicalDistanceToEnd, mismatchOpticalDistance,
+				mismatchPhysicalDistance,
+				reflectogramMismatchEventId);
 	}
 
 	public Identifier getAffectedPathElementId() {
@@ -302,14 +188,6 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	}
 
 	/**
-	 * @see LineMismatchEvent#getResultId()
-	 * @see PopupNotificationEvent#getResultId()
-	 */
-	public Identifier getResultId() {
-		return this.resultId;
-	}
-
-	/**
 	 * @see LineMismatchEvent#getMismatchOpticalDistance()
 	 * @see PopupNotificationEvent#getMismatchOpticalDistance()
 	 */
@@ -326,10 +204,9 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	}
 
 	/**
-	 * @see LineMismatchEvent#getMismatchCreated()
-	 * @see PopupNotificationEvent#getMismatchCreated()
+	 * @see LineMismatchEvent#getReflectogramMismatchEventId()
 	 */
-	public Date getMismatchCreated() {
-		return (Date) this.mismatchCreated.clone();
+	public Identifier getReflectogramMismatchEventId() {
+		return this.reflectogramMismatchEventId;
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLineMismatchEvent.java,v 1.4.2.1 2006/03/20 13:26:14 bass Exp $
+ * $Id: AbstractLineMismatchEvent.java,v 1.4.2.2 2006/03/23 07:58:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4.2.1 $, $Date: 2006/03/20 13:26:14 $
+ * @version $Revision: 1.4.2.2 $, $Date: 2006/03/23 07:58:01 $
  * @module event
  */
 public abstract class AbstractLineMismatchEvent extends StorableObject
@@ -32,9 +32,7 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 	}
 
 	protected String paramString() {
-		return "alarmType = " + this.getAlarmType()
-				+ "; severity = " + this.getSeverity()
-				+ "; resultId = " + this.getResultId();
+		return "reflectogramMismatchEventId = " + this.getReflectogramMismatchEventId();
 	}
 
 	@Override
