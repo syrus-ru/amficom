@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.55 2006/03/23 07:58:00 bass Exp $
+ * $Id: event.idl,v 1.56 2006/03/23 10:49:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -222,6 +222,7 @@ module eventv2 {
 			private IdlSpatialData spatialData;
 			private double mismatchOpticalDistance;
 			private double mismatchPhysicalDistance;
+			private wstring message;
 			private general::corba::IdlIdentifier reflectogramMismatchEventId;
 
 			general::corba::IdlIdentifier getAffectedPathElementId();
@@ -230,12 +231,14 @@ module eventv2 {
 			double getPhysicalDistanceToEnd();
 			double getMismatchOpticalDistance();
 			double getMismatchPhysicalDistance();
+			wstring getMessage();
 			general::corba::IdlIdentifier getReflectogramMismatchEventId();
 
 			factory init(in general::corba::IdlIdentifier affectedPathElementId,
 					in IdlSpatialData spatialData,
 					in double mismatchOpticalDistance,
 					in double mismatchPhysicalDistance,
+					in wstring message,
 					in general::corba::IdlIdentifier reflectogramMismatchEventId);
 		};
 
@@ -247,7 +250,6 @@ module eventv2 {
 			};
 
 			IdlDeliveryMethod getDeliveryMethod();
-			wstring getMessage();
 		};
 
 		valuetype IdlEmailNotificationEvent : general::corba::IdlStorableObject, IdlNotificationEvent {
@@ -257,6 +259,7 @@ module eventv2 {
 
 			string getEmail();
 			wstring getSubject();
+			wstring getMessage();
 
 			factory init(in string email, in wstring subject, in wstring message);
 		};
@@ -266,36 +269,20 @@ module eventv2 {
 			private wstring message;
 
 			string getCellular();
+			wstring getMessage();
 			
 			factory init(in string cellular, in wstring message);
 		};
 
 		valuetype IdlPopupNotificationEvent : general::corba::IdlStorableObject, IdlNotificationEvent {
 			private general::corba::IdlIdentifier targetUserId;
-			private wstring message;
-			private general::corba::IdlIdentifier resultId;
-			private double mismatchOpticalDistance;
-			private double mismatchPhysicalDistance;
-			private long long mismatchCreated;
-			private reflectometry::corba::IdlSeverity severity;
-			private general::corba::IdlIdentifier affectedPathElementId;
+			private general::corba::IdlIdentifier lineMismatchEventId;
 
 			general::corba::IdlIdentifier getTargetUserId();
-			general::corba::IdlIdentifier getResultId();
-			double getMismatchOpticalDistance();
-			double getMismatchPhysicalDistance();
-			long long getMismatchCreated();
-			reflectometry::corba::IdlSeverity getSeverity();
-			general::corba::IdlIdentifier getAffectedPathElementId();
+			general::corba::IdlIdentifier getLineMismatchEventId();
 
 			factory init(in general::corba::IdlIdentifier targetUserId,
-					in wstring message,
-					in general::corba::IdlIdentifier resultId,
-					in double mismatchOpticalDistance,
-					in double mismatchPhysicalDistance,
-					in long long mismatchCreated,
-					in reflectometry::corba::IdlSeverity severity,
-					in general::corba::IdlIdentifier affectedPathElementId);
+					in general::corba::IdlIdentifier lineMismatchEventId);
 		};
 
 		abstract valuetype IdlMeasurementStatusChangedEvent : IdlEvent {
