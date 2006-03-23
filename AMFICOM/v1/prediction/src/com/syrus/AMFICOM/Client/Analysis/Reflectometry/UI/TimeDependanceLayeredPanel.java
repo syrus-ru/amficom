@@ -182,10 +182,10 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements
 			case PredictionModel.ATTENUATION:
 				statistics = stats.getAttenuationInfo(event);
 				break;
-			case PredictionModel.AMPLITUDE:
+			case PredictionModel.REFL_AMPLITUDE:
 				statistics = stats.getReflectiveAmplitudeInfo(event);
 				break;
-			case PredictionModel.POWER_LEVEL:
+			case PredictionModel.Y0_LEVEL:
 				statistics = stats.getY0Info(event);
 				break;
 			case PredictionModel.LOSS:
@@ -209,34 +209,34 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements
 		final TimedToolBar toolBar = (TimedToolBar)this.toolbar;
 		final boolean hasAttenuationInfo = predictionManager != null && nEvent != -1 
 				&& predictionManager.hasAttenuationInfo(nEvent); 
-		final boolean hasEnergyLossInfo = predictionManager != null && nEvent != -1 
+		final boolean hasLossInfo = predictionManager != null && nEvent != -1 
 				&& predictionManager.hasLossInfo(nEvent); 
-		final boolean hasSplashAmplitudeInfo = predictionManager != null && nEvent != -1 
+		final boolean hasReflectiveAmplitudeInfo = predictionManager != null && nEvent != -1 
 				&& predictionManager.hasReflectiveAmplitudeInfo(nEvent);
-		final boolean hasAmplitudeInfo = predictionManager != null && nEvent != -1 
+		final boolean hasY0Info = predictionManager != null && nEvent != -1 
 				&& predictionManager.hasY0Info(nEvent);
 		
-		toolBar.lossButton.setEnabled(hasEnergyLossInfo);
+		toolBar.lossButton.setEnabled(hasLossInfo);
 		toolBar.attButton.setEnabled(hasAttenuationInfo);
-		toolBar.plevelButton.setEnabled(hasSplashAmplitudeInfo);
-		toolBar.amplButton.setEnabled(hasAmplitudeInfo);
+		toolBar.y0Button.setEnabled(hasY0Info);
+		toolBar.reflAmplButton.setEnabled(hasReflectiveAmplitudeInfo);
 		
-		if (hasEnergyLossInfo && toolBar.lossButton.isSelected()) {
+		if (hasLossInfo && toolBar.lossButton.isSelected()) {
 			 toolBar.lossButton.doClick();
 		} else if (hasAttenuationInfo && toolBar.attButton.isSelected()) {
 			 toolBar.attButton.doClick();
-		} else if (hasAmplitudeInfo && toolBar.amplButton.isSelected()) {
-			 toolBar.amplButton.doClick();
-		} else if (hasSplashAmplitudeInfo && toolBar.plevelButton.isSelected()) {
-			 toolBar.plevelButton.doClick();
-		} else if (hasEnergyLossInfo) {
+		} else if (hasY0Info && toolBar.y0Button.isSelected()) {
+			 toolBar.y0Button.doClick();
+		} else if (hasReflectiveAmplitudeInfo && toolBar.reflAmplButton.isSelected()) {
+			 toolBar.reflAmplButton.doClick();
+		} else if (hasLossInfo) {
 			 toolBar.lossButton.doClick();
 		} else if (hasAttenuationInfo) {
 			 toolBar.attButton.doClick();
-		} else if (hasAmplitudeInfo) {
-			 toolBar.amplButton.doClick();
-		} else if (hasSplashAmplitudeInfo) {
-			 toolBar.plevelButton.doClick();
+		} else if (hasY0Info) {
+			 toolBar.y0Button.doClick();
+		} else if (hasReflectiveAmplitudeInfo) {
+			 toolBar.reflAmplButton.doClick();
 		} else {
 			
 		}
@@ -251,8 +251,8 @@ class TimedToolBar extends ScalableToolBar {
 
 	protected static final String att = "att";
 	protected static final String loss = "loss";
-	protected static final String plevel = "plevel";
-	protected static final String ampl = "ampl";
+	protected static final String y0 = "y0";
+	protected static final String reflAmpl = "reflAmpl";
 
 	JToggleButton pointsButton = new JToggleButton();
 	JToggleButton linesButton = new JToggleButton();
@@ -260,15 +260,15 @@ class TimedToolBar extends ScalableToolBar {
 
 	JToggleButton attButton = new JToggleButton();
 	JToggleButton lossButton = new JToggleButton();
-	JToggleButton plevelButton = new JToggleButton();
-	JToggleButton amplButton = new JToggleButton();
+	JToggleButton y0Button = new JToggleButton();
+	JToggleButton reflAmplButton = new JToggleButton();
 
 	public TimedToolBar(TimeDependanceLayeredPanel panel) {
 		super(panel);
 	}
 
 	protected static String[] buttons = new String[] {
-		att, loss, plevel, ampl, SEPARATOR, points, lines, approx, SEPARATOR, EX, DX, EY, DY, FIX
+		att, loss, y0, reflAmpl, SEPARATOR, points, lines, approx, SEPARATOR, EX, DX, EY, DY, FIX
 	};
 
 	@Override
@@ -309,9 +309,9 @@ class TimedToolBar extends ScalableToolBar {
 					}
 				},
 				true));
-		buttons1.put(plevel,
+		buttons1.put(y0,
 				createToolButton(
-				this.plevelButton,
+				this.y0Button,
 				null,
 				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
 				null,
@@ -319,13 +319,13 @@ class TimedToolBar extends ScalableToolBar {
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/entrance.gif")),
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						plevelButton_actionPerformed(e);
+						y0Button_actionPerformed(e);
 					}
 				},
 				true));
-		buttons1.put(ampl,
+		buttons1.put(reflAmpl,
 				createToolButton(
-				this.amplButton,
+				this.reflAmplButton,
 				null,
 				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
 				null,
@@ -333,7 +333,7 @@ class TimedToolBar extends ScalableToolBar {
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/amplitude.gif")),
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						amplButton_actionPerformed(e);
+						reflAmplButton_actionPerformed(e);
 					}
 				},
 				true));
@@ -382,8 +382,8 @@ class TimedToolBar extends ScalableToolBar {
 
 		ButtonGroup group = new ButtonGroup();
 		group.add(this.attButton);
-		group.add(this.plevelButton);
-		group.add(this.amplButton);
+		group.add(this.y0Button);
+		group.add(this.reflAmplButton);
 		group.add(this.lossButton);
 
 		this.lossButton.setSelected(true);
@@ -405,15 +405,15 @@ class TimedToolBar extends ScalableToolBar {
 		panel1.updateAnalysisType();
 	}
 
-	void plevelButton_actionPerformed(ActionEvent e) {
+	void y0Button_actionPerformed(ActionEvent e) {
 		TimeDependanceLayeredPanel panel1 = (TimeDependanceLayeredPanel)super.panel;
-		PredictionModel.setEventType(PredictionModel.POWER_LEVEL);
+		PredictionModel.setEventType(PredictionModel.Y0_LEVEL);
 		panel1.updateAnalysisType();
 	}
 
-	void amplButton_actionPerformed(ActionEvent e) {
+	void reflAmplButton_actionPerformed(ActionEvent e) {
 		TimeDependanceLayeredPanel panel1 = (TimeDependanceLayeredPanel)super.panel;
-		PredictionModel.setEventType(PredictionModel.AMPLITUDE);
+		PredictionModel.setEventType(PredictionModel.REFL_AMPLITUDE);
 		panel1.updateAnalysisType();
 	}
 

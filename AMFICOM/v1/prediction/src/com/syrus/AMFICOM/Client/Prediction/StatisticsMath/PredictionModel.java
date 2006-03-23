@@ -1,5 +1,5 @@
 /*-
- * $Id: PredictionModel.java,v 1.2 2006/03/23 09:41:03 saa Exp $
+ * $Id: PredictionModel.java,v 1.3 2006/03/23 10:07:29 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,9 +14,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class PredictionModel {
-	public static final int POWER_LEVEL = 0;
+	public static final int Y0_LEVEL = 0;
 	public static final int ATTENUATION = 1;
-	public static final int AMPLITUDE = 2;
+	public static final int REFL_AMPLITUDE = 2;
 	public static final int REFLECTANCE = 3;
 	public static final int LOSS = 4;
 	public static final int NON_INITIALYZED = -1;
@@ -57,9 +57,9 @@ public class PredictionModel {
 		switch (eventType) {
 		case PredictionModel.ATTENUATION:
 			return manager.getAttenuationInfo(eventNumber);
-		case PredictionModel.AMPLITUDE:
+		case PredictionModel.REFL_AMPLITUDE:
 			return manager.getReflectiveAmplitudeInfo(eventNumber);
-		case PredictionModel.POWER_LEVEL:
+		case PredictionModel.Y0_LEVEL:
 			return manager.getY0Info(eventNumber);
 		case PredictionModel.LOSS:
 			return manager.getLossInfo(eventNumber);
