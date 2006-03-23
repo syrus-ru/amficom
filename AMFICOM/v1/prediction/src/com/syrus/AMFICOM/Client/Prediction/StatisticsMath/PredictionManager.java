@@ -1,5 +1,5 @@
 /*-
- * $Id: PredictionManager.java,v 1.8 2006/03/23 09:27:26 saa Exp $
+ * $Id: PredictionManager.java,v 1.9 2006/03/23 09:37:50 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
  * </p>
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2006/03/23 09:27:26 $
+ * @version $Revision: 1.9 $, $Date: 2006/03/23 09:37:50 $
  * @module prediction
  */
 public interface PredictionManager {
@@ -67,9 +67,10 @@ public interface PredictionManager {
 
 	/**
 	 * ¬озвращает статистику по затуханию на данном событии (дЅ/км)
-	 * ќпределен, если {@link #hasAttenuationInfo} возвращает true,
+	 * ќпределен, если {@link #hasAttenuationInfo(int)} возвращает true,
 	 * но и в этом случае нет гарантии, что временной р€д будет непуст.
 	 * @param nEvent номер событи€
+	 * @throws IllegalStateException {@link #hasAttenuationInfo(int)} == false
 	 */
 	Statistics getAttenuationInfo(int nEvent);
 
@@ -83,10 +84,10 @@ public interface PredictionManager {
 
 	/**
 	 * ¬озвращает статистику по потер€м на данном событии
-	 * ќпределен, если {@link #hasEnergyLossInfo} возвращает true,
+	 * ќпределен, если {@link #hasEnergyLossInfo(int)} возвращает true,
 	 * но и в этом случае нет гарантии, что временной р€д будет непуст.
 	 * @param nEvent номер событи€
-	 * @throws IllegalStateException {@link #hasEnergyLossInfo} == false
+	 * @throws IllegalStateException {@link #hasEnergyLossInfo(int)} == false
 	 */
 	Statistics getEnergyLossInfo(int nEvent);
 
@@ -102,10 +103,10 @@ public interface PredictionManager {
 	/**
 	 * ¬озвращает статистику по амплитуде отражательного всплеска
 	 *   на данном событии
-	 * ќпределен, если {@link #hasSplashAmplitudeInfo} возвращает true,
+	 * ќпределен, если {@link #hasSplashAmplitudeInfo(int)} возвращает true,
 	 * но и в этом случае нет гарантии, что временной р€д будет непуст.
 	 * @param nEvent номер событи€
-	 * @throws IllegalStateException {@link #hasSplashAmplitudeInfo} == false
+	 * @throws IllegalStateException {@link #hasSplashAmplitudeInfo(int)} == false
 	 */
 	Statistics getSplashAmplitudeInfo(int nEvent);
 
@@ -120,10 +121,10 @@ public interface PredictionManager {
 
 	/**
 	 * ¬озвращает статистику по уровню падающего сигнала на данном событии
-	 * ќпределен, если {@link #hasAmplitudeInfo} возвращает true,
+	 * ќпределен, если {@link #hasAmplitudeInfo(int)} возвращает true,
 	 * но и в этом случае нет гарантии, что временной р€д будет непуст.
 	 * @param nEvent номер событи€
-	 * @throws IllegalStateException {@link #hasAmplitudeInfo} == false
+	 * @throws IllegalStateException {@link #hasAmplitudeInfo(int)} == false
 	 */
 	Statistics getAmplitudeInfo(int nEvent);
 
@@ -138,10 +139,10 @@ public interface PredictionManager {
 
 	/**
 	 * ¬озвращает статистику по коэффициенту отражени€ на данном событии
-	 * ќпределен, если {@link #hasReflectanceInfo} возвращает true,
+	 * ќпределен, если {@link #hasReflectanceInfo(int)} возвращает true,
 	 * но и в этом случае нет гарантии, что временной р€д будет непуст.
 	 * @param nEvent номер событи€
-	 * @throws IllegalStateException {@link #hasReflectanceInfo} == false
+	 * @throws IllegalStateException {@link #hasReflectanceInfo(int)} == false
 	 */
 	Statistics getReflectanceInfo(int nEvent);
 
