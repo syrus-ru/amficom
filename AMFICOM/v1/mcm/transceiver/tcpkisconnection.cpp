@@ -40,7 +40,7 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_establishSock
 	if (kis_socket == INVALID_SOCKET) {
 		kis_socket = (SOCKET) com_syrus_AMFICOM_mcm_TCPKISConnection_KIS_TCP_SOCKET_DISCONNECTED;
 	}
-	return (jint)kis_socket;
+	return (jint) kis_socket;
 }
 
 JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_dropSocketConnection(JNIEnv *env, jobject obj) {
