@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementControlModule.java,v 1.146.2.10 2006/03/24 09:03:27 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146.2.11 2006/03/24 09:24:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146.2.10 $, $Date: 2006/03/24 09:03:27 $
+ * @version $Revision: 1.146.2.11 $, $Date: 2006/03/24 09:24:19 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -425,11 +425,8 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			Log.errorMessage(ae);
 			return;
 		}
-		if (tests.isEmpty()) {
-			return;
-		}
 
-		Log.debugMessage("Loaded " + tests.size() + " " + TEST_STATUS_SCHEDULED + " and " + TEST_STATUS_PROCESSING + " tests",
+		Log.debugMessage("Loaded " + tests.size() + " tests of status " + TEST_STATUS_SCHEDULED + " or " + TEST_STATUS_PROCESSING,
 				DEBUGLEVEL07);
 		for (final Test test : tests) {
 			switch (test.getStatus()) {
@@ -684,7 +681,8 @@ final class MeasurementControlModule extends SleepButWorkThread {
 					scheduledTestIterator.add(newTest);
 					newTest.setStatus(TEST_STATUS_SCHEDULED);
 				} else {
-					Log.errorMessage("Status of new test '" + newTest.getId() + "': " + newTest.getStatus() + " -- not TEST_STATUS_NEW");
+					Log.errorMessage("Status of new test '"
+							+ newTest.getId() + "': " + newTest.getStatus() + " -- not " + TEST_STATUS_NEW);
 				}
 
 				newTest = newTestIterator.hasNext() ? newTestIterator.next() : null;
@@ -747,7 +745,8 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			}
 
 			if (testStatus != TEST_STATUS_STOPPING) {
-				Log.errorMessage("Illegal status: " + testStatus + " of test '" + testId + "' -- not STOPPING. Will stop anyway.");
+				Log.errorMessage("Illegal status: "
+						+ testStatus + " of test '" + testId + "' -- not " + TEST_STATUS_STOPPING + ". Will stop anyway.");
 			}
 			test.setStatus(TEST_STATUS_STOPPED);
 		}
@@ -806,6 +805,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			testProcessor.start();
 		} catch (TestProcessingException tpe) {
 			Log.errorMessage(tpe);
+			Log.debugMessage("Setting status of test '" + testId + "' to " + TEST_STATUS_ABORTED, DEBUGLEVEL07);
 			test.setStatus(TEST_STATUS_ABORTED);
 			try {
 				StorableObjectPool.flush(test, LoginManager.getUserId(), true);
