@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.90.2.3 2006/03/16 12:01:22 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.90.2.4 2006/03/24 09:22:35 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,8 @@ import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_ABORTED;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_COMPLETED;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_PROCESSING;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_SCHEDULED;
+import static com.syrus.util.Log.DEBUGLEVEL06;
+import static com.syrus.util.Log.DEBUGLEVEL07;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -56,7 +58,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.90.2.3 $, $Date: 2006/03/16 12:01:22 $
+ * @version $Revision: 1.90.2.4 $, $Date: 2006/03/24 09:22:35 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -128,7 +130,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		}
 
 		final int numberOfMeasurements = this.test.getNumberOfMeasurements();
-		Log.debugMessage("Test '" + testId + "' -- number of measurements: " + numberOfMeasurements, Log.DEBUGLEVEL06);
+		Log.debugMessage("Test '" + testId + "' -- number of measurements: " + numberOfMeasurements, DEBUGLEVEL06);
 		if (numberOfMeasurements == 0) {
 			this.numberOfMResults = 0;
 			this.lastMeasurementStartTime = null;
@@ -144,7 +146,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 			throw new TestProcessingException(ABORT_REASON_DATABASE_ERROR, roe);
 		} catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Last measurement for test '" + testId + "' not found; assume test has none measurements",
-					Log.DEBUGLEVEL06);
+					DEBUGLEVEL06);
 			this.numberOfMResults = 0;
 			this.lastMeasurementStartTime = null;
 			return;
@@ -162,7 +164,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		Log.debugMessage("Test '" + testId + "' -- last measurement: " + lastMeasurement.getId()
 				+ " (status: " + lastMeasurementStatus
 				+ "), number of measurement results: " + this.numberOfMResults,
-				Log.DEBUGLEVEL06);
+				DEBUGLEVEL06);
 
 		switch (lastMeasurementStatus) {
 			case ACTION_STATUS_NEW:
@@ -196,7 +198,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 				}
 				break;
 			default:
-				Log.debugMessage("Test '" + testId + "' -- status of last measurement: " + lastMeasurementStatus, Log.DEBUGLEVEL06);
+				Log.debugMessage("Test '" + testId + "' -- status of last measurement: " + lastMeasurementStatus, DEBUGLEVEL06);
 		}
 
 		try {
@@ -244,10 +246,10 @@ abstract class TestProcessor extends SleepButWorkThread {
 					}
 					if (this.nextMeasurementStartTime == null) {
 						this.lastMeasurementAcquisition = true;
-						Log.debugMessage("Test '" + this.test.getId() + "' | Last measurement acquisition", Log.DEBUGLEVEL06);
+						Log.debugMessage("Test '" + this.test.getId() + "' | Last measurement acquisition", DEBUGLEVEL06);
 					} else {
 						Log.debugMessage("Test '" + this.test.getId() + "' | Next measurement at: " + this.nextMeasurementStartTime,
-								Log.DEBUGLEVEL06);
+								DEBUGLEVEL06);
 					}
 				} else {
 					if (this.nextMeasurementStartTime.getTime() <= System.currentTimeMillis()) {
@@ -353,7 +355,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 			mesg.append("\t nextMeasurementStartTime: ");
 			mesg.append(this.nextMeasurementStartTime);
 		}
-		Log.debugMessage(mesg.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage(mesg.toString(), DEBUGLEVEL07);
 
 		if (this.lastMeasurementAcquisition
 				&& (this.numberOfMResults >= numberOfMeasurements
@@ -387,7 +389,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 	}
 
 	private void complete() {
-		Log.debugMessage("Test '" + this.test.getId() + "' setting as completed", Log.DEBUGLEVEL07);
+		Log.debugMessage("Test '" + this.test.getId() + "' setting as completed", DEBUGLEVEL07);
 		this.test.setStatus(TEST_STATUS_COMPLETED);
 		try {
 			StorableObjectPool.flush(this.test, LoginManager.getUserId(), false);
@@ -398,7 +400,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 	}
 
 	void abort(final String abortReason) {
-		Log.debugMessage("Test '" + this.test.getId() + "' setting as aborted", Log.DEBUGLEVEL07);
+		Log.debugMessage("Test '" + this.test.getId() + "' setting as aborted", DEBUGLEVEL07);
 		this.test.addStop(abortReason);
 		this.test.setStatus(TEST_STATUS_ABORTED);
 		try {
