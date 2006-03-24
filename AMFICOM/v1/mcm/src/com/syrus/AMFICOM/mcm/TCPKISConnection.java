@@ -1,5 +1,5 @@
 /*-
- * $Id: TCPKISConnection.java,v 1.27.2.4 2006/03/24 11:19:03 arseniy Exp $
+ * $Id: TCPKISConnection.java,v 1.27.2.5 2006/03/24 11:20:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KEY_KIS_HOST_NAME;
 import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KEY_KIS_TCP_PORT;
 import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KIS_HOST_NAME;
 import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KIS_TCP_PORT;
+import static com.syrus.util.Log.DEBUGLEVEL07;
 
 import java.util.Map;
 
@@ -24,7 +25,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27.2.4 $, $Date: 2006/03/24 11:19:03 $
+ * @version $Revision: 1.27.2.5 $, $Date: 2006/03/24 11:20:34 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -106,7 +107,7 @@ final class TCPKISConnection implements KISConnection {
 	public synchronized void establish(final long kisConnectionTimeout, final boolean dropIfAlreadyEstablished)
 			throws CommunicationException {
 		Log.debugMessage("Connecting to KIS '" + this.kisId + "' on host '" + this.kisHostName + "', port " + this.kisTCPPort,
-				Log.DEBUGLEVEL07);
+				DEBUGLEVEL07);
 		if (this.isEstablished()) {
 			if (dropIfAlreadyEstablished) {
 				this.drop();
@@ -121,7 +122,7 @@ final class TCPKISConnection implements KISConnection {
 			this.kisTCPSocket = this.establishSocketConnection();
 			if (!this.isEstablished()) {
 				Log.debugMessage("Cannot connect to KIS '" + this.kisId + "' on host '" + this.kisHostName + "', port " + this.kisTCPPort,
-						Log.DEBUGLEVEL07);
+						DEBUGLEVEL07);
 				final Object obj = new Object();
 				try {
 					synchronized (obj) {
@@ -134,7 +135,7 @@ final class TCPKISConnection implements KISConnection {
 		}	//while
 
 		if (this.isEstablished()) {
-			Log.debugMessage("Connected to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
+			Log.debugMessage("Connected to KIS '" + this.kisId + "'", DEBUGLEVEL07);
 		} else {
 			throw new CommunicationException("Cannot connect to KIS '" + this.kisId
 					+ "' on host '" + this.kisHostName
@@ -147,7 +148,7 @@ final class TCPKISConnection implements KISConnection {
 	 */
 	public synchronized void drop() {
 		if (this.kisTCPSocket != KIS_TCP_SOCKET_DISCONNECTED) {
-			Log.debugMessage("Closing socket: " + this.kisTCPSocket, Log.DEBUGLEVEL09);
+			Log.debugMessage("Closing socket: " + this.kisTCPSocket, DEBUGLEVEL07);
 			this.dropSocketConnection();
 			this.kisTCPSocket = KIS_TCP_SOCKET_DISCONNECTED;
 		}
@@ -172,14 +173,14 @@ final class TCPKISConnection implements KISConnection {
 		final String localAddress = measurement.getMonitoredElement().getLocalAddress();
 
 		Log.debugMessage("Transmitting measurement '" + measurementId
-				+ "' to KIS '" + this.kisId + "' on " + this.kisHostName + ":" + this.kisTCPPort, Log.DEBUGLEVEL07);
+				+ "' to KIS '" + this.kisId + "' on " + this.kisHostName + ":" + this.kisTCPPort, DEBUGLEVEL07);
 		if (this.transmitMeasurementBySocket(measurementId.toString(),
 				measurement.getTypeCodename(),
 				localAddress,
 				codenames,
 				values,
 				timewait)) {
-			Log.debugMessage("Transmitted measurement '" + measurementId + "' to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
+			Log.debugMessage("Transmitted measurement '" + measurementId + "' to KIS '" + this.kisId + "'", DEBUGLEVEL07);
 		} else {
 			throw new CommunicationException("Cannot transmit measurement '" + measurementId + "' to KIS '" + this.kisId + "'");
 		}
@@ -192,7 +193,7 @@ final class TCPKISConnection implements KISConnection {
 		this.kisReport = null;
 		if (this.receiveKISReportFromSocket(timewait)) {
 			if (this.kisReport != null) {
-				Log.debugMessage("Received report for measurement '" + this.kisReport.getMeasurementId() + "'", Log.DEBUGLEVEL07);
+				Log.debugMessage("Received report for measurement '" + this.kisReport.getMeasurementId() + "'", DEBUGLEVEL07);
 			}
 			return this.kisReport;
 		}
