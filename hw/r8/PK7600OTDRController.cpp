@@ -88,7 +88,7 @@ BOOL PK7600OTDRController::setMeasurementParameters(const Parameter** parameters
 	double resolution = -1;
 	short pulseWidth = -1;
 	double ior = -1;
-	double scans = -1;
+	int scans = -1;
 	short smoothFilter = -1;
 	
 	char* parameterName;
@@ -117,11 +117,11 @@ BOOL PK7600OTDRController::setMeasurementParameters(const Parameter** parameters
 			delete bValue;
 		} else if (strcmp(parameterName, PARAMETER_NAME_SCANS) == 0) {
 			bValue = parameters[i]->getValue()->getReversed();
-			scans = *(double*) bValue->getData();
+			scans = *(int*) bValue->getData();
 			delete bValue;
-		} else if (strcmp(parameterName, PARAMETER_NAME_SMOOTH_FILTER) == 0) {
+		} else if (strcmp(parameterName, PARAMETER_NAME_FLAG_SMOOTH_FILTER) == 0) {
 			bValue = parameters[i]->getValue()->getReversed();
-			smoothFilter = *(short*) bValue->getData();
+			smoothFilter = (*(int*) bValue->getData() == 0) ? 0 : 1;
 			delete bValue;
 		} else {
 			printf("PK7600OTDRController | Unknown name of parameter: %s\n", parameterName);
@@ -153,7 +153,7 @@ BOOL PK7600OTDRController::setMeasurementParameters(const Parameter** parameters
 		return FALSE;
 	}
 	if (smoothFilter < 0) {
-		printf("PK7600OTDRController | ERROR: Parameter %s not found\n", PARAMETER_NAME_SMOOTH_FILTER);
+		printf("PK7600OTDRController | ERROR: Parameter %s not found\n", PARAMETER_NAME_FLAG_SMOOTH_FILTER);
 		return FALSE;
 	}
 
@@ -164,6 +164,14 @@ BOOL PK7600OTDRController::setMeasurementParameters(const Parameter** parameters
 	this->iorM = ior;
 	this->scansM = (unsigned short) scans;
 	this->smoothFilterM = smoothFilter;
+	printf("PK7600OTDRController | Measurement parameters:\nWave length: %hu\nTrace length: %f\nResolution: %f\nPulse width: %f\nIOR: %f\nScans: %hu\nSmooth filter: %hd\n",
+			this->waveLengthM,
+			this->traceLengthM,
+			this->resolutionM,
+			this->pulseWidthM,
+			this->iorM,
+			this->scansM,
+			this->smoothFilterM);
 
 	int code = PK7600AcqSetParamsEx(this->otdrId,
 			this->scansM,
