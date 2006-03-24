@@ -65,7 +65,7 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand {
 		// Загружаем выбранные рефлектограммы
 		try {
 			TypicalCondition condition1 = new TypicalCondition(from, to, OperationSort.OPERATION_IN_RANGE, ObjectEntities.MEASUREMENT_CODE, MeasurementWrapper.COLUMN_START_TIME);
-			LinkedIdsCondition mcond  = new LinkedIdsCondition(me.getId(), ObjectEntities.MEASUREMENT_CODE);
+			LinkedIdsCondition mcond  = new LinkedIdsCondition(ms.getId(), ObjectEntities.MEASUREMENT_CODE);
 			Set<Measurement> measurements = StorableObjectPool.getStorableObjectsByCondition(
 					new CompoundCondition(condition1, CompoundConditionSort.AND, mcond), true);
 			if (measurements.isEmpty()) {
