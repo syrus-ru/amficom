@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTAUController.cpp,v 1.4 2005/10/26 08:12:55 arseniy Exp $
+// $Id: OTAUController.cpp,v 1.5 2006/03/24 15:14:35 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.4 $, $Date: 2005/10/26 08:12:55 $
+// $Revision: 1.5 $, $Date: 2006/03/24 15:14:35 $
 // $Author: arseniy $
 //
 // OTAUController.cpp: implementation of the OTAUController class.
@@ -135,7 +135,7 @@ void* OTAUController::run(void* args) {
 	unsigned int holdConnectionMessageSentTimeout = 0; //яЕЙСМДШ
 	while (otauController->running) {
 		if (holdConnectionMessageSentTimeout >= OTAU_HOLD_PORT_TIMEOUT) {
-			printf("OTAUController | Sending hold connection command to OTAU %hd on COM port %hd", otauController->otauAddress, otauController->comPortId);
+			printf("OTAUController | Sending hold connection command to OTAU %hd on COM port %hd\n", otauController->otauAddress, otauController->comPortId);
 			OTAUController::sendCOMPortMessage(otauController->comPortHandle,
 				message,
 				reply,
@@ -147,7 +147,7 @@ void* OTAUController::run(void* args) {
 	}
 
 	sprintf(message, OTAU_MESSAGE_DISCONNECT_FORMAT, otauController->otauAddress);
-	printf("OTAUController | Sending disconnect command to OTAU %hd on COM port %hd", otauController->otauAddress, otauController->comPortId);
+	printf("OTAUController | Sending disconnect command to OTAU %hd on COM port %hd\n", otauController->otauAddress, otauController->comPortId);
 	OTAUController::sendCOMPortMessage(otauController->comPortHandle, message, reply, OTAU_REPLY_SIZE);
 	
 	delete[] message;
