@@ -19,7 +19,7 @@
 #define PARAMETER_NAME_PULSE_WIDTH_M (const char*) "ref_pulswd_m"
 #define PARAMETER_NAME_IOR (const char*) "ref_ior"
 #define PARAMETER_NAME_SCANS (const char*) "ref_scans"
-#define PARAMETER_NAME_SMOOTH_FILTER (const char*) "ref_smooth_filter"
+#define PARAMETER_NAME_FLAG_SMOOTH_FILTER (const char*) "ref_flag_smooth_filter"
 
 class PK7600OTDRController : public OTDRController {
 	private:
