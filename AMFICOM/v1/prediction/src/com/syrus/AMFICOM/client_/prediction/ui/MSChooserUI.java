@@ -1,5 +1,5 @@
 /*-
- * $Id: MSChooserUI.java,v 1.2 2006/03/23 14:58:54 stas Exp $
+ * $Id: MSChooserUI.java,v 1.3 2006/03/24 07:26:46 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JButton;
@@ -270,9 +271,16 @@ public final class MSChooserUI {
 							final Set<MeasurementSetup> mSetups = StorableObjectPool.getStorableObjectsByCondition(
 									condition1, true);
 							
+							final Set<MeasurementSetup> mSetupsWithCS = new HashSet<MeasurementSetup>();
+							for (MeasurementSetup ms : mSetups) {
+								if (ms.getCriteriaSet() != null) {
+									mSetupsWithCS.add(ms);
+								}
+							}
+							
 							final WrapperedListModel model = lsMsList.getModel();
 							model.removeAllElements();
-							model.addElements(mSetups);
+							model.addElements(mSetupsWithCS);
 							model.sort();
 						}
 					} catch (ApplicationException e1) {
