@@ -288,11 +288,11 @@ public class TimeParametersFrame extends JInternalFrame {
 														temporalPatternId,
 														true);
 											long intervalLength = TimeParametersPanel.this.getIntervalLength();
-											periodicalTemporalPattern = 
-												PeriodicalTemporalPattern.getInstance(
-													LoginManager.getUserId(), 
-													intervalLength);
-											schedulerModel.changeTemporalPattern(periodicalTemporalPattern);
+											if (intervalLength != 0) {
+												periodicalTemporalPattern = PeriodicalTemporalPattern.getInstance(
+														LoginManager.getUserId(), intervalLength);
+												schedulerModel.changeTemporalPattern(periodicalTemporalPattern);
+											}
 										}
 									}
 								}
