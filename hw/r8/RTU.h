@@ -9,6 +9,9 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#define INIT_PK7600 //Использовать рефлектометры PK7600
+//#define INIT_QP1640 //Использовать рефлектометры QP1640
+
 #include <deque>
 #include <map>
 #include "pthread.h"

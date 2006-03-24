@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTU.cpp,v 1.8 2006/03/24 12:31:13 arseniy Exp $
+// $Id: RTU.cpp,v 1.9 2006/03/24 15:15:26 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.8 $, $Date: 2006/03/24 12:31:13 $
+// $Revision: 1.9 $, $Date: 2006/03/24 15:15:26 $
 // $Author: arseniy $
 //
 // RTU.cpp: implementation of the RTU class.
@@ -39,17 +39,21 @@ RTU::RTU(const unsigned short comPortNumber, const unsigned int timewait) {
 
 	this->timewait = timewait;
 
+#ifdef INIT_PK7600
 	if (initPK7600Cards(this, this, this->timewait)) {
 		this->state = RTU_STATE_OTDR_INITIALIZED;
 	} else {
 		this->state = RTU_STATE_OTDR_INIT_FAILED;
 	}
-//
-//	if (initQP1640Cards(this, this, this->timewait)) {
-//		this->state = RTU_STATE_OTDR_INITIALIZED;
-//	} else {
-//		this->state = RTU_STATE_OTDR_INIT_FAILED;
-//	}
+#endif
+
+#ifdef INIT_QP1640
+	if (initQP1640Cards(this, this, this->timewait)) {
+		this->state = RTU_STATE_OTDR_INITIALIZED;
+	} else {
+		this->state = RTU_STATE_OTDR_INIT_FAILED;
+	}
+#endif
 
 	//TODO: Init OTDR cards of other type
 
