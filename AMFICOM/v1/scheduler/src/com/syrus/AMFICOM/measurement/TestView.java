@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.23 2006/02/21 09:49:18 arseniy Exp $
+* $Id: TestView.java,v 1.24 2006/03/24 07:39:10 saa Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.23 $, $Date: 2006/02/21 09:49:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2006/03/24 07:39:10 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -56,8 +56,8 @@ public final class TestView {
 	
 	private final Test test;
 	
-	private Date firstDate;
-	private Date lastDate;
+//	private Date firstDate;
+//	private Date lastDate;
 	
 	private MeasurementSetup measurementSetup;
 	
@@ -126,7 +126,7 @@ public final class TestView {
 	}
 	
 	private final void createStartEndTimes() throws ApplicationException {
-		this.firstDate = this.test.getStartTime();
+//		this.firstDate = this.test.getStartTime();
 		
 		final Identifier mainMeasurementSetupId = this.test.getMainMeasurementSetupId();
 		
@@ -135,7 +135,7 @@ public final class TestView {
 		
 		final Identifier groupTestId = this.test.getGroupTestId();
 		if (groupTestId.isVoid()) {
-			this.lastDate = this.test.getEndTime();
+//			this.lastDate = this.test.getEndTime();
 		} else {
 			final LinkedIdsCondition groupTestCondition = 
 				new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE);
@@ -144,9 +144,9 @@ public final class TestView {
 			for (final Test groupTest : tests) {
 				final Date endTime = groupTest.getEndTime();
 				assert endTime != null;
-				if (this.lastDate != null || endTime.compareTo(this.lastDate) > 0){
-					this.lastDate = endTime;
-				}
+//				if (this.lastDate != null || endTime.compareTo(this.lastDate) > 0){
+//					this.lastDate = endTime;
+//				}
 			} 
 			// TODO calculate status for group test
 		}
@@ -477,11 +477,13 @@ public final class TestView {
 	}
 	
 	public final Date getFirstDate() {
-		return this.firstDate;
+		return this.test.getStartTime();
+//		return this.firstDate;
 	}
 	
 	public final Date getLastDate() {
-		return this.lastDate;
+		return this.test.getEndTime();
+//		return this.lastDate;
 	}
 	
 	public final Date getEnd() {
