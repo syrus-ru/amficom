@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlLineMismatchEventImpl.java,v 1.6 2005/12/06 09:42:28 bass Exp $
+ * $Id: IdlLineMismatchEventImpl.java,v 1.6.2.5 2006/03/23 15:48:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,25 +8,19 @@
 
 package com.syrus.AMFICOM.eventv2.corba;
 
-import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
-
 import com.syrus.AMFICOM.eventv2.DefaultLineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.LineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlEventPackage.IdlEventType;
-import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialData;
-import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialDataPackage.IdlAffectedPathElementSpatious;
-import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchData;
-import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatch;
-import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialData;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpacialDataPackage.IdlAffectedPathElementSpacious;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.reflectometry.corba.IdlAlarmType;
-import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/12/06 09:42:28 $
+ * @version $Revision: 1.6.2.5 $, $Date: 2006/03/23 15:48:42 $
  * @module event
  */
 final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
@@ -36,76 +30,45 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 		// empty
 	}
 
-	IdlLineMismatchEventImpl(final IdlAlarmType alarmType,
-			final IdlSeverity severity,
-			final IdlMismatchData mismatchData,
+	/**
+	 * @param id
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param affectedPathElementId
+	 * @param spacialData
+	 * @param mismatchOpticalDistance
+	 * @param mismatchPhysicalDistance
+	 * @param message
+	 * @param reflectogramMismatchEventId
+	 */
+	IdlLineMismatchEventImpl(final IdlIdentifier id,
+			final long created, final long modified,
+			final IdlIdentifier creatorId,
+			final IdlIdentifier modifierId, final long version,
 			final IdlIdentifier affectedPathElementId,
-			final IdlSpatialData spatialData,
-			final IdlIdentifier resultId,
+			final IdlSpacialData spacialData,
 			final double mismatchOpticalDistance,
 			final double mismatchPhysicalDistance,
-			final long mismatchCreated) {
-		final IdlIdentifier voidId = VOID_IDENTIFIER.getIdlTransferable();
-		this.id = voidId;
-		this.creatorId = voidId;
-		this.modifierId = voidId;
+			final String message,
+			final IdlIdentifier reflectogramMismatchEventId) {
+		this.id = id;
+		this.created = created;
+		this.modified = modified;
+		this.creatorId = creatorId;
+		this.modifierId = modifierId;
+		this.version = version;
 
-		this.alarmType = alarmType;
-		this.severity = severity;
-		this.mismatchData = mismatchData;
 		this.affectedPathElementId = affectedPathElementId;
-		this.spatialData = spatialData;
+		this.spacialData = spacialData;
 
-		this.resultId = resultId;
 		this.mismatchOpticalDistance = mismatchOpticalDistance;
 		this.mismatchPhysicalDistance = mismatchPhysicalDistance;
-		this.mismatchCreated = mismatchCreated;
-	}
 
-	/**
-	 * @see IdlLineMismatchEvent#getAlarmType()
-	 */
-	@Override
-	public IdlAlarmType getAlarmType() {
-		return this.alarmType;
-	}
-
-	/**
-	 * @see IdlLineMismatchEvent#getSeverity()
-	 */
-	@Override
-	public IdlSeverity getSeverity() {
-		return this.severity;
-	}
-
-	/**
-	 * @see IdlLineMismatchEvent#hasMismatch()
-	 */
-	@Override
-	public boolean hasMismatch() {
-		return this.mismatchData.discriminator() == IdlMismatch._TRUE;
-	}
-
-	/**
-	 * @see IdlLineMismatchEvent#getMinMismatch()
-	 */
-	@Override
-	public double getMinMismatch() {
-		if (this.hasMismatch()) {
-			return this.mismatchData.mismatchPair().minMismatch;
-		}
-		throw new IllegalStateException();
-	}
-
-	/**
-	 * @see IdlLineMismatchEvent#getMaxMismatch()
-	 */
-	@Override
-	public double getMaxMismatch() {
-		if (this.hasMismatch()) {
-			return this.mismatchData.mismatchPair().maxMismatch;
-		}
-		throw new IllegalStateException();
+		this.message = message;
+		this.reflectogramMismatchEventId = reflectogramMismatchEventId;
 	}
 
 	/**
@@ -117,11 +80,11 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	}
 
 	/**
-	 * @see IdlLineMismatchEvent#isAffectedPathElementSpatious()
+	 * @see IdlLineMismatchEvent#isAffectedPathElementSpacious()
 	 */
 	@Override
-	public boolean isAffectedPathElementSpatious() {
-		return this.spatialData.discriminator() == IdlAffectedPathElementSpatious._TRUE;
+	public boolean isAffectedPathElementSpacious() {
+		return this.spacialData.discriminator() == IdlAffectedPathElementSpacious._TRUE;
 	}
 
 	/**
@@ -129,8 +92,8 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	 */
 	@Override
 	public double getPhysicalDistanceToStart() {
-		if (this.isAffectedPathElementSpatious()) {
-			return this.spatialData.physicalDistancePair().physicalDistanceToStart;
+		if (this.isAffectedPathElementSpacious()) {
+			return this.spacialData.physicalDistancePair().physicalDistanceToStart;
 		}
 		throw new IllegalStateException();
 	}
@@ -140,8 +103,8 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	 */
 	@Override
 	public double getPhysicalDistanceToEnd() {
-		if (this.isAffectedPathElementSpatious()) {
-			return this.spatialData.physicalDistancePair().physicalDistanceToEnd;
+		if (this.isAffectedPathElementSpacious()) {
+			return this.spacialData.physicalDistancePair().physicalDistanceToEnd;
 		}
 		throw new IllegalStateException();
 	}
@@ -151,14 +114,6 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	 */
 	public IdlEventType getType() {
 		return IdlEventType.LINE_MISMATCH;
-	}
-
-	/**
-	 * @see IdlLineMismatchEvent#getResultId()
-	 */
-	@Override
-	public IdlIdentifier getResultId() {
-		return this.resultId;
 	}
 
 	/**
@@ -178,11 +133,19 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	}
 
 	/**
-	 * @see IdlLineMismatchEvent#getMismatchCreated()
+	 * @see IdlLineMismatchEvent#getMessage()
 	 */
 	@Override
-	public long getMismatchCreated() {
-		return this.mismatchCreated;
+	public String getMessage() {
+		return this.message;
+	}
+
+	/**
+	 * @see IdlLineMismatchEvent#getReflectogramMismatchEventId()
+	 */
+	@Override
+	public IdlIdentifier getReflectogramMismatchEventId() {
+		return this.reflectogramMismatchEventId;
 	}
 
 	/**
@@ -190,14 +153,19 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	 * @see com.syrus.AMFICOM.general.corba.IdlStorableObject#getNative()
 	 */
 	@Override
-	public StorableObject getNative() throws IdlCreateObjectException {
-		throw new UnsupportedOperationException();
+	public DefaultLineMismatchEvent getNative() throws IdlCreateObjectException {
+		try {
+			return new DefaultLineMismatchEvent(this);
+		} catch (final CreateObjectException coe) {
+			throw coe.getIdlTransferable();
+		}
 	}
 
 	/**
+	 * @throws IdlCreateObjectException
 	 * @see IdlEvent#getNativeEvent()
 	 */
-	public LineMismatchEvent getNativeEvent() {
-		return DefaultLineMismatchEvent.valueOf(this);
+	public LineMismatchEvent getNativeEvent() throws IdlCreateObjectException {
+		return this.getNative();
 	}
 }

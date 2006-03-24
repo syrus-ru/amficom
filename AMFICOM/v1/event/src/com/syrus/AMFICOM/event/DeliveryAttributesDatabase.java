@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesDatabase.java,v 1.9 2005/12/02 11:24:21 bass Exp $
+ * $Id: DeliveryAttributesDatabase.java,v 1.9.4.1 2006/03/20 15:20:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,9 @@ import static com.syrus.AMFICOM.event.DeliveryAttributesWrapper.COLUMN_SEVERITY;
 import static com.syrus.AMFICOM.event.DeliveryAttributesWrapper.LINKED_COLUMN_DELIVERY_ATTRIBUTES_ID;
 import static com.syrus.AMFICOM.event.DeliveryAttributesWrapper.LINKED_COLUMN_ROLE_ID;
 import static com.syrus.AMFICOM.event.DeliveryAttributesWrapper.LINKED_COLUMN_SYSTEM_USER_ID;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.DELIVERYATTRIBUTES_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.TableNames.DELIVERY_ATTRIBUTES_ROLE_LINK;
 import static com.syrus.AMFICOM.general.TableNames.DELIVERY_ATTRIBUTES_SYSTEM_USER_LINK;
 
@@ -39,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/12/02 11:24:21 $
+ * @version $Revision: 1.9.4.1 $, $Date: 2006/03/20 15:20:58 $
  * @module event
  */
 public final class DeliveryAttributesDatabase extends
@@ -123,9 +125,9 @@ public final class DeliveryAttributesDatabase extends
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		final DeliveryAttributes deliveryAttributes = (storableObject == null)
 				? new DeliveryAttributes(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						VOID_IDENTIFIER,
 						null,
-						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						Severity.SEVERITY_NONE)
 				: storableObject;
 		deliveryAttributes.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),

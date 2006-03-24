@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSmsNotificationEventImpl.java,v 1.4 2005/12/06 09:42:28 bass Exp $
+ * $Id: IdlSmsNotificationEventImpl.java,v 1.4.2.1 2006/03/21 08:38:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.eventv2.DefaultSmsNotificationEvent;
 import com.syrus.AMFICOM.eventv2.SmsNotificationEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlEventPackage.IdlEventType;
 import com.syrus.AMFICOM.eventv2.corba.IdlNotificationEventPackage.IdlDeliveryMethod;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -21,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/12/06 09:42:28 $
+ * @version $Revision: 1.4.2.1 $, $Date: 2006/03/21 08:38:12 $
  * @module event
  */
 final class IdlSmsNotificationEventImpl extends IdlSmsNotificationEvent {
@@ -80,9 +81,15 @@ final class IdlSmsNotificationEventImpl extends IdlSmsNotificationEvent {
 	}
 
 	/**
+	 * @throws IdlCreateObjectException
 	 * @see IdlEvent#getNativeEvent()
 	 */
-	public SmsNotificationEvent getNativeEvent() {
-		return DefaultSmsNotificationEvent.valueOf(this);
+	public SmsNotificationEvent getNativeEvent()
+	throws IdlCreateObjectException {
+		try {
+			return DefaultSmsNotificationEvent.valueOf(this);
+		} catch (final CreateObjectException coe) {
+			throw coe.getIdlTransferable();
+		}
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultMeasurementStatusChangedEvent.java,v 1.1 2006/02/20 17:14:56 arseniy Exp $
+ * $Id: DefaultMeasurementStatusChangedEvent.java,v 1.1.4.2 2006/03/21 08:37:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,24 +7,33 @@
  */
 package com.syrus.AMFICOM.eventv2;
 
+import java.util.Date;
+
 import com.syrus.AMFICOM.eventv2.corba.IdlMeasurementStatusChangedEvent;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2006/02/20 17:14:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.1.4.2 $, $Date: 2006/03/21 08:37:50 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 public abstract class DefaultMeasurementStatusChangedEvent<T extends IdlMeasurementStatusChangedEvent> implements MeasurementStatusChangedEvent<T> {
+	private Date created;
 	private Identifier measurementId;
 
 	DefaultMeasurementStatusChangedEvent(final Identifier measurementId) {
+		this.created = new Date();
 		this.measurementId = measurementId;
 	}
 
-	DefaultMeasurementStatusChangedEvent(final IdlMeasurementStatusChangedEvent idlMeasurementStatusChangedEvent) {
-		this.measurementId = Identifier.valueOf(idlMeasurementStatusChangedEvent.getMeasurementId());
+	DefaultMeasurementStatusChangedEvent(/*IdlMeasurementStatusChangedEvent*/) {
+		// super();
+	}
+
+	public final Date getCreated() {
+		return this.created;
 	}
 
 	public final Identifier getMeasurementId() {
@@ -35,4 +44,17 @@ public abstract class DefaultMeasurementStatusChangedEvent<T extends IdlMeasurem
 		return EventType.MEASUREMENT_STATUS_CHANGED;
 	}
 
+	/**
+	 * @param measurementStatusChangedEvent
+	 * @throws IdlConversionException
+	 * @see com.syrus.util.transport.idl.IdlTransferableObjectExt#fromIdlTransferable(org.omg.CORBA.portable.IDLEntity)
+	 */
+	public void fromIdlTransferable(
+			final T measurementStatusChangedEvent)
+	throws IdlConversionException {
+		synchronized (this) {
+			this.created = new Date(measurementStatusChangedEvent.getCreated());
+			this.measurementId = Identifier.valueOf(measurementStatusChangedEvent.getMeasurementId());
+		}
+	}
 }
