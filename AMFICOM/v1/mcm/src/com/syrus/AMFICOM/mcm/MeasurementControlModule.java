@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementControlModule.java,v 1.146.2.9 2006/03/23 15:27:12 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146.2.10 2006/03/24 09:03:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_SCHEDULE
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_STOPPED;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_STOPPING;
 import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_STATUS;
+import static com.syrus.util.Log.DEBUGLEVEL07;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -62,7 +63,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146.2.9 $, $Date: 2006/03/23 15:27:12 $
+ * @version $Revision: 1.146.2.10 $, $Date: 2006/03/24 09:03:27 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -428,6 +429,8 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			return;
 		}
 
+		Log.debugMessage("Loaded " + tests.size() + " " + TEST_STATUS_SCHEDULED + " and " + TEST_STATUS_PROCESSING + " tests",
+				DEBUGLEVEL07);
 		for (final Test test : tests) {
 			switch (test.getStatus()) {
 				case TEST_STATUS_SCHEDULED:
@@ -472,7 +475,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			try {
 				final Transceiver transceiver = new Transceiver(kisId);
 				transceiver.start();
-				Log.debugMessage("Started transceiver for KIS '" + kisId + "'", Log.DEBUGLEVEL07);
+				Log.debugMessage("Started transceiver for KIS '" + kisId + "'", DEBUGLEVEL07);
 				this.transceivers.put(kisId, transceiver);
 			} catch (ApplicationException ae) {
 				Log.errorMessage(ae);
@@ -732,10 +735,10 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			final Identifier testId = test.getId();
 			final TestStatus testStatus = test.getStatus();
 			if (this.scheduledTests.contains(test)) {
-				Log.debugMessage("Test '" + testId + "': removing from list of scheduled tests", Log.DEBUGLEVEL07);
+				Log.debugMessage("Test '" + testId + "': removing from list of scheduled tests", DEBUGLEVEL07);
 				this.scheduledTests.remove(test);
 			} else if (this.testProcessors.containsKey(testId)) {
-				Log.debugMessage("Test '" + testId + "': stopping test processor", Log.DEBUGLEVEL07);
+				Log.debugMessage("Test '" + testId + "': stopping test processor", DEBUGLEVEL07);
 				final TestProcessor testProcessor = this.testProcessors.get(testId);
 				testProcessor.finishTest();
 			} else {
