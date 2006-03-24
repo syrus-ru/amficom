@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTU.cpp,v 1.7 2005/10/26 15:07:44 arseniy Exp $
+// $Id: RTU.cpp,v 1.8 2006/03/24 12:31:13 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.7 $, $Date: 2005/10/26 15:07:44 $
+// $Revision: 1.8 $, $Date: 2006/03/24 12:31:13 $
 // $Author: arseniy $
 //
 // RTU.cpp: implementation of the RTU class.
@@ -44,12 +44,12 @@ RTU::RTU(const unsigned short comPortNumber, const unsigned int timewait) {
 	} else {
 		this->state = RTU_STATE_OTDR_INIT_FAILED;
 	}
-
-	if (initQP1640Cards(this, this, this->timewait)) {
-		this->state = RTU_STATE_OTDR_INITIALIZED;
-	} else {
-		this->state = RTU_STATE_OTDR_INIT_FAILED;
-	}
+//
+//	if (initQP1640Cards(this, this, this->timewait)) {
+//		this->state = RTU_STATE_OTDR_INITIALIZED;
+//	} else {
+//		this->state = RTU_STATE_OTDR_INIT_FAILED;
+//	}
 
 	//TODO: Init OTDR cards of other type
 
@@ -225,7 +225,7 @@ void* RTU::run(void* args) {
 		Sleep(twms);
 
 		pthread_mutex_lock(rtu->tMutex);
-		printf ("RTU | %u measurements in queue\n", rtu->measurementQueue.size());
+		printf ("RTU | %u measurement(s) in queue\n", rtu->measurementQueue.size());
 		if (!rtu->measurementQueue.empty()) {
 			const MeasurementSegment* measurementSegment = rtu->measurementQueue.back();
 			rtu->measurementQueue.pop_back();
@@ -308,10 +308,10 @@ BOOL RTU::parseLocalAddress(const ByteArray* localAddress,
 			OTAUPortId& otauPortId) {
 	int ret = sscanf(localAddress->getData(),
 		LOCAL_ADDRESS_FORMAT,
-		otdrId,
-		comPortId,
-		otauAddress,
-		otauPortId);
+		&otdrId,
+		&comPortId,
+		&otauAddress,
+		&otauPortId);
 	return (ret == 4);
 }
 
