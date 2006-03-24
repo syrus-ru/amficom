@@ -16,7 +16,7 @@
 #define PARAMETER_NAME_WAVELENGTH (const char*) "ref_wvlen"
 #define PARAMETER_NAME_TRACE_LENGTH (const char*) "ref_trclen"
 #define PARAMETER_NAME_RESOLUTION (const char*) "ref_res"
-#define PARAMETER_NAME_PULSE_WIDTH (const char*) "ref_pulswd"
+#define PARAMETER_NAME_PULSE_WIDTH_M (const char*) "ref_pulswd_m"
 #define PARAMETER_NAME_IOR (const char*) "ref_ior"
 #define PARAMETER_NAME_SCANS (const char*) "ref_scans"
 #define PARAMETER_NAME_SMOOTH_FILTER (const char*) "ref_smooth_filter"
