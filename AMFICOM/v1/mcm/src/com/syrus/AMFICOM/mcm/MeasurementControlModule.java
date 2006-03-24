@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementControlModule.java,v 1.146.2.11 2006/03/24 09:24:19 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146.2.12 2006/03/24 09:35:38 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.OR;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
+import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_ON_SERVICE;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_ABORTED;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_NEW;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_PROCESSING;
@@ -63,7 +64,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146.2.11 $, $Date: 2006/03/24 09:24:19 $
+ * @version $Revision: 1.146.2.12 $, $Date: 2006/03/24 09:35:38 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -451,10 +452,15 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	}
 
 	/**
-	 * Создать и запустить поток приёмопередатчика для каждого КИС.
+	 * Создать и запустить поток приёмопередатчика для каждого рабочего КИС.
 	 */
 	private void setupKISTransceivers() {
-		final LinkedIdsCondition kisCondition = new LinkedIdsCondition(this.moduleId, KIS_CODE);
+		final LinkedIdsCondition mcmKisCondition = new LinkedIdsCondition(this.moduleId, KIS_CODE);
+		final TypicalCondition onServiceKisCondition = new TypicalCondition(Boolean.TRUE,
+				OPERATION_EQUALS,
+				KIS_CODE,
+				COLUMN_ON_SERVICE);
+		final CompoundCondition kisCondition = new CompoundCondition(AND, mcmKisCondition, onServiceKisCondition);
 		final Set<KIS> kiss;
 		try {
 			kiss = StorableObjectPool.getStorableObjectsByCondition(kisCondition, true, false);
