@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.71 2006/01/26 15:15:34 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.72 2006/03/24 07:33:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2006/01/26 15:15:34 $
+ * @version $Revision: 1.72 $, $Date: 2006/03/24 07:33:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -117,6 +117,9 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						break;
 					case MONITOREDELEMENT_CODE:
 						condition = super.conditionTest(measurement.getMonitoredElementId());
+						break;
+					case MEASUREMENTSETUP_CODE:
+						condition = super.conditionTest(measurement.getSetup());
 						break;
 					default:
 						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
