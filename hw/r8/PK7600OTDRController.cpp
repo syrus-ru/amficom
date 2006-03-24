@@ -81,7 +81,7 @@ OTDRModel PK7600OTDRController::getOTDRModel() const {
 }
 
 BOOL PK7600OTDRController::setMeasurementParameters(const Parameter** parameters, const unsigned int parNumber) {
-	printf("PK7600OTDRController | Setting measurement parameters");
+	printf("PK7600OTDRController | Setting measurement parameters\n");
 
 	int waveLength = -1;
 	double traceLength = -1;
@@ -107,7 +107,7 @@ BOOL PK7600OTDRController::setMeasurementParameters(const Parameter** parameters
 			bValue = parameters[i]->getValue()->getReversed();
 			resolution = *(double*) bValue->getData();
 			delete bValue;
-		} else if (strcmp(parameterName, PARAMETER_NAME_PULSE_WIDTH) == 0) {
+		} else if (strcmp(parameterName, PARAMETER_NAME_PULSE_WIDTH_M) == 0) {
 			bValue = parameters[i]->getValue()->getReversed();
 			pulseWidth = *(short*) bValue->getData();
 			delete bValue;
@@ -141,7 +141,7 @@ BOOL PK7600OTDRController::setMeasurementParameters(const Parameter** parameters
 		return FALSE;
 	}
 	if (pulseWidth < 0) {
-		printf("PK7600OTDRController | ERROR: Parameter %s not found\n", PARAMETER_NAME_PULSE_WIDTH);
+		printf("PK7600OTDRController | ERROR: Parameter %s not found\n", PARAMETER_NAME_PULSE_WIDTH_M);
 		return FALSE;
 	}
 	if (ior < 0) {
