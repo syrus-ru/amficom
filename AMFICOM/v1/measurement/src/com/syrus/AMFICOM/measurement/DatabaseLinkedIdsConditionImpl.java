@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41.2.7 2006/03/22 16:55:47 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41.2.8 2006/03/24 08:56:16 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,6 +56,7 @@ import static com.syrus.AMFICOM.measurement.ActionParameterWrapper.COLUMN_BINDIN
 import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.LINK_COLUMN_ACTION_TEMPLATE_ID;
 import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID;
 import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_MONITORED_ELEMENT_ID;
+import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_ACTION_TEMPLATE_ID;
 import static com.syrus.AMFICOM.measurement.AnalysisResultParameterWrapper.COLUMN_ANALYSIS_ID;
 import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_MCM_ID;
 import static com.syrus.AMFICOM.measurement.MeasurementPortWrapper.COLUMN_KIS_ID;
@@ -73,7 +74,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 /**
- * @version $Revision: 1.41.2.7 $, $Date: 2006/03/22 16:55:47 $
+ * @version $Revision: 1.41.2.8 $, $Date: 2006/03/24 08:56:16 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -110,19 +111,25 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}
-			case ANALYSIS_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-					case MEASUREMENT_CODE:
-						return super.getQuery(AnalysisWrapper.COLUMN_MEASUREMENT_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
-				}
 			case MEASUREMENT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 					case TEST_CODE:
 						return super.getQuery(COLUMN_TEST_ID);
 					case MONITOREDELEMENT_CODE:
 						return super.getQuery(COLUMN_MONITORED_ELEMENT_ID);
+					case ACTIONTEMPLATE_CODE:
+						return super.getQuery(COLUMN_ACTION_TEMPLATE_ID);
+					default:
+						throw super.newExceptionLinkedEntityIllegal();
+				}
+			case ANALYSIS_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+					case MEASUREMENT_CODE:
+						return super.getQuery(AnalysisWrapper.COLUMN_MEASUREMENT_ID);
+					case MONITOREDELEMENT_CODE:
+						return super.getQuery(COLUMN_MONITORED_ELEMENT_ID);
+					case ACTIONTEMPLATE_CODE:
+						return super.getQuery(COLUMN_ACTION_TEMPLATE_ID);
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}
@@ -130,6 +137,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				switch (super.condition.getLinkedEntityCode()) {
 					case MONITOREDELEMENT_CODE:
 						return super.getQuery(COLUMN_MONITORED_ELEMENT_ID);
+					case ACTIONTEMPLATE_CODE:
+						return super.getQuery(COLUMN_ACTION_TEMPLATE_ID);
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}
