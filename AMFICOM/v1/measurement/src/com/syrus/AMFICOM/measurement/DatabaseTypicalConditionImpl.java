@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.28.2.5 2006/03/22 13:09:36 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.28.2.6 2006/03/24 09:34:24 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
 import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_HOSTNAME;
+import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_ON_SERVICE;
 import static com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternWrapper.COLUMN_PERIOD;
 import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_END_TIME;
 import static com.syrus.AMFICOM.measurement.TestWrapper.COLUMN_START_TIME;
@@ -35,7 +36,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.28.2.5 $, $Date: 2006/03/22 13:09:36 $
+ * @version $Revision: 1.28.2.6 $, $Date: 2006/03/24 09:34:24 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -91,7 +92,8 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 				return key == COLUMN_DESCRIPTION;
 			case KIS_CODE:
 				return key == COLUMN_NAME
-						|| key == COLUMN_HOSTNAME;
+						|| key == COLUMN_HOSTNAME
+						|| key == COLUMN_ON_SERVICE;
 			case MONITOREDELEMENT_CODE:
 				return key == COLUMN_NAME;
 			default:
