@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.38 2006/03/06 13:32:40 saa Exp $
+ * $Id: ManagerMainFrame.java,v 1.39 2006/03/24 08:47:24 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.38 $, $Date: 2006/03/06 13:32:40 $
+ * @version $Revision: 1.39 $, $Date: 2006/03/24 08:47:24 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -121,7 +121,8 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 	private CellBuffer	buffer;
 	
 	public ManagerMainFrame(final ApplicationContext aContext) {
-		super(aContext, "Manager", new AbstractMainMenuBar(aContext.getApplicationModel()) {
+		super(aContext, I18N.getString("Manager.Title"),
+				new AbstractMainMenuBar(aContext.getApplicationModel()) {
 
 			private JMenu				menuView;
 			@Override
