@@ -738,8 +738,15 @@ public class TimeParametersFrame extends JInternalFrame {
 //				temporalPattern = (TemporalPattern) TimeParametersPanel.this.timeStamps.getSelectedValue();
 				long intervalLength = this.getIntervalLength();
 				try {
-					temporalPattern = PeriodicalTemporalPattern.getInstance(LoginManager.getUserId(), intervalLength);
+					if (intervalLength != 0) {
+						temporalPattern = PeriodicalTemporalPattern.getInstance(LoginManager.getUserId(), intervalLength);
+					} else {
+						temporalPattern = null; // will report problem
+					}
 				} catch (CreateObjectException e1) {
+					temporalPattern = null; // will report problem
+				}
+				if (temporalPattern == null) {
 					this.schedulerModel.setBreakData();
 					JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 						I18N.getString("Scheduler.Error.CannotCreatePeriodicalPattern"),
