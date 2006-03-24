@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: MCMTransceiver.cpp,v 1.2 2005/10/09 13:49:23 arseniy Exp $
+// $Id: MCMTransceiver.cpp,v 1.3 2006/03/24 12:29:26 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.2 $, $Date: 2005/10/09 13:49:23 $
+// $Revision: 1.3 $, $Date: 2006/03/24 12:29:26 $
 // $Author: arseniy $
 //
 // MCMTransceiver.cpp: implementation of the MCMTransceiver class.
@@ -103,16 +103,17 @@ void* MCMTransceiver::run(void* args) {
 			sel_ret = select(csockfd + 1, &in, NULL, NULL, &tv);
 
 			if (sel_ret == 0) {
-				printf("MCMTransceiver.run | Nothing to receive\n");
+				printf("MCMTransceiver | Nothing to receive\n");
 				empty_count ++;
 				if (empty_count >= max_empty_count) {
-					printf("MCMTransceiver.run | Timeout %u sec passed, closing communication\n", mcmTransceiver->maxMCMTimeout);
+					printf("MCMTransceiver | Timeout %u sec passed, closing communication\n", mcmTransceiver->maxMCMTimeout);
 					sca->close_communication();
 					empty_count = 0;
 				}
 			}
 			else  {
 				if (sel_ret > 0) {
+					printf("MCMTransceiver | Receiving segment\n");
 					empty_count = 0;
 					rec_ret = receive_segment(csockfd, mcmTransceiver->timewait, segment);
 					switch (rec_ret) {
@@ -127,7 +128,7 @@ void* MCMTransceiver::run(void* args) {
 							sca->close_communication();
 							break;
 						default:
-							printf("MCMTransceiver.run | Illegal return value of receive_segment: %d\n", rec_ret);
+							printf("MCMTransceiver | Illegal return value of receive_segment: %d\n", rec_ret);
 					}
 				}
 				else {
@@ -162,12 +163,12 @@ void* MCMTransceiver::run(void* args) {
 							mcmTransceiver->segmentProcessor->reAddReportSegment(resultSegment);
 							break;
 						default:
-							printf("MCMTransceiver.run | Illegal return value of transmit_segment: %d\n", wrt_ret);
+							printf("MCMTransceiver | Illegal return value of transmit_segment: %d\n", wrt_ret);
 					}
 				}
 				else {
 					if (sel_ret == 0) {
-						printf("MCMTransceiver.run | Cannot transmit now\n");
+						printf("MCMTransceiver | Cannot transmit now\n");
 					}
 					else {
 						show_error("select");
