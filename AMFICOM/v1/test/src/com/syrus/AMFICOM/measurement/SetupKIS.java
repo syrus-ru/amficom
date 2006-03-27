@@ -1,5 +1,5 @@
 /*
- * $Id: SetupKIS.java,v 1.1.2.3 2006/03/27 09:35:42 arseniy Exp $
+ * $Id: SetupKIS.java,v 1.1.2.4 2006/03/27 09:37:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ public final class SetupKIS extends TestCase {
 
 	public static Test suite() {
 		final DatabaseCommonTest commonTest = new DatabaseCommonTest();
-		commonTest.addTestSuite(SetupKIS.class);
+		commonTest.addTest(new SetupKIS("testSwitchOnService"));
 		return commonTest.createTestSetup();
 	}
 
@@ -91,7 +91,7 @@ public final class SetupKIS extends TestCase {
 		StorableObjectPool.flush(kiss, creatorId, false);
 	}
 
-	public void _testSwitchOnService() throws ApplicationException {
+	public void testSwitchOnService() throws ApplicationException {
 		final Identifier creatorId = LoginManager.getUserId();
 
 		final String kisHostName = "rtu-3";
