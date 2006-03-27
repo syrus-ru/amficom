@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameter.java,v 1.1.2.15 2006/03/27 14:51:39 arseniy Exp $
+ * $Id: ActionParameter.java,v 1.1.2.16 2006/03/27 15:00:44 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,9 +42,9 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 /**
  * Параметр действия. Всегда имеет свою измерительную связку
  * {@link com.syrus.AMFICOM.measurement.ActionParameterTypeBinding},
- * идентификатор которй хранится в {@link #bindingId}.
+ * идентификатор которой хранится в {@link #bindingId}.
  * 
- * @version $Revision: 1.1.2.15 $, $Date: 2006/03/27 14:51:39 $
+ * @version $Revision: 1.1.2.16 $, $Date: 2006/03/27 15:00:44 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
