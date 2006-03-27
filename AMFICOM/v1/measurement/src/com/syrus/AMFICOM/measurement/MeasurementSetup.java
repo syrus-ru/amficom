@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementSetup.java,v 1.100.2.8 2006/03/22 17:51:58 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.100.2.9 2006/03/27 05:41:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.100.2.8 $, $Date: 2006/03/22 17:51:58 $
+ * @version $Revision: 1.100.2.9 $, $Date: 2006/03/27 05:41:25 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -149,6 +149,10 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 		return this.measurementTemplateId;
 	}
 
+	public ActionTemplate getMeasurementTemplate() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.measurementTemplateId, true);
+	}
+
 	public void setMeasurementTemplateId(final Identifier measurementTemplateId) {
 		this.measurementTemplateId = measurementTemplateId;
 		super.markAsChanged();
@@ -156,6 +160,10 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 
 	public Identifier getAnalysisTemplateId() {
 		return this.analysisTemplateId;
+	}
+
+	public ActionTemplate getAnalysisTemplate() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.analysisTemplateId, true);
 	}
 
 	public void setAnalysisTemplateId(final Identifier analysisTemplateId) {
