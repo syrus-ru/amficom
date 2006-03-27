@@ -293,13 +293,13 @@ void PK7600OTDRController::fillBellcoreStructure(BellcoreStructure* bellcoreStru
 						"Other");
 
 
-	//Get the number of 100-nanosecond intervals since 1.01.1601
+	//Количество 100-наносекундных интервалов с 01.01.1601.
 	SYSTEMTIME sysTime;
 	GetSystemTime(&sysTime);
 	FILETIME fileTime;
 	SystemTimeToFileTime(&sysTime,&fileTime);
 	ULARGE_INTEGER * time = (ULARGE_INTEGER *) (&fileTime);
-	//Get the same value for time 00:00 1.01.1970
+	//То же самое для 00:00 1.01.1970.
 	SYSTEMTIME sysTime1970;
 	sysTime1970.wYear = 1970;
 	sysTime1970.wMonth = 1;
@@ -311,16 +311,18 @@ void PK7600OTDRController::fillBellcoreStructure(BellcoreStructure* bellcoreStru
 	FILETIME fileTime1970;
 	SystemTimeToFileTime(&sysTime1970,&fileTime1970);
 	ULARGE_INTEGER * time1970 = (ULARGE_INTEGER *) (&fileTime1970);
-	//Calculate difference between theese two dates -- current time since 00:00 1.01.1970 in seconds
+	//Вычислить разницу между текущей датой и 01.01.1970 00:00. Для перевода в секунды разделить на 10000000.
 	unsigned long dts = (unsigned long) (time->QuadPart/10000000 - time1970->QuadPart/10000000);
 
 	short tpw = 1;
 	short* pwu = new short[tpw];
-	pwu[0] = (short) this->pulseWidthM;
+	//Преобразовать из метров в наносекунды.
+	pwu[0] = (short) (this->pulseWidthM * this->iorM * 10. / 3.);
 	int* ds = new int[tpw];
-	ds[0] = (int) (10000. * this->resolutionM * this->iorM * 100. / 3.);//10000. - ???
+	//Количество сотен пикосекунд для снятия 10000 точек.
+	ds[0] = (int) (10000. * this->resolutionM * this->iorM * 100. / 3.);
 	int* nppw = new int[tpw];
-	nppw[0] = (long) ((float) (this->pulseWidthM) * 3. / (this->iorM * this->resolutionM * 10.));
+	nppw[0] = (long) (this->pulseWidthM / this->resolutionM);
 
 	bellcoreStructure->add_field_fxd_params(dts,
 						"mt",
