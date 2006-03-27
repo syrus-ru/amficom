@@ -59,8 +59,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 
 	ApplicationContext		aContext;
 	SchedulerModel			schedulerModel;
-	
-	JPanel					switchPanel;
+
+	JPanel			switchPanel;
 	List<MeasurementSetup>	msList;
 	List<MeasurementSetup>	msListAnalysisOnly;
 
@@ -69,24 +69,22 @@ final class TestParametersPanel implements PropertyChangeListener {
 	private JLabel analysisLabel;
 	private JCheckBox useAnalysisSetupsCheckBox;
 	JCheckBox allAvailableCheckBox;
-	
+
 	WrapperedComboBox<Describable> analysisComboBox;
 	private JLabel patternsLabel;
 	WrapperedList<MeasurementSetup> testSetups;
 	// UI components end
-	
-	Dispatcher		dispatcher;
+
+	Dispatcher	dispatcher;
 
 	ParametersTestPanel		parametersTestPanel;
 
-	Identifier		measurementSetupId;
+	Identifier	measurementSetupId;
 
-//	private final UIDefaults panels = new UIDefaults();
-	
 	PropertyChangeEvent propertyChangeEvent;
-	
-	private JPanel	patternPanel;	
-	
+
+	private JPanel	patternPanel;
+
 	public TestParametersPanel(final ApplicationContext aContext) {
 		this.aContext = aContext;
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
@@ -97,7 +95,6 @@ final class TestParametersPanel implements PropertyChangeListener {
 
 		this.createGUI();
 	}
-
 
 	@SuppressWarnings("serial")
 	private void createGUI() {
