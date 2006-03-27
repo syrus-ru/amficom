@@ -1,5 +1,5 @@
 /*-
- * $$Id: NetMapViewer.java,v 1.73 2006/03/23 19:57:38 stas Exp $$
+ * $$Id: NetMapViewer.java,v 1.74 2006/03/27 14:42:52 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,14 +63,12 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.AlarmMarker;
 import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.EventMarker;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
 import com.syrus.AMFICOM.resource.DoublePoint;
-import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
@@ -87,7 +85,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * 
- * @version $Revision: 1.73 $, $Date: 2006/03/23 19:57:38 $
+ * @version $Revision: 1.74 $, $Date: 2006/03/27 14:42:52 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -517,9 +515,9 @@ public abstract class NetMapViewer {
 						Log.errorMessage(e);
 						return;
 					}
-					if(path == null) {
-						PathElement pe = StorableObjectPool.getStorableObject(mne.getSchemePathElementId(), true);
-						path = mapViewController.getMeasurementPathBySchemePathId(pe.getParentPathOwner().getId());
+					if(path == null && mne.getSchemePathId() != null) {
+						SchemePath schemePath = StorableObjectPool.getStorableObject(mne.getSchemePathId(), true);
+						path = mapViewController.getMeasurementPathBySchemePathId(schemePath.getId());
 					}
 
 					if(path != null) {
@@ -536,40 +534,6 @@ public abstract class NetMapViewer {
 						MarkerController mc = (MarkerController)mapViewController.getController(marker);
 						/*
 						if (mne.getSchemePathElementId() != null) {
-							mc.moveToFromStartLo(marker, mne.getSchemePathElementId(), mne.getOpticalDistance());
-						} else {
-							mc.moveToFromStartLo(marker, mne.getOpticalDistance());
-						}*/
-						mc.moveToFromStartLf(marker, mne.getOpticalDistance());
-//						marker.setPhysicalDistance(mne.getOpticalDistance());
-						this.logicalNetLayer.updateZoom();
-					}
-				}
-				else if(mne.getMarkerEventType() == MarkerEvent.EVENTMARKER_CREATED_EVENT) {
-					this.logicalNetLayer.deselectAll();
-					
-					MeasurementPath path;
-					try {
-						path = mapViewController
-							.getMeasurementPathByMonitoredElementId(mne.getMeId());
-					} catch(ApplicationException e) {
-						Log.errorMessage(e);
-						return;
-					}
-
-					if(path != null) {
-						EventMarker marker = new EventMarker(
-								mne.getMarkerId(),
-								LoginManager.getUserId(),
-								mapView,
-								path,
-								mne.getMeId(),
-								I18N.getString(MapEditorResourceKeys.ENTITY_EVENT));
-						mapView.addMarker(marker);
-						mapView.getMap().setSelected(marker, true);
-						
-						MarkerController mc = (MarkerController)mapViewController.getController(marker);
-				/*		if (mne.getSchemePathElementId() != null) {
 							mc.moveToFromStartLo(marker, mne.getSchemePathElementId(), mne.getOpticalDistance());
 						} else {
 							mc.moveToFromStartLo(marker, mne.getOpticalDistance());
@@ -645,19 +609,18 @@ public abstract class NetMapViewer {
 						mapView.getMap().setSelected(marker, true);
 						final MeasurementPath measurementPath = marker.getMeasurementPath();
 						
-						final PathElement pe = StorableObjectPool.getStorableObject(mne.getSchemePathElementId(), true);
-						final SchemePath schemePath = pe.getParentPathOwner();
-						if(measurementPath.getSchemePath() == null)
-							measurementPath.setSchemePath(schemePath);
-
-						MarkerController mc = (MarkerController)mapViewController.getController(marker);
-/*						if (mne.getSchemePathElementId() != null) {
-							mc.moveToFromStartLo(marker, mne.getSchemePathElementId(), mne.getOpticalDistance());
+						final Identifier schemePathId = mne.getSchemePathId();
+						final MarkerController mc = (MarkerController)mapViewController.getController(marker);
+						if (schemePathId != null) {
+							final SchemePath schemePath = StorableObjectPool.getStorableObject(schemePathId, true);
+							if(measurementPath.getSchemePath() == null)
+								measurementPath.setSchemePath(schemePath);
+							
+							mc.moveToFromStartLf(marker, schemePath.getPhysicalDistance(mne.getOpticalDistance()));
 						} else {
-							mc.moveToFromStartLo(marker, mne.getOpticalDistance());
-						}*/
-						mc.moveToFromStartLf(marker, schemePath.getPhysicalDistance(mne.getOpticalDistance()));
-//						marker.setPhysicalDistance(schemePath.getPhysicalDistance(mne.getOpticalDistance()));
+							Log.debugMessage("SchemePathId is null! It will have to move marker by optical distance" , Level.FINE);
+							mc.moveToFromStartLf(marker, mne.getOpticalDistance());
+						}
 					}
 				}
 				else if(mne.getMarkerEventType() == MarkerEvent.MARKER_SELECTED_EVENT) {
