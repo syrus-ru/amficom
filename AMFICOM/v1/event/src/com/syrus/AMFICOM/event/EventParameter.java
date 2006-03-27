@@ -1,11 +1,13 @@
 /*
- * $Id: EventParameter.java,v 1.32 2006/02/16 13:34:26 arseniy Exp $
+ * $Id: EventParameter.java,v 1.32.2.1 2006/03/27 11:21:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.event;
+
+import java.io.Serializable;
 
 import org.omg.CORBA.ORB;
 
@@ -20,12 +22,12 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2006/02/16 13:34:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32.2.1 $, $Date: 2006/03/27 11:21:40 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
-public final class EventParameter implements Identifiable,
+public final class EventParameter implements Identifiable, Serializable,
 		IdlTransferableObject<IdlEventParameter> {
 	private static final long serialVersionUID = 4906660762164733352L;
 

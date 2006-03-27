@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultMeasurementCompletedEvent.java,v 1.2.4.2 2006/03/21 08:37:50 bass Exp $
+ * $Id: DefaultMeasurementCompletedEvent.java,v 1.2.4.3 2006/03/27 11:21:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,15 +19,13 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.2.4.2 $, $Date: 2006/03/21 08:37:50 $
+ * @version $Revision: 1.2.4.3 $, $Date: 2006/03/27 11:21:40 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 public final class DefaultMeasurementCompletedEvent extends DefaultMeasurementStatusChangedEvent<IdlMeasurementCompletedEvent>
 		implements MeasurementCompletedEvent {
-	private static final long serialVersionUID = -1535111953086544661L;
-
 	private boolean hasQuality;
 	private double quality;
 

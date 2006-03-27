@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.63 2006/03/13 13:54:02 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.63.2.1 2006/03/27 11:21:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,12 +68,10 @@ import com.syrus.util.Log;
  * </ul>
  *
  * @author $Author: bass $
- * @version $Revision: 1.63 $, $Date: 2006/03/13 13:54:02 $
+ * @version $Revision: 1.63.2.1 $, $Date: 2006/03/27 11:21:42 $
  * @module general
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
-	private static final long serialVersionUID = -4465622004640499700L;
-
 	private static final String CREATING_A_DUMMY_CONDITION = "; creating a dummy condition...";
 	private static final String INVALID_UNDERLYING_IMPLEMENTATION = "Invalid underlying implementation: ";
 	private static final String LINKED_IDS_CONDITION_INIT = "LinkedIdsCondition.<init>() | ";
@@ -283,8 +281,6 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 
 	private static LinkedIdsCondition createDummyCondition() {
 		return new LinkedIdsCondition() {
-			private static final long serialVersionUID = 4447852496352966852L;
-
 			@Override
 			public boolean isConditionTrue(final StorableObject storableObject) {
 				Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE

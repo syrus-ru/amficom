@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultSmsNotificationEvent.java,v 1.3.2.2 2006/03/23 10:48:43 bass Exp $
+ * $Id: DefaultSmsNotificationEvent.java,v 1.3.2.3 2006/03/27 11:21:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,13 +18,11 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3.2.2 $, $Date: 2006/03/23 10:48:43 $
+ * @version $Revision: 1.3.2.3 $, $Date: 2006/03/27 11:21:40 $
  * @module event
  */
 public final class DefaultSmsNotificationEvent extends
 		AbstractSmsNotificationEvent {
-	private static final long serialVersionUID = 4952154893053173010L;
-
 	/**
 	 * @serial include 
 	 */

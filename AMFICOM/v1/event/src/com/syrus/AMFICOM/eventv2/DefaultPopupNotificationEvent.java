@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultPopupNotificationEvent.java,v 1.16.4.3 2006/03/23 10:48:43 bass Exp $
+ * $Id: DefaultPopupNotificationEvent.java,v 1.16.4.4 2006/03/27 11:21:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,13 +19,11 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.16.4.3 $, $Date: 2006/03/23 10:48:43 $
+ * @version $Revision: 1.16.4.4 $, $Date: 2006/03/27 11:21:40 $
  * @module event
  */
 public final class DefaultPopupNotificationEvent extends
 		AbstractPopupNotificationEvent {
-	private static final long serialVersionUID = 3901755454384903933L;
-
 	/**
 	 * @serial include 
 	 */
