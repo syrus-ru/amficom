@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalImageQuery.java,v 1.18 2006/02/28 15:20:01 arseniy Exp $
+ * $Id: TopologicalImageQuery.java,v 1.19 2006/03/27 11:21:42 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.map;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 import java.awt.Image;
+import java.io.Serializable;
 
 import org.omg.CORBA.ORB;
 
@@ -21,12 +22,12 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 /**
  * Класс-запрос для обращения к серверу топографических данных через пул
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2006/02/28 15:20:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2006/03/27 11:21:42 $
  * @module mapinfo
  */
 public final class TopologicalImageQuery
-		implements Comparable<TopologicalImageQuery>,
+		implements Comparable<TopologicalImageQuery>, Serializable,
 		IdlTransferableObject<IdlTopologicalImageQuery> {
 	private static final long serialVersionUID = 5174295311154560836L;
 

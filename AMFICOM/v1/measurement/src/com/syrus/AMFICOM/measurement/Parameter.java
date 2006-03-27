@@ -1,5 +1,5 @@
 /*
- * $Id: Parameter.java,v 1.24 2005/12/07 17:17:16 bass Exp $
+ * $Id: Parameter.java,v 1.25 2006/03/27 11:21:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.omg.CORBA.ORB;
 
@@ -29,14 +30,14 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/12/07 17:17:16 $
+ * @version $Revision: 1.25 $, $Date: 2006/03/27 11:21:42 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
 public final class Parameter implements IdlTransferableObject<IdlParameter>,
-		Identifiable {
+		Identifiable, Serializable {
 	private static final long serialVersionUID = -5102988777073070109L;
 
 	private Identifier id;

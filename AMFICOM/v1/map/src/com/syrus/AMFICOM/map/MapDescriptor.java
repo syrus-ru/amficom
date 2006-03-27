@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDescriptor.java,v 1.5 2005/12/07 17:17:18 bass Exp $
+ * $Id: MapDescriptor.java,v 1.6 2006/03/27 11:21:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import java.io.Serializable;
 
 import org.omg.CORBA.ORB;
 
@@ -16,10 +18,10 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 /**
  * @author max
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/12/07 17:17:18 $
+ * @version $Revision: 1.6 $, $Date: 2006/03/27 11:21:42 $
  * @module map
  */
-public class MapDescriptor implements MapFileDescriptor,
+public class MapDescriptor implements MapFileDescriptor, Serializable,
 		IdlTransferableObject<IdlMapDescriptor> {
 	private static final long serialVersionUID = -2322785940339779652L;
 

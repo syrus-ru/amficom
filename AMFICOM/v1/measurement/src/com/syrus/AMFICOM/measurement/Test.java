@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.190 2006/03/22 09:33:48 saa Exp $
+ * $Id: Test.java,v 1.191 2006/03/27 11:21:42 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -46,8 +47,8 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.190 $, $Date: 2006/03/22 09:33:48 $
- * @author $Author: saa $
+ * @version $Revision: 1.191 $, $Date: 2006/03/27 11:21:42 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -697,7 +698,7 @@ public final class Test extends StorableObject
 	}
 
 	public final class TestTimeStamps
-			implements IdlTransferableObject<IdlTestTimeStamps> {
+			implements IdlTransferableObject<IdlTestTimeStamps>, Serializable {
 		private static final long serialVersionUID = -3560328752462377043L;
 
 		Date startTime; // not null

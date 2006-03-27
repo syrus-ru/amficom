@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.25 2005/12/09 11:36:12 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.26 2006/03/27 11:21:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,13 +27,11 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $
+ * @author $Author: bass $
  * @module map
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
-	private static final long serialVersionUID = 4853544689882844284L;
-
 	@SuppressWarnings("unused")
 	private LinkedIdsConditionImpl(final Set<? extends Identifiable> linkedIdentifiables, final Short linkedEntityCode, final Short entityCode) {
 		this.linkedIdentifiables = linkedIdentifiables;

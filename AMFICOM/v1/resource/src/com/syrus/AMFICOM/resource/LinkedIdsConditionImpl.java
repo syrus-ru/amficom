@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.5 2006/02/28 15:19:59 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.6 2006/03/27 11:21:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,13 +19,11 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2006/02/28 15:19:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2006/03/27 11:21:41 $
+ * @author $Author: bass $
  * @module resource
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
-	private static final long serialVersionUID = 2022895734421025015L;
-
 	protected static final Short LAYOUT_ITEM_SHORT = new Short(LAYOUT_ITEM_CODE);
 
 	@SuppressWarnings("unused")

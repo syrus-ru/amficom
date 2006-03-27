@@ -1,5 +1,5 @@
 /*-
- * $Id: MapFeature.java,v 1.8 2005/12/07 17:17:18 bass Exp $
+ * $Id: MapFeature.java,v 1.9 2006/03/27 11:21:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.map;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 
+import java.io.Serializable;
+
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.map.corba.IdlMapFeature;
@@ -18,10 +20,10 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 /**
  * @author Maxim Selivanov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/12/07 17:17:18 $
+ * @version $Revision: 1.9 $, $Date: 2006/03/27 11:21:42 $
  * @module map
  */
-public class MapFeature implements IdlTransferableObject<IdlMapFeature> {
+public class MapFeature implements IdlTransferableObject<IdlMapFeature>, Serializable {
 	private static final long serialVersionUID = 6461287614714505638L;
 
 	private double centerX;
