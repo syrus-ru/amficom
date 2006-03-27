@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTAUController.h,v 1.3 2005/10/09 14:14:25 arseniy Exp $
+// $Id: OTAUController.h,v 1.4 2006/03/27 08:53:19 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.3 $, $Date: 2005/10/09 14:14:25 $
+// $Revision: 1.4 $, $Date: 2006/03/27 08:53:19 $
 // $Author: arseniy $
 //
 // OTAUController.h: interface for the OTAUController class.
@@ -55,7 +55,7 @@ typedef unsigned short OTAUPortId;
 #define OTAU_MESSAGE_INIT_FORMAT ";INIT-SYS:OTAU%02hd:ALL:ABCD::1;"
 #define OTAU_MESSAGE_CONNECT_FORMAT ";CONN-TACC-OTAU:OTAU%02hd:%02hd:ABCD:%02hd;"
 #define OTAU_MESSAGE_HOLD_CONNECTION_FORMAT ";REPT-STAT:OTAU%02hd::ABCD;"
-#define OTAU_MESSAGE_DISCONNECT_FORMAT ";DISC-TACC:PRST:%02hd:ABCD;"
+#define OTAU_MESSAGE_DISCONNECT_FORMAT ";DISC-TACC:01:%02hd:ABCD;"
 
 #define OTAU_HOLD_PORT_TIMEOUT (unsigned int) 50 //sec
 
