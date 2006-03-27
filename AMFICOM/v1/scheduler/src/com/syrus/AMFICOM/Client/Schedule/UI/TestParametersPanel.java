@@ -259,8 +259,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 					(MeasurementSetup) TestParametersPanel.this.testSetups.getSelectedValue();
 				assert Log.debugMessage(measurementSetup, Log.DEBUGLEVEL03);
 				if (TestParametersPanel.this.parametersTestPanel != null) {
+					// XXX: зачем invokeLater? Вроде, все работает и при выполнении "прямо сейчас"
 					SwingUtilities.invokeLater(new Runnable() {
-						
 						public void run() {
 							TestParametersPanel.this.parametersTestPanel.setMeasurementSetup(measurementSetup);
 						}
