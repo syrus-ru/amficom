@@ -1,5 +1,5 @@
 /*-
- * $Id: SetupParameterType.java,v 1.1.2.4 2006/02/27 16:24:55 arseniy Exp $
+ * $Id: SetupParameterType.java,v 1.1.2.5 2006/03/27 09:35:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_GAIN_SPLICE_ON;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_LIFE_FIBER_DETECT;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_SMOOTH_FILTER;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.INDEX_OF_REFRACTION;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PREDICTION_TIME;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PREDICTION_TIME_END;
@@ -55,7 +56,7 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2006/02/27 16:24:55 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/03/27 09:35:24 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -144,6 +145,13 @@ public final class SetupParameterType extends TestCase {
 				NONDIMENSIONAL));
 
 		typeCodename = FLAG_LIFE_FIBER_DETECT.stringValue();
+		parameterTypes.add(ParameterType.createInstance(creatorId,
+				typeCodename,
+				I18N.getString(RESOURCE_KEY_ROOT + typeCodename),
+				BOOLEAN,
+				NONDIMENSIONAL));
+
+		typeCodename = FLAG_SMOOTH_FILTER.stringValue();
 		parameterTypes.add(ParameterType.createInstance(creatorId,
 				typeCodename,
 				I18N.getString(RESOURCE_KEY_ROOT + typeCodename),

@@ -1,5 +1,5 @@
 /*-
- * $Id: SetupActionParameter.java,v 1.1.2.2 2006/03/01 11:43:03 arseniy Exp $
+ * $Id: SetupActionParameter.java,v 1.1.2.3 2006/03/27 09:35:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_GAIN_SPLICE_ON;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_LIFE_FIBER_DETECT;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_SMOOTH_FILTER;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.INDEX_OF_REFRACTION;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PULSE_WIDTH_M;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PULSE_WIDTH_NS;
@@ -51,7 +52,7 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/03/01 11:43:03 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/03/27 09:35:24 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -116,6 +117,10 @@ public final class SetupActionParameter extends TestCase {
 				OPERATION_EQUALS,
 				PARAMETER_TYPE_CODE,
 				COLUMN_CODENAME));
+		parameterTypeCondition.addCondition(new TypicalCondition(FLAG_SMOOTH_FILTER.stringValue(),
+				OPERATION_EQUALS,
+				PARAMETER_TYPE_CODE,
+				COLUMN_CODENAME));
 		final Set<ParameterType> parameterTypes = StorableObjectPool.getStorableObjectsByCondition(parameterTypeCondition, true);
 		assertTrue("Not all parameter types can be loaded", parameterTypes.size() == parameterTypeCondition.getConditionsNumber());
 		final Map<String, ParameterType> parameterTypeCodenamesMap = StorableObjectType.createCodenamesMap(parameterTypes);
@@ -130,19 +135,19 @@ public final class SetupActionParameter extends TestCase {
 		final MeasurementType measurementType = measurementTypes.iterator().next();
 
 		/*	Measurement port types*/
-		final CompoundCondition measurementPortTypeCondition = new CompoundCondition(new TypicalCondition(REFLECTOMETRY_QP1640A.stringValue(),
-					OPERATION_EQUALS,
-					MEASUREMENTPORT_TYPE_CODE,
-					COLUMN_CODENAME),
-				OR,
+		final CompoundCondition measurementPortTypeCondition = new CompoundCondition(OR,
+				new TypicalCondition(REFLECTOMETRY_QP1640A.stringValue(),
+						OPERATION_EQUALS,
+						MEASUREMENTPORT_TYPE_CODE,
+						COLUMN_CODENAME),
 				new TypicalCondition(REFLECTOMETRY_QP1643A.stringValue(),
-					OPERATION_EQUALS,
-					MEASUREMENTPORT_TYPE_CODE,
-					COLUMN_CODENAME));
-		measurementPortTypeCondition.addCondition(new TypicalCondition(REFLECTOMETRY_PK7600.stringValue(),
-				OPERATION_EQUALS,
-				MEASUREMENTPORT_TYPE_CODE,
-				COLUMN_CODENAME));
+						OPERATION_EQUALS,
+						MEASUREMENTPORT_TYPE_CODE,
+						COLUMN_CODENAME),
+				new TypicalCondition(REFLECTOMETRY_PK7600.stringValue(),
+						OPERATION_EQUALS,
+						MEASUREMENTPORT_TYPE_CODE,
+						COLUMN_CODENAME));
 		final Set<MeasurementPortType> measurementPortTypes = StorableObjectPool.getStorableObjectsByCondition(measurementPortTypeCondition, true);
 		assertTrue("Not all measurement port types can be loaded", measurementPortTypes.size() == measurementPortTypeCondition.getConditionsNumber());
 		final Map<String, MeasurementPortType> measurementPortTypeCodenamesMap = StorableObjectType.createCodenamesMap(measurementPortTypes);
@@ -673,6 +678,18 @@ public final class SetupActionParameter extends TestCase {
 		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(1.4682),
+				actionParameterTypeBinding.getId(),
+				false));
+
+		/* Smooth filter */
+		parameterType = parameterTypeCodenamesMap.get(FLAG_SMOOTH_FILTER.stringValue());
+		actionParameterTypeBinding = ActionParameterTypeBinding.valueOf(parameterType, measurementType, measurementPortType);
+		actionParameters.add(ActionParameter.createInstance(creatorId,
+				ByteArray.toByteArray(true),
+				actionParameterTypeBinding.getId(),
+				false));
+		actionParameters.add(ActionParameter.createInstance(creatorId,
+				ByteArray.toByteArray(false),
 				actionParameterTypeBinding.getId(),
 				false));
 

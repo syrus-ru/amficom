@@ -1,5 +1,5 @@
 /*-
- * $Id: SetupActionParameterTypeBinding.java,v 1.1.2.3 2006/03/23 15:27:40 arseniy Exp $
+ * $Id: SetupActionParameterTypeBinding.java,v 1.1.2.4 2006/03/27 09:36:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_GAIN_SPLICE_ON;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_LIFE_FIBER_DETECT;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_SMOOTH_FILTER;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.INDEX_OF_REFRACTION;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PREDICTION_TIME;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PREDICTION_TIME_END;
@@ -62,7 +63,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/03/23 15:27:40 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/03/27 09:36:00 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -124,6 +125,10 @@ public class SetupActionParameterTypeBinding extends TestCase {
 				PARAMETER_TYPE_CODE,
 				COLUMN_CODENAME));
 		parameterTypeCondition.addCondition(new TypicalCondition(FLAG_LIFE_FIBER_DETECT.stringValue(),
+				OPERATION_EQUALS,
+				PARAMETER_TYPE_CODE,
+				COLUMN_CODENAME));
+		parameterTypeCondition.addCondition(new TypicalCondition(FLAG_SMOOTH_FILTER.stringValue(),
 				OPERATION_EQUALS,
 				PARAMETER_TYPE_CODE,
 				COLUMN_CODENAME));
@@ -485,6 +490,11 @@ public class SetupActionParameterTypeBinding extends TestCase {
 		actionParameterTypeBindings.add(ActionParameterTypeBinding.createInstance(creatorId,
 				ParameterValueKind.CONTINUOUS,
 				parameterTypeCodenamesMap.get(AVERAGE_COUNT.stringValue()).getId(),
+				measurementTypeId,
+				pk7600MeasurementPortTypeId));
+		actionParameterTypeBindings.add(ActionParameterTypeBinding.createInstance(creatorId,
+				ParameterValueKind.ENUMERATED,
+				parameterTypeCodenamesMap.get(FLAG_SMOOTH_FILTER.stringValue()).getId(),
 				measurementTypeId,
 				pk7600MeasurementPortTypeId));
 
