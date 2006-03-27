@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.38.2.2 2006/03/07 08:28:41 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.38.2.3 2006/03/27 05:42:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.ActionParameterDatabase;
 import com.syrus.AMFICOM.measurement.ActionParameterTypeBindingDatabase;
 import com.syrus.AMFICOM.measurement.ActionTemplateDatabase;
@@ -43,7 +44,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 
 
 /**
- * @version $Revision: 1.38.2.2 $, $Date: 2006/03/07 08:28:41 $
+ * @version $Revision: 1.38.2.3 $, $Date: 2006/03/27 05:42:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -55,6 +56,7 @@ final class DatabaseContextSetup {
 	}
 
 	public static void initDatabaseContext() {
+		DatabaseContext.registerDatabase(new ParameterTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicDatabase());
 
@@ -82,6 +84,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
 		DatabaseContext.registerDatabase(new MeasurementTypeDatabase());
 		DatabaseContext.registerDatabase(new AnalysisTypeDatabase());
+//		DatabaseContext.registerDatabase(new ModelingTypeDatabase());
 		DatabaseContext.registerDatabase(new ActionParameterTypeBindingDatabase());
 		DatabaseContext.registerDatabase(new KISDatabase());
 		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
@@ -93,7 +96,9 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new MeasurementSetupDatabase());
 		DatabaseContext.registerDatabase(new MeasurementDatabase());
 		DatabaseContext.registerDatabase(new AnalysisDatabase());
+//		DatabaseContext.registerDatabase(new ModelingDatabase());
 		DatabaseContext.registerDatabase(new MeasurementResultParameterDatabase());
 		DatabaseContext.registerDatabase(new AnalysisResultParameterDatabase());
+//		DatabaseContext.registerDatabase(new ModelingResultParameterDatabase());
 	}
 }
