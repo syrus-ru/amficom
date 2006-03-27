@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTAUController.cpp,v 1.5 2006/03/24 15:14:35 arseniy Exp $
+// $Id: OTAUController.cpp,v 1.6 2006/03/27 08:52:26 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.5 $, $Date: 2006/03/24 15:14:35 $
+// $Revision: 1.6 $, $Date: 2006/03/27 08:52:26 $
 // $Author: arseniy $
 //
 // OTAUController.cpp: implementation of the OTAUController class.
@@ -95,7 +95,7 @@ BOOL OTAUController::start(const OTAUPortId otauPortId) {
 
 BOOL OTAUController::switchOTAU() const {
 	char* message = new char[OTAU_MESSAGE_SIZE];
-	sprintf(message, OTAU_MESSAGE_CONNECT_FORMAT, this->otauAddress, this->currentOTAUPort, this->otauAddress);
+	sprintf(message, OTAU_MESSAGE_CONNECT_FORMAT, this->otauAddress, this->currentOTAUPort, this->currentOTAUPort);
 	message[OTAU_MESSAGE_SIZE - 1] = 0;
 
 	char* reply = new char[OTAU_REPLY_SIZE];
@@ -146,7 +146,7 @@ void* OTAUController::run(void* args) {
 		Sleep(twms);
 	}
 
-	sprintf(message, OTAU_MESSAGE_DISCONNECT_FORMAT, otauController->otauAddress);
+	sprintf(message, OTAU_MESSAGE_DISCONNECT_FORMAT, otauController->currentOTAUPort);
 	printf("OTAUController | Sending disconnect command to OTAU %hd on COM port %hd\n", otauController->otauAddress, otauController->comPortId);
 	OTAUController::sendCOMPortMessage(otauController->comPortHandle, message, reply, OTAU_REPLY_SIZE);
 	
