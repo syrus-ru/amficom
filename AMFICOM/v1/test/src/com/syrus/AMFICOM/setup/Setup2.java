@@ -1,5 +1,5 @@
 /*-
- * $Id: Setup2.java,v 1.1.2.3 2006/03/23 15:28:14 arseniy Exp $
+ * $Id: Setup2.java,v 1.1.2.4 2006/03/27 09:34:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.reflectometry.SetupActionParameter;
 import com.syrus.AMFICOM.reflectometry.SetupParameterType;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/03/23 15:28:14 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/03/27 09:34:54 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -35,13 +35,13 @@ public final class Setup2 extends TestCase {
 	public static Test suite() {
 		final CORBACommonTest commonTest = new CORBACommonTest();
 
-		//-Create parameter types 
-		commonTest.addTest(new SetupParameterType("testCreate"));
-
 		//-Create configuration objects.
 		commonTest.addTest(new SetupEquipmentType("testCreate"));
 		commonTest.addTest(new SetupPortType("testCreate"));
 		commonTest.addTest(new SetupTransmissionPathType("testCreate"));
+
+		//-Create parameter types 
+		commonTest.addTest(new SetupParameterType("testCreate"));
 
 		//-Create measurement port types, and action types
 		commonTest.addTest(new SetupMeasurementPortType("testCreate"));
