@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionResultParameter.java,v 1.1.2.11 2006/03/17 11:54:48 arseniy Exp $
+ * $Id: ActionResultParameter.java,v 1.1.2.12 2006/03/27 15:08:09 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,16 +21,32 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.corba.IdlActionResultParameter;
 
+
 /**
- * @version $Revision: 1.1.2.11 $, $Date: 2006/03/17 11:54:48 $
+ * Надкласс для параметров результата действия. Всегда имеет действие, в
+ * результате которого появился; идентификатор этого действия хранится в
+ * {@link #actionId}. Класс параметризован по классу этого действия.
+ * 
+ * @version $Revision: 1.1.2.12 $, $Date: 2006/03/27 15:08:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public abstract class ActionResultParameter<A extends Action> extends Parameter {
+	/**
+	 * Идентификатор типа параметра.
+	 */
 	private Identifier typeId;
+
+	/**
+	 * Идентификатор действия.
+	 */
 	private Identifier actionId;
 
+	/**
+	 * Кодовое имя типа данного параметра. Используется в
+	 * {@link #getTypeCodename()}.
+	 */
 	private transient String typeCodename;
 
 	ActionResultParameter(final Identifier id,
@@ -67,19 +83,38 @@ public abstract class ActionResultParameter<A extends Action> extends Parameter 
 		this.actionId = Identifier.valueOf(idlActionResultParameter.actionId);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	@Override
 	public final Identifier getTypeId() {
 		return this.typeId;
 	}
 
+	/**
+	 * Получить идентификатор действия, в результате которого был создан данный
+	 * параметр.
+	 * 
+	 * @return Идентификатор действия
+	 */
 	public final Identifier getActionId() {
 		return this.actionId;
 	}
 
+	/**
+	 * Получить действие, в результате которого был создан данный параметр.
+	 * Обёртка над {@link #getActionId()}.
+	 * 
+	 * @return Действие
+	 * @throws ApplicationException
+	 */
 	public final A getAction() throws ApplicationException {
-		return StorableObjectPool.<A>getStorableObject(this.actionId, true);
+		return StorableObjectPool.<A> getStorableObject(this.actionId, true);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	@Override
 	public final String getTypeCodename() throws ApplicationException {
 		if (this.typeCodename == null) {
