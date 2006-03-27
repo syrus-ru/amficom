@@ -1,5 +1,5 @@
 /*-
- * $Id: TestAddTest.java,v 1.1.2.3 2006/03/23 15:28:38 arseniy Exp $
+ * $Id: TestAddTest.java,v 1.1.2.4 2006/03/27 09:41:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
-import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_SUBSTRING;
 import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
 import static com.syrus.AMFICOM.measurement.MeasurementTypeCodename.REFLECTOMETRY;
 import static com.syrus.AMFICOM.measurement.Test.TestStatus.TEST_STATUS_SCHEDULED;
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/03/23 15:28:38 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/03/27 09:41:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -52,27 +52,27 @@ public final class TestAddTest extends TestCase {
 
 	public static junit.framework.Test suite() {
 		final CORBACommonTest commonTest = new CORBACommonTest();
-		commonTest.addTestSuite(TestAddTest.class);
+		commonTest.addTest(new TestAddTest("testAdd"));
 		return commonTest.createTestSetup();
 	}
 
-	public void _testAdd() throws ApplicationException {
+	public void testAdd() throws ApplicationException {
 		final Identifier creatorId = LoginManager.getUserId();
 
 		final MeasurementType measurementType = MeasurementType.valueOf(REFLECTOMETRY.stringValue());
 		final MeasurementPortType measurementPortType = MeasurementPortType.valueOf(REFLECTOMETRY_PK7600.stringValue());
 
-		final String measurementPortDescription = "MeasurementPort_1_KIS_1_Equipment_1";
+		final String measurementPortDescriptionSubstring = "MeasurementPort_1_";
 		final StorableObjectCondition measurementPortCondition = new CompoundCondition(new LinkedIdsCondition(measurementPortType,
 						MEASUREMENTPORT_CODE),
 				AND,
-				new TypicalCondition(measurementPortDescription,
-						OPERATION_EQUALS,
+				new TypicalCondition(measurementPortDescriptionSubstring,
+						OPERATION_SUBSTRING,
 						MEASUREMENTPORT_CODE,
 						COLUMN_DESCRIPTION));
 		final Set<MeasurementPort> measurementPorts = StorableObjectPool.getStorableObjectsByCondition(measurementPortCondition, true);
 		if (measurementPorts.isEmpty()) {
-			throw new ObjectNotFoundException("MeasurementPort " + measurementPortDescription + " of type " + measurementPortType.getCodename() + " not found");
+			throw new ObjectNotFoundException("MeasurementPort like " + measurementPortDescriptionSubstring + " of type " + measurementPortType.getCodename() + " not found");
 		}
 		assertTrue(ONLY_ONE_EXPECTED + ": " + measurementPorts, measurementPorts.size() == 1);
 		final MeasurementPort measurementPort = measurementPorts.iterator().next();
@@ -80,7 +80,7 @@ public final class TestAddTest extends TestCase {
 		final StorableObjectCondition monitoredElementCondition = new LinkedIdsCondition(measurementPort, MONITOREDELEMENT_CODE);
 		final Set<MonitoredElement> monitoredElements = StorableObjectPool.getStorableObjectsByCondition(monitoredElementCondition, true);
 		if (monitoredElements.isEmpty()) {
-			throw new ObjectNotFoundException("MonitoredElement for MeasurementPort " + measurementPortDescription + " not found");
+			throw new ObjectNotFoundException("MonitoredElement for MeasurementPort " + measurementPort.getDescription() + " not found");
 		}
 		assertTrue(ONLY_ONE_EXPECTED + ": " + monitoredElements, monitoredElements.size() == 1);
 		final MonitoredElement monitoredElement = monitoredElements.iterator().next();
@@ -101,7 +101,7 @@ public final class TestAddTest extends TestCase {
 				"test",
 				VOID_IDENTIFIER,
 				monitoredElement.getId(),
-				new Date(System.currentTimeMillis() + 60L * 1000L),
+				new Date(System.currentTimeMillis() + 30L * 1000L),
 				Collections.singleton(measurementSetup.getId()),
 				measurementType.getId());
 		test.setStatus(TEST_STATUS_SCHEDULED);
