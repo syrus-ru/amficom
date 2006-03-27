@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.74 2005/12/07 17:16:24 bass Exp $
+ * $Id: ParameterType.java,v 1.74.4.1 2006/03/27 10:10:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,18 +16,16 @@ import java.util.HashSet;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlParameterType;
-import com.syrus.util.Codeable;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/12/07 17:16:24 $
+ * @version $Revision: 1.74.4.1 $, $Date: 2006/03/27 10:10:06 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public enum ParameterType implements IdlTransferableObject<IdlParameterType>,
-		Codeable {
+public enum ParameterType implements IdlTransferableObject<IdlParameterType> {
 	REF_WAVE_LENGTH("ref_wvlen", DataType.INTEGER, MeasurementUnit.NANOMETER),
 	REF_TRACE_LENGTH("ref_trclen", DataType.DOUBLE, MeasurementUnit.KILOMETER),
 	REF_RESOLUTION("ref_res", DataType.DOUBLE, MeasurementUnit.METER),
@@ -80,10 +78,6 @@ public enum ParameterType implements IdlTransferableObject<IdlParameterType>,
 		return valueOf(idlParameterType.value());
 	}
 
-	public int getCode() {
-		return this.ordinal();
-	}
-
 	public String getCodename() {
 		return this.codename;
 	}
@@ -103,9 +97,9 @@ public enum ParameterType implements IdlTransferableObject<IdlParameterType>,
 	@SuppressWarnings("unused")
 	public IdlParameterType getIdlTransferable(final ORB orb) {
 		try {
-			return IdlParameterType.from_int(this.getCode());
+			return IdlParameterType.from_int(this.ordinal());
 		} catch (org.omg.CORBA.BAD_PARAM bp) {
-			Log.errorMessage("Illegal code: " + this.getCode() + ", returning UNKNOWN");
+			Log.errorMessage("Illegal code: " + this.ordinal() + ", returning UNKNOWN");
 			return IdlParameterType.UNKNOWN_PARAMETERTYPE;
 		}
 	}

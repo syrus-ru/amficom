@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementUnit.java,v 1.13 2005/12/07 17:16:24 bass Exp $
+ * $Id: MeasurementUnit.java,v 1.13.4.1 2006/03/27 10:10:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,17 +11,16 @@ import org.omg.CORBA.BAD_PARAM;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlMeasurementUnit;
-import com.syrus.util.Codeable;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/12/07 17:16:24 $
+ * @version $Revision: 1.13.4.1 $, $Date: 2006/03/27 10:10:06 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public enum MeasurementUnit implements Codeable,
+public enum MeasurementUnit implements
 		IdlTransferableObject<IdlMeasurementUnit> {
 	NONDIMENSIONAL("nondimensional"),
 
@@ -74,10 +73,6 @@ public enum MeasurementUnit implements Codeable,
 		return valueOf(idlMeasurementUnit.value());
 	}
 
-	public int getCode() {
-		return this.ordinal();
-	}
-
 	public String getCodename() {
 		return this.codename;
 	}
@@ -92,9 +87,9 @@ public enum MeasurementUnit implements Codeable,
 
 	public IdlMeasurementUnit getIdlTransferable() {
 		try {
-			return IdlMeasurementUnit.from_int(this.getCode());
+			return IdlMeasurementUnit.from_int(this.ordinal());
 		} catch (final BAD_PARAM bp) {
-			Log.errorMessage("Illegal code: " + this.getCode() + ", returning UNKNOWN");
+			Log.errorMessage("Illegal code: " + this.ordinal() + ", returning UNKNOWN");
 			return IdlMeasurementUnit.UNKNOWN_MEASUREMENTUNIT;
 		}
 	}
