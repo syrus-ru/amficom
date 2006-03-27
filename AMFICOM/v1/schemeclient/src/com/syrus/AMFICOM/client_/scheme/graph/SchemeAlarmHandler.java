@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeAlarmHandler.java,v 1.12 2006/02/22 07:08:11 stas Exp $
+ * $Id: SchemeAlarmHandler.java,v 1.13 2006/03/27 15:08:54 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2006/02/22 07:08:11 $
+ * @version $Revision: 1.13 $, $Date: 2006/03/27 15:08:54 $
  * @module schemeclient_v1
  */
 
@@ -75,31 +75,35 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 			final MarkerEvent event = (MarkerEvent)evt;
 			if (event.getMarkerEventType() == MarkerEvent.ALARMMARKER_CREATED_EVENT) {
 				try {
-					final PathElement pathElement = StorableObjectPool.getStorableObject(
-							event.getSchemePathElementId(), true);
-					
-					openCorrespondingPanel(pathElement);
-					ElementsPanel panel = this.pane.getCurrentPanel();
-					
-					final DefaultGraphCell cell = SchemeActions.findObjectById(panel.getGraph(),
-							pathElement.getAbstractSchemeElementId());
-					
-					if (cell != null) {
-						this.cellsMap.put(event.getMarkerId(), cell);
-						this.panelsMap.put(event.getMarkerId(), panel);
+					if (event.getPathElementId() != null) {
+						final PathElement pathElement = StorableObjectPool.getStorableObject(
+								event.getPathElementId(), true);
 						
-						panel.getGraph().insureCellVisible(cell);
+						openCorrespondingPanel(pathElement);
+						ElementsPanel panel = this.pane.getCurrentPanel();
 						
-						AlarmPainter painter = this.paintersMap.get(panel);
-						if (painter == null || painter.getState() == State.TERMINATED) {
-							painter = new AlarmPainter(panel.getGraph(), cell);
-							this.paintersMap.put(panel, painter);
-							painter.start();
-						} else {
-							synchronized (this) {
-								painter.addAlarmedCell(cell);
+						final DefaultGraphCell cell = SchemeActions.findObjectById(panel.getGraph(),
+								pathElement.getAbstractSchemeElementId());
+						
+						if (cell != null) {
+							this.cellsMap.put(event.getMarkerId(), cell);
+							this.panelsMap.put(event.getMarkerId(), panel);
+							
+							panel.getGraph().insureCellVisible(cell);
+							
+							AlarmPainter painter = this.paintersMap.get(panel);
+							if (painter == null || painter.getState() == State.TERMINATED) {
+								painter = new AlarmPainter(panel.getGraph(), cell);
+								this.paintersMap.put(panel, painter);
+								painter.start();
+							} else {
+								synchronized (this) {
+									painter.addAlarmedCell(cell);
+								}
 							}
 						}
+					} else {
+						Log.errorMessage("Can't open corresponding scheme for ALARM_MARKER_CREATED event as peId is null");
 					}
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
