@@ -65,7 +65,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.102 $, $Date: 2006/03/23 14:25:58 $
+ * @version $Revision: 1.103 $, $Date: 2006/03/27 14:50:43 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -132,6 +132,9 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		this.createGUI();
 	}
 
+	/**
+	 * @todo описать что делает этот метод...
+	 */
 	private synchronized ParameterSet getSet() {
 		ParameterSet parameterSet = null;
 		synchronized (this) { // XXX: synchronize(this) внутри synchronized-метода не имеет смысла
@@ -154,6 +157,12 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 			if (this.setId != null) {
 				{ // тут был 'try'
 					if (!parameterSet.isChanged()) {
+						/*
+						 * "parameterSet not changed":
+						 * перебираем все типы параметров, перечисленных в parameterSet
+						 * и сравниваем соответствующие им unchangedObjects со значениями из GUI;
+						 * если обнаруживается отличие в их значениях, сбрасываем setId в null
+						 */
 	//					System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " !set.isChanged()");
 						final Parameter[] parameters = parameterSet.getParameters();
 						for (int i = 0; i < parameters.length; i++) {
@@ -161,7 +170,6 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 							ParameterType typeUnchanged = type;
 							Object value = null;
 	
-							// = parameters[i].getStringValue();
 							if (type.equals(ParameterType.REF_WAVE_LENGTH)) {
 								value = this.waveLengthComboBox.getSelectedItem().toString();
 							} else if (type.equals(ParameterType.REF_TRACE_LENGTH)) {
@@ -197,13 +205,22 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 							}
 						}
 					} else {
+						/*
+						 * "parameterSet changed":
+						 * 1. сохраняем копию параметры parameterSet в lastParameters
+						 * 2. если меняется REF_PULSE_WIDTH_HIGH_RES/REF_PULSE_WIDTH_LOW_RES:
+						 * 2.1. выбрасываем из unchangedObjects параметр, которого больше нет
+						 * 2.2. кладем (неявно, через getByteArray) в unchangedObjects новый параметр 
+						 * 3. создаем новые экземпляры Parameter для тех параметров, которые изменились
+						 * 4. задаем для parameterSet набор параметров, в котором некоторые параметры, возможно, изменились, а некоторые - старые
+						 */
+//						System.err.println("getSet(): setId != null, pars changed");
 	//					System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " set.isChanged()");
 						final Parameter[] parameters = parameterSet.getParameters();
 						this.lastParameters = parameters.clone();
 						for (int i = 0; i < parameters.length; i++) {
 							final ParameterType type = parameters[i].getType();
-							BigDecimal value = null;
-							// = parameters[i].getStringValue();
+							final BigDecimal value;
 							if (type.equals(ParameterType.REF_WAVE_LENGTH)) {
 								value = (BigDecimal) this.waveLengthComboBox.getSelectedItem();
 							} else if (type.equals(ParameterType.REF_TRACE_LENGTH)) {
@@ -252,6 +269,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 								value = this.gsOptionBox.isSelected() ? BigDecimal.ONE : BigDecimal.ZERO;
 							} else if (type.equals(ParameterType.REF_FLAG_LIFE_FIBER_DETECT)) {
 								value = this.lfdOptionBox.isSelected() ? BigDecimal.ONE : BigDecimal.ZERO;
+							} else {
+								value = null;
 							}
 	
 							final BigDecimal bigDecimal = this.unchangedObjects.get(type);
@@ -263,12 +282,23 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 									AbstractMainFrame.showErrorMessage(this, e);
 								}
 							}
-						}				
+						}
 						parameterSet.setParameters(parameters);
-					
 					}
 				}
-			} else  {
+			} else {
+
+//				//				maybe this is better?:
+//			}
+//			if (this.setId == null) {
+
+				/*
+				 * "setId == null":
+				 * 1. unchangedObjects очищаем
+				 * 2. создаем и заполняем новый набор параметров
+				 * 2.1. при этом автоматически наполняется unchangedObjects
+				 * 3. setId := id созданного набора
+				 */
 	//			System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " == null");
 				try {
 	
@@ -442,6 +472,9 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		return name.trim().length() > 0 ? ',' + name : "";
 	}
 
+	/**
+	 * Кроме всего прочего, изменяет unchangedObjects
+	 */
 	private ByteArray getByteArray(final BigDecimal value, final ParameterType parameterType) {
 
 		this.unchangedObjects.put(parameterType, value);
@@ -466,9 +499,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 						+ " for parameter type '" + parameterType.getCodename() + "'");
 		}
 		return byteArray;
-		
 	}
-	
+
 	@Override
 	public void setEnableEditing(final boolean enable) {
 		this.descriptionLabel.setEnabled(enable);
@@ -793,7 +825,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		if (this.skip) {
 			return;
 		}
-		
+
 		final ParameterSet parameterSet = this.getSet();
 		final String description = this.getDescription();
 		final boolean descriptionChanged = !description.equals(this.oldDescription);
@@ -936,7 +968,6 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		if (this.skip) {
 			return;
 		}		
-		
 		
 		if (this.setId != null && set != null && this.setId.equals(set)) {
 			this.skip = false;
