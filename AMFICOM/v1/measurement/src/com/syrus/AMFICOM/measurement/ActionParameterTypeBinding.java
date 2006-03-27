@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.15 2006/03/22 16:54:27 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.16 2006/03/27 14:51:39 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,8 +47,33 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameterValueKind;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
+
 /**
- * @version $Revision: 1.1.2.15 $, $Date: 2006/03/22 16:54:27 $
+ * Измерительная связка. Связка трёх сущностей: типа параметра
+ * {@link com.syrus.AMFICOM.general.ParameterType}, типа измерительного порта
+ * {@link com.syrus.AMFICOM.measurement.MeasurementPortType} и типа действия
+ * {@link com.syrus.AMFICOM.measurement.ActionType}. Для каждой такой связки
+ * существует свой набор допустимых значений параметра. Набор значений может
+ * быть двух видов: перечисляемый
+ * {@link com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind#ENUMERATED}
+ * и непрерывный
+ * {@link com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind#CONTINUOUS};
+ * вид набора значений хранится в {@link #parameterValueKind}. Если он -
+ * перечисляемый, то все допустимые параметры для данной связки (т. е. - данного
+ * типа параметра {@link #parameterTypeId} для данного типа действия
+ * {@link #actionTypeId} и на данном типе измерительного порта
+ * {@link #measurementPortTypeId}) уже должны быть предопределены при установке
+ * системы. Пользователь не должен создавать новые экземпляры параметров
+ * {@link com.syrus.AMFICOM.measurement.ActionParameter} для измерительных
+ * связок {@link ActionParameterTypeBinding} с перечисляемым набором значений
+ * параметра. Если же набор значений - непрерывный, то пользователь может
+ * создавать новые параметры
+ * {@link com.syrus.AMFICOM.measurement.ActionParameter} с ещё не существующими
+ * значениями. В любом из этих двух случаев можно использовать метод
+ * {@link #getActionParameters()} для получения всех параметров, существующих
+ * для данной измерительной связки.
+ * 
+ * @version $Revision: 1.1.2.16 $, $Date: 2006/03/27 14:51:39 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -56,6 +81,9 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 public final class ActionParameterTypeBinding extends StorableObject implements IdlTransferableObjectExt<IdlActionParameterTypeBinding> {
 	private static final long serialVersionUID = 8851510439449075891L;
 
+	/**
+	 * Виды набора значений параметра - перечисляемый и непрерывный.
+	 */
 	static enum ParameterValueKind {
 		ENUMERATED,
 		CONTINUOUS;
@@ -80,15 +108,51 @@ public final class ActionParameterTypeBinding extends StorableObject implements 
 		}
 	}
 
+	/**
+	 * Вид набора значений параметра.
+	 */
 	private ParameterValueKind parameterValueKind;
+
+	/**
+	 * Тип параметра.
+	 */
 	private Identifier parameterTypeId;
+
+	/**
+	 * Тип действия.
+	 */
 	private Identifier actionTypeId;
+
+	/**
+	 * Тип измерительного порта.
+	 */
 	private Identifier measurementPortTypeId;
 
+
+	/**
+	 * Условие для подгрузки параметров, существующих для данной измерительной
+	 * связки. См. {@link #getActionParameters()}.
+	 */
 	private transient LinkedIdsCondition actionParameterCondition;
 
+	/**
+	 * Условие для подгрузки измерительной связки по типу параметра.
+	 * Используется в {@link #valueOf(Identifier, Identifier, Identifier)}.
+	 */
 	private static LinkedIdsCondition parameterTypeIdCondition;
+
+	/**
+	 * Условие для подгрузки измерительной связки по типу действия. Используется
+	 * в {@link #getValues(Identifier, Identifier)} и в
+	 * {@link #valueOf(Identifier, Identifier, Identifier)}.
+	 */
 	private static LinkedIdsCondition actionTypeIdCondition;
+
+	/**
+	 * Условие для подгрузки измерительной связки по типу измерительного порта.
+	 * Используется в {@link #getValues(Identifier, Identifier)} и в
+	 * {@link #valueOf(Identifier, Identifier, Identifier)}.
+	 */
 	private static LinkedIdsCondition measurementPortTypeIdCondition;
 
 	ActionParameterTypeBinding(final Identifier id,
@@ -118,6 +182,17 @@ public final class ActionParameterTypeBinding extends StorableObject implements 
 		}
 	}
 
+	/**
+	 * Создать новый экземпляр.
+	 * 
+	 * @param creatorId
+	 * @param parameterValueKind
+	 * @param parameterTypeId
+	 * @param actionTypeId
+	 * @param measurementPortTypeId
+	 * @return Новый экземпляр измерительной связки.
+	 * @throws CreateObjectException
+	 */
 	public static ActionParameterTypeBinding createInstance(final Identifier creatorId,
 			final ParameterValueKind parameterValueKind,
 			final Identifier parameterTypeId,
@@ -177,32 +252,70 @@ public final class ActionParameterTypeBinding extends StorableObject implements 
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
-			
 
+	/**
+	 * Получить вид набора значений параметра для данной измерительной связки.
+	 * 
+	 * @return Вид набора значений параметра.
+	 */
 	public ParameterValueKind getParameterValueKind() {
 		return this.parameterValueKind;
 	}
 
+	/**
+	 * Получить идентификатор типа параметра.
+	 * 
+	 * @return Идентификатор типа параметра.
+	 */
 	public Identifier getParameterTypeId() {
 		return this.parameterTypeId;
 	}
 
+	/**
+	 * Получить тип параметра. Обёртка для {@link #getParameterTypeId()}.
+	 * 
+	 * @return Тип параметра.
+	 * @throws ApplicationException
+	 */
 	public ParameterType getParameterType() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.parameterTypeId, true);
 	}
 
+	/**
+	 * Получить идентификатор типа действия.
+	 * 
+	 * @return Идентификатор типа действия.
+	 */
 	public Identifier getActionTypeId() {
 		return this.actionTypeId;
 	}
 
+	/**
+	 * Получить тип действия. Обёртка для {@link #getActionTypeId()}.
+	 * 
+	 * @return Тип действия.
+	 * @throws ApplicationException
+	 */
 	public ActionType getActionType() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.actionTypeId, true);
 	}
 
+	/**
+	 * Получить идентификатор типа измерительного порта.
+	 * 
+	 * @return Идентификатор типа измерительного порта.
+	 */
 	public Identifier getMeasurementPortTypeId() {
 		return this.measurementPortTypeId;
 	}
 
+	/**
+	 * Получить тип измерительного порта. Обёртка для
+	 * {@link #getMeasurementPortTypeId()}.
+	 * 
+	 * @return Тип измерительного порта.
+	 * @throws ApplicationException
+	 */
 	public MeasurementPortType getMeasurementPortType() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.measurementPortTypeId, true);
 	}
@@ -253,6 +366,13 @@ public final class ActionParameterTypeBinding extends StorableObject implements 
 		return ActionParameterTypeBindingWrapper.getInstance();
 	}
 
+	/**
+	 * Получить все существующие параметры действия для данной измерительной
+	 * связки.
+	 * 
+	 * @return Набор параметров для данной измерительной связки.
+	 * @throws ApplicationException
+	 */
 	public Set<ActionParameter> getActionParameters() throws ApplicationException {
 		if (this.actionParameterCondition == null) {
 			this.actionParameterCondition = new LinkedIdsCondition(this, ACTIONPARAMETER_CODE);
@@ -261,6 +381,16 @@ public final class ActionParameterTypeBinding extends StorableObject implements 
 		return StorableObjectPool.getStorableObjectsByCondition(this.actionParameterCondition, true);
 	}
 
+	/**
+	 * Найти все измерительные связки для данного типа действия и данного типа
+	 * измерительного порта.
+	 * 
+	 * @param actionType
+	 * @param measurementPortType
+	 * @return Набор измерительных связок для данного типа действия и данного
+	 *         типа измерительного порта.
+	 * @throws ApplicationException
+	 */
 	public static Set<ActionParameterTypeBinding> getValues(final ActionType actionType,
 			final MeasurementPortType measurementPortType) throws ApplicationException {
 		assert actionType != null : NON_NULL_EXPECTED;
@@ -269,6 +399,16 @@ public final class ActionParameterTypeBinding extends StorableObject implements 
 		return getValues(actionType.getId(), measurementPortType.getId());
 	}
 
+	/**
+	 * Найти все измерительные связки для данного типа действия и данного типа
+	 * измерительного порта.
+	 * 
+	 * @param actionTypeId
+	 * @param measurementPortTypeId
+	 * @return Набор измерительных связок для данного типа действия и данного
+	 *         типа измерительного порта.
+	 * @throws ApplicationException
+	 */
 	public static Set<ActionParameterTypeBinding> getValues(final Identifier actionTypeId,
 			final Identifier measurementPortTypeId) throws ApplicationException {
 		assert actionTypeId != null : NON_NULL_EXPECTED;
@@ -295,6 +435,19 @@ public final class ActionParameterTypeBinding extends StorableObject implements 
 		return StorableObjectPool.getStorableObjectsByCondition(condition, true);
 	}
 
+	/**
+	 * Найти измерительную связку по заданным типу параметра, типу действия и
+	 * типу измерительного порта.
+	 * 
+	 * @param parameterType
+	 * @param actionType
+	 * @param measurementPortType
+	 * @return Измерительную связку для заданных типа параметра, типа действия и
+	 *         типа измерительного порта.
+	 * @throws ApplicationException
+	 *         {@link CreateObjectException}, если такой объект не найден;
+	 *         {@link ApplicationException} в случае ошибки поиска.
+	 */
 	public static ActionParameterTypeBinding valueOf(final ParameterType parameterType,
 			final ActionType actionType,
 			final MeasurementPortType measurementPortType) throws ApplicationException {
@@ -305,6 +458,19 @@ public final class ActionParameterTypeBinding extends StorableObject implements 
 		return valueOf(parameterType.getId(), actionType.getId(), measurementPortType.getId());
 	}
 
+	/**
+	 * Найти измерительную связку по заданным типу параметра, типу действия и
+	 * типу измерительного порта.
+	 * 
+	 * @param parameterTypeId
+	 * @param actionTypeId
+	 * @param measurementPortTypeId
+	 * @return Измерительную связку для заданных типа параметра, типа действия и
+	 *         типа измерительного порта.
+	 * @throws ApplicationException
+	 *         {@link CreateObjectException}, если такой объект не найден;
+	 *         {@link ApplicationException} в случае ошибки поиска.
+	 */
 	public static ActionParameterTypeBinding valueOf(final Identifier parameterTypeId,
 			final Identifier actionTypeId,
 			final Identifier measurementPortTypeId) throws ApplicationException {

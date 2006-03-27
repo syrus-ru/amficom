@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.74.2.9 2006/03/17 10:10:41 arseniy Exp $
+ * $Id: ParameterType.java,v 1.74.2.10 2006/03/27 14:52:24 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,8 +33,13 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
+
 /**
- * @version $Revision: 1.74.2.9 $, $Date: 2006/03/17 10:10:41 $
+ * Тип параметра. Описывается типом данных и единицами измерения. Кодовые имена
+ * типов параметров для рефлектометрических измерений см. в
+ * ReflectometryParameterTypeCodename.
+ * 
+ * @version $Revision: 1.74.2.10 $, $Date: 2006/03/27 14:52:24 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -42,9 +47,21 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 public final class ParameterType extends StorableObjectType implements IdlTransferableObjectExt<IdlParameterType> {
 	private static final long serialVersionUID = -2843753663001680790L;
 
+	/**
+	 * Тип данных.
+	 */
 	private DataType dataType;
+
+	/**
+	 * Единицы измерения.
+	 */
 	private MeasurementUnit measurementUnit;
 
+
+	/**
+	 * Условие для поиска параметра по кодовому имени. См.
+	 * {@link #valueOf(String)}.
+	 */
 	private static TypicalCondition codenameCondition;
 
 	ParameterType(final Identifier id,
@@ -77,6 +94,17 @@ public final class ParameterType extends StorableObjectType implements IdlTransf
 		}
 	}
 
+	/**
+	 * Создать новый экземпляр.
+	 * 
+	 * @param creatorId
+	 * @param codename
+	 * @param description
+	 * @param dataType
+	 * @param measurementUnit
+	 * @return Новый экземпляр.
+	 * @throws CreateObjectException
+	 */
 	public static ParameterType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description,
@@ -105,10 +133,20 @@ public final class ParameterType extends StorableObjectType implements IdlTransf
 		}
 	}
 
+	/**
+	 * Получить тип данных.
+	 * 
+	 * @return Тип данных
+	 */
 	public DataType getDataType() {
 		return this.dataType;
 	}
 
+	/**
+	 * Получить единицы измерения.
+	 * 
+	 * @return единицы измерения.
+	 */
 	public MeasurementUnit getMeasurementUnit() {
 		return this.measurementUnit;
 	}
@@ -162,6 +200,16 @@ public final class ParameterType extends StorableObjectType implements IdlTransf
 		return ParameterTypeWrapper.getInstance();
 	}
 
+	/**
+	 * Найти тип параметра для заданного кодового имени.
+	 * 
+	 * @param codename
+	 *        Кодовое имя
+	 * @return Тип параметра, соответствующиий заданному кодовому имени.
+	 * @throws ApplicationException
+	 *         {@link CreateObjectException}, если такой объект не найден;
+	 *         {@link ApplicationException} в случае ошибки поиска.
+	 */
 	public static ParameterType valueOf(final String codename) throws ApplicationException {
 		assert codename != null : NON_NULL_EXPECTED;
 
@@ -183,9 +231,11 @@ public final class ParameterType extends StorableObjectType implements IdlTransf
 	}
 
 	/**
-	 * Create Map codename-identifier.
+	 * Создать карту, где по ключу - кодовое имя, а по величине - идентификатор
+	 * типа параметра, соответствующего этому кодовому имени.
+	 * 
 	 * @param codenames
-	 * @return Unmodifiable Map<String codename, Identifier id>
+	 * @return Неизменяемая карта вида <String codename, Identifier id>
 	 * @throws ApplicationException
 	 */
 	public static Map<String, Identifier> getCodenameIdentifierMap(final Set<String> codenames) throws ApplicationException {
@@ -195,7 +245,7 @@ public final class ParameterType extends StorableObjectType implements IdlTransf
 			return Collections.emptyMap();
 		}
 
-		//Slightly optimized case
+		/* В случае одного объекта поиск слегка шустрее. */
 		if (codenames.size() == 1) {
 			final String codename = codenames.iterator().next();
 			final TypicalCondition condition = new TypicalCondition(codename,
@@ -232,10 +282,13 @@ public final class ParameterType extends StorableObjectType implements IdlTransf
 	}
 
 	/**
-	 * Create Map codename-identifier.
-	 * NOTE: This method assumes, that array of codenames is unique.
+	 * Создать карту, где по ключу - кодовое имя, а по величине - идентификатор
+	 * типа параметра, соответствующего этому кодовому имени. Этот метод
+	 * предполагает, что массив кодовых имён <code>codenames</code> не
+	 * содержит повторяющихся значений.
+	 * 
 	 * @param codenames
-	 * @return Unmodifiable Map<String codename, Identifier id>
+	 * @return Неизменяемая карта вида <String codename, Identifier id>
 	 * @throws ApplicationException
 	 */
 	public static Map<String, Identifier> getCodenameIdentifierMap(final String[] codenames) throws ApplicationException {

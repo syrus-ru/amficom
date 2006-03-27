@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameter.java,v 1.1.2.14 2006/03/22 16:50:11 arseniy Exp $
+ * $Id: ActionParameter.java,v 1.1.2.15 2006/03/27 14:51:39 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionParameterHelper;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
+
 /**
- * @version $Revision: 1.1.2.14 $, $Date: 2006/03/22 16:50:11 $
+ * Параметр действия. Всегда имеет свою измерительную связку
+ * {@link com.syrus.AMFICOM.measurement.ActionParameterTypeBinding},
+ * идентификатор которй хранится в {@link #bindingId}.
+ * 
+ * @version $Revision: 1.1.2.15 $, $Date: 2006/03/27 14:51:39 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -47,11 +52,27 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 public final class ActionParameter extends Parameter implements IdlTransferableObjectExt<IdlActionParameter> {
 	private static final long serialVersionUID = -7695430559152990049L;
 
+	/**
+	 * Идентификатор измерительной связки.
+	 */
 	private Identifier bindingId;
 
-	/*	Cached fields*/
+
+	/**
+	 * Вид набора значений данного параметра. Используется в
+	 * {@link #getValueKind()}.
+	 */
 	private transient ParameterValueKind valueKind;
+
+	/**
+	 * Идентификатор типа данного параметра. Используется в {@link #getTypeId()}.
+	 */
 	private transient Identifier typeId;
+
+	/**
+	 * Кодовое имя типа данного параметра. Используется в
+	 * {@link #getTypeCodename()}.
+	 */
 	private transient String typeCodename;
 
 	ActionParameter(final Identifier id,
@@ -72,14 +93,16 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 	}
 
 	/**
-	 * Create new instance.
-	 * This method always check, if parameter value kind
-	 * for the binding supplied is not ENUMERATED.
+	 * Создать новый экземпляр. Именно этот метод и должны использовать конечные
+	 * пользователи. Он всегда проверяет вид набора значений данного параметра.
+	 * Если этот вид перечисляемый
+	 * {@link com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind#ENUMERATED},
+	 * то возбуждается исключение {@link CreateObjectException}.
 	 * 
 	 * @param creatorId
 	 * @param value
 	 * @param bindingId
-	 * @return New instance.
+	 * @return Новый экземпляр
 	 * @throws CreateObjectException
 	 */
 	public static ActionParameter createInstance(final Identifier creatorId, final byte[] value, final Identifier bindingId)
@@ -88,13 +111,16 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 	}
 
 	/**
-	 * Create new instance.
+	 * Создать новый экземпляр. Этот метод не должен использоваться конечными
+	 * пользователями, поскольку оставляет возможность создавать параметры для
+	 * перечисляемых наборов значений. Такие параметры должны создаваться только
+	 * на этапе установки системы.
 	 * 
 	 * @param creatorId
 	 * @param value
 	 * @param bindingId
 	 * @param checkValueKind
-	 * @return New instance.
+	 * @return Новый экземпляр
 	 * @throws CreateObjectException
 	 */
 	public static ActionParameter createInstance(final Identifier creatorId,
@@ -173,6 +199,9 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 		return this.bindingId;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	@Override
 	public Identifier getTypeId() throws ApplicationException {
 		if (this.typeId == null) {
@@ -182,6 +211,9 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 		return this.typeId;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	@Override
 	public String getTypeCodename() throws ApplicationException {
 		if (this.typeCodename == null) {
@@ -192,6 +224,12 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 		return this.typeCodename;
 	}
 
+	/**
+	 * Получить вид набора значений данного параметра.
+	 * 
+	 * @return Вид набора значений данного параметра
+	 * @throws ApplicationException
+	 */
 	public ParameterValueKind getValueKind() throws ApplicationException {
 		if (this.valueKind == null) {
 			final ActionParameterTypeBinding actionParameterTypeBinding = StorableObjectPool.getStorableObject(this.bindingId, true);
@@ -218,12 +256,28 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 		return ActionParameterWrapper.getInstance();
 	}
 
+	/**
+	 * Найти все параметры действия для данной измерительной связки. См. также
+	 * {@link ActionParameterTypeBinding#getActionParameters()}
+	 * 
+	 * @param actionParameterTypeBinding
+	 * @return Все параметры действия для данной измерительной связки
+	 * @throws ApplicationException
+	 */
 	public static Set<ActionParameter> getValues(final ActionParameterTypeBinding actionParameterTypeBinding) throws ApplicationException {
 		assert actionParameterTypeBinding != null : NON_NULL_EXPECTED;
 
 		return actionParameterTypeBinding.getActionParameters();
 	}
 
+	/**
+	 * Найти все параметры действия для данной измерительной связки. См. также
+	 * {@link ActionParameterTypeBinding#getActionParameters()}
+	 * 
+	 * @param actionParameterTypeBindingId
+	 * @return Все параметры действия для данной измерительной связки
+	 * @throws ApplicationException
+	 */
 	public static Set<ActionParameter> getValues(final Identifier actionParameterTypeBindingId) throws ApplicationException {
 		assert actionParameterTypeBindingId != null : NON_NULL_EXPECTED;
 		assert actionParameterTypeBindingId.getMajor() == ACTIONPARAMETERTYPEBINDING_CODE : ILLEGAL_ENTITY_CODE;
