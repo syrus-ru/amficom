@@ -1,5 +1,5 @@
  /*-
- * $$Id: MarkerController.java,v 1.48 2006/03/09 13:18:59 stas Exp $$
+ * $$Id: MarkerController.java,v 1.49 2006/03/27 14:44:49 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,13 +27,10 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.resource.DoublePoint;
@@ -45,7 +42,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер маркера.
  * 
- * @version $Revision: 1.48 $, $Date: 2006/03/09 13:18:59 $
+ * @version $Revision: 1.49 $, $Date: 2006/03/27 14:44:49 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -522,8 +519,8 @@ public class MarkerController extends AbstractNodeController {
 									MarkerEvent.MARKER_CREATED_EVENT,
 									marker.getId(),
 									getFromStartLengthLo(marker),
-									marker.getMeasurementPath().getSchemePath()
-											.getId(),
+									null,
+									marker.getMeasurementPath().getSchemePath().getId(),
 									marker.getMonitoringElementId()));
 		} catch(Exception e) {
 			Log.errorMessage(e);
@@ -537,10 +534,7 @@ public class MarkerController extends AbstractNodeController {
 	public void notifyMarkerDeleted(final Marker marker) {
 		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MarkerEvent(this,
 				MarkerEvent.MARKER_DELETED_EVENT,
-				marker.getId(),
-				0.0D,
-				marker.getMeasurementPath().getSchemePath().getId(),
-				marker.getMonitoringElementId()));
+				marker.getId()));
 	}
 
 	/**
@@ -551,11 +545,13 @@ public class MarkerController extends AbstractNodeController {
 	 */
 	public void notifyMarkerMoved(final Marker marker) throws MapConnectionException, MapDataException {
 		try {
+			final SchemePath schemePath = marker.getMeasurementPath().getSchemePath();
 			this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MarkerEvent(this,
 					MarkerEvent.MARKER_MOVED_EVENT,
 					marker.getId(),
-					marker.getMeasurementPath().getSchemePath().getOpticalDistance(marker.getPhysicalDistance()),
-					marker.getMeasurementPath().getSchemePath().getId(),
+					schemePath.getOpticalDistance(marker.getPhysicalDistance()),
+					null, 
+					schemePath.getId(),
 					marker.getMonitoringElementId()));
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
