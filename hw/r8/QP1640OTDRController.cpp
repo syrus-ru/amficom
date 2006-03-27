@@ -86,11 +86,11 @@ BOOL QP1640OTDRController::setMeasurementParameters(const Parameter** parameters
 			delete bValue;
 		} else if (strcmp(parameterName, PARAMETER_NAME_FLAG_GAIN_SPLICE_ON) == 0) {
 			bValue = parameters[i]->getValue()->getReversed();
-			flagGainSpliceOn = *(int*)(bValue->getData());
+			flagGainSpliceOn = (*(char*) bValue->getData() == 0) ? 0 : 1;
 			delete bValue;
 		} else if (strcmp(parameterName, PARAMETER_NAME_FLAG_LIVE_FIBER_DETECT) == 0) {
 			bValue = parameters[i]->getValue()->getReversed();
-			flagLiveFiberDetect = *(int*)(bValue->getData());
+			flagLiveFiberDetect = (*(char*) bValue->getData() == 0) ? 0 : 1;
 			delete bValue;
 		} else {
 			printf("QP1640OTDRController | Unknown name of parameter: %s\n", parameterName);

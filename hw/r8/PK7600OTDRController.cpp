@@ -121,7 +121,7 @@ BOOL PK7600OTDRController::setMeasurementParameters(const Parameter** parameters
 			delete bValue;
 		} else if (strcmp(parameterName, PARAMETER_NAME_FLAG_SMOOTH_FILTER) == 0) {
 			bValue = parameters[i]->getValue()->getReversed();
-			smoothFilter = (*(int*) bValue->getData() == 0) ? 0 : 1;
+			smoothFilter = (*(char*) bValue->getData() == 0) ? 0 : 1;
 			delete bValue;
 		} else {
 			printf("PK7600OTDRController | Unknown name of parameter: %s\n", parameterName);
