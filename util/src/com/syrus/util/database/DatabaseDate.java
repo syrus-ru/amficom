@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseDate.java,v 1.20 2005/10/31 12:29:58 bass Exp $
+ * $Id: DatabaseDate.java,v 1.21 2006/03/27 11:27:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/10/31 12:29:58 $
+ * @version $Revision: 1.21 $, $Date: 2006/03/27 11:27:17 $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -30,6 +30,18 @@ public class DatabaseDate {
 		assert false;
 	}
 
+	/**
+	 * <p>WARNING: prior to migration to
+	 * {@link java.sql.ResultSet#getTimestamp(String)} database schemas
+	 * should be updated in order to reference TIMESTAMP, not DATE. This
+	 * is not an easy task and requires a tool for schema alteration
+	 * to be written.</p>
+	 * 
+	 * <p>Currently, blind migration would result in an
+	 * {@code IllegalArgumentException} at {@link java.sql.Timestamp#valueOf(String)}.</p>
+	 * 
+	 * @see <a href = "http://ararat.science.syrus.ru/cgi-bin/bugzilla/show_bug.cgi?id=525">bug #525</a> 
+	 */
 	public static Date fromQuerySubString(final ResultSet resultSet, final String column) throws SQLException {
 		Date date = null;
 		try {
@@ -37,7 +49,7 @@ public class DatabaseDate {
 			if (dateStr != null) {
 				date = SDF.parse(dateStr);
 			}
-		} catch (ParseException pe) {
+		} catch (final ParseException pe) {
 			Log.errorMessage("parse exception '" + pe.getMessage() + '\'');
 		}
 		return date;
