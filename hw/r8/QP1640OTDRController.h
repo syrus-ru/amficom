@@ -71,6 +71,8 @@ class QP1640OTDRController : public OTDRController {
 		 * 	Реализация виртуальной функции класса OTDRController.*/
 		BellcoreStructure* runMeasurement() const;
 
+		/*	Заполнить объект Белкор данными, полученными с рефлектометра.
+		 * 	Предназначена для вызова из #runMeasurement().*/
 		void fillBellcoreStructure(BellcoreStructure* bellcoreStructure,
 			QPOTDRWaveformHeader* waveFormHeader,
 			QPOTDRWaveformData*  waveFormData) const;

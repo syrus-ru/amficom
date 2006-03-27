@@ -68,6 +68,8 @@ class PK7600OTDRController : public OTDRController {
 		 * 	Реализация виртуальной функции класса OTDRController.*/
 		BellcoreStructure* runMeasurement() const;
 
+		/*	Заполнить объект Белкор данными, полученными с рефлектометра.
+		 * 	Предназначена для вызова из #runMeasurement().*/
 		void fillBellcoreStructure(BellcoreStructure* bellcoreStructure,
 			OTDRWaveformHeader* waveFormHeader,
 			OTDRWaveformData*  waveFormData) const;
