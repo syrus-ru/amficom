@@ -1,5 +1,5 @@
 /*-
- * $Id: EnumUtil.java,v 1.8.6.1 2006/03/17 08:06:45 bass Exp $
+ * $Id: EnumUtil.java,v 1.8.6.2 2006/03/27 10:09:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.8.6.1 $, $Date: 2006/03/17 08:06:45 $
+ * @version $Revision: 1.8.6.2 $, $Date: 2006/03/27 10:09:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -20,21 +20,11 @@ import java.util.Map;
 public final class EnumUtil {
 	private static final String VALUE_OF_METHOD_NAME = "valueOf";
 
-	private static final Map<Class, Method> VALUE_OF_METHODS = new HashMap<Class, Method>();
+	private static final Map<Class<?>, Method> VALUE_OF_METHODS = new HashMap<Class<?>, Method>();
 
 	private EnumUtil() {
 		//singleton
 		assert false;
-	}
-
-	/**
-	 * @param e
-	 * @return {@link Enum#ordinal()}
-	 * @deprecated removed in HEAD revision.
-	 */
-	@Deprecated
-	public static int getCode(final Enum<?> e) {
-		return e.ordinal();
 	}
 
 	public static <E extends Enum<E>> E valueOf(final Class<E> enumClass, final int intValue) {
@@ -49,18 +39,19 @@ public final class EnumUtil {
 		}
 
 		try {
-			return (E) valueOfMethod.invoke(null, new Integer(intValue));
-		} catch (Exception e) {
+			@SuppressWarnings("unchecked")
+			final E e = (E) valueOfMethod.invoke(null, Integer.valueOf(intValue));
+			return e;
+		} catch (final Exception e) {
 			Log.errorMessage(e);
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
-			
 	}
 
-	private static Method reflectMethodFromInt(final Class enumClass) {
+	private static Method reflectMethodFromInt(final Class<? extends Enum<?>> enumClass) {
 		try {
 			return enumClass.getDeclaredMethod(VALUE_OF_METHOD_NAME, int.class);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
 	}
