@@ -80,9 +80,9 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 					MarkerEvent.MARKER_CREATED_EVENT,
 					m.getId(),
 					m.pos * this.deltaX,
+					null, 
 					this.scheme_path_id,
-					this.monitored_element_id
-					);
+					this.monitored_element_id);
 			if(true)
 			{
 //				mne.spd = new SchemePathDecompositor();
@@ -93,10 +93,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 			this.dispatcher.firePropertyChange(mne);
 			this.dispatcher.firePropertyChange(new MarkerEvent(this,
 					MarkerEvent.MARKER_SELECTED_EVENT,
-					m.getId(), 
-					m.pos * this.deltaX, 
-					this.scheme_path_id, 
-					this.monitored_element_id));
+					m.getId()));
 
 			return;
 		}
@@ -116,7 +113,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 					}
 					active_marker = m;
 					dispatcher.firePropertyChange(new MarkerEvent(this, MarkerEvent.MARKER_SELECTED_EVENT,
-														 m.getId(), m.pos * deltaX, scheme_path_id, monitored_element_id));
+														 m.getId()));
 				}
 			}
 		}
@@ -156,6 +153,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 				MarkerEvent.MARKER_MOVED_EVENT,
 			active_marker.getId(),
 			active_marker.pos * deltaX,
+			null,
 			scheme_path_id,
 			monitored_element_id));
 	}
@@ -291,10 +289,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 				MarkerEvent mne = new MarkerEvent(
 						this,
 						MarkerEvent.MARKER_DELETED_EVENT,
-						m.getId(),
-						m.pos * deltaX,
-						scheme_path_id,
-						monitored_element_id);
+						m.getId());
 //				mne.setDescriptor("refevent");
 				dispatcher.firePropertyChange(mne);
 				deleteMarker(m);
@@ -395,10 +390,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 		MarkerEvent mne = new MarkerEvent(
 				this,
 				MarkerEvent.MARKER_DELETED_EVENT,
-				m.getId(),
-				m.pos * deltaX,
-				scheme_path_id,
-				monitored_element_id);
+				m.getId());
 		dispatcher.firePropertyChange(mne);
 		return m;
 	}
