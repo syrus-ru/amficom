@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryParameterTypeCodename.java,v 1.1.2.1 2006/02/22 08:50:40 arseniy Exp $
+ * $Id: ReflectometryParameterTypeCodename.java,v 1.1.2.2 2006/03/27 05:40:47 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.reflectometry;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/22 08:50:40 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/03/27 05:40:47 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module reflectometry
@@ -24,6 +24,7 @@ public enum ReflectometryParameterTypeCodename {
 	FLAG_PULSE_WIDTH_LOW_RES("ref_flag_pulswd_low_res"),
 	FLAG_GAIN_SPLICE_ON("ref_flag_gain_splice_on"),
 	FLAG_LIFE_FIBER_DETECT("ref_flag_life_fiber_detect"),
+	FLAG_SMOOTH_FILTER("ref_flag_smooth_filter"),
 
 	REFLECTOGRAMMA("reflectogramma"),
 
