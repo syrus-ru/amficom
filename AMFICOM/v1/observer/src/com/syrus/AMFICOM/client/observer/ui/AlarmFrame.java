@@ -44,12 +44,10 @@ import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.newFilter.ConditionKey;
@@ -129,27 +127,10 @@ public class AlarmFrame extends JInternalFrame {
 						
 						Identifier meId = m.getMonitoredElementId();
 						PathElement pe = StorableObjectPool.getStorableObject(lineMismatchEvent.getAffectedPathElementId(), true);
-						SchemePath path = null;
-						
-						if (pe == null) {
-							MonitoredElement me = StorableObjectPool.getStorableObject(meId, true);
-							Set<Identifier> tpathIds = me.getMonitoredDomainMemberIds();
-							
-							if (!tpathIds.isEmpty()) {
-								Set<SchemePath> schemePaths = StorableObjectPool.getStorableObjectsByCondition(
-										new LinkedIdsCondition(tpathIds.iterator().next(), ObjectEntities.SCHEMEPATH_CODE), true);
-								
-								if (!schemePaths.isEmpty()) {
-									path = schemePaths.iterator().next();
-									pe = path.getPathElementByOpticalDistance(optDistance);
-								}
-							}
-						} else {
-							path = pe.getParentPathOwner();
-						}
+						SchemePath path = pe.getParentPathOwner();
 						
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-								lmeId, optDistance, pe.getId(), meId);
+								lmeId, optDistance, pe.getId(), path.getId(), meId);
 
 						AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
 						AlarmFrame.this.table.setSelectedValue(lineMismatchEvent);
@@ -226,25 +207,27 @@ public class AlarmFrame extends JInternalFrame {
 					AbstractReflectogramMismatchEvent rmEvent2 = StorableObjectPool.getStorableObject(rme2Id, true);
 					
 					final ApplicationContext aContext1 = AlarmFrame.this.aContext;
+					
 					if (!firstb) {
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-								lmEvent1.getId(), lmEvent1.getMismatchOpticalDistance(),  
-								lmEvent1.getAffectedPathElementId(), rmEvent1.getMonitoredElementId());
+								lmEvent1.getId());
 
 						aContext1.getDispatcher().firePropertyChange(mEvent);
 					}
 					if (!lastb && first != last) {
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-								lmEvent2.getId(), lmEvent2.getMismatchOpticalDistance(), 
-								lmEvent2.getAffectedPathElementId(), rmEvent2.getMonitoredElementId());
+								lmEvent2.getId());
 
 						aContext1.getDispatcher().firePropertyChange(mEvent);
 					}
 					
 					if (firstb) {
+						final Identifier affectedPathElementId = lmEvent1.getAffectedPathElementId();
+						PathElement pe = StorableObjectPool.getStorableObject(affectedPathElementId, true);
+						SchemePath path = pe.getParentPathOwner();
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
 								lmEvent1.getId(), lmEvent1.getMismatchOpticalDistance(), 
-								lmEvent1.getAffectedPathElementId(), rmEvent1.getMonitoredElementId());
+								affectedPathElementId, path.getId(), rmEvent1.getMonitoredElementId());
 
 						//	notify about measurement
 						Result result = StorableObjectPool.getStorableObject(rmEvent1.getResultId(), true);
@@ -256,9 +239,12 @@ public class AlarmFrame extends JInternalFrame {
 						aContext1.getDispatcher().firePropertyChange(mEvent);
 					} 
 					if (lastb && first != last) {
+						final Identifier affectedPathElementId2 = lmEvent2.getAffectedPathElementId();
+						PathElement pe = StorableObjectPool.getStorableObject(affectedPathElementId2, true);
+						SchemePath path = pe.getParentPathOwner();
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
 								lmEvent2.getId(), lmEvent2.getMismatchOpticalDistance(), 
-								lmEvent2.getAffectedPathElementId(), rmEvent2.getMonitoredElementId());
+								affectedPathElementId2, path.getId(), rmEvent2.getMonitoredElementId());
 						
 						// notify about measurement
 						Result result = StorableObjectPool.getStorableObject(rmEvent2.getResultId(), true);
@@ -396,6 +382,7 @@ public class AlarmFrame extends JInternalFrame {
 		try {
 			Set<AbstractLineMismatchEvent> limeMismatchEvents = StorableObjectPool.getStorableObjectsByCondition(condition , true);
 			this.model.setValues(limeMismatchEvents);
+			this.model.sortRows(0, this.model.getSortOrder(0));
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
 		}
@@ -430,34 +417,19 @@ public class AlarmFrame extends JInternalFrame {
 		AbstractLineMismatchEvent lmEvent = this.model.getObject(this.table.getSelectedRow());
 		this.table.setSelectedValue(null);
 		
-		try {
-			Identifier rme1Id = lmEvent.getReflectogramMismatchEventId();
-			AbstractReflectogramMismatchEvent rmEvent = StorableObjectPool.getStorableObject(rme1Id, true);
-			MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-					lmEvent.getId(), lmEvent.getMismatchOpticalDistance(), 
-					lmEvent.getAffectedPathElementId(), rmEvent.getMonitoredElementId());
-			this.aContext.getDispatcher().firePropertyChange(mEvent2);
-		} catch (ApplicationException e1) {
-			Log.errorMessage(e1);
-		}
+		MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
+				lmEvent.getId());
+		this.aContext.getDispatcher().firePropertyChange(mEvent2);
 	}
 
 	void buttonDelete_actionPerformed(ActionEvent e) {
 		AbstractLineMismatchEvent lmEvent = this.model.getObject(this.table.getSelectedRow());
 		this.table.setSelectedValue(null);
 		this.model.removeObject(lmEvent);
-		
-		try {
-			Identifier rme1Id = lmEvent.getReflectogramMismatchEventId();
-			AbstractReflectogramMismatchEvent rmEvent = StorableObjectPool.getStorableObject(rme1Id, true);
-			MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-					lmEvent.getId(),
-					lmEvent.getMismatchOpticalDistance(), lmEvent.getAffectedPathElementId(),
-					rmEvent.getMonitoredElementId());
-			this.aContext.getDispatcher().firePropertyChange(mEvent2);
-		} catch (ApplicationException e1) {
-			Log.errorMessage(e1);
-		}
+
+		MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
+				lmEvent.getId());
+		this.aContext.getDispatcher().firePropertyChange(mEvent2);
 	}
 
 	void filterButton_actionPerformed(ActionEvent e) {
