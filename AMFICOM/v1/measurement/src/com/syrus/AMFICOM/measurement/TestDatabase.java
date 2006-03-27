@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.137 2005/12/02 11:24:09 bass Exp $
+ * $Id: TestDatabase.java,v 1.138 2006/03/27 10:10:07 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.137 $, $Date: 2005/12/02 11:24:09 $
+ * @version $Revision: 1.138 $, $Date: 2006/03/27 10:10:07 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -110,8 +110,8 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 			+ ((startTime != null) ? DatabaseDate.toUpdateSubString(startTime) : SQL_NULL ) + COMMA
 			+ ((endTime != null) ? DatabaseDate.toUpdateSubString(endTime) : SQL_NULL ) + COMMA
 			+ DatabaseIdentifier.toSQLString(test.getTemporalPatternId()) + COMMA
-			+ Integer.toString(test.getMeasurementType().getCode()) + COMMA
-			+ Integer.toString(test.getAnalysisType().getCode()) + COMMA
+			+ Integer.toString(test.getMeasurementType().ordinal()) + COMMA
+			+ Integer.toString(test.getAnalysisType().ordinal()) + COMMA
 			+ DatabaseIdentifier.toSQLString(test.getGroupTestId()) + COMMA
 			+ test.getStatus().value() + COMMA
 			+ DatabaseIdentifier.toSQLString(test.getMonitoredElement().getId()) + COMMA
@@ -138,8 +138,8 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 		preparedStatement.setTimestamp(++startParameterNumber, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
 		preparedStatement.setTimestamp(++startParameterNumber, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getTemporalPatternId());
-		preparedStatement.setInt(++startParameterNumber, storableObject.getMeasurementType().getCode());
-		preparedStatement.setInt(++startParameterNumber, storableObject.getAnalysisType().getCode());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getMeasurementType().ordinal());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getAnalysisType().ordinal());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getGroupTestId());
 		preparedStatement.setInt(++startParameterNumber, storableObject.getStatus().value());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMonitoredElement().getId());

@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.116 2006/01/19 14:27:15 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.117 2006/03/27 10:10:07 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.116 $, $Date: 2006/01/19 14:27:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.117 $, $Date: 2006/03/27 10:10:07 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -293,7 +293,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 				parameterType = parameter.getType();
 
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, parameterId);
-				preparedStatement.setInt(2, parameterType.getCode());
+				preparedStatement.setInt(2, parameterType.ordinal());
 				DatabaseIdentifier.setIdentifier(preparedStatement, 3, resultId);
 
 				Log.debugMessage("Inserting parameter " + parameterType.getDescription() + " for result " + resultId, Log.DEBUGLEVEL09);

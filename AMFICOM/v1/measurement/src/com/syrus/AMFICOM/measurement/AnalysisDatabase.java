@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.76 2006/01/26 15:15:35 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.77 2006/03/27 10:10:07 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2006/01/26 15:15:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.77 $, $Date: 2006/03/27 10:10:07 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -67,7 +67,7 @@ public final class AnalysisDatabase extends StorableObjectDatabase<Analysis> {
 
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final Analysis storableObject) throws IllegalDataException {
-		final String values = Integer.toString(storableObject.getType().getCode()) + COMMA
+		final String values = Integer.toString(storableObject.getType().ordinal()) + COMMA
 			+ DatabaseIdentifier.toSQLString(storableObject.getMonitoredElementId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(storableObject.getMeasurementId()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
@@ -78,7 +78,7 @@ public final class AnalysisDatabase extends StorableObjectDatabase<Analysis> {
 	@Override
 	protected int setEntityForPreparedStatementTmpl(final Analysis storableObject, final PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
-		preparedStatement.setInt(++startParameterNumber, storableObject.getType().getCode());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getType().ordinal());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMonitoredElementId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMeasurementId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);

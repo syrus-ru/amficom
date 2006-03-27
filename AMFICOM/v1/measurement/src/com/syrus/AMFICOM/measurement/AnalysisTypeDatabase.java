@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisTypeDatabase.java,v 1.110 2005/10/31 12:30:15 bass Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.111 2006/03/27 10:10:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.110 $, $Date: 2005/10/31 12:30:15 $
+ * @version $Revision: 1.111 $, $Date: 2006/03/27 10:10:07 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -51,7 +51,7 @@ public final class AnalysisTypeDatabase {
 			preparedStatement = connection.prepareStatement(sql);
 			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			for (final AnalysisType analysisType : AnalysisType.values()) {
-				preparedStatement.setInt(1, analysisType.getCode());
+				preparedStatement.setInt(1, analysisType.ordinal());
 				preparedStatement.setString(2, analysisType.getCodename());
 				Log.debugMessage("Inserting analysis type '" + analysisType.getCodename() + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();

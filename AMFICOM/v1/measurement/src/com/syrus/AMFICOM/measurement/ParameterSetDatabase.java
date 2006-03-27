@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.25 2005/12/02 11:24:09 bass Exp $
+ * $Id: ParameterSetDatabase.java,v 1.26 2006/03/27 10:10:07 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/12/02 11:24:09 $
+ * @version $Revision: 1.26 $, $Date: 2006/03/27 10:10:07 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -247,7 +247,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 				parameterType = parameter.getType();
 
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, parameterId);
-				preparedStatement.setInt(2, parameterType.getCode());
+				preparedStatement.setInt(2, parameterType.ordinal());
 				DatabaseIdentifier.setIdentifier(preparedStatement, 3, setId);
 
 				Log.debugMessage("Inserting parameter " + parameterType.getDescription() + " for set '" + setId + "'", Log.DEBUGLEVEL09);

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.55 2005/12/02 11:24:09 bass Exp $
+ * $Id: ModelingDatabase.java,v 1.56 2006/03/27 10:10:07 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/12/02 11:24:09 $
+ * @version $Revision: 1.56 $, $Date: 2006/03/27 10:10:07 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -65,7 +65,7 @@ public final class ModelingDatabase extends StorableObjectDatabase<Modeling> {
 
 	@Override
   protected String getUpdateSingleSQLValuesTmpl(final Modeling storableObject) throws IllegalDataException {
-  	final String values = Integer.toString(storableObject.getType().getCode()) + COMMA
+  	final String values = Integer.toString(storableObject.getType().ordinal()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getMonitoredElementId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getArgumentSet().getId()) + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE;
@@ -76,7 +76,7 @@ public final class ModelingDatabase extends StorableObjectDatabase<Modeling> {
 	protected int setEntityForPreparedStatementTmpl(final Modeling storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		preparedStatement.setInt(++startParameterNumber, storableObject.getType().getCode());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getType().ordinal());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMonitoredElementId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getArgumentSet().getId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);

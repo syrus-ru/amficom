@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementTypeDatabase.java,v 1.117 2005/10/31 12:30:15 bass Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.118 2006/03/27 10:10:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.117 $, $Date: 2005/10/31 12:30:15 $
+ * @version $Revision: 1.118 $, $Date: 2006/03/27 10:10:07 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -51,7 +51,7 @@ public final class MeasurementTypeDatabase {
 			preparedStatement = connection.prepareStatement(sql);
 			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			for (final MeasurementType measurementType : MeasurementType.values()) {
-				preparedStatement.setInt(1, measurementType.getCode());
+				preparedStatement.setInt(1, measurementType.ordinal());
 				preparedStatement.setString(2, measurementType.getCodename());
 				Log.debugMessage("Inserting measurement type '" + measurementType.getCodename() + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
