@@ -124,7 +124,7 @@ public class CountPredictedReflectogramm extends AbstractCommand {
 
 		Heap.putSecondaryTrace(tr);
 		Heap.setCurrentTrace(Heap.MODELED_TRACE_KEY);
-		Heap.setSecondaryTraceAsPrimary(Heap.MODELED_TRACE_KEY, true);
+		Heap.setSecondaryTraceAsPrimary(Heap.MODELED_TRACE_KEY, Heap.hasEtalon());
 		Heap.getPFTracePrimary();
 	}
 }
