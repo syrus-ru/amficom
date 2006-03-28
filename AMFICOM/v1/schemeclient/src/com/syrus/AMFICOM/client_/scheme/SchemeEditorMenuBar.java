@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMenuBar.java,v 1.13 2006/02/21 08:10:43 stas Exp $
+ * $Id: SchemeEditorMenuBar.java,v 1.14 2006/03/28 10:22:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.resource.LangModelScheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2006/02/21 08:10:43 $
+ * @version $Revision: 1.14 $, $Date: 2006/03/28 10:22:59 $
  * @module schemeclient
  */
 
@@ -56,8 +56,6 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		final JMenuItem menuPathEdit = new JMenuItem();
 		final JMenuItem menuPathSave = new JMenuItem();
 		final JMenuItem menuPathCancel = new JMenuItem();
-		final JMenuItem menuPathDelete = new JMenuItem();
-		final JMenuItem menuPathAutoCreate = new JMenuItem();
 
 		final JMenu menuReport = new JMenu();
 		final JMenuItem menuReportCreate = new JMenuItem();
@@ -139,28 +137,22 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		menuPathNew.setName("menuPathNew");
 		menuPathNew.setText(LangModelSchematics.getString("menuPathNew"));
 		menuPathNew.addActionListener(this.actionAdapter);
-		menuPathAutoCreate.setName("menuPathAutoCreate");
-		menuPathAutoCreate.setText(LangModelSchematics.getString("menuPathAutoCreate"));
-		menuPathAutoCreate.addActionListener(this.actionAdapter);
 		menuPathSave.setName("menuPathSave");
 		menuPathSave.setText(LangModelSchematics.getString("menuPathSave"));
 		menuPathSave.addActionListener(this.actionAdapter);
 		menuPathCancel.setName("menuPathCancel");
 		menuPathCancel.setText(LangModelSchematics.getString("menuPathCancel"));
 		menuPathCancel.addActionListener(this.actionAdapter);
-		menuPathDelete.setName("menuPathDelete");
-		menuPathDelete.setText(LangModelSchematics.getString("menuPathDelete"));
-		menuPathDelete.addActionListener(this.actionAdapter);
 		menuPathEdit.setName("menuPathEdit");
 		menuPathEdit.setText(LangModelSchematics.getString("menuPathEdit"));
 		menuPathEdit.addActionListener(this.actionAdapter);
+
 		menuPath.add(menuPathNew);
 		menuPath.add(menuPathEdit);
+		menuPath.addSeparator();
 		menuPath.add(menuPathSave);
-		menuPath.add(menuPathDelete);
+		menuPath.addSeparator();
 		menuPath.add(menuPathCancel);
-		//		menuPath.addSeparator();
-		menuPath.add(menuPathAutoCreate);
 
 		menuReport.setName("menuReport");
 		menuReport.setText(LangModelSchematics.getString("menuReport"));
@@ -247,14 +239,10 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 				menuPath.setEnabled(aModel.isEnabled("menuPath"));
 				menuPathNew.setVisible(aModel.isVisible("menuPathNew"));
 				menuPathNew.setEnabled(aModel.isEnabled("menuPathNew"));
-				menuPathAutoCreate.setVisible(aModel.isVisible("menuPathAutoCreate"));
-				menuPathAutoCreate.setEnabled(aModel.isEnabled("menuPathAutoCreate"));
 				menuPathSave.setVisible(aModel.isVisible("menuPathSave"));
 				menuPathSave.setEnabled(aModel.isEnabled("menuPathSave"));
 				menuPathCancel.setVisible(aModel.isVisible("menuPathCancel"));
 				menuPathCancel.setEnabled(aModel.isEnabled("menuPathCancel"));
-				menuPathDelete.setVisible(aModel.isVisible("menuPathDelete"));
-				menuPathDelete.setEnabled(aModel.isEnabled("menuPathDelete"));
 				menuPathEdit.setVisible(aModel.isVisible("menuPathEdit"));
 				menuPathEdit.setEnabled(aModel.isEnabled("menuPathEdit"));
 
