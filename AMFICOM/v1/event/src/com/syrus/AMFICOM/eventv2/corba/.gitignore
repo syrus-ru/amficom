@@ -11,6 +11,7 @@ IdlEvent.java
 IdlNotificationEvent.java
 IdlReflectogramMismatchEvent.java
 IdlLineMismatchEvent.java
+IdlMismatchContainer.java
 IdlEmailNotificationEvent.java
 IdlSmsNotificationEvent.java
 IdlPopupNotificationEvent.java
