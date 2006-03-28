@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.8.2.1 2006/03/28 15:11:25 bass Exp $
+ * $Id: EventQueue.java,v 1.8.2.2 2006/03/28 15:11:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8.2.1 $, $Date: 2006/03/28 15:11:25 $
+ * @version $Revision: 1.8.2.2 $, $Date: 2006/03/28 15:11:49 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -68,7 +68,7 @@ final class EventQueue extends SleepButWorkThread {
 				while (this.eventEqueue.isEmpty()) {
 					try {
 						this.wait(10000);
-					} catch (InterruptedException ie) {
+					} catch (final InterruptedException ie) {
 						Log.debugMessage(this.getName() + " -- interrupted", Log.DEBUGLEVEL07);
 					}
 				}
