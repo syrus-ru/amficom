@@ -1,10 +1,10 @@
 /*-
-* $Id: DeliveryAttributesXML.java,v 1.2 2006/03/15 15:47:20 arseniy Exp $
-*
-* Copyright ¿ 2005 Syrus Systems.
-* Dept. of Science & Technology.
-* Project: AMFICOM.
-*/
+ * $Id: DeliveryAttributesXML.java,v 1.3 2006/03/28 10:17:19 bass Exp $
+ *
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.event;
 
@@ -26,10 +26,9 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.AbstractStorableObjectXML;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
-
 /**
- * @version $Revision: 1.2 $, $Date: 2006/03/15 15:47:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2006/03/28 10:17:19 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module event
  */
@@ -45,7 +44,9 @@ public class DeliveryAttributesXML extends AbstractStorableObjectXML<DeliveryAtt
 	@Override
 	protected List<String> getKeysTmpl() {
 		if (keys == null) {
-			final String[] keysArray = new String[] { COLUMN_SEVERITY, LINKED_COLUMN_SYSTEM_USER_IDS, LINKED_COLUMN_ROLE_IDS };
+			final String[] keysArray = {COLUMN_SEVERITY, 
+					LINKED_COLUMN_SYSTEM_USER_IDS, 
+					LINKED_COLUMN_ROLE_IDS};
 			keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 		}
 		return keys;

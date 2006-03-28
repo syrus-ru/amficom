@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.28 2006/03/15 15:47:20 arseniy Exp $
+ * $Id: EventSourceDatabase.java,v 1.29 2006/03/28 10:17:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,12 @@
  */
 package com.syrus.AMFICOM.event;
 
+import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_EQUIPMENT_ID;
+import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_LINK_ID;
+import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_MCM_ID;
+import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_PORT_ID;
+import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_SOURCE_ENTITY_CODE;
+import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_TRANSMISSION_PATH_ID;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EVENTSOURCE_CODE;
@@ -14,18 +20,13 @@ import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
-import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_TRANSMISSION_PATH_ID;
-import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_EQUIPMENT_ID;
-import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_LINK_ID;
-import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_MCM_ID;
-import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_PORT_ID;
-import static com.syrus.AMFICOM.event.EventSourceWrapper.COLUMN_SOURCE_ENTITY_CODE;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,8 +41,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2006/03/15 15:47:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2006/03/28 10:17:19 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
@@ -208,7 +209,7 @@ public final class EventSourceDatabase extends StorableObjectDatabase<EventSourc
 		final EventSource eventSource = (storableObject == null)
 				? new EventSource(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						null)
 					: storableObject;
 		final short sourceEntityCode = resultSet.getShort(COLUMN_SOURCE_ENTITY_CODE);

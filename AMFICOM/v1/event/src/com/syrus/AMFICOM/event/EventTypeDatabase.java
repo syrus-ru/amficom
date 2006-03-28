@@ -1,5 +1,5 @@
 /*-
- * $Id: EventTypeDatabase.java,v 1.52 2006/03/15 15:47:20 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.53 2006/03/28 10:17:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,6 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID;
 import static com.syrus.AMFICOM.general.TableNames.EVENTTYPEUSERALERT;
 import static com.syrus.AMFICOM.general.TableNames.EVENTTYPPARTYPLINK;
 
@@ -43,10 +42,10 @@ import com.syrus.AMFICOM.general.DatabaseStorableObjectCondition;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
@@ -54,8 +53,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2006/03/15 15:47:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.53 $, $Date: 2006/03/28 10:17:19 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
@@ -73,8 +72,8 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
-				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
+			columns = COLUMN_CODENAME + COMMA
+				+ COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}
@@ -131,18 +130,18 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 		if ((eventTypes == null) || (eventTypes.isEmpty())) {
 			return;
 		}
-
-		final Map<Identifier, Set<Identifier>> eventParamaterTypesMap = this.retrieveLinkedEntityIds(eventTypes,
-				EVENTTYPPARTYPLINK,
-				LINK_COLUMN_EVENT_TYPE_ID,
-				LINK_COLUMN_PARAMETER_TYPE_ID);
-
-		for (final EventType eventType : eventTypes) {
-			final Identifier eventTypeId = eventType.getId();
-			final Set<Identifier> paramaterTypeIds = eventParamaterTypesMap.get(eventTypeId);
-
-			eventType.setParameterTypes0(paramaterTypeIds);
-		}
+//
+//		final Map<Identifier, Set<Identifier>> eventParamaterTypesMap = this.retrieveLinkedEntityIds(eventTypes,
+//				ObjectEntities.EVENTTYPPARTYPLINK,
+//				EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID,
+//				StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
+//
+//		for (final EventType eventType : eventTypes) {
+//			final Identifier eventTypeId = eventType.getId();
+//			final Set<Identifier> paramaterTypeIds = eventParamaterTypesMap.get(eventTypeId);
+//
+//			eventType.setParameterTypes0(paramaterTypeIds);
+//		}
 	}
 
 	private void retrieveUserAlertKindsByOneQuery(final Set<EventType> eventTypes) throws RetrieveObjectException {
@@ -257,16 +256,16 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			return;
 		}
 
-		final Map<Identifier, Set<Identifier>> parameterTypeIdsMap = new HashMap<Identifier, Set<Identifier>>();
+		final Map<Identifier, Set<ParameterType>> parameterTypeIdsMap = new HashMap<Identifier, Set<ParameterType>>();
 		for (final EventType eventType : eventTypes) {
-			final Set<Identifier> parameterTypeIds = eventType.getParameterTypeIds();
-			parameterTypeIdsMap.put(eventType.getId(), parameterTypeIds);
+			final Set<ParameterType> parameterTypes = eventType.getParameterTypes();
+			parameterTypeIdsMap.put(eventType.getId(), parameterTypes);
 		}
-
-		super.updateLinkedEntityIds(parameterTypeIdsMap,
-				EVENTTYPPARTYPLINK,
-				LINK_COLUMN_EVENT_TYPE_ID,
-				LINK_COLUMN_PARAMETER_TYPE_ID);
+//
+//		super.updateLinkedEntityIds(parameterTypeIdsMap,
+//				ObjectEntities.EVENTTYPPARTYPLINK,
+//				EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID,
+//				StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 	}
 
 	private void updateUserAlertKinds(final Set<EventType> eventTypes) throws UpdateObjectException {

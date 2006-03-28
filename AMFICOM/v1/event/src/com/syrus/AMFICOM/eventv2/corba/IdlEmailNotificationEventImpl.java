@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlEmailNotificationEventImpl.java,v 1.4 2005/12/06 09:42:28 bass Exp $
+ * $Id: IdlEmailNotificationEventImpl.java,v 1.5 2006/03/28 10:17:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.eventv2.DefaultEmailNotificationEvent;
 import com.syrus.AMFICOM.eventv2.EmailNotificationEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlEventPackage.IdlEventType;
 import com.syrus.AMFICOM.eventv2.corba.IdlNotificationEventPackage.IdlDeliveryMethod;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -21,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/12/06 09:42:28 $
+ * @version $Revision: 1.5 $, $Date: 2006/03/28 10:17:19 $
  * @module event
  */
 final class IdlEmailNotificationEventImpl extends IdlEmailNotificationEvent {
@@ -90,9 +91,14 @@ final class IdlEmailNotificationEventImpl extends IdlEmailNotificationEvent {
 	}
 
 	/**
+	 * @throws IdlCreateObjectException
 	 * @see IdlEvent#getNativeEvent()
 	 */
-	public EmailNotificationEvent getNativeEvent() {
-		return DefaultEmailNotificationEvent.valueOf(this);
+	public EmailNotificationEvent getNativeEvent() throws IdlCreateObjectException {
+		try {
+			return DefaultEmailNotificationEvent.valueOf(this);
+		} catch (final CreateObjectException coe) {
+			throw coe.getIdlTransferable();
+		}
 	}
 }

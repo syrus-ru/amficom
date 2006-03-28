@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultEmailNotificationEvent.java,v 1.5 2005/12/07 17:16:25 bass Exp $
+ * $Id: DefaultEmailNotificationEvent.java,v 1.6 2006/03/28 10:17:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,17 +15,17 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlEmailNotificationEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlEmailNotificationEventHelper;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/12/07 17:16:25 $
+ * @version $Revision: 1.6 $, $Date: 2006/03/28 10:17:19 $
  * @module event
  */
 public final class DefaultEmailNotificationEvent extends
 		AbstractEmailNotificationEvent {
-	private static final long serialVersionUID = -3744378922196321279L;
-
 	/**
 	 * @serial include 
 	 */
@@ -41,22 +41,28 @@ public final class DefaultEmailNotificationEvent extends
 	 */
 	private String message;
 
+	/**
+	 * @param emailNotificationEvent
+	 * @throws CreateObjectException
+	 */
 	private DefaultEmailNotificationEvent(
-			final IdlEmailNotificationEvent emailNotificationEvent) {
-		this.email = emailNotificationEvent.getEmail();
-		this.subject = emailNotificationEvent.getSubject();
-		this.message = emailNotificationEvent.getMessage();
+			final IdlEmailNotificationEvent emailNotificationEvent)
+	throws CreateObjectException {
+		try {
+			this.fromIdlTransferable(emailNotificationEvent);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
-	private DefaultEmailNotificationEvent(
-			final LineMismatchEvent lineMismatchEvent,
-			final String address,
+	private DefaultEmailNotificationEvent(final String address,
+			final String subject,
 			final String message) {
 		assert address != null : NON_NULL_EXPECTED;
 		assert address.length() != 0 : NON_EMPTY_EXPECTED;
 
 		this.email = address;
-		this.subject = lineMismatchEvent.getSeverity().getLocalizedName();
+		this.subject = subject;
 		this.message = message;
 	}
 
@@ -69,16 +75,25 @@ public final class DefaultEmailNotificationEvent extends
 				this.subject, this.message);
 	}
 
-	public static EmailNotificationEvent valueOf(
-			final IdlEmailNotificationEvent emailNotificationEvent) {
-		return new DefaultEmailNotificationEvent(emailNotificationEvent);
+	public void fromIdlTransferable(final IdlEmailNotificationEvent emailNotificationEvent)
+	throws IdlConversionException {
+		synchronized (this) {
+			this.email = emailNotificationEvent.getEmail();
+			this.subject = emailNotificationEvent.getSubject();
+			this.message = emailNotificationEvent.getMessage();
+		}
 	}
 
 	public static EmailNotificationEvent valueOf(
-			final LineMismatchEvent lineMismatchEvent,
-			final String address,
+			final IdlEmailNotificationEvent emailNotificationEvent)
+	throws CreateObjectException {
+		return new DefaultEmailNotificationEvent(emailNotificationEvent);
+	}
+
+	public static EmailNotificationEvent valueOf(final String address,
+			final String subject,
 			final String message) {
-		return new DefaultEmailNotificationEvent(lineMismatchEvent, address, message);
+		return new DefaultEmailNotificationEvent(address, subject, message);
 	}
 
 	/**
@@ -96,7 +111,7 @@ public final class DefaultEmailNotificationEvent extends
 	}
 
 	/**
-	 * @see NotificationEvent#getMessage()
+	 * @see EmailNotificationEvent#getMessage()
 	 */
 	public String getMessage() {
 		return this.message;

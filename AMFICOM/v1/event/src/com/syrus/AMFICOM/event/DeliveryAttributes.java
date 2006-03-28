@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.15 2006/03/15 15:47:20 arseniy Exp $
+ * $Id: DeliveryAttributes.java,v 1.16 2006/03/28 10:17:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,17 +38,18 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2006/03/15 15:47:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2006/03/28 10:17:19 $
  * @module event
  */
-public final class DeliveryAttributes extends StorableObject {
+public final class DeliveryAttributes extends StorableObject
+		implements IdlTransferableObjectExt<IdlDeliveryAttributes> {
 	private static final long serialVersionUID = -8861427452530992582L;
 
 	private Severity severity;
@@ -95,7 +96,7 @@ public final class DeliveryAttributes extends StorableObject {
 	 * @see StorableObject#getIdlTransferable(ORB)
 	 */
 	@Override
-	public IdlStorableObject getIdlTransferable(final ORB orb) {
+	public IdlDeliveryAttributes getIdlTransferable(final ORB orb) {
 		return IdlDeliveryAttributesHelper.init(orb,
 				this.id.getIdlTransferable(orb),
 				this.created.getTime(),
@@ -109,15 +110,13 @@ public final class DeliveryAttributes extends StorableObject {
 	}
 
 	/**
-	 * @param transferable
+	 * @param deliveryAttributes
 	 * @throws IdlConversionException
-	 * @see StorableObject#fromIdlTransferable(IdlStorableObject)
+	 * @see StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
+	public void fromIdlTransferable(final IdlDeliveryAttributes deliveryAttributes)
 	throws IdlConversionException {
 		synchronized (this) {
-			final IdlDeliveryAttributes deliveryAttributes = (IdlDeliveryAttributes) transferable;
 			super.fromIdlTransferable(deliveryAttributes);
 			this.severity = Severity.valueOf(deliveryAttributes.severity);
 			this.setRoleIds0(Identifier.fromTransferables(deliveryAttributes.roleIds));

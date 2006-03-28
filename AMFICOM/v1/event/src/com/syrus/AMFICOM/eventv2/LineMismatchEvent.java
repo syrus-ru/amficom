@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.12 2005/11/22 19:33:13 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.13 2006/03/28 10:17:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,9 @@
 
 package com.syrus.AMFICOM.eventv2;
 
-import java.util.Date;
-
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType;
-import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
  * Generation of this one may be triggered upon receipt of a
@@ -21,64 +18,26 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/11/22 19:33:13 $
+ * @version $Revision: 1.13 $, $Date: 2006/03/28 10:17:19 $
  * @module event
  */
-public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
+public interface LineMismatchEvent
+		extends Event<IdlLineMismatchEvent>, Identifiable {
 	/**
-	 * @return mismatch type; see {@link AlarmType AlarmType},
-	 *         {@link com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#getAlarmType()}.
-	 * @see AlarmType AlarmType
-	 * @see com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#getAlarmType()
-	 */
-	AlarmType getAlarmType();
-	
-	/**
-	 * @return problem severity; see {@link Severity Severity},
-	 *         {@link com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#getSeverity()}.
-	 * @see Severity Severity
-	 * @see com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#getSeverity()
-	 */
-	Severity getSeverity();
-
-	/**
-	 * @return {@code true} if threshold excess factor is defined; see
-	 *         {@link com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#hasMismatch()}.
-	 * @see com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#hasMismatch()
-	 */
-	boolean hasMismatch();
-
-	/**
-	 * @return lower bound of threshold excess factor if
-	 *         {@code mismatch} is defined, i.&nbsp;e.
-	 *         {@link #hasMismatch()}<code>&nbsp;==&nbsp;true</code>.
-	 *         In this case, it&apos;s guaranteed that
-	 *         <code>0.0&nbsp;&lt;=&nbsp;</code>{@link #getMinMismatch()
-	 *         minMismatch}<code>&nbsp;&lt;=&nbsp;</code>{@link
-	 *         #getMaxMismatch() maxMismatch}<code>&nbsp;&lt;=&nbsp;1.0</code>.
-	 * @throws IllegalStateException if threshold excess factor is
-	 *         undefined, i.&nbsp;e. {@link #hasMismatch()}<code>&nbsp;==&nbsp;false</code>.
-	 * @see com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#getMinMismatch()
-	 */
-	double getMinMismatch();
-
-	/**
-	 * @return upper bound of threshold excess factor if
-	 *         {@code mismatch} is defined, i.&nbsp;e.
-	 *         {@link #hasMismatch()}<code>&nbsp;==&nbsp;true</code>.
-	 *         In this case, it&apos;s guaranteed that
-	 *         <code>0.0&nbsp;&lt;=&nbsp;</code>{@link #getMinMismatch()
-	 *         minMismatch}<code>&nbsp;&lt;=&nbsp;</code>{@link
-	 *         #getMaxMismatch() maxMismatch}<code>&nbsp;&lt;=&nbsp;1.0</code>.
-	 * @throws IllegalStateException if threshold excess factor is
-	 *         undefined, i.&nbsp;e. {@link #hasMismatch()}<code>&nbsp;==&nbsp;false</code>.
-	 * @see com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#getMaxMismatch()
-	 */
-	double getMaxMismatch();
-
-	/**
-	 * @return identifier of the {@code PathElement} affected. It&apos;s
-	 *         guaranteed to be both non-{@code null} and non-void.
+	 * <p>Returns identifier of the {@code PathElement} affected. It&apos;s
+	 * guaranteed to be both non-{@code null} and non-void, unless
+	 * {@code PathElement} is deleted (which is unlikely for newly-created
+	 * events, but still may happen in the future): in this latter case a
+	 * void identifier will be returned by this method.</p>
+	 *
+	 * <p>Also, the original value of
+	 * {@link #isAffectedPathElementSpacious() affectedPathElementSpacious}
+	 * property is preserved if the {@code PathElement} is deleted.</p>
+	 *
+	 * <p>See also the note on nullability of
+	 * {@link #getReflectogramMismatchEventId() resultId} property.</p>
+	 *
+	 * @return identifier of the {@code PathElement} affected.
 	 */
 	Identifier getAffectedPathElementId();
 
@@ -152,23 +111,22 @@ public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
 	 */
 	double getPhysicalDistanceToEnd();
 
-	/**
-	 * @see PopupNotificationEvent#getResultId()
-	 */
-	Identifier getResultId();
-
-	/**
-	 * @see PopupNotificationEvent#getMismatchOpticalDistance()
-	 */
 	double getMismatchOpticalDistance();
 
-	/**
-	 * @see PopupNotificationEvent#getMismatchPhysicalDistance()
-	 */
 	double getMismatchPhysicalDistance();
 
+	String getMessage();
+
 	/**
-	 * @see PopupNotificationEvent#getMismatchCreated()
+	 * <p>{@code reflectogramMismatchEventId} is guaranteed to be
+	 * non-{@code null} and non-void during this event&apos;s transfer from
+	 * an agent to the event server, but later on, if the
+	 * {@link ReflectogramMismatchEvent} referenced by this
+	 * {@code reflectogramMismatchEventId} is deleted, a void identifier
+	 * will be returned by this method.</p>
+	 *
+	 * <p>See also the note on nullability of
+	 * {@link #getAffectedPathElementId() affectedPathElementId} property.</p>
 	 */
-	Date getMismatchCreated();
+	Identifier getReflectogramMismatchEventId();
 }

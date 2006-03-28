@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultMeasurementStartedEvent.java,v 1.1 2006/02/20 17:14:56 arseniy Exp $
+ * $Id: DefaultMeasurementStartedEvent.java,v 1.2 2006/03/28 10:17:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,34 +11,44 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlMeasurementStartedEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlMeasurementStartedEventHelper;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.util.transport.idl.IdlConversionException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2006/02/20 17:14:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2006/03/28 10:17:19 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 public final class DefaultMeasurementStartedEvent extends DefaultMeasurementStatusChangedEvent<IdlMeasurementStartedEvent> implements MeasurementStartedEvent {
-	private static final long serialVersionUID = -2290640950287598171L;
-
 	private DefaultMeasurementStartedEvent(final Identifier measurementId) {
 		super(measurementId);
 	}
 
-	private DefaultMeasurementStartedEvent(final IdlMeasurementStartedEvent idlMeasurementStartedEvent) {
-		super(idlMeasurementStartedEvent);
+	private DefaultMeasurementStartedEvent(
+			final IdlMeasurementStartedEvent idlMeasurementStartedEvent)
+	throws CreateObjectException {
+		try {
+			this.fromIdlTransferable(idlMeasurementStartedEvent);
+		} catch (final IdlConversionException ice) {
+			throw new CreateObjectException(ice);
+		}
 	}
 
 	public IdlMeasurementStartedEvent getIdlTransferable(final ORB orb) {
-		return IdlMeasurementStartedEventHelper.init(orb, super.getMeasurementId().getIdlTransferable());
+		return IdlMeasurementStartedEventHelper.init(orb,
+				super.getCreated().getTime(),
+				super.getMeasurementId().getIdlTransferable());
 	}
 
 	public static MeasurementStartedEvent valueOf(final Identifier measurementId) {
 		return new DefaultMeasurementStartedEvent(measurementId);
 	}
 
-	public static MeasurementStartedEvent valueOf(final IdlMeasurementStartedEvent idlMeasurementStartedEvent) {
-		return new DefaultMeasurementStartedEvent(idlMeasurementStartedEvent);
+	public static MeasurementStartedEvent valueOf(
+			final IdlMeasurementStartedEvent measurementStartedEvent)
+	throws CreateObjectException {
+		return new DefaultMeasurementStartedEvent(measurementStartedEvent);
 	}
 }

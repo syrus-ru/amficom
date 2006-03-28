@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlEventTypeImpl.java,v 1.13 2006/03/15 15:47:20 arseniy Exp $
+ * $Id: IdlEventTypeImpl.java,v 1.14 2006/03/28 10:17:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,16 +15,17 @@ import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.IdlUserAlertKinds;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2006/03/15 15:47:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2006/03/28 10:17:19 $
  * @module event
  */
 final class IdlEventTypeImpl extends IdlEventType {
-	private static final long serialVersionUID = -8746516616626306511L;
+	private static final long serialVersionUID = -7624987454620297508L;
 
 	IdlEventTypeImpl() {
 		// empty
@@ -38,7 +39,7 @@ final class IdlEventTypeImpl extends IdlEventType {
 			final long version,
 			final String codename,
 			final String description,
-			final IdlIdentifier[] parameterTypeIds,
+			final IdlParameterType[] parameterTypes,
 			final IdlUserAlertKinds[] userAlertKinds) {
 		this.id = id;
 		this.created = created;
@@ -48,7 +49,7 @@ final class IdlEventTypeImpl extends IdlEventType {
 		this.version = version;
 		this.codename = codename;
 		this.description = description;
-		this.parameterTypeIds = parameterTypeIds;
+		this.parameterTypes = parameterTypes;
 		this.userAlertKinds = userAlertKinds;
 	}
 
