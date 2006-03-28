@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.118.2.1 2006/02/11 18:53:24 arseniy Exp $
+ * $Id: general.idl,v 1.118.2.2 2006/03/28 12:12:28 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,12 +39,15 @@ module general {
 //////////////////// Useful definitions ///////////////////
 
 		typedef string<32> String32;
+
 		typedef wstring<32> WString32;
 		typedef wstring<64> WString64;
-		/*\u002a\u002f@SuppressWarnings("all")/**/
-		typedef sequence<WString64> WString64Seq;
 		typedef wstring<128> WString128;
 		typedef wstring<256> WString256;
+		typedef wstring<4000> WString4000;
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		typedef sequence<WString64> WString64Seq;
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<WString256> WString256Seq;
 
