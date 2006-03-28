@@ -1,5 +1,5 @@
 /*-
- * $Id: MSChooserUI.java,v 1.3 2006/03/24 07:26:46 stas Exp $
+ * $Id: MSChooserUI.java,v 1.4 2006/03/28 13:40:59 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JButton;
@@ -35,15 +34,11 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
@@ -84,8 +79,7 @@ public final class MSChooserUI {
 						okButton, 
 						cancelButton}, 
 						null);
-			dialog = optionPane.createDialog(frame, 
-					I18N.getString("Title.measurementLoad"));
+			dialog = optionPane.createDialog(frame, I18N.getString("Title.measurementLoad"));
 			dialog.setModal(true);
 			dialog.setResizable(true);
 		}
@@ -93,6 +87,7 @@ public final class MSChooserUI {
 		dialog.setVisible(true);
 	}
 
+	@SuppressWarnings("unused")
 	private void initUI() {
 		if (mainPanel == null) {
 			mainPanel = new JPanel();
@@ -257,31 +252,13 @@ public final class MSChooserUI {
 			btRefreshMsBut.addActionListener(new ActionListener() {
 				public void actionPerformed(final ActionEvent e) {
 					try {
-						final Date fromDate1 = combineDates((Date)spnStartDateSpinner.getValue(), 
-								(Date)spnStartTimeSpinner.getValue());
-						final Date toDate1 = combineDates((Date)spnEndDateSpinner.getValue(), 
-								(Date)spnEndTimeSpinner.getValue());
-						
 						final MonitoredElement me1 = (MonitoredElement)cmbMeCombo.getSelectedItem();
 						if (me1 != null) {
 							final LinkedIdsCondition condition1 = new LinkedIdsCondition(me1.getId(), ObjectEntities.MEASUREMENTSETUP_CODE);
-							final TypicalCondition condition2 = new TypicalCondition(fromDate1, toDate1, OperationSort.OPERATION_IN_RANGE, 
-									ObjectEntities.MEASUREMENTSETUP_CODE, StorableObjectWrapper.COLUMN_CREATED);
-							final CompoundCondition condition3 = new CompoundCondition(condition1, CompoundConditionSort.AND, condition2);
 							final Set<MeasurementSetup> mSetups = StorableObjectPool.getStorableObjectsByCondition(
 									condition1, true);
-							
-							final Set<MeasurementSetup> mSetupsWithCS = new HashSet<MeasurementSetup>();
-							for (MeasurementSetup ms : mSetups) {
-								if (ms.getCriteriaSet() != null) {
-									mSetupsWithCS.add(ms);
-								}
-							}
-							
-							final WrapperedListModel model = lsMsList.getModel();
-							model.removeAllElements();
-							model.addElements(mSetupsWithCS);
-							model.sort();
+							final WrapperedListModel<MeasurementSetup> model = lsMsList.getModel();
+							model.setElements(mSetups);
 						}
 					} catch (ApplicationException e1) {
 						Log.errorMessage(e1);
@@ -313,9 +290,7 @@ public final class MSChooserUI {
 			try {
 				LinkedIdsCondition condition1 = new LinkedIdsCondition(LoginManager.getDomainId(), ObjectEntities.MONITOREDELEMENT_CODE);
 				Set<MonitoredElement> mes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
-				cmbMeCombo.addElements(mes);
-				((WrapperedListModel)cmbMeCombo.getModel()).sort();
-				
+				((WrapperedListModel<MonitoredElement>)cmbMeCombo.getModel()).setElements(mes);
 			} catch (ApplicationException e1) {
 				Log.errorMessage(e1);
 			}

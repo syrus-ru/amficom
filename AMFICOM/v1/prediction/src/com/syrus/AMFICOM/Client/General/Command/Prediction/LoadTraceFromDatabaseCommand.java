@@ -17,8 +17,7 @@ import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionModel;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.MTAEPredictionManager.PredictionMtaeAndDate;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
-import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -76,21 +75,25 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand {
 				return;
 			}
 			
+			// если в шаблоне есть параметры анализа, то используем их для Trace.getTraceWithARIfPossible
+			AnalysisParameters analysisParameters = AnalysisUtil.getCriteriaSetByMeasurementSetup(ms);
+			boolean hasCriteriaSet = true;
+			if (analysisParameters == null) {
+				// в противном случае берем дефолтные - должно быть не null
+				hasCriteriaSet = false;
+				analysisParameters = Heap.getMinuitDefaultParams();
+			}
+
 			Collection<PredictionMtaeAndDate> pmads = new ArrayList<PredictionMtaeAndDate>();
 			Set<Trace> traces = new HashSet<Trace>(measurements.size());
 			for (Measurement m : measurements) {
-				final AnalysisResult analysis = AnalysisUtil.getAnalysisForMeasurementIfPresent(m);
-				if (analysis == null) {
-					continue; // У этого измерения не было анализа - пропускаем
-				}
-				final ModelTraceAndEventsImpl mtae = analysis.getMTAE();
 				final long date = m.getStartTime().getTime();
-				pmads.add(new PredictionMtaeAndDate(mtae, date));
-
 				for (Result result1 : m.getResults()) { // XXX: PERFORMANCE: 90% of load-from-cache time is m.getResults() (takes ~ 1 sec)
 					if (result1.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
 						try {
-							traces.add(Trace.getTraceWithARIfPossible(result1, Heap.getMinuitAnalysisParams()));
+							final Trace trace = Trace.getTraceWithARIfPossible(result1, analysisParameters);
+							pmads.add(new PredictionMtaeAndDate(trace.getMTAE(), date));							
+							traces.add(trace);
 						} catch (SimpleApplicationException e) {
 							Log.errorMessage(e);
 						}
@@ -108,20 +111,25 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand {
 			
 			// Загружаем эталон в Heap как первичную р/г
 			try {
-				if (!AnalysisUtil.loadEtalonAsEtalonAndAsPrimary(ms)) {
-					return;
+				// если были критерии анализа в MS, значит есть эталон - грузим его как основную р/г
+				if (hasCriteriaSet) { 
+					if (!AnalysisUtil.loadEtalonAsEtalonAndAsPrimary(ms)) {
+						return;
+					}
+					for (Trace tr: traces) {
+						if (!Heap.hasSecondaryBSKey(tr.getKey()) && !Heap.getPrimaryTrace().getKey().equals(tr.getKey())) {
+							Heap.putSecondaryTrace(tr);
+							Heap.setCurrentTrace(tr.getKey());
+						}
+					}
+				} else { // если не было критериев анализа, грузим всю кучу (там выбирается наиболее типичная как основная) 
+					Heap.openManyTraces(traces);
+					Heap.updatePrimaryAnalysis();
 				}
 			} catch (DataFormatException e) {
 				Log.errorMessage(e);
 			} catch (ApplicationException e) {
 				Log.errorMessage(e);
-			}
-
-			for (Trace tr: traces) {
-				if (!Heap.hasSecondaryBSKey(tr.getKey()) && !Heap.getPrimaryTrace().getKey().equals(tr.getKey())) {
-					Heap.putSecondaryTrace(tr);
-					Heap.setCurrentTrace(tr.getKey());
-				}
 			}
 			
 			PredictionManager pm = new MTAEPredictionManager(pmads,
