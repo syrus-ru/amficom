@@ -45,7 +45,7 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements
 	}
 	
 	public void currentEventChanged() {
-		int event = Heap.getCurrentEtalonEvent2();
+		int event = Heap.hasEtalon() ? Heap.getCurrentEtalonEvent2() : Heap.getCurrentEvent2();
 		setSelectedEvent(event);
 	}
 	
