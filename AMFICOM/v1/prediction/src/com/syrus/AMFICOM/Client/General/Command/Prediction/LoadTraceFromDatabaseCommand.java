@@ -86,8 +86,8 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand {
 				final ModelTraceAndEventsImpl mtae = analysis.getMTAE();
 				final long date = m.getStartTime().getTime();
 				pmads.add(new PredictionMtaeAndDate(mtae, date));
-				
-				for (Result result1 : m.getResults()) {
+
+				for (Result result1 : m.getResults()) { // XXX: PERFORMANCE: 90% of load-from-cache time is m.getResults() (takes ~ 1 sec)
 					if (result1.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
 						try {
 							traces.add(Trace.getTraceWithARIfPossible(result1, Heap.getMinuitAnalysisParams()));
