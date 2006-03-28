@@ -1,5 +1,5 @@
 /*-
- * $Id: MTAEPredictionManager.java,v 1.8 2006/03/23 09:41:03 saa Exp $
+ * $Id: MTAEPredictionManager.java,v 1.9 2006/03/28 10:37:06 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 /**
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2006/03/23 09:41:03 $
+ * @version $Revision: 1.9 $, $Date: 2006/03/28 10:37:06 $
  * @module prediction
  */
 public class MTAEPredictionManager implements PredictionManager {
@@ -63,10 +63,11 @@ public class MTAEPredictionManager implements PredictionManager {
 	private long lowerTime;
 	private long upperTime;
 	private MonitoredElement me;
-	private double[] temp; // temporary array for output data
 
-	private SimpleReflectogramEventComparer[] srecCache;
-	private Statistics[] lossStatsCache;
+	private SimpleReflectogramEventComparer[] srecCache; // comparer for each trace
+
+	// stats for every event
+	private Statistics[] lossStatsCache; 
 	private Statistics[] attenuationStatsCache;
 	private Statistics[] y0StatsCache;
 	private Statistics[] amplStatsCache;
@@ -134,12 +135,11 @@ public class MTAEPredictionManager implements PredictionManager {
 		this.lowerTime = lowerTime;
 		this.upperTime = upperTime;
 		this.me = me;
-		this.temp = new double[this.data.length];
 		this.srecCache = new SimpleReflectogramEventComparer[this.data.length];
-		this.lossStatsCache = new Statistics[this.data.length];
-		this.attenuationStatsCache = new Statistics[this.data.length];
-		this.y0StatsCache = new Statistics[this.data.length];
-		this.amplStatsCache = new Statistics[this.data.length];
+		this.lossStatsCache = new Statistics[this.base.getNEvents()];
+		this.attenuationStatsCache = new Statistics[this.base.getNEvents()];
+		this.y0StatsCache = new Statistics[this.base.getNEvents()];
+		this.amplStatsCache = new Statistics[this.base.getNEvents()];
 		assert(getMinTime() <= getMaxTime());
 	}
 
@@ -338,7 +338,6 @@ public class MTAEPredictionManager implements PredictionManager {
 		}
 		if (statsCache[nEvent] == null) {
 			List<TimeDependenceData> tdd = new ArrayList<TimeDependenceData>();
-			int pos = 0;
 			for (int i = 0; i < this.data.length; i++) {
 				int nEv2 = getSREC(i).getProbeIdByEtalonId(nEvent);
 				if (nEv2 < 0)
@@ -348,7 +347,6 @@ public class MTAEPredictionManager implements PredictionManager {
 				if (!extractor.hasParameter(event))
 					continue;
 				final double value = extractor.getParameter(event);
-				this.temp[pos++] = value;
 				tdd.add(new TimeDependenceData(this.data[i].getDate(), value));
 			}
 			final TimeDependenceData[] tddArray = tdd.toArray(
