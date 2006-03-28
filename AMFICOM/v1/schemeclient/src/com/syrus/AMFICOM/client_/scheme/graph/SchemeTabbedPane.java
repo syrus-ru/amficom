@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.42 2006/03/17 10:42:07 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.43 2006/03/28 10:17:47 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.42 $, $Date: 2006/03/17 10:42:07 $
+ * @version $Revision: 1.43 $, $Date: 2006/03/28 10:17:47 $
  * @module schemeclient
  */
 
@@ -550,14 +550,14 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	
 
 	
-	private void setPathMode() {
+	public void setPathMode() {
 		AbstractButton b = this.toolBar.commands.get(Constants.PATH_MODE);
 		if (!b.isSelected()) {
 			b.doClick();
 		}
 	}
 	
-	private void setLinkMode() {
+	public void setLinkMode() {
 		AbstractButton b = this.toolBar.commands.get(Constants.LINK_MODE);
 		if (!b.isSelected()) {
 			b.doClick();
