@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.8.2.2 2006/03/28 15:11:49 bass Exp $
+ * $Id: EventQueue.java,v 1.8.2.3 2006/03/28 15:21:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.FINEST;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -27,7 +27,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8.2.2 $, $Date: 2006/03/28 15:11:49 $
+ * @version $Revision: 1.8.2.3 $, $Date: 2006/03/28 15:21:17 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -52,7 +52,7 @@ final class EventQueue extends SleepButWorkThread {
 
 	@SuppressWarnings("unused")
 	synchronized void addEvent(final Event<?> event) throws EventQueueFullException {
-		Log.debugMessage("Event: " + event + " added to outbox", INFO);
+		Log.debugMessage("Event: " + event + " is being added to outbox", FINEST);
 		this.eventEqueue.add(event);
 		this.notifyAll();
 	}
@@ -78,7 +78,10 @@ final class EventQueue extends SleepButWorkThread {
 				final EventServer eventServer = connectionManager.getEventServerReference();
 
 				final IdlEvent[] idlEvents = this.createIdlEventArray(connectionManager);
+				final int length = idlEvents.length;
+				Log.debugMessage("Sending " + length + " event(s) to the event server", FINEST);
 				eventServer.receiveEvents(idlEvents);
+				Log.debugMessage("Done sending " + length + " event(s) to the event server", FINEST);
 				this.eventEqueue.clear();
 			} catch (final CommunicationException ce) {
 				Log.errorMessage(ce);
