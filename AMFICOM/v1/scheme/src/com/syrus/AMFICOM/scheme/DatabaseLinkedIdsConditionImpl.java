@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.47 2006/03/15 15:49:10 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.48 2006/03/28 14:11:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.47 $, $Date: 2006/03/15 15:49:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.48 $, $Date: 2006/03/28 14:11:17 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -166,6 +166,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				switch (super.condition.getLinkedEntityCode()) {
 				case SCHEMEDEVICE_CODE:
 					return super.getQuery(SchemeCablePortWrapper.COLUMN_PARENT_DEVICE_ID);
+				case PORT_TYPE_CODE:
+					return super.getQuery(SchemeCablePortWrapper.COLUMN_CABLE_PORT_TYPE_ID);
 				default:
 					throw super.newExceptionLinkedEntityIllegal();
 				}
