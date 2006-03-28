@@ -1,5 +1,5 @@
 /*-
- * $Id: EventDatabase.java,v 1.54.2.1 2006/03/27 10:10:05 bass Exp $
+ * $Id: EventDatabase.java,v 1.54.2.2 2006/03/28 09:52:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,21 @@
 
 package com.syrus.AMFICOM.event;
 
+import static com.syrus.AMFICOM.event.EventWrapper.LINK_COLUMN_EVENT_ID;
+import static com.syrus.AMFICOM.event.EventWrapper.LINK_COLUMN_PARAMETER_VALUE;
+import static com.syrus.AMFICOM.event.EventWrapper.LINK_COLUMN_SOURCE_ID;
+import static com.syrus.AMFICOM.general.ObjectEntities.EVENTPARAMETER;
+import static com.syrus.AMFICOM.general.ObjectEntities.EVENT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_TYPE_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
 import static com.syrus.AMFICOM.general.TableNames.EVENTSOURCELINK;
 
 import java.sql.Connection;
@@ -25,13 +40,11 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
@@ -39,7 +52,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.54.2.1 $, $Date: 2006/03/27 10:10:05 $
+ * @version $Revision: 1.54.2.2 $, $Date: 2006/03/28 09:52:57 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -53,14 +66,14 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.EVENT_CODE;
+		return EVENT_CODE;
 	}
 
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
+			columns = COLUMN_TYPE_ID + COMMA
+				+ COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}
@@ -94,9 +107,9 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 	protected Event updateEntityFromResultSet(final Event storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		final Event event = (storableObject == null)
-				? new Event(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				? new Event(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						null,
 						null,
 						null,
@@ -105,17 +118,17 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 		EventType eventType;
 		try {
 			eventType = (EventType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-					StorableObjectWrapper.COLUMN_TYPE_ID), true);
+					COLUMN_TYPE_ID), true);
 		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
-		event.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+		event.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
 				eventType,
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));		
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));		
 		return event;
 	}
 
@@ -125,13 +138,13 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
     }
 
     final StringBuffer stringBuffer = new StringBuffer(SQL_SELECT
-				+ StorableObjectWrapper.COLUMN_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_TYPE_CODE + COMMA
-				+ EventWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
-				+ EventWrapper.LINK_COLUMN_EVENT_ID
-				+ SQL_FROM + ObjectEntities.EVENTPARAMETER
+				+ COLUMN_ID + COMMA
+				+ COLUMN_TYPE_CODE + COMMA
+				+ LINK_COLUMN_PARAMETER_VALUE + COMMA
+				+ LINK_COLUMN_EVENT_ID
+				+ SQL_FROM + EVENTPARAMETER
 				+ SQL_WHERE);
-    stringBuffer.append(idsEnumerationString(events, EventWrapper.LINK_COLUMN_EVENT_ID, true));
+    stringBuffer.append(idsEnumerationString(events, LINK_COLUMN_EVENT_ID, true));
 
     final Map<Identifier, Set<EventParameter>> eventParametersMap = new HashMap<Identifier, Set<EventParameter>>();
 
@@ -145,11 +158,11 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 			resultSet = statement.executeQuery(stringBuffer.toString());
 
 			while (resultSet.next()) {
-				final ParameterType parameterType = ParameterType.valueOf(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE));
-				final EventParameter eventParameter = new EventParameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				final ParameterType parameterType = ParameterType.valueOf(resultSet.getInt(COLUMN_TYPE_CODE));
+				final EventParameter eventParameter = new EventParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						parameterType,
-						DatabaseString.fromQuerySubString(resultSet.getString(EventWrapper.LINK_COLUMN_PARAMETER_VALUE)));
-				final Identifier eventId = DatabaseIdentifier.getIdentifier(resultSet, EventWrapper.LINK_COLUMN_EVENT_ID);
+						DatabaseString.fromQuerySubString(resultSet.getString(LINK_COLUMN_PARAMETER_VALUE)));
+				final Identifier eventId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_EVENT_ID);
 				Set<EventParameter> eventParameters = eventParametersMap.get(eventId);
 				if (eventParameters == null) {
 					eventParameters = new HashSet<EventParameter>();
@@ -202,8 +215,8 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 
 		final Map<Identifier, Set<Identifier>> eventSourceIdsMap = this.retrieveLinkedEntityIds(events,
 				EVENTSOURCELINK,
-				EventWrapper.LINK_COLUMN_EVENT_ID,
-				EventWrapper.LINK_COLUMN_SOURCE_ID);
+				LINK_COLUMN_EVENT_ID,
+				LINK_COLUMN_SOURCE_ID);
 
 		for (final Event event : events) {
 			final Identifier eventId = event.getId();
@@ -232,11 +245,11 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 	private void insertEventParameters(final Event event) throws CreateObjectException {
 		final Identifier eventId = event.getId();
 		final Set<EventParameter> eventParameters = event.getParameters();
-		final String sql = SQL_INSERT_INTO + ObjectEntities.EVENTPARAMETER + OPEN_BRACKET
-				+ StorableObjectWrapper.COLUMN_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_TYPE_CODE + COMMA
-				+ EventWrapper.LINK_COLUMN_EVENT_ID + COMMA
-				+ EventWrapper.LINK_COLUMN_PARAMETER_VALUE
+		final String sql = SQL_INSERT_INTO + EVENTPARAMETER + OPEN_BRACKET
+				+ COLUMN_ID + COMMA
+				+ COLUMN_TYPE_CODE + COMMA
+				+ LINK_COLUMN_EVENT_ID + COMMA
+				+ LINK_COLUMN_PARAMETER_VALUE
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -308,8 +321,8 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 
 		super.updateLinkedEntityIds(eventSourceIdsMap,
 				EVENTSOURCELINK,
-				EventWrapper.LINK_COLUMN_EVENT_ID,
-				EventWrapper.LINK_COLUMN_SOURCE_ID);
+				LINK_COLUMN_EVENT_ID,
+				LINK_COLUMN_SOURCE_ID);
 	}
 
 	@Override

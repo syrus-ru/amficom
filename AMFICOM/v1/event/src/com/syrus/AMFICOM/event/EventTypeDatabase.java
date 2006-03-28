@@ -1,5 +1,5 @@
 /*-
- * $Id: EventTypeDatabase.java,v 1.51 2006/02/16 13:34:26 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.51.2.1 2006/03/28 09:52:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,20 @@
 
 package com.syrus.AMFICOM.event;
 
+import static com.syrus.AMFICOM.event.EventTypeWrapper.LINK_COLUMN_ALERT_KIND;
+import static com.syrus.AMFICOM.event.EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID;
+import static com.syrus.AMFICOM.event.EventTypeWrapper.LINK_COLUMN_USER_ID;
+import static com.syrus.AMFICOM.general.ObjectEntities.EVENT_TYPE;
+import static com.syrus.AMFICOM.general.ObjectEntities.EVENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
 import static com.syrus.AMFICOM.general.TableNames.EVENTTYPEUSERALERT;
 import static com.syrus.AMFICOM.general.TableNames.EVENTTYPPARTYPLINK;
 
@@ -28,12 +42,10 @@ import com.syrus.AMFICOM.general.DatabaseStorableObjectCondition;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
@@ -41,8 +53,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2006/02/16 13:34:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.51.2.1 $, $Date: 2006/03/28 09:52:57 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
@@ -54,14 +66,14 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.EVENT_TYPE_CODE;
+		return EVENT_TYPE_CODE;
 	}
 
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
-				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
+			columns = COLUMN_CODENAME + COMMA
+				+ COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}
@@ -96,21 +108,21 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			throws IllegalDataException,
 				SQLException {
 		final EventType eventType = storableObject == null
-				? new EventType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				? new EventType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						null,
 						null,
 						null,
 						null)
 					: storableObject;
-		eventType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				StorableObjectVersion.valueOf(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
+		eventType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
 		return eventType;
 	}
 
@@ -149,12 +161,12 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 
 	private Map<Identifier, Map<Identifier, Set<AlertKind>>> retrieveDBUserAlertKindsMap(final Set<EventType> eventTypes) throws RetrieveObjectException {
 		final StringBuffer sql = new StringBuffer(SQL_SELECT
-				+ EventTypeWrapper.LINK_COLUMN_USER_ID + COMMA
-				+ EventTypeWrapper.LINK_COLUMN_ALERT_KIND + COMMA
-				+ EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID
+				+ LINK_COLUMN_USER_ID + COMMA
+				+ LINK_COLUMN_ALERT_KIND + COMMA
+				+ LINK_COLUMN_EVENT_TYPE_ID
 				+ SQL_FROM + EVENTTYPEUSERALERT
 				+ SQL_WHERE);
-		sql.append(idsEnumerationString(eventTypes, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID, true));
+		sql.append(idsEnumerationString(eventTypes, LINK_COLUMN_EVENT_TYPE_ID, true));
 
 		final Map<Identifier, Map<Identifier, Set<AlertKind>>> dbEventTypeUserAlertKindsMap = new HashMap<Identifier, Map<Identifier, Set<AlertKind>>>();
 
@@ -167,9 +179,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			Log.debugMessage(this.getEntityName() + "Database.retrieveDBUserAlertKindsMap | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			while (resultSet.next()) {
-				final Identifier userId = DatabaseIdentifier.getIdentifier(resultSet, EventTypeWrapper.LINK_COLUMN_USER_ID);
-				final AlertKind alertKind = AlertKind.from_int(resultSet.getInt(EventTypeWrapper.LINK_COLUMN_ALERT_KIND));
-				final Identifier eventTypeId = DatabaseIdentifier.getIdentifier(resultSet, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID);
+				final Identifier userId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_USER_ID);
+				final AlertKind alertKind = AlertKind.from_int(resultSet.getInt(LINK_COLUMN_ALERT_KIND));
+				final Identifier eventTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_EVENT_TYPE_ID);
 
 				Map<Identifier, Set<AlertKind>> userAlertKindsMap = dbEventTypeUserAlertKindsMap.get(eventTypeId);
 				if (userAlertKindsMap == null) {
@@ -370,9 +382,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 		}
 
 		final String sql = SQL_INSERT_INTO + EVENTTYPEUSERALERT + OPEN_BRACKET
-				+ EventTypeWrapper.LINK_COLUMN_USER_ID + COMMA
-				+ EventTypeWrapper.LINK_COLUMN_ALERT_KIND + COMMA
-				+ EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID
+				+ LINK_COLUMN_USER_ID + COMMA
+				+ LINK_COLUMN_ALERT_KIND + COMMA
+				+ LINK_COLUMN_EVENT_TYPE_ID
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -439,9 +451,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 				final Set<AlertKind> userAlertKinds = userAlertKindsMap.get(userId);
 				for (final AlertKind alertKind : userAlertKinds) {
 					sql.append(SQL_OR + OPEN_BRACKET
-							+ EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID + EQUALS + DatabaseIdentifier.toSQLString(eventTypeId) + SQL_AND
-							+ EventTypeWrapper.LINK_COLUMN_USER_ID + EQUALS + DatabaseIdentifier.toSQLString(userId) + SQL_AND
-							+ EventTypeWrapper.LINK_COLUMN_ALERT_KIND + EQUALS + alertKind.value()
+							+ LINK_COLUMN_EVENT_TYPE_ID + EQUALS + DatabaseIdentifier.toSQLString(eventTypeId) + SQL_AND
+							+ LINK_COLUMN_USER_ID + EQUALS + DatabaseIdentifier.toSQLString(userId) + SQL_AND
+							+ LINK_COLUMN_ALERT_KIND + EQUALS + alertKind.value()
 							+ CLOSE_BRACKET);
 				}
 			}
@@ -484,10 +496,10 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 				+ EVENTTYPPARTYPLINK
 				+ SQL_WHERE);
 		final StringBuffer sql2 = new StringBuffer(SQL_DELETE_FROM
-				+ ObjectEntities.EVENT_TYPE
+				+ EVENT_TYPE
 				+ SQL_WHERE);
-		sql1.append(idsEnumerationString(objects, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID, true));
-		sql2.append(idsEnumerationString(objects, StorableObjectWrapper.COLUMN_ID, true));
+		sql1.append(idsEnumerationString(objects, LINK_COLUMN_EVENT_TYPE_ID, true));
+		sql2.append(idsEnumerationString(objects, COLUMN_ID, true));
 
 		Statement statement = null;
 		Connection connection = null;

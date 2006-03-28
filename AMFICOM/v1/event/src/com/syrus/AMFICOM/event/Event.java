@@ -1,5 +1,5 @@
 /*-
- * $Id: Event.java,v 1.54 2006/03/15 14:47:31 bass Exp $
+ * $Id: Event.java,v 1.54.2.1 2006/03/28 09:52:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.event;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.EVENT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -23,7 +24,6 @@ import com.syrus.AMFICOM.event.corba.IdlEventHelper;
 import com.syrus.AMFICOM.event.corba.IdlEventPackage.IdlEventParameter;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -37,7 +37,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2006/03/15 14:47:31 $
+ * @version $Revision: 1.54.2.1 $, $Date: 2006/03/28 09:52:57 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -107,7 +107,7 @@ public final class Event extends StorableObject
 		try {
 			final Event event = new Event(IdentifierPool.getGeneratedIdentifier(EVENT_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					type,
 					description,
 					eventParameters,
@@ -281,8 +281,6 @@ public final class Event extends StorableObject
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.type);
 		for(EventParameter eventParameter: this.eventParameters) {
