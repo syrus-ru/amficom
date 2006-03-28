@@ -1,5 +1,5 @@
 /*-
- * $Id: WorkstationBeanFactory.java,v 1.4 2005/12/14 15:08:30 bob Exp $
+ * $Id: WorkstationBeanFactory.java,v 1.5 2006/03/28 07:30:29 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.manager.beans;
+
+import static com.syrus.AMFICOM.general.Identifier.SEPARATOR;
 
 import java.util.Set;
 
@@ -27,8 +29,8 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/14 15:08:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2006/03/28 07:30:29 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -44,7 +46,7 @@ public final class WorkstationBeanFactory extends AbstractBeanFactory<NonStorabl
 	
 	@Override
 	public NonStorableBean createBean(final Perspective perspective) throws ApplicationException {
-		return this.createBean(WORKSTATION_CODENAME + this.count);
+		return this.createBean(WORKSTATION_CODENAME + SEPARATOR + this.count);
 	}
 	
 	@Override
