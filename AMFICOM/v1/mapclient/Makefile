@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.7 2005/10/12 10:03:30 bass Exp $
+# $Id: Makefile,v 1.8 2006/03/28 12:23:05 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -15,9 +15,13 @@ $(call checkenve,JAVA_HOME)
 
 DEPENDENCIES = \
 general \
+administration \
+measurement \
 map \
+scheme \
 filter \
-commonclient
+commonclient \
+util
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/event/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/map/*.java) \
