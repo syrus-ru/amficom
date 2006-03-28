@@ -1,5 +1,5 @@
 /*-
- * $Id: ValidateSchemeCommand.java,v 1.4 2006/03/17 10:40:53 stas Exp $
+ * $Id: ValidateSchemeCommand.java,v 1.5 2006/03/28 09:36:14 stas Exp $
  *
  * Copyright ї 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,16 +87,25 @@ public class ValidateSchemeCommand extends AbstractCommand {
 						}
 					}
 					
+					String[] wells = new String[] {"тк", "пк", "нк", "пик" };
+					
 					for (SchemeElement se : scheme.getSchemeElements(false)) {
-						se.setLabel(se.getName());
+						final String name = se.getName();
+						se.setLabel(name);
+						for (int i = 0; i < wells.length; i++) {
+							final int n = name.indexOf(wells[i]);
+							if (n != -1) {
+								se.setLabel(name.substring(n));
+								break;
+							}	
+						}
 					}
 						
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
 				}
-				
 			}
-			
+
 			SchemeActions.isValid(graph);
 			this.messages.addAll(SchemeActions.getValidationMessages());
 		
