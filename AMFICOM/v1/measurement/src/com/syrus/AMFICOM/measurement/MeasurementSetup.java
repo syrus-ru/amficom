@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementSetup.java,v 1.100.2.9 2006/03/27 05:41:25 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.100.2.10 2006/03/28 08:48:16 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,25 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
+
 /**
- * @version $Revision: 1.100.2.9 $, $Date: 2006/03/27 05:41:25 $
+ * Шаблон измерительного задания. Каждое задание
+ * {@link com.syrus.AMFICOM.measurement.Test} должно иметь по меньшей мере один
+ * такой шаблон. Шаблон измерительного задания состоит из двух частей: шаблон
+ * измерения {@link #measurementTemplateId} и шаблон анализа
+ * {@link #analysisTemplateId}. Шаблон анализа может быть равен
+ * {@link com.syrus.AMFICOM.general.Identifier#VOID_IDENTIFIER} (что
+ * соответствует заданию без анализа), шаблон измерения - никогда. Шаблон
+ * измерительного задания должен быть привязан к одной или более измеряемых
+ * линий {@link com.syrus.AMFICOM.measurement.MonitoredElement}; таким образом,
+ * каждая измеряемая линия имеет свой набор шаблонов, по которым на ней можно
+ * проводить измерения. Поскольку каждый из шаблонов действия - шаблон измерения
+ * и шаблон анализа - сам по себе уже привязан к какому-то набору измеряемых
+ * линий, то созданный на их основе шаблон измерительного задания может быть
+ * привязан лишь к тем линиям, к которым привязан каждый из составляющих его
+ * шаблонов действия.
+ * 
+ * @version $Revision: 1.100.2.10 $, $Date: 2006/03/28 08:48:16 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -46,13 +63,29 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 public final class MeasurementSetup extends StorableObject implements IdlTransferableObjectExt<IdlMeasurementSetup> {
 	private static final long serialVersionUID = -2848488077315796037L;
 
+	/**
+	 * Идентификатор шаблона измерения.
+	 */
 	private Identifier measurementTemplateId;
-	private Identifier analysisTemplateId;
-	private String description;
-	private Set<Identifier> monitoredElementIds;
 
 	/**
-	 * Used only in {@link MeasurementSetup#isValid()}
+	 * Идентификатор шаблона анализа.
+	 */
+	private Identifier analysisTemplateId;
+
+	/**
+	 * Описание.
+	 */
+	private String description;
+
+	/**
+	 * Набор идентификаторов измеряемых линий, к которым привязан данный шаблон.
+	 */
+	private Set<Identifier> monitoredElementIds;
+
+
+	/**
+	 * Вспомогательное поле. используется в {@link #isValid()}.
 	 */
 	private transient Set<Identifier> actionTemplateIds;
 
@@ -85,6 +118,17 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 		}
 	}
 
+	/**
+	 * Создать новый экземпляр.
+	 * 
+	 * @param creatorId
+	 * @param measurementTemplateId
+	 * @param analysisTemplateId
+	 * @param description
+	 * @param monitoredElementIds
+	 * @return Новый экземпляр.
+	 * @throws CreateObjectException
+	 */
 	public static MeasurementSetup createInstance(final Identifier creatorId,
 			final Identifier measurementTemplateId,
 			final Identifier analysisTemplateId,
@@ -145,46 +189,103 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * Получить идентификатор шаблона измерения.
+	 * 
+	 * @return Идентификатор шаблона измерения
+	 */
 	public Identifier getMeasurementTemplateId() {
 		return this.measurementTemplateId;
 	}
 
+	/**
+	 * Получить шаблон измерения. Обёртка над
+	 * {@link #getMeasurementTemplateId()}.
+	 * 
+	 * @return Шаблон измерения
+	 * @throws ApplicationException
+	 */
 	public ActionTemplate getMeasurementTemplate() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.measurementTemplateId, true);
 	}
 
+	/**
+	 * Выставить новый идентификатор шаблона измерения.
+	 * 
+	 * @param measurementTemplateId
+	 */
 	public void setMeasurementTemplateId(final Identifier measurementTemplateId) {
 		this.measurementTemplateId = measurementTemplateId;
 		super.markAsChanged();
 	}
 
+	/**
+	 * Получить идентификатор шаблона анализа.
+	 * 
+	 * @return Идентификатор шаблона анализа
+	 */
 	public Identifier getAnalysisTemplateId() {
 		return this.analysisTemplateId;
 	}
 
+	/**
+	 * Получить шаблон анализа. Обёртка над {@link #getAnalysisTemplateId()}.
+	 * 
+	 * @return
+	 * @throws ApplicationException
+	 */
 	public ActionTemplate getAnalysisTemplate() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.analysisTemplateId, true);
 	}
 
+	/**
+	 * Выставить новый идентификатор шаблона анализа.
+	 * 
+	 * @param analysisTemplateId
+	 */
 	public void setAnalysisTemplateId(final Identifier analysisTemplateId) {
 		this.analysisTemplateId = analysisTemplateId;
 		super.markAsChanged();
 	}
 
+	/**
+	 * Получить описание.
+	 * 
+	 * @return Описание
+	 */
 	public String getDescription() {
 		return this.description;
 	}
 
+	/**
+	 * Выставить описание.
+	 * 
+	 * @param description
+	 */
 	public void setDescription(final String description) {
 		this.description = description;
 		super.markAsChanged();
 	}
 
+	/**
+	 * Проверить, привязан ли данный шаблон измерительного задания к данной
+	 * измеряемой линии.
+	 * 
+	 * @param monitoredElementId
+	 * @return <code>true</code>, если данный шаблон привязан к линии
+	 *         <code>monitoredElementId</code>.
+	 */
 	public boolean isAttachedToMonitoredElement(final Identifier monitoredElementId) {
 		assert monitoredElementId.getMajor() == MONITOREDELEMENT_CODE : ILLEGAL_ENTITY_CODE;
 		return this.monitoredElementIds.contains(monitoredElementId);
 	}
 
+	/**
+	 * Получить набор идентификаторов измеряемых линий, к которым привязан
+	 * данный шаблон измерительного задания.
+	 * 
+	 * @return Набор идентификаторов, к которым привязан данный шаблон
+	 */
 	public Set<Identifier> getMonitoredElementIds() {
 		return Collections.unmodifiableSet(this.monitoredElementIds);
 	}

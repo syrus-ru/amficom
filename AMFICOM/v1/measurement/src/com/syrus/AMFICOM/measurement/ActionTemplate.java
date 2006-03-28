@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplate.java,v 1.1.2.10 2006/03/22 16:51:32 arseniy Exp $
+ * $Id: ActionTemplate.java,v 1.1.2.11 2006/03/28 08:48:16 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,14 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.1.2.10 $, $Date: 2006/03/22 16:51:32 $
+ * Шаблон действия. Каждое действие, т. е., наследник
+ * {@link com.syrus.AMFICOM.measurement.Action}, имеет свой шаблон. Шаблон
+ * действия должен быть привязан к одной или более измеряемых линий
+ * {@link com.syrus.AMFICOM.measurement.MonitoredElement}. Таким образом,
+ * каждая измеряемая линия имеет свой набор шаблонов, по которым на ней можно
+ * проводить данное действие.
+ * 
+ * @version $Revision: 1.1.2.11 $, $Date: 2006/03/28 08:48:16 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -46,9 +53,25 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 public final class ActionTemplate extends StorableObject implements IdlTransferableObjectExt<IdlActionTemplate> {
 	private static final long serialVersionUID = 725853453958152504L;
 
+	/**
+	 * Описание.
+	 */
 	private String description;
+
+	/**
+	 * Приблизительная продолжительность действия с данным шаблоном.
+	 */
 	private long approximateActionDuration;
-	private Set<Identifier> actionParameterIds;//XXX Maybe replace Set with List
+
+	/**
+	 * Набор идентификаторов параметров действия.
+	 * XXX Возможно, придётся заменить Set на List.
+	 */
+	private Set<Identifier> actionParameterIds;
+
+	/**
+	 * Набор идентификаторов измеряемых линий, к которым привязан данный шаблон.
+	 */
 	private Set<Identifier> monitoredElementIds;
 
 	ActionTemplate(final Identifier id,
@@ -82,6 +105,17 @@ public final class ActionTemplate extends StorableObject implements IdlTransfera
 		}
 	}
 
+	/**
+	 * Создать новый экземпляр.
+	 * 
+	 * @param creatorId
+	 * @param description
+	 * @param approximateActionDuration
+	 * @param actionParameterIds
+	 * @param monitoredElementIds
+	 * @return Новый экземпляр.
+	 * @throws CreateObjectException
+	 */
 	public static ActionTemplate createInstance(final Identifier creatorId,
 			final String description,
 			final long approximateActionDuration,
@@ -141,28 +175,62 @@ public final class ActionTemplate extends StorableObject implements IdlTransfera
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
+	/**
+	 * Получить описание.
+	 * 
+	 * @return Описание
+	 */
 	public String getDescription() {
 		return this.description;
 	}
 
+	/**
+	 * Выставить описание.
+	 * 
+	 * @param description
+	 */
 	public void setDescription(final String description) {
 		this.description = description;
 		super.markAsChanged();
 	}
 
+	/**
+	 * Получить приблизительную длительность действия, выполняемого по данному
+	 * шаблону.
+	 * 
+	 * @return Приблизительная длительность действия
+	 */
 	public long getApproximateActionDuration() {
 		return this.approximateActionDuration;
 	}
 
+	/**
+	 * Выставить приблизительную длительность действия, выполняемого по данному
+	 * шаблону.
+	 * 
+	 * @param approximateActionDuration
+	 */
 	public void setApproximateActionDuration(final long approximateActionDuration) {
 		this.approximateActionDuration = approximateActionDuration;
 		super.markAsChanged();
 	}
 
+	/**
+	 * Получить список идентификаторов параметров действия.
+	 * 
+	 * @return Список идентификаторов параметров действия
+	 */
 	public Set<Identifier> getActionParameterIds() {
 		return Collections.unmodifiableSet(this.actionParameterIds);
 	}
 
+	/**
+	 * Получить список параметров действия. Обёртка над
+	 * {@link #getActionParameterIds()}.
+	 * 
+	 * @return Список параметров действия
+	 * @throws ApplicationException
+	 */
 	public Set<ActionParameter> getActionParameters() throws ApplicationException {
 		return StorableObjectPool.getStorableObjects(this.actionParameterIds, true);
 	}
@@ -174,11 +242,24 @@ public final class ActionTemplate extends StorableObject implements IdlTransfera
 		}
 	}
 
+	/**
+	 * Проверить, привязан ли данный шаблон действия к данной измеряемой линии.
+	 * 
+	 * @param monitoredElementId
+	 * @return <code>true</code>, если данный шаблон привязан к линии
+	 *         <code>monitoredElementId</code>.
+	 */
 	public boolean isAttachedToMonitoredElement(final Identifier monitoredElementId) {
 		assert monitoredElementId.getMajor() == MONITOREDELEMENT_CODE : ILLEGAL_ENTITY_CODE;
 		return this.monitoredElementIds.contains(monitoredElementId);
 	}
 
+	/**
+	 * Получить набор идентификаторов измеряемых линий, к которым привязан
+	 * данный шаблон действия.
+	 * 
+	 * @return Набор идентификаторов, к которым привязан данный шаблон
+	 */
 	public Set<Identifier> getMonitoredElementIds() {
 		return Collections.unmodifiableSet(this.monitoredElementIds);
 	}
@@ -225,12 +306,15 @@ public final class ActionTemplate extends StorableObject implements IdlTransfera
 	}
 
 	/**
-	 * NOTE: This method assumes, that ParameterTypes for ActionParameters of
-	 * this ActionTemplate are unuque. In the set
-	 * <code>actionParameterIds</code> no two or more ActionParameters with
-	 * the same ParameterType.
+	 * Для всех параметров действия, входящих в данный шаблон, создать карту,
+	 * где по ключу - кодовое имя, а по величине - величина соответствующего
+	 * параметра. Этот метод предполагает, что среди всех параметров действия
+	 * данного шаблона не найдётся ни одной пары с одинаковыми типами
+	 * {@link com.syrus.AMFICOM.general.ParameterType}. См. также
+	 * {@link Parameter#getTypeCodenameValueMap(Set)}.
 	 * 
-	 * @return Map<String parameterTypeCodename, byte[] actionParameterValue>
+	 * @return Неизменяемая карта вида <String parameterTypeCodename, byte[]
+	 *         parameterValue>
 	 * @throws ApplicationException
 	 */
 	public Map<String, byte[]> getParameterTypeCodenameValueMap() throws ApplicationException {
