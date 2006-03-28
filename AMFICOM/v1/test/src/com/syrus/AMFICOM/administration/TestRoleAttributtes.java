@@ -1,5 +1,5 @@
 /*
- * $Id: TestRoleAttributtes.java,v 1.7 2006/02/17 12:04:55 arseniy Exp $
+ * $Id: TestRoleAttributtes.java,v 1.8 2006/03/28 08:34:35 stas Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2006/02/17 12:04:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2006/03/28 08:34:35 $
+ * @author $Author: stas $
  * @module test
  */
 public class TestRoleAttributtes extends TestCase {
@@ -173,19 +173,19 @@ public class TestRoleAttributtes extends TestCase {
 				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_ENTER, true);
 			}
 			
-//			{
-//				final PermissionAttributes attributes = 
-//					PermissionAttributes.createInstance(userId, 
-//						Identifier.VOID_IDENTIFIER, 
-//						analyst.getId(), 
-//						Module.MODELING);
-//				
-//				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
-//				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_MAP, true);
-//				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
-//				attributes.setPermissionEnable(PermissionCodename.MODELING_SAVE_REFLECTOGRAM_MODEL, true);
-//				attributes.setPermissionEnable(PermissionCodename.MODELING_SET_MODELING_OPTIONS, true);
-//			}
+			{
+				final PermissionAttributes attributes = 
+					PermissionAttributes.createInstance(userId, 
+						Identifier.VOID_IDENTIFIER, 
+						analyst.getId(), 
+						Module.MODELING);
+				
+				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_MAP, true);
+				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
+				attributes.setPermissionEnable(PermissionCodename.MODELING_SAVE_REFLECTOGRAM_MODEL, true);
+				attributes.setPermissionEnable(PermissionCodename.MODELING_SET_MODELING_OPTIONS, true);
+			}
 			
 			{
 				final PermissionAttributes attributes = 

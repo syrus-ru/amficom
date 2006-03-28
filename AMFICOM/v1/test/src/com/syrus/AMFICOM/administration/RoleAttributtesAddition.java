@@ -1,5 +1,5 @@
 /*
- * $Id: RoleAttributtesAddition.java,v 1.5 2006/03/22 11:12:38 stas Exp $
+ * $Id: RoleAttributtesAddition.java,v 1.6 2006/03/28 08:34:35 stas Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  * 
  * Sets Administration permission to Media Monitoring Administrator role added on 14/12/2005
  * 
- * @version $Revision: 1.5 $, $Date: 2006/03/22 11:12:38 $
+ * @version $Revision: 1.6 $, $Date: 2006/03/28 08:34:35 $
  * @author $Author: stas $
  * @module test
  */
@@ -168,7 +168,7 @@ public class RoleAttributtesAddition extends TestCase {
 		{
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.PLANNER.getCodename(), 
+					new TypicalCondition(RoleCodename.ANALYST.getCodename(), 
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), true);
@@ -194,14 +194,17 @@ public class RoleAttributtesAddition extends TestCase {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						analyst.getId(), 
-						Module.PREDICTION);
+						Module.MODELING);
 			} else { 
 				permissionAttributes = attributes.iterator().next();
 			}
 			
 			final PermissionAttributes.PermissionCodename[] codenames = new PermissionAttributes.PermissionCodename[]{		
-				PermissionAttributes.PermissionCodename.PREDICTION_ENTER,
-				PermissionAttributes.PermissionCodename.PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM,
+				PermissionAttributes.PermissionCodename.MODELING_ENTER,
+				PermissionAttributes.PermissionCodename.MODELING_OPEN_MAP,
+				PermissionAttributes.PermissionCodename.MODELING_OPEN_SCHEME,
+				PermissionAttributes.PermissionCodename.MODELING_SAVE_REFLECTOGRAM_MODEL,
+				PermissionAttributes.PermissionCodename.MODELING_SET_MODELING_OPTIONS
 			};
 			
 			for (final PermissionAttributes.PermissionCodename codename : codenames) {
