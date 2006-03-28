@@ -363,11 +363,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 		}
 		
 		if (single) {
-			if (this.msList == null) {
-				this.msList = new LinkedList<MeasurementSetup>();
-			} else {
-				this.msList.clear();
-			}
+			resetMsList();
 			this.msList.add(measurementSetup);
 		}
 
@@ -424,26 +420,18 @@ final class TestParametersPanel implements PropertyChangeListener {
 	}
 
 	boolean isAnalysisEnable(final MeasurementSetup measurementSetup) {
+		// XXX: думаю, правильнее было бы 'return getCriteriaSet != null;'
 		return measurementSetup.getCriteriaSet() != null
 		|| measurementSetup.getEtalon() != null
 		|| measurementSetup.getThresholdSet() != null;
 	}
-	
+
 	void setMeasurementSetups0(final Set<MeasurementSetup> measurementSetups) {
 		Log.debugMessage(measurementSetups,
 			Log.DEBUGLEVEL10);
-		if (this.msList == null) {
-			this.msList = new LinkedList<MeasurementSetup>();
-		} else {
-			this.msList.clear();
-		}
+		resetMsList();
+		resetMsListAnalysisOnly();
 
-		if (this.msListAnalysisOnly == null) {
-			this.msListAnalysisOnly = new LinkedList<MeasurementSetup>();
-		} else {
-			this.msListAnalysisOnly.clear();
-		}
-		
 		this.msList.addAll(measurementSetups);
 		for (final MeasurementSetup measurementSetup : measurementSetups) {
 			if (this.isAnalysisEnable(measurementSetup)) {
@@ -615,4 +603,21 @@ final class TestParametersPanel implements PropertyChangeListener {
 
 	}
 
+	private void resetMsList() {
+		if (this.msList == null) {
+			this.msList = new LinkedList<MeasurementSetup>();
+		} else {
+			this.msList.clear();
+		}
+	}
+
+	private void resetMsListAnalysisOnly() {
+		if (this.msListAnalysisOnly == null) {
+			this.msListAnalysisOnly = new LinkedList<MeasurementSetup>();
+		} else {
+			this.msListAnalysisOnly.clear();
+		}
+	}
+
+//	private void add
 }
