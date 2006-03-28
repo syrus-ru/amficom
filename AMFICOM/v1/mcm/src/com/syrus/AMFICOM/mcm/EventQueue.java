@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.8.2.3 2006/03/28 15:21:17 bass Exp $
+ * $Id: EventQueue.java,v 1.8.2.4 2006/03/28 15:25:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8.2.3 $, $Date: 2006/03/28 15:21:17 $
+ * @version $Revision: 1.8.2.4 $, $Date: 2006/03/28 15:25:40 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -82,7 +82,6 @@ final class EventQueue extends SleepButWorkThread {
 				Log.debugMessage("Sending " + length + " event(s) to the event server", FINEST);
 				eventServer.receiveEvents(idlEvents);
 				Log.debugMessage("Done sending " + length + " event(s) to the event server", FINEST);
-				this.eventEqueue.clear();
 			} catch (final CommunicationException ce) {
 				Log.errorMessage(ce);
 				super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
@@ -121,6 +120,7 @@ final class EventQueue extends SleepButWorkThread {
 			for (final Event<?> event : this.eventEqueue) {
 				idlEvents[i++] = event.getIdlTransferable(orb);
 			}
+			this.eventEqueue.clear();
 		}
 		return idlEvents;
 	}
