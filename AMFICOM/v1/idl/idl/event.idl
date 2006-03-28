@@ -1,0 +1,338 @@
+/*-
+ * $Id: event.idl,v 1.59.2.1 2006/03/28 12:13:25 arseniy Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+#ifndef EVENT_IDL
+#define	EVENT_IDL
+
+#include "general.idl"
+#include "reflectometry.idl"
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+module com {
+module syrus {
+module AMFICOM {
+#else // MY_COMPILER_IS_NOT_BRAINDEAD
+#pragma prefix "AMFICOM.syrus.com"
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
+
+module event {
+	module corba {
+
+
+/////////////////////// EventType ////////////////////////
+
+		valuetype IdlEventType : general::corba::IdlStorableObject {
+			enum AlertKind {
+				ALERT_KIND_WINDOW,
+				ALERT_KIND_EMAIL,
+				ALERT_KIND_SMS
+			};
+
+			typedef sequence<AlertKind> AlertKindSeq;
+
+			struct IdlUserAlertKinds {
+				general::corba::IdlIdentifier userId;
+				AlertKindSeq alertKinds;
+			};
+
+			typedef sequence<IdlUserAlertKinds> IdlUserAlertKindsSeq;
+
+			public general::corba::WString32 codename;
+			public general::corba::WString256 description;
+
+			public general::corba::IdlIdentifierSeq parameterTypeIds;
+			public IdlUserAlertKindsSeq userAlertKinds;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 codename,
+					in general::corba::WString256 description,
+					in general::corba::IdlIdentifierSeq parameterTypeIds,
+					in IdlUserAlertKindsSeq userAlertKinds);
+		};
+
+
+/////////////////////// EventSource ////////////////////////
+
+		valuetype IdlEventSource : general::corba::IdlStorableObject {
+			public general::corba::IdlIdentifier sourceEntityId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::IdlIdentifier sourceEntityId);
+		};
+
+
+/////////////////////// Event ////////////////////////
+
+		valuetype IdlEvent : general::corba::IdlStorableObject {
+			typedef struct IdlEventParameter {
+				general::corba::IdlIdentifier id;
+				general::corba::IdlIdentifier _typeId;
+				wstring value;
+			} EventParameter;
+			typedef sequence<EventParameter> EventParameterSeq;
+
+			public general::corba::IdlIdentifier _typeId;
+			public general::corba::WString256 description;
+
+			public EventParameterSeq parameters;
+			public general::corba::IdlIdentifierSeq eventSourceIds;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::IdlIdentifier _typeId,
+					in general::corba::WString256 description,
+					in EventParameterSeq parameters,
+					in general::corba::IdlIdentifierSeq eventSourceIds);
+		};
+
+		typedef sequence<IdlEvent> IdlEventSeq;
+
+		valuetype IdlDeliveryAttributes : general::corba::IdlStorableObject {
+			public reflectometry::corba::IdlSeverity severity;
+			public general::corba::IdlIdentifierSeq roleIds;
+			public general::corba::IdlIdentifierSeq systemUserIds;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in reflectometry::corba::IdlSeverity severity,
+					in general::corba::IdlIdentifierSeq roleIds,
+					in general::corba::IdlIdentifierSeq systemUserIds);
+		};
+	};
+};
+
+module eventv2 {
+	module corba {
+		abstract valuetype IdlEvent {
+			enum IdlEventType {
+				REFLECTOGRAM_MISMATCH,
+				LINE_MISMATCH,
+				NOTIFICATION,
+				MEASUREMENT_STATUS_CHANGED
+			};
+
+			IdlEventType getType();
+
+			eventv2::Event getNativeEvent() raises (general::corba::IdlCreateObjectException);
+		};
+		typedef sequence <IdlEvent> IdlEventSeq;
+
+		valuetype IdlReflectogramMismatchEvent : general::corba::IdlStorableObject, IdlEvent {
+			union IdlMismatchData switch (
+				enum IdlMismatch {
+					_FALSE,
+					_TRUE}) {
+				case _TRUE:
+					struct IdlMismatchPair {
+						double minMismatch;
+						double maxMismatch;
+					} mismatchPair;
+			};
+			private IdlMismatchData mismatchData;
+			private reflectometry::corba::IdlSeverity severity;
+			union IdlAnchorData switch (
+				enum IdlAnchor {
+					_FALSE,
+					_TRUE}) {
+				case _TRUE:
+					struct IdlAnchorPair {
+						general::corba::IdlIdentifier anchor1Id;
+						general::corba::IdlIdentifier anchor2Id;
+						long anchor1Coord;
+						long anchor2Coord;
+					} anchorPair;
+			};
+			private IdlAnchorData anchorData;
+			private long coord;
+			private long endCoord;
+			private reflectometry::corba::IdlAlarmType alarmType;
+			private double deltaX;
+			private general::corba::IdlIdentifier resultId;
+			private general::corba::IdlIdentifier monitoredElementId;
+
+			long long getCreated();
+			boolean hasMismatch();
+			double getMinMismatch();
+			double getMaxMismatch();
+			reflectometry::corba::IdlSeverity getSeverity();
+			boolean hasAnchors();
+			general::corba::IdlIdentifier getAnchor1Id();
+			general::corba::IdlIdentifier getAnchor2Id();
+			long getAnchor1Coord();
+			long getAnchor2Coord();
+			long getCoord();
+			long getEndCoord();
+			reflectometry::corba::IdlAlarmType getAlarmType();
+			double getDeltaX();
+			general::corba::IdlIdentifier getResultId();
+			general::corba::IdlIdentifier getMonitoredElementId();
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in IdlMismatchData mismatchData,
+					in reflectometry::corba::IdlSeverity severity,
+					in IdlAnchorData anchorData,
+					in long coord,
+					in long endCoord,
+					in reflectometry::corba::IdlAlarmType alarmType,
+					in double deltaX,
+					in general::corba::IdlIdentifier resultId,
+					in general::corba::IdlIdentifier monitoredElementId);
+		};
+
+		valuetype IdlLineMismatchEvent : general::corba::IdlStorableObject, IdlEvent {
+			private general::corba::IdlIdentifier affectedPathElementId;
+			union IdlSpacialData switch (
+				enum IdlAffectedPathElementSpacious {
+					_FALSE,
+					_TRUE}) {
+				case _TRUE:
+					struct IdlPhysicalDistancePair {
+						double physicalDistanceToStart;
+						double physicalDistanceToEnd;
+					} physicalDistancePair;
+			};
+			private IdlSpacialData spacialData;
+			private double mismatchOpticalDistance;
+			private double mismatchPhysicalDistance;
+			private general::corba::WString4000 message;
+			private general::corba::IdlIdentifier reflectogramMismatchEventId;
+
+			general::corba::IdlIdentifier getAffectedPathElementId();
+			boolean isAffectedPathElementSpacious();
+			double getPhysicalDistanceToStart();
+			double getPhysicalDistanceToEnd();
+			double getMismatchOpticalDistance();
+			double getMismatchPhysicalDistance();
+			general::corba::WString4000 getMessage();
+			general::corba::IdlIdentifier getReflectogramMismatchEventId();
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::IdlIdentifier affectedPathElementId,
+					in IdlSpacialData spacialData,
+					in double mismatchOpticalDistance,
+					in double mismatchPhysicalDistance,
+					in general::corba::WString4000 message,
+					in general::corba::IdlIdentifier reflectogramMismatchEventId);
+		};
+
+		abstract valuetype IdlNotificationEvent : IdlEvent {
+			enum IdlDeliveryMethod {
+				EMAIL,
+				SMS,
+				POPUP
+			};
+
+			IdlDeliveryMethod getDeliveryMethod();
+		};
+
+		valuetype IdlEmailNotificationEvent : general::corba::IdlStorableObject, IdlNotificationEvent {
+			private string email;
+			private wstring subject;
+			private wstring message;
+
+			string getEmail();
+			wstring getSubject();
+			wstring getMessage();
+
+			factory init(in string email, in wstring subject, in wstring message);
+		};
+
+		valuetype IdlSmsNotificationEvent : general::corba::IdlStorableObject, IdlNotificationEvent {
+			private string cellular;
+			private wstring message;
+
+			string getCellular();
+			wstring getMessage();
+			
+			factory init(in string cellular, in wstring message);
+		};
+
+		valuetype IdlPopupNotificationEvent : general::corba::IdlStorableObject, IdlNotificationEvent {
+			private general::corba::IdlIdentifier targetUserId;
+			private general::corba::IdlIdentifier lineMismatchEventId;
+
+			general::corba::IdlIdentifier getTargetUserId();
+			general::corba::IdlIdentifier getLineMismatchEventId();
+
+			factory init(in general::corba::IdlIdentifier targetUserId,
+					in general::corba::IdlIdentifier lineMismatchEventId);
+		};
+
+		abstract valuetype IdlMeasurementStatusChangedEvent : IdlEvent {
+			long long getCreated();
+			general::corba::IdlIdentifier getMeasurementId();
+		};
+
+		valuetype IdlMeasurementStartedEvent : general::corba::IdlStorableObject, IdlMeasurementStatusChangedEvent {
+			private general::corba::IdlIdentifier measurementId;
+
+			factory init(in long long created,
+					in general::corba::IdlIdentifier measurementId);
+		};
+
+		valuetype IdlMeasurementCompletedEvent : general::corba::IdlStorableObject, IdlMeasurementStatusChangedEvent {
+			union QClause switch (enum QPresence { YES, NO }) {
+				case YES:
+					double quality;
+			};
+
+			private general::corba::IdlIdentifier measurementId;
+			private QClause qClause;
+
+			boolean hasQ();
+			double getQ();
+
+			factory init(in long long created,
+					in general::corba::IdlIdentifier measurementId,
+					in QClause qClause);
+		};
+
+
+/////////////////// EventReceiver ////////////////////
+
+		interface EventReceiver {
+			void receiveEvent(in IdlEvent event) raises (general::corba::AMFICOMRemoteException);
+		};
+	};
+};
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+};
+};
+};
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
+
+#endif // EVENT_IDL
