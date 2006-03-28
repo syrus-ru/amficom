@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.8 2006/03/19 13:10:58 arseniy Exp $
+ * $Id: EventQueue.java,v 1.8.2.1 2006/03/28 15:11:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2006/03/19 13:10:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8.2.1 $, $Date: 2006/03/28 15:11:25 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -37,7 +37,7 @@ final class EventQueue extends SleepButWorkThread {
 	private static final int FALL_CODE_ESTABLISH_CONNECTION = 1;
 	private static final int FALL_CODE_TRANSMIT_EVENTS = 2;
 
-	private List<Event> eventEqueue;
+	private List<Event<?>> eventEqueue;
 	private volatile boolean running;
 
 	public EventQueue() {
@@ -46,12 +46,12 @@ final class EventQueue extends SleepButWorkThread {
 
 		super.setName("EventQueue");
 
-		this.eventEqueue = Collections.synchronizedList(new LinkedList<Event>());
+		this.eventEqueue = Collections.synchronizedList(new LinkedList<Event<?>>());
 		this.running = true;
 	}
 
 	@SuppressWarnings("unused")
-	synchronized void addEvent(final Event event) throws EventQueueFullException {
+	synchronized void addEvent(final Event<?> event) throws EventQueueFullException {
 		Log.debugMessage("Event: " + event + " added to outbox", INFO);
 		this.eventEqueue.add(event);
 		this.notifyAll();
@@ -115,7 +115,7 @@ final class EventQueue extends SleepButWorkThread {
 		synchronized (this.eventEqueue) {
 			idlEvents = new IdlEvent[this.eventEqueue.size()];
 			int i = 0;
-			for (final Event<IdlEvent> event : this.eventEqueue) {
+			for (final Event<?> event : this.eventEqueue) {
 				idlEvents[i++] = event.getIdlTransferable(orb);
 			}
 		}
