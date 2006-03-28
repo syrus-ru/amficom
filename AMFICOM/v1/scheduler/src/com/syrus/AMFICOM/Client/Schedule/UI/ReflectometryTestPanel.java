@@ -65,7 +65,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2006/03/27 14:50:43 $
+ * @version $Revision: 1.104 $, $Date: 2006/03/28 12:08:21 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -1130,7 +1130,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 								ReflectometryTestPanel.this.resolutionComboBox.setSelectedIndex(comboBox.getItemCount() - 1);
 							}
 						}
-						
+
 						ReflectometryTestPanel.this.skip = previousSkipState;
 					}
 				}
@@ -1150,7 +1150,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 
 		final ActionListener changeActionListener = new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {				
+			public void actionPerformed(ActionEvent e) {
 				if (!ReflectometryTestPanel.this.skip) {
 					synchronized(ReflectometryTestPanel.this) {
 						Log.debugMessage("ReflectometryTestPanel.ActionListener.actionPerformed | ", Log.DEBUGLEVEL10);
@@ -1159,14 +1159,14 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 				}
 			}
 		};
-		
+
 		final FocusListener textFieldFocusListener = new FocusAdapter() {
 			@Override
 			public void focusLost(final FocusEvent e) {
 				changeActionListener.actionPerformed(null);
 			}
 		};
-		
+
 		this.descriptionField.addFocusListener(textFieldFocusListener);
 
 		this.descriptionField.addActionListener(changeActionListener);
