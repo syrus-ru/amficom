@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.8.2.6 2006/03/28 15:44:44 bass Exp $
+ * $Id: EventQueue.java,v 1.8.2.7 2006/03/28 15:56:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.mcm;
 
 import static java.util.logging.Level.FINEST;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8.2.6 $, $Date: 2006/03/28 15:44:44 $
+ * @version $Revision: 1.8.2.7 $, $Date: 2006/03/28 15:56:25 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -67,13 +66,17 @@ final class EventQueue extends SleepButWorkThread {
 		while (this.running) {
 
 			synchronized (this.eventQueue) {
-				while (this.eventQueue.isEmpty()) {
+				while (this.eventQueue.isEmpty() && this.running) {
 					try {
 						this.eventQueue.wait(10000);
 					} catch (final InterruptedException ie) {
 						Log.debugMessage(this.getName() + " -- interrupted", Log.DEBUGLEVEL07);
 					}
 				}
+			}
+
+			if (this.eventQueue.isEmpty()) {
+				continue;
 			}
 
 			try {
