@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.12 2005/10/17 14:59:15 stas Exp $
+ * $Id: Constants.java,v 1.13 2006/03/28 09:52:16 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,10 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Stroke;
 import java.awt.Toolkit;
 
 import javax.swing.Icon;
@@ -17,7 +19,7 @@ import javax.swing.ImageIcon;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/10/17 14:59:15 $
+ * @version $Revision: 1.13 $, $Date: 2006/03/28 09:52:16 $
  * @module schemeclient
  */
 
@@ -32,6 +34,19 @@ public interface Constants {
 	public static final Dimension A3 = new Dimension (1680, 1190);
 	public static final Dimension A4 = new Dimension (840, 1190);
 
+	public static Stroke PRIMARY_SELECTION_STROKE = new BasicStroke(2);
+	
+	/** Global Stroke To Highlight Selection */
+	public static float[] dash = { 5f, 5f };
+	public static Stroke SECONDARY_SELECTION_STROKE =
+		new BasicStroke(
+			1,
+			BasicStroke.CAP_BUTT,
+			BasicStroke.JOIN_MITER,
+			10.0f,
+			dash,
+			0.0f);
+	
 	public static final int HORIZONTAL = 0;
 	public static final int VERTICAL = 1;
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeVertexView.java,v 1.8 2006/03/17 10:29:10 stas Exp $
+ * $Id: SchemeVertexView.java,v 1.9 2006/03/28 09:52:16 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,13 +23,14 @@ import com.jgraph.graph.CellViewRenderer;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.VertexRenderer;
 import com.jgraph.graph.VertexView;
+import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2006/03/17 10:29:10 $
+ * @version $Revision: 1.9 $, $Date: 2006/03/28 09:52:16 $
  * @module schemeclient
  */
 
@@ -119,9 +120,13 @@ public class SchemeVertexView extends VertexView {
 				g.drawString(name, (d.width - textWidth) / 2, textHeight);
 			}
 			
-			((Graphics2D) g).setStroke(GraphConstants.SELECTION_STROKE);
-			if (this.childrenSelected)
-				g.setColor(this.graph.getGridColor());
+			((Graphics2D) g).setStroke(Constants.PRIMARY_SELECTION_STROKE);
+			if (this.childrenSelected) {
+				((Graphics2D) g).setStroke(Constants.SECONDARY_SELECTION_STROKE);
+//				g.setColor(this.graph.getGridColor());
+				g.setColor(this.graph.getHighlightColor());
+			}
+				
 			//		else if (hasFocus && selected)
 			//			g.setColor(graph.getLockedHandleColor());
 			else if (this.selected)
