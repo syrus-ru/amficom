@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.16 2006/03/28 10:17:19 bass Exp $
+ * $Id: DeliveryAttributes.java,v 1.17 2006/03/28 11:43:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2006/03/28 10:17:19 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2006/03/28 11:43:45 $
  * @module event
  */
 public final class DeliveryAttributes extends StorableObject
@@ -114,14 +114,12 @@ public final class DeliveryAttributes extends StorableObject
 	 * @throws IdlConversionException
 	 * @see StorableObject#fromIdlTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
-	public void fromIdlTransferable(final IdlDeliveryAttributes deliveryAttributes)
-	throws IdlConversionException {
-		synchronized (this) {
-			super.fromIdlTransferable(deliveryAttributes);
-			this.severity = Severity.valueOf(deliveryAttributes.severity);
-			this.setRoleIds0(Identifier.fromTransferables(deliveryAttributes.roleIds));
-			this.setSystemUserIds0(Identifier.fromTransferables(deliveryAttributes.systemUserIds));
-		}
+	public synchronized void fromIdlTransferable(final IdlDeliveryAttributes deliveryAttributes) throws IdlConversionException {
+		super.fromIdlTransferable(deliveryAttributes);
+
+		this.severity = Severity.valueOf(deliveryAttributes.severity);
+		this.setRoleIds0(Identifier.fromTransferables(deliveryAttributes.roleIds));
+		this.setSystemUserIds0(Identifier.fromTransferables(deliveryAttributes.systemUserIds));
 	}
 
 	/**
