@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.8.2.5 2006/03/28 15:26:37 bass Exp $
+ * $Id: EventQueue.java,v 1.8.2.6 2006/03/28 15:44:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8.2.5 $, $Date: 2006/03/28 15:26:37 $
+ * @version $Revision: 1.8.2.6 $, $Date: 2006/03/28 15:44:44 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -46,15 +46,17 @@ final class EventQueue extends SleepButWorkThread {
 
 		super.setName("EventQueue");
 
-		this.eventQueue = Collections.synchronizedList(new LinkedList<Event<?>>());
+		this.eventQueue = new LinkedList<Event<?>>();
 		this.running = true;
 	}
 
 	@SuppressWarnings("unused")
-	synchronized void addEvent(final Event<?> event) throws EventQueueFullException {
+	void addEvent(final Event<?> event) throws EventQueueFullException {
 		Log.debugMessage("Event: " + event + " is being added to outbox", FINEST);
-		this.eventQueue.add(event);
-		this.notifyAll();
+		synchronized (this.eventQueue) {
+			this.eventQueue.add(event);
+			this.notifyAll();
+		}
 	}
 
 	@Override
@@ -64,10 +66,10 @@ final class EventQueue extends SleepButWorkThread {
 
 		while (this.running) {
 
-			synchronized (this) {
+			synchronized (this.eventQueue) {
 				while (this.eventQueue.isEmpty()) {
 					try {
-						this.wait(10000);
+						this.eventQueue.wait(10000);
 					} catch (final InterruptedException ie) {
 						Log.debugMessage(this.getName() + " -- interrupted", Log.DEBUGLEVEL07);
 					}
@@ -125,8 +127,10 @@ final class EventQueue extends SleepButWorkThread {
 		return idlEvents;
 	}
 
-	synchronized void shutdown() {
+	void shutdown() {
 		this.running = false;
-		this.notifyAll();
+		synchronized (this.eventQueue) {
+			this.eventQueue.notifyAll();
+		}
 	}
 }
