@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.8.2.4 2006/03/28 15:25:40 bass Exp $
+ * $Id: EventQueue.java,v 1.8.2.5 2006/03/28 15:26:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8.2.4 $, $Date: 2006/03/28 15:25:40 $
+ * @version $Revision: 1.8.2.5 $, $Date: 2006/03/28 15:26:37 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -37,7 +37,7 @@ final class EventQueue extends SleepButWorkThread {
 	private static final int FALL_CODE_ESTABLISH_CONNECTION = 1;
 	private static final int FALL_CODE_TRANSMIT_EVENTS = 2;
 
-	private List<Event<?>> eventEqueue;
+	private List<Event<?>> eventQueue;
 	private volatile boolean running;
 
 	public EventQueue() {
@@ -46,14 +46,14 @@ final class EventQueue extends SleepButWorkThread {
 
 		super.setName("EventQueue");
 
-		this.eventEqueue = Collections.synchronizedList(new LinkedList<Event<?>>());
+		this.eventQueue = Collections.synchronizedList(new LinkedList<Event<?>>());
 		this.running = true;
 	}
 
 	@SuppressWarnings("unused")
 	synchronized void addEvent(final Event<?> event) throws EventQueueFullException {
 		Log.debugMessage("Event: " + event + " is being added to outbox", FINEST);
-		this.eventEqueue.add(event);
+		this.eventQueue.add(event);
 		this.notifyAll();
 	}
 
@@ -65,7 +65,7 @@ final class EventQueue extends SleepButWorkThread {
 		while (this.running) {
 
 			synchronized (this) {
-				while (this.eventEqueue.isEmpty()) {
+				while (this.eventQueue.isEmpty()) {
 					try {
 						this.wait(10000);
 					} catch (final InterruptedException ie) {
@@ -114,13 +114,13 @@ final class EventQueue extends SleepButWorkThread {
 	private IdlEvent[] createIdlEventArray(final BaseConnectionManager connectionManager) {
 		final ORB orb = connectionManager.getCORBAServer().getOrb();
 		final IdlEvent[] idlEvents;
-		synchronized (this.eventEqueue) {
-			idlEvents = new IdlEvent[this.eventEqueue.size()];
+		synchronized (this.eventQueue) {
+			idlEvents = new IdlEvent[this.eventQueue.size()];
 			int i = 0;
-			for (final Event<?> event : this.eventEqueue) {
+			for (final Event<?> event : this.eventQueue) {
 				idlEvents[i++] = event.getIdlTransferable(orb);
 			}
-			this.eventEqueue.clear();
+			this.eventQueue.clear();
 		}
 		return idlEvents;
 	}
