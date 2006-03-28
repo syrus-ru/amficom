@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.51 2006/03/27 11:21:41 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.52 2006/03/28 13:50:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.*;
 
 import java.util.Set;
 
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2006/03/27 11:21:41 $
+ * @version $Revision: 1.52 $, $Date: 2006/03/28 13:50:45 $
  * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -189,7 +189,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				case SCHEMEDEVICE_CODE:
 					return super.conditionTest(schemePort.parentSchemeDeviceId);
 				case PORT_TYPE_CODE:
-					return super.conditionTest(schemePort.getPortTypeId());
+					return super.conditionTest(schemePort.portTypeId);
 				default:
 					throw newIllegalObjectEntityException();
 				}
@@ -198,6 +198,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				switch (super.linkedEntityCode) {
 				case SCHEMEDEVICE_CODE:
 					return super.conditionTest(schemeCablePort.parentSchemeDeviceId);
+				case PORT_TYPE_CODE:
+					return super.conditionTest(schemeCablePort.portTypeId);
 				default:
 					throw newIllegalObjectEntityException();
 				}
