@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesXML.java,v 1.3 2006/03/28 10:17:19 bass Exp $
+ * $Id: DeliveryAttributesXML.java,v 1.4 2006/03/28 11:44:03 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,9 +26,11 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.AbstractStorableObjectXML;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
+
+
 /**
- * @version $Revision: 1.3 $, $Date: 2006/03/28 10:17:19 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2006/03/28 11:44:03 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module event
  */
