@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 import com.syrus.util.Log;
 
 public class ModelGenerator {
-	SchemePath path;
 	List<ModelEvent> reflectoElements;
 	List<PathElement> pathelements;
 
@@ -39,7 +38,6 @@ public class ModelGenerator {
 		double defReflect,
 		double defAttenuation)
 	{
-		this.path = path;
 		this.defConnectorLoss = defConnectorLoss;
 		this.defWeldLoss = defWeldLoss;
 		this.defReflect = defReflect;
