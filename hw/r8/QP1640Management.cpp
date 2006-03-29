@@ -19,7 +19,7 @@ BOOL initQP1640Cards(OTDRReportListener* otdrReportListener,
 
 		const int errorcode = QPOTDRInitialize(cards[id]);
 		if (errorcode == 0) {
-			printf("QP1640OTDRController | Init card %u - success", id);
+			printf("QP1640OTDRController | Init card %u - success\n", id);
 			QP1640OTDRController* otdrController = new QP1640OTDRController(id,
 				otdrReportListener,
 				timewait);
