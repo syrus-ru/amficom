@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.59.2.1 2006/03/21 08:45:21 bass Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.59.2.2 2006/03/29 05:48:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59.2.1 $, $Date: 2006/03/21 08:45:21 $
+ * @version $Revision: 1.59.2.2 $, $Date: 2006/03/29 05:48:32 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -201,9 +201,6 @@ final class AnalysisEvaluationProcessor {
 			}
 
 			return analysisResult;
-		} catch (final EventQueueFullException eqfe) {
-			Log.debugMessage(eqfe, SEVERE);
-			throw new AnalysisException(eqfe);
 		} catch (final DataFormatException dfe) {
 			Log.debugMessage(dfe, SEVERE);
 			throw new AnalysisException(dfe);
