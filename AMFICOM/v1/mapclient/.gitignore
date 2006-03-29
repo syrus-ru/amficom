@@ -15,3 +15,4 @@ test
 .mach
 Makefile.inc
 .pmd
+.refactorings
