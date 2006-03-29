@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMObjectSynchronizer.java,v 1.1.2.4 2006/03/21 09:40:06 arseniy Exp $
+ * $Id: MCMObjectSynchronizer.java,v 1.1.2.5 2006/03/29 05:56:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2006/03/21 09:40:06 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/03/29 05:56:51 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -101,7 +101,7 @@ final class MCMObjectSynchronizer extends Thread {
 	public void run() {
 		while (this.running) {
 			synchronized (this) {
-				while (this.loadIdsQueue.isEmpty()) {
+				while (this.loadIdsQueue.isEmpty() && this.running) {
 					try {
 						this.wait(SLEEP_TIMEOUT);
 					} catch (InterruptedException e) {

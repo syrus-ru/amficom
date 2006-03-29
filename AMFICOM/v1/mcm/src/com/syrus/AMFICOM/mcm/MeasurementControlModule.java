@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementControlModule.java,v 1.146.2.12 2006/03/24 09:35:38 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146.2.13 2006/03/29 05:56:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146.2.12 $, $Date: 2006/03/24 09:35:38 $
+ * @version $Revision: 1.146.2.13 $, $Date: 2006/03/29 05:56:51 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -630,7 +630,10 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		while (this.running) {
 
 			synchronized (this) {
-				while (this.newTestIds.isEmpty() && this.stoppingTestIds.isEmpty() && this.scheduledTests.isEmpty()) {
+				while (this.newTestIds.isEmpty()
+						&& this.stoppingTestIds.isEmpty()
+						&& this.scheduledTests.isEmpty()
+						&& this.running) {
 					try {
 						sleep(super.initialTimeToSleep);
 					} catch (InterruptedException ie) {

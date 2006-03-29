@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.80.2.2 2006/03/16 12:02:14 arseniy Exp $
+ * $Id: Transceiver.java,v 1.80.2.3 2006/03/29 05:56:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.80.2.2 $, $Date: 2006/03/16 12:02:14 $
+ * @version $Revision: 1.80.2.3 $, $Date: 2006/03/29 05:56:51 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -211,9 +211,9 @@ final class Transceiver extends SleepButWorkThread {
 		while (this.running) {
 
 			synchronized (this) {
-				while (this.newMeasurements.isEmpty() && this.runningMeasurementIds.isEmpty()) {
+				while (this.newMeasurements.isEmpty() && this.runningMeasurementIds.isEmpty() && this.running) {
 					try {
-						this.wait(10000);
+						this.wait(super.initialTimeToSleep);
 					} catch (InterruptedException ie) {
 						Log.debugMessage(this.getName() + " -- interrupted", Log.DEBUGLEVEL07);
 					}
