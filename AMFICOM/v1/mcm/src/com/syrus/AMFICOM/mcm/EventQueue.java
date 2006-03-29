@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.8.2.7 2006/03/28 15:56:25 bass Exp $
+ * $Id: EventQueue.java,v 1.8.2.8 2006/03/29 05:45:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8.2.7 $, $Date: 2006/03/28 15:56:25 $
+ * @version $Revision: 1.8.2.8 $, $Date: 2006/03/29 05:45:53 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -54,7 +54,7 @@ final class EventQueue extends SleepButWorkThread {
 		Log.debugMessage("Event: " + event + " is being added to outbox", FINEST);
 		synchronized (this.eventQueue) {
 			this.eventQueue.add(event);
-			this.notifyAll();
+			this.eventQueue.notifyAll();
 		}
 	}
 
