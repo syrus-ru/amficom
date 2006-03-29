@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.7.2.2 2006/03/16 11:58:20 arseniy Exp $
+ * $Id: EventQueue.java,v 1.7.2.3 2006/03/29 09:21:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,9 +11,8 @@ package com.syrus.AMFICOM.mcm;
 import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KEY_MAX_FALLS;
 import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KEY_TICK_TIME;
 import static com.syrus.AMFICOM.mcm.MeasurementControlModule.TICK_TIME;
-import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.FINEST;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,7 +29,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7.2.2 $, $Date: 2006/03/16 11:58:20 $
+ * @version $Revision: 1.7.2.3 $, $Date: 2006/03/29 09:21:45 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -40,7 +39,7 @@ final class EventQueue extends SleepButWorkThread {
 	private static final int FALL_CODE_ESTABLISH_CONNECTION = 1;
 	private static final int FALL_CODE_TRANSMIT_EVENTS = 2;
 
-	private List<Event<? extends IdlEvent>> eventEqueue;
+	private List<Event<?>> eventQueue;
 	private volatile boolean running;
 
 	public EventQueue() {
@@ -49,15 +48,16 @@ final class EventQueue extends SleepButWorkThread {
 
 		super.setName("EventQueue");
 
-		this.eventEqueue = Collections.synchronizedList(new LinkedList<Event<? extends IdlEvent>>());
+		this.eventQueue = new LinkedList<Event<?>>();
 		this.running = true;
 	}
 
-	@SuppressWarnings("unused")
-	synchronized void addEvent(final Event<? extends IdlEvent> event) throws EventQueueFullException {
-		Log.debugMessage("Event: " + event + " added to outbox", INFO);
-		this.eventEqueue.add(event);
-		this.notifyAll();
+	void addEvent(final Event<?> event) {
+		Log.debugMessage("Event: " + event + " is being added to outbox", FINEST);
+		synchronized (this.eventQueue) {
+			this.eventQueue.add(event);
+			this.eventQueue.notifyAll();
+		}
 	}
 
 	@Override
@@ -67,22 +67,28 @@ final class EventQueue extends SleepButWorkThread {
 
 		while (this.running) {
 
-			synchronized (this) {
-				while (this.eventEqueue.isEmpty()) {
+			synchronized (this.eventQueue) {
+				while (this.eventQueue.isEmpty() && this.running) {
 					try {
-						this.wait(10000);
-					} catch (InterruptedException ie) {
+						this.eventQueue.wait(10000);
+					} catch (final InterruptedException ie) {
 						Log.debugMessage(this.getName() + " -- interrupted", Log.DEBUGLEVEL07);
 					}
 				}
+			}
+
+			if (this.eventQueue.isEmpty()) {
+				continue;
 			}
 
 			try {
 				final EventServer eventServer = connectionManager.getEventServerReference();
 
 				final IdlEvent[] idlEvents = this.createIdlEventArray(connectionManager);
+				final int length = idlEvents.length;
+				Log.debugMessage("Sending " + length + " event(s) to the event server", FINEST);
 				eventServer.receiveEvents(idlEvents);
-				this.eventEqueue.clear();
+				Log.debugMessage("Done sending " + length + " event(s) to the event server", FINEST);
 			} catch (final CommunicationException ce) {
 				Log.errorMessage(ce);
 				super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
@@ -114,16 +120,22 @@ final class EventQueue extends SleepButWorkThread {
 
 	private IdlEvent[] createIdlEventArray(final BaseConnectionManager connectionManager) {
 		final ORB orb = connectionManager.getCORBAServer().getOrb();
-		final IdlEvent[] idlEvents = new IdlEvent[this.eventEqueue.size()];
-		int i = 0;
-		for (final Event<? extends IdlEvent> event : this.eventEqueue) {
-			idlEvents[i++] = event.getIdlTransferable(orb);
+		final IdlEvent[] idlEvents;
+		synchronized (this.eventQueue) {
+			idlEvents = new IdlEvent[this.eventQueue.size()];
+			int i = 0;
+			for (final Event<?> event : this.eventQueue) {
+				idlEvents[i++] = event.getIdlTransferable(orb);
+			}
+			this.eventQueue.clear();
 		}
 		return idlEvents;
 	}
 
-	synchronized void shutdown() {
+	void shutdown() {
 		this.running = false;
-		this.notifyAll();
+		synchronized (this.eventQueue) {
+			this.eventQueue.notifyAll();
+		}
 	}
 }
