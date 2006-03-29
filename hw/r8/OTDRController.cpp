@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTDRController.cpp,v 1.7 2005/10/26 15:07:44 arseniy Exp $
+// $Id: OTDRController.cpp,v 1.8 2006/03/29 13:24:39 arseniy Exp $
 // 
 // Syrus Systems.
 // оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.7 $, $Date: 2005/10/26 15:07:44 $
+// $Revision: 1.8 $, $Date: 2006/03/29 13:24:39 $
 // $Author: arseniy $
 //
 // Implementation of the OTDRController class.
@@ -50,7 +50,7 @@ void OTDRController::init() {
 		this->retrieveOTDRPluginInfo();
 
 //		/*	Вывести допустимые параметры измерений.*/
-//		this->printAvailableParameters();
+		this->printAvailableParameters();
 
 		/*	Изменить текущее состояние*/
 		this->state = OTDR_STATE_READY;
