@@ -30,7 +30,96 @@ void QP1640OTDRController::retrieveOTDRPluginInfo() {
 }
 
 void QP1640OTDRController::printAvailableParameters() const {
-	printf("QP1640OTDRController | QP1640 card N %d", this->otdrId);
+	printf("QP1640OTDRController | QP1640 card N %d\n", this->otdrId);
+
+	int maxWaves = QPOTDRGetMaxWaves(this->otdrId);
+	if (maxWaves <= 0) {
+		printf("QP1640OTDRController | ERROR: QPOTDRGetMaxWaves returned error\n");
+		return;
+	}
+
+	int i;
+	float* waves = new float[MAX_WAVES];
+	QPOTDRGetAvailWaves(this->otdrId, waves);
+	for (i = 0; i < maxWaves; i++) {
+		//Длина волны.
+		printf("Wave length: %f\n", waves[i]);
+		int j;
+
+		//Длины рефлектограммы
+		int maxRanges = QPOTDRGetMaxRanges(this->otdrId, waves[i]);
+		if (maxRanges <= 0) {
+			printf("QP1640OTDRController | ERROR: QPOTDRGetMaxRanges returned error\n");
+			delete[] waves;
+			return;
+		}
+		float* ranges = new float[MAX_RANGES];
+		QPOTDRGetAvailRanges(this->otdrId, waves[i], ranges);
+		for (j = 0; j < maxRanges; j++) {
+			printf("\tRange: %f\n", ranges[j]);
+		}
+		delete[] ranges;
+
+		//Ширины импульса (для режимов высокого и низкого разрешения).
+		int maxPulseWidths = QPOTDRGetMaxPulses(this->otdrId, waves[i]);
+		if (maxPulseWidths <= 0) {
+			printf("QP1640OTDRController | ERROR: QPOTDRGetMaxPulses returned error\n");
+			delete[] waves;
+			return;
+		}
+		DWORD* pulseWidths = new DWORD[MAX_PULSES];
+		QPOTDRGetAvailPulses(this->otdrId, waves[i], pulseWidths);
+		for (j = 0; j < maxPulseWidths; j++) {
+			const int flagPulswdLowRes = pulseWidths[j] & 0x00000001;
+			if (flagPulswdLowRes) {
+				const short pulswd = pulseWidths[j] >> 16;
+				printf("\tPulse witdh low res\t%u\n", pulswd);
+			}
+		}
+		for (j = 0; j < maxPulseWidths; j++) {
+			const int flagPulswdLowRes = pulseWidths[j] & 0x00000001;
+			if (!flagPulswdLowRes) {
+				const short pulswd = pulseWidths[j] >> 16;
+				printf("\tPulse witdh high res\t%u\n", pulswd);
+			}
+		}
+		delete[] pulseWidths;
+
+		//Показатель отражения.
+		float ior = QPOTDRGetDefaultIOR(this->otdrId, waves[i]);
+		printf("\t Index of refraction: %f\n", ior);
+
+		//Количество усреднений.
+		int maxAverages = QPOTDRGetMaxAverages(this->otdrId, waves[i]);
+		if (maxAverages <= 0) {
+			printf("QP1640OTDRController | ERROR: QPOTDRGetMaxAverages returned error\n");
+			delete[] waves;
+			return;
+		}
+		DWORD* avergs = new DWORD[MAX_AVERAGES];
+		QPOTDRGetAvailAverages(this->otdrId, waves[i], avergs);
+		for (j = 0; j < maxAverages; j++) {
+			printf("\tAverage: %u\n", avergs[j]);
+		}
+		delete[] avergs;
+	}
+
+	delete[] waves;
+
+	//Разрешение.
+	int maxPointSpacings = QPOTDRGetMaxPointSpacings(this->otdrId);
+	if (maxPointSpacings <= 0) {
+		printf("QP1640OTDRController | ERROR: QPOTDRGetMaxPointSpacings returned error\n");
+		return;
+	}
+	float* pointSpacings = new float[MAX_SPACINGS];
+	QPOTDRGetAvailSpacings(this->otdrId, pointSpacings);
+	//НЕ_МОЯ_ОШИБКА: Истинное количество допустимых значений 8, однако QPOTDRGetMaxPointSpacings возвращает 7.
+	//Поэтому цикл не до maxPointSpacings, а до MAX_SPACINGS.
+	for (i = 0; i < MAX_SPACINGS; i++) {
+		printf("Point spacing: %f\n", pointSpacings[i]);
+	}
+	delete[] pointSpacings;
 }
 
 OTDRModel QP1640OTDRController::getOTDRModel() const {
@@ -38,7 +127,7 @@ OTDRModel QP1640OTDRController::getOTDRModel() const {
 }
 
 BOOL QP1640OTDRController::setMeasurementParameters(const Parameter** parameters, const unsigned int parNumber) {
-	printf("QP1640OTDRController | Setting measurement parameters");
+	printf("QP1640OTDRController | Setting measurement parameters\n");
 
 	int waveLength = -1;
 	double traceLength = -1;
@@ -338,7 +427,7 @@ BellcoreStructure* QP1640OTDRController::runMeasurement() const {
 			QPOTDRRetrieveWaveformSync(this->otdrId, waveFormHeader, waveFormData, false);
 		} else // Life fiber / critical error
 			if (ret == WAIT_OBJECT_0 + 2) {
-				printf("RTUTransceiver | ERROR: Life fiber detected or critical error occured. Test aborted\n");
+				printf("RTUTransceiver | ERROR: Life fiber detected or critical error occured. Measurement aborted\n");
 			}
 
 	} while (ret == WAIT_OBJECT_0 + 1);
