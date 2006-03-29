@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementControlModule.java,v 1.146.2.13 2006/03/29 05:56:51 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146.2.14 2006/03/29 09:22:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146.2.13 $, $Date: 2006/03/29 05:56:51 $
+ * @version $Revision: 1.146.2.14 $, $Date: 2006/03/29 09:22:31 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -563,7 +563,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	 * @param event
 	 * @throws EventQueueFullException
 	 */
-	void addEventToQueue(final Event<? extends IdlEvent> event) throws EventQueueFullException {
+	void addEventToQueue(final Event<? extends IdlEvent> event) {
 		assert event != null : NON_NULL_EXPECTED;
 		this.eventQueue.addEvent(event);
 	}
