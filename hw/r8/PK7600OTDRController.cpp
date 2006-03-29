@@ -41,11 +41,11 @@ void PK7600OTDRController::retrieveOTDRPluginInfo() {
 void PK7600OTDRController::printAvailableParameters() const {
 	printf("PK7600OTDRController | PK7600 card N %d, serial number: %s, model number: %s\n", this->otdrId, this->otdrPluginInfo->serialNumber, this->otdrPluginInfo->modelNumber);
 
-	float* wavelengths = new float[PK7600_MAX_WAVES];
-	PK7600GetAvailWaves(this->otdrId, wavelengths);
+	float* waveLengths = new float[PK7600_MAX_WAVES];
+	PK7600GetAvailWaves(this->otdrId, waveLengths);
 
-	float* pulsewidths = new float[PK7600_MAX_PULSES];
-	PK7600GetAvailPulses(this->otdrId, pulsewidths);
+	float* pulseWidths = new float[PK7600_MAX_PULSES];
+	PK7600GetAvailPulses(this->otdrId, pulseWidths);
 
 	float *ranges = new float[PK7600_MAX_RANGES];
 	PK7600GetAvailRanges(this->otdrId, ranges);
@@ -54,22 +54,22 @@ void PK7600OTDRController::printAvailableParameters() const {
 	PK7600GetAvailSpacings(this->otdrId, pointSpacings);
 
 	for (int w = 0; w < PK7600_MAX_WAVES; w++) {
-		if (wavelengths[w] == 0) {
+		if (waveLengths[w] == 0) {
 			continue;
 		}
-		printf("Wavelength: %f:\n", wavelengths[w]);
+		printf("Wavelength: %f:\n", waveLengths[w]);
 		for (int r = 0; r < PK7600_MAX_RANGES; r++) {
 			if (ranges[r] == 0) {
 				continue;
 			}
 			printf("\tRange: %f:\n", ranges[r]);
-			const int maxPointSpacingIndex = PK7600GetMaxSpacing(this->otdrId, wavelengths[w], ranges[r], pointSpacings);
+			const int maxPointSpacingIndex = PK7600GetMaxSpacing(this->otdrId, waveLengths[w], ranges[r], pointSpacings);
 			for (int ps = 0; ps <= maxPointSpacingIndex; ps++) {
 				printf("\t\tPoint spacing: %f:\n", pointSpacings[ps]);
-				const int minPulseWidthIndex = PK7600GetMinPulseWidth(this->otdrId, wavelengths[w], ranges[r], pointSpacings[ps], pulsewidths);
-				const int maxPulseWidthIndex = PK7600GetMaxPulseWidth(this->otdrId, wavelengths[w], ranges[r], pointSpacings[ps], pulsewidths);
+				const int minPulseWidthIndex = PK7600GetMinPulseWidth(this->otdrId, waveLengths[w], ranges[r], pointSpacings[ps], pulseWidths);
+				const int maxPulseWidthIndex = PK7600GetMaxPulseWidth(this->otdrId, waveLengths[w], ranges[r], pointSpacings[ps], pulseWidths);
 				for (int pw = minPulseWidthIndex; pw <= maxPulseWidthIndex; pw++) {
-					printf("\t\t\tPulse width: %f:\n", pulsewidths[pw]);
+					printf("\t\t\tPulse width: %f:\n", pulseWidths[pw]);
 				}
 			}
 		}
