@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMObjectSynchronizer.java,v 1.1.2.5 2006/03/29 05:56:51 arseniy Exp $
+ * $Id: MCMObjectSynchronizer.java,v 1.1.2.6 2006/03/29 09:09:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@ package com.syrus.AMFICOM.mcm;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.util.Log.DEBUGLEVEL07;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1.2.5 $, $Date: 2006/03/29 05:56:51 $
+ * @version $Revision: 1.1.2.6 $, $Date: 2006/03/29 09:09:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -105,7 +106,7 @@ final class MCMObjectSynchronizer extends Thread {
 					try {
 						this.wait(SLEEP_TIMEOUT);
 					} catch (InterruptedException e) {
-						Log.debugMessage(this.getName() + " -- interrupted", Log.DEBUGLEVEL07);
+						Log.debugMessage(this.getName() + " -- interrupted", DEBUGLEVEL07);
 					}
 				}
 			}

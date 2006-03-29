@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.80.2.3 2006/03/29 05:56:51 arseniy Exp $
+ * $Id: Transceiver.java,v 1.80.2.4 2006/03/29 09:07:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import static com.syrus.AMFICOM.measurement.Action.ActionStatus.ACTION_STATUS_AB
 import static com.syrus.AMFICOM.measurement.Action.ActionStatus.ACTION_STATUS_COMPLETED;
 import static com.syrus.AMFICOM.measurement.Action.ActionStatus.ACTION_STATUS_NEW;
 import static com.syrus.AMFICOM.measurement.Action.ActionStatus.ACTION_STATUS_RUNNING;
+import static com.syrus.util.Log.DEBUGLEVEL07;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -44,7 +45,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.80.2.3 $, $Date: 2006/03/29 05:56:51 $
+ * @version $Revision: 1.80.2.4 $, $Date: 2006/03/29 09:07:57 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -139,7 +140,7 @@ final class Transceiver extends SleepButWorkThread {
 			return;
 		}
 
-		Log.debugMessage("Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+		Log.debugMessage("Adding measurement '" + measurementId + "'", DEBUGLEVEL07);
 		this.newMeasurements.add(measurement);
 
 		this.notifyAll();
@@ -174,7 +175,7 @@ final class Transceiver extends SleepButWorkThread {
 			return;
 		}
 
-		Log.debugMessage("Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+		Log.debugMessage("Adding measurement '" + measurementId + "'", DEBUGLEVEL07);
 		this.runningMeasurementIds.add(measurementId);
 
 		this.notifyAll();
@@ -193,12 +194,12 @@ final class Transceiver extends SleepButWorkThread {
 		assert measurementId.getMajor() == MEASUREMENT_CODE : ILLEGAL_ENTITY_CODE;
 
 		if (this.newMeasurements.remove(measurementId)) {
-			Log.debugMessage("Removed measurement '" + measurementId + "' from list of new measurements", Log.DEBUGLEVEL07);
+			Log.debugMessage("Removed measurement '" + measurementId + "' from list of new measurements", DEBUGLEVEL07);
 		} else {
 			if (this.runningMeasurementIds.contains(measurementId)) {
 				/* @todo Послать команду прерывания измерения на КИС. */
 				this.runningMeasurementIds.remove(measurementId);
-				Log.debugMessage("Cancelled running measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+				Log.debugMessage("Cancelled running measurement '" + measurementId + "'", DEBUGLEVEL07);
 			}
 		}
 	}
@@ -215,7 +216,7 @@ final class Transceiver extends SleepButWorkThread {
 					try {
 						this.wait(super.initialTimeToSleep);
 					} catch (InterruptedException ie) {
-						Log.debugMessage(this.getName() + " -- interrupted", Log.DEBUGLEVEL07);
+						Log.debugMessage(this.getName() + " -- interrupted", DEBUGLEVEL07);
 					}
 				}
 			}
@@ -228,7 +229,7 @@ final class Transceiver extends SleepButWorkThread {
 					try {
 						this.kisConnection.transmitMeasurement(measurement, super.initialTimeToSleep);
 
-						Log.debugMessage("Successfully transferred measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+						Log.debugMessage("Successfully transferred measurement '" + measurementId + "'", DEBUGLEVEL07);
 						this.newMeasurements.remove(measurement);
 						this.runningMeasurementIds.add(measurementId);
 						measurement.setStatus(ACTION_STATUS_RUNNING);
@@ -259,7 +260,7 @@ final class Transceiver extends SleepButWorkThread {
 					}
 				} else {// if (this.kisReport == null)
 					final Identifier measurementId = this.kisReport.getMeasurementId();
-					Log.debugMessage("Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+					Log.debugMessage("Received report for measurement '" + measurementId + "'", DEBUGLEVEL07);
 					if (!this.runningMeasurementIds.remove(measurementId)) {
 						Log.errorMessage("Measurement '" + measurementId + "' not found in set of running measurements");
 					}
@@ -281,7 +282,7 @@ final class Transceiver extends SleepButWorkThread {
 							StorableObjectPool.flush(saveObjects, LoginManager.getUserId(), false);
 						} catch (CreateObjectException coe) {
 							Log.errorMessage(coe);
-							Log.debugMessage("Cannot create result -- trying to wait", Log.DEBUGLEVEL07);
+							Log.debugMessage("Cannot create result -- trying to wait", DEBUGLEVEL07);
 							try {
 								MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 							} catch (CommunicationException ce) {
@@ -365,7 +366,7 @@ final class Transceiver extends SleepButWorkThread {
 	private void cancelAndAbortNewMeasurement() {
 		if (this.measurementToRemove != null) {
 			Log.debugMessage("Removing measurement '" + this.measurementToRemove.getId() + "' from KIS '" + this.kisId + "'",
-					Log.DEBUGLEVEL07);
+					DEBUGLEVEL07);
 			this.newMeasurements.remove(this.measurementToRemove);
 
 			this.measurementToRemove.setStatus(ACTION_STATUS_ABORTED);
@@ -409,7 +410,7 @@ final class Transceiver extends SleepButWorkThread {
 	private void throwAwayKISReport() {
 		if (this.kisReport != null) {
 			Log.debugMessage("Throwing away report of measurement '" + this.kisReport.getMeasurementId()
-					+ "' from KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
+					+ "' from KIS '" + this.kisId + "'", DEBUGLEVEL07);
 			this.kisReport = null;
 		} else {
 			Log.errorMessage("ERROR: KIS report is null -- nothing to throw away");
