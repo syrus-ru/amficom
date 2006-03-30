@@ -354,9 +354,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 
 		try {
 			this.changeMonitoredElement(measurementSetup.getMonitoredElementIds().iterator().next());
-		} catch (ApplicationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
 		}
 		
 		if (switchToSetups && !this.useSetupsCheckBox.isSelected()) {
@@ -364,24 +363,20 @@ final class TestParametersPanel implements PropertyChangeListener {
 		}
 		
 		final boolean analysisSetupsSelected = this.useAnalysisSetupsCheckBox.isSelected();
-		final boolean measurementSetupWithAnalysis = 
-			measurementSetup.getCriteriaSet() != null &&
-			measurementSetup.getEtalon() != null &&
-			measurementSetup.getThresholdSet() != null;		 
-		
+		final boolean measurementSetupWithAnalysis = isAnalysisEnable(measurementSetup);		 
+
 		try {
 			if (analysisSetupsSelected && 
 					this.schedulerModel.getSelectedTest().getAnalysisType() == AnalysisType.UNKNOWN) {
 				this.useAnalysisSetupsCheckBox.doClick();
 			}
 		} catch (final ApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.errorMessage(e);
 		}
-		
+
 		final WrapperedListModel<MeasurementSetup> wrapperedListModel = 
 			this.testSetups.getModel();
-		
+
 		if (single) {
 			wrapperedListModel.setElements(this.msList);
 		} else if (!this.msList.contains(measurementSetup)) {
@@ -390,15 +385,15 @@ final class TestParametersPanel implements PropertyChangeListener {
 			if(measurementSetupWithAnalysis) {
 				this.msListAnalysisOnly.add(measurementSetup);
 				if (analysisSetupsSelected) {
-					wrapperedListModel.addElement(measurementSetup);					
+					wrapperedListModel.addElement(measurementSetup);
 				}
 			}
 
 			if (!analysisSetupsSelected) {
 				wrapperedListModel.addElement(measurementSetup);
-			}			
-		}		
-		
+			}
+		}
+
 		if (this.testSetups.getSelectedValue() == null) {
 			this.testSetups.setSelectedValue(measurementSetup, true);
 		}
