@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.28 2006/01/23 13:32:09 bob Exp $
+ * $Id: LogicalTreeUI.java,v 1.29 2006/03/30 12:44:11 bass Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,8 +64,8 @@ import javax.swing.tree.TreeSelectionModel;
 import com.syrus.AMFICOM.general.Identifiable;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2006/01/23 13:32:09 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2006/03/30 12:44:11 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter
  */
@@ -581,10 +581,9 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 					if (lastPathComponent instanceof Populatable) {
 						final Populatable populatableItem = (Populatable) lastPathComponent;
 						if (!populatableItem.isPopulated()) {
-							final Cursor previousCursor = LogicalTreeUI.this.tree.getCursor();  
 							LogicalTreeUI.this.tree.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 							populatableItem.populate();
-							LogicalTreeUI.this.tree.setCursor(previousCursor);
+							LogicalTreeUI.this.tree.setCursor(Cursor.getDefaultCursor());
 						}
 					}
 				}
