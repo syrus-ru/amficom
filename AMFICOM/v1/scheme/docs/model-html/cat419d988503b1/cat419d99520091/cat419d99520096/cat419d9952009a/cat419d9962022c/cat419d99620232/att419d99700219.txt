@@ -1,3 +1,0 @@
-*
-						 * Getter returns physical length of this scheme link or scheme cable link.
-						 * @see #physicalLength
