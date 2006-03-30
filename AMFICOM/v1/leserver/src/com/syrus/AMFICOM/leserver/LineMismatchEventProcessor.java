@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.24 2006/03/23 18:15:54 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.25 2006/03/30 08:49:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,12 @@
 
 package com.syrus.AMFICOM.leserver;
 
-import static com.syrus.AMFICOM.administration.SystemUserWrapper.COLUMN_LOGIN;
-import static com.syrus.AMFICOM.administration.SystemUserWrapper.LOGINPROCESSOR_LOGIN;
 import static com.syrus.AMFICOM.eventv2.EventType.LINE_MISMATCH;
 import static com.syrus.AMFICOM.general.CharacteristicTypeCodenames.USER_EMAIL;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
@@ -30,7 +27,6 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.SystemUser;
-import com.syrus.AMFICOM.bugs.Crutch524;
 import com.syrus.AMFICOM.event.DeliveryAttributes;
 import com.syrus.AMFICOM.eventv2.DefaultEmailNotificationEvent;
 import com.syrus.AMFICOM.eventv2.DefaultPopupNotificationEvent;
@@ -47,6 +43,7 @@ import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -56,14 +53,11 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2006/03/23 18:15:54 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2006/03/30 08:49:16 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
-	@Crutch524(notes = "")
-	private static Identifier creatorId = null;
-
 	private static Identifier characteristicTypeId = null;
 
 	private static StorableObjectCondition condition = null;
@@ -99,9 +93,7 @@ final class LineMismatchEventProcessor implements EventProcessor {
 			final ReflectogramMismatchEvent reflectogramMismatchEvent =
 					(ReflectogramMismatchEvent) StorableObjectPool.getStorableObject(lineMismatchEvent.getReflectogramMismatchEventId(), true);
 			final Severity severity = reflectogramMismatchEvent.getSeverity();
-			final Set<SystemUser> systemUsers = DeliveryAttributes
-					.getInstance(getCreatorId(), severity)
-					.getSystemUsersRecursively();
+			final Set<SystemUser> systemUsers = DeliveryAttributes.getInstance(LoginManager.getUserId(), severity).getSystemUsersRecursively();
 			final Set<Identifier> systemUserIds = Identifier.createIdentifiers(systemUsers);
 
 			final Set<String> addresses = getAddresses(systemUserIds);
@@ -196,37 +188,6 @@ final class LineMismatchEventProcessor implements EventProcessor {
 				}
 			}
 			return characteristicTypeId;
-		}
-	}
-
-	@Crutch524(notes = "")
-	private static Identifier getCreatorId() {
-		synchronized (LineMismatchEventProcessor.class) {
-			if (creatorId == null) {
-				try {
-					final Set<SystemUser> systemUsers = StorableObjectPool.getStorableObjectsByCondition(
-							new TypicalCondition(
-									LOGINPROCESSOR_LOGIN,
-									OPERATION_EQUALS,
-									SYSTEMUSER_CODE,
-									COLUMN_LOGIN),
-							true);
-					assert systemUsers != null : NON_NULL_EXPECTED;
-					final int size = systemUsers.size();
-					assert size == 1 : size;
-					creatorId = systemUsers.iterator().next().getId();
-				} catch (final ApplicationException ae) {
-					Log.debugMessage(ae, SEVERE);
-					creatorId = VOID_IDENTIFIER;
-		
-					/*
-					 * Never. But log the exception prior to issuing an
-					 * eror.
-					 */
-					assert false;
-				}
-			}
-			return creatorId;
 		}
 	}
 }

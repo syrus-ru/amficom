@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.16 2006/03/23 18:15:54 bass Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.17 2006/03/30 08:49:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,22 +8,14 @@
 
 package com.syrus.AMFICOM.leserver;
 
-import static com.syrus.AMFICOM.administration.SystemUserWrapper.COLUMN_LOGIN;
-import static com.syrus.AMFICOM.administration.SystemUserWrapper.LOGINPROCESSOR_LOGIN;
 import static com.syrus.AMFICOM.eventv2.EventType.REFLECTORGAM_MISMATCH;
-import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
-import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
-import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import com.syrus.AMFICOM.administration.SystemUser;
-import com.syrus.AMFICOM.bugs.Crutch524;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.eventv2.DefaultLineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.Event;
@@ -34,8 +26,8 @@ import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
@@ -47,8 +39,8 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
- * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2006/03/23 18:15:54 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2006/03/30 08:49:16 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor
@@ -95,9 +87,6 @@ final class ReflectogramMismatchEventProcessor
 
 	private static final Pattern METER_PLURAL_GENITIVE_REGEXP = Pattern.compile("(([0-9]*[^1])?[0,5-9]|[0-9]*1[0-9])");
 
-
-	@Crutch524(notes = "")
-	private static Identifier creatorId = null;
 
 	/**
 	 * @see EventProcessor#getEventType()
@@ -223,7 +212,7 @@ final class ReflectogramMismatchEventProcessor
 			}
 
 			final LineMismatchEvent lineMismatchEvent = DefaultLineMismatchEvent.newInstance(
-					getCreatorId(),
+					LoginManager.getUserId(),
 					affectedPathElement.getId(),
 					affectedPathElement.isSpacious(),
 					physicalDistanceFromStart,
@@ -353,37 +342,6 @@ final class ReflectogramMismatchEventProcessor
 		} catch (final ApplicationException ae) {
 			Log.debugMessage(ae, SEVERE);
 			return "";
-		}
-	}
-
-	@Crutch524(notes = "")
-	private static Identifier getCreatorId() {
-		synchronized (LineMismatchEventProcessor.class) {
-			if (creatorId == null) {
-				try {
-					final Set<SystemUser> systemUsers = StorableObjectPool.getStorableObjectsByCondition(
-							new TypicalCondition(
-									LOGINPROCESSOR_LOGIN,
-									OPERATION_EQUALS,
-									SYSTEMUSER_CODE,
-									COLUMN_LOGIN),
-							true);
-					assert systemUsers != null : NON_NULL_EXPECTED;
-					final int size = systemUsers.size();
-					assert size == 1 : size;
-					creatorId = systemUsers.iterator().next().getId();
-				} catch (final ApplicationException ae) {
-					Log.debugMessage(ae, SEVERE);
-					creatorId = VOID_IDENTIFIER;
-		
-					/*
-					 * Never. But log the exception prior to issuing an
-					 * eror.
-					 */
-					assert false;
-				}
-			}
-			return creatorId;
 		}
 	}
 }
