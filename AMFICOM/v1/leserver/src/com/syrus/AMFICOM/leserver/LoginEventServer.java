@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.34 2006/02/28 15:19:59 arseniy Exp $
+ * $Id: LoginEventServer.java,v 1.35 2006/03/30 08:47:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2006/02/28 15:19:59 $
+ * @version $Revision: 1.35 $, $Date: 2006/03/30 08:47:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -118,9 +118,8 @@ final class LoginEventServer {
 				throw new ApplicationException("Cannot find login server process or event server process");
 			}
 	
-			/*	Init session environment
-			 * NOTE: No logging in*/
-			LEServerSessionEnvironment.createInstance(server.getHostName());
+			/* Init session environment */
+			LEServerSessionEnvironment.createInstance(server.getHostName(), loginServerProcess.getUserId());
 	
 			/*	Activate servants*/
 			final CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
