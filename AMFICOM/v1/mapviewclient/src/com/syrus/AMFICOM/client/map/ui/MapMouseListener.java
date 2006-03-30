@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMouseListener.java,v 1.79 2006/02/22 10:54:45 stas Exp $$
+ * $$Id: MapMouseListener.java,v 1.80 2006/03/30 15:42:11 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
@@ -35,6 +36,7 @@ import com.syrus.AMFICOM.client.map.popup.MapPopupMenu;
 import com.syrus.AMFICOM.client.map.popup.MapPopupMenuManager;
 import com.syrus.AMFICOM.client.map.strategy.MapStrategy;
 import com.syrus.AMFICOM.client.map.strategy.MapStrategyManager;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
@@ -55,7 +57,7 @@ import com.syrus.util.Log;
  * события передается текущему активному элементу карты (посредством объекта
  * MapStrategy)
  * 
- * @version $Revision: 1.79 $, $Date: 2006/02/22 10:54:45 $
+ * @version $Revision: 1.80 $, $Date: 2006/03/30 15:42:11 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -93,12 +95,24 @@ public final class MapMouseListener implements MouseListener {
 	}
 
 	public void mousePressed(MouseEvent me) {
-		boolean proceed = true;
-
-		LogicalNetLayer logicalNetLayer = this.netMapViewer
-				.getLogicalNetLayer();
-
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		final LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		MapState mapState = logicalNetLayer.getMapState();
+		
+		// XXX этот костыль введен, чтобы можно было двигать карту, если нельзя редактировать ее
+		if (mapState.getActionMode() != MapState.SELECT_ACTION_MODE &&
+				mapState.getActionMode() != MapState.SELECT_MARKER_ACTION_MODE)  {
+			if (mapState.getActionMode() != MapState.NULL_ACTION_MODE) { // not an edit action!
+				if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
+					mapState.setActionMode(MapState.NULL_ACTION_MODE);
+				}
+				if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
+					mapState.setActionMode(MapState.NULL_ACTION_MODE);
+				}
+			}
+		}
+
+		boolean proceed = true;
 
 		mapState.setMouseMode(MapState.MOUSE_PRESSED);// Установить режим
 
@@ -448,6 +462,24 @@ public final class MapMouseListener implements MouseListener {
 				return;
 
 		mapState.setMouseMode(MapState.MOUSE_RELEASED);
+
+		
+		// XXX этот костыль введен, чтобы можно было двигать карту, если нельзя редактировать ее  
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		if (mapState.getActionMode() != MapState.SELECT_ACTION_MODE &&
+				mapState.getActionMode() != MapState.SELECT_MARKER_ACTION_MODE)  {
+			if (mapState.getActionMode() != MapState.NULL_ACTION_MODE) { // not an edit action!
+				if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
+					mapState.setActionMode(MapState.NULL_ACTION_MODE);
+					logicalNetLayer.sendMapEvent(MapEvent.NEED_REPAINT);
+				}
+				if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
+					mapState.setActionMode(MapState.NULL_ACTION_MODE);
+					logicalNetLayer.sendMapEvent(MapEvent.NEED_REPAINT);
+				}
+			}
+		}
+		
 		if(logicalNetLayer.getMapView() != null) {
 			try {
 				// Обрабатывает события на панели инстрементов

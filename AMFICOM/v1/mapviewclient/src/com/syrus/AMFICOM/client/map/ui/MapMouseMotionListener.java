@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMouseMotionListener.java,v 1.45 2006/03/30 11:29:40 stas Exp $$
+ * $$Id: MapMouseMotionListener.java,v 1.46 2006/03/30 15:42:11 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -29,8 +28,6 @@ import com.syrus.AMFICOM.client.map.strategy.MapStrategy;
 import com.syrus.AMFICOM.client.map.strategy.MapStrategyManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.util.Log;
 
@@ -40,7 +37,7 @@ import com.syrus.util.Log;
  * обработка события передается текущему активному элементу карты (посредством
  * объекта MapStrategy)
  * 
- * @version $Revision: 1.45 $, $Date: 2006/03/30 11:29:40 $
+ * @version $Revision: 1.46 $, $Date: 2006/03/30 15:42:11 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -57,24 +54,16 @@ public final class MapMouseMotionListener implements MouseMotionListener {
 		final LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		MapState mapState = logicalNetLayer.getMapState();
 		
-		if (mapState.getActionMode() == MapState.NULL_ACTION_MODE) { // not an edit action!
-			
-		} else { 
-			if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
-				aContext.getDispatcher().firePropertyChange(
-						new StatusMessageEvent(
-								this,
-								StatusMessageEvent.STATUS_MESSAGE,
-								I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
-				return;
-			}
-			if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
-				aContext.getDispatcher().firePropertyChange(
-						new StatusMessageEvent(
-								this,
-								StatusMessageEvent.STATUS_MESSAGE,
-								I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
-				return;
+		// XXX этот костыль введен, чтобы можно было двигать карту, если нельзя редактировать ее
+		if (mapState.getActionMode() != MapState.SELECT_ACTION_MODE &&
+				mapState.getActionMode() != MapState.SELECT_MARKER_ACTION_MODE)  {
+			if (mapState.getActionMode() != MapState.NULL_ACTION_MODE) { // not an edit action!
+				if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
+					mapState.setActionMode(MapState.NULL_ACTION_MODE);
+				}
+				if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
+					mapState.setActionMode(MapState.NULL_ACTION_MODE);
+				}
 			}
 		}
 
