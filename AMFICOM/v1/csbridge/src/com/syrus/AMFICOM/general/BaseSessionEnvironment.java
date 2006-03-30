@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.34 2006/02/17 11:32:21 arseniy Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.35 2006/03/30 12:08:32 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,17 @@ import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2006/02/17 11:32:21 $
+ * @version $Revision: 1.35 $, $Date: 2006/03/30 12:08:32 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
 public abstract class BaseSessionEnvironment {
+	/**
+	 * Время, отводимое на попытки войти в систему. Должно быть в миллисекундах.
+	 */
+	private static final long LOGIN_TIMEOUT = 10 * 1000;
+
 	protected BaseConnectionManager baseConnectionManager;
 	protected PoolContext poolContext;
 	protected Date sessionEstablishDate;
@@ -97,8 +102,27 @@ public abstract class BaseSessionEnvironment {
 	 * @throws LoginException
 	 */
 	public final void login(final String login, final String password, final Identifier domainId)
-			throws CommunicationException, LoginException {
-		LoginManager.login(login, password, domainId);
+			throws CommunicationException,
+				LoginException {
+		final long loginDeadTime = System.currentTimeMillis() + LOGIN_TIMEOUT;
+		boolean loggedId = false;
+		while (!loggedId) {
+			try {
+				LoginManager.login(login, password, domainId);
+				loggedId = true;
+			} catch (CommunicationException ce) {
+				Log.errorMessage("Cannot establish connection -- " + ce.getMessage());
+				if (System.currentTimeMillis() >= loginDeadTime) {
+					throw ce;
+				}
+				try {
+					Thread.sleep(2 * 1000);
+				} catch (InterruptedException ie) {
+					Log.errorMessage(ie);
+				}
+			}
+		}
+
 		try {
 			StorableObjectPool.deserialize(this.poolContext.getLRUMapSaver());
 		} catch (final ApplicationException ae) {
