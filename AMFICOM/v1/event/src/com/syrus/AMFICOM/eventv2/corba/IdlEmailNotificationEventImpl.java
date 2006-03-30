@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlEmailNotificationEventImpl.java,v 1.5 2006/03/28 10:17:19 bass Exp $
+ * $Id: IdlEmailNotificationEventImpl.java,v 1.6 2006/03/30 08:06:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2006/03/28 10:17:19 $
+ * @version $Revision: 1.6 $, $Date: 2006/03/30 08:06:47 $
  * @module event
  */
 final class IdlEmailNotificationEventImpl extends IdlEmailNotificationEvent {
@@ -75,8 +75,9 @@ final class IdlEmailNotificationEventImpl extends IdlEmailNotificationEvent {
 	}
 
 	/**
-	 * @see IdlNotificationEvent#getMessage()
+	 * @see IdlEmailNotificationEvent#getMessage()
 	 */
+	@Override
 	public String getMessage() {
 		return this.message;
 	}
