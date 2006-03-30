@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.105 2006/03/15 14:47:30 bass Exp $
+ * $Id: Measurement.java,v 1.106 2006/03/30 12:10:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.105 $, $Date: 2006/03/15 14:47:30 $
+ * @version $Revision: 1.106 $, $Date: 2006/03/30 12:10:30 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -198,6 +198,10 @@ public final class Measurement extends Action
 
 	public Identifier getTestId() {
 		return this.testId;
+	}
+
+	public Test getTest() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getTestId(), true);
 	}
 
 	/**
