@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractReflectogramMismatchEvent.java,v 1.6 2006/03/28 10:17:19 bass Exp $
+ * $Id: AbstractReflectogramMismatchEvent.java,v 1.7 2006/03/30 12:10:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.reflectometry.SOAnchor;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2006/03/28 10:17:19 $
+ * @version $Revision: 1.7 $, $Date: 2006/03/30 12:10:05 $
  * @module event
  */
 public abstract class AbstractReflectogramMismatchEvent extends StorableObject
@@ -59,7 +59,7 @@ public abstract class AbstractReflectogramMismatchEvent extends StorableObject
 		final int coord = this.getCoord();
 		return "alarmType = " + this.getAlarmType()
 				+ "; severity = " + this.getSeverity()
-				+ "; resultId = " + this.getResultId()
+				+ "; measurementId = " + this.getMeasurementId()
 				+ "; deltaX = " + deltaX
 				+ "; coord = " + coord
 				+ "; distance = " + this.getDistance() + " = " + deltaX + " * " + coord;
@@ -108,8 +108,7 @@ public abstract class AbstractReflectogramMismatchEvent extends StorableObject
 				this.getEndCoord(),
 				this.getAlarmType().getIdlTransferable(orb),
 				this.getDeltaX(),
-				this.getResultId().getIdlTransferable(orb),
-				this.getMonitoredElementId().getIdlTransferable(orb));
+				this.getMeasurementId().getIdlTransferable(orb));
 	}
 
 	@Override
@@ -119,8 +118,7 @@ public abstract class AbstractReflectogramMismatchEvent extends StorableObject
 			dependencies.add(Identifier.valueOf(this.getAnchor1Id().getValue()));
 			dependencies.add(Identifier.valueOf(this.getAnchor2Id().getValue()));
 		}
-		dependencies.add(this.getResultId());
-		dependencies.add(this.getMonitoredElementId());
+		dependencies.add(this.getMeasurementId());
 		return dependencies;
 	}
 
@@ -132,7 +130,7 @@ public abstract class AbstractReflectogramMismatchEvent extends StorableObject
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.6 $, $Date: 2006/03/28 10:17:19 $
+	 * @version $Revision: 1.7 $, $Date: 2006/03/30 12:10:05 $
 	 * @module event
 	 */
 	final class SoAnchorImpl implements SOAnchor, Identifiable, Serializable {

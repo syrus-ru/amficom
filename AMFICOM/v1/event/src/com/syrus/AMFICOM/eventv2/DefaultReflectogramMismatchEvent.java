@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultReflectogramMismatchEvent.java,v 1.15 2006/03/28 10:17:19 bass Exp $
+ * $Id: DefaultReflectogramMismatchEvent.java,v 1.16 2006/03/30 12:10:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,9 +9,8 @@
 package com.syrus.AMFICOM.eventv2;
 
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
-import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.REFLECTOGRAMMISMATCHEVENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
@@ -33,7 +32,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2006/03/28 10:17:19 $
+ * @version $Revision: 1.16 $, $Date: 2006/03/30 12:10:05 $
  * @module event
  */
 public final class DefaultReflectogramMismatchEvent extends
@@ -108,12 +107,7 @@ public final class DefaultReflectogramMismatchEvent extends
 	/**
 	 * @serial include
 	 */
-	private Identifier resultId;
-
-	/**
-	 * @serial include
-	 */
-	private Identifier monitoredElementId;
+	private Identifier measurementId;
 
 	/**
 	 * Ctor used solely by database driver.
@@ -128,45 +122,27 @@ public final class DefaultReflectogramMismatchEvent extends
 	 * @param id
 	 * @param creatorId
 	 * @param reflectogramMismatch
-	 * @param resultId
-	 * @param monitoredElementId
+	 * @param measurementId
 	 */
 	private DefaultReflectogramMismatchEvent(final Identifier id,
 			final Identifier creatorId,
 			final ReflectogramMismatch reflectogramMismatch,
-			final Identifier resultId,
-			final Identifier monitoredElementId) {
+			final Identifier measurementId) {
 		super(id, creatorId, new Date(), INITIAL_VERSION);
 
 		/*
-		 * resultId: strict check (void not permitted at object creation
-		 * stage)
+		 * measurementId: strict check (void not permitted at object
+		 * creation stage)
 		 */
-		if (resultId == null) {
-			throw new NullPointerException("resultId is null");
+		if (measurementId == null) {
+			throw new NullPointerException("measurementId is null");
 		}
-		final short resultIdMajor = resultId.getMajor();
-		if (resultIdMajor != RESULT_CODE) {
-			throw new IllegalArgumentException(resultId.isVoid()
-					? "resultId is void"
-					: "Type of resultId: ``"
-							+ ObjectEntities.codeToString(resultIdMajor)
-							+ "'' is invalid");
-		}
-
-		/*
-		 * monitoredElementId: strict check (void not permitted at
-		 * object creation stage)
-		 */
-		if (monitoredElementId == null) {
-			throw new NullPointerException("monitoredElementId is null");
-		}
-		final short monitoredElementIdMajor = monitoredElementId.getMajor();
-		if (monitoredElementIdMajor != MONITOREDELEMENT_CODE) {
-			throw new IllegalArgumentException(monitoredElementId.isVoid()
-					? "monitoredElementId is void"
-					: "Type of monitoredElementId: ``"
-							+ ObjectEntities.codeToString(monitoredElementIdMajor)
+		final short measurementIdMajor = measurementId.getMajor();
+		if (measurementIdMajor != MEASUREMENT_CODE) {
+			throw new IllegalArgumentException(measurementId.isVoid()
+					? "measurementId is void"
+					: "Type of measurementId: ``"
+							+ ObjectEntities.codeToString(measurementIdMajor)
 							+ "'' is invalid");
 		}
 
@@ -196,8 +172,7 @@ public final class DefaultReflectogramMismatchEvent extends
 		this.endCoord = reflectogramMismatch.getEndCoord();
 		this.alarmType = reflectogramMismatch.getAlarmType();
 		this.deltaX = reflectogramMismatch.getDeltaX();
-		this.resultId = resultId;
-		this.monitoredElementId = monitoredElementId;
+		this.measurementId = measurementId;
 	}
 
 	/**
@@ -239,28 +214,15 @@ public final class DefaultReflectogramMismatchEvent extends
 			super.fromIdlTransferable((IdlStorableObject) reflectogramMismatchEvent);
 
 			/*
-			 * resultId: loose check (void permitted)
+			 * measurementId: loose check (void permitted)
 			 */
 			@SuppressWarnings("hiding")
-			final Identifier resultId = Identifier.valueOf(reflectogramMismatchEvent.getResultId());
-			final short resultIdMajor = resultId.getMajor();
-			if (!(resultIdMajor == RESULT_CODE
-					|| resultId.isVoid())) {
-				throw new IllegalArgumentException("Type of resultId: ``"
-						+ ObjectEntities.codeToString(resultIdMajor)
-						+ "'' is invalid");
-			}
-
-			/*
-			 * monitoredElementId: loose check (void permitted)
-			 */
-			@SuppressWarnings("hiding")
-			final Identifier monitoredElementId = Identifier.valueOf(reflectogramMismatchEvent.getMonitoredElementId());
-			final short monitoredElementIdMajor = monitoredElementId.getMajor();
-			if (!(monitoredElementIdMajor == MONITOREDELEMENT_CODE
-					|| monitoredElementId.isVoid())) {
-				throw new IllegalArgumentException("Type of monitoredElementId: ``"
-						+ ObjectEntities.codeToString(monitoredElementIdMajor)
+			final Identifier measurementId = Identifier.valueOf(reflectogramMismatchEvent.getMeasurementId());
+			final short measurementIdMajor = measurementId.getMajor();
+			if (!(measurementIdMajor == MEASUREMENT_CODE
+					|| measurementId.isVoid())) {
+				throw new IllegalArgumentException("Type of measurementId: ``"
+						+ ObjectEntities.codeToString(measurementIdMajor)
 						+ "'' is invalid");
 			}
 
@@ -287,8 +249,7 @@ public final class DefaultReflectogramMismatchEvent extends
 			this.endCoord = reflectogramMismatchEvent.getEndCoord();
 			this.alarmType = AlarmType.valueOf(reflectogramMismatchEvent.getAlarmType());
 			this.deltaX = reflectogramMismatchEvent.getDeltaX();
-			this.resultId = resultId;
-			this.monitoredElementId = monitoredElementId;
+			this.measurementId = measurementId;
 		}
 	}
 
@@ -310,29 +271,17 @@ public final class DefaultReflectogramMismatchEvent extends
 			final Identifier anchor2Id,
 			final int anchor1Coord,
 			final int anchor2Coord,
-			final Identifier resultId,
-			final Identifier monitoredElementId) {
+			final Identifier measurementId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
 		/*
-		 * resultId: loose check (void permitted)
+		 * measurementId: loose check (void permitted)
 		 */
-		final short resultIdMajor = resultId.getMajor();
-		if (!(resultIdMajor == RESULT_CODE
-				|| resultId.isVoid())) {
-			throw new IllegalArgumentException("Type of resultId: ``"
-					+ ObjectEntities.codeToString(resultIdMajor)
-					+ "'' is invalid");
-		}
-
-		/*
-		 * monitoredElementId: loose check (void permitted)
-		 */
-		final short monitoredElementIdMajor = monitoredElementId.getMajor();
-		if (!(monitoredElementIdMajor == MONITOREDELEMENT_CODE
-				|| monitoredElementId.isVoid())) {
-			throw new IllegalArgumentException("Type of monitoredElementId: ``"
-					+ ObjectEntities.codeToString(monitoredElementIdMajor)
+		final short measurementIdMajor = measurementId.getMajor();
+		if (!(measurementIdMajor == MEASUREMENT_CODE
+				|| measurementId.isVoid())) {
+			throw new IllegalArgumentException("Type of measurementId: ``"
+					+ ObjectEntities.codeToString(measurementIdMajor)
 					+ "'' is invalid");
 		}
 
@@ -359,8 +308,7 @@ public final class DefaultReflectogramMismatchEvent extends
 		this.endCoord = endCoord;
 		this.alarmType = alarmType;
 		this.deltaX = deltaX;
-		this.resultId = resultId;
-		this.monitoredElementId = monitoredElementId;
+		this.measurementId = measurementId;
 	}
 
 	/**
@@ -370,15 +318,13 @@ public final class DefaultReflectogramMismatchEvent extends
 	 *
 	 * @param creatorId
 	 * @param reflectogramMismatch
-	 * @param resultId
-	 * @param monitoredElementId
+	 * @param measurementId
 	 * @throws CreateObjectException
 	 */
 	public static ReflectogramMismatchEvent newInstance(
 			final Identifier creatorId,
 			final ReflectogramMismatch reflectogramMismatch,
-			final Identifier resultId,
-			final Identifier monitoredElementId)
+			final Identifier measurementId)
 	throws CreateObjectException {
 		if (creatorId == null) {
 			throw new NullPointerException("creatorId is null");
@@ -392,8 +338,7 @@ public final class DefaultReflectogramMismatchEvent extends
 					IdentifierPool.getGeneratedIdentifier(REFLECTOGRAMMISMATCHEVENT_CODE),
 					creatorId,
 					reflectogramMismatch,
-					resultId, 
-					monitoredElementId);
+					measurementId);
 			return reflectogramMismatchEvent;
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -523,16 +468,9 @@ public final class DefaultReflectogramMismatchEvent extends
 	}
 
 	/**
-	 * @see ReflectogramMismatchEvent#getResultId()
+	 * @see ReflectogramMismatchEvent#getMeasurementId()
 	 */
-	public Identifier getResultId() {
-		return this.resultId;
-	}
-
-	/**
-	 * @see ReflectogramMismatchEvent#getMonitoredElementId()
-	 */
-	public Identifier getMonitoredElementId() {
-		return this.monitoredElementId;
+	public Identifier getMeasurementId() {
+		return this.measurementId;
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventWrapper.java,v 1.2 2006/03/28 10:17:19 bass Exp $
+ * $Id: ReflectogramMismatchEventWrapper.java,v 1.3 2006/03/30 12:10:05 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Wrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2006/03/28 10:17:19 $
+ * @version $Revision: 1.3 $, $Date: 2006/03/30 12:10:05 $
  * @module event
  */
 public final class ReflectogramMismatchEventWrapper
@@ -41,8 +41,7 @@ public final class ReflectogramMismatchEventWrapper
 	public static final String COLUMN_ANCHOR2_ID = "anchor2_id";
 	public static final String COLUMN_ANCHOR1_COORD = "anchor1_coord";
 	public static final String COLUMN_ANCHOR2_COORD = "anchor2_coord";
-	public static final String COLUMN_RESULT_ID = "result_id";
-	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
+	public static final String COLUMN_MEASUREMENT_ID = "measurement_id";
 
 	private final List<String> keys;
 
@@ -65,8 +64,7 @@ public final class ReflectogramMismatchEventWrapper
 				COLUMN_ANCHOR2_ID,
 				COLUMN_ANCHOR1_COORD,
 				COLUMN_ANCHOR2_COORD,
-				COLUMN_RESULT_ID,
-				COLUMN_MONITORED_ELEMENT_ID));
+				COLUMN_MEASUREMENT_ID));
 	}
 
 	/**
@@ -112,8 +110,7 @@ public final class ReflectogramMismatchEventWrapper
 			return Boolean.class;
 		} else if (internedKey == COLUMN_ANCHOR1_ID
 				|| internedKey == COLUMN_ANCHOR2_ID
-				|| internedKey == COLUMN_RESULT_ID
-				|| internedKey == COLUMN_MONITORED_ELEMENT_ID) {
+				|| internedKey == COLUMN_MEASUREMENT_ID) {
 			return Identifier.class;
 		}
 		return null;
@@ -180,10 +177,8 @@ public final class ReflectogramMismatchEventWrapper
 			return Integer.valueOf(reflectogramMismatchEvent.getAnchor1Coord());
 		} else if (internedKey == COLUMN_ANCHOR2_COORD) {
 			return Integer.valueOf(reflectogramMismatchEvent.getAnchor2Coord());
-		} else if (internedKey == COLUMN_RESULT_ID) {
-			return reflectogramMismatchEvent.getResultId();
-		} else if (internedKey == COLUMN_MONITORED_ELEMENT_ID) {
-			return reflectogramMismatchEvent.getMonitoredElementId();
+		} else if (internedKey == COLUMN_MEASUREMENT_ID) {
+			return reflectogramMismatchEvent.getMeasurementId();
 		}
 		return null;
 	}

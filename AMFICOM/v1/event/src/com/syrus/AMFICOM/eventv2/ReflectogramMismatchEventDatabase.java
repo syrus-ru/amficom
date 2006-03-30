@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventDatabase.java,v 1.2 2006/03/28 10:17:19 bass Exp $
+ * $Id: ReflectogramMismatchEventDatabase.java,v 1.3 2006/03/30 12:10:05 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,9 +17,8 @@ import static com.syrus.AMFICOM.eventv2.ReflectogramMismatchEventWrapper.COLUMN_
 import static com.syrus.AMFICOM.eventv2.ReflectogramMismatchEventWrapper.COLUMN_DELTA_X;
 import static com.syrus.AMFICOM.eventv2.ReflectogramMismatchEventWrapper.COLUMN_END_COORD;
 import static com.syrus.AMFICOM.eventv2.ReflectogramMismatchEventWrapper.COLUMN_MAX_MISMATCH;
+import static com.syrus.AMFICOM.eventv2.ReflectogramMismatchEventWrapper.COLUMN_MEASUREMENT_ID;
 import static com.syrus.AMFICOM.eventv2.ReflectogramMismatchEventWrapper.COLUMN_MIN_MISMATCH;
-import static com.syrus.AMFICOM.eventv2.ReflectogramMismatchEventWrapper.COLUMN_MONITORED_ELEMENT_ID;
-import static com.syrus.AMFICOM.eventv2.ReflectogramMismatchEventWrapper.COLUMN_RESULT_ID;
 import static com.syrus.AMFICOM.eventv2.ReflectogramMismatchEventWrapper.COLUMN_SEVERITY;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.REFLECTOGRAMMISMATCHEVENT_CODE;
@@ -48,7 +47,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2006/03/28 10:17:19 $
+ * @version $Revision: 1.3 $, $Date: 2006/03/30 12:10:05 $
  * @module event
  */
 public final class ReflectogramMismatchEventDatabase
@@ -82,8 +81,7 @@ public final class ReflectogramMismatchEventDatabase
 						+ COLUMN_ANCHOR2_ID + COMMA
 						+ COLUMN_ANCHOR1_COORD + COMMA
 						+ COLUMN_ANCHOR2_COORD + COMMA
-						+ COLUMN_RESULT_ID + COMMA
-						+ COLUMN_MONITORED_ELEMENT_ID
+						+ COLUMN_MEASUREMENT_ID
 				: columns;
 	}
 
@@ -94,7 +92,6 @@ public final class ReflectogramMismatchEventDatabase
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		return updateMultipleSQLValues == null
 				? updateMultipleSQLValues = QUESTION + COMMA
-						+ QUESTION + COMMA
 						+ QUESTION + COMMA
 						+ QUESTION + COMMA
 						+ QUESTION + COMMA
@@ -137,8 +134,7 @@ public final class ReflectogramMismatchEventDatabase
 								+ DatabaseIdentifier.toSQLString(VOID_IDENTIFIER) + COMMA
 								+ SQL_NULL + COMMA
 								+ SQL_NULL + COMMA)
-				+ DatabaseIdentifier.toSQLString(reflectogramMismatchEvent.getResultId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(reflectogramMismatchEvent.getMonitoredElementId());
+				+ DatabaseIdentifier.toSQLString(reflectogramMismatchEvent.getMeasurementId());
 	}
 
 	/**
@@ -178,8 +174,7 @@ public final class ReflectogramMismatchEventDatabase
 			preparedStatement.setNull(++startParameterNumber, Types.INTEGER);
 			preparedStatement.setNull(++startParameterNumber, Types.INTEGER);
 		}
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, reflectogramMismatchEvent.getResultId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, reflectogramMismatchEvent.getMonitoredElementId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, reflectogramMismatchEvent.getMeasurementId());
 		return startParameterNumber;
 	}
 
@@ -294,8 +289,7 @@ public final class ReflectogramMismatchEventDatabase
 				anchor2Id,
 				anchor1Coord,
 				anchor2Coord,
-				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_RESULT_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MONITORED_ELEMENT_ID));
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_ID));
 		return reflectogramMismatchEvent;
 	}
 }

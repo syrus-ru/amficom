@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlReflectogramMismatchEventImpl.java,v 1.11 2006/03/28 10:17:19 bass Exp $
+ * $Id: IdlReflectogramMismatchEventImpl.java,v 1.12 2006/03/30 12:10:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2006/03/28 10:17:19 $
+ * @version $Revision: 1.12 $, $Date: 2006/03/30 12:10:05 $
  * @module event
  */
 final class IdlReflectogramMismatchEventImpl
@@ -49,8 +49,7 @@ final class IdlReflectogramMismatchEventImpl
 	 * @param endCoord
 	 * @param alarmType
 	 * @param deltaX
-	 * @param resultId
-	 * @param monitoredElementId
+	 * @param measurementId
 	 */
 	IdlReflectogramMismatchEventImpl(final IdlIdentifier id,
 			final long created, final long modified,
@@ -61,8 +60,7 @@ final class IdlReflectogramMismatchEventImpl
 			final IdlAnchorData anchorData, final int coord,
 			final int endCoord, final IdlAlarmType alarmType,
 			final double deltaX,
-			final IdlIdentifier resultId,
-			final IdlIdentifier monitoredElementId) {
+			final IdlIdentifier measurementId) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -77,8 +75,7 @@ final class IdlReflectogramMismatchEventImpl
 		this.endCoord = endCoord;
 		this.alarmType = alarmType;
 		this.deltaX = deltaX;
-		this.resultId = resultId;
-		this.monitoredElementId = monitoredElementId;
+		this.measurementId = measurementId;
 	}
 
 	/**
@@ -172,17 +169,12 @@ final class IdlReflectogramMismatchEventImpl
 		return this.deltaX;
 	}
 
-	@Override
-	public IdlIdentifier getResultId() {
-		return this.resultId;
-	}
-
 	/**
-	 * @see IdlReflectogramMismatchEvent#getMonitoredElementId()
+	 * @see IdlReflectogramMismatchEvent#getMeasurementId()
 	 */
 	@Override
-	public IdlIdentifier getMonitoredElementId() {
-		return this.monitoredElementId;
+	public IdlIdentifier getMeasurementId() {
+		return this.measurementId;
 	}
 
 	public IdlEventType getType() {
