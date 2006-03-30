@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.95 2006/02/28 15:37:01 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.96 2006/03/30 12:41:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,6 @@ import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -50,7 +49,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2006/02/28 15:37:01 $
+ * @version $Revision: 1.96 $, $Date: 2006/03/30 12:41:22 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -133,7 +132,13 @@ final class MeasurementServer extends SleepButWorkThread {
 		Application.init(APPLICATION_NAME);
 
 		/*	All preparations on startup*/
-		startup();
+		try {
+			startup();
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+			Log.errorMessage("Cannot start -- exiting");
+			System.exit(0);
+		}
 
 		/*	Start main loop	*/
 		final MeasurementServer measurementServer = new MeasurementServer();
@@ -148,7 +153,7 @@ final class MeasurementServer extends SleepButWorkThread {
 		});
 	}
 
-	private static void startup() {
+	private static void startup() throws ApplicationException {
 		/*	Establish connection with database	*/
 		establishDatabaseConnection();
 
@@ -163,54 +168,43 @@ final class MeasurementServer extends SleepButWorkThread {
 		final Identifier serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
 		final String processCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSERVER_PROCESS_CODENAME,
 				ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
-		try {
-			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
-			final Server server = serverDatabase.retrieveForId(serverId);
+		final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
+		final Server server = serverDatabase.retrieveForId(serverId);
 
-			final StorableObjectDatabase<ServerProcess> serverProcessDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE);
-			final ServerProcess serverProcess = ((ServerProcessDatabase) serverProcessDatabase).retrieveForServerAndCodename(serverId,
-					processCodename);
+		final StorableObjectDatabase<ServerProcess> serverProcessDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE);
+		final ServerProcess serverProcess = ((ServerProcessDatabase) serverProcessDatabase).retrieveForServerAndCodename(serverId,
+				processCodename);
 
-			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
-			final SystemUser user = systemUserDatabase.retrieveForId(serverProcess.getUserId());
+		final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
+		final SystemUser user = systemUserDatabase.retrieveForId(serverProcess.getUserId());
 
-			final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
-			final Set<Identifier> mcmIds = Identifier.createIdentifiers(((MCMDatabase) mcmDatabase).retrieveForServer(serverId));
+		final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
+		final Set<Identifier> mcmIds = Identifier.createIdentifiers(((MCMDatabase) mcmDatabase).retrieveForServer(serverId));
 
-			login = user.getLogin();
-			domainId = server.getDomainId();
+		login = user.getLogin();
+		domainId = server.getDomainId();
 
-			/*	Create map of test ids to start*/
-			startTestIdMap = Collections.synchronizedMap(new HashMap<Identifier, Set<Identifier>>(mcmIds.size()));
-			for (final Identifier mcmId : mcmIds) {
-				startTestIdMap.put(mcmId, Collections.synchronizedSet(new HashSet<Identifier>()));
-			}
-
-			/*	Create map of test ids to stop*/
-			stopTestIdMap = Collections.synchronizedMap(new HashMap<Identifier, Set<Identifier>>());
-
-			/*	Create condition for load tests*/
-			createTestLoadCondition();
-
-			/*	Create collection of MCM identifiers for aborting tests*/
-			mcmIdsToAbortTests = Collections.synchronizedSet(new HashSet<Identifier>());
-
-			/*	Create session environment*/
-			MServerSessionEnvironment.createInstance(server.getHostName(), mcmIds, processCodename);
-
-			/*	Login*/
-			final MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
-			try {
-				sessionEnvironment.login(login, PASSWORD, domainId);
-			}
-			catch (final LoginException le) {
-				Log.errorMessage(le);
-			}
+		/*	Create map of test ids to start*/
+		startTestIdMap = Collections.synchronizedMap(new HashMap<Identifier, Set<Identifier>>(mcmIds.size()));
+		for (final Identifier mcmId : mcmIds) {
+			startTestIdMap.put(mcmId, Collections.synchronizedSet(new HashSet<Identifier>()));
 		}
-		catch (final ApplicationException ae) {
-			Log.errorMessage(ae);
-			System.exit(0);
-		}
+
+		/*	Create map of test ids to stop*/
+		stopTestIdMap = Collections.synchronizedMap(new HashMap<Identifier, Set<Identifier>>());
+
+		/*	Create condition for load tests*/
+		createTestLoadCondition();
+
+		/*	Create collection of MCM identifiers for aborting tests*/
+		mcmIdsToAbortTests = Collections.synchronizedSet(new HashSet<Identifier>());
+
+		/*	Create session environment*/
+		MServerSessionEnvironment.createInstance(server.getHostName(), mcmIds, processCodename);
+
+		/*	Login*/
+		final MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
+		sessionEnvironment.login(login, PASSWORD, domainId);
 	}
 
 	private static void establishDatabaseConnection() {
