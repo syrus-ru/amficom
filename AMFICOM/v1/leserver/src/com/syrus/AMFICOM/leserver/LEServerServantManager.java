@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerServantManager.java,v 1.17 2006/03/30 12:42:25 bass Exp $
+ * $Id: LEServerServantManager.java,v 1.18 2006/03/30 12:57:30 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,17 +23,15 @@ import com.syrus.AMFICOM.leserver.corba.EventServerHelper;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2006/03/30 12:42:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2006/03/30 12:57:30 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
 final class LEServerServantManager extends RunnableVerifiedConnectionManager implements EventServerConnectionManager {
 	private String eventServerServantName;
 
-	public LEServerServantManager(final CORBAServer corbaServer,
-			final String eventServerServantName,
-			final long timeout) {
+	public LEServerServantManager(final CORBAServer corbaServer, final String eventServerServantName, final long timeout) {
 		super(corbaServer, Collections.singleton(eventServerServantName), timeout);
 
 		this.eventServerServantName = eventServerServantName;
