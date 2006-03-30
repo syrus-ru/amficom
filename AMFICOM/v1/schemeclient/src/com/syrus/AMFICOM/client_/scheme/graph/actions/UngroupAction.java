@@ -1,5 +1,5 @@
 /*
- * $Id: UngroupAction.java,v 1.10 2005/10/31 12:30:28 bass Exp $
+ * $Id: UngroupAction.java,v 1.11 2006/03/30 11:17:22 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.11 $, $Date: 2006/03/30 11:17:22 $
  * @module schemeclient
  */
 
@@ -98,10 +98,10 @@ public class UngroupAction extends AbstractAction {
 						
 						// Devices and links moves up, inner SE delete
 						for (SchemeDevice device : new HashSet<SchemeDevice>(seToDelete.getSchemeDevices(false))) {
-							device.setParentSchemeProtoElement(SchemeObjectsFactory.stubProtoElement, false);
+							device.setParentSchemeProtoElement(SchemeObjectsFactory.getStubProtoElementInitialyzed(), false);
 						}
 						for (SchemeLink link : new HashSet<SchemeLink>(seToDelete.getSchemeLinks(false))) {
-							link.setParentSchemeProtoElement(SchemeObjectsFactory.stubProtoElement, false);
+							link.setParentSchemeProtoElement(SchemeObjectsFactory.getStubProtoElementInitialyzed(), false);
 						}
 												
 						if (seToDelete.getParentSchemeElement() != null) {
@@ -127,7 +127,7 @@ public class UngroupAction extends AbstractAction {
 						
 						// Devices and links moves up, inner SE delete
 						for (SchemeDevice device : new HashSet<SchemeDevice>(speToDelete.getSchemeDevices(false))) {
-							device.setParentSchemeProtoElement(SchemeObjectsFactory.stubProtoElement, false);
+							device.setParentSchemeProtoElement(SchemeObjectsFactory.getStubProtoElementInitialyzed(), false);
 						}
 						
 						if (speToDelete.getParentSchemeProtoElement() != null) {
@@ -143,7 +143,7 @@ public class UngroupAction extends AbstractAction {
 								toDelete.add(spe);
 							} 
 							for (SchemeLink link : new HashSet<SchemeLink>(speToDelete.getSchemeLinks(false))) {
-								link.setParentSchemeProtoElement(SchemeObjectsFactory.stubProtoElement, false);
+								link.setParentSchemeProtoElement(SchemeObjectsFactory.getStubProtoElementInitialyzed(), false);
 							}
 						}
 					}

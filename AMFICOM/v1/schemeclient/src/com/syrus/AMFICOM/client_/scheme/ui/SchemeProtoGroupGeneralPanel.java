@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupGeneralPanel.java,v 1.16 2006/02/15 12:18:11 stas Exp $
+ * $Id: SchemeProtoGroupGeneralPanel.java,v 1.17 2006/03/30 11:17:22 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2006/02/15 12:18:11 $
+ * @version $Revision: 1.17 $, $Date: 2006/03/30 11:17:22 $
  * @module schemeclient
  */
 
@@ -238,7 +238,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 		try {
 			final Set<SchemeProtoGroup> groups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			groups.remove(this.schemeProtoGroup);
-			groups.remove(SchemeObjectsFactory.stubProtoGroup);
+			groups.remove(SchemeObjectsFactory.getStubProtoGroup());
 			final List<SchemeProtoGroup> sortedGroups = new LinkedList<SchemeProtoGroup>(groups);
 			Collections.sort(sortedGroups, new WrapperComparator<SchemeProtoGroup>(SchemeProtoGroupWrapper.getInstance(),
 					StorableObjectWrapper.COLUMN_NAME));

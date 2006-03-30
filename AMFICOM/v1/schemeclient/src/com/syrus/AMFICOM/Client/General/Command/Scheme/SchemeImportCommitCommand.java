@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommitCommand.java,v 1.12 2006/02/15 12:19:50 stas Exp $
+ * $Id: SchemeImportCommitCommand.java,v 1.13 2006/03/30 11:17:22 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,12 +54,12 @@ public class SchemeImportCommitCommand extends AbstractCommand {
 			
 			EquivalentCondition condition1 = new EquivalentCondition(ObjectEntities.SCHEMEPROTOGROUP_CODE);
 			Set<SchemeProtoGroup> groups = StorableObjectPool.getStorableObjectsByCondition(condition1, false);
-			groups.remove(SchemeObjectsFactory.stubProtoGroup);
+			groups.remove(SchemeObjectsFactory.getStubProtoGroup());
 			StorableObjectPool.flush(groups, userId, false);
 
 			EquivalentCondition condition2 = new EquivalentCondition(ObjectEntities.SCHEMEPROTOELEMENT_CODE);
 			Set<SchemeProtoElement> protos = StorableObjectPool.getStorableObjectsByCondition(condition2, false);
-			protos.remove(SchemeObjectsFactory.stubProtoElement);
+			protos.remove(SchemeObjectsFactory.getStubProtoElement());
 
 			for (SchemeProtoElement proto : protos) {
 				Set<Identifiable> ids = proto.getReverseDependencies(false);

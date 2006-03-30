@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.56 2006/02/15 12:18:10 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.57 2006/03/30 11:17:22 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.56 $, $Date: 2006/02/15 12:18:10 $
+ * @version $Revision: 1.57 $, $Date: 2006/03/30 11:17:22 $
  * @module schemeclient
  */
 
@@ -99,8 +99,8 @@ public class SchemeObjectsFactory {
 	private static int schemeCounter = 1;
 	private static final String EMPTY = "";  //$NON-NLS-1$
 	
-	public static SchemeProtoElement stubProtoElement;
-	public static SchemeProtoGroup stubProtoGroup;
+	private static SchemeProtoElement stubProtoElement;
+	private static SchemeProtoGroup stubProtoGroup;
 	private static String stubName = "should not see me";
 	
 	// caching of types of creating objects
@@ -113,11 +113,30 @@ public class SchemeObjectsFactory {
 	
 	// TODO add objects here when deleted and flush on exit
 //	Set<Identifier> deletedObjects = new HashSet<Identifier>();
+
+	/**
+	 * if not initialyzed return null
+	 * @return stubProtoElement
+	 */
+	public static SchemeProtoElement getStubProtoElement() {
+		return stubProtoElement;
+	}
 	
-	public static void init(final ApplicationContext aContext1) {
-		aContext = aContext1;
-		Identifier userId = LoginManager.getUserId();
-		if (stubProtoGroup == null) {
+	/**
+	 * if not initialyzed return null
+	 * @return stubProtoGroup 
+	 */
+	public static SchemeProtoGroup getStubProtoGroup() {
+		return stubProtoGroup;
+	}
+	
+	/**
+	 * initialyze stubProtoElement and return it
+	 * @return stubProtoElement
+	 */
+	public static SchemeProtoElement getStubProtoElementInitialyzed() {
+		if (stubProtoElement == null) {
+			Identifier userId = LoginManager.getUserId();
 			try {
 				stubProtoGroup = SchemeProtoGroup.createInstance(userId, stubName);
 				stubProtoElement = SchemeProtoElement.createInstance(userId, stubName, stubProtoGroup);
@@ -125,6 +144,28 @@ public class SchemeObjectsFactory {
 				Log.errorMessage(e);
 			}
 		}
+		return stubProtoElement;
+	}
+	
+	/**
+	 * initialyze stubProtoGroup and return it
+	 * @return stubProtoGroup 
+	 */
+	public static SchemeProtoGroup getStubProtoGroupInitialyzed() {
+		if (stubProtoGroup == null) {
+			Identifier userId = LoginManager.getUserId();
+			try {
+				stubProtoGroup = SchemeProtoGroup.createInstance(userId, stubName);
+				stubProtoElement = SchemeProtoElement.createInstance(userId, stubName, stubProtoGroup);
+			} catch (CreateObjectException e) {
+				Log.errorMessage(e);
+			}
+		}
+		return stubProtoGroup;
+	}
+	
+	public static void init(final ApplicationContext aContext1) {
+		aContext = aContext1;
 		aContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, 
 				new PropertyChangeListener() {
 					public void propertyChange(PropertyChangeEvent evt) {
@@ -406,7 +447,7 @@ public class SchemeObjectsFactory {
 		
 		Identifier userId = LoginManager.getUserId();
 		SchemeProtoElement protoElement = SchemeProtoElement.createInstance(userId, 
-				LangModelScheme.getString("Title.component") + " (" + counter + ")", stubProtoElement);  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+				LangModelScheme.getString("Title.component") + " (" + counter + ")", getStubProtoElementInitialyzed());  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		protoElement.setProtoEquipment(protoEq);
 		if (aContext != null) {
 			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, protoElement.getId(), SchemeEvent.CREATE_OBJECT));
@@ -479,8 +520,7 @@ public class SchemeObjectsFactory {
 
 	public static SchemeDevice createSchemeDevice(String name) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-
-		SchemeDevice schemeDevice = SchemeDevice.createInstance(userId, name, stubProtoElement);
+		SchemeDevice schemeDevice = SchemeDevice.createInstance(userId, name, getStubProtoElementInitialyzed());
 		return schemeDevice;
 	}
 	
@@ -555,7 +595,7 @@ public class SchemeObjectsFactory {
 		}
 		
 		Identifier userId = LoginManager.getUserId();
-		SchemeLink schemeLink = SchemeLink.createInstance(userId, name, stubProtoElement);
+		SchemeLink schemeLink = SchemeLink.createInstance(userId, name, getStubProtoElementInitialyzed());
 		schemeLink.setAbstractLinkType(type);
 		
 		if (aContext != null) {
