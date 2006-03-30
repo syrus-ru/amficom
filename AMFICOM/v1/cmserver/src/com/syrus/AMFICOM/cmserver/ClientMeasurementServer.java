@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.73 2006/03/16 12:09:42 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.74 2006/03/30 12:35:40 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,9 +19,9 @@ import com.syrus.AMFICOM.administration.ServerProcess;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Application;
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2006/03/16 12:09:42 $
+ * @version $Revision: 1.74 $, $Date: 2006/03/30 12:35:40 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -82,7 +82,13 @@ final class ClientMeasurementServer {
 		Application.init(APPLICATION_NAME);
 
 		/*	All preparations on startup*/
-		startup();
+		try {
+			startup();
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+			Log.errorMessage("Cannot start -- exiting");
+			System.exit(0);
+		}
 
 		/**
 		 * Add shutdown hook.
@@ -95,7 +101,7 @@ final class ClientMeasurementServer {
 		});
 	}
 
-	private static void startup() {
+	private static void startup() throws ApplicationException {
 		/*	Establish connection with database	*/
 		establishDatabaseConnection();
 
@@ -108,33 +114,24 @@ final class ClientMeasurementServer {
 		/*	Retrieve info about user*/
 		serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
 		processCodename = ApplicationProperties.getString(KEY_CMSERVER_PROCESS_CODENAME, CMSERVER_PROCESS_CODENAME);
-		try {
-			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);
-			final Server server = serverDatabase.retrieveForId(serverId);
+		final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);
+		final Server server = serverDatabase.retrieveForId(serverId);
 
-			final StorableObjectDatabase<ServerProcess> storableObjectDatabase = DatabaseContext.getDatabase(SERVERPROCESS_CODE);
-			final ServerProcess serverProcess = ((ServerProcessDatabase) storableObjectDatabase).retrieveForServerAndCodename(serverId,
-					processCodename);
+		final StorableObjectDatabase<ServerProcess> storableObjectDatabase = DatabaseContext.getDatabase(SERVERPROCESS_CODE);
+		final ServerProcess serverProcess = ((ServerProcessDatabase) storableObjectDatabase).retrieveForServerAndCodename(serverId,
+				processCodename);
 
-			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(SYSTEMUSER_CODE);
-			final SystemUser user = ((SystemUserDatabase) systemUserDatabase).retrieveForId(serverProcess.getUserId());
+		final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(SYSTEMUSER_CODE);
+		final SystemUser user = ((SystemUserDatabase) systemUserDatabase).retrieveForId(serverProcess.getUserId());
 
-			login = user.getLogin();
+		login = user.getLogin();
 
-			/*	Create session environment*/
-			CMServerSessionEnvironment.createInstance(server.getHostName(), processCodename);
-	
-			/*	Login*/
-			final CMServerSessionEnvironment sessionEnvironment = CMServerSessionEnvironment.getInstance();
-			try {
-				sessionEnvironment.login(login, PASSWORD, server.getDomainId());
-			} catch (final LoginException le) {
-				Log.errorMessage(le);
-			}
-		} catch (final Exception e) {
-			Log.errorMessage(e);
-			System.exit(0);
-		}
+		/*	Create session environment*/
+		CMServerSessionEnvironment.createInstance(server.getHostName(), processCodename);
+
+		/*	Login*/
+		final CMServerSessionEnvironment sessionEnvironment = CMServerSessionEnvironment.getInstance();
+		sessionEnvironment.login(login, PASSWORD, server.getDomainId());
 	}
 
 	private static void establishDatabaseConnection() {
