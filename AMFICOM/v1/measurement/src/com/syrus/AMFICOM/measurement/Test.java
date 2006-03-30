@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.191 2006/03/27 11:21:42 bass Exp $
+ * $Id: Test.java,v 1.192 2006/03/30 12:10:47 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.191 $, $Date: 2006/03/27 11:21:42 $
+ * @version $Revision: 1.192 $, $Date: 2006/03/30 12:10:47 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -585,6 +585,10 @@ public final class Test extends StorableObject
 			}
 		}
 		return this.kisId;
+	}
+
+	public KIS getKIS() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getKISId(), true);
 	}
 
 	public Identifier getMCMId() {
