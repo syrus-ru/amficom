@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.8.2.9 2006/03/29 05:48:32 bass Exp $
+ * $Id: EventQueue.java,v 1.8.2.10 2006/03/30 13:18:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,11 +9,13 @@
 package com.syrus.AMFICOM.mcm;
 
 import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.*;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.omg.CORBA.ORB;
+import org.omg.CORBA.SystemException;
 
 import com.syrus.AMFICOM.eventv2.Event;
 import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
@@ -26,7 +28,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8.2.9 $, $Date: 2006/03/29 05:48:32 $
+ * @version $Revision: 1.8.2.10 $, $Date: 2006/03/30 13:18:02 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -78,24 +80,39 @@ final class EventQueue extends SleepButWorkThread {
 				continue;
 			}
 
+			IdlEvent idlEvents[] = null;
 			try {
 				final EventServer eventServer = connectionManager.getEventServerReference();
 
-				final IdlEvent[] idlEvents = this.createIdlEventArray(connectionManager);
+				idlEvents = this.createIdlEventArray(connectionManager);
 				final int length = idlEvents.length;
 				Log.debugMessage("Sending " + length + " event(s) to the event server", FINEST);
 				eventServer.receiveEvents(idlEvents);
 				Log.debugMessage("Done sending " + length + " event(s) to the event server", FINEST);
 			} catch (final CommunicationException ce) {
-				Log.errorMessage(ce);
+				Log.debugMessage(ce, SEVERE);
+				super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
+				super.sleepCauseOfFall();
+			} catch (final SystemException se) {
+				if (idlEvents != null) {
+					Log.debugMessage(idlEvents.length
+							+ " event(s) has(ve) just been dropped for the following reason:",
+							SEVERE);
+				}
+				Log.debugMessage(se, SEVERE);
 				super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
 				super.sleepCauseOfFall();
 			} catch (final IdlEventProcessingException epe) {
-				Log.errorMessage("Cannot transmit events -- " + epe.message);
+				if (idlEvents != null) {
+					Log.debugMessage(idlEvents.length
+							+ " event(s) has(ve) just been dropped for the following reason:",
+							SEVERE);
+				}
+				Log.debugMessage(epe.message, SEVERE);
+				Log.debugMessage(epe, SEVERE);
 				super.fallCode = FALL_CODE_TRANSMIT_EVENTS;
 				super.sleepCauseOfFall();
 			}
-
 		}
 	}
 
