@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.95.2.5 2006/03/30 12:10:58 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.95.2.6 2006/03/30 12:30:52 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,6 @@ import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
@@ -63,7 +62,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.95.2.5 $, $Date: 2006/03/30 12:10:58 $
+ * @version $Revision: 1.95.2.6 $, $Date: 2006/03/30 12:30:52 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -267,11 +266,7 @@ final class MeasurementServer extends SleepButWorkThread {
 
 		/* Войти в систему. */
 		final String systemUserLogin = systemUser.getLogin();
-		try {
-			MServerSessionEnvironment.getInstance().login(systemUserLogin, PASSWORD, server.getDomainId());
-		} catch (final LoginException le) {
-			Log.errorMessage(le);
-		}
+		MServerSessionEnvironment.getInstance().login(systemUserLogin, PASSWORD, server.getDomainId());
 
 		/* Создать объект главного класса. */
 		instance = new MeasurementServer(systemUserLogin, mcmIds);
