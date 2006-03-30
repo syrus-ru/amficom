@@ -7,7 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -45,6 +47,7 @@ import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -62,6 +65,7 @@ public class AlarmFrame extends JInternalFrame {
 	ApplicationContext aContext;
 
 	boolean initial_init = true;
+	Map<Identifier, Identifier> lme2marker = new HashMap<Identifier, Identifier>();
 
 	private Wrapper<AbstractLineMismatchEvent> wrapper;
 	WrapperedTableModel<AbstractLineMismatchEvent> model;
@@ -205,14 +209,18 @@ public class AlarmFrame extends JInternalFrame {
 					
 					final Dispatcher dispatcher2 = aContext1.getDispatcher();
 					if (!firstb) {
+						Identifier markerId = AlarmFrame.this.lme2marker.get(lmEvent1.getId());
+						
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-								lmEvent1.getId());
+								markerId);
 
 						dispatcher2.firePropertyChange(mEvent);
 					}
 					if (!lastb && first != last) {
+						Identifier markerId = AlarmFrame.this.lme2marker.get(lmEvent2.getId());
+						
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-								lmEvent2.getId());
+								markerId);
 
 						dispatcher2.firePropertyChange(mEvent);
 					}
@@ -223,8 +231,15 @@ public class AlarmFrame extends JInternalFrame {
 						SchemePath path = pe.getParentPathOwner();
 						final Measurement measurement = StorableObjectPool.getStorableObject(rmEvent1.getMeasurementId(), true);
 						final Identifier monitoredElementId = measurement.getTest().getMonitoredElementId();
+						
+						Identifier markerId = AlarmFrame.this.lme2marker.get(lmEvent1.getId());
+						if (markerId == null) {
+							markerId = LocalIdentifierGenerator.generateIdentifier(ObjectEntities.MARK_CODE);
+							AlarmFrame.this.lme2marker.put(lmEvent1.getId(), markerId);
+						}
+						
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-								lmEvent1.getId(), lmEvent1.getMismatchOpticalDistance(), 
+								markerId, lmEvent1.getMismatchOpticalDistance(), 
 								affectedPathElementId, path.getId(), monitoredElementId);
 
 						//	notify about measurement
@@ -239,8 +254,15 @@ public class AlarmFrame extends JInternalFrame {
 						final Identifier measurementId = rmEvent2.getMeasurementId();
 						final Measurement measurement = StorableObjectPool.getStorableObject(measurementId, true);
 						final Identifier monitoredElementId = measurement.getTest().getMonitoredElementId();
+						
+						Identifier markerId = AlarmFrame.this.lme2marker.get(lmEvent2.getId());
+						if (markerId == null) {
+							markerId = LocalIdentifierGenerator.generateIdentifier(ObjectEntities.MARK_CODE);
+							AlarmFrame.this.lme2marker.put(lmEvent2.getId(), markerId);
+						}
+						
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-								lmEvent2.getId(), lmEvent2.getMismatchOpticalDistance(), 
+								markerId, lmEvent2.getMismatchOpticalDistance(), 
 								affectedPathElementId2, path.getId(), monitoredElementId);
 						
 						// notify about measurement
@@ -423,8 +445,10 @@ public class AlarmFrame extends JInternalFrame {
 		AbstractLineMismatchEvent lmEvent = this.model.getObject(this.table.getSelectedRow());
 		this.table.setSelectedValue(null);
 		
+		Identifier markerId = AlarmFrame.this.lme2marker.get(lmEvent.getId());
+		
 		MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-				lmEvent.getId());
+				markerId);
 		this.aContext.getDispatcher().firePropertyChange(mEvent2);
 	}
 
@@ -432,9 +456,11 @@ public class AlarmFrame extends JInternalFrame {
 		AbstractLineMismatchEvent lmEvent = this.model.getObject(this.table.getSelectedRow());
 		this.table.setSelectedValue(null);
 		this.model.removeObject(lmEvent);
+		
+		Identifier markerId = AlarmFrame.this.lme2marker.get(lmEvent.getId());
 
 		MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
-				lmEvent.getId());
+				markerId);
 		this.aContext.getDispatcher().firePropertyChange(mEvent2);
 	}
 
