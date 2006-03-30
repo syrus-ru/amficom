@@ -28,10 +28,11 @@ import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.EventReceiver;
 import com.syrus.AMFICOM.client.event.MarkerEvent;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.observer.ObserverMainFrame;
+import com.syrus.AMFICOM.client.sound.SoundManager;
 import com.syrus.AMFICOM.eventv2.AbstractLineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.AbstractReflectogramMismatchEvent;
 import com.syrus.AMFICOM.eventv2.Event;
@@ -64,7 +65,7 @@ public class AlarmFrame extends JInternalFrame {
 
 	private Wrapper<AbstractLineMismatchEvent> wrapper;
 	WrapperedTableModel<AbstractLineMismatchEvent> model;
-	WrapperedTable table;
+	WrapperedTable<AbstractLineMismatchEvent> table;
 
 	JPanel actionPanel = new JPanel();
 	JButton buttonAcknowledge = new JButton();
@@ -75,7 +76,7 @@ public class AlarmFrame extends JInternalFrame {
 	JButton buttonClose = new JButton();
 	JButton buttonRefresh = new JButton();
 
-	boolean perform_processing = true;
+//	boolean perform_processing = true;
 
 	Filter filter = new Filter(new ConditionWrapper(){
 		public List<ConditionKey> getKeys() {
@@ -110,7 +111,10 @@ public class AlarmFrame extends JInternalFrame {
 					final AbstractLineMismatchEvent lineMismatchEvent = StorableObjectPool.getStorableObject(lmeId, true);
 					
 					AlarmFrame.this.model.addObject(lineMismatchEvent);
-
+					
+					alarmSignal();
+					// this performed in listSelection listener
+/*
 					Identifier rmeId = lineMismatchEvent.getReflectogramMismatchEventId();
 					final AbstractReflectogramMismatchEvent reflectogramMismatchEvent = StorableObjectPool.getStorableObject(rmeId, true);
 					
@@ -126,6 +130,7 @@ public class AlarmFrame extends JInternalFrame {
 							lmeId, optDistance, pe.getId(), path.getId(), meId);
 
 					dispatcher2.firePropertyChange(mEvent);
+					*/
 					AlarmFrame.this.table.setSelectedValue(lineMismatchEvent);
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
@@ -364,13 +369,21 @@ public class AlarmFrame extends JInternalFrame {
 	public ApplicationModel getModel() {
 		return this.aContext.getApplicationModel();
 	}
+	
+	void alarmSignal() {
+		SoundManager.loop("sounds/klaxon1.wav");
+	}
 
 	public void updateContents() {
 		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINEMISMATCHEVENT_CODE);
 		try {
-			Set<AbstractLineMismatchEvent> limeMismatchEvents = StorableObjectPool.getStorableObjectsByCondition(condition , true);
-			this.model.setValues(limeMismatchEvents);
+			Set<AbstractLineMismatchEvent> lineMismatchEvents = StorableObjectPool.getStorableObjectsByCondition(condition , true);
+			this.model.setValues(lineMismatchEvents);
 			this.model.sortRows(0, this.model.getSortOrder(0));
+			
+			if (!lineMismatchEvents.isEmpty()) {
+				alarmSignal();
+			}
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
 		}
@@ -385,11 +398,13 @@ public class AlarmFrame extends JInternalFrame {
 	}
 
 	void buttonDescribe_actionPerformed(ActionEvent e) {
+		SoundManager.stop();
+		
 		int selected = this.table.getSelectedRow();
 		if (selected != -1) {
 			AbstractLineMismatchEvent lineMismatchEvent = this.model.getObject(selected);
 		
-		JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+		JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 				lineMismatchEvent.getMessage(), 
 				LangModelObserver.getString("Message.information"), 
 				JOptionPane.INFORMATION_MESSAGE);
@@ -397,11 +412,14 @@ public class AlarmFrame extends JInternalFrame {
 	}
 
 	void buttonAcknowledge_actionPerformed(ActionEvent e) {
-		int mini = this.table.getSelectionModel().getMinSelectionIndex();
-		int maxi = this.table.getSelectionModel().getMaxSelectionIndex();
+		SoundManager.stop();		
+//		int mini = this.table.getSelectionModel().getMinSelectionIndex();
+//		int maxi = this.table.getSelectionModel().getMaxSelectionIndex();
 	}
 
 	void buttonFix_actionPerformed(ActionEvent e) {
+		SoundManager.stop();
+		
 		AbstractLineMismatchEvent lmEvent = this.model.getObject(this.table.getSelectedRow());
 		this.table.setSelectedValue(null);
 		
