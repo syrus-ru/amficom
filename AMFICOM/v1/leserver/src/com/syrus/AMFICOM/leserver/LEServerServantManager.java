@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerServantManager.java,v 1.16 2006/03/30 12:11:12 bass Exp $
+ * $Id: LEServerServantManager.java,v 1.17 2006/03/30 12:42:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,31 +18,25 @@ import com.syrus.AMFICOM.general.ContextNameFactory;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.EventServerConnectionManager;
 import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
-import com.syrus.AMFICOM.general.ServerConnectionManager;
-import com.syrus.AMFICOM.general.corba.CommonServer;
-import com.syrus.AMFICOM.general.corba.CommonServerHelper;
 import com.syrus.AMFICOM.leserver.corba.EventServer;
 import com.syrus.AMFICOM.leserver.corba.EventServerHelper;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2006/03/30 12:11:12 $
+ * @version $Revision: 1.17 $, $Date: 2006/03/30 12:42:25 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
-final class LEServerServantManager extends RunnableVerifiedConnectionManager implements EventServerConnectionManager, ServerConnectionManager {
+final class LEServerServantManager extends RunnableVerifiedConnectionManager implements EventServerConnectionManager {
 	private String eventServerServantName;
-	private String mServerServantName;
 
 	public LEServerServantManager(final CORBAServer corbaServer,
 			final String eventServerServantName,
-			final String mServerServantName,
 			final long timeout) {
 		super(corbaServer, Collections.singleton(eventServerServantName), timeout);
 
 		this.eventServerServantName = eventServerServantName;
-		this.mServerServantName = mServerServantName;
 
 		assert timeout >= 10L * 60L * 1000L: ErrorMessages.TIMEOUT_TOO_SHORT; //not less then 10 min
 	}
@@ -61,13 +55,10 @@ final class LEServerServantManager extends RunnableVerifiedConnectionManager imp
 				BaseConnectionManager.SERVANT_CHECK_TIMEOUT) * 60 * 1000;
 		final String eventServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
 				ServerProcessWrapper.EVENT_PROCESS_CODENAME);
-		final String mServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSERVER_PROCESS_CODENAME,
-				ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
 
 		final LEServerServantManager leServerServantManager =  new LEServerServantManager(
 				corbaServer,
 				eventServerServantName,
-				mServerServantName,
 				timeout);
 		(new Thread(leServerServantManager, "LEServerServantManager")).start();
 		return leServerServantManager;
@@ -79,13 +70,5 @@ final class LEServerServantManager extends RunnableVerifiedConnectionManager imp
 	 */
 	public EventServer getEventServerReference() throws CommunicationException {
 		return EventServerHelper.narrow(this.getVerifiableReference(this.eventServerServantName));
-	}
-
-	/**
-	 * @throws CommunicationException
-	 * @see com.syrus.AMFICOM.general.ServerConnectionManager#getServerReference()
-	 */
-	public CommonServer getServerReference() throws CommunicationException {
-		return CommonServerHelper.narrow(this.getVerifiableReference(this.mServerServantName));
 	}
 }

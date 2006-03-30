@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerSessionEnvironment.java,v 1.15 2006/03/30 12:11:12 bass Exp $
+ * $Id: LEServerSessionEnvironment.java,v 1.16 2006/03/30 12:42:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.leserver;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifierGeneratorServer;
+import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -20,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2006/03/30 12:11:12 $
+ * @version $Revision: 1.16 $, $Date: 2006/03/30 12:42:25 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -61,7 +62,7 @@ final class LEServerSessionEnvironment {
 
 	public static void createInstance(final String serverHostName, final Identifier systemUserId) throws CommunicationException {
 		final LEServerServantManager leServerServantManager = LEServerServantManager.createAndStart(serverHostName);
-		final ObjectLoader objectLoader = new LEServerObjectLoader(leServerServantManager);
+		final ObjectLoader objectLoader = new DatabaseObjectLoader();
 		final LEServerPoolContext leServerPoolContext = new LEServerPoolContext(objectLoader);
 		instance = new LEServerSessionEnvironment(leServerServantManager, leServerPoolContext, systemUserId);
 	}
