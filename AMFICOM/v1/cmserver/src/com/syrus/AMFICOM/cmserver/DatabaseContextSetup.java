@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.45.2.1 2006/03/13 07:10:13 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.45.2.2 2006/03/30 12:43:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,6 +31,8 @@ import com.syrus.AMFICOM.event.DeliveryAttributesDatabase;
 import com.syrus.AMFICOM.event.EventDatabase;
 import com.syrus.AMFICOM.event.EventSourceDatabase;
 import com.syrus.AMFICOM.event.EventTypeDatabase;
+import com.syrus.AMFICOM.eventv2.LineMismatchEventDatabase;
+import com.syrus.AMFICOM.eventv2.ReflectogramMismatchEventDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -61,7 +63,7 @@ import com.syrus.AMFICOM.report.ReportTemplateDatabase;
 import com.syrus.AMFICOM.report.TableDataDatabase;
 
 /**
- * @version $Revision: 1.45.2.1 $, $Date: 2006/03/13 07:10:13 $
+ * @version $Revision: 1.45.2.2 $, $Date: 2006/03/30 12:43:51 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -122,6 +124,8 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new EventDatabase());
 		DatabaseContext.registerDatabase(new EventSourceDatabase());
 		DatabaseContext.registerDatabase(new DeliveryAttributesDatabase());
+		DatabaseContext.registerDatabase(new ReflectogramMismatchEventDatabase());
+		DatabaseContext.registerDatabase(new LineMismatchEventDatabase());
 
 		DatabaseContext.registerDatabase(new AttachedTextDatabase());
 		DatabaseContext.registerDatabase(new DataDatabase());
