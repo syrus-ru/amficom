@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementControlModule.java,v 1.146.2.14 2006/03/29 09:22:31 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146.2.15 2006/03/30 12:12:35 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,6 @@ import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
@@ -64,7 +63,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146.2.14 $, $Date: 2006/03/29 09:22:31 $
+ * @version $Revision: 1.146.2.15 $, $Date: 2006/03/30 12:12:35 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -259,6 +258,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			startup();
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
+			Log.errorMessage("Cannot start -- exiting");
 			System.exit(0);
 		}
 
@@ -320,11 +320,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 		/* Войти в систему. */
 		final String systemUserLogin = systemUser.getLogin();
-		try {
-			MCMSessionEnvironment.getInstance().login(systemUserLogin, PASSWORD, mcm.getDomainId());
-		} catch (final LoginException le) {
-			Log.errorMessage(le);
-		}
+		MCMSessionEnvironment.getInstance().login(systemUserLogin, PASSWORD, mcm.getDomainId());
 
 		/* Создать объект главного класса. */
 		instance = new MeasurementControlModule(mcmId, systemUserLogin);
