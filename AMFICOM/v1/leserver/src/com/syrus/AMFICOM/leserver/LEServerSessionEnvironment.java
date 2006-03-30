@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerSessionEnvironment.java,v 1.13 2005/12/02 15:22:24 arseniy Exp $
+ * $Id: LEServerSessionEnvironment.java,v 1.14 2006/03/30 08:47:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,14 +12,16 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectLoader;
 import com.syrus.AMFICOM.general.PoolContext;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/12/02 15:22:24 $
+ * @version $Revision: 1.14 $, $Date: 2006/03/30 08:47:13 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -31,12 +33,16 @@ final class LEServerSessionEnvironment {
 	private LEServerPoolContext leServerPoolContext;
 
 	private LEServerSessionEnvironment(final LEServerServantManager leServerServantManager,
-			final LEServerPoolContext leServerPoolContext) {
+			final LEServerPoolContext leServerPoolContext,
+			final Identifier systemUserId) {
 		this.leServerServantManager = leServerServantManager;
 		this.leServerPoolContext = leServerPoolContext;
 
 		/* Generate identifiers using local database */
 		IdentifierPool.init(new DatabaseIdentifierGeneratorServer());
+
+		LoginManager.init(new LEServerLoginPerformer(systemUserId), null);
+
 		this.leServerPoolContext.init();
 		try {
 			StorableObjectPool.deserialize(this.leServerPoolContext.getLRUMapSaver());
@@ -54,11 +60,11 @@ final class LEServerSessionEnvironment {
 		return this.leServerPoolContext;
 	}
 
-	public static void createInstance(final String serverHostName) throws CommunicationException {
+	public static void createInstance(final String serverHostName, final Identifier systemUserId) throws CommunicationException {
 		final LEServerServantManager leServerServantManager = LEServerServantManager.createAndStart(serverHostName);
 		final ObjectLoader objectLoader = new DatabaseObjectLoader();
 		final LEServerPoolContext leServerPoolContext = new LEServerPoolContext(objectLoader);
-		instance = new LEServerSessionEnvironment(leServerServantManager, leServerPoolContext);
+		instance = new LEServerSessionEnvironment(leServerServantManager, leServerPoolContext, systemUserId);
 	}
 
 	public static LEServerSessionEnvironment getInstance() {
