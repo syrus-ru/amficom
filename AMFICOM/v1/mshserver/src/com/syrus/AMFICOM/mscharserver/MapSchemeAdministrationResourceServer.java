@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.26 2006/03/16 11:32:48 arseniy Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.27 2006/03/30 12:12:09 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,9 +20,9 @@ import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Application;
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2006/03/16 11:32:48 $
+ * @version $Revision: 1.27 $, $Date: 2006/03/30 12:12:09 $
  * @author $Author: arseniy $
  * @module mscharserver
  */
@@ -87,7 +87,14 @@ final class MapSchemeAdministrationResourceServer {
 
 	public static void main(String[] args) {
 		Application.init(APPLICATION_NAME);
-		startup();
+
+		try {
+			startup();
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+			Log.errorMessage("Cannot start -- exiting");
+			System.exit(0);
+		}
 
 		/**
 		 * Add shutdown hook.
@@ -113,7 +120,7 @@ final class MapSchemeAdministrationResourceServer {
 		}
 	}
 
-	private static void startup() {
+	private static void startup() throws ApplicationException {
 		/*
 		 * Establish connection with database.
 		 */
@@ -123,42 +130,33 @@ final class MapSchemeAdministrationResourceServer {
 		serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
 		processCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSCHARSERVER_PROCESS_CODENAME,
 				ServerProcessWrapper.MSCHARSERVER_PROCESS_CODENAME);
-		try {
-			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);
-			final Server server = serverDatabase.retrieveForId(serverId);
+		final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);
+		final Server server = serverDatabase.retrieveForId(serverId);
 
-			final StorableObjectDatabase<ServerProcess> storableObjectDatabase = DatabaseContext.getDatabase(SERVERPROCESS_CODE);
-			final ServerProcess serverProcess = ((ServerProcessDatabase) storableObjectDatabase).retrieveForServerAndCodename(serverId,
-					processCodename);
+		final StorableObjectDatabase<ServerProcess> storableObjectDatabase = DatabaseContext.getDatabase(SERVERPROCESS_CODE);
+		final ServerProcess serverProcess = ((ServerProcessDatabase) storableObjectDatabase).retrieveForServerAndCodename(serverId,
+				processCodename);
 
-			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(SYSTEMUSER_CODE);
-			final SystemUser user = ((SystemUserDatabase) systemUserDatabase).retrieveForId(serverProcess.getUserId());
+		final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(SYSTEMUSER_CODE);
+		final SystemUser user = ((SystemUserDatabase) systemUserDatabase).retrieveForId(serverProcess.getUserId());
 
-			login = user.getLogin();
+		login = user.getLogin();
 
-			/*
-			 * Mapinfo pool init.
-			 */
-			MapInfoPool.init();
+		/*
+		 * Mapinfo pool init.
+		 */
+		MapInfoPool.init();
 
-			/*
-			 * Create session environment.
-			 */
-			MscharServerSessionEnvironment.createInstance(server.getHostName(), processCodename);
+		/*
+		 * Create session environment.
+		 */
+		MscharServerSessionEnvironment.createInstance(server.getHostName(), processCodename);
 
-			/*
-			 * Login.
-			 */
-			final MscharServerSessionEnvironment sessionEnvironment = MscharServerSessionEnvironment.getInstance();
-			try {
-				sessionEnvironment.login(login, PASSWORD, server.getDomainId());
-			} catch (final LoginException le) {
-				Log.errorMessage(le);
-			}
-		} catch (final Exception e) {
-			Log.debugMessage(e, Level.SEVERE);
-			System.exit(0);
-		}
+		/*
+		 * Login.
+		 */
+		final MscharServerSessionEnvironment sessionEnvironment = MscharServerSessionEnvironment.getInstance();
+		sessionEnvironment.login(login, PASSWORD, server.getDomainId());
 	}
 
 	static synchronized void shutdown() {
