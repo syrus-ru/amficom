@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultReflectogramMismatchEvent.java,v 1.16 2006/03/30 12:10:05 bass Exp $
+ * $Id: DefaultReflectogramMismatchEvent.java,v 1.17 2006/03/30 18:07:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2006/03/30 12:10:05 $
+ * @version $Revision: 1.17 $, $Date: 2006/03/30 18:07:36 $
  * @module event
  */
 public final class DefaultReflectogramMismatchEvent extends
@@ -131,8 +131,7 @@ public final class DefaultReflectogramMismatchEvent extends
 		super(id, creatorId, new Date(), INITIAL_VERSION);
 
 		/*
-		 * measurementId: strict check (void not permitted at object
-		 * creation stage)
+		 * measurementId: strict check (void not permitted)
 		 */
 		if (measurementId == null) {
 			throw new NullPointerException("measurementId is null");
@@ -214,16 +213,20 @@ public final class DefaultReflectogramMismatchEvent extends
 			super.fromIdlTransferable((IdlStorableObject) reflectogramMismatchEvent);
 
 			/*
-			 * measurementId: loose check (void permitted)
+			 * measurementId: strict check (void not permitted)
 			 */
 			@SuppressWarnings("hiding")
 			final Identifier measurementId = Identifier.valueOf(reflectogramMismatchEvent.getMeasurementId());
+			if (measurementId == null) {
+				throw new NullPointerException("measurementId is null");
+			}
 			final short measurementIdMajor = measurementId.getMajor();
-			if (!(measurementIdMajor == MEASUREMENT_CODE
-					|| measurementId.isVoid())) {
-				throw new IllegalArgumentException("Type of measurementId: ``"
-						+ ObjectEntities.codeToString(measurementIdMajor)
-						+ "'' is invalid");
+			if (measurementIdMajor != MEASUREMENT_CODE) {
+				throw new IllegalArgumentException(measurementId.isVoid()
+						? "measurementId is void"
+						: "Type of measurementId: ``"
+								+ ObjectEntities.codeToString(measurementIdMajor)
+								+ "'' is invalid");
 			}
 
 
@@ -275,14 +278,18 @@ public final class DefaultReflectogramMismatchEvent extends
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
 		/*
-		 * measurementId: loose check (void permitted)
+		 * measurementId: strict check (void not permitted)
 		 */
+		if (measurementId == null) {
+			throw new NullPointerException("measurementId is null");
+		}
 		final short measurementIdMajor = measurementId.getMajor();
-		if (!(measurementIdMajor == MEASUREMENT_CODE
-				|| measurementId.isVoid())) {
-			throw new IllegalArgumentException("Type of measurementId: ``"
-					+ ObjectEntities.codeToString(measurementIdMajor)
-					+ "'' is invalid");
+		if (measurementIdMajor != MEASUREMENT_CODE) {
+			throw new IllegalArgumentException(measurementId.isVoid()
+					? "measurementId is void"
+					: "Type of measurementId: ``"
+							+ ObjectEntities.codeToString(measurementIdMajor)
+							+ "'' is invalid");
 		}
 
 
