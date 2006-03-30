@@ -142,53 +142,32 @@ final class TestParametersPanel implements PropertyChangeListener {
 		this.useAnalysisSetupsCheckBox.addActionListener(new ActionListener() {
 			@SuppressWarnings("unqualified-field-access")
 			public void actionPerformed(final ActionEvent e) {
-				final JCheckBox checkBox = (JCheckBox) e.getSource();
-				
-				boolean selected = checkBox.isSelected();
-				
-				analysisComboBox.setEnabled(selected);
-				if (!selected) {
+				boolean withAnalysis = ((JCheckBox)e.getSource()).isSelected();
+
+				analysisComboBox.setEnabled(withAnalysis);
+				if (!withAnalysis) {
 					selectAnalysisType(analysisComboBox, 
 						AnalysisType.UNKNOWN, 
 						false);
 				}
-				
-				// there is no reason to perform this event if disable ability all setups
+
+				// XXX: если показываются не все доступные шаблоны, то список отображаемых шаблонов не меняем
+				// (это вольный перевод квазианглоязычного комментария от bob'а)
 				if (!allAvailableCheckBox.isSelected()) { 
 					return;
 				}
-		
+
 				final WrapperedListModel<MeasurementSetup> wrapperedListModel = testSetups.getModel();
 				MeasurementSetup selectedMeasurementSetup = (MeasurementSetup) testSetups.getSelectedValue();
-//				if (!measurementSetupId.isVoid()) {
-//					try {
-//						Log.debugMessage(".actionPerformed | " + measurementSetupId, Log.DEBUGLEVEL10);
-//						selectedValue = StorableObjectPool.getStorableObject(measurementSetupId, true);
-//					} catch (final ApplicationException e1) {
-//						AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
-//						return;
-//					}
-//				}
-				
+
 				testSetups.clearSelection();
 
-				final List<MeasurementSetup> list;
-				
-				if (selected) {
-					list = msListAnalysisOnly;
-				} else {
-					list = msList;
-				}
-				
-				wrapperedListModel.setElements(list);
+				wrapperedListModel.setElements(
+						withAnalysis ? msListAnalysisOnly : msList);
+
 				if (selectedMeasurementSetup != null) {
 					testSetups.setSelectedValue(selectedMeasurementSetup, true);
-					if (!selected) {
-						selected = isAnalysisEnable(selectedMeasurementSetup);
-					}
 				}
-
-				
 			}
 		});
 
@@ -426,6 +405,11 @@ final class TestParametersPanel implements PropertyChangeListener {
 		|| measurementSetup.getThresholdSet() != null;
 	}
 
+	/**
+	 * Устанавливает this.msList, this.msListAnalysisOnly и this.testSetups
+	 * по данному набору шаблонов
+	 * @param measurementSetups данный набор шаблонов
+	 */
 	void setMeasurementSetups0(final Set<MeasurementSetup> measurementSetups) {
 		Log.debugMessage(measurementSetups,
 			Log.DEBUGLEVEL10);
