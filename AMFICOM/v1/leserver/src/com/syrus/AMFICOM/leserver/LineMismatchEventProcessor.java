@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.25 2006/03/30 08:49:16 arseniy Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.26 2006/03/30 12:08:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2006/03/30 08:49:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2006/03/30 12:08:46 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
@@ -93,7 +93,9 @@ final class LineMismatchEventProcessor implements EventProcessor {
 			final ReflectogramMismatchEvent reflectogramMismatchEvent =
 					(ReflectogramMismatchEvent) StorableObjectPool.getStorableObject(lineMismatchEvent.getReflectogramMismatchEventId(), true);
 			final Severity severity = reflectogramMismatchEvent.getSeverity();
-			final Set<SystemUser> systemUsers = DeliveryAttributes.getInstance(LoginManager.getUserId(), severity).getSystemUsersRecursively();
+			final Set<SystemUser> systemUsers = DeliveryAttributes
+					.getInstance(LoginManager.getUserId(), severity)
+					.getSystemUsersRecursively();
 			final Set<Identifier> systemUserIds = Identifier.createIdentifiers(systemUsers);
 
 			final Set<String> addresses = getAddresses(systemUserIds);
