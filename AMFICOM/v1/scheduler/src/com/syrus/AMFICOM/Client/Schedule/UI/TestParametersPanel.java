@@ -146,8 +146,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 
 				analysisComboBox.setEnabled(withAnalysis);
 				if (!withAnalysis) {
-					selectAnalysisType(analysisComboBox, 
-						AnalysisType.UNKNOWN, 
+					selectAnalysisType(AnalysisType.UNKNOWN, 
 						false);
 				}
 
@@ -287,6 +286,13 @@ final class TestParametersPanel implements PropertyChangeListener {
 		this.allAvailableCheckBox.setEnabled(enable);
 	}
 
+	/**
+	 * Возвращает текущее состояние analysisComboBox.
+	 * Если analysisComboBox в неопределенном состоянии, возвращает
+	 * AnalysisType.UNKNOWN.
+	 * @return текущее состояние analysisComboBox либо AnalysisType.UNKNOWN,
+	 *   но не null.
+	 */
 	public final AnalysisType getAnalysisType() {
 		final AnalysisType analysisType = (AnalysisType) this.analysisComboBox.getSelectedItem();
 		return analysisType != null ? analysisType : AnalysisType.UNKNOWN;
@@ -410,7 +416,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 	 * по данному набору шаблонов
 	 * @param measurementSetups данный набор шаблонов
 	 */
-	void setMeasurementSetups0(final Set<MeasurementSetup> measurementSetups) {
+	private void setMeasurementSetups0(final Set<MeasurementSetup> measurementSetups) {
 		Log.debugMessage(measurementSetups,
 			Log.DEBUGLEVEL10);
 		resetMsList();
@@ -434,22 +440,19 @@ final class TestParametersPanel implements PropertyChangeListener {
 			wrapperedListModel.setElements(this.msList);
 		}
 	}
-	
+
 	void setMeasurementSetups(final Set<MeasurementSetup> measurementSetups) {
 		this.setMeasurementSetups0(measurementSetups);
 
-//		this.testSetups.setEnabled(true);
-//		this.useAnalysisSetupsCheckBox.setEnabled(true);
+		this.selectAnalysisType(this.getAnalysisType(), true);
 
-		this.selectAnalysisType(this.analysisComboBox, this.getAnalysisType(), true);
-		
 		if (!this.measurementSetupId.isVoid()) {
 			try {
 				this.setMeasurementSetup((MeasurementSetup) StorableObjectPool.getStorableObject(this.measurementSetupId, true), true);
 			} catch (final ApplicationException e) {
 				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 			}
-		}		
+		}
 	}
 
 	void refreshMeasurementSetups() {
@@ -522,7 +525,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 			}
 		} else if (propertyName == SchedulerModel.COMMAND_SET_ANALYSIS_TYPE) {
-			this.selectAnalysisType(this.analysisComboBox, (AnalysisType) newValue, true);
+			this.selectAnalysisType((AnalysisType) newValue, true);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_MEASUREMENT_SETUP)){
 			try {
 				this.refreshMeasurementSetup();
@@ -571,20 +574,24 @@ final class TestParametersPanel implements PropertyChangeListener {
 
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_ANALYSIS_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP, this);
-
 	}
 
-	synchronized void selectAnalysisType(final JComboBox cb,
-	                                 	final AnalysisType analysisType,
-	                                 	final boolean changeStatus) {
+	/**
+	 * Выбирает в analysisComboBox требуемый тип анализа
+	 * @param analysisType требуемый тип анализа
+	 * @param changeStatus true, чтобы при необходимости включить также и
+	 *   useAnalysisSetupsCheckBox
+	 */
+	synchronized void selectAnalysisType(final AnalysisType analysisType,
+			final boolean changeStatus) {
 		assert analysisType != null : ErrorMessages.NON_NULL_EXPECTED;
-		cb.setSelectedItem(analysisType);
-		AnalysisType selectedItem = (AnalysisType) cb.getSelectedItem();		
+		final JComboBox comboBox = this.analysisComboBox;
+		comboBox.setSelectedItem(analysisType);
+		AnalysisType selectedItem = (AnalysisType) comboBox.getSelectedItem();		
 		if (changeStatus && selectedItem != AnalysisType.UNKNOWN
 				&& !this.useAnalysisSetupsCheckBox.isSelected()) {
 			this.useAnalysisSetupsCheckBox.doClick();
 		}
-
 	}
 
 	private void resetMsList() {
