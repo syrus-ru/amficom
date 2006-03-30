@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMouseMotionListener.java,v 1.44 2006/02/22 15:37:15 stas Exp $$
+ * $$Id: MapMouseMotionListener.java,v 1.45 2006/03/30 11:29:40 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,6 @@ import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.util.Log;
 
 /**
@@ -41,7 +40,7 @@ import com.syrus.util.Log;
  * обработка события передается текущему активному элементу карты (посредством
  * объекта MapStrategy)
  * 
- * @version $Revision: 1.44 $, $Date: 2006/02/22 15:37:15 $
+ * @version $Revision: 1.45 $, $Date: 2006/03/30 11:29:40 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -56,8 +55,9 @@ public final class MapMouseMotionListener implements MouseMotionListener {
 	public void mouseDragged(MouseEvent me) {
 		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
 		final LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
-		MapElement mapElement = logicalNetLayer.getCurrentMapElement();
-		if (mapElement instanceof Marker) { // no edit action!
+		MapState mapState = logicalNetLayer.getMapState();
+		
+		if (mapState.getActionMode() == MapState.NULL_ACTION_MODE) { // not an edit action!
 			
 		} else { 
 			if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
@@ -82,7 +82,6 @@ public final class MapMouseMotionListener implements MouseMotionListener {
 		// me.getPoint().y + ")");
 
 		logicalNetLayer.setCurrentPoint(me.getPoint());
-		MapState mapState = logicalNetLayer.getMapState();
 
 		mapState.setMouseMode(MapState.MOUSE_DRAGGED);
 		if(logicalNetLayer.getMapView() != null) {
@@ -125,8 +124,8 @@ public final class MapMouseMotionListener implements MouseMotionListener {
 				// fall through
 				case MapState.NO_OPERATION:
 					try {
-						MapStrategy strategy = MapStrategyManager
-								.getStrategy(mapElement);
+						MapElement mapElement = logicalNetLayer.getCurrentMapElement();
+						MapStrategy strategy = MapStrategyManager.getStrategy(mapElement);
 						if(strategy != null) {
 							strategy.setNetMapViewer(this.netMapViewer);
 							strategy.doContextChanges(me);
@@ -196,7 +195,6 @@ public final class MapMouseMotionListener implements MouseMotionListener {
 				}
 			}
 
-		if(mapState.getActionMode() == MapState.NULL_ACTION_MODE) {
 			if(mapState.getOperationMode() == MapState.NO_OPERATION) {
 				if(MapPropertiesManager.isDescreteNavigation()) {
 					Dimension imageSize = this.netMapViewer
@@ -233,7 +231,7 @@ public final class MapMouseMotionListener implements MouseMotionListener {
 				this.netMapViewer.setCursor(Cursor
 						.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 			}
-		}
+
 
 		mapState.setMouseMode(MapState.MOUSE_NONE);
 	}
