@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.95.2.3 2006/03/21 09:39:13 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.95.2.4 2006/03/30 12:09:50 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.95.2.3 $, $Date: 2006/03/21 09:39:13 $
+ * @version $Revision: 1.95.2.4 $, $Date: 2006/03/30 12:09:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -199,6 +199,7 @@ final class MeasurementServer extends SleepButWorkThread {
 			startup();
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
+			Log.errorMessage("Cannot start -- exiting");
 			System.exit(0);
 		}
 
