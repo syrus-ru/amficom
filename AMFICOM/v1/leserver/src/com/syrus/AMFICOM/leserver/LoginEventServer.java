@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.36 2006/03/30 08:50:07 arseniy Exp $
+ * $Id: LoginEventServer.java,v 1.37 2006/03/30 12:17:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2006/03/30 08:50:07 $
+ * @version $Revision: 1.37 $, $Date: 2006/03/30 12:17:08 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -71,7 +71,13 @@ final class LoginEventServer {
 		Application.init(APPLICATION_NAME);
 
 		/*	All preparations on startup*/
-		startup();
+		try {
+			startup();
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+			Log.errorMessage("Cannot start -- exiting");
+			System.exit(0);
+		}
 
 		/*	Start Login Processor*/
 		final LoginProcessor loginProcessor = new LoginProcessor();
@@ -90,7 +96,7 @@ final class LoginEventServer {
 		});
 	}
 
-	private static void startup() {
+	private static void startup() throws ApplicationException {
 		/*	Establish connection with database	*/
 		establishDatabaseConnection();
 
@@ -100,37 +106,31 @@ final class LoginEventServer {
 
 		/*	Retrieve info about server*/
 		final Identifier serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
-		try {
-			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);
-			final Server server = serverDatabase.retrieveForId(serverId);
+		final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(SERVER_CODE);
+		final Server server = serverDatabase.retrieveForId(serverId);
 
-			/*	Retrieve info about processes*/
-			loginProcessCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_LOGIN_PROCESS_CODENAME,
-					ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
-			eventProcessCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
-					ServerProcessWrapper.EVENT_PROCESS_CODENAME);
-			final StorableObjectDatabase<ServerProcess> storableObjectDatabase = DatabaseContext.getDatabase(SERVERPROCESS_CODE);
-			final ServerProcessDatabase serverProcessDatabase = (ServerProcessDatabase) storableObjectDatabase;
-			final ServerProcess loginServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, loginProcessCodename);
-			final ServerProcess eventServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, eventProcessCodename);
-			// TODO something with loginServerProcess and eventServerProcess
-			if (loginServerProcess == null || eventServerProcess == null) {
-				throw new ApplicationException("Cannot find login server process or event server process");
-			}
-	
-			/* Init session environment */
-			LEServerSessionEnvironment.createInstance(server.getHostName(), eventServerProcess.getUserId());
-	
-			/*	Activate servants*/
-			final CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
-			corbaServer.activateServant(new LoginServerImplementation(), loginProcessCodename);
-			corbaServer.activateServant(new EventServerImplementation(), eventProcessCodename);
-			corbaServer.printNamingContext();
+		/*	Retrieve info about processes*/
+		loginProcessCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_LOGIN_PROCESS_CODENAME,
+				ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
+		eventProcessCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
+				ServerProcessWrapper.EVENT_PROCESS_CODENAME);
+		final StorableObjectDatabase<ServerProcess> storableObjectDatabase = DatabaseContext.getDatabase(SERVERPROCESS_CODE);
+		final ServerProcessDatabase serverProcessDatabase = (ServerProcessDatabase) storableObjectDatabase;
+		final ServerProcess loginServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, loginProcessCodename);
+		final ServerProcess eventServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, eventProcessCodename);
+		// TODO something with loginServerProcess and eventServerProcess
+		if (loginServerProcess == null || eventServerProcess == null) {
+			throw new ApplicationException("Cannot find login server process or event server process");
 		}
-		catch (final ApplicationException ae) {
-			Log.errorMessage(ae);
-			System.exit(0);
-		}
+
+		/* Init session environment */
+		LEServerSessionEnvironment.createInstance(server.getHostName(), eventServerProcess.getUserId());
+
+		/*	Activate servants*/
+		final CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
+		corbaServer.activateServant(new LoginServerImplementation(), loginProcessCodename);
+		corbaServer.activateServant(new EventServerImplementation(), eventProcessCodename);
+		corbaServer.printNamingContext();
 	}
 
 	private static void establishDatabaseConnection() {
