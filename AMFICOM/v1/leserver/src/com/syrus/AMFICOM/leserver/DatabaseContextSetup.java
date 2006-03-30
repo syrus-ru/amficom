@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseContextSetup.java,v 1.20 2006/03/23 15:15:57 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.21 2006/03/30 12:11:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,9 +26,14 @@ import com.syrus.AMFICOM.eventv2.ReflectogramMismatchEventDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.measurement.KISDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementPortDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementPortTypeDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MonitoredElementDatabase;
+import com.syrus.AMFICOM.measurement.ParameterSetDatabase;
+import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.scheme.CableChannelingItemDatabase;
 import com.syrus.AMFICOM.scheme.PathElementDatabase;
 import com.syrus.AMFICOM.scheme.SchemeCableLinkDatabase;
@@ -48,7 +53,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElementDatabase;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroupDatabase;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2006/03/23 15:15:57 $
+ * @version $Revision: 1.21 $, $Date: 2006/03/30 12:11:12 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -73,9 +78,14 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new TransmissionPathTypeDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathDatabase());
 
-		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
+		DatabaseContext.registerDatabase(new KISDatabase());
+		DatabaseContext.registerDatabase(new MeasurementDatabase());
 		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
+		DatabaseContext.registerDatabase(new MeasurementSetupDatabase());
 		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
+		DatabaseContext.registerDatabase(new ParameterSetDatabase());
+		DatabaseContext.registerDatabase(new TestDatabase());
 
 		DatabaseContext.registerDatabase(new EventTypeDatabase());
 		DatabaseContext.registerDatabase(new EventDatabase());

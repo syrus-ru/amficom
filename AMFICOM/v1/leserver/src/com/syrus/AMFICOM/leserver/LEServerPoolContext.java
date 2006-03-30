@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerPoolContext.java,v 1.19 2006/02/28 15:19:59 arseniy Exp $
+ * $Id: LEServerPoolContext.java,v 1.20 2006/03/30 12:11:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,14 @@
 
 package com.syrus.AMFICOM.leserver;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETERSET_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
 
@@ -25,8 +30,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.LRUMapSaver;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2006/02/28 15:19:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2006/03/30 12:11:12 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -63,9 +68,14 @@ final class LEServerPoolContext extends PoolContext {
 		StorableObjectPool.addObjectPool(TRANSPATH_TYPE_CODE, configurationPoolSize, configurationPoolTimeToLive);
 		StorableObjectPool.addObjectPool(TRANSMISSIONPATH_CODE, configurationPoolSize, configurationPoolTimeToLive);
 
-		StorableObjectPool.addObjectPool(MEASUREMENTPORT_TYPE_CODE, measurementPoolSize, measurementPoolTimeToLive);
-		StorableObjectPool.addObjectPool(MONITOREDELEMENT_CODE, measurementPoolSize, measurementPoolTimeToLive);
+		StorableObjectPool.addObjectPool(KIS_CODE, measurementPoolSize, measurementPoolTimeToLive);
+		StorableObjectPool.addObjectPool(MEASUREMENT_CODE, measurementPoolSize, measurementPoolTimeToLive);
 		StorableObjectPool.addObjectPool(MEASUREMENTPORT_CODE, measurementPoolSize, measurementPoolTimeToLive);
+		StorableObjectPool.addObjectPool(MEASUREMENTPORT_TYPE_CODE, measurementPoolSize, measurementPoolTimeToLive);
+		StorableObjectPool.addObjectPool(MEASUREMENTSETUP_CODE, measurementPoolSize, measurementPoolTimeToLive);
+		StorableObjectPool.addObjectPool(MONITOREDELEMENT_CODE, measurementPoolSize, measurementPoolTimeToLive);
+		StorableObjectPool.addObjectPool(PARAMETERSET_CODE, measurementPoolSize, measurementPoolTimeToLive);
+		StorableObjectPool.addObjectPool(TEST_CODE, measurementPoolSize, measurementPoolTimeToLive);
 
 		if (LRU_MAP_SAVER == null) {
 			LRU_MAP_SAVER = new IdentifierLRUMapSaver(super.objectLoader);

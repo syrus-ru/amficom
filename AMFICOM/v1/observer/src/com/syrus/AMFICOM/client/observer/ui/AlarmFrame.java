@@ -22,10 +22,10 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.EventReceiver;
 import com.syrus.AMFICOM.client.event.MarkerEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -46,10 +46,7 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.newFilter.ConditionKey;
 import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.AMFICOM.resource.LangModelObserver;
@@ -104,6 +101,7 @@ public class AlarmFrame extends JInternalFrame {
 		 */
 		@SuppressWarnings("unchecked")
 		public void receiveEvent(final Event<?> event) {
+			final Dispatcher dispatcher2 = AlarmFrame.this.aContext.getDispatcher();
 			if (event instanceof PopupNotificationEvent) {
 				Log.debugMessage("PopupNotificationEvent received", Level.FINER);
 				final PopupNotificationEvent popupNotificationEvent = (PopupNotificationEvent) event;
@@ -116,27 +114,19 @@ public class AlarmFrame extends JInternalFrame {
 					Identifier rmeId = lineMismatchEvent.getReflectogramMismatchEventId();
 					final AbstractReflectogramMismatchEvent reflectogramMismatchEvent = StorableObjectPool.getStorableObject(rmeId, true);
 					
-					Identifier resultId = reflectogramMismatchEvent.getResultId();
-					Result result = StorableObjectPool.getStorableObject(resultId, true);
-					
 					double optDistance = lineMismatchEvent.getMismatchOpticalDistance();
 
-					if (result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
-						final Action action = result.getAction();
-						Measurement m = (Measurement) action;
-						
-						Identifier meId = m.getMonitoredElementId();
-						PathElement pe = StorableObjectPool.getStorableObject(lineMismatchEvent.getAffectedPathElementId(), true);
-						SchemePath path = pe.getParentPathOwner();
-						
-						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
-								lmeId, optDistance, pe.getId(), path.getId(), meId);
+					final Measurement measurement = StorableObjectPool.getStorableObject(reflectogramMismatchEvent.getMeasurementId(), true);
+					
+					Identifier meId = measurement.getMonitoredElementId();
+					PathElement pe = StorableObjectPool.getStorableObject(lineMismatchEvent.getAffectedPathElementId(), true);
+					SchemePath path = pe.getParentPathOwner();
+					
+					MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
+							lmeId, optDistance, pe.getId(), path.getId(), meId);
 
-						AlarmFrame.this.aContext.getDispatcher().firePropertyChange(mEvent);
-						AlarmFrame.this.table.setSelectedValue(lineMismatchEvent);
-					} else {
-						throw new IllegalStateException("Result of ReflectogramMismatchEvent.getResultId() must have ResultSort.RESULT_SORT_MEASUREMENT");
-					}
+					dispatcher2.firePropertyChange(mEvent);
+					AlarmFrame.this.table.setSelectedValue(lineMismatchEvent);
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
 				}
@@ -146,7 +136,7 @@ public class AlarmFrame extends JInternalFrame {
 				Identifier measurentId = msEvent.getMeasurementId();
 				try {
 					Measurement m = StorableObjectPool.getStorableObject(measurentId, true);
-					AlarmFrame.this.aContext.getDispatcher().firePropertyChange(new PropertyChangeEvent(this, "MeasurementStarted", null, m.getMonitoredElementId()));
+					dispatcher2.firePropertyChange(new PropertyChangeEvent(this, "MeasurementStarted", null, m.getMonitoredElementId()));
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
 				}
@@ -157,7 +147,7 @@ public class AlarmFrame extends JInternalFrame {
 				Identifier measurentId = mcEvent.getMeasurementId();
 				try {
 					Measurement m = StorableObjectPool.getStorableObject(measurentId, true);
-					AlarmFrame.this.aContext.getDispatcher().firePropertyChange(new PropertyChangeEvent(this, "MeasurementStoped", null, m.getMonitoredElementId()));
+					dispatcher2.firePropertyChange(new PropertyChangeEvent(this, "MeasurementStoped", null, m.getMonitoredElementId()));
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
 				}
@@ -208,52 +198,50 @@ public class AlarmFrame extends JInternalFrame {
 					
 					final ApplicationContext aContext1 = AlarmFrame.this.aContext;
 					
+					final Dispatcher dispatcher2 = aContext1.getDispatcher();
 					if (!firstb) {
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
 								lmEvent1.getId());
 
-						aContext1.getDispatcher().firePropertyChange(mEvent);
+						dispatcher2.firePropertyChange(mEvent);
 					}
 					if (!lastb && first != last) {
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT,
 								lmEvent2.getId());
 
-						aContext1.getDispatcher().firePropertyChange(mEvent);
+						dispatcher2.firePropertyChange(mEvent);
 					}
 					
 					if (firstb) {
 						final Identifier affectedPathElementId = lmEvent1.getAffectedPathElementId();
 						PathElement pe = StorableObjectPool.getStorableObject(affectedPathElementId, true);
 						SchemePath path = pe.getParentPathOwner();
+						final Measurement measurement = StorableObjectPool.getStorableObject(rmEvent1.getMeasurementId(), true);
+						final Identifier monitoredElementId = measurement.getTest().getMonitoredElementId();
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
 								lmEvent1.getId(), lmEvent1.getMismatchOpticalDistance(), 
-								affectedPathElementId, path.getId(), rmEvent1.getMonitoredElementId());
+								affectedPathElementId, path.getId(), monitoredElementId);
 
 						//	notify about measurement
-						Result result = StorableObjectPool.getStorableObject(rmEvent1.getResultId(), true);
-						if (AnalysisUtil.hasMeasurementByResult(result)) {
-							Measurement m = AnalysisUtil.getMeasurementByResult(result);
-							aContext1.getDispatcher().firePropertyChange(
-									new ObjectSelectedEvent(this, m, null, ObjectSelectedEvent.MEASUREMENT));
-						}
-						aContext1.getDispatcher().firePropertyChange(mEvent);
+						dispatcher2.firePropertyChange(
+								new ObjectSelectedEvent(this, measurement, null, ObjectSelectedEvent.MEASUREMENT));
+						dispatcher2.firePropertyChange(mEvent);
 					} 
 					if (lastb && first != last) {
 						final Identifier affectedPathElementId2 = lmEvent2.getAffectedPathElementId();
 						PathElement pe = StorableObjectPool.getStorableObject(affectedPathElementId2, true);
 						SchemePath path = pe.getParentPathOwner();
+						final Identifier measurementId = rmEvent2.getMeasurementId();
+						final Measurement measurement = StorableObjectPool.getStorableObject(measurementId, true);
+						final Identifier monitoredElementId = measurement.getTest().getMonitoredElementId();
 						MarkerEvent mEvent = new MarkerEvent(this, MarkerEvent.ALARMMARKER_CREATED_EVENT,
 								lmEvent2.getId(), lmEvent2.getMismatchOpticalDistance(), 
-								affectedPathElementId2, path.getId(), rmEvent2.getMonitoredElementId());
+								affectedPathElementId2, path.getId(), monitoredElementId);
 						
 						// notify about measurement
-						Result result = StorableObjectPool.getStorableObject(rmEvent2.getResultId(), true);
-						if (AnalysisUtil.hasMeasurementByResult(result)) {
-							Measurement m = AnalysisUtil.getMeasurementByResult(result);
-							aContext1.getDispatcher().firePropertyChange(
-									new ObjectSelectedEvent(this, m, null, ObjectSelectedEvent.MEASUREMENT));
-						}
-						aContext1.getDispatcher().firePropertyChange(mEvent);
+						dispatcher2.firePropertyChange(
+								new ObjectSelectedEvent(this, measurement, null, ObjectSelectedEvent.MEASUREMENT));
+						dispatcher2.firePropertyChange(mEvent);
 					} 
 				} catch (ApplicationException e1) {
 					Log.errorMessage(e1);

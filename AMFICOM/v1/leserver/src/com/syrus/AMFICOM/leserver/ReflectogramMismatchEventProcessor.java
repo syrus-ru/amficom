@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.17 2006/03/30 08:49:16 arseniy Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.18 2006/03/30 12:11:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,11 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
+import com.syrus.AMFICOM.measurement.KIS;
+import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
+import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.EasyDateFormatter;
@@ -39,8 +42,8 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2006/03/30 08:49:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2006/03/30 12:11:12 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor
@@ -87,7 +90,6 @@ final class ReflectogramMismatchEventProcessor
 
 	private static final Pattern METER_PLURAL_GENITIVE_REGEXP = Pattern.compile("(([0-9]*[^1])?[0,5-9]|[0-9]*1[0-9])");
 
-
 	/**
 	 * @see EventProcessor#getEventType()
 	 */
@@ -108,15 +110,14 @@ final class ReflectogramMismatchEventProcessor
 				SEVERE);
 
 		try {
-			final Identifier resultId = reflectogramMismatchEvent.getResultId();
-			if (resultId.isVoid()) {
-				throw new NullPointerException("Result is null");
+			final Identifier measurementId = reflectogramMismatchEvent.getMeasurementId();
+			if (measurementId.isVoid()) {
+				throw new NullPointerException("Measurement is null");
 			}
-			final Identifier monitoredElementId = reflectogramMismatchEvent.getMonitoredElementId();
-			if (monitoredElementId.isVoid()) {
-				throw new NullPointerException("MonitoredElement is null");
-			}
-			final MonitoredElement monitoredElement = StorableObjectPool.getStorableObject(monitoredElementId, true);
+			final Measurement measurement = StorableObjectPool.getStorableObject(measurementId, true);
+			final Test test = measurement.getTest();
+			final MonitoredElement monitoredElement = test.getMonitoredElement();
+			final KIS kis = test.getKIS();
 			final MeasurementPort measurementPort = monitoredElement.getMeasurementPort();
 			final Identifier portId = measurementPort.getPortId();
 			if (portId.isVoid()) {
@@ -220,6 +221,9 @@ final class ReflectogramMismatchEventProcessor
 					eventOpticalDistance,
 					eventPhysicalDistance,
 					createMessage(reflectogramMismatchEvent,
+							test,
+							kis,
+							monitoredElement,
 							affectedPathElement,
 							physicalDistanceFromStart,
 							physicalDistanceFromEnd),
@@ -276,10 +280,16 @@ final class ReflectogramMismatchEventProcessor
 	 */
 	private static String createMessage(
 			final ReflectogramMismatchEvent reflectogramMismatchEvent,
+			final Test test,
+			final KIS kis,
+			final MonitoredElement monitoredElement,
 			final PathElement affectedPathElement,
 			final double physicalDistanceToStart,
 			final double physicalDistanceToEnd) {
-		return MISMATCH_CREATED + COLON_TAB + EasyDateFormatter.formatDate(reflectogramMismatchEvent.getCreated())
+		return MISMATCH_CREATED + COLON_TAB + EasyDateFormatter.formatDate(reflectogramMismatchEvent.getCreated()) + NEWLINE
+				+ "Discovered by Test" + COLON_TAB + test.getDescription() + NEWLINE
+				+ "Reflectometer" + COLON_TAB + kis.getName() + NEWLINE
+				+ "Monitored Element" + COLON_TAB + monitoredElement.getDisplayedName() + NEWLINE
 				+ NEWLINE
 				+ reflectogramMismatchEvent.getSeverity().getLocalizedDescription() + NEWLINE
 				+ reflectogramMismatchEvent.getAlarmType().getLocalizedDescription() + NEWLINE
