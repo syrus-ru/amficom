@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.12 2006/03/23 15:21:41 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.13 2006/03/31 08:09:19 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -33,6 +33,7 @@ import java.util.TreeMap;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
@@ -57,7 +58,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.12 $, $Date: 2006/03/23 15:21:41 $
+ * @version $Revision: 1.183.2.13 $, $Date: 2006/03/31 08:09:19 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -614,12 +615,20 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		return this.kisId;
 	}
 
+	public KIS getKIS() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getKISId(), true);
+	}
+
 	public Identifier getMCMId() throws ApplicationException {
 		if (this.mcmId == null) {
 			final KIS kis = StorableObjectPool.getStorableObject(this.getKISId(), true);
 			this.mcmId = kis.getMCMId();
 		}
 		return this.mcmId;
+	}
+
+	public MCM getMCM() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getMCMId(), true);
 	}
 
 	public Identifier getCurrentMeasurementSetupId() {
