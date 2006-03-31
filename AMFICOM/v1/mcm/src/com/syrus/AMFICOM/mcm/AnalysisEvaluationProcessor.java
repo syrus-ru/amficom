@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.57.2.5 2006/03/29 09:22:31 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.57.2.6 2006/03/31 08:20:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57.2.5 $, $Date: 2006/03/29 09:22:31 $
+ * @version $Revision: 1.57.2.6 $, $Date: 2006/03/31 08:20:01 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -133,8 +133,7 @@ final class AnalysisEvaluationProcessor {
 			loadAnalysisManager(analysis.getTypeCodename(), measurementResultParameter, analysis);
 
 			final Set<AnalysisResultParameter> analysisResultParameters = analysisManager.analyse();
-			final Identifier resultId = measurementResultParameter.getId();
-			final Identifier monitoredElementId = measurementResultParameter.getAction().getMonitoredElementId();
+			final Identifier measurementId = measurementResultParameter.getActionId();
 
 			int dadaraAlarmsOccurenceCount = 0;
 			for (final AnalysisResultParameter analysisResultParameter : analysisResultParameters) {
@@ -150,8 +149,7 @@ final class AnalysisEvaluationProcessor {
 				for (final ReflectogramMismatch reflectogramMismatch : ReflectogramMismatchImpl.alarmsFromByteArray(analysisResultParameter.getValue())) {
 					MeasurementControlModule.getInstance().addEventToQueue(DefaultReflectogramMismatchEvent.newInstance(LoginManager.getUserId(),
 							reflectogramMismatch,
-							resultId,
-							monitoredElementId));
+							measurementId));
 				}
 			}
 
