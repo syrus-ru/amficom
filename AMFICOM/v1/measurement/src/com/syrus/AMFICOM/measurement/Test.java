@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.13 2006/03/31 08:09:19 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.14 2006/03/31 08:53:10 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -58,7 +58,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.13 $, $Date: 2006/03/31 08:09:19 $
+ * @version $Revision: 1.183.2.14 $, $Date: 2006/03/31 08:53:10 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -80,6 +80,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 
 	private SortedMap<Date, String> stopMap;  
 
+	private transient Identifier measurementPortId;
 	private transient Identifier kisId;
 	private transient Identifier mcmId;
 	private transient Identifier currentMeasurementSetupId;
@@ -606,11 +607,20 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		}
 	}
 
+	public Identifier getMeasurementPortId() throws ApplicationException {
+		if (this.measurementPortId == null) {
+			this.measurementPortId = this.getMonitoredElement().getMeasurementPortId();
+		}
+		return this.measurementPortId;
+	}
+
+	public MeasurementPort getMeasurementPort() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getMeasurementPortId(), true);
+	}
+
 	public Identifier getKISId() throws ApplicationException {
 		if (this.kisId == null) {
-			final Identifier measurementPortId = this.getMonitoredElement().getMeasurementPortId();
-			final MeasurementPort measurementPort = StorableObjectPool.getStorableObject(measurementPortId, true);
-			this.kisId = measurementPort.getKISId();
+			this.kisId = this.getMeasurementPort().getKISId();
 		}
 		return this.kisId;
 	}
