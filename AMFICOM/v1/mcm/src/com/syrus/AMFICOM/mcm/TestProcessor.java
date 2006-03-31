@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.90.2.4 2006/03/24 09:22:35 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.90.2.5 2006/03/31 08:37:42 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.90.2.4 $, $Date: 2006/03/24 09:22:35 $
+ * @version $Revision: 1.90.2.5 $, $Date: 2006/03/31 08:37:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -424,7 +424,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 			return;
 		}
 
-		/* Найти все измерения теста в состояниях не ВЫПОЛНЕН и не ПРЕРВАН. */
+		/* Найти все измерения задания в состояниях не ВЫПОЛНЕН и не ПРЕРВАН. */
 		final LinkedIdsCondition testMeasurementCondition = new LinkedIdsCondition(this.test, MEASUREMENT_CODE);
 		final TypicalCondition notCompletedMeasurementCondition = new TypicalCondition(ACTION_STATUS_COMPLETED,
 				OPERATION_NOT_EQUALS,
