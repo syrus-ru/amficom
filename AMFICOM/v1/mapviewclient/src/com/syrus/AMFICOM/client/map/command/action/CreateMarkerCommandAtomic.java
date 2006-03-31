@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateMarkerCommandAtomic.java,v 1.45 2006/02/15 11:12:43 stas Exp $$
+ * $$Id: CreateMarkerCommandAtomic.java,v 1.46 2006/03/31 05:45:34 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 
+import com.syrus.AMFICOM.client.event.MarkerEvent;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.controllers.MarkerController;
@@ -21,6 +22,7 @@ import com.syrus.AMFICOM.client.map.controllers.MeasurementPathController;
 import com.syrus.AMFICOM.client.map.controllers.NodeLinkController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -29,12 +31,13 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
 
 /**
  * Команда создания метки на линии
  * 
- * @version $Revision: 1.45 $, $Date: 2006/02/15 11:12:43 $
+ * @version $Revision: 1.46 $, $Date: 2006/03/31 05:45:34 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -104,6 +107,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand {
 							DoublePoint dpoint = converter.convertScreenToMap(this.point);
 							MeasurementPathController mpc = (MeasurementPathController )mapViewController.getController(this.path);
 
+							final Identifier monitoredElementId = mpc.getMonitoredElementId(this.path);
 							this.marker = Marker.createInstance(
 									LoginManager.getUserId(),
 									this.mapView, 
@@ -111,7 +115,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand {
 									nodeLink.getOtherNode(node),
 									nodeLink,
 									this.path,
-									mpc.getMonitoredElementId(this.path),
+									monitoredElementId,
 									dpoint);
 							this.marker.setCablePath(cablePath);
 							this.mapView.addMarker(this.marker);
@@ -122,6 +126,13 @@ public class CreateMarkerCommandAtomic extends MapActionCommand {
 							mc.notifyMarkerCreated(this.marker);
 
 							this.logicalNetLayer.setCurrentMapElement(this.marker);
+							
+							final SchemePath schemePath = this.path.getSchemePath();
+							this.aContext.getDispatcher().firePropertyChange(
+									new MarkerEvent(this, MarkerEvent.MARKER_CREATED_EVENT, this.marker.getId(), 
+											schemePath.getOpticalDistance(marker.getPhysicalDistance()), 
+											null, monitoredElementId, schemePath.getId()));
+							
 							setResult(Command.RESULT_OK);
 							found = true;
 							break;
