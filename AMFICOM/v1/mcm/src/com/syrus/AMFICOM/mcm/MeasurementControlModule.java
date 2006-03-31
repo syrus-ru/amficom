@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.147 2006/03/30 12:40:44 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146 2005/12/17 12:18:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -48,7 +49,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.147 $, $Date: 2006/03/30 12:40:44 $
+ * @version $Revision: 1.146 $, $Date: 2005/12/17 12:18:57 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -175,13 +176,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}
 
 		/*	All preparations on startup*/
-		try {
-			startup();
-		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
-			Log.errorMessage("Cannot start -- exiting");
-			System.exit(0);
-		}
+		startup();
 
 		/*	Start main loop	*/
 		final MeasurementControlModule measurementControlModule = new MeasurementControlModule();
@@ -196,7 +191,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		});
 	}
 
-	private static void startup() throws ApplicationException {
+	private static void startup() {
 		/*	Establish connection with database	*/
 		establishDatabaseConnection();
 
@@ -206,40 +201,50 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 		/*	Retrieve information about MCM, it's user and server*/
 		mcmId = new Identifier(ApplicationProperties.getString(KEY_MCM_ID, MCM_ID));
-		final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
-		final MCM mcm = mcmDatabase.retrieveForId(mcmId);
+		try {
+			final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
+			final MCM mcm = mcmDatabase.retrieveForId(mcmId);
 
-		final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
-		final SystemUser user = systemUserDatabase.retrieveForId(mcm.getUserId());
+			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
+			final SystemUser user = systemUserDatabase.retrieveForId(mcm.getUserId());
 
-		final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
-		final Server server = serverDatabase.retrieveForId(mcm.getServerId());
+			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
+			final Server server = serverDatabase.retrieveForId(mcm.getServerId());
 
-		login = user.getLogin();
-		domainId = mcm.getDomainId();
+			login = user.getLogin();
+			domainId = mcm.getDomainId();
 
-		/*	Create session environment*/
-		MCMSessionEnvironment.createInstance(server.getHostName(), mcmId.toString());
+			/*	Create session environment*/
+			MCMSessionEnvironment.createInstance(server.getHostName(), mcmId.toString());
 
-		/*	Login*/
-		final MCMSessionEnvironment sessionEnvironment = MCMSessionEnvironment.getInstance();
-		sessionEnvironment.login(login, PASSWORD, domainId);
+			/*	Login*/
+			final MCMSessionEnvironment sessionEnvironment = MCMSessionEnvironment.getInstance();
+			try {
+				sessionEnvironment.login(login, PASSWORD, domainId);
+			} catch (final LoginException le) {
+				Log.errorMessage(le);
+			}
 
-		/*	Create map of test processors*/
-		testProcessors = Collections.synchronizedMap(new HashMap<Identifier, TestProcessor>());
+			/*	Create map of test processors*/
+			testProcessors = Collections.synchronizedMap(new HashMap<Identifier, TestProcessor>());
 
-		/*	Create (and start - ?) KIS connection manager*/
-		activateKISConnectionManager();
+			/*	Create (and start - ?) KIS connection manager*/
+			activateKISConnectionManager();
 
-		/*	Create and start transceiver for every KIS*/
-		activateKISTransceivers();
+			/*	Create and start transceiver for every KIS*/
+			activateKISTransceivers();
 
-		/*	Create and fill testList - sheduled tests ordered by start_time;	*/
-		prepareTestList();
+			/*	Create and fill testList - sheduled tests ordered by start_time;	*/
+			prepareTestList();
 
-		/*	Create and start event thread*/
-		eventQueue = new EventQueue();
-		eventQueue.start();
+			/*	Create and start event thread*/
+			eventQueue = new EventQueue();
+			eventQueue.start();
+
+		} catch (final ApplicationException ae) {
+			Log.errorMessage(ae);
+			System.exit(0);
+		}
 	}
 
 	static void establishDatabaseConnection() {

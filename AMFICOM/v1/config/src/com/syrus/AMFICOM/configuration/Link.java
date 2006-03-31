@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.81 2006/03/15 15:18:30 arseniy Exp $
+ * $Id: Link.java,v 1.80 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.configuration;
 import static com.syrus.AMFICOM.general.ErrorMessages.NATURE_INVALID;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Date;
 
@@ -26,15 +25,16 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.81 $, $Date: 2006/03/15 15:18:30 $
+ * @author $Author: bass $
+ * @version $Revision: 1.80 $, $Date: 2006/03/15 14:47:32 $
  * @module config
  */
-public final class Link extends AbstractLink {
+public final class Link extends AbstractLink
+		implements IdlTransferableObjectExt<IdlLink> {
 	private static final long serialVersionUID = 3257283626012783672L;
 
 	public Link(final IdlLink idlLink) throws CreateObjectException {
@@ -104,7 +104,7 @@ public final class Link extends AbstractLink {
 		try {
 			final Link link = new Link(IdentifierPool.getGeneratedIdentifier(LINK_CODE),
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					domainId,
 					name,
 					description,
@@ -125,24 +125,21 @@ public final class Link extends AbstractLink {
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlLink idlLink = (IdlLink) transferable;
-		super.fromTransferable(idlLink, new Identifier(idlLink.domainId));
-
+	public synchronized void fromIdlTransferable(final IdlLink idlLink)
+	throws IdlConversionException {
 		try {
-			super.type = StorableObjectPool.getStorableObject(new Identifier(idlLink._typeId), true);
+			super.fromIdlTransferable(idlLink, new Identifier(idlLink.domainId));
+	
+			this.name = idlLink.name;
+			this.description = idlLink.description;
+			this.inventoryNo = idlLink.inventoryNo;
+			this.supplier = idlLink.supplier;
+			this.supplierCode = idlLink.supplierCode;
+	
+			super.type = (LinkType) StorableObjectPool.getStorableObject(new Identifier(idlLink._typeId), true);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}
-
-		this.name = idlLink.name;
-		this.description = idlLink.description;
-		this.inventoryNo = idlLink.inventoryNo;
-		this.supplier = idlLink.supplier;
-		this.supplierCode = idlLink.supplierCode;
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -150,8 +147,6 @@ public final class Link extends AbstractLink {
 	 */
 	@Override
 	public IdlLink getIdlTransferable(final ORB orb) {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		return IdlLinkHelper.init(orb,
 				super.id.getIdlTransferable(),
 				super.created.getTime(),
