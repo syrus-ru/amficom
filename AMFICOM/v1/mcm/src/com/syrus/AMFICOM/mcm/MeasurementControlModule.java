@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementControlModule.java,v 1.146.2.15 2006/03/30 12:12:35 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146.2.16 2006/03/31 08:40:37 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146.2.15 $, $Date: 2006/03/30 12:12:35 $
+ * @version $Revision: 1.146.2.16 $, $Date: 2006/03/31 08:40:37 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -466,11 +466,13 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}
 
 		for (final KIS kis : kiss) {
+			final Identifier kisId = kis.getId();
+
 			if (!kis.isOnService()) {
+				Log.errorMessage("KIS '" + kisId + "' is not on service");
 				continue;
 			}
 
-			final Identifier kisId = kis.getId();
 			try {
 				final Transceiver transceiver = new Transceiver(kisId);
 				transceiver.start();
