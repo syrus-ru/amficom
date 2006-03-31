@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.90.2.5 2006/03/31 08:37:42 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.90.2.6 2006/03/31 08:38:11 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.90.2.5 $, $Date: 2006/03/31 08:37:42 $
+ * @version $Revision: 1.90.2.6 $, $Date: 2006/03/31 08:38:11 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -419,7 +419,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 	 * изменение ответственен код, вызывающий этот метод.
 	 */
 	void finishTest() {
-		/* Проверить, может уже остановлен. */
+		/* Проверить, может уже остановлено. */
 		if (!this.running) {
 			return;
 		}
