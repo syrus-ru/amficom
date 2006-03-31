@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerPoolContext.java,v 1.20 2006/03/30 12:11:12 bass Exp $
+ * $Id: LEServerPoolContext.java,v 1.21 2006/03/31 06:42:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETERSET_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.*;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierLRUMapSaver;
@@ -30,7 +30,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.LRUMapSaver;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2006/03/30 12:11:12 $
+ * @version $Revision: 1.21 $, $Date: 2006/03/31 06:42:16 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -65,6 +65,8 @@ final class LEServerPoolContext extends PoolContext {
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.EVENT_GROUP_CODE, eventPoolSize, eventPoolTimeToLive);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.SCHEME_GROUP_CODE, schemePoolSize, schemePoolTimeToLive);
 
+		StorableObjectPool.addObjectPool(EQUIPMENT_CODE, configurationPoolSize, configurationPoolTimeToLive);
+		StorableObjectPool.addObjectPool(PROTOEQUIPMENT_CODE, configurationPoolSize, configurationPoolTimeToLive);
 		StorableObjectPool.addObjectPool(TRANSPATH_TYPE_CODE, configurationPoolSize, configurationPoolTimeToLive);
 		StorableObjectPool.addObjectPool(TRANSMISSIONPATH_CODE, configurationPoolSize, configurationPoolTimeToLive);
 

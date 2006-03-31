@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.18 2006/03/30 12:11:12 bass Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.19 2006/03/31 06:42:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,11 +11,16 @@ package com.syrus.AMFICOM.leserver;
 import static com.syrus.AMFICOM.eventv2.EventType.REFLECTORGAM_MISMATCH;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
+import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.eventv2.DefaultLineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.Event;
@@ -34,7 +39,9 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.scheme.AbstractSchemeElement;
 import com.syrus.AMFICOM.scheme.PathElement;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
@@ -43,7 +50,7 @@ import com.syrus.util.Log;
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2006/03/30 12:11:12 $
+ * @version $Revision: 1.19 $, $Date: 2006/03/31 06:42:16 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor
@@ -286,18 +293,76 @@ final class ReflectogramMismatchEventProcessor
 			final PathElement affectedPathElement,
 			final double physicalDistanceToStart,
 			final double physicalDistanceToEnd) {
+		String leftNonSpaciousName = null;
+		String rightNonSpaciousName = null;
+
+		if (affectedPathElement.isSpacious()) {
+			printDebugInfo(affectedPathElement);
+
+			try {
+				final SchemePath parentPathOwner = affectedPathElement.getParentPathOwner();
+				final ArrayList<PathElement> pathMembers = new ArrayList<PathElement>(parentPathOwner.getPathMembers());
+				final int sequentialNumber = affectedPathElement.getSequentialNumber();
+
+
+				for (int i = sequentialNumber - 1, n = 0; i >= n; i--) {
+					final PathElement pathElement = pathMembers.get(i);
+					if (pathElement.isSpacious()) {
+						continue;
+					}
+					leftNonSpaciousName = getExtendedName(pathElement.getId());
+				}
+
+				
+				for (int i = sequentialNumber + 1, n = pathMembers.size(); i < n; i++) {
+					final PathElement pathElement = pathMembers.get(i);
+					if (pathElement.isSpacious()) {
+						continue;
+					}
+					rightNonSpaciousName = getExtendedName(pathElement.getId());
+				}
+			} catch (final ApplicationException ae) {
+				Log.debugMessage(ae, SEVERE);
+			}
+		}
 		return MISMATCH_CREATED + COLON_TAB + EasyDateFormatter.formatDate(reflectogramMismatchEvent.getCreated()) + NEWLINE
-				+ "Discovered by Test" + COLON_TAB + test.getDescription() + NEWLINE
-				+ "Reflectometer" + COLON_TAB + kis.getName() + NEWLINE
-				+ "Monitored Element" + COLON_TAB + monitoredElement.getDisplayedName() + NEWLINE
+//				+ "Discovered by Test" + COLON_TAB + test.getDescription() + NEWLINE
+				/**
+				 * @todo localize me
+				 */
+				+ "\u041e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d\u043e \u0442\u0435\u0441\u0442\u043e\u043c" + COLON_TAB + test.getDescription() + NEWLINE
+//				+ "Reflectometer" + COLON_TAB + kis.getName() + NEWLINE
+				/**
+				 * @todo localize me
+				 */
+				+ "\u0420\u0435\u0444\u043b\u0435\u043a\u0442\u043e\u043c\u0435\u0442\u0440" + COLON_TAB + kis.getName() + NEWLINE
+//				+ "Monitored Element" + COLON_TAB + monitoredElement.getDisplayedName() + NEWLINE
+				/**
+				 * @todo localize me
+				 */
+				+ "\u041b\u0438\u043d\u0438\u044f \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f" + COLON_TAB + monitoredElement.getDisplayedName() + NEWLINE
 				+ NEWLINE
 				+ reflectogramMismatchEvent.getSeverity().getLocalizedDescription() + NEWLINE
 				+ reflectogramMismatchEvent.getAlarmType().getLocalizedDescription() + NEWLINE
 				+ NEWLINE
 				+ AFFECTED + SPACE + PATH_ELEMENT + COLON_TAB + getExtendedName(affectedPathElement.getId()) + NEWLINE
 				+ (affectedPathElement.isSpacious()
-						? PHYSICAL_DISTANCE_TO + SPACE + START_OF + SPACE + PATH_ELEMENT_GENITIVE + COLON_TAB + getLocalizedDistance((int) physicalDistanceToStart) + NEWLINE
-						+ PHYSICAL_DISTANCE_TO + SPACE + END_OF + SPACE + PATH_ELEMENT_GENITIVE + COLON_TAB + getLocalizedDistance((int) physicalDistanceToEnd) + NEWLINE
+						? PHYSICAL_DISTANCE_TO + SPACE
+								+ (leftNonSpaciousName == null
+										/**
+										 * @todo localize me
+										 */
+										? START_OF + SPACE + PATH_ELEMENT_GENITIVE + SPACE + "(\u043e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0443\u0437\u043b\u0430 \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u043e)"
+										: "\u0443\u0437\u043b\u0430" + SPACE + leftNonSpaciousName)
+								+ COLON_TAB + getLocalizedDistance((int) physicalDistanceToStart) + NEWLINE
+						+ PHYSICAL_DISTANCE_TO + SPACE
+								+ (rightNonSpaciousName == null
+										/**
+										 * @todo localize me
+										 */
+										? END_OF + SPACE + PATH_ELEMENT_GENITIVE + SPACE + "(\u043e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0443\u0437\u043b\u0430 \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u043e)"
+										: "\u0443\u0437\u043b\u0430" + SPACE + rightNonSpaciousName)
+								+ COLON_TAB + getLocalizedDistance((int) physicalDistanceToEnd) + NEWLINE
 						: "")
 				+ NEWLINE
 				+ (reflectogramMismatchEvent.hasMismatch()
@@ -346,12 +411,153 @@ final class ReflectogramMismatchEventProcessor
 				return "";
 			}
 
-			return pathElement.getName() + SPACE + '('
-					+ pathElement.getAbstractSchemeElement()
-					.getNearestParentScheme().getName() + ')';
+			final AbstractSchemeElement abstractSchemeElement = pathElement.getAbstractSchemeElement();
+			final String schemeElementName = abstractSchemeElement.getName();
+			final String schemeName = abstractSchemeElement.getNearestParentScheme().getName();
+			if (pathElement.isSpacious()) {
+				return schemeElementName + SPACE + '(' + schemeName + ')';
+			}
+			final SchemeElement schemeElement = (SchemeElement) abstractSchemeElement;
+			final ProtoEquipment protoEquipment = schemeElement.getProtoEquipment();
+			if (protoEquipment == null) {
+				Log.debugMessage("For SchemeElement: "
+						+ schemeElement.getId()
+						+ ", ProtoEquipment is null",
+						WARNING);
+				return schemeElementName + SPACE + '(' + schemeName + ')';
+			}
+			final EquipmentType equipmentType = protoEquipment.getType();
+			return equipmentType.getDescription() + ' ' + schemeElementName + SPACE + '(' + schemeName + ')';
 		} catch (final ApplicationException ae) {
 			Log.debugMessage(ae, SEVERE);
 			return "";
 		}
+	}
+
+	/**
+	 * Currently, just logs names of the nodes nearest to
+	 * {@code affectedPathElement}. Later on, will be used to form a message
+	 * to deliver to clients. Search mechanism to be transformed into a more
+	 * intelligent one.
+	 *  
+	 * @param affectedPathElement
+	 */
+	private static void printDebugInfo(final PathElement affectedPathElement) {
+		String leftNonSpaciosName = null;
+		String leftNonMuffName = null;
+		String leftMuffName = null;
+
+		String rightNonSpaciosName = null;
+		String rightNonMuffName = null;
+		String rightMuffName = null;
+		try {
+			final SchemePath parentPathOwner = affectedPathElement.getParentPathOwner();
+			final ArrayList<PathElement> pathMembers = new ArrayList<PathElement>(parentPathOwner.getPathMembers());
+			final int sequentialNumber = affectedPathElement.getSequentialNumber();
+
+
+			for (int i = sequentialNumber - 1, n = 0; i >= n; i--) {
+				final PathElement pathElement = pathMembers.get(i);
+				if (pathElement.isSpacious()) {
+					continue;
+				}
+				final SchemeElement schemeElement = (SchemeElement) pathElement.getAbstractSchemeElement();
+				if (leftNonSpaciosName == null) {
+					leftNonSpaciosName = schemeElement.getName();
+					assert leftNonSpaciosName != null;
+				}
+				final ProtoEquipment protoEquipment = schemeElement.getProtoEquipment();
+				if (protoEquipment == null) {
+					Log.debugMessage("For SchemeElement: "
+							+ schemeElement.getId()
+							+ ", ProtoEquipment is null",
+							WARNING);
+					continue;
+				}
+				final EquipmentType equipmentType = protoEquipment.getType();
+				if (equipmentType == EquipmentType.MUFF && leftMuffName == null) {
+					leftMuffName = equipmentType.getDescription() + ' ' + schemeElement.getName();
+					assert leftMuffName != null;
+				} else if (equipmentType != EquipmentType.MUFF && leftNonMuffName == null) {
+					leftNonMuffName = equipmentType.getDescription() + ' ' + schemeElement.getName();
+					assert leftNonMuffName != null;
+				}
+
+				if (leftNonMuffName != null && leftMuffName != null) {
+					break;
+				}
+			}
+
+
+			for (int i = sequentialNumber + 1, n = pathMembers.size(); i < n; i++) {
+				final PathElement pathElement = pathMembers.get(i);
+				if (pathElement.isSpacious()) {
+					continue;
+				}
+				final SchemeElement schemeElement = (SchemeElement) pathElement.getAbstractSchemeElement();
+				if (rightNonSpaciosName == null) {
+					rightNonSpaciosName = schemeElement.getName();
+					assert rightNonSpaciosName != null;
+				}
+				final ProtoEquipment protoEquipment = schemeElement.getProtoEquipment();
+				if (protoEquipment == null) {
+					Log.debugMessage("For SchemeElement: "
+							+ schemeElement.getId()
+							+ ", ProtoEquipment is null",
+							WARNING);
+					continue;
+				}
+				final EquipmentType equipmentType = protoEquipment.getType();
+				if (equipmentType == EquipmentType.MUFF && rightMuffName == null) {
+					rightMuffName = equipmentType.getDescription() + ' ' + schemeElement.getName();
+					assert rightMuffName != null;
+				} else if (equipmentType != EquipmentType.MUFF && rightNonMuffName == null) {
+					rightNonMuffName = equipmentType.getDescription() + ' ' + schemeElement.getName();
+					assert rightNonMuffName != null;
+				}
+
+				if (rightNonMuffName != null && rightMuffName != null) {
+					break;
+				}
+			}
+		} catch (final ApplicationException ae) {
+			Log.debugMessage(ae, SEVERE);
+			final String fallbackName = '<' + ae.getLocalizedMessage() + '>';
+
+			leftNonSpaciosName = fallbackName;
+			leftNonMuffName = fallbackName;
+			leftMuffName = fallbackName;
+
+			rightNonSpaciosName = fallbackName;
+			rightNonMuffName = fallbackName;
+			rightMuffName = fallbackName;
+		}
+
+		if (leftNonSpaciosName == null) {
+			leftNonSpaciosName = "N/A";
+		}
+		if (leftNonMuffName == null) {
+			leftNonMuffName = "N/A";
+		}
+		if (leftMuffName == null) {
+			leftMuffName = "N/A";
+		}
+
+		if (rightNonSpaciosName == null) {
+			rightNonSpaciosName = "N/A";
+		}
+		if (rightNonMuffName == null) {
+			rightNonMuffName = "N/A";
+		}
+		if (rightMuffName == null) {
+			rightMuffName = "N/A";
+		}
+
+		Log.debugMessage("*** Nearest left node: " + leftNonSpaciosName, INFO);
+		Log.debugMessage("*** Nearest left non-muff node: " + leftNonMuffName, INFO);
+		Log.debugMessage("*** Nearest left muff: " + leftMuffName, INFO);
+		Log.debugMessage("*** Nearest right node: " + rightNonSpaciosName, INFO);
+		Log.debugMessage("*** Nearest right non-muff node: " + rightNonMuffName, INFO);
+		Log.debugMessage("*** Nearest right muff: " + rightMuffName, INFO);
 	}
 }
