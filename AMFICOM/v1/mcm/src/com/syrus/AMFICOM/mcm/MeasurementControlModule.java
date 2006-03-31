@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementControlModule.java,v 1.146.2.16 2006/03/31 08:40:37 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146.2.17 2006/03/31 08:42:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146.2.16 $, $Date: 2006/03/31 08:40:37 $
+ * @version $Revision: 1.146.2.17 $, $Date: 2006/03/31 08:42:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -456,7 +456,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 				OPERATION_EQUALS,
 				KIS_CODE,
 				COLUMN_ON_SERVICE);
-		final CompoundCondition kisCondition = new CompoundCondition(AND, mcmKisCondition, onServiceKisCondition);
+		final CompoundCondition kisCondition = new CompoundCondition(mcmKisCondition, AND, onServiceKisCondition);
 		final Set<KIS> kiss;
 		try {
 			kiss = StorableObjectPool.getStorableObjectsByCondition(kisCondition, true, false);
