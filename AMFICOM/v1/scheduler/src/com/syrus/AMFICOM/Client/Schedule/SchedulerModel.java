@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.181 2006/04/03 10:39:45 bass Exp $
+ * $Id: SchedulerModel.java,v 1.182 2006/04/03 11:30:30 saa Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,8 +73,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.181 $, $Date: 2006/04/03 10:39:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.182 $, $Date: 2006/04/03 11:30:30 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -84,19 +84,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	public static final String	COMMAND_CHANGE_ME_TYPE				= "ChangeMEType";
 
 	public static final String	COMMAND_CLEAN						= "Clean";
-
-	private static final int	FLAG_APPLY							= 1 << 1;
-	private static final int	FLAG_CREATE							= 1 << 2;
-	Dispatcher					dispatcher;
-
-	private int					flag								= 0;
-
-	private Set<Identifier>		testIds								= new HashSet<Identifier>();
-	private Set<Identifier>		mainTestIds							= new HashSet<Identifier>();
-	private Identifier			selectedFirstTestId;
-	Set<Identifier>				selectedTestIds;
-	Set<Test> finishingTests;
-	Map<Set<Identifier>, Set<Identifier>>							measurementSetupIdMap;
 
 	public static final String	COMMAND_GET_NAME					= "GetName";
 	public static final String	COMMAND_SET_NAME					= "SetName";
@@ -122,7 +109,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	public static final String	COMMAND_REFRESH_TEST				= "RefreshTest";
 	public static final String	COMMAND_REFRESH_TESTS				= "RefreshTests";
 	public static final String	COMMAND_REMOVE_TEST					= "RemoveTest";
-	
+
 	public static final String	COMMAND_REFRESH_TEMPORAL_STAMPS		= "RefreshTemporalStamps";
 	public static final String	COMMAND_REFRESH_MEASUREMENT_SETUP	= "RefreshMeasurementSetup";
 
@@ -131,7 +118,21 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 	public static final String	COMMAND_DATE_OPERATION				= "DateOperation";
 
-	private MeasurementType				measurementType				= MeasurementType.UNKNOWN;
+	private static final int	FLAG_APPLY							= 1 << 1;
+	private static final int	FLAG_CREATE							= 1 << 2;
+
+	private Dispatcher			dispatcher;
+
+	private int					flag								= 0;
+
+	private Set<Identifier>		testIds								= new HashSet<Identifier>();
+	private Set<Identifier>		mainTestIds							= new HashSet<Identifier>();
+	private Identifier			selectedFirstTestId;
+	private Set<Identifier>		selectedTestIds;
+	private Set<Test> 			finishingTests;
+	private Map<Set<Identifier>, Set<Identifier>>	measurementSetupIdMap;
+
+	private MeasurementType		measurementType						= MeasurementType.UNKNOWN;
 
 	private String				name								= null;
 	private MonitoredElement	monitoredElement					= null;
@@ -142,13 +143,12 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	private Date				startGroupDate;
 	private boolean				aloneGroupTest;
 
-	private Map<Identifier, Identifier>					meTestGroup;
+	private Map<Identifier, Identifier>				meTestGroup;
 
 	private boolean				groupTest							= false;
-	private Test	selectedFirstTest;
-//	private boolean	yetUpdated = false;
+	private Test				selectedFirstTest;
 	private SchedulerHandler	schedulerHandler;
-	
+
 	private IntersectionValidator intersectionValidator;
 
 	public SchedulerModel(final ApplicationContext aContext) {
@@ -163,7 +163,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_ANALYSIS_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_GROUP_TEST, this);
 
-		//
 		this.add(MENU_SESSION);
 		this.add(MENU_SESSION_NEW);
 		this.add(MENU_SESSION_CLOSE);
@@ -196,29 +195,26 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 		this.setVisible(ApplicationModel.MENU_HELP, true);
 		this.setVisible(ApplicationModel.MENU_HELP_ABOUT, true);
-		
+
 		final ExtensionLauncher extensionLauncher = ExtensionLauncher.getInstance();
 		final ClassLoader classLoader = SchedulerModel.class.getClassLoader();
 		extensionLauncher.addExtensions(classLoader.getResource("xml/resources.xml"));
-		extensionLauncher.getExtensionHandler(ResourceHandler.class.getName()); 
+		extensionLauncher.getExtensionHandler(ResourceHandler.class.getName());
 		extensionLauncher.addExtensions(classLoader.getResource("xml/scheduler.xml"));
-		
-		this.schedulerHandler = extensionLauncher.getExtensionHandler(SchedulerHandler.class.getName());	
-		
+
+		this.schedulerHandler = extensionLauncher.getExtensionHandler(SchedulerHandler.class.getName());
+
 		this.intersectionValidator = new IntersectionValidator(true);
 	}
 
 	public SchedulerHandler getSchedulerHandler() {
 		return this.schedulerHandler;
 	}
-	
-	/**
-	 * @return tests
-	 */
+
 	public Set<Identifier> getTestIds() {
 		return this.testIds;
 	}
-	
+
 	public Set<Identifier> getMainTestIds() {
 		Log.debugMessage(this.mainTestIds, Log.DEBUGLEVEL09);
 		return this.mainTestIds;
@@ -229,7 +225,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		if (propertyName == COMMAND_CLEAN) {
 			if (this.testIds != null) {
 				this.testIds.clear();
-			}			
+			}
 			if (this.mainTestIds != null) {
 				this.mainTestIds.clear();
 			}
@@ -249,7 +245,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			this.name = (String) evt.getNewValue();
 		} else if (propertyName == COMMAND_SET_GROUP_TEST) {
 			this.groupTest = true;
-		} 
+		}
 	}
 
 	public final boolean isAddingGroupTestEnable() {
@@ -259,15 +255,15 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		}
 		return false;
 	}
-	
+
 	public void removeTest(final Test test) throws ApplicationException {
-		
+
 		int status = test.getStatus().value();
 		if (status == TestStatus._TEST_STATUS_COMPLETED ||
 				status == TestStatus._TEST_STATUS_ABORTED) {
 			return;
 		}
-		
+
 		final Identifier groupTestId = test.getGroupTestId();
 		if (groupTestId != null && !groupTestId.isVoid()) {
 			if (this.meTestGroup != null) {
@@ -307,7 +303,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		final Collection<IconPopulatableItem> measurementTypeItems = new ArrayList<IconPopulatableItem>(measurementTypes.length);
 
 		final MeasurementTypeChildrenFactory childrenFactory = new MeasurementTypeChildrenFactory(LoginManager.getDomainId());
-		
+
 		for(final MeasurementType measurementType1 : measurementTypes) {
 			if (measurementType1.getDescription().trim().length() == 0) {
 				continue;
@@ -357,7 +353,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 
 	public void createTest() throws ApplicationException {
-		this.flag = FLAG_CREATE;		
+		this.flag = FLAG_CREATE;
 		this.startGetData(true);
 	}
 
@@ -395,20 +391,20 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 //	private void createTestingTest() throws ApplicationException {
 //		long intervalLength = 60L * 60L * 1000L;
-//		final TypicalCondition periodicalTypicalCondition = new TypicalCondition(intervalLength, 
-//			intervalLength, 
-//			OperationSort.OPERATION_EQUALS, 
-//			ObjectEntities.PERIODICALTEMPORALPATTERN_CODE, 
-//			PeriodicalTemporalPatternWrapper.COLUMN_PERIOD); 
-//		final Set<PeriodicalTemporalPattern> periodicalTemporalPatterns = 
+//		final TypicalCondition periodicalTypicalCondition = new TypicalCondition(intervalLength,
+//			intervalLength,
+//			OperationSort.OPERATION_EQUALS,
+//			ObjectEntities.PERIODICALTEMPORALPATTERN_CODE,
+//			PeriodicalTemporalPatternWrapper.COLUMN_PERIOD);
+//		final Set<PeriodicalTemporalPattern> periodicalTemporalPatterns =
 //			StorableObjectPool.getStorableObjectsByCondition(periodicalTypicalCondition, true, true);
 //		PeriodicalTemporalPattern periodicalTemporalPattern = periodicalTemporalPatterns.iterator().next();
-//		
-//		final MonitoredElement me1 = 
+//
+//		final MonitoredElement me1 =
 //			StorableObjectPool.getStorableObject(new Identifier("MonitoredElement_7"), true);
-//		final MonitoredElement me2 = 
+//		final MonitoredElement me2 =
 //			StorableObjectPool.getStorableObject(new Identifier("MonitoredElement_16"), true);
-//		
+//
 //		Date now = new Date();
 //		final Date startTime = new Date(now.getTime() - intervalLength * 3L);
 //		final Date endTime = new Date(now.getTime() + intervalLength * 1L);
@@ -641,8 +637,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				break;
 			}
 			if (start.equals(end)) {
-  				break;
-  			}
+				break;
+			}
 			start = end;
 		}
 	
@@ -1362,10 +1358,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	 * @throws ApplicationException
 	 */
 	public String isValid(final Identifier monitoredElementId,
-	                       final Date startDate, 
-	                       final Date endDate,
-	                       final Identifier temporalPatternId,
-	                       final MeasurementSetup newMeasurementSetup) 
+			final Date startDate, 
+			final Date endDate,
+			final Identifier temporalPatternId,
+			final MeasurementSetup newMeasurementSetup) 
 	throws ApplicationException {
 		final AbstractTemporalPattern temporalPattern;
 		if (temporalPatternId == null || temporalPatternId.isVoid()) {
@@ -1390,10 +1386,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	 * @throws ApplicationException
 	 */
 	public String isValid(final Identifier monitoredElementId,
-	                       final Date startDate, 
-	                       final Date endDate,
-	                       final AbstractTemporalPattern temporalPattern,
-	                       final MeasurementSetup newTestMeasurementSetup) 
+			final Date startDate, 
+			final Date endDate,
+			final AbstractTemporalPattern temporalPattern,
+			final MeasurementSetup newTestMeasurementSetup) 
 	throws ApplicationException {
 		return this.intersectionValidator.isValid(monitoredElementId, 
 			startDate, 
@@ -1505,10 +1501,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 	
 	public String isValid(final Test test,
-  		final  AbstractTemporalPattern temporalPattern) 
-  	throws ApplicationException {
-  		return this.intersectionValidator.isValid(test, temporalPattern);
-  	}
+		final  AbstractTemporalPattern temporalPattern) 
+	throws ApplicationException {
+		return this.intersectionValidator.isValid(test, temporalPattern);
+	}
 	
 	/**
 	 * @param test
@@ -1523,11 +1519,11 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 	
 	public String isValid(final Test test,
-  		final Date startDate,
-  		final Date endDate) 
-  	throws ApplicationException {
-  		return this.intersectionValidator.isValid(test, startDate, endDate);
-  	}
+		final Date startDate,
+		final Date endDate) 
+	throws ApplicationException {
+		return this.intersectionValidator.isValid(test, startDate, endDate);
+	}
 	
 	public final String getExtendedTestDescription(final Test test) {		
 		final TestView view = TestView.valueOf(test);
@@ -1539,7 +1535,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 
 	public static Color getColor(final TestStatus testStatus, 
-	                             final boolean selected) {
+			final boolean selected) {
 		Color color;
 		switch (testStatus.value()) {
 			case TestStatus._TEST_STATUS_COMPLETED:
