@@ -1,10 +1,11 @@
-/*
- * $Id: SchedulerReportModel.java,v 1.1 2006/04/03 10:20:56 bass Exp $
+/*-
+ * $Id: SchedulerReportModel.java,v 1.2 2006/04/03 10:31:04 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright © 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.Client.Schedule.report;
 
 import java.util.ArrayList;
@@ -27,7 +28,13 @@ import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 
-public class SchedulerReportModel extends ReportModel {
+/**
+ * @author Peter Peskovsky
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2006/04/03 10:31:04 $
+ * @module scheduler
+ */
+public final class SchedulerReportModel extends ReportModel {
 	// Названия отчётов для карты
 	/**
 	 * График тестов
@@ -74,8 +81,10 @@ public class SchedulerReportModel extends ReportModel {
 					result = TestReport.createReport(
 							test,
 							(TableDataStorableElement) dataStorableElement);
-				} catch (CreateReportException e) {
-				} catch (ApplicationException e) {
+				} catch (final CreateReportException cre) {
+					// noone seems to care
+				} catch (final ApplicationException ae) {
+					// noone seems to care
 				}
 			}
 		}
