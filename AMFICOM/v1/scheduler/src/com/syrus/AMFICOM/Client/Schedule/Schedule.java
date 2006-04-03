@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Schedule;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.Client.Schedule.general.UIStorage;
 import com.syrus.AMFICOM.client.launcher.Launcher;
 import com.syrus.AMFICOM.client.model.AbstractApplication;
 

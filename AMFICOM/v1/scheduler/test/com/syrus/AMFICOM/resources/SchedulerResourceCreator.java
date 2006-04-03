@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerResourceCreator.java,v 1.3 2005/12/29 08:54:53 bob Exp $
+ * $Id: SchedulerResourceCreator.java,v 1.4 2006/04/03 10:39:45 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
-import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.Client.Schedule.general.UIStorage;
 import com.syrus.AMFICOM.extensions.ExtensionPoint;
 import com.syrus.AMFICOM.extensions.RootDocument;
 import com.syrus.AMFICOM.extensions.RootDocument.Root;
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.extensions.resources.Rgb;
 import com.syrus.AMFICOM.extensions.resources.Color.Name.Enum;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/29 08:54:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2006/04/03 10:39:45 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */

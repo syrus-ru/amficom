@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.86 2006/03/21 11:46:20 saa Exp $
+ * $Id: TableFrame.java,v 1.87 2006/04/03 10:39:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.Client.Schedule.general.UIStorage;
 import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.client.UI.ProcessingDialogDummy;
 import com.syrus.AMFICOM.client.UI.StubLabelCellRenderer;
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2006/03/21 11:46:20 $
- * @author $Author: saa $
+ * @version $Revision: 1.87 $, $Date: 2006/04/03 10:39:45 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */

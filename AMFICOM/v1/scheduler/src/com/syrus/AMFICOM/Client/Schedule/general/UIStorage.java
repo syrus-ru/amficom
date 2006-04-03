@@ -1,19 +1,19 @@
 /*-
- * $Id: UIStorage.java,v 1.16 2005/12/29 09:54:32 bob Exp $
+ * $Id: UIStorage.java,v 1.1 2006/04/03 10:39:45 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-package com.syrus.AMFICOM.Client.Scheduler.General;
+package com.syrus.AMFICOM.Client.Schedule.general;
 
 import java.text.SimpleDateFormat;
 
 /**
  * Storage for scheduler gui keys
  * 
- * @version $Revision: 1.16 $, $Date: 2005/12/29 09:54:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.1 $, $Date: 2006/04/03 10:39:45 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.180 2006/03/22 09:41:14 saa Exp $
+ * $Id: SchedulerModel.java,v 1.181 2006/04/03 10:39:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import java.util.logging.Level;
 
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.Client.Schedule.general.UIStorage;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -73,8 +73,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.180 $, $Date: 2006/03/22 09:41:14 $
- * @author $Author: saa $
+ * @version $Revision: 1.181 $, $Date: 2006/04/03 10:39:45 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */

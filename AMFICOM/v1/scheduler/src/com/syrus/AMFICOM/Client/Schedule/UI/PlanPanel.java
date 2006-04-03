@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.83 2006/03/22 12:46:59 saa Exp $
+ * $Id: PlanPanel.java,v 1.84 2006/04/03 10:39:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.Client.Schedule.general.UIStorage;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.ZebraListCellRenderer;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -62,8 +62,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2006/03/22 12:46:59 $
- * @author $Author: saa $
+ * @version $Revision: 1.84 $, $Date: 2006/04/03 10:39:45 $
+ * @author $Author: bass $
  * @module scheduler
  */
 final class PlanPanel extends JPanel implements ActionListener, PropertyChangeListener {
