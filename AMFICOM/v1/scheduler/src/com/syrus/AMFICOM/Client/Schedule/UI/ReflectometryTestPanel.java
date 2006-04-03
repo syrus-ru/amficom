@@ -65,7 +65,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.104 $, $Date: 2006/03/28 12:08:21 $
+ * @version $Revision: 1.105 $, $Date: 2006/04/03 12:28:55 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -919,7 +919,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 						this.measurementSetup.setDescription(description);
 						this.testParametersPanel.refreshMeasurementSetup(this.measurementSetup);
 					} else {
-						{										
+						{
 							final MeasurementSetup measurementSetup;
 							try {
 								measurementSetup = MeasurementSetup.createInstance(LoginManager.getUserId(),
@@ -940,6 +940,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 							}
 		
 						}
+//						this.measurementSetup = null;
+
 					}
 				}
 			}
