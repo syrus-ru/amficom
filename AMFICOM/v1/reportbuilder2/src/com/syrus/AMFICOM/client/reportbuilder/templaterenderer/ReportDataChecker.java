@@ -1,5 +1,5 @@
 /*
- * $Id: ReportDataChecker.java,v 1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: ReportDataChecker.java,v 1.2 2006/04/03 09:21:19 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,13 +13,13 @@ import java.util.Map;
 import com.syrus.AMFICOM.Client.Analysis.Report.AESMPReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
 import com.syrus.AMFICOM.client.map.report.MapReportModel;
-import com.syrus.AMFICOM.client.scheduler.report.SchedulerReportModel;
 import com.syrus.AMFICOM.client_.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.report.SchedulerReportModel;
 import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.Scheme;

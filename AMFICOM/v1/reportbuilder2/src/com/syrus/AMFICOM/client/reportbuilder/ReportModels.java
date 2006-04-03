@@ -1,5 +1,5 @@
 /*-
- * $Id: ReportModels.java,v 1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: ReportModels.java,v 1.2 2006/04/03 09:21:19 stas Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,18 +11,18 @@ import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.SurveyReportModel;
 import com.syrus.AMFICOM.client.map.report.MapReportModel;
-import com.syrus.AMFICOM.client.modelling.report.ModelingReportModel;
-import com.syrus.AMFICOM.client.observe.report.ObserveReportModel;
-import com.syrus.AMFICOM.client.prediction.report.PredictionReportModel;
+import com.syrus.AMFICOM.report.ModelingReportModel;
+import com.syrus.AMFICOM.report.ObserverReportModel;
+import com.syrus.AMFICOM.report.PredictionReportModel;
 import com.syrus.AMFICOM.client.report.ReportModel;
-import com.syrus.AMFICOM.client.scheduler.report.SchedulerReportModel;
+import com.syrus.AMFICOM.report.SchedulerReportModel;
 import com.syrus.AMFICOM.client_.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.report.DestinationModules;
 
 /**
  * @author max
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/12/02 11:37:17 $
+ * @author $Author: stas $
+ * @version $Revision: 1.2 $, $Date: 2006/04/03 09:21:19 $
  * @module reportbuilder
  */
 
@@ -31,7 +31,7 @@ public enum ReportModels {
 	EVALUATION(new EvaluationReportModel()),
 	MAP(new MapReportModel()),
 	MODELING(new ModelingReportModel()),
-	OBSERVE(new ObserveReportModel()),
+	OBSERVE(new ObserverReportModel()),
 	OPTIMIZATION(null),
 	PREDICTION(new PredictionReportModel()),
 	SCHEDULER(new SchedulerReportModel()),
