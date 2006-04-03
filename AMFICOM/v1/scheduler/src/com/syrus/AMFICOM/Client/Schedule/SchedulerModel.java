@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.183 2006/04/03 12:27:45 saa Exp $
+ * $Id: SchedulerModel.java,v 1.184 2006/04/03 13:05:59 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.183 $, $Date: 2006/04/03 12:27:45 $
+ * @version $Revision: 1.184 $, $Date: 2006/04/03 13:05:59 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -135,9 +135,13 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	 * Сами групповые тесты сюда включены.
 	 */
 	private Set<Identifier>		mainTestIds							= new HashSet<Identifier>();
+
 	private Identifier			selectedFirstTestId;
+
 	private Set<Identifier>		selectedTestIds;
+
 	private Set<Test> 			finishingTests;
+
 	private Map<Set<Identifier>, Set<Identifier>>	measurementSetupIdMap;
 
 	private MeasurementType		measurementType						= MeasurementType.UNKNOWN;
@@ -541,7 +545,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			
 			Log.debugMessage("TestView.refreshCache:" + (time31-time3),
 				Log.DEBUGLEVEL03);
-			this.getFinishingTests(tests);
+			this.prepareFinishingTests(tests);
 			
 			for (final Test test : refreshTests) {
 				this.addTest(test);
@@ -570,7 +574,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		return this.finishingTests;
 	}
 	
-	private void getFinishingTests(final Set<Test> updatedTests) throws ApplicationException {
+	private void prepareFinishingTests(final Set<Test> updatedTests) throws ApplicationException {
 		if (this.finishingTests != null) {
 			this.finishingTests.clear();
 		} else {
