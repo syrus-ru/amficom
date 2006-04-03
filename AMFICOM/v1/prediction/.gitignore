@@ -8,3 +8,5 @@ prediction.jpx~
 *.tar
 *.gz
 doc
+.classpath
+.project
