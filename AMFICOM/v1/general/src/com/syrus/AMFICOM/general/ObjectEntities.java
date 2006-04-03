@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.96.2.6 2006/03/22 08:34:27 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.96.2.7 2006/04/03 15:18:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import gnu.trove.TShortObjectHashMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.96.2.6 $, $Date: 2006/03/22 08:34:27 $
+ * @version $Revision: 1.96.2.7 $, $Date: 2006/04/03 15:18:20 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -70,8 +70,8 @@ public final class ObjectEntities {
 	public static final String MEASUREMENT_TYPE = "MeasurementType";
 	public static final String ANALYSIS_TYPE = "AnalysisType";
 	public static final String MODELING_TYPE = "ModelingType";
-	public static final String MEASUREMENTPORT_TYPE = "MeasurementPortType";
 	public static final String ACTIONPARAMETERTYPEBINDING = "ActionParameterTypeBinding";
+	public static final String MEASUREMENTPORT_TYPE = "MeasurementPortType";
 
 	/*	Object */
 	public static final String PARAMETERSET = "ParameterSet";
@@ -276,8 +276,8 @@ public final class ObjectEntities {
 	public static final short MEASUREMENT_TYPE_CODE = 0x0241;
 	public static final short ANALYSIS_TYPE_CODE = 0x0242;
 	public static final short MODELING_TYPE_CODE = 0x0243;
-	public static final short MEASUREMENTPORT_TYPE_CODE = 0x0244;
-	public static final short ACTIONPARAMETERTYPEBINDING_CODE = 0x0245;
+	public static final short ACTIONPARAMETERTYPEBINDING_CODE = 0x0244;
+	public static final short MEASUREMENTPORT_TYPE_CODE = 0x0245;
 
 	public static final short MEASUREMENT_MAX_CODE = 0x0280;
 
@@ -415,8 +415,8 @@ public final class ObjectEntities {
 		registerEntity(MEASUREMENT_TYPE_CODE, MEASUREMENT_TYPE);
 		registerEntity(ANALYSIS_TYPE_CODE, ANALYSIS_TYPE);
 		registerEntity(MODELING_TYPE_CODE, MODELING_TYPE);
-		registerEntity(MEASUREMENTPORT_TYPE_CODE, MEASUREMENTPORT_TYPE);
 		registerEntity(ACTIONPARAMETERTYPEBINDING_CODE, ACTIONPARAMETERTYPEBINDING);
+		registerEntity(MEASUREMENTPORT_TYPE_CODE, MEASUREMENTPORT_TYPE);
 
 		registerEntity(SITENODE_TYPE_CODE, SITENODE_TYPE);
 		registerEntity(PHYSICALLINK_TYPE_CODE, PHYSICALLINK_TYPE);
