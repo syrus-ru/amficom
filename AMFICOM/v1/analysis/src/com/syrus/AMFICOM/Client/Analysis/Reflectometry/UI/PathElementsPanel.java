@@ -404,7 +404,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 						final double d[] = this.path.getOpticalDistanceFromStart(pathElement);
 						final int start1 = index2coord((int) Math.round(d[0] / this.deltaX));
 						final int end1 = index2coord((int) Math.round(d[1] / this.deltaX));
-						Log.debugMessage("PathElement " + pathElement.getName() + " from " + start1 + " to " + end1, Level.FINER);
+						Log.debugMessage("PathElement " + pathElement.getName() + " from " + start1 + " to " + end1, Log.DEBUGLEVEL09);
 						
 						if (pathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
 							
