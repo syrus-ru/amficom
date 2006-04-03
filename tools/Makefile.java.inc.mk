@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.java.inc.mk,v 1.13 2006/02/22 08:54:12 bass Exp $
+# $Id: Makefile.java.inc.mk,v 1.14 2006/04/03 15:50:00 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -285,7 +285,7 @@ PMD_RULES = rulesets/unusedcode.xml,rulesets/imports.xml,rulesets/basic.xml,rule
 #
 # Javadoc
 #
-JAVADOCHOST = bass.science.syrus.ru
+JAVADOCHOST = ararat.science.syrus.ru
 HTTP_DOCROOT = /var/www/html
 JAVADOC = $(JAVA_HOME)/bin/javadoc
 JAVADOCFLAGS = \
