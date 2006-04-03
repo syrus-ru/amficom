@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.185 2006/04/03 13:11:50 saa Exp $
+ * $Id: SchedulerModel.java,v 1.186 2006/04/03 14:54:20 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.185 $, $Date: 2006/04/03 13:11:50 $
+ * @version $Revision: 1.186 $, $Date: 2006/04/03 14:54:20 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -136,9 +136,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	 */
 	private Set<Identifier>		mainTestIds							= new HashSet<Identifier>();
 
-	private Identifier			selectedFirstTestId;
-
 	private Set<Identifier>		selectedTestIds;
+
+	private Identifier			selectedFirstTestId;
 
 	private Set<Test> 			finishingTests;
 
@@ -359,6 +359,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		this.refreshTest(this);
 	}
 
+	// XXX: unused?
 	public void applyTest() throws ApplicationException {
 		this.flag = FLAG_APPLY;
 		this.startGetData(true);
@@ -570,7 +571,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
 	}
 
-	public final Set<Test> getFinishingTests(){
+	public final Set<Test> getFinishingTests() {
 		return this.finishingTests;
 	}
 
@@ -707,7 +708,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		return Collections.emptySet();
 	}
 
-	public Set<Test> getSelectedTests(){
+	// полагается на то, что все выбранные тесты присутствуют в TestView.MAP
+	public Set<Test> getSelectedTests() {
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
 			final Set<Test> selectedTests = new HashSet<Test>(this.selectedTestIds.size());
 			for (final Identifier testId : this.selectedTestIds) {
@@ -718,11 +720,12 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		return Collections.emptySet();
 	}
 
+	// XXX: в отличие от getSelectedTests(), достает selectedFirst тест через Pool
 	public Test getSelectedTest() throws ApplicationException {
 		try {
 			return this.selectedFirstTestId != null
 					? (Test) StorableObjectPool.getStorableObject(this.selectedFirstTestId, true)
-						: null;
+					: null;
 		} catch (final ApplicationException e) {
 			throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
 		}
@@ -792,6 +795,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		return this.measurementType;
 	}
 
+	// XXX: may be changed to private
 	public void setSelectedMonitoredElement(final MonitoredElement monitoredElement) {
 		Log.debugMessage(this.monitoredElement + " > " + monitoredElement,
 			Log.DEBUGLEVEL10);
@@ -828,6 +832,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		return this.monitoredElement;
 	}
 
+	// XXX: may be changed to private
 	public void refreshMeasurementSetups() {
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
 			COMMAND_SET_MEASUREMENT_SETUPS,
@@ -1126,6 +1131,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		}
 	}
 
+	// XXX: чем этот метод отличается от moveSelectedTests(Date)?
 	public void moveSelectedTests(final long offset) throws ApplicationException {
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
 			final Set<Test> selectedTests;
@@ -1360,13 +1366,13 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 
 	/**
-	 *
+	 * XXX: may be changed to private
 	 * @param monitoredElementId
 	 * @param startDate
 	 * @param endDate
 	 * @param temporalPatternId
 	 * @param newMeasurementSetup
-	 * @return intersection desctription or null if there is no intersection
+	 * @return description of the problem or null if there is no intersection
 	 * @throws ApplicationException
 	 */
 	public String isValid(final Identifier monitoredElementId,
@@ -1389,6 +1395,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 
 	/**
+	 * XXX: may be changed to private
 	 * @param monitoredElementId
 	 * @param startDate
 	 * @param endDate
@@ -1501,6 +1508,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 
 	/**
+	 * XXX: may be changed to private
 	 * @param test
 	 * @param newTestMeasurementSetup
 	 * @return intersection desctription or null if there is no intersection
@@ -1512,6 +1520,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		return this.intersectionValidator.isValid(test, newTestMeasurementSetup);
 	}
 
+	// XXX: may be changed to private
 	public String isValid(final Test test,
 		final  AbstractTemporalPattern temporalPattern)
 	throws ApplicationException {
@@ -1519,6 +1528,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 
 	/**
+	 * XXX: may be changed to private
 	 * @param test
 	 * @param offset
 	 * @return intersection desctription or null if there is no intersection
