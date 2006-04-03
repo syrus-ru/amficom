@@ -1,5 +1,5 @@
 /*-
-* $Id: TraceEventsToolBar.java,v 1.12 2005/10/17 15:05:05 saa Exp $
+* $Id: TraceEventsToolBar.java,v 1.13 2006/04/03 10:39:42 saa Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/17 15:05:05 $
+ * @version $Revision: 1.13 $, $Date: 2006/04/03 10:39:42 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis
@@ -33,10 +33,12 @@ public class TraceEventsToolBar extends ScalableToolBar
 	protected static final String trace = "traceButton";
 	protected static final String events = "eventsButton";
 	protected static final String modeled = "modeledButton";
+	protected static final String paleSecondary = "paleSecondaryButton";
 
 	JToggleButton traceTButton = new JToggleButton();
 	JToggleButton eventsTButton = new JToggleButton();
 	JToggleButton modeledTButton = new JToggleButton();
+	JToggleButton paleSecondaryTButton = new JToggleButton();
 
 	public TraceEventsToolBar (TraceEventsLayeredPanel panel)
 	{
@@ -110,6 +112,23 @@ public class TraceEventsToolBar extends ScalableToolBar
 					}
 				},
 				true));
+		buttons1.put(
+				paleSecondary,
+				createToolButton(
+				this.paleSecondaryTButton,
+				null,
+				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
+				null,
+				LangModelAnalyse.getString("showtrace"), // @todo: add localization
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_TRACE), // @todo: add icon
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						paleSecondaryTButton_actionPerformed(e);
+					}
+				},
+				true));
 
 		this.eventsTButton.doClick();
 		return buttons1;
@@ -126,6 +145,10 @@ public class TraceEventsToolBar extends ScalableToolBar
 	}
 
 	void modeledTButton_actionPerformed(ActionEvent e)
+	{
+		((TraceEventsLayeredPanel)super.panel).updPaintingMode();
+	}
+	void paleSecondaryTButton_actionPerformed(ActionEvent e)
 	{
 		((TraceEventsLayeredPanel)super.panel).updPaintingMode();
 	}

@@ -67,10 +67,13 @@ implements PropertyChangeListener
 	public boolean modelShowDesired() {
 		return ((TraceEventsToolBar)toolbar).modeledTButton.isSelected();
 	}
+	public boolean paleSecondaryDesired() {
+		return ((TraceEventsToolBar)toolbar).paleSecondaryTButton.isSelected();
+	}
 
 	public void updPaintingMode() {
 		// just mark to repaint
-		// all updates will displayed via *ShowDesired() methods
+		// all updates will be found via *Desired() methods
 		jLayeredPane.repaint();
 	}
 }

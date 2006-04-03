@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramPanel.java,v 1.8 2005/10/17 15:05:05 saa Exp $
+ * $Id: ReflectogramPanel.java,v 1.9 2006/04/03 10:39:42 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceRange;
 /**
  * Отрисовывает рефлектограмму (исходную и модельную, с учетом расцветки)
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/10/17 15:05:05 $
+ * @version $Revision: 1.9 $, $Date: 2006/04/03 10:39:42 $
  * @module
  */
 public class ReflectogramPanel extends TraceEventsPanel {
@@ -32,7 +32,7 @@ public class ReflectogramPanel extends TraceEventsPanel {
 	 */
 	public ReflectogramPanel(TraceEventsLayeredPanel panel,
 			double[] y, double deltaX) {
-		super(panel, y, deltaX);
+		super(panel, y, deltaX, false);
 	}
 
 	/**
@@ -43,7 +43,8 @@ public class ReflectogramPanel extends TraceEventsPanel {
 			String id, boolean arg) {
 		super(panel,
 				Heap.getAnyTraceByKey(id).getTraceData(),
-				Heap.getAnyTraceByKey(id).getDeltaX());
+				Heap.getAnyTraceByKey(id).getDeltaX(),
+				true);
 		if (arg == false)
 			throw new UnsupportedOperationException();
 		this.draw_scales = false;
@@ -122,10 +123,11 @@ public class ReflectogramPanel extends TraceEventsPanel {
 	{
 		if (this.mt == null)
 			return;
-		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_MODELED));
 		if (isDraw_events()) {
 			draw_eventized_curve(g, this.mt.getYArray(), false);
 		} else {
+			g.setColor(correctColor(UIManager.getColor(
+					AnalysisResourceKeys.COLOR_MODELED), false));
 			drawModelCurve(g, this.mt, false);
 		}
 	}
@@ -138,6 +140,13 @@ public class ReflectogramPanel extends TraceEventsPanel {
 	}
 
 	@Override
+	protected boolean hasWeakBothColors() {
+		// Когда включено отображение модельной кривой, исходная рефлектограмма
+		// будет отображаться блеклыми цветами
+		return isPale_secondary() && this.isSecondary;
+	}
+
+	@Override
 	protected boolean isShowGraph() {
 		return ((TraceEventsLayeredPanel)this.parent).graphsShowDesired();
 	}
@@ -147,5 +156,8 @@ public class ReflectogramPanel extends TraceEventsPanel {
 	}
 	protected boolean isDraw_modeled() {
 		return ((TraceEventsLayeredPanel)this.parent).modelShowDesired();
+	}
+	protected boolean isPale_secondary() {
+		return ((TraceEventsLayeredPanel)this.parent).paleSecondaryDesired();
 	}
 }

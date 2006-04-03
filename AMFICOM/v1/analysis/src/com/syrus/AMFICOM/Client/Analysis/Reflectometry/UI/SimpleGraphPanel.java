@@ -114,7 +114,17 @@ public class SimpleGraphPanel extends JPanel
 		setDefaultScales();
 	}
 
+	/**
+	 * @return true, если надо ослабить цвет только для исходных рефлектограмм
+	 */
 	protected boolean hasWeakTraceColors() {
+		return false;
+	}
+
+	/**
+	 * @return true, если надо ослабить цвет и исходных, и модельных рефлектограмм
+	 */
+	protected boolean hasWeakBothColors() {
 		return false;
 	}
 
@@ -171,13 +181,15 @@ public class SimpleGraphPanel extends JPanel
 	protected void updColorModel() {
 	}
 
-	protected Color correctColor(Color color1, boolean isTraceColor)
+	protected Color correctColor(Color color1,
+			boolean isTraceColor)
 	{
 		double weight = 0.3; // XXX: color soften factor
 		double a = weight;
 		double b = 255 * (1.0 - weight);
-		return isTraceColor && hasWeakTraceColors() ?
-			new Color( // XXX: каждый раз создается новый объект цвета
+		return isTraceColor && hasWeakTraceColors()
+				|| hasWeakBothColors()
+			? new Color( // XXX: каждый раз создается новый объект цвета
 				(int )(color1.getRed() * a + b),
 				(int )(color1.getGreen() * a + b),
 				(int )(color1.getBlue() * a + b))

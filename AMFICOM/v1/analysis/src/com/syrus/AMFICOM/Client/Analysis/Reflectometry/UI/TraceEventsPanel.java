@@ -13,6 +13,7 @@ public class TraceEventsPanel extends ScaledGraphPanel
 {
 	protected SimpleReflectogramEvent[] sevents;
 
+	protected boolean isSecondary;
 	protected Color connectColor;
 	protected Color deadzoneColor;
 	protected Color weldColor;
@@ -21,9 +22,20 @@ public class TraceEventsPanel extends ScaledGraphPanel
 	protected Color noiseColor;
 	protected Color endColor;
 
-	public TraceEventsPanel(ResizableLayeredPanel panel, double[] y, double deltaX)
-	{
+	// XXX: mark as deprecated?
+	public TraceEventsPanel(ResizableLayeredPanel panel,
+			double[] y,
+			double deltaX) {
+		this(panel, y, deltaX, false);
+	}
+
+	public TraceEventsPanel(ResizableLayeredPanel panel,
+			double[] y,
+			double deltaX,
+			boolean isSecondary) {
 		super (panel, y, deltaX);
+
+		this.isSecondary = isSecondary;
 
 		Kx = deltaX / 1000d;
 		Ky = 1;

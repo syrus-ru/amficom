@@ -128,7 +128,8 @@ public abstract class AESMPReportModel extends ReportModel
 				TraceEventsPanel sgPanel = new TraceEventsPanel(
 						new ResizableLayeredPanel(),
 						bStructure.getTraceData(),
-						bStructure.getResolution());
+						bStructure.getResolution(),
+						false);
 				IntDimension elementSize = element.getSize();
 				sgPanel.setColorModel(REFLECTOGRAMM_COLOR);
 				sgPanel.setSize(
