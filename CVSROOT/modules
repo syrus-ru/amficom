@@ -47,7 +47,6 @@ AMFICOM_v1	&tools\
 		&report \
 		&reportclient \
 		&reportbuilder \
-		&reportother \
 		&resource \
 		&scheduler \
 		&mcm_interface \
@@ -147,8 +146,6 @@ reportclient		AMFICOM/v1/reportclient
 reportbuilder		AMFICOM/v1/reportbuilder2
 #M oldreportbuilder	Report builder module (original history prior to 20051202; R/O)
 oldreportbuilder	AMFICOM/v1/reportbuilder
-#M	reportother
-reportother		AMFICOM/v1/reportother
 #M	resource	Images'n'stuff
 resource		AMFICOM/v1/resource
 resource_v1		AMFICOM/v1/resource
