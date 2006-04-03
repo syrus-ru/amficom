@@ -1,5 +1,5 @@
 /*-
- * $Id: SetupEquipmentType.java,v 1.1.2.1 2006/02/21 15:53:40 arseniy Exp $
+ * $Id: SetupEquipmentType.java,v 1.1.2.2 2006/04/03 15:15:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,14 +14,14 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.SQLCommonTest;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.setup.I18N;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/21 15:53:40 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/04/03 15:15:12 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -33,7 +33,7 @@ public final class SetupEquipmentType extends TestCase {
 	}
 
 	public static Test suite() {
-		final SQLCommonTest commonTest = new SQLCommonTest();
+		final DatabaseCommonTest commonTest = new DatabaseCommonTest();
 		commonTest.addTestSuite(SetupEquipmentType.class);
 		return commonTest.createTestSetup();
 	}
