@@ -336,9 +336,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 		this.setMeasurementSetup(measurementSetup, false);
 	}
 	
-	public void setMeasurementSetup(final MeasurementSetup measurementSetup, 
+	private void setMeasurementSetup(final MeasurementSetup measurementSetup, 
 	                                final boolean switchToSetups) {
-		
 		final boolean single = !this.allAvailableCheckBox.isSelected();
 		
 		this.testSetups.clearSelection();
@@ -346,7 +345,9 @@ final class TestParametersPanel implements PropertyChangeListener {
 		if (measurementSetup == null || this.msList == null && !single) {
 			return;
 		}
-		
+
+		// AS-UNDERSTOOD: в режиме отображения одного шаблона делаем msList := только один шаблон.
+		// AS-UNDERSTOOD: при этом msListAnalysisOnly и testSetups.getModel().elements не меняем - оставляем старыми. Доколе и зачем - не знаю
 		if (single) {
 			resetMsList();
 			this.msList.add(measurementSetup);
@@ -357,11 +358,11 @@ final class TestParametersPanel implements PropertyChangeListener {
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
 		}
-		
+
 		if (switchToSetups && !this.useSetupsCheckBox.isSelected()) {
 			this.useSetupsCheckBox.doClick();
 		}
-		
+
 		final boolean analysisSetupsSelected = this.useAnalysisSetupsCheckBox.isSelected();
 		final boolean measurementSetupWithAnalysis = isAnalysisEnable(measurementSetup);		 
 
@@ -441,9 +442,16 @@ final class TestParametersPanel implements PropertyChangeListener {
 
 		this.selectAnalysisType(this.getAnalysisType(), true);
 
+		// пытаемся сохранить текущий шаблон
 		if (!this.measurementSetupId.isVoid()) {
 			try {
 				this.setMeasurementSetup((MeasurementSetup) StorableObjectPool.getStorableObject(this.measurementSetupId, true), true);
+//				final MeasurementSetup setup = (MeasurementSetup) StorableObjectPool.getStorableObject(this.measurementSetupId, true);
+//				if (measurementSetups.contains(setup)) {
+//					this.setMeasurementSetup(setup, true);
+//				} else {
+//					System.err.println("Note: setMeasurementSetups: setup selection lost");
+//				}
 			} catch (final ApplicationException e) {
 				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 			}
@@ -484,8 +492,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 			}
 		}
 	}
-	
-	private void changeMonitoredElement(final Identifier monitoredElementId) 
+
+	private void changeMonitoredElement(final Identifier monitoredElementId)
 	throws ApplicationException {
 		final MonitoredElement me = StorableObjectPool.getStorableObject(monitoredElementId, true);
 		final MeasurementPort port = StorableObjectPool.getStorableObject(me.getMeasurementPortId(), true);
@@ -502,8 +510,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 			this.parametersTestPanel.setEnableEditing(!this.useSetupsCheckBox.isSelected());
 			this.setEnableEditing(this.useSetupsCheckBox.isSelected());
 		} else {
-			Log.errorMessage("Port type codename '" + codename + "' does not support");
-			AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.UnsupportedDeviceType"));			
+			Log.errorMessage("Port type codename '" + codename + "' is not supported");
+			AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.UnsupportedDeviceType"));
 		}
 	}
 
