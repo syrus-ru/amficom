@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.182 2006/04/03 11:30:30 saa Exp $
+ * $Id: SchedulerModel.java,v 1.183 2006/04/03 12:27:45 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.182 $, $Date: 2006/04/03 11:30:30 $
+ * @version $Revision: 1.183 $, $Date: 2006/04/03 12:27:45 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -125,7 +125,15 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 	private int					flag								= 0;
 
+	/**
+	 * id всех тестов, в т.ч. тех, что входят в групповые тесты
+	 */
 	private Set<Identifier>		testIds								= new HashSet<Identifier>();
+
+	/**
+	 * id всех тестов, не включая тех, что входят в групповые тесты.
+	 * Сами групповые тесты сюда включены.
+	 */
 	private Set<Identifier>		mainTestIds							= new HashSet<Identifier>();
 	private Identifier			selectedFirstTestId;
 	private Set<Identifier>		selectedTestIds;
