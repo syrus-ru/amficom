@@ -1,4 +1,4 @@
--- $Id: protoequipment.sql,v 1.2.2.1 2006/02/14 09:49:58 arseniy Exp $
+-- $Id: protoequipment.sql,v 1.2.2.2 2006/04/03 09:55:38 arseniy Exp $
 
 CREATE TABLE ProtoEquipment (
  id NUMBER(19),
@@ -20,7 +20,7 @@ CREATE TABLE ProtoEquipment (
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT peq_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
- CONSTRAINT peq_epqtype_fk FOREIGN KEY (type_id)
+ CONSTRAINT peq_eqt_fk FOREIGN KEY (type_id)
   REFERENCES EquipmentType (id) ON DELETE CASCADE
 );
 
