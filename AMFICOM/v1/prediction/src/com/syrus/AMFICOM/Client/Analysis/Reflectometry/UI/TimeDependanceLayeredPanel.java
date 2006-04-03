@@ -11,6 +11,8 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
@@ -23,7 +25,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
 public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements 
-		CurrentEventChangeListener {
+		CurrentEventChangeListener, ChangeListener {
 	private static final long serialVersionUID = 7568579524512348177L;
 
 	protected double maxX;
@@ -32,6 +34,8 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements
 	public TimeDependanceLayeredPanel(Dispatcher dispatcher) {
 		super();
 		init_module(dispatcher);
+		
+		PredictionModel.addChangeListener(this);
 	}
 
 	@Override
@@ -46,7 +50,9 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements
 	
 	public void currentEventChanged() {
 		int event = Heap.hasEtalon() ? Heap.getCurrentEtalonEvent2() : Heap.getCurrentEvent2();
-		setSelectedEvent(event);
+		updateToolbarButtons(event);
+		PredictionModel.setEventNumber(event);
+		updateCurrentEvent(event);
 	}
 	
 	@Override
@@ -161,9 +167,7 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements
 		}
 	}*/
 
-	public void setSelectedEvent(int num) {
-		updateToolbarButtons(num);
-		PredictionModel.setEventNumber(num);
+	public void updateCurrentEvent(int num) {
 		for(int i = 0; i < this.jLayeredPane.getComponentCount(); i++) {
 			SimpleGraphPanel p = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if (p instanceof TimeDependencePanel) {
@@ -175,31 +179,36 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements
 	}
 
 	void setPanelParams (TimeDependencePanel panel, int event) {
-		PredictionManager stats = PredictionModel.getPredictionManager();
-		if (stats != null && event != -1) {
-			Statistics statistics;
-			switch (PredictionModel.getEventType()) {
-			case PredictionModel.ATTENUATION:
-				statistics = stats.getAttenuationInfo(event);
-				break;
-			case PredictionModel.REFL_AMPLITUDE:
-				statistics = stats.getReflectiveAmplitudeInfo(event);
-				break;
-			case PredictionModel.Y0_LEVEL:
-				statistics = stats.getY0Info(event);
-				break;
-			case PredictionModel.LOSS:
-				statistics = stats.getLossInfo(event);
-				break;
-			case PredictionModel.REFLECTANCE:
-				statistics = stats.getReflectanceInfo(event);
-				break;
-			default:
-				Log.errorMessage("PredictionModel is no initialyzed yet");
+		try {
+			PredictionManager stats = PredictionModel.getPredictionManager();
+			if (stats != null && event != -1) {
+				Statistics statistics;
+				switch (PredictionModel.getEventType()) {
+				case PredictionModel.ATTENUATION:
+					statistics = stats.getAttenuationInfo(event);
+					break;
+				case PredictionModel.REFL_AMPLITUDE:
+					statistics = stats.getReflectiveAmplitudeInfo(event);
+					break;
+				case PredictionModel.Y0_LEVEL:
+					statistics = stats.getY0Info(event);
+					break;
+				case PredictionModel.LOSS:
+					statistics = stats.getLossInfo(event);
+					break;
+				case PredictionModel.REFLECTANCE:
+					statistics = stats.getReflectanceInfo(event);
+					break;
+				default:
+					Log.errorMessage("PredictionModel is no initialyzed yet");
 				return;
+				}
+				panel.init(statistics.getTimeDependence());
+				panel.setLinearCoeffs(statistics.getLc());
 			}
-			panel.init(statistics.getTimeDependence());
-			panel.setLinearCoeffs(statistics.getLc());
+		} catch (IllegalArgumentException e) {
+			Log.errorMessage("Incorrect state of PredictionManager: possibly no traces selected for prediction: " + e.getMessage());
+			return;
 		}
 		panel.c_event = event;
 	}
@@ -239,6 +248,13 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements
 			 toolBar.reflAmplButton.doClick();
 		} else {
 			
+		}
+	}
+
+	public void stateChanged(ChangeEvent e) {
+		if (e.getSource().equals(PredictionModel.class)) {
+			int event = Heap.hasEtalon() ? Heap.getCurrentEtalonEvent2() : Heap.getCurrentEvent2();
+			updateCurrentEvent(event);
 		}
 	}
 }

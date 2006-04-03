@@ -1,9 +1,9 @@
 package com.syrus.AMFICOM.Client.General.Command.Prediction;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Trace;
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.MTAEPredictionManager;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.FilteredMTAEPredictionManager;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionManager;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionModel;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.MTAEPredictionManager.PredictionMtaeAndDate;
@@ -84,7 +84,7 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand {
 				analysisParameters = Heap.getMinuitDefaultParams();
 			}
 
-			Collection<PredictionMtaeAndDate> pmads = new ArrayList<PredictionMtaeAndDate>();
+			Map<String, PredictionMtaeAndDate> pmads = new HashMap<String, PredictionMtaeAndDate>();
 			Set<Trace> traces = new HashSet<Trace>(measurements.size());
 			for (Measurement m : measurements) {
 				final long date = m.getStartTime().getTime();
@@ -92,7 +92,7 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand {
 					if (result1.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
 						try {
 							final Trace trace = Trace.getTraceWithARIfPossible(result1, analysisParameters);
-							pmads.add(new PredictionMtaeAndDate(trace.getMTAE(), date));							
+							pmads.put(trace.getKey(), new PredictionMtaeAndDate(trace.getMTAE(), date));							
 							traces.add(trace);
 						} catch (SimpleApplicationException e) {
 							Log.errorMessage(e);
@@ -132,13 +132,16 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand {
 				Log.errorMessage(e);
 			}
 			
-			PredictionManager pm = new MTAEPredictionManager(pmads,
+			PredictionManager pm = new FilteredMTAEPredictionManager(pmads,
 					Heap.getMTAEPrimary(),
 					from.getTime(),
 					to.getTime(),
 					me);
-			
+
+			PredictionModel.init(this.aContext);
 			PredictionModel.initPredictionManager(pm);
+			
+			Heap.setCurrentEvent(0);
 		} catch (ApplicationException ex) {
 			GUIUtil.processApplicationException(ex);
 			return;

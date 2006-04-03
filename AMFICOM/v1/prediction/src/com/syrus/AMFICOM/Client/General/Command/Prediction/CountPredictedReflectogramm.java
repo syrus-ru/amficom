@@ -41,8 +41,21 @@ public class CountPredictedReflectogramm extends AbstractCommand {
 			return;
 		}
 		
-		if (pm.getMaxTime() <= pm.getMinTime()) {
-			Log.errorMessage("Incorrect state of PredictionManager: pm.getMaxTime() <= pm.getMinTime()");
+		try {
+			if (pm.getMaxTime() <= pm.getMinTime()) {
+				Log.errorMessage("Incorrect state of PredictionManager: pm.getMaxTime() <= pm.getMinTime()");
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+						I18N.getString("Message.error.infufficientAnalysesFound"), 
+						I18N.getString("Message.error"),
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+		} catch (IllegalArgumentException e) {
+			Log.errorMessage("Incorrect state of PredictionManager: possibly no traces selected for prediction: " + e.getMessage());
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+					I18N.getString("Message.error.infufficientAnalysesFound"), 
+					I18N.getString("Message.error"),
+					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		

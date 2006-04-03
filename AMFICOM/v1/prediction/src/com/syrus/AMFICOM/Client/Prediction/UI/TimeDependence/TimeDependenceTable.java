@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionModel;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.Statistics;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.TimeDependenceData;
 import com.syrus.AMFICOM.client.UI.ATable;
+import com.syrus.util.Log;
 
 /**
  * @author Levchenko Alexandre S.
@@ -146,8 +147,13 @@ public class TimeDependenceTable extends JInternalFrame implements ReportTable, 
 
 	public void stateChanged(ChangeEvent e) {
 		if (e.getSource().equals(PredictionModel.class)) {
-			Statistics statistics = PredictionModel.getCurrentStatistics();
-			setData(statistics.getTimeDependence(), statistics.getLc(), statistics.getDimension());
+			try {
+				Statistics statistics = PredictionModel.getCurrentStatistics();
+				setData(statistics.getTimeDependence(), statistics.getLc(), statistics.getDimension());
+			} catch (IllegalArgumentException e1) {
+				Log.errorMessage("Incorrect state of PredictionManager: possibly no traces selected for prediction: " + e1.getMessage());
+				return;
+			}
 		}
 	}
 }

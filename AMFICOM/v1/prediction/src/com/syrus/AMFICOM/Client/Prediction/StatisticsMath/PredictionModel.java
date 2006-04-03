@@ -1,5 +1,5 @@
 /*-
- * $Id: PredictionModel.java,v 1.3 2006/03/23 10:07:29 stas Exp $
+ * $Id: PredictionModel.java,v 1.4 2006/04/03 10:55:27 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,17 @@
 
 package com.syrus.AMFICOM.Client.Prediction.StatisticsMath;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.LinkedList;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.analysis.TraceResource;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 public class PredictionModel {
 	public static final int Y0_LEVEL = 0;
@@ -21,14 +28,46 @@ public class PredictionModel {
 	public static final int LOSS = 4;
 	public static final int NON_INITIALYZED = -1;
 	
-	private static PredictionManager manager;
+	static PredictionManager manager;
 	private static int eventType = NON_INITIALYZED;
 	private static int eventNumber = NON_INITIALYZED;
 	
 	private static LinkedList<ChangeListener> changeListeners = new LinkedList<ChangeListener>();
 	
+	private static ApplicationContext aContext;
+	private static PropertyChangeListener traceChooserListener;
+	
 	private PredictionModel() {
 		// never
+	}
+	
+	public static void init(final ApplicationContext aContext1) {
+		if (traceChooserListener == null) {
+			traceChooserListener = new PropertyChangeListener() {
+				public void propertyChange(PropertyChangeEvent evt) {
+					if (evt.getPropertyName().equals(RefUpdateEvent.typ)) {
+						RefUpdateEvent ev = (RefUpdateEvent)evt;
+						if (ev.traceChanged()) {
+							if (manager instanceof FilteredMTAEPredictionManager) {
+								TraceResource tr = (TraceResource)evt.getNewValue();
+								final String id = tr.getId();
+								if (!id.equals(Heap.PRIMARY_TRACE_KEY) && !id.equals(Heap.ETALON_TRACE_KEY) 
+										&& !id.equals(Heap.MODELED_TRACE_KEY)) {
+									((FilteredMTAEPredictionManager)manager).setActive(id, tr.isShown());
+									changeNotify();
+								}
+							}		
+						}
+					}
+				}
+			};
+		}
+
+		if (aContext != null) {
+			aContext.getDispatcher().removePropertyChangeListener(RefUpdateEvent.typ, traceChooserListener);
+		}
+		aContext = aContext1;
+		aContext.getDispatcher().addPropertyChangeListener(RefUpdateEvent.typ, traceChooserListener);
 	}
 	
 	public static void addChangeListener(ChangeListener changeListener) {
@@ -43,7 +82,7 @@ public class PredictionModel {
 		PredictionModel.manager = manager1;
 	}
 	
-	private static void changeNotify() {
+	static void changeNotify() {
 		for (ChangeListener changeListener : changeListeners) {
 			changeListener.stateChanged(new ChangeEvent(PredictionModel.class));
 		}
