@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.186 2006/04/03 14:54:20 saa Exp $
+ * $Id: SchedulerModel.java,v 1.187 2006/04/03 15:13:55 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.186 $, $Date: 2006/04/03 14:54:20 $
+ * @version $Revision: 1.187 $, $Date: 2006/04/03 15:13:55 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -121,7 +121,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	private static final int	FLAG_APPLY							= 1 << 1;
 	private static final int	FLAG_CREATE							= 1 << 2;
 
-	private Dispatcher			dispatcher;
+
+	private final SchedulerHandler		schedulerHandler;
+	private final IntersectionValidator intersectionValidator;
+	private final Dispatcher			dispatcher;
 
 	private int					flag								= 0;
 
@@ -139,6 +142,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	private Set<Identifier>		selectedTestIds;
 
 	private Identifier			selectedFirstTestId;
+
+	private Test				selectedFirstTest; // XXX: это поле изменяется малосогласованно с selectedFirstTestId
 
 	private Set<Test> 			finishingTests;
 
@@ -158,10 +163,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	private Map<Identifier, Identifier>				meTestGroup;
 
 	private boolean				groupTest							= false;
-	private Test				selectedFirstTest;
-	private SchedulerHandler	schedulerHandler;
 
-	private IntersectionValidator intersectionValidator;
 
 	public SchedulerModel(final ApplicationContext aContext) {
 		this.dispatcher = aContext.getDispatcher();
