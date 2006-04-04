@@ -1,5 +1,8 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.MUFF;
+import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.OTHER;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.FontMetrics;
@@ -13,15 +16,11 @@ import java.util.ListIterator;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.analysis.EventAnchorer;
-import com.syrus.AMFICOM.analysis.SOAnchorImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -348,10 +347,15 @@ public final class PathElementsPanel extends AnalysisPanel {
 			type = se.getProtoEquipment().getType();
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
-			type = EquipmentType.OTHER;
+			try {
+				type = EquipmentType.valueOf(OTHER.stringValue());
+			} catch (ApplicationException e1) {
+				Log.errorMessage(e1);
+				return;
+			}
 		}
 		// if muff - paint small box and dashed line
-		if (type.equals(EquipmentType.MUFF)) {
+		if (type.getCodename().equals(MUFF.stringValue())) {
 			g.fill3DRect(coord - 1, 6, 2, 8, true);
 			((Graphics2D) g).setStroke(ScaledGraphPanel.DASHED_STROKE);
 			g.drawLine(coord, 6, coord, getHeight());
