@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.80 2006/03/15 14:47:32 bass Exp $
+ * $Id: Link.java,v 1.80.2.1 2006/04/04 09:30:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import static com.syrus.AMFICOM.general.ErrorMessages.NATURE_INVALID;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Date;
 
@@ -29,12 +30,11 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.80 $, $Date: 2006/03/15 14:47:32 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.80.2.1 $, $Date: 2006/04/04 09:30:38 $
  * @module config
  */
-public final class Link extends AbstractLink
-		implements IdlTransferableObjectExt<IdlLink> {
+public final class Link extends AbstractLink implements IdlTransferableObjectExt<IdlLink> {
 	private static final long serialVersionUID = 3257283626012783672L;
 
 	public Link(final IdlLink idlLink) throws CreateObjectException {
@@ -98,13 +98,14 @@ public final class Link extends AbstractLink
 				|| inventoryNo == null
 				|| supplier == null
 				|| supplierCode == null
-				|| mark == null)
+				|| mark == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
+		}
 
 		try {
 			final Link link = new Link(IdentifierPool.getGeneratedIdentifier(LINK_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					name,
 					description,
@@ -125,21 +126,22 @@ public final class Link extends AbstractLink
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlLink idlLink)
-	throws IdlConversionException {
+	public synchronized void fromIdlTransferable(final IdlLink idlLink) throws IdlConversionException {
 		try {
 			super.fromIdlTransferable(idlLink, new Identifier(idlLink.domainId));
-	
+
 			this.name = idlLink.name;
 			this.description = idlLink.description;
 			this.inventoryNo = idlLink.inventoryNo;
 			this.supplier = idlLink.supplier;
 			this.supplierCode = idlLink.supplierCode;
-	
+
 			super.type = (LinkType) StorableObjectPool.getStorableObject(new Identifier(idlLink._typeId), true);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -147,6 +149,8 @@ public final class Link extends AbstractLink
 	 */
 	@Override
 	public IdlLink getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlLinkHelper.init(orb,
 				super.id.getIdlTransferable(),
 				super.created.getTime(),

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.159 2006/03/15 14:47:32 bass Exp $
+ * $Id: Equipment.java,v 1.159.2.1 2006/04/04 09:30:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -61,15 +62,13 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.159 $, $Date: 2006/03/15 14:47:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.159.2.1 $, $Date: 2006/04/04 09:30:38 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class Equipment extends DomainMember
-		implements MonitoredDomainMember,
-		Characterizable,
-		XmlTransferableObject<XmlEquipment>, ReverseDependencyContainer,
+		implements MonitoredDomainMember, Characterizable, XmlTransferableObject<XmlEquipment>, ReverseDependencyContainer,
 		IdlTransferableObjectExt<IdlEquipment> {
 	private static final long serialVersionUID = 2432748205979033898L;
 
@@ -119,7 +118,6 @@ public final class Equipment extends DomainMember
 				creatorId,
 				version,
 				domainId);
-
 		this.protoEquipmentId = protoEquipmentId;
 		this.name = name;
 		this.description = description;
@@ -144,17 +142,14 @@ public final class Equipment extends DomainMember
 	 * @param creatorId
 	 * @throws IdentifierGenerationException
 	 */
-	private Equipment(final XmlIdentifier id,
-			final String importType,
-			final Date created,
-			final Identifier creatorId)
-	throws IdentifierGenerationException {
+	private Equipment(final XmlIdentifier id, final String importType, final Date created, final Identifier creatorId)
+			throws IdentifierGenerationException {
 		super(id, importType, EQUIPMENT_CODE, created, creatorId);
 	}
 
 	/**
 	 * create new instance for client
-	 *
+	 * 
 	 * @param creatorId
 	 * @param domainId
 	 * @param name
@@ -196,7 +191,7 @@ public final class Equipment extends DomainMember
 		try {
 			final Equipment equipment = new Equipment(IdentifierPool.getGeneratedIdentifier(EQUIPMENT_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					protoEquipmentId,
 					name,
@@ -261,8 +256,7 @@ public final class Equipment extends DomainMember
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlEquipment et)
-	throws IdlConversionException {
+	public synchronized void fromIdlTransferable(final IdlEquipment et) throws IdlConversionException {
 		super.fromIdlTransferable(et, new Identifier(et.domainId));
 
 		this.protoEquipmentId = new Identifier(et.protoEquipmentId);
@@ -279,6 +273,8 @@ public final class Equipment extends DomainMember
 		this.swSerial = et.swSerial;
 		this.swVersion = et.swVersion;
 		this.inventoryNumber = et.inventoryNumber;
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -287,8 +283,7 @@ public final class Equipment extends DomainMember
 	 * @throws XmlConversionException
 	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
-	public void fromXmlTransferable(final XmlEquipment equipment, final String importType)
-	throws XmlConversionException {
+	public void fromXmlTransferable(final XmlEquipment equipment, final String importType) throws XmlConversionException {
 		try {
 			XmlComplementorRegistry.complementStorableObject(equipment, EQUIPMENT_CODE, importType, PRE_IMPORT);
 
@@ -349,6 +344,8 @@ public final class Equipment extends DomainMember
 	 */
 	@Override
 	public IdlEquipment getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlEquipmentHelper.init(orb,
 				super.id.getIdlTransferable(),
 				super.created.getTime(),
@@ -379,10 +376,8 @@ public final class Equipment extends DomainMember
 	 * @throws XmlConversionException
 	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
-	public void getXmlTransferable(final XmlEquipment equipment,
-			final String importType,
-			final boolean usePool)
-	throws XmlConversionException {
+	public void getXmlTransferable(final XmlEquipment equipment, final String importType, final boolean usePool)
+			throws XmlConversionException {
 		try {
 			super.id.getXmlTransferable(equipment.addNewId(), importType);
 			equipment.setName(this.name);
@@ -534,8 +529,6 @@ public final class Equipment extends DomainMember
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies =  new HashSet<Identifiable>();
 		dependencies.add(this.protoEquipmentId);
 		return dependencies;

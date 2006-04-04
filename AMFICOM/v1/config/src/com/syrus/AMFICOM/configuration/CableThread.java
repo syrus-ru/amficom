@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.51 2006/03/15 14:47:32 bass Exp $
+ * $Id: CableThread.java,v 1.51.2.1 2006/04/04 09:30:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@ package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -32,14 +33,12 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2006/03/15 14:47:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.51.2.1 $, $Date: 2006/04/04 09:30:38 $
+ * @author $Author: arseniy $
  * @module config
  */
 public final class CableThread extends DomainMember
-		implements TypedObject<CableThreadType>,
-		IdlTransferableObjectExt<IdlCableThread> {
-
+		implements TypedObject<CableThreadType>, IdlTransferableObjectExt<IdlCableThread> {
 	private static final long serialVersionUID = 3258415027823063600L;
 
 	private String name;
@@ -78,13 +77,14 @@ public final class CableThread extends DomainMember
 			final String name,
 			final String description,
 			final CableThreadType type) throws CreateObjectException {
-		if (creatorId == null || domainId == null || name == null || description == null || type == null)
+		if (creatorId == null || domainId == null || name == null || description == null || type == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
+		}
 
 		try {
 			final CableThread cableThread = new CableThread(IdentifierPool.getGeneratedIdentifier(CABLETHREAD_CODE),
 					creatorId,
-					StorableObjectVersion.INITIAL_VERSION,
+					INITIAL_VERSION,
 					domainId,
 					name,
 					description,
@@ -100,17 +100,18 @@ public final class CableThread extends DomainMember
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlCableThread ctt)
-	throws IdlConversionException {
+	public synchronized void fromIdlTransferable(final IdlCableThread ctt) throws IdlConversionException {
 		try {
 			super.fromIdlTransferable(ctt, new Identifier(ctt.domainId));
-	
+
 			this.name = ctt.name;
 			this.description = ctt.description;
 			this.type = (CableThreadType) StorableObjectPool.getStorableObject(new Identifier(ctt._typeId), true);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -119,6 +120,8 @@ public final class CableThread extends DomainMember
 	 */
 	@Override
 	public IdlCableThread getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlCableThreadHelper.init(orb,
 				super.id.getIdlTransferable(),
 				super.created.getTime(),
@@ -166,8 +169,6 @@ public final class CableThread extends DomainMember
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(1);
 		dependencies.add(this.type);
 		return dependencies;
