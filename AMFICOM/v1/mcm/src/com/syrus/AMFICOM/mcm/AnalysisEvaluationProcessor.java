@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.59 2006/03/17 15:26:29 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.59.2.3 2006/03/30 12:11:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.eventv2.DefaultReflectogramMismatchEvent;
+import com.syrus.AMFICOM.eventv2.ReflectogramMismatchEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -38,8 +39,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2006/03/17 15:26:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.59.2.3 $, $Date: 2006/03/30 12:11:12 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -154,9 +155,6 @@ final class AnalysisEvaluationProcessor {
 					measurementResult, analysis, etalon);
 	
 			final Parameter[] arParameters = analysisManager.analyse();
-			final Identifier resultId = measurementResult.getId();
-			final Identifier monitoredElementId = measurementResult.getAction().getMonitoredElementId();
-
 			double q = Double.NaN;
 			int dadaraAlarmsOccurenceCount = 0;
 			for (final Parameter parameter : arParameters) {
@@ -173,11 +171,14 @@ final class AnalysisEvaluationProcessor {
 								+ "; should be 1", WARNING);
 					}
 					for (final ReflectogramMismatch reflectogramMismatch : ReflectogramMismatchImpl.alarmsFromByteArray(parameter.getValue())) {
-						MeasurementControlModule.eventQueue.addEvent(
-								DefaultReflectogramMismatchEvent.valueOf(
+						final Identifier creatorId = LoginManager.getUserId();
+						final ReflectogramMismatchEvent reflectogramMismatchEvent =
+								DefaultReflectogramMismatchEvent.newInstance(
+										creatorId,
 										reflectogramMismatch,
-										resultId,
-										monitoredElementId));
+										analysis.getMeasurementId());
+						MeasurementControlModule.eventQueue.addEvent(
+								reflectogramMismatchEvent);
 					}
 
 				} else {
@@ -196,9 +197,6 @@ final class AnalysisEvaluationProcessor {
 			}
 
 			return analysisResult;
-		} catch (final EventQueueFullException eqfe) {
-			Log.debugMessage(eqfe, SEVERE);
-			throw new AnalysisException(eqfe);
 		} catch (final DataFormatException dfe) {
 			Log.debugMessage(dfe, SEVERE);
 			throw new AnalysisException(dfe);
