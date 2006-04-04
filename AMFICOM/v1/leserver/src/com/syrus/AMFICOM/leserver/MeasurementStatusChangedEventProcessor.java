@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementStatusChangedEventProcessor.java,v 1.1 2006/03/15 16:20:34 bass Exp $
+ * $Id: MeasurementStatusChangedEventProcessor.java,v 1.2 2006/04/04 06:08:46 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2006/03/15 16:20:34 $
+ * @version $Revision: 1.2 $, $Date: 2006/04/04 06:08:46 $
  * @module leserver
  */
 final class MeasurementStatusChangedEventProcessor implements EventProcessor {
@@ -40,10 +40,9 @@ final class MeasurementStatusChangedEventProcessor implements EventProcessor {
 
 	/**
 	 * @param event
-	 * @throws EventProcessingException
 	 * @see EventProcessor#processEvent(Event)
 	 */
-	public void processEvent(Event<?> event) throws EventProcessingException {
+	public void processEvent(Event<?> event) {
 		@SuppressWarnings("unchecked")
 		final MeasurementStatusChangedEvent<?> measurementStatusChangedEvent = (MeasurementStatusChangedEvent) event;
 

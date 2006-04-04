@@ -1,5 +1,5 @@
 /*-
- * $Id: EventProcessor.java,v 1.7 2005/11/13 06:29:01 bass Exp $
+ * $Id: EventProcessor.java,v 1.8 2006/04/04 06:08:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.eventv2.EventType;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/11/13 06:29:01 $
+ * @version $Revision: 1.8 $, $Date: 2006/04/04 06:08:46 $
  * @module leserver
  */
 interface EventProcessor {
@@ -22,7 +22,6 @@ interface EventProcessor {
 
 	/**
 	 * @param event
-	 * @throws EventProcessingException
 	 */
-	void processEvent(final Event<?> event) throws EventProcessingException;
+	void processEvent(final Event<?> event);
 }

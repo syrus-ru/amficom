@@ -1,5 +1,5 @@
 /*-
- * $Id: EventProcessorRegistry.java,v 1.4 2005/10/31 10:49:45 arseniy Exp $
+ * $Id: EventProcessorRegistry.java,v 1.5 2006/04/04 06:08:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/10/31 10:49:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2006/04/04 06:08:46 $
  * @module leserver
  */
 final class EventProcessorRegistry {
@@ -61,10 +61,8 @@ final class EventProcessorRegistry {
 
 	/**
 	 * @param event
-	 * @throws EventProcessingException
 	 */
-	static void processEvent(final Event<? extends IdlEvent> event)
-	throws EventProcessingException {
+	static void processEvent(final Event<? extends IdlEvent> event) {
 		if (event == null) {
 			throw new NullPointerException();
 		}

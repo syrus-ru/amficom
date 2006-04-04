@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupNotificationEventProcessor.java,v 1.10 2006/03/01 20:46:54 bass Exp $
+ * $Id: PopupNotificationEventProcessor.java,v 1.11 2006/04/04 06:08:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2006/03/01 20:46:54 $
+ * @version $Revision: 1.11 $, $Date: 2006/04/04 06:08:46 $
  * @module leserver
  */
 final class PopupNotificationEventProcessor implements EventProcessor {
@@ -42,10 +42,9 @@ final class PopupNotificationEventProcessor implements EventProcessor {
 
 	/**
 	 * @param event
-	 * @throws EventProcessingException
 	 * @see EventProcessor#processEvent(Event)
 	 */
-	public void processEvent(final Event<?> event) throws EventProcessingException {
+	public void processEvent(final Event<?> event) {
 		@SuppressWarnings("unchecked")
 		final NotificationEvent<?> notificationEvent = (NotificationEvent) event;
 

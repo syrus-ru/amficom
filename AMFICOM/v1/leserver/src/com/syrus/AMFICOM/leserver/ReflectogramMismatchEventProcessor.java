@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.19 2006/03/31 06:42:16 bass Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.20 2006/04/04 06:08:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
 import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
@@ -50,7 +49,7 @@ import com.syrus.util.Log;
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2006/03/31 06:42:16 $
+ * @version $Revision: 1.20 $, $Date: 2006/04/04 06:08:46 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor
@@ -106,10 +105,9 @@ final class ReflectogramMismatchEventProcessor
 
 	/**
 	 * @param event
-	 * @throws EventProcessingException
 	 * @see EventProcessor#processEvent(Event)
 	 */
-	public void processEvent(final Event<?> event) throws EventProcessingException {
+	public void processEvent(final Event<?> event) {
 		@SuppressWarnings("unchecked")
 		final ReflectogramMismatchEvent reflectogramMismatchEvent = (ReflectogramMismatchEvent) event;
 		Log.debugMessage("ReflectogramMismatchEvent: "
@@ -128,9 +126,11 @@ final class ReflectogramMismatchEventProcessor
 			final MeasurementPort measurementPort = monitoredElement.getMeasurementPort();
 			final Identifier portId = measurementPort.getPortId();
 			if (portId.isVoid()) {
-				throw new EventProcessingException("For MeasurementPort: "
+				Log.debugMessage("For MeasurementPort: "
 						+ measurementPort.getId()
-						+ " Port is null");
+						+ " Port is null",
+						SEVERE);
+				return;
 			}
 			final Set<TransmissionPath> transmissionPaths =
 					StorableObjectPool.getStorableObjectsByCondition(
@@ -138,11 +138,12 @@ final class ReflectogramMismatchEventProcessor
 							true);
 			final int transmissionPathsSize = transmissionPaths.size();
 			if (transmissionPathsSize != 1) {
-				throw new EventProcessingException(
-						"For Port: " + portId
+				Log.debugMessage("For Port: " + portId
 						+ ", actual TransmissionPath count: "
 						+ transmissionPathsSize
-						+ "; expected: 1");
+						+ "; expected: 1",
+						SEVERE);
+				return;
 			}
 			final Identifier transmissionPathId = transmissionPaths.iterator().next().getId();
 			final Set<SchemePath> schemePaths =
@@ -151,12 +152,13 @@ final class ReflectogramMismatchEventProcessor
 							true);
 			final int schemePathsSize = schemePaths.size();
 			if (schemePathsSize != 1) {
-				throw new EventProcessingException(
-						"For TransmissionPath: "
+				Log.debugMessage("For TransmissionPath: "
 						+ transmissionPathId
 						+ ", actual SchemePath count: "
 						+ schemePathsSize
-						+ "; expected: 1");
+						+ "; expected: 1",
+						SEVERE);
+				return;
 			}
 			final SchemePath schemePath = schemePaths.iterator().next();
 			final Identifier schemePathId = schemePath.getId();
@@ -171,12 +173,13 @@ final class ReflectogramMismatchEventProcessor
 			 * is greater than totalOpticalLength, in points.
 			 */
 			if (eventOpticalDistance > totalOpticalLength + epsilon) {
-				throw new EventProcessingException(
-						"For SchemePath: " + schemePathId
+				Log.debugMessage("For SchemePath: " + schemePathId
 						+ ", eventOpticalDistance: "
 						+ eventOpticalDistance
 						+ " is greater than totalOpticalLength: "
-						+ totalOpticalLength);
+						+ totalOpticalLength,
+						SEVERE);
+				return;
 			}
 
 			double minimumMetric = Double.POSITIVE_INFINITY;
@@ -215,8 +218,10 @@ final class ReflectogramMismatchEventProcessor
 				}
 			}
 			if (affectedPathElement == null) {
-				throw new EventProcessingException("SchemePath: "
-						+ schemePathId + " is empty");
+				Log.debugMessage("SchemePath: "
+						+ schemePathId + " is empty",
+						SEVERE);
+				return;
 			}
 
 			final LineMismatchEvent lineMismatchEvent = DefaultLineMismatchEvent.newInstance(
@@ -239,9 +244,7 @@ final class ReflectogramMismatchEventProcessor
 			servantManager.getEventServerReference().receiveEvents(new IdlEvent[] {
 					lineMismatchEvent.getIdlTransferable(servantManager.getCORBAServer().getOrb())});
 		} catch (final ApplicationException ae) {
-			throw new EventProcessingException(ae);
-		} catch (final IdlEventProcessingException epe) {
-			throw new EventProcessingException(epe.message, epe);
+			Log.debugMessage(ae, SEVERE);
 		}
 	}
 

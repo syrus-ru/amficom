@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.26 2006/03/30 12:08:46 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.27 2006/04/04 06:08:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,14 +47,13 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2006/03/30 12:08:46 $
+ * @version $Revision: 1.27 $, $Date: 2006/04/04 06:08:46 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
@@ -71,10 +70,9 @@ final class LineMismatchEventProcessor implements EventProcessor {
 
 	/**
 	 * @param event
-	 * @throws EventProcessingException
 	 * @see EventProcessor#processEvent(Event)
 	 */
-	public void processEvent(final Event<?> event) throws EventProcessingException {
+	public void processEvent(final Event<?> event) {
 		@SuppressWarnings("unchecked")
 		final LineMismatchEvent lineMismatchEvent = (LineMismatchEvent) event;
 		Log.debugMessage("LineMismatchEvent: "
@@ -120,16 +118,7 @@ final class LineMismatchEventProcessor implements EventProcessor {
 
 			servantManager.getEventServerReference().receiveEvents(notificationEvents);
 		} catch (final ApplicationException ae) {
-			throw new EventProcessingException(ae);
-		} catch (final IdlEventProcessingException epe) {
-			/*
-			 * Almost certainly, this will never happen, as the post
-			 * office should't blame the reflectometer for users
-			 * being unavailable ;-)
-			 * 
-			 *     -- Old Wise Saa.
-			 */
-			throw new EventProcessingException(epe.message, epe);
+			Log.debugMessage(ae, SEVERE);
 		}
 	}
 

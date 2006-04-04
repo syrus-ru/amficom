@@ -1,5 +1,5 @@
 /*-
- * $Id: SmsNotificationEventProcessor.java,v 1.5 2005/11/13 06:29:00 bass Exp $
+ * $Id: SmsNotificationEventProcessor.java,v 1.6 2006/04/04 06:08:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/11/13 06:29:00 $
+ * @version $Revision: 1.6 $, $Date: 2006/04/04 06:08:46 $
  * @module leserver
  */
 final class SmsNotificationEventProcessor implements EventProcessor {
@@ -33,10 +33,9 @@ final class SmsNotificationEventProcessor implements EventProcessor {
 
 	/**
 	 * @param event
-	 * @throws EventProcessingException
 	 * @see EventProcessor#processEvent(Event)
 	 */
-	public void processEvent(final Event<?> event) throws EventProcessingException {
+	public void processEvent(final Event<?> event) {
 		@SuppressWarnings("unchecked")
 		final NotificationEvent<?> notificationEvent = (NotificationEvent) event;
 

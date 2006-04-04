@@ -1,5 +1,5 @@
 /*-
- * $Id: EventServerImplementation.java,v 1.29 2006/03/22 12:21:14 bass Exp $
+ * $Id: EventServerImplementation.java,v 1.30 2006/04/04 06:08:46 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,10 @@ import com.syrus.AMFICOM.eventv2.Event;
 import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.leserver.corba.EventServerPOA;
-import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2006/03/22 12:21:14 $
+ * @version $Revision: 1.30 $, $Date: 2006/04/04 06:08:46 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -39,10 +38,9 @@ final class EventServerImplementation extends EventServerPOA {
 
 	/**
 	 * @param idlEvents
-	 * @throws IdlEventProcessingException
 	 * @see com.syrus.AMFICOM.leserver.corba.EventServerOperations#receiveEvents(IdlEvent[])
 	 */
-	public void receiveEvents(final IdlEvent[] idlEvents) throws IdlEventProcessingException {
+	public void receiveEvents(final IdlEvent[] idlEvents) {
 		Log.debugMessage("Received " + idlEvents.length + " event(s)",
 				INFO);
 		for (final IdlEvent idlEvent : idlEvents) {
@@ -51,8 +49,6 @@ final class EventServerImplementation extends EventServerPOA {
 				EventProcessorRegistry.processEvent(event);
 				Log.debugMessage("Event: " + event + " delivered successfully",
 						INFO);
-			} catch (final EventProcessingException epe) {
-				Log.debugMessage(epe, WARNING);
 			} catch (final IdlCreateObjectException coe) {
 				Log.debugMessage(coe.detailMessage, WARNING);
 				Log.debugMessage(coe, WARNING);
