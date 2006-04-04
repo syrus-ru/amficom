@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.18 2005/10/31 12:30:19 bass Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.18.4.1 2006/04/04 09:12:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author max
- * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/10/31 12:30:19 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.18.4.1 $, $Date: 2006/04/04 09:12:16 $
  * @module general
  */
 final class XmlIdentifierDatabase {
@@ -153,9 +153,15 @@ final class XmlIdentifierDatabase {
 				 * must add hooks to save/delete operations of
 				 * CORBA object loader.
 				 */
-				if (true || StorableObjectDatabase.isPresentInDatabase(id)) {
-					LocalXmlIdentifierPool.put(id, resultSet.getString(COLUMN_XML_ID), importType, LocalXmlIdentifierPool.KeyState.UP_TO_DATE);
-				} else {
+				try {
+					if (true || StorableObjectDatabase.isObjectPresentInDatabase(id)) {
+						LocalXmlIdentifierPool.put(id, resultSet.getString(COLUMN_XML_ID), importType, LocalXmlIdentifierPool.KeyState.UP_TO_DATE);
+					} else {
+						resultSet.deleteRow();
+					}
+				} catch (IllegalObjectEntityException ioee) {
+					Log.errorMessage(ioee);
+					Log.debugMessage("Deleting row from result set due to don't know what to do", Log.DEBUGLEVEL10);
 					resultSet.deleteRow();
 				}
 			}
