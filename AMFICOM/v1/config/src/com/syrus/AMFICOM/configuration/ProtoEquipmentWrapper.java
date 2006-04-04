@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentWrapper.java,v 1.3 2006/03/13 15:54:24 bass Exp $
+ * $Id: ProtoEquipmentWrapper.java,v 1.3.2.1 2006/04/04 09:19:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,11 +11,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2006/03/13 15:54:24 $
- * @author $Author: bass $
+ * @version $Revision: 1.3.2.1 $, $Date: 2006/04/04 09:19:57 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -33,7 +34,7 @@ public final class ProtoEquipmentWrapper extends StorableObjectWrapper<ProtoEqui
 
 	private ProtoEquipmentWrapper() {
 		// empty private constructor
-		final String[] keysArray = new String[] { COLUMN_TYPE_CODE,
+		final String[] keysArray = new String[] { COLUMN_TYPE_ID,
 				COLUMN_NAME,
 				COLUMN_DESCRIPTION,
 				COLUMN_MANUFACTURER,
@@ -62,8 +63,8 @@ public final class ProtoEquipmentWrapper extends StorableObjectWrapper<ProtoEqui
 	public Object getValue(final ProtoEquipment equipmentType, final String key) {
 		final Object value = super.getValue(equipmentType, key);
 		if (value == null && equipmentType != null) {
-			if (key.equals(COLUMN_TYPE_CODE)) {
-				return equipmentType.getType();
+			if (key.equals(COLUMN_TYPE_ID)) {
+				return equipmentType.getTypeId();
 			}
 			if (key.equals(COLUMN_NAME)) {
 				return equipmentType.getName();
@@ -88,8 +89,8 @@ public final class ProtoEquipmentWrapper extends StorableObjectWrapper<ProtoEqui
 	@Override
 	public void setValue(final ProtoEquipment protoEquipment, final String key, final Object value) {
 		if (protoEquipment != null) {
-			if (key.equals(COLUMN_TYPE_CODE)) {
-				protoEquipment.setType((EquipmentType) value);
+			if (key.equals(COLUMN_TYPE_ID)) {
+				protoEquipment.setTypeId((Identifier) value);
 			}
 			if (key.equals(COLUMN_NAME)) {
 				protoEquipment.setName((String) value);
@@ -121,8 +122,8 @@ public final class ProtoEquipmentWrapper extends StorableObjectWrapper<ProtoEqui
 		if (clazz != null) {
 			return clazz;
 		}
-		if (key.equals(COLUMN_TYPE_CODE)) {
-			return EquipmentType.class;
+		if (key.equals(COLUMN_TYPE_ID)) {
+			return Identifier.class;
 		}
 		if (key.equals(COLUMN_NAME)
 				|| key.equals(COLUMN_DESCRIPTION)
