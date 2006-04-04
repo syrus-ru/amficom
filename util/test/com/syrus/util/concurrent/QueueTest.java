@@ -1,5 +1,5 @@
 /*-
- * $Id: QueueTest.java,v 1.3 2006/04/04 06:47:02 bass Exp $
+ * $Id: QueueTest.java,v 1.4 2006/04/04 08:10:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,14 +10,14 @@ package com.syrus.util.concurrent;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2006/04/04 06:47:02 $
+ * @version $Revision: 1.4 $, $Date: 2006/04/04 08:10:33 $
  * @module util
  */
 final class QueueTest {
@@ -41,117 +41,29 @@ final class QueueTest {
 	}
 
 	private static class Queue<T> {
-		private List<T> queueEntries = Collections.synchronizedList(new LinkedList<T>());
+		private final BlockingQueue<T> queueEntries;
 
-		private Set<Thread> waitingProducers = Collections.synchronizedSet(new HashSet<Thread>());
-
-		private Set<Thread> waitingConsumers = Collections.synchronizedSet(new HashSet<Thread>());
-
-		private final Object putLock = new Object();
-
-		private final Object getLock = new Object();
-
-		private final int maximumSize;
-
-		private Queue(final int size) {
-			this.maximumSize = size;
+		private Queue(final int capacity) {
+			this.queueEntries = new LinkedBlockingQueue<T>(capacity);
 		}
 
 		Queue() {
 			this(Integer.MAX_VALUE);
 		}
 
-		private String getWaitingProducers() {
-			final StringBuilder stringBuilder = new StringBuilder("[");
-			synchronized (this.waitingProducers) {
-				for (final Thread producer : this.waitingProducers) {
-					final String name = producer.getName();
-					stringBuilder.append(stringBuilder.length() == 1 ? name : ", " + name);
-				}
-			}
-			stringBuilder.append(']');
-			return stringBuilder.toString();
-		}
-		
-		private String getWaitingConsumers() {
-			final StringBuilder stringBuilder = new StringBuilder("[");
-			synchronized (this.waitingConsumers) {
-				for (final Thread consumer : this.waitingConsumers) {
-					final String name = consumer.getName();
-					stringBuilder.append(stringBuilder.length() == 1 ? name : ", " + name);
-				}
-			}
-			stringBuilder.append(']');
-			return stringBuilder.toString();
+		void put(final T queueEntry) throws InterruptedException {
+			this.queueEntries.put(queueEntry);
 		}
 
-		void put(final T queueEntry) {
-			try {
-				synchronized (this.putLock) {
-					while (this.queueEntries.size() == this.maximumSize) {
-						final Thread producer = Thread.currentThread();
-						assert !this.waitingProducers.contains(producer);
-						this.waitingProducers.add(producer);
-						this.putLock.wait();
-						assert this.waitingProducers.contains(producer);
-						this.waitingProducers.remove(producer);
-					}
-				}
-			} catch (final InterruptedException ie) {
-				ie.printStackTrace();
-			}
-
-			synchronized (this.queueEntries) {
-				final int currentSize = this.queueEntries.size();
-				assert currentSize < this.maximumSize :
-						"currentSize: " + currentSize
-						+ "; producers: " + this.getWaitingProducers()
-						+ "; consumers: " + this.getWaitingConsumers();
-				this.queueEntries.add(queueEntry);
-				synchronized (this.getLock) {
-					this.getLock.notify();
-				}
-			}
+		Set<T> takeAll() throws InterruptedException {
+			final Set<T> returnValue = new HashSet<T>();
+			returnValue.add(this.queueEntries.take());
+			this.queueEntries.drainTo(returnValue);
+			return Collections.unmodifiableSet(returnValue);
 		}
 
-		Set<T> getAll() {
-			try {
-				synchronized (this.getLock) {
-					while (this.queueEntries.size() == 0) {
-						final Thread consumer = Thread.currentThread();
-						assert !this.waitingConsumers.contains(consumer);
-						this.waitingConsumers.add(consumer);
-						this.getLock.wait();
-						assert this.waitingConsumers.contains(consumer);
-						this.waitingConsumers.remove(consumer);
-					}
-				}
-			} catch (final InterruptedException ie) {
-				ie.printStackTrace();
-			}
-
-			synchronized (this.queueEntries) {
-				final int currentSize = this.queueEntries.size();
-				assert currentSize > 0 :
-						"currentSize: " + currentSize
-						+ "; producers: " + this.getWaitingProducers()
-						+ "; consumers: " + this.getWaitingConsumers();
-				final Set<T> returnValue = new HashSet<T>(this.queueEntries);
-				this.queueEntries.clear();
-				synchronized (this.putLock) {
-					this.putLock.notify();
-				}
-
-				return Collections.unmodifiableSet(returnValue);
-			}
-		}
-
-//		int getCurrentSize() {
-//			return this.queueEntries.size();
-//		}
-
-		int getMaximumSize() {
-			return this.maximumSize;
+		int size() {
+			return this.queueEntries.size();
 		}
 	}
 
@@ -162,17 +74,16 @@ final class QueueTest {
 			this.queue = queue;
 		}
 
-		private void consume() {
-			for (final QueueEntry queueEntry : this.queue.getAll()) {
-//				System.err.println("CONSUMED: " + queueEntry + "; size: " + this.queue.getCurrentSize());
-				System.err.println("CONSUMED: " + queueEntry);
+		private void consume() throws InterruptedException {
+			for (final QueueEntry queueEntry : this.queue.takeAll()) {
+				System.err.println("CONSUMED: " + queueEntry + "; size: " + this.queue.size());
 			}
 		}
 
 		public void run() {
 			while (true) {
-				consume();
 				try {
+					consume();
 					Thread.sleep(10 * 1000);
 				} catch (final InterruptedException ie) {
 					ie.printStackTrace();
@@ -188,17 +99,16 @@ final class QueueTest {
 			this.queue = queue;
 		}
 
-		private void produce() {
+		private void produce() throws InterruptedException {
 			final QueueEntry queueEntry = new QueueEntry();
 			this.queue.put(queueEntry);
-//			System.err.println("PRODUCED: " + queueEntry + "; size: " + this.queue.getCurrentSize());
-			System.err.println("PRODUCED: " + queueEntry);
+			System.err.println("PRODUCED: " + queueEntry + "; size: " + this.queue.size());
 		}
 
 		public void run() {
 			while (true) {
-				produce();
 				try {
+					produce();
 					Thread.sleep(1 * 1000);
 				} catch (final InterruptedException ie) {
 					ie.printStackTrace();
