@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTestContext.java,v 1.4.2.1 2006/03/22 08:53:59 arseniy Exp $
+ * $Id: DatabaseTestContext.java,v 1.4.2.2 2006/04/04 10:11:45 arseniy Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,9 +45,7 @@ import com.syrus.AMFICOM.administration.PermissionAttributesDatabase;
 import com.syrus.AMFICOM.administration.RoleDatabase;
 import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
-import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
-import com.syrus.AMFICOM.administration.SystemUserWrapper;
 import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
@@ -106,7 +104,7 @@ import com.syrus.util.database.DatabaseConnection;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.4.2.1 $, $Date: 2006/03/22 08:53:59 $
+ * @version $Revision: 1.4.2.2 $, $Date: 2006/04/04 10:11:45 $
  * @module
  */
 public class DatabaseTestContext implements TestContext {
@@ -118,9 +116,6 @@ public class DatabaseTestContext implements TestContext {
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 	public static final String DB_LOGIN_NAME = "amficom";
-
-	// @todo: add ctor or factory
-	private static SystemUser sysUser;
 
 	private static boolean oneTimeInitialized = false;
 
@@ -230,17 +225,6 @@ public class DatabaseTestContext implements TestContext {
 		//More pools...
 	}
 
-	private static void setSysUser() {
-		final StorableObjectDatabase<SystemUser> database = DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
-		final SystemUserDatabase userDatabase = (SystemUserDatabase) database;
-		try {
-			sysUser = userDatabase.retrieveForLogin(SystemUserWrapper.SYS_LOGIN);
-		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
-			System.exit(0);
-		}
-	}
-
 	public static final void establishDatabaseConnection() {
 		final String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
 		final String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
@@ -264,7 +248,6 @@ public class DatabaseTestContext implements TestContext {
 		establishDatabaseConnection();
 		initIdentifierPool();
 		initStorableObjectPool();
-		setSysUser();
 	}
 
 	public void tearDown() {
