@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.8.2.10 2006/03/30 13:18:02 bass Exp $
+ * $Id: EventQueue.java,v 1.8.2.11 2006/04/04 06:08:45 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,12 +23,11 @@ import com.syrus.AMFICOM.general.BaseConnectionManager;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.leserver.corba.EventServer;
-import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8.2.10 $, $Date: 2006/03/30 13:18:02 $
+ * @version $Revision: 1.8.2.11 $, $Date: 2006/04/04 06:08:45 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -36,7 +35,6 @@ import com.syrus.util.Log;
 final class EventQueue extends SleepButWorkThread {
 	/*	Error codes for method processFall()	*/
 	private static final int FALL_CODE_ESTABLISH_CONNECTION = 1;
-	private static final int FALL_CODE_TRANSMIT_EVENTS = 2;
 
 	private List<Event<?>> eventQueue;
 	private volatile boolean running;
@@ -102,16 +100,6 @@ final class EventQueue extends SleepButWorkThread {
 				Log.debugMessage(se, SEVERE);
 				super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
 				super.sleepCauseOfFall();
-			} catch (final IdlEventProcessingException epe) {
-				if (idlEvents != null) {
-					Log.debugMessage(idlEvents.length
-							+ " event(s) has(ve) just been dropped for the following reason:",
-							SEVERE);
-				}
-				Log.debugMessage(epe.message, SEVERE);
-				Log.debugMessage(epe, SEVERE);
-				super.fallCode = FALL_CODE_TRANSMIT_EVENTS;
-				super.sleepCauseOfFall();
 			}
 		}
 	}
@@ -123,9 +111,6 @@ final class EventQueue extends SleepButWorkThread {
 				break;
 			case FALL_CODE_ESTABLISH_CONNECTION:
 				Log.errorMessage("ERROR: Many errors during establishing connection. Чё делать - ума не приложу.");
-				break;
-			case FALL_CODE_TRANSMIT_EVENTS:
-				Log.errorMessage("ERROR: Many errors during transmit event. Чё делать - ума не приложу.");
 				break;
 			default:
 				Log.errorMessage("ERROR: Unknown error code: " + super.fallCode);
