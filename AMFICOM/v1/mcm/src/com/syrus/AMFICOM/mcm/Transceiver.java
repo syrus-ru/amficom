@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.81 2006/03/17 15:27:27 arseniy Exp $
+ * $Id: Transceiver.java,v 1.82 2006/04/04 10:35:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2006/03/17 15:27:27 $
+ * @version $Revision: 1.82 $, $Date: 2006/04/04 10:35:01 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -148,11 +148,7 @@ final class Transceiver extends SleepButWorkThread {
 							measurement.setStatus(IdlMeasurementStatus.MEASUREMENT_STATUS_ACQUIRING);
 							StorableObjectPool.flush(measurementId, LoginManager.getUserId(), false);
 
-							try {
-								MeasurementControlModule.eventQueue.addEvent(DefaultMeasurementStartedEvent.valueOf(measurementId));
-							} catch (EventQueueFullException eqfe) {
-								Log.errorMessage(eqfe);
-							}
+							MeasurementControlModule.eventQueue.addEvent(DefaultMeasurementStartedEvent.valueOf(measurementId));
 
 							super.clearFalls();
 						} catch (CommunicationException ce) {

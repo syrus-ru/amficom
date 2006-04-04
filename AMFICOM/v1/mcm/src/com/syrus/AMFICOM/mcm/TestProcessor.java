@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.92 2006/03/17 15:27:27 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.93 2006/04/04 10:35:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.92 $, $Date: 2006/03/17 15:27:27 $
+ * @version $Revision: 1.93 $, $Date: 2006/04/04 10:35:01 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -317,11 +317,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 				} else {
 					measurementCompletedEvent = DefaultMeasurementCompletedEvent.valueOf(measurement.getId(), Double.NaN);
 				}
-				try {
-					MeasurementControlModule.eventQueue.addEvent(measurementCompletedEvent);
-				} catch (EventQueueFullException eqfe) {
-					Log.errorMessage(eqfe);
-				}
+				MeasurementControlModule.eventQueue.addEvent(measurementCompletedEvent);
 			} catch (AnalysisException ae) {
 				Log.errorMessage(ae);
 			}
