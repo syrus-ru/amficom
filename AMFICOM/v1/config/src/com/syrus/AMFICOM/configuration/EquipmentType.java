@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.110.4.2 2006/04/04 09:20:15 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.110.4.3 2006/04/04 13:09:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.ONLY_ONE_EXPECTED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
@@ -34,12 +35,14 @@ import com.syrus.AMFICOM.configuration.corba.IdlEquipmentTypeHelper;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -54,7 +57,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.110.4.2 $, $Date: 2006/04/04 09:20:15 $
+ * @version $Revision: 1.110.4.3 $, $Date: 2006/04/04 13:09:23 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -78,6 +81,9 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  */
 public final class EquipmentType extends StorableObjectType implements Namable, XmlTransferableObject<XmlEquipmentType>, IdlTransferableObjectExt<IdlEquipmentType> {
 	private static final long serialVersionUID = 361767579292639873L;
+
+	private static TypicalCondition codenameCondition;
+	private static EquivalentCondition equivalentCondition;
 
 	EquipmentType(final Identifier id,
 			final Identifier creatorId,
@@ -312,5 +318,34 @@ public final class EquipmentType extends StorableObjectType implements Namable, 
 	@Override
 	public EquipmentTypeWrapper getWrapper() {
 		return EquipmentTypeWrapper.getInstance();
+	}
+
+	public static EquipmentType valueOf(final String codename) throws ApplicationException {
+		if (codenameCondition == null) {
+			codenameCondition = new TypicalCondition(codename, OPERATION_EQUALS, EQUIPMENT_TYPE_CODE, COLUMN_CODENAME);
+		} else {
+			codenameCondition.setValue(codename);
+		}
+
+		final Set<EquipmentType> equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(codenameCondition, true);
+		if (equipmentTypes.isEmpty()) {
+			throw new ObjectNotFoundException("EquipmentType '" + codename + "' not found");
+		}
+
+		assert equipmentTypes.size() == 1 : ONLY_ONE_EXPECTED;
+		return equipmentTypes.iterator().next();
+	}
+
+	public static Set<EquipmentType> values() throws ApplicationException {
+		if (equivalentCondition == null) {
+			equivalentCondition = new EquivalentCondition(EQUIPMENT_TYPE_CODE);
+		}
+
+		return StorableObjectPool.getStorableObjectsByCondition(equivalentCondition, true);
+	}
+
+	public static EquipmentType[] valuesArray() throws ApplicationException {
+		final Set<EquipmentType> equipmentTypes = values();
+		return equipmentTypes.toArray(new EquipmentType[equipmentTypes.size()]);
 	}
 }
