@@ -1,5 +1,5 @@
 /*
- * $Id: MCMSetup.java,v 1.23 2006/02/17 12:48:29 arseniy Exp $
+ * $Id: MCMSetup.java,v 1.24 2006/04/04 10:34:11 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KEY_MCM_ID;
 import static com.syrus.AMFICOM.mcm.MeasurementControlModule.MCM_ID;
 
 import com.syrus.AMFICOM.administration.corba.IdlMCM;
-import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DataTypeDatabase;
@@ -34,7 +33,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2006/02/17 12:48:29 $
+ * @version $Revision: 1.24 $, $Date: 2006/04/04 10:34:11 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -139,8 +138,6 @@ final class MCMSetup {
 		DataTypeDatabase.insertAll();
 		MeasurementUnitDatabase.insertAll();
 		ParameterTypeDatabase.insertAll();
-
-		EquipmentTypeDatabase.insertAll();
 
 		MeasurementTypeDatabase.insertAll();
 		AnalysisTypeDatabase.insertAll();
