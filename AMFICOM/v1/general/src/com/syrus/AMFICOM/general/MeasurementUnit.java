@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementUnit.java,v 1.13.4.1 2006/03/27 10:10:06 bass Exp $
+ * $Id: MeasurementUnit.java,v 1.13.4.2 2006/04/04 08:58:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,13 +15,12 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.13.4.1 $, $Date: 2006/03/27 10:10:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.13.4.2 $, $Date: 2006/04/04 08:58:45 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public enum MeasurementUnit implements
-		IdlTransferableObject<IdlMeasurementUnit> {
+public enum MeasurementUnit implements IdlTransferableObject<IdlMeasurementUnit> {
 	NONDIMENSIONAL("nondimensional"),
 
 	KILOMETER("km"),
@@ -32,6 +31,8 @@ public enum MeasurementUnit implements
 	NANOSECOND("nsec"),
 
 	UNKNOWN("unknown");
+
+	private static final MeasurementUnit VALUES[] = values();
 
 	private static final String KEY_ROOT = "MeasurementUnit.Name.";
 
@@ -45,31 +46,15 @@ public enum MeasurementUnit implements
 	}
 
 	public static MeasurementUnit valueOf(final int code) {
-		switch (code) {
-			case IdlMeasurementUnit._NONDIMENSIONAL:
-				return NONDIMENSIONAL;
-
-			case IdlMeasurementUnit._KILOMETER:
-				return KILOMETER;
-			case IdlMeasurementUnit._METER:
-				return METER;
-			case IdlMeasurementUnit._NANOMETER:
-				return NANOMETER;
-
-			case IdlMeasurementUnit._SECOND:
-				return SECOND;
-			case IdlMeasurementUnit._NANOSECOND:
-				return NANOSECOND;
-
-			case IdlMeasurementUnit._UNKNOWN_MEASUREMENTUNIT:
-				return UNKNOWN;
-			default:
-				Log.errorMessage("Illegal IDL code: " + code + ", returning RAW");
-				return UNKNOWN;
+		try {
+			return VALUES[code];
+		} catch (ArrayIndexOutOfBoundsException aioobe) {
+			Log.errorMessage("Illegal code: " + code + ", returning UNKNOWN");
+			return UNKNOWN;
 		}
 	}
 
-	public static MeasurementUnit fromTransferable(final IdlMeasurementUnit idlMeasurementUnit) {
+	public static MeasurementUnit valueOf(final IdlMeasurementUnit idlMeasurementUnit) {
 		return valueOf(idlMeasurementUnit.value());
 	}
 
@@ -92,5 +77,14 @@ public enum MeasurementUnit implements
 			Log.errorMessage("Illegal code: " + this.ordinal() + ", returning UNKNOWN");
 			return IdlMeasurementUnit.UNKNOWN_MEASUREMENTUNIT;
 		}
+	}
+
+	public String stringValue() {
+		return this.codename;
+	}
+
+	@Override
+	public String toString() {
+		return this.name() + "(" + Integer.toString(this.ordinal()) + ", " + this.stringValue() + ")";
 	}
 }
