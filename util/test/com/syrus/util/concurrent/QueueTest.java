@@ -1,5 +1,5 @@
 /*-
- * $Id: QueueTest.java,v 1.2 2006/04/04 06:45:50 bass Exp $
+ * $Id: QueueTest.java,v 1.3 2006/04/04 06:47:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2006/04/04 06:45:50 $
+ * @version $Revision: 1.3 $, $Date: 2006/04/04 06:47:02 $
  * @module util
  */
 final class QueueTest {
@@ -30,7 +30,7 @@ final class QueueTest {
 
 		private long l;
 		
-		private QueueEntry() {
+		QueueEntry() {
 			this.l = newL();
 		}
 
@@ -57,7 +57,7 @@ final class QueueTest {
 			this.maximumSize = size;
 		}
 
-		private Queue() {
+		Queue() {
 			this(Integer.MAX_VALUE);
 		}
 
@@ -158,7 +158,7 @@ final class QueueTest {
 	private static class Consumer implements Runnable {
 		private final Queue<QueueEntry> queue;
 
-		private Consumer(final Queue<QueueEntry> queue) {
+		Consumer(final Queue<QueueEntry> queue) {
 			this.queue = queue;
 		}
 
@@ -184,7 +184,7 @@ final class QueueTest {
 	private static class Producer implements Runnable {
 		private final Queue<QueueEntry> queue;
 
-		private Producer(final Queue<QueueEntry> queue) {
+		Producer(final Queue<QueueEntry> queue) {
 			this.queue = queue;
 		}
 
