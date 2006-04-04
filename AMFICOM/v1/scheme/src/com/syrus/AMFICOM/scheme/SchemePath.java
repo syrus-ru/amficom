@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.126 2006/03/17 09:33:46 bass Exp $
+ * $Id: SchemePath.java,v 1.127 2006/04/04 09:33:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import static com.syrus.AMFICOM.configuration.EquipmentType.MUFF;
+import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.MUFF;
 import static com.syrus.AMFICOM.general.ErrorMessages.CHILDREN_ALIEN;
 import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
@@ -73,8 +73,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #16 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.126 $, $Date: 2006/03/17 09:33:46 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.127 $, $Date: 2006/04/04 09:33:26 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -775,7 +775,7 @@ public final class SchemePath extends StorableObject
 			final PathElement pathElement1 = pathElementIterator.next();
 			if (pathElement1.getKind() == IdlKind.SCHEME_ELEMENT) {
 				final SchemeElement parentSchemeElement = pathElement1.getSchemeElement().getParentSchemeElement();
-				if (parentSchemeElement == null || parentSchemeElement.getProtoEquipment().getType() != MUFF) {
+				if (parentSchemeElement == null || !parentSchemeElement.getProtoEquipment().getType().getCodename().equals(MUFF.stringValue())) {
 					return pathElement1;
 				}
 			}
@@ -921,7 +921,7 @@ public final class SchemePath extends StorableObject
 		for (final PathElement currentPathElement : pathElementsReversed) {
 			if (currentPathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
 				final SchemeElement parentSchemeElement = currentPathElement.getSchemeElement().getParentSchemeElement();
-				if (parentSchemeElement == null || parentSchemeElement.getProtoEquipment().getType() != MUFF) {
+				if (parentSchemeElement == null || !parentSchemeElement.getProtoEquipment().getType().getCodename().equals(MUFF.stringValue())) {
 					return currentPathElement;
 				}
 			}
