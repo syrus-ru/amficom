@@ -65,7 +65,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.105 $, $Date: 2006/04/03 12:28:55 $
+ * @version $Revision: 1.106 $, $Date: 2006/04/04 10:04:03 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -406,6 +406,9 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		return parameterSet;
 	}
 
+	/**
+	 * Заполняет this.unchangedMap по текущему состоянию GUI элементов
+	 */
 	private void refreshUnchangedMap() {
 		if (this.unchangedObjects == null) {
 			this.unchangedObjects = new HashMap<ParameterType, BigDecimal>();
@@ -806,19 +809,19 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	}
 	
 	public MeasurementSetup getMeasurementSetup() throws CreateObjectException {
-		final MeasurementSetup measurementSetup = this.schedulerModel.createMeasurementSetup(this.getSet(), 
+		final MeasurementSetup measurementSetup1 = this.schedulerModel.createMeasurementSetup(this.getSet(), 
 				getDescription());
 		try {
-			final ReflectometryMeasurementSetup setup = new ReflectometryMeasurementSetup(measurementSetup);
+			final ReflectometryMeasurementSetup setup = new ReflectometryMeasurementSetup(measurementSetup1);
 			final ReflectometryMeasurementParameters measurementParameters = setup.getMeasurementParameters();
-			measurementSetup.setMeasurementDuration((long) (1000 * ReflectometryUtil.getUpperEstimatedAgentTestTime(measurementParameters)));
-			Log.debugMessage(measurementSetup.getMeasurementDuration()/1000 + " sec",
+			measurementSetup1.setMeasurementDuration((long) (1000 * ReflectometryUtil.getUpperEstimatedAgentTestTime(measurementParameters)));
+			Log.debugMessage(measurementSetup1.getMeasurementDuration()/1000 + " sec",
 				Log.DEBUGLEVEL09);
 		} catch (final DataFormatException e) {
 			// TODO
 			throw new CreateObjectException(e);
 		}
-		return measurementSetup;
+		return measurementSetup1;
 	}
 	
 	synchronized void refreshTestsSet() {
@@ -890,17 +893,17 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 											unchangedMeasurementSetupNewMap.get(baseMeasurementSetup.getId());
 		
 										if (measurementSetupId == null) {			
-											final MeasurementSetup measurementSetup = this.getMeasurementSetup();
-											measurementSetup.setCriteriaSet(baseMeasurementSetup.getCriteriaSet());
-											measurementSetup.setThresholdSet(baseMeasurementSetup.getThresholdSet());
-											measurementSetup.setEtalon(baseMeasurementSetup.getEtalon());
-											measurementSetup.setMeasurementTypes(baseMeasurementSetup.getMeasurementTypes());											
+											final MeasurementSetup measurementSetup1 = this.getMeasurementSetup();
+											measurementSetup1.setCriteriaSet(baseMeasurementSetup.getCriteriaSet());
+											measurementSetup1.setThresholdSet(baseMeasurementSetup.getThresholdSet());
+											measurementSetup1.setEtalon(baseMeasurementSetup.getEtalon());
+											measurementSetup1.setMeasurementTypes(baseMeasurementSetup.getMeasurementTypes());											
 											this.skip = true;
-											this.testParametersPanel.setMeasurementSetup(measurementSetup);
+											this.testParametersPanel.setMeasurementSetup(measurementSetup1);
 											this.skip = false;
-											measurementSetupId = measurementSetup.getId();
+											measurementSetupId = measurementSetup1.getId();
 											unchangedMeasurementSetupNewMap.put(baseMeasurementSetup.getId(), measurementSetupId);
-											this.schedulerModel.changeMeasurementSetup(measurementSetup);
+											this.schedulerModel.changeMeasurementSetup(measurementSetup1);
 										}
 									}
 								} else {
@@ -920,9 +923,9 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 						this.testParametersPanel.refreshMeasurementSetup(this.measurementSetup);
 					} else {
 						{
-							final MeasurementSetup measurementSetup;
+							final MeasurementSetup measurementSetup1;
 							try {
-								measurementSetup = MeasurementSetup.createInstance(LoginManager.getUserId(),
+								measurementSetup1 = MeasurementSetup.createInstance(LoginManager.getUserId(),
 									parameterSet,
 									this.measurementSetup.getCriteriaSet(),
 									this.measurementSetup.getThresholdSet(),
@@ -932,9 +935,9 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 									this.measurementSetup.getMonitoredElementIds(),
 									this.measurementSetup.getMeasurementTypes());
 									this.skip = true;
-									this.testParametersPanel.setMeasurementSetup(measurementSetup);
+									this.testParametersPanel.setMeasurementSetup(measurementSetup1);
 									this.skip = false;
-								this.measurementSetup = measurementSetup;
+								this.measurementSetup = measurementSetup1;
 							} catch (final CreateObjectException e) {
 								AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.CannotCreateMeasurementSetup"));
 							}
@@ -965,6 +968,13 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		this.skip = false;
 	}
 
+	/**
+	 * 1. Если this.skip, то return
+	 * 2. Если this.setId имеет тот же id, что и данный set, то return
+	 * 3. очищает this.unchangedObjects
+	 * 4. выставляет setIdm GUI элементы и this.unchangedMap по данному set
+	 * @param set данный set
+	 */
 	private void setSet(final ParameterSet set) {
 //		System.out.println("ReflectometryTestPanel.setSet() | 1 " + (set != null ? set.getId() : null));
 		if (this.skip) {
@@ -997,9 +1007,14 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		this.skip = false;
 	}
 
+	/**
+	 * Выставляет GUI элементы и this.unchangedMap
+	 * в соответствии с данными параметрами.
+	 * @param setParameters данные параметры
+	 */
 	private void refrestParameterSet(final Parameter[] setParameters ) {
 		this.gsOptionBox.setSelected(false);
-		this.lfdOptionBox.setSelected(false);	
+		this.lfdOptionBox.setSelected(false);
 
 		for (int i = 0; i < setParameters.length; i++) {
 			final ParameterType parameterType = setParameters[i].getType();
