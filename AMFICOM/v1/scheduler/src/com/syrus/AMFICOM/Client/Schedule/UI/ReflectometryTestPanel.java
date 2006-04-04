@@ -65,7 +65,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.107 $, $Date: 2006/04/04 10:15:06 $
+ * @version $Revision: 1.108 $, $Date: 2006/04/04 10:53:03 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -811,19 +811,32 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	public MeasurementSetup getMeasurementSetup() throws CreateObjectException {
 		final MeasurementSetup measurementSetup1 = this.schedulerModel.createMeasurementSetup(this.getSet(), 
 				getDescription());
-		try {
-			final ReflectometryMeasurementSetup setup = new ReflectometryMeasurementSetup(measurementSetup1);
-			final ReflectometryMeasurementParameters measurementParameters = setup.getMeasurementParameters();
-			measurementSetup1.setMeasurementDuration((long) (1000 * ReflectometryUtil.getUpperEstimatedAgentTestTime(measurementParameters)));
-			Log.debugMessage(measurementSetup1.getMeasurementDuration()/1000 + " sec",
-				Log.DEBUGLEVEL09);
-		} catch (final DataFormatException e) {
-			// TODO
-			throw new CreateObjectException(e);
-		}
+		updateMeasurementSetupDuration(measurementSetup1);
 		return measurementSetup1;
 	}
-	
+
+	/**
+	 * Корректирует в шаблоне продолжительность одного измерения согласно
+	 * параметрам измерения этого шаблона.
+	 * FIXME: бросает CreateObjectException - по всей видимости,
+	 * это не самый подходходящий тип исключения. Однако он оставлен здесь по
+	 * историческим соображениями, а также из-за полного отсутствия документации
+	 * по исключениями группы ApplicationException.
+	 * @param measurementSetup1 шаблон
+	 * @throws CreateObjectException ошибка при обработке шаблона
+	 */
+	private static void updateMeasurementSetupDuration(MeasurementSetup measurementSetup1)
+	throws CreateObjectException {
+		try {
+			final ReflectometryMeasurementParameters measurementParameters =
+				new ReflectometryMeasurementSetup(measurementSetup1).getMeasurementParameters();
+			measurementSetup1.setMeasurementDuration((long)(1000 * ReflectometryUtil.getUpperEstimatedAgentTestTime(measurementParameters)));
+			Log.debugMessage(measurementSetup1.getMeasurementDuration()/1000 + " sec", Log.DEBUGLEVEL09);
+		} catch (DataFormatException e) {
+			throw new CreateObjectException(e);
+		}
+	}
+
 	synchronized void refreshTestsSet() {
 		if (this.skip) {
 			return;
@@ -833,7 +846,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		final String description = this.getDescription();
 		final boolean descriptionChanged = !description.equals(this.oldDescription);
 		if (parameterSet != null && (parameterSet.isChanged()
-				|| descriptionChanged)) {
+					|| descriptionChanged)) {
 				Log.debugMessage(Log.DEBUGLEVEL10);
 				this.oldDescription = description;
 				final Set<Identifier> selectedTestIds = this.schedulerModel.getSelectedTestIds();
@@ -852,17 +865,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 									
 									if (baseMeasurementSetup.isChanged()) {
 										baseMeasurementSetup.setParameterSet(parameterSet);
-										
-										try {
-											final ReflectometryMeasurementSetup setup = new ReflectometryMeasurementSetup(baseMeasurementSetup);
-											final ReflectometryMeasurementParameters measurementParameters = setup.getMeasurementParameters();
-											baseMeasurementSetup.setMeasurementDuration((long) (1000 * ReflectometryUtil.getUpperEstimatedAgentTestTime(measurementParameters)));
-											Log.debugMessage(baseMeasurementSetup.getMeasurementDuration()/1000 + " sec",
-												Log.DEBUGLEVEL10);
-										} catch (final DataFormatException e) {
-											// TODO
-											throw new CreateObjectException(e);
-										}
+										updateMeasurementSetupDuration(baseMeasurementSetup);
 
 										this.skip = true;
 
@@ -874,14 +877,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 											if (this.lastParameters != null) {
 												baseMeasurementSetup.getParameterSet().setParameters(this.lastParameters);
 												this.refrestParameterSet(this.lastParameters);
-												try {
-													final ReflectometryMeasurementSetup setup = new ReflectometryMeasurementSetup(baseMeasurementSetup);
-													final ReflectometryMeasurementParameters measurementParameters = setup.getMeasurementParameters();
-													baseMeasurementSetup.setMeasurementDuration((long) (1000 * ReflectometryUtil.getUpperEstimatedAgentTestTime(measurementParameters)));													
-												} catch (final DataFormatException e1) {
-													// TODO
-													throw new CreateObjectException(e1);
-												}
+												updateMeasurementSetupDuration(baseMeasurementSetup);
 												this.schedulerModel.changeMeasurementSetup(baseMeasurementSetup);
 											}
 											AbstractMainFrame.showErrorMessage(this, e);
