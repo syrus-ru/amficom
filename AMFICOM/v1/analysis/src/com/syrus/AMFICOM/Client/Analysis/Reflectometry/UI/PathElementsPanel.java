@@ -41,7 +41,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 
 	private int textWidth;
 	private int textHeight;
-	private static Color movingColor = new Color(191, 255, 63);
+	private static Color movingColor = new Color(127, 127, 127);
 	private static Color selectionColor = new Color(91, 191, 91);
 	private static Color selectionAnchoredColor = new Color(16, 255, 16);
 	private static Color defaultColor = new Color(91, 91, 191);
@@ -336,8 +336,8 @@ public final class PathElementsPanel extends AnalysisPanel {
 						g.fillRect(start1, 5, end1 - start1, 9);
 //							g.drawLine(start1, 5, end1, 5);
 //							g.drawLine(end1, 5, end1, 3);
-						g.setColor(Color.BLACK);
-						g.drawString(String.valueOf((int)pathElement.getOpticalLength()), start1 + this.textWidth, 25);
+//						g.setColor(Color.BLACK);
+//						g.drawString(String.valueOf((int)pathElement.getOpticalLength()), start1 + this.textWidth, 25);
 					}
 				}
 				if (container.equals(this.pathResource.getEndPathElement())) {
