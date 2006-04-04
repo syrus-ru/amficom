@@ -29,11 +29,13 @@ general \
 administration \
 configuration \
 measurement \
+report \
 filter \
 reflectometry \
 csbridge \
 commonclient \
-filterclient
+filterclient \
+reportclient
 
 EXTCLASSPATH := $(TROVE4JCLASSPATH):$(XMLBEANSCLASSPATH)
 
