@@ -41,10 +41,12 @@ public final class PathElementsPanel extends AnalysisPanel {
 
 	private int textWidth;
 	private int textHeight;
-	static Color movingColor = Color.GREEN.brighter();
-	static Color selectionColor = Color.GREEN;
-	static Color anchoredColor = Color.BLUE;
-	static Color defaultColor = Color.BLACK;
+	private static Color movingColor = new Color(191, 255, 63);
+	private static Color selectionColor = new Color(91, 191, 91);
+	private static Color selectionAnchoredColor = new Color(16, 255, 16);
+	private static Color defaultColor = new Color(91, 91, 191);
+	private static Color anchoredColor = new Color(16, 16, 255);
+
 	
 	PathResource pathResource;	
 	
@@ -106,45 +108,51 @@ public final class PathElementsPanel extends AnalysisPanel {
 				}
 				this.pathResource.setSelectedPathElement(container);
 				
-				if (!e.isShiftDown()) {
-					this.pathResource.clearActivePathElements();
-				}
-				this.pathResource.addActivePathElement(container);
-				
-				// get all PE's in epsilon vicinity which is not CL
-				PathElementContainer current = container;
-				while (this.pathResource.hasPrevious(current)) {
-					final double[] _d = this.pathResource.getOpticalDistanceFromStart(current);
-					current = this.pathResource.getPrevious(current);
-					
-					// if is CL - not including it
-					if (current.getPathElement().getKind() == IdlKind.SCHEME_CABLE_LINK) {
-						break;
-					}
-					final double[] d = this.pathResource.getOpticalDistanceFromStart(current);
-					if (((_d[0] - d[0]) / super.deltaX) * super.scaleX > GRAB_RANGE) {
-						break;
+				// if already selected do nothing
+				if (!this.pathResource.getActivePathElements().contains(container)) {
+					if (!e.isShiftDown()) {
+						this.pathResource.clearActivePathElements();
 					}
 					this.pathResource.addActivePathElement(container);
-				}
-				current = container;
-				while (this.pathResource.hasNext(current)) {
-					final double[] _d = this.pathResource.getOpticalDistanceFromStart(current);
-					current = this.pathResource.getNext(current);
 					
-					// if is CL - not including it
-					if (current.getPathElement().getKind() == IdlKind.SCHEME_CABLE_LINK) {
-						break;
+					// get all PE's in epsilon vicinity which is not CL
+					PathElementContainer current = container;
+					while (this.pathResource.hasPrevious(current)) {
+						final double[] _d = this.pathResource.getOpticalDistanceFromStart(current);
+						current = this.pathResource.getPrevious(current);
+						
+						// if is CL - not including it
+						if (current.getPathElement().getKind() == IdlKind.SCHEME_CABLE_LINK) {
+							break;
+						}
+						final double[] d = this.pathResource.getOpticalDistanceFromStart(current);
+						if (((_d[0] - d[0]) / super.deltaX) * super.scaleX > GRAB_RANGE) {
+							break;
+						}
+						this.pathResource.addActivePathElement(current);
 					}
-					final double[] d = this.pathResource.getOpticalDistanceFromStart(current);
-					if (((d[1] - _d[1]) / super.deltaX) * super.scaleX > GRAB_RANGE) {
-						break;
+					current = container;
+					while (this.pathResource.hasNext(current)) {
+						final double[] _d = this.pathResource.getOpticalDistanceFromStart(current);
+						current = this.pathResource.getNext(current);
+						
+						// if is CL - not including it
+						if (current.getPathElement().getKind() == IdlKind.SCHEME_CABLE_LINK) {
+							break;
+						}
+						final double[] d = this.pathResource.getOpticalDistanceFromStart(current);
+						if (((d[1] - _d[1]) / super.deltaX) * super.scaleX > GRAB_RANGE) {
+							break;
+						}
+						this.pathResource.addActivePathElement(current);
 					}
-					this.pathResource.addActivePathElement(container);
 				}
 				this.parent.repaint();
 				return;
 			}
+			// otherwise clear selection
+			this.pathResource.clearActivePathElements();
+			this.pathResource.setSelectedPathElement(null);
 		}
 		super.this_mousePressed(e);
 	}
@@ -191,11 +199,12 @@ public final class PathElementsPanel extends AnalysisPanel {
 		if (this.setting_active_pe) {
 			final int change = (this.dockedX - coord2index(this.startpos.x));
 			final List<PathElementContainer> activePathElements = this.pathResource.getActivePathElements();
+			final PathElementContainer container = this.pathResource.getSelectedPathElement();
 			if (!activePathElements.isEmpty() && Math.abs(change) > 0) {
 				PathElementContainer firstMovingPE = this.pathResource.getFirstActivePathElement();
 				PathElementContainer lastMovingPE = this.pathResource.getLastActivePathElement();
 				
-				double[] initial = this.pathResource.getOpticalDistanceFromStart(this.pathResource.getSelectedPathElement());
+				double[] initial = this.pathResource.getOpticalDistanceFromStart(container);
 				double d = this.dockedX * this.deltaX - initial[0]; 
 				
 				PathElementContainer lastNode = this.pathResource.getPreviousAnchored(firstMovingPE);
@@ -208,9 +217,10 @@ public final class PathElementsPanel extends AnalysisPanel {
 					this.pathResource.changeOpticalLength(lastMovingPE, nextNode, -d);
 				}
 
-				if (Heap.hasEtalon()) {
-					ModelTraceAndEvents mtae = Heap.getMTMEtalon().getMTAE();
-					this.pathResource.updateAnchor(firstMovingPE, mtae, this.dockedEvent);
+				this.pathResource.updateAnchor(firstMovingPE, this.dockedEvent);
+			} else {
+				if (e.isControlDown() && container.getPathElement().getKind() == IdlKind.SCHEME_ELEMENT) {
+					container.setAnchored(!container.isAnchored());
 				}
 			}
 
@@ -301,11 +311,17 @@ public final class PathElementsPanel extends AnalysisPanel {
 					final PathElement pathElement = container.getPathElement();
 					if (pathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
 						if (this.pathResource.getActivePathElements().contains(container)) {
-							g.setColor(selectionColor);
-						}	else if (container.isAnchored()) {
-							g.setColor(anchoredColor);
-						} else {
-							g.setColor(defaultColor);
+							if (container.isAnchored()) {
+								g.setColor(selectionAnchoredColor);
+							} else {
+								g.setColor(selectionColor);
+							}
+						}	else {
+							if (container.isAnchored()) {
+								g.setColor(anchoredColor);
+							} else {
+								g.setColor(defaultColor);
+							}
 						}
 						
 						SchemeElement se = getSchemeElement(container);
@@ -368,7 +384,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 		}
 		String text = se.getName();
 		Scheme parentScheme = se.getParentScheme();
-		if (parentScheme != null) {
+		if (parentScheme != null && !parentScheme.equals(this.pathResource.getPathScheme())) {
 			text = text + "(" + parentScheme.getName() + ")";
 		}
 		
