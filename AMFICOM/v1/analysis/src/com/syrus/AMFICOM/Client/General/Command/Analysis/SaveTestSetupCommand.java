@@ -11,10 +11,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.ParameterSet;
@@ -98,9 +95,9 @@ public class SaveTestSetupCommand extends AbstractCommand
 			return false;
 		}
 
-		MeasurementSetup measurementSetup;
 		try {
-			measurementSetup = MeasurementSetup.createInstance(
+			final MeasurementSetup measurementSetup =
+				MeasurementSetup.createInstance(
 					LoginManager.getUserId(),
 					msTest.getParameterSet(),
 					criteriaSet,
@@ -110,23 +107,11 @@ public class SaveTestSetupCommand extends AbstractCommand
 					msTest.getMeasurementDuration(),
 					msTest.getMonitoredElementIds(),
 					msTest.getMeasurementTypes());
-			StorableObjectPool.putStorableObject(measurementSetup);
-		} catch (CreateObjectException e) {
+			StorableObjectPool.flush(measurementSetup, LoginManager.getUserId(), false);
+		} catch (ApplicationException e) {
+			e.printStackTrace();
 			GUIUtil.showCreateObjectProblemError();
 			return false;
-		} catch(IllegalObjectEntityException e) {
-			//e.printStackTrace();
-			throw new InternalError("IllegalObjectEntityException while trying to create MS instance: " +  e);
-		}
-
-		/**
-		 * @todo use flush(false) to non forced saving
-		 */
-		try {
-			StorableObjectPool.flush(ObjectEntities.MEASUREMENTSETUP_CODE, LoginManager.getUserId(), true);
-		} catch(ApplicationException ex) {
-			ex.printStackTrace();
-			GUIUtil.showErrorMessage(GUIUtil.MSG_ERROR_DATABASE_FLUSH_ERROR);
 		}
 
 		// Показываем юзеру, что его шаблон сохранен и здравствует
