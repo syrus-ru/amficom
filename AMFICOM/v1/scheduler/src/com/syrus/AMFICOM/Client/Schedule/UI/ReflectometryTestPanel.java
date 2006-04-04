@@ -65,7 +65,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.106 $, $Date: 2006/04/04 10:04:03 $
+ * @version $Revision: 1.107 $, $Date: 2006/04/04 10:15:06 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -1058,19 +1058,26 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 				this.selectCBValue(this.resolutionComboBox, new BigDecimal(stringValue));
 			} else if (parameterType.equals(ParameterType.REF_PULSE_WIDTH_HIGH_RES)) {
 				this.selectCBValue(this.pulseWidthHiResComboBox, new BigDecimal(stringValue));
-				if (!this.highResolutionCheckBox.isSelected()) {
-					this.highResolutionCheckBox.doClick();
-				}
+				// NB: highResolutionCheckBox.doClick() is not suitable:
+				// it invokes fire update listeners only if it is enabled.
+				// so, we process the update by ourselves.
+				this.highResolutionCheckBox.setSelected(true);
+				handleStateChangeOfHiResComboBox();
 			} else if (parameterType.equals(ParameterType.REF_PULSE_WIDTH_LOW_RES)) {
 				this.selectCBValue(this.pulseWidthLowResComboBox, new BigDecimal(stringValue));
-				if (this.highResolutionCheckBox.isSelected()) {
-					this.highResolutionCheckBox.doClick();
-				}
+				this.highResolutionCheckBox.setSelected(false);
+				handleStateChangeOfHiResComboBox();
 			}
 		}
 		this.refreshUnchangedMap();
 	}
-	
+
+	void handleStateChangeOfHiResComboBox() {
+		boolean b = this.highResolutionCheckBox.isSelected();
+		ReflectometryTestPanel.this.pulseWidthHiResComboBox.setVisible(b);
+		ReflectometryTestPanel.this.pulseWidthLowResComboBox.setVisible(!b);
+	}
+
 	private void createUIItems() {
 		this.descriptionField = new JTextField(128);
 
@@ -1157,11 +1164,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		this.highResolutionCheckBox.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				JCheckBox checkBox = (JCheckBox) e.getSource();
-				boolean b = checkBox.isSelected();
-				ReflectometryTestPanel.this.pulseWidthHiResComboBox.setVisible(b);
-				ReflectometryTestPanel.this.pulseWidthLowResComboBox.setVisible(!b);
-
+				ReflectometryTestPanel.this.handleStateChangeOfHiResComboBox();
 			}
 		});
 
