@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<session comment="Inline deprecated method" version="1.0">
+<refactoring comment="Inline deprecated method" delete="false" description="Inline method 'com.syrus.AMFICOM.leserver.EventProcessorRegistry.start()'" flags="393222" id="org.eclipse.jdt.ui.inline.method" input="unit://src/com/syrus/AMFICOM/leserver/EventProcessorRegistry.java" mode="0" project="leserver" selection="-1 -1" version="1.0"/>
+</session>

@@ -1,0 +1,3 @@
+1144144816848	Extract local variable 'event' from expression 'this.queueEntries.take()'
+1144149440445	Inline local variable 'state' in 'com.syrus.AMFICOM.leserver.EventProcessorRegistry.processEvent()'
+1144147762392	Rename method 'com.syrus.AMFICOM.leserver.EventProcessorRegistry.start()' to 'startProcessors'
