@@ -43,7 +43,7 @@ SOURCES := $(shell find $(SRCDIR) -name *java)
 
 
 $(LIBNAME): .mach
-	$(CP) \
+#	$(CP) \
 		$(SRCDIR)/com/syrus/AMFICOM/Client/Schedule/UI/*.[gp][ir][fo]* \
 		$(CLASSDIR)/com/syrus/AMFICOM/Client/Schedule/UI
 	$(JAR) -cf $@ \
@@ -63,7 +63,7 @@ clean:	cleanmach
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) -r $(CLASSDIR)/com
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY: xml
