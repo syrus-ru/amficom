@@ -1,5 +1,5 @@
 /*-
- * $Id: QueueTest.java,v 1.1 2005/11/13 10:54:50 bass Exp $
+ * $Id: QueueTest.java,v 1.2 2006/04/04 06:45:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,14 +17,14 @@ import java.util.Set;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/11/13 10:54:50 $
+ * @version $Revision: 1.2 $, $Date: 2006/04/04 06:45:50 $
  * @module util
  */
 final class QueueTest {
 	private static class QueueEntry {
-		private static volatile long currentL = 0;
+		private static long currentL = 0;
 
-		private static long newL() {
+		private static synchronized long newL() {
 			return currentL++;
 		}
 
@@ -146,9 +146,9 @@ final class QueueTest {
 			}
 		}
 
-		int getCurrentSize() {
-			return this.queueEntries.size();
-		}
+//		int getCurrentSize() {
+//			return this.queueEntries.size();
+//		}
 
 		int getMaximumSize() {
 			return this.maximumSize;
@@ -164,7 +164,8 @@ final class QueueTest {
 
 		private void consume() {
 			for (final QueueEntry queueEntry : this.queue.getAll()) {
-				System.err.println("CONSUMED: " + queueEntry + "; size: " + this.queue.getCurrentSize());
+//				System.err.println("CONSUMED: " + queueEntry + "; size: " + this.queue.getCurrentSize());
+				System.err.println("CONSUMED: " + queueEntry);
 			}
 		}
 
@@ -190,7 +191,8 @@ final class QueueTest {
 		private void produce() {
 			final QueueEntry queueEntry = new QueueEntry();
 			this.queue.put(queueEntry);
-			System.err.println("PRODUCED: " + queueEntry + "; size: " + this.queue.getCurrentSize());
+//			System.err.println("PRODUCED: " + queueEntry + "; size: " + this.queue.getCurrentSize());
+			System.err.println("PRODUCED: " + queueEntry);
 		}
 
 		public void run() {
@@ -209,6 +211,14 @@ final class QueueTest {
 	 * @param args
 	 */
 	public static void main(final String args[]) {
+		try {
+			assert false;
+			System.err.println("Assertions are disabled -- rerun with -ea VM arg.");
+			System.exit(1);
+		} catch (final AssertionError ae) {
+			// empty
+		}
+
 		final Queue<QueueEntry> queue = new Queue<QueueEntry>();
 
 		final int producerCount = 10;
