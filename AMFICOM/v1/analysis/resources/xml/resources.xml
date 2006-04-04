@@ -143,6 +143,9 @@
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdInitial">
       <res:filename>images/th_initial.gif</res:filename>
     </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.weakSecondary">
+      <res:filename>images/weak_secondary.gif</res:filename>
+    </res:resource>
     <res:resource xsi:type="res:color" id="trace1">
       <res:rgb>
         <res:red>128</res:red>
