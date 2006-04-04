@@ -27,6 +27,7 @@ temp
 .sqlj
 .classpath
 .project
+.refactorings
 javadoc.xml
 .nbintdb
 .pmd
