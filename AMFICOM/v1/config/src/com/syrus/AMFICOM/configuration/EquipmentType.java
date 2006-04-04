@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.110.4.3 2006/04/04 13:09:23 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.110.4.4 2006/04/04 14:13:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.110.4.3 $, $Date: 2006/04/04 13:09:23 $
+ * @version $Revision: 1.110.4.4 $, $Date: 2006/04/04 14:13:03 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -318,6 +318,22 @@ public final class EquipmentType extends StorableObjectType implements Namable, 
 	@Override
 	public EquipmentTypeWrapper getWrapper() {
 		return EquipmentTypeWrapper.getInstance();
+	}
+
+	public static Identifier idOf(final String codename) throws ApplicationException {
+		if (codenameCondition == null) {
+			codenameCondition = new TypicalCondition(codename, OPERATION_EQUALS, EQUIPMENT_TYPE_CODE, COLUMN_CODENAME);
+		} else {
+			codenameCondition.setValue(codename);
+		}
+
+		final Set<Identifier> equipmentTypeIds = StorableObjectPool.getIdentifiersByCondition(codenameCondition, true);
+		if (equipmentTypeIds.isEmpty()) {
+			throw new ObjectNotFoundException("EquipmentType '" + codename + "' not found");
+		}
+
+		assert equipmentTypeIds.size() == 1 : ONLY_ONE_EXPECTED;
+		return equipmentTypeIds.iterator().next();
 	}
 
 	public static EquipmentType valueOf(final String codename) throws ApplicationException {
