@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.36.4.1 2006/03/27 11:21:42 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.36.4.2 2006/04/04 09:31:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 
@@ -30,8 +32,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36.4.1 $, $Date: 2006/03/27 11:21:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.36.4.2 $, $Date: 2006/04/04 09:31:13 $
+ * @author $Author: arseniy $
  * @module config
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -70,6 +72,18 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				switch (this.linkedEntityCode) {
 					case CABLELINK_TYPE_CODE:
 						condition = super.conditionTest(cableThreadType.getCableLinkType().getId());
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
+				break;
+			case PROTOEQUIPMENT_CODE:
+				final ProtoEquipment protoEquipment = (ProtoEquipment) storableObject;
+				switch (this.linkedEntityCode) {
+					case EQUIPMENT_TYPE_CODE:
+						condition = super.conditionTest(protoEquipment.getTypeId());
 						break;
 					default:
 						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
