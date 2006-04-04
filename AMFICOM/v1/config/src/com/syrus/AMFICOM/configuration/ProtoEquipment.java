@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.29.2.1 2006/04/04 09:19:57 arseniy Exp $
+ * $Id: ProtoEquipment.java,v 1.29.2.2 2006/04/04 13:09:41 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.29.2.1 $, $Date: 2006/04/04 09:19:57 $
+ * @version $Revision: 1.29.2.2 $, $Date: 2006/04/04 13:09:41 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -350,6 +350,10 @@ public final class ProtoEquipment extends StorableObject
 	public void setTypeId(final Identifier typeId) {
 		this.typeId = typeId;
 		super.markAsChanged();
+	}
+
+	public void setType(final EquipmentType equipmentType) {
+		this.setTypeId(equipmentType.getId());
 	}
 
 	public void setName(final String name) {
