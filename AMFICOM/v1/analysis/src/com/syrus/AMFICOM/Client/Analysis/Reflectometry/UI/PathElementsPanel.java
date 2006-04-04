@@ -59,9 +59,10 @@ public final class PathElementsPanel extends AnalysisPanel {
 	public void setPath(final SchemePath path) {
 		this.pathResource = new PathResource(path);
 
-		if (Heap.hasEtalon()) {
-			ModelTraceAndEvents mtae = Heap.getMTMEtalon().getMTAE();
-			validateAnchors(mtae);
+		try {
+			this.pathResource.validateAnchors();
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
 		}
 	}
 
@@ -267,35 +268,14 @@ public final class PathElementsPanel extends AnalysisPanel {
 	}
 	*/
 	
-	void validateAnchors(ModelTraceAndEvents mtae) {
-		EventAnchorer ea = Heap.obtainAnchorer();
-		boolean anchorerUpdated = false;
-		try {
-			for (int i = 0; i < mtae.getNEvents(); i++) {
-				SOAnchorImpl soAnchor = ea.getEventAnchor(i);
-				if (soAnchor.getValue() != SOAnchorImpl.VOID_ANCHOR.getValue()) {
-					Identifier peId = Identifier.valueOf(soAnchor.getValue());
-					PathElement pe = StorableObjectPool.getStorableObject(peId, true);
-					if (pe == null) {
-						ea.setEventAnchor(i, SOAnchorImpl.VOID_ANCHOR);
-						anchorerUpdated = true;
-						Log.debugMessage("Invalid pathElement with id '" + peId + "' Remove anchor for event " + i, Level.FINER);	
-					}
-				}
-			}
-			if (anchorerUpdated) {
-				Heap.notifyAnchorerChanged();
-			}
-		} catch (ApplicationException e) {
-			Log.errorMessage(e);
-		}
-	}
-	
 	void setPaintPathElements(boolean b) {
 		this.paint_path_elements = b;
-		if (b && Heap.hasEtalon()) {
-			ModelTraceAndEvents mtae = Heap.getMTMEtalon().getMTAE();
-			validateAnchors(mtae);
+		if (b) {
+			try {
+				this.pathResource.validateAnchors();
+			} catch (ApplicationException e) {
+				Log.errorMessage(e);
+			}
 		}
 	}
 

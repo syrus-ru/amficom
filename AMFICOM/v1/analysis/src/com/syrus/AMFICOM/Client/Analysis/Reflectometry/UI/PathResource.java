@@ -1,5 +1,5 @@
 /*-
- * $Id: PathResource.java,v 1.1 2006/04/04 08:05:05 stas Exp $
+ * $Id: PathResource.java,v 1.2 2006/04/04 08:47:35 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,10 +9,12 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.logging.Level;
 
@@ -21,6 +23,8 @@ import com.syrus.AMFICOM.analysis.EventAnchorer;
 import com.syrus.AMFICOM.analysis.SOAnchorImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
@@ -59,6 +63,7 @@ public final class PathResource {
 		} else {
 			this.pathElements = Collections.emptyList();
 		}
+		validateAnchors();
 	}
 //	public void setPath(SchemePath path1, EventAnchorer anchorer) throws ApplicationException {
 //		this.path = path1;
@@ -176,6 +181,40 @@ public final class PathResource {
 		}
 		return next;
 	}
+	
+	public void validateAnchors() throws ApplicationException {
+		if (Heap.hasEtalon()) {
+			ModelTraceAndEvents mtae = Heap.getMTMEtalon().getMTAE();
+			EventAnchorer ea = Heap.obtainAnchorer();
+			
+			boolean anchorerUpdated = false;
+			Set<Identifier> anchoredPEIds = new HashSet<Identifier>();
+			for (int i = 0; i < mtae.getNEvents(); i++) {
+				SOAnchorImpl soAnchor = ea.getEventAnchor(i);
+				if (soAnchor.getValue() != SOAnchorImpl.VOID_ANCHOR.getValue()) {
+					Identifier peId = Identifier.valueOf(soAnchor.getValue());
+					PathElement pe = StorableObjectPool.getStorableObject(peId, true);
+					if (pe == null) {
+						ea.setEventAnchor(i, SOAnchorImpl.VOID_ANCHOR);
+						anchorerUpdated = true;
+						Log.debugMessage("Invalid pathElement with id '" + peId + "' Remove anchor for event " + i, Level.FINER);	
+					} else {
+						anchoredPEIds.add(Identifier.valueOf(soAnchor.getValue()));
+					}
+				}
+			}
+
+			for (PathElementContainer container : this.pathElements) {
+				if (anchoredPEIds.contains(container.getPathElement().getId())) {
+					container.setAnchored(true);
+				}
+			}
+			
+			if (anchorerUpdated) {
+				Heap.notifyAnchorerChanged();
+			}
+		}
+	}
 	public void updateAnchor(final PathElementContainer container, final ModelTraceAndEvents mtae, final int dockedEvent) {
 		long id = container.getPathElement().getId().getIdentifierCode();
 		// create link to Etalon
@@ -269,8 +308,8 @@ final class PathElementContainer {
 		return this.anchored;
 	}
 
-	public void setAnchored(boolean moveable) {
-		this.anchored = moveable;
+	public void setAnchored(boolean anchored) {
+		this.anchored = anchored;
 	}
 	
 	@Override
