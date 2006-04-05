@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingTypeCodename.java,v 1.1.2.3 2006/04/05 09:44:49 arseniy Exp $
+ * $Id: ModelingTypeCodename.java,v 1.1.2.4 2006/04/05 09:48:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.measurement;
 import com.syrus.util.Codename;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/04/05 09:44:49 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/04/05 09:48:31 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -21,7 +21,7 @@ public enum ModelingTypeCodename implements Codename {
 	private String codename;
 
 	private ModelingTypeCodename(final String codename) {
-		this.codename = codename;
+		this.codename = codename.intern();
 	}
 
 	public String stringValue() {
