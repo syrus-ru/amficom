@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathGeneralPanel.java,v 1.15 2006/02/15 12:18:11 stas Exp $
+ * $Id: SchemePathGeneralPanel.java,v 1.16 2006/04/05 13:32:20 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -355,7 +355,10 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 								Set<Identifier> tpathIds = me.getMonitoredDomainMemberIds();
 								if (!tpathIds.isEmpty()) {
 									Set<TransmissionPath> tPaths = StorableObjectPool.getStorableObjects(tpathIds, true);
-									this.schemePath.setTransmissionPath(tPaths.iterator().next());
+									final TransmissionPath tpath = tPaths.iterator().next();
+									this.schemePath.setTransmissionPath(tpath);
+									tpath.setName(this.tfNameText.getText());
+									StorableObjectPool.flush(tpath, LoginManager.getUserId(), false);
 								}
 							}
 						}
