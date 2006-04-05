@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.188 2006/04/05 06:06:13 saa Exp $
+ * $Id: SchedulerModel.java,v 1.189 2006/04/05 06:46:20 saa Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.188 $, $Date: 2006/04/05 06:06:13 $
+ * @version $Revision: 1.189 $, $Date: 2006/04/05 06:46:20 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -340,17 +340,11 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 	private void refreshTest(final Object source) {
 		if (this.selectedFirstTest != null) {
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(source,
-					COMMAND_SET_MEASUREMENT_TYPE,
-					null,
-					this.selectedFirstTest.getMeasurementType()));
-			MonitoredElement monitoredElement1 = this.selectedFirstTest.getMonitoredElement();
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(source, COMMAND_SET_MONITORED_ELEMENT, null, monitoredElement1));
-
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(source, COMMAND_SET_MEASUREMENT_TYPE, null, this.selectedFirstTest.getMeasurementType()));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(source, COMMAND_SET_MONITORED_ELEMENT, null, this.selectedFirstTest.getMonitoredElement()));
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(source, COMMAND_SET_ANALYSIS_TYPE, this, this.selectedFirstTest.getAnalysisType()));
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(source, COMMAND_REFRESH_TEMPORAL_STAMPS, null, null));
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(source, COMMAND_REFRESH_MEASUREMENT_SETUP, null, null));
-
 		}
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(source, COMMAND_REFRESH_TEST, null, null));
 	}
