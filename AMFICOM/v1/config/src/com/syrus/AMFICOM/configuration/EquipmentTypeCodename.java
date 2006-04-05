@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeCodename.java,v 1.3.4.2 2006/04/05 09:44:49 arseniy Exp $
+ * $Id: EquipmentTypeCodename.java,v 1.3.4.3 2006/04/05 09:48:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.bugs.Crutch136;
 import com.syrus.util.Codename;
 
 /**
- * @version $Revision: 1.3.4.2 $, $Date: 2006/04/05 09:44:49 $
+ * @version $Revision: 1.3.4.3 $, $Date: 2006/04/05 09:48:31 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -36,7 +36,7 @@ public enum EquipmentTypeCodename implements Codename {
 	private String codename;
 
 	private EquipmentTypeCodename(final String codename) {
-		this.codename = codename;
+		this.codename = codename.intern();
 	}
 
 	public String stringValue() {
