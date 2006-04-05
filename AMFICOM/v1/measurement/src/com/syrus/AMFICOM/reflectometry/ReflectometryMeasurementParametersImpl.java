@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryMeasurementParametersImpl.java,v 1.4.2.3 2006/04/05 12:00:14 arseniy Exp $
+ * $Id: ReflectometryMeasurementParametersImpl.java,v 1.4.2.4 2006/04/05 13:46:58 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,11 +28,12 @@ import com.syrus.util.Log;
  * На данный момент modifier-методы не поддерживаются.
  * </p>
  * @author saa
- * @author $Author: arseniy $
- * @version $Revision: 1.4.2.3 $, $Date: 2006/04/05 12:00:14 $
+ * @author $Author: saa $
+ * @version $Revision: 1.4.2.4 $, $Date: 2006/04/05 13:46:58 $
  * @module
  */
-public final class ReflectometryMeasurementParametersImpl implements ReflectometryMeasurementParameters {
+public final class ReflectometryMeasurementParametersImpl
+implements ReflectometryMeasurementParameters {
 	private ActionTemplate<Measurement> measurementTemplate;
 
 	private int waveLength;
@@ -48,21 +49,25 @@ public final class ReflectometryMeasurementParametersImpl implements Reflectomet
 	/**
 	 * Этот конструктор предназначен для использования в
 	 * {@link ReflectometryMeasurementSetup}, а не для непосредственного вызова.
+	 * FIXME: принимать на входе ActionTemplate&lt;Measurement&gt;
 	 * @param measurementTemplateId Должен быть шаблоном для измерений.
 	 * @throws DataFormatException Неправильный формат входных данных
 	 */
-	 ReflectometryMeasurementParametersImpl(final Identifier measurementTemplateId) throws DataFormatException, ApplicationException {
-		this.measurementTemplate = StorableObjectPool.getStorableObject(measurementTemplateId, true);
+	ReflectometryMeasurementParametersImpl(final Identifier measurementTemplateId)
+	throws DataFormatException, ApplicationException {
+		this.measurementTemplate = StorableObjectPool.getStorableObject(
+				measurementTemplateId, true);
 		this.unpack();
 	}
 
 	 /**
 	  * @throws DataFormatException данные не распознаны
 	  */
-	 private void unpack() throws DataFormatException, ApplicationException {
-		 final Set<ActionParameter> actionParameters = this.measurementTemplate.getActionParameters();
-		 for (final ActionParameter actionParameter : actionParameters) {
-			 final String parameterTypeCodename = actionParameter.getTypeCodename();
+	private void unpack() throws DataFormatException, ApplicationException {
+		final Set<ActionParameter> actionParameters =
+				this.measurementTemplate.getActionParameters();
+		for (final ActionParameter actionParameter : actionParameters) {
+			final String parameterTypeCodename = actionParameter.getTypeCodename();
 			if (parameterTypeCodename.equals(ReflectometryParameterTypeCodename.WAVE_LENGTH.stringValue())) {
 				try {
 					this.waveLength = new ByteArray(actionParameter.getValue()).toInt();
