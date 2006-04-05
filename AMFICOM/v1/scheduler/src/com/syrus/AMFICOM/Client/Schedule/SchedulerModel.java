@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.187 2006/04/03 15:13:55 saa Exp $
+ * $Id: SchedulerModel.java,v 1.188 2006/04/05 06:06:13 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.187 $, $Date: 2006/04/03 15:13:55 $
+ * @version $Revision: 1.188 $, $Date: 2006/04/05 06:06:13 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -139,6 +139,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	 */
 	private Set<Identifier>		mainTestIds							= new HashSet<Identifier>();
 
+	/**
+	 * Стало быть, это ids выделенных тестов.
+	 */
 	private Set<Identifier>		selectedTestIds;
 
 	private Identifier			selectedFirstTestId;
@@ -703,6 +706,11 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		this.refreshTests();
 	}
 
+	/**
+	 * Возвращает IDs выделенных тестов.
+	 * Возвращаемый набор соответствует тому, что возвращает
+	 * {@link #getSelectedTestIds()}
+	 */
 	public Set<Identifier> getSelectedTestIds() {
 		if (this.selectedTestIds != null) {
 			return this.selectedTestIds;
@@ -710,7 +718,12 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		return Collections.emptySet();
 	}
 
-	// полагается на то, что все выбранные тесты присутствуют в TestView.MAP
+	/**
+	 * Возвращает выделенные тесты.
+	 * Возвращаемый набор соответствует набору, получаемому
+	 * через {@link #getSelectedTestIds()}.
+	 * XXX: полагается на то, что все выбранные тесты присутствуют в TestView.MAP
+	 */
 	public Set<Test> getSelectedTests() {
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
 			final Set<Test> selectedTests = new HashSet<Test>(this.selectedTestIds.size());
