@@ -1,8 +1,5 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.MUFF;
-import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.OTHER;
-
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.FontMetrics;
@@ -363,15 +360,10 @@ public final class PathElementsPanel extends AnalysisPanel {
 			type = se.getProtoEquipment().getType();
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
-			try {
-				type = EquipmentType.valueOf(OTHER.stringValue());
-			} catch (ApplicationException e1) {
-				Log.errorMessage(e1);
-				return;
-			}
+			type = EquipmentType.OTHER;
 		}
 		// if muff - paint small box and dashed line
-		if (type.getCodename().equals(MUFF.stringValue())) {
+		if (type.equals(EquipmentType.MUFF)) {
 			g.fill3DRect(coord - 1, 6, 2, 8, true);
 			((Graphics2D) g).setStroke(ScaledGraphPanel.DASHED_STROKE);
 			g.drawLine(coord, 6, coord, getHeight());
