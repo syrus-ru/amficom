@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryMeasurementSetup.java,v 1.2.2.3 2006/04/05 14:03:22 arseniy Exp $
+ * $Id: ReflectometryMeasurementSetup.java,v 1.2.2.4 2006/04/05 14:11:47 arseniy Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,12 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.DataFormatException;
 
 /**
- * надстройка над MeasurementSetup для естественного представления
- * параметров, специфичных для рефлектометрии
+ * Надстройка над MeasurementSetup для естественного представления параметров,
+ * специфичных для рефлектометрии.
+ * 
  * @author $Author: arseniy $
  * @author saa
- * @version $Revision: 1.2.2.3 $, $Date: 2006/04/05 14:03:22 $
+ * @version $Revision: 1.2.2.4 $, $Date: 2006/04/05 14:11:47 $
  * @module
  */
 public class ReflectometryMeasurementSetup {
