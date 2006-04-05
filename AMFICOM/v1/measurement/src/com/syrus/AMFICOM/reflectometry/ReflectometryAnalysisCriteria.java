@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryAnalysisCriteria.java,v 1.1.2.3 2006/04/05 12:00:14 arseniy Exp $
+ * $Id: ReflectometryAnalysisCriteria.java,v 1.1.2.4 2006/04/05 14:02:34 arseniy Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,6 @@ package com.syrus.AMFICOM.reflectometry;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.ActionParameter;
 import com.syrus.AMFICOM.measurement.ActionTemplate;
 import com.syrus.AMFICOM.measurement.Analysis;
@@ -30,7 +28,7 @@ import com.syrus.util.Log;
  * <p>
  * @author saa
  * @author $Author: arseniy $
- * @version $Revision: 1.1.2.3 $, $Date: 2006/04/05 12:00:14 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/04/05 14:02:34 $
  * @module
  */
 public class ReflectometryAnalysisCriteria implements ReflectometryEtalon {
@@ -39,9 +37,17 @@ public class ReflectometryAnalysisCriteria implements ReflectometryEtalon {
 	private byte[] dadaraEtalon;
 	private byte[] reflectogrammaEtalon;
 
-	ReflectometryAnalysisCriteria(final Identifier analysisTemplateId) throws DataFormatException, ApplicationException {
-		this.analysisTemplate = StorableObjectPool.getStorableObject(analysisTemplateId, true);
-		unpack();
+	/**
+	 * @param analysisTemplate
+	 *        Шаблон для анализа.
+	 * @throws DataFormatException
+	 *         Неправильный формат входных данных.
+	 * @throws ApplicationException
+	 *         Ошибки при доставании из пула.
+	 */
+	ReflectometryAnalysisCriteria(final ActionTemplate<Analysis> analysisTemplate) throws DataFormatException, ApplicationException {
+		this.analysisTemplate = analysisTemplate;
+		this.unpack();
 	}
 
 	private void unpack() throws DataFormatException, ApplicationException {

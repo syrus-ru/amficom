@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryMeasurementParametersImpl.java,v 1.4.2.4 2006/04/05 13:46:58 saa Exp $
+ * $Id: ReflectometryMeasurementParametersImpl.java,v 1.4.2.5 2006/04/05 14:02:34 arseniy Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.ActionParameter;
 import com.syrus.AMFICOM.measurement.ActionTemplate;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -28,8 +26,8 @@ import com.syrus.util.Log;
  * На данный момент modifier-методы не поддерживаются.
  * </p>
  * @author saa
- * @author $Author: saa $
- * @version $Revision: 1.4.2.4 $, $Date: 2006/04/05 13:46:58 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4.2.5 $, $Date: 2006/04/05 14:02:34 $
  * @module
  */
 public final class ReflectometryMeasurementParametersImpl
@@ -48,15 +46,19 @@ implements ReflectometryMeasurementParameters {
 
 	/**
 	 * Этот конструктор предназначен для использования в
-	 * {@link ReflectometryMeasurementSetup}, а не для непосредственного вызова.
-	 * FIXME: принимать на входе ActionTemplate&lt;Measurement&gt;
-	 * @param measurementTemplateId Должен быть шаблоном для измерений.
-	 * @throws DataFormatException Неправильный формат входных данных
+	 * {@link ReflectometryMeasurementSetup}, а не для непосредственного
+	 * вызова.
+	 * 
+	 * @param measurementTemplate
+	 *        Шаблон для измерений.
+	 * @throws DataFormatException
+	 *         Неправильный формат входных данных.
+	 * @throws ApplicationException
+	 *         Ошибки при доставании из пула.
 	 */
-	ReflectometryMeasurementParametersImpl(final Identifier measurementTemplateId)
+	ReflectometryMeasurementParametersImpl(final ActionTemplate<Measurement> measurementTemplate)
 	throws DataFormatException, ApplicationException {
-		this.measurementTemplate = StorableObjectPool.getStorableObject(
-				measurementTemplateId, true);
+		this.measurementTemplate = measurementTemplate;
 		this.unpack();
 	}
 
