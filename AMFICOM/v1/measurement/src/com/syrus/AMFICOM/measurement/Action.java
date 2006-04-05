@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.43.2.9 2006/03/17 11:54:48 arseniy Exp $
+ * $Id: Action.java,v 1.43.2.10 2006/04/05 07:40:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,26 +7,31 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.corba.IdlAction;
 import com.syrus.AMFICOM.measurement.corba.IdlActionStatus;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43.2.9 $, $Date: 2006/03/17 11:54:48 $
+ * @version $Revision: 1.43.2.10 $, $Date: 2006/04/05 07:40:03 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -69,7 +74,7 @@ public abstract class Action<R extends ActionResultParameter> extends StorableOb
 	private ActionStatus status;
 
 	private transient String typeCodename;
-	transient LinkedIdsCondition actionResultParametersCondition;
+	private transient LinkedIdsCondition actionResultParametersCondition;
 
 	Action(final Identifier id,
 			final Identifier creatorId,
@@ -185,6 +190,26 @@ public abstract class Action<R extends ActionResultParameter> extends StorableOb
 		return this.typeCodename;
 	}
 
+	public ActionResultParameter getActionResultParameter(final ParameterType parameterType) throws ApplicationException {
+		assert parameterType != null : NON_NULL_EXPECTED;
+
+		this.ensureActionResultParametersConditionIsCreated();
+		final CompoundCondition condition = new CompoundCondition(this.actionResultParametersCondition,
+				AND,
+				new LinkedIdsCondition(parameterType, this.getResultParameterEntityCode()));
+
+		final Set<ActionResultParameter> actionResultParameters = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		if (actionResultParameters.isEmpty()) {
+			return null;
+		}
+		if (actionResultParameters.size() > 1) {
+			Log.errorMessage("Action '"
+					+ this.id + "' has more, than 1 ActionResultParameter of type '" + parameterType.getCodename() + "': "
+					+ actionResultParameters);
+		}
+		return actionResultParameters.iterator().next();
+	}
+
 	public final Set<Identifier> getActionResultParameterIds() throws ApplicationException {
 		this.ensureActionResultParametersConditionIsCreated();
 		return StorableObjectPool.getIdentifiersByCondition(this.actionResultParametersCondition, true);
@@ -195,7 +220,13 @@ public abstract class Action<R extends ActionResultParameter> extends StorableOb
 		return StorableObjectPool.getStorableObjectsByCondition(this.actionResultParametersCondition, true);
 	}
 
-	abstract void ensureActionResultParametersConditionIsCreated();
+	private void ensureActionResultParametersConditionIsCreated() {
+		if (this.actionResultParametersCondition == null) {
+			this.actionResultParametersCondition = new LinkedIdsCondition(super.id, this.getResultParameterEntityCode());
+		}
+	}
+
+	abstract short getResultParameterEntityCode();
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
