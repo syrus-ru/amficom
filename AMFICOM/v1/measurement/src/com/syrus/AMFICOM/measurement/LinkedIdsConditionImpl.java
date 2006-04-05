@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.71.2.8 2006/03/24 08:56:16 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.71.2.9 2006/04/05 12:00:14 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71.2.8 $, $Date: 2006/03/24 08:56:16 $
+ * @version $Revision: 1.71.2.9 $, $Date: 2006/04/05 12:00:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -193,7 +193,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				}
 				break;
 			case ACTIONTEMPLATE_CODE:
-				final ActionTemplate actionTemplate = (ActionTemplate) storableObject;
+				final ActionTemplate<?> actionTemplate = (ActionTemplate) storableObject;
 				switch (this.linkedEntityCode) {
 					case MONITOREDELEMENT_CODE:
 						condition = super.conditionTest(actionTemplate.getMonitoredElementIds());

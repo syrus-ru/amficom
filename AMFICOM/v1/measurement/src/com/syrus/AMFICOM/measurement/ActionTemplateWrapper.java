@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplateWrapper.java,v 1.1.2.4 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: ActionTemplateWrapper.java,v 1.1.2.5 2006/04/05 12:00:14 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,12 +16,12 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/04/05 12:00:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class ActionTemplateWrapper extends StorableObjectWrapper<ActionTemplate> {
+public final class ActionTemplateWrapper extends StorableObjectWrapper<ActionTemplate<Action>> {
 	public static final String COLUMN_APPROXIMATE_ACTION_DURATION = "approximate_action_duration";
 	public static final String LINK_COLUMN_ACTION_TEMPLATE_ID = "action_template_id";
 	public static final String LINK_COLUMN_ACTION_PARAMETER_ID = "action_parameter_id";
@@ -55,7 +55,7 @@ public final class ActionTemplateWrapper extends StorableObjectWrapper<ActionTem
 	}
 
 	@Override
-	public Object getValue(final ActionTemplate object, final String key) {
+	public Object getValue(final ActionTemplate<Action> object, final String key) {
 		final Object value = super.getValue(object, key);
 		if (value == null && object != null) {
 			if (key.equals(COLUMN_DESCRIPTION)) {

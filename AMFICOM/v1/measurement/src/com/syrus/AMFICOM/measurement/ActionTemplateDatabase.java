@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplateDatabase.java,v 1.1.2.4 2006/02/28 15:20:05 arseniy Exp $
+ * $Id: ActionTemplateDatabase.java,v 1.1.2.5 2006/04/05 12:00:14 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,12 +42,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2006/02/28 15:20:05 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/04/05 12:00:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionTemplate> {
+public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionTemplate<Action>> {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -75,14 +75,14 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final ActionTemplate storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(final ActionTemplate<Action> storableObject) throws IllegalDataException {
 		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ Long.toString(storableObject.getApproximateActionDuration());
 		return sql;
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final ActionTemplate storableObject,
+	protected int setEntityForPreparedStatementTmpl(final ActionTemplate<Action> storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
@@ -91,12 +91,12 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 	}
 
 	@Override
-	protected ActionTemplate updateEntityFromResultSet(final ActionTemplate storableObject, final ResultSet resultSet)
+	protected ActionTemplate<Action> updateEntityFromResultSet(final ActionTemplate<Action> storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
 				RetrieveObjectException,
 				SQLException {
-		final ActionTemplate actionTemplate = (storableObject == null)
-				? new ActionTemplate(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+		final ActionTemplate<Action> actionTemplate = (storableObject == null)
+				? new ActionTemplate<Action>(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						null,
 						ILLEGAL_VERSION,
 						null,
@@ -115,15 +115,15 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 	}
 
 	@Override
-	protected Set<ActionTemplate> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		final Set<ActionTemplate> actionTemplates = super.retrieveByCondition(conditionQuery);
+	protected Set<ActionTemplate<Action>> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set<ActionTemplate<Action>> actionTemplates = super.retrieveByCondition(conditionQuery);
 
 		this.retrieveLinkedIds(actionTemplates);
 
 		return actionTemplates;
 	}
 
-	private void retrieveLinkedIds(final Set<ActionTemplate> actionTemplates) throws RetrieveObjectException {
+	private void retrieveLinkedIds(final Set<ActionTemplate<Action>> actionTemplates) throws RetrieveObjectException {
 		if (actionTemplates == null || actionTemplates.isEmpty()) {
 			return;
 		}
@@ -136,7 +136,7 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 				ACTMPL_ME_LINK,
 				LINK_COLUMN_ACTION_TEMPLATE_ID,
 				LINK_COLUMN_MONITORED_ELEMENT_ID);
-		for (final ActionTemplate actionTemplate : actionTemplates) {
+		for (final ActionTemplate<Action> actionTemplate : actionTemplates) {
 			final Identifier actionTemplateId = actionTemplate.getId();
 
 			final Set<Identifier> actionParameterIds = apIdsMap.get(actionTemplateId);
@@ -148,7 +148,7 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 	}
 
 	@Override
-	protected void insert(final Set<ActionTemplate> actionTemplates) throws IllegalDataException, CreateObjectException {
+	protected void insert(final Set<ActionTemplate<Action>> actionTemplates) throws IllegalDataException, CreateObjectException {
 		super.insert(actionTemplates);
 
 		final Map<Identifier, Set<Identifier>> actionParameterIdsMap = this.createActionParameterIdsMap(actionTemplates);
@@ -165,7 +165,7 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 	}
 
 	@Override
-	protected void update(final Set<ActionTemplate> actionTemplates) throws UpdateObjectException {
+	protected void update(final Set<ActionTemplate<Action>> actionTemplates) throws UpdateObjectException {
 		super.update(actionTemplates);
 
 		final Map<Identifier, Set<Identifier>> actionParameterIdsMap = this.createActionParameterIdsMap(actionTemplates);
@@ -181,17 +181,17 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 				LINK_COLUMN_MONITORED_ELEMENT_ID);
 	}
 
-	private Map<Identifier, Set<Identifier>> createActionParameterIdsMap(final Set<ActionTemplate> actionTemplates) {
+	private Map<Identifier, Set<Identifier>> createActionParameterIdsMap(final Set<ActionTemplate<Action>> actionTemplates) {
 		final Map<Identifier, Set<Identifier>> actionParameterIdsMap = new HashMap<Identifier, Set<Identifier>>();
-		for (final ActionTemplate actionTemplate : actionTemplates) {
+		for (final ActionTemplate<Action> actionTemplate : actionTemplates) {
 			actionParameterIdsMap.put(actionTemplate.getId(), actionTemplate.getActionParameterIds());
 		}
 		return actionParameterIdsMap;
 	}
 
-	private Map<Identifier, Set<Identifier>> createMonitoredElementIdsMap(final Set<ActionTemplate> actionTemplates) {
+	private Map<Identifier, Set<Identifier>> createMonitoredElementIdsMap(final Set<ActionTemplate<Action>> actionTemplates) {
 		final Map<Identifier, Set<Identifier>> monitoredElementIdsMap = new HashMap<Identifier, Set<Identifier>>();
-		for (final ActionTemplate actionTemplate : actionTemplates) {
+		for (final ActionTemplate<Action> actionTemplate : actionTemplates) {
 			monitoredElementIdsMap.put(actionTemplate.getId(), actionTemplate.getMonitoredElementIds());
 		}
 		return monitoredElementIdsMap;

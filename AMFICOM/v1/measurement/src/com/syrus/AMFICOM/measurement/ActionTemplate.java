@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplate.java,v 1.1.2.11 2006/03/28 08:48:16 arseniy Exp $
+ * $Id: ActionTemplate.java,v 1.1.2.12 2006/04/05 12:00:14 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,12 +45,12 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * каждая измеряемая линия имеет свой набор шаблонов, по которым на ней можно
  * проводить данное действие.
  * 
- * @version $Revision: 1.1.2.11 $, $Date: 2006/03/28 08:48:16 $
+ * @version $Revision: 1.1.2.12 $, $Date: 2006/04/05 12:00:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class ActionTemplate extends StorableObject implements IdlTransferableObjectExt<IdlActionTemplate> {
+public final class ActionTemplate<T extends Action> extends StorableObject implements IdlTransferableObjectExt<IdlActionTemplate> {
 	private static final long serialVersionUID = 725853453958152504L;
 
 	/**
@@ -116,7 +116,7 @@ public final class ActionTemplate extends StorableObject implements IdlTransfera
 	 * @return Новый экземпляр.
 	 * @throws CreateObjectException
 	 */
-	public static ActionTemplate createInstance(final Identifier creatorId,
+	public static <TT extends Action> ActionTemplate<TT> createInstance(final Identifier creatorId,
 			final String description,
 			final long approximateActionDuration,
 			final Set<Identifier> actionParameterIds,
@@ -129,7 +129,7 @@ public final class ActionTemplate extends StorableObject implements IdlTransfera
 		}
 
 		try {
-			final ActionTemplate actionTemplate = new ActionTemplate(IdentifierPool.getGeneratedIdentifier(ACTIONTEMPLATE_CODE),
+			final ActionTemplate<TT> actionTemplate = new ActionTemplate<TT>(IdentifierPool.getGeneratedIdentifier(ACTIONTEMPLATE_CODE),
 					creatorId,
 					INITIAL_VERSION,
 					description,

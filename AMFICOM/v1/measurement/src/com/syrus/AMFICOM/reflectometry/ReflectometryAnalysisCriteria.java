@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryAnalysisCriteria.java,v 1.1.2.2 2006/02/22 08:51:27 arseniy Exp $
+ * $Id: ReflectometryAnalysisCriteria.java,v 1.1.2.3 2006/04/05 12:00:14 arseniy Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.ActionParameter;
 import com.syrus.AMFICOM.measurement.ActionTemplate;
+import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
@@ -29,11 +30,11 @@ import com.syrus.util.Log;
  * <p>
  * @author saa
  * @author $Author: arseniy $
- * @version $Revision: 1.1.2.2 $, $Date: 2006/02/22 08:51:27 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/04/05 12:00:14 $
  * @module
  */
 public class ReflectometryAnalysisCriteria implements ReflectometryEtalon {
-	private ActionTemplate analysisTemplate;
+	private ActionTemplate<Analysis> analysisTemplate;
 	private byte[] dadaraCriteria;
 	private byte[] dadaraEtalon;
 	private byte[] reflectogrammaEtalon;

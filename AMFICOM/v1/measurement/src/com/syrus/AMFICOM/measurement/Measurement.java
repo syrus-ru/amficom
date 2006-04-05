@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.101.2.10 2006/04/05 09:24:37 arseniy Exp $
+ * $Id: Measurement.java,v 1.101.2.11 2006/04/05 12:00:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.101.2.10 $, $Date: 2006/04/05 09:24:37 $
+ * @version $Revision: 1.101.2.11 $, $Date: 2006/04/05 12:00:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -220,6 +220,11 @@ public final class Measurement extends Action<MeasurementResultParameter> implem
 	@Override
 	short getResultParameterEntityCode() {
 		return MEASUREMENTRESULTPARAMETER_CODE;
+	}
+
+	@Override
+	public ActionTemplate<Measurement> getActionTemplate() throws ApplicationException {
+		return super.getActionTemplate0();
 	}
 
 	/**

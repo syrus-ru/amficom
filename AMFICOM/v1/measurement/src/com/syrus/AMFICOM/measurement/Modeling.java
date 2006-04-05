@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.68.2.9 2006/04/05 07:41:21 arseniy Exp $
+ * $Id: Modeling.java,v 1.68.2.10 2006/04/05 12:00:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import java.util.Date;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -29,7 +30,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.68.2.9 $, $Date: 2006/04/05 07:41:21 $
+ * @version $Revision: 1.68.2.10 $, $Date: 2006/04/05 12:00:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -134,6 +135,11 @@ public final class Modeling extends Action<ModelingResultParameter> implements I
 	@Override
 	short getResultParameterEntityCode() {
 		return MODELINGRESULTPARAMETER_CODE;
+	}
+
+	@Override
+	public ActionTemplate<Modeling> getActionTemplate() throws ApplicationException {
+		return super.getActionTemplate0();
 	}
 
 	/**

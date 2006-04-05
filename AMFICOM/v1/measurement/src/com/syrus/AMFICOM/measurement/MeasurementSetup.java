@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementSetup.java,v 1.100.2.10 2006/03/28 08:48:16 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.100.2.11 2006/04/05 12:00:14 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * привязан лишь к тем линиям, к которым привязан каждый из составляющих его
  * шаблонов действия.
  * 
- * @version $Revision: 1.100.2.10 $, $Date: 2006/03/28 08:48:16 $
+ * @version $Revision: 1.100.2.11 $, $Date: 2006/04/05 12:00:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -205,7 +205,7 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 	 * @return Шаблон измерения
 	 * @throws ApplicationException
 	 */
-	public ActionTemplate getMeasurementTemplate() throws ApplicationException {
+	public ActionTemplate<Measurement> getMeasurementTemplate() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.measurementTemplateId, true);
 	}
 
@@ -234,7 +234,7 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 	 * @return
 	 * @throws ApplicationException
 	 */
-	public ActionTemplate getAnalysisTemplate() throws ApplicationException {
+	public ActionTemplate<Analysis> getAnalysisTemplate() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.analysisTemplateId, true);
 	}
 
@@ -328,12 +328,12 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 			}
 		}
 		try {
-			final Set<ActionTemplate> actionTemplates = StorableObjectPool.getStorableObjects(this.actionTemplateIds, true);
+			final Set<ActionTemplate<? extends Action>> actionTemplates = StorableObjectPool.getStorableObjects(this.actionTemplateIds, true);
 			if (actionTemplates.size() < this.actionTemplateIds.size()) {
 				Log.errorMessage("Cannot load all action templates for measurement setup '" + this.id + "'; loaded: " + actionTemplates);
 				return false;
 			}
-			for (final ActionTemplate actionTemplate : actionTemplates) {
+			for (final ActionTemplate<? extends Action> actionTemplate : actionTemplates) {
 				final Set<Identifier> actionTemplateMEIds = actionTemplate.getMonitoredElementIds();
 				if (!actionTemplateMEIds.containsAll(this.monitoredElementIds)) {
 					Log.errorMessage("Action template '"

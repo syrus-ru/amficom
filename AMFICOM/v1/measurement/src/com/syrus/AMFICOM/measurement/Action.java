@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.43.2.12 2006/04/05 10:44:36 arseniy Exp $
+ * $Id: Action.java,v 1.43.2.13 2006/04/05 12:00:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43.2.12 $, $Date: 2006/04/05 10:44:36 $
+ * @version $Revision: 1.43.2.13 $, $Date: 2006/04/05 12:00:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -157,7 +157,9 @@ public abstract class Action<R extends ActionResultParameter> extends StorableOb
 		return this.actionTemplateId;
 	}
 
-	public final ActionTemplate getActionTemplate() throws ApplicationException {
+	public abstract ActionTemplate getActionTemplate() throws ApplicationException;
+
+	protected final <T extends Action> ActionTemplate<T> getActionTemplate0() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.actionTemplateId, true);
 	}
 
