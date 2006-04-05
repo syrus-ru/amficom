@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.43.2.11 2006/04/05 10:43:28 arseniy Exp $
+ * $Id: Action.java,v 1.43.2.12 2006/04/05 10:44:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43.2.11 $, $Date: 2006/04/05 10:43:28 $
+ * @version $Revision: 1.43.2.12 $, $Date: 2006/04/05 10:44:36 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -190,7 +190,7 @@ public abstract class Action<R extends ActionResultParameter> extends StorableOb
 		return this.typeCodename;
 	}
 
-	public R getActionResultParameter(final ParameterType parameterType) throws ApplicationException {
+	public final R getActionResultParameter(final ParameterType parameterType) throws ApplicationException {
 		assert parameterType != null : NON_NULL_EXPECTED;
 
 		this.ensureActionResultParametersConditionIsCreated();
