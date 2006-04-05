@@ -38,6 +38,7 @@ AMFICOM_v1	&tools\
 		&mapclient \
 		&analysis \
 		&modeling \
+		&prediction \
 		&event \
 		&measurement \
 		&scheme \
