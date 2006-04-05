@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.110.4.4 2006/04/04 14:13:03 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.110.4.5 2006/04/05 09:45:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,6 +49,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.util.Codename;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 import com.syrus.util.transport.idl.IdlConversionException;
@@ -57,7 +58,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.110.4.4 $, $Date: 2006/04/04 14:13:03 $
+ * @version $Revision: 1.110.4.5 $, $Date: 2006/04/05 09:45:16 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -334,6 +335,11 @@ public final class EquipmentType extends StorableObjectType implements Namable, 
 
 		assert equipmentTypeIds.size() == 1 : ONLY_ONE_EXPECTED;
 		return equipmentTypeIds.iterator().next();
+	}
+
+	public static EquipmentType valueOf(final Codename codename) throws ApplicationException {
+		assert codename != null : NON_NULL_EXPECTED;
+		return valueOf(codename.stringValue());
 	}
 
 	public static EquipmentType valueOf(final String codename) throws ApplicationException {
