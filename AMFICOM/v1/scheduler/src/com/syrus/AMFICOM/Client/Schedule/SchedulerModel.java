@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.189 2006/04/05 06:46:20 saa Exp $
+ * $Id: SchedulerModel.java,v 1.190 2006/04/05 08:05:33 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.189 $, $Date: 2006/04/05 06:46:20 $
+ * @version $Revision: 1.190 $, $Date: 2006/04/05 08:05:33 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -106,6 +106,13 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	public static final String	COMMAND_SET_TEMPORAL_STAMPS			= "SetTestTemporalStamps";
 
 	public static final String	COMMAND_ADD_TEST					= "AddTest";
+	/**
+	 * Событие "Обновился выделенный тест".
+	 * source используется не совсем понятным образом,
+	 * oldValue и newValue не используются.
+	 * Событие генерируется в {@link SchedulerModel}
+	 * и (на 2006-04-04) в TimeParametersPanel при изменении названия теста.
+	 */
 	public static final String	COMMAND_REFRESH_TEST				= "RefreshTest";
 	public static final String	COMMAND_REFRESH_TESTS				= "RefreshTests";
 	public static final String	COMMAND_REMOVE_TEST					= "RemoveTest";
@@ -773,6 +780,13 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		}
 	}
 
+	/**
+	 * Добавляет id данного теста в список выделенных тестов.
+	 * (Если этот id уже есть в этом списке, ничего не делает).
+	 * Никаких оповещений через dispatcher не производит.
+	 * 
+	 * @param selectedTest данный тест
+	 */
 	private void addSelectedSingleTest(final Test selectedTest) {
 		final Identifier selectedTestId = selectedTest.getId();
 		if (!this.selectedTestIds.contains(selectedTestId)) {
