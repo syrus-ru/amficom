@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.68.2.8 2006/03/17 11:54:48 arseniy Exp $
+ * $Id: Modeling.java,v 1.68.2.9 2006/04/05 07:41:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.corba.IdlModeling;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingHelper;
@@ -30,7 +29,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.68.2.8 $, $Date: 2006/03/17 11:54:48 $
+ * @version $Revision: 1.68.2.9 $, $Date: 2006/04/05 07:41:21 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -133,10 +132,8 @@ public final class Modeling extends Action<ModelingResultParameter> implements I
 	}
 
 	@Override
-	void ensureActionResultParametersConditionIsCreated() {
-		if (super.actionResultParametersCondition == null) {
-			super.actionResultParametersCondition = new LinkedIdsCondition(this.id, MODELINGRESULTPARAMETER_CODE);
-		}
+	short getResultParameterEntityCode() {
+		return MODELINGRESULTPARAMETER_CODE;
 	}
 
 	/**
