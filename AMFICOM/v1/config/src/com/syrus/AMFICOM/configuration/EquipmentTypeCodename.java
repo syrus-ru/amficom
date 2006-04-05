@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeCodename.java,v 1.3.4.1 2006/04/04 09:16:53 arseniy Exp $
+ * $Id: EquipmentTypeCodename.java,v 1.3.4.2 2006/04/05 09:44:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,15 @@
 package com.syrus.AMFICOM.configuration;
 
 import com.syrus.AMFICOM.bugs.Crutch136;
+import com.syrus.util.Codename;
 
 /**
- * @version $Revision: 1.3.4.1 $, $Date: 2006/04/04 09:16:53 $
+ * @version $Revision: 1.3.4.2 $, $Date: 2006/04/05 09:44:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
-public enum EquipmentTypeCodename {
+public enum EquipmentTypeCodename implements Codename {
 	REFLECTOMETER("reflectometer"),
 	OPTICAL_SWITCH("optical_switch"),
 	MUFF("muff"),
