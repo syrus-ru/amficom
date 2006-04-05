@@ -65,7 +65,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.109 $, $Date: 2006/04/04 13:19:36 $
+ * @version $Revision: 1.110 $, $Date: 2006/04/05 06:04:36 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -929,9 +929,9 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 									this.measurementSetup.getMeasurementDuration(),
 									this.measurementSetup.getMonitoredElementIds(),
 									this.measurementSetup.getMeasurementTypes());
-									this.skip = true;
-									this.testParametersPanel.setMeasurementSetup(measurementSetup1);
-									this.skip = false;
+								this.skip = true;
+								this.testParametersPanel.setMeasurementSetup(measurementSetup1);
+								this.skip = false;
 								this.measurementSetup = measurementSetup1;
 							} catch (final CreateObjectException e) {
 								AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.CannotCreateMeasurementSetup"));
