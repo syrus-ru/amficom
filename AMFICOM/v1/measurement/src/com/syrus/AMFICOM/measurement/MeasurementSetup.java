@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementSetup.java,v 1.100.2.11 2006/04/05 12:00:14 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.100.2.12 2006/04/05 14:01:23 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * привязан лишь к тем линиям, к которым привязан каждый из составляющих его
  * шаблонов действия.
  * 
- * @version $Revision: 1.100.2.11 $, $Date: 2006/04/05 12:00:14 $
+ * @version $Revision: 1.100.2.12 $, $Date: 2006/04/05 14:01:23 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -231,10 +231,13 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 	/**
 	 * Получить шаблон анализа. Обёртка над {@link #getAnalysisTemplateId()}.
 	 * 
-	 * @return
+	 * @return Шаблон анализа, если есть. Иначе - <code>null</code>.
 	 * @throws ApplicationException
 	 */
 	public ActionTemplate<Analysis> getAnalysisTemplate() throws ApplicationException {
+		if (this.analysisTemplateId.isVoid()) {
+			return null;
+		}
 		return StorableObjectPool.getStorableObject(this.analysisTemplateId, true);
 	}
 
