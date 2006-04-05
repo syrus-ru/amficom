@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.101.2.9 2006/04/05 07:41:47 arseniy Exp $
+ * $Id: Measurement.java,v 1.101.2.10 2006/04/05 09:24:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.101.2.9 $, $Date: 2006/04/05 07:41:47 $
+ * @version $Revision: 1.101.2.10 $, $Date: 2006/04/05 09:24:37 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -190,7 +190,7 @@ public final class Measurement extends Action<MeasurementResultParameter> implem
 	 * Этот метод написан в предположении, что у измерения не может быть больше
 	 * одного анализа. Если нет ни одного анализа - возвращает <code>null</code>.
 	 * Если есть один - возвращает его. Если есть более одного - возвращает
-	 * первий попавшийся и выдаёт сообщение.
+	 * первый попавшийся и выдаёт сообщение.
 	 * 
 	 * @return Анализ для данного измерения.
 	 * @throws ApplicationException
