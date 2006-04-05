@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.43.2.10 2006/04/05 07:40:03 arseniy Exp $
+ * $Id: Action.java,v 1.43.2.11 2006/04/05 10:43:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43.2.10 $, $Date: 2006/04/05 07:40:03 $
+ * @version $Revision: 1.43.2.11 $, $Date: 2006/04/05 10:43:28 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -190,7 +190,7 @@ public abstract class Action<R extends ActionResultParameter> extends StorableOb
 		return this.typeCodename;
 	}
 
-	public ActionResultParameter getActionResultParameter(final ParameterType parameterType) throws ApplicationException {
+	public R getActionResultParameter(final ParameterType parameterType) throws ApplicationException {
 		assert parameterType != null : NON_NULL_EXPECTED;
 
 		this.ensureActionResultParametersConditionIsCreated();
@@ -198,7 +198,7 @@ public abstract class Action<R extends ActionResultParameter> extends StorableOb
 				AND,
 				new LinkedIdsCondition(parameterType, this.getResultParameterEntityCode()));
 
-		final Set<ActionResultParameter> actionResultParameters = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		final Set<R> actionResultParameters = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		if (actionResultParameters.isEmpty()) {
 			return null;
 		}
