@@ -30,18 +30,17 @@ import com.syrus.AMFICOM.measurement.Test;
  * @author ???
  * @author Vladimir Dolzhenko
  */
-
 final class TestRequestPanel extends JPanel implements PropertyChangeListener {
 
 	private static final long	serialVersionUID	= 3834032471820939824L;
 
 	JTextField					nameTextField;
 
-	private JTextField				ownerTextField;
+	private JTextField			ownerTextField;
 
-	private JTextField				typeTextField;
+	private JTextField			typeTextField;
 
-	private JTextField				portTextField;
+	private JTextField			portTextField;
 
 	SchedulerModel				schedulerModel;
 
@@ -58,6 +57,7 @@ final class TestRequestPanel extends JPanel implements PropertyChangeListener {
 		final JPanel panel = new JPanel(new GridLayout(0, 2));
 		final JLabel titleLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.Title") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(titleLabel);
+
 		this.nameTextField = new JTextField();
 		panel.add(this.nameTextField);
 		this.nameTextField.setEditable(true);
@@ -70,16 +70,17 @@ final class TestRequestPanel extends JPanel implements PropertyChangeListener {
 					selectedTest = TestRequestPanel.this.schedulerModel.getSelectedTest();
 				} catch (final ApplicationException e1) {
 					AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
-					return; 
+					return;
 				}
 				if (selectedTest != null && selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 					selectedTest.setDescription(textField.getText());
-					TestRequestPanel.this.dispatcher
-							.firePropertyChange(new PropertyChangeEvent(TestRequestPanel.this,
-																		SchedulerModel.COMMAND_REFRESH_TEST, null, null));
+					TestRequestPanel.this.dispatcher.firePropertyChange(
+							new PropertyChangeEvent(TestRequestPanel.this,
+									SchedulerModel.COMMAND_REFRESH_TEST, null, null));
 				}
 			}
 		});
+
 		final JLabel ownerLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.Owner") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(ownerLabel);
 		this.ownerTextField = new JTextField();
@@ -100,7 +101,6 @@ final class TestRequestPanel extends JPanel implements PropertyChangeListener {
 		panel.add(this.typeTextField);
 
 		this.add(Box.createVerticalGlue());
-
 	}
 
 	public void propertyChange(final PropertyChangeEvent evt) {
@@ -113,8 +113,10 @@ final class TestRequestPanel extends JPanel implements PropertyChangeListener {
 				return;
 			}
 		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_NAME)) {
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_NAME, null,
-																		TestRequestPanel.this.nameTextField.getText()));
+			this.dispatcher.firePropertyChange(
+					new PropertyChangeEvent(
+							this, SchedulerModel.COMMAND_SET_NAME, null,
+							TestRequestPanel.this.nameTextField.getText()));
 		}
 
 	}
