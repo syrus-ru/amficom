@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.101.2.8 2006/03/17 11:54:48 arseniy Exp $
+ * $Id: Measurement.java,v 1.101.2.9 2006/04/05 07:41:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTRESULTPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
@@ -27,15 +29,17 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurement;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementHelper;
+import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.101.2.8 $, $Date: 2006/03/17 11:54:48 $
+ * @version $Revision: 1.101.2.9 $, $Date: 2006/04/05 07:41:47 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -45,6 +49,8 @@ public final class Measurement extends Action<MeasurementResultParameter> implem
 	private static final long serialVersionUID = -1217428566443489958L;
 
 	private Identifier testId;
+
+	private transient Identifier analysisId = VOID_IDENTIFIER;
 
 	Measurement(final Identifier id,
 			final Identifier creatorId,
@@ -147,11 +153,73 @@ public final class Measurement extends Action<MeasurementResultParameter> implem
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
-	@Override
-	void ensureActionResultParametersConditionIsCreated() {
-		if (super.actionResultParametersCondition == null) {
-			super.actionResultParametersCondition = new LinkedIdsCondition(this.id, MEASUREMENTRESULTPARAMETER_CODE);
+	public Identifier getTestId() {
+		return this.testId;
+	}
+
+	public Test getTest() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.testId, true);
+	}
+
+	/**
+	 * Этот метод написан в предположении, что у измерения не может быть больше
+	 * одного анализа. Если нет ни одного анализа - возвращает <code>null</code>.
+	 * Если есть один - возвращает его идентификатор. Если есть более одного -
+	 * возвращает идентификатор первого попавшегося и выдаёт сообщение.
+	 * 
+	 * @return Идентификатор анализа для данного измерения.
+	 * @throws ApplicationException
+	 */
+	public Identifier getAnalysisId() throws ApplicationException {
+		if (this.analysisId.isVoid()) {
+			final StorableObjectCondition condition = new LinkedIdsCondition(this.id, ANALYSIS_CODE);
+			final Set<Identifier> analysisIds = StorableObjectPool.getIdentifiersByCondition(condition, true);
+			if (analysisIds.isEmpty()) {
+				this.analysisId = null;
+			} else {
+				if (analysisIds.size() > 1) {
+					Log.errorMessage("Measurement '" + this.id + "' has more, than 1 analysis: " + analysisIds);
+				}
+				this.analysisId = analysisIds.iterator().next();
+			}
 		}
+		return this.analysisId;
+	}
+
+	/**
+	 * Этот метод написан в предположении, что у измерения не может быть больше
+	 * одного анализа. Если нет ни одного анализа - возвращает <code>null</code>.
+	 * Если есть один - возвращает его. Если есть более одного - возвращает
+	 * первий попавшийся и выдаёт сообщение.
+	 * 
+	 * @return Анализ для данного измерения.
+	 * @throws ApplicationException
+	 */
+	public Analysis getAnalysis() throws ApplicationException {
+		if (this.analysisId.isVoid()) {
+			final StorableObjectCondition condition = new LinkedIdsCondition(this.id, ANALYSIS_CODE);
+			final Set<Analysis> analyses = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (analyses.isEmpty()) {
+				this.analysisId = null;
+				return null;
+			}
+			if (analyses.size() > 1) {
+				Log.errorMessage("Measurement '" + this.id + "' has more, than 1 analysis: " + analyses);
+			}
+			final Analysis analysis = analyses.iterator().next();
+			this.analysisId = analysis.getId();
+			return analysis;
+		}
+
+		if (this.analysisId == null) {
+			return null;
+		}
+		return StorableObjectPool.getStorableObject(this.analysisId, true);
+	}
+
+	@Override
+	short getResultParameterEntityCode() {
+		return MEASUREMENTRESULTPARAMETER_CODE;
 	}
 
 	/**
@@ -193,14 +261,6 @@ public final class Measurement extends Action<MeasurementResultParameter> implem
 		return super.isValid()
 				&& this.getTypeId().getMajor() == MEASUREMENT_TYPE_CODE
 				&& this.testId != null && this.testId.getMajor() == TEST_CODE;
-	}
-
-	public Identifier getTestId() {
-		return this.testId;
-	}
-
-	public Test getTest() throws ApplicationException {
-		return StorableObjectPool.getStorableObject(this.testId, true);
 	}
 
 	/**
