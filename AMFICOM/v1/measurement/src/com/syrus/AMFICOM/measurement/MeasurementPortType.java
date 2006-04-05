@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.21.2.6 2006/03/17 11:54:48 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.21.2.7 2006/04/05 09:45:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,11 +37,12 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortTypeHelper;
+import com.syrus.util.Codename;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.21.2.6 $, $Date: 2006/03/17 11:54:48 $
+ * @version $Revision: 1.21.2.7 $, $Date: 2006/04/05 09:45:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -174,6 +175,11 @@ public final class MeasurementPortType extends StorableObjectType
 	@Override
 	protected MeasurementPortTypeWrapper getWrapper() {
 		return MeasurementPortTypeWrapper.getInstance();
+	}
+
+	public static MeasurementPortType valueOf(final Codename codename) throws ApplicationException {
+		assert codename != null : NON_NULL_EXPECTED;
+		return valueOf(codename.stringValue());
 	}
 
 	public static MeasurementPortType valueOf(final String codename) throws ApplicationException {

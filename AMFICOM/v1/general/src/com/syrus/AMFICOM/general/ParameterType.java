@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.74.2.10 2006/03/27 14:52:24 arseniy Exp $
+ * $Id: ParameterType.java,v 1.74.2.11 2006/04/05 09:45:16 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.general.corba.IdlParameterTypeHelper;
+import com.syrus.util.Codename;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
@@ -39,7 +40,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * типов параметров для рефлектометрических измерений см. в
  * ReflectometryParameterTypeCodename.
  * 
- * @version $Revision: 1.74.2.10 $, $Date: 2006/03/27 14:52:24 $
+ * @version $Revision: 1.74.2.11 $, $Date: 2006/04/05 09:45:16 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -198,6 +199,21 @@ public final class ParameterType extends StorableObjectType implements IdlTransf
 	@Override
 	public ParameterTypeWrapper getWrapper() {
 		return ParameterTypeWrapper.getInstance();
+	}
+
+	/**
+	 * Найти тип параметра для заданного кодового имени.
+	 * 
+	 * @param codename
+	 *        Кодовое имя
+	 * @return Тип параметра, соответствующиий заданному кодовому имени.
+	 * @throws ApplicationException
+	 *         {@link CreateObjectException}, если такой объект не найден;
+	 *         {@link ApplicationException} в случае ошибки поиска.
+	 */
+	public static ParameterType valueOf(final Codename codename) throws ApplicationException {
+		assert codename != null : NON_NULL_EXPECTED;
+		return valueOf(codename.stringValue());
 	}
 
 	/**

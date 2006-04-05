@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingType.java,v 1.65.2.7 2006/03/17 11:54:48 arseniy Exp $
+ * $Id: ModelingType.java,v 1.65.2.8 2006/04/05 09:45:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,11 +31,12 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingTypeHelper;
+import com.syrus.util.Codename;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.65.2.7 $, $Date: 2006/03/17 11:54:48 $
+ * @version $Revision: 1.65.2.8 $, $Date: 2006/04/05 09:45:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -109,6 +110,11 @@ public final class ModelingType extends ActionType implements IdlTransferableObj
 	@Override
 	public ModelingTypeWrapper getWrapper() {
 		return ModelingTypeWrapper.getInstance();
+	}
+
+	public static ModelingType valueOf(final Codename codename) throws ApplicationException {
+		assert codename != null : NON_NULL_EXPECTED;
+		return valueOf(codename.stringValue());
 	}
 
 	public static ModelingType valueOf(final String codename) throws ApplicationException {
