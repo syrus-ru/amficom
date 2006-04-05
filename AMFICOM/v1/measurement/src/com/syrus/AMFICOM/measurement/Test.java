@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.14 2006/03/31 08:53:10 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.15 2006/04/05 13:02:56 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -58,7 +58,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.14 $, $Date: 2006/03/31 08:53:10 $
+ * @version $Revision: 1.183.2.15 $, $Date: 2006/04/05 13:02:56 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -715,11 +715,11 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		}
 
 		MonitoredElement monitoredElement = null;
-		ActionTemplate measurementTemplate = null;
+		ActionTemplate<Measurement> measurementTemplate = null;
 		try {
 			monitoredElement = StorableObjectPool.getStorableObject(this.monitoredElementId, true);
 			final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(this.getCurrentMeasurementSetupId(), true);
-			measurementTemplate = StorableObjectPool.getStorableObject(measurementSetup.getMeasurementTemplateId(), true);
+			measurementTemplate = measurementSetup.getMeasurementTemplate();
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
