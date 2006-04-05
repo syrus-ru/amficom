@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryParameterTypeCodename.java,v 1.1.2.2 2006/03/27 05:40:47 arseniy Exp $
+ * $Id: ReflectometryParameterTypeCodename.java,v 1.1.2.3 2006/04/05 09:45:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,13 +7,15 @@
  */
 package com.syrus.AMFICOM.reflectometry;
 
+import com.syrus.util.Codename;
+
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/03/27 05:40:47 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/04/05 09:45:46 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module reflectometry
  */
-public enum ReflectometryParameterTypeCodename {
+public enum ReflectometryParameterTypeCodename implements Codename {
 	WAVE_LENGTH("ref_wvlen"),
 	TRACE_LENGTH("ref_trclen"),
 	RESOLUTION("ref_res"),
@@ -44,7 +46,7 @@ public enum ReflectometryParameterTypeCodename {
 	private String codename;
 
 	private ReflectometryParameterTypeCodename(final String codename) {
-		this.codename = codename;
+		this.codename = codename.intern();
 	}
 
 	public String stringValue() {
