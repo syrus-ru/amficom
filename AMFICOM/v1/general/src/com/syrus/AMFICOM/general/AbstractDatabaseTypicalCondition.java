@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.24 2006/03/15 15:17:43 arseniy Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.23.4.1 2006/03/27 10:10:06 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,25 +19,26 @@ import static com.syrus.AMFICOM.general.StorableObjectDatabase.NOT_EQUALS;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_AND;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FROM;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FUNCTION_UPPER;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_IN;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_LIKE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_PATTERN_CHARACTERS;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_SELECT;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FUNCTION_UPPER;
 
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.TypicalSort;
+import com.syrus.util.EnumUtil;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2006/03/15 15:17:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23.4.1 $, $Date: 2006/03/27 10:10:06 $
+ * @author $Author: bass $
  * @module general
  */
 public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorableObjectCondition {

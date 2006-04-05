@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalCondition.java,v 1.64 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.64.2.1 2006/03/27 11:21:42 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,13 +44,11 @@ import com.syrus.util.EnumUtil;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2006/03/15 15:17:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.64.2.1 $, $Date: 2006/03/27 11:21:42 $
+ * @author $Author: bass $
  * @module general
  */
 public class TypicalCondition implements StorableObjectCondition {
-	private static final long serialVersionUID = -2099200598390912964L;
-
 	protected static final String ERROR_ENTITY_NOT_REGISTERED = "ERROR: Entity not registered for this condition -- ";
 	private static final String ERROR_UNKNOWN_TYPE_CODE = "ERROR: Unknown type code: ";
 	private static final String ERROR_UNKNOWN_NUMBER_CODE = "ERROR: Unknown number code: ";
