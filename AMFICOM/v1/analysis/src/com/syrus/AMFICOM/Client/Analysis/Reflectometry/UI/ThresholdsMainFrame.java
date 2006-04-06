@@ -23,9 +23,12 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAllTracesCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadModelingCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.MakeCurrentTracePrimaryCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.SavePathElementsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupAsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupCommand;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
@@ -217,15 +220,14 @@ implements BsHashChangeListener, EtalonMTMListener,
 
 		aModel.setCommand(AnalyseApplicationModel.MENU_MEASUREMENTSETUP_CREATE, 
 				new CreateTestSetupCommand(this.aContext));
-// FIXME: put them back
 
-//		aModel.setCommand(AnalyseApplicationModel.MENU_MEASUREMENTSETUP_SAVE, 
-//				new SaveTestSetupCommand(this.aContext, SaveTestSetupCommand.CRITERIA + SaveTestSetupCommand.ETALON));
-//		aModel.setCommand(AnalyseApplicationModel.MENU_MEASUREMENTSETUP_SAVE_AS, 
-//				new SaveTestSetupAsCommand(this.aContext, SaveTestSetupCommand.CRITERIA + SaveTestSetupCommand.ETALON));
+		aModel.setCommand(AnalyseApplicationModel.MENU_MEASUREMENTSETUP_SAVE, 
+				new SaveTestSetupCommand(this.aContext, SaveTestSetupCommand.CRITERIA + SaveTestSetupCommand.ETALON));
+		aModel.setCommand(AnalyseApplicationModel.MENU_MEASUREMENTSETUP_SAVE_AS, 
+				new SaveTestSetupAsCommand(this.aContext, SaveTestSetupCommand.CRITERIA + SaveTestSetupCommand.ETALON));
 
 		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD, new LoadTraceFromDatabaseCommand(this.dispatcher, this.aContext));
-//		aModel.setCommand(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD, new LoadModelingCommand(this.aContext));
+		aModel.setCommand(AnalyseApplicationModel.MENU_MODELING_DOWNLOAD, new LoadModelingCommand(this.aContext));
 		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE, new AddTraceFromDatabaseCommand(this.aContext));
 		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE, new FileRemoveCommand(null, this.aContext));
 
