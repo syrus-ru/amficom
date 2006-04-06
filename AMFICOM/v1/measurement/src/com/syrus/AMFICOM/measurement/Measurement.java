@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.101.2.11 2006/04/05 12:00:14 arseniy Exp $
+ * $Id: Measurement.java,v 1.101.2.12 2006/04/06 11:19:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.101.2.11 $, $Date: 2006/04/05 12:00:14 $
+ * @version $Revision: 1.101.2.12 $, $Date: 2006/04/06 11:19:26 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -171,6 +171,10 @@ public final class Measurement extends Action<MeasurementResultParameter> implem
 	 * @throws ApplicationException
 	 */
 	public Identifier getAnalysisId() throws ApplicationException {
+		if (this.analysisId == null) {
+			return null;
+		}
+
 		if (this.analysisId.isVoid()) {
 			final StorableObjectCondition condition = new LinkedIdsCondition(this.id, ANALYSIS_CODE);
 			final Set<Identifier> analysisIds = StorableObjectPool.getIdentifiersByCondition(condition, true);
@@ -196,6 +200,10 @@ public final class Measurement extends Action<MeasurementResultParameter> implem
 	 * @throws ApplicationException
 	 */
 	public Analysis getAnalysis() throws ApplicationException {
+		if (this.analysisId == null) {
+			return null;
+		}
+
 		if (this.analysisId.isVoid()) {
 			final StorableObjectCondition condition = new LinkedIdsCondition(this.id, ANALYSIS_CODE);
 			final Set<Analysis> analyses = StorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -211,9 +219,6 @@ public final class Measurement extends Action<MeasurementResultParameter> implem
 			return analysis;
 		}
 
-		if (this.analysisId == null) {
-			return null;
-		}
 		return StorableObjectPool.getStorableObject(this.analysisId, true);
 	}
 
