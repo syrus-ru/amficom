@@ -13,6 +13,7 @@ import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
@@ -27,7 +28,8 @@ import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-public class MarkersInfoFrame extends JInternalFrame implements PropertyChangeListener, BsHashChangeListener {
+public class MarkersInfoFrame extends JInternalFrame implements PropertyChangeListener, BsHashChangeListener,
+		ReportTable {
 	private static final long serialVersionUID = 1645657805656146998L;
 
 	// Don't change sequence
@@ -180,5 +182,13 @@ public class MarkersInfoFrame extends JInternalFrame implements PropertyChangeLi
 
 	public void bsHashRemovedAll() {
 		this.setVisible(false);
+	}
+
+	public String getReportTitle() {
+		return LangModelAnalyse.getString("markerInfoTitle");
+	}
+
+	public TableModel getTableModel() {
+		return this.tModel;
 	}
 }
