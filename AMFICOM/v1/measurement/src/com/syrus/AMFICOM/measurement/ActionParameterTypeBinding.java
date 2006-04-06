@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.16 2006/03/27 14:51:39 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.17 2006/04/06 10:23:04 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,12 +49,20 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 
 /**
+ * <p>
  * Измерительная связка. Связка трёх сущностей: типа параметра
  * {@link com.syrus.AMFICOM.general.ParameterType}, типа измерительного порта
  * {@link com.syrus.AMFICOM.measurement.MeasurementPortType} и типа действия
  * {@link com.syrus.AMFICOM.measurement.ActionType}. Для каждой такой связки
- * существует свой набор допустимых значений параметра. Набор значений может
- * быть двух видов: перечисляемый
+ * существует свой набор допустимых значений параметра. Измерительные связки
+ * создаются на этапе первоначальной установки системы, либо на этапе её
+ * настройки. Конечный пользователь не должен их создавать, а должен подгружать
+ * с помощью методов {@link #valueOf(Identifier, Identifier, Identifier)},
+ * {@link #valueOf(ParameterType, ActionType, MeasurementPortType)}, а также
+ * {@link #getValues(ActionType, MeasurementPortType)},
+ * {@link #getValues(Identifier, Identifier)}.
+ * <p>
+ * Набор значений может быть двух видов: перечисляемый
  * {@link com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind#ENUMERATED}
  * и непрерывный
  * {@link com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind#CONTINUOUS};
@@ -69,11 +77,13 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * параметра. Если же набор значений - непрерывный, то пользователь может
  * создавать новые параметры
  * {@link com.syrus.AMFICOM.measurement.ActionParameter} с ещё не существующими
- * значениями. В любом из этих двух случаев можно использовать метод
+ * значениями.
+ * <p>
+ * В любом из этих двух случаев можно использовать метод
  * {@link #getActionParameters()} для получения всех параметров, существующих
  * для данной измерительной связки.
  * 
- * @version $Revision: 1.1.2.16 $, $Date: 2006/03/27 14:51:39 $
+ * @version $Revision: 1.1.2.17 $, $Date: 2006/04/06 10:23:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
