@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.71.2.9 2006/04/05 12:00:14 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.71.2.10 2006/04/06 09:20:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71.2.9 $, $Date: 2006/04/05 12:00:14 $
+ * @version $Revision: 1.71.2.10 $, $Date: 2006/04/06 09:20:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -219,6 +219,9 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case MEASUREMENTRESULTPARAMETER_CODE:
 				final MeasurementResultParameter measurementResultParameter = (MeasurementResultParameter) storableObject;
 				switch (this.linkedEntityCode) {
+					case PARAMETER_TYPE_CODE:
+						condition = super.conditionTest(measurementResultParameter.getTypeId());
+						break;
 					case MEASUREMENT_CODE:
 						condition = super.conditionTest(measurementResultParameter.getMeasurementId());
 						break;
@@ -230,11 +233,18 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 							condition = false;
 						}
 						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
 			case ANALYSISRESULTPARAMETER_CODE:
 				final AnalysisResultParameter analysisResultParameter = (AnalysisResultParameter) storableObject;
 				switch (this.linkedEntityCode) {
+					case PARAMETER_TYPE_CODE:
+						condition = super.conditionTest(analysisResultParameter.getTypeId());
+						break;
 					case ANALYSIS_CODE:
 						condition = super.conditionTest(analysisResultParameter.getAnalysisId());
 						break;
@@ -254,14 +264,25 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 							condition = false;
 						}
 						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
 			case MODELINGRESULTPARAMETER_CODE:
 				final ModelingResultParameter modelingResultParameter = (ModelingResultParameter) storableObject;
 				switch (this.linkedEntityCode) {
+					case PARAMETER_TYPE_CODE:
+						condition = super.conditionTest(modelingResultParameter.getTypeId());
+						break;
 					case ANALYSIS_CODE:
 						condition = super.conditionTest(modelingResultParameter.getModelingId());
 						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
 			case TEST_CODE:

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41.2.8 2006/03/24 08:56:16 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41.2.9 2006/04/06 09:20:43 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 /**
- * @version $Revision: 1.41.2.8 $, $Date: 2006/03/24 08:56:16 $
+ * @version $Revision: 1.41.2.9 $, $Date: 2006/04/06 09:20:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -162,6 +162,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				}
 			case MEASUREMENTRESULTPARAMETER_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
+					case PARAMETER_TYPE_CODE:
+						return super.getQuery(COLUMN_TYPE_ID);
 					case MEASUREMENT_CODE:
 						return super.getQuery(COLUMN_MEASUREMENT_ID);
 					case TEST_CODE:
@@ -171,6 +173,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				}
 			case ANALYSISRESULTPARAMETER_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
+					case PARAMETER_TYPE_CODE:
+						return super.getQuery(COLUMN_TYPE_ID);
 					case ANALYSIS_CODE:
 						return super.getQuery(COLUMN_ANALYSIS_ID);
 					case MEASUREMENT_CODE:
@@ -199,6 +203,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				}
 			case MODELINGRESULTPARAMETER_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
+					case PARAMETER_TYPE_CODE:
+						return super.getQuery(COLUMN_TYPE_ID);
 					case MODELING_CODE:
 						return super.getQuery(COLUMN_MODELING_ID);
 					default:
