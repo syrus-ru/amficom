@@ -31,7 +31,7 @@ public class SaveTestSetupAsCommand extends AbstractCommand
 		if (newName == null)
 			return;
 
-		if (SaveTestSetupCommand.createNewMSAndSave(newName, this.aContext, this.type))
+		if (SaveTestSetupCommand.createNewMSAndSave(newName, this.type))
 			Heap.setNewMSName(null); // success
 	}
 }

@@ -1,7 +1,7 @@
 /*-
- * $Id: TraceLoadDialog.java,v 1.13.2.1 2006/04/06 13:01:43 saa Exp $
+ * $Id: ModelLoadDialog.java,v 1.1.2.1 2006/04/06 13:01:43 saa Exp $
  *
- * Copyright ї 2005 Syrus Systems.
+ * Copyright ї 2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -28,23 +28,21 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MeasurementResultParameter;
-import com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename;
+import com.syrus.AMFICOM.measurement.Modeling;
+import com.syrus.AMFICOM.measurement.ModelingResultParameter;
 import com.syrus.util.Log;
 
-/**
- * @author $Author: saa $
- * @version $Revision: 1.13.2.1 $, $Date: 2006/04/06 13:01:43 $
- * @module analysis
- */
-
-public class TraceLoadDialog {
+public class ModelLoadDialog {
 	private static TreeFilterUI treeFilterUI;
 	static IconedTreeUI treeUI;
-	private static Set<MeasurementResultParameter> selectedResults;
+	private static Set<ModelingResultParameter> selectedResults;
 
 	static JOptionPane optionPane;
 	static JDialog dialog;
@@ -52,15 +50,15 @@ public class TraceLoadDialog {
 	static JButton cancelButton;
 	static int result;
 
-	public static Set<MeasurementResultParameter> getResults() {
+	public static Set<ModelingResultParameter> getResults() {
 		return selectedResults;
 	}
 
 	public static int showDialog(JFrame frame) {
 		if (treeFilterUI == null) {
-			selectedResults = new HashSet<MeasurementResultParameter>();
-			Item root = new ResultChildrenFactory().getRoot();
-			
+			selectedResults = new HashSet<ModelingResultParameter>();
+			Item root = new ModelChildrenFactory().getRoot();
+
 			treeUI = new IconedTreeUI(root);
 			treeUI.getTree().expandPath(new TreePath(root));
 			treeUI.getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
@@ -77,14 +75,15 @@ public class TraceLoadDialog {
 						for (int i = 0; i < paths.length; i++) {
 							for (int j = 0; j < paths[i].getPathCount(); j++) {
 								Item item = (Item)paths[i].getPathComponent(j);
-								if (item.getObject() instanceof Measurement) {
+								if (item.getObject() instanceof Measurement || 
+										item.getObject() instanceof Modeling) {
 									b = true;
 									break;
 								}
 							}
 						}
 					}
-					TraceLoadDialog.okButton.setEnabled(b);
+					ModelLoadDialog.okButton.setEnabled(b);
 				}
 			});
 			okButton = new JButton(I18N.getString("Common.Button.OK"));
@@ -113,34 +112,31 @@ public class TraceLoadDialog {
 		dialog.setVisible(true);
 		
 		if (result == JOptionPane.OK_OPTION) {
-			Set<Measurement> selectedMeasurements = new HashSet<Measurement>();
+			Set<Identifier> selectedModelIds = new HashSet<Identifier>();
 			TreePath[] paths = treeUI.getTree().getSelectionPaths();
 			if (paths != null) {
 				for (int i = 0; i < paths.length; i++) {
 					for (int j = 0; j < paths[i].getPathCount(); j++) {
 						Item item = (Item) paths[i].getPathComponent(j);
-						if (item.getObject() instanceof Measurement) {
-							selectedMeasurements.add((Measurement)item.getObject());
+						if (item.getObject() instanceof Modeling) {
+							selectedModelIds.add(((Modeling)item.getObject()).getId());
 						}
 					}
 				}
 			}
 
-			// XXX: [Note: before PARS_REFACT] performance: seemes to be a longest part
-			// 0.5 - 1 sec: present in local (client's) cache
-			// 3 - 4 sec: absent in local (client's) cache, seems to be presentin server's
-			// ~146 sec: seems to be absent in server cache (first request) (Arseniy says servers gets these results from agent)
 			try {
-				for(Measurement m: selectedMeasurements) {
-					MeasurementResultParameter res =
-						m.getActionResultParameter(ParameterType.valueOf(
-								ReflectometryParameterTypeCodename.REFLECTOGRAMMA));
-					selectedResults.add(res);	
+				if (!selectedModelIds.isEmpty()) {
+					StorableObjectCondition condition2 = new LinkedIdsCondition(selectedModelIds, ObjectEntities.MODELINGRESULTPARAMETER_CODE);
+					Set<ModelingResultParameter> resultSet = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
+					for (ModelingResultParameter modelingResult: resultSet) {
+						selectedResults.add(modelingResult);
+					}
 				}
 			} catch (ApplicationException e) {
 				Log.errorMessage(e);
 			}
-			if (selectedResults.isEmpty()) {
+			if (selectedResults.isEmpty() && selectedModelIds.isEmpty()) {
 				// XXX: error processing: выдать сообщение об ошибке, что нет результатов
 				result = JOptionPane.CANCEL_OPTION;
 			}

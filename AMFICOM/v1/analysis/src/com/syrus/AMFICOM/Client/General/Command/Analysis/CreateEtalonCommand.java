@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.Log;
 
 /**
@@ -89,11 +88,10 @@ public class CreateEtalonCommand extends AbstractCommand
 			String name = LangModelAnalyse.getString("etalon");
 			{
 				// определяем временное название для эталона
-				Result result1 = Heap.getPrimaryTrace().getResult();
-				if (result1 != null) {
-					Measurement m = AnalysisUtil.getMeasurementByResult(result1);
+				Measurement m = Heap.getPrimaryTrace().getMeasurement();
+				if (m != null) {
 					name = AnalysisUtil.makeEtalonRefName(
-							AnalysisUtil.getMEbyMS(m.getSetup()),
+							AnalysisUtil.getMEbyMS(AnalysisUtil.getMSbyM(m)),
 							null);
 				}
 			}

@@ -18,10 +18,11 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementResultParameter;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.reflectometry.ReflectometryAnalysisCriteria;
+import com.syrus.AMFICOM.reflectometry.ReflectometryMeasurementSetup;
 import com.syrus.io.DataFormatException;
 
 public class LoadTraceFromDatabaseCommand extends AbstractCommand
@@ -62,7 +63,8 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 		if(TraceLoadDialog.showDialog(parent) == JOptionPane.CANCEL_OPTION) {
 			return;
 		}
-		Set<Result> results = TraceLoadDialog.getResults();
+		Set<MeasurementResultParameter> results =
+			TraceLoadDialog.getResults();
 
 		// XXX: Если набор результатов пуст, ничего не делаем
 		if (results.isEmpty())
@@ -112,21 +114,21 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 		// 4. При создании (или сохранении) шаблона предупреждать пользователя,
 		//    что есть несколько MS, и предупреждать,
 		//    что будет взят MS первичной.
-		Result primaryTraceResult = Heap.getPrimaryTrace().getResult();
-		if (primaryTraceResult != null
-				&& AnalysisUtil.hasMeasurementByResult(primaryTraceResult)) {
-			Measurement m = AnalysisUtil.getMeasurementByResult(primaryTraceResult);
-			MeasurementSetup ms = m.getSetup();
-			Heap.setContextMeasurementSetup(ms);
+		Measurement primaryTraceMeasurement = Heap.getPrimaryTrace().getMeasurement();
+		if (primaryTraceMeasurement != null) {
 
 			try {
-				// пытаемся загрузить параметры анализа
-				// (в принципе, если они были, то они уже были загружены
-				// во время загрузки primary trace)
-				AnalysisUtil.loadCriteriaSet(LoginManager.getUserId(), ms);
-				// пытаемся загрузить эталон
-				if (ms.getEtalon() != null &&
-						PermissionManager.isPermitted(PermissionManager.Operation.LOAD_ETALON)) {
+				// FIXME: обработка ошибок: загружаем много объектов. При ошибках надо как-то откатить уже загруженные 
+				MeasurementSetup ms = AnalysisUtil.getMSbyM(
+						primaryTraceMeasurement);
+				Heap.setContextMeasurementSetup(ms);
+				// пытаемся загрузить параметры анализа и эталон
+				final ReflectometryAnalysisCriteria criteria =
+					new ReflectometryMeasurementSetup(ms).getAnalysisCriteria();
+				AnalysisUtil.loadAnalysisParameters(ms);
+				if (criteria != null && criteria.hasEtalon()
+						&& PermissionManager.isPermitted(
+								PermissionManager.Operation.LOAD_ETALON)) {
 					AnalysisUtil.loadEtalon(ms);
 				} else {
 					Heap.unSetEtalonPair();
@@ -136,7 +138,7 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 				// результаты анализа. Теперь мы повторно загружаем
 				// результаты анализа + результаты оценки,
 				// но уже только для одной р/г - той, что выбрана как первичная.
-				AnalysisUtil.loadEtalonComparison(m);
+				AnalysisUtil.loadEtalonComparison(primaryTraceMeasurement);
 			} catch (DataFormatException e) {
 				GUIUtil.showDataFormatError();
 			} catch (ApplicationException e) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: Trace.java,v 1.15 2005/12/21 14:47:04 saa Exp $
+ * $Id: Trace.java,v 1.15.2.1 2006/04/06 13:01:43 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.MeasurementResultParameter;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
@@ -39,16 +39,19 @@ import com.syrus.util.Log;
  *   <li> String абсолютный путь - для файла
  *   <li> String measurementId - для р/г из БД
  *   </ul>
- * <li> Result (null, если это локальный файл) - по нему можно определить шаблон, с которым была снята р/г
+ * <li> Measurement - результат измерения,
+ * (null, если это локальный файл) - по нему можно
+ * определить шаблон, с которым была снята р/г.
+ * 
  * @author $Author: saa $
- * @version $Revision: 1.15 $, $Date: 2005/12/21 14:47:04 $
+ * @version $Revision: 1.15.2.1 $, $Date: 2006/04/06 13:01:43 $
  * @module
  */
 public class Trace {
 	private PFTrace pfTrace;
 	private AnalysisParameters ap; // может использоваться для построения ar
 	private String key;
-	private Result result; // may be null
+	private Measurement measurement; // may be null
 
 	private double[] traceData = null; // null if not cached yet
 	private AnalysisResult ar = null;
@@ -62,7 +65,7 @@ public class Trace {
 		this.pfTrace = new PFTrace(bs);
 		this.ap = ap;
 		this.key = key;
-		this.result = null;
+		this.measurement = null;
 		this.analysisLoaded = false;
 	}
 
@@ -73,7 +76,7 @@ public class Trace {
 		this.pfTrace = trace;
 		this.ap = ap;
 		this.key = key;
-		this.result = null;
+		this.measurement = null;
 		this.analysisLoaded = false;
 	}
 
@@ -83,7 +86,7 @@ public class Trace {
 		assert(key != null);
 		this.pfTrace = trace;
 		this.key = key;
-		this.result = null;
+		this.measurement = null;
 		this.ar = ar;
 		this.analysisLoaded = true;
 	}
@@ -91,16 +94,16 @@ public class Trace {
 	/**
 	 * one of ap and mtae may be null
 	 */
-	private Trace(Result result,
+	private Trace(MeasurementResultParameter result,
 			AnalysisParameters ap, AnalysisResult ar)
 	throws SimpleApplicationException {
 		assert(result != null);
 		assert(ap != null || ar != null);
 		this.pfTrace = new PFTrace(
-				AnalysisUtil.getBellcoreStructureFromResult(result));
+				AnalysisUtil.getBellcoreStructureFromMeasurementResult(result));
 		this.ap = ap;
 		this.key = result.getId().getIdentifierString();
-		this.result = result;
+		this.measurement = AnalysisUtil.getActionByResult(result);
 		this.ar = ar;
 		this.analysisLoaded = ar != null;
 	}
@@ -113,20 +116,20 @@ public class Trace {
 	 * @throws SimpleApplicationException если попытались открыть
 	 * результат, не содержащий рефлектограмму
 	 */
-	public Trace(Result result, AnalysisParameters ap)
+	public Trace(MeasurementResultParameter result, AnalysisParameters ap)
 	throws SimpleApplicationException {
 		this(result, ap, null);
 	}
 
 	/**
-	 * Открывает рефлектограмму с предварительно полученными результатами анализа
+	 * Открывает рефлектограмму с предварительно полученными результатами анализа.
 	 * XXX try to use getTraceWithARIfPossible instead
 	 * @param result результат измерения
 	 * @param ar результат анализа
 	 * @throws SimpleApplicationException если попытались открыть
 	 * результат, не содержащую рефлектограмму 
 	 */
-	public Trace(Result result, AnalysisResult ar)
+	public Trace(MeasurementResultParameter result, AnalysisResult ar)
 	throws SimpleApplicationException {
 		this(result, null, ar);
 	}
@@ -155,23 +158,23 @@ public class Trace {
 	 * @throws SimpleApplicationException попытались открыть
 	 *   результат, не содержащий рефлектограмму
 	 */
-	public static Trace getTraceWithARIfPossible(final Result result,
+	public static Trace getTraceWithARIfPossible(
+			final MeasurementResultParameter result,
 			final AnalysisParameters ap)
 	throws DataFormatException, ApplicationException, SimpleApplicationException {
 		final AnalysisResult ar =
-			AnalysisUtil.getAnalysisResultForResultIfPresent(result);
+			AnalysisUtil.getAnalysisResultForMeasurementResultIfPresent(result);
 		if (ar != null) {
 			Log.debugMessage("Created Trace() on result and loaded analysisResult", Level.FINER);
 			return new Trace(result, ar);
 		} else {
-			if (AnalysisUtil.hasMeasurementByResult(result)) {
-				final Measurement m = AnalysisUtil.getMeasurementByResult(result);
-				final AnalysisParameters criteriaSet =
-					AnalysisUtil.getCriteriaSetByMeasurementSetup(m.getSetup());
-				if (criteriaSet != null) {
-					Log.debugMessage("Created Trace() on result and loaded criteriaSet", Level.FINER);
-					return new Trace(result, criteriaSet);
-				}
+			final Measurement m = AnalysisUtil.getActionByResult(result);
+			final AnalysisParameters criteriaSet =
+				AnalysisUtil.getCriteriaSetByMeasurementSetup(
+						AnalysisUtil.getMSbyM(m));
+			if (criteriaSet != null) {
+				Log.debugMessage("Created Trace() on result and loaded criteriaSet", Level.FINER);
+				return new Trace(result, criteriaSet);
 			}
 			Log.debugMessage("Created Trace() on result and default ap", Level.FINER);
 			return new Trace(result, ap);
@@ -216,9 +219,17 @@ public class Trace {
 	public double getDeltaX() {
 		return this.pfTrace.getResolution();
 	}
-	public Result getResult() {
-		return this.result;
+
+	/**
+	 * Возвращает Measurement, по которому была получена эта р/г либо null,
+	 * если такого измерения нет.
+	 * @return Measurement, по которому была получена эта р/г либо null,
+	 * если такого измерения нет
+	 */
+	public Measurement getMeasurement() {
+		return this.measurement;
 	}
+
 	/**
 	 * @return true, если результаты анализа были заданы в момент создания
 	 * этого объекта. Фактически это обычно означает,

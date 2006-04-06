@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
-import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
+import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.IdlMonitoredElementKind;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
@@ -42,7 +42,7 @@ public class PathElementsFrame extends AnalysisFrame {
 			Log.debugMessage("Start create PathElements panel", Level.FINEST);
 			MonitoredElement me = StorableObjectPool.getStorableObject(new Identifier(pf.getBS().monitoredElementId), true);
 			Log.debugMessage("Found MonitoredElement " + me.getName() + " ("+ me.getId() + ")", Level.FINEST);
-			if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
+			if (me.getKind().equals(IdlMonitoredElementKind.MONITOREDELEMENT_KIND_TRANSMISSION_PATH)) {
 				LinkedIdsCondition condition = new LinkedIdsCondition(me.getMeasurementPortId(), ObjectEntities.PATHELEMENT_CODE);
 				Set<PathElement> pathElements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				Log.debugMessage("Found " + pathElements.size() + " PathElement(s)", Level.FINEST);	
@@ -52,7 +52,7 @@ public class PathElementsFrame extends AnalysisFrame {
 					Log.debugMessage("Selected Path is " + path.getName() + " (" + path.getId() + ")", Level.FINEST);
 				}
 			} else {
-				Log.debugMessage("ME sort is " + me.getSort() + "; must be " + MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH, Level.FINEST);
+				Log.debugMessage("ME kind is " + me.getKind() + "; must be " + IdlMonitoredElementKind.MONITOREDELEMENT_KIND_TRANSMISSION_PATH, Level.FINEST);
 			}
 			setTitle(me.getName());
 		} catch (ApplicationException ex) {

@@ -15,7 +15,8 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementResultParameter;
 import com.syrus.io.DataFormatException;
 
 public class AddTraceFromDatabaseCommand extends AbstractCommand
@@ -60,12 +61,13 @@ public class AddTraceFromDatabaseCommand extends AbstractCommand
 	 * @throws ApplicationException 
 	 * @throws DataFormatException 
 	 */
-	public static Set<Trace> getTracesFromResults(Set<Result> results)
+	public static Set<Trace> getTracesFromResults(
+			Set<MeasurementResultParameter> results)
 	throws DataFormatException, ApplicationException {
 		Set<Trace> traces = new HashSet<Trace>(results.size());
 		int totalCounter = 0;
 		int loadProblemsCounter = 0;
-		for (Result result1: results) {
+		for (MeasurementResultParameter result1: results) {
 			totalCounter++;
 			try {
 				// параметры анализа из Heap используются только в случае,
@@ -118,7 +120,8 @@ public class AddTraceFromDatabaseCommand extends AbstractCommand
 		JFrame parent = Environment.getActiveWindow();
 		if(TraceLoadDialog.showDialog(parent) == JOptionPane.CANCEL_OPTION)
 			return;
-		Set<Result> results = TraceLoadDialog.getResults();
+		Set<MeasurementResultParameter> results =
+			TraceLoadDialog.getResults();
 
 		// пытаемся загрузить рефлектограммы
 		Set<Trace> traces;
