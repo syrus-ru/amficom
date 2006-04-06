@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.15 2006/04/05 13:02:56 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.16 2006/04/06 07:26:46 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -58,7 +59,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.15 $, $Date: 2006/04/05 13:02:56 $
+ * @version $Revision: 1.183.2.16 $, $Date: 2006/04/06 07:26:46 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -646,8 +647,19 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		return this.currentMeasurementSetupId;
 	}
 
+	/**
+	 * Получить текущий шаблон данного задания. В случае невозможности
+	 * подгрузить шаблон кидает исключение.
+	 * 
+	 * @return Текущий шаблон задания. Никогда не возвращает <code>null</code>.
+	 * @throws ApplicationException
+	 */
 	public MeasurementSetup getCurrentMeasurementSetup() throws ApplicationException {
-		return StorableObjectPool.getStorableObject(this.getCurrentMeasurementSetupId(), true);
+		final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(this.getCurrentMeasurementSetupId(), true);
+		if (measurementSetup != null) {
+			return measurementSetup;
+		}
+		throw new ObjectNotFoundException("Cannot find measurement setup '" + this.currentMeasurementSetupId + "' for test '" + this.id + "'");
 	}
 
 	/**
