@@ -8,6 +8,7 @@ import java.awt.event.ComponentEvent;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
@@ -76,7 +77,10 @@ public class ResizableLayeredPanel extends JPanel
 		this.mainPanel.setBackground(UIManager.getColor(ResourceKeys.COLOR_GRAPHICS_BACKGROUND));
 
 		toolbar.setVisible(false);
-
+	}
+	
+	public JComponent getMainPane() {
+		return jLayeredPane;
 	}
 
 	public ScaledGraphPanel getTopPanel()
