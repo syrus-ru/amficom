@@ -1,11 +1,24 @@
 
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.ANALYSIS_FRAME;
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.ANALYSIS_SELECTION_FRAME;
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.EVENTS_FRAME;
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.MARKERS_INFO_FRAME;
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.PRIMARY_PARAMETERS_FRAME;
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.SELECTOR_FRAME;
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.STATS_FRAME;
+
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+
+import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
+import javax.swing.UIDefaults;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.PermissionManager;
@@ -30,12 +43,15 @@ import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.report.DestinationModules;
+import com.syrus.util.Log;
 
 public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsHashChangeListener, EtalonMTMListener,
 		CurrentTraceChangeListener {
@@ -45,14 +61,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 	ClientAnalysisManager		aManager	= new ClientAnalysisManager();
 
-	TraceSelectorFrame			selectFrame;
-	PrimaryParametersFrame		paramFrame;
-	OverallStatsFrame			statsFrame;
-	EventsFrame					eventsFrame;
-	AnalysisFrame				analysisFrame;
-	MarkersInfoFrame			mInfoFrame;
-	AnalysisSelectionFrame		anaSelectFrame;
-
+	UIDefaults					frames;
 	List<ReportTable>					tables;
 	List<SimpleResizableFrame>					graphs;
 
@@ -60,52 +69,13 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		super(aContext, LangModelAnalyse.getString("AnalyseTitle"), new AnalyseMainMenuBar(aContext
 				.getApplicationModel()), new AnalyseMainToolBar());
 
-		this.setWindowArranger(new WindowArranger(this) {
-
-			@Override
-			public void arrange() {
-				AnalyseMainFrameSimplified f = (AnalyseMainFrameSimplified) this.mainframe;
-
-				int w = f.desktopPane.getSize().width;
-				int h = f.desktopPane.getSize().height;
-
-				normalize(f.paramFrame);
-				normalize(f.selectFrame);
-				normalize(f.statsFrame);
-				normalize(f.mInfoFrame);
-				normalize(f.analysisFrame);
-				normalize(f.eventsFrame);
-				normalize(f.anaSelectFrame);
-
-				f.paramFrame.setSize(w / 6, h / 4);
-				f.statsFrame.setSize(w / 6, h / 4);
-				f.mInfoFrame.setSize(w / 6, h / 4);
-				f.selectFrame.setSize(w / 6, h - f.mInfoFrame.getHeight() - f.statsFrame.getHeight()
-						- f.paramFrame.getHeight());
-				f.analysisFrame.setSize(5 * w / 6, 3 * h / 4);
-				f.eventsFrame.setSize(w / 2, h / 4);
-				f.anaSelectFrame.setSize(w / 3, h / 4);
-
-				f.selectFrame.setLocation(5 * w / 6, 0);
-				f.paramFrame.setLocation(5 * w / 6, f.selectFrame.getHeight());
-				f.mInfoFrame.setLocation(5 * w / 6, f.selectFrame.getHeight() + f.paramFrame.getHeight());
-				f.statsFrame.setLocation(5 * w / 6, f.selectFrame.getHeight() + f.mInfoFrame.getHeight()
-						+ f.paramFrame.getHeight());
-				f.analysisFrame.setLocation(0, 0);
-				f.anaSelectFrame.setLocation(0, f.analysisFrame.getHeight());
-				f.eventsFrame.setLocation(w / 3, f.analysisFrame.getHeight());
-			}
-		});
-
 		this.addComponentListener(new ComponentAdapter() {
 
 			@Override
 			public void componentShown(ComponentEvent e) {
 				// init_module();
-				desktopPane.setPreferredSize(desktopPane.getSize());
+				AnalyseMainFrameSimplified.this.desktopPane.setPreferredSize(AnalyseMainFrameSimplified.this.desktopPane.getSize());
 				AnalyseMainFrameSimplified.this.windowArranger.arrange();
-
-				AnalyseMainFrameSimplified.this.analysisFrame.grabFocus();
 			}
 		});
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -125,34 +95,155 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 	}
 
 	protected void initFrames() {
+		this.frames = new UIDefaults();
 		this.tables = new LinkedList<ReportTable>();
 		this.graphs = new LinkedList<SimpleResizableFrame>();
+		final JDesktopPane desktop = AnalyseMainFrameSimplified.this.desktopPane;
 		
-		this.selectFrame = new TraceSelectorFrame(super.dispatcher);
-		this.desktopPane.add(this.selectFrame);
+		this.frames.put(SELECTOR_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | SELECTOR_FRAME", Level.FINEST);
+				TraceSelectorFrame selectFrame = new TraceSelectorFrame(AnalyseMainFrameSimplified.this.dispatcher);
+				desktop.add(selectFrame);
+				return selectFrame;
+			}
+		});
 		
-		this.paramFrame = new PrimaryParametersFrame();
-		this.desktopPane.add(this.paramFrame);
-		this.tables.add(this.paramFrame);
+		this.frames.put(PRIMARY_PARAMETERS_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | PRIMARY_PARAMETERS_FRAME", Level.FINEST);
+				PrimaryParametersFrame paramFrame = new PrimaryParametersFrame() {
+					@Override
+					public String getReportTitle() {
+						return PRIMARY_PARAMETERS_FRAME;
+					}
+				};
+				desktop.add(paramFrame);
+				AnalyseMainFrameSimplified.this.tables.add(paramFrame);
+				return paramFrame;
+			}
+		});
 		
-		this.statsFrame = new OverallStatsFrame(super.dispatcher);
-		this.desktopPane.add(this.statsFrame);
-		this.tables.add(this.statsFrame);
+		this.frames.put(STATS_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | STATS_FRAME", Level.FINEST);
+				OverallStatsFrame statsFrame = new OverallStatsFrame(AnalyseMainFrameSimplified.this.dispatcher) {
+					@Override
+					public String getReportTitle() {
+						return STATS_FRAME;
+					}
+				};
+				desktop.add(statsFrame);
+				AnalyseMainFrameSimplified.this.tables.add(statsFrame);
+				return statsFrame;
+			}
+		});
 		
-		this.eventsFrame = new EventsFrame(this.aContext, false);
-		this.desktopPane.add(this.eventsFrame);
-		this.tables.add(this.eventsFrame);
+		this.frames.put(EVENTS_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | EVENTS_FRAME", Level.FINEST);
+				EventsFrame eventsFrame = new EventsFrame(aContext, false) {
+					@Override
+					public String getReportTitle() {
+						return EVENTS_FRAME;
+					}
+				};
+				desktop.add(eventsFrame);
+				AnalyseMainFrameSimplified.this.tables.add(eventsFrame);
+				return eventsFrame;
+			}
+		});
 		
-		this.analysisFrame = new AnalysisFrame(super.dispatcher);
-		this.desktopPane.add(this.analysisFrame);
-		this.graphs.add(this.analysisFrame);
+		this.frames.put(ANALYSIS_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | ANALYSIS_FRAME", Level.FINEST);
+				AnalysisFrame analysisFrame = new AnalysisFrame(AnalyseMainFrameSimplified.this.dispatcher)  {
+					@Override
+					public String getReportTitle() {
+						return ANALYSIS_FRAME;
+					}
+				};
+				desktop.add(analysisFrame);
+				AnalyseMainFrameSimplified.this.graphs.add(analysisFrame);
+				return analysisFrame;
+			}
+		});
 		
-		this.mInfoFrame = new MarkersInfoFrame(super.dispatcher);
-		this.desktopPane.add(this.mInfoFrame);
+		this.frames.put(MARKERS_INFO_FRAME, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | MARKERS_INFO_FRAME", Level.FINEST);
+				MarkersInfoFrame mInfoFrame = new MarkersInfoFrame(AnalyseMainFrameSimplified.this.dispatcher) {
+					@Override
+					public String getReportTitle() {
+						return MARKERS_INFO_FRAME;
+					}
+				};
+				AnalyseMainFrameSimplified.this.tables.add(mInfoFrame);
+				desktop.add(mInfoFrame);
+				return mInfoFrame;
+			}
+		});
 		
-		this.anaSelectFrame = new AnalysisSelectionFrame(this.aContext);
-		this.desktopPane.add(this.anaSelectFrame);
-		this.tables.add(this.anaSelectFrame);
+		this.frames.put(ANALYSIS_SELECTION_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | ANALYSIS_SELECTION_FRAME", Level.FINEST);
+				AnalysisSelectionFrame analysisSelectionFrame = new AnalysisSelectionFrame(aContext) {
+					@Override
+					public String getReportTitle() {
+						return ANALYSIS_SELECTION_FRAME;
+					}
+				};
+				desktop.add(analysisSelectionFrame);
+				AnalyseMainFrameSimplified.this.tables.add(analysisSelectionFrame);
+				return analysisSelectionFrame;
+			}
+		});
+		
+		this.setWindowArranger(new WindowArranger(this) {
+
+			@Override
+			public void arrange() {
+				AnalyseMainFrameSimplified f = (AnalyseMainFrameSimplified) this.mainframe;
+
+				int w = desktop.getSize().width;
+				int h = desktop.getSize().height;
+
+				JInternalFrame selectFrame = (JInternalFrame) f.frames.get(SELECTOR_FRAME);
+				JInternalFrame paramFrame = (JInternalFrame) f.frames.get(PRIMARY_PARAMETERS_FRAME);
+				JInternalFrame statsFrame = (JInternalFrame) f.frames.get(STATS_FRAME);
+				JInternalFrame eventsFrame = (JInternalFrame) f.frames.get(EVENTS_FRAME);
+				JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(ANALYSIS_FRAME);
+				JInternalFrame mInfoFrame = (JInternalFrame) f.frames.get(MARKERS_INFO_FRAME);
+				JInternalFrame anaSelectFrame = (JInternalFrame) f.frames.get(ANALYSIS_SELECTION_FRAME);
+				
+				normalize(paramFrame);
+				normalize(selectFrame);
+				normalize(statsFrame);
+				normalize(mInfoFrame);
+				normalize(analysisFrame);
+				normalize(eventsFrame);
+				normalize(anaSelectFrame);
+
+				paramFrame.setSize(w / 6, h / 4);
+				statsFrame.setSize(w / 6, h / 4);
+				mInfoFrame.setSize(w / 6, h / 4);
+				selectFrame.setSize(w / 6, h - mInfoFrame.getHeight() - statsFrame.getHeight()
+						- paramFrame.getHeight());
+				analysisFrame.setSize(5 * w / 6, 3 * h / 4);
+				eventsFrame.setSize(w / 2, h / 4);
+				anaSelectFrame.setSize(w / 3, h / 4);
+
+				selectFrame.setLocation(5 * w / 6, 0);
+				paramFrame.setLocation(5 * w / 6, selectFrame.getHeight());
+				mInfoFrame.setLocation(5 * w / 6, selectFrame.getHeight() + paramFrame.getHeight());
+				statsFrame.setLocation(5 * w / 6, selectFrame.getHeight() + mInfoFrame.getHeight()
+						+ paramFrame.getHeight());
+				analysisFrame.setLocation(0, 0);
+				anaSelectFrame.setLocation(0, analysisFrame.getHeight());
+				eventsFrame.setLocation(w / 3, analysisFrame.getHeight());
+			}
+		});
 	}
 	
 	public AnalyseMainFrameSimplified() {
@@ -186,9 +277,6 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_CURRENT_MAKE_PRIMARY, new MakeCurrentTracePrimaryCommand());
 
-		// XXX temporary not allowed, uncomment after create frames like AnalyseMainFrame 
-		aModel.setVisible(AnalyseApplicationModel.MENU_REPORT, false);
- 
 		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(this.aContext, 
 				DestinationModules.ANALYSIS);
 		rc.setParameter(CreateAnalysisReportCommand.TABLE, this.tables);
@@ -196,18 +284,41 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		
 		aModel.setCommand(AnalyseApplicationModel.MENU_REPORT_CREATE, rc);
 
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, new ShowWindowCommand(this.selectFrame));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS, new ShowWindowCommand(this.paramFrame));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_OVERALLSTATS, new ShowWindowCommand(this.statsFrame));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_EVENTS, new ShowWindowCommand(this.eventsFrame));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, new ShowWindowCommand(this.analysisFrame));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_MARKERSINFO, new ShowWindowCommand(this.mInfoFrame));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSISSELECTION, new ShowWindowCommand(this.anaSelectFrame));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, this.getLazyCommand(SELECTOR_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS, this.getLazyCommand(PRIMARY_PARAMETERS_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_OVERALLSTATS, this.getLazyCommand(STATS_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_EVENTS, this.getLazyCommand(EVENTS_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, this.getLazyCommand(ANALYSIS_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_MARKERSINFO, this.getLazyCommand(MARKERS_INFO_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSISSELECTION, this.getLazyCommand(ANALYSIS_SELECTION_FRAME));
 
 		setDefaultModel(aModel);
 		aModel.fireModelChanged("");
 	}
 
+	private AbstractCommand getLazyCommand(final Object key) {
+		return new AbstractCommand() {
+
+			private Command	command;
+
+			private Command getLazyCommand() {
+				if (this.command == null) {
+					Object object = AnalyseMainFrameSimplified.this.frames.get(key);
+					if (object instanceof JInternalFrame) {
+						System.out.println("init getLazyCommand for " + key);
+						this.command = new ShowWindowCommand((JInternalFrame) object);
+					}
+				}
+				return this.command;
+			}
+
+			@Override
+			public void execute() {
+				this.getLazyCommand().execute();
+			}
+		};
+	}
+	
 	@Override
 	protected void setDefaultModel(ApplicationModel aModel) {
 		super.setDefaultModel(aModel);

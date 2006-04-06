@@ -1,11 +1,28 @@
 
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.ANALYSIS_FRAME;
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.ANALYSIS_SELECTION_FRAME;
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.DETAILED_EVENTS_FRAME;
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.EVENTS_FRAME;
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.HISTOGRAMM_FRAME;
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.MARKERS_INFO_FRAME;
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.NOISE_FRAME;
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.NOISE_HISTOGRAMM_FRAME;
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.PRIMARY_PARAMETERS_FRAME;
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.SELECTOR_FRAME;
+import static com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame.STATS_FRAME;
+
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+
+import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
+import javax.swing.UIDefaults;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.PermissionManager;
@@ -37,12 +54,15 @@ import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.report.DestinationModules;
+import com.syrus.util.Log;
 
 public class ThresholdsMainFrame extends AbstractMainFrame
 implements BsHashChangeListener, EtalonMTMListener,
@@ -51,17 +71,10 @@ implements BsHashChangeListener, EtalonMTMListener,
 
 	ClientAnalysisManager		aManager			= new ClientAnalysisManager();
 
-	ThresholdsSelectionFrame	thresholdsSelectionFrame;
-	TraceSelectorFrame			selectFrame;
-	PrimaryParametersFrame		paramFrame;
-	OverallStatsFrame			statsFrame;
-	EventsFrame					eventsFrame;
-	DetailedEventsFrame			detailedEvFrame;
-	ThresholdsFrame				thresholdsFrame;
-	MarkersInfoFrame			mInfoFrame;
-	AnalysisSelectionFrame		anaSelectFrame;
-	PathElementsFrame				analysisFrame;
+	public static final String	THRESHOLDS_FRAME		= "thresholdsFrame";
+	public static final String	THRESHOLDS_SELECTION_FRAME	= "thresholdsSelectionFrame";
 
+	UIDefaults					frames;
 	List<ReportTable>					tables;
 	List<SimpleResizableFrame>					graphs;
 
@@ -69,62 +82,11 @@ implements BsHashChangeListener, EtalonMTMListener,
 		super(aContext, LangModelAnalyse.getString("ThresholdsTitle"), new AnalyseMainMenuBar(aContext
 			.getApplicationModel()), new AnalyseMainToolBar());
 
-		this.setWindowArranger( new WindowArranger(this) {
-
-			@Override
-			public void arrange() {
-				ThresholdsMainFrame f = (ThresholdsMainFrame) this.mainframe;
-
-				int w = f.desktopPane.getSize().width;
-				int h = f.desktopPane.getSize().height;
-				int minh = Math.min(205, h / 4);
-
-				normalize(f.paramFrame);
-				normalize(f.selectFrame);
-				normalize(f.statsFrame);
-				normalize(f.mInfoFrame);
-				normalize(f.analysisFrame);
-				normalize(f.thresholdsFrame);
-				normalize(f.eventsFrame);
-				normalize(f.detailedEvFrame);
-				normalize(f.anaSelectFrame);
-				normalize(f.thresholdsSelectionFrame);
-
-				f.paramFrame.setSize(w / 6, minh);
-				f.selectFrame.setSize(w / 6, minh);
-				f.statsFrame.setSize(w / 6, minh);
-				f.mInfoFrame.setSize(w / 6, minh);
-				f.analysisFrame.setSize(2 * w / 3, h - 2 * minh);
-				f.thresholdsFrame.setSize(w / 3, h - 2 * minh);
-				f.eventsFrame.setSize(w / 2, minh);
-				f.detailedEvFrame.setSize(w / 6, minh);
-				f.anaSelectFrame.setSize(w / 3, minh);
-				f.thresholdsSelectionFrame.setSize(w / 3, minh);
-
-				f.paramFrame.setLocation(w / 6, 0);
-				f.selectFrame.setLocation(0, 0);
-				f.statsFrame.setLocation(w / 3, 0);
-				f.mInfoFrame.setLocation(w / 2, 0);
-				f.analysisFrame.setLocation(0, minh);
-				f.thresholdsFrame.setLocation(f.analysisFrame.getWidth(), minh);
-
-				f.anaSelectFrame.setLocation(2 * w / 3, 0);
-
-				f.eventsFrame.setLocation(0, minh + f.analysisFrame.getHeight());
-				f.detailedEvFrame.setLocation(f.eventsFrame.getWidth(), minh + f.analysisFrame.getHeight());
-				f.thresholdsSelectionFrame.setLocation(f.eventsFrame.getWidth() + f.detailedEvFrame.getWidth(), minh
-						+ f.analysisFrame.getHeight());
-			}
-		} 
-			);
-
 		this.addComponentListener(new ComponentAdapter() {
-
 			@Override
 			public void componentShown(ComponentEvent e) {
 				ThresholdsMainFrame.this.desktopPane.setPreferredSize(ThresholdsMainFrame.this.desktopPane.getSize());
 				ThresholdsMainFrame.this.windowArranger.arrange();
-				ThresholdsMainFrame.this.analysisFrame.grabFocus();
 			}
 		}
 			);
@@ -138,7 +100,6 @@ implements BsHashChangeListener, EtalonMTMListener,
 			}
 		});
 
-
 		PermissionManager.setEvaluationTranslation();
 		
 		// XXX: debug code
@@ -147,48 +108,209 @@ implements BsHashChangeListener, EtalonMTMListener,
 	}
 
 	protected void initFrames() {
+		this.frames = new UIDefaults();
 		this.tables = new LinkedList<ReportTable>();
 		this.graphs = new LinkedList<SimpleResizableFrame>();
+		final JDesktopPane desktop = ThresholdsMainFrame.this.desktopPane;
 		
-		this.selectFrame = new TraceSelectorFrame(this.dispatcher);
-		this.desktopPane.add(this.selectFrame);
-
-		this.tables = new LinkedList<ReportTable>();
-		this.graphs = new LinkedList<SimpleResizableFrame>();
+		this.frames.put(SELECTOR_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | SELECTOR_FRAME", Level.FINEST);
+				TraceSelectorFrame selectFrame = new TraceSelectorFrame(ThresholdsMainFrame.this.dispatcher);
+				desktop.add(selectFrame);
+				return selectFrame;
+			}
+		});
 		
-		this.paramFrame = new PrimaryParametersFrame();
-		this.desktopPane.add(this.paramFrame);
-		this.tables.add(this.paramFrame);
+		this.frames.put(PRIMARY_PARAMETERS_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | PRIMARY_PARAMETERS_FRAME", Level.FINEST);
+				PrimaryParametersFrame paramFrame = new PrimaryParametersFrame() {
+					@Override
+					public String getReportTitle() {
+						return PRIMARY_PARAMETERS_FRAME;
+					}
+				};
+				desktop.add(paramFrame);
+				ThresholdsMainFrame.this.tables.add(paramFrame);
+				return paramFrame;
+			}
+		});
 
-		this.statsFrame = new OverallStatsFrame(this.dispatcher);
-		this.desktopPane.add(this.statsFrame);
-		this.tables.add(this.statsFrame);
+		this.frames.put(STATS_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | STATS_FRAME", Level.FINEST);
+				OverallStatsFrame statsFrame = new OverallStatsFrame(ThresholdsMainFrame.this.dispatcher) {
+					@Override
+					public String getReportTitle() {
+						return STATS_FRAME;
+					}
+				};
+				desktop.add(statsFrame);
+				ThresholdsMainFrame.this.tables.add(statsFrame);
+				return statsFrame;
+			}
+		});
 
-		this.eventsFrame = new EventsFrame(this.aContext, true);
-		this.desktopPane.add(this.eventsFrame);
-		this.tables.add(this.eventsFrame);
+		this.frames.put(EVENTS_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | EVENTS_FRAME", Level.FINEST);
+				EventsFrame eventsFrame = new EventsFrame(aContext, false) {
+					@Override
+					public String getReportTitle() {
+						return EVENTS_FRAME;
+					}
+				};
+				desktop.add(eventsFrame);
+				ThresholdsMainFrame.this.tables.add(eventsFrame);
+				return eventsFrame;
+			}
+		});
 
-		this.thresholdsSelectionFrame = new ThresholdsSelectionFrame(this.dispatcher);
-		this.desktopPane.add(this.thresholdsSelectionFrame);
-		this.tables.add(this.thresholdsSelectionFrame);
+		this.frames.put(DETAILED_EVENTS_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | DETAILED_EVENTS_FRAME", Level.FINEST);
+				DetailedEventsFrame detailedEvFrame = new DetailedEventsFrame();
+				desktop.add(detailedEvFrame);
+				return detailedEvFrame;
+			}
+		});
+		
+		this.frames.put(THRESHOLDS_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | THRESHOLDS_FRAME", Level.FINEST);
+				ThresholdsFrame thresholdsFrame = new ThresholdsFrame(ThresholdsMainFrame.this.dispatcher)  {
+					@Override
+					public String getReportTitle() {
+						return THRESHOLDS_FRAME;
+					}
+				};
+				desktop.add(thresholdsFrame);
+				ThresholdsMainFrame.this.graphs.add(thresholdsFrame);
+				return thresholdsFrame;
+			}
+		});
 
-		this.detailedEvFrame = new DetailedEventsFrame();
-		this.desktopPane.add(this.detailedEvFrame);
+		this.frames.put(THRESHOLDS_SELECTION_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | THRESHOLDS_SELECTION_FRAME", Level.FINEST);
+				ThresholdsSelectionFrame thresholdsSelectionFrame = new ThresholdsSelectionFrame(ThresholdsMainFrame.this.dispatcher)  {
+					@Override
+					public String getReportTitle() {
+						return THRESHOLDS_SELECTION_FRAME;
+					}
+				};
+				desktop.add(thresholdsSelectionFrame);
+				ThresholdsMainFrame.this.tables.add(thresholdsSelectionFrame);
+				return thresholdsSelectionFrame;
+			}
+		});
 
-		this.thresholdsFrame = new ThresholdsFrame(this.dispatcher);
-		this.desktopPane.add(this.thresholdsFrame);
-		this.graphs.add(this.thresholdsFrame);
+		this.frames.put(ANALYSIS_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | ANALYSIS_FRAME", Level.FINEST);
+				AnalysisFrame analysisFrame = new AnalysisFrame(ThresholdsMainFrame.this.dispatcher)  {
+					@Override
+					public String getReportTitle() {
+						return ANALYSIS_FRAME;
+					}
+				};
+				desktop.add(analysisFrame);
+				ThresholdsMainFrame.this.graphs.add(analysisFrame);
+				return analysisFrame;
+			}
+		});
 
-		this.mInfoFrame = new MarkersInfoFrame(this.dispatcher);
-		this.desktopPane.add(this.mInfoFrame);
-
-		this.anaSelectFrame = new AnalysisSelectionFrame(this.aContext);
-		this.desktopPane.add(this.anaSelectFrame);
-		this.tables.add(this.anaSelectFrame);
-
-		this.analysisFrame = new PathElementsFrame(this.aContext, this.dispatcher);
-		this.desktopPane.add(this.analysisFrame);
-		this.graphs.add(this.analysisFrame);
+		this.frames.put(MARKERS_INFO_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | MARKERS_INFO_FRAME", Level.FINEST);
+				MarkersInfoFrame mInfoFrame = new MarkersInfoFrame(ThresholdsMainFrame.this.dispatcher) {
+					@Override
+					public String getReportTitle() {
+						return MARKERS_INFO_FRAME;
+					}
+				};
+				ThresholdsMainFrame.this.tables.add(mInfoFrame);
+				desktop.add(mInfoFrame);
+				return mInfoFrame;
+			}
+		});
+		
+		this.frames.put(ANALYSIS_SELECTION_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | ANALYSIS_SELECTION_FRAME", Level.FINEST);
+				AnalysisSelectionFrame analysisSelectionFrame = new AnalysisSelectionFrame(aContext) {
+					@Override
+					public String getReportTitle() {
+						return ANALYSIS_SELECTION_FRAME;
+					}
+				};
+				desktop.add(analysisSelectionFrame);
+				ThresholdsMainFrame.this.tables.add(analysisSelectionFrame);
+				return analysisSelectionFrame;
+			}
+		});
+		
+		this.setWindowArranger( new WindowArranger(this) {
+			@Override
+			public void arrange() {
+				ThresholdsMainFrame f = (ThresholdsMainFrame) this.mainframe;
+				
+				int w = f.desktopPane.getSize().width;
+				int h = f.desktopPane.getSize().height;
+				int minh = Math.min(205, h / 4);
+				
+				JInternalFrame selectFrame = (JInternalFrame) f.frames.get(SELECTOR_FRAME);
+				JInternalFrame paramFrame = (JInternalFrame) f.frames.get(PRIMARY_PARAMETERS_FRAME);
+				JInternalFrame statsFrame = (JInternalFrame) f.frames.get(STATS_FRAME);
+				JInternalFrame noiseFrame = (JInternalFrame) f.frames.get(NOISE_FRAME);
+				JInternalFrame noiseHistoFrame = (JInternalFrame) f.frames.get(NOISE_HISTOGRAMM_FRAME);
+				JInternalFrame eventsFrame = (JInternalFrame) f.frames.get(EVENTS_FRAME);
+				JInternalFrame detailedEvFrame = (JInternalFrame) f.frames.get(DETAILED_EVENTS_FRAME);
+				JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(ANALYSIS_FRAME);
+				JInternalFrame mInfoFrame = (JInternalFrame) f.frames.get(MARKERS_INFO_FRAME);
+				JInternalFrame anaSelectFrame = (JInternalFrame) f.frames.get(ANALYSIS_SELECTION_FRAME);
+				JInternalFrame dhf = (JInternalFrame) f.frames.get(HISTOGRAMM_FRAME);
+				JInternalFrame thresholdsFrame = (JInternalFrame) f.frames.get(THRESHOLDS_FRAME);
+				JInternalFrame thresholdsSelectionFrame = (JInternalFrame) f.frames.get(THRESHOLDS_SELECTION_FRAME);
+				
+				normalize(paramFrame);
+				normalize(selectFrame);
+				normalize(statsFrame);
+				normalize(mInfoFrame);
+				normalize(analysisFrame);
+				normalize(thresholdsFrame);
+				normalize(eventsFrame);
+				normalize(detailedEvFrame);
+				normalize(anaSelectFrame);
+				normalize(thresholdsSelectionFrame);
+				
+				paramFrame.setSize(w / 6, minh);
+				selectFrame.setSize(w / 6, minh);
+				statsFrame.setSize(w / 6, minh);
+				mInfoFrame.setSize(w / 6, minh);
+				analysisFrame.setSize(2 * w / 3, h - 2 * minh);
+				thresholdsFrame.setSize(w / 3, h - 2 * minh);
+				eventsFrame.setSize(w / 2, minh);
+				detailedEvFrame.setSize(w / 6, minh);
+				anaSelectFrame.setSize(w / 3, minh);
+				thresholdsSelectionFrame.setSize(w / 3, minh);
+				
+				paramFrame.setLocation(w / 6, 0);
+				selectFrame.setLocation(0, 0);
+				statsFrame.setLocation(w / 3, 0);
+				mInfoFrame.setLocation(w / 2, 0);
+				analysisFrame.setLocation(0, minh);
+				thresholdsFrame.setLocation(analysisFrame.getWidth(), minh);
+				
+				anaSelectFrame.setLocation(2 * w / 3, 0);
+				
+				eventsFrame.setLocation(0, minh + analysisFrame.getHeight());
+				detailedEvFrame.setLocation(eventsFrame.getWidth(), minh + analysisFrame.getHeight());
+				thresholdsSelectionFrame.setLocation(eventsFrame.getWidth() + detailedEvFrame.getWidth(), minh
+						+ analysisFrame.getHeight());
+			}
+		});
 	}
 	
 	public ThresholdsMainFrame() {
@@ -236,28 +358,48 @@ implements BsHashChangeListener, EtalonMTMListener,
 		rc.setParameter(CreateAnalysisReportCommand.PANEL, this.graphs);
 
 		aModel.setCommand(AnalyseApplicationModel.MENU_REPORT_CREATE, rc);
-
 		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_SAVE_PATHELEMENTS, new SavePathElementsCommand(this.aContext));
-		
-		// XXX temporary not allowed, uncomment after create frames like AnalyseMainFrame 
-		aModel.setVisible(AnalyseApplicationModel.MENU_REPORT, false);
 
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, new ShowWindowCommand(this.selectFrame));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS, new ShowWindowCommand(this.paramFrame));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_OVERALLSTATS, new ShowWindowCommand(this.statsFrame));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_EVENTS, new ShowWindowCommand(this.eventsFrame));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, new ShowWindowCommand(this.analysisFrame));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_MARKERSINFO, new ShowWindowCommand(this.mInfoFrame));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSISSELECTION, new ShowWindowCommand(this.anaSelectFrame));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_DETAILEDEVENTS, new ShowWindowCommand(this.detailedEvFrame));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_THRESHOLDS, new ShowWindowCommand(this.thresholdsFrame));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_THRESHOLDSSELECTION, new ShowWindowCommand(this.thresholdsSelectionFrame));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, this.getLazyCommand(SELECTOR_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS, this.getLazyCommand(PRIMARY_PARAMETERS_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_OVERALLSTATS, this.getLazyCommand(STATS_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_EVENTS, this.getLazyCommand(EVENTS_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_DETAILEDEVENTS, this.getLazyCommand(DETAILED_EVENTS_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, this.getLazyCommand(ANALYSIS_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_MARKERSINFO, this.getLazyCommand(MARKERS_INFO_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSISSELECTION, this.getLazyCommand(ANALYSIS_SELECTION_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_HISTOGRAMM, this.getLazyCommand(HISTOGRAMM_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_THRESHOLDS, this.getLazyCommand(THRESHOLDS_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_THRESHOLDSSELECTION, this.getLazyCommand(THRESHOLDS_SELECTION_FRAME));
 
 		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_CHECK_MISMATCH, new CheckMismatchCommand());
 
 		aModel.fireModelChanged("");
 	}
 
+	private AbstractCommand getLazyCommand(final Object key) {
+		return new AbstractCommand() {
+
+			private Command	command;
+
+			private Command getLazyCommand() {
+				if (this.command == null) {
+					Object object = ThresholdsMainFrame.this.frames.get(key);
+					if (object instanceof JInternalFrame) {
+						System.out.println("init getLazyCommand for " + key);
+						this.command = new ShowWindowCommand((JInternalFrame) object);
+					}
+				}
+				return this.command;
+			}
+
+			@Override
+			public void execute() {
+				this.getLazyCommand().execute();
+			}
+		};
+	}
+	
 	@Override
 	protected void setDefaultModel(ApplicationModel aModel) {
 		super.setDefaultModel(aModel);
@@ -387,8 +529,6 @@ implements BsHashChangeListener, EtalonMTMListener,
 			aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_THRESHOLDSSELECTION, true);
 
 			aModel.fireModelChanged("");
-
-			this.thresholdsSelectionFrame.setVisible(true);
 		} else if (id.equals(Heap.REFERENCE_TRACE_KEY)) {
 //			aModel.setEnabled("menuTraceReferenceMakeCurrent", true);
 //			aModel.fireModelChanged(new String[] { "menuTraceReferenceMakeCurrent"});
@@ -448,8 +588,6 @@ implements BsHashChangeListener, EtalonMTMListener,
 		aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_THRESHOLDSSELECTION, false);
 
 		aModel.fireModelChanged("");
-		// thresholdsFrame.setVisible(false);
-		this.thresholdsSelectionFrame.setVisible(false);
 	}
 
 	public void etalonMTMCUpdated() {
