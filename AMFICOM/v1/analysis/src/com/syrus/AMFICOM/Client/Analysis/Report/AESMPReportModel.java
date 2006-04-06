@@ -13,7 +13,6 @@ import javax.swing.table.AbstractTableModel;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalysisPanel;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ResizableLayeredPanel;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ScaledGraphPanel;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.TraceEventsPanel;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -79,26 +78,31 @@ public abstract class AESMPReportModel extends ReportModel
 					(AbstractTableModel)data,
 					(TableDataStorableElement) element);
 		}
-		else if (data instanceof ScaledGraphPanel) {
-			ScaledGraphPanel sgPanel = (ScaledGraphPanel)data;
-			Dimension oldSize = sgPanel.getSize();			
+		else if (data instanceof ResizableLayeredPanel) {
+			ResizableLayeredPanel lPanel = (ResizableLayeredPanel)data;
+			
+			Dimension oldSize = lPanel.getMainPane().getSize();
+			
 			Dimension sizeForRendering = new Dimension(
 					element.getWidth() - RenderingComponent.EDGE_SIZE,
 					element.getHeight() - RenderingComponent.EDGE_SIZE);
 			
 			boolean oldShowMarkers = false;
-			if (sgPanel instanceof AnalysisPanel) {
-				oldShowMarkers = ((AnalysisPanel) sgPanel).show_markers;
-				((AnalysisPanel) sgPanel).show_markers = false;
+			if (lPanel.getTopPanel() instanceof AnalysisPanel) {
+				oldShowMarkers = ((AnalysisPanel)lPanel.getTopPanel()).show_markers;
+				((AnalysisPanel) lPanel.getTopPanel()).show_markers = false;
 			}
 			
-			sgPanel.setSize(sizeForRendering);
-			result = ScaledGraphPanelReport.createReport(element,sgPanel);
-			sgPanel.setSize(oldSize);
-			sgPanel.setDefaultScales();
+			lPanel.getMainPane().setSize(sizeForRendering);
+			lPanel.resize();
 			
-			if (sgPanel instanceof AnalysisPanel)
-				((AnalysisPanel)sgPanel).show_markers = oldShowMarkers;
+			result = ScaledGraphPanelReport.createReport(element,lPanel.getMainPane());
+			lPanel.getMainPane().setSize(oldSize);
+			lPanel.resize();
+			
+			if (lPanel.getTopPanel() instanceof AnalysisPanel) {
+				((AnalysisPanel) lPanel.getTopPanel()).show_markers = oldShowMarkers;
+			}
 			
 		}
 		else if (reportName.equals(REFLECTOGRAMM)) {
