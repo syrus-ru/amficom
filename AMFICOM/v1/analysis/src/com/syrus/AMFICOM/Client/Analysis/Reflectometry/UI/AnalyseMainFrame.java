@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 
+import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.UIDefaults;
 
@@ -30,7 +31,6 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadModelingCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.MakeCurrentTracePrimaryCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.SavePathElementsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupAsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupCommand;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
@@ -43,7 +43,6 @@ import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
@@ -62,31 +61,20 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 	ClientAnalysisManager		aManager					= new ClientAnalysisManager();
 
 	public static final String	NOISE_FRAME					= "noiseFrame";
-	
 	public static final String	NOISE_HISTOGRAMM_FRAME				= "noiseHistogrammFrame";
-	
 	public static final String	SELECTOR_FRAME				= "selectFrame";
-
 	public static final String	PRIMARY_PARAMETERS_FRAME	= "paramFrame";
-
 	public static final String	STATS_FRAME					= "statsFrame";
-
 	public static final String	EVENTS_FRAME				= "eventsFrame";
-
-	public static final String	MARKERS_INFO_FRAME			= "MarkersInfoFrame";
-
+	public static final String	MARKERS_INFO_FRAME			= "mInfoFrame";
 	public static final String	ANALYSIS_FRAME				= "analysisFrame";
-
-	public static final String	ANALYSIS_SELECTION_FRAME	= "AnalysisSelectionFrame";
-
+	public static final String	ANALYSIS_SELECTION_FRAME	= "anaSelectFrame";
 	public static final String	DETAILED_EVENTS_FRAME		= "DetailedEventsFrame";
-
 	public static final String	HISTOGRAMM_FRAME			= "HistogrammFrame";
 
 	UIDefaults					frames;
-
 	NoiseHistogrammPanel noiseHistogrammPanel;	
-	
+
 	List<ReportTable>					tables;
 	List<SimpleResizableFrame>					graphs;
 
@@ -127,18 +115,17 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.tables = new LinkedList<ReportTable>();
 		this.graphs = new LinkedList<SimpleResizableFrame>();
 		
+		final JDesktopPane desktop = AnalyseMainFrame.this.desktopPane;
 		this.frames.put(SELECTOR_FRAME, new UIDefaults.LazyValue() {
-
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | SELECTOR_FRAME", Level.FINEST);
 				TraceSelectorFrame selectFrame = new TraceSelectorFrame(AnalyseMainFrame.this.dispatcher);
-				desktopPane.add(selectFrame);
+				desktop.add(selectFrame);
 				return selectFrame;
 			}
 		});
 
 		this.frames.put(PRIMARY_PARAMETERS_FRAME, new UIDefaults.LazyValue() {
-
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | PRIMARY_PARAMETERS_FRAME", Level.FINEST);
 				PrimaryParametersFrame paramFrame = new PrimaryParametersFrame() {
@@ -147,14 +134,13 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 						return PRIMARY_PARAMETERS_FRAME;
 					}
 				};
-				desktopPane.add(paramFrame);
+				desktop.add(paramFrame);
 				AnalyseMainFrame.this.tables.add(paramFrame);
 				return paramFrame;
 			}
 		});
 
 		this.frames.put(STATS_FRAME, new UIDefaults.LazyValue() {
-
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | STATS_FRAME", Level.FINEST);
 				OverallStatsFrame statsFrame = new OverallStatsFrame(AnalyseMainFrame.this.dispatcher) {
@@ -163,7 +149,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 						return STATS_FRAME;
 					}
 				};
-				desktopPane.add(statsFrame);
+				desktop.add(statsFrame);
 				AnalyseMainFrame.this.tables.add(statsFrame);
 				return statsFrame;
 			}
@@ -180,7 +166,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 					}
 				};
 				noiseFrame.setTitle(LangModelAnalyse.getString("Noise level"));
-				desktopPane.add(noiseFrame);
+				desktop.add(noiseFrame);
 				AnalyseMainFrame.this.graphs.add(noiseFrame);
 				return noiseFrame;
 			}
@@ -213,7 +199,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 					}
 				};
 				noiseHistoFrame.setTitle(LangModelAnalyse.getString("noiseHistoTitle"));
-				desktopPane.add(noiseHistoFrame);
+				desktop.add(noiseHistoFrame);
 				AnalyseMainFrame.this.graphs.add(noiseHistoFrame);
 				return noiseHistoFrame;
 			}
@@ -229,20 +215,17 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 						int h = f.desktopPane.getSize().height;
 						int minh = Math.min(205, h / 4);
 
-						JInternalFrame selectFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.SELECTOR_FRAME);
-						JInternalFrame paramFrame = (JInternalFrame) f.frames
-								.get(AnalyseMainFrame.PRIMARY_PARAMETERS_FRAME);
-						JInternalFrame statsFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.STATS_FRAME);
-						JInternalFrame noiseFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.NOISE_FRAME);
-						JInternalFrame noiseHistoFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.NOISE_HISTOGRAMM_FRAME);
-						JInternalFrame eventsFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.EVENTS_FRAME);
-						JInternalFrame detailedEvFrame = (JInternalFrame) f.frames
-								.get(AnalyseMainFrame.DETAILED_EVENTS_FRAME);
-						JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.ANALYSIS_FRAME);
-						JInternalFrame mInfoFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.MARKERS_INFO_FRAME);
-						JInternalFrame anaSelectFrame = (JInternalFrame) f.frames
-								.get(AnalyseMainFrame.ANALYSIS_SELECTION_FRAME);
-						JInternalFrame dhf = (JInternalFrame) f.frames.get(AnalyseMainFrame.HISTOGRAMM_FRAME);
+						JInternalFrame selectFrame = (JInternalFrame) f.frames.get(SELECTOR_FRAME);
+						JInternalFrame paramFrame = (JInternalFrame) f.frames.get(PRIMARY_PARAMETERS_FRAME);
+						JInternalFrame statsFrame = (JInternalFrame) f.frames.get(STATS_FRAME);
+						JInternalFrame noiseFrame = (JInternalFrame) f.frames.get(NOISE_FRAME);
+						JInternalFrame noiseHistoFrame = (JInternalFrame) f.frames.get(NOISE_HISTOGRAMM_FRAME);
+						JInternalFrame eventsFrame = (JInternalFrame) f.frames.get(EVENTS_FRAME);
+						JInternalFrame detailedEvFrame = (JInternalFrame) f.frames.get(DETAILED_EVENTS_FRAME);
+						JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(ANALYSIS_FRAME);
+						JInternalFrame mInfoFrame = (JInternalFrame) f.frames.get(MARKERS_INFO_FRAME);
+						JInternalFrame anaSelectFrame = (JInternalFrame) f.frames.get(ANALYSIS_SELECTION_FRAME);
+						JInternalFrame dhf = (JInternalFrame) f.frames.get(HISTOGRAMM_FRAME);
 
 						normalize(paramFrame);
 						normalize(selectFrame);
@@ -284,7 +267,6 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			});
 
 		this.frames.put(EVENTS_FRAME, new UIDefaults.LazyValue() {
-
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | EVENTS_FRAME", Level.FINEST);
 				EventsFrame eventsFrame = new EventsFrame(aContext, false) {
@@ -293,24 +275,22 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 						return EVENTS_FRAME;
 					}
 				};
-				AnalyseMainFrame.this.desktopPane.add(eventsFrame);
+				desktop.add(eventsFrame);
 				AnalyseMainFrame.this.tables.add(eventsFrame);
 				return eventsFrame;
 			}
 		});
 
 		this.frames.put(DETAILED_EVENTS_FRAME, new UIDefaults.LazyValue() {
-
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | DETAILED_EVENTS_FRAME", Level.FINEST);
 				DetailedEventsFrame detailedEvFrame = new DetailedEventsFrame();
-				desktopPane.add(detailedEvFrame);
+				desktop.add(detailedEvFrame);
 				return detailedEvFrame;
 			}
 		});
 
 		this.frames.put(ANALYSIS_FRAME, new UIDefaults.LazyValue() {
-
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ANALYSIS_FRAME", Level.FINEST);
 				AnalysisFrame analysisFrame = new AnalysisFrame(AnalyseMainFrame.this.dispatcher)  {
@@ -319,24 +299,28 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 						return ANALYSIS_FRAME;
 					}
 				};
-				desktopPane.add(analysisFrame);
+				desktop.add(analysisFrame);
 				AnalyseMainFrame.this.graphs.add(analysisFrame);
 				return analysisFrame;
 			}
 		});
 
 		this.frames.put(MARKERS_INFO_FRAME, new UIDefaults.LazyValue() {
-
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | MARKERS_INFO_FRAME", Level.FINEST);
-				MarkersInfoFrame mInfoFrame = new MarkersInfoFrame(AnalyseMainFrame.this.dispatcher) ;
-				desktopPane.add(mInfoFrame);
+				MarkersInfoFrame mInfoFrame = new MarkersInfoFrame(AnalyseMainFrame.this.dispatcher) {
+					@Override
+					public String getReportTitle() {
+						return MARKERS_INFO_FRAME;
+					}
+				};
+				AnalyseMainFrame.this.tables.add(mInfoFrame);
+				desktop.add(mInfoFrame);
 				return mInfoFrame;
 			}
 		});
 
 		this.frames.put(ANALYSIS_SELECTION_FRAME, new UIDefaults.LazyValue() {
-
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ANALYSIS_SELECTION_FRAME", Level.FINEST);
 				AnalysisSelectionFrame analysisSelectionFrame = new AnalysisSelectionFrame(aContext) {
@@ -345,7 +329,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 						return ANALYSIS_SELECTION_FRAME;
 					}
 				};
-				AnalyseMainFrame.this.desktopPane.add(analysisSelectionFrame);
+				desktop.add(analysisSelectionFrame);
 				AnalyseMainFrame.this.tables.add(analysisSelectionFrame);
 				return analysisSelectionFrame;
 			}
