@@ -95,6 +95,8 @@ public abstract class AESMPReportModel extends ReportModel
 			sgPanel.setSize(sizeForRendering);
 			result = ScaledGraphPanelReport.createReport(element,sgPanel);
 			sgPanel.setSize(oldSize);
+			sgPanel.setDefaultScales();
+			
 			if (sgPanel instanceof AnalysisPanel)
 				((AnalysisPanel)sgPanel).show_markers = oldShowMarkers;
 			
