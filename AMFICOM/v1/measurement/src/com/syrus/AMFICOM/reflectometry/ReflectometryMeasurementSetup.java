@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryMeasurementSetup.java,v 1.2.2.4 2006/04/05 14:11:47 arseniy Exp $
+ * $Id: ReflectometryMeasurementSetup.java,v 1.2.2.5 2006/04/06 09:20:30 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,9 +18,9 @@ import com.syrus.io.DataFormatException;
  * Надстройка над MeasurementSetup для естественного представления параметров,
  * специфичных для рефлектометрии.
  * 
- * @author $Author: arseniy $
+ * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.2.2.4 $, $Date: 2006/04/05 14:11:47 $
+ * @version $Revision: 1.2.2.5 $, $Date: 2006/04/06 09:20:30 $
  * @module
  */
 public class ReflectometryMeasurementSetup {
@@ -46,7 +46,7 @@ public class ReflectometryMeasurementSetup {
 	}
 
 	/**
-	 * @return критерии анализа данного шаблона, may be null
+	 * @return критерии анализа и эталон данного шаблона, may be null
 	 */
 	public ReflectometryAnalysisCriteria getAnalysisCriteria() {
 		return this.analysisCriteria;
