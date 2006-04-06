@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionDatabase.java,v 1.1.2.4 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: ActionDatabase.java,v 1.1.2.5 2006/04/06 11:14:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,25 +26,25 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/04/06 11:14:20 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public abstract class ActionDatabase<A extends Action<R>, R extends ActionResultParameter<A>> extends StorableObjectDatabase<A> {
-	static String columns;
-	static String updateMultipleSQLValues;
+	private static String columns;
+	private static String updateMultipleSQLValues;
 
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = COLUMN_TYPE_ID + COMMA
-				+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-				+ COLUMN_ACTION_TEMPLATE_ID + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_START_TIME + COMMA
-				+ COLUMN_DURATION + COMMA
-				+ COLUMN_STATUS;
+					+ COLUMN_MONITORED_ELEMENT_ID + COMMA
+					+ COLUMN_ACTION_TEMPLATE_ID + COMMA
+					+ COLUMN_NAME + COMMA
+					+ COLUMN_START_TIME + COMMA
+					+ COLUMN_DURATION + COMMA
+					+ COLUMN_STATUS;
 		}
 		return columns;
 	}
@@ -53,13 +53,13 @@ public abstract class ActionDatabase<A extends Action<R>, R extends ActionResult
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION;
-    	}
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION;
+		}
 		return updateMultipleSQLValues;
 	}
 
