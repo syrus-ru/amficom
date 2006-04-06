@@ -92,8 +92,6 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener {
 		ppp.updScale2fitCurrentEv(.2, 1.);
 		p.setColorModel(id);
 		this.traces.put(id, p);
-
-		setVisible(true);
 	}
 
 	void removeTrace (String id)

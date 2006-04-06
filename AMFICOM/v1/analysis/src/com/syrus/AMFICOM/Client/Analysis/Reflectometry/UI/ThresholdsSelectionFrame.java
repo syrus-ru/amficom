@@ -508,6 +508,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 
 	public void bsHashAdded(String key) {
 		updateMakeEtalonButton();
+		setVisible(true);
 	}
 
 	public void bsHashRemoved(String key) {
@@ -516,6 +517,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 
 	public void bsHashRemovedAll() {
 		this.jTable.setModel(this.tModel);
+		setVisible (false);
 	}
 
 	public void currentEventChanged()
