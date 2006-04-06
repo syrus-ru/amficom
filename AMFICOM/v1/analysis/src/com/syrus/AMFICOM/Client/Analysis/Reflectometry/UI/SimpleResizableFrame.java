@@ -55,8 +55,8 @@ public class SimpleResizableFrame extends JInternalFrame {
 		this.getContentPane().add(panel, BorderLayout.CENTER);
 	}
 
-	public ScaledGraphPanel getTopGraphPanel() {
-		return panel.getTopPanel();
+	public ResizableLayeredPanel getTopGraphPanel() {
+		return panel;
 	}
 
 	public String getReportTitle() {
