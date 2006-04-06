@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementControlModule.java,v 1.146.2.17 2006/03/31 08:42:15 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.146.2.18 2006/04/06 08:07:16 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.eventv2.Event;
 import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
@@ -63,7 +64,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.146.2.17 $, $Date: 2006/03/31 08:42:15 $
+ * @version $Revision: 1.146.2.18 $, $Date: 2006/04/06 08:07:16 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -478,8 +479,8 @@ final class MeasurementControlModule extends SleepButWorkThread {
 				transceiver.start();
 				Log.debugMessage("Started transceiver for KIS '" + kisId + "'", DEBUGLEVEL07);
 				this.transceivers.put(kisId, transceiver);
-			} catch (ApplicationException ae) {
-				Log.errorMessage(ae);
+			} catch (KISException ke) {
+				Log.errorMessage(ke);
 			}
 		}
 	}
@@ -526,11 +527,21 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	 *         {@link ApplicationException}, если не удалось подгрузить данные
 	 *         из БД.
 	 */
-	KISConnection getKISConnection(final Identifier kisId) throws ApplicationException {
+	KISConnection getKISConnection(final Identifier kisId) throws KISException {
 		assert kisId.getMajor() == KIS_CODE : ILLEGAL_ENTITY_CODE;
 
-		final KIS kis = StorableObjectPool.getStorableObject(kisId, true);
-		return this.kisConnectionManager.getConnection(kis);
+		final KIS kis;
+		try {
+			kis = StorableObjectPool.getStorableObject(kisId, true);
+		} catch (ApplicationException ae) {
+			throw new KISException(ae);
+		}
+
+		try {
+			return this.kisConnectionManager.getConnection(kis);
+		} catch (CommunicationException ce) {
+			throw new KISException(ce);
+		}
 	}
 
 	/**

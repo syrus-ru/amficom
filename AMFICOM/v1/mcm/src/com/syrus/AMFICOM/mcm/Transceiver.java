@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.80.2.4 2006/03/29 09:07:57 arseniy Exp $
+ * $Id: Transceiver.java,v 1.80.2.5 2006/04/06 08:07:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.80.2.4 $, $Date: 2006/03/29 09:07:57 $
+ * @version $Revision: 1.80.2.5 $, $Date: 2006/04/06 08:07:16 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -96,7 +96,7 @@ final class Transceiver extends SleepButWorkThread {
 	 */
 	private boolean running;
 
-	public Transceiver(final Identifier kisId) throws ApplicationException {
+	public Transceiver(final Identifier kisId) throws KISException {
 		super(ApplicationProperties.getInt(KEY_KIS_TICK_TIME, KIS_TICK_TIME) * 1000,
 				ApplicationProperties.getInt(KEY_KIS_MAX_FALLS, KIS_MAX_FALLS));
 		super.setName("Transceiver " + kisId);
