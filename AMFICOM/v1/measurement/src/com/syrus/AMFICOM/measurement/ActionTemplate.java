@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplate.java,v 1.1.2.12 2006/04/05 12:00:14 arseniy Exp $
+ * $Id: ActionTemplate.java,v 1.1.2.13 2006/04/06 13:03:12 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,14 +38,17 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * Шаблон действия. Каждое действие, т. е., наследник
+ * <p>
+ * Шаблон действия.
+ * <p>
+ * Каждое действие, т. е., наследник
  * {@link com.syrus.AMFICOM.measurement.Action}, имеет свой шаблон. Шаблон
  * действия должен быть привязан к одной или более измеряемых линий
  * {@link com.syrus.AMFICOM.measurement.MonitoredElement}. Таким образом,
  * каждая измеряемая линия имеет свой набор шаблонов, по которым на ней можно
  * проводить данное действие.
  * 
- * @version $Revision: 1.1.2.12 $, $Date: 2006/04/05 12:00:14 $
+ * @version $Revision: 1.1.2.13 $, $Date: 2006/04/06 13:03:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
