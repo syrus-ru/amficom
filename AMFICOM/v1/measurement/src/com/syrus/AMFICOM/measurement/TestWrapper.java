@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.27.2.4 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: TestWrapper.java,v 1.27.2.5 2006/04/07 13:09:58 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.measurement.Test.TestStatus;
 import com.syrus.AMFICOM.measurement.Test.TestTemporalType;
 
 /**
- * @version $Revision: 1.27.2.4 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.27.2.5 $, $Date: 2006/04/07 13:09:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -135,8 +135,6 @@ public final class TestWrapper extends StorableObjectWrapper<Test> {
 				test.setMonitoredElementId((Identifier) value);
 			} else if (key.equals(COLUMN_STATUS)) {
 				test.setStatus((TestStatus) value);
-			} else if (key.equals(COLUMN_TEMPORAL_TYPE)) {
-				test.setTemporalType((TestTemporalType) value);
 			} else if (key.equals(COLUMN_START_TIME)) {
 				test.setStartTime(new Date(Long.parseLong((String) value)));
 			} else if (key.equals(COLUMN_END_TIME)) {
