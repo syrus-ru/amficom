@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisType.java,v 1.107.2.8 2006/04/05 09:45:15 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.107.2.9 2006/04/07 07:38:44 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -36,7 +37,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.107.2.8 $, $Date: 2006/04/05 09:45:15 $
+ * @version $Revision: 1.107.2.9 $, $Date: 2006/04/07 07:38:44 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -45,6 +46,7 @@ public final class AnalysisType extends ActionType implements IdlTransferableObj
 	private static final long serialVersionUID = 3770601862577867745L;
 
 	private static TypicalCondition codenameCondition;
+	private static EquivalentCondition equivalentCondition;
 
 	AnalysisType(final Identifier id,
 			final Identifier creatorId,
@@ -135,5 +137,19 @@ public final class AnalysisType extends ActionType implements IdlTransferableObj
 		}
 		assert analysisTypes.size() == 1 : ONLY_ONE_EXPECTED;
 		return analysisTypes.iterator().next();
+	}
+
+	/**
+	 * Найти все существующие типы анализа.
+	 * 
+	 * @return Все существующие типы анализа.
+	 * @throws ApplicationException
+	 */
+	public static Set<AnalysisType> values() throws ApplicationException {
+		if (equivalentCondition == null) {
+			equivalentCondition = new EquivalentCondition(ANALYSIS_TYPE_CODE);
+		}
+
+		return StorableObjectPool.getStorableObjectsByCondition(equivalentCondition, true);
 	}
 }

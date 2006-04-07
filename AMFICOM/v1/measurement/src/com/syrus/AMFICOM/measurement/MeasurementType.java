@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementType.java,v 1.111.2.9 2006/04/07 07:23:03 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.111.2.10 2006/04/07 07:38:44 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -36,7 +37,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.111.2.9 $, $Date: 2006/04/07 07:23:03 $
+ * @version $Revision: 1.111.2.10 $, $Date: 2006/04/07 07:38:44 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -45,6 +46,7 @@ public final class MeasurementType extends ActionType implements IdlTransferable
 	private static final long serialVersionUID = -5293028501528188012L;
 
 	private static TypicalCondition codenameCondition;
+	private static EquivalentCondition equivalentCondition;
 
 	MeasurementType(final Identifier id,
 			final Identifier creatorId,
@@ -144,5 +146,19 @@ public final class MeasurementType extends ActionType implements IdlTransferable
 		}
 		assert measurementTypes.size() == 1 : ONLY_ONE_EXPECTED;
 		return measurementTypes.iterator().next();
+	}
+
+	/**
+	 * Найти все существующие типы измерений.
+	 * 
+	 * @return Все существующие типы измерений.
+	 * @throws ApplicationException
+	 */
+	public static Set<MeasurementType> values() throws ApplicationException {
+		if (equivalentCondition == null) {
+			equivalentCondition = new EquivalentCondition(MEASUREMENT_TYPE_CODE);
+		}
+
+		return StorableObjectPool.getStorableObjectsByCondition(equivalentCondition, true);
 	}
 }
