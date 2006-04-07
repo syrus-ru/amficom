@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisType.java,v 1.107.2.9 2006/04/07 07:38:44 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.107.2.10 2006/04/07 08:14:06 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.107.2.9 $, $Date: 2006/04/07 07:38:44 $
+ * @version $Revision: 1.107.2.10 $, $Date: 2006/04/07 08:14:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -145,7 +145,7 @@ public final class AnalysisType extends ActionType implements IdlTransferableObj
 	 * @return Все существующие типы анализа.
 	 * @throws ApplicationException
 	 */
-	public static Set<AnalysisType> values() throws ApplicationException {
+	public static Set<AnalysisType> getValues() throws ApplicationException {
 		if (equivalentCondition == null) {
 			equivalentCondition = new EquivalentCondition(ANALYSIS_TYPE_CODE);
 		}

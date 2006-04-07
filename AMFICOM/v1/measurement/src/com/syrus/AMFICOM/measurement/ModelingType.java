@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingType.java,v 1.65.2.9 2006/04/07 07:38:44 arseniy Exp $
+ * $Id: ModelingType.java,v 1.65.2.10 2006/04/07 08:14:06 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.65.2.9 $, $Date: 2006/04/07 07:38:44 $
+ * @version $Revision: 1.65.2.10 $, $Date: 2006/04/07 08:14:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -145,7 +145,7 @@ public final class ModelingType extends ActionType implements IdlTransferableObj
 	 * @return Все существующие типы моделирования.
 	 * @throws ApplicationException
 	 */
-	public static Set<ModelingType> values() throws ApplicationException {
+	public static Set<ModelingType> getValues() throws ApplicationException {
 		if (equivalentCondition == null) {
 			equivalentCondition = new EquivalentCondition(MODELING_TYPE_CODE);
 		}
