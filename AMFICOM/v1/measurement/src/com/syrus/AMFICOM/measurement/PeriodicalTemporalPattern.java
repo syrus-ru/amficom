@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.30.2.3 2006/03/17 11:54:48 arseniy Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.30.2.4 2006/04/07 10:16:45 saa Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -17,28 +17,37 @@ import java.util.Date;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
+import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
-
 /**
- * @version $Revision: 1.30.2.3 $, $Date: 2006/03/17 11:54:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30.2.4 $, $Date: 2006/04/07 10:16:45 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
-public final class PeriodicalTemporalPattern extends AbstractTemporalPattern implements IdlTransferableObjectExt<IdlPeriodicalTemporalPattern> {
+public final class PeriodicalTemporalPattern
+		extends AbstractTemporalPattern
+		implements IdlTransferableObjectExt<IdlPeriodicalTemporalPattern> {
+
 	private static final long serialVersionUID = 3257567312898175032L;
 
 	private long period;
@@ -94,15 +103,50 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern imp
 	}	
 	
 	/**
+	 * @param creatorId
+	 * @param period
+	 * @return exists PeridicalTemporalPattern with period, otherwise create new one.
+	 * @throws CreateObjectException
+	 */
+	public static PeriodicalTemporalPattern getInstance(final Identifier creatorId, 
+			final long period) throws CreateObjectException {
+		final TypicalCondition typicalCondition = new TypicalCondition(period, 
+			period, 
+			OperationSort.OPERATION_EQUALS, 
+			ObjectEntities.PERIODICALTEMPORALPATTERN_CODE, 
+			PeriodicalTemporalPatternWrapper.COLUMN_PERIOD); 
+		try {
+			final Set<PeriodicalTemporalPattern> periodicalTemporalPatterns = 
+				StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true, true);
+			if (!periodicalTemporalPatterns.isEmpty()) {
+				final int size = periodicalTemporalPatterns.size();
+				if (size != 1) {
+					// normally this should not happen, but see bug 464
+					Log.debugMessage("PeriodicalTemporalPatterns.size is "
+							+ size + ", expected 1", Level.WARNING);
+				}
+				return periodicalTemporalPatterns.iterator().next();
+			}
+			return createInstance(creatorId, period);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+	}
+	
+	/**
 	 * create new instance for client
 	 * @param creatorId creator id
 	 * @param period period in milliseconds
+	 * @deprecated use {@link #getInstance(Identifier, long)}
 	 */
+	@Deprecated
 	public static PeriodicalTemporalPattern createInstance(final Identifier creatorId, final long period)
 			throws CreateObjectException {
 
 		try {
-			final PeriodicalTemporalPattern periodicalTemporalPattern = new PeriodicalTemporalPattern(IdentifierPool.getGeneratedIdentifier(PERIODICALTEMPORALPATTERN_CODE),
+			final PeriodicalTemporalPattern periodicalTemporalPattern = 
+				new PeriodicalTemporalPattern(
+					IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE),
 					creatorId,
 					INITIAL_VERSION,
 					period);
@@ -147,11 +191,11 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern imp
 		final Date startInterval,
 		final Date endInterval) {
 		
-		if (start.compareTo(end) >= 0) {
+		if (start.compareTo(end) > 0) {
 			throw new IllegalArgumentException("Start date later than end date");
 		}
 		
-		if (startInterval.compareTo(endInterval) >= 0) {
+		if (startInterval.compareTo(endInterval) > 0) {
 			throw new IllegalArgumentException("Start interval date later than end interval date");
 		}
 		
@@ -161,10 +205,10 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern imp
 				endInterval.getTime() : 
 				end.getTime();
 		
+		final long d = startInterval.getTime() - start0;
 		final long startTime0 = start.compareTo(startInterval) < 0 ? 
-				start0 + this.period * (1 + (int)(startInterval.getTime() - start0) / this.period) :
+				start0 + this.period * ((d % this.period == 0 ? 0 : 1) + d / this.period) :
 				start0;
-				
 		final SortedSet<Date> times1 = new TreeSet<Date>();
 		for(long time = startTime0; time <= end0; time += this.period) {
 			times1.add(new Date(time));
@@ -239,6 +283,7 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern imp
 		return buffer.toString();
 	}
 	
+	@Deprecated
 	public void setPeriod(final long period) {
 		if (this.period != period) {
 			super.times = null;
