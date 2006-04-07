@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEventHandler.java,v 1.14 2006/02/15 12:18:11 stas Exp $
+ * $Id: SchemeEventHandler.java,v 1.15 2006/04/07 13:53:02 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.client_.scheme.ui;
+
+import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.RACK;
 
 import java.beans.PropertyChangeEvent;
 
@@ -24,7 +26,6 @@ import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
-import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -33,8 +34,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2006/02/15 12:18:11 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2006/04/07 13:53:02 $
  * @module schemeclient
  */
 
@@ -84,7 +85,7 @@ public class SchemeEventHandler extends AbstractEventHandler {
 					} else if (event.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT)) {
 						SchemeElement se = (SchemeElement)object;
 						try {
-							if (se.getProtoEquipment().getType().equals(EquipmentType.RACK)) {
+							if (se.getProtoEquipment().getType().getCodename().equals(RACK.stringValue())) {
 								this.frame.setVisualManager(event.getVisualManager());
 								StorableObjectEditor editor = this.frame.getCurrentEditor();
 								if (editor != null)

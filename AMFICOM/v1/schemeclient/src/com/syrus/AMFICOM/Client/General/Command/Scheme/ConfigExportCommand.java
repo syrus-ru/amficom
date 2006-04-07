@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigExportCommand.java,v 1.9 2005/12/07 17:17:36 bass Exp $
+ * $Id: ConfigExportCommand.java,v 1.10 2006/04/07 13:53:02 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
+
+import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.BUG_136;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +23,6 @@ import org.apache.xmlbeans.XmlOptions;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.Equipment;
-import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
@@ -91,7 +92,7 @@ public class ConfigExportCommand extends ImportExportCommand {
 			Collection<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 			Set<XmlProtoEquipment> xmlEquipmentTypes = new HashSet<XmlProtoEquipment>();
 			for (ProtoEquipment protoEq : protoEquipments) {
-				if (!protoEq.getType().equals(EquipmentType.BUG_136)) {
+				if (!protoEq.getType().getCodename().equals(BUG_136.stringValue())) {
 					XmlProtoEquipment xmlEquipmentType = XmlProtoEquipment.Factory.newInstance();
 					protoEq.getXmlTransferable(xmlEquipmentType, AMFICOM_IMPORT, false);
 					xmlEquipmentTypes.add(xmlEquipmentType);

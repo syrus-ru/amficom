@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.29 2006/02/15 12:18:11 stas Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.30 2006/04/07 13:53:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,9 @@
  */
 
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
+
+import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.CABLE_PANEL;
+import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.MUFF;
 
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -34,7 +37,6 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeElementPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemePropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeProtoElementPropertiesManager;
-import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
@@ -47,8 +49,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.29 $, $Date: 2006/02/15 12:18:11 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2006/04/07 13:53:02 $
  * @module schemeclient
  */
 
@@ -180,7 +182,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 		if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
 			SchemeProtoElement pe = (SchemeProtoElement)cellContainer;
 			try {
-				if (pe.getProtoEquipment().getType().equals(EquipmentType.MUFF)) {
+				if (pe.getProtoEquipment().getType().getCodename().equals(MUFF.stringValue())) {
 					CreateUgo.createMuffUgo(pe, invisibleGraph, icon, label, blockports_in, blockports_out);
 				} else {
 					CreateUgo.createProtoUgo((SchemeProtoElement)cellContainer, invisibleGraph, icon, label, blockports_in, blockports_out);
@@ -191,9 +193,9 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
 			SchemeElement se = (SchemeElement)cellContainer;
 			try {
-				if (se.getProtoEquipment().getType().equals(EquipmentType.MUFF)) {
+				if (se.getProtoEquipment().getType().getCodename().equals(MUFF.stringValue())) {
 					CreateUgo.createMuffUgo(se, invisibleGraph, icon, label, blockports_in, blockports_out);
-				} else if (se.getProtoEquipment().getType().equals(EquipmentType.CABLE_PANEL)) {
+				} else if (se.getProtoEquipment().getType().getCodename().equals(CABLE_PANEL.stringValue())) {
 					CreateUgo.createRackUgo(se, graph);
 				} else {
 					CreateUgo.createElementUgo(se, invisibleGraph, icon, label, blockports_in, blockports_out);

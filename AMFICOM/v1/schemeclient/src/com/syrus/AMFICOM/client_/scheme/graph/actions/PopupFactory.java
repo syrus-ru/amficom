@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.26 2006/02/22 12:00:26 stas Exp $
+ * $Id: PopupFactory.java,v 1.27 2006/04/07 13:53:02 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
+
+import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.MUFF;
 
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -54,9 +56,6 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.PathElement;
@@ -315,7 +314,8 @@ public class PopupFactory {
 		
 		JMenu menu = new JMenu(LangModelScheme.getString("Menu.path.insert_muff")); //$NON-NLS-1$
 		try {
-			TypicalCondition condition1 = new TypicalCondition(EquipmentType.MUFF, OperationSort.OPERATION_EQUALS, ObjectEntities.PROTOEQUIPMENT_CODE, StorableObjectWrapper.COLUMN_TYPE_CODE);
+			final EquipmentType muffEquipmentType = EquipmentType.valueOf(MUFF);
+			final LinkedIdsCondition condition1 = new LinkedIdsCondition(muffEquipmentType, ObjectEntities.PROTOEQUIPMENT_CODE);
 			Set<ProtoEquipment> protoEqs = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 			Set<Identifier> protoEqIds = new HashSet<Identifier>(); 
 			for (ProtoEquipment protoEq : protoEqs) {

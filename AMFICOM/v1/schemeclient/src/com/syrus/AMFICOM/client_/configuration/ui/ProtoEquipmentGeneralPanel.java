@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentGeneralPanel.java,v 1.10 2006/02/15 12:18:10 stas Exp $
+ * $Id: ProtoEquipmentGeneralPanel.java,v 1.11 2006/04/07 13:53:02 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -48,8 +47,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2006/02/15 12:18:10 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2006/04/07 13:53:02 $
  * @module schemeclient
  */
 
@@ -73,8 +72,14 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 
 	protected ProtoEquipmentGeneralPanel() {
 		super();
-		Set<EquipmentType> eqts = new HashSet<EquipmentType>(Arrays.asList(EquipmentType.values()));
-		eqts.remove(EquipmentType.BUG_136);
+
+		final Set<EquipmentType> eqts = new HashSet<EquipmentType>();
+		try {
+			eqts.addAll(EquipmentType.values());
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+		}
+		Bug136Remover.removeEquipmentTypeBug136(eqts);
 		this.tfEqtCombo = new AComboBox(eqts.toArray(new EquipmentType[eqts.size()]));
 		
 		final GridBagLayout gbPanel0 = new GridBagLayout();
@@ -282,7 +287,11 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 			this.taDescriptionArea.setText(this.protoEq.getDescription());
 			this.tfManufacturerText.setText(this.protoEq.getManufacturer());
 			this.tfManufacturerCodeText.setText(this.protoEq.getManufacturerCode());
-			this.tfEqtCombo.setSelectedItem(this.protoEq.getType());
+			try {
+				this.tfEqtCombo.setSelectedItem(this.protoEq.getType());
+			} catch (ApplicationException ae) {
+				Log.errorMessage(ae);
+			}
 		} else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
 			this.taDescriptionArea.setText(SchemeResourceKeys.EMPTY);

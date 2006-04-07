@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.30 2006/03/17 10:27:59 stas Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.31 2006/04/07 13:53:02 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,11 +53,10 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.KISWrapper;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
@@ -68,8 +67,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKi
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.30 $, $Date: 2006/03/17 10:27:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2006/04/07 13:53:02 $
  * @module schemeclient
  */
 
@@ -89,7 +88,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 	JTextField tfSymbolText = new JTextField();
 	JButton btSymbolBut = new JButton();
 	JLabel lbCodenameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.CODENAME));
-	AComboBox eqtCombo = new AComboBox(EquipmentType.values());
+	AComboBox eqtCombo;
 	JLabel lbTypeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
 	WrapperedComboBox<ProtoEquipment> cmbTypeCombo = new WrapperedComboBox<ProtoEquipment>(
 			ProtoEquipmentWrapper.getInstance(),
@@ -133,6 +132,12 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 
 	protected SchemeElementGeneralPanel() {
 		super();
+
+		try {
+			this.eqtCombo = new AComboBox(EquipmentType.valuesArray());
+		} catch (ApplicationException ae) {
+			Log.errorMessage(ae);
+		}
 
 		this.nf.setValueClass(Integer.class);
 		this.nf.setMinimum(new Integer(0));
@@ -730,11 +735,8 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 
 	void eqtCombo_stateChanged(final EquipmentType eqt) {
 		this.cmbTypeCombo.removeAllItems();
-		
-		final TypicalCondition condition = new TypicalCondition(eqt, 
-				OperationSort.OPERATION_EQUALS, 
-				ObjectEntities.PROTOEQUIPMENT_CODE, 
-				StorableObjectWrapper.COLUMN_TYPE_CODE);
+
+		final LinkedIdsCondition condition = new LinkedIdsCondition(eqt, ObjectEntities.PROTOEQUIPMENT_CODE);
 		try {
 			final Set<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			this.cmbTypeCombo.addElements(protoEquipments);
@@ -849,8 +851,13 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		if (protoEq != null) {
 			this.eqtCombo.setEnabled(true);
 			this.cmbTypeCombo.setEnabled(true);
-			this.eqtCombo.setSelectedItem(protoEq.getType());
-			this.eqtCombo_stateChanged(protoEq.getType());
+			try {
+				final EquipmentType equipmentType = protoEq.getType();
+				this.eqtCombo.setSelectedItem(equipmentType);
+				this.eqtCombo_stateChanged(equipmentType);
+			} catch (ApplicationException ae) {
+				Log.errorMessage(ae);
+			}
 			this.cmbTypeCombo.setSelectedItem(protoEq);
 			this.typeCombo_stateChanged(protoEq);
 		} else {

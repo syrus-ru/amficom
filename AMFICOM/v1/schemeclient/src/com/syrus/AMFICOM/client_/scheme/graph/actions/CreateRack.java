@@ -1,5 +1,5 @@
 /*-
- * $Id: CreateRack.java,v 1.8 2006/02/15 12:18:11 stas Exp $
+ * $Id: CreateRack.java,v 1.9 2006/04/07 13:53:02 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
+
+import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.RACK;
 
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
@@ -39,11 +41,9 @@ import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -102,12 +102,11 @@ public class CreateRack extends AbstractAction {
 			try {
 				SchemeElement element = SchemeObjectsFactory.createSchemeElement(res.getScheme());
 				element.setName(LangModelGraph.getString("rack") + counter); //$NON-NLS-1$
-				
+
+				final EquipmentType rackEquipmentType = EquipmentType.valueOf(RACK);
+
 				ProtoEquipment rackProto = null;
-				final TypicalCondition condition = new TypicalCondition(EquipmentType.RACK, 
-						OperationSort.OPERATION_EQUALS, 
-						ObjectEntities.PROTOEQUIPMENT_CODE, 
-						StorableObjectWrapper.COLUMN_TYPE_CODE);
+				final LinkedIdsCondition condition = new LinkedIdsCondition(rackEquipmentType, ObjectEntities.PROTOEQUIPMENT_CODE);
 				try {
 					Set<ProtoEquipment> rackProtos = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					if (!rackProtos.isEmpty()) {
@@ -117,7 +116,7 @@ public class CreateRack extends AbstractAction {
 					Log.errorMessage(e1);
 				}
 				if (rackProto == null) {
-					rackProto = SchemeObjectsFactory.createProtoEquipment(LangModelGraph.getString("rack"), EquipmentType.RACK);
+					rackProto = SchemeObjectsFactory.createProtoEquipment(LangModelGraph.getString("rack"), rackEquipmentType);
 				}
 				element.setProtoEquipment(rackProto);
 				counter++;

@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationImporter.java,v 1.1 2006/01/11 12:42:57 stas Exp $
+ * $Id: ConfigurationImporter.java,v 1.2 2006/04/07 13:53:02 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
@@ -214,12 +215,11 @@ public class ConfigurationImporter extends Importer {
 						Log.debugMessage("Skip creation of ProtoEquipment as EQT is null for " + name, Level.FINER);
 					} else {
 						if (protoEquipment == null) {
-							protoEquipment = ProtoEquipment.createInstance(
-									LoginManager.getUserId(), 
-									eqt, 
-									name, 
-									description, 
-									manufacturer, 
+							protoEquipment = ProtoEquipment.createInstance(LoginManager.getUserId(),
+									eqt.getId(),
+									name,
+									description,
+									manufacturer,
 									manufacturerCode);
 						}
 						idsMapping.put(id, protoEquipment.getId());
@@ -236,39 +236,41 @@ public class ConfigurationImporter extends Importer {
 					manufacturer = s[1];
 				} else if (s[0].equals("@manufacturer_code")) {
 					manufacturerCode = s[1];
-				} else if (s[0].equals("@eq_class")) { 
+				} else if (s[0].equals("@eq_class")) {
 					String eqClass = s[1];
-					if (eqClass.equals(CROSS)) {
-						eqt = EquipmentType.CROSS;
-					} else if (eqClass.equals(MUFF)) {
-						eqt = EquipmentType.MUFF;
-					} else if (eqClass.equals(FILTER)) {
-						eqt = EquipmentType.FILTER;
-					} else if (eqClass.equals(MULTIPLEXOR)) {
-						eqt = EquipmentType.MULTIPLEXOR;
-					} else if (eqClass.equals(RECEIVER)) {
-						eqt = EquipmentType.RECEIVER;
-					} else if (eqClass.equals(SWITCH)) {
-						eqt = EquipmentType.OPTICAL_SWITCH;
-					} else if (eqClass.equals(TESTER)) {
-						eqt = EquipmentType.REFLECTOMETER;
-					} else if (eqClass.equals(TRANSMITTER)) {
-						eqt = EquipmentType.TRANSMITTER;
-					} else {
-						eqt = null;
+					try {
+						if (eqClass.equals(CROSS)) {
+							eqt = EquipmentType.valueOf(EquipmentTypeCodename.CROSS.stringValue());
+						} else if (eqClass.equals(MUFF)) {
+							eqt = EquipmentType.valueOf(EquipmentTypeCodename.MUFF.stringValue());
+						} else if (eqClass.equals(FILTER)) {
+							eqt = EquipmentType.valueOf(EquipmentTypeCodename.FILTER.stringValue());
+						} else if (eqClass.equals(MULTIPLEXOR)) {
+							eqt = EquipmentType.valueOf(EquipmentTypeCodename.MULTIPLEXOR.stringValue());
+						} else if (eqClass.equals(RECEIVER)) {
+							eqt = EquipmentType.valueOf(EquipmentTypeCodename.RECEIVER.stringValue());
+						} else if (eqClass.equals(SWITCH)) {
+							eqt = EquipmentType.valueOf(EquipmentTypeCodename.OPTICAL_SWITCH.stringValue());
+						} else if (eqClass.equals(TESTER)) {
+							eqt = EquipmentType.valueOf(EquipmentTypeCodename.REFLECTOMETER.stringValue());
+						} else if (eqClass.equals(TRANSMITTER)) {
+							eqt = EquipmentType.valueOf(EquipmentTypeCodename.TRANSMITTER.stringValue());
+						} else {
+							eqt = null;
+						}
+					} catch (ApplicationException ae) {
+						throw new CreateObjectException("Cannot load EquipmentType '" + eqClass + "'", ae);
 					}
-					
 				} else if (s[0].equals("@characteristics")) {
 					Set<Characteristic> characteristics = new HashSet<Characteristic>();
 					if (eqt == null) {
 						Log.debugMessage("Skip creation of ProtoEquipment as EQT is null for " + name, Level.FINER);
 					} else {
-						protoEquipment = ProtoEquipment.createInstance(
-								LoginManager.getUserId(), 
-								eqt, 
-								name, 
-								description, 
-								manufacturer, 
+						protoEquipment = ProtoEquipment.createInstance(LoginManager.getUserId(),
+								eqt.getId(),
+								name,
+								description,
+								manufacturer,
 								manufacturerCode);
 					}
 					String[] ch = analyseString(isr.readASCIIString());

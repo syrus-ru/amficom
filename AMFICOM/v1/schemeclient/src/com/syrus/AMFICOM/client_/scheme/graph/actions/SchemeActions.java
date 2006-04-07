@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.68 2006/03/17 10:29:10 stas Exp $
+ * $Id: SchemeActions.java,v 1.69 2006/04/07 13:53:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,9 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
+import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.MUFF;
+import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.OPTICAL_SWITCH;
+import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.RACK;
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.WARNING;
 
@@ -66,7 +69,6 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 import com.syrus.AMFICOM.client_.scheme.utils.NumberedComparator;
 import com.syrus.AMFICOM.configuration.Equipment;
-import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -102,8 +104,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.68 $, $Date: 2006/03/17 10:29:10 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.69 $, $Date: 2006/04/07 13:53:02 $
  * @module schemeclient
  */
 
@@ -572,7 +574,7 @@ public class SchemeActions {
 	}
 	
 	private static void generateImageFromInternal(SchemeGraph graph, SchemeElement se, Set<SchemeElement> schemeElements) throws ApplicationException {
-		if (se.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER && se.getProtoEquipment().getType().equals(EquipmentType.RACK)) {
+		if (se.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER && se.getProtoEquipment().getType().getCodename().equals(RACK.stringValue())) {
 			// skip image creation for Rack
 			return;
 		}
@@ -594,7 +596,7 @@ public class SchemeActions {
 		for (SchemeElement child : schemeElements) {
 			// in case of rack pit to graph it's child instead of rack itself
 			if (child.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER && 
-					child.getProtoEquipment().getType().equals(EquipmentType.RACK)) {
+					child.getProtoEquipment().getType().getCodename().equals(RACK.stringValue())) {
 //				List<DefaultGraphCell> insertedCells = new ArrayList<DefaultGraphCell>();				
 				for (SchemeElement child2 : child.getSchemeElements(false)) {
 					Point p;
@@ -754,9 +756,9 @@ public class SchemeActions {
 //		CreateUgo.createMuffUgo(se, graph, null, EMPTY, blockports_in, blockports_out);
 		if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 			CreateUgo.createElementUgo(se, graph, null, se.getLabel(), blockports_in, blockports_out);
-		} else if (se.getProtoEquipment().getType().equals(EquipmentType.MUFF)) {
+		} else if (se.getProtoEquipment().getType().getCodename().equals(MUFF.stringValue())) {
 			CreateUgo.createMuffUgo(se, graph, null, EMPTY, blockports_in, blockports_out);
-		} else if (se.getProtoEquipment().getType().equals(EquipmentType.RACK)) {
+		} else if (se.getProtoEquipment().getType().getCodename().equals(RACK.stringValue())) {
 			CreateUgo.createRackUgo(se, graph);
 		} else {
 			CreateUgo.createElementUgo(se, graph, null, se.getLabel(), blockports_in, blockports_out);
@@ -1439,7 +1441,7 @@ public class SchemeActions {
 			try {
 				PathElement lastPE = path.getPreviousPathElement(pe);
 				SchemeElement lastSE = lastPE.getSchemeElement();
-				if (!lastSE.getProtoEquipment().getType().equals(EquipmentType.OPTICAL_SWITCH)) {
+				if (!lastSE.getProtoEquipment().getType().getCodename().equals(OPTICAL_SWITCH.stringValue())) {
 					if (is_source) {
 						pe.setParentPathOwner(null, true);
 					} else {
