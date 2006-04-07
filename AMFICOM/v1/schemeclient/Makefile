@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.19 2005/12/09 09:19:42 arseniy Exp $
+# $Id: Makefile,v 1.20 2006/04/07 13:50:45 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -14,6 +14,7 @@ include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 
 DEPENDENCIES = \
+bugs \
 util \
 general \
 administration \
