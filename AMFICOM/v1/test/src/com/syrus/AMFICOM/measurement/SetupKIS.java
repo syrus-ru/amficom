@@ -1,5 +1,5 @@
 /*
- * $Id: SetupKIS.java,v 1.1.2.4 2006/03/27 09:37:56 arseniy Exp $
+ * $Id: SetupKIS.java,v 1.1.2.5 2006/04/07 14:17:10 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DatabaseCommonTest;
+import com.syrus.AMFICOM.general.CORBACommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -43,7 +43,7 @@ public final class SetupKIS extends TestCase {
 	}
 
 	public static Test suite() {
-		final DatabaseCommonTest commonTest = new DatabaseCommonTest();
+		final CORBACommonTest commonTest = new CORBACommonTest();
 		commonTest.addTest(new SetupKIS("testSwitchOnService"));
 		return commonTest.createTestSetup();
 	}
