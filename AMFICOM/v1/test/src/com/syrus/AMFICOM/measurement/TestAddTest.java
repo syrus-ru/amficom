@@ -1,5 +1,5 @@
 /*-
- * $Id: TestAddTest.java,v 1.1.2.4 2006/03/27 09:41:42 arseniy Exp $
+ * $Id: TestAddTest.java,v 1.1.2.5 2006/04/07 14:18:50 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2006/03/27 09:41:42 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/04/07 14:18:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -52,7 +52,7 @@ public final class TestAddTest extends TestCase {
 
 	public static junit.framework.Test suite() {
 		final CORBACommonTest commonTest = new CORBACommonTest();
-		commonTest.addTest(new TestAddTest("testAdd"));
+		commonTest.addTest(new TestAddTest("testRetrieve"));
 		return commonTest.createTestSetup();
 	}
 
@@ -103,7 +103,8 @@ public final class TestAddTest extends TestCase {
 				monitoredElement.getId(),
 				new Date(System.currentTimeMillis() + 30L * 1000L),
 				Collections.singleton(measurementSetup.getId()),
-				measurementType.getId());
+				measurementType.getId(),
+				VOID_IDENTIFIER);
 		test.setStatus(TEST_STATUS_SCHEDULED);
 
 		StorableObjectPool.flush(test, creatorId, false);
