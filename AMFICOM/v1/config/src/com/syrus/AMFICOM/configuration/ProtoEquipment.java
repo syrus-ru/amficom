@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.29.2.2 2006/04/04 13:09:41 arseniy Exp $
+ * $Id: ProtoEquipment.java,v 1.29 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,8 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
-import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -57,8 +55,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.29.2.2 $, $Date: 2006/04/04 13:09:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2006/03/15 14:47:32 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -69,7 +67,7 @@ public final class ProtoEquipment extends StorableObject
 		IdlTransferableObjectExt<IdlProtoEquipment> {
 	private static final long serialVersionUID = 7066410483749919904L;
 
-	private Identifier typeId;
+	private EquipmentType type;
 
 	private String name;
 	private String description;
@@ -87,7 +85,7 @@ public final class ProtoEquipment extends StorableObject
 	ProtoEquipment(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
-			final Identifier typeId,
+			final EquipmentType type,
 			final String name,
 			final String description,
 			final String manufacturer,
@@ -98,7 +96,7 @@ public final class ProtoEquipment extends StorableObject
 				creatorId,
 				creatorId,
 				version);
-		this.typeId = typeId;
+		this.type = type;
 		this.name = name;
 		this.description = description;
 		this.manufacturer = manufacturer;
@@ -130,20 +128,20 @@ public final class ProtoEquipment extends StorableObject
 	 * @throws CreateObjectException
 	 */
 	public static ProtoEquipment createInstance(final Identifier creatorId,
-			final Identifier typeId,
+			final EquipmentType type,
 			final String name,
 			final String description,
 			final String manufacturer,
 			final String manufacturerCode) throws CreateObjectException {
-		if (creatorId == null || typeId == null || manufacturer == null || manufacturerCode == null) {
+		if (creatorId == null || type == null || manufacturer == null || manufacturerCode == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
 		}
 
 		try {
 			final ProtoEquipment protoEquipment = new ProtoEquipment(IdentifierPool.getGeneratedIdentifier(PROTOEQUIPMENT_CODE),
 					creatorId,
-					INITIAL_VERSION,
-					typeId,
+					StorableObjectVersion.INITIAL_VERSION,
+					type,
 					name,
 					description,
 					manufacturer,
@@ -160,7 +158,6 @@ public final class ProtoEquipment extends StorableObject
 
 	/**
 	 * Create new instance on import/export from XML
-	 * 
 	 * @param creatorId
 	 * @param xmlProtoEquipment
 	 * @param importType
@@ -169,7 +166,8 @@ public final class ProtoEquipment extends StorableObject
 	 */
 	public static ProtoEquipment createInstance(final Identifier creatorId,
 			final XmlProtoEquipment xmlProtoEquipment,
-			final String importType) throws CreateObjectException {
+			final String importType)
+	throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
@@ -205,15 +203,14 @@ public final class ProtoEquipment extends StorableObject
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlProtoEquipment pet) throws IdlConversionException {
+	public synchronized void fromIdlTransferable(final IdlProtoEquipment pet)
+	throws IdlConversionException {
 		super.fromIdlTransferable(pet);
-		this.typeId = Identifier.valueOf(pet._typeId);
+		this.type = EquipmentType.fromTransferable(pet.type);
 		this.name = pet.name;
 		this.description = pet.description;
 		this.manufacturer = pet.manufacturer;
 		this.manufacturerCode = pet.manufacturerCode;
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -224,11 +221,11 @@ public final class ProtoEquipment extends StorableObject
 	 */
 	@Shitlet
 	public void fromXmlTransferable(final XmlProtoEquipment protoEquipment, final String importType)
-			throws XmlConversionException {
+	throws XmlConversionException {
 		try {
 			XmlComplementorRegistry.complementStorableObject(protoEquipment, PROTOEQUIPMENT_CODE, importType, PRE_IMPORT);
 	
-			this.typeId = Identifier.fromXmlTransferable(protoEquipment.getEquipmentTypeId(), importType, MODE_THROW_IF_ABSENT);
+			this.type = EquipmentType.fromXmlTransferable(protoEquipment.getXmlEquipmentType());
 	
 			this.name = protoEquipment.getName();
 			this.description = protoEquipment.isSetDescription()
@@ -258,15 +255,13 @@ public final class ProtoEquipment extends StorableObject
 	 */
 	@Override
 	public IdlProtoEquipment getIdlTransferable(final ORB orb) {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-
 		return IdlProtoEquipmentHelper.init(orb, this.id.getIdlTransferable(),
 				super.created.getTime(),
 				super.modified.getTime(),
 				super.creatorId.getIdlTransferable(),
 				super.modifierId.getIdlTransferable(),
 				super.version.longValue(),
-				this.typeId.getIdlTransferable(orb),
+				this.type.getIdlTransferable(orb),
 				this.name != null ? this.name : "",
 				this.description != null ? this.description : "",
 				this.manufacturer,
@@ -280,13 +275,15 @@ public final class ProtoEquipment extends StorableObject
 	 * @throws XmlConversionException
 	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
-	public void getXmlTransferable(final XmlProtoEquipment protoEquipment, final String importType, final boolean usePool)
-			throws XmlConversionException {
+	public void getXmlTransferable(final XmlProtoEquipment protoEquipment,
+			final String importType,
+			final boolean usePool)
+	throws XmlConversionException {
 		try {
 			super.id.getXmlTransferable(protoEquipment.addNewId(), importType);
-
-			this.typeId.getXmlTransferable(protoEquipment.addNewEquipmentTypeId(), importType);
-
+	
+			protoEquipment.setXmlEquipmentType(this.type.getXmlTransferable());
+	
 			protoEquipment.setName(this.name);
 			if (protoEquipment.isSetDescription()) {
 				protoEquipment.unsetDescription();
@@ -323,12 +320,8 @@ public final class ProtoEquipment extends StorableObject
 		}
 	}
 
-	public Identifier getTypeId() {
-		return this.typeId;
-	}
-
-	public EquipmentType getType() throws ApplicationException {
-		return StorableObjectPool.getStorableObject(this.typeId, true);
+	public EquipmentType getType() {
+		return this.type;
 	}
 
 	public String getName() {
@@ -347,13 +340,9 @@ public final class ProtoEquipment extends StorableObject
 		return this.manufacturerCode;
 	}
 
-	public void setTypeId(final Identifier typeId) {
-		this.typeId = typeId;
+	public void setType(final EquipmentType type) {
+		this.type = type;
 		super.markAsChanged();
-	}
-
-	public void setType(final EquipmentType equipmentType) {
-		this.setTypeId(equipmentType.getId());
 	}
 
 	public void setName(final String name) {
@@ -381,13 +370,13 @@ public final class ProtoEquipment extends StorableObject
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
-			final Identifier typeId,
+			final EquipmentType type,
 			final String name,
 			final String description,
 			final String manufacturer,
 			final String manufacturerCode) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
-		this.typeId = typeId;
+		this.type = type;
 		this.name = name;
 		this.description = description;
 		this.manufacturer = manufacturer;
@@ -396,6 +385,8 @@ public final class ProtoEquipment extends StorableObject
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return Collections.emptySet();
 	}
 
@@ -412,7 +403,8 @@ public final class ProtoEquipment extends StorableObject
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+	public Set<Identifiable> getReverseDependencies(final boolean usePool)
+	throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(this.id);
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {

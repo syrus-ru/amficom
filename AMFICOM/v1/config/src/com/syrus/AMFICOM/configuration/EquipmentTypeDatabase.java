@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeDatabase.java,v 1.62.4.2 2006/04/04 09:19:57 arseniy Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.62.4.1 2006/03/27 10:10:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,97 +7,75 @@
  */
 package com.syrus.AMFICOM.configuration;
 
-import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.COMMA;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.QUESTION;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_INSERT_INTO;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_VALUES;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.util.database.DatabaseDate;
-import com.syrus.util.database.DatabaseString;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TableNames;
+import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.62.4.2 $, $Date: 2006/04/04 09:19:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.62.4.1 $, $Date: 2006/03/27 10:10:06 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
-public final class EquipmentTypeDatabase extends StorableObjectDatabase<EquipmentType> {
-	private static String columns;
-	private static String updateMultipleSQLValues;
+public final class EquipmentTypeDatabase {
 
-	@Override
-	protected short getEntityCode() {
-		return EQUIPMENT_TYPE_CODE;
+	private EquipmentTypeDatabase() {
+		//Empty
 	}
 
-	@Override
-	protected final String getColumnsTmpl() {
-		if (columns == null) {
-			columns = COLUMN_CODENAME + COMMA
-				+ COLUMN_DESCRIPTION;
+	public static void insertAll() throws CreateObjectException {
+		final String sql = SQL_INSERT_INTO + TableNames.EQUIPMENT_TYPE + OPEN_BRACKET
+				+ StorableObjectWrapper.COLUMN_CODE + COMMA
+				+ StorableObjectWrapper.COLUMN_CODENAME
+				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+				+ QUESTION + COMMA
+				+ QUESTION
+				+ CLOSE_BRACKET;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			for (final EquipmentType equipmentType : EquipmentType.values()) {
+				preparedStatement.setInt(1, equipmentType.ordinal());
+				preparedStatement.setString(2, equipmentType.getCodename());
+				Log.debugMessage("Inserting equipment type '" + equipmentType.getCodename() + "'",
+						Log.DEBUGLEVEL09);
+				preparedStatement.executeUpdate();
+			}
+			connection.commit();
+		} catch (SQLException sqle) {
+			throw new CreateObjectException(sqle.getMessage(), sqle);
+		} finally {
+			try {
+				try {
+					if (preparedStatement != null) {
+						preparedStatement.close();
+						preparedStatement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
+			} catch (SQLException sqle1) {
+				Log.errorMessage(sqle1);
+			}
 		}
-		return columns;
-	}
-
-	@Override
-	protected final String getUpdateMultipleSQLValuesTmpl() {
-		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = QUESTION + COMMA
-				+ QUESTION;
-    	}
-		return updateMultipleSQLValues;
-	}
-
-	@Override
-	protected final String getUpdateSingleSQLValuesTmpl(final EquipmentType storableObject) throws IllegalDataException {
-		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
-		return sql;
-	}
-
-	@Override
-	protected final int setEntityForPreparedStatementTmpl(final EquipmentType storableObject,
-			final PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException, SQLException {
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCodename(), SIZE_CODENAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		return startParameterNumber;
-	}
-
-	@Override
-	protected EquipmentType updateEntityFromResultSet(final EquipmentType storableObject, final ResultSet resultSet)
-			throws IllegalDataException,
-				RetrieveObjectException,
-				SQLException {
-		final EquipmentType equipmentType = (storableObject == null)
-				? new EquipmentType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
-						null,
-						ILLEGAL_VERSION,
-						null,
-						null)
-					: storableObject;
-		equipmentType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
-		return equipmentType;
 	}
 }

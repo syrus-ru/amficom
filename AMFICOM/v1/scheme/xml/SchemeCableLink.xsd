@@ -1,0 +1,61 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xsd:schema
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	xmlns:map = "http://syrus.com/AMFICOM/map/xml"
+	xmlns:scheme = "http://syrus.com/AMFICOM/scheme/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/scheme/xml"
+	elementFormDefault = "qualified">
+
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: SchemeCableLink.xsd,v 1.6 2005/09/02 16:28:54 bass Exp $
+
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:include
+		schemaLocation = "AbstractSchemeLink.xsd"/>
+	<xsd:include
+		schemaLocation = "SchemeCableThread.xsd"/>
+	<xsd:include
+		schemaLocation = "CableChannelingItem.xsd"/>
+
+	<xsd:element name = "schemeCableLinks" type = "scheme:XmlSchemeCableLinkSeq">
+		<xsd:key name = "schemeCableLinkId">
+			<xsd:selector xpath = "scheme:schemeCableLinks/scheme:schemeCableLink"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key>
+	</xsd:element>
+
+	<xsd:complexType name = "XmlSchemeCableLink" final = "#all">
+		<xsd:complexContent>
+			<xsd:extension base = "scheme:XmlAbstractSchemeLink">
+				<xsd:sequence>
+					<xsd:choice>
+						<xsd:element name = "cableLinkTypeId" type = "general:XmlIdentifier"/>
+						<xsd:element name = "cableLinkId" type = "general:XmlIdentifier"/>
+					</xsd:choice>
+					<xsd:element name = "sourceSchemeCablePortId" type = "general:XmlIdentifier"
+						minOccurs = "0"/>
+					<xsd:element name = "targetSchemeCablePortId" type = "general:XmlIdentifier"
+						minOccurs = "0"/>
+					<xsd:element name = "parentSchemeId" type = "general:XmlIdentifier"/>
+					<xsd:element ref = "scheme:schemeCableThreads"
+						minOccurs = "0"/>
+					<xsd:element ref = "scheme:cableChannelingItems"
+						minOccurs = "0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name = "XmlSchemeCableLinkSeq" final = "#all">
+		<xsd:sequence>
+			<xsd:element name = "schemeCableLink" type = "scheme:XmlSchemeCableLink" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

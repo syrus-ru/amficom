@@ -1,0 +1,6 @@
+*
+						 * This is a circular dependency on {@link SchemeCableThread}, see {@link SchemeCableThread#schemePort()}.
+						 *
+						 * @return scheme cable thread attached to this scheme port.
+						 * @see #schemeCableThreadId
+						 * @see SchemeCableThread#schemePort()

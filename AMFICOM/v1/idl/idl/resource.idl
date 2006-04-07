@@ -1,0 +1,83 @@
+/*-
+ * $Id: resource.idl,v 1.21 2005/09/06 11:11:54 bob Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+#ifndef RESOURCE_IDL
+#define RESOURCE_IDL
+
+#include "general.idl"
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+module com {
+module syrus {
+module AMFICOM {
+#else // MY_COMPILER_IS_NOT_BRAINDEAD
+#pragma prefix "AMFICOM.syrus.com"
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
+
+module resource {
+	module corba {
+
+
+/////////////////////// ImageResource ////////////////////////
+
+		valuetype IdlImageResource : general::corba::IdlStorableObject {
+			union IdlImageResourceData switch (enum ImageResourceSort {
+					BITMAP,
+					FILE,
+					SCHEME}) {
+				case BITMAP:
+					struct IdlBitmapImageResourceData {
+						general::corba::WString32 codename;
+						::CORBA::OctetSeq image;
+					} bitmapImageResourceData;
+				case FILE:
+					struct IdlFileImageResourceData {
+						general::corba::WString32 codename;
+						general::corba::WString256 fileName;
+					} fileImageResourceData;
+				case SCHEME:
+					::CORBA::OctetSeq image;
+			};
+
+			public IdlImageResourceData data;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in IdlImageResourceData data);
+		};
+
+		valuetype IdlLayoutItem : general::corba::IdlStorableObject {
+			public general::corba::IdlIdentifier parentId;
+			public general::corba::WString32 layoutName;
+			public general::corba::WString128 name;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::IdlIdentifier parentId,
+					in general::corba::WString32 layoutName,
+					in general::corba::WString128 name);
+		};
+
+	};
+};
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+};
+};
+};
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
+
+#endif // RESOURCE_IDL

@@ -1,0 +1,579 @@
+/*-
+ * $Id: scheme.idl,v 1.40 2005/10/16 18:18:23 bass Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+#ifndef SCHEME_IDL
+#define SCHEME_IDL
+
+#include "administration.idl"
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+module com {
+module syrus {
+module AMFICOM {
+#else // MY_COMPILER_IS_NOT_BRAINDEAD
+#pragma prefix "AMFICOM.syrus.com"
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
+
+module scheme {
+	module corba {
+
+
+/////////////////////// SchemeProtoGroup ////////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlSchemeProtoGroup : general::corba::IdlStorableObject {
+			public general::corba::WString32 name;
+			public general::corba::WString256 description;
+
+			public general::corba::IdlIdentifier symbolId;
+			public general::corba::IdlIdentifier parentSchemeProtoGroupId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 name,
+					in general::corba::WString256 description,
+					in general::corba::IdlIdentifier symbolId,
+					in general::corba::IdlIdentifier parentSchemeProtoGroupId);
+		};
+
+
+/////////////////////// SchemeProtoElement ////////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlSchemeProtoElement : general::corba::IdlStorableObject {
+			public general::corba::WString32 name;
+			public general::corba::WString256 description;
+			public general::corba::WString64 label;
+
+			public general::corba::IdlIdentifier protoEquipmentId;
+			public general::corba::IdlIdentifier symbolId;
+			public general::corba::IdlIdentifier ugoCellId;
+			public general::corba::IdlIdentifier schemeCellId;
+			public general::corba::IdlIdentifier parentSchemeProtoGroupId;
+			public general::corba::IdlIdentifier parentSchemeProtoElementId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 name,
+					in general::corba::WString256 description,
+					in general::corba::WString64 label,
+					in general::corba::IdlIdentifier protoEquipmentId,
+					in general::corba::IdlIdentifier symbolId,
+					in general::corba::IdlIdentifier ugoCellId,
+					in general::corba::IdlIdentifier schemeCellId,
+					in general::corba::IdlIdentifier parentSchemeProtoGroupId,
+					in general::corba::IdlIdentifier parentSchemeProtoElementId);
+		};
+
+
+/////////////////////// Scheme ////////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlScheme : administration::corba::IdlDomainMember {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
+			enum IdlKind {
+				BUILDING,
+				CABLE_SUBNETWORK,
+				NETWORK,
+				FLOOR,
+				ROOM,
+				RACK,
+				BAY,
+				CARDCAGE
+			};
+
+			public general::corba::WString32 name;
+			public general::corba::WString256 description;
+			public general::corba::WString64 label;
+			public long width;
+			public long height;
+			public IdlKind kind;
+
+			public general::corba::IdlIdentifier mapId;
+			public general::corba::IdlIdentifier symbolId;
+			public general::corba::IdlIdentifier ugoCellId;
+			public general::corba::IdlIdentifier schemeCellId;
+			public general::corba::IdlIdentifier parentSchemeElementId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 name,
+					in general::corba::WString256 description,
+					in general::corba::WString64 label,
+					in long width,
+					in long height,
+					in IdlKind kind,
+					in general::corba::IdlIdentifier domainId,
+					in general::corba::IdlIdentifier mapId,
+					in general::corba::IdlIdentifier symbolId,
+					in general::corba::IdlIdentifier ugoCellId,
+					in general::corba::IdlIdentifier schemeCellId,
+					in general::corba::IdlIdentifier parentSchemeElementId);
+		};
+
+
+/////////////////////// AbstractSchemeElement - SchemeElement ////////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlAbstractSchemeElement : general::corba::IdlStorableObject {
+			public general::corba::WString32 name;
+			public general::corba::WString256 description;
+
+			public general::corba::IdlIdentifier parentSchemeId;
+		};
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlSchemeElement : IdlAbstractSchemeElement {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
+			enum IdlSchemeElementKind {
+				SCHEME_ELEMENT_CONTAINER,
+				SCHEME_CONTAINER
+			};
+
+			public general::corba::WString64 label;
+			public IdlSchemeElementKind kind;
+
+			public general::corba::IdlIdentifier protoEquipmentId;
+			public general::corba::IdlIdentifier equipmentId;
+			public general::corba::IdlIdentifier kisId;
+			public general::corba::IdlIdentifier siteNodeId;
+			public general::corba::IdlIdentifier symbolId;
+			public general::corba::IdlIdentifier ugoCellId;
+			public general::corba::IdlIdentifier schemeCellId;
+			public general::corba::IdlIdentifier parentSchemeElementId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 name,
+					in general::corba::WString256 description,
+					in general::corba::WString64 label,
+					in IdlSchemeElementKind kind,
+					in general::corba::IdlIdentifier protoEquipmentId,
+					in general::corba::IdlIdentifier equipmentId,
+					in general::corba::IdlIdentifier kisId,
+					in general::corba::IdlIdentifier siteNodeId,
+					in general::corba::IdlIdentifier symbolId,
+					in general::corba::IdlIdentifier ugoCellId,
+					in general::corba::IdlIdentifier schemeCellId,
+					in general::corba::IdlIdentifier parentSchemeId,
+					in general::corba::IdlIdentifier parentSchemeElementId);
+		};
+
+
+/////////////////////// SchemeOptimizeInfo ////////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlSchemeOptimizeInfo : general::corba::IdlStorableObject {
+			public general::corba::WString32 name;
+			public general::corba::WString256 description;
+			public long optimizationMode;
+			public long iterations;
+			public double price;
+			public double waveLength;
+			public double lenMargin;
+			public double mutationRate;
+			public double mutationDegree;
+			public double rtuDeleteProb;
+			public double rtuCreateProb;
+			public double nodesSpliceProb;
+			public double nodesCutProb;
+			public double survivorRate;
+
+			public general::corba::IdlIdentifier parentSchemeId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 name,
+					in general::corba::WString256 description,
+					in long optimizationMode,
+					in long iterations,
+					in double price,
+					in double waveLength,
+					in double lenMargin,
+					in double mutationRate,
+					in double mutationDegree,
+					in double rtuDeleteProb,
+					in double rtuCreateProb,
+					in double nodesSpliceProb,
+					in double nodesCutProb,
+					in double survivorRate,
+					in general::corba::IdlIdentifier parentSchemeId);
+		};
+
+
+/////////////////////// SchemeOptimizeInfoSwitch ////////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlSchemeOptimizeInfoSwitch : general::corba::IdlStorableObject {
+			public general::corba::WString128 name;
+			public long priceUsd;
+			public octet noOfPorts;
+			public general::corba::IdlIdentifier parentSchemeOptimizeInfoId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString128 name,
+					in long priceUsd,
+					in octet noOfPorts,
+					in general::corba::IdlIdentifier parentSchemeOptimizeInfoId);
+		};
+
+
+/////////////////////// SchemeOptimizeInfoRtu ////////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlSchemeOptimizeInfoRtu : general::corba::IdlStorableObject {
+			public general::corba::WString128 name;
+			public long priceUsd;
+			public float rangeDb;
+			public general::corba::IdlIdentifier parentSchemeOptimizeInfoId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString128 name,
+					in long priceUsd,
+					in float rangeDb,
+					in general::corba::IdlIdentifier parentSchemeOptimizeInfoId);
+		};
+
+
+/////////////////////// SchemeMonitoringSolution ////////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlSchemeMonitoringSolution : general::corba::IdlStorableObject {
+			public general::corba::WString32 name;
+			public general::corba::WString256 description;
+			public long priceUsd;
+			public boolean active;
+
+			public general::corba::IdlIdentifier parentSchemeId;
+			public general::corba::IdlIdentifier parentSchemeOptimizeInfoId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 name,
+					in general::corba::WString256 description,
+					in long priceUsd,
+					in boolean active,
+					in general::corba::IdlIdentifier parentSchemeId,
+					in general::corba::IdlIdentifier parentSchemeOptimizeInfoId);
+		};
+
+
+/////////////////////// SchemeDevice ////////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlSchemeDevice : general::corba::IdlStorableObject {
+			public general::corba::WString32 name;
+			public general::corba::WString256 description;
+
+			public general::corba::IdlIdentifier parentSchemeProtoElementId;
+			public general::corba::IdlIdentifier parentSchemeElementId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 name,
+					in general::corba::WString256 description,
+					in general::corba::IdlIdentifier parentSchemeProtoElementId,
+					in general::corba::IdlIdentifier parentSchemeElementId);
+		};
+
+
+/////////////////////// AbstractSchemePort - SchemePort, SchemeCablePort ////////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlAbstractSchemePort : general::corba::IdlStorableObject {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
+			enum IdlDirectionType {
+				_IN,
+				_OUT
+			};
+
+			public general::corba::WString32 name;
+			public general::corba::WString256 description;
+			public IdlDirectionType directionType;
+
+			public general::corba::IdlIdentifier measurementPortId;
+			public general::corba::IdlIdentifier parentSchemeDeviceId;
+		};
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlSchemePort : IdlAbstractSchemePort {
+			public general::corba::IdlIdentifier portTypeId;
+			public general::corba::IdlIdentifier portId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 name,
+					in general::corba::WString256 description,
+					in IdlDirectionType directionType,
+					in general::corba::IdlIdentifier portTypeId,
+					in general::corba::IdlIdentifier portId,
+					in general::corba::IdlIdentifier measurementPortId,
+					in general::corba::IdlIdentifier parentSchemeDeviceId);
+		};
+
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlSchemeCablePort : IdlAbstractSchemePort {
+			public general::corba::IdlIdentifier cablePortTypeId;
+			public general::corba::IdlIdentifier cablePortId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 name,
+					in general::corba::WString256 description,
+					in IdlDirectionType directionType,
+					in general::corba::IdlIdentifier cablePortTypeId,
+					in general::corba::IdlIdentifier cablePortId,
+					in general::corba::IdlIdentifier measurementPortId,
+					in general::corba::IdlIdentifier parentSchemeDeviceId);
+		};
+
+
+/////////////////////// AbstractSchemeLink - SchemeLink, SchemeCableLink ////////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlAbstractSchemeLink : IdlAbstractSchemeElement {
+			public double physicalLength;
+			public double opticalLength;
+		};
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlSchemeLink: IdlAbstractSchemeLink {
+			public general::corba::IdlIdentifier linkTypeId;
+			public general::corba::IdlIdentifier linkId;
+			public general::corba::IdlIdentifier siteNodeId;
+			public general::corba::IdlIdentifier sourceSchemePortId;
+			public general::corba::IdlIdentifier targetSchemePortId;
+			public general::corba::IdlIdentifier parentSchemeElementId;
+			public general::corba::IdlIdentifier parentSchemeProtoElementId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 name,
+					in general::corba::WString256 description,
+					in double physicalLength,
+					in double opticalLength,
+					in general::corba::IdlIdentifier linkTypeId,
+					in general::corba::IdlIdentifier linkId,
+					in general::corba::IdlIdentifier siteNodeId,
+					in general::corba::IdlIdentifier sourceSchemePortId,
+					in general::corba::IdlIdentifier targetSchemePortId,
+					in general::corba::IdlIdentifier parentSchemeId,
+					in general::corba::IdlIdentifier parentSchemeElementId,
+					in general::corba::IdlIdentifier parentSchemeProtoElementId);
+		};
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlSchemeCableLink : IdlAbstractSchemeLink {
+			public general::corba::IdlIdentifier cableLinkTypeId;
+			public general::corba::IdlIdentifier cableLinkId;
+			public general::corba::IdlIdentifier sourceSchemeCablePortId;
+			public general::corba::IdlIdentifier targetSchemeCablePortId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 name,
+					in general::corba::WString256 description,
+					in double physicalLength,
+					in double opticalLength,
+					in general::corba::IdlIdentifier cableLinkTypeId,
+					in general::corba::IdlIdentifier cableLinkId,
+					in general::corba::IdlIdentifier sourceSchemeCablePortId,
+					in general::corba::IdlIdentifier targetSchemeCablePortId,
+					in general::corba::IdlIdentifier parentSchemeId);
+		};
+
+
+/////////////////////// SchemeCableThread ////////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlSchemeCableThread : general::corba::IdlStorableObject {
+			public general::corba::WString32 name;
+			public general::corba::WString256 description;
+
+			public general::corba::IdlIdentifier linkTypeId;
+			public general::corba::IdlIdentifier linkId;
+			public general::corba::IdlIdentifier sourceSchemePortId;
+			public general::corba::IdlIdentifier targetSchemePortId;
+			public general::corba::IdlIdentifier parentSchemeCableLinkId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 name,
+					in general::corba::WString256 description,
+					in general::corba::IdlIdentifier linkTypeId,
+					in general::corba::IdlIdentifier linkId,
+					in general::corba::IdlIdentifier sourceSchemePortId,
+					in general::corba::IdlIdentifier targetSchemePortId,
+					in general::corba::IdlIdentifier parentSchemeCableLinkId);
+		};
+
+
+/////////////////////// CableChannelingItem ////////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlCableChannelingItem : general::corba::IdlStorableObject {
+			public double startSpare;
+			public double endSpare;
+			public long rowX;
+			public long placeY;
+			public long sequentialNumber;
+
+			public general::corba::IdlIdentifier physicalLinkId;
+			public general::corba::IdlIdentifier pipeBlockId;
+			public general::corba::IdlIdentifier startSiteNodeId;
+			public general::corba::IdlIdentifier endSiteNodeId;
+			public general::corba::IdlIdentifier parentSchemeCableLinkId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in double startSpare,
+					in double endSpare,
+					in long rowX,
+					in long placeY,
+					in long sequentialNumber,
+					in general::corba::IdlIdentifier physicalLinkId,
+					in general::corba::IdlIdentifier pipeBlockId,
+					in general::corba::IdlIdentifier startSiteNodeId,
+					in general::corba::IdlIdentifier endSiteNodeId,
+					in general::corba::IdlIdentifier parentSchemeCableLinkId);
+		};
+
+
+/////////////////////// SchemePath ////////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlSchemePath : general::corba::IdlStorableObject {
+			public general::corba::WString32 name;
+			public general::corba::WString256 description;
+
+			public general::corba::IdlIdentifier transmissionPathId;
+			public general::corba::IdlIdentifier parentSchemeMonitoringSolutionId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::WString32 name,
+					in general::corba::WString256 description,
+					in general::corba::IdlIdentifier transmissionPathId,
+					in general::corba::IdlIdentifier parentSchemeMonitoringSolutionId);
+		};
+
+
+/////////////////////// PathElement ////////////////////////
+
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlPathElement : general::corba::IdlStorableObject {
+			union IdlData switch (
+				/*\u002a\u002f@SuppressWarnings("all")/**/
+				enum IdlKind{
+					SCHEME_ELEMENT,
+					SCHEME_CABLE_LINK,
+					SCHEME_LINK}) {
+				case SCHEME_ELEMENT:
+					struct IdlSchemeElementData {
+						general::corba::IdlIdentifier startAbstractSchemePortId;
+						general::corba::IdlIdentifier endAbstractSchemePortId;
+					} schemeElementData;
+				case SCHEME_CABLE_LINK:
+					general::corba::IdlIdentifier schemeCableThreadId;
+				case SCHEME_LINK:
+					general::corba::IdlIdentifier schemeLinkId;
+			};
+
+			public general::corba::IdlIdentifier parentSchemePathId;
+			public long sequentialNumber;
+			public IdlData data;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::IdlIdentifier parentSchemePathId,
+					in long sequentialNumber,
+					in IdlData data);
+		};
+
+
+	};
+};
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+};
+};
+};
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
+
+#endif // SCHEME_IDL

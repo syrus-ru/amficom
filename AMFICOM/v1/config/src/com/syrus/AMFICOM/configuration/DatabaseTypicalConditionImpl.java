@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.25.4.1 2006/04/04 09:32:32 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.25 2005/11/11 09:15:21 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,12 +10,10 @@ package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_TYPE_CODE;
@@ -27,7 +25,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.25.4.1 $, $Date: 2006/04/04 09:32:32 $
+ * @version $Revision: 1.25 $, $Date: 2005/11/11 09:15:21 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -59,25 +57,21 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 	@Override
 	protected boolean isKeySupported(final String key) {
 		switch (this.condition.getEntityCode().shortValue()) {
-			case EQUIPMENT_TYPE_CODE:
-				return key == COLUMN_CODENAME;
-			case PORT_TYPE_CODE:
-				return key == PortTypeWrapper.COLUMN_SORT
+		case PORT_TYPE_CODE:
+			return key == PortTypeWrapper.COLUMN_SORT
 					|| key == PortTypeWrapper.COLUMN_KIND
 					|| key == COLUMN_CODENAME;
-			case TRANSPATH_TYPE_CODE:
-				return key == COLUMN_CODENAME;
-			case PROTOEQUIPMENT_CODE:
-				return key == ProtoEquipmentWrapper.COLUMN_MANUFACTURER_CODE
-				|| key == COLUMN_TYPE_CODE;
-			case MONITOREDELEMENT_CODE:
-				return key == COLUMN_NAME;
-			case CABLELINK_TYPE_CODE:
-			case LINK_TYPE_CODE:
-			case CABLETHREAD_TYPE_CODE:
-				return key == COLUMN_CODENAME;
-			default:
-				return false;
+		case PROTOEQUIPMENT_CODE:
+			return key == ProtoEquipmentWrapper.COLUMN_MANUFACTURER_CODE
+					|| key == COLUMN_TYPE_CODE;
+		case MONITOREDELEMENT_CODE:
+			return key == COLUMN_NAME;
+		case CABLELINK_TYPE_CODE:
+		case LINK_TYPE_CODE:
+		case CABLETHREAD_TYPE_CODE:
+			return key == COLUMN_CODENAME;
+		default:
+			return false;
 		}
 	}
 }

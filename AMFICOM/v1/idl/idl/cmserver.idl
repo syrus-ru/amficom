@@ -1,0 +1,38 @@
+/*-
+ * $Id: cmserver.idl,v 1.62 2005/07/28 16:01:18 arseniy Exp $
+ *
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+#ifndef CMSERVER_IDL
+#define CMSERVER_IDL
+
+#include "general.idl"
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+module com {
+module syrus {
+module AMFICOM {
+#else // MY_COMPILER_IS_NOT_BRAINDEAD
+#pragma prefix "AMFICOM.syrus.com"
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
+
+module cmserver {
+module corba {
+
+	interface CMServer : general::corba::CommonServer, general::corba::IdentifierGeneratorServer {
+		//Ничего особенного
+	};
+
+};
+};
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+};
+};
+};
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
+
+#endif // CMSERVER_IDL

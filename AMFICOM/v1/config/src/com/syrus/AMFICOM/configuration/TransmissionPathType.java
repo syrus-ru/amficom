@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.87.2.1 2006/04/04 09:23:35 arseniy Exp $
+ * $Id: TransmissionPathType.java,v 1.87 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHI
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
 import java.util.Date;
@@ -41,13 +40,16 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.87.2.1 $, $Date: 2006/04/04 09:23:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.87 $, $Date: 2006/03/15 14:47:32 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
+
 public final class TransmissionPathType extends StorableObjectType
-		implements Characterizable, Namable, ReverseDependencyContainer, IdlTransferableObjectExt<IdlTransmissionPathType> {
+		implements Characterizable, Namable, ReverseDependencyContainer,
+		IdlTransferableObjectExt<IdlTransmissionPathType> {
+
 	private static final long serialVersionUID = 5311725679846973948L;
 
 	private String name;
@@ -89,14 +91,13 @@ public final class TransmissionPathType extends StorableObjectType
 			final String codename,
 			final String description,
 			final String name) throws CreateObjectException {
-		if (creatorId == null || codename == null || name == null || description == null) {
+		if (creatorId == null || codename == null || name == null || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		}
 
 		try {
 			final TransmissionPathType transmissionPathType = new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(TRANSPATH_TYPE_CODE),
 					creatorId,
-					INITIAL_VERSION,
+					StorableObjectVersion.INITIAL_VERSION,
 					codename,
 					description,
 					name);
@@ -111,11 +112,10 @@ public final class TransmissionPathType extends StorableObjectType
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlTransmissionPathType tptt) throws IdlConversionException {
+	public synchronized void fromIdlTransferable(final IdlTransmissionPathType tptt)
+	throws IdlConversionException {
 		super.fromIdlTransferable(tptt, tptt.codename, tptt.description);
 		this.name = tptt.name;
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -124,7 +124,6 @@ public final class TransmissionPathType extends StorableObjectType
 	 */
 	@Override
 	public IdlTransmissionPathType getIdlTransferable(final ORB orb) {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlTransmissionPathTypeHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -147,7 +146,7 @@ public final class TransmissionPathType extends StorableObjectType
 		super.markAsChanged();
 	}
 
-	protected synchronized void setAttributes(final Date created,
+	protected synchronized void setAttributes(final 	Date created,
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
@@ -161,6 +160,8 @@ public final class TransmissionPathType extends StorableObjectType
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return Collections.emptySet();
 	}
 
@@ -177,7 +178,8 @@ public final class TransmissionPathType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+	public Set<Identifiable> getReverseDependencies(final boolean usePool)
+	throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(this.id);
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
@@ -209,7 +211,9 @@ public final class TransmissionPathType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
 	 */
-	public void addCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
+	public void addCharacteristic(final Characteristic characteristic,
+			final boolean usePool)
+	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		characteristic.setParentCharacterizable(this, usePool);
 	}
@@ -220,7 +224,10 @@ public final class TransmissionPathType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
 	 */
-	public void removeCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
+	public void removeCharacteristic(
+			final Characteristic characteristic,
+			final boolean usePool)
+	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		characteristic.setParentCharacterizable(this, usePool);
@@ -231,7 +238,8 @@ public final class TransmissionPathType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
 	 */
-	public Set<Characteristic> getCharacteristics(boolean usePool) throws ApplicationException {
+	public Set<Characteristic> getCharacteristics(boolean usePool)
+	throws ApplicationException {
 		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
 	}
 
@@ -239,7 +247,8 @@ public final class TransmissionPathType extends StorableObjectType
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	Set<Characteristic> getCharacteristics0(final boolean usePool) throws ApplicationException {
+	Set<Characteristic> getCharacteristics0(final boolean usePool)
+	throws ApplicationException {
 		return this.getCharacteristicContainerWrappee().getContainees(usePool);
 	}
 

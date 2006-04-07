@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.100.2.1 2006/04/04 09:30:38 arseniy Exp $
+ * $Id: LinkType.java,v 1.100 2006/03/15 14:47:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,9 @@ package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
@@ -56,14 +54,19 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.100.2.1 $, $Date: 2006/04/04 09:30:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.100 $, $Date: 2006/03/15 14:47:32 $
+ * @author $Author: bass $
  * @module config
  */
 
 public final class LinkType extends AbstractLinkType
-		implements XmlTransferableObject<XmlLinkType>, IdlTransferableObjectExt<IdlLinkType> {
-	private static final long serialVersionUID = 3257007652839372857L;
+		implements XmlTransferableObject<XmlLinkType>,
+		IdlTransferableObjectExt<IdlLinkType> {
+
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3257007652839372857L;
 
 	private String name;
 	private int sort;
@@ -113,8 +116,11 @@ public final class LinkType extends AbstractLinkType
 	 * @param creatorId
 	 * @throws IdentifierGenerationException
 	 */
-	private LinkType(final XmlIdentifier id, final String importType, final Date created, final Identifier creatorId)
-			throws IdentifierGenerationException {
+	private LinkType(final XmlIdentifier id,
+			final String importType,
+			final Date created,
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
 		super(id, importType, LINK_TYPE_CODE, created, creatorId);
 	}
 
@@ -124,8 +130,11 @@ public final class LinkType extends AbstractLinkType
 	 * @param xmlLinkType
 	 * @throws CreateObjectException
 	 */
-	public static LinkType createInstance(final Identifier creatorId, final String importType, final XmlLinkType xmlLinkType)
-			throws CreateObjectException {
+	public static LinkType createInstance(
+			final Identifier creatorId,
+			final String importType,
+			final XmlLinkType xmlLinkType)
+	throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
@@ -241,7 +250,7 @@ public final class LinkType extends AbstractLinkType
 		try {
 			final LinkType linkType = new LinkType(IdentifierPool.getGeneratedIdentifier(LINK_TYPE_CODE),
 						creatorId,
-						INITIAL_VERSION,
+						StorableObjectVersion.INITIAL_VERSION,
 						codename,
 						description,
 						name,
@@ -260,7 +269,8 @@ public final class LinkType extends AbstractLinkType
 		}
 	}
 
-	public synchronized void fromIdlTransferable(final IdlLinkType ltt) throws IdlConversionException {
+	public synchronized void fromIdlTransferable(final IdlLinkType ltt)
+	throws IdlConversionException {
 		super.fromIdlTransferable(ltt, ltt.codename, ltt.description);
 
 		this.sort = ltt.sort.value();
@@ -268,8 +278,6 @@ public final class LinkType extends AbstractLinkType
 		this.manufacturerCode = ltt.manufacturerCode;
 		this.imageId = new Identifier(ltt.imageId);
 		this.name = ltt.name;
-
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -279,7 +287,9 @@ public final class LinkType extends AbstractLinkType
 	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	@Shitlet
-	public void fromXmlTransferable(final XmlLinkType linkType, final String importType) throws XmlConversionException {
+	public void fromXmlTransferable(final XmlLinkType linkType,
+			final String importType)
+	throws XmlConversionException {
 		try {
 			XmlComplementorRegistry.complementStorableObject(linkType, LINK_TYPE_CODE, importType, PRE_IMPORT);
 
@@ -315,7 +325,6 @@ public final class LinkType extends AbstractLinkType
 	 */
 	@Override
 	public IdlLinkType getIdlTransferable(final ORB orb) {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlLinkTypeHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -339,8 +348,10 @@ public final class LinkType extends AbstractLinkType
 	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	@Shitlet
-	public void getXmlTransferable(final XmlLinkType linkType, final String importType, final boolean usePool)
-			throws XmlConversionException {
+	public void getXmlTransferable(final XmlLinkType linkType,
+			final String importType,
+			final boolean usePool)
+	throws XmlConversionException {
 		try {
 			this.id.getXmlTransferable(linkType.addNewId(), importType);
 			linkType.setName(this.name);

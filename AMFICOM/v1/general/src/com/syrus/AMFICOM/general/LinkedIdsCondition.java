@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.63.2.2 2006/04/04 08:56:05 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.63.2.1 2006/03/27 11:21:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,9 @@ package com.syrus.AMFICOM.general;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -65,8 +67,8 @@ import com.syrus.util.Log;
  * {@link #isNeedMore(Set)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.63.2.2 $, $Date: 2006/04/04 08:56:05 $
+ * @author $Author: bass $
+ * @version $Revision: 1.63.2.1 $, $Date: 2006/03/27 11:21:42 $
  * @module general
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -181,7 +183,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 
 		final Set<Identifiable> lnkIdentifiables = new HashSet<Identifiable>(transferable.linkedIds.length);
 		for (int i = 0; i < transferable.linkedIds.length; i++) {
-			lnkIdentifiables.add(Identifier.valueOf(transferable.linkedIds[i]));
+			lnkIdentifiables.add(new Identifier(transferable.linkedIds[i]));
 		}
 
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(code.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl";
@@ -342,6 +344,21 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 
 	public final void setLinkedIdentifiable(final Identifiable linkedIdentifiable) {
 		this.setLinkedIdentifiables(Collections.singleton(linkedIdentifiable));
+	}
+
+	@Deprecated
+	protected final Map<Short, Set<Identifier>> sort(final Set<Identifier> linkIds) {
+		final Map<Short, Set<Identifier>> codeIdsMap = new HashMap<Short, Set<Identifier>>();
+		for (final Identifier id : linkIds) {
+			final short code = id.getMajor();
+			Set<Identifier> ids = codeIdsMap.get(new Short(code));
+			if (ids == null) {
+				ids = new HashSet<Identifier>();
+				codeIdsMap.put(new Short(code), ids);
+			}
+			ids.add(id);
+		}
+		return codeIdsMap;
 	}
 
 	protected final boolean conditionTest(Set<? extends Identifiable> identifiables) {
