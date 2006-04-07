@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionType.java,v 1.26.2.5 2006/03/17 11:54:48 arseniy Exp $
+ * $Id: ActionType.java,v 1.26.2.6 2006/04/07 09:07:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,10 +7,13 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NOT_IMPLEMENTED;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectType;
@@ -18,12 +21,12 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.corba.IdlActionType;
 
 /**
- * @version $Revision: 1.26.2.5 $, $Date: 2006/03/17 11:54:48 $
+ * @version $Revision: 1.26.2.6 $, $Date: 2006/04/07 09:07:34 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public abstract class ActionType extends StorableObjectType {
+public abstract class ActionType extends StorableObjectType implements Describable {
 
 	ActionType(final Identifier id,
 			final Identifier creatorId,
@@ -58,6 +61,14 @@ public abstract class ActionType extends StorableObjectType {
 	 */
 	final void fromIdlTransferable(final IdlActionType idlActionType) {
 		super.fromIdlTransferable(idlActionType, idlActionType.codename, idlActionType.description);
+	}
+
+	public final String getName() {
+		return super.getDescription();
+	}
+
+	public final void setName(final String name) {
+		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
 	/**
