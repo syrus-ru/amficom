@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.17 2006/04/07 06:44:52 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.18 2006/04/07 07:25:34 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NOT_IMPLEMENTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
@@ -59,14 +60,14 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.17 $, $Date: 2006/04/07 06:44:52 $
+ * @version $Revision: 1.183.2.18 $, $Date: 2006/04/07 07:25:34 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
 public final class Test extends StorableObject implements IdlTransferableObjectExt<IdlTest>, Describable {
-	private static final long serialVersionUID = -6387317612272518101L;
+	private static final long serialVersionUID = 3614619269477477987L;
 
 	private String description;
 	private Identifier groupTestId;
@@ -145,56 +146,8 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	/**
-	 * Create new instance for client.
-	 * Creates onetime test without analysis.
-	 * @param creatorId
-	 * @param description
-	 * @param groupTestId
-	 * @param monitoredElementId
-	 * @param startTime
-	 * @param measurementSetupIds
-	 * @param measurementTypeId
-	 * @return New instance of onetime test.
-	 * @throws CreateObjectException
-	 */
-	public static Test createInstance(final Identifier creatorId,
-			final String description,
-			final Identifier groupTestId,
-			final Identifier monitoredElementId,
-			final Date startTime,
-			final Set<Identifier> measurementSetupIds,
-			final Identifier measurementTypeId) throws CreateObjectException {
-		try {
-			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(TEST_CODE),
-					creatorId,
-					INITIAL_VERSION,
-					description,
-					groupTestId,
-					monitoredElementId,
-					TestStatus.TEST_STATUS_NEW,
-					TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME,
-					startTime,
-					startTime,
-					VOID_IDENTIFIER,
-					measurementSetupIds,
-					measurementTypeId,
-					0,
-					VOID_IDENTIFIER,
-					null);
-
-			assert test.isValid() : OBJECT_STATE_ILLEGAL;
-
-			test.markAsChanged();
-
-			return test;
-		} catch (IdentifierGenerationException ige) {
-			throw new CreateObjectException("Cannot generate identifier ", ige);
-		}
-	}
-
-	/**
-	 * Create new instance for client.
-	 * Creates onetime test with analysis.
+	 * Создать новый экземпляр одноразового задания.
+	 * 
 	 * @param creatorId
 	 * @param description
 	 * @param groupTestId
@@ -203,7 +156,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	 * @param measurementSetupIds
 	 * @param measurementTypeId
 	 * @param analysisTypeId
-	 * @return New instance of onetime test.
+	 * @return Новый экземпляр одноразового задания.
 	 * @throws CreateObjectException
 	 */
 	public static Test createInstance(final Identifier creatorId,
@@ -243,60 +196,8 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	/**
-	 * Create new instance for client.
-	 * Creates periodical test without analysis.
-	 * @param creatorId
-	 * @param description
-	 * @param groupTestId
-	 * @param monitoredElementId
-	 * @param startTime
-	 * @param endTime
-	 * @param temporalPatternId
-	 * @param measurementSetupIds
-	 * @param measurementTypeId
-	 * @return New instance of periodical test.
-	 * @throws CreateObjectException
-	 */
-	public static Test createInstance(final Identifier creatorId,
-			final String description,
-			final Identifier groupTestId,
-			final Identifier monitoredElementId,
-			final Date startTime,
-			final Date endTime,
-			final Identifier temporalPatternId,
-			final Set<Identifier> measurementSetupIds,
-			final Identifier measurementTypeId) throws CreateObjectException {
-		try {
-			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(TEST_CODE),
-					creatorId,
-					INITIAL_VERSION,
-					description,
-					groupTestId,
-					monitoredElementId,
-					TestStatus.TEST_STATUS_NEW,
-					TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL,
-					startTime,
-					endTime,
-					temporalPatternId,
-					measurementSetupIds,
-					measurementTypeId,
-					0,
-					VOID_IDENTIFIER,
-					null);
-
-			assert test.isValid() : OBJECT_STATE_ILLEGAL;
-
-			test.markAsChanged();
-
-			return test;
-		} catch (IdentifierGenerationException ige) {
-			throw new CreateObjectException("Cannot generate identifier ", ige);
-		}
-	}
-
-	/**
-	 * Create new instance for client.
-	 * Creates periodical test with analysis.
+	 * Создать новый экземпляр периодического задания.
+	 * 
 	 * @param creatorId
 	 * @param description
 	 * @param groupTestId
@@ -307,7 +208,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	 * @param measurementSetupIds
 	 * @param measurementTypeId
 	 * @param analysisTypeId
-	 * @return New instance of periodical test.
+	 * @return Новый экземпляр периодического задания.
 	 * @throws CreateObjectException
 	 */
 	public static Test createInstance(final Identifier creatorId,
@@ -411,7 +312,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	/**
-	 * @param description The description to set.
+	 * @param description
 	 */
 	public void setDescription(final String description) {
 		assert description != null : NON_NULL_EXPECTED;
@@ -424,12 +325,14 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	/**
-	 * <p>Never call this method ! </p>  
+	 * <p>
+	 * Метод не поддерживается!
+	 * 
 	 * @throws UnsupportedOperationException
 	 */
 	public void setName(final String name) {
-		throw new UnsupportedOperationException("Test.setName() is unsupported");		
-	}	
+		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+	}
 
 	public Identifier getGroupTestId() {
 		return this.groupTestId;
@@ -451,7 +354,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	/**
-	 * @param monitoredElement The monitoredElement to set.
+	 * @param monitoredElement
 	 */
 	public void setMonitoredElementId(final Identifier monitoredElementId) {
 		assert monitoredElementId != null : NON_NULL_EXPECTED;
@@ -465,7 +368,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	/**
-	 * @param status The status to set.
+	 * @param status
 	 */
 	public void setStatus(final TestStatus status) {
 		assert status != null : NON_NULL_EXPECTED;
@@ -478,7 +381,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	/**
-	 * @param temporalType The temporalType to set.
+	 * @param temporalType
 	 */
 	public void setTemporalType(final TestTemporalType temporalType) {
 		assert temporalType != null : NON_NULL_EXPECTED;
@@ -509,7 +412,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	/**
-	 * @param temporalPatternId The temporalPatternId to set.
+	 * @param temporalPatternId
 	 */
 	public void setTemporalPatternId(final Identifier temporalPatternId) {
 		this.timeStamps.setTemporalPatternId(temporalPatternId);
@@ -547,7 +450,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	/**
-	 * @param measurementType The measurementType to set.
+	 * @param measurementType
 	 */
 	public void setMeasurementType(final Identifier measurementTypeId) {
 		assert measurementTypeId != null : NON_NULL_EXPECTED;
@@ -572,7 +475,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	/**
-	 * @param analysisType The analysisType to set.
+	 * @param analysisType
 	 */
 	public void setAnalysisTypeId(final Identifier analysisTypeId) {
 		assert analysisTypeId != null : NON_NULL_EXPECTED;
@@ -582,15 +485,16 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	/**
-	 * @return map of test stop time and reason to stop
+	 * @return Карту вида <дата остановки, причина остановки>
 	 */
 	public SortedMap<Date, String> getStopMap() {
 		return Collections.unmodifiableSortedMap(this.stopMap);
 	}
 
 	/**
-	 * stop test now. 
-	 * @param reason reason to stop test
+	 * Остановить задание сейчас.
+	 * 
+	 * @param reason
 	 * @see #addStop(Date, String)
 	 */
 	public void addStop(final String reason) {
@@ -598,9 +502,10 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	/**
-	 * add test stop 
-	 * @param stopTime time, when stop test
-	 * @param reason reason to stop test
+	 * Остановить задание в указанное время.
+	 * 
+	 * @param stopTime
+	 * @param reason
 	 */
 	public void addStop(final Date stopTime, final String reason) {
 		assert stopTime != null : NON_NULL_EXPECTED;
@@ -774,7 +679,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public synchronized void setAttributes(final Date created,
+	protected synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
