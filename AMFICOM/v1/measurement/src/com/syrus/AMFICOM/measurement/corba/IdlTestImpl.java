@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlTestImpl.java,v 1.12.2.5 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: IdlTestImpl.java,v 1.12.2.6 2006/04/07 13:12:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,13 +16,14 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestStops;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTemporalType;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStamps;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.12.2.5 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.12.2.6 $, $Date: 2006/04/07 13:12:21 $
  * @module measurement
  */
 final class IdlTestImpl extends IdlTest {
@@ -42,6 +43,7 @@ final class IdlTestImpl extends IdlTest {
 			final IdlIdentifier groupTestId,
 			final IdlIdentifier monitoredElementId,
 			final IdlTestStatus status,
+			final IdlTestTemporalType temporalType,
 			final IdlTestTimeStamps timeStamps,
 			final IdlIdentifier[] measurementSetupIds,
 			final IdlIdentifier measurementTypeId,
@@ -58,6 +60,7 @@ final class IdlTestImpl extends IdlTest {
 		this.groupTestId = groupTestId;
 		this.monitoredElementId = monitoredElementId;
 		this.status = status;
+		this.temporalType = temporalType;
 		this.timeStamps = timeStamps;
 		this.measurementSetupIds = measurementSetupIds;
 		this.measurementTypeId = measurementTypeId;
