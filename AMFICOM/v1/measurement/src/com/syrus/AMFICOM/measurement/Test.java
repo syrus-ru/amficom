@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.20 2006/04/07 09:32:03 saa Exp $
+ * $Id: Test.java,v 1.183.2.21 2006/04/07 13:17:16 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NOT_IMPLEMENTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
@@ -50,9 +51,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.measurement.corba.IdlTestHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestStops;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTemporalType;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStamps;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.IdlPeriodicalTestTimeStamps;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.IdlTestTemporalType;
 import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
@@ -60,8 +60,8 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.20 $, $Date: 2006/04/07 09:32:03 $
- * @author $Author: saa $
+ * @version $Revision: 1.183.2.21 $, $Date: 2006/04/07 13:17:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -184,6 +184,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 					0,
 					analysisTypeId,
 					null);
+			test.normalizeEndTime();
 
 			assert test.isValid() : OBJECT_STATE_ILLEGAL;
 
@@ -192,6 +193,8 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 			return test;
 		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -238,6 +241,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 					0,
 					analysisTypeId,
 					null);
+			test.normalizeEndTime();
 
 			assert test.isValid() : OBJECT_STATE_ILLEGAL;
 
@@ -246,6 +250,8 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 			return test;
 		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -274,6 +280,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 				this.groupTestId.getIdlTransferable(orb),
 				this.monitoredElementId.getIdlTransferable(orb),
 				this.status.getIdlTransferable(),
+				this.temporalType.getIdlTransferable(),
 				this.timeStamps.getIdlTransferable(orb),
 				Identifier.createTransferables(this.measurementSetupIds),
 				this.measurementTypeId.getIdlTransferable(orb),
@@ -292,7 +299,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		this.groupTestId = Identifier.valueOf(idlTest.groupTestId);
 		this.monitoredElementId = Identifier.valueOf(idlTest.monitoredElementId);
 		this.status = TestStatus.valueOf(idlTest.status);
-		this.temporalType = TestTemporalType.valueOf(idlTest.timeStamps.discriminator());
+		this.temporalType = TestTemporalType.valueOf(idlTest.temporalType);
 		this.timeStamps = new TestTimeStamps(idlTest.timeStamps);
 		this.setMeasurementSetupIds0(Identifier.fromTransferables(idlTest.measurementSetupIds));
 		this.measurementTypeId = Identifier.valueOf(idlTest.measurementTypeId);
@@ -380,20 +387,18 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		return this.temporalType;
 	}
 
-	/**
-	 * @param temporalType
-	 */
-	public void setTemporalType(final TestTemporalType temporalType) {
-		assert temporalType != null : NON_NULL_EXPECTED;
-		this.temporalType = temporalType;
-		super.markAsChanged();
-	}
-
 	public Date getStartTime() {
 		return this.timeStamps.getStartTime();
 	}
-	
+
+	/**
+	 * Выставить новое время начала.
+	 * 
+	 * @param startTime
+	 *        Не <code>null</code>.
+	 */
 	public void setStartTime(final Date startTime) {
+		assert startTime != null : NON_NULL_EXPECTED;
 		this.timeStamps.setStartTime(startTime);
 		super.markAsChanged();
 	}
@@ -401,8 +406,15 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	public Date getEndTime() {
 		return this.timeStamps.getEndTime();
 	}
-	
+
+	/**
+	 * Выставить новое время завершения.
+	 * 
+	 * @param endTime
+	 *        Не <code>null</code>.
+	 */
 	public void setEndTime(final Date endTime) {
+		assert endTime != null : NON_NULL_EXPECTED;
 		this.timeStamps.setEndTime(endTime);
 		super.markAsChanged();
 	}
@@ -412,11 +424,31 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	/**
+	 * <p>
+	 * Выставить новый временной шаблон.
+	 * <p>
+	 * Если данное задание имеет периодический временной тип ({@link TestTemporalType#TEST_TEMPORAL_TYPE_PERIODICAL}),
+	 * то выставляется новый идентификатор временного шаблона. В противном
+	 * случае бросается {@link IllegalStateException}.
+	 * 
 	 * @param temporalPatternId
+	 *        Идентификатор нового временного шаблона. Должен быть не пустой и
+	 *        не <code>null</code>.
 	 */
 	public void setTemporalPatternId(final Identifier temporalPatternId) {
-		this.timeStamps.setTemporalPatternId(temporalPatternId);
-		super.markAsChanged();
+		if (this.temporalType == TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL) {
+			assert temporalPatternId != null : NON_NULL_EXPECTED;
+			assert !temporalPatternId.isVoid() : NON_VOID_EXPECTED;
+			final short temporalPatternIdMajor = temporalPatternId.getMajor();
+			assert temporalPatternId.isVoid()
+					|| temporalPatternIdMajor == CRONTEMPORALPATTERN_CODE
+					|| temporalPatternIdMajor == INTERVALSTEMPORALPATTERN_CODE
+					|| temporalPatternIdMajor == PERIODICALTEMPORALPATTERN_CODE
+				: ILLEGAL_ENTITY_CODE;
+			this.timeStamps.setTemporalPatternId(temporalPatternId);
+			super.markAsChanged();
+		}
+		throw new IllegalStateException("Cannot set temporalPatternId to non-periodical test");
 	}
 
 	public Set<Identifier> getMeasurementSetupIds() {
@@ -464,14 +496,17 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	/**
-	 * @return analysis type id or {@link Identifier#VOID_IDENTIFIER} if no analysis
+	 * @return Идентификатор типа анализа, или
+	 *         {@link Identifier#VOID_IDENTIFIER}, если это задание без
+	 *         анализа.
 	 */
 	public Identifier getAnalysisTypeId() {
 		return this.analysisTypeId;
 	}
 
 	/**
-	 * @return analysis type or null if no analysis
+	 * @return Тип анализа, или <code>null</code>, если это задание без
+	 *         анализа.
 	 * @throws ApplicationException
 	 */
 	public AnalysisType getAnalysisType() throws ApplicationException {
@@ -766,6 +801,80 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		return transferables;
 	}
 
+	/**
+	 * Normalize end date to finishing of last test's measurement
+	 * 
+	 * @throws ApplicationException
+	 * @deprecated Объект сам должен себя нормализовать.
+	 */
+	@Deprecated
+	public final void normalize() throws ApplicationException {
+		this.normalizeEndTime();
+	}
+
+	/**
+	 * Нормализовать время завершения.
+	 * 
+	 * @throws ApplicationException
+	 */
+	private void normalizeEndTime() throws ApplicationException {
+		if (this.timeStamps.normalize()) {
+			this.markAsChanged();
+		}
+	}
+
+	/**
+	 * Нормализует конечную дату. На данный момент поддерживает только
+	 * одноразовые тесты и тесты с периодическим временным шаблоном.
+	 * 
+	 * @param startTime
+	 *        начальная дата, не <code>null</code>
+	 * @param endTime
+	 *        Действующий контракт: ненормализованная конечная дата, не раньше
+	 *        startTime, не <code>null</code>
+	 *        <p>
+	 * 		@todo <b>Новый (тестовый) контракт</b>: ненормализованная конечная дата,
+	 *       <b>позднее startTime</b>, не <code>null</code>.
+	 * @param temporalPattern
+	 *        временной шаблон либо <code>null</code> для одноразового теста
+	 * @param measurementSetup
+	 *        параметры измерения (для определения продолжительности измерения)
+	 * @return нормализованная конечная дата. Если параметр endTime уже
+	 *         нормализован, то может возвращать тот же объект endTime.
+	 * @throws ApplicationException
+	 */
+	public static Date normalizeEndDate(final Date startTime,
+			final Date endTime,
+			final AbstractTemporalPattern temporalPattern,
+			final MeasurementSetup measurementSetup) throws ApplicationException {
+		assert startTime != null;
+		assert endTime != null;
+		assert measurementSetup != null;
+		assert !endTime.before(startTime);
+		/*Новый контракт - так правильнее.
+		assert endTime.after(startTime);*/
+
+		final long duration = measurementSetup.calcTotalDuration();
+
+		final long start = startTime.getTime();
+		final long end = endTime.getTime();
+
+		final long normalizedEnd;
+		if (temporalPattern == null) {
+			normalizedEnd = start + duration;
+		} else {
+			assert (temporalPattern instanceof PeriodicalTemporalPattern) :
+				"Normalization of end time for " + temporalPattern.getClass().getName() + " is not supported";
+			final long period = ((PeriodicalTemporalPattern) temporalPattern).getPeriod();
+			normalizedEnd = start + period * ((end - start) / period) + duration;
+		}
+
+		if (end == normalizedEnd) {
+			return endTime;
+		}
+		return new Date(normalizedEnd);
+	}
+
 
 
 	public static enum TestStatus {
@@ -822,55 +931,34 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	}
 
 	private final class TestTimeStamps implements IdlTransferableObject<IdlTestTimeStamps>, Serializable {
-		private static final long serialVersionUID = -3560328752462377043L;
+		private static final long serialVersionUID = -5285003774876473339L;
 
 		private Date startTime;
 		private Date endTime;
 		private Identifier temporalPatternId;
 
 		TestTimeStamps(final Date startTime, final Date endTime, final Identifier temporalPatternId) {
+			this.startTime = startTime;
+			this.endTime = endTime;
 			final TestTemporalType testTemporalType = this.getTestTemporalType();
 			switch (testTemporalType) {
 				case TEST_TEMPORAL_TYPE_ONETIME:
-					this.startTime = startTime;
-					this.endTime = this.startTime;
 					this.temporalPatternId = VOID_IDENTIFIER;
 					break;
 				case TEST_TEMPORAL_TYPE_PERIODICAL:
-					this.startTime = startTime;
-					this.endTime = endTime;
 					this.temporalPatternId = temporalPatternId;
-					if (this.endTime == null) {
-						Log.errorMessage("ERROR: End time is NULL");
-						this.endTime = this.startTime;
-					}
-					if (this.temporalPatternId == null) {
-						Log.errorMessage("ERROR: Temporal pattern is NULL");
-						this.temporalPatternId = VOID_IDENTIFIER;
-					}
 					break;
 				default:
 					Log.errorMessage("TestTimeStamps | Illegal temporal type: " + testTemporalType + " of test");
 			}
+
 			assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		}
 
 		TestTimeStamps(final IdlTestTimeStamps idlTestTimeStamps) {
-			switch (this.getTestTemporalType()) {
-				case TEST_TEMPORAL_TYPE_ONETIME:
-					this.startTime = new Date(idlTestTimeStamps.startTime());
-					this.endTime = this.startTime;
-					this.temporalPatternId = VOID_IDENTIFIER;
-					break;
-				case TEST_TEMPORAL_TYPE_PERIODICAL:
-					final IdlPeriodicalTestTimeStamps idlPeriodicalTestTimeStamps = idlTestTimeStamps.ptts();
-					this.startTime = new Date(idlPeriodicalTestTimeStamps.startTime);
-					this.endTime = new Date(idlPeriodicalTestTimeStamps.endTime);
-					this.temporalPatternId = Identifier.valueOf(idlPeriodicalTestTimeStamps.temporalPatternId);
-					break;
-				default:
-					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.getTestTemporalType());
-			}
+			this.startTime = new Date(idlTestTimeStamps.startTime);
+			this.endTime = new Date(idlTestTimeStamps.endTime);
+			this.temporalPatternId = Identifier.valueOf(idlTestTimeStamps.temporalPatternId);
 
 			assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		}
@@ -882,31 +970,34 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		public IdlTestTimeStamps getIdlTransferable(final ORB orb) {
 			assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
-			final IdlTestTimeStamps idlTestTimeStamps = new IdlTestTimeStamps();
-			switch (this.getTestTemporalType()) {
-				case TEST_TEMPORAL_TYPE_ONETIME:
-					idlTestTimeStamps.startTime(this.startTime.getTime());
-					break;
-				case TEST_TEMPORAL_TYPE_PERIODICAL:
-					idlTestTimeStamps.ptts(new IdlPeriodicalTestTimeStamps(this.startTime.getTime(),
-							this.endTime.getTime(),
-							this.temporalPatternId.getIdlTransferable()));
-					break;
-				default:
-					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.getTestTemporalType());
-			}
-			return idlTestTimeStamps;
+			return new IdlTestTimeStamps(this.startTime.getTime(),
+					this.endTime.getTime(),
+					this.temporalPatternId.getIdlTransferable());
 		}
 
-		protected boolean isValid() {
-			if (this.startTime == null || this.endTime == null) {
+		/**
+		 * Действующий контракт: конечная дата <u>не раньше</u> начальной.
+		 * 
+		 * @todo Новый (тестовый) контракт: конечная дата <u>позднее</u>
+		 *       начальной. См. также
+		 *       {@link Test#normalizeEndDate(Date, Date, AbstractTemporalPattern, MeasurementSetup)}.
+		 */
+		boolean isValid() {
+			if (this.startTime == null || this.endTime == null || this.temporalPatternId == null) {
 				return false;
 			}
+			if (this.endTime.before(this.startTime)) {
+				return false;
+			}
+			/*Новый контракт
+			if (!this.endTime.after(this.startTime)) {
+				return false;
+			}*/
 			switch (this.getTestTemporalType()) {
 				case TEST_TEMPORAL_TYPE_ONETIME:
-					return this.startTime == this.endTime;
+					return this.temporalPatternId.isVoid();
 				case TEST_TEMPORAL_TYPE_PERIODICAL:
-					if (this.temporalPatternId == null) {
+					if (this.temporalPatternId.isVoid()) {
 						return false;
 					}
 					final short temporalPatternIdMajor = this.temporalPatternId.getMajor();
@@ -948,55 +1039,45 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 			return false;
 		}
 
-		public TestTemporalType getTestTemporalType() {
+		private TestTemporalType getTestTemporalType() {
 			return Test.this.getTemporalType();
 		}
 
-		public Date getEndTime() {
-			return this.endTime;
-		}
-
-		public Date getStartTime() {
+		Date getStartTime() {
 			return this.startTime;
 		}
 
-		public Identifier getTemporalPatternId() {
+		Date getEndTime() {
+			return this.endTime;
+		}
+
+		Identifier getTemporalPatternId() {
 			return this.temporalPatternId;
 		}
 
-		public void setStartTime(final Date startTime) {
-			assert startTime != null : NON_NULL_EXPECTED;
+		void setStartTime(final Date startTime) {
 			this.startTime = startTime;
 		}
 
-		public void setEndTime(final Date endTime) {
-			assert endTime != null : NON_NULL_EXPECTED;
+		void setEndTime(final Date endTime) {
 			this.endTime = endTime;
 		}
 
-		public void setTemporalPatternId(final Identifier temporalPatternId) {
-			assert temporalPatternId != null : NON_NULL_EXPECTED;
-			final short temporalPatternIdMajor = temporalPatternId.getMajor();
-			assert temporalPatternId.isVoid()
-					|| temporalPatternIdMajor == CRONTEMPORALPATTERN_CODE
-					|| temporalPatternIdMajor == INTERVALSTEMPORALPATTERN_CODE
-					|| temporalPatternIdMajor == PERIODICALTEMPORALPATTERN_CODE
-				: ILLEGAL_ENTITY_CODE;
+		void setTemporalPatternId(final Identifier temporalPatternId) {
 			this.temporalPatternId = temporalPatternId;
 		}
 
 		boolean normalize() throws ApplicationException {
 			final AbstractTemporalPattern temporalPattern;
 			switch (this.getTestTemporalType()) {
-			case TEST_TEMPORAL_TYPE_ONETIME:
-				temporalPattern = null;
-				break;
-			default:
-				temporalPattern = StorableObjectPool.getStorableObject(this.temporalPatternId, true);
-				assert(temporalPattern != null) : NON_NULL_EXPECTED;
+				case TEST_TEMPORAL_TYPE_ONETIME:
+					temporalPattern = null;
+					break;
+				default:
+					temporalPattern = StorableObjectPool.getStorableObject(this.temporalPatternId, true);
+					assert (temporalPattern != null) : NON_NULL_EXPECTED;
 			}
-			Date normalizedEnd = Test.normalizeEndDate(
-					this.startTime,
+			final Date normalizedEnd = Test.normalizeEndDate(this.startTime,
 					this.endTime,
 					temporalPattern,
 					Test.this.getCurrentMeasurementSetup());
@@ -1007,63 +1088,5 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 			this.endTime = normalizedEnd;
 			return true;
 		}
-	}
-
-	/**
-	 * Normalize end date to finishing of last test's measurement
-	 * @throws ApplicationException
-	 */
-	public final void normalize() throws ApplicationException {
-		if (this.timeStamps.normalize()) {
-			this.markAsChanged();
-		}
-	}
-
-
-	/**
-	 * Нормализует конечную дату.
-	 * На данный момент поддерживает только
-	 * одноразовые тесты и тесты с периодическим временным шаблоном.
-	 * 
-	 * @param startTime начальная дата, not null
-	 * @param endTime ненормализованная конечная дате, не раньше startTime, not null
-	 * @param temporalPattern временной шаблон либо null для одноразового теста
-	 * @param measurementSetup параметры измерения (для определения
-	 *   продолжительности измерения)
-	 * @return нормализованная конечная дата. Если параметр endTime
-	 *   уже нормализован, то может возвращать тот же объект endTime.
-	 * @throws ApplicationException 
-	 */
-	public static Date normalizeEndDate(Date startTime,
-			Date endTime,
-			AbstractTemporalPattern temporalPattern,
-			MeasurementSetup measurementSetup) throws ApplicationException {
-		assert startTime != null;
-		assert endTime != null;
-		assert measurementSetup != null;
-		assert !endTime.before(startTime);
-
-		long duration = measurementSetup.calcTotalDuration();
-
-		final long start = startTime.getTime();
-		final long end = endTime.getTime();
-
-		final long normalizedEnd;
-		if (temporalPattern == null) {
-			normalizedEnd = start + duration;
-		} else {
-			assert (temporalPattern instanceof PeriodicalTemporalPattern) :
-				"Normalization of end time for " + temporalPattern.getClass().getName() + " is not supported";
-			final long period = ((PeriodicalTemporalPattern)temporalPattern)
-					.getPeriod();
-			normalizedEnd = start
-				+ period * ((end - start) / period)
-				+ duration;
-		}
-
-		if (end == normalizedEnd) {
-			return endTime;
-		}
-		return new Date(normalizedEnd);
 	}
 }
