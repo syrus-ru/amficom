@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.19 2006/04/07 08:14:24 saa Exp $
+ * $Id: Test.java,v 1.183.2.20 2006/04/07 09:32:03 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -60,7 +60,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.19 $, $Date: 2006/04/07 08:14:24 $
+ * @version $Revision: 1.183.2.20 $, $Date: 2006/04/07 09:32:03 $
  * @author $Author: saa $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -463,10 +463,17 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		return this.numberOfMeasurements;
 	}
 
+	/**
+	 * @return analysis type id or {@link Identifier#VOID_IDENTIFIER} if no analysis
+	 */
 	public Identifier getAnalysisTypeId() {
 		return this.analysisTypeId;
 	}
 
+	/**
+	 * @return analysis type or null if no analysis
+	 * @throws ApplicationException
+	 */
 	public AnalysisType getAnalysisType() throws ApplicationException {
 		if (!this.analysisTypeId.isVoid()) {
 			return StorableObjectPool.getStorableObject(this.analysisTypeId, true);
