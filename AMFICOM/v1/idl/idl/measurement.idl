@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.91.2.10 2006/03/07 10:42:49 arseniy Exp $
+ * $Id: measurement.idl,v 1.91.2.11 2006/04/07 13:11:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -304,17 +304,15 @@ module measurement {
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlTest : general::corba::IdlStorableObject {
 			/*\u002a\u002f@SuppressWarnings("all")/**/
-			union IdlTestTimeStamps switch (enum IdlTestTemporalType {
+			enum IdlTestTemporalType {
 					TEST_TEMPORAL_TYPE_ONETIME,
-					TEST_TEMPORAL_TYPE_PERIODICAL}) {
-				case TEST_TEMPORAL_TYPE_ONETIME:
-					long long startTime;
-				case TEST_TEMPORAL_TYPE_PERIODICAL:
-					struct IdlPeriodicalTestTimeStamps {
-						long long startTime;
-						long long endTime;
-						general::corba::IdlIdentifier temporalPatternId;
-					} ptts;
+					TEST_TEMPORAL_TYPE_PERIODICAL
+			};
+			/*\u002a\u002f@SuppressWarnings("all")/**/
+			struct IdlTestTimeStamps {
+				long long startTime;
+				long long endTime;
+				general::corba::IdlIdentifier temporalPatternId;
 			};
 			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum IdlTestStatus {
@@ -339,6 +337,7 @@ module measurement {
 			public general::corba::IdlIdentifier groupTestId;
 			public general::corba::IdlIdentifier monitoredElementId;
 			public IdlTestStatus status;
+			public IdlTestTemporalType temporalType;
 			public IdlTestTimeStamps timeStamps;
 			public general::corba::IdlIdentifierSeq measurementSetupIds;
 			public general::corba::IdlIdentifier measurementTypeId;
@@ -356,6 +355,7 @@ module measurement {
 					in general::corba::IdlIdentifier groupTestId,
 					in general::corba::IdlIdentifier monitoredElementId,
 					in IdlTestStatus status,
+					in IdlTestTemporalType temporalType,
 					in IdlTestTimeStamps timeStamps,
 					in general::corba::IdlIdentifierSeq measurementSetupIds,
 					in general::corba::IdlIdentifier measurementTypeId,
