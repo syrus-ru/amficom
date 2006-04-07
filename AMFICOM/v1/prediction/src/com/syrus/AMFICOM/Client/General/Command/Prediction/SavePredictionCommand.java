@@ -87,8 +87,6 @@ public class SavePredictionCommand extends AbstractCommand {
 					userId,
 					parameters);
 			
-			StorableObjectPool.putStorableObject(m);
-			StorableObjectPool.putStorableObject(r);
 			StorableObjectPool.flush(m, userId, false);
 			StorableObjectPool.flush(r, userId, false);
 			
