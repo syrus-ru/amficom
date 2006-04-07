@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.16 2006/04/06 07:26:46 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.17 2006/04/07 06:44:52 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -59,7 +59,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.16 $, $Date: 2006/04/06 07:26:46 $
+ * @version $Revision: 1.183.2.17 $, $Date: 2006/04/07 06:44:52 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -542,6 +542,10 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		return this.measurementTypeId;
 	}
 
+	public MeasurementType getMeasurementType() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.measurementTypeId, true);
+	}
+
 	/**
 	 * @param measurementType The measurementType to set.
 	 */
@@ -558,6 +562,13 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 
 	public Identifier getAnalysisTypeId() {
 		return this.analysisTypeId;
+	}
+
+	public AnalysisType getAnalysisType() throws ApplicationException {
+		if (!this.analysisTypeId.isVoid()) {
+			return StorableObjectPool.getStorableObject(this.analysisTypeId, true);
+		}
+		return null;
 	}
 
 	/**
