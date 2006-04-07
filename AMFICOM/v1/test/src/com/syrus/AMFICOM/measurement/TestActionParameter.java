@@ -1,5 +1,5 @@
 /*-
- * $Id: TestActionParameter.java,v 1.1.2.5 2006/04/05 14:31:27 arseniy Exp $
+ * $Id: TestActionParameter.java,v 1.1.2.6 2006/04/07 14:17:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,14 @@ package com.syrus.AMFICOM.measurement;
 
 
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
+import static com.syrus.AMFICOM.measurement.Action.ActionStatus.ACTION_STATUS_COMPLETED;
+import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_STATUS;
 import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
 import static com.syrus.AMFICOM.measurement.MeasurementTypeCodename.REFLECTOMETRY;
+import static com.syrus.AMFICOM.measurement.AnalysisTypeCodename.DADARA;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_ANALYSIS_RESULT;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PREDICTION_TIME;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PULSE_WIDTH_M;
@@ -21,20 +27,23 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBACommonTest;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind;
 
 /**
- * @version $Revision: 1.1.2.5 $, $Date: 2006/04/05 14:31:27 $
+ * @version $Revision: 1.1.2.6 $, $Date: 2006/04/07 14:17:38 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -45,9 +54,11 @@ public final class TestActionParameter extends TestCase {
 		super(name);
 	}
 
-	public static Test suite() {
+	public static junit.framework.Test suite() {
 		final CORBACommonTest commonTest = new CORBACommonTest();
-		commonTest.addTestSuite(TestActionParameter.class);
+		//commonTest.addTestSuite(TestActionParameter.class);
+		commonTest.addTest(new TestActionParameter("testMeasurementType"));
+		commonTest.addTest(new TestActionParameter("testAnalysisType"));
 		return commonTest.createTestSetup();
 	}
 
@@ -89,6 +100,42 @@ public final class TestActionParameter extends TestCase {
 		for (final Measurement measurement : measurements) {
 			final MeasurementResultParameter measurementResultParameter = measurement.getActionResultParameter(parameterType);
 			System.out.println("Measurement: '" + measurement.getId() + "', reflectogramma length: " + measurementResultParameter.getValue().length);
+		}
+	}
+
+	public void testTestMeasurementResult() throws ApplicationException {
+		final StorableObjectCondition testCondition = new EquivalentCondition(TEST_CODE);
+		final Set<Test> tests = StorableObjectPool.getStorableObjectsByCondition(testCondition, true);
+		if (tests.isEmpty()) {
+			throw new ObjectNotFoundException("No tests");
+		}
+		final Test test = tests.iterator().next();
+
+		final StorableObjectCondition measurementStatusCondition = new TypicalCondition(ACTION_STATUS_COMPLETED,
+				OPERATION_EQUALS,
+				MEASUREMENT_CODE,
+				COLUMN_STATUS);
+		final StorableObjectCondition measurementTestCondition = new LinkedIdsCondition(test, MEASUREMENT_CODE);
+		final StorableObjectCondition measurementCondition = new CompoundCondition(measurementStatusCondition,
+				AND,
+				measurementTestCondition);
+		final Set<Measurement> measurements = StorableObjectPool.getStorableObjectsByCondition(measurementCondition, true);
+		System.out.println("Measurements: " + measurements);
+	}
+
+	public void testMeasurementType() throws ApplicationException {
+		final MeasurementType measurementType = MeasurementType.valueOf(REFLECTOMETRY);
+		final Set<KIS> kiss = measurementType.getProperKISs();
+		for (final KIS kis : kiss) {
+			System.out.println("'" + kis.getId() + "': " + kis.getHostName());
+		}
+	}
+
+	public void testAnalysisType() throws ApplicationException {
+		final AnalysisType analysisType = AnalysisType.valueOf(DADARA);
+		final Set<KIS> kiss = analysisType.getProperKISs();
+		for (final KIS kis : kiss) {
+			System.out.println("'" + kis.getId() + "': " + kis.getHostName());
 		}
 	}
 }
