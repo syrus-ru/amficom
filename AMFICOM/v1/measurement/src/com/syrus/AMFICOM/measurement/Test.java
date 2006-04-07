@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.18 2006/04/07 07:25:34 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.19 2006/04/07 08:14:24 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -60,8 +60,8 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.18 $, $Date: 2006/04/07 07:25:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.183.2.19 $, $Date: 2006/04/07 08:14:24 $
+ * @author $Author: saa $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -580,7 +580,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 
 	/**
 	 * @todo Implement more sophysticated method to determine current MeasurementSetup
-	 *
+	 * @todo заменить обратно s/CurrentMeasurementSetup/MainMeasurementSetup/gi; т.к. основной шаблон не меняется
 	 */
 	private void ensureCurrentMeasurementSetupIsSet() {
 		if (this.currentMeasurementSetupId == null) {
@@ -977,6 +977,86 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 				: ILLEGAL_ENTITY_CODE;
 			this.temporalPatternId = temporalPatternId;
 		}
+
+		boolean normalize() throws ApplicationException {
+			final AbstractTemporalPattern temporalPattern;
+			switch (this.getTestTemporalType()) {
+			case TEST_TEMPORAL_TYPE_ONETIME:
+				temporalPattern = null;
+				break;
+			default:
+				temporalPattern = StorableObjectPool.getStorableObject(this.temporalPatternId, true);
+				assert(temporalPattern != null) : NON_NULL_EXPECTED;
+			}
+			Date normalizedEnd = Test.normalizeEndDate(
+					this.startTime,
+					this.endTime,
+					temporalPattern,
+					Test.this.getCurrentMeasurementSetup());
+
+			if (normalizedEnd.equals(this.endTime)) {
+				return false;
+			}
+			this.endTime = normalizedEnd;
+			return true;
+		}
 	}
 
+	/**
+	 * Normalize end date to finishing of last test's measurement
+	 * @throws ApplicationException
+	 */
+	public final void normalize() throws ApplicationException {
+		if (this.timeStamps.normalize()) {
+			this.markAsChanged();
+		}
+	}
+
+
+	/**
+	 * Нормализует конечную дату.
+	 * На данный момент поддерживает только
+	 * одноразовые тесты и тесты с периодическим временным шаблоном.
+	 * 
+	 * @param startTime начальная дата, not null
+	 * @param endTime ненормализованная конечная дате, не раньше startTime, not null
+	 * @param temporalPattern временной шаблон либо null для одноразового теста
+	 * @param measurementSetup параметры измерения (для определения
+	 *   продолжительности измерения)
+	 * @return нормализованная конечная дата. Если параметр endTime
+	 *   уже нормализован, то может возвращать тот же объект endTime.
+	 * @throws ApplicationException 
+	 */
+	public static Date normalizeEndDate(Date startTime,
+			Date endTime,
+			AbstractTemporalPattern temporalPattern,
+			MeasurementSetup measurementSetup) throws ApplicationException {
+		assert startTime != null;
+		assert endTime != null;
+		assert measurementSetup != null;
+		assert !endTime.before(startTime);
+
+		long duration = measurementSetup.calcTotalDuration();
+
+		final long start = startTime.getTime();
+		final long end = endTime.getTime();
+
+		final long normalizedEnd;
+		if (temporalPattern == null) {
+			normalizedEnd = start + duration;
+		} else {
+			assert (temporalPattern instanceof PeriodicalTemporalPattern) :
+				"Normalization of end time for " + temporalPattern.getClass().getName() + " is not supported";
+			final long period = ((PeriodicalTemporalPattern)temporalPattern)
+					.getPeriod();
+			normalizedEnd = start
+				+ period * ((end - start) / period)
+				+ duration;
+		}
+
+		if (end == normalizedEnd) {
+			return endTime;
+		}
+		return new Date(normalizedEnd);
+	}
 }
