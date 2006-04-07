@@ -1,5 +1,5 @@
 /*-
- * $Id: TestAddMeasurementSetup.java,v 1.1.2.3 2006/03/27 09:39:55 arseniy Exp $
+ * $Id: TestAddMeasurementSetup.java,v 1.1.2.4 2006/04/07 14:18:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKi
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/03/27 09:39:55 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/04/07 14:18:21 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -69,8 +69,8 @@ public final class TestAddMeasurementSetup extends TestCase {
 	public void testAdd() throws ApplicationException, IOException {
 		final Identifier creatorId = LoginManager.getUserId();
 
-		final MeasurementType measurementType = MeasurementType.valueOf(REFLECTOMETRY.stringValue());
-		final MeasurementPortType measurementPortType = MeasurementPortType.valueOf(REFLECTOMETRY_PK7600.stringValue());
+		final MeasurementType measurementType = MeasurementType.valueOf(REFLECTOMETRY);
+		final MeasurementPortType measurementPortType = MeasurementPortType.valueOf(REFLECTOMETRY_PK7600);
 
 		final String measurementPortDescriptionSubstring = "MeasurementPort_1_";
 		final StorableObjectCondition measurementPortCondition = new CompoundCondition(new LinkedIdsCondition(measurementPortType,
@@ -151,9 +151,9 @@ public final class TestAddMeasurementSetup extends TestCase {
 			System.out.println(stringBuffer);
 		}
 
-		final ActionTemplate actionTemplate = ActionTemplate.createInstance(creatorId,
+		final ActionTemplate<Measurement> actionTemplate = ActionTemplate.createInstance(creatorId,
 				"test",
-				0,
+				60 * 1000L,
 				actionParameterIds,
 				Collections.singleton(monitoredElement.getId()));
 
@@ -200,8 +200,8 @@ public final class TestAddMeasurementSetup extends TestCase {
 		}
 
 		for (final MeasurementSetup measurementSetup : measurementSetups) {
-			System.out.println("MeasurementSetup: " + measurementSetup.getDescription());
-			final ActionTemplate measurementTemplate = measurementSetup.getMeasurementTemplate();
+			System.out.println("MeasurementSetup: '" + measurementSetup.getDescription() + "', duration: " + measurementSetup.getMeasurementTemplate().getApproximateActionDuration());
+			final ActionTemplate<Measurement> measurementTemplate = measurementSetup.getMeasurementTemplate();
 			final Set<ActionParameter> measurementParameters = measurementTemplate.getActionParameters();
 			for (final ActionParameter actionParameter : measurementParameters) {
 				System.out.println("Id: " + actionParameter.getId().getIdentifierCode() + ", '" + actionParameter.getTypeCodename() + "' == " + actionParameter.stringValue());
