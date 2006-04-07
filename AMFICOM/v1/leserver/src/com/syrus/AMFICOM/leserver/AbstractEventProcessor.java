@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractEventProcessor.java,v 1.1.2.1 2006/04/07 08:44:07 bass Exp $
+ * $Id: AbstractEventProcessor.java,v 1.1.2.2 2006/04/07 09:43:01 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1.2.1 $, $Date: 2006/04/07 08:44:07 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/04/07 09:43:01 $
  * @module leserver
  */
 abstract class AbstractEventProcessor implements EventProcessor, Runnable {
@@ -98,6 +98,8 @@ abstract class AbstractEventProcessor implements EventProcessor, Runnable {
 				this.processEvent(event);
 			} catch (final InterruptedException ie) {
 				Log.debugMessage(ie, SEVERE);
+			} catch (final Throwable t) {
+				Log.debugMessage(t, SEVERE);
 			}
 		}
 	}
