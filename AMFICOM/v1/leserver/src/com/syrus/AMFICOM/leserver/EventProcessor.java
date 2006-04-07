@@ -1,5 +1,5 @@
 /*-
- * $Id: EventProcessor.java,v 1.8 2006/04/04 06:08:46 bass Exp $
+ * $Id: EventProcessor.java,v 1.8.2.1 2006/04/07 08:44:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.eventv2.EventType;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2006/04/04 06:08:46 $
+ * @version $Revision: 1.8.2.1 $, $Date: 2006/04/07 08:44:07 $
  * @module leserver
  */
 interface EventProcessor {
@@ -24,4 +24,27 @@ interface EventProcessor {
 	 * @param event
 	 */
 	void processEvent(final Event<?> event);
+
+	/**
+	 * @param event
+	 * @see java.util.concurrent.BlockingQueue#put(Object)
+	 */
+	void put(final Event<?> event);
+
+	void putPoison();
+
+	/**
+	 * @see Thread#start()
+	 */
+	void start();
+
+	/**
+	 * @see Thread#join()
+	 */
+	void join() throws InterruptedException;
+
+	/**
+	 * @see Thread#getName()
+	 */
+	String getName();
 }

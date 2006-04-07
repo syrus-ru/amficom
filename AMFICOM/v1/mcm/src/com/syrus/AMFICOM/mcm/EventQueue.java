@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.9 2006/04/04 10:33:24 arseniy Exp $
+ * $Id: EventQueue.java,v 1.8.2.11 2006/04/04 06:08:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2006/04/04 10:33:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8.2.11 $, $Date: 2006/04/04 06:08:45 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
