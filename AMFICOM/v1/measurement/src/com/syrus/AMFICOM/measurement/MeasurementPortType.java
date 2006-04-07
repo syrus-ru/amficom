@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.21.2.7 2006/04/05 09:45:15 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.21.2.8 2006/04/07 07:23:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.21.2.7 $, $Date: 2006/04/05 09:45:15 $
+ * @version $Revision: 1.21.2.8 $, $Date: 2006/04/07 07:23:03 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -82,11 +82,12 @@ public final class MeasurementPortType extends StorableObjectType
 	}
 	
 	/**
-	 * create new instance for client
+	 * Создать новый экземпляр.
 	 * 
 	 * @param creatorId
 	 * @param codename
 	 * @param description
+	 * @return Новый экземпляр.
 	 * @throws CreateObjectException
 	 */
 	public static MeasurementPortType createInstance(final Identifier creatorId,

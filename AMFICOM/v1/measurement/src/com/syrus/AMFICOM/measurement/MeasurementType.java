@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementType.java,v 1.111.2.8 2006/04/05 09:45:15 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.111.2.9 2006/04/07 07:23:03 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.111.2.8 $, $Date: 2006/04/05 09:45:15 $
+ * @version $Revision: 1.111.2.9 $, $Date: 2006/04/07 07:23:03 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -62,6 +62,15 @@ public final class MeasurementType extends ActionType implements IdlTransferable
 		}
 	}
 
+	/**
+	 * Создать новый экземпляр.
+	 * 
+	 * @param creatorId
+	 * @param codename
+	 * @param description
+	 * @return Новый экземпляр.
+	 * @throws CreateObjectException
+	 */
 	public static MeasurementType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description) throws CreateObjectException {
