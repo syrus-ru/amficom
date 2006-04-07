@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementSetup.java,v 1.100.2.13 2006/04/06 13:03:12 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.100.2.14 2006/04/07 06:51:45 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,8 +58,8 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * их основе шаблон измерительного задания может быть привязан лишь к тем
  * линиям, к которым привязан каждый из составляющих его шаблонов действия.
  * 
- * @version $Revision: 1.100.2.13 $, $Date: 2006/04/06 13:03:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.100.2.14 $, $Date: 2006/04/07 06:51:45 $
+ * @author $Author: saa $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -225,7 +225,9 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 	/**
 	 * Получить идентификатор шаблона анализа.
 	 * 
-	 * @return Идентификатор шаблона анализа
+	 * @return Идентификатор шаблона анализа,
+	 * not null,
+	 * but may be {@link com.syrus.AMFICOM.general.Identifier#VOID_IDENTIFIER}
 	 */
 	public Identifier getAnalysisTemplateId() {
 		return this.analysisTemplateId;
@@ -368,4 +370,24 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 	protected MeasurementSetupWrapper getWrapper() {
 		return MeasurementSetupWrapper.getInstance();
 	}	
+
+	/**
+	 * Вычисляет продолжительность выполнения и обработки одного измерения
+	 * по этому шаблону.
+	 * <p>
+	 * XXX: это просто замена старого метода getMeasurementDuration(),
+	 * которая суммирует время измерения и время анализа.
+	 * На самом деле новое измерение в принципе может идти одновременно с
+	 * анализом предыдущего.
+	 * 
+	 * @return продолжительность выполнения и обработки одного измерения
+	 * @throws ApplicationException
+	 */
+	public long calcTotalDuration() throws ApplicationException {
+		long ret = this.getMeasurementTemplate().getApproximateActionDuration();
+		if (!this.analysisTemplateId.isVoid()) {
+			ret += this.getAnalysisTemplate().getApproximateActionDuration();
+		}
+		return ret;
+	}
 }
