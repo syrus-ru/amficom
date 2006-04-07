@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41.2.9 2006/04/06 09:20:43 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41.2.10 2006/04/07 10:48:51 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import static com.syrus.AMFICOM.measurement.ActionParameterTypeBindingWrapper.CO
 import static com.syrus.AMFICOM.measurement.ActionParameterWrapper.COLUMN_BINDING_ID;
 import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.LINK_COLUMN_ACTION_TEMPLATE_ID;
 import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID;
-import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_MONITORED_ELEMENT_ID;
 import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_ACTION_TEMPLATE_ID;
+import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_MONITORED_ELEMENT_ID;
 import static com.syrus.AMFICOM.measurement.AnalysisResultParameterWrapper.COLUMN_ANALYSIS_ID;
 import static com.syrus.AMFICOM.measurement.KISWrapper.COLUMN_MCM_ID;
 import static com.syrus.AMFICOM.measurement.MeasurementPortWrapper.COLUMN_KIS_ID;
@@ -74,7 +74,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 /**
- * @version $Revision: 1.41.2.9 $, $Date: 2006/04/06 09:20:43 $
+ * @version $Revision: 1.41.2.10 $, $Date: 2006/04/07 10:48:51 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -237,17 +237,12 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 						stringBuffer.append(SQL_FROM);
 						stringBuffer.append(MEASUREMENTPORT);
 						stringBuffer.append(SQL_WHERE);
-						stringBuffer.append(super.getLinkedQuery(COLUMN_KIS_ID,
-								COLUMN_ID,
-								COLUMN_MCM_ID,
-								KIS));
+						stringBuffer.append(super.getLinkedQuery(COLUMN_KIS_ID, COLUMN_ID, COLUMN_MCM_ID, KIS));
 						stringBuffer.append(CLOSE_BRACKET);
 						stringBuffer.append(CLOSE_BRACKET);
 						return stringBuffer.toString();
 					case ACTIONTEMPLATE_CODE:
-						return super.getLinkedQuery(LINK_COLUMN_TEST_ID, 
-								LINK_COLUMN_MEASUREMENT_SETUP_ID, 
-								TEST_MS_LINK);
+						return super.getLinkedQuery(LINK_COLUMN_TEST_ID, LINK_COLUMN_MEASUREMENT_SETUP_ID, TEST_MS_LINK);
 					case TEST_CODE:
 						return super.getQuery(COLUMN_GROUP_TEST_ID);
 					default:
@@ -262,15 +257,9 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					case KIS_CODE:
 						return super.getQuery(COLUMN_KIS_ID);
 					case MCM_CODE:
-						return super.getLinkedQuery(COLUMN_KIS_ID,
-								COLUMN_ID,
-								COLUMN_MCM_ID,
-								KIS);
+						return super.getLinkedQuery(COLUMN_KIS_ID, COLUMN_ID, COLUMN_MCM_ID, KIS);
 					case DOMAIN_CODE:
-						return super.getLinkedQuery(COLUMN_KIS_ID,
-								COLUMN_ID,
-								COLUMN_DOMAIN_ID,
-								KIS);
+						return super.getLinkedQuery(COLUMN_KIS_ID, COLUMN_ID, COLUMN_DOMAIN_ID, KIS);
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}
@@ -280,6 +269,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 						return super.getQuery(COLUMN_MCM_ID);
 					case DOMAIN_CODE:
 						return super.getQuery(COLUMN_DOMAIN_ID);
+					case MEASUREMENTPORT_CODE:
+						return super.getLinkedQuery(COLUMN_KIS_ID, COLUMN_ID, MEASUREMENTPORT);
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}

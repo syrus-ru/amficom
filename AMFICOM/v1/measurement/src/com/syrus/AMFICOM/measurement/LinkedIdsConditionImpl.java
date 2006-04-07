@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.71.2.10 2006/04/06 09:20:43 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.71.2.11 2006/04/07 10:48:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71.2.10 $, $Date: 2006/04/06 09:20:43 $
+ * @version $Revision: 1.71.2.11 $, $Date: 2006/04/07 10:48:51 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -333,16 +333,16 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						break;
 					case MCM_CODE:
 						try {
-							final KIS kis1 = (KIS) StorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
-							condition = super.conditionTest(kis1.getMCMId());
+							final KIS kis = StorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
+							condition = super.conditionTest(kis.getMCMId());
 						} catch (ApplicationException ae) {
 							Log.errorMessage(ae);
 						}
 						break;
 					case DOMAIN_CODE:
 						try {
-							final KIS kis1 = (KIS) StorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
-							condition = this.checkDomain(kis1);
+							final KIS kis = StorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
+							condition = this.checkDomain(kis);
 						} catch (ApplicationException ae) {
 							Log.errorMessage(ae);
 						}
@@ -361,6 +361,14 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						break;
 					case DOMAIN_CODE:
 						condition = this.checkDomain(kis);
+						break;
+					case MEASUREMENTPORT_CODE:
+						try {
+							condition = super.conditionTest(kis.getMeasurementPortIds());
+						} catch (ApplicationException ae) {
+							Log.errorMessage(ae);
+							condition = false;
+						}
 						break;
 					default:
 						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
