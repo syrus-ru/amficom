@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementStatusChangedEventProcessor.java,v 1.2.2.1 2006/04/07 08:44:07 bass Exp $
+ * $Id: MeasurementStatusChangedEventProcessor.java,v 1.2.2.2 2006/04/07 10:04:23 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,12 @@ import static com.syrus.AMFICOM.eventv2.EventType.MEASUREMENT_STATUS_CHANGED;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.omg.CORBA.Object;
 import org.omg.CORBA.SystemException;
 
@@ -21,16 +27,20 @@ import com.syrus.AMFICOM.eventv2.MeasurementStatusChangedEvent;
 import com.syrus.AMFICOM.eventv2.corba.EventReceiver;
 import com.syrus.AMFICOM.eventv2.corba.EventReceiverHelper;
 import com.syrus.AMFICOM.general.CORBAServer;
+import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.UserLogin;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2.2.1 $, $Date: 2006/04/07 08:44:07 $
+ * @version $Revision: 1.2.2.2 $, $Date: 2006/04/07 10:04:23 $
  * @module leserver
  */
 final class MeasurementStatusChangedEventProcessor extends AbstractEventProcessor {
+	private final Map<SessionKey, ExecutorService> executors =
+		Collections.synchronizedMap(new HashMap<SessionKey, ExecutorService>());
+
 	MeasurementStatusChangedEventProcessor(final int capacity) {
 		super(capacity);
 	}
@@ -56,28 +66,60 @@ final class MeasurementStatusChangedEventProcessor extends AbstractEventProcesso
 		@SuppressWarnings("unchecked")
 		final MeasurementStatusChangedEvent<?> measurementStatusChangedEvent = (MeasurementStatusChangedEvent) event;
 
-		try {
-			Log.debugMessage("A new event has arrived", FINEST);
-			final CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
-			for (final UserLogin userLogin : LoginProcessor.getUserLogins()) {
-				try {
-					final Object object = corbaServer.stringToObject(userLogin.getUserIOR());
-					if (!object._is_a(EventReceiverHelper.id())) {
-						Log.debugMessage("Object: " + object + " is not an EventReceiver; skipping", FINEST);
-						continue;
-					}
-					final EventReceiver eventReceiver = EventReceiverHelper.narrow(object);
-					eventReceiver.receiveEvent(measurementStatusChangedEvent.getIdlTransferable(corbaServer.getOrb()));
-				} catch (final SystemException se) {
-					Log.debugMessage(se, SEVERE);
-				}
+		Log.debugMessage(measurementStatusChangedEvent
+				+ " started being processed",
+				FINEST);
+		final CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
+		for (final UserLogin userLogin : LoginProcessor.getUserLogins()) {
+			/**
+			 * @todo This code is a copy-paste of one in
+			 * PopupNotificationEventProcessor.
+			 */
+			final SessionKey sessionKey = userLogin.getSessionKey();
+			ExecutorService executorService = this.executors.get(sessionKey);
+			if (executorService == null) {
+				executorService = Executors.newSingleThreadExecutor();
+				this.executors.put(sessionKey, executorService);
 			}
-			Log.debugMessage("Exiting...", FINEST);
-		} catch (final Throwable t) {
-			Log.debugMessage(t, SEVERE);
+			executorService.submit(new Runnable() {
+				public void run() {
+					try {
+						final Object object = corbaServer.stringToObject(userLogin.getUserIOR());
+						if (!object._is_a(EventReceiverHelper.id())) {
+							Log.debugMessage("Object: " + object + " is not an EventReceiver; skipping", FINEST);
+							return;
+						}
+						final EventReceiver eventReceiver = EventReceiverHelper.narrow(object);
+						eventReceiver.receiveEvent(measurementStatusChangedEvent.getIdlTransferable(corbaServer.getOrb()));
+						final long t1 = System.nanoTime();
+						Log.debugMessage(measurementStatusChangedEvent
+								+ " delivered in "
+								+ ((t1 - t0) / 1e9)
+								+ " second(s)",
+								FINEST);
+					} catch (final SystemException se) {
+						/**
+						 * @todo catch COMM_FAILURE separately
+						 * and request failed session removal.
+						 */
+						Log.debugMessage(se, SEVERE);
+					} catch (final Throwable t) {
+						/**
+						 * @todo EventReceiver#receiveEvent(...)
+						 * should't throw an ARE: there's
+						 * no need to, and I'm unsure
+						 * which specific handling there
+						 * should be.
+						 */
+						Log.debugMessage(t, SEVERE);
+					}
+				}
+			});
 		}
 
 		final long t1 = System.nanoTime();
-		Log.debugMessage(((t1 - t0) / 1e9) + " second(s)", FINEST);
+		Log.debugMessage(measurementStatusChangedEvent + " submitted in "
+				+ ((t1 - t0) / 1e9) + " second(s); delivery pending",
+				FINEST);
 	}
 }
