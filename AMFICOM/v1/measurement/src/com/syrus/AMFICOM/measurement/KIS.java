@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.14.2.5 2006/03/17 11:54:48 arseniy Exp $
+ * $Id: KIS.java,v 1.14.2.6 2006/04/07 10:49:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,9 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -36,12 +34,11 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.corba.IdlKIS;
 import com.syrus.AMFICOM.measurement.corba.IdlKISHelper;
-import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.14.2.5 $, $Date: 2006/03/17 11:54:48 $
+ * @version $Revision: 1.14.2.6 $, $Date: 2006/04/07 10:49:30 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -56,6 +53,8 @@ public final class KIS extends DomainMember implements IdlTransferableObjectExt<
 	private Identifier equipmentId;
 	private Identifier mcmId;
 	private boolean onService;
+
+	private transient LinkedIdsCondition measurementPortCondition;
 
 	public KIS(final IdlKIS kt) throws CreateObjectException {
 		try {
@@ -292,18 +291,20 @@ public final class KIS extends DomainMember implements IdlTransferableObjectExt<
 		return dependencies;
 	}
 
-	/**
-	 * @return <code>Set&lt;MeasurementPort&gt;</code>
-	 */
-	public Set<MeasurementPort> getMeasurementPorts(final boolean breakOnLoadError) {
-		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, MEASUREMENTPORT_CODE),
-					true,
-					breakOnLoadError);
-		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, Level.SEVERE);
-			return Collections.emptySet();
+	public Set<Identifier> getMeasurementPortIds() throws ApplicationException {
+		if (this.measurementPortCondition == null) {
+			this.measurementPortCondition = new LinkedIdsCondition(this.id, MEASUREMENTPORT_CODE);
 		}
+
+		return StorableObjectPool.getIdentifiersByCondition(this.measurementPortCondition, true);
+	}
+
+	public Set<MeasurementPort> getMeasurementPorts() throws ApplicationException {
+		if (this.measurementPortCondition == null) {
+			this.measurementPortCondition = new LinkedIdsCondition(this.id, MEASUREMENTPORT_CODE);
+		}
+
+		return StorableObjectPool.getStorableObjectsByCondition(this.measurementPortCondition, true);
 	}
 
 	@Override
