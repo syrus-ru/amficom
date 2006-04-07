@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.30.2.4 2006/04/07 10:16:45 saa Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.30.2.5 2006/04/07 10:16:57 saa Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
-import static com.syrus.AMFICOM.general.ObjectEntities.PERIODICALTEMPORALPATTERN_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
 import java.util.Collections;
@@ -39,7 +38,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.30.2.4 $, $Date: 2006/04/07 10:16:45 $
+ * @version $Revision: 1.30.2.5 $, $Date: 2006/04/07 10:16:57 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module measurement
