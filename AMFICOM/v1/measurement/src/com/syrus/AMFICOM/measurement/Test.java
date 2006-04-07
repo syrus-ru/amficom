@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.21 2006/04/07 13:17:16 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.22 2006/04/07 14:15:36 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -60,7 +60,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.21 $, $Date: 2006/04/07 13:17:16 $
+ * @version $Revision: 1.183.2.22 $, $Date: 2006/04/07 14:15:36 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -149,13 +149,25 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	 * Создать новый экземпляр одноразового задания.
 	 * 
 	 * @param creatorId
+	 *        Идентификатор пользователя, создающего объект.
 	 * @param description
+	 *        Строка описания.
 	 * @param groupTestId
+	 *        Идентификатор старшего в группе задания. Для одиночного задания
+	 *        (т. е. - задание вне какой-либо группы) должен быть
+	 *        {@link Identifier#VOID_IDENTIFIER}. Не <code>null</code>.
 	 * @param monitoredElementId
+	 *        Идентификатор измеряемой линии. Не <code>null</code>.
 	 * @param startTime
+	 *        Время начала выполнения. Не <code>null</code>.
 	 * @param measurementSetupIds
+	 *        Идентификаторы шаблонов. Должно быть непустое множество.
 	 * @param measurementTypeId
+	 *        Идентификатор типа измерения. Не
+	 *        {@link Identifier#VOID_IDENTIFIER}, не <code>null</code>.
 	 * @param analysisTypeId
+	 *        Идентификатор типа анализа. Может быть
+	 *        {@link Identifier#VOID_IDENTIFIER}, не <code>null</code>.
 	 * @return Новый экземпляр одноразового задания.
 	 * @throws CreateObjectException
 	 */
@@ -202,15 +214,31 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	 * Создать новый экземпляр периодического задания.
 	 * 
 	 * @param creatorId
+	 *        Идентификатор пользователя, создающего объект.
 	 * @param description
+	 *        Строка описания.
 	 * @param groupTestId
+	 *        Идентификатор старшего в группе задания. Для одиночного задания
+	 *        (т. е. - задание вне какой-либо группы) должен быть
+	 *        {@link Identifier#VOID_IDENTIFIER}. Не <code>null</code>.
 	 * @param monitoredElementId
+	 *        Идентификатор измеряемой линии. Не <code>null</code>.
 	 * @param startTime
+	 *        Время начала выполнения. Не <code>null</code>.
 	 * @param endTime
+	 *        Время окончания выполнения. Не <code>null</code>. Должно быть
+	 *        позднее <code>startTime</code>.
 	 * @param temporalPatternId
+	 *        Идентификатор временного шаблона. Не
+	 *        {@link Identifier#VOID_IDENTIFIER}, не <code>null</code>.
 	 * @param measurementSetupIds
+	 *        Идентификаторы шаблонов. Должно быть непустое множество.
 	 * @param measurementTypeId
+	 *        Идентификатор типа измерения. Не
+	 *        {@link Identifier#VOID_IDENTIFIER}, не <code>null</code>.
 	 * @param analysisTypeId
+	 *        Идентификатор типа анализа. Может быть
+	 *        {@link Identifier#VOID_IDENTIFIER}, не <code>null</code>.
 	 * @return Новый экземпляр периодического задания.
 	 * @throws CreateObjectException
 	 */
