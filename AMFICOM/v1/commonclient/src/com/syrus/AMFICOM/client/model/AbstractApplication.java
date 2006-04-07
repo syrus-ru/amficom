@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.31 2005/12/12 14:07:41 bob Exp $
+ * $Id: AbstractApplication.java,v 1.32 2006/04/07 13:01:04 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.awt.Font;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 
 import javax.swing.JDialog;
@@ -24,11 +25,10 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.metal.MetalTheme;
 
 import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
-
-import com.incors.plaf.kunststoff.KunststoffLookAndFeel;
 
 import com.syrus.AMFICOM.client.UI.AMFICOMMetalTheme;
 import com.syrus.AMFICOM.client.UI.dialogs.ModuleCodeDialog;
@@ -50,8 +50,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/12/12 14:07:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.32 $, $Date: 2006/04/07 13:01:04 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -149,8 +149,16 @@ public abstract class AbstractApplication {
 			MetalLookAndFeel.setCurrentTheme(new AMFICOMMetalTheme());
 			lnf = new MetalLookAndFeel();
 		} else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_KUNSTSTOFF)) {
-			KunststoffLookAndFeel.setCurrentTheme(new AMFICOMMetalTheme());
-			lnf = new KunststoffLookAndFeel();
+			try {
+				final Class<?> clazz = Class.forName("com.incors.plaf.kunststoff.KunststoffLookAndFeel");
+				final Method method = clazz.getMethod("setCurrentTheme", MetalTheme.class);
+				method.invoke(clazz, new AMFICOMMetalTheme());
+				lnf = (LookAndFeel) clazz.newInstance();
+			} catch (final RuntimeException re) {
+				throw re;
+			} catch (final Exception e) {
+				return this.getDefaultLookAndFeel();
+			}
 		} else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_WINDOWS)) {
 			lnf = new WindowsLookAndFeel();
 		} else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_MOTIF)) {
