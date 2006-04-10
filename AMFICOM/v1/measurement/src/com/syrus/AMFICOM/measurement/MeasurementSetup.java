@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementSetup.java,v 1.100.2.15 2006/04/07 07:23:03 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.100.2.16 2006/04/10 11:22:07 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * их основе шаблон измерительного задания может быть привязан лишь к тем
  * линиям, к которым привязан каждый из составляющих его шаблонов действия.
  * 
- * @version $Revision: 1.100.2.15 $, $Date: 2006/04/07 07:23:03 $
+ * @version $Revision: 1.100.2.16 $, $Date: 2006/04/10 11:22:07 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -322,8 +322,12 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 	@Override
 	protected boolean isValid() {
 		final boolean valid = super.isValid()
-				&& this.measurementTemplateId != null && this.measurementTemplateId.getMajor() == ACTIONTEMPLATE_CODE
-				&& this.analysisTemplateId != null && (this.analysisTemplateId.isVoid() || this.analysisTemplateId.getMajor() == ACTIONTEMPLATE_CODE);
+				&& this.measurementTemplateId != null
+				&& this.measurementTemplateId.getMajor() == ACTIONTEMPLATE_CODE
+				&& this.analysisTemplateId != null
+				&& (this.analysisTemplateId.isVoid() || this.analysisTemplateId.getMajor() == ACTIONTEMPLATE_CODE)
+				&& this.monitoredElementIds != null
+				&& (this.monitoredElementIds.isEmpty() || StorableObject.getEntityCodeOfIdentifiables(this.monitoredElementIds) == MONITOREDELEMENT_CODE);
 		if (!valid) {
 			return false;
 		}
