@@ -1,6 +1,18 @@
 
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_ANALYSIS_MAIN;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_ANALYSIS_SELECTION;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_EVENTS;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_MARKERS_INFO;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_PRIMARY_PARAMETERS;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_TRACE_SELECTOR;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_OVERALL_STATS;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_NOISE;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_DETAILED_EVENTS;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_HISTOGRAMM;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_NOISE_HISTOGRAMM;
+
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
@@ -40,6 +52,7 @@ import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
@@ -52,6 +65,7 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.util.Log;
 
@@ -59,18 +73,6 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		PrimaryRefAnalysisListener, EtalonMTMListener, CurrentTraceChangeListener {
 
 	ClientAnalysisManager		aManager					= new ClientAnalysisManager();
-
-	public static final String	NOISE_FRAME					= "noiseFrame";
-	public static final String	NOISE_HISTOGRAMM_FRAME				= "noiseHistogrammFrame";
-	public static final String	SELECTOR_FRAME				= "selectFrame";
-	public static final String	PRIMARY_PARAMETERS_FRAME	= "paramFrame";
-	public static final String	STATS_FRAME					= "statsFrame";
-	public static final String	EVENTS_FRAME				= "eventsFrame";
-	public static final String	MARKERS_INFO_FRAME			= "mInfoFrame";
-	public static final String	ANALYSIS_FRAME				= "analysisFrame";
-	public static final String	ANALYSIS_SELECTION_FRAME	= "anaSelectFrame";
-	public static final String	DETAILED_EVENTS_FRAME		= "DetailedEventsFrame";
-	public static final String	HISTOGRAMM_FRAME			= "HistogrammFrame";
 
 	UIDefaults					frames;
 	NoiseHistogrammPanel noiseHistogrammPanel;	
@@ -116,7 +118,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.graphs = new LinkedList<SimpleResizableFrame>();
 		
 		final JDesktopPane desktop = AnalyseMainFrame.this.desktopPane;
-		this.frames.put(SELECTOR_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_TRACE_SELECTOR, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | SELECTOR_FRAME", Level.FINEST);
 				TraceSelectorFrame selectFrame = new TraceSelectorFrame(AnalyseMainFrame.this.dispatcher);
@@ -125,13 +127,13 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			}
 		});
 
-		this.frames.put(PRIMARY_PARAMETERS_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_PRIMARY_PARAMETERS, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | PRIMARY_PARAMETERS_FRAME", Level.FINEST);
 				PrimaryParametersFrame paramFrame = new PrimaryParametersFrame() {
 					@Override
 					public String getReportTitle() {
-						return PRIMARY_PARAMETERS_FRAME;
+						return FRAME_PRIMARY_PARAMETERS;
 					}
 				};
 				desktop.add(paramFrame);
@@ -140,13 +142,13 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			}
 		});
 
-		this.frames.put(STATS_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_OVERALL_STATS, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | STATS_FRAME", Level.FINEST);
 				OverallStatsFrame statsFrame = new OverallStatsFrame(AnalyseMainFrame.this.dispatcher) {
 					@Override
 					public String getReportTitle() {
-						return STATS_FRAME;
+						return FRAME_OVERALL_STATS;
 					}
 				};
 				desktop.add(statsFrame);
@@ -155,17 +157,17 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			}
 		});
 
-		this.frames.put(NOISE_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_NOISE, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | NOISE_FRAME", Level.FINEST);
 				ScalableFrame noiseFrame = new ScalableFrame(new ScalableLayeredPanel()) {
 					@Override
 					public String getReportTitle() {
-						return NOISE_FRAME;
+						return FRAME_NOISE;
 					}
 				};
-				noiseFrame.setTitle(LangModelAnalyse.getString("Noise level"));
+				noiseFrame.setTitle(I18N.getString(AnalysisResourceKeys.FRAME_NOISE));
 				desktop.add(noiseFrame);
 				AnalyseMainFrame.this.graphs.add(noiseFrame);
 				return noiseFrame;
@@ -185,7 +187,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 //			}
 //		});
 		
-		this.frames.put(NOISE_HISTOGRAMM_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_NOISE_HISTOGRAMM, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | NOISE_HISTOGRAMM_FRAME", Level.FINEST);
 				
@@ -195,10 +197,10 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 				ScalableFrame noiseHistoFrame = new ScalableFrame(layeredPanel) {
 					@Override
 					public String getReportTitle() {
-						return NOISE_HISTOGRAMM_FRAME;
+						return FRAME_NOISE_HISTOGRAMM;
 					}
 				};
-				noiseHistoFrame.setTitle(LangModelAnalyse.getString("noiseHistoTitle"));
+				noiseHistoFrame.setTitle(I18N.getString(FRAME_NOISE_HISTOGRAMM));
 				desktop.add(noiseHistoFrame);
 				AnalyseMainFrame.this.graphs.add(noiseHistoFrame);
 				return noiseHistoFrame;
@@ -215,17 +217,17 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 						int h = f.desktopPane.getSize().height;
 						int minh = Math.min(205, h / 4);
 
-						JInternalFrame selectFrame = (JInternalFrame) f.frames.get(SELECTOR_FRAME);
-						JInternalFrame paramFrame = (JInternalFrame) f.frames.get(PRIMARY_PARAMETERS_FRAME);
-						JInternalFrame statsFrame = (JInternalFrame) f.frames.get(STATS_FRAME);
-						JInternalFrame noiseFrame = (JInternalFrame) f.frames.get(NOISE_FRAME);
-						JInternalFrame noiseHistoFrame = (JInternalFrame) f.frames.get(NOISE_HISTOGRAMM_FRAME);
-						JInternalFrame eventsFrame = (JInternalFrame) f.frames.get(EVENTS_FRAME);
-						JInternalFrame detailedEvFrame = (JInternalFrame) f.frames.get(DETAILED_EVENTS_FRAME);
-						JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(ANALYSIS_FRAME);
-						JInternalFrame mInfoFrame = (JInternalFrame) f.frames.get(MARKERS_INFO_FRAME);
-						JInternalFrame anaSelectFrame = (JInternalFrame) f.frames.get(ANALYSIS_SELECTION_FRAME);
-						JInternalFrame dhf = (JInternalFrame) f.frames.get(HISTOGRAMM_FRAME);
+						JInternalFrame selectFrame = (JInternalFrame) f.frames.get(FRAME_TRACE_SELECTOR);
+						JInternalFrame paramFrame = (JInternalFrame) f.frames.get(FRAME_PRIMARY_PARAMETERS);
+						JInternalFrame statsFrame = (JInternalFrame) f.frames.get(FRAME_OVERALL_STATS);
+						JInternalFrame noiseFrame = (JInternalFrame) f.frames.get(FRAME_NOISE);
+						JInternalFrame noiseHistoFrame = (JInternalFrame) f.frames.get(FRAME_NOISE_HISTOGRAMM);
+						JInternalFrame eventsFrame = (JInternalFrame) f.frames.get(FRAME_EVENTS);
+						JInternalFrame detailedEvFrame = (JInternalFrame) f.frames.get(FRAME_DETAILED_EVENTS);
+						JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(FRAME_ANALYSIS_MAIN);
+						JInternalFrame mInfoFrame = (JInternalFrame) f.frames.get(FRAME_MARKERS_INFO);
+						JInternalFrame anaSelectFrame = (JInternalFrame) f.frames.get(FRAME_ANALYSIS_SELECTION);
+						JInternalFrame dhf = (JInternalFrame) f.frames.get(FRAME_HISTOGRAMM);
 
 						normalize(paramFrame);
 						normalize(selectFrame);
@@ -266,13 +268,13 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 					}
 			});
 
-		this.frames.put(EVENTS_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_EVENTS, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | EVENTS_FRAME", Level.FINEST);
 				EventsFrame eventsFrame = new EventsFrame(aContext, false) {
 					@Override
 					public String getReportTitle() {
-						return EVENTS_FRAME;
+						return FRAME_EVENTS;
 					}
 				};
 				desktop.add(eventsFrame);
@@ -281,7 +283,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			}
 		});
 
-		this.frames.put(DETAILED_EVENTS_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_DETAILED_EVENTS, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | DETAILED_EVENTS_FRAME", Level.FINEST);
 				DetailedEventsFrame detailedEvFrame = new DetailedEventsFrame();
@@ -290,13 +292,13 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			}
 		});
 
-		this.frames.put(ANALYSIS_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_ANALYSIS_MAIN, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ANALYSIS_FRAME", Level.FINEST);
 				AnalysisFrame analysisFrame = new AnalysisFrame(AnalyseMainFrame.this.dispatcher)  {
 					@Override
 					public String getReportTitle() {
-						return ANALYSIS_FRAME;
+						return FRAME_ANALYSIS_MAIN;
 					}
 				};
 				desktop.add(analysisFrame);
@@ -305,13 +307,13 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			}
 		});
 
-		this.frames.put(MARKERS_INFO_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_MARKERS_INFO, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | MARKERS_INFO_FRAME", Level.FINEST);
 				MarkersInfoFrame mInfoFrame = new MarkersInfoFrame(AnalyseMainFrame.this.dispatcher) {
 					@Override
 					public String getReportTitle() {
-						return MARKERS_INFO_FRAME;
+						return FRAME_MARKERS_INFO;
 					}
 				};
 				AnalyseMainFrame.this.tables.add(mInfoFrame);
@@ -320,13 +322,13 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			}
 		});
 
-		this.frames.put(ANALYSIS_SELECTION_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_ANALYSIS_SELECTION, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ANALYSIS_SELECTION_FRAME", Level.FINEST);
 				AnalysisSelectionFrame analysisSelectionFrame = new AnalysisSelectionFrame(aContext) {
 					@Override
 					public String getReportTitle() {
-						return ANALYSIS_SELECTION_FRAME;
+						return FRAME_ANALYSIS_SELECTION;
 					}
 				};
 				desktop.add(analysisSelectionFrame);
@@ -335,14 +337,14 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			}
 		});
 
-		this.frames.put(HISTOGRAMM_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_HISTOGRAMM, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | HISTOGRAMM_FRAME", Level.FINEST);
 				HistogrammFrame histogrammFrame = new HistogrammFrame(AnalyseMainFrame.this.dispatcher) {
 					@Override
 					public String getReportTitle() {
-						return HISTOGRAMM_FRAME;
+						return FRAME_HISTOGRAMM;
 					}
 				};
 				AnalyseMainFrame.this.desktopPane.add(histogrammFrame);
@@ -410,17 +412,17 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 //		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(this.windowArranger));
 
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, this.getLazyCommand(SELECTOR_FRAME));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS, this.getLazyCommand(PRIMARY_PARAMETERS_FRAME));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_OVERALLSTATS, this.getLazyCommand(STATS_FRAME));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_NOISE, this.getLazyCommand(NOISE_FRAME));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_FILTERED, this.getLazyCommand(NOISE_HISTOGRAMM_FRAME));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_EVENTS, this.getLazyCommand(EVENTS_FRAME));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_DETAILEDEVENTS, this.getLazyCommand(DETAILED_EVENTS_FRAME));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, this.getLazyCommand(ANALYSIS_FRAME));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_MARKERSINFO, this.getLazyCommand(MARKERS_INFO_FRAME));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSISSELECTION, this.getLazyCommand(ANALYSIS_SELECTION_FRAME));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_HISTOGRAMM, this.getLazyCommand(HISTOGRAMM_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, this.getLazyCommand(FRAME_TRACE_SELECTOR));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS, this.getLazyCommand(FRAME_PRIMARY_PARAMETERS));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_OVERALLSTATS, this.getLazyCommand(FRAME_OVERALL_STATS));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_NOISE, this.getLazyCommand(FRAME_NOISE));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_FILTERED, this.getLazyCommand(FRAME_NOISE_HISTOGRAMM));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_EVENTS, this.getLazyCommand(FRAME_EVENTS));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_DETAILEDEVENTS, this.getLazyCommand(FRAME_DETAILED_EVENTS));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, this.getLazyCommand(FRAME_ANALYSIS_MAIN));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_MARKERSINFO, this.getLazyCommand(FRAME_MARKERS_INFO));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSISSELECTION, this.getLazyCommand(FRAME_ANALYSIS_SELECTION));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_HISTOGRAMM, this.getLazyCommand(FRAME_HISTOGRAMM));
 
 		setDefaultModel(aModel);
 
@@ -526,8 +528,8 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 //			double[] filtered = Heap.getRefAnalysisPrimary().filtered;
 			double[] noise = Heap.getRefAnalysisPrimary().noise;
 
-			ScalableFrame noiseFrame = (ScalableFrame) this.frames.get(NOISE_FRAME);
-			ScalableFrame noiseHistoFrame = (ScalableFrame) this.frames.get(NOISE_HISTOGRAMM_FRAME);
+			ScalableFrame noiseFrame = (ScalableFrame) this.frames.get(FRAME_NOISE);
+			ScalableFrame noiseHistoFrame = (ScalableFrame) this.frames.get(FRAME_NOISE_HISTOGRAMM);
 
 			noiseFrame.setGraph(noise, deltaX, false, Heap.PRIMARY_TRACE_KEY);
 			noiseFrame.updScales();
@@ -584,9 +586,9 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 	}
 
 	private void closeFrames() {
-		ScalableFrame noiseFrame = (ScalableFrame) this.frames.get(NOISE_FRAME);
+		ScalableFrame noiseFrame = (ScalableFrame) this.frames.get(FRAME_NOISE);
 		noiseFrame.setVisible(false);
-		ScalableFrame filteredFrame = (ScalableFrame) this.frames.get(NOISE_HISTOGRAMM_FRAME);
+		ScalableFrame filteredFrame = (ScalableFrame) this.frames.get(FRAME_NOISE_HISTOGRAMM);
 		filteredFrame.setVisible(false);
 	}
 

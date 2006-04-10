@@ -1,5 +1,5 @@
 /*-
- * $Id: PrimaryParameters.java,v 1.5 2005/10/17 14:20:09 saa Exp $
+ * $Id: PrimaryParameters.java,v 1.6 2006/04/10 13:26:53 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,14 +12,14 @@ import java.beans.*;
 import java.text.DateFormat;
 import java.util.*;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/10/17 14:20:09 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2006/04/10 13:26:53 $
  * @module analysis
  */
 
@@ -40,19 +40,19 @@ public class PrimaryParameters {
 	public void init(BellcoreStructure bs) {
 		setAverages(Integer.toString(bs.getAverages()));
 		setBackscatter((Double.toString(bs.getBackscatter()) + " " 
-				+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)));
+				+ I18N.getString(AnalysisResourceKeys.TEXT_DB)));
 		setDate(DateFormat.getDateInstance().format(bs.getDate()));
 		setTime(DateFormat.getTimeInstance().format(bs.getDate()));
 		setGroupindex(Double.toString(bs.getIOR()));
 		setModuleId(bs.getOpticalModuleId());
 		setPulsewidth(Integer.toString(bs.getPulsewidth()) + " " 
-				+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NS));
+				+ I18N.getString(AnalysisResourceKeys.TEXT_NS));
 		setRange(Long.toString(Math.round(bs.getRange())) + " " 
-				+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM));
+				+ I18N.getString(AnalysisResourceKeys.TEXT_KM));
 		setResolution(Double.toString(MathRef.floatRound(bs.getResolution(), 3)) + " " 
-				+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT));
+				+ I18N.getString(AnalysisResourceKeys.TEXT_MT));
 		setWavelength(Integer.toString(bs.getWavelength()) + " " 
-				+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NM));
+				+ I18N.getString(AnalysisResourceKeys.TEXT_NM));
 	}
 	
 	public String getModuleId() {

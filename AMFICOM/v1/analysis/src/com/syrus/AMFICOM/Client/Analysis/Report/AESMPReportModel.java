@@ -36,20 +36,11 @@ import com.syrus.io.BellcoreStructure;
 public abstract class AESMPReportModel extends ReportModel
 {
 	//Названия таблиц для всех модулей (3 анализа + прогноз и моделирование)
-	/**
-	 * Общая информация
-	 */
-	public static String COMMON_INFO = "statsFrame";
-	/**
-	 * Рефлектограмма
-	 */
-	public static String REFLECTOGRAMM = "analysisFrame";
-	/**
-	 * Основные характеристики
-	 */
-	public static String GENERAL_CHARACTERISTICS = "eventsFrame";
+	public static String COMMON_INFO = "Menu.Window.statsFrame";
+	public static String REFLECTOGRAMM = "Menu.Window.analysisFrame";
+	public static String GENERAL_CHARACTERISTICS = "Menu.Window.eventsFrame";
 
-	private static final String REFLECTOGRAMM_COLOR = "reflectogrammColor";
+	private static final String REFLECTOGRAMM_COLOR = "ReflectogrammColor";
 	
 	public AESMPReportModel(){
 		UIManager.put(REFLECTOGRAMM_COLOR,Color.BLUE);		
@@ -186,7 +177,7 @@ public abstract class AESMPReportModel extends ReportModel
 		if (	reportName.equals(COMMON_INFO)
 			||	reportName.equals(GENERAL_CHARACTERISTICS)
 			||	reportName.equals(REFLECTOGRAMM))
-			return I18N.getString("report.Modules.AESMPCommon." + reportName);
-		return null;
+			return I18N.getString(reportName);
+		throw new IllegalArgumentException(reportName);
 	}
 }

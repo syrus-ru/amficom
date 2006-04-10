@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.TraceResource;
 import com.syrus.AMFICOM.analysis.TraceResourceWrapper;
@@ -38,6 +37,7 @@ import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
@@ -128,7 +128,7 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 		this.setClosable(true);
 		this.setIconifiable(true);
 		// this.setMaximizable(true);
-		this.setTitle(LangModelAnalyse.getString("selectorTitle"));
+		this.setTitle(I18N.getString(AnalysisResourceKeys.FRAME_TRACE_SELECTOR));
 
 		this.mainPanel.setLayout(new BorderLayout());
 		this.mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());

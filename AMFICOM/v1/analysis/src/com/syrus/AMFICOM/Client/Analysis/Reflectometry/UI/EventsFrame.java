@@ -48,6 +48,7 @@ import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class EventsFrame extends JInternalFrame
@@ -298,7 +299,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		this.setClosable(true);
 		this.setMaximizable(true);
 		this.setIconifiable(true);
-		this.setTitle(LangModelAnalyse.getString("eventTableTitle"));
+		this.setTitle(I18N.getString(AnalysisResourceKeys.FRAME_EVENTS));
 
 		this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		final ListSelectionModel rowSM = this.table.getSelectionModel();		

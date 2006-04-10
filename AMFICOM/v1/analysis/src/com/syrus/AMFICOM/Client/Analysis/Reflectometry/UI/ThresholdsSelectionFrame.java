@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThreshEditor;
 import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.client.UI.ATable;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
@@ -54,7 +55,6 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
  *    увеличить/уменьшить пороги, и, вроде как, загрузить начальные пороги(?)
  * </ol>
  */
-@SuppressWarnings("all")
 public class ThresholdsSelectionFrame extends JInternalFrame
 implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 	CurrentEventChangeListener, EtalonMTMListener {
@@ -88,7 +88,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 
 	public String getReportTitle()
 	{
-		return LangModelAnalyse.getString("thresholdsTableTitle");
+		return I18N.getString(AnalysisResourceKeys.FRAME_THRESHOLDS_SELECTION);
 	}
 
 	public TableModel getTableModel()
@@ -118,6 +118,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		toolbar.add(button);
 	}
 
+	@SuppressWarnings("unused") 
 	private void jbInit() throws Exception
 	{
 		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
@@ -125,7 +126,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
-		this.setTitle(LangModelAnalyse.getString("thresholdsTableTitle"));
+		this.setTitle(I18N.getString(AnalysisResourceKeys.FRAME_THRESHOLDS_SELECTION));
 
 		this.tModel = new ThresholdTableModel(
 			new String[] {
@@ -141,7 +142,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(200);
 		this.jTable.setDefaultEditor(Object.class, ThresholdEditor.getInstance());
 
-		this.setContentPane(mainPanel);
+		this.setContentPane(this.mainPanel);
 
 		//jToolBar1.setBorderPainted(true);
 		JToolBar jToolBar = new JToolBar();
@@ -179,7 +180,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 						ModelTraceManager.ThreshEditor ted = getCurrentTED();
 						if (ted != null) {
 							ted.decreaseValues();
-							dispatcher.firePropertyChange(new RefUpdateEvent(this,
+							ThresholdsSelectionFrame.this.dispatcher.firePropertyChange(new RefUpdateEvent(this,
 								RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 						}
 					}
@@ -195,7 +196,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 						ModelTraceManager.ThreshEditor ted = getCurrentTED();
 						if (ted != null) {
 							ted.increaseValues();
-							dispatcher.firePropertyChange(new RefUpdateEvent(this,
+							ThresholdsSelectionFrame.this.dispatcher.firePropertyChange(new RefUpdateEvent(this,
 								RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 						}
 					}
@@ -236,7 +237,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 						ModelTraceManager mtm = Heap.getMTMEtalon();
 						if (mtm != null) {
 							mtm.changeAllDyThresholdsBy(-0.1, 0.0);
-							dispatcher.firePropertyChange(new RefUpdateEvent(this,
+							ThresholdsSelectionFrame.this.dispatcher.firePropertyChange(new RefUpdateEvent(this,
 								RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 						}
 					}
@@ -252,7 +253,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 						ModelTraceManager mtm = Heap.getMTMEtalon();
 						if (mtm != null) {
 							mtm.changeAllDyThresholdsBy(0.1, 0.0);
-							dispatcher.firePropertyChange(new RefUpdateEvent(this,
+							ThresholdsSelectionFrame.this.dispatcher.firePropertyChange(new RefUpdateEvent(this,
 								RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 						}
 					}
@@ -269,7 +270,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 						ModelTraceManager mtm = Heap.getMTMEtalon();
 						if (mtm != null) {
 							mtm.changeAllDyThresholdsBy(0.0, -0.5);
-							dispatcher.firePropertyChange(new RefUpdateEvent(this,
+							ThresholdsSelectionFrame.this.dispatcher.firePropertyChange(new RefUpdateEvent(this,
 								RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 						}
 					}
@@ -285,7 +286,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 						ModelTraceManager mtm = Heap.getMTMEtalon();
 						if (mtm != null) {
 							mtm.changeAllDyThresholdsBy(0.0, 0.5);
-							dispatcher.firePropertyChange(new RefUpdateEvent(this,
+							ThresholdsSelectionFrame.this.dispatcher.firePropertyChange(new RefUpdateEvent(this,
 								RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 						}
 					}
@@ -296,18 +297,18 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		this.jTable.setDefaultRenderer(Object.class,
 			new ADefaultTableCellRenderer.ObjectRenderer());
 
-		scrollPane.setViewport(viewport);
-		scrollPane.getViewport().add(this.jTable);
-		scrollPane.setAutoscrolls(true);
+		this.scrollPane.setViewport(this.viewport);
+		this.scrollPane.getViewport().add(this.jTable);
+		this.scrollPane.setAutoscrolls(true);
 
 		JPanel northPanel = new JPanel(new BorderLayout());
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
+		this.mainPanel.setLayout(new BorderLayout());
+		this.mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 
-		mainPanel.add(northPanel,  BorderLayout.NORTH);
+		this.mainPanel.add(northPanel,  BorderLayout.NORTH);
 		northPanel.add(jToolBar,  BorderLayout.NORTH);
 		//northPanel.add(jComboBox1,  BorderLayout.CENTER);
-		mainPanel.add(scrollPane, BorderLayout.CENTER);
+		this.mainPanel.add(this.scrollPane, BorderLayout.CENTER);
 	}
 
 	// gets all thresholds editors relevant to current event
@@ -364,7 +365,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 	}
 
 	void updateThresholds() {
-		int selected = jTable.getSelectedRow();
+		int selected = this.jTable.getSelectedRow();
 		ThreshEditor[] te = getTeds();
 		if (te == null)
 			te = new ThreshEditor[0];
@@ -399,9 +400,9 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 				pData[i][j] =
 					new Double(MathRef.floatRound(te[i].getValue(j - 1), 4));
 		}
-		tModel.updateData(pData);
-		if (selected != -1 && selected <= jTable.getRowCount())
-			jTable.getSelectionModel().setSelectionInterval(selected, selected);
+		this.tModel.updateData(pData);
+		if (selected != -1 && selected <= this.jTable.getRowCount())
+			this.jTable.getSelectionModel().setSelectionInterval(selected, selected);
 	}
 
 	static class ThresholdEditor extends DefaultCellEditor {
@@ -462,7 +463,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 				te[row].setValue(
 						col - 1,
 						Double.valueOf(value.toString()).doubleValue());
-				dispatcher.firePropertyChange(new RefUpdateEvent(this,
+				ThresholdsSelectionFrame.this.dispatcher.firePropertyChange(new RefUpdateEvent(this,
 						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 			} catch(NumberFormatException e)
 			{

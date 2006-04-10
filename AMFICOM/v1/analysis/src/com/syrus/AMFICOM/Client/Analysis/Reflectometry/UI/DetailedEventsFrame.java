@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.Client.General.Event.EtalonComparisonListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.DetailedEventResource;
 import com.syrus.AMFICOM.analysis.DetailedEventWrapper;
 import com.syrus.AMFICOM.analysis.dadara.EvaluationPerEventResult;
@@ -29,6 +30,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
 import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class DetailedEventsFrame extends JInternalFrame
@@ -125,7 +127,7 @@ implements EtalonMTMListener, CurrentEventChangeListener,
 		this.setClosable(true);
 		this.setIconifiable(true);
 		// this.setMaximizable(true);
-		this.setTitle(LangModelAnalyse.getString("eventDetailedTableTitle"));
+		this.setTitle(I18N.getString(AnalysisResourceKeys.FRAME_DETAILED_EVENTS));
 
 		final JScrollPane scrollPane = new JScrollPane(this.mainTable);
 		scrollPane.setAutoscrolls(true);

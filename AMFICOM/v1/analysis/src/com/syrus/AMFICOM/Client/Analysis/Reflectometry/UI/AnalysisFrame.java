@@ -9,10 +9,11 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.TraceResource;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -47,7 +48,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 
 	private void jbInit() throws Exception
 	{
-		setTitle(LangModelAnalyse.getString("analysisTitle"));
+		setTitle(I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN));
 		addComponentListener(new java.awt.event.ComponentAdapter()
 		{
 			@Override
@@ -61,7 +62,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 	@Override
 	public String getReportTitle()
 	{
-		return LangModelAnalyse.getString("analysisTitle");
+		return I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN);
 	}
 
 	private void init_module(Dispatcher dispatcher1)
@@ -105,12 +106,12 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 					title1 = me.getName();
 				} catch(ApplicationException ex) {
 					Log.errorMessage(ex);
-					title1 = LangModelAnalyse.getString("analysisTitle");
+					title1 = I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN);
 				} catch (RuntimeException ex) {
-					title1 = LangModelAnalyse.getString("analysisTitle");
+					title1 = I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN);
 				}
 			} else {
-				title1 = LangModelAnalyse.getString("analysisTitle");
+				title1 = I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN);
 			}
 			setTitle(title1);
 

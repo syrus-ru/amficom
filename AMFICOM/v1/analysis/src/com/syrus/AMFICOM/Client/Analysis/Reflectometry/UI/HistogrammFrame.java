@@ -9,9 +9,10 @@ import javax.swing.JPanel;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.AnalysisParametersListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.I18N;
 
 public class HistogrammFrame
 extends ScalableFrame
@@ -31,7 +32,7 @@ implements BsHashChangeListener, AnalysisParametersListener {
 	}
 
 	private void jbInit() throws Exception {
-		setTitle(LangModelAnalyse.getString("histogrammTitle"));
+		setTitle(I18N.getString(AnalysisResourceKeys.FRAME_HISTOGRAMM));
 	}
 
 	@Deprecated // seems unused

@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.23 2006/03/14 14:45:51 saa Exp $
+ * $Id: DetailedEventResource.java,v 1.24 2006/04/10 13:26:53 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.EvaluationPerEventResult;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
@@ -29,16 +28,17 @@ import com.syrus.AMFICOM.analysis.dadara.events.HavingLoss;
 import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.23 $, $Date: 2006/03/14 14:45:51 $
+ * @author $Author: stas $
+ * @version $Revision: 1.24 $, $Date: 2006/04/10 13:26:53 $
  * @module analysis
  */
 
 public class DetailedEventResource {
-	private static final String DASH = LangModelAnalyse.getString("dash");
+	private static final String DASH = I18N.getString(AnalysisResourceKeys.TEXT_DASH);
 	private static final String DEFAULT_TYPE = DASH;
 	
 //	private static final Icon ICON_GAIN = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_GAIN);
@@ -135,12 +135,12 @@ public class DetailedEventResource {
 	
 	public void initAdditional(DetailedEvent ev, double res) {
 		this.event = ev;
-		String sDB = " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB);
-		String sMT = " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT);
+		String sDB = " " + I18N.getString(AnalysisResourceKeys.TEXT_DB);
+		String sMT = " " + I18N.getString(AnalysisResourceKeys.TEXT_MT);
 		
 		int sType = ev.getEventType();
 		//setType(AnalysisUtil.getDetailedEventName(ev));
-		setExtension(Double.toString(MathRef.round_3(res * (DetailedEventUtil.getWidth(ev)))) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM));
+		setExtension(Double.toString(MathRef.round_3(res * (DetailedEventUtil.getWidth(ev)))) + " " + I18N.getString(AnalysisResourceKeys.TEXT_KM));
 		
 		switch (sType) {
 		case SimpleReflectogramEvent.DEADZONE:
@@ -196,8 +196,8 @@ public class DetailedEventResource {
 			double meanDeviation1 = ReflectogramComparer.getMeanDeviation(Heap.getMTAEPrimary(), etalonMT, ev);
 			difference = ((int) (difference * 1000.)) / 1000.; // точность 0.001 дБ
 			meanDeviation1 = ((int) (meanDeviation1 * 1000.)) / 1000.;
-			setEtalonMaxDeviation(difference + " " + LangModelAnalyse.getString("dB"));
-			setEtalonMeanDeviation(meanDeviation1 + " " + LangModelAnalyse.getString("dB"));
+			setEtalonMaxDeviation(difference + " " + I18N.getString(AnalysisResourceKeys.TEXT_DB));
+			setEtalonMeanDeviation(meanDeviation1 + " " + I18N.getString(AnalysisResourceKeys.TEXT_DB));
 		} else {
 			setEtalonMaxDeviation(DASH);
 			setEtalonMeanDeviation(DASH);
@@ -208,7 +208,7 @@ public class DetailedEventResource {
 			try {
 				double lossDiff = DetailedEventUtil.getLossDiff(dataEvent, etalonEvent);
 				lossDiff = ((int) (lossDiff * 1000.)) / 1000.;
-				value = lossDiff + " " + LangModelAnalyse.getString("dB");
+				value = lossDiff + " " + I18N.getString(AnalysisResourceKeys.TEXT_DB);
 			} catch (NoSuchFieldException e) {
 				value = DASH;
 			}
@@ -216,13 +216,13 @@ public class DetailedEventResource {
 
 			double widthDiff = DetailedEventUtil.getWidthDiff(dataEvent, etalonEvent) * deltaX;
 			widthDiff = ((int) (widthDiff * 10.)) / 10.; // точность 0.1 м
-			value = String.valueOf(widthDiff) + " " + LangModelAnalyse.getString("m");
+			value = String.valueOf(widthDiff) + " " + I18N.getString(AnalysisResourceKeys.TEXT_MT);
 			setLengthDifference(value);
 
 			double locationDiff = (dataEvent.getBegin() - etalonEvent.getBegin()) * deltaX;
 			locationDiff = ((int) (locationDiff * 10.)) / 10.;
 			value = String.valueOf(locationDiff) + " "
-					+ LangModelAnalyse.getString("m");
+					+ I18N.getString(AnalysisResourceKeys.TEXT_MT);
 			setLocationDifference(value);
 		} else {
 			setLossDifference(DASH);
@@ -248,7 +248,7 @@ public class DetailedEventResource {
 				setKi(String.valueOf(MathRef.round_2(perEvent.getK(perEventId))));
 			} else {
 				String text = perEvent.isModified(perEventId)
-						? LangModelAnalyse.getString("QKmodified")
+						? I18N.getString(AnalysisResourceKeys.LABEL_QK_MODIFIED)
 						: DASH;
 				setQi(text);
 				setKi(text);
@@ -261,10 +261,10 @@ public class DetailedEventResource {
 
 	public void initAnchorer(int etalonId,
 			EventAnchorer anchorer) {
-		anchored = false;
+		this.anchored = false;
 		if (anchorer != null && etalonId >= 0) {
 			if (!anchorer.getEventAnchor(etalonId).isVoid())
-				anchored = true;
+				this.anchored = true;
 		}
 	}
 
@@ -327,7 +327,7 @@ public class DetailedEventResource {
 	}
 
 	public Object getAnchorImage() {
-		return anchored ? ICON_ANCHORED : "";
+		return this.anchored ? ICON_ANCHORED : "";
 	}
 
 	public void setNumber(String number) {

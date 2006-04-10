@@ -17,11 +17,13 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.PrimaryParameters;
 import com.syrus.AMFICOM.analysis.PrimaryParametersWrapper;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class PrimaryParametersFrame extends JInternalFrame implements BsHashChangeListener, CurrentTraceChangeListener,
@@ -87,7 +89,7 @@ public class PrimaryParametersFrame extends JInternalFrame implements BsHashChan
 		this.setClosable(true);
 		this.setIconifiable(true);
 		// this.setMaximizable(true);
-		this.setTitle(LangModelAnalyse.getString("parametersTitle"));
+		this.setTitle(I18N.getString(AnalysisResourceKeys.FRAME_PRIMARY_PARAMETERS));
 
 		this.mainPanel.setLayout(new BorderLayout());
 		this.mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());

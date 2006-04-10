@@ -10,32 +10,21 @@ import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.TraceResource;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.I18N;
 
 public class ThresholdsFrame extends SimpleResizableFrame
 implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener {
 	private Dispatcher dispatcher;
 	Map traces = new HashMap();
 
-	public ThresholdsFrame(Dispatcher dispatcher)
-	{
+	public ThresholdsFrame(Dispatcher dispatcher) {
 		super (new ThresholdsLayeredPanel(dispatcher));
-
+		setTitle(I18N.getString(AnalysisResourceKeys.FRAME_THRESHOLDS));
 		init_module(dispatcher);
-		try
-		{
-			jbInit();
-		} catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	private void jbInit() throws Exception
-	{
-		setTitle(LangModelAnalyse.getString("thresholdsTitle"));
 	}
 
 	void init_module(Dispatcher dispatcher1)

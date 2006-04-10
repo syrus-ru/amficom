@@ -24,7 +24,6 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.AnalysisCommand;
 import com.syrus.AMFICOM.Client.General.Event.AnalysisParametersListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.AnalysisParametersWrapper;
 import com.syrus.AMFICOM.analysis.PFTrace;
@@ -34,6 +33,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer.NumberRenderer;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 
@@ -41,7 +41,6 @@ public class AnalysisSelectionFrame extends JInternalFrame
 implements BsHashChangeListener, PrimaryMTAEListener,
 		AnalysisParametersListener, ReportTable {
 	private static final long serialVersionUID = -5866433900913468687L;
-	private static final String TITLE = LangModelAnalyse.getString("analysisSelectionTitle");
 
 	private WrapperedPropertyTable<AnalysisParameters> table;
 	private JPanel mainPanel;
@@ -88,7 +87,7 @@ implements BsHashChangeListener, PrimaryMTAEListener,
 	}
 
 	public String getReportTitle() {
-		return TITLE;
+		return I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_SELECTION);
 	}
 
 	public TableModel getTableModel() {
@@ -99,19 +98,13 @@ implements BsHashChangeListener, PrimaryMTAEListener,
 		this.table.getModel().setObject(ap);
 	}
 
-	private void updColorModel() {
-	}
-
-	private void updateTitle() {
-	}
-
 	private void createUI() {
 		this.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
-		this.setTitle(TITLE);
+		this.setTitle(I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_SELECTION));
 
 		this.table = new WrapperedPropertyTable<AnalysisParameters>(
 				new WrapperedPropertyTableModel<AnalysisParameters>(AnalysisParametersWrapper.getInstance(),
@@ -153,7 +146,7 @@ implements BsHashChangeListener, PrimaryMTAEListener,
 		final JButton analysisDefaultsButton = new JButton();
 
 		analysisStartButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		analysisStartButton.setToolTipText(LangModelAnalyse.getString("analysisStart"));
+		analysisStartButton.setToolTipText(I18N.getString(AnalysisResourceKeys.BUTTON_ANALYSIS_PERFORM));
 		analysisStartButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_PERFORM_ANALYSIS));
 		analysisStartButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -162,7 +155,7 @@ implements BsHashChangeListener, PrimaryMTAEListener,
 		});
 
 		analysisInitialButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		analysisInitialButton.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
+		analysisInitialButton.setToolTipText(I18N.getString(AnalysisResourceKeys.BUTTON_ANALYSIS_INITIAL));
 		analysisInitialButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_INITIAL_ANALYSIS));
 		analysisInitialButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -172,7 +165,7 @@ implements BsHashChangeListener, PrimaryMTAEListener,
 
 		analysisDefaultsButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		analysisDefaultsButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
-		analysisDefaultsButton.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
+		analysisDefaultsButton.setToolTipText(I18N.getString(AnalysisResourceKeys.BUTTON_ANALYSIS_DEFAULTS));
 		analysisDefaultsButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DEFAULT_ANALYSIS));
 		analysisDefaultsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -202,8 +195,6 @@ implements BsHashChangeListener, PrimaryMTAEListener,
 		this.mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		this.mainPanel.add(this.scrollPane, BorderLayout.CENTER);
 		this.mainPanel.add(jToolBar, BorderLayout.NORTH);
-
-		this.updColorModel();
 	}
 
 	void analysisStartButton_actionPerformed(final ActionEvent e) {
@@ -228,14 +219,14 @@ implements BsHashChangeListener, PrimaryMTAEListener,
 		if (primaryTrace == null)
 			return; // not loaded
 		if (primaryTrace.getBS().measurementId == null)
-			this.setTitle(TITLE + " ("
-					+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
+			this.setTitle(I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_SELECTION) + " ("
+					+ I18N.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
 		else {
 			MeasurementSetup ms = Heap.getContextMeasurementSetup();
-			this.setTitle(TITLE + " ("
+			this.setTitle(I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_SELECTION) + " ("
 					+ (ms == null
-							? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN)
-								: LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN) + ": " + ms.getDescription())
+							? I18N.getString(AnalysisResourceKeys.TEXT_NO_PATTERN)
+								: I18N.getString(AnalysisResourceKeys.TEXT_PATTERN) + ": " + ms.getDescription())
 					+ ')');
 		}
 

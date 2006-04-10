@@ -1,5 +1,5 @@
 /*-
- * $Id: EnhancedReflectogramPanel.java,v 1.9 2005/10/06 15:53:58 saa Exp $
+ * $Id: EnhancedReflectogramPanel.java,v 1.10 2006/04/10 13:26:53 stas Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,11 +20,12 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
+import com.syrus.AMFICOM.client.resource.I18N;
 
 /**
  * Отрисовывает рефлектограмму и кучу всяких сопутствующих вещей
- * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/10/06 15:53:58 $
+ * @author $Author: stas $
+ * @version $Revision: 1.10 $, $Date: 2006/04/10 13:26:53 $
  * @module
  */
 public class EnhancedReflectogramPanel extends ReflectogramPanel {
@@ -212,7 +213,7 @@ public class EnhancedReflectogramPanel extends ReflectogramPanel {
 		int h = (int)((noise_level - top) * scaleY - 1);
 		g.drawLine(0, h, jw, h);
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
-		g.drawString(LangModelAnalyse.getString("Noise level"), jw - 87, h - 1);
+		g.drawString(I18N.getString(AnalysisResourceKeys.TEXT_NOISE_LEVEL), jw - 87, h - 1);
 	}
 
 	protected void paint_alarms(Graphics g) {

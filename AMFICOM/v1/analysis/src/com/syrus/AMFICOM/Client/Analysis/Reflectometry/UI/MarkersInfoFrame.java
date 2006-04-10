@@ -18,7 +18,7 @@ import javax.swing.table.TableModel;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.MarkerResource;
 import com.syrus.AMFICOM.analysis.MarkerResourceWrapper;
 import com.syrus.AMFICOM.analysis.PFTrace;
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class MarkersInfoFrame extends JInternalFrame implements PropertyChangeListener, BsHashChangeListener,
@@ -105,7 +106,7 @@ public class MarkersInfoFrame extends JInternalFrame implements PropertyChangeLi
 		this.setClosable(true);
 		this.setIconifiable(true);
 		// this.setMaximizable(true);
-		this.setTitle(LangModelAnalyse.getString("markerInfoTitle"));
+		this.setTitle(I18N.getString(AnalysisResourceKeys.FRAME_MARKERS_INFO));
 
 		this.mainPanel.setLayout(new BorderLayout());
 		this.mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -118,9 +119,9 @@ public class MarkersInfoFrame extends JInternalFrame implements PropertyChangeLi
 	}
 
 	void updTableModel(final MarkersInfo mInfo) {
-		final String mt = " " + LangModelAnalyse.getString("mt");
-		final String dB = " " + LangModelAnalyse.getString("dB");
-		final String dbkm = " " + LangModelAnalyse.getString("dB/km");
+		final String mt = " " + I18N.getString(AnalysisResourceKeys.TEXT_MT);
+		final String dB = " " + I18N.getString(AnalysisResourceKeys.TEXT_DB);
+		final String dbkm = " " + I18N.getString(AnalysisResourceKeys.TEXT_DB);
 
 		// setting keys
 		if (mInfo.a_type == MarkersInfo.REFLECTIVE) {
@@ -185,7 +186,7 @@ public class MarkersInfoFrame extends JInternalFrame implements PropertyChangeLi
 	}
 
 	public String getReportTitle() {
-		return LangModelAnalyse.getString("markerInfoTitle");
+		return I18N.getString(AnalysisResourceKeys.FRAME_MARKERS_INFO);
 	}
 
 	public TableModel getTableModel() {

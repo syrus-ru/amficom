@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.OverallStats;
 import com.syrus.AMFICOM.analysis.OverallStatsWrapper;
 import com.syrus.AMFICOM.analysis.PFTrace;
@@ -33,6 +34,7 @@ import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
@@ -117,7 +119,7 @@ public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListen
 		this.scrollPane.setViewport(this.viewport);
 		this.scrollPane.setAutoscrolls(true);
 
-		this.tabbedPane.add(LangModelAnalyse.getString("Title.main"), this.mainPanel);
+		this.tabbedPane.add(I18N.getString(AnalysisResourceKeys.FRAME_OVERALL_STATS), this.mainPanel);
 
 		this.jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.mainPanel.add(this.scrollPane, BorderLayout.CENTER);

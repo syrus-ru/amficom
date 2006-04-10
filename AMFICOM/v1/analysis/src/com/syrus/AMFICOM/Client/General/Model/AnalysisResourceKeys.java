@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.30 2006/04/03 13:47:07 stas Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.31 2006/04/10 13:26:53 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.30 $, $Date: 2006/04/03 13:47:07 $
+ * @version $Revision: 1.31 $, $Date: 2006/04/10 13:26:53 $
  * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module analysis
@@ -110,14 +110,40 @@ public interface AnalysisResourceKeys extends ResourceKeys {
 	String	ICON_ANALYSIS_BREAK					= "com.syrus.AMFICOM.icon.analisys.break";
 	String	ICON_ANCHORED						= "com.syrus.AMFICOM.icon.anchored";
 
-	String	TEXT_KM									= "km";
-	String	TEXT_DB									= "dB";
-	String	TEXT_NS									= "ns";
-	String	TEXT_NM									= "nm";
-	String	TEXT_MT									= "mt";
-	String	TEXT_NO_PATTERN							= "no_pattern";
-	String	TEXT_PATTERN							= "pattern";
+	String	BUTTON_ANALYSIS_PERFORM						= "Button.analysis_perform";
+	String	BUTTON_ANALYSIS_INITIAL						= "Button.analysis_initial";
+	String	BUTTON_ANALYSIS_DEFAULTS						= "Button.analysis_defaults";
+	
+	String	TEXT_KM									= "Text.km";
+	String	TEXT_DB									= "Text.dB";
+	String	TEXT_DBKM									= "Text.dB/km";
+	String	TEXT_NS									= "Text.ns";
+	String	TEXT_NM									= "Text.nm";
+	String	TEXT_MT									= "Text.mt";
+	String	TEXT_DASH									= "Text.dash";
+	String	TEXT_NOISE_LEVEL							= "Text.noise_level";
+	
+	String	TEXT_NO_PATTERN							= "Label.no_pattern";
+	String	TEXT_PATTERN							= "Label.pattern";
+	String	LABEL_QK_MODIFIED					= "Label.QK_modified";
+	
+	
 	
 	String STROKE_NOISE_HISTOGRAMM = "noise_histogramm_stroke";
 	String STROKE_DEFAULT = "default_stroke";
+
+	// Frames
+	String	FRAME_NOISE					= "Window.noiseFrame";
+	String	FRAME_NOISE_HISTOGRAMM				= "Window.noiseHistogrammFrame";
+	String	FRAME_TRACE_SELECTOR				= "Window.selectFrame";
+	String	FRAME_PRIMARY_PARAMETERS	= "Window.paramFrame";
+	String	FRAME_OVERALL_STATS					= "Window.statsFrame";
+	String	FRAME_EVENTS				= "Window.eventsFrame";
+	String	FRAME_MARKERS_INFO			= "Window.markersInfoFrame";
+	String	FRAME_ANALYSIS_MAIN				= "Window.analysisFrame";
+	String	FRAME_ANALYSIS_SELECTION	= "Window.analysisSelectFrame";
+	String	FRAME_DETAILED_EVENTS		= "Window.detailedEventsFrame";
+	String	FRAME_HISTOGRAMM			= "Window.histogrammFrame";
+	String	FRAME_THRESHOLDS		= "Window.thresholdsFrame";
+	String	FRAME_THRESHOLDS_SELECTION	= "Window.thresholdsSelectionFrame";
 }
