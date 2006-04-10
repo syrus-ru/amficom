@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryMeasurementParameters.java,v 1.2 2005/10/10 09:51:22 saa Exp $
+ * $Id: ReflectometryMeasurementParameters.java,v 1.2.2.1 2006/04/10 13:06:34 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.reflectometry;
 /**
  * Параметры измерения в рефлектометрии
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/10/10 09:51:22 $
+ * @version $Revision: 1.2.2.1 $, $Date: 2006/04/10 13:06:34 $
  * @module
  */
 public interface ReflectometryMeasurementParameters {
@@ -44,7 +44,7 @@ public interface ReflectometryMeasurementParameters {
 	 * возвращает	длительность импульса, нс
 	 * @return		длительность импульса, нс
 	 */
-	int getPulseWidth();
+	int getPulseWidthNs();
 
 	/**
 	 * возвращает	показатель преломления

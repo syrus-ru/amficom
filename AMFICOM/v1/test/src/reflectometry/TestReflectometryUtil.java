@@ -1,5 +1,5 @@
 /*-
- * $Id: TestReflectometryUtil.java,v 1.2 2006/01/27 16:11:25 saa Exp $
+ * $Id: TestReflectometryUtil.java,v 1.2.2.1 2006/04/10 13:06:34 saa Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectometryUtil;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2006/01/27 16:11:25 $
+ * @version $Revision: 1.2.2.1 $, $Date: 2006/04/10 13:06:34 $
  * @module
  */
 public class TestReflectometryUtil extends TestCase {
@@ -42,7 +42,7 @@ public class TestReflectometryUtil extends TestCase {
 						return 32768;
 					}
 	
-					public int getPulseWidth() {
+					public int getPulseWidthNs() {
 						return 0;
 					}
 	
@@ -123,7 +123,7 @@ public class TestReflectometryUtil extends TestCase {
 					return (int)(params[3]);
 				}
 
-				public int getPulseWidth() {
+				public int getPulseWidthNs() {
 					return (int)(params[0]);
 				}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryMeasurementParametersImpl.java,v 1.4.2.5 2006/04/05 14:02:34 arseniy Exp $
+ * $Id: ReflectometryMeasurementParametersImpl.java,v 1.4.2.6 2006/04/10 13:06:34 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
  * На данный момент modifier-методы не поддерживаются.
  * </p>
  * @author saa
- * @author $Author: arseniy $
- * @version $Revision: 1.4.2.5 $, $Date: 2006/04/05 14:02:34 $
+ * @author $Author: saa $
+ * @version $Revision: 1.4.2.6 $, $Date: 2006/04/10 13:06:34 $
  * @module
  */
 public final class ReflectometryMeasurementParametersImpl
@@ -157,7 +157,7 @@ implements ReflectometryMeasurementParameters {
 		return this.numberOfAverages;
 	}
 
-	public int getPulseWidth() {
+	public int getPulseWidthNs() {
 		return this.pulseWidth;
 	}
 
