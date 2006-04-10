@@ -1,5 +1,5 @@
 /*-
-* $Id: RoleXML.java,v 1.2 2006/02/28 15:19:58 arseniy Exp $
+* $Id: RoleXML.java,v 1.3 2006/04/10 16:56:18 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.administration;
 
+import static com.syrus.AMFICOM.administration.RoleWrapper.LINK_COLUMN_SYSTEM_USER_ID;
 import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
@@ -19,10 +20,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.AbstractStorableObjectXML;
+import com.syrus.AMFICOM.general.Identifier;
 /**
- * @version $Revision: 1.2 $, $Date: 2006/02/28 15:19:58 $
+ * @version $Revision: 1.3 $, $Date: 2006/04/10 16:56:18 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -51,7 +54,9 @@ public class RoleXML extends AbstractStorableObjectXML<Role> {
 				this.getIdentifier(objectMap, COLUMN_CREATOR_ID),
 				this.getVersion(objectMap, COLUMN_VERSION),
 				this.getString(objectMap, COLUMN_CODENAME),
-				this.getString(objectMap, COLUMN_DESCRIPTION));
+				this.getString(objectMap, COLUMN_DESCRIPTION),
+				Collections.<Identifier> emptySet());
+		role.setSystemUserIds0((Set<Identifier>) objectMap.get(LINK_COLUMN_SYSTEM_USER_ID));
 		return role;
 	}
 }

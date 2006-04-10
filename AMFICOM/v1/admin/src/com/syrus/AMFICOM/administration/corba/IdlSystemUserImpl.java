@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSystemUserImpl.java,v 1.9 2006/03/14 10:47:59 bass Exp $
+ * $Id: IdlSystemUserImpl.java,v 1.10 2006/04/10 16:56:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,12 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2006/03/14 10:47:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2006/04/10 16:56:18 $
  * @module administration
  */
 final class IdlSystemUserImpl extends IdlSystemUser {
-	private static final long serialVersionUID = 1550106907023939289L;
+	private static final long serialVersionUID = -8576064038640118164L;
 
 	IdlSystemUserImpl() {
 		// empty
@@ -39,8 +39,7 @@ final class IdlSystemUserImpl extends IdlSystemUser {
 			final String login,
 			final SystemUserSort sort,
 			final String name,
-			final String description,
-			final IdlIdentifier[] roleIds) {
+			final String description) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -51,7 +50,6 @@ final class IdlSystemUserImpl extends IdlSystemUser {
 		this.sort = sort;
 		this.name = name;
 		this.description = description;
-		this.roleIds = roleIds;
 	}
 
 	/**

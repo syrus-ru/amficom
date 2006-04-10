@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserXML.java,v 1.6 2006/02/28 15:19:58 arseniy Exp $
+* $Id: SystemUserXML.java,v 1.7 2006/04/10 16:56:18 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,12 +22,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.AbstractStorableObjectXML;
-import com.syrus.AMFICOM.general.Identifier;
 /**
- * @version $Revision: 1.6 $, $Date: 2006/02/28 15:19:58 $
+ * @version $Revision: 1.7 $, $Date: 2006/04/10 16:56:18 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -64,7 +62,6 @@ public class SystemUserXML extends AbstractStorableObjectXML<SystemUser> {
 				this.getInteger(objectMap, COLUMN_SORT).intValue(),
 				this.getString(objectMap, COLUMN_NAME),
 				this.getString(objectMap, COLUMN_DESCRIPTION));
-		systemUser.setRoleIds0((Set<Identifier>) objectMap.get(LINK_COLUMN_ROLE_IDS));
 		return systemUser;
 	}
 }

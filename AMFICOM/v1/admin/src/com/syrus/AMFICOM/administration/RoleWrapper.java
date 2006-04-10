@@ -1,5 +1,5 @@
 /*
- * $Id: RoleWrapper.java,v 1.3 2006/03/13 15:54:25 bass Exp $
+ * $Id: RoleWrapper.java,v 1.4 2006/04/10 16:56:18 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,25 +11,26 @@ package com.syrus.AMFICOM.administration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2006/03/13 15:54:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2006/04/10 16:56:18 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 public final class RoleWrapper extends StorableObjectWrapper<Role> {
+	public static final String LINK_COLUMN_ROLE_ID = "role_id";
+	public static final String LINK_COLUMN_SYSTEM_USER_ID = "system_user_id";
 
 	private static RoleWrapper instance;
 
 	private List<String> keys;
 
 	private RoleWrapper() {
-		// empty private constructor
-		final String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_CODENAME};
-
+		final String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_CODENAME, LINK_COLUMN_SYSTEM_USER_ID };
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
@@ -58,6 +59,9 @@ public final class RoleWrapper extends StorableObjectWrapper<Role> {
 			}
 			if (key.equals(COLUMN_CODENAME)) {
 				return role.getCodename();
+			}
+			if (key.equals(LINK_COLUMN_SYSTEM_USER_ID)) {
+				return role.getSystemUserIds();
 			}
 		}
 		return value;
@@ -100,6 +104,9 @@ public final class RoleWrapper extends StorableObjectWrapper<Role> {
 		if (key.equals(COLUMN_DESCRIPTION)
 				|| key.equals(COLUMN_CODENAME)) {
 			return String.class;
+		}
+		if (key.equals(LINK_COLUMN_SYSTEM_USER_ID)) {
+			return Set.class;
 		}
 		return null;
 	}

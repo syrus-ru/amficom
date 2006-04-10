@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlRoleImpl.java,v 1.5 2006/03/14 10:47:59 bass Exp $
+ * $Id: IdlRoleImpl.java,v 1.6 2006/04/10 16:56:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2006/03/14 10:47:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2006/04/10 16:56:18 $
  * @module administration
  */
 final class IdlRoleImpl extends IdlRole {
-	private static final long serialVersionUID = 1550106907023939289L;
+	private static final long serialVersionUID = -851165842201552661L;
 
 	IdlRoleImpl() {
 		// empty
@@ -36,7 +36,8 @@ final class IdlRoleImpl extends IdlRole {
 			final IdlIdentifier modifierId,
 			final long version,
 			final String codename,
-			final String description) {
+			final String description,
+			final IdlIdentifier[] systemUserIds) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -45,6 +46,7 @@ final class IdlRoleImpl extends IdlRole {
 		this.version = version;
 		this.codename = codename;
 		this.description = description;
+		this.systemUserIds = systemUserIds;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserWrapper.java,v 1.18 2006/03/13 15:54:25 bass Exp $
+ * $Id: SystemUserWrapper.java,v 1.19 2006/04/10 16:56:18 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,14 @@ import java.util.List;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/03/13 15:54:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2006/04/10 16:56:18 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -41,10 +43,6 @@ public final class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
 	// name VARCHAR2(64) not NULL,
 	// sort NUMBER(2, 0) NOT NULL,
 	public static final String COLUMN_SORT = "sort";
-
-	public static final String LINK_COLUMN_ROLE_ID = "role_id";
-	
-	public static final String LINK_COLUMN_SYSTEM_USER_ID = "system_user_id";
 	
 	public static final String LINK_COLUMN_ROLE_IDS = "role_ids";
 	
@@ -95,7 +93,12 @@ public final class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
 				return new Integer(user.getSort().value());
 			}
 			if (key.equals(LINK_COLUMN_ROLE_IDS)) {
-				return user.getRoleIds();
+				try {
+					return user.getRoleIds();
+				} catch (ApplicationException ae) {
+					Log.errorMessage(ae);
+					return Collections.emptySet();
+				}
 			}
 		}
 		return value;
@@ -118,7 +121,11 @@ public final class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
 			} else if (key.equals(COLUMN_SORT)) {
 				user.setSort(SystemUserSort.from_int(((Integer) value).intValue()));
 			} else if (key.equals(LINK_COLUMN_ROLE_IDS)) {
-				user.setRoleIds((Set<Identifier>)value);
+				try {
+					user.setRoleIds((Set<Identifier>) value);
+				} catch (ApplicationException ae) {
+					Log.errorMessage(ae);
+				}
 			}
 		}
 	}

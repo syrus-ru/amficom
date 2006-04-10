@@ -1,17 +1,19 @@
 /*-
-* $Id: SystemUser.java,v 1.45 2006/03/15 14:47:31 bass Exp $
-*
-* Copyright ¿ 2005 Syrus Systems.
-* Dept. of Science & Technology.
-* Project: AMFICOM.
-*/
+ * $Id: SystemUser.java,v 1.46 2006/04/10 16:56:18 arseniy Exp $
+ *
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.administration;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
@@ -33,32 +35,39 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
+
 /**
- * @version $Revision: 1.45 $, $Date: 2006/03/15 14:47:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.46 $, $Date: 2006/04/10 16:56:18 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 
-public final class SystemUser extends StorableObject
-		implements Characterizable, Namable, IdlTransferableObjectExt<IdlSystemUser> {
-	private static final long serialVersionUID = 7173419705878464356L;
+public final class SystemUser extends StorableObject implements Characterizable, Namable, IdlTransferableObjectExt<IdlSystemUser> {
+	private static final long serialVersionUID = -8933797697074976263L;
 
 	private String login;
 	private int sort;
 	private String name;
 	private String description;
-	private Set<Identifier> roleIds;  
-	
+
+	private transient StorableObjectCondition roleCondition;
+
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 * @throws CreateObjectException 
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
+	 * 
+	 * @throws CreateObjectException
 	 */
 	public SystemUser(final IdlSystemUser ut) throws CreateObjectException {
 		try {
@@ -69,7 +78,9 @@ public final class SystemUser extends StorableObject
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	SystemUser(final Identifier id,
 			final Identifier creatorId,
@@ -78,32 +89,27 @@ public final class SystemUser extends StorableObject
 			final int sort,
 			final String name,
 			final String description) {
-		super(id,
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
-				creatorId,
-				creatorId,
-				version);
+		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId, version);
 		this.login = login;
 		this.sort = sort;
 		this.name = name;
 		this.description = description;
-		
-		this.roleIds = new HashSet<Identifier>();
 	}
 
 	/**
-	 * Create System Administrator
-	 * This method is only need on system installation to create the first system administrator.
-	 * Normally, only installation procedure should call it.
-	 * Other users must be created using {@link SystemUser#createInstance(Identifier, String, SystemUserSort, String, String)}.
+	 * Create System Administrator This method is only need on system
+	 * installation to create the first system administrator. Normally, only
+	 * installation procedure should call it. Other users must be created using
+	 * {@link SystemUser#createInstance(Identifier, String, SystemUserSort, String, String)}.
+	 * 
 	 * @param login
 	 * @param name
 	 * @param description
 	 * @return instance of SystemUser, SystemUserSort._USER_SORT_SYSADMIN
 	 * @throws CreateObjectException
 	 */
-	protected static SystemUser createSysAdminInstance(final String login, final String name, final String description) throws CreateObjectException {
+	protected static SystemUser createSysAdminInstance(final String login, final String name, final String description)
+			throws CreateObjectException {
 		try {
 			final Identifier generatedIdentifier = IdentifierPool.getGeneratedIdentifier(SYSTEMUSER_CODE);
 			final SystemUser systemUser = new SystemUser(generatedIdentifier,
@@ -122,6 +128,7 @@ public final class SystemUser extends StorableObject
 
 	/**
 	 * client constructor
+	 * 
 	 * @param creatorId
 	 * @param login
 	 * @param sort
@@ -158,24 +165,26 @@ public final class SystemUser extends StorableObject
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 * @throws IdlConversionException 
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
+	 * 
+	 * @throws IdlConversionException
 	 */
-	public synchronized void fromIdlTransferable(final IdlSystemUser ut) 
-	throws IdlConversionException {
-		super.fromIdlTransferable(ut);
-		this.login = ut.login;
-		this.sort = ut.sort.value();
-		this.name = ut.name;
-		this.description = ut.description;
+	public synchronized void fromIdlTransferable(final IdlSystemUser idlSystemUser) throws IdlConversionException {
+		super.fromIdlTransferable(idlSystemUser);
+		this.login = idlSystemUser.login;
+		this.sort = idlSystemUser.sort.value();
+		this.name = idlSystemUser.name;
+		this.description = idlSystemUser.description;
 
-		this.roleIds = Identifier.fromTransferables(ut.roleIds);
-		
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	@Override
 	public IdlSystemUser getIdlTransferable(final ORB orb) {
@@ -191,8 +200,7 @@ public final class SystemUser extends StorableObject
 				this.login,
 				SystemUserSort.from_int(this.sort),
 				this.name,
-				this.description,
-				Identifier.createTransferables(this.roleIds));
+				this.description);
 	}
 
 	/**
@@ -203,12 +211,11 @@ public final class SystemUser extends StorableObject
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
-				&& this.roleIds != null 
 				&& this.login != null && this.login.length() != 0
 				&& this.name != null && this.name.length() != 0
 				&& this.description != null;
 	}
-	
+
 	public String getLogin() {
 		return this.login;
 	}
@@ -258,7 +265,7 @@ public final class SystemUser extends StorableObject
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		return new HashSet<Identifiable>(this.roleIds);
+		return Collections.emptySet();
 	}
 
 	public void setLogin(final String login) {
@@ -278,34 +285,42 @@ public final class SystemUser extends StorableObject
 
 	public void addRole(final Role role) {
 		assert role != null : NON_NULL_EXPECTED;
-		this.roleIds.add(role.getId());
-		super.markAsChanged();
+
+		role.addSystemUserId(this.id);
 	}
 
 	public void removeRole(final Role role) {
 		assert role != null : NON_NULL_EXPECTED;
-		this.roleIds.remove(role.getId());
-		super.markAsChanged();
+
+		role.removeSystemUserId(this.id);
 	}
 
-	public Set<Identifier> getRoleIds() {
-		return Collections.unmodifiableSet(this.roleIds);
+	public Set<Identifier> getRoleIds() throws ApplicationException {
+		if (this.roleCondition == null) {
+			this.roleCondition = new LinkedIdsCondition(this, ROLE_CODE);
+		}
+
+		return StorableObjectPool.getIdentifiersByCondition(this.roleCondition, true);
 	}
 
-	public void setRoleIds(final Set<Identifier> roleIds) {
-		this.setRoleIds0(roleIds);
-		super.markAsChanged();
+	public Set<Role> getRoles() throws ApplicationException {
+		if (this.roleCondition == null) {
+			this.roleCondition = new LinkedIdsCondition(this, ROLE_CODE);
+		}
+
+		return StorableObjectPool.getStorableObjectsByCondition(this.roleCondition, true);
 	}
 
-	/**
-	 * <p>
-	 * <b>Clients must never explicitly call this method.</b>
-	 * </p>
-	 */
-	void setRoleIds0(final Set<Identifier> roleIds) {
-		this.roleIds.clear();
-		if (roleIds != null) {
-			this.roleIds.addAll(roleIds);
+	public void setRoleIds(final Set<Identifier> roleIds) throws ApplicationException {
+		assert roleIds != null : NON_NULL_EXPECTED;
+		if (roleIds.isEmpty()) {
+			return;
+		}
+		assert StorableObject.getEntityCodeOfIdentifiables(roleIds) == ROLE_CODE : ILLEGAL_ENTITY_CODE;
+
+		final Set<Role> roles = StorableObjectPool.getStorableObjects(roleIds, true);
+		for (final Role role : roles) {
+			role.addSystemUserId(this.id);
 		}
 	}
 
@@ -328,15 +343,17 @@ public final class SystemUser extends StorableObject
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)
-				? this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE)
-				: this.characteristicContainerWrappee;
+				? this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this,
+						CHARACTERISTIC_CODE)
+					: this.characteristicContainerWrappee;
 	}
 
 	/**
 	 * @param characteristic
 	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic,
+	 *      boolean)
 	 */
 	public void addCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
@@ -377,7 +394,8 @@ public final class SystemUser extends StorableObject
 	 * @param characteristics
 	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set,
+	 *      boolean)
 	 */
 	public void setCharacteristics(final Set<Characteristic> characteristics, final boolean usePool) throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;

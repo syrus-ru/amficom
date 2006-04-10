@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.43 2006/03/27 11:21:41 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.44 2006/04/10 16:56:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2006/03/27 11:21:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2006/04/10 16:56:18 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -149,7 +149,24 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				final SystemUser systemUser = (SystemUser) storableObject;
 				switch (this.linkedEntityCode) {
 					case ROLE_CODE:
-						condition = super.conditionTest(systemUser.getRoleIds());
+						try {
+							condition = super.conditionTest(systemUser.getRoleIds());
+						} catch (ApplicationException ae) {
+							Log.errorMessage(ae);
+							condition = false;
+						}
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
+				break;
+			case ROLE_CODE:
+				final Role role = (Role) storableObject;
+				switch (this.linkedEntityCode) {
+					case SYSTEMUSER_CODE:
+						condition = super.conditionTest(role.getSystemUserIds());
 						break;
 					default:
 						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
