@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplate.java,v 1.1.2.13 2006/04/06 13:03:12 arseniy Exp $
+ * $Id: ActionTemplate.java,v 1.1.2.14 2006/04/10 11:21:20 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@ package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
@@ -48,7 +49,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * каждая измеряемая линия имеет свой набор шаблонов, по которым на ней можно
  * проводить данное действие.
  * 
- * @version $Revision: 1.1.2.13 $, $Date: 2006/04/06 13:03:12 $
+ * @version $Revision: 1.1.2.14 $, $Date: 2006/04/10 11:21:20 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -129,6 +130,9 @@ public final class ActionTemplate<T extends Action> extends StorableObject imple
 				|| actionParameterIds == null
 				|| monitoredElementIds == null) {
 			throw new IllegalArgumentException(NON_NULL_EXPECTED);
+		}
+		if (actionParameterIds.isEmpty()) {
+			throw new IllegalArgumentException(NON_VOID_EXPECTED);
 		}
 
 		try {
@@ -290,9 +294,10 @@ public final class ActionTemplate<T extends Action> extends StorableObject imple
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.actionParameterIds != null
+				&& !this.actionParameterIds.isEmpty()
 				&& StorableObject.getEntityCodeOfIdentifiables(this.actionParameterIds) == ACTIONPARAMETER_CODE
 				&& this.monitoredElementIds != null
-				&& StorableObject.getEntityCodeOfIdentifiables(this.monitoredElementIds) == MONITOREDELEMENT_CODE;
+				&& (this.monitoredElementIds.isEmpty() || StorableObject.getEntityCodeOfIdentifiables(this.monitoredElementIds) == MONITOREDELEMENT_CODE);
 	}
 
 	@Override
