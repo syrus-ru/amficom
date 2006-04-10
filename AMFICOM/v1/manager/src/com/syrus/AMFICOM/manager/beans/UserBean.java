@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.9 2005/12/22 10:13:57 bob Exp $
+ * $Id: UserBean.java,v 1.10 2006/04/10 18:31:58 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/12/22 10:13:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2006/04/10 18:31:58 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -154,8 +154,8 @@ public class UserBean extends Bean implements WorkstationItem {
 	}
 	
 	public boolean containsRole(final Role role) {
-		final Set<Identifier> roleIds = this.user.getRoleIds();
-		return roleIds.contains(role.getId());
+		final Set<Identifier> systemUserIds = role.getSystemUserIds();
+		return systemUserIds.contains(this.user.getId());
 	}
 	
 	private Characteristic findCharacteristic(final String codename,
