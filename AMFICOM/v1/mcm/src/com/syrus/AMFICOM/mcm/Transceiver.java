@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.80.2.5 2006/04/06 08:07:16 arseniy Exp $
+ * $Id: Transceiver.java,v 1.80.2.6 2006/04/10 17:06:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.80.2.5 $, $Date: 2006/04/06 08:07:16 $
+ * @version $Revision: 1.80.2.6 $, $Date: 2006/04/10 17:06:34 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -299,8 +299,8 @@ final class Transceiver extends SleepButWorkThread {
 						if (measurementResultParameters != null) {
 							final Identifier testId = measurement.getTestId();
 							final TestProcessor testProcessor = MeasurementControlModule.getInstance().getTestProcessor(testId);
-							assert testProcessor.getTestId().equals(testId) : "Test: '" + testId + "', test processor: '" + testProcessor.getTestId() + "'";
 							if (testProcessor != null) {
+								assert testProcessor.getTestId().equals(testId) : "Test: '" + testId + "', test processor: '" + testProcessor.getTestId() + "'";
 								testProcessor.addMeasurementResultParameters(measurementResultParameters);
 								this.kisReport = null;
 							} else {// if (testProcessor != null)
