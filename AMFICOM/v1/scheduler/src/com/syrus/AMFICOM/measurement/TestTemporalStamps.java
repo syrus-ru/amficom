@@ -1,5 +1,5 @@
 /*
- * $Id: TestTemporalStamps.java,v 1.11 2005/10/31 12:29:59 bass Exp $
+ * $Id: TestTemporalStamps.java,v 1.11.4.1 2006/04/10 11:46:00 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,12 +12,12 @@ import java.util.Date;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.Undoable;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
+import com.syrus.AMFICOM.measurement.Test.TestTemporalType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/31 12:29:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.11.4.1 $, $Date: 2006/04/10 11:46:00 $
+ * @author $Author: saa $
  * @module scheduler
  */
 public class TestTemporalStamps implements Undoable  {
@@ -26,7 +26,7 @@ public class TestTemporalStamps implements Undoable  {
 	private Date			startTime;
 	private AbstractTemporalPattern	temporalPattern;
 
-	private int				discriminator;
+	private TestTemporalType	temporalType;
 	
 	private Date undoEndTime;
 	private Date undoStartTime;
@@ -35,14 +35,14 @@ public class TestTemporalStamps implements Undoable  {
 			Date startTime,
 			Date endTime,
 			AbstractTemporalPattern temporalPattern) {
-		this.discriminator = temporalType.value();
+		this.temporalType = temporalType;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.temporalPattern = temporalPattern;
 	}
 
 	public TestTemporalType getTestTemporalType() {
-		return TestTemporalType.from_int(this.discriminator);
+		return this.temporalType;
 	}
 
 	public Date getEndTime() {
