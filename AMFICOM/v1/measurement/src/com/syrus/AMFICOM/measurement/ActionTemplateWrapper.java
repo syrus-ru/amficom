@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplateWrapper.java,v 1.1.2.5 2006/04/05 12:00:14 arseniy Exp $
+ * $Id: ActionTemplateWrapper.java,v 1.1.2.6 2006/04/10 17:02:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.1.2.5 $, $Date: 2006/04/05 12:00:14 $
+ * @version $Revision: 1.1.2.6 $, $Date: 2006/04/10 17:02:01 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -63,6 +63,9 @@ public final class ActionTemplateWrapper extends StorableObjectWrapper<ActionTem
 			}
 			if (key.equals(COLUMN_APPROXIMATE_ACTION_DURATION)) {
 				return Long.valueOf(object.getApproximateActionDuration());
+			}
+			if (key.equals(LINK_COLUMN_ACTION_PARAMETER_ID)) {
+				return object.getActionParameterIds();
 			}
 			if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID)) {
 				return object.getMonitoredElementIds();
