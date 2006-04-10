@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplateDatabase.java,v 1.1.2.5 2006/04/05 12:00:14 arseniy Exp $
+ * $Id: ActionTemplateDatabase.java,v 1.1.2.6 2006/04/10 17:01:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,6 @@ import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.LINK_COLUMN_MO
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,6 +34,7 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1.2.5 $, $Date: 2006/04/05 12:00:14 $
+ * @version $Revision: 1.1.2.6 $, $Date: 2006/04/10 17:01:38 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -151,13 +151,13 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 	protected void insert(final Set<ActionTemplate<Action>> actionTemplates) throws IllegalDataException, CreateObjectException {
 		super.insert(actionTemplates);
 
-		final Map<Identifier, Set<Identifier>> actionParameterIdsMap = this.createActionParameterIdsMap(actionTemplates);
+		final Map<Identifier, Set<Identifier>> actionParameterIdsMap = StorableObject.createValuesMap(actionTemplates, LINK_COLUMN_ACTION_PARAMETER_ID);
 		super.insertLinkedEntityIds(actionParameterIdsMap,
 				ACTMPL_PAR_LINK,
 				LINK_COLUMN_ACTION_TEMPLATE_ID,
 				LINK_COLUMN_ACTION_PARAMETER_ID);
 
-		final Map<Identifier, Set<Identifier>> monitoredElementIdsMap = this.createMonitoredElementIdsMap(actionTemplates);
+		final Map<Identifier, Set<Identifier>> monitoredElementIdsMap = StorableObject.createValuesMap(actionTemplates, LINK_COLUMN_MONITORED_ELEMENT_ID);
 		super.insertLinkedEntityIds(monitoredElementIdsMap,
 				ACTMPL_ME_LINK,
 				LINK_COLUMN_ACTION_TEMPLATE_ID,
@@ -168,32 +168,16 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 	protected void update(final Set<ActionTemplate<Action>> actionTemplates) throws UpdateObjectException {
 		super.update(actionTemplates);
 
-		final Map<Identifier, Set<Identifier>> actionParameterIdsMap = this.createActionParameterIdsMap(actionTemplates);
+		final Map<Identifier, Set<Identifier>> actionParameterIdsMap = StorableObject.createValuesMap(actionTemplates, LINK_COLUMN_ACTION_PARAMETER_ID);
 		super.updateLinkedEntityIds(actionParameterIdsMap,
 				ACTMPL_PAR_LINK,
 				LINK_COLUMN_ACTION_TEMPLATE_ID,
 				LINK_COLUMN_ACTION_PARAMETER_ID);
 
-		final Map<Identifier, Set<Identifier>> monitoredElementIdsMap = this.createMonitoredElementIdsMap(actionTemplates);
+		final Map<Identifier, Set<Identifier>> monitoredElementIdsMap = StorableObject.createValuesMap(actionTemplates, LINK_COLUMN_MONITORED_ELEMENT_ID);
 		super.updateLinkedEntityIds(monitoredElementIdsMap,
 				ACTMPL_ME_LINK,
 				LINK_COLUMN_ACTION_TEMPLATE_ID,
 				LINK_COLUMN_MONITORED_ELEMENT_ID);
-	}
-
-	private Map<Identifier, Set<Identifier>> createActionParameterIdsMap(final Set<ActionTemplate<Action>> actionTemplates) {
-		final Map<Identifier, Set<Identifier>> actionParameterIdsMap = new HashMap<Identifier, Set<Identifier>>();
-		for (final ActionTemplate<Action> actionTemplate : actionTemplates) {
-			actionParameterIdsMap.put(actionTemplate.getId(), actionTemplate.getActionParameterIds());
-		}
-		return actionParameterIdsMap;
-	}
-
-	private Map<Identifier, Set<Identifier>> createMonitoredElementIdsMap(final Set<ActionTemplate<Action>> actionTemplates) {
-		final Map<Identifier, Set<Identifier>> monitoredElementIdsMap = new HashMap<Identifier, Set<Identifier>>();
-		for (final ActionTemplate<Action> actionTemplate : actionTemplates) {
-			monitoredElementIdsMap.put(actionTemplate.getId(), actionTemplate.getMonitoredElementIds());
-		}
-		return monitoredElementIdsMap;
 	}
 }
