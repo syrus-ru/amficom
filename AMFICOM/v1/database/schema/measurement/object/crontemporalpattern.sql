@@ -1,4 +1,4 @@
--- $Id: crontemporalpattern.sql,v 1.5 2005/06/15 17:03:09 bass Exp $
+-- $Id: crontemporalpattern.sql,v 1.6 2006/04/10 10:17:51 arseniy Exp $
 
 CREATE OR REPLACE TYPE CronStringArray AS TABLE OF VARCHAR2(64 CHAR)
 /
@@ -22,4 +22,4 @@ CREATE TABLE CronTemporalPattern (
  )
  NESTED TABLE value STORE AS cronvaluetab;
 
-CREATE SEQUENCE crontemporalpattern_seq ORDER;
+CREATE SEQUENCE CronTemporalPattern_seq ORDER;
