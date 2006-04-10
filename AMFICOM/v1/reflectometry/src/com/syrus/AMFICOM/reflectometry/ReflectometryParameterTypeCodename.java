@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryParameterTypeCodename.java,v 1.1.2.3 2006/04/05 09:45:46 arseniy Exp $
+ * $Id: ReflectometryParameterTypeCodename.java,v 1.1.2.4 2006/04/10 13:01:50 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.reflectometry;
 import com.syrus.util.Codename;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/04/05 09:45:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/04/10 13:01:50 $
+ * @author $Author: saa $
  * @author Tashoyan Arseniy Feliksovich
  * @module reflectometry
  */
@@ -56,5 +56,14 @@ public enum ReflectometryParameterTypeCodename implements Codename {
 	@Override
 	public String toString() {
 		return this.stringValue();
+	}
+
+	/**
+	 * FIXME: стоит ли ввести такой метод? 
+	 * Проверяет совпадение this с codename, представленного строкой
+	 * @param typeCodename codename, представленный строкой
+	 */
+	private boolean matches(String typeCodename) {
+		return this.codename.equals(typeCodename);
 	}
 }
