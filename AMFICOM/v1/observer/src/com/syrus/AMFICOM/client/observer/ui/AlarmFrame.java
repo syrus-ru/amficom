@@ -1,6 +1,9 @@
 package com.syrus.AMFICOM.client.observer.ui;
 
+import static com.syrus.AMFICOM.resource.ObserverResourceKeys.FRAME_ALARM;
+
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -35,7 +38,7 @@ import com.syrus.AMFICOM.client.event.MarkerEvent;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.observer.ObserverMainFrame;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client.sound.SoundManager;
 import com.syrus.AMFICOM.eventv2.AbstractLineMismatchEvent;
@@ -263,9 +266,9 @@ public class AlarmFrame extends JInternalFrame {
 		this.setIconifiable(true);
 		this.setMaximizable(true);
 		this.setResizable(true);
-		this.setName(ObserverMainFrame.ALARM_FRAME);
+		this.setName(FRAME_ALARM);
 
-		this.setTitle(LangModelObserver.getString("title.alarm_frame"));
+		this.setTitle(I18N.getString(FRAME_ALARM));
 		this.getContentPane().setLayout(new BorderLayout());
 		this.addInternalFrameListener(new javax.swing.event.InternalFrameAdapter() {
 			@Override
@@ -372,6 +375,8 @@ public class AlarmFrame extends JInternalFrame {
 	}
 
 	public void updateContents() {
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		
 		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINEMISMATCHEVENT_CODE);
 		try {
 			Set<AbstractLineMismatchEvent> lineMismatchEvents = StorableObjectPool.getStorableObjectsByCondition(condition , true);
@@ -391,7 +396,7 @@ public class AlarmFrame extends JInternalFrame {
 					this.model.addObject(alarm);
 				}
 			}
-			this.model.sortRows(0, this.model.getSortOrder(0));
+			this.model.sortRows(3, this.model.getSortOrder(3));
 			
 			if (!lineMismatchEvents.isEmpty()) {
 				alarmSignal();
@@ -403,6 +408,7 @@ public class AlarmFrame extends JInternalFrame {
 		this.buttonFix.setEnabled(false);
 		this.buttonDelete.setEnabled(false);
 		this.buttonDescribe.setEnabled(false);
+		setCursor(Cursor.getDefaultCursor());
 	}
 
 	void buttonRefresh_actionPerformed(ActionEvent e) {

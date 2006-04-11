@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultFrame.java,v 1.7 2006/03/09 13:26:03 stas Exp $
+ * $Id: ResultFrame.java,v 1.8 2006/04/11 11:10:24 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.client.observer.ui;
+
+import static com.syrus.AMFICOM.resource.ObserverResourceKeys.FRAME_RESULT;
 
 import java.awt.BorderLayout;
 import java.awt.event.ComponentAdapter;
@@ -33,7 +35,7 @@ import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MapThresholdsLayeredPa
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ThresholdsPanel;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.EtalonComparison;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
@@ -44,6 +46,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.controllers.ParameterController;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -67,7 +70,7 @@ import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
-import com.syrus.AMFICOM.resource.LangModelObserver;
+import com.syrus.AMFICOM.resource.ObserverResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.DataFormatException;
@@ -75,20 +78,18 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2006/03/09 13:26:03 $
+ * @version $Revision: 1.8 $, $Date: 2006/04/11 11:10:24 $
  * @module surveyclient_v1
  */
 
 public class ResultFrame extends JInternalFrame implements PropertyChangeListener {
 	private static final long serialVersionUID = 3258417226830002487L;
-
-	public static final String	NAME = "resultFrame"; //$NON-NLS-1$
 	
 	ApplicationContext aContext;
 	
 	JTabbedPane tabs;
-	WrapperedTableModel inParamsTableModel;
-	WrapperedTableModel outParamsTableModel;
+	WrapperedTableModel<Parameter> inParamsTableModel;
+	WrapperedTableModel<Parameter> outParamsTableModel;
 	
 	MapThresholdsLayeredPanel layeredPanel;
 //	private Map<String, JComponent> traceMap;
@@ -107,8 +108,8 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 		this.setResizable(true);
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
-		this.setName(NAME);
-		this.setTitle(LangModelObserver.getString("title.result_frame")); //$NON-NLS-1$
+		this.setName(FRAME_RESULT);
+		this.setTitle(I18N.getString(FRAME_RESULT));
 		
 		this.addPropertyChangeListener(JInternalFrame.IS_MAXIMUM_PROPERTY, new java.beans.PropertyChangeListener() {
 
@@ -126,13 +127,13 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 			}
 		});
 		
-		this.inParamsTableModel = new WrapperedTableModel(ParameterController.getInstance(), 
+		this.inParamsTableModel = new WrapperedTableModel<Parameter>(ParameterController.getInstance(), 
 				new String[] {StorableObjectWrapper.COLUMN_NAME, ParameterController.COLUMN_VALUE });
-		this.outParamsTableModel = new WrapperedTableModel(ParameterController.getInstance(), 
+		this.outParamsTableModel = new WrapperedTableModel<Parameter>(ParameterController.getInstance(), 
 				new String[] {StorableObjectWrapper.COLUMN_NAME, ParameterController.COLUMN_VALUE });
 
-		WrapperedTable inParamsTable = new WrapperedTable(this.inParamsTableModel);
-		WrapperedTable outParamsTable = new WrapperedTable(this.outParamsTableModel);
+		WrapperedTable<Parameter> inParamsTable = new WrapperedTable<Parameter>(this.inParamsTableModel);
+		WrapperedTable<Parameter> outParamsTable = new WrapperedTable<Parameter>(this.outParamsTableModel);
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 				inParamsTable, outParamsTable);
@@ -140,7 +141,7 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 		splitPane.setResizeWeight(.5);
 		
 		this.tabs = new JTabbedPane();
-		this.tabs.add(LangModelObserver.getString("title.parameters"), splitPane); //$NON-NLS-1$
+		this.tabs.add(I18N.getString(ObserverResourceKeys.FRAME_RESULT_PARAMETERS), splitPane); //$NON-NLS-1$
 
 		this.getContentPane().setLayout(new BorderLayout());
 		this.getContentPane().add(this.tabs, BorderLayout.CENTER);
@@ -382,7 +383,7 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 		reflectogramPanel.select_by_mouse = true;
 		this.layeredPanel.updScale2fit();
 
-		this.tabs.addTab(LangModelAnalyse.getString("trace"), this.layeredPanel);  //$NON-NLS-1$
+		this.tabs.addTab(I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN), this.layeredPanel);  //$NON-NLS-1$
 		this.tabs.setSelectedComponent(this.layeredPanel);
 //		this.traceMap.put(key, this.layeredPanel);
 	}
