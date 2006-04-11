@@ -1,5 +1,5 @@
 /*-
- * $Id: ReportModels.java,v 1.3 2006/04/03 10:40:10 bass Exp $
+ * $Id: ReportModels.java,v 1.4 2006/04/11 14:46:48 stas Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,23 +21,23 @@ import com.syrus.AMFICOM.report.DestinationModules;
 
 /**
  * @author max
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2006/04/03 10:40:10 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2006/04/11 14:46:48 $
  * @module reportbuilder
  */
 
 public enum ReportModels {
+	OBSERVE(new ObserverReportModel()),
 	ANALYSIS(new AnalysisReportModel()),
 	EVALUATION(new EvaluationReportModel()),
-	MAP(new MapReportModel()),
-	MODELING(new ModelingReportModel()),
-	OBSERVE(new ObserverReportModel()),
-	OPTIMIZATION(null),
-	PREDICTION(new PredictionReportModel()),
-	SCHEDULER(new SchedulerReportModel()),
-	SCHEME(new SchemeReportModel()),
 	SURVEY(new SurveyReportModel()),
-	COMBINED(null);
+	MODELING(new ModelingReportModel()),
+	PREDICTION(new PredictionReportModel()),
+	MAP(new MapReportModel()),
+	SCHEME(new SchemeReportModel()),
+//	OPTIMIZATION(null),
+	SCHEDULER(new SchedulerReportModel());
+//	COMBINED(null);
 	
 	ReportModel reportModel;
 	
