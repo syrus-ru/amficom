@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingReportModel.java,v 1.1 2006/04/03 08:20:30 stas Exp $
+ * $Id: ModelingReportModel.java,v 1.2 2006/04/11 05:52:23 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,10 +10,10 @@ package com.syrus.AMFICOM.report;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.syrus.AMFICOM.Client.Analysis.Report.AESMPReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.report.DestinationModules;
+import com.syrus.AMFICOM.resource.ModelResourceKeys;
 
 /**
  * <p>Title: </p>
@@ -25,12 +25,6 @@ import com.syrus.AMFICOM.report.DestinationModules;
  */
 
 public class ModelingReportModel extends AnalysisReportModel {
-	// Названия таблиц для моделирования
-	public static String MODELLING_PARAMETERS = "ParamsTitle";
-	
-	public ModelingReportModel() {
-	}
-	
 	@Override
 	public String getName()	{
 		return DestinationModules.MODELING;
@@ -40,14 +34,14 @@ public class ModelingReportModel extends AnalysisReportModel {
 	public Collection<String> getTemplateElementNames() {
 		Collection<String> result = new ArrayList<String>();
 
-		result.add(AESMPReportModel.COMMON_INFO);
-		result.add(AESMPReportModel.REFLECTOGRAMM);
-		result.add(AESMPReportModel.GENERAL_CHARACTERISTICS);
+		result.add(AnalysisResourceKeys.FRAME_OVERALL_STATS);
+		result.add(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN);
+		result.add(AnalysisResourceKeys.FRAME_EVENTS);
 		
-		result.add(AnalysisReportModel.TEST_PARAMETERS);
-		result.add(AnalysisReportModel.ANALYSIS_PARAMETERS);
+		result.add(AnalysisResourceKeys.FRAME_PRIMARY_PARAMETERS);
+		result.add(AnalysisResourceKeys.FRAME_ANALYSIS_SELECTION);
 		
-		result.add(ModelingReportModel.MODELLING_PARAMETERS);
+		result.add(ModelResourceKeys.FRAME_TRANS_DATA);
 
 		return result;
 	}
@@ -56,8 +50,7 @@ public class ModelingReportModel extends AnalysisReportModel {
 	public String getReportElementName(String reportName) {
 		String langReportName = super.getReportElementName(reportName);
 		if (langReportName == null){
-			if (reportName.equals(MODELLING_PARAMETERS))
-				langReportName = I18N.getString("report.Modules.Modeling." + reportName);
+			langReportName = I18N.getString(reportName);
 		}
 		return langReportName;
 	}
