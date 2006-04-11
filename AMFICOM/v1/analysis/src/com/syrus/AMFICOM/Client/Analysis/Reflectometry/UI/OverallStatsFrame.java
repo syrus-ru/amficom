@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.OverallStats;
 import com.syrus.AMFICOM.analysis.OverallStatsWrapper;
@@ -80,7 +79,7 @@ public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListen
 	}
 
 	public String getReportTitle() {
-		return LangModelAnalyse.getString("overallTitle");
+		return I18N.getString(AnalysisResourceKeys.FRAME_OVERALL_STATS);
 	}
 
 	public TableModel getTableModel() {
@@ -112,21 +111,21 @@ public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListen
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
-		this.setTitle(LangModelAnalyse.getString("overallTitle"));
+		this.setTitle(I18N.getString(AnalysisResourceKeys.FRAME_OVERALL_STATS));
 
 		this.mainPanel.setLayout(new BorderLayout());
 		this.mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		this.scrollPane.setViewport(this.viewport);
 		this.scrollPane.setAutoscrolls(true);
 
-		this.tabbedPane.add(I18N.getString(AnalysisResourceKeys.FRAME_OVERALL_STATS), this.mainPanel);
+		this.tabbedPane.add(I18N.getString(AnalysisResourceKeys.FRAME_OVERALL_STATS_BASIC), this.mainPanel);
 
 		this.jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.mainPanel.add(this.scrollPane, BorderLayout.CENTER);
 		this.scrollPane.getViewport().add(this.jTable);
 		this.tabbedPane.setEnabledAt(0, true);
 
-		this.tabbedPane.add(LangModelAnalyse.getString("Title.comparative"), this.mainPanelWholeComp);
+		this.tabbedPane.add(I18N.getString(AnalysisResourceKeys.FRAME_OVERALL_STATS_COMPARATIVE), this.mainPanelWholeComp);
 		this.wctModel = new WrapperedPropertyTableModel<OverallStats>(OverallStatsWrapper.getInstance(),
 				this.stats,
 				new String[] { OverallStatsWrapper.KEY_LENGTH,
