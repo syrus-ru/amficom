@@ -1,5 +1,10 @@
 package com.syrus.AMFICOM.client.observer;
 
+import static com.syrus.AMFICOM.resource.ObserverResourceKeys.FRAME_ALARM;
+import static com.syrus.AMFICOM.resource.ObserverResourceKeys.FRAME_TREE;
+import static com.syrus.AMFICOM.resource.ObserverResourceKeys.FRAME_RESULT;
+import static com.syrus.AMFICOM.resource.SchemeResourceKeys.FRAME_EDITOR_MAIN;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -20,7 +25,6 @@ import com.syrus.AMFICOM.client.UI.CharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.GeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
-import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.editor.ViewMapWindowCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.MapPropertiesEventHandler;
@@ -35,7 +39,7 @@ import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.MapSurveyApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.ObserverApplicationModel;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
-//import com.syrus.AMFICOM.client.observer.alarm.AlarmReceiver;
+import com.syrus.AMFICOM.client.observer.command.CreateObserverReportCommand;
 import com.syrus.AMFICOM.client.observer.command.OpenMapViewCommand;
 import com.syrus.AMFICOM.client.observer.command.OpenSchemeViewCommand;
 import com.syrus.AMFICOM.client.observer.command.start.OpenAnalysisCommand;
@@ -68,15 +72,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 	private static final long serialVersionUID = -4447044860893666923L;
 
 	UIDefaults					frames;
-	
-	public static final String	ALARM_FRAME	= "alarmFrame"; //$NON-NLS-1$
-	public static final String	ALARM_POPUP_FRAME	= "alarmPopupFrame"; //$NON-NLS-1$
-	public static final String	TREE_FRAME = "treeFrame"; //$NON-NLS-1$
-
 	SchemeTabbedPane schemePane;
-//	private CreateSurveyReportCommand csrCommand = null;
-
-	//	SchemeAlarmUpdater schemeAlarmUpdater = null;
 
 	public ObserverMainFrame(final ApplicationContext aContext) {
 		super(aContext, 
@@ -96,7 +92,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		this.schemePane.setEditable(false);
 		this.schemePane.setToolBarVisible(false);
 		
-		this.frames.put(SchemeViewerFrame.NAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_EDITOR_MAIN, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | SCHEME_VIEWER_FRAME", Level.FINEST);
 				SchemeViewerFrame editorFrame = new SchemeViewerFrame(ObserverMainFrame.this.aContext, ObserverMainFrame.this.schemePane);
@@ -139,7 +135,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 			}
 		});
 		
-		this.frames.put(ResultFrame.NAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_RESULT, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue RESULT_FRAME", Level.FINEST);
 				ResultFrame resultFrame = new ResultFrame(ObserverMainFrame.this.aContext);
@@ -148,7 +144,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 			}
 		});
 		
-		this.frames.put(ALARM_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_ALARM, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue ALARM_FRAME", Level.FINEST);
 				AlarmFrame alarmFrame = new AlarmFrame(ObserverMainFrame.this.aContext);
@@ -157,17 +153,17 @@ public class ObserverMainFrame extends AbstractMainFrame {
 			}
 		});
 		
-		this.frames.put(TREE_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_TREE, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | TREE_FRAME", Level.FINEST);
 				JInternalFrame treeFrame = new JInternalFrame();
-				treeFrame.setName(TREE_FRAME);
+				treeFrame.setName(FRAME_TREE);
 				treeFrame.setIconifiable(true);
 				treeFrame.setClosable(true);
 				treeFrame.setResizable(true);
 				treeFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 				treeFrame.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
-				treeFrame.setTitle(LangModelSchematics.getString("treeFrameTitle"));
+				treeFrame.setTitle(I18N.getString(FRAME_TREE));
 				
 				ObserverTreeModel model = new ObserverTreeModel(ObserverMainFrame.this.aContext);
 				IconedTreeUI iconedTreeUI = new IconedTreeUI(model.getRoot());
@@ -209,7 +205,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 						
 					}
 					componentName = componentName.intern();
-					if (componentName == TREE_FRAME) {
+					if (componentName == FRAME_TREE) {
 						final JInternalFrame treeFrame = (JInternalFrame) component;
 						normalize(treeFrame);
 						treeFrame.setSize(width / 5, height);
@@ -219,17 +215,17 @@ public class ObserverMainFrame extends AbstractMainFrame {
 						normalize(mapFrame);
 						mapFrame.setSize(3 * width / 5, 3 * height / 4);
 						mapFrame.setLocation(width / 5, height / 4);
-					} else if (componentName == ResultFrame.NAME) {
+					} else if (componentName == FRAME_RESULT) {
 						final JInternalFrame resultFrame = (JInternalFrame) component;
 						normalize(resultFrame);
 						resultFrame.setSize(width * 2 / 5, height / 4);			
 						resultFrame.setLocation(width * 3 / 5, 0);
-					} else if (componentName == ALARM_FRAME) {
+					} else if (componentName == FRAME_ALARM) {
 						final JInternalFrame alarmFrame = (JInternalFrame) component;
 						normalize(alarmFrame);
 						alarmFrame.setSize(width * 2 / 5, height / 4);
 						alarmFrame.setLocation(width / 5, 0);
-					} else if (componentName == SchemeViewerFrame.NAME) {
+					} else if (componentName == FRAME_EDITOR_MAIN) {
 						final JInternalFrame schemeFrame = (JInternalFrame) component;
 						normalize(schemeFrame);
 						schemeFrame.setSize(3 * width / 5, 3 * height / 4);
@@ -263,9 +259,6 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		aModel.setEnabled(ObserverApplicationModel.MENU_OPEN, true);
 		aModel.setEnabled(ObserverApplicationModel.MENU_REPORT, true);
 		aModel.setEnabled(ApplicationModel.MENU_VIEW, true);
-		
-		aModel.setVisible(ObserverApplicationModel.MENU_REPORT, false);
-		aModel.setVisible(ObserverApplicationModel.MENU_START_PROGNOSIS, false);
 	}
 
 	@Override
@@ -287,10 +280,10 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		MapApplicationModelFactory mapApplicationModelFactory = new MapSurveyApplicationModelFactory();
 
 		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_MAP, new ViewMapWindowCommand(this.desktopPane, this.aContext, mapApplicationModelFactory));
-		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_SCHEME, this.getLazyCommand(SchemeViewerFrame.NAME));
-		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_RESULTS, this.getLazyCommand(ResultFrame.NAME));
-		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_ALARMS, this.getLazyCommand(ALARM_FRAME));
-		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_NAVIGATOR, this.getLazyCommand(TREE_FRAME));
+		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_SCHEME, this.getLazyCommand(FRAME_EDITOR_MAIN));
+		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_RESULTS, this.getLazyCommand(FRAME_RESULT));
+		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_ALARMS, this.getLazyCommand(FRAME_ALARM));
+		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_NAVIGATOR, this.getLazyCommand(FRAME_TREE));
 		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_CHARACTERISTICS, this.getLazyCommand(CharacteristicPropertiesFrame.NAME));
 		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_GENERAL_PROPERTIES, this.getLazyCommand(GeneralPropertiesFrame.NAME));
 		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_ADDITIONAL_PROPERTIES, this.getLazyCommand(AdditionalPropertiesFrame.NAME));
@@ -299,9 +292,9 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		aModel.setCommand(ObserverApplicationModel.MENU_OPEN_SCHEME, new OpenSchemeViewCommand(this.aContext));
 		aModel.setCommand(ObserverApplicationModel.MENU_OPEN_MAP, new OpenMapViewCommand(this.desktopPane, this.aContext, mapApplicationModelFactory));
 		
-//		csrCommand = new CreateSurveyReportCommand(aContext);
-//		csrCommand.setParameter(this);
-//		aModel.setCommand(SurveyApplicationModel.MENU_REPORT_BY_TEMPLATE, csrCommand);
+		CreateObserverReportCommand	csrCommand = new CreateSurveyReportCommand(aContext);
+		csrCommand.setParameter(this);
+		aModel.setCommand(SurveyApplicationModel.MENU_REPORT_BY_TEMPLATE, csrCommand);
 
 		aModel.fireModelChanged();
 	}

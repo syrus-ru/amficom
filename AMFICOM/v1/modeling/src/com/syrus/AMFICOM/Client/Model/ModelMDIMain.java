@@ -2,6 +2,7 @@
 // Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.Client.Model;
 
+import static com.syrus.AMFICOM.resource.SchemeResourceKeys.FRAME_EDITOR_MAIN;
 import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_ANALYSIS_MAIN;
 import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_TRACE_SELECTOR;
 import static com.syrus.AMFICOM.resource.ModelResourceKeys.FRAME_TRANS_DATA;
@@ -149,7 +150,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		this.tables = new LinkedList<ReportTable>();
 		this.graphs = new LinkedList<SimpleResizableFrame>();
 		
-		this.frames.put(SchemeViewerFrame.NAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_EDITOR_MAIN, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | SCHEME_VIEWER_FRAME", Level.FINEST);
 				SchemeViewerFrame editorFrame = new SchemeViewerFrame(ModelMDIMain.this.aContext, ModelMDIMain.this.schemePane);
@@ -282,7 +283,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 				JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(FRAME_ANALYSIS_MAIN);
 				JInternalFrame modelParamsFrame = (JInternalFrame) f.frames.get(RefModelParamsFrame.NAME);
 								
-				JInternalFrame schemeFrame = (JInternalFrame) f.frames.get(SchemeViewerFrame.NAME);
+				JInternalFrame schemeFrame = (JInternalFrame) f.frames.get(FRAME_EDITOR_MAIN);
 				JInternalFrame generalFrame = (JInternalFrame) f.frames.get(GeneralPropertiesFrame.NAME);
 				JInternalFrame charFrame = (JInternalFrame) f.frames.get(CharacteristicPropertiesFrame.NAME);
 				JInternalFrame additionalFrame = (JInternalFrame) f.frames.get(AdditionalPropertiesFrame.NAME);
@@ -417,7 +418,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, this.getLazyCommand(FRAME_ANALYSIS_MAIN));
 		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_TRANS_DATA, this.getLazyCommand(FRAME_TRANS_DATA));
 		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS, this.getLazyCommand(RefModelParamsFrame.NAME));
-		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_SCHEME, this.getLazyCommand(SchemeViewerFrame.NAME));
+		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_SCHEME, this.getLazyCommand(FRAME_EDITOR_MAIN));
 		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES, this.getLazyCommand(GeneralPropertiesFrame.NAME));
 		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES, this.getLazyCommand(AdditionalPropertiesFrame.NAME));
 		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS, this.getLazyCommand(CharacteristicPropertiesFrame.NAME));
@@ -552,7 +553,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 	void showSchemeFrames(boolean b) {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 	
-		JInternalFrame schemeFrame = (JInternalFrame) this.frames.get(SchemeViewerFrame.NAME);
+		JInternalFrame schemeFrame = (JInternalFrame) this.frames.get(FRAME_EDITOR_MAIN);
 		schemeFrame.setVisible(b);
 		JInternalFrame generalFrame = (JInternalFrame) this.frames.get(GeneralPropertiesFrame.NAME);
 		generalFrame.setVisible(b);
