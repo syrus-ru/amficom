@@ -1,5 +1,5 @@
 /*-
- * $Id: TestReport.java,v 1.2.4.1 2006/04/10 11:46:00 saa Exp $
+ * $Id: TestReport.java,v 1.2.4.2 2006/04/11 10:23:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.Client.Schedule.report;
+
+import static com.syrus.AMFICOM.general.MeasurementUnit.NONDIMENSIONAL;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,19 +24,22 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.MeasurementUnit;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.ActionParameter;
+import com.syrus.AMFICOM.measurement.ActionTemplate;
+import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.Test.TestTemporalType;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
+import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
  * @author Peter Peskovsky
- * @author $Author: saa $
- * @version $Revision: 1.2.4.1 $, $Date: 2006/04/10 11:46:00 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2.4.2 $, $Date: 2006/04/11 10:23:23 $
  * @module scheduler
  */
 final class TestReport {
@@ -55,12 +60,17 @@ final class TestReport {
 				new TestReportTableModel(test,vertDivisionsCount),
 				getTableColumnWidths(vertDivisionsCount));
 		} catch (ApplicationException e) {
-			Log.errorMessage(e.getMessage());
 			Log.errorMessage(e);			
 			throw new CreateReportException(
 					tableStorableElement.getReportName(),
 					tableStorableElement.getModelClassName(),
 					CreateReportException.ERROR_GETTING_FROM_POOL);
+		} catch (DataFormatException e) {
+			Log.errorMessage(e);
+			throw new CreateReportException(
+					tableStorableElement.getReportName(),
+					tableStorableElement.getModelClassName(),
+					CreateReportException.WRONG_DATA_TO_INSTALL);
 		}
 		
 		return renderingComponent;
@@ -78,8 +88,8 @@ final class TestReport {
 
 	/**
 	 * @author Peter Peskovsky
-	 * @author $Author: saa $
-	 * @version $Revision: 1.2.4.1 $, $Date: 2006/04/10 11:46:00 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.2.4.2 $, $Date: 2006/04/11 10:23:23 $
 	 * @module scheduler
 	 */
 	private static final class TestReportTableModel extends AbstractTableModel {
@@ -115,7 +125,7 @@ final class TestReport {
 		
 		protected TestReportTableModel (
 				Test test,
-				int vertDivisionsCount) throws ApplicationException {
+				int vertDivisionsCount) throws ApplicationException, DataFormatException {
 			this.vertDivisionsCount = vertDivisionsCount;
 	
 			TestWrapper wrapper = TestWrapper.getInstance();
@@ -165,20 +175,22 @@ final class TestReport {
 			this.propertyValuesColumn.add(EMPTY_STRING);
 			this.originalRowCount += 2;
 			
-			MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(
+			final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(
 					test.getCurrentMeasurementSetupId(),
 					true);
-			ParameterSet parameterSet = measurementSetup.getParameterSet();
-			for (Parameter parameter : parameterSet.getParameters()) {
-				ParameterType parameterType = parameter.getType();
-				MeasurementUnit measurementUnit = parameterType.getMeasurementUnit();
-	
-				String valueName = parameterType.getDescription();
-				if (measurementUnit != MeasurementUnit.NONDIMENSIONAL)
-					valueName += (SEPARATOR + measurementUnit.getName());
-				
-				this.propertyNamesColumn.add(valueName);
-				this.propertyValuesColumn.add(parameter.getStringValue());
+			final ActionTemplate<Measurement> measurementTemplate = measurementSetup.getMeasurementTemplate();
+			for (final ActionParameter actionParameter : measurementTemplate.getActionParameters()) {
+				final ParameterType parameterType = actionParameter.getType();
+				final MeasurementUnit measurementUnit = parameterType.getMeasurementUnit();
+
+				final StringBuffer name = new StringBuffer(parameterType.getDescription());
+				if (measurementUnit != NONDIMENSIONAL) {
+					name.append(SEPARATOR);
+					name.append(measurementUnit.getName());
+				}
+
+				this.propertyNamesColumn.add(name.toString());
+				this.propertyValuesColumn.add(actionParameter.stringValue());
 				this.originalRowCount++;
 			}
 			
