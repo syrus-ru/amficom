@@ -8,9 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +25,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -37,54 +41,62 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.DescribableWrapper;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.measurement.ActionTemplate;
 import com.syrus.AMFICOM.measurement.AnalysisType;
+import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
-import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
-import com.syrus.util.WrapperComparator;
 
+/*
+ * TODO
+ * 3. implement setDescription и нормальную работу descriptionField
+ */
 final class TestParametersPanel implements PropertyChangeListener {
 
 	ApplicationContext		aContext;
 	SchedulerModel			schedulerModel;
 
-	JPanel			switchPanel;
+	JPanel					switchPanel;
 	List<MeasurementSetup>	msList;
 	List<MeasurementSetup>	msListAnalysisOnly;
 
 	// UI components begin
-	private JCheckBox useSetupsCheckBox;
-	private JLabel analysisLabel;
-	private JCheckBox useAnalysisSetupsCheckBox;
-	JCheckBox allAvailableCheckBox;
+	private JCheckBox		useSetupsCheckBox;
+	private JLabel			analysisLabel;
+	private JCheckBox		useAnalysisSetupsCheckBox;
+	JCheckBox				allAvailableCheckBox;
+
+	// moved from RTP
+	private JTextField		descriptionField;
 
 	WrapperedComboBox<Describable> analysisComboBox;
-	private JLabel patternsLabel;
+	private JLabel			patternsLabel;
 	WrapperedList<MeasurementSetup> testSetups;
 	// UI components end
 
-	Dispatcher	dispatcher;
+	Dispatcher				dispatcher;
 
-	ParametersTestPanel		parametersTestPanel;
+	MeasurementParametersPanel parametersTestPanel;
 
-	Identifier	measurementSetupId;
+	Identifier				measurementSetupId; // FIXME: не понятно, то ли мы им пользуемся, то ли нет
 
-	PropertyChangeEvent propertyChangeEvent;
+	PropertyChangeEvent		propertyChangeEvent;
 
-	private JPanel	patternPanel;
+	private JPanel			patternPanel;
 
 	public TestParametersPanel(final ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -109,8 +121,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 		final AnalysisType[] analysisTypes =
 			atValues.toArray(new AnalysisType[atValues.size()]);
 
-		final List<Describable> analysisTypeList = 
-			new ArrayList<Describable>(Arrays.asList(analysisTypes));		
+		final List<Describable> analysisTypeList =
+			new ArrayList<Describable>(Arrays.asList(analysisTypes));
 
 		this.analysisComboBox.removeAll(); // XXX: это лучше делать при loggedOut
 		this.analysisComboBox.addElements(analysisTypeList);
@@ -119,7 +131,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 
 	@SuppressWarnings("serial")
 	private void createGUI() {
-		this.analysisComboBox = new WrapperedComboBox<Describable>(DescribableWrapper.getInstance(),  
+
+		this.analysisComboBox = new WrapperedComboBox<Describable>(DescribableWrapper.getInstance(),
 			DescribableWrapper.COLUMN_DESCRIPTION,
 			null);
 
@@ -140,10 +153,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			public void actionPerformed(final ActionEvent e) {
 				JCheckBox checkBox = (JCheckBox) e.getSource();
 				boolean useSetup = checkBox.isSelected();
-				if (TestParametersPanel.this.parametersTestPanel != null) {
-					TestParametersPanel.this.parametersTestPanel.setEnableEditing(!useSetup);
-				}
-				TestParametersPanel.this.setEnableEditing(useSetup);
+				TestParametersPanel.this.setUseSetup(useSetup);
 			}
 		});
 		this.patternPanel.add(this.useSetupsCheckBox, gbc);
@@ -161,7 +171,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 
 				// XXX: если показываются не все доступные шаблоны, то список отображаемых шаблонов не меняем
 				// (это вольный перевод квазианглоязычного комментария от bob'а)
-				if (!allAvailableCheckBox.isSelected()) { 
+				if (!allAvailableCheckBox.isSelected()) {
 					return;
 				}
 
@@ -202,11 +212,11 @@ final class TestParametersPanel implements PropertyChangeListener {
 				}
 			}
 		});
-		
+
 		this.allAvailableCheckBox = new JCheckBox(
 			I18N.getString("Scheduler.Text.MeasurementParameter.AllAvailableSetups"),
 			false);
-		
+
 		this.allAvailableCheckBox.addActionListener(new ActionListener() {
 			@SuppressWarnings("unqualified-field-access")
 			public void actionPerformed(final ActionEvent e) {
@@ -214,7 +224,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 				if (checkBox.isSelected()) {
 					refreshMeasurementSetups();
 				} else {
-					final WrapperedListModel<MeasurementSetup> wrapperedListModel = 
+					final WrapperedListModel<MeasurementSetup> wrapperedListModel =
 						testSetups.getModel();
 					final Set<MeasurementSetup> emptySet = Collections.emptySet();
 					wrapperedListModel.setElements(emptySet);
@@ -226,7 +236,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 				}
 			}
 		});
-		
+
 		this.patternPanel.add(this.allAvailableCheckBox, gbc);
 
 		this.measurementSetupId = Identifier.VOID_IDENTIFIER;
@@ -238,15 +248,21 @@ final class TestParametersPanel implements PropertyChangeListener {
 		this.testSetups.addListSelectionListener(new ListSelectionListener() {
 
 			public void valueChanged(final ListSelectionEvent e) {
-				
-				final MeasurementSetup measurementSetup = 
+
+				final MeasurementSetup measurementSetup =
 					(MeasurementSetup) TestParametersPanel.this.testSetups.getSelectedValue();
 				assert Log.debugMessage(measurementSetup, Log.DEBUGLEVEL03);
 				if (TestParametersPanel.this.parametersTestPanel != null) {
 					// XXX: зачем invokeLater? Вроде, все работает и при выполнении "прямо сейчас"
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
-							TestParametersPanel.this.parametersTestPanel.setMeasurementSetup(measurementSetup);
+							try {
+								TestParametersPanel.this.parametersTestPanel.setMeasurementTemplate(measurementSetup.getMeasurementTemplate());
+							} catch (ApplicationException e1) {
+								// XXX: ApplicationException handling
+								Log.errorMessage(e1);
+								throw new InternalError(e1.getMessage());
+							}
 						}
 					});
 				}
@@ -263,7 +279,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 					TestParametersPanel.this.analysisComboBox.setEnabled(analysisEnable);
 					if (TestParametersPanel.this.propertyChangeEvent == null) {
 						try {
-							TestParametersPanel.this.schedulerModel.changeMeasurementSetup(measurementSetup);							
+							TestParametersPanel.this.schedulerModel.changeMeasurementSetup(measurementSetup);
 						} catch (final ApplicationException e1) {
 							AbstractMainFrame.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
 						}
@@ -275,24 +291,35 @@ final class TestParametersPanel implements PropertyChangeListener {
 		scroll.setAutoscrolls(true);
 		gbc.weighty = 1.0;
 		this.patternPanel.add(scroll, gbc);
-
 		gbc.weighty = 0.0;
+
+		// @todo: доделать работу с descriptionField: название; отслеживать
+		// изменение шаблона и пр.
+		this.descriptionField = new JTextField(128);
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		this.patternPanel.add(this.descriptionField, gbc);
+
 		this.patternPanel.add(this.switchPanel, gbc);
 		this.analysisComboBox.setEnabled(false);
 		this.useSetupsCheckBox.doClick();
 	}
 
-	void setEnableEditing(final boolean enable) {
-		this.testSetups.setEnabled(enable);
-		if (!enable) {
+	void setUseSetup(final boolean useSetup) {
+		this.testSetups.setEnabled(useSetup);
+		if (!useSetup) {
 			if (this.useAnalysisSetupsCheckBox.isSelected()) {
 				this.useAnalysisSetupsCheckBox.doClick();
 			}
 		}
-		this.useAnalysisSetupsCheckBox.setEnabled(enable);
-		this.patternsLabel.setEnabled(enable);
-		this.analysisLabel.setEnabled(enable);
-		this.allAvailableCheckBox.setEnabled(enable);
+		this.useAnalysisSetupsCheckBox.setEnabled(useSetup);
+		this.patternsLabel.setEnabled(useSetup);
+		this.analysisLabel.setEnabled(useSetup);
+		this.allAvailableCheckBox.setEnabled(useSetup);
+
+		this.descriptionField.setEnabled(!useSetup);
+		if (this.parametersTestPanel != null) {
+			this.parametersTestPanel.setEnableEditing(!useSetup);
+		}
 	}
 
 	/**
@@ -304,7 +331,20 @@ final class TestParametersPanel implements PropertyChangeListener {
 		return (AnalysisType) this.analysisComboBox.getSelectedItem();
 	}
 
+	/**
+	 * Возвращает существующий либо специально сгенерированный шаблон
+	 * либо null.
+	 *
+	 * @todo если выбрано создание нового шаблона, то неизвестно,
+	 * должен ли создать один шаблон и возвращать его каждый раз,
+	 * или же каждый раз создавать новый. Пока что каждый раз создает новый.
+	 * Учитывая, что галочка "использовать шаблон" автоматически выставляется
+	 * при создании нового теста, то, быть может, текущее поведение приемлемо.
+	 *
+	 * @return шаблон либо null
+	 */
 	public MeasurementSetup getMeasurementSetup() {
+
 		if (this.useSetupsCheckBox.isSelected()) {
 			final MeasurementSetup measurementSetup = (MeasurementSetup) this.testSetups.getSelectedValue();
 			if (measurementSetup == null) {
@@ -316,36 +356,58 @@ final class TestParametersPanel implements PropertyChangeListener {
 			}
 			return measurementSetup;
 		}
-		
-		// otherwise 
-		
+
+		// создаем новый шаблон (по параметрам измерения, без анализа)
 		try {
-			return this.parametersTestPanel != null ? this.parametersTestPanel.getMeasurementSetup() : null;
+			if (this.parametersTestPanel == null) {
+				return null;
+			}
+			final ActionTemplate<Measurement> measurementTemplate =
+				this.parametersTestPanel.getMeasurementTemplate();
+			return MeasurementSetup.createInstance(LoginManager.getUserId(),
+					measurementTemplate.getId(),
+					Identifier.VOID_IDENTIFIER,
+					getDescription(),
+					Collections.singleton(
+							this.schedulerModel.getMonitoredElement().getId()));
 		} catch (final CreateObjectException e) {
 			this.schedulerModel.setBreakData();
 			AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.CannotCreateMeasurementSetup"));
 			return null;
 		}
+
+	}
+
+	// moved here from bob's ReflectometryTestPanel
+	private final String getDescription() {
+		final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+
+		final String description = this.descriptionField.getText();
+		return description.trim().length() == 0 ?
+//				commented according to bug 283
+//				I18N.getString("Scheduler.Text.Scheduler.CreatedByScheduler") +
+				sdf.format(new Date())
+				: description;
 	}
 
 	public void refreshMeasurementSetup(final MeasurementSetup measurementSetup) {
-		final WrapperedListModel<MeasurementSetup> wrapperedListModel = 
+		final WrapperedListModel<MeasurementSetup> wrapperedListModel =
 			this.testSetups.getModel();
-		
+
 		wrapperedListModel.sort();
-		
+
 		this.setMeasurementSetup(measurementSetup);
 
 	}
-	
+
 	public void setMeasurementSetup(final MeasurementSetup measurementSetup) {
 		this.setMeasurementSetup(measurementSetup, false);
 	}
-	
-	private void setMeasurementSetup(final MeasurementSetup measurementSetup, 
+
+	private void setMeasurementSetup(final MeasurementSetup measurementSetup,
 	                                final boolean switchToSetups) {
 		final boolean single = !this.allAvailableCheckBox.isSelected();
-		
+
 		this.testSetups.clearSelection();
 		this.measurementSetupId = measurementSetup != null ? measurementSetup.getId() : Identifier.VOID_IDENTIFIER;
 		if (measurementSetup == null || this.msList == null && !single) {
@@ -370,10 +432,10 @@ final class TestParametersPanel implements PropertyChangeListener {
 		}
 
 		final boolean analysisSetupsSelected = this.useAnalysisSetupsCheckBox.isSelected();
-		final boolean measurementSetupWithAnalysis = isAnalysisEnable(measurementSetup);		 
+		final boolean measurementSetupWithAnalysis = isAnalysisEnable(measurementSetup);
 
 		try {
-			if (analysisSetupsSelected && 
+			if (analysisSetupsSelected &&
 					this.schedulerModel.getSelectedTest().getAnalysisType() == null) {
 				this.useAnalysisSetupsCheckBox.doClick();
 			}
@@ -381,7 +443,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			Log.errorMessage(e);
 		}
 
-		final WrapperedListModel<MeasurementSetup> wrapperedListModel = 
+		final WrapperedListModel<MeasurementSetup> wrapperedListModel =
 			this.testSetups.getModel();
 
 		if (single) {
@@ -428,7 +490,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			}
 		}
 
-		final WrapperedListModel<MeasurementSetup> wrapperedListModel = 
+		final WrapperedListModel<MeasurementSetup> wrapperedListModel =
 			this.testSetups.getModel();
 
 		this.testSetups.clearSelection();
@@ -445,16 +507,11 @@ final class TestParametersPanel implements PropertyChangeListener {
 
 		this.selectAnalysisType(this.getAnalysisType_orNull(), true);
 
+		// FIXME: saa: зачем эта штука, не понимаю.
 		// пытаемся сохранить текущий шаблон
 		if (!this.measurementSetupId.isVoid()) {
 			try {
 				this.setMeasurementSetup((MeasurementSetup) StorableObjectPool.getStorableObject(this.measurementSetupId, true), true);
-//				final MeasurementSetup setup = (MeasurementSetup) StorableObjectPool.getStorableObject(this.measurementSetupId, true);
-//				if (measurementSetups.contains(setup)) {
-//					this.setMeasurementSetup(setup, true);
-//				} else {
-//					System.err.println("Note: setMeasurementSetups: setup selection lost");
-//				}
 			} catch (final ApplicationException e) {
 				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 			}
@@ -475,19 +532,19 @@ final class TestParametersPanel implements PropertyChangeListener {
 							AbstractMainFrame.showErrorMessage(e.getMessage());
 						}
 					}
-					
+
 				}, I18N.getString("Common.ProcessingDialog.PlsWait"));
 			}
 		}
 	}
-	
+
 	void refreshMeasurementSetup() throws ApplicationException {
 		final Test selectedTest = this.schedulerModel.getSelectedTest();
 		if (selectedTest != null) {
 			final Set<Identifier> measurementSetupIds = selectedTest.getMeasurementSetupIds();
 			if (!measurementSetupIds.isEmpty()) {
 				final Identifier mainMeasurementSetupId = measurementSetupIds.iterator().next();
-				final MeasurementSetup measurementSetup = 
+				final MeasurementSetup measurementSetup =
 					StorableObjectPool.getStorableObject(mainMeasurementSetupId, true);
 				if (measurementSetup != null) {
 					this.setMeasurementSetup(measurementSetup, true);
@@ -506,12 +563,11 @@ final class TestParametersPanel implements PropertyChangeListener {
 		this.parametersTestPanel = this.schedulerModel.getSchedulerHandler().getParametersTestPanel(codename);
 		if (this.parametersTestPanel != null) {
 			this.parametersTestPanel.setApplicationContext(this.aContext);
-			this.parametersTestPanel.setTestParametersPanel(this);
+//			this.parametersTestPanel.setTestParametersPanel(this); // XXX: по-моему, эта ссылка не нужна. Потому ее и нету.
 			this.parametersTestPanel.setMonitoredElement(me);
 			this.switchPanel.add(this.parametersTestPanel, "");
 			this.patternPanel.revalidate();
-			this.parametersTestPanel.setEnableEditing(!this.useSetupsCheckBox.isSelected());
-			this.setEnableEditing(this.useSetupsCheckBox.isSelected());
+			this.setUseSetup(this.useSetupsCheckBox.isSelected());
 		} else {
 			Log.errorMessage("Port type codename '" + codename + "' is not supported");
 			AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.UnsupportedDeviceType"));
@@ -537,24 +593,24 @@ final class TestParametersPanel implements PropertyChangeListener {
 				this.refreshMeasurementSetup();
 			} catch (final ApplicationException e) {
 				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
-			}					
+			}
 		} else if (propertyName == SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP) {
 			this.setMeasurementSetup((MeasurementSetup) newValue, true);
 		} else if (propertyName == SchedulerModel.COMMAND_SET_MEASUREMENT_SETUPS) {
 			this.refreshMeasurementSetups();
 		} else if (propertyName == SchedulerModel.COMMAND_GET_ANALYSIS_TYPE_OR_NULL) {
 			this.dispatcher.firePropertyChange(
-				new PropertyChangeEvent(this, 
+				new PropertyChangeEvent(this,
 					SchedulerModel.COMMAND_SET_ANALYSIS_TYPE_OR_NULL,
-					null, 
+					null,
 					this.getAnalysisType_orNull()));
 		} else if (propertyName == SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP) {
 			MeasurementSetup measurementSetup1 = getMeasurementSetup();
 			if (measurementSetup1 != null) {
 				this.dispatcher.firePropertyChange(
-					new PropertyChangeEvent(this, 
+					new PropertyChangeEvent(this,
 						SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP,
-						null, 
+						null,
 						measurementSetup1));
 			}
 		} else if (propertyName == ContextChangeEvent.TYPE) {
@@ -562,7 +618,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			if (cce.isLoggedIn()) {
 				loggedIn();
 			}
-		} 
+		}
 
 		this.propertyChangeEvent = null;
 	}
@@ -570,7 +626,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 	public JComponent getComponent() {
 		return this.patternPanel;
 	}
-	
+
 	public void unregisterDispatcher() {
 		this.dispatcher.removePropertyChangeListener(SchedulerModel.COMMAND_CHANGE_ME_TYPE, this);
 	}
@@ -599,7 +655,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			final boolean changeStatus) {
 		final JComboBox comboBox = this.analysisComboBox;
 		comboBox.setSelectedItem(analysisType);
-		AnalysisType selectedItem = (AnalysisType) comboBox.getSelectedItem();		
+		AnalysisType selectedItem = (AnalysisType) comboBox.getSelectedItem();
 		if (changeStatus && selectedItem != null
 				&& !this.useAnalysisSetupsCheckBox.isSelected()) {
 			this.useAnalysisSetupsCheckBox.doClick();

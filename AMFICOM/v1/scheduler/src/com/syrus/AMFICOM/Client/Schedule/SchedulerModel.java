@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.190.2.1 2006/04/10 11:46:00 saa Exp $
+ * $Id: SchedulerModel.java,v 1.190.2.2 2006/04/11 07:42:55 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.190.2.1 $, $Date: 2006/04/10 11:46:00 $
+ * @version $Revision: 1.190.2.2 $, $Date: 2006/04/11 07:42:55 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -432,7 +432,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_TEMPORAL_STAMPS, null, null));
 			}
 			if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
-				throw new InternalError("not implemented: need generateTest()");
+				this.generateTest__MT_notNull(); // FIXME: не знаю, mt notNull или нет
+//				throw new InternalError("not implemented: need generateTest()");
 //				this.generateTest();
 			}
 		}
@@ -850,6 +851,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			null));
 	}
 
+	public MonitoredElement getMonitoredElement() {
+		return this.monitoredElement;
+	}
+
 	public Set<MeasurementSetup> getMeasurementSetups() throws ApplicationException {
 		StorableObjectCondition condition = null;
 
@@ -1043,11 +1048,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					analysisTypeId);
 		}	}
 
-	private void generateTest__MT_notNull_AT_notNull() throws ApplicationException {
+	private void generateTest__MT_notNull() throws ApplicationException {
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 
 			assert(this.measurementType_orNull != null);
-			assert(this.analysisType_orNull != null);
 
 			final Set<Identifier> newTestIds = new HashSet<Identifier>();
 			Test test = null;
@@ -1084,7 +1088,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 								temporalPattern != null ? temporalPattern.getId() : null,
 								measurementSetupIds,
 								this.measurementType_orNull.getId(),
-								this.analysisType_orNull.getId());
+								this.analysisType_orNull != null
+									? this.analysisType_orNull.getId()
+									: Identifier.VOID_IDENTIFIER);
 						test.normalize(); // XXX: already normalized?
 						newTestIds.add(test.getId());
 					} catch (final CreateObjectException e) {
