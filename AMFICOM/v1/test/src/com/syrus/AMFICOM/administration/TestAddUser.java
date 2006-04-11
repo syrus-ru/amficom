@@ -1,5 +1,5 @@
 /*
- * $Id: TestAddUser.java,v 1.1.2.1 2006/02/17 12:28:05 arseniy Exp $
+ * $Id: TestAddUser.java,v 1.1.2.2 2006/04/11 09:31:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/02/17 12:28:05 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/04/11 09:31:46 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -62,7 +62,7 @@ public class TestAddUser extends TestCase {
 
 		final Set<StorableObjectCondition> typicalConditions = new HashSet<StorableObjectCondition>();
 		for (final RoleCodename codename : roleCodenames) {
-			typicalConditions.add(new TypicalCondition(codename.getCodename(),
+			typicalConditions.add(new TypicalCondition(codename.stringValue(),
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.ROLE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME));

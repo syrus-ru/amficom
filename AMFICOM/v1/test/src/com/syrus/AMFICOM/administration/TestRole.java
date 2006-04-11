@@ -1,5 +1,5 @@
 /*
- * $Id: TestRole.java,v 1.2.2.2 2006/04/10 17:07:00 arseniy Exp $
+ * $Id: TestRole.java,v 1.2.2.3 2006/04/11 09:32:23 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.2.2.2 $, $Date: 2006/04/10 17:07:00 $
+ * @version $Revision: 1.2.2.3 $, $Date: 2006/04/11 09:32:23 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -43,7 +43,7 @@ public class TestRole extends TestCase {
 
 		final Set<Role> roles = new HashSet<Role>();
 		for (final RoleCodename roleCodename : RoleCodename.values()) {
-			final Role role = Role.createInstance(creatorId, roleCodename.getCodename(), roleCodename.getDescription());
+			final Role role = Role.createInstance(creatorId, roleCodename.stringValue(), roleCodename.getDescription());
 
 			sysUser.addRole(role);
 			roles.add(role);

@@ -1,5 +1,5 @@
 /*
- * $Id: RoleAttributtesAddition.java,v 1.3.2.1 2006/02/17 12:28:05 arseniy Exp $
+ * $Id: RoleAttributtesAddition.java,v 1.3.2.2 2006/04/11 09:32:09 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  * 
  * Sets Administration permission to Media Monitoring Administrator role added on 14/12/2005
  * 
- * @version $Revision: 1.3.2.1 $, $Date: 2006/02/17 12:28:05 $
+ * @version $Revision: 1.3.2.2 $, $Date: 2006/04/11 09:32:09 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -116,7 +116,7 @@ public class RoleAttributtesAddition extends TestCase {
 		{
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.MEDIA_MONITORING_ADMINISTATOR.getCodename(), 
+					new TypicalCondition(RoleCodename.MEDIA_MONITORING_ADMINISTATOR.stringValue(), 
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), true);
@@ -172,7 +172,7 @@ public class RoleAttributtesAddition extends TestCase {
 		{
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.PLANNER.getCodename(), 
+					new TypicalCondition(RoleCodename.PLANNER.stringValue(), 
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), true);
@@ -204,7 +204,7 @@ public class RoleAttributtesAddition extends TestCase {
 		{
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.OPERATOR.getCodename(), 
+					new TypicalCondition(RoleCodename.OPERATOR.stringValue(), 
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), true);
