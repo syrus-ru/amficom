@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResourceKeys.java,v 1.12 2006/01/24 07:47:19 stas Exp $
+ * $Id: SchemeResourceKeys.java,v 1.12.2.1 2006/04/11 10:27:00 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2006/01/24 07:47:19 $
+ * @version $Revision: 1.12.2.1 $, $Date: 2006/04/11 10:27:00 $
  * @module schemeclient
  */
 public interface SchemeResourceKeys extends ResourceKeys {
@@ -64,7 +64,13 @@ public interface SchemeResourceKeys extends ResourceKeys {
 	String COLOR_PORT_NO_LINK = "color.port_no_link";
 	String COLOR_PORT_TERMAL = "color.port_thermal";
 	String COLOR_PORT_COMMON = "color.port_common";
-		
+	
+	String	FRAME_TREE = "Window.treeFrame";
+	String	FRAME_EDITOR_MAIN	= "Window.editorFrame";
+	String	FRAME_GENERAL_PROPERTIES	= "Window.generalFrame";
+	String 	FRAME_ADDITIONAL_PROPERIES = "Window.additionalFrame";
+	String	FRAME_CHARACTERISTICS = "Window.characteristicFrame";
+	
 	String EMPTY = ""; //$NON-NLS-1$
 	String ROOT = "scheme.root"; //$NON-NLS-1$
 	String INPUT = "input"; //$NON-NLS-1$

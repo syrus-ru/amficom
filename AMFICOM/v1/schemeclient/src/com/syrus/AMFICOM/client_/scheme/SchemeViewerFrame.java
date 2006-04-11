@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeViewerFrame.java,v 1.9 2006/02/15 12:18:10 stas Exp $
+ * $Id: SchemeViewerFrame.java,v 1.9.2.1 2006/04/11 10:27:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.client_.scheme;
 
+import static com.syrus.AMFICOM.resource.SchemeResourceKeys.FRAME_EDITOR_MAIN;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import java.beans.PropertyVetoException;
@@ -17,28 +18,28 @@ import javax.swing.JInternalFrame;
 import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2006/02/15 12:18:10 $
+ * @version $Revision: 1.9.2.1 $, $Date: 2006/04/11 10:27:00 $
  * @module schemeclient
  */
 
 public class SchemeViewerFrame extends JInternalFrame {
 	private static final long serialVersionUID = 7822597656196362953L;
-	public static final String	NAME	= "editorFrame";
 	ApplicationContext aContext;
 	UgoTabbedPane pane;
 
 	public SchemeViewerFrame(ApplicationContext aContext, UgoTabbedPane pane) {
 		this.pane = pane;
 
-		setName(NAME);
+		setName(FRAME_EDITOR_MAIN);
+		setTitle(I18N.getString(FRAME_EDITOR_MAIN));
 		
-		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				"images/general.gif")));
+		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		setResizable(true);
 		setClosable(true);

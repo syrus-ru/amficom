@@ -1,11 +1,15 @@
 /*
- * $Id: SchemeReportModel.java,v 1.6 2006/03/13 13:54:00 bass Exp $
+ * $Id: SchemeReportModel.java,v 1.6.2.1 2006/04/11 10:27:00 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.client_.scheme.report;
+
+import static com.syrus.AMFICOM.resource.SchemeResourceKeys.FRAME_ADDITIONAL_PROPERIES;
+import static com.syrus.AMFICOM.resource.SchemeResourceKeys.FRAME_CHARACTERISTICS;
+import static com.syrus.AMFICOM.resource.SchemeResourceKeys.FRAME_EDITOR_MAIN;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,32 +41,14 @@ import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 
-public class SchemeReportModel extends ReportModel
-{
-	//Названия таблиц для всех модулей (3 анализа + прогноз и моделирование)
-	/**
-	 * Отображаемая на экране схема
-	 */
-	public static String ON_SCREEN_SCHEME_CELL_CONTAINER = "onScreenScheme";
-	/**
-	 * Условное графическое обозначение
-	 */
-	public static String SELECTED_OBJECT_UGO = "selectedObjectUGO";
-	/**
-	 * Характеристики объекта
-	 */
-	public static String SELECTED_OBJECT_CHARS = "selectedObjectChars";
-	public SchemeReportModel(){
-		//empty
-	}
-
+public class SchemeReportModel extends ReportModel {
 	@Override
-	public ReportType getReportKind(String reportName){
-		ReportType result = ReportType.TABLE;
-		if (	reportName.equals(ON_SCREEN_SCHEME_CELL_CONTAINER)
-			||	reportName.equals(SELECTED_OBJECT_UGO))
-			result = ReportType.GRAPH;
-		return result;
+	public ReportType getReportKind(String reportName) {
+		if (reportName.equals(FRAME_EDITOR_MAIN)
+			|| reportName.equals(FRAME_ADDITIONAL_PROPERIES)) {
+			return ReportType.GRAPH;
+		}
+		return ReportType.TABLE;
 	}
 	
 	@Override
@@ -84,13 +70,13 @@ public class SchemeReportModel extends ReportModel
 		Identifier objectId = ((Identifiable)data).getId();
 		
 		try {
-			if (reportName.equals(ON_SCREEN_SCHEME_CELL_CONTAINER)) {
+			if (reportName.equals(FRAME_EDITOR_MAIN)) {
 				if (objectId.getMajor() == ObjectEntities.SCHEME_CODE) {
 					Scheme scheme = StorableObjectPool.getStorableObject(objectId,true);
 					result = SchemeReport.createReport(scheme,element,aContext);
 				}
 			}
-			else if (element.getReportName().equals(SELECTED_OBJECT_UGO)) {
+			else if (element.getReportName().equals(FRAME_ADDITIONAL_PROPERIES)) {
 				VisualManager visualManager = null;
 				Object dataObject = null;
 				if (objectId.getMajor() == ObjectEntities.SCHEME_CODE) {
@@ -134,7 +120,7 @@ public class SchemeReportModel extends ReportModel
 							visualManager,
 							dataObject);
 			}
-			else if (reportName.equals(SELECTED_OBJECT_CHARS)) {
+			else if (reportName.equals(FRAME_CHARACTERISTICS)) {
 				if (objectId.getMajor() == ObjectEntities.SCHEME_CODE) {
 					Scheme scheme = StorableObjectPool.getStorableObject(objectId,true);
 					result = SchemeReport.createReport(scheme,element,aContext);
@@ -184,16 +170,7 @@ public class SchemeReportModel extends ReportModel
 	
 	@Override
 	public String getReportElementName(String reportName) {
-		// TODO Вообще-то, эта информация должна храниться в
-		// других LangModel'ах и, соответственно, методы должны
-		//быть в моделях отчётов - наследницах
-		String langReportName = null;
-		if (	reportName.equals(ON_SCREEN_SCHEME_CELL_CONTAINER)
-			||	reportName.equals(SELECTED_OBJECT_UGO)
-			||	reportName.equals(SELECTED_OBJECT_CHARS))
-			langReportName = I18N.getString("report.Modules.SchemeEditor." + reportName);
-		
-		return langReportName;
+		return I18N.getString(reportName);
 	}
 
 	@Override
@@ -205,9 +182,9 @@ public class SchemeReportModel extends ReportModel
 	public Collection<String> getTemplateElementNames() {
 		Collection<String> result = new ArrayList<String>();
 
-		result.add(ON_SCREEN_SCHEME_CELL_CONTAINER);
-		result.add(SELECTED_OBJECT_UGO);
-		result.add(SELECTED_OBJECT_CHARS);
+		result.add(FRAME_EDITOR_MAIN);
+		result.add(FRAME_ADDITIONAL_PROPERIES);
+		result.add(FRAME_CHARACTERISTICS);
 		
 		return result;
 	}
