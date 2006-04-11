@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryParameterTypeCodename.java,v 1.1.2.4 2006/04/10 13:01:50 saa Exp $
+ * $Id: ReflectometryParameterTypeCodename.java,v 1.1.2.5 2006/04/11 08:54:46 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,12 +10,14 @@ package com.syrus.AMFICOM.reflectometry;
 import com.syrus.util.Codename;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2006/04/10 13:01:50 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/04/11 08:54:46 $
  * @author $Author: saa $
  * @author Tashoyan Arseniy Feliksovich
  * @module reflectometry
  */
 public enum ReflectometryParameterTypeCodename implements Codename {
+
+	// Параметры измерения
 	WAVE_LENGTH("ref_wvlen"),
 	TRACE_LENGTH("ref_trclen"),
 	RESOLUTION("ref_res"),
@@ -28,17 +30,22 @@ public enum ReflectometryParameterTypeCodename implements Codename {
 	FLAG_LIFE_FIBER_DETECT("ref_flag_life_fiber_detect"),
 	FLAG_SMOOTH_FILTER("ref_flag_smooth_filter"),
 
+	// Результат измерения
 	REFLECTOGRAMMA("reflectogramma"),
 
+	// Параметры анализа/сравнения dadara
 	DADARA_CRITERIA("dadara_criteria"),
 	REFLECTOGRAMMA_ETALON("reflectogramma_etalon"),
 	DADARA_ETALON("dadara_etalon"),
+
+	// Результаты анализа/сравнения dadara
 	DADARA_ANALYSIS_RESULT("dadara_analysis_result"),
 	DADARA_ALARMS("dadara_alarm_array"),
 	DADARA_QUALITY_PER_EVENT("dadara_quality_per_event"),
 	DADARA_QUALITY_OVERALL_D("dadara_quality_overall_d"),
 	DADARA_QUALITY_OVERALL_Q("dadara_quality_overall_q"),
 
+	// Параметры прогнозирования
 	PREDICTION_TIME("prediction_time"),
 	PREDICTION_TIME_START("prediction_time_start"),
 	PREDICTION_TIME_END("prediction_time_end");
