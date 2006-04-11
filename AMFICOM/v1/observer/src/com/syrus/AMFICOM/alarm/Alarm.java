@@ -1,5 +1,5 @@
 /*-
- * $Id: Alarm.java,v 1.1 2006/04/07 10:50:17 stas Exp $
+ * $Id: Alarm.java,v 1.2 2006/04/11 09:41:54 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,13 @@
 
 package com.syrus.AMFICOM.alarm;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.syrus.AMFICOM.eventv2.AbstractReflectogramMismatchEvent;
 import com.syrus.AMFICOM.eventv2.LineMismatchEvent;
+import com.syrus.AMFICOM.eventv2.ReflectogramMismatchEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 public class Alarm {
 	private double delta_x = 0.5;
 	
-	private Set<LineMismatchEvent> lineMismatchEvents;
+	private Set<AlarmEvent> lineMismatchEvents;
 	
 	private final SchemePath schemePath;
 	private final PathElement pathElement;
@@ -45,9 +45,19 @@ public class Alarm {
 	private Measurement lastMeasurement;
 	private String lastMessage;
 	
-	public Alarm(LineMismatchEvent event) throws CreateObjectException {
-		this.lineMismatchEvents = new HashSet<LineMismatchEvent>();
+	private class AlarmEvent {
+		LineMismatchEvent lme;
+		ReflectogramMismatchEvent rme;
 		
+		AlarmEvent(LineMismatchEvent lineMismatchEvent, ReflectogramMismatchEvent reflectogramMismatchEvent) {
+			this.lme = lineMismatchEvent;
+			this.rme = reflectogramMismatchEvent;
+		}
+	}
+	
+	public Alarm(LineMismatchEvent event) throws CreateObjectException {
+		this.lineMismatchEvents = new HashSet<AlarmEvent>();
+
 		try {
 			this.pathElement = StorableObjectPool.getStorableObject(event.getAffectedPathElementId(), true);
 			this.schemePath = this.pathElement.getParentPathOwner();
@@ -56,11 +66,11 @@ public class Alarm {
 			this.monitoredElementId = measurement.getMonitoredElementId();
 			this.opticalDistance = event.getMismatchOpticalDistance();
 			this.physicalDistance = event.getMismatchPhysicalDistance();
+			
+			addLineMismatchEvent(event);
 		} catch (ApplicationException e) {
 			throw new CreateObjectException(e);
 		}
-		
-		addLineMismatchEvent(event);
 	}
 	
 	public Date getStartDate() {
@@ -111,22 +121,10 @@ public class Alarm {
 	}
 	
 	public boolean isSuitable(LineMismatchEvent event1) {
-		try {
-			final PathElement pathElement1 = StorableObjectPool.getStorableObject(event1.getAffectedPathElementId(), true);
-			AbstractReflectogramMismatchEvent rme = StorableObjectPool.getStorableObject(event1.getReflectogramMismatchEventId(), true);
-			Measurement measurement = StorableObjectPool.getStorableObject(rme.getMeasurementId(), true);
-			final Identifier monitoredElementId1 = measurement.getMonitoredElementId();
-			final double opticalDistance1 = event1.getMismatchOpticalDistance();
-			final double physicalDistance1 = event1.getMismatchPhysicalDistance();
-			
-			if (this.pathElement.equals(pathElement1)
-					&& this.monitoredElementId.equals(monitoredElementId1)
-					&& Math.abs(this.opticalDistance - opticalDistance1) < this.delta_x
-					&& Math.abs(this.physicalDistance - physicalDistance1) < this.delta_x) {
-				return true;
-			}
-		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+		if (this.pathElement.getId().equals(event1.getAffectedPathElementId())
+				&& Math.abs(this.opticalDistance - event1.getMismatchOpticalDistance()) < this.delta_x
+				&& Math.abs(this.physicalDistance - event1.getMismatchPhysicalDistance()) < this.delta_x) {
+			return true;
 		}
 		return false;
 	}
@@ -140,26 +138,22 @@ public class Alarm {
 		return true;
 	}
 
-	public void addLineMismatchEvent(LineMismatchEvent event) {
-		this.lineMismatchEvents.add(event);
-		try {
-			update();
-		} catch (ApplicationException e) {
-			Log.errorMessage(e);
-		}
+	public void addLineMismatchEvent(LineMismatchEvent event) throws ApplicationException {
+		final AbstractReflectogramMismatchEvent rme = StorableObjectPool.getStorableObject(event.getReflectogramMismatchEventId(), true);
+		this.lineMismatchEvents.add(new AlarmEvent(event, rme));
+		update();
 	}
 	
-	public void addLineMismatchEvents(Set<LineMismatchEvent> events) {
-		this.lineMismatchEvents.addAll(events);
-		try {
-			update();
-		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+	public void addLineMismatchEvents(Set<LineMismatchEvent> events) throws ApplicationException {
+		for (LineMismatchEvent event : events) {
+			final AbstractReflectogramMismatchEvent rme = StorableObjectPool.getStorableObject(event.getReflectogramMismatchEventId(), true);
+			this.lineMismatchEvents.add(new AlarmEvent(event, rme));
 		}
+		update();
 	}
 	
-	public Set<LineMismatchEvent> getLineMismatchEvents() {
-		return Collections.unmodifiableSet(this.lineMismatchEvents);
+	public int getEventsCount() {
+		return this.lineMismatchEvents.size();
 	}
 	
 	private void update() throws ApplicationException {
@@ -167,16 +161,15 @@ public class Alarm {
 		long last = Long.MIN_VALUE;
 		
 		Identifier lastMeasurementId = Identifier.VOID_IDENTIFIER;
-		for (LineMismatchEvent event : this.lineMismatchEvents) {
-			final AbstractReflectogramMismatchEvent rme = StorableObjectPool.getStorableObject(event.getReflectogramMismatchEventId(), true);
-			final long time = rme.getCreated().getTime();
+		for (AlarmEvent event : this.lineMismatchEvents) {
+			final long time = event.rme.getCreated().getTime();
 			if (first > time) {
 				first = time;
 			}
 			if (last < time) {
 				last = time;
-				lastMeasurementId = rme.getMeasurementId();
-				this.lastMessage = event.getMessage();
+				lastMeasurementId = event.rme.getMeasurementId();
+				this.lastMessage = event.lme.getMessage();
 			}
 		}
 		this.startDate = new Date(first);
