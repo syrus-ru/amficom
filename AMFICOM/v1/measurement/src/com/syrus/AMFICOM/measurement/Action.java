@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.43.2.15 2006/04/06 10:32:15 arseniy Exp $
+ * $Id: Action.java,v 1.43.2.16 2006/04/11 07:30:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43.2.15 $, $Date: 2006/04/06 10:32:15 $
+ * @version $Revision: 1.43.2.16 $, $Date: 2006/04/11 07:30:56 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -51,6 +51,14 @@ public abstract class Action<R extends ActionResultParameter> extends StorableOb
 			return IdlActionStatus.from_int(this.ordinal());
 		}
 
+		/**
+		 * Вызывается из {@link com.syrus.util.EnumUtil#valueOf(Class, int)},
+		 * поэтому должен быть public.
+		 * 
+		 * @param code
+		 * @return Объект {@link ActionStatus}, соответствующий данному целому
+		 *         <code>code</code>.
+		 */
 		public static ActionStatus valueOf(final int code) {
 			return VALUES[code];
 		}
