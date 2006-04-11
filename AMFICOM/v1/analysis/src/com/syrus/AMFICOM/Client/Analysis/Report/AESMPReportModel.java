@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalysisPanel;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ResizableLayeredPanel;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.TraceEventsPanel;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.CreateReportException;
@@ -33,12 +34,7 @@ import com.syrus.AMFICOM.report.TableDataStorableElement;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.io.BellcoreStructure;
 
-public abstract class AESMPReportModel extends ReportModel
-{
-	//Названия таблиц для всех модулей (3 анализа + прогноз и моделирование)
-	public static String COMMON_INFO = "Menu.Window.statsFrame";
-	public static String REFLECTOGRAMM = "Menu.Window.analysisFrame";
-	public static String GENERAL_CHARACTERISTICS = "Menu.Window.eventsFrame";
+public abstract class AESMPReportModel extends ReportModel {
 
 	private static final String REFLECTOGRAMM_COLOR = "ReflectogrammColor";
 	
@@ -49,7 +45,7 @@ public abstract class AESMPReportModel extends ReportModel
 	@Override
 	public ReportType getReportKind(String reportName){
 		ReportType result = ReportType.TABLE;
-		if (reportName.equals(AESMPReportModel.REFLECTOGRAMM))
+		if (reportName.equals(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN))
 			result = ReportType.GRAPH;
 		return result;
 	}
@@ -96,7 +92,7 @@ public abstract class AESMPReportModel extends ReportModel
 			}
 			
 		}
-		else if (reportName.equals(REFLECTOGRAMM)) {
+		else if (reportName.equals(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN)) {
 			if (!(data instanceof Identifier))
 				throw new CreateReportException(
 						reportName,
@@ -174,10 +170,6 @@ public abstract class AESMPReportModel extends ReportModel
 	
 	@Override
 	public String getReportElementName(String reportName) {
-		if (	reportName.equals(COMMON_INFO)
-			||	reportName.equals(GENERAL_CHARACTERISTICS)
-			||	reportName.equals(REFLECTOGRAMM))
-			return I18N.getString(reportName);
-		throw new IllegalArgumentException(reportName);
+		return I18N.getString(reportName);
 	}
 }

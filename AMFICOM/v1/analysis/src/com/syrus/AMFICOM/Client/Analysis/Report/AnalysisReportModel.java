@@ -3,34 +3,17 @@ package com.syrus.AMFICOM.Client.Analysis.Report;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.report.DestinationModules;
 
 /**
  * Модель отчётов для модуля "Анализ"
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/10/14 12:00:48 $
+ * @version $Revision: 1.8 $, $Date: 2006/04/11 05:50:31 $
  * @module reportother
  */
-public class AnalysisReportModel extends AESMPReportModel
-{
-	// Названия элементов шаблона для модуля "Анализ"
-	/**
-	 * Параметры теста
-	 */
-	public static String TEST_PARAMETERS = "paramFrame";
-	/**
-	 * Параметры анализа
-	 */
-	public static String ANALYSIS_PARAMETERS = "anaSelectFrame";
-	/**
-	 * Данные по маркерам
-	 */
-	public static String MARKER_DATA = "mInfoFrame";
-	
-	public AnalysisReportModel() {
-	}
-
+public class AnalysisReportModel extends AESMPReportModel {
 	@Override
 	public String getName()	{
 		return DestinationModules.ANALYSIS;
@@ -40,13 +23,13 @@ public class AnalysisReportModel extends AESMPReportModel
 	public Collection<String> getTemplateElementNames() {
 		Collection<String> result = new ArrayList<String>();
 
-		result.add(AESMPReportModel.COMMON_INFO);
-		result.add(AESMPReportModel.REFLECTOGRAMM);
-		result.add(AESMPReportModel.GENERAL_CHARACTERISTICS);
+		result.add(AnalysisResourceKeys.FRAME_OVERALL_STATS); // AESMPReportModel.COMMON_INFO
+		result.add(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN); // AESMPReportModel.REFLECTOGRAMM
+		result.add(AnalysisResourceKeys.FRAME_EVENTS); // AESMPReportModel.GENERAL_CHARACTERISTICS
 		
-		result.add(AnalysisReportModel.TEST_PARAMETERS);
-		result.add(AnalysisReportModel.ANALYSIS_PARAMETERS);
-		result.add(AnalysisReportModel.MARKER_DATA);
+		result.add(AnalysisResourceKeys.FRAME_PRIMARY_PARAMETERS); // AnalysisReportModel.TEST_PARAMETERS
+		result.add(AnalysisResourceKeys.FRAME_ANALYSIS_SELECTION); // AnalysisReportModel.ANALYSIS_PARAMETERS
+		result.add(AnalysisResourceKeys.FRAME_MARKERS_INFO); //AnalysisReportModel.MARKER_DATA
 		
 		return result;
 	}
@@ -55,10 +38,7 @@ public class AnalysisReportModel extends AESMPReportModel
 	public String getReportElementName(String reportName) {
 		String langReportName = super.getReportElementName(reportName);
 		if (langReportName == null){
-			if (	reportName.equals(TEST_PARAMETERS)
-				||	reportName.equals(ANALYSIS_PARAMETERS)
-				||	reportName.equals(MARKER_DATA))
-				langReportName = I18N.getString("report.Modules.Analysis." + reportName);
+			langReportName = I18N.getString(reportName);
 		}
 		return langReportName;
 	}

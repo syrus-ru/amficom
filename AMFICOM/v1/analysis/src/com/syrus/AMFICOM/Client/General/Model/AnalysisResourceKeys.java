@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.31 2006/04/10 13:26:53 stas Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.32 2006/04/11 05:50:31 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.31 $, $Date: 2006/04/10 13:26:53 $
+ * @version $Revision: 1.32 $, $Date: 2006/04/11 05:50:31 $
  * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module analysis
@@ -138,6 +138,8 @@ public interface AnalysisResourceKeys extends ResourceKeys {
 	String	FRAME_TRACE_SELECTOR				= "Window.selectFrame";
 	String	FRAME_PRIMARY_PARAMETERS	= "Window.paramFrame";
 	String	FRAME_OVERALL_STATS					= "Window.statsFrame";
+	String	FRAME_OVERALL_STATS_BASIC					= "Window.statsFrame.basic";
+	String	FRAME_OVERALL_STATS_COMPARATIVE					= "Window.statsFrame.comparative";
 	String	FRAME_EVENTS				= "Window.eventsFrame";
 	String	FRAME_MARKERS_INFO			= "Window.markersInfoFrame";
 	String	FRAME_ANALYSIS_MAIN				= "Window.analysisFrame";
