@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.148.2.5 2006/04/04 09:01:40 arseniy Exp $
+ * $Id: StorableObject.java,v 1.148.2.5.4.1 2006/04/11 07:49:36 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,8 +47,8 @@ import com.syrus.util.LRUMap.Retainable;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.148.2.5 $, $Date: 2006/04/04 09:01:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.148.2.5.4.1 $, $Date: 2006/04/11 07:49:36 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -644,9 +644,11 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 		assert !storableObjects.isEmpty() : NON_EMPTY_EXPECTED;
 		assert hasSingleTypeEntities(storableObjects) :  OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
+		@SuppressWarnings("unchecked")
 		final Wrapper storableObjectWrapper = storableObjects.iterator().next().getWrapper();
 		final Map<Identifier, V> valuesMap = new HashMap<Identifier, V>();
 		for (final T storableObject : storableObjects) {
+			@SuppressWarnings("unchecked")
 			final V value = (V) storableObjectWrapper.getValue(storableObject, key);
 			valuesMap.put(storableObject.getId(), value);
 		}
@@ -701,8 +703,8 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.148.2.5 $, $Date: 2006/04/04 09:01:40 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.148.2.5.4.1 $, $Date: 2006/04/11 07:49:36 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -810,8 +812,8 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.148.2.5 $, $Date: 2006/04/04 09:01:40 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.148.2.5.4.1 $, $Date: 2006/04/11 07:49:36 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
