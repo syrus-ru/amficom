@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<session version="1.0">
+<refactoring description="Extract local variable 'isEventReceiver' from expression 'object._is_a(EventReceiverHelper.id())'" final="true" id="org.eclipse.jdt.ui.extract.temp" input="unit://src/com/syrus/AMFICOM/leserver/PopupNotificationEventProcessor.java" name="isEventReceiver" replace="true" selection="3309 38" stamp="1144737465173" version="1.0"/>
+</session>

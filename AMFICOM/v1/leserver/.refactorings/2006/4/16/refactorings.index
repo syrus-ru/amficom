@@ -1,0 +1,1 @@
+1144737465173	Extract local variable 'isEventReceiver' from expression 'object._is_a(EventReceiverHelper.id())'
