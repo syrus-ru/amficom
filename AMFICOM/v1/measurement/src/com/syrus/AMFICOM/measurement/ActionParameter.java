@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameter.java,v 1.1.2.16 2006/03/27 15:00:44 arseniy Exp $
+ * $Id: ActionParameter.java,v 1.1.2.17 2006/04/11 12:07:27 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind.ENUMERATED;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +25,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -35,6 +37,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlActionParameterHelper;
+import com.syrus.util.ByteArray;
+import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
@@ -44,7 +48,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * {@link com.syrus.AMFICOM.measurement.ActionParameterTypeBinding},
  * идентификатор которой хранится в {@link #bindingId}.
  * 
- * @version $Revision: 1.1.2.16 $, $Date: 2006/03/27 15:00:44 $
+ * @version $Revision: 1.1.2.17 $, $Date: 2006/04/11 12:07:27 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -89,6 +93,122 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 			this.fromIdlTransferable(idlActionParameter);
 		} catch (final IdlConversionException ice) {
 			throw new CreateObjectException(ice);
+		}
+	}
+
+	/**
+	 * Найти или попытаться создать новый параметр действия для связки
+	 * <code>actionParameterTypeBinding</code>, имеющий величину
+	 * <code>value</code>.
+	 * <p>
+	 * Строковое представление величины <code>stringValue</code> пререводится
+	 * в представление в виде массива байт. Затем вызывается метод
+	 * {@link #valueOf(Identifier, byte[], ActionParameterTypeBinding)}.
+	 * 
+	 * @see {@link #valueOf(Identifier, byte[], ActionParameterTypeBinding)}.
+	 * @param creatorId
+	 * @param stringValue
+	 * @param actionParameterTypeBinding
+	 * @return Параметр действия для заданной связки, имеющий заданную величину.
+	 * @throws ApplicationException
+	 */
+	public static ActionParameter valueOf(final Identifier creatorId,
+			final String stringValue,
+			final ActionParameterTypeBinding actionParameterTypeBinding) throws ApplicationException {
+		final ParameterType parameterType = actionParameterTypeBinding.getParameterType();
+		final DataType dataType = parameterType.getDataType();
+		final byte[] value;
+		switch (dataType) {
+			case INTEGER:
+				value = ByteArray.toByteArray(Integer.parseInt(stringValue));
+				break;
+			case DOUBLE:
+				value = ByteArray.toByteArray(Double.parseDouble(stringValue));
+				break;
+			case STRING:
+				value = ByteArray.toByteArray(stringValue);
+				break;
+			case DATE:
+				value = ByteArray.toByteArray(Long.parseLong(stringValue));
+				break;
+			case LONG:
+				value = ByteArray.toByteArray(Long.parseLong(stringValue));
+				break;
+			case RAW:
+				value = stringValue.getBytes();
+				break;
+			default:
+				throw new IllegalArgumentException("Illegal data type: "
+						+ dataType + " of ParameterType '" + parameterType.getId() + "'");
+		}
+		return valueOf(creatorId, value, actionParameterTypeBinding);
+	}
+
+	/**
+	 * Найти или попытаться создать новый параметр действия для связки
+	 * <code>actionParameterTypeBinding</code>, имеющий величину
+	 * <code>value</code>.
+	 * <p>
+	 * В зависимости от вида набора значений параметра
+	 * {@link com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind}
+	 * этот метод действует по-разному. Если этот вид перечисляемый
+	 * {@link com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind#ENUMERATED},
+	 * то производится поиск по всем параметрам, существующим для данной связки.
+	 * Если удалось среди них найти параметр с величиной, равной
+	 * <code>value</code>, то этот параметр возвращается, в противном случае
+	 * бросается {@link ObjectNotFoundException}.
+	 * <p>
+	 * В случае же, когда вид набора значений непрерывный
+	 * {@link com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind#CONTINUOUS},
+	 * сначала определяется общее количество параметров связки
+	 * <code>actionParameterTypeBinding</code>. Если оно слишком большое
+	 * (больше 100), то поиск среди существующих для данной связки параметров не
+	 * производится и возвращается заново созданный объект. При этом выводится
+	 * предупреждение на консоль. Если же это количество не слишком велико, то,
+	 * как и для перечисляемых значений, подгружаются все параметры действия,
+	 * существующие для связки <code>actionParameterTypeBinding</code>, и
+	 * среди них ищется такой, у которого величина совпадает с заданной
+	 * <code>value</code>. Если такой параметр найден - то он возвращается, в
+	 * противном случае возвращается сызнова созданный объект.
+	 * <code>actionParameterTypeBinding</code>.
+	 * 
+	 * @param creatorId
+	 * @param value
+	 * @param actionParameterTypeBinding
+	 * @return Параметр действия для заданной связки, имеющий заданную величину.
+	 * @throws ApplicationException
+	 */
+	public static ActionParameter valueOf(final Identifier creatorId,
+			final byte[] value,
+			final ActionParameterTypeBinding actionParameterTypeBinding) throws ApplicationException {
+		final ParameterValueKind parameterValueKind = actionParameterTypeBinding.getParameterValueKind();
+		switch (parameterValueKind) {
+			case ENUMERATED:
+				for (final ActionParameter actionParameter : actionParameterTypeBinding.getActionParameters()) {
+					if (Arrays.equals(actionParameter.getValue(), value)) {
+						return actionParameter;
+					}
+				}
+				throw new ObjectNotFoundException("Cannot find ActionParameter of value kind "
+						+ parameterValueKind + " for value " + value);
+			case CONTINUOUS:
+				final Identifier bindingId = actionParameterTypeBinding.getId();
+				final Set<Identifier> actionParameterIds = actionParameterTypeBinding.getActionParameterIds();
+				if (actionParameterIds.size() > 100) {
+					Log.debugMessage("WARNING: Many "
+							+ parameterValueKind + " action parameters for binding '" + bindingId
+							+ "'; creating new without trying to reuse existing", Log.DEBUGLEVEL05);
+					return ActionParameter.createInstance(creatorId, value, bindingId);
+				}
+				final Set<ActionParameter> actionParameters = StorableObjectPool.getStorableObjects(actionParameterIds, true);
+				for (final ActionParameter actionParameter : actionParameters) {
+					if (Arrays.equals(actionParameter.getValue(), value)) {
+						return actionParameter;
+					}
+				}
+				return ActionParameter.createInstance(creatorId, value, bindingId);
+			default:
+				throw new IllegalArgumentException("Illegal parameter value kind: " + parameterValueKind);
 		}
 	}
 
