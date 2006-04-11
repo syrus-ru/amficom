@@ -1,5 +1,5 @@
 /*-
- * $Id: Role.java,v 1.18 2006/04/10 16:56:18 arseniy Exp $
+ * $Id: Role.java,v 1.19 2006/04/11 09:24:41 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/04/10 16:56:18 $
+ * @version $Revision: 1.19 $, $Date: 2006/04/11 09:24:41 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -68,8 +68,13 @@ public final class Role extends StorableObject implements Describable, IdlTransf
 			return LangModelAdministation.getString(KEY_ROOT + this.codename);
 		}
 		
-		public final String getCodename() {
+		public final String stringValue() {
 			return this.codename;
+		}
+
+		@Override
+		public String toString() {
+			return this.name() + "(" + Integer.toString(this.ordinal()) + ")";
 		}
 	}
 	
