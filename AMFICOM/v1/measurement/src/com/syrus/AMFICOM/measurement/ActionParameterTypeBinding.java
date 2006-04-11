@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.18 2006/04/11 08:49:52 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.19 2006/04/11 10:34:19 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -83,7 +83,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * {@link #getActionParameters()} для получения всех параметров, существующих
  * для данной измерительной связки.
  * 
- * @version $Revision: 1.1.2.18 $, $Date: 2006/04/11 08:49:52 $
+ * @version $Revision: 1.1.2.19 $, $Date: 2006/04/11 10:34:19 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -94,7 +94,7 @@ public final class ActionParameterTypeBinding extends StorableObject implements 
 	/**
 	 * Виды набора значений параметра - перечисляемый и непрерывный.
 	 */
-	static enum ParameterValueKind {
+	public static enum ParameterValueKind {
 		ENUMERATED,
 		CONTINUOUS;
 
