@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderMainFrame.java,v 1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: ReportBuilderMainFrame.java,v 1.2 2006/04/11 05:58:32 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,8 +59,8 @@ import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.util.Log;
 /**
  * 
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/12/02 11:37:17 $
+ * @author $Author: stas $
+ * @version $Revision: 1.2 $, $Date: 2006/04/11 05:58:32 $
  * @author Peskovsky Peter
  * @module reportbuilder_v1
  */
@@ -303,67 +303,52 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 	
 	@Override
 	public void loggedIn() {
-		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		this.setApplicationModelForTemplateSchemeStandart(aModel);
-		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_NEW, true);
 		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD, true);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_NEW, true);
 		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE, false);		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE_AS, false);
+//		this.setDefaultModelForTemplate(aModel, false);
 		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW, false);		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TREE, false);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME, false);
-
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_TEMPLATE, true);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_TEMPLATE_PARAMETERS, false);
 		aModel.fireModelChanged("");
 	}
 
 	@Override
 	public void loggedOut() {
-		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_TEMPLATE, false);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_TEMPLATE_PARAMETERS, false);
-		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_NEW, false);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD, false);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE, false);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE_AS, false);
-		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW, false);		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TREE, false);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME, false);
+		setDefaultModel(aModel);
 
 		aModel.fireModelChanged("");
 		setFramesVisible(false);
 	}
 
-	private void setApplicationModelForTemplateSchemeStandart(ApplicationModel aModel){
-		//////////
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_NEW, true);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE, true);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE_AS, true);		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD, true);
+	@Override
+	protected void setDefaultModel(ApplicationModel aModel){
+		super.setDefaultModel(aModel);
 		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_INSERT_IMAGE, true);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_INSERT_LABEL, true);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_DELETE_OBJECT, false);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_CHANGE_VIEW, true);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_SAVE_REPORT, false);		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_PRINT_REPORT, false);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_TEMPLATE, true);
+		aModel.setEnabled(ApplicationModel.MENU_VIEW, true);
+	}
+	
+	protected void setDisbledModelForTemplate(ApplicationModel aModel) {
+		
+	}
+	
+	protected void setDefaultModelForTemplate(ApplicationModel aModel, boolean enabled) {
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE, enabled);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE_AS, enabled);		
+		
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_INSERT_IMAGE, enabled);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_INSERT_LABEL, enabled);
+//		aModel.setEnabled(ReportBuilderApplicationModel.MENU_DELETE_OBJECT, false);
+//		aModel.setEnabled(ReportBuilderApplicationModel.MENU_CHANGE_VIEW, enabled);
+//		aModel.setEnabled(ReportBuilderApplicationModel.MENU_SAVE_REPORT, false);		
+//		aModel.setEnabled(ReportBuilderApplicationModel.MENU_PRINT_REPORT, false);
 
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_TEMPLATE, true);		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_TEMPLATE_PARAMETERS, true);
-		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW, true);		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TREE, true);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME, true);
-		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);		
+//		aModel.setEnabled(ReportBuilderApplicationModel.MENU_SAVE_REPORT, enabled);		
+//		aModel.setEnabled(ReportBuilderApplicationModel.MENU_PRINT_REPORT, enabled);
+	
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_TEMPLATE_PARAMETERS, enabled);
 	}
 	
 	@Override
@@ -373,18 +358,18 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 		if (pce instanceof ReportFlagEvent) {
 			String eventType = ((ReportFlagEvent)pce).getEventType();
 			if (eventType.equals(ReportFlagEvent.LABEL_CREATION_STARTED)) {
-				aModel.setAllItemsEnabled(false);
+				this.setDefaultModelForTemplate(aModel, false);
 				aModel.setEnabled(ReportBuilderApplicationModel.MENU_INSERT_LABEL, true);
 				aModel.fireModelChanged("");
 			}
 			else if (eventType.equals(ReportFlagEvent.IMAGE_CREATION_STARTED)) {
-				aModel.setAllItemsEnabled(false);
+				this.setDefaultModelForTemplate(aModel, false);
 				aModel.setEnabled(ReportBuilderApplicationModel.MENU_INSERT_IMAGE, true);
 				aModel.fireModelChanged("");
 			}
 	
 			else if (eventType.equals(ReportFlagEvent.SPECIAL_MODE_CANCELED)) {
-				this.setApplicationModelForTemplateSchemeStandart(aModel);
+				this.setDefaultModelForTemplate(aModel, true);
 				aModel.fireModelChanged("");
 			}
 			else if (eventType.equals(ReportFlagEvent.DELETE_OBJECT)) {
@@ -425,7 +410,7 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 					
 					ModuleMode.setMode(MODULE_MODE.REPORT_PREVIEW);
 					
-					aModel.setAllItemsEnabled(false);
+					this.setDefaultModelForTemplate(aModel, false);
 					aModel.setEnabled(ReportBuilderApplicationModel.MENU_CHANGE_VIEW,true);					
 					aModel.setEnabled(ReportBuilderApplicationModel.MENU_SAVE_REPORT,true);
 					aModel.setEnabled(ReportBuilderApplicationModel.MENU_PRINT_REPORT,true);					
@@ -435,7 +420,7 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 					this.rendererScrollPane.getViewport().add(this.reportTemplateRenderer);					
 					
 					ModuleMode.setMode(MODULE_MODE.TEMPLATE_SCHEME);
-					this.setApplicationModelForTemplateSchemeStandart(aModel);
+					this.setDefaultModelForTemplate(aModel, true);
 				}
 				aModel.fireModelChanged("");
 			}
@@ -448,11 +433,16 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 			aModel.fireModelChanged("");
 		}
 		else if (pce instanceof AttachLabelEvent) {
-			aModel.setAllItemsEnabled(false);
+			this.setDefaultModelForTemplate(aModel, false);
 			aModel.fireModelChanged("");
 		}
 		else if (pce instanceof UseTemplateEvent) {
-			this.setApplicationModelForTemplateSchemeStandart(aModel);			
+			this.setDefaultModelForTemplate(aModel, true);			
+			
+			aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TREE, true);
+			aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME, true);
+			aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);
+			
 			aModel.fireModelChanged("");
 		}
 	}

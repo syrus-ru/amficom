@@ -1,5 +1,5 @@
 /*
- * $Id: TemplateRendererInnerToolbar.java,v 1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: TemplateRendererInnerToolbar.java,v 1.2 2006/04/11 05:58:32 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -143,8 +143,8 @@ public final class TemplateRendererInnerToolbar extends JToolBar implements Prop
 				TemplateRendererInnerToolbar.this.insertImageButton.setEnabled(model.isEnabled(ReportBuilderApplicationModel.MENU_INSERT_IMAGE));				
 				TemplateRendererInnerToolbar.this.deleteObjectButton.setVisible(model.isVisible(ReportBuilderApplicationModel.MENU_DELETE_OBJECT));
 				TemplateRendererInnerToolbar.this.deleteObjectButton.setEnabled(model.isEnabled(ReportBuilderApplicationModel.MENU_DELETE_OBJECT));				
-//				TemplateRendererInnerToolbar.this.changeViewButton.setVisible(model.isVisible(ReportBuilderApplicationModel.MENU_CHANGE_VIEW));
-//				TemplateRendererInnerToolbar.this.changeViewButton.setEnabled(model.isEnabled(ReportBuilderApplicationModel.MENU_CHANGE_VIEW));				
+				TemplateRendererInnerToolbar.this.changeViewButton.setVisible(model.isVisible(ReportBuilderApplicationModel.MENU_CHANGE_VIEW));
+				TemplateRendererInnerToolbar.this.changeViewButton.setEnabled(model.isEnabled(ReportBuilderApplicationModel.MENU_CHANGE_VIEW));				
 				TemplateRendererInnerToolbar.this.saveReportButton.setVisible(model.isVisible(ReportBuilderApplicationModel.MENU_SAVE_REPORT));
 				TemplateRendererInnerToolbar.this.saveReportButton.setEnabled(model.isEnabled(ReportBuilderApplicationModel.MENU_SAVE_REPORT));				
 				TemplateRendererInnerToolbar.this.printReportButton.setVisible(model.isVisible(ReportBuilderApplicationModel.MENU_PRINT_REPORT));
@@ -215,10 +215,6 @@ public final class TemplateRendererInnerToolbar extends JToolBar implements Prop
 			this.insertImageButton.setSelected(false);
 			this.insertLabelButton.setSelected(false);			
 		}
-	}
-	
-	public JButton getChangeViewButton() {
-		return this.changeViewButton;
 	}
 }
 

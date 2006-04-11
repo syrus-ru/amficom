@@ -1,5 +1,5 @@
 /*
- * $Id: ReportDataChecker.java,v 1.3 2006/04/03 10:40:10 bass Exp $
+ * $Id: ReportDataChecker.java,v 1.4 2006/04/11 05:58:32 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.client.reportbuilder.templaterenderer;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.syrus.AMFICOM.Client.Analysis.Report.AESMPReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.report.SchedulerReportModel;
 import com.syrus.AMFICOM.client.map.report.MapReportModel;
 import com.syrus.AMFICOM.client_.scheme.report.SchemeReportModel;
@@ -102,7 +102,7 @@ public class ReportDataChecker {
 					AnalysisReportModel.class.getName());
 			attributes.put(
 					REPORT_NAME,
-					AESMPReportModel.REFLECTOGRAMM);
+					AnalysisResourceKeys.FRAME_ANALYSIS_MAIN);
 		}
 		
 		return attributes;
