@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameter.java,v 1.1.2.18 2006/04/11 12:47:37 arseniy Exp $
+ * $Id: ActionParameter.java,v 1.1.2.19 2006/04/11 13:06:58 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,13 +52,13 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * {@link com.syrus.AMFICOM.measurement.ActionParameterTypeBinding},
  * идентификатор которой хранится в {@link #bindingId}.
  * 
- * @version $Revision: 1.1.2.18 $, $Date: 2006/04/11 12:47:37 $
+ * @version $Revision: 1.1.2.19 $, $Date: 2006/04/11 13:06:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class ActionParameter extends Parameter implements IdlTransferableObjectExt<IdlActionParameter> {
-	private static final long serialVersionUID = -7695430559152990049L;
+	private static final long serialVersionUID = 8301168255517905300L;
 
 	/**
 	 * Идентификатор измерительной связки.

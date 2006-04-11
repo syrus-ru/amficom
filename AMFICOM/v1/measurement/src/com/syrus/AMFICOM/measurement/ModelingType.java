@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingType.java,v 1.65.2.10 2006/04/07 08:14:06 arseniy Exp $
+ * $Id: ModelingType.java,v 1.65.2.11 2006/04/11 13:06:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,13 +37,13 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.65.2.10 $, $Date: 2006/04/07 08:14:06 $
+ * @version $Revision: 1.65.2.11 $, $Date: 2006/04/11 13:06:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class ModelingType extends ActionType implements IdlTransferableObjectExt<IdlModelingType> {
-	private static final long serialVersionUID = 1150540687087689211L;
+	private static final long serialVersionUID = -4924424744229026447L;
 
 	private static TypicalCondition codenameCondition;
 	private static EquivalentCondition equivalentCondition;

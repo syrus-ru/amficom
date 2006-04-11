@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.14.2.6 2006/04/07 10:49:30 arseniy Exp $
+ * $Id: KIS.java,v 1.14.2.7 2006/04/11 13:06:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,13 +38,13 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.14.2.6 $, $Date: 2006/04/07 10:49:30 $
+ * @version $Revision: 1.14.2.7 $, $Date: 2006/04/11 13:06:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class KIS extends DomainMember implements IdlTransferableObjectExt<IdlKIS>, Namable {
-	private static final long serialVersionUID = -7396074492931314603L;
+	private static final long serialVersionUID = 6778392895657823596L;
 
 	private String name;
 	private String description;

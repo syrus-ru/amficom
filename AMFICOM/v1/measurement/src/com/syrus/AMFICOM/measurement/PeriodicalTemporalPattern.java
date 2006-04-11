@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.30.2.5 2006/04/07 10:16:57 saa Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.30.2.6 2006/04/11 13:06:58 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,16 +38,15 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.30.2.5 $, $Date: 2006/04/07 10:16:57 $
- * @author $Author: saa $
+ * @version $Revision: 1.30.2.6 $, $Date: 2006/04/11 13:06:58 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
 public final class PeriodicalTemporalPattern
 		extends AbstractTemporalPattern
 		implements IdlTransferableObjectExt<IdlPeriodicalTemporalPattern> {
-
-	private static final long serialVersionUID = 3257567312898175032L;
+	private static final long serialVersionUID = 5477751279878842423L;
 
 	private long period;
 

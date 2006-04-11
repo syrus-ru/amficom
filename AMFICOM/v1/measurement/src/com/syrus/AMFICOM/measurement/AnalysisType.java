@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisType.java,v 1.107.2.10 2006/04/07 08:14:06 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.107.2.11 2006/04/11 13:06:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,13 +37,13 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.107.2.10 $, $Date: 2006/04/07 08:14:06 $
+ * @version $Revision: 1.107.2.11 $, $Date: 2006/04/11 13:06:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class AnalysisType extends ActionType implements IdlTransferableObjectExt<IdlAnalysisType> {
-	private static final long serialVersionUID = 3770601862577867745L;
+	private static final long serialVersionUID = 1231695950918077519L;
 
 	private static TypicalCondition codenameCondition;
 	private static EquivalentCondition equivalentCondition;

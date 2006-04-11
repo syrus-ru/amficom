@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.23 2006/04/11 07:31:44 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.24 2006/04/11 13:06:58 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -60,14 +60,14 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.23 $, $Date: 2006/04/11 07:31:44 $
+ * @version $Revision: 1.183.2.24 $, $Date: 2006/04/11 13:06:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
 public final class Test extends StorableObject implements IdlTransferableObjectExt<IdlTest>, Describable {
-	private static final long serialVersionUID = 3614619269477477987L;
+	private static final long serialVersionUID = -2487836825838569355L;
 
 	private String description;
 	private Identifier groupTestId;

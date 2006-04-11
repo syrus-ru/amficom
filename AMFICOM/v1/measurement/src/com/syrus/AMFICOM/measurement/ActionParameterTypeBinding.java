@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.20 2006/04/11 12:07:00 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.21 2006/04/11 13:06:58 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -83,13 +83,13 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * {@link #getActionParameters()} для получения всех параметров, существующих
  * для данной измерительной связки.
  * 
- * @version $Revision: 1.1.2.20 $, $Date: 2006/04/11 12:07:00 $
+ * @version $Revision: 1.1.2.21 $, $Date: 2006/04/11 13:06:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class ActionParameterTypeBinding extends StorableObject implements IdlTransferableObjectExt<IdlActionParameterTypeBinding> {
-	private static final long serialVersionUID = 8851510439449075891L;
+	private static final long serialVersionUID = 1842721581438209396L;
 
 	/**
 	 * Виды набора значений параметра - перечисляемый и непрерывный.

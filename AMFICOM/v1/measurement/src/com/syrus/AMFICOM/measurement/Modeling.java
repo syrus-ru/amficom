@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.68.2.10 2006/04/05 12:00:14 arseniy Exp $
+ * $Id: Modeling.java,v 1.68.2.11 2006/04/11 13:06:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,13 +30,13 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.68.2.10 $, $Date: 2006/04/05 12:00:14 $
+ * @version $Revision: 1.68.2.11 $, $Date: 2006/04/11 13:06:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class Modeling extends Action<ModelingResultParameter> implements IdlTransferableObjectExt<IdlModeling> {
-	private static final long serialVersionUID = 622710280466286589L;
+	private static final long serialVersionUID = 7476757366646779614L;
 
 	Modeling(final Identifier id,
 			final Identifier creatorId,

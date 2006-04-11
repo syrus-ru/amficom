@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.90.2.10 2006/04/05 12:00:14 arseniy Exp $
+ * $Id: Analysis.java,v 1.90.2.11 2006/04/11 13:06:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,14 +34,14 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.90.2.10 $, $Date: 2006/04/05 12:00:14 $
+ * @version $Revision: 1.90.2.11 $, $Date: 2006/04/11 13:06:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
 public final class Analysis extends Action<AnalysisResultParameter> implements IdlTransferableObjectExt<IdlAnalysis> {
-	private static final long serialVersionUID = 2935808157242604848L;
+	private static final long serialVersionUID = 9165843016878045902L;
 
 	private Identifier measurementId;
 

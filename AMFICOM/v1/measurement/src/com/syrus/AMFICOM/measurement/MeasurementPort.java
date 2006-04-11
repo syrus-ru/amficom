@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.19.2.5 2006/03/23 09:37:46 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.19.2.6 2006/04/11 13:06:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,14 +43,14 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.19.2.5 $, $Date: 2006/03/23 09:37:46 $
+ * @version $Revision: 1.19.2.6 $, $Date: 2006/04/11 13:06:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class MeasurementPort extends StorableObject
 		implements Characterizable, TypedObject<MeasurementPortType>, IdlTransferableObjectExt<IdlMeasurementPort> {
-	private static final long serialVersionUID = -5100885507408715167L;
+	private static final long serialVersionUID = 1411619700088837652L;
 
 	private MeasurementPortType type;
 

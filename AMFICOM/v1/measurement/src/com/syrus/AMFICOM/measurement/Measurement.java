@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.101.2.12 2006/04/06 11:19:26 arseniy Exp $
+ * $Id: Measurement.java,v 1.101.2.13 2006/04/11 13:06:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,14 +39,14 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.101.2.12 $, $Date: 2006/04/06 11:19:26 $
+ * @version $Revision: 1.101.2.13 $, $Date: 2006/04/11 13:06:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
 public final class Measurement extends Action<MeasurementResultParameter> implements IdlTransferableObjectExt<IdlMeasurement> {
-	private static final long serialVersionUID = -1217428566443489958L;
+	private static final long serialVersionUID = -6233007458010090218L;
 
 	private Identifier testId;
 

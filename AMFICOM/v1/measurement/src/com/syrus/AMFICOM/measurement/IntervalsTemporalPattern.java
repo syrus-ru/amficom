@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.42.2.5 2006/03/17 11:54:48 arseniy Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.42.2.6 2006/04/11 13:06:58 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -49,13 +49,13 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 
 /**
- * @version $Revision: 1.42.2.5 $, $Date: 2006/03/17 11:54:48 $
+ * @version $Revision: 1.42.2.6 $, $Date: 2006/04/11 13:06:58 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
 public final class IntervalsTemporalPattern extends AbstractTemporalPattern implements IdlTransferableObjectExt<IdlIntervalsTemporalPattern>, Undoable {
-	private static final long serialVersionUID = 3257567312898175032L;
+	private static final long serialVersionUID = -1354766978651748585L;
 
 	/** SortedMap <Long milliseconds, Identifier <AbstractTemporalPattern>> */
 	private SortedMap<Long, Identifier> intervalsAbstractTemporalPatternMap;

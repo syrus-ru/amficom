@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.33.2.3 2006/03/17 11:54:48 arseniy Exp $
+ * $Id: CronTemporalPattern.java,v 1.33.2.4 2006/04/11 13:06:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,13 +41,13 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.33.2.3 $, $Date: 2006/03/17 11:54:48 $
+ * @version $Revision: 1.33.2.4 $, $Date: 2006/04/11 13:06:58 $
  * @author $Author: arseniy $
  * @module measurement
  */
 
 public final class CronTemporalPattern extends AbstractTemporalPattern implements IdlTransferableObjectExt<IdlCronTemporalPattern> {
-	private static final long serialVersionUID = 3256437014894163509L;
+	private static final long serialVersionUID = -8189043344042037043L;
 
 	private static final String I18N_KEY_MIN = "min";
 	private static final String I18N_KEY_HOUR = "hour";
