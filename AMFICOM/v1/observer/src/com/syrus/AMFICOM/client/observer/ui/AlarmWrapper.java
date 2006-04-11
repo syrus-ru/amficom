@@ -1,5 +1,5 @@
 /*-
- * $Id: AlarmWrapper.java,v 1.1 2006/04/07 10:50:17 stas Exp $
+ * $Id: AlarmWrapper.java,v 1.2 2006/04/11 09:42:24 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -92,7 +92,7 @@ public class AlarmWrapper implements Wrapper<Alarm> {
 		
 		final String internedKey = key.intern();
 		if (internedKey == COLUMN_MEASURE_COUNT) {
-			return Integer.valueOf(alarm.getLineMismatchEvents().size());
+			return Integer.valueOf(alarm.getEventsCount());
 		}
 		if (internedKey == COLUMN_DATE_STARTED) {
 			return alarm.getStartDate();
