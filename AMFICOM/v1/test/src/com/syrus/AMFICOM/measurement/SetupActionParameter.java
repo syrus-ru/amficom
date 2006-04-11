@@ -1,11 +1,11 @@
 /*-
- * $Id: SetupActionParameter.java,v 1.1.2.3 2006/03/27 09:35:24 arseniy Exp $
+ * $Id: SetupActionParameter.java,v 1.1.2.1 2006/04/11 12:48:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-package com.syrus.AMFICOM.reflectometry;
+package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/03/27 09:35:24 $
+ * @version $Revision: 1.1.2.1 $, $Date: 2006/04/11 12:48:56 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
