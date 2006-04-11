@@ -1,5 +1,5 @@
 /*
- * $Id: ReportDataChecker.java,v 1.4 2006/04/11 05:58:32 stas Exp $
+ * $Id: ReportDataChecker.java,v 1.5 2006/04/11 14:30:35 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Map;
 import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.report.SchedulerReportModel;
+import com.syrus.AMFICOM.client.UI.CharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.client.map.report.MapReportModel;
 import com.syrus.AMFICOM.client_.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.map.Collector;
@@ -20,6 +21,7 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -57,7 +59,7 @@ public class ReportDataChecker {
 					SchemeReportModel.class.getName());
 			attributes.put(
 					REPORT_NAME,
-					SchemeReportModel.ON_SCREEN_SCHEME_CELL_CONTAINER);
+					SchemeResourceKeys.FRAME_EDITOR_MAIN);
 		}
 		else if (	(objectToInstall instanceof SchemeElement)
 				||	(objectToInstall instanceof AbstractSchemePort)
@@ -69,7 +71,7 @@ public class ReportDataChecker {
 					SchemeReportModel.class.getName());
 			attributes.put(
 					REPORT_NAME,
-					SchemeReportModel.SELECTED_OBJECT_CHARS);
+					CharacteristicPropertiesFrame.NAME);
 		}
 
 		//Для сиюминутных отчётов по карте
