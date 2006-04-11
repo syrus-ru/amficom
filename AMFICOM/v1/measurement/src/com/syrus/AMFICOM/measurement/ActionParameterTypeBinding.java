@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameterTypeBinding.java,v 1.1.2.17 2006/04/06 10:23:04 arseniy Exp $
+ * $Id: ActionParameterTypeBinding.java,v 1.1.2.18 2006/04/11 08:49:52 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -83,7 +83,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * {@link #getActionParameters()} для получения всех параметров, существующих
  * для данной измерительной связки.
  * 
- * @version $Revision: 1.1.2.17 $, $Date: 2006/04/06 10:23:04 $
+ * @version $Revision: 1.1.2.18 $, $Date: 2006/04/11 08:49:52 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -203,7 +203,7 @@ public final class ActionParameterTypeBinding extends StorableObject implements 
 	 * @return Новый экземпляр измерительной связки.
 	 * @throws CreateObjectException
 	 */
-	public static ActionParameterTypeBinding createInstance(final Identifier creatorId,
+	static ActionParameterTypeBinding createInstance(final Identifier creatorId,
 			final ParameterValueKind parameterValueKind,
 			final Identifier parameterTypeId,
 			final Identifier actionTypeId,
