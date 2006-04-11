@@ -1,5 +1,5 @@
 /*
- * $Id: TestCreateAdministrationCharacteristics.java,v 1.3.2.2 2006/03/10 15:59:11 arseniy Exp $
+ * $Id: TestCreateAdministrationCharacteristics.java,v 1.3.2.3 2006/04/11 09:31:08 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,12 +19,12 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CORBACommonTest;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
 import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DataType;
-import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.resource.LayoutItem;
 
 /**
- * @version $Revision: 1.3.2.2 $, $Date: 2006/03/10 15:59:11 $
+ * @version $Revision: 1.3.2.3 $, $Date: 2006/04/11 09:31:08 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -44,7 +44,7 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 	}
 
 	public static Test suite() {
-		final DatabaseCommonTest commonTest = new DatabaseCommonTest();
+		final CORBACommonTest commonTest = new CORBACommonTest();
 		commonTest.addTestSuite(TestCreateAdministrationCharacteristics.class);
 		return commonTest.createTestSetup();
 	}
