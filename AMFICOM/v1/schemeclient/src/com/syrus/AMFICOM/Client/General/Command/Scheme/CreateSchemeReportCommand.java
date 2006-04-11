@@ -1,5 +1,5 @@
 /*-
- * $Id: CreateSchemeReportCommand.java,v 1.13.2.1 2006/04/11 10:27:00 stas Exp $
+ * $Id: CreateSchemeReportCommand.java,v 1.13.2.2 2006/04/11 14:25:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import static com.syrus.AMFICOM.resource.SchemeResourceKeys.FRAME_CHARACTERISTIC
 import static com.syrus.AMFICOM.resource.SchemeResourceKeys.FRAME_EDITOR_MAIN;
 
 import java.util.HashMap;
+import java.util.logging.Level;
 
 import javax.swing.JDialog;
 
@@ -50,6 +51,11 @@ public class CreateSchemeReportCommand extends AbstractCommand {
 
 	@Override
 	public void execute() {
+		if (this.pane.getCurrentPanel() == null) {
+			Log.debugMessage("Could not create report - scheme is not opened", Level.WARNING);
+			return;
+		}
+		
 		java.util.Map<Object,Object> reportData = new HashMap<Object,Object>();
 	
 		try {
