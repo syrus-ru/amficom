@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameter.java,v 1.1.2.17 2006/04/11 12:07:27 arseniy Exp $
+ * $Id: ActionParameter.java,v 1.1.2.18 2006/04/11 12:47:37 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,13 @@ import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind.ENUMERATED;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -48,7 +52,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * {@link com.syrus.AMFICOM.measurement.ActionParameterTypeBinding},
  * идентификатор которой хранится в {@link #bindingId}.
  * 
- * @version $Revision: 1.1.2.17 $, $Date: 2006/04/11 12:07:27 $
+ * @version $Revision: 1.1.2.18 $, $Date: 2006/04/11 12:47:37 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -78,6 +82,8 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 	 * {@link #getTypeCodename()}.
 	 */
 	private transient String typeCodename;
+
+	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US);
 
 	ActionParameter(final Identifier id,
 			final Identifier creatorId,
@@ -115,9 +121,13 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 	public static ActionParameter valueOf(final Identifier creatorId,
 			final String stringValue,
 			final ActionParameterTypeBinding actionParameterTypeBinding) throws ApplicationException {
+		assert creatorId != null : NON_NULL_EXPECTED;
+		assert stringValue != null : NON_NULL_EXPECTED;
+		assert actionParameterTypeBinding != null : NON_NULL_EXPECTED;
+
 		final ParameterType parameterType = actionParameterTypeBinding.getParameterType();
 		final DataType dataType = parameterType.getDataType();
-		final byte[] value;
+		byte[] value;
 		switch (dataType) {
 			case INTEGER:
 				value = ByteArray.toByteArray(Integer.parseInt(stringValue));
@@ -129,7 +139,12 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 				value = ByteArray.toByteArray(stringValue);
 				break;
 			case DATE:
-				value = ByteArray.toByteArray(Long.parseLong(stringValue));
+				try {
+					value = ByteArray.toByteArray(DATE_FORMAT.parse(stringValue).getTime());
+				} catch (ParseException e) {
+					Log.errorMessage(e);
+					value = ByteArray.toByteArray(Long.parseLong(stringValue));
+				}
 				break;
 			case LONG:
 				value = ByteArray.toByteArray(Long.parseLong(stringValue));
@@ -181,6 +196,10 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 	public static ActionParameter valueOf(final Identifier creatorId,
 			final byte[] value,
 			final ActionParameterTypeBinding actionParameterTypeBinding) throws ApplicationException {
+		assert creatorId != null : NON_NULL_EXPECTED;
+		assert value != null : NON_NULL_EXPECTED;
+		assert actionParameterTypeBinding != null : NON_NULL_EXPECTED;
+
 		final ParameterValueKind parameterValueKind = actionParameterTypeBinding.getParameterValueKind();
 		switch (parameterValueKind) {
 			case ENUMERATED:
@@ -213,11 +232,15 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 	}
 
 	/**
-	 * Создать новый экземпляр. Именно этот метод и должны использовать конечные
-	 * пользователи. Он всегда проверяет вид набора значений данного параметра.
-	 * Если этот вид перечисляемый
+	 * Создать новый экземпляр. Этот метод проверяет вид набора значений данного
+	 * параметра. Если этот вид перечисляемый
 	 * {@link com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind#ENUMERATED},
 	 * то возбуждается исключение {@link CreateObjectException}.
+	 * <p>
+	 * Конечные пользователи могут использовать этот метод, однако более
+	 * предпочтительным является использование
+	 * {@link #valueOf(Identifier, byte[], ActionParameterTypeBinding)} и
+	 * {@link #valueOf(Identifier, String, ActionParameterTypeBinding)}.
 	 * 
 	 * @param creatorId
 	 * @param value
@@ -235,6 +258,10 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 	 * пользователями, поскольку оставляет возможность создавать параметры для
 	 * перечисляемых наборов значений. Такие параметры должны создаваться только
 	 * на этапе установки системы.
+	 * <p>
+	 * Пользователи должны использовать методы
+	 * {@link #valueOf(Identifier, byte[], ActionParameterTypeBinding)} и
+	 * {@link #valueOf(Identifier, String, ActionParameterTypeBinding)}.
 	 * 
 	 * @param creatorId
 	 * @param value
@@ -243,7 +270,7 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 	 * @return Новый экземпляр
 	 * @throws CreateObjectException
 	 */
-	public static ActionParameter createInstance(final Identifier creatorId,
+	static ActionParameter createInstance(final Identifier creatorId,
 			final byte[] value,
 			final Identifier bindingId,
 			final boolean checkValueKind) throws CreateObjectException {
