@@ -292,9 +292,9 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		aModel.setCommand(ObserverApplicationModel.MENU_OPEN_SCHEME, new OpenSchemeViewCommand(this.aContext));
 		aModel.setCommand(ObserverApplicationModel.MENU_OPEN_MAP, new OpenMapViewCommand(this.desktopPane, this.aContext, mapApplicationModelFactory));
 		
-		CreateObserverReportCommand	csrCommand = new CreateSurveyReportCommand(aContext);
-		csrCommand.setParameter(this);
-		aModel.setCommand(SurveyApplicationModel.MENU_REPORT_BY_TEMPLATE, csrCommand);
+//		CreateObserverReportCommand	csrCommand = new CreateSurveyReportCommand(aContext);
+//		csrCommand.setParameter(this);
+//		aModel.setCommand(SurveyApplicationModel.MENU_REPORT_BY_TEMPLATE, csrCommand);
 
 		aModel.fireModelChanged();
 	}
