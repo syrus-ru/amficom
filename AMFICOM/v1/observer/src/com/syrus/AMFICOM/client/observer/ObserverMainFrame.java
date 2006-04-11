@@ -1,8 +1,8 @@
 package com.syrus.AMFICOM.client.observer;
 
 import static com.syrus.AMFICOM.resource.ObserverResourceKeys.FRAME_ALARM;
-import static com.syrus.AMFICOM.resource.ObserverResourceKeys.FRAME_TREE;
 import static com.syrus.AMFICOM.resource.ObserverResourceKeys.FRAME_RESULT;
+import static com.syrus.AMFICOM.resource.ObserverResourceKeys.FRAME_TREE;
 import static com.syrus.AMFICOM.resource.SchemeResourceKeys.FRAME_EDITOR_MAIN;
 
 import java.awt.BorderLayout;
@@ -292,9 +292,8 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		aModel.setCommand(ObserverApplicationModel.MENU_OPEN_SCHEME, new OpenSchemeViewCommand(this.aContext));
 		aModel.setCommand(ObserverApplicationModel.MENU_OPEN_MAP, new OpenMapViewCommand(this.desktopPane, this.aContext, mapApplicationModelFactory));
 		
-//		CreateObserverReportCommand	csrCommand = new CreateSurveyReportCommand(aContext);
-//		csrCommand.setParameter(this);
-//		aModel.setCommand(SurveyApplicationModel.MENU_REPORT_BY_TEMPLATE, csrCommand);
+		CreateObserverReportCommand	csrCommand = new CreateObserverReportCommand(this.aContext, this.desktopPane, this.schemePane);
+		aModel.setCommand(ObserverApplicationModel.MENU_REPORT_BY_TEMPLATE, csrCommand);
 
 		aModel.fireModelChanged();
 	}

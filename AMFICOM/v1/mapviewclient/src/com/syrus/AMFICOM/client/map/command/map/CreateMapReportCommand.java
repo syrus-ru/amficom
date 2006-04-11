@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateMapReportCommand.java,v 1.16 2006/02/15 11:26:49 stas Exp $$
+ * $$Id: CreateMapReportCommand.java,v 1.17 2006/04/11 14:24:14 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.client.map.command.map;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2006/02/15 11:26:49 $
+ * @version $Revision: 1.17 $, $Date: 2006/04/11 14:24:14 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -48,49 +49,47 @@ public class CreateMapReportCommand extends AbstractCommand {
 	@Override
 	public void execute() {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktopPane);
-
 		if(mapFrame == null) {
+			Log.debugMessage("Report for map inaccessible - map is not opened", Level.WARNING);
 			return;
 		}
 
 		MapView mapView = mapFrame.getMapView();
-
 		if(mapView == null) {
+			Log.debugMessage("Report for map inaccessible - mapView not found", Level.WARNING);
 			return;
 		}
 
 		NetMapViewer netMapViewer = mapFrame.getMapViewer();
 
-		final Set<MapElement> selectedElements = mapView.getMap().getSelectedElements();
-		if(selectedElements.size() != 1) {
-			// more than 1 object selected
-			return;
-		}
-		MapElement mapElement = selectedElements.iterator().next();
-		
 		java.util.Map<Object,Object> reportData = new HashMap<Object,Object>();
-		if(mapElement instanceof CablePath) {
-			SchemeCableLink schemeCableLink = ((CablePath)mapElement).getSchemeCableLink();
-			reportData.put(MapReportModel.CABLE_LAYOUT, schemeCableLink.getId());
-		}
 		Map<Object,Object> topologyImageReportData = new HashMap<Object,Object>();
 		topologyImageReportData.put(MapReportModel.MAPVIEW_OBJECT,mapView);
 		try {
 			topologyImageReportData.put(
 					MapReportModel.CENTER,
-					mapElement.getLocation());			
+					netMapViewer.getMapContext().getCenter());			
 			topologyImageReportData.put(
 					MapReportModel.SCALE,
 					new Double(netMapViewer.getMapContext().getScale()));
 			topologyImageReportData.put(
 					MapReportModel.MAPFRAME_SIZE,
 					mapFrame.getSize());
+			reportData.put(MapReportModel.TOPOLOGY_IMAGE, topologyImageReportData);
 		} catch (MapException e1) {
 			Log.errorMessage(e1);
 		}
 		
-		reportData.put(MapReportModel.TOPOLOGY_IMAGE, topologyImageReportData);
-		reportData.put(MapReportModel.SELECTED_OBJECT_CHARS, mapElement.getId());
+		final Set<MapElement> selectedElements = mapView.getMap().getSelectedElements();
+		if(selectedElements.size() == 1) {
+			MapElement mapElement = selectedElements.iterator().next();
+			if(mapElement instanceof CablePath) {
+				SchemeCableLink schemeCableLink = ((CablePath)mapElement).getSchemeCableLink();
+				reportData.put(MapReportModel.CABLE_LAYOUT, schemeCableLink.getId());
+			}
+			reportData.put(MapReportModel.SELECTED_OBJECT_CHARS, mapElement.getId());
+		}
+		
 		try {
 			JDialog dialog = new CreateReportDialog(
 					this.aContext,

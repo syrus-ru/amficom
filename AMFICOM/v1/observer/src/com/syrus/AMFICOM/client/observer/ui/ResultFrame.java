@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultFrame.java,v 1.8 2006/04/11 11:10:24 stas Exp $
+ * $Id: ResultFrame.java,v 1.9 2006/04/11 14:27:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import javax.swing.WindowConstants;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MapThresholdsLayeredPanel;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ResizableLayeredPanel;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ThresholdsPanel;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
@@ -78,7 +79,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2006/04/11 11:10:24 $
+ * @version $Revision: 1.9 $, $Date: 2006/04/11 14:27:50 $
  * @module surveyclient_v1
  */
 
@@ -356,6 +357,10 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 	void removeReflectogramTab(String key) {
 		Log.debugMessage(ResultFrame.class.getName() + ".removeReflectogramTab() perform", Level.FINEST); //$NON-NLS-1$
 		this.tabs.remove(this.layeredPanel);
+	}
+	
+	public ResizableLayeredPanel getReflectogrammPanel() {
+		return this.layeredPanel;
 	}
 	
 	void initReflectogramTab(String key, BellcoreStructure bs) {

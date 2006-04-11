@@ -1,5 +1,5 @@
 /*
- * $Id: MapReportModel.java,v 1.22 2006/04/11 11:37:29 stas Exp $
+ * $Id: MapReportModel.java,v 1.23 2006/04/11 14:24:14 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.ImageRenderingComponent;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportModel;
-
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -42,15 +41,15 @@ public class MapReportModel extends ReportModel {
 	/**
 	 * Изображение карты
 	 */ 
-	public static String TOPOLOGY_IMAGE = "topologyImage";
+	public static String TOPOLOGY_IMAGE = "Window.topologyImage";
 	/**
 	 * Прокладка кабеля по тоннелям (список колодцев и тоннелей)
 	 */ 
-	public static String CABLE_LAYOUT = "cableLayout";
+	public static String CABLE_LAYOUT = "Window.cableLayout";
 	/**
 	 * Характеристики объекта
 	 */
-	public static String SELECTED_OBJECT_CHARS = "selectedObjectChars";
+	public static String SELECTED_OBJECT_CHARS = "Window.selectedObjectChars";
 	
 	//Параметры для отображения топографии для элемента
 	public static String MAPVIEW_OBJECT = "mapViewObject";
@@ -188,16 +187,7 @@ public class MapReportModel extends ReportModel {
 	
 	@Override
 	public String getReportElementName(String reportName) {
-		// TODO Вообще-то, эта информация должна храниться в
-		// других I18N'ах и, соответственно, методы должны
-		//быть в моделях отчётов - наследницах
-		String langReportName = null;
-		if (	reportName.equals(TOPOLOGY_IMAGE)
-			||	reportName.equals(CABLE_LAYOUT)			
-			||	reportName.equals(SELECTED_OBJECT_CHARS))
-			langReportName = I18N.getString("report.Modules.Map." + reportName);
-			
-		return langReportName;
+		return I18N.getString(reportName);
 	}
 	
 	@Override

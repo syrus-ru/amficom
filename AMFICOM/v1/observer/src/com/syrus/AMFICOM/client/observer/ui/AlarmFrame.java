@@ -26,6 +26,7 @@ import javax.swing.UIManager;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.alarm.Alarm;
@@ -455,5 +456,13 @@ public class AlarmFrame extends JInternalFrame {
 
 	void filterButton_actionPerformed(ActionEvent e) {
 		// TODO filtration
+	}
+
+	public String getReportTitle() {
+		return FRAME_ALARM;
+	}
+
+	public TableModel getTableModel() {
+		return this.model;
 	}
 }
