@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.23 2006/02/28 15:20:05 arseniy Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.24 2006/04/11 07:54:14 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacter
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.23 $, $Date: 2006/02/28 15:20:05 $
+ * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2006/04/11 07:54:14 $
  * @module commonclient
  */
 
@@ -161,8 +161,8 @@ public class CharacteristicAddDialog {
 				null);
 
 		try {
-			final TypicalCondition condition = new TypicalCondition(ctSort.value(),
-					ctSort.value(),
+			final TypicalCondition condition = new TypicalCondition(
+					CharacteristicTypeSort.valueOf(ctSort),
 					OPERATION_EQUALS,
 					CHARACTERISTIC_TYPE_CODE,
 					COLUMN_SORT);
