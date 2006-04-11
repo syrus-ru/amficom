@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 /**
  * Отчёт "Прокладка кабеля"
  * @author $Author: stas $
- * @version $Revision: 1.26 $, $Date: 2006/02/14 10:20:06 $
+ * @version $Revision: 1.27 $, $Date: 2006/04/11 11:37:29 $
  * @module reportother
  */
 public class CableLayoutReport {
@@ -196,6 +196,7 @@ class CableLayoutReportTableModel extends AbstractTableModel {
 		return this.columnCount;
 	}
 
+	/*
 	@Override
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex % CableLayoutReport.COLUMNS_COUNT) {
@@ -206,7 +207,22 @@ class CableLayoutReportTableModel extends AbstractTableModel {
 			
 		}
 		throw new AssertionError("TestReportTableModel.getColumnName | Unreachable code");
-    }	
+    }	*/
+	
+	public String getColumnName(int columnIndex) {
+		switch (columnIndex % CableLayoutReport.COLUMNS_COUNT) {
+		case 0:
+			return I18N.getString(MapEditorResourceKeys.LABEL_START_NODE);
+		case 1:
+			return I18N.getString(MapEditorResourceKeys.LABEL_START_SPARE);
+		case 2:
+			return I18N.getString(MapEditorResourceKeys.LABEL_END_SPARE);
+		case 3:
+			return I18N.getString(MapEditorResourceKeys.LABEL_END_NODE);
+			
+		}
+		throw new AssertionError("TestReportTableModel.getColumnName | Unreachable code");
+    }
 	
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		int index = this.getRowCount() * (columnIndex / CableLayoutReport.COLUMNS_COUNT) + rowIndex;

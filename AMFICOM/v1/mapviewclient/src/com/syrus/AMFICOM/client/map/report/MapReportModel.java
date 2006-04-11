@@ -1,5 +1,5 @@
 /*
- * $Id: MapReportModel.java,v 1.21 2006/03/13 13:54:02 bass Exp $
+ * $Id: MapReportModel.java,v 1.22 2006/04/11 11:37:29 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -160,6 +160,11 @@ public class MapReportModel extends ReportModel {
 						result = SiteNodeReport.createReport(
 								(TableDataStorableElement) element,
 								siteNode);
+					} else if (objectID.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE) {
+						SchemeCableLink schemeCableLink = StorableObjectPool.getStorableObject(objectID,true);
+						result = CableLayoutReport.createReport(
+								(TableDataStorableElement) element,
+								schemeCableLink);
 					}
 				}
 			}
