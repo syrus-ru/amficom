@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.22 2006/04/07 14:15:36 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.23 2006/04/11 07:31:44 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -60,7 +60,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.22 $, $Date: 2006/04/07 14:15:36 $
+ * @version $Revision: 1.183.2.23 $, $Date: 2006/04/11 07:31:44 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -920,7 +920,15 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 			return IdlTestStatus.from_int(this.ordinal());
 		}
 
-		static TestStatus valueOf(final int code) {
+		/**
+		 * Вызывается из {@link com.syrus.util.EnumUtil#valueOf(Class, int)},
+		 * поэтому должен быть public.
+		 * 
+		 * @param code
+		 * @return Объект {@link TestStatus}, соответствующий данному целому
+		 *         <code>code</code>.
+		 */
+		public static TestStatus valueOf(final int code) {
 			return VALUES[code];
 		}
 
