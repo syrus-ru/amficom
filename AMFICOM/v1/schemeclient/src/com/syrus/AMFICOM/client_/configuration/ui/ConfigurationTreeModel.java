@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationTreeModel.java,v 1.16 2006/04/07 13:53:02 arseniy Exp $
+ * $Id: ConfigurationTreeModel.java,v 1.15 2006/02/15 12:18:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,10 +30,10 @@ import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.logic.AbstractChildrenFactory;
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2006/04/07 13:53:02 $
+ * @author $Author: stas $
+ * @version $Revision: 1.15 $, $Date: 2006/02/15 12:18:10 $
  * @module schemeclient
  */
 
@@ -167,8 +167,11 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 			} 
 		} else if (node.getObject() instanceof EquipmentType) {
 			EquipmentType eqt = (EquipmentType)node.getObject();
-
-			final LinkedIdsCondition condition = new LinkedIdsCondition(eqt, ObjectEntities.PROTOEQUIPMENT_CODE);
+			
+			TypicalCondition condition = new TypicalCondition(eqt,
+					 OperationSort.OPERATION_EQUALS,
+					 ObjectEntities.PROTOEQUIPMENT_CODE,
+					 StorableObjectWrapper.COLUMN_TYPE_CODE);
 			try {
 				Collection<StorableObject> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				
@@ -290,9 +293,9 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 				eqts.add(protoEquipment.getType());
 			}
 			
-			Collection toAdd = this.getObjectsToAdd2(eqts, contents);
-			Bug136Remover.removeEquipmentTypeBug136(toAdd);
-
+			Collection toAdd = getObjectsToAdd2(eqts, contents);
+			toAdd.remove(EquipmentType.BUG_136);
+			
 			Collection<Item> toRemove = getItemsToRemove2(eqts, node.getChildren());
 			for (Item child : toRemove) {
 				child.setParent(null);

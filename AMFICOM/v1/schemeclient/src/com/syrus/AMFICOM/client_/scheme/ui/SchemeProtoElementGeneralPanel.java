@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.29 2006/04/07 13:53:02 arseniy Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.28 2006/02/15 12:18:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,8 +7,6 @@
  */
 
 package com.syrus.AMFICOM.client_.scheme.ui;
-
-import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.BUG_136;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -49,10 +47,11 @@ import com.syrus.AMFICOM.configuration.ProtoEquipmentWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
@@ -63,8 +62,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2006/04/07 13:53:02 $
+ * @author $Author: stas $
+ * @version $Revision: 1.28 $, $Date: 2006/02/15 12:18:11 $
  * @module schemeclient
  */
 
@@ -82,7 +81,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 	JTextField labelText = new JTextField();
 	JButton symbolBut = new JButton();
 	JLabel lbCodenameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.CODENAME));
-	AComboBox eqtCombo;
+	AComboBox eqtCombo = new AComboBox(EquipmentType.values());
 	JLabel typeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
 	WrapperedComboBox<ProtoEquipment> typeCombo = new WrapperedComboBox<ProtoEquipment>(ProtoEquipmentWrapper.getInstance(),
 			StorableObjectWrapper.COLUMN_NAME,
@@ -100,12 +99,6 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 
 	protected SchemeProtoElementGeneralPanel() {
 		super();
-
-		try {
-			this.eqtCombo = new AComboBox(EquipmentType.valuesArray());
-		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
-		}
 
 		final GridBagLayout gbpanel0 = new GridBagLayout();
 		final GridBagConstraints gbcpanel0 = new GridBagConstraints();
@@ -378,8 +371,11 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 
 	void eqtCombo_stateChanged(final EquipmentType eqt) {
 		this.typeCombo.removeAllItems();
-
-		final LinkedIdsCondition condition = new LinkedIdsCondition(eqt, ObjectEntities.PROTOEQUIPMENT_CODE);
+		
+		final TypicalCondition condition = new TypicalCondition(eqt, 
+				OperationSort.OPERATION_EQUALS, 
+				ObjectEntities.PROTOEQUIPMENT_CODE, 
+				StorableObjectWrapper.COLUMN_TYPE_CODE);
 		try {
 			final Set<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			this.typeCombo.addElements(protoEquipments);
@@ -443,7 +439,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			try {
 				SchemeProtoElement parentPE = this.schemeProtoElement.getParentSchemeProtoElement();
 				if (parentPE != null && parentPE.getProtoEquipment() != null &&
-						!parentPE.getProtoEquipment().getType().getCodename().equals(BUG_136.stringValue())) {
+						!parentPE.getProtoEquipment().getType().equals(EquipmentType.BUG_136)) {
 					this.parentCombo.addItem(null);
 					this.parentCombo.setSelectedItem(null);
 					this.parentCombo.setEnabled(false);
@@ -471,13 +467,8 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		if (protoEq != null) {
 			this.eqtCombo.setEnabled(true);
 			this.typeCombo.setEnabled(true);
-			try {
-				final EquipmentType equipmentType = protoEq.getType();
-				this.eqtCombo.setSelectedItem(equipmentType);
-				this.eqtCombo_stateChanged(equipmentType);
-			} catch (ApplicationException ae) {
-				Log.errorMessage(ae);
-			}
+			this.eqtCombo.setSelectedItem(protoEq.getType());
+			this.eqtCombo_stateChanged(protoEq.getType());
 			this.typeCombo.setSelectedItem(protoEq);
 			this.typeCombo_stateChanged(protoEq);
 		} else {

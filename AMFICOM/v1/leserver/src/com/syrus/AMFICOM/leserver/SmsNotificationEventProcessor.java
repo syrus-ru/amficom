@@ -1,5 +1,5 @@
 /*-
- * $Id: SmsNotificationEventProcessor.java,v 1.6 2006/04/04 06:08:46 bass Exp $
+ * $Id: SmsNotificationEventProcessor.java,v 1.6.2.1 2006/04/07 08:44:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,9 @@
 
 package com.syrus.AMFICOM.leserver;
 
-import static com.syrus.AMFICOM.eventv2.EventType.NOTIFICATION;
 import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.FINEST;
 
-import com.syrus.AMFICOM.eventv2.Event;
-import com.syrus.AMFICOM.eventv2.EventType;
 import com.syrus.AMFICOM.eventv2.NotificationEvent;
 import com.syrus.AMFICOM.eventv2.SmsNotificationEvent;
 import com.syrus.util.Log;
@@ -20,32 +18,38 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2006/04/04 06:08:46 $
+ * @version $Revision: 1.6.2.1 $, $Date: 2006/04/07 08:44:07 $
  * @module leserver
  */
-final class SmsNotificationEventProcessor implements EventProcessor {
-	/**
-	 * @see EventProcessor#getEventType()
-	 */
-	public EventType getEventType() {
-		return NOTIFICATION;
+final class SmsNotificationEventProcessor extends AbstractNotificationEventProcessor {
+	SmsNotificationEventProcessor(final int capacity) {
+		super(capacity);
+	}
+
+	SmsNotificationEventProcessor() {
+		this(Integer.MAX_VALUE);
 	}
 
 	/**
-	 * @param event
-	 * @see EventProcessor#processEvent(Event)
+	 * @param notificationEvent
+	 * @see AbstractNotificationEventProcessor#processEvent(NotificationEvent)
 	 */
-	public void processEvent(final Event<?> event) {
-		@SuppressWarnings("unchecked")
-		final NotificationEvent<?> notificationEvent = (NotificationEvent) event;
+	@Override
+	void processEvent(final NotificationEvent<?> notificationEvent) {
+		final long t0 = System.nanoTime();
 
-		if (notificationEvent instanceof SmsNotificationEvent) {
-			@SuppressWarnings("unchecked")
-			final SmsNotificationEvent smsNotificationEvent = (SmsNotificationEvent) notificationEvent;
-			Log.debugMessage("Event: "
-					+ smsNotificationEvent
-					+ " delivered successfully",
-					CONFIG);
+		if (!(notificationEvent instanceof SmsNotificationEvent)) {
+			return;
 		}
+
+		@SuppressWarnings("unchecked")
+		final SmsNotificationEvent smsNotificationEvent = (SmsNotificationEvent) notificationEvent;
+		Log.debugMessage("Event: "
+				+ smsNotificationEvent
+				+ " delivered successfully",
+				CONFIG);
+
+		final long t1 = System.nanoTime();
+		Log.debugMessage(((t1 - t0) / 1e9) + " second(s)", FINEST);
 	}
 }

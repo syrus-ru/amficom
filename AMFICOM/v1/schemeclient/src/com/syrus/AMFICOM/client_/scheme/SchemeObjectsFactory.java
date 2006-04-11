@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.58 2006/04/07 13:53:02 arseniy Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.57 2006/03/30 11:17:22 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -89,8 +89,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.58 $, $Date: 2006/04/07 13:53:02 $
+ * @author $Author: stas $
+ * @version $Revision: 1.57 $, $Date: 2006/03/30 11:17:22 $
  * @module schemeclient
  */
 
@@ -219,7 +219,7 @@ public class SchemeObjectsFactory {
 	}
 	
 	public static ProtoEquipment createProtoEquipment(String name, EquipmentType type) throws CreateObjectException {
-		ProtoEquipment protoEqt = ProtoEquipment.createInstance(LoginManager.getUserId(), type.getId(), name, EMPTY, EMPTY, EMPTY);
+		ProtoEquipment protoEqt = ProtoEquipment.createInstance(LoginManager.getUserId(), type, name, EMPTY, EMPTY, EMPTY);
 		if (aContext != null) {
 			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, protoEqt.getId(), SchemeEvent.CREATE_OBJECT));
 		}

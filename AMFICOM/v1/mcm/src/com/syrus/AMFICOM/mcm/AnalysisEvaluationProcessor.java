@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.60 2006/04/04 10:33:01 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.59.2.3 2006/03/30 12:11:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2006/04/04 10:33:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.59.2.3 $, $Date: 2006/03/30 12:11:12 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */

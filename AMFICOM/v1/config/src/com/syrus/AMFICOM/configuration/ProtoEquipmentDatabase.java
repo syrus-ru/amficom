@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentDatabase.java,v 1.4 2005/12/02 11:24:19 bass Exp $
+ * $Id: ProtoEquipmentDatabase.java,v 1.4.4.1 2006/03/27 10:10:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/02 11:24:19 $
+ * @version $Revision: 1.4.4.1 $, $Date: 2006/03/27 10:10:06 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -66,7 +66,7 @@ public final class ProtoEquipmentDatabase extends StorableObjectDatabase<ProtoEq
 
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final ProtoEquipment storableObject) throws IllegalDataException {
-		final String sql = Integer.toString(storableObject.getType().getCode()) + COMMA
+		final String sql = Integer.toString(storableObject.getType().ordinal()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getManufacturer(), SIZE_MANUFACTURER_COLUMN) + APOSTROPHE + COMMA
@@ -78,7 +78,7 @@ public final class ProtoEquipmentDatabase extends StorableObjectDatabase<ProtoEq
 	protected int setEntityForPreparedStatementTmpl(final ProtoEquipment storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		preparedStatement.setInt(++startParameterNumber, storableObject.getType().getCode());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getType().ordinal());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getManufacturer(), SIZE_MANUFACTURER_COLUMN);

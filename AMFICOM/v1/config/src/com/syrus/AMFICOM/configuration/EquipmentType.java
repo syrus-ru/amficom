@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.110 2005/12/07 17:16:25 bass Exp $
+ * $Id: EquipmentType.java,v 1.110.4.1 2006/03/27 10:10:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,16 +20,15 @@ import com.syrus.AMFICOM.configuration.corba.IdlEquipmentType;
 import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment.XmlEquipmentType;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.util.Codeable;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.110 $, $Date: 2005/12/07 17:16:25 $
+ * @version $Revision: 1.110.4.1 $, $Date: 2006/03/27 10:10:06 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
-public enum EquipmentType implements Namable, Codeable,
+public enum EquipmentType implements Namable,
 		IdlTransferableObject<IdlEquipmentType> {
 	REFLECTOMETER("reflectometer"),
 	OPTICAL_SWITCH("optical_switch"),
@@ -99,10 +98,6 @@ public enum EquipmentType implements Namable, Codeable,
 		return valueOf(xmlEquipmentType.intValue() - 1);
 	}
 
-	public int getCode() {
-		return this.ordinal();
-	}
-
 	public String getCodename() {
 		return this.codename;
 	}
@@ -121,14 +116,14 @@ public enum EquipmentType implements Namable, Codeable,
 
 	public IdlEquipmentType getIdlTransferable(final ORB orb) {
 		try {
-			return IdlEquipmentType.from_int(this.getCode());
+			return IdlEquipmentType.from_int(this.ordinal());
 		} catch (org.omg.CORBA.BAD_PARAM bp) {
-			throw new IllegalArgumentException("Illegal code: " + this.getCode());
+			throw new IllegalArgumentException("Illegal code: " + this.ordinal());
 		}
 	}
 	
 	public XmlEquipmentType.Enum getXmlTransferable() {
-		return XmlEquipmentType.Enum.forInt(this.getCode() + 1);
+		return XmlEquipmentType.Enum.forInt(this.ordinal() + 1);
 	}
 
 	public static IdlEquipmentType[] createTransferables(final EnumSet<EquipmentType> equipmentTypes, final ORB orb) {
@@ -156,6 +151,6 @@ public enum EquipmentType implements Namable, Codeable,
 
 	@Override
 	public String toString() {
-		return this.getCodename() + " " + this.getCode();
+		return this.getCodename() + " " + this.ordinal();
 	}
 }

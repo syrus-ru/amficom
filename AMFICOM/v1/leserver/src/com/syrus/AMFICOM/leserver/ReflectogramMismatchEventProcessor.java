@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.21 2006/04/04 10:35:24 arseniy Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.20.2.2 2006/04/07 08:44:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,10 @@
 
 package com.syrus.AMFICOM.leserver;
 
-import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.MUFF;
 import static com.syrus.AMFICOM.eventv2.EventType.REFLECTORGAM_MISMATCH;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
+import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -49,12 +49,11 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
- * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2006/04/04 10:35:24 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20.2.2 $, $Date: 2006/04/07 08:44:07 $
  * @module leserver
  */
-final class ReflectogramMismatchEventProcessor
-		implements EventProcessor {
+final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 	/*-********************************************************************
 	 * String constants & i18n.                                           *
 	 **********************************************************************/
@@ -97,6 +96,14 @@ final class ReflectogramMismatchEventProcessor
 
 	private static final Pattern METER_PLURAL_GENITIVE_REGEXP = Pattern.compile("(([0-9]*[^1])?[0,5-9]|[0-9]*1[0-9])");
 
+	ReflectogramMismatchEventProcessor(final int capacity) {
+		super(capacity);
+	}
+
+	ReflectogramMismatchEventProcessor() {
+		this(Integer.MAX_VALUE);
+	}
+
 	/**
 	 * @see EventProcessor#getEventType()
 	 */
@@ -109,11 +116,13 @@ final class ReflectogramMismatchEventProcessor
 	 * @see EventProcessor#processEvent(Event)
 	 */
 	public void processEvent(final Event<?> event) {
+		final long t0 = System.nanoTime();
+
 		@SuppressWarnings("unchecked")
 		final ReflectogramMismatchEvent reflectogramMismatchEvent = (ReflectogramMismatchEvent) event;
 		Log.debugMessage("ReflectogramMismatchEvent: "
 				+ reflectogramMismatchEvent + " started being processed",
-				SEVERE);
+				FINEST);
 
 		try {
 			final Identifier measurementId = reflectogramMismatchEvent.getMeasurementId();
@@ -247,6 +256,9 @@ final class ReflectogramMismatchEventProcessor
 		} catch (final ApplicationException ae) {
 			Log.debugMessage(ae, SEVERE);
 		}
+
+		final long t1 = System.nanoTime();
+		Log.debugMessage(((t1 - t0) / 1e9) + " second(s)", FINEST);
 	}
 
 	/**
@@ -301,7 +313,9 @@ final class ReflectogramMismatchEventProcessor
 		String rightNonSpaciousName = null;
 
 		if (affectedPathElement.isSpacious()) {
-			printDebugInfo(affectedPathElement);
+			if (false) {
+				printDebugInfo(affectedPathElement);
+			}
 
 			try {
 				final SchemePath parentPathOwner = affectedPathElement.getParentPathOwner();
@@ -312,18 +326,32 @@ final class ReflectogramMismatchEventProcessor
 				for (int i = sequentialNumber - 1, n = 0; i >= n; i--) {
 					final PathElement pathElement = pathMembers.get(i);
 					if (pathElement.isSpacious()) {
+						/**
+						 * @bug The distance reported
+						 * will be incorrect if there're
+						 * two adjacent spacious path
+						 * elements.
+						 */
 						continue;
 					}
 					leftNonSpaciousName = getExtendedName(pathElement.getId());
+					break;
 				}
 
 				
 				for (int i = sequentialNumber + 1, n = pathMembers.size(); i < n; i++) {
 					final PathElement pathElement = pathMembers.get(i);
 					if (pathElement.isSpacious()) {
+						/**
+						 * @bug The distance reported
+						 * will be incorrect if there're
+						 * two adjacent spacious path
+						 * elements.
+						 */
 						continue;
 					}
 					rightNonSpaciousName = getExtendedName(pathElement.getId());
+					break;
 				}
 			} catch (final ApplicationException ae) {
 				Log.debugMessage(ae, SEVERE);
@@ -447,6 +475,8 @@ final class ReflectogramMismatchEventProcessor
 	 * @param affectedPathElement
 	 */
 	private static void printDebugInfo(final PathElement affectedPathElement) {
+		final long t0 = System.nanoTime();
+
 		String leftNonSpaciosName = null;
 		String leftNonMuffName = null;
 		String leftMuffName = null;
@@ -479,12 +509,10 @@ final class ReflectogramMismatchEventProcessor
 					continue;
 				}
 				final EquipmentType equipmentType = protoEquipment.getType();
-				final String equipmentTypeCodename = equipmentType.getCodename();
-				final String muffCodename = MUFF.stringValue();
-				if (equipmentTypeCodename.equals(muffCodename) && leftMuffName == null) {
+				if (equipmentType == EquipmentType.MUFF && leftMuffName == null) {
 					leftMuffName = equipmentType.getDescription() + ' ' + schemeElement.getName();
 					assert leftMuffName != null;
-				} else if (!equipmentTypeCodename.equals(muffCodename) && leftNonMuffName == null) {
+				} else if (equipmentType != EquipmentType.MUFF && leftNonMuffName == null) {
 					leftNonMuffName = equipmentType.getDescription() + ' ' + schemeElement.getName();
 					assert leftNonMuffName != null;
 				}
@@ -514,12 +542,10 @@ final class ReflectogramMismatchEventProcessor
 					continue;
 				}
 				final EquipmentType equipmentType = protoEquipment.getType();
-				final String equipmentTypeCodename = equipmentType.getCodename();
-				final String muffCodename = MUFF.stringValue();
-				if (equipmentTypeCodename.equals(muffCodename) && rightMuffName == null) {
+				if (equipmentType == EquipmentType.MUFF && rightMuffName == null) {
 					rightMuffName = equipmentType.getDescription() + ' ' + schemeElement.getName();
 					assert rightMuffName != null;
-				} else if (!equipmentTypeCodename.equals(muffCodename) && rightNonMuffName == null) {
+				} else if (equipmentType != EquipmentType.MUFF && rightNonMuffName == null) {
 					rightNonMuffName = equipmentType.getDescription() + ' ' + schemeElement.getName();
 					assert rightNonMuffName != null;
 				}
@@ -567,5 +593,8 @@ final class ReflectogramMismatchEventProcessor
 		Log.debugMessage("*** Nearest right node: " + rightNonSpaciosName, INFO);
 		Log.debugMessage("*** Nearest right non-muff node: " + rightNonMuffName, INFO);
 		Log.debugMessage("*** Nearest right muff: " + rightMuffName, INFO);
+
+		final long t1 = System.nanoTime();
+		Log.debugMessage(((t1 - t0) / 1e9) + " second(s)", FINEST);
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.208 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.207.2.2 2006/03/27 10:10:06 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,18 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
-import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
-import static com.syrus.AMFICOM.general.ErrorMessages.ONLY_ONE_EXPECTED;
-import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -43,8 +32,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.208 $, $Date: 2006/03/15 15:17:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.207.2.2 $, $Date: 2006/03/27 10:10:06 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 9
@@ -79,7 +68,6 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 	public static final String SQL_FUNCTION_MAX = " MAX ";
 	public static final String SQL_FUNCTION_UPPER = " UPPER ";
-	public static final String SQL_FUNCTION_EMPTY_BLOB = " EMPTY_BLOB() ";
 	
 	public static final String SQL_IN = " IN ";
 	public static final String SQL_NOT_IN = " NOT IN ";
@@ -93,9 +81,10 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	public static final String SQL_UPDATE = " UPDATE ";
 	public static final String SQL_VALUES = " VALUES ";
 	public static final String SQL_WHERE = " WHERE ";
+	public static final String SQL_FUNCTION_EMPTY_BLOB = " EMPTY_BLOB() ";
 	public static final String SQL_IS = " IS ";
 
-	protected static enum ExecuteMode {MODE_INSERT, MODE_UPDATE}
+	protected enum ExecuteMode {MODE_INSERT, MODE_UPDATE}
 
 	public static final int SIZE_CODENAME_COLUMN = 32;
 	public static final int SIZE_NAME_COLUMN = 64;
@@ -123,15 +112,15 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 	protected final String getColumns(final ExecuteMode mode) {
 		if (columns == null) {
-			columns = COLUMN_CREATED + COMMA
-					+ COLUMN_MODIFIED + COMMA
-					+ COLUMN_CREATOR_ID + COMMA
-					+ COLUMN_MODIFIER_ID + COMMA
-					+ COLUMN_VERSION + COMMA;
+			columns = StorableObjectWrapper.COLUMN_CREATED + COMMA
+					+ StorableObjectWrapper.COLUMN_MODIFIED + COMMA
+					+ StorableObjectWrapper.COLUMN_CREATOR_ID + COMMA
+					+ StorableObjectWrapper.COLUMN_MODIFIER_ID + COMMA
+					+ StorableObjectWrapper.COLUMN_VERSION + COMMA;
 		}
 		switch (mode) {
 			case MODE_INSERT:
-				return COLUMN_ID + COMMA + columns + this.getColumnsTmpl();
+				return StorableObjectWrapper.COLUMN_ID + COMMA + columns + this.getColumnsTmpl();
 			case MODE_UPDATE:
 				return columns + this.getColumnsTmpl();
 			default:
@@ -159,6 +148,14 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 	protected abstract String getUpdateSingleSQLValuesTmpl(T storableObject) throws IllegalDataException;
 
+	/**
+	 * This method is not used any longer, but preserved in venerable memory
+	 * of Arseniy's technical genius.
+	 *
+	 * @param storableObject
+	 * @param mode
+	 * @throws IllegalDataException
+	 */
 	protected final String getUpdateSingleSQLValues(final T storableObject, final ExecuteMode mode)
 			throws IllegalDataException {
 		String modeString;
@@ -187,10 +184,10 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		if (this.retrieveQuery == null) {
 			buffer = new StringBuffer(SQL_SELECT);
 			String cols = this.getColumns(ExecuteMode.MODE_INSERT);
-			cols = cols.replaceFirst(COLUMN_CREATED,
-					DatabaseDate.toQuerySubString(COLUMN_CREATED));
-			cols = cols.replaceFirst(COLUMN_MODIFIED,
-					DatabaseDate.toQuerySubString(COLUMN_MODIFIED));
+			cols = cols.replaceFirst(StorableObjectWrapper.COLUMN_CREATED,
+					DatabaseDate.toQuerySubString(StorableObjectWrapper.COLUMN_CREATED));
+			cols = cols.replaceFirst(StorableObjectWrapper.COLUMN_MODIFIED,
+					DatabaseDate.toQuerySubString(StorableObjectWrapper.COLUMN_MODIFIED));
 			buffer.append(cols);
 			buffer.append(SQL_FROM);
 			buffer.append(this.getEntityName());
@@ -303,9 +300,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 	public final Set<T> retrieveButIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition)
 			throws RetrieveObjectException, IllegalDataException {
-		assert StorableObject.hasSingleTypeEntities(ids) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
+		assert StorableObject.hasSingleTypeEntities(ids) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
-		final StringBuffer stringBuffer = idsEnumerationString(ids, COLUMN_ID, false);
+		final StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
 
 		if (condition != null) {
 			stringBuffer.append(SQL_AND);
@@ -319,9 +316,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 	public final Set<T> retrieveByIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition)
 			throws RetrieveObjectException, IllegalDataException {
-		assert StorableObject.hasSingleTypeEntities(ids) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
+		assert StorableObject.hasSingleTypeEntities(ids) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
-		final StringBuffer stringBuffer = idsEnumerationString(ids, COLUMN_ID, true);
+		final StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true);
 
 		if (condition != null) {
 			stringBuffer.append(SQL_AND);
@@ -334,10 +331,10 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	}
 
 	public final T retrieveForId(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		assert id != null : NON_NULL_EXPECTED;
-		assert id.getMajor() == this.getEntityCode() : ILLEGAL_ENTITY_CODE;
+		assert id != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert id.getMajor() == this.getEntityCode() : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
-		final String condition = COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(id);
+		final String condition = StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(id);
 		try {
 			final Set<T> objects = this.retrieveByCondition(condition);
 			if (!objects.isEmpty()) {
@@ -365,7 +362,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		final String tableName = this.getEntityName();
 
 		final StringBuffer sql = new StringBuffer(SQL_SELECT);
-		sql.append(COLUMN_ID);
+		sql.append(StorableObjectWrapper.COLUMN_ID);
 		sql.append(SQL_FROM);
 		sql.append(tableName);
 		sql.append(SQL_WHERE);
@@ -379,7 +376,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			while (resultSet.next()) {
-				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
+				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
 				identifiers.add(id);
 			}
 		} catch (SQLException sqle) {
@@ -418,9 +415,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	}
 
 	public final Set<Identifier> retrieveIdentifiersButIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition) throws RetrieveObjectException {
-		assert StorableObject.hasSingleTypeEntities(ids) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
+		assert StorableObject.hasSingleTypeEntities(ids) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
-		final StringBuffer stringBuffer = idsEnumerationString(ids, COLUMN_ID, false);
+		final StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
 
 		if (condition != null) {
 			stringBuffer.append(SQL_AND);
@@ -433,9 +430,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	}
 
 	public final Set<Identifier> retrieveIdentifiersByIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition) throws RetrieveObjectException {
-		assert StorableObject.hasSingleTypeEntities(ids) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
+		assert StorableObject.hasSingleTypeEntities(ids) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
-		final StringBuffer stringBuffer = idsEnumerationString(ids, COLUMN_ID, true);
+		final StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true);
 
 		if (condition != null) {
 			stringBuffer.append(SQL_AND);
@@ -608,12 +605,12 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 	}
 
-	public final boolean isPresentInDatabase(final Identifier id) throws RetrieveObjectException {
+	public static boolean isPresentInDatabase(final Identifier id) throws RetrieveObjectException {
 		final String aliasCount = "count";
-		final String tableName = this.getEntityName();
+		final String tableName = ObjectEntities.codeToString(id.getMajor());
 		final String sql = SQL_SELECT + SQL_COUNT + aliasCount
 				+ SQL_FROM + tableName
-				+ SQL_WHERE + COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(id);
+				+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
@@ -624,7 +621,6 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			resultSet = statement.executeQuery(sql.toString());
 			resultSet.next();
 			final int count = resultSet.getInt(aliasCount);
-			assert count <= 1 : ONLY_ONE_EXPECTED;
 			return count > 0;
 		}
 		catch (SQLException sqle) {
@@ -633,54 +629,38 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 		finally {
 			try {
-				try {
-					if (statement != null) {
-						statement.close();
-						statement = null;
-					}
-				} finally {
-					try {
-						if (resultSet != null) {
-							resultSet.close();
-							resultSet = null;
-						}
-					} finally {
-						if (connection != null) {
-							DatabaseConnection.releaseConnection(connection);
-							connection = null;
-						}
-					}
-				}
-			} catch (SQLException sqle1) {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
 				Log.errorMessage(sqle1);
+			}
+			finally {
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
 
-	public static boolean isObjectPresentInDatabase(final Identifier id) throws RetrieveObjectException, IllegalObjectEntityException {
-		final short entityCode = id.getMajor();
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
-		final StorableObjectDatabase<?> storableObjectDatabase = DatabaseContext.getDatabase(entityCode);
-		if (storableObjectDatabase == null) {
-			throw new IllegalObjectEntityException("Cannot find database for code " + entityCode, IllegalObjectEntityException.UNKNOWN_ENTITY_CODE);
-		}
-		return storableObjectDatabase.isPresentInDatabase(id);
-	}
-
 	final Map<Identifier, StorableObjectVersion> retrieveVersions(final Set<Identifier> ids) throws RetrieveObjectException {
-		assert StorableObject.hasSingleTypeEntities(ids) : OBJECTS_NOT_OF_THE_SAME_ENTITY;
+		assert StorableObject.hasSingleTypeEntities(ids) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
 		final String tableName = this.getEntityName();
 
 		final Map<Identifier, StorableObjectVersion> versionsMap = new HashMap<Identifier, StorableObjectVersion>();
 
 		final StringBuffer sql = new StringBuffer(SQL_SELECT);
-		sql.append(COLUMN_ID);
+		sql.append(StorableObjectWrapper.COLUMN_ID);
 		sql.append(COMMA);
-		sql.append(COLUMN_VERSION);
+		sql.append(StorableObjectWrapper.COLUMN_VERSION);
 		sql.append(SQL_FROM);
 		sql.append(tableName);
 		sql.append(SQL_WHERE);
-		sql.append(idsEnumerationString(ids, COLUMN_ID, true));
+		sql.append(idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true));
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
@@ -690,8 +670,8 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			while (resultSet.next()) {
-				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
-				final long version = resultSet.getLong(COLUMN_VERSION);
+				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
+				final long version = resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION);
 				versionsMap.put(id, StorableObjectVersion.valueOf(version));
 			}
 		}
@@ -727,7 +707,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		if (versionsMap.size() < ids.size()) {
 			for (final Identifier id : ids) {
 				if (!versionsMap.containsKey(id)) {
-					versionsMap.put(id, ILLEGAL_VERSION);
+					versionsMap.put(id, StorableObjectVersion.ILLEGAL_VERSION);
 				}
 			}
 		}
@@ -741,9 +721,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	private void insertEntities(final Set<T> storableObjects)
 			throws IllegalDataException,
 				CreateObjectException {
-		assert storableObjects != null : NON_NULL_EXPECTED;
-		assert !storableObjects.isEmpty() : NON_EMPTY_EXPECTED;
-		assert StorableObject.getEntityCodeOfIdentifiables(storableObjects) == this.getEntityCode() : ILLEGAL_ENTITY_CODE;
+		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert !storableObjects.isEmpty() : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert StorableObject.getEntityCodeOfIdentifiables(storableObjects) == this.getEntityCode() : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
 		final String sql = SQL_INSERT_INTO + this.getEntityName() + OPEN_BRACKET
 				+ this.getColumns(ExecuteMode.MODE_INSERT)
@@ -949,9 +929,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				CreateObjectException,
 				IllegalDataException,
 				UpdateObjectException {
-		assert storableObjects != null : NON_NULL_EXPECTED;
-		assert !storableObjects.isEmpty() : NON_EMPTY_EXPECTED;
-		assert StorableObject.getEntityCodeOfIdentifiables(storableObjects) == this.getEntityCode() : ILLEGAL_ENTITY_CODE;
+		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert !storableObjects.isEmpty() : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert StorableObject.getEntityCodeOfIdentifiables(storableObjects) == this.getEntityCode() : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
 		final Set<Identifier> ids = Identifier.createIdentifiers(storableObjects);
 		final Set<Identifier> dbIds = this.retrieveIdentifiersByIdsByCondition(ids, null);
@@ -979,9 +959,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	}
 
 	private void updateEntities(final Set<T> storableObjects) throws UpdateObjectException {
-		assert storableObjects != null : NON_NULL_EXPECTED;
-		assert !storableObjects.isEmpty() : NON_EMPTY_EXPECTED;
-		assert StorableObject.getEntityCodeOfIdentifiables(storableObjects) == this.getEntityCode() : ILLEGAL_ENTITY_CODE;
+		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert !storableObjects.isEmpty() : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert StorableObject.getEntityCodeOfIdentifiables(storableObjects) == this.getEntityCode() : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
 		final String[] cols = this.getColumns(ExecuteMode.MODE_UPDATE).split(COMMA);
 		final String[] values = this.getUpdateMultipleSQLValues().split(COMMA);
@@ -992,7 +972,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		sql.append(this.getEntityName());
 		sql.append(SQL_SET);
 		for (int i = 0; i < cols.length; i++) {
-			if (cols[i].equals(COLUMN_ID)) {
+			if (cols[i].equals(StorableObjectWrapper.COLUMN_ID)) {
 				continue;
 			}
 			sql.append(cols[i]);
@@ -1003,7 +983,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			}
 		}
 		sql.append(SQL_WHERE);
-		sql.append(COLUMN_ID);
+		sql.append(StorableObjectWrapper.COLUMN_ID);
 		sql.append(EQUALS);
 		sql.append(QUESTION);
 
@@ -1248,7 +1228,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		final StringBuffer stringBuffer = new StringBuffer(SQL_DELETE_FROM);
 		stringBuffer.append(this.getEntityName());
 		stringBuffer.append(SQL_WHERE);
-		stringBuffer.append(idsEnumerationString(identifiables, COLUMN_ID, true));
+		stringBuffer.append(idsEnumerationString(identifiables, StorableObjectWrapper.COLUMN_ID, true));
 
 		Statement statement = null;
 		Connection connection = null;

@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.150 2006/03/16 11:28:12 arseniy Exp $
+ * $Id: StorableObject.java,v 1.148.2.5.4.1 2006/04/11 07:49:36 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,9 @@ import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
 
+import java.io.Serializable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.Collections;
@@ -31,6 +33,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.bugs.Crutch134;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
@@ -41,17 +44,15 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 import com.syrus.util.LRUMap.Retainable;
-import com.syrus.util.transport.idl.IdlConversionException;
-import com.syrus.util.transport.idl.IdlTransferableObject;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.150 $, $Date: 2006/03/16 11:28:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.148.2.5.4.1 $, $Date: 2006/04/11 07:49:36 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public abstract class StorableObject implements Identifiable,
-		IdlTransferableObject<IdlStorableObject>, Retainable {
+public abstract class StorableObject implements Identifiable, Retainable, Serializable {
 	private static final long serialVersionUID = 3904998894075738999L;
 
 	protected Identifier id;
@@ -135,15 +136,17 @@ public abstract class StorableObject implements Identifiable,
 	}
 
 	/**
-	 *
-	 * Will be overridden by descendants.
-	 *
 	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 * @throws ApplicationException
+	 *
+	 * <p>
+	 * Non-synchronized.
+	 * Non-overriding.
+	 * Non-overridable.
+	 * </p>
+	 *
+	 * @param transferable
 	 */
-	@SuppressWarnings("unused")
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable)
-	throws IdlConversionException {
+	protected final void fromIdlTransferable(final IdlStorableObject transferable) {
 		this.id = Identifier.valueOf(transferable.id);
 		this.created = new Date(transferable.created);
 		this.modified = new Date(transferable.modified);
@@ -215,7 +218,7 @@ public abstract class StorableObject implements Identifiable,
 	 * @param orb
 	 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlStorableObject getIdlTransferable(final ORB orb) {
+	protected IdlStorableObject getIdlTransferable(final ORB orb) {
 		return IdlStorableObjectHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -332,8 +335,8 @@ public abstract class StorableObject implements Identifiable,
 			final Identifier modifierId,
 			final StorableObjectVersion version) {
 		assert created != null && modified != null && creatorId != null && modifierId != null;
-		this.created = created;
-		this.modified = modified;
+		this.created = new Date(created.getTime());
+		this.modified = new Date(modified.getTime());
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 		this.version = version;
@@ -410,7 +413,17 @@ public abstract class StorableObject implements Identifiable,
 		int i = 0;
 		synchronized (storableObjects) {
 			for (final StorableObject storableObject : storableObjects) {
-				transferables[i++] = storableObject.getIdlTransferable(orb);
+				if (!(storableObject instanceof IdlTransferableObjectExt)) {
+					Log.debugMessage(storableObject.getClass().getName() + " doesn't support IDL import/export", SEVERE);
+					continue;
+				}
+				IdlTransferableObjectExt<?> pureJava = (IdlTransferableObjectExt) storableObject;
+				final IDLEntity transferable = pureJava.getIdlTransferable(orb);
+				if (!(transferable instanceof IdlStorableObject)) {
+					Log.debugMessage(transferable.getClass().getName() + " isn't castable to IdlStorableObject", SEVERE);
+					continue;
+				}
+				transferables[i++] = (IdlStorableObject) transferable;
 			}
 		}
 		return transferables;
@@ -424,7 +437,8 @@ public abstract class StorableObject implements Identifiable,
 		for (final IdlStorableObject idlStorableObject : storableObjectsT) {
 			try {
 				storableObjects.add((T) idlStorableObject.getNative());
-			} catch (IdlCreateObjectException coe) {
+			} catch (final IdlCreateObjectException coe) {
+				Log.errorMessage(coe.detailMessage);
 				Log.errorMessage(coe);
 			}
 		}
@@ -630,9 +644,11 @@ public abstract class StorableObject implements Identifiable,
 		assert !storableObjects.isEmpty() : NON_EMPTY_EXPECTED;
 		assert hasSingleTypeEntities(storableObjects) :  OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
+		@SuppressWarnings("unchecked")
 		final Wrapper storableObjectWrapper = storableObjects.iterator().next().getWrapper();
 		final Map<Identifier, V> valuesMap = new HashMap<Identifier, V>();
 		for (final T storableObject : storableObjects) {
+			@SuppressWarnings("unchecked")
 			final V value = (V) storableObjectWrapper.getValue(storableObject, key);
 			valuesMap.put(storableObject.getId(), value);
 		}
@@ -686,17 +702,13 @@ public abstract class StorableObject implements Identifiable,
 	 * at com.sun.tools.javac.Main.compile(Main.java:67)
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
-	 * <p>Moreover, there&apos;s a
-	 * <a href = "https://bugs.eclipse.org/bugs/show_bug.cgi?id=128063">bug</a>
-	 * in Eclipse 3.2.0M4 which prevents this class from being protected.</p>
-	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.150 $, $Date: 2006/03/16 11:28:12 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.148.2.5.4.1 $, $Date: 2006/04/11 07:49:36 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
-	public static class StorableObjectContainerWrappee<T extends StorableObject> {
+	protected static class StorableObjectContainerWrappee<T extends StorableObject> {
 		private static final long serialVersionUID = -1264974065379428032L;
 
 		private boolean cacheBuilt = false;
@@ -800,8 +812,8 @@ public abstract class StorableObject implements Identifiable,
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.150 $, $Date: 2006/03/16 11:28:12 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.148.2.5.4.1 $, $Date: 2006/04/11 07:49:36 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
@@ -813,7 +825,7 @@ public abstract class StorableObject implements Identifiable,
 	/**
 	 * @see com.syrus.util.LRUMap.Retainable#retain()
 	 */
-	public final boolean retain() {
+	public boolean retain() {
 		return this.isChanged();
 	}
 }

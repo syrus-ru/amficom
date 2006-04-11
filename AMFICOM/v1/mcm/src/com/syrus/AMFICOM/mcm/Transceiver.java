@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.82 2006/04/04 10:35:01 arseniy Exp $
+ * $Id: Transceiver.java,v 1.81.2.1 2006/03/29 05:48:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2006/04/04 10:35:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.81.2.1 $, $Date: 2006/03/29 05:48:32 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */

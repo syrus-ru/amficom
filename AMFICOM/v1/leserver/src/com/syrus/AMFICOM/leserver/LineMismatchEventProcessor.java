@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.27 2006/04/04 06:08:46 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.27.2.1 2006/04/07 08:44:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,13 +53,21 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2006/04/04 06:08:46 $
+ * @version $Revision: 1.27.2.1 $, $Date: 2006/04/07 08:44:07 $
  * @module leserver
  */
-final class LineMismatchEventProcessor implements EventProcessor {
+final class LineMismatchEventProcessor extends AbstractEventProcessor {
 	private static Identifier characteristicTypeId = null;
 
 	private static StorableObjectCondition condition = null;
+
+	LineMismatchEventProcessor(final int capacity) {
+		super(capacity);
+	}
+
+	LineMismatchEventProcessor() {
+		this(Integer.MAX_VALUE);
+	}
 
 	/**
 	 * @see EventProcessor#getEventType()
@@ -73,6 +81,8 @@ final class LineMismatchEventProcessor implements EventProcessor {
 	 * @see EventProcessor#processEvent(Event)
 	 */
 	public void processEvent(final Event<?> event) {
+		final long t0 = System.nanoTime();
+
 		@SuppressWarnings("unchecked")
 		final LineMismatchEvent lineMismatchEvent = (LineMismatchEvent) event;
 		Log.debugMessage("LineMismatchEvent: "
@@ -120,6 +130,9 @@ final class LineMismatchEventProcessor implements EventProcessor {
 		} catch (final ApplicationException ae) {
 			Log.debugMessage(ae, SEVERE);
 		}
+
+		final long t1 = System.nanoTime();
+		Log.debugMessage(((t1 - t0) / 1e9) + " second(s)", FINEST);
 	}
 
 	private static Set<String> getAddresses(final Set<Identifier> systemUserIds) throws ApplicationException {
