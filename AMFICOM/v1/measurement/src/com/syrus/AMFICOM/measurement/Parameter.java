@@ -1,5 +1,5 @@
 /*-
- * $Id: Parameter.java,v 1.24.2.8 2006/03/27 14:51:39 arseniy Exp $
+ * $Id: Parameter.java,v 1.24.2.9 2006/04/11 10:21:09 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.corba.IdlParameter;
+import com.syrus.io.DataFormatException;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
@@ -31,7 +32,7 @@ import com.syrus.util.Log;
 /**
  * Надкласс для всех параметров. У любого параметра есть величина.
  * 
- * @version $Revision: 1.24.2.8 $, $Date: 2006/03/27 14:51:39 $
+ * @version $Revision: 1.24.2.9 $, $Date: 2006/04/11 10:21:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -88,6 +89,16 @@ public abstract class Parameter extends StorableObject {
 	}
 
 	/**
+	 * Получить тип параметра.
+	 * 
+	 * @return Тип параметра.
+	 * @throws ApplicationException
+	 */
+	public final ParameterType getType() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getTypeId(), true);
+	}
+
+	/**
 	 * Получить идентификатор типа параметра.
 	 * 
 	 * @return Идентификатор типа параметра.
@@ -130,30 +141,34 @@ public abstract class Parameter extends StorableObject {
 	 * @throws ApplicationException
 	 * @throws IOException
 	 */
-	public final String stringValue() throws ApplicationException, IOException {
+	public final String stringValue() throws ApplicationException, DataFormatException {
 		if (this.byteArrayValue == null) {
 			this.byteArrayValue = new ByteArray(this.value);
 		}
 		final ParameterType parameterType = StorableObjectPool.getStorableObject(this.getTypeId(), true);
 		final DataType dataType = parameterType.getDataType();
-		switch (dataType) {
-			case INTEGER:
-				return Integer.toString(this.byteArrayValue.toInt());
-			case DOUBLE:
-				return Double.toString(this.byteArrayValue.toDouble());
-			case STRING:
-				return this.byteArrayValue.toUTFString();
-			case DATE:
-				return this.byteArrayValue.toDate().toString();
-			case LONG:
-				return Long.toString(this.byteArrayValue.toLong());
-			case BOOLEAN:
-				return Boolean.toString(this.byteArrayValue.toBoolean());
-			case RAW:
-				return String.valueOf(this.value);
-			default:
-				Log.errorMessage("Illegal data type: " + dataType);
-				return String.valueOf(this.value);
+		try {
+			switch (dataType) {
+				case INTEGER:
+					return Integer.toString(this.byteArrayValue.toInt());
+				case DOUBLE:
+					return Double.toString(this.byteArrayValue.toDouble());
+				case STRING:
+					return this.byteArrayValue.toUTFString();
+				case DATE:
+					return this.byteArrayValue.toDate().toString();
+				case LONG:
+					return Long.toString(this.byteArrayValue.toLong());
+				case BOOLEAN:
+					return Boolean.toString(this.byteArrayValue.toBoolean());
+				case RAW:
+					return String.valueOf(this.value);
+				default:
+					Log.errorMessage("Illegal data type: " + dataType);
+					return String.valueOf(this.value);
+			}
+		} catch (IOException ioe) {
+			throw new DataFormatException("Cannot convert to " + dataType + " -- " + ioe.getMessage());
 		}
 	}
 
