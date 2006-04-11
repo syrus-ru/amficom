@@ -1,5 +1,5 @@
 /*-
- * $Id: TestActionParameter.java,v 1.1.2.6 2006/04/07 14:17:38 arseniy Exp $
+ * $Id: TestActionParameter.java,v 1.1.2.7 2006/04/11 12:50:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,16 +14,15 @@ import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static com.syrus.AMFICOM.measurement.Action.ActionStatus.ACTION_STATUS_COMPLETED;
 import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_STATUS;
+import static com.syrus.AMFICOM.measurement.AnalysisTypeCodename.DADARA;
 import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
 import static com.syrus.AMFICOM.measurement.MeasurementTypeCodename.REFLECTOMETRY;
-import static com.syrus.AMFICOM.measurement.AnalysisTypeCodename.DADARA;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_ANALYSIS_RESULT;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PREDICTION_TIME;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PULSE_WIDTH_M;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PULSE_WIDTH_NS;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.REFLECTOGRAMMA;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,9 +40,10 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind;
+import com.syrus.io.DataFormatException;
 
 /**
- * @version $Revision: 1.1.2.6 $, $Date: 2006/04/07 14:17:38 $
+ * @version $Revision: 1.1.2.7 $, $Date: 2006/04/11 12:50:39 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -62,7 +62,7 @@ public final class TestActionParameter extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testRetrieve() throws ApplicationException, IOException {
+	public void testRetrieve() throws ApplicationException, DataFormatException {
 		final ParameterType parameterType = ParameterType.valueOf(PULSE_WIDTH_M);
 		final MeasurementType measurementType = MeasurementType.valueOf(REFLECTOMETRY);
 		final MeasurementPortType measurementPortType = MeasurementPortType.valueOf(REFLECTOMETRY_PK7600);

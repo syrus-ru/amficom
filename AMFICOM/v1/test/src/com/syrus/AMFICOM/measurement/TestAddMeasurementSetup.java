@@ -1,5 +1,5 @@
 /*-
- * $Id: TestAddMeasurementSetup.java,v 1.1.2.4 2006/04/07 14:18:21 arseniy Exp $
+ * $Id: TestAddMeasurementSetup.java,v 1.1.2.5 2006/04/11 12:50:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.TRACE_LENGTH;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.WAVE_LENGTH;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -45,10 +44,11 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind;
+import com.syrus.io.DataFormatException;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2006/04/07 14:18:21 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/04/11 12:50:39 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -66,7 +66,7 @@ public final class TestAddMeasurementSetup extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testAdd() throws ApplicationException, IOException {
+	public void testAdd() throws ApplicationException, DataFormatException {
 		final Identifier creatorId = LoginManager.getUserId();
 
 		final MeasurementType measurementType = MeasurementType.valueOf(REFLECTOMETRY);
@@ -166,7 +166,7 @@ public final class TestAddMeasurementSetup extends TestCase {
 		StorableObjectPool.flush(measurementSetup, creatorId, false);
 	}
 
-	public void testRetrieve() throws ApplicationException, IOException {
+	public void testRetrieve() throws ApplicationException, DataFormatException {
 		final MeasurementPortType measurementPortType = MeasurementPortType.valueOf(REFLECTOMETRY_PK7600.stringValue());
 
 		final String measurementPortDescriptionSubstring = "MeasurementPort_1_";
