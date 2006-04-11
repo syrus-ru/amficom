@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderApplicationModel.java,v 1.2 2006/04/11 05:58:32 stas Exp $
+ * $Id: ReportBuilderApplicationModel.java,v 1.3 2006/04/11 14:30:02 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -141,5 +141,7 @@ public class ReportBuilderApplicationModel extends ApplicationModel
 		I18N.addResourceBundle("com.syrus.AMFICOM.Client.General.Lang.schematics");
 		I18N.addResourceBundle("com.syrus.AMFICOM.client.resource.map");
 		I18N.addResourceBundle("com.syrus.AMFICOM.Client.General.lang.scheduler");
+		I18N.addResourceBundle("com.syrus.AMFICOM.client.resource.map");
+		I18N.addResourceBundle("com.syrus.AMFICOM.resource.observer");
 	}
 }
