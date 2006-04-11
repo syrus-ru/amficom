@@ -15,6 +15,8 @@ import javax.swing.table.AbstractTableModel;
 
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.ATable;
+import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.resource.ModelResourceKeys;
 
 public class TransData extends JInternalFrame {
 
@@ -56,7 +58,7 @@ public class TransData extends JInternalFrame {
 		jScrollPane1.getViewport().add(jTable1);
 		jScrollPane1.getViewport().setBackground(SystemColor.window);
 
-		this.setTitle("Параметры системы передачи");
+		this.setTitle(I18N.getString(ModelResourceKeys.FRAME_TRANS_DATA));
 
 		jComboBox1.addItemListener(new java.awt.event.ItemListener()
 		{

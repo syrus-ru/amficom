@@ -2,6 +2,11 @@
 // Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.Client.Model;
 
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_ANALYSIS_MAIN;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_TRACE_SELECTOR;
+import static com.syrus.AMFICOM.resource.ModelResourceKeys.FRAME_TRANS_DATA;
+import static com.syrus.AMFICOM.resource.ModelResourceKeys.FRAME_TREE;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ComponentAdapter;
@@ -92,11 +97,6 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 	private static final long serialVersionUID = 2212105265261102560L;
 
 	ClientAnalysisManager		aManager					= new ClientAnalysisManager();
-	
-	public static final String	SELECTOR_FRAME				= "selectFrame";
-	public static final String	TRANS_DATA_FRAME	= "transData";
-	public static final String	ANALYSIS_FRAME				= "analysisFrame";
-	public static final String	TREE_FRAME = "treeFrame";
 	
 	SchemeTabbedPane schemePane;
 	MapMarkersLayeredPanel layeredPanel;
@@ -204,7 +204,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 			}
 		});
 		
-		this.frames.put(SELECTOR_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_TRACE_SELECTOR, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | SELECTOR_FRAME", Level.FINEST);
 				TraceSelectorFrame selectFrame = new TraceSelectorFrame(ModelMDIMain.this.dispatcher);
@@ -213,7 +213,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 			}
 		});
 		
-		this.frames.put(TRANS_DATA_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_TRANS_DATA, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | TRANS_DATA_FRAME", Level.FINEST);
 				TransData transDataFrame = new TransData();
@@ -222,7 +222,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 			}
 		});
 		
-		this.frames.put(ANALYSIS_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_ANALYSIS_MAIN, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ANALYSIS_FRAME", Level.FINEST);
@@ -231,7 +231,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 				ScalableFrame analysisFrame = new ScalableFrame(ModelMDIMain.this.layeredPanel) {
 					@Override
 					public String getReportTitle() {
-						return ANALYSIS_FRAME;
+						return FRAME_ANALYSIS_MAIN;
 					}
 				};
 				analysisFrame.setTitle(LangModelAnalyse.getString("analysisTitle"));
@@ -241,11 +241,11 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 			}
 		});
 		
-		this.frames.put(TREE_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_TREE, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | TREE_FRAME", Level.FINEST);
 				JInternalFrame treeFrame = new JInternalFrame();
-				treeFrame.setName(TREE_FRAME);
+				treeFrame.setName(FRAME_TREE);
 				treeFrame.setIconifiable(true);
 				treeFrame.setClosable(true);
 				treeFrame.setResizable(true);
@@ -276,10 +276,10 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 				int h = f.desktopPane.getSize().height;
 				int minh = Math.min(205, h / 4);
 
-				JInternalFrame selectFrame = (JInternalFrame) f.frames.get(ModelMDIMain.SELECTOR_FRAME);
-				JInternalFrame treeFrame = (JInternalFrame) f.frames.get(ModelMDIMain.TREE_FRAME);
-				JInternalFrame tdFrame = (JInternalFrame) f.frames.get(ModelMDIMain.TRANS_DATA_FRAME);
-				JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(ModelMDIMain.ANALYSIS_FRAME);
+				JInternalFrame selectFrame = (JInternalFrame) f.frames.get(FRAME_TRACE_SELECTOR);
+				JInternalFrame treeFrame = (JInternalFrame) f.frames.get(FRAME_TREE);
+				JInternalFrame tdFrame = (JInternalFrame) f.frames.get(FRAME_TRANS_DATA);
+				JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(FRAME_ANALYSIS_MAIN);
 				JInternalFrame modelParamsFrame = (JInternalFrame) f.frames.get(RefModelParamsFrame.NAME);
 								
 				JInternalFrame schemeFrame = (JInternalFrame) f.frames.get(SchemeViewerFrame.NAME);
@@ -412,10 +412,10 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 
 		aModel.setCommand("menuReportCreate", rc);
 
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, this.getLazyCommand(SELECTOR_FRAME));
-		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_TREE, this.getLazyCommand(TREE_FRAME));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, this.getLazyCommand(ANALYSIS_FRAME));
-		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_TRANS_DATA, this.getLazyCommand(TRANS_DATA_FRAME));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, this.getLazyCommand(FRAME_TRACE_SELECTOR));
+		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_TREE, this.getLazyCommand(FRAME_TREE));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, this.getLazyCommand(FRAME_ANALYSIS_MAIN));
+		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_TRANS_DATA, this.getLazyCommand(FRAME_TRANS_DATA));
 		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS, this.getLazyCommand(RefModelParamsFrame.NAME));
 		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_SCHEME, this.getLazyCommand(SchemeViewerFrame.NAME));
 		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES, this.getLazyCommand(GeneralPropertiesFrame.NAME));
@@ -442,7 +442,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 	public void bsHashAdded(String key) {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		
-		ScalableFrame analysisFrame = (ScalableFrame)this.frames.get(ANALYSIS_FRAME);
+		ScalableFrame analysisFrame = (ScalableFrame)this.frames.get(FRAME_ANALYSIS_MAIN);
 		BellcoreStructure bs = Heap.getAnyPFTraceByKey(key).getBS();
 		
 		double delta_x = bs.getResolution();
@@ -481,7 +481,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 	public void bsHashRemoved(String key) {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		
-		ScalableFrame analysisFrame = (ScalableFrame)this.frames.get(ANALYSIS_FRAME);
+		ScalableFrame analysisFrame = (ScalableFrame)this.frames.get(FRAME_ANALYSIS_MAIN);
 		analysisFrame.removeGraph(key);
 		analysisFrame.updScales();
 		
@@ -529,13 +529,13 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 	}
 	
 	void showTraceFrames(boolean b) {
-		JInternalFrame analysisFrame = (JInternalFrame) this.frames.get(ANALYSIS_FRAME);
+		JInternalFrame analysisFrame = (JInternalFrame) this.frames.get(FRAME_ANALYSIS_MAIN);
 		analysisFrame.setVisible(b);
-		JInternalFrame tdFrame = (JInternalFrame) this.frames.get(TRANS_DATA_FRAME);
+		JInternalFrame tdFrame = (JInternalFrame) this.frames.get(FRAME_TRANS_DATA);
 		tdFrame.setVisible(b);
-		JInternalFrame treeFrame = (JInternalFrame) this.frames.get(TREE_FRAME);
+		JInternalFrame treeFrame = (JInternalFrame) this.frames.get(FRAME_TREE);
 		treeFrame.setVisible(b);
-		JInternalFrame selectFrame = (JInternalFrame) this.frames.get(SELECTOR_FRAME);
+		JInternalFrame selectFrame = (JInternalFrame) this.frames.get(FRAME_TRACE_SELECTOR);
 		selectFrame.setVisible(b);
 		JInternalFrame modelParamsFrame = (JInternalFrame) this.frames.get(RefModelParamsFrame.NAME);
 		modelParamsFrame.setVisible(b);
