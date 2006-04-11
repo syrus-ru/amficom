@@ -1,5 +1,5 @@
 /*-
- * $Id: RefreshWindowTreeCommand.java,v 1.2 2006/04/11 05:58:32 stas Exp $
+ * $Id: RefreshWindowTreeCommand.java,v 1.3 2006/04/11 14:48:57 stas Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
 /**
  * @author max
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2006/04/11 05:58:32 $
+ * @version $Revision: 1.3 $, $Date: 2006/04/11 14:48:57 $
  * @module reportbuilder
  */
 
@@ -105,10 +105,13 @@ public class RefreshWindowTreeCommand extends AbstractCommand {
 		treeFilterUI.getShowFilterButton().setEnabled(enable);
 		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_CHANGE_VIEW, enable);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_SAVE_REPORT, enable);		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_PRINT_REPORT, enable);
+		// FIXME make setEnabled
+		aModel.setVisible(ReportBuilderApplicationModel.MENU_CHANGE_VIEW, enable);
+		aModel.setVisible(ReportBuilderApplicationModel.MENU_SAVE_REPORT, enable);		
+		aModel.setVisible(ReportBuilderApplicationModel.MENU_PRINT_REPORT, enable);
 		aModel.fireModelChanged("");
+		// FIXME make setEnabled		
+		iconedTreeUI.getToolBar().setVisible(enable);
 				
 		this.treeFrame.setVisible(true);
 	}
