@@ -15,11 +15,12 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ReportTable;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelPrediction;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.PredictionModel;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.Statistics;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.TimeDependenceData;
 import com.syrus.AMFICOM.client.UI.ATable;
+import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.resource.PredictionResourceKeys;
 import com.syrus.util.Log;
 
 /**
@@ -59,7 +60,7 @@ public class TimeDependenceTable extends JInternalFrame implements ReportTable, 
 
 		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().
 		getImage("images/general.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		setTitle(LangModelPrediction.getString("TimedTableTitle"));
+		setTitle(I18N.getString(PredictionResourceKeys.FRAME_TIME_DEPENDANCE_TABLE));
 
 		dataTable.getColumnModel().getColumn(0).setPreferredWidth(130);
 		dataTable.getColumnModel().getColumn(1).setPreferredWidth(40);
@@ -67,7 +68,7 @@ public class TimeDependenceTable extends JInternalFrame implements ReportTable, 
 
 	public String getReportTitle()
 	{
-		return LangModelPrediction.getString("TimedTableTitle");
+		return I18N.getString(PredictionResourceKeys.FRAME_TIME_DEPENDANCE_TABLE);
 	}
 
 	public TableModel getTableModel()

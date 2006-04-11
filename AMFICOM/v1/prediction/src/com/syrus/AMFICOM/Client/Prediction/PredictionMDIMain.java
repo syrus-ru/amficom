@@ -1,5 +1,16 @@
 package com.syrus.AMFICOM.Client.Prediction;
 
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_ANALYSIS_MAIN;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_DETAILED_EVENTS;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_EVENTS;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_HISTOGRAMM;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_MARKERS_INFO;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_OVERALL_STATS;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_PRIMARY_PARAMETERS;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_TRACE_SELECTOR;
+import static com.syrus.AMFICOM.resource.PredictionResourceKeys.FRAME_TIME_DEPENDANCE;
+import static com.syrus.AMFICOM.resource.PredictionResourceKeys.FRAME_TIME_DEPENDANCE_TABLE;
+
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.LinkedList;
@@ -50,17 +61,6 @@ import com.syrus.util.Log;
 public class PredictionMDIMain extends AbstractMainFrame implements BsHashChangeListener, PrimaryTraceListener {
 	private static final long serialVersionUID = 6748721407305415134L;
 
-	public static final String	SELECTOR_FRAME				= "selectFrame";
-	public static final String	PRIMARY_PARAMETERS_FRAME	= "paramFrame";
-	public static final String	STATS_FRAME					= "statsFrame";
-	public static final String	EVENTS_FRAME				= "eventsFrame";
-	public static final String	MARKERS_INFO_FRAME			= "MarkersInfoFrame";
-	public static final String	ANALYSIS_FRAME				= "analysisFrame";
-	public static final String	DETAILED_EVENTS_FRAME		= "DetailedEventsFrame";
-	public static final String	HISTOGRAMM_FRAME			= "HistogrammFrame";
-	public static final String	TD_FRAME			= "TimeDependanceFrame";
-	public static final String	TD_TABLE			= "TimeDependanceTable";
-	
 	UIDefaults					frames;
 	NoiseHistogrammPanel noiseHistogrammPanel;	
 
@@ -92,24 +92,24 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 		this.tables = new LinkedList<ReportTable>();
 		this.graphs = new LinkedList<SimpleResizableFrame>();
 		
-		this.frames.put(SELECTOR_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_TRACE_SELECTOR, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | SELECTOR_FRAME", Level.FINEST);
+				Log.debugMessage(".createValue | FRAME_TRACE_SELECTOR", Level.FINEST);
 				TraceSelectorFrame selectFrame = new TraceSelectorFrame(PredictionMDIMain.this.dispatcher);
 				desktopPane.add(selectFrame);
 				return selectFrame;
 			}
 		});
 
-		this.frames.put(PRIMARY_PARAMETERS_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_PRIMARY_PARAMETERS, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | PRIMARY_PARAMETERS_FRAME", Level.FINEST);
+				Log.debugMessage(".createValue | FRAME_PRIMARY_PARAMETERS", Level.FINEST);
 				PrimaryParametersFrame paramFrame = new PrimaryParametersFrame() {
 					@Override
 					public String getReportTitle() {
-						return PRIMARY_PARAMETERS_FRAME;
+						return FRAME_PRIMARY_PARAMETERS;
 					}
 				};
 				desktopPane.add(paramFrame);
@@ -118,14 +118,14 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 			}
 		});
 
-		this.frames.put(STATS_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_OVERALL_STATS, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | STATS_FRAME", Level.FINEST);
+				Log.debugMessage(".createValue | FRAME_OVERALL_STATS_FRAME", Level.FINEST);
 				OverallStatsFrame statsFrame = new OverallStatsFrame(PredictionMDIMain.this.dispatcher) {
 					@Override
 					public String getReportTitle() {
-						return STATS_FRAME;
+						return FRAME_OVERALL_STATS;
 					}
 				};
 				desktopPane.add(statsFrame);
@@ -143,16 +143,16 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 						int h = f.desktopPane.getSize().height;
 						int minh = Math.min(205, h / 4);
 
-						JInternalFrame selectFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.SELECTOR_FRAME);
-						JInternalFrame paramFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.PRIMARY_PARAMETERS_FRAME);
-						JInternalFrame statsFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.STATS_FRAME);
-						JInternalFrame eventsFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.EVENTS_FRAME);
-						JInternalFrame detailedEvFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.DETAILED_EVENTS_FRAME);
-						JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.ANALYSIS_FRAME);
-						JInternalFrame mInfoFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.MARKERS_INFO_FRAME);
-						JInternalFrame dhf = (JInternalFrame) f.frames.get(PredictionMDIMain.HISTOGRAMM_FRAME);
-						JInternalFrame tdf = (JInternalFrame) f.frames.get(PredictionMDIMain.TD_FRAME);
-						JInternalFrame tdt = (JInternalFrame) f.frames.get(PredictionMDIMain.TD_TABLE);
+						JInternalFrame selectFrame = (JInternalFrame) f.frames.get(FRAME_TRACE_SELECTOR);
+						JInternalFrame paramFrame = (JInternalFrame) f.frames.get(FRAME_PRIMARY_PARAMETERS);
+						JInternalFrame statsFrame = (JInternalFrame) f.frames.get(FRAME_OVERALL_STATS);
+						JInternalFrame eventsFrame = (JInternalFrame) f.frames.get(FRAME_EVENTS);
+						JInternalFrame detailedEvFrame = (JInternalFrame) f.frames.get(FRAME_DETAILED_EVENTS);
+						JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(FRAME_ANALYSIS_MAIN);
+						JInternalFrame mInfoFrame = (JInternalFrame) f.frames.get(FRAME_MARKERS_INFO);
+						JInternalFrame dhf = (JInternalFrame) f.frames.get(FRAME_HISTOGRAMM);
+						JInternalFrame tdf = (JInternalFrame) f.frames.get(FRAME_TIME_DEPENDANCE);
+						JInternalFrame tdt = (JInternalFrame) f.frames.get(FRAME_TIME_DEPENDANCE_TABLE);
 
 						normalize(paramFrame);
 						normalize(selectFrame);
@@ -189,14 +189,14 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 					}
 			});
 
-		this.frames.put(EVENTS_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_EVENTS, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | EVENTS_FRAME", Level.FINEST);
+				Log.debugMessage(".createValue | FRAME_EVENTS", Level.FINEST);
 				EventsFrame eventsFrame = new EventsFrame(aContext, false) {
 					@Override
 					public String getReportTitle() {
-						return EVENTS_FRAME;
+						return FRAME_EVENTS;
 					}
 				};
 				PredictionMDIMain.this.desktopPane.add(eventsFrame);
@@ -205,24 +205,24 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 			}
 		});
 
-		this.frames.put(DETAILED_EVENTS_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_DETAILED_EVENTS, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | DETAILED_EVENTS_FRAME", Level.FINEST);
+				Log.debugMessage(".createValue | DETAILED_FRAME_EVENTS", Level.FINEST);
 				DetailedEventsFrame detailedEvFrame = new DetailedEventsFrame();
 				desktopPane.add(detailedEvFrame);
 				return detailedEvFrame;
 			}
 		});
 
-		this.frames.put(ANALYSIS_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_ANALYSIS_MAIN, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ANALYSIS_FRAME", Level.FINEST);
 				AnalysisFrame analysisFrame = new AnalysisFrame(PredictionMDIMain.this.dispatcher)  {
 					@Override
 					public String getReportTitle() {
-						return ANALYSIS_FRAME;
+						return FRAME_ANALYSIS_MAIN;
 					}
 				};
 				desktopPane.add(analysisFrame);
@@ -231,7 +231,7 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 			}
 		});
 
-		this.frames.put(MARKERS_INFO_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_MARKERS_INFO, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | MARKERS_INFO_FRAME", Level.FINEST);
@@ -241,14 +241,14 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 			}
 		});
 
-		this.frames.put(HISTOGRAMM_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_HISTOGRAMM, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | HISTOGRAMM_FRAME", Level.FINEST);
 				HistogrammFrame histogrammFrame = new HistogrammFrame(PredictionMDIMain.this.dispatcher) {
 					@Override
 					public String getReportTitle() {
-						return HISTOGRAMM_FRAME;
+						return FRAME_HISTOGRAMM;
 					}
 				};
 				PredictionMDIMain.this.desktopPane.add(histogrammFrame);
@@ -257,14 +257,14 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 			}
 		});
 		
-		this.frames.put(TD_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_TIME_DEPENDANCE, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | TD_FRAME", Level.FINEST);
 				TimeDependenceFrame timeDependenceFrame = new TimeDependenceFrame(PredictionMDIMain.this.dispatcher) {
 					@Override
 					public String getReportTitle() {
-						return TD_FRAME;
+						return FRAME_TIME_DEPENDANCE;
 					}
 				};
 				PredictionMDIMain.this.desktopPane.add(timeDependenceFrame);
@@ -273,14 +273,14 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 			}
 		});
 		
-		this.frames.put(TD_TABLE, new UIDefaults.LazyValue() {
+		this.frames.put(FRAME_TIME_DEPENDANCE_TABLE, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | TD_FRAME", Level.FINEST);
 				TimeDependenceTable timeDependenceTable = new TimeDependenceTable() {
 					@Override
 					public String getReportTitle() {
-						return TD_TABLE;
+						return FRAME_TIME_DEPENDANCE_TABLE;
 					}
 				};
 				PredictionMDIMain.this.desktopPane.add(timeDependenceTable);
@@ -313,15 +313,15 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 		rc.setParameter(CreateAnalysisReportCommand.PANEL, this.graphs);
 		aModel.setCommand(PredictionApplicationModel.MENU_REPORT_CREATE, rc);
 
-		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_TRACESELECTOR, this.getLazyCommand(SELECTOR_FRAME));
-		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS, this.getLazyCommand(PRIMARY_PARAMETERS_FRAME));
-		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_OVERALLSTATS, this.getLazyCommand(STATS_FRAME));
-		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_EVENTS, this.getLazyCommand(EVENTS_FRAME));
-		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_ANALYSIS, this.getLazyCommand(ANALYSIS_FRAME));
-		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_MARKERSINFO, this.getLazyCommand(MARKERS_INFO_FRAME));
-		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_HISTOGRAMM, this.getLazyCommand(HISTOGRAMM_FRAME));
-		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_TD_FRAME, this.getLazyCommand(TD_FRAME));
-		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_TD_TABLE, this.getLazyCommand(TD_TABLE));
+		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_TRACESELECTOR, this.getLazyCommand(FRAME_TRACE_SELECTOR));
+		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS, this.getLazyCommand(FRAME_PRIMARY_PARAMETERS));
+		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_OVERALLSTATS, this.getLazyCommand(FRAME_OVERALL_STATS));
+		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_EVENTS, this.getLazyCommand(FRAME_EVENTS));
+		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_ANALYSIS, this.getLazyCommand(FRAME_ANALYSIS_MAIN));
+		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_MARKERSINFO, this.getLazyCommand(FRAME_MARKERS_INFO));
+		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_HISTOGRAMM, this.getLazyCommand(FRAME_HISTOGRAMM));
+		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_TD_FRAME, this.getLazyCommand(FRAME_TIME_DEPENDANCE));
+		aModel.setCommand(PredictionApplicationModel.MENU_WINDOW_TD_TABLE, this.getLazyCommand(FRAME_TIME_DEPENDANCE_TABLE));
 		
 		setDefaultModel(aModel);
 
@@ -385,16 +385,16 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 		
 		PredictionMDIMain f = this;
 		
-		JInternalFrame selectFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.SELECTOR_FRAME);
-		JInternalFrame paramFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.PRIMARY_PARAMETERS_FRAME);
-		JInternalFrame statsFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.STATS_FRAME);
-		JInternalFrame eventsFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.EVENTS_FRAME);
-		JInternalFrame detailedEvFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.DETAILED_EVENTS_FRAME);
-		JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.ANALYSIS_FRAME);
-		JInternalFrame mInfoFrame = (JInternalFrame) f.frames.get(PredictionMDIMain.MARKERS_INFO_FRAME);
-		JInternalFrame dhf = (JInternalFrame) f.frames.get(PredictionMDIMain.HISTOGRAMM_FRAME);
-		JInternalFrame tdf = (JInternalFrame) f.frames.get(PredictionMDIMain.TD_FRAME);
-		JInternalFrame tdt = (JInternalFrame) f.frames.get(PredictionMDIMain.TD_TABLE);
+		JInternalFrame selectFrame = (JInternalFrame) f.frames.get(FRAME_TRACE_SELECTOR);
+		JInternalFrame paramFrame = (JInternalFrame) f.frames.get(FRAME_PRIMARY_PARAMETERS);
+		JInternalFrame statsFrame = (JInternalFrame) f.frames.get(FRAME_OVERALL_STATS);
+		JInternalFrame eventsFrame = (JInternalFrame) f.frames.get(FRAME_EVENTS);
+		JInternalFrame detailedEvFrame = (JInternalFrame) f.frames.get(FRAME_DETAILED_EVENTS);
+		JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(FRAME_ANALYSIS_MAIN);
+		JInternalFrame mInfoFrame = (JInternalFrame) f.frames.get(FRAME_MARKERS_INFO);
+		JInternalFrame dhf = (JInternalFrame) f.frames.get(FRAME_HISTOGRAMM);
+		JInternalFrame tdf = (JInternalFrame) f.frames.get(FRAME_TIME_DEPENDANCE);
+		JInternalFrame tdt = (JInternalFrame) f.frames.get(FRAME_TIME_DEPENDANCE_TABLE);
 		
 		selectFrame.setVisible(false);
 		paramFrame.setVisible(false);
@@ -410,7 +410,7 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 
 	public void bsHashAdded(String key) {
 		if (key.equals(Heap.PRIMARY_TRACE_KEY)) {
-			TimeDependenceTable tdTable = (TimeDependenceTable) PredictionMDIMain.this.frames.get(PredictionMDIMain.TD_TABLE);
+			TimeDependenceTable tdTable = (TimeDependenceTable) PredictionMDIMain.this.frames.get(FRAME_TIME_DEPENDANCE_TABLE);
 			tdTable.setVisible(true);
 			
 			ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -429,7 +429,7 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 	public void bsHashRemoved(String key) {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		
-		ScalableFrame analysisFrame = (ScalableFrame)this.frames.get(ANALYSIS_FRAME);
+		ScalableFrame analysisFrame = (ScalableFrame)this.frames.get(FRAME_ANALYSIS_MAIN);
 		analysisFrame.removeGraph(key);
 		analysisFrame.updScales();
 		
@@ -440,7 +440,7 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 	}
 	
 	public void bsHashRemovedAll() {
-		TimeDependenceTable tdTable = (TimeDependenceTable) PredictionMDIMain.this.frames.get(PredictionMDIMain.TD_TABLE);
+		TimeDependenceTable tdTable = (TimeDependenceTable) PredictionMDIMain.this.frames.get(FRAME_TIME_DEPENDANCE_TABLE);
 		tdTable.setVisible(false);
 		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
