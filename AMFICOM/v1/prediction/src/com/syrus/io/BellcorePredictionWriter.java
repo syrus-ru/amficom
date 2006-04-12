@@ -16,8 +16,13 @@ public class BellcorePredictionWriter
 		bs.dataPts.tndp = data.length;
 
 		bs.dataPts.dsf = new int[1][data.length];
-		for (int i = 0; i < data.length; i++)
-			bs.dataPts.dsf[0][i] = (int)(65535 - 1000d * data[i]);
+		for (int i = 0; i < data.length; i++) {
+			bs.dataPts.dsf[0][i] = (int)(- 1000d * data[i]);
+			if (bs.dataPts.dsf[0][i] < 0) {
+				System.err.println("bs.dataPts.dsf is " + bs.dataPts.dsf[0][i] + "; set to 0");
+				bs.dataPts.dsf[0][i] = 0; 
+			}
+		}
 	}
 
 	public void setTime(long time)
