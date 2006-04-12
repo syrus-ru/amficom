@@ -1,5 +1,5 @@
 /*-
- * $Id: TestAddMeasurementSetup.java,v 1.1.2.6 2006/04/12 13:22:10 arseniy Exp $
+ * $Id: TestAddMeasurementSetup.java,v 1.1.2.7 2006/04/12 13:27:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.1.2.6 $, $Date: 2006/04/12 13:22:10 $
+ * @version $Revision: 1.1.2.7 $, $Date: 2006/04/12 13:27:54 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -206,7 +206,9 @@ public final class TestAddMeasurementSetup extends TestCase {
 
 		for (final MeasurementSetup measurementSetup : measurementSetups) {
 			System.out.println("MeasurementSetup: '" + measurementSetup.getDescription() + "', duration: " + measurementSetup.getMeasurementTemplate().getApproximateActionDuration());
-			final ActionTemplate<Measurement> measurementTemplate = measurementSetup.getMeasurementTemplate();
+			System.out.println("\t MeasurementPortType: '" + measurementSetup.getMeasurementPortTypeId() + "'");
+			final ActionTemplate<Measurement> measurementTemplate = measurementSetup.getMeasurementTemplate(); 
+			System.out.println("\t Measurement ActionTemplate MeasurementPortType: '" + measurementTemplate.getMeasurementPortTypeId() + "', ActionType: '" + measurementTemplate.getActionTypeId() + "'");
 			final Set<ActionParameter> measurementParameters = measurementTemplate.getActionParameters();
 			for (final ActionParameter actionParameter : measurementParameters) {
 				System.out.println("Id: " + actionParameter.getId().getIdentifierCode() + ", '" + actionParameter.getTypeCodename() + "' == " + actionParameter.stringValue());
