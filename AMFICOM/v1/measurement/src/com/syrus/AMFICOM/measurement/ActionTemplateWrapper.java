@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplateWrapper.java,v 1.1.2.6 2006/04/10 17:02:01 arseniy Exp $
+ * $Id: ActionTemplateWrapper.java,v 1.1.2.7 2006/04/12 13:02:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,21 +7,27 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.measurement.ActionTypeWrapper.ActionTypeKindWrapper.COLUMN_ANALYSIS_TYPE_ID;
+import static com.syrus.AMFICOM.measurement.ActionTypeWrapper.ActionTypeKindWrapper.COLUMN_MEASUREMENT_TYPE_ID;
+import static com.syrus.AMFICOM.measurement.ActionTypeWrapper.ActionTypeKindWrapper.COLUMN_MODELING_TYPE_ID;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.1.2.6 $, $Date: 2006/04/10 17:02:01 $
+ * @version $Revision: 1.1.2.7 $, $Date: 2006/04/12 13:02:20 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class ActionTemplateWrapper extends StorableObjectWrapper<ActionTemplate<Action>> {
+	public static final String COLUMN_MEASUREMENT_PORT_TYPE_ID = "measurement_port_type_id";
 	public static final String COLUMN_APPROXIMATE_ACTION_DURATION = "approximate_action_duration";
 	public static final String LINK_COLUMN_ACTION_TEMPLATE_ID = "action_template_id";
 	public static final String LINK_COLUMN_ACTION_PARAMETER_ID = "action_parameter_id";
@@ -32,7 +38,9 @@ public final class ActionTemplateWrapper extends StorableObjectWrapper<ActionTem
 	private List<String> keys;
 
 	private ActionTemplateWrapper() {
-		final String[] keysArray = new String[] { COLUMN_DESCRIPTION,
+		final String[] keysArray = new String[] { COLUMN_MEASUREMENT_TYPE_ID,
+				COLUMN_MEASUREMENT_PORT_TYPE_ID,
+				COLUMN_DESCRIPTION,
 				COLUMN_APPROXIMATE_ACTION_DURATION,
 				LINK_COLUMN_MONITORED_ELEMENT_ID };
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
@@ -58,6 +66,14 @@ public final class ActionTemplateWrapper extends StorableObjectWrapper<ActionTem
 	public Object getValue(final ActionTemplate<Action> object, final String key) {
 		final Object value = super.getValue(object, key);
 		if (value == null && object != null) {
+			if (key.equals(COLUMN_MEASUREMENT_TYPE_ID)
+					|| key.equals(COLUMN_ANALYSIS_TYPE_ID)
+					|| key.equals(COLUMN_MODELING_TYPE_ID)) {
+				return object.getActionTypeId();
+			}
+			if (key.equals(COLUMN_MEASUREMENT_PORT_TYPE_ID)) {
+				return object.getMeasurementPortTypeId();
+			}
 			if (key.equals(COLUMN_DESCRIPTION)) {
 				return object.getDescription();
 			}
@@ -104,6 +120,12 @@ public final class ActionTemplateWrapper extends StorableObjectWrapper<ActionTem
 		final Class<?> clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
+		}
+		if (key.equals(COLUMN_MEASUREMENT_TYPE_ID)
+				|| key.equals(COLUMN_ANALYSIS_TYPE_ID)
+				|| key.equals(COLUMN_MODELING_TYPE_ID)
+				|| key.equals(COLUMN_MEASUREMENT_PORT_TYPE_ID)) {
+			return Identifier.class;
 		}
 		if (key.equals(COLUMN_DESCRIPTION)) {
 			return String.class;

@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplateDatabase.java,v 1.1.2.6 2006/04/10 17:01:38 arseniy Exp $
+ * $Id: ActionTemplateDatabase.java,v 1.1.2.7 2006/04/12 13:02:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
 import static com.syrus.AMFICOM.general.TableNames.ACTMPL_ME_LINK;
 import static com.syrus.AMFICOM.general.TableNames.ACTMPL_PAR_LINK;
 import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.COLUMN_APPROXIMATE_ACTION_DURATION;
+import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.COLUMN_MEASUREMENT_PORT_TYPE_ID;
 import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.LINK_COLUMN_ACTION_PARAMETER_ID;
 import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.LINK_COLUMN_ACTION_TEMPLATE_ID;
 import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID;
@@ -38,11 +39,12 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.measurement.ActionTypeDatabase.ActionTypeKindDatabase;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1.2.6 $, $Date: 2006/04/10 17:01:38 $
+ * @version $Revision: 1.1.2.7 $, $Date: 2006/04/12 13:02:20 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -59,7 +61,9 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COLUMN_DESCRIPTION + COMMA
+			columns = ActionTypeKindDatabase.getInstance().getColumns() + COMMA
+					+ COLUMN_MEASUREMENT_PORT_TYPE_ID + COMMA
+					+ COLUMN_DESCRIPTION + COMMA
 					+ COLUMN_APPROXIMATE_ACTION_DURATION;
 		}
 		return columns;
@@ -68,7 +72,9 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = QUESTION + COMMA
+			updateMultipleSQLValues = ActionTypeKindDatabase.getInstance().getUpdateMultipleSQLValues() + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
 					+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -76,7 +82,9 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final ActionTemplate<Action> storableObject) throws IllegalDataException {
-		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+		final String sql = ActionTypeKindDatabase.getInstance().getUpdateSingleSQLValues(storableObject.getActionTypeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getMeasurementPortTypeId()) + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ Long.toString(storableObject.getApproximateActionDuration());
 		return sql;
 	}
@@ -85,30 +93,39 @@ public final class ActionTemplateDatabase extends StorableObjectDatabase<ActionT
 	protected int setEntityForPreparedStatementTmpl(final ActionTemplate<Action> storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
+		startParameterNumber = ActionTypeKindDatabase.getInstance().setEntityForPreparedStatement(storableObject.getActionTypeId(),
+				preparedStatement,
+				startParameterNumber);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMeasurementPortTypeId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		preparedStatement.setLong(++startParameterNumber, storableObject.getApproximateActionDuration());
 		return startParameterNumber;
 	}
 
 	@Override
-	protected ActionTemplate<Action> updateEntityFromResultSet(final ActionTemplate<Action> storableObject, final ResultSet resultSet)
-			throws IllegalDataException,
-				RetrieveObjectException,
-				SQLException {
+	protected ActionTemplate<Action> updateEntityFromResultSet(final ActionTemplate<Action> storableObject,
+			final ResultSet resultSet) throws IllegalDataException, RetrieveObjectException, SQLException {
 		final ActionTemplate<Action> actionTemplate = (storableObject == null)
 				? new ActionTemplate<Action>(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						null,
 						ILLEGAL_VERSION,
 						null,
+						null,
+						null,
 						0,
 						null,
 						null)
 					: storableObject;
+
+		final Identifier actionTypeId = ActionTypeKindDatabase.getInstance().getActionTypeId(resultSet);
+
 		actionTemplate.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 				StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
+				actionTypeId,
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_PORT_TYPE_ID),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 				resultSet.getLong(COLUMN_APPROXIMATE_ACTION_DURATION));
 		return actionTemplate;
