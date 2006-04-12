@@ -455,6 +455,8 @@ public class AnalysisUtil {
 
 		ActionTemplate<Analysis> analysisTemplate = ActionTemplate.createInstance(
 				userId,
+				AnalysisType.valueOf(AnalysisTypeCodename.DADARA).getId(),
+				portType.getId(),
 				"",
 				0, // XXX: estimated duration: no estimation by the moment
 				parameterIds,
