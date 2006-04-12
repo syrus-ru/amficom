@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.91.2.11 2006/04/07 13:11:51 arseniy Exp $
+ * $Id: measurement.idl,v 1.91.2.12 2006/04/12 12:54:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -131,6 +131,8 @@ module measurement {
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlActionTemplate : general::corba::IdlStorableObject {
+			public general::corba::IdlIdentifier actionTypeId;
+			public general::corba::IdlIdentifier measurementPortTypeId;
 			public general::corba::WString256 description;
 			public long long approximateActionDuration;
 			public general::corba::IdlIdentifierSeq actionParameterIds;
@@ -142,6 +144,8 @@ module measurement {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
+					in general::corba::IdlIdentifier actionTypeId,
+					in general::corba::IdlIdentifier measurementPortTypeId,
 					in general::corba::WString256 description,
 					in long long approximateActionDuration,
 					in general::corba::IdlIdentifierSeq actionParameterIds,
@@ -281,6 +285,7 @@ module measurement {
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlMeasurementSetup : general::corba::IdlStorableObject {
+			public general::corba::IdlIdentifier measurementPortTypeId;
 			public general::corba::IdlIdentifier measurementTemplateId;
 			public general::corba::IdlIdentifier analysisTemplateId;
 			public general::corba::WString256 description;
@@ -292,6 +297,7 @@ module measurement {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
+					in general::corba::IdlIdentifier measurementPortTypeId,
 					in general::corba::IdlIdentifier measurementTemplateId,
 					in general::corba::IdlIdentifier analysisTemplateId,
 					in general::corba::WString256 description,
