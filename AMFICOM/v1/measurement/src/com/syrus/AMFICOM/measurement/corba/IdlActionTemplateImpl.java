@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.measurement.ActionTemplate;
 import com.syrus.util.Log;
 
 final class IdlActionTemplateImpl extends IdlActionTemplate {
-	private static final long serialVersionUID = 7190941862266356232L;
+	private static final long serialVersionUID = -6518223273175288517L;
 
 	IdlActionTemplateImpl() {
 		// empty
@@ -22,6 +22,8 @@ final class IdlActionTemplateImpl extends IdlActionTemplate {
 			final IdlIdentifier creatorId,
 			final IdlIdentifier modifierId,
 			final long version,
+			final IdlIdentifier actionTypeId,
+			final IdlIdentifier measurementPortTypeId,
 			final String description,
 			final long approximateActionDuration,
 			final IdlIdentifier[] actionParameterIds,
@@ -32,6 +34,8 @@ final class IdlActionTemplateImpl extends IdlActionTemplate {
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 		this.version = version;
+		this.actionTypeId = actionTypeId;
+		this.measurementPortTypeId = measurementPortTypeId;
 		this.description = description;
 		this.approximateActionDuration = approximateActionDuration;
 		this.actionParameterIds = actionParameterIds;
