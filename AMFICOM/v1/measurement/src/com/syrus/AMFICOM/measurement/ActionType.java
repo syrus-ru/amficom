@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionType.java,v 1.26.2.7 2006/04/07 10:55:23 arseniy Exp $
+ * $Id: ActionType.java,v 1.26.2.8 2006/04/12 12:59:40 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,11 @@ package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NOT_IMPLEMENTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETERTYPEBINDING_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_TYPE_CODE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -29,7 +32,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.corba.IdlActionType;
 
 /**
- * @version $Revision: 1.26.2.7 $, $Date: 2006/04/07 10:55:23 $
+ * @version $Revision: 1.26.2.8 $, $Date: 2006/04/12 12:59:40 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -120,4 +123,36 @@ public abstract class ActionType extends StorableObjectType implements Describab
 	protected Set<Identifiable> getDependenciesTmpl() {
 		return Collections.emptySet();
 	}
+
+
+	static enum ActionTypeKind {
+		MEASUREMENT_TYPE,
+		ANALYSIS_TYPE,
+		MODELING_TYPE;
+
+		private static final ActionTypeKind VALUES[] = values();
+
+		static ActionTypeKind valueOf(final int code) {
+			return VALUES[code];
+		}
+
+		static ActionTypeKind valueOf(final Identifier actionTypeId) {
+			switch (actionTypeId.getMajor()) {
+				case MEASUREMENT_TYPE_CODE:
+					return MEASUREMENT_TYPE;
+				case ANALYSIS_TYPE_CODE:
+					return ANALYSIS_TYPE;
+				case MODELING_TYPE_CODE:
+					return MODELING_TYPE;
+				default:
+					throw new IllegalArgumentException("Illegal identifier: " + actionTypeId);
+			}
+		}
+
+		@Override
+		public String toString() {
+			return this.name() + "(" + Integer.toString(this.ordinal()) + ")";
+		}
+	}
+
 }
