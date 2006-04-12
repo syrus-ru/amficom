@@ -1,5 +1,5 @@
 /*
- * $Id: TestRole.java,v 1.3 2006/02/17 12:04:55 arseniy Exp $
+ * $Id: TestRole.java,v 1.4 2006/04/12 07:21:13 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2006/02/17 12:04:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2006/04/12 07:21:13 $
+ * @author $Author: bass $
  * @module test
  */
 public class TestRole extends TestCase {
@@ -40,7 +40,7 @@ public class TestRole extends TestCase {
 		final SystemUser sysUser = StorableObjectPool.getStorableObject(userId, true);
 		for(final RoleCodename roleCodename : RoleCodename.values()) {
 			sysUser.addRole(Role.createInstance(userId, 
-				roleCodename.getCodename(), 
+				roleCodename.stringValue(), 
 				roleCodename.getDescription()));
 		}
 		

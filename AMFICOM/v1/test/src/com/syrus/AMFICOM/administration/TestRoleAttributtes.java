@@ -1,5 +1,5 @@
 /*
- * $Id: TestRoleAttributtes.java,v 1.8 2006/03/28 08:34:35 stas Exp $
+ * $Id: TestRoleAttributtes.java,v 1.9 2006/04/12 07:21:13 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2006/03/28 08:34:35 $
- * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2006/04/12 07:21:13 $
+ * @author $Author: bass $
  * @module test
  */
 public class TestRoleAttributtes extends TestCase {
@@ -50,7 +50,7 @@ public class TestRoleAttributtes extends TestCase {
 			// System Administator
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.SYSTEM_ADMINISTATOR.getCodename(),
+					new TypicalCondition(RoleCodename.SYSTEM_ADMINISTATOR.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -80,7 +80,7 @@ public class TestRoleAttributtes extends TestCase {
 			// Media Monitoring Administator
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.MEDIA_MONITORING_ADMINISTATOR.getCodename(),
+					new TypicalCondition(RoleCodename.MEDIA_MONITORING_ADMINISTATOR.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -135,7 +135,7 @@ public class TestRoleAttributtes extends TestCase {
 			// Analyst
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.ANALYST.getCodename(),
+					new TypicalCondition(RoleCodename.ANALYST.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -271,7 +271,7 @@ public class TestRoleAttributtes extends TestCase {
 			// Operator
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.OPERATOR.getCodename(),
+					new TypicalCondition(RoleCodename.OPERATOR.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -402,7 +402,7 @@ public class TestRoleAttributtes extends TestCase {
 			// Subscriber
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.SUBSCRIBER.getCodename(),
+					new TypicalCondition(RoleCodename.SUBSCRIBER.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -464,7 +464,7 @@ public class TestRoleAttributtes extends TestCase {
 			// Planner
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.PLANNER.getCodename(),
+					new TypicalCondition(RoleCodename.PLANNER.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -547,7 +547,7 @@ public class TestRoleAttributtes extends TestCase {
 			// Specialist
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.SPECIALIST.getCodename(),
+					new TypicalCondition(RoleCodename.SPECIALIST.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -695,7 +695,7 @@ public class TestRoleAttributtes extends TestCase {
 			// Media Monitoring Administator
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.MEDIA_MONITORING_ADMINISTATOR.getCodename(),
+					new TypicalCondition(RoleCodename.MEDIA_MONITORING_ADMINISTATOR.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -720,7 +720,7 @@ public class TestRoleAttributtes extends TestCase {
 			// Analyst
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.ANALYST.getCodename(),
+					new TypicalCondition(RoleCodename.ANALYST.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -748,7 +748,7 @@ public class TestRoleAttributtes extends TestCase {
 			// Operator
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.OPERATOR.getCodename(),
+					new TypicalCondition(RoleCodename.OPERATOR.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -774,7 +774,7 @@ public class TestRoleAttributtes extends TestCase {
 			// Planner
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.PLANNER.getCodename(),
+					new TypicalCondition(RoleCodename.PLANNER.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -801,7 +801,7 @@ public class TestRoleAttributtes extends TestCase {
 			// Specialist
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.SPECIALIST.getCodename(),
+					new TypicalCondition(RoleCodename.SPECIALIST.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -840,7 +840,7 @@ public class TestRoleAttributtes extends TestCase {
 			// Analyst
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.ANALYST.getCodename(),
+					new TypicalCondition(RoleCodename.ANALYST.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -863,7 +863,7 @@ public class TestRoleAttributtes extends TestCase {
 			// Operator
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.OPERATOR.getCodename(),
+					new TypicalCondition(RoleCodename.OPERATOR.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -886,7 +886,7 @@ public class TestRoleAttributtes extends TestCase {
 			// Specialist
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.SPECIALIST.getCodename(),
+					new TypicalCondition(RoleCodename.SPECIALIST.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
