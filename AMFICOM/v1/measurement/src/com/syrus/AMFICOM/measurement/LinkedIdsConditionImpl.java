@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.71.2.11 2006/04/07 10:48:51 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.71.2.12 2006/04/12 13:07:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71.2.11 $, $Date: 2006/04/07 10:48:51 $
+ * @version $Revision: 1.71.2.12 $, $Date: 2006/04/12 13:07:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -195,6 +195,14 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case ACTIONTEMPLATE_CODE:
 				final ActionTemplate<?> actionTemplate = (ActionTemplate) storableObject;
 				switch (this.linkedEntityCode) {
+					case MEASUREMENT_TYPE_CODE:
+					case ANALYSIS_TYPE_CODE:
+					case MODELING_TYPE_CODE:
+						condition = super.conditionTest(actionTemplate.getActionTypeId());
+						break;
+					case MEASUREMENTPORT_TYPE_CODE:
+						condition = super.conditionTest(actionTemplate.getMeasurementPortTypeId());
+						break;
 					case MONITOREDELEMENT_CODE:
 						condition = super.conditionTest(actionTemplate.getMonitoredElementIds());
 						break;
@@ -207,6 +215,9 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case MEASUREMENTSETUP_CODE:
 				final MeasurementSetup measurementSetup = (MeasurementSetup) storableObject;
 				switch (this.linkedEntityCode) {
+					case MEASUREMENTPORT_TYPE_CODE:
+						condition = super.conditionTest(measurementSetup.getMeasurementPortTypeId());
+						break;
 					case MONITOREDELEMENT_CODE:
 						condition = super.conditionTest(measurementSetup.getMonitoredElementIds());
 						break;

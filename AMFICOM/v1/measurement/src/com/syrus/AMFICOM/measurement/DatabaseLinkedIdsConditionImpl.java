@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41.2.10 2006/04/07 10:48:51 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41.2.11 2006/04/12 13:07:49 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,14 +47,14 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_TYPE_ID;
 import static com.syrus.AMFICOM.general.TableNames.ACTMPL_ME_LINK;
 import static com.syrus.AMFICOM.general.TableNames.MS_ME_LINK;
 import static com.syrus.AMFICOM.general.TableNames.TEST_MS_LINK;
-import static com.syrus.AMFICOM.measurement.ActionParameterTypeBindingWrapper.COLUMN_ANALYSIS_TYPE_ID;
 import static com.syrus.AMFICOM.measurement.ActionParameterTypeBindingWrapper.COLUMN_MEASUREMENT_PORT_TYPE_ID;
-import static com.syrus.AMFICOM.measurement.ActionParameterTypeBindingWrapper.COLUMN_MEASUREMENT_TYPE_ID;
-import static com.syrus.AMFICOM.measurement.ActionParameterTypeBindingWrapper.COLUMN_MODELING_TYPE_ID;
 import static com.syrus.AMFICOM.measurement.ActionParameterTypeBindingWrapper.COLUMN_PARAMETER_TYPE_ID;
 import static com.syrus.AMFICOM.measurement.ActionParameterWrapper.COLUMN_BINDING_ID;
 import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.LINK_COLUMN_ACTION_TEMPLATE_ID;
 import static com.syrus.AMFICOM.measurement.ActionTemplateWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID;
+import static com.syrus.AMFICOM.measurement.ActionTypeWrapper.ActionTypeKindWrapper.COLUMN_ANALYSIS_TYPE_ID;
+import static com.syrus.AMFICOM.measurement.ActionTypeWrapper.ActionTypeKindWrapper.COLUMN_MEASUREMENT_TYPE_ID;
+import static com.syrus.AMFICOM.measurement.ActionTypeWrapper.ActionTypeKindWrapper.COLUMN_MODELING_TYPE_ID;
 import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_ACTION_TEMPLATE_ID;
 import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_MONITORED_ELEMENT_ID;
 import static com.syrus.AMFICOM.measurement.AnalysisResultParameterWrapper.COLUMN_ANALYSIS_ID;
@@ -74,7 +74,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 /**
- * @version $Revision: 1.41.2.10 $, $Date: 2006/04/07 10:48:51 $
+ * @version $Revision: 1.41.2.11 $, $Date: 2006/04/12 13:07:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -144,6 +144,14 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				}
 			case ACTIONTEMPLATE_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
+					case MEASUREMENT_TYPE_CODE:
+						return super.getQuery(COLUMN_MEASUREMENT_TYPE_ID);
+					case ANALYSIS_TYPE_CODE:
+						return super.getQuery(COLUMN_ANALYSIS_TYPE_ID);
+					case MODELING_TYPE_CODE:
+						return super.getQuery(COLUMN_MODELING_TYPE_ID);
+					case MEASUREMENTPORT_TYPE_CODE:
+						return super.getQuery(ActionTemplateWrapper.COLUMN_MEASUREMENT_PORT_TYPE_ID);
 					case MONITOREDELEMENT_CODE:
 						return super.getLinkedQuery(LINK_COLUMN_ACTION_TEMPLATE_ID,
 								LINK_COLUMN_MONITORED_ELEMENT_ID,
@@ -153,6 +161,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				}
 			case MEASUREMENTSETUP_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
+					case MEASUREMENTPORT_TYPE_CODE:
+						return super.getQuery(MeasurementSetupWrapper.COLUMN_MEASUREMENT_PORT_TYPE_ID);
 					case MONITOREDELEMENT_CODE:
 						return super.getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 								MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID,
