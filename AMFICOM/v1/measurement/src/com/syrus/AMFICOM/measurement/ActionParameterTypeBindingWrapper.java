@@ -1,11 +1,15 @@
 /*-
- * $Id: ActionParameterTypeBindingWrapper.java,v 1.1.2.3 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: ActionParameterTypeBindingWrapper.java,v 1.1.2.4 2006/04/12 13:03:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.measurement.ActionTypeWrapper.ActionTypeKindWrapper.COLUMN_ANALYSIS_TYPE_ID;
+import static com.syrus.AMFICOM.measurement.ActionTypeWrapper.ActionTypeKindWrapper.COLUMN_MEASUREMENT_TYPE_ID;
+import static com.syrus.AMFICOM.measurement.ActionTypeWrapper.ActionTypeKindWrapper.COLUMN_MODELING_TYPE_ID;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,7 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/04/12 13:03:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -24,10 +28,6 @@ import com.syrus.util.PropertyChangeException;
 public class ActionParameterTypeBindingWrapper extends StorableObjectWrapper<ActionParameterTypeBinding> {
 	public static final String COLUMN_PARAMETER_VALUE_KIND = "parameter_value_kind";
 	public static final String COLUMN_PARAMETER_TYPE_ID = "parameter_type_id";
-	public static final String COLUMN_ACTION_TYPE_KIND_CODE = "action_type_kind_code";
-	public static final String COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
-	public static final String COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
-	public static final String COLUMN_MODELING_TYPE_ID = "modeling_type_id";
 	public static final String COLUMN_MEASUREMENT_PORT_TYPE_ID = "measurement_port_type_id";
 
 	private static ActionParameterTypeBindingWrapper instance;
@@ -68,7 +68,9 @@ public class ActionParameterTypeBindingWrapper extends StorableObjectWrapper<Act
 			if (key.equals(COLUMN_PARAMETER_TYPE_ID)) {
 				return object.getParameterTypeId();
 			}
-			if (key.equals(COLUMN_MEASUREMENT_TYPE_ID)) {
+			if (key.equals(COLUMN_MEASUREMENT_TYPE_ID)
+					|| key.equals(COLUMN_ANALYSIS_TYPE_ID)
+					|| key.equals(COLUMN_MODELING_TYPE_ID)) {
 				return object.getActionTypeId();
 			}
 			if (key.equals(COLUMN_MEASUREMENT_PORT_TYPE_ID)) {
@@ -107,6 +109,8 @@ public class ActionParameterTypeBindingWrapper extends StorableObjectWrapper<Act
 		}
 		if (key.equals(COLUMN_PARAMETER_TYPE_ID)
 				|| key.equals(COLUMN_MEASUREMENT_TYPE_ID)
+				|| key.equals(COLUMN_ANALYSIS_TYPE_ID)
+				|| key.equals(COLUMN_MODELING_TYPE_ID)
 				|| key.equals(COLUMN_MEASUREMENT_PORT_TYPE_ID)) {
 			return Identifier.class;
 		}
