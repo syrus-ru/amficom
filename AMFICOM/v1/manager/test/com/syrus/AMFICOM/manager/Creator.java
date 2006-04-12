@@ -1,5 +1,5 @@
 /*-
-* $Id: Creator.java,v 1.4 2005/12/23 12:41:48 bob Exp $
+* $Id: Creator.java,v 1.5 2006/04/12 06:45:09 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/12/23 12:41:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2006/04/12 06:45:09 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -54,7 +54,7 @@ public class Creator extends TestCase {
 			// System Administator
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.SYSTEM_ADMINISTATOR.getCodename(),
+					new TypicalCondition(RoleCodename.SYSTEM_ADMINISTATOR.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -84,7 +84,7 @@ public class Creator extends TestCase {
 			// Media Monitoring Administator
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.MEDIA_MONITORING_ADMINISTATOR.getCodename(),
+					new TypicalCondition(RoleCodename.MEDIA_MONITORING_ADMINISTATOR.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -139,7 +139,7 @@ public class Creator extends TestCase {
 			// Analyst
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.ANALYST.getCodename(),
+					new TypicalCondition(RoleCodename.ANALYST.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -275,7 +275,7 @@ public class Creator extends TestCase {
 			// Operator
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.OPERATOR.getCodename(),
+					new TypicalCondition(RoleCodename.OPERATOR.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -421,7 +421,7 @@ public class Creator extends TestCase {
 			// Subscriber
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.SUBSCRIBER.getCodename(),
+					new TypicalCondition(RoleCodename.SUBSCRIBER.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -483,7 +483,7 @@ public class Creator extends TestCase {
 			// Planner
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.PLANNER.getCodename(),
+					new TypicalCondition(RoleCodename.PLANNER.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -567,7 +567,7 @@ public class Creator extends TestCase {
 			// Specialist
 			final Set<Role> roles = 
 				StorableObjectPool.getStorableObjectsByCondition(
-					new TypicalCondition(RoleCodename.SPECIALIST.getCodename(),
+					new TypicalCondition(RoleCodename.SPECIALIST.stringValue(),
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.ROLE_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME), 
@@ -712,7 +712,7 @@ public class Creator extends TestCase {
 		
 		for(final RoleCodename roleCodename : RoleCodename.values()) {
 			Role.createInstance(userId, 
-				roleCodename.getCodename(), 
+				roleCodename.stringValue(), 
 				roleCodename.getDescription());
 		}
 		
