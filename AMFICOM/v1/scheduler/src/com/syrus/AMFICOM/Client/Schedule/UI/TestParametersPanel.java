@@ -259,7 +259,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 							try {
 								TestParametersPanel.this.parametersTestPanel.setMeasurementTemplate(measurementSetup.getMeasurementTemplate());
 							} catch (ApplicationException e1) {
-								// XXX: ApplicationException handling
+								/* XXX: ApplicationException handling */
 								Log.errorMessage(e1);
 								throw new InternalError(e1.getMessage());
 							}

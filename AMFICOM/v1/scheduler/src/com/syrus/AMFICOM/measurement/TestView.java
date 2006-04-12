@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.24.4.1 2006/04/10 11:46:00 saa Exp $
+* $Id: TestView.java,v 1.24.4.2 2006/04/12 08:22:24 saa Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.24.4.1 $, $Date: 2006/04/10 11:46:00 $
+ * @version $Revision: 1.24.4.2 $, $Date: 2006/04/12 08:22:24 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -516,7 +516,7 @@ public final class TestView {
 			try {
 				testMonitoredElement = this.test.getMonitoredElement();
 			} catch (ApplicationException e) {
-				// XXX: ApplicationException handling
+				/* XXX: ApplicationException handling */
 				Log.errorMessage(e);
 				throw new InternalError(e.getMessage());
 			}

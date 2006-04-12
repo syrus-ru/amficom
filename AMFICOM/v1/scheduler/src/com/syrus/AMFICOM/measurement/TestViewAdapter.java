@@ -1,5 +1,5 @@
 /*
- * $Id: TestViewAdapter.java,v 1.12.4.1 2006/04/10 11:46:00 saa Exp $
+ * $Id: TestViewAdapter.java,v 1.12.4.2 2006/04/12 08:22:24 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.12.4.1 $, $Date: 2006/04/10 11:46:00 $
+ * @version $Revision: 1.12.4.2 $, $Date: 2006/04/12 08:22:24 $
  * @author $Author: saa $
  * @module module
  */
@@ -174,7 +174,7 @@ public class TestViewAdapter implements Wrapper<TestView> {
 				try {
 					return test.getMeasurementType().getDescription();
 				} catch (ApplicationException e) {
-					// XXX: ApplicationException handling
+					/* XXX: ApplicationException handling */
 					Log.errorMessage(e);
 					throw new InternalError(e.getMessage());
 				}

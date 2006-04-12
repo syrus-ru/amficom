@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.84.4.1 2006/04/10 11:46:00 saa Exp $
+ * $Id: PlanPanel.java,v 1.84.4.2 2006/04/12 08:22:24 saa Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.84.4.1 $, $Date: 2006/04/10 11:46:00 $
+ * @version $Revision: 1.84.4.2 $, $Date: 2006/04/12 08:22:24 $
  * @author $Author: saa $
  * @module scheduler
  */
@@ -767,7 +767,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			try {
 				monitoredElement = test.getMonitoredElement();
 			} catch (ApplicationException e) {
-				// XXX: ApplicationException handling
+				/* XXX: ApplicationException handling */
 				Log.errorMessage(e);
 				throw new InternalError(e.getMessage());
 			}
