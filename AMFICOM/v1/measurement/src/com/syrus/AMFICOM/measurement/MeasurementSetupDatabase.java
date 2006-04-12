@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
 import static com.syrus.AMFICOM.general.TableNames.MS_ME_LINK;
 import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.COLUMN_ANALYSIS_TEMPLATE_ID;
 import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.COLUMN_MEASUREMENT_TEMPLATE_ID;
+import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.COLUMN_MEASUREMENT_PORT_TYPE_ID;
 import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID;
 import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID;
 
@@ -45,7 +46,8 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COLUMN_MEASUREMENT_TEMPLATE_ID + COMMA
+			columns = COLUMN_MEASUREMENT_PORT_TYPE_ID + COMMA
+					+ COLUMN_MEASUREMENT_TEMPLATE_ID + COMMA
 					+ COLUMN_ANALYSIS_TEMPLATE_ID + COMMA
 					+ COLUMN_DESCRIPTION;
 		}
@@ -57,6 +59,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
 					+ QUESTION + COMMA
+					+ QUESTION + COMMA
 					+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -64,7 +67,8 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final MeasurementSetup storableObject) throws IllegalDataException {
-		final String sql = DatabaseIdentifier.toSQLString(storableObject.getMeasurementTemplateId()) + COMMA
+		final String sql = DatabaseIdentifier.toSQLString(storableObject.getMeasurementPortTypeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getMeasurementTemplateId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getAnalysisTemplateId()) + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return sql;
@@ -74,6 +78,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 	protected int setEntityForPreparedStatementTmpl(final MeasurementSetup storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMeasurementPortTypeId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMeasurementTemplateId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAnalysisTemplateId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
@@ -92,6 +97,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 						null,
 						null,
 						null,
+						null,
 						null)
 					: storableObject;
 				measurementSetup.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
@@ -99,6 +105,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 						DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 						DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 						StorableObjectVersion.valueOf(resultSet.getLong(COLUMN_VERSION)),
+						DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_PORT_TYPE_ID),
 						DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_TEMPLATE_ID),
 						DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ANALYSIS_TEMPLATE_ID),
 						DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));

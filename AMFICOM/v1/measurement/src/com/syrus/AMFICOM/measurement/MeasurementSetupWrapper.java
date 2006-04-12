@@ -9,6 +9,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 public final class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSetup> {
+	public static final String COLUMN_MEASUREMENT_PORT_TYPE_ID = "measurement_port_type_id";
 	public static final String COLUMN_MEASUREMENT_TEMPLATE_ID = "measurement_template_id";
 	public static final String COLUMN_ANALYSIS_TEMPLATE_ID = "analysis_template_id";
 	public static final String LINK_COLUMN_MEASUREMENT_SETUP_ID = "measurement_setup_id";
@@ -19,9 +20,10 @@ public final class MeasurementSetupWrapper extends StorableObjectWrapper<Measure
 	private List<String> keys;
 
 	private MeasurementSetupWrapper() {
-		final String[] keysArray = new String[] { COLUMN_DESCRIPTION,
+		final String[] keysArray = new String[] { COLUMN_MEASUREMENT_PORT_TYPE_ID,
 				COLUMN_MEASUREMENT_TEMPLATE_ID,
 				COLUMN_ANALYSIS_TEMPLATE_ID,
+				COLUMN_DESCRIPTION,
 				LINK_COLUMN_MONITORED_ELEMENT_ID };
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -46,6 +48,9 @@ public final class MeasurementSetupWrapper extends StorableObjectWrapper<Measure
 	public Object getValue(final MeasurementSetup object, final String key) {
 		final Object value = super.getValue(object, key);
 		if (value == null && object != null) {
+			if (key.equals(COLUMN_MEASUREMENT_PORT_TYPE_ID)) {
+				return object.getMeasurementPortTypeId();
+			}
 			if (key.equals(COLUMN_MEASUREMENT_TEMPLATE_ID)) {
 				return object.getMeasurementTemplateId();
 			}
@@ -69,12 +74,6 @@ public final class MeasurementSetupWrapper extends StorableObjectWrapper<Measure
 	@Override
 	public void setValue(final MeasurementSetup storableObject, final String key, final Object value) throws PropertyChangeException {
 		if (storableObject != null) {
-			if (key.equals(COLUMN_MEASUREMENT_TEMPLATE_ID)) {
-				storableObject.setMeasurementTemplateId((Identifier) value);
-			}
-			if (key.equals(COLUMN_ANALYSIS_TEMPLATE_ID)) {
-				storableObject.setAnalysisTemplateId((Identifier) value);
-			}
 			if (key.equals(COLUMN_DESCRIPTION)) {
 				storableObject.setDescription((String) value);
 			}
@@ -96,7 +95,9 @@ public final class MeasurementSetupWrapper extends StorableObjectWrapper<Measure
 		if (clazz != null) {
 			return clazz;
 		}
-		if (key.equals(COLUMN_MEASUREMENT_TEMPLATE_ID) || key.equals(COLUMN_ANALYSIS_TEMPLATE_ID)) {
+		if (key.equals(COLUMN_MEASUREMENT_PORT_TYPE_ID)
+				|| key.equals(COLUMN_MEASUREMENT_TEMPLATE_ID)
+				|| key.equals(COLUMN_ANALYSIS_TEMPLATE_ID)) {
 			return Identifier.class;
 		}
 		if (key.equals(COLUMN_DESCRIPTION)) {
