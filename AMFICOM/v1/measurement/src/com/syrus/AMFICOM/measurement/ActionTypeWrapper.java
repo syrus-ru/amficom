@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTypeWrapper.java,v 1.1.2.3 2006/04/12 13:00:20 arseniy Exp $
+ * $Id: ActionTypeWrapper.java,v 1.1.2.4 2006/04/12 13:13:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,20 +15,12 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2006/04/12 13:00:20 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/04/12 13:13:28 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public abstract class ActionTypeWrapper<T extends ActionType> extends StorableObjectWrapper<T> {
-
-	static class ActionTypeKindWrapper {
-		public static final String COLUMN_ACTION_TYPE_KIND_CODE = "action_type_kind_code";
-		public static final String COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
-		public static final String COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
-		public static final String COLUMN_MODELING_TYPE_ID = "modeling_type_id";
-	}
-
 
 	private List<String> keys;
 
@@ -97,6 +89,14 @@ public abstract class ActionTypeWrapper<T extends ActionType> extends StorableOb
 			return String.class;
 		}
 		return null;
+	}
+
+
+	static class ActionTypeKindWrapper {
+		public static final String COLUMN_ACTION_TYPE_KIND_CODE = "action_type_kind_code";
+		public static final String COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
+		public static final String COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
+		public static final String COLUMN_MODELING_TYPE_ID = "modeling_type_id";
 	}
 
 }
