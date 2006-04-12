@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionTemplate.java,v 1.1.2.14 2006/04/10 11:21:20 arseniy Exp $
+ * $Id: ActionTemplate.java,v 1.1.2.15 2006/04/12 13:01:49 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,10 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONPARAMETER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
@@ -44,18 +48,37 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * <p>
  * Каждое действие, т. е., наследник
  * {@link com.syrus.AMFICOM.measurement.Action}, имеет свой шаблон. Шаблон
- * действия должен быть привязан к одной или более измеряемых линий
- * {@link com.syrus.AMFICOM.measurement.MonitoredElement}. Таким образом,
+ * действия привязан к типу действия
+ * {@link com.syrus.AMFICOM.measurement.ActionType} (поле {@link #actionTypeId})
+ * и типу измерительного порта
+ * {@link com.syrus.AMFICOM.measurement.MeasurementPortType} (поле
+ * {@link #measurementPortTypeId}). Эти поля должны соответствовать аналогичным
+ * полям измерительной связки
+ * {@link com.syrus.AMFICOM.measurement.ActionParameterTypeBinding} для каждого
+ * из входящих в шаблон параметров {@link #actionParameterIds}.
+ * <p>
+ * Кроме того, шаблон действия должен быть привязан к одной или более измеряемых
+ * линий {@link com.syrus.AMFICOM.measurement.MonitoredElement}. Таким образом,
  * каждая измеряемая линия имеет свой набор шаблонов, по которым на ней можно
  * проводить данное действие.
  * 
- * @version $Revision: 1.1.2.14 $, $Date: 2006/04/10 11:21:20 $
+ * @version $Revision: 1.1.2.15 $, $Date: 2006/04/12 13:01:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class ActionTemplate<T extends Action> extends StorableObject implements IdlTransferableObjectExt<IdlActionTemplate> {
-	private static final long serialVersionUID = 725853453958152504L;
+	private static final long serialVersionUID = -5951315596905172529L;
+
+	/**
+	 * Идентификатор типа действия.
+	 */
+	private Identifier actionTypeId;
+
+	/**
+	 * Идентификатор типа измерительного порта.
+	 */
+	private Identifier measurementPortTypeId;
 
 	/**
 	 * Описание.
@@ -81,6 +104,8 @@ public final class ActionTemplate<T extends Action> extends StorableObject imple
 	ActionTemplate(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
+			final Identifier actionTypeId,
+			final Identifier measurementPortTypeId,
 			final String description,
 			final long approximateActionDuration,
 			final Set<Identifier> actionParameterIds,
@@ -91,10 +116,14 @@ public final class ActionTemplate<T extends Action> extends StorableObject imple
 				creatorId,
 				creatorId,
 				version);
+		this.actionTypeId = actionTypeId;
+		this.measurementPortTypeId = measurementPortTypeId;
 		this.description = description;
 		this.approximateActionDuration = approximateActionDuration;
+
 		this.actionParameterIds = new HashSet<Identifier>();
 		this.setActionParameterIds0(actionParameterIds);
+
 		this.monitoredElementIds = new HashSet<Identifier>();
 		this.setMonitoredElementIds0(monitoredElementIds);
 	}
@@ -111,8 +140,26 @@ public final class ActionTemplate<T extends Action> extends StorableObject imple
 
 	/**
 	 * Создать новый экземпляр.
+	 * <p>
+	 * Этот метод проверяет, что заявленный тип действия
+	 * <code>actionTypeId</code> и заявленный тип измерительного порта
+	 * <code>measurementPortTypeId</code> годятся для параметров действия
+	 * <code>actionParameterIds</code>. Другими словами, измерительная связка
+	 * {@link ActionParameterTypeBinding} для каждого из параметров
+	 * <code>actionParameterIds</code>, должна содержать тип действия
+	 * <code>actionTypeId</code> и тип измерительного порта
+	 * <code>measurementPortTypeId</code>. Если это не так, кидается
+	 * {@link IllegalArgumentException}.
+	 * <p>
+	 * Кроме того, все входящие величины проверяются на неравенство
+	 * <code>null</code>, а <code>actionParameterIds</code> должен быть
+	 * непустой. Если эти условия не выполняются, также кидается
+	 * {@link IllegalArgumentException}.
 	 * 
+	 * @param <TT>
 	 * @param creatorId
+	 * @param actionTypeId
+	 * @param measurementPortTypeId
 	 * @param description
 	 * @param approximateActionDuration
 	 * @param actionParameterIds
@@ -121,6 +168,8 @@ public final class ActionTemplate<T extends Action> extends StorableObject imple
 	 * @throws CreateObjectException
 	 */
 	public static <TT extends Action> ActionTemplate<TT> createInstance(final Identifier creatorId,
+			final Identifier actionTypeId,
+			final Identifier measurementPortTypeId,
 			final String description,
 			final long approximateActionDuration,
 			final Set<Identifier> actionParameterIds,
@@ -134,11 +183,33 @@ public final class ActionTemplate<T extends Action> extends StorableObject imple
 		if (actionParameterIds.isEmpty()) {
 			throw new IllegalArgumentException(NON_VOID_EXPECTED);
 		}
+		try {
+			final Set<ActionParameter> actionParameters = StorableObjectPool.getStorableObjects(actionParameterIds, true);
+			for (final ActionParameter actionParameter : actionParameters) {
+				final Identifier parameterActionTypeId = actionParameter.getBinding().getActionTypeId();
+				if (!parameterActionTypeId.equals(actionTypeId)) {
+					throw new IllegalArgumentException("ActionType '"
+							+ parameterActionTypeId + "' for ActionParameter '" + actionParameter.getId()
+							+ "' differs from ActionType '" + actionTypeId + "' for ActionTemplate to create");
+				}
+
+				final Identifier parameterMeasurementPortTypeId = actionParameter.getBinding().getMeasurementPortTypeId();
+				if (!parameterMeasurementPortTypeId.equals(measurementPortTypeId)) {
+					throw new IllegalArgumentException("MeasurementPortType '"
+							+ parameterMeasurementPortTypeId + "' for ActionParameter '" + actionParameter.getId()
+							+ "' differs from MeasurementPortType '" + measurementPortTypeId + "' for ActionTemplate to create");
+				}
+			}
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException("Cannot validate ActionType and MeasurementPortType", ae);
+		}
 
 		try {
 			final ActionTemplate<TT> actionTemplate = new ActionTemplate<TT>(IdentifierPool.getGeneratedIdentifier(ACTIONTEMPLATE_CODE),
 					creatorId,
 					INITIAL_VERSION,
+					actionTypeId,
+					measurementPortTypeId,
 					description,
 					approximateActionDuration,
 					actionParameterIds,
@@ -165,6 +236,8 @@ public final class ActionTemplate<T extends Action> extends StorableObject imple
 				super.creatorId.getIdlTransferable(orb),
 				super.modifierId.getIdlTransferable(orb),
 				super.version.longValue(),
+				this.actionTypeId.getIdlTransferable(),
+				this.measurementPortTypeId.getIdlTransferable(),
 				this.description,
 				this.approximateActionDuration,
 				Identifier.createTransferables(this.actionParameterIds),
@@ -174,12 +247,53 @@ public final class ActionTemplate<T extends Action> extends StorableObject imple
 	public synchronized void fromIdlTransferable(final IdlActionTemplate idlActionTemplate) throws IdlConversionException {
 		super.fromIdlTransferable(idlActionTemplate);
 
+		this.actionTypeId = Identifier.valueOf(idlActionTemplate.actionTypeId);
+		this.measurementPortTypeId = Identifier.valueOf(idlActionTemplate.measurementPortTypeId);
 		this.description = idlActionTemplate.description;
 		this.approximateActionDuration = idlActionTemplate.approximateActionDuration;
+
 		this.setActionParameterIds0(Identifier.fromTransferables(idlActionTemplate.actionParameterIds));
 		this.setMonitoredElementIds0(Identifier.fromTransferables(idlActionTemplate.monitoredElementIds));
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+	}
+
+	/**
+	 * Получить идентификатор типа действия.
+	 * 
+	 * @return Идентификатор типа действия.
+	 */
+	public Identifier getActionTypeId() {
+		return this.actionTypeId;
+	}
+
+	/**
+	 * Получить тип действия.
+	 * 
+	 * @return Тип действия.
+	 * @throws ApplicationException
+	 */
+	public ActionType getActionType() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.actionTypeId, true);
+	}
+
+	/**
+	 * Получить идентификатор типа измерительного порта.
+	 * 
+	 * @return Идентификатор типа измерительного порта.
+	 */
+	public Identifier getMeasurementPortTypeId() {
+		return this.measurementPortTypeId;
+	}
+
+	/**
+	 * Получить тип измерительного порта.
+	 * 
+	 * @return Тип измерительного порта.
+	 * @throws ApplicationException
+	 */
+	public MeasurementPortType getMeasurementPortType() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.measurementPortTypeId, true);
 	}
 
 	/**
@@ -283,9 +397,13 @@ public final class ActionTemplate<T extends Action> extends StorableObject imple
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
+			final Identifier actionTypeId,
+			final Identifier measurementPortTypeId,
 			final String description,
 			final long approximateActionDuration) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
+		this.actionTypeId = actionTypeId;
+		this.measurementPortTypeId = measurementPortTypeId;
 		this.description = description;
 		this.approximateActionDuration = approximateActionDuration;
 	}
@@ -293,6 +411,12 @@ public final class ActionTemplate<T extends Action> extends StorableObject imple
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
+				&& this.actionTypeId != null
+				&& (this.actionTypeId.getMajor() == MEASUREMENT_TYPE_CODE
+						|| this.actionTypeId.getMajor() == ANALYSIS_TYPE_CODE
+						|| this.actionTypeId.getMajor() == MODELING_TYPE_CODE)
+				&& this.measurementPortTypeId != null
+				&& this.measurementPortTypeId.getMajor() == MEASUREMENTPORT_TYPE_CODE
 				&& this.actionParameterIds != null
 				&& !this.actionParameterIds.isEmpty()
 				&& StorableObject.getEntityCodeOfIdentifiables(this.actionParameterIds) == ACTIONPARAMETER_CODE
@@ -303,6 +427,8 @@ public final class ActionTemplate<T extends Action> extends StorableObject imple
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.actionTypeId);
+		dependencies.add(this.measurementPortTypeId);
 		dependencies.addAll(this.actionParameterIds);
 		dependencies.addAll(this.monitoredElementIds);
 		return dependencies;
