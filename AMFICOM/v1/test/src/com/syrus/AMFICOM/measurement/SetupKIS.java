@@ -1,5 +1,5 @@
 /*
- * $Id: SetupKIS.java,v 1.1.2.5 2006/04/07 14:17:10 arseniy Exp $
+ * $Id: SetupKIS.java,v 1.1.2.6 2006/04/12 13:22:24 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -94,7 +94,7 @@ public final class SetupKIS extends TestCase {
 	public void testSwitchOnService() throws ApplicationException {
 		final Identifier creatorId = LoginManager.getUserId();
 
-		final String kisHostName = "rtu-3";
+		final String kisHostName = "rtu-1";
 		final StorableObjectCondition kisCondition = new TypicalCondition(kisHostName, OPERATION_EQUALS, KIS_CODE, COLUMN_HOSTNAME);
 		final Set<KIS> kiss = StorableObjectPool.getStorableObjectsByCondition(kisCondition, true);
 		if (kiss.isEmpty()) {
