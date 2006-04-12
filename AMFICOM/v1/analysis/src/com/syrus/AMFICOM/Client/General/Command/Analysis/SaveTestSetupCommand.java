@@ -66,6 +66,7 @@ public class SaveTestSetupCommand extends AbstractCommand
 			// создаем совокупный шаблон
 			measurementSetup = MeasurementSetup.createInstance(
 				LoginManager.getUserId(),
+				msTest.getMeasurementPortTypeId(),
 				msTest.getMeasurementTemplateId(),
 				analysisTemplateId,
 				name,
