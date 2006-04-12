@@ -1,5 +1,5 @@
 /*-
- * $Id: PredictionModel.java,v 1.4 2006/04/03 10:55:27 stas Exp $
+ * $Id: PredictionModel.java,v 1.5 2006/04/12 14:52:10 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,10 @@ public class PredictionModel {
 								final String id = tr.getId();
 								if (!id.equals(Heap.PRIMARY_TRACE_KEY) && !id.equals(Heap.ETALON_TRACE_KEY) 
 										&& !id.equals(Heap.MODELED_TRACE_KEY)) {
-									((FilteredMTAEPredictionManager)manager).setActive(id, tr.isShown());
-									changeNotify();
+									if (((FilteredMTAEPredictionManager)manager).containsTrace(id)) {
+										((FilteredMTAEPredictionManager)manager).setActive(id, tr.isShown());
+										changeNotify();
+									}
 								}
 							}		
 						}

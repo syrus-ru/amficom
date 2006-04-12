@@ -1,5 +1,5 @@
 /*-
- * $Id: FilteredMTAEPredictionManager.java,v 1.2 2006/04/03 09:25:28 saa Exp $
+ * $Id: FilteredMTAEPredictionManager.java,v 1.3 2006/04/12 14:52:10 stas Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
  * исключения {@link IllegalStateException}, {@link IllegalArgumentException}.
  * 
  * @author saa
- * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2006/04/03 09:25:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2006/04/12 14:52:10 $
  * @module prediction
  */
 public class FilteredMTAEPredictionManager implements PredictionManager {
@@ -104,6 +104,10 @@ public class FilteredMTAEPredictionManager implements PredictionManager {
 			this.activeTraces.remove(key);
 		}
 		this.resetManager();
+	}
+	
+	public boolean containsTrace(String key) {
+		return this.allTraces.containsKey(key); 
 	}
 
 	private void resetManager() {
