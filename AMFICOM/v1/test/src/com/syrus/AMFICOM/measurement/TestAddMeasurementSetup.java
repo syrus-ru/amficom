@@ -1,5 +1,5 @@
 /*-
- * $Id: TestAddMeasurementSetup.java,v 1.1.2.5 2006/04/11 12:50:39 arseniy Exp $
+ * $Id: TestAddMeasurementSetup.java,v 1.1.2.6 2006/04/12 13:22:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.1.2.5 $, $Date: 2006/04/11 12:50:39 $
+ * @version $Revision: 1.1.2.6 $, $Date: 2006/04/12 13:22:10 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -139,7 +139,9 @@ public final class TestAddMeasurementSetup extends TestCase {
 							}
 						}
 						if (scansActionParameterId == null) {
-							scansActionParameterId = ActionParameter.createInstance(creatorId, ByteArray.toByteArray(averageCount), actionParameterTypeBinding.getId()).getId();
+							scansActionParameterId = ActionParameter.createInstance(creatorId,
+									ByteArray.toByteArray(averageCount),
+									actionParameterTypeBinding.getId()).getId();
 						}
 						actionParameterIds.add(scansActionParameterId);
 					}
@@ -152,12 +154,15 @@ public final class TestAddMeasurementSetup extends TestCase {
 		}
 
 		final ActionTemplate<Measurement> actionTemplate = ActionTemplate.createInstance(creatorId,
+				measurementType.getId(),
+				measurementPortType.getId(),
 				"test",
 				60 * 1000L,
 				actionParameterIds,
 				Collections.singleton(monitoredElement.getId()));
 
 		final MeasurementSetup measurementSetup = MeasurementSetup.createInstance(creatorId,
+				measurementPortType.getId(),
 				actionTemplate.getId(),
 				VOID_IDENTIFIER,
 				"test",
