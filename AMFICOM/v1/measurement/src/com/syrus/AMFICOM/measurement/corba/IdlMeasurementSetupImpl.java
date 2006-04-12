@@ -9,7 +9,7 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.util.Log;
 
 final class IdlMeasurementSetupImpl extends IdlMeasurementSetup {
-	private static final long serialVersionUID = 6803393489149894831L;
+	private static final long serialVersionUID = 77221861881120876L;
 
 	IdlMeasurementSetupImpl() {
 		// empty
@@ -21,6 +21,7 @@ final class IdlMeasurementSetupImpl extends IdlMeasurementSetup {
 			final IdlIdentifier creatorId,
 			final IdlIdentifier modifierId,
 			final long version,
+			final IdlIdentifier measurementPortTypeId,
 			final IdlIdentifier measurementTemplateId,
 			final IdlIdentifier analysisTemplateId,
 			final String description,
@@ -31,9 +32,10 @@ final class IdlMeasurementSetupImpl extends IdlMeasurementSetup {
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 		this.version = version;
-		this.description = description;
+		this.measurementPortTypeId = measurementPortTypeId;
 		this.measurementTemplateId = measurementTemplateId;
 		this.analysisTemplateId = analysisTemplateId;
+		this.description = description;
 		this.monitoredElementIds = monitoredElementIds;
 	}
 
