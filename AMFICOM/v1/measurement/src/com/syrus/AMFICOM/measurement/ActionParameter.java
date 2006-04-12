@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionParameter.java,v 1.1.2.19 2006/04/11 13:06:58 arseniy Exp $
+ * $Id: ActionParameter.java,v 1.1.2.20 2006/04/12 12:56:40 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * {@link com.syrus.AMFICOM.measurement.ActionParameterTypeBinding},
  * идентификатор которой хранится в {@link #bindingId}.
  * 
- * @version $Revision: 1.1.2.19 $, $Date: 2006/04/11 13:06:58 $
+ * @version $Revision: 1.1.2.20 $, $Date: 2006/04/12 12:56:40 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -342,8 +342,23 @@ public final class ActionParameter extends Parameter implements IdlTransferableO
 		this.bindingId = bindingId;
 	}
 
+	/**
+	 * Получить идентификатор измерительной связки.
+	 * 
+	 * @return Идентификатор измерительной связки.
+	 */
 	public Identifier getBindingId() {
 		return this.bindingId;
+	}
+
+	/**
+	 * Получить измерительную связку. Обёртка над {@link #getBindingId()}.
+	 * 
+	 * @return Измерительная связка.
+	 * @throws ApplicationException
+	 */
+	public ActionParameterTypeBinding getBinding() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.bindingId, true);
 	}
 
 	/**
