@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.30.2.6 2006/04/11 13:06:58 arseniy Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.30.2.7 2006/04/12 11:27:05 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.30.2.6 $, $Date: 2006/04/11 13:06:58 $
+ * @version $Revision: 1.30.2.7 $, $Date: 2006/04/12 11:27:05 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement
@@ -88,7 +88,7 @@ public final class PeriodicalTemporalPattern
 		} catch (final IdlConversionException ice) {
 			throw new CreateObjectException(ice);
 		}
-	}	
+	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -96,10 +96,10 @@ public final class PeriodicalTemporalPattern
 	public synchronized void fromIdlTransferable(final IdlPeriodicalTemporalPattern idlPeriodicalTemporalPattern) throws IdlConversionException {
 		super.fromIdlTransferable(idlPeriodicalTemporalPattern);
 		this.period = idlPeriodicalTemporalPattern.period;
-		
+
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}	
-	
+
 	/**
 	 * @param creatorId
 	 * @param period
@@ -130,7 +130,7 @@ public final class PeriodicalTemporalPattern
 			throw new CreateObjectException(ae);
 		}
 	}
-	
+
 	/**
 	 * create new instance for client
 	 * @param creatorId creator id
@@ -159,7 +159,6 @@ public final class PeriodicalTemporalPattern
 		}
 	}
 
-	
 	/**
 	 * <p>
 	 * <b>Clients must never explicitly call this method. </b>
@@ -169,7 +168,7 @@ public final class PeriodicalTemporalPattern
 	protected boolean isValid() {
 		return super.isValid() && this.period > 0;
 	}
-	
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -182,41 +181,37 @@ public final class PeriodicalTemporalPattern
 			this.times.add(new Date(time));
 		}
 	}
-	
+
 	@Override
-	public final SortedSet<Date> getTimes(final Date start,
-		final Date end,
-		final Date startInterval,
-		final Date endInterval) {
-		
+	public final SortedSet<Date> getTimes(final Date start, final Date end, final Date startInterval, final Date endInterval) {
+
 		if (start.compareTo(end) > 0) {
 			throw new IllegalArgumentException("Start date later than end date");
 		}
-		
+
 		if (startInterval.compareTo(endInterval) > 0) {
 			throw new IllegalArgumentException("Start interval date later than end interval date");
 		}
-		
+
 		final long start0 = start.getTime();
-		
-		final long end0 = endInterval.compareTo(end) < 0 ? 
-				endInterval.getTime() : 
-				end.getTime();
-		
+
+		final long end0 = endInterval.compareTo(end) < 0 ? endInterval.getTime() : end.getTime();
+
 		final long d = startInterval.getTime() - start0;
-		final long startTime0 = start.compareTo(startInterval) < 0 ? 
-				start0 + this.period * ((d % this.period == 0 ? 0 : 1) + d / this.period) :
-				start0;
+		final long startTime0 = start.compareTo(startInterval) < 0 ? start0
+				+ this.period * ((d % this.period == 0 ? 0 : 1) + d / this.period) : start0;
 		final SortedSet<Date> times1 = new TreeSet<Date>();
-		for(long time = startTime0; time <= end0; time += this.period) {
+		for (long time = startTime0; time <= end0; time += this.period) {
 			times1.add(new Date(time));
 		}
-		
+
 		return times1;
 	}
-	
+
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
@@ -229,7 +224,7 @@ public final class PeriodicalTemporalPattern
 	@Override
 	public IdlPeriodicalTemporalPattern getIdlTransferable(final ORB orb) {
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
-		
+
 		return IdlPeriodicalTemporalPatternHelper.init(orb,
 				this.id.getIdlTransferable(),
 				this.created.getTime(),
@@ -240,27 +235,26 @@ public final class PeriodicalTemporalPattern
 				this.period);
 	}
 
-	
 	public long getPeriod() {
 		return this.period;
 	}
-	
+
 	public String getPeriodDescription() {
-		StringBuffer buffer = new StringBuffer();
+		final StringBuffer buffer = new StringBuffer();
 		long period1 = this.period;
-		
+
 		int days = (int) (period1 / DAY_LONG);
 		period1 -= days * DAY_LONG;
 		int hours = (int) (period1 / HOUR_LONG);
 		period1 -= hours * HOUR_LONG;
 		int mins = (int) (period1 / MINUTE_LONG);
-		
+
 		if (days > 0) {
 			buffer.append(days);
 			buffer.append(" ");
 			buffer.append(LangModelMeasurement.getString(I18N_KEY_DAYS));
 		}
-		
+
 		if (hours > 0) {
 			if (buffer.length() > 0) {
 				buffer.append(", ");
@@ -269,7 +263,7 @@ public final class PeriodicalTemporalPattern
 			buffer.append(" ");
 			buffer.append(LangModelMeasurement.getString(I18N_KEY_HOUR));
 		}
-		
+
 		if (mins > 0) {
 			if (buffer.length() > 0) {
 				buffer.append(", ");
@@ -280,18 +274,11 @@ public final class PeriodicalTemporalPattern
 		}
 		return buffer.toString();
 	}
-	
-	@Deprecated
-	public void setPeriod(final long period) {
-		if (this.period != period) {
-			super.times = null;
-			this.period = period;
-			super.markAsChanged();
-		}
-	}
-	
+
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
 	protected synchronized void setAttributes(final Date created,
 			final Date modified,
