@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementSetup.java,v 1.100.2.16 2006/04/10 11:22:07 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.100.2.17 2006/04/12 12:57:50 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
@@ -53,18 +54,29 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * каждая измеряемая линия имеет свой набор шаблонов, по которым на ней можно
  * проводить измерения.
  * <p>
+ * Шаблон измерительного задания привязан к типу измерительного порта
+ * {@link com.syrus.AMFICOM.measurement.MeasurementPortType} (поле
+ * {@link #measurementPortTypeId}). Это поле должно соответствовать аналогичным
+ * полям шаблонов измерения и анализа, входящих в данный шаблон измерительного
+ * задания.
+ * <p>
  * Поскольку каждый из шаблонов действия - шаблон измерения и шаблон анализа -
  * сам по себе уже привязан к какому-то набору измеряемых линий, то созданный на
  * их основе шаблон измерительного задания может быть привязан лишь к тем
  * линиям, к которым привязан каждый из составляющих его шаблонов действия.
  * 
- * @version $Revision: 1.100.2.16 $, $Date: 2006/04/10 11:22:07 $
+ * @version $Revision: 1.100.2.17 $, $Date: 2006/04/12 12:57:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class MeasurementSetup extends StorableObject implements IdlTransferableObjectExt<IdlMeasurementSetup> {
-	private static final long serialVersionUID = -2848488077315796037L;
+	private static final long serialVersionUID = 7296011372140670277L;
+
+	/**
+	 * Идентификатор типа измерительного порта.
+	 */
+	private Identifier measurementPortTypeId;
 
 	/**
 	 * Идентификатор шаблона измерения.
@@ -95,6 +107,7 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 	MeasurementSetup(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
+			final Identifier measurementPortTypeId,
 			final Identifier measurementTemplateId,
 			final Identifier analysisTemplateId,
 			final String description,
@@ -105,6 +118,7 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 				creatorId,
 				creatorId,
 				version);
+		this.measurementPortTypeId = measurementPortTypeId;
 		this.measurementTemplateId = measurementTemplateId;
 		this.analysisTemplateId = analysisTemplateId;
 		this.description = description;
@@ -123,8 +137,21 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 
 	/**
 	 * Создать новый экземпляр.
+	 * <p>
+	 * Этот метод проверяет, что заявленный тип измерительного порта
+	 * <code>measurementPortTypeId</code> годится для шаблонов измерения
+	 * <code>measurementTemplateId</code> и анализа
+	 * <code>analysisTemplateId</code>. Другими словами, оба шаблона
+	 * <code>measurementTemplateId</code> и <code>analysisTemplateId</code>
+	 * должны иметь тип измерительного порта <code>measurementPortTypeId</code>.
+	 * Если это не так, кидается {@link IllegalArgumentException}.
+	 * <p>
+	 * Кроме того, все входящие величины проверяются на неравенство
+	 * <code>null</code>. Если проверка не проходит, также кидается
+	 * {@link IllegalArgumentException}.
 	 * 
 	 * @param creatorId
+	 * @param measurementPortTypeId
 	 * @param measurementTemplateId
 	 * @param analysisTemplateId
 	 * @param description
@@ -133,22 +160,46 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 	 * @throws CreateObjectException
 	 */
 	public static MeasurementSetup createInstance(final Identifier creatorId,
+			final Identifier measurementPortTypeId,
 			final Identifier measurementTemplateId,
 			final Identifier analysisTemplateId,
 			final String description,
 			final Set<Identifier> monitoredElementIds) throws CreateObjectException {
 		if (creatorId == null
+				|| measurementPortTypeId == null
 				|| measurementTemplateId == null
 				|| analysisTemplateId == null
 				|| description == null
 				|| monitoredElementIds == null) {
 			throw new IllegalArgumentException(NON_NULL_EXPECTED);
 		}
+		try {
+			final ActionTemplate<Measurement> measurementTemplate = StorableObjectPool.getStorableObject(measurementTemplateId, true);
+			final Identifier mTemplateMeasurementPortTypeId = measurementTemplate.getMeasurementPortTypeId();
+			if (!mTemplateMeasurementPortTypeId.equals(measurementPortTypeId)) {
+				throw new IllegalArgumentException("MeasurementPortType '"
+						+ mTemplateMeasurementPortTypeId + "' of measurement ActionTemplate '" + measurementTemplateId
+						+ "' differs from MeasurementPortType '" + measurementPortTypeId + "' of MeasurementSetup to create");
+			}
+
+			if (!analysisTemplateId.isVoid()) {
+				final ActionTemplate<Analysis> analysisTemplate = StorableObjectPool.getStorableObject(analysisTemplateId, true);
+				final Identifier aTemplateMeasurementPortTypeId = analysisTemplate.getMeasurementPortTypeId();
+				if (!aTemplateMeasurementPortTypeId.equals(measurementPortTypeId)) {
+					throw new IllegalArgumentException("MeasurementPortType '"
+							+ aTemplateMeasurementPortTypeId + "' of analysis ActionTemplate '" + analysisTemplateId
+							+ "' differs from MeasurementPortType '" + measurementPortTypeId + "' of MeasurementSetup to create");
+				}
+			}
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException("Cannot validate MeasurementPortType", ae);
+		}
 
 		try {
 			final MeasurementSetup measurementSetup = new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(MEASUREMENTSETUP_CODE),
 					creatorId,
 					INITIAL_VERSION,
+					measurementPortTypeId,
 					measurementTemplateId,
 					analysisTemplateId,
 					description,
@@ -175,6 +226,7 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 				super.creatorId.getIdlTransferable(orb),
 				super.modifierId.getIdlTransferable(orb),
 				super.version.longValue(),
+				this.measurementPortTypeId.getIdlTransferable(orb),
 				this.measurementTemplateId.getIdlTransferable(orb),
 				this.analysisTemplateId.getIdlTransferable(orb),
 				this.description,
@@ -184,12 +236,32 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 	public synchronized void fromIdlTransferable(final IdlMeasurementSetup idlMeasurementSetup) throws IdlConversionException {
 		super.fromIdlTransferable(idlMeasurementSetup);
 
+		this.measurementPortTypeId = Identifier.valueOf(idlMeasurementSetup.measurementPortTypeId);
 		this.measurementTemplateId = Identifier.valueOf(idlMeasurementSetup.measurementTemplateId);
 		this.analysisTemplateId = Identifier.valueOf(idlMeasurementSetup.analysisTemplateId);
 		this.description = idlMeasurementSetup.description;
 		this.setMonitoredElementIds0(Identifier.fromTransferables(idlMeasurementSetup.monitoredElementIds));
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+	}
+
+	/**
+	 * Получить идентификатор типа измерительного порта.
+	 * 
+	 * @return Идентификатор типа измерительного порта.
+	 */
+	public Identifier getMeasurementPortTypeId() {
+		return this.measurementPortTypeId;
+	}
+
+	/**
+	 * Получить тип измерительного порта.
+	 * 
+	 * @return Тип измерительного порта.
+	 * @throws ApplicationException
+	 */
+	public MeasurementPortType getMeasurementPortType() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.measurementPortTypeId, true);
 	}
 
 	/**
@@ -310,10 +382,12 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
+			final Identifier measurementPortTypeId,
 			final Identifier measurementTemplateId,
 			final Identifier analysisTemplateId,
 			final String description) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
+		this.measurementPortTypeId = measurementPortTypeId;
 		this.measurementTemplateId = measurementTemplateId;
 		this.analysisTemplateId = analysisTemplateId;
 		this.description = description;
@@ -322,6 +396,8 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 	@Override
 	protected boolean isValid() {
 		final boolean valid = super.isValid()
+				&& this.measurementPortTypeId != null
+				&& this.measurementPortTypeId.getMajor() == MEASUREMENTPORT_TYPE_CODE
 				&& this.measurementTemplateId != null
 				&& this.measurementTemplateId.getMajor() == ACTIONTEMPLATE_CODE
 				&& this.analysisTemplateId != null
@@ -364,6 +440,7 @@ public final class MeasurementSetup extends StorableObject implements IdlTransfe
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.measurementPortTypeId);
 		dependencies.add(this.measurementTemplateId);
 		dependencies.add(this.analysisTemplateId);
 		dependencies.addAll(this.monitoredElementIds);
