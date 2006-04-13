@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementParameters.java,v 1.1.2.4 2006/04/13 12:48:26 saa Exp $
+ * $Id: MeasurementParameters.java,v 1.1.2.5 2006/04/13 13:07:58 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,24 +44,23 @@ import com.syrus.util.ByteArray;
 
 /**
  * Обеспечивает хранение параметров измерения и
- * их преобразование между тремя представлениями:
+ * их преобразование между двумя представлениями:
  * <ul>
- * <li> {@link ActionTemplate}/{@link ActionParameter}
+ * <li> {@link ActionTemplate}/{@link ActionParameter},
+ *      в т.ч. подготовка {@link ReflectometryMeasurementParameters} и
+ *      определение длительности измерения через
+ *      {@link MeasurementTimeEstimator}.
  * <li> Параметры, удобные для GUI: доступ к полям по ключам набора Property,
  *      представляя boolean самим собой, а int и double как String.
  *      Конкретное поле может присутствовать, а может отсутствовать в
  *      зависимости от конкретного типа измерительного порта.
- * <li> (только экспорт с потерей данных)
- *   {@link ReflectometryMeasurementParameters}/{@link MeasurementTimeEstimator}
- *   - для определения продолжительности измерения (фактически, это необходимо
- *   для представления в виде {@link ActionTemplate}.
  * </ul>
  * 
- * FIXME: переименовать: Фактически этот класс завязан на рефлектометрию.<p>
+ * @todo переименовать: Фактически этот класс завязан на рефлектометрию.<p>
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.4 $, $Date: 2006/04/13 12:48:26 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/04/13 13:07:58 $
  * @module scheduler
  */
 public class MeasurementParameters {
@@ -500,10 +499,17 @@ public class MeasurementParameters {
 		setFromTemplate(template);
 	}
 
-	public ReflectometryMeasurementParameters getRMP() {
-		final boolean hasGainSplice = getValue(ReflectometryParameterTypeCodename.FLAG_GAIN_SPLICE_ON).asBoolean();
-		final boolean hasHiRes = false; // FIXME: implement this for both QP and PK reflectometers
-		final boolean hasLFD = getValue(ReflectometryParameterTypeCodename.FLAG_LIFE_FIBER_DETECT).asBoolean();
+	/**
+	 * возвращает ReflectometryMeasurementParameters в минимальном
+	 * представлении, достаточном для правильной работы estimator'а
+	 */
+	private ReflectometryMeasurementParameters getRMP() {
+		final boolean hasGainSplice = hasValue(ReflectometryParameterTypeCodename.FLAG_GAIN_SPLICE_ON)
+			&& getValue(ReflectometryParameterTypeCodename.FLAG_GAIN_SPLICE_ON).asBoolean();
+		final boolean hasHiRes = hasValue(ReflectometryParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES)
+			&& !getValue(ReflectometryParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES).asBoolean();
+		final boolean hasLFD = hasValue(ReflectometryParameterTypeCodename.FLAG_LIFE_FIBER_DETECT)
+			&& getValue(ReflectometryParameterTypeCodename.FLAG_LIFE_FIBER_DETECT).asBoolean();
 		final int averages = getValue(ReflectometryParameterTypeCodename.AVERAGE_COUNT).asInteger();
 		final double refIndex = getValue(ReflectometryParameterTypeCodename.INDEX_OF_REFRACTION).asDouble();
 		final int pulseWidthNs;
