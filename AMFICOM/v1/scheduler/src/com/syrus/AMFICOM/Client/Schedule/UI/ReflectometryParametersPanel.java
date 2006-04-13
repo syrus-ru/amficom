@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryParametersPanel.java,v 1.1.2.1 2006/04/13 09:39:03 saa Exp $
+ * $Id: ReflectometryParametersPanel.java,v 1.1.2.2 2006/04/13 11:25:42 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.1 $, $Date: 2006/04/13 09:39:03 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/04/13 11:25:42 $
  * @module
  */
 public class ReflectometryParametersPanel extends MeasurementParametersPanel {
@@ -214,26 +214,21 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 					for (String value: this.parameters.valuesPropertyStringValue(property)) {
 						comboBox.addItem(value);
 					}
-					// выбираем текущее значение либо снимаем выделение
+					// выбираем текущее значение
 					final String currentValue = this.parameters.getPropertyStringValue(property);
 					comboBox.setSelectedItem(currentValue);
 				} else if (component instanceof JCheckBox) {
 					JCheckBox checkBox = (JCheckBox) component;
 					// набор значений загружать не надо
-					// выбираем текущее значение, используя по умолчанию false
-					checkBox.setSelected(this.parameters.isPropertyUnset(property)
-							? false
-							: this.parameters.getPropertyAsBoolean(property));
+					checkBox.setSelected(this.parameters.getPropertyAsBoolean(property));
 				} else if (component instanceof JTextField) {
 					JTextField textField = (JTextField) component;
 					if (valueKind != ParameterValueKind.CONTINUOUS) {
 						throw new InternalError("Unsupported value kind");
 					}
 					// набор значений загружать не надо
-					// устанавливаем текущее значение, используя по умолчанию пустую строку
-					textField.setText(this.parameters.isPropertyUnset(property)
-							? ""
-							: this.parameters.getPropertyStringValue(property));
+					// устанавливаем текущее значение
+					textField.setText(this.parameters.getPropertyStringValue(property));
 				} else {
 					assert false; // did we add component of any other type?
 				}

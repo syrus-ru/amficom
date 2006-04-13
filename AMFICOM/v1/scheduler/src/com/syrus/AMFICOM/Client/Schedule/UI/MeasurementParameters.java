@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementParameters.java,v 1.1.2.1 2006/04/13 09:39:03 saa Exp $
+ * $Id: MeasurementParameters.java,v 1.1.2.2 2006/04/13 11:25:42 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,19 +39,14 @@ import com.syrus.AMFICOM.reflectometry.ReflectometryUtil;
 import com.syrus.util.ByteArray;
 
 /**
- * @todo избавиться от состояния "не определено"
- * 
  * Обеспечивает хранение параметров измерения и
  * их преобразование между тремя представлениями:
  * <ul>
  * <li> {@link ActionTemplate}/{@link ActionParameter}
- * <li> Параметры, удобные для GUI:
- *   FIXME: здесь javadoc устарел. Теперь используется Properties
- *   <ul>
- *   <li> String waveLength - перечислимый, определен всегда
- *   <li> String traceLength - перечислимый, определен всегда
- *   <li> ... надо добавить еще
- *   </ul>
+ * <li> Параметры, удобные для GUI: доступ к полям по ключам набора Property,
+ *      представляя boolean самим собой, а int и double как String.
+ *      Конкретное поле может присутствовать, а может отсутствовать в
+ *      зависимости от конкретного типа измерительного порта.
  * <li> (только экспорт с потерей данных)
  *   {@link ReflectometryMeasurementParameters}/{@link MeasurementTimeEstimator}
  *   - для определения продолжительности измерения (фактически, это необходимо
@@ -62,51 +57,88 @@ import com.syrus.util.ByteArray;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.1 $, $Date: 2006/04/13 09:39:03 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/04/13 11:25:42 $
  * @module scheduler
  */
 public class MeasurementParameters {
 
+	/**
+	 * Отображение параметров в виде "свойств"
+	 * (такое представление удобно для UI).
+	 * 
+	 * В отличие от параметров,
+	 * каждое свойство имеет свой фиксированный kind,
+	 * поэтому один и тот же параметр (например, число усреднений)
+	 * может быть представлен разными свойствами.
+	 * 
+	 * Здесь мы должны обеспечить, чтобы в каждый момент времени
+	 * одному параметру соответствовало не более одного свойства.
+	 * 
+	 * Кроме того, мы полагаемся, что нет неопознанных параметров.
+	 * Тогда можно рассчитывать на отношение параметров к свойствам
+	 * вида {0,1} : 1, т.е. каждому параметру соответствует ровно одно
+	 * свойство, а каждому свойству соответствует один параметр
+	 * или не соответствует ни одного (свойство не определено).
+	 */
 	public static enum Property {
 		// эти отображения только определяют зависимости.
 		// Настоящие значения параметров уточнятся далее.
+
+		// enumerated
 		E_WAVELENGTH(ReflectometryParameterTypeCodename.WAVE_LENGTH),
 		E_TRACELENGTH(ReflectometryParameterTypeCodename.TRACE_LENGTH),
 		E_REFRACTION_INDEX(ReflectometryParameterTypeCodename.INDEX_OF_REFRACTION),
-		FLAG_HIRES(ReflectometryParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES), // NB: будет преобразовано дополнительно
 		E_PULSE_WIDTH_M(ReflectometryParameterTypeCodename.PULSE_WIDTH_M),
 		E_PULSE_WIDTH_NS(ReflectometryParameterTypeCodename.PULSE_WIDTH_NS),
 		E_AVERAGES(ReflectometryParameterTypeCodename.AVERAGE_COUNT), // NB: будет отфильтровано дополнительно
-		I_AVERAGES(ReflectometryParameterTypeCodename.AVERAGE_COUNT), // NB: будет отфильтровано дополнительно
 		E_RESOLUTION(ReflectometryParameterTypeCodename.RESOLUTION),
-		FLAG_GAIN_SPLICE(ReflectometryParameterTypeCodename.FLAG_GAIN_SPLICE_ON),
-		FLAG_SMOOTH(ReflectometryParameterTypeCodename.FLAG_SMOOTH_FILTER),
-		FLAG_LFD(ReflectometryParameterTypeCodename.FLAG_LIFE_FIBER_DETECT);
+
+		// enumerated boolean
+		FLAG_GAIN_SPLICE(ReflectometryParameterTypeCodename.FLAG_GAIN_SPLICE_ON, true),
+		FLAG_SMOOTH(ReflectometryParameterTypeCodename.FLAG_SMOOTH_FILTER, false),
+		FLAG_LFD(ReflectometryParameterTypeCodename.FLAG_LIFE_FIBER_DETECT, true),
+		FLAG_HIRES(ReflectometryParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES, true), // NB: HIRES = NOT(LOWRES) 
+
+		// continuous
+		I_AVERAGES(ReflectometryParameterTypeCodename.AVERAGE_COUNT, 10); // NB: будет отфильтровано дополнительно
 
 		public final ReflectometryParameterTypeCodename codename;
+		private final byte[] defaultValue;
 		Property(ReflectometryParameterTypeCodename codename) {
 			this.codename = codename;
+			this.defaultValue = null;
+		}
+		Property(ReflectometryParameterTypeCodename codename, boolean defaultValue) {
+			this.codename = codename;
+			this.defaultValue = ByteArray.toByteArray(defaultValue);
+		}
+		Property(ReflectometryParameterTypeCodename codename, int defaultValue) {
+			this.codename = codename;
+			this.defaultValue = ByteArray.toByteArray(defaultValue);
+		}
+		public byte[] getDefaultValueClone() {
+			return this.defaultValue == null ? null : this.defaultValue.clone();
 		}
 	}
 
 	/**
-	 * Хранит текущее значения параметра (в виде byte[]) либо null,
+	 * Хранит текущее значения параметра в виде byte[]
 	 * информацию, необходимую для его сохранения как ActionParameter,
 	 * информацию о его истинном типе,
 	 * а также множество допустимых значений параметра.
 	 * 
+	 * XXX: Создается в состоянии, когда текущее значение не определено,
+	 * но перед использованием должен быть проинициализирован.
+	 * 
 	 * Имеет возможность доступа и изменения с помощью типизированных
 	 * as...() и set...() методов: хотя определены все эти методы,
 	 * допустимы только те, который соответствует реальному типу.
-	 * Для работы со значениями типа "не определено", предоставлены
-	 * методы isUnset() и unset(). Если значение не определено,
-	 * (isUnset() == true), то вызов метода as...() недопустим.
 	 */
 	private static class ParameterRecord {
 		private DataType dataType; // must correspond to binding.parameterType
 		private ActionParameterTypeBinding binding; // please, read only access
 		private Set<byte[]> allowedValues; // null for continuous
-		public byte[] data; // may be null
+		private byte[] data; // initialized as null, when used cheched to be not null
 
 		public ParameterRecord(ActionParameterTypeBinding binding,
 				Set<byte[]> allowedValues) throws ApplicationException {
@@ -120,10 +152,10 @@ public class MeasurementParameters {
 			default:
 				assert false;
 			}
+			this.data = null; // XXX: инициализация
 			this.binding = binding;
 			this.dataType = binding.getParameterType().getDataType();
 			this.allowedValues = allowedValues;
-			this.data = null;
 		}
 
 		public ActionParameterTypeBinding getBinding() {
@@ -138,14 +170,11 @@ public class MeasurementParameters {
 			return this.dataType;
 		}
 
-		public boolean isUnset() {
-			return this.data == null;
-		}
-
 		/**
 		 * please, do not modify returned array
 		 */
 		public byte[] asBAR() {
+			assert this.data != null;
 			return this.data;
 		}
 
@@ -193,14 +222,17 @@ public class MeasurementParameters {
 		}
 
 		public boolean asBoolean() {
+			assert this.data != null;
 			return asBoolean(this.data);
 		}
 
 		public int asInteger() {
+			assert this.data != null;
 			return asInteger(this.data);
 		}
 
 		public double asDouble() {
+			assert this.data != null;
 			return asDouble(this.data);
 		}
 
@@ -212,21 +244,17 @@ public class MeasurementParameters {
 		}
 
 		public void setInteger(int i) {
-			if (this.dataType != DataType.BOOLEAN) {
+			if (this.dataType != DataType.INTEGER) {
 				throw new IllegalStateException();
 			}
 			this.data = ByteArray.toByteArray(i);
 		}
 
 		public void setDouble(double d) {
-			if (this.dataType != DataType.BOOLEAN) {
+			if (this.dataType != DataType.DOUBLE) {
 				throw new IllegalStateException();
 			}
 			this.data = ByteArray.toByteArray(d);
-		}
-
-		public void unset() {
-			this.data = null;
 		}
 
 		@Override
@@ -262,23 +290,19 @@ public class MeasurementParameters {
 
 		/**
 		 * Makes string representation. Supports Integer and Double value types only.
-		 * returns null if values is unset.
+		 * @return String, not null
 		 */
 		public String getStringValue() {
-			return this.data == null ? null : getStringValue(this.data);
+			assert this.data != null;
+			return getStringValue(this.data);
 		}
 
 		/**
 		 * Sets from string value.
 		 *  Supports Integer and Double value types only.
-		 * @param value string value or null to unset
+		 * @param value string value, not null
 		 */
 		public void setStringValue(String s) {
-			// XXX: if s is null, does not checks if the type is allowed. That's not desired but suitable.
-			if (s == null) {
-				unset();
-				return;
-			}
 			switch(this.dataType) {
 			case INTEGER:
 				setInteger(Integer.parseInt(s));
@@ -292,9 +316,9 @@ public class MeasurementParameters {
 		}
 
 		/**
-		 * returns set of allowed string representations or null of continuous.
+		 * Gets set of allowed string representations.
 		 *   Supports Integer and Double value types only.
-		 * @return set of allowed string representations or null of continuous
+		 * @return set of allowed string representations or null for continuous
 		 */
 		public Set<String> getAllowedStringValues() {
 			if (this.allowedValues == null) {
@@ -342,7 +366,9 @@ public class MeasurementParameters {
 	public MeasurementParameters(MonitoredElement me) throws ApplicationException {
 		this.me = me;
 
-		// надо загрузить начальные значения values
+		// загружаем this.parameters
+		// Внимание: значения ParameterRecord.data остаются null,
+		// надо будет проинициализировать!
 		final MeasurementPortType mpType = getMeasurementPortType();
 		final Set<ActionParameterTypeBinding> bindings =
 			ActionParameterTypeBinding.getValues(
@@ -372,15 +398,17 @@ public class MeasurementParameters {
 			}
 		}
 
-		// инициализируем properties-ссылки
+		// инициализируем properties-ссылки,
+		// а также начальные значения свойств соответствующих им параметров
 		this.properties = new HashMap<Property,ParameterRecord>(
 				Property.values().length);
 		for (Property p : Property.values()) {
 			// есть ли такое свойство?
 			final ParameterRecord record = this.parameters.get(ParameterType.valueOf(p.codename));
 			if (record == null) {
-				continue;
+				continue; // такого свойства на данном типе порта нет
 			}
+			// дополнительная фильтрация для числа усреднений
 			switch(p) {
 			case E_AVERAGES:
 				if (record.getValueKind() != ParameterValueKind.ENUMERATED) {
@@ -395,7 +423,20 @@ public class MeasurementParameters {
 			default:
 				// common processing
 			}
+			// добавляем это свойство
 			this.properties.put(p, record);
+
+			// инициализируем соответствующий этому свойству параметр
+			byte[] defaultValue = p.getDefaultValueClone();
+			if (defaultValue != null) {
+				record.setBAR(defaultValue);
+			} else {
+				assert record.getValueKind() == ParameterValueKind.ENUMERATED;
+				assert record.getDataType() != DataType.BOOLEAN;
+				// XXX: берем первый попавшийся
+				record.setStringValue(
+						record.getAllowedStringValues().iterator().next());
+			}
 		}
 	}
 
@@ -415,7 +456,6 @@ public class MeasurementParameters {
 	}
 
 	public ReflectometryMeasurementParameters getRMP() {
-		// FIXME: may throw NullPointers if there is not enough data
 		final boolean hasGainSplice = getValue(ReflectometryParameterTypeCodename.FLAG_GAIN_SPLICE_ON).asBoolean();
 		final boolean hasHiRes = false; // FIXME: implement this for both QP and PK reflectometers
 		final boolean hasLFD = getValue(ReflectometryParameterTypeCodename.FLAG_LIFE_FIBER_DETECT).asBoolean();
@@ -514,7 +554,7 @@ public class MeasurementParameters {
 			final ParameterRecord record = this.parameters.get(key);
 			final ActionParameter parameter =
 				ActionParameter.valueOf(LoginManager.getUserId(),
-					record.data,
+					record.asBAR(),
 					record.getBinding());
 			parameterIds.add(parameter.getId());
 		}
@@ -544,14 +584,15 @@ public class MeasurementParameters {
 	// GUI API
 
 	/**
-	 * @todo javadoc required
+	 * @return true, если данное свойство определено для данного типа порта
 	 */
 	public boolean hasProperty(Property property) {
 		return this.properties.containsKey(property);
 	}
 
 	/**
-	 * @todo javadoc required
+	 * @return тип данного свойства
+	 * @throws IllegalArgumentException свойство не определено
 	 */
 	public ParameterValueKind getPropertyValueKind(Property property) {
 		if (!hasProperty(property)) {
@@ -562,9 +603,12 @@ public class MeasurementParameters {
 	}
 
 	/**
-	 * @todo javadoc required
-	 * Supported only for numerical values
-	 * @return string value or null if not set yet
+	 * Определяет строковое представление значения.
+	 * Поддерживается только для числовых значений.
+	 * 
+	 * @return строковое представление значения, not null
+	 * @throws IllegalArgumentException свойство не определено
+	 * @throws IllegalStateException тип свойства не поддерживается
 	 */
 	public String getPropertyStringValue(Property property) {
 		if (!hasProperty(property)) {
@@ -574,9 +618,31 @@ public class MeasurementParameters {
 	}
 
 	/**
-	 * @todo javadoc required
-	 * Supported only for numerical values
-	 * @return string value set or null if not set yet
+	 * Устанавливает свойство по его строковому представлению.
+	 * Поддерживается только для числовых значений.
+	 * 
+	 * @param property устанавливаемое свойство
+	 * @param value устанавливаемое значение, not null
+	 * @throws IllegalArgumentException свойство не определено
+	 * @throws IllegalStateException тип свойства не поддерживается
+	 */
+	public void setPropertyStringValue(Property property, String value) {
+		assert value != null;
+		if (!hasProperty(property)) {
+			throw new IllegalArgumentException("Property not present: " + property);
+		}
+		this.properties.get(property).setStringValue(value);
+	}
+
+	/**
+	 * Определяет множество строковых представлений
+	 *   допустимых значений перечислимого параметра.
+	 * Поддерживается только для числовых значений.
+	 * 
+	 * @return для enumerated типа: множество строк,
+	 *   для continuous типа: null
+	 * @throws IllegalArgumentException свойство не определено
+	 * @throws IllegalStateException тип свойства не поддерживается
 	 */
 	public Set<String> valuesPropertyStringValue(Property property) {
 		if (!hasProperty(property)) {
@@ -586,32 +652,11 @@ public class MeasurementParameters {
 	}
 
 	/**
-	 * @todo javadoc required
-	 * @return true if value is not set yet
-	 */
-	public boolean isPropertyUnset(Property property) {
-		if (!hasProperty(property)) {
-			throw new IllegalArgumentException("Property not present: " + property);
-		}
-		return this.properties.get(property).isUnset();
-	}
-
-	/**
-	 * @todo javadoc required
-	 */
-	public void unsetProperty(Property property) {
-		if (!hasProperty(property)) {
-			throw new IllegalArgumentException("Property not present: " + property);
-		}
-		this.properties.get(property).unset();
-	}
-
-	/**
-	 * @todo javadoc required
-	 * Supported only for boolean values.
-	 * Will crush if property is not set yet (please check
-	 * {@link #isPropertyUnset} first).
-	 * @return string value or null if not set yet
+	 * Определяет значение boolean-свойства.
+	 * 
+	 * @return значение boolean свойства
+	 * @throws IllegalArgumentException свойство не определено
+	 * @throws IllegalStateException тип свойства не boolean
 	 */
 	public boolean getPropertyAsBoolean(Property property) {
 		if (!hasProperty(property)) {
@@ -624,8 +669,12 @@ public class MeasurementParameters {
 	}
 
 	/**
-	 * @todo javadoc required
-	 * Supported only for boolean values.
+	 * Устанавливает значение boolean-свойства.
+	 * 
+	 * @param property устанавливаемое свойство
+	 * @param value устанавливаемое значение свойства
+	 * @throws IllegalArgumentException свойство не определено
+	 * @throws IllegalStateException тип свойства не boolean
 	 */
 	public void setPropertyAsBoolean(Property property, boolean value) {
 		if (!hasProperty(property)) {
@@ -636,13 +685,6 @@ public class MeasurementParameters {
 		} else {
 			this.properties.get(property).setBoolean(value);
 		}
-	}
-
-	public void setPropertyStringValue(Property property, String value) {
-		if (!hasProperty(property)) {
-			throw new IllegalArgumentException("Property not present: " + property);
-		}
-		this.properties.get(property).setStringValue(value);
 	}
 
 	public MonitoredElement getMe() {
