@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.20.2.2 2006/04/07 08:44:07 bass Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.20.2.2.2.1 2006/04/13 08:24:29 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.leserver;
 
+import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.MUFF;
 import static com.syrus.AMFICOM.eventv2.EventType.REFLECTORGAM_MISMATCH;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
@@ -49,8 +50,8 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
- * @author $Author: bass $
- * @version $Revision: 1.20.2.2 $, $Date: 2006/04/07 08:44:07 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.20.2.2.2.1 $, $Date: 2006/04/13 08:24:29 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
@@ -509,10 +510,12 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 					continue;
 				}
 				final EquipmentType equipmentType = protoEquipment.getType();
-				if (equipmentType == EquipmentType.MUFF && leftMuffName == null) {
+				final String equipmentTypeCodename = equipmentType.getCodename();
+				final String muffCodename = MUFF.stringValue();
+				if (equipmentTypeCodename.equals(muffCodename) && leftMuffName == null) {
 					leftMuffName = equipmentType.getDescription() + ' ' + schemeElement.getName();
 					assert leftMuffName != null;
-				} else if (equipmentType != EquipmentType.MUFF && leftNonMuffName == null) {
+				} else if (!equipmentTypeCodename.equals(muffCodename) && leftNonMuffName == null) {
 					leftNonMuffName = equipmentType.getDescription() + ' ' + schemeElement.getName();
 					assert leftNonMuffName != null;
 				}
@@ -542,10 +545,12 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 					continue;
 				}
 				final EquipmentType equipmentType = protoEquipment.getType();
-				if (equipmentType == EquipmentType.MUFF && rightMuffName == null) {
+				final String equipmentTypeCodename = equipmentType.getCodename();
+				final String muffCodename = MUFF.stringValue();
+				if (equipmentTypeCodename.equals(muffCodename) && rightMuffName == null) {
 					rightMuffName = equipmentType.getDescription() + ' ' + schemeElement.getName();
 					assert rightMuffName != null;
-				} else if (equipmentType != EquipmentType.MUFF && rightNonMuffName == null) {
+				} else if (!equipmentTypeCodename.equals(muffCodename) && rightNonMuffName == null) {
 					rightNonMuffName = equipmentType.getDescription() + ' ' + schemeElement.getName();
 					assert rightNonMuffName != null;
 				}
