@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerParametersHandlerCreator.java,v 1.1.4.1 2006/04/10 11:46:00 saa Exp $
+ * $Id: SchedulerParametersHandlerCreator.java,v 1.1.4.2 2006/04/13 09:39:03 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import junit.framework.TestCase;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
-import com.syrus.AMFICOM.Client.Schedule.UI.ReflectometryTestPanel;
+import com.syrus.AMFICOM.Client.Schedule.UI.ReflectometryParametersPanel;
 import com.syrus.AMFICOM.extensions.ExtensionPoint;
 import com.syrus.AMFICOM.extensions.RootDocument;
 import com.syrus.AMFICOM.extensions.RootDocument.Root;
@@ -24,10 +24,10 @@ import com.syrus.AMFICOM.extensions.scheduler.ParameterHandler;
 import com.syrus.AMFICOM.extensions.scheduler.ParametersHandler;
 import com.syrus.AMFICOM.extensions.scheduler.SchedulerExtensions;
 import com.syrus.AMFICOM.extensions.scheduler.SchedulerResource;
-import com.syrus.AMFICOM.measurement.MeasurementTypeCodename;
+import com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename;
 
 /**
- * @version $Revision: 1.1.4.1 $, $Date: 2006/04/10 11:46:00 $
+ * @version $Revision: 1.1.4.2 $, $Date: 2006/04/13 09:39:03 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -37,7 +37,7 @@ public class SchedulerParametersHandlerCreator extends TestCase {
 	public static void main(String[] args) {
 		junit.textui.TestRunner.run(SchedulerParametersHandlerCreator.class);
 	}
-	
+
 	public void testCreation() throws Exception {
 		final String xmlFilePath = "resources/xml/scheduler.xml";
 		this.buildDocument(true, xmlFilePath);
@@ -48,29 +48,60 @@ public class SchedulerParametersHandlerCreator extends TestCase {
     	final XmlOptions opt = (new XmlOptions()).setSavePrettyPrint();
 
 		// Build a new document
-    	
-    	final RootDocument doc = RootDocument.Factory.newInstance();    	
+
+    	final RootDocument doc = RootDocument.Factory.newInstance();
 		if (enableOutput) {
 			System.out.println("Empty document:\n" + doc.xmlText(opt) + "\nValid:" + doc.validate() + "\n");
 		}
-		Root extensions = doc.addNewRoot();		
+		Root extensions = doc.addNewRoot();
 		ExtensionPoint extensionPoint = extensions.addNewExtension();
-		final SchedulerExtensions schedulerExtensions = (SchedulerExtensions) extensionPoint.changeType(SchedulerExtensions.type);		
+		final SchedulerExtensions schedulerExtensions = (SchedulerExtensions) extensionPoint.changeType(SchedulerExtensions.type);
 		schedulerExtensions.setId(com.syrus.AMFICOM.Client.Schedule.SchedulerHandler.class.getName());
-				
-		
-		{			  
+
+
+//		{
+//			final SchedulerResource resource = schedulerExtensions.addNewSchedulerResource();
+//			resource.setId(ParametersHandler.type.getName().getLocalPart());
+//			final ParametersHandler parametersHandler = (ParametersHandler) resource.changeType(ParametersHandler.type);
+//
+//			{
+//				ParameterHandler resource1 = parametersHandler.addNewParameterHandler();
+//				resource1.setId(MeasurementTypeCodename.REFLECTOMETRY.stringValue());
+//				resource1.setHandlerClass(ReflectometryParametersPanel.class.getName());
+//			}
+//		}
+
+		{
 			final SchedulerResource resource = schedulerExtensions.addNewSchedulerResource();
 			resource.setId(ParametersHandler.type.getName().getLocalPart());
-			final ParametersHandler parametersHandler = (ParametersHandler) resource.changeType(ParametersHandler.type);			
-			
-			{			  
+			final ParametersHandler parametersHandler = (ParametersHandler) resource.changeType(ParametersHandler.type);
+			{
 				ParameterHandler resource1 = parametersHandler.addNewParameterHandler();
-				resource1.setId(MeasurementTypeCodename.REFLECTOMETRY.stringValue());
-				resource1.setHandlerClass(ReflectometryTestPanel.class.getName());
+				resource1.setId(MeasurementPortTypeCodename.REFLECTOMETRY_PK7600.stringValue());
+				resource1.setHandlerClass(ReflectometryParametersPanel.class.getName());
+			}
+    	}
+		{
+			final SchedulerResource resource = schedulerExtensions.addNewSchedulerResource();
+			resource.setId(ParametersHandler.type.getName().getLocalPart());
+			final ParametersHandler parametersHandler = (ParametersHandler) resource.changeType(ParametersHandler.type);
+			{
+				ParameterHandler resource1 = parametersHandler.addNewParameterHandler();
+				resource1.setId(MeasurementPortTypeCodename.REFLECTOMETRY_QP1640A.stringValue());
+				resource1.setHandlerClass(ReflectometryParametersPanel.class.getName());
+			}
+    	}
+		{
+			final SchedulerResource resource = schedulerExtensions.addNewSchedulerResource();
+			resource.setId(ParametersHandler.type.getName().getLocalPart());
+			final ParametersHandler parametersHandler = (ParametersHandler) resource.changeType(ParametersHandler.type);
+			{
+				ParameterHandler resource1 = parametersHandler.addNewParameterHandler();
+				resource1.setId(MeasurementPortTypeCodename.REFLECTOMETRY_QP1643A.stringValue());
+				resource1.setHandlerClass(ReflectometryParametersPanel.class.getName());
 			}
 		}
-		
+
 		// Document contains two concrete resources and is valid
 		if (enableOutput) {
 			System.out.println("Final document:\n" + doc.xmlText(opt));

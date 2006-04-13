@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
  * 
  * @author $Author: saa $
  * @author не установлен
- * @version $Revision: 1.1.2.1 $, $Date: 2006/04/11 07:42:55 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/04/13 09:39:03 $
  * @module
  */
 public abstract class MeasurementParametersPanel extends JPanel {
@@ -47,9 +47,9 @@ public abstract class MeasurementParametersPanel extends JPanel {
 
 	/**
 	 * Установить текущие параметры измерения согласно данному
-	 * шаблону измерения.
+	 * шаблону измерения. При необходимости сменить MonitoredElement.
 	 * 
-	 * @param template данный шаблон измерения
+	 * @param template данный шаблон измерения, not null
 	 */
 	public abstract void setMeasurementTemplate(final ActionTemplate<Measurement> template);
 

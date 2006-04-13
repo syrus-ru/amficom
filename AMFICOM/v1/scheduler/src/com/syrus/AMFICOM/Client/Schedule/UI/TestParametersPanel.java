@@ -253,9 +253,10 @@ final class TestParametersPanel implements PropertyChangeListener {
 					(MeasurementSetup) TestParametersPanel.this.testSetups.getSelectedValue();
 				assert Log.debugMessage(measurementSetup, Log.DEBUGLEVEL03);
 				if (TestParametersPanel.this.parametersTestPanel != null) {
+					if (measurementSetup != null) { 
 					// XXX: зачем invokeLater? Вроде, все работает и при выполнении "прямо сейчас"
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
+//					SwingUtilities.invokeLater(new Runnable() {
+//						public void run() {
 							try {
 								TestParametersPanel.this.parametersTestPanel.setMeasurementTemplate(measurementSetup.getMeasurementTemplate());
 							} catch (ApplicationException e1) {
@@ -263,8 +264,14 @@ final class TestParametersPanel implements PropertyChangeListener {
 								Log.errorMessage(e1);
 								throw new InternalError(e1.getMessage());
 							}
-						}
-					});
+//						}
+//					});
+					} else {
+						/*
+						 * если не выбран ни один шаблон, оставляем старые
+						 * параметры, т.к. MonitoredElement пока еще не изменился
+						 */
+					}
 				}
 
 				if (TestParametersPanel.this.propertyChangeEvent != null) {
@@ -365,6 +372,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			final ActionTemplate<Measurement> measurementTemplate =
 				this.parametersTestPanel.getMeasurementTemplate();
 			return MeasurementSetup.createInstance(LoginManager.getUserId(),
+					measurementTemplate.getMeasurementPortTypeId(),
 					measurementTemplate.getId(),
 					Identifier.VOID_IDENTIFIER,
 					getDescription(),
