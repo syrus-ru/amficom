@@ -1,5 +1,5 @@
 /*
- * $Id: TestValidator.java,v 1.4.4.1 2006/04/10 11:46:00 saa Exp $
+ * $Id: TestValidator.java,v 1.4.4.2 2006/04/13 12:49:44 saa Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,13 +16,11 @@ import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
-import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MeasurementTypeCodename;
@@ -34,7 +32,7 @@ import com.syrus.AMFICOM.validator.IntersectionValidator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4.4.1 $, $Date: 2006/04/10 11:46:00 $
+ * @version $Revision: 1.4.4.2 $, $Date: 2006/04/13 12:49:44 $
  * @author $Author: saa $
  * @module scheduler
  */

@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryParametersPanel.java,v 1.1.2.3 2006/04/13 12:21:04 saa Exp $
+ * $Id: ReflectometryParametersPanel.java,v 1.1.2.4 2006/04/13 12:49:44 saa Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,6 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Schedule.UI.MeasurementParameters.Property;
-import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -37,7 +36,7 @@ import com.syrus.util.Log;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.3 $, $Date: 2006/04/13 12:21:04 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/04/13 12:49:44 $
  * @module
  */
 public class ReflectometryParametersPanel extends MeasurementParametersPanel {
