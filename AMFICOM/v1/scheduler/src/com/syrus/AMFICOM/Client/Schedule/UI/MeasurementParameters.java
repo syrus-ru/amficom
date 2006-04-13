@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementParameters.java,v 1.1.2.3 2006/04/13 12:21:04 saa Exp $
+ * $Id: MeasurementParameters.java,v 1.1.2.4 2006/04/13 12:48:26 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,10 +9,13 @@
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -58,7 +61,7 @@ import com.syrus.util.ByteArray;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.3 $, $Date: 2006/04/13 12:21:04 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2006/04/13 12:48:26 $
  * @module scheduler
  */
 public class MeasurementParameters {
@@ -136,10 +139,38 @@ public class MeasurementParameters {
 	 * допустимы только те, который соответствует реальному типу.
 	 */
 	private static class ParameterRecord {
-		private DataType dataType; // must correspond to binding.parameterType
+		DataType dataType; // must correspond to binding.parameterType
 		private ActionParameterTypeBinding binding; // please, read only access
-		private Set<byte[]> allowedValues; // null for continuous
+		private List<byte[]> allowedValues; // null for continuous
 		private byte[] data; // initialized as null, when used cheched to be not null
+
+		/* довольно медленная реализация (из-за new ByteArray()),
+		 * к тому же создается отдельно для каждой записи
+		 */
+		private Comparator<byte[]> valueComparator = new Comparator<byte[]>() {
+			public int compare(byte[] o1, byte[] o2) {
+				final ByteArray bar1 = new ByteArray(o1);
+				final ByteArray bar2 = new ByteArray(o2);
+				try {
+					switch(ParameterRecord.this.dataType) {
+					case DOUBLE:
+						double delta = bar1.toDouble() - bar2.toDouble();
+						return delta <= 0 ? delta < 0 ? -1 : 0 : 1;
+					case INTEGER:
+						return bar1.toInt() - bar2.toInt();
+					case BOOLEAN:
+						// в принципе, результат сортировки boolean нигде не отображается
+						return bar1.toBoolean()
+							? bar2.toBoolean() ? 0 : 1
+							: bar2.toBoolean() ? -1 : 0;
+					default:
+						throw new IllegalStateException("Comparator not supported for " + ParameterRecord.this.dataType);
+					}
+				} catch(IOException e) {
+					/* XXX: use DataFormatException? */
+					throw new InternalError();
+				}
+			}};
 
 		public ParameterRecord(ActionParameterTypeBinding binding,
 				Set<byte[]> allowedValues) throws ApplicationException {
@@ -156,7 +187,20 @@ public class MeasurementParameters {
 			this.data = null; // XXX: инициализация
 			this.binding = binding;
 			this.dataType = binding.getParameterType().getDataType();
-			this.allowedValues = allowedValues;
+
+			// сортируем allowedValues, заодно делая safe copy
+			if (allowedValues == null) {
+				this.allowedValues = null;
+			} else {
+				//this.allowedValues = allowedValues;
+				this.allowedValues = new ArrayList<byte[]>(allowedValues.size());
+				for (byte[] bytes : allowedValues) {
+					this.allowedValues.add(bytes.clone());
+				}
+				// к этому моменту this.dataType уже определен,
+				// и наш компаратор будет работать
+				Collections.sort(this.allowedValues, this.valueComparator);
+			}
 		}
 
 		public ActionParameterTypeBinding getBinding() {
@@ -317,15 +361,15 @@ public class MeasurementParameters {
 		}
 
 		/**
-		 * Gets set of allowed string representations.
+		 * Gets list of allowed string representations.
 		 *   Supports Integer and Double value types only.
-		 * @return set of allowed string representations or null for continuous
+		 * @return list of allowed string representations or null for continuous
 		 */
-		public Set<String> getAllowedStringValues() {
+		public List<String> getAllowedStringValues() {
 			if (this.allowedValues == null) {
 				return null;
 			}
-			Set<String> ret = new HashSet<String>(this.allowedValues.size());
+			List<String> ret = new ArrayList<String>(this.allowedValues.size());
 			for (byte[] bar : this.allowedValues) {
 				ret.add(getStringValue(bar));
 			}
@@ -649,7 +693,7 @@ public class MeasurementParameters {
 	 * @throws IllegalArgumentException свойство не определено
 	 * @throws IllegalStateException тип свойства не поддерживается
 	 */
-	public Set<String> valuesPropertyStringValue(Property property) {
+	public List<String> valuesPropertyStringValue(Property property) {
 		checkProperty(property);
 		return this.properties.get(property).getAllowedStringValues();
 	}
