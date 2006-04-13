@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementSetup.java,v 1.100.2.17 2006/04/12 12:57:50 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.100.2.18 2006/04/13 12:48:30 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.ACTIONTEMPLATE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 
@@ -65,7 +65,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * их основе шаблон измерительного задания может быть привязан лишь к тем
  * линиям, к которым привязан каждый из составляющих его шаблонов действия.
  * 
- * @version $Revision: 1.100.2.17 $, $Date: 2006/04/12 12:57:50 $
+ * @version $Revision: 1.100.2.18 $, $Date: 2006/04/13 12:48:30 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement

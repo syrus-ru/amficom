@@ -1,5 +1,5 @@
 /*
- * $Id: KISWrapper.java,v 1.3.2.2 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: KISWrapper.java,v 1.3.2.3 2006/04/13 12:48:30 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -15,10 +17,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
-import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
-
 /**
- * @version $Revision: 1.3.2.2 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.3.2.3 $, $Date: 2006/04/13 12:48:30 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement

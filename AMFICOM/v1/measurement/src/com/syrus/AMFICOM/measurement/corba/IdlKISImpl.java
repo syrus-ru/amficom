@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlKISImpl.java,v 1.5.2.2 2006/03/15 15:50:02 arseniy Exp $
+ * $Id: IdlKISImpl.java,v 1.5.2.3 2006/04/13 12:48:30 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.measurement.corba;
 
 import static java.util.logging.Level.SEVERE;
 
-import com.syrus.AMFICOM.measurement.corba.IdlKIS;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -20,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.5.2.2 $, $Date: 2006/03/15 15:50:02 $
+ * @version $Revision: 1.5.2.3 $, $Date: 2006/04/13 12:48:30 $
  * @module measurement
  */
 final class IdlKISImpl extends IdlKIS {

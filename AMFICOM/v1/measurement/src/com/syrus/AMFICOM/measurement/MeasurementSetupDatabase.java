@@ -11,8 +11,8 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
 import static com.syrus.AMFICOM.general.TableNames.MS_ME_LINK;
 import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.COLUMN_ANALYSIS_TEMPLATE_ID;
-import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.COLUMN_MEASUREMENT_TEMPLATE_ID;
 import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.COLUMN_MEASUREMENT_PORT_TYPE_ID;
+import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.COLUMN_MEASUREMENT_TEMPLATE_ID;
 import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID;
 import static com.syrus.AMFICOM.measurement.MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID;
 
