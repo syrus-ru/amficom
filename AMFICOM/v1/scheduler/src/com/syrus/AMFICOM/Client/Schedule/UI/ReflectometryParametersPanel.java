@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryParametersPanel.java,v 1.1.2.2 2006/04/13 11:25:42 saa Exp $
+ * $Id: ReflectometryParametersPanel.java,v 1.1.2.3 2006/04/13 12:21:04 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.2 $, $Date: 2006/04/13 11:25:42 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/04/13 12:21:04 $
  * @module
  */
 public class ReflectometryParametersPanel extends MeasurementParametersPanel {
@@ -54,7 +54,6 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 		JComboBox refractComboBox = new JComboBox();
 		JComboBox waveLengthComboBox = new JComboBox();
 		JComboBox maxDistanceComboBox = new JComboBox();
-		JCheckBox highResolutionCheckBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.HighResolution"));
 		JComboBox pulseWidthMComboBox = new JComboBox();
 		pulseWidthMComboBox.setMaximumRowCount(15);
 		JComboBox pulseWidthNsComboBox = new JComboBox();
@@ -63,18 +62,36 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 		JComboBox averagesComboBox = new JComboBox();
 		JFormattedTextField averagesField = new JFormattedTextField(); // XXX: как оно будет работать?
 
-		JLabel refractLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.IndexOfRefraction"));
-		JLabel waveLengthLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.WaveLength"));
-		JLabel averagesCBLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.AverageQuantity"));
-		JLabel averagesFLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.AverageQuantity"));
-		JLabel resolutionLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.Resolution"));
-		JLabel maxDistanceLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.Distance"));
-		JLabel pulseWidthMLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.PulseWidth"));
-		JLabel pulseWidthNsLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.PulseWidth"));
+//		JLabel refractLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.IndexOfRefraction"));
+//		JLabel waveLengthLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.WaveLength"));
+//		JLabel averagesCBLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.AverageQuantity"));
+//		JLabel averagesFLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.AverageQuantity"));
+//		JLabel resolutionLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.Resolution"));
+//		JLabel maxDistanceLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.Distance"));
+//		JLabel pulseWidthMLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.PulseWidth"));
+//		JLabel pulseWidthNsLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.PulseWidth"));
+//
+//		JCheckBox gsOptionBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.GainSplice"));
+//		JCheckBox smoothOptionBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.BoxCar"));
+//		JCheckBox lfdOptionBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.LiveFiberDetect"));
 
-		JCheckBox gsOptionBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.GainSplice"));
-		JCheckBox smoothOptionBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.BoxCar"));
-		JCheckBox lfdOptionBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.LiveFiberDetect"));
+//		JCheckBox highResolutionCheckBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.HighResolution"));
+
+		JLabel refractLabel = new JLabel();
+		JLabel waveLengthLabel = new JLabel();
+		JLabel averagesCBLabel = new JLabel();
+		JLabel averagesFLabel = new JLabel();
+		JLabel resolutionLabel = new JLabel();
+		JLabel maxDistanceLabel = new JLabel();
+		JLabel pulseWidthMLabel = new JLabel();
+		JLabel pulseWidthNsLabel = new JLabel();
+
+		JCheckBox gsOptionBox = new JCheckBox();
+		JCheckBox smoothOptionBox = new JCheckBox();
+		JCheckBox lfdOptionBox = new JCheckBox();
+
+		/* Note: название для этой опции все равно будет взято из I18N (see MeasurementParameters) */
+		JCheckBox highResolutionCheckBox = new JCheckBox();
 
 		this.requirements.put(refractComboBox, MeasurementParameters.Property.E_REFRACTION_INDEX);
 		this.requirements.put(waveLengthComboBox, MeasurementParameters.Property.E_WAVELENGTH);
@@ -199,6 +216,21 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 			final boolean visible = this.parameters != null && this.parameters.hasProperty(property);
 			component.setVisible(visible);
 
+			// определяем названия
+			if (visible) {
+				if (component instanceof JLabel
+						|| component instanceof JCheckBox) {
+					String description =
+						this.parameters.getPropertyDescription(property);
+
+					if (component instanceof JLabel) {
+						((JLabel)component).setText(description);
+					} else {
+						((JCheckBox)component).setText(description);
+					}
+				}
+			}
+
 			// устанавливаем набор допустимых значений и текущее значение
 			if (visible) {
 				final ParameterValueKind valueKind = this.parameters.getPropertyValueKind(property);
@@ -288,7 +320,8 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 	 */
 	@Override
 	public void setEnableEditing(boolean b) {
-		// @todo Auto-generated method stub
-
+		for (JComponent component: this.requirements.keySet()) {
+			component.setEnabled(b);
+		}
 	}
 }

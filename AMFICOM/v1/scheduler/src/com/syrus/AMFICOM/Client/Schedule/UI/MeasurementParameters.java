@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementParameters.java,v 1.1.2.2 2006/04/13 11:25:42 saa Exp $
+ * $Id: MeasurementParameters.java,v 1.1.2.3 2006/04/13 12:21:04 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifier;
@@ -57,7 +58,7 @@ import com.syrus.util.ByteArray;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.2 $, $Date: 2006/04/13 11:25:42 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/04/13 12:21:04 $
  * @module scheduler
  */
 public class MeasurementParameters {
@@ -84,20 +85,20 @@ public class MeasurementParameters {
 		// эти отображения только определяют зависимости.
 		// Настоящие значения параметров уточнятся далее.
 
-		// enumerated
+		// enumerated numericals
 		E_WAVELENGTH(ReflectometryParameterTypeCodename.WAVE_LENGTH),
 		E_TRACELENGTH(ReflectometryParameterTypeCodename.TRACE_LENGTH),
 		E_REFRACTION_INDEX(ReflectometryParameterTypeCodename.INDEX_OF_REFRACTION),
 		E_PULSE_WIDTH_M(ReflectometryParameterTypeCodename.PULSE_WIDTH_M),
 		E_PULSE_WIDTH_NS(ReflectometryParameterTypeCodename.PULSE_WIDTH_NS),
-		E_AVERAGES(ReflectometryParameterTypeCodename.AVERAGE_COUNT), // NB: будет отфильтровано дополнительно
+		E_AVERAGES(ReflectometryParameterTypeCodename.AVERAGE_COUNT),
 		E_RESOLUTION(ReflectometryParameterTypeCodename.RESOLUTION),
 
 		// enumerated boolean
 		FLAG_GAIN_SPLICE(ReflectometryParameterTypeCodename.FLAG_GAIN_SPLICE_ON, true),
 		FLAG_SMOOTH(ReflectometryParameterTypeCodename.FLAG_SMOOTH_FILTER, false),
 		FLAG_LFD(ReflectometryParameterTypeCodename.FLAG_LIFE_FIBER_DETECT, true),
-		FLAG_HIRES(ReflectometryParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES, true), // NB: HIRES = NOT(LOWRES) 
+		FLAG_HIRES(ReflectometryParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES, true), // NB: HIRES = NOT(LOWRES); XXX: может, использовать само lowres, без трансляции?
 
 		// continuous
 		I_AVERAGES(ReflectometryParameterTypeCodename.AVERAGE_COUNT, 10); // NB: будет отфильтровано дополнительно
@@ -581,6 +582,10 @@ public class MeasurementParameters {
 		}
 	}
 
+	public MonitoredElement getMe() {
+		return this.me;
+	}
+
 	// GUI API
 
 	/**
@@ -590,14 +595,18 @@ public class MeasurementParameters {
 		return this.properties.containsKey(property);
 	}
 
+	private void checkProperty(Property property) {
+		if (!hasProperty(property)) {
+			throw new IllegalArgumentException("Property not present: " + property);
+		}
+	}
+
 	/**
 	 * @return тип данного свойства
 	 * @throws IllegalArgumentException свойство не определено
 	 */
 	public ParameterValueKind getPropertyValueKind(Property property) {
-		if (!hasProperty(property)) {
-			throw new IllegalArgumentException("Property not present: " + property);
-		}
+		checkProperty(property);
 		final ParameterRecord record = this.properties.get(property);
 		return record.getValueKind();
 	}
@@ -611,9 +620,7 @@ public class MeasurementParameters {
 	 * @throws IllegalStateException тип свойства не поддерживается
 	 */
 	public String getPropertyStringValue(Property property) {
-		if (!hasProperty(property)) {
-			throw new IllegalArgumentException("Property not present: " + property);
-		}
+		checkProperty(property);
 		return this.properties.get(property).getStringValue();
 	}
 
@@ -628,9 +635,7 @@ public class MeasurementParameters {
 	 */
 	public void setPropertyStringValue(Property property, String value) {
 		assert value != null;
-		if (!hasProperty(property)) {
-			throw new IllegalArgumentException("Property not present: " + property);
-		}
+		checkProperty(property);
 		this.properties.get(property).setStringValue(value);
 	}
 
@@ -645,9 +650,7 @@ public class MeasurementParameters {
 	 * @throws IllegalStateException тип свойства не поддерживается
 	 */
 	public Set<String> valuesPropertyStringValue(Property property) {
-		if (!hasProperty(property)) {
-			throw new IllegalArgumentException("Property not present: " + property);
-		}
+		checkProperty(property);
 		return this.properties.get(property).getAllowedStringValues();
 	}
 
@@ -659,9 +662,7 @@ public class MeasurementParameters {
 	 * @throws IllegalStateException тип свойства не boolean
 	 */
 	public boolean getPropertyAsBoolean(Property property) {
-		if (!hasProperty(property)) {
-			throw new IllegalArgumentException("Property not present: " + property);
-		}
+		checkProperty(property);
 		if (property == Property.FLAG_HIRES) {
 			return !this.properties.get(property).asBoolean();
 		}
@@ -677,9 +678,7 @@ public class MeasurementParameters {
 	 * @throws IllegalStateException тип свойства не boolean
 	 */
 	public void setPropertyAsBoolean(Property property, boolean value) {
-		if (!hasProperty(property)) {
-			throw new IllegalArgumentException("Property not present: " + property);
-		}
+		checkProperty(property);
 		if (property == Property.FLAG_HIRES) {
 			this.properties.get(property).setBoolean(!value);
 		} else {
@@ -687,7 +686,23 @@ public class MeasurementParameters {
 		}
 	}
 
-	public MonitoredElement getMe() {
-		return this.me;
+	private String getUnit(final ParameterType parameterType) {
+		String name = parameterType.getMeasurementUnit().getName();
+		return name.trim().length() > 0 ? ", " + name : "";
+	}
+
+	public String getPropertyDescription(Property property) {
+		checkProperty(property);
+		if (property == Property.FLAG_HIRES) {
+			return I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.HighResolution");
+		}
+		try {
+			final ParameterType parameterType =
+				this.properties.get(property).getBinding().getParameterType();
+			return parameterType.getDescription() + getUnit(parameterType);
+		} catch (ApplicationException e) {
+			/* XXX: ApplicationException handling */
+			throw new InternalError(e.getMessage());
+		}
 	}
 }
