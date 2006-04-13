@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryParametersPanel.java,v 1.1.2.4 2006/04/13 12:49:44 saa Exp $
+ * $Id: ReflectometryParametersPanel.java,v 1.1.2.5 2006/04/13 13:52:46 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,14 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -36,12 +42,13 @@ import com.syrus.util.Log;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.4 $, $Date: 2006/04/13 12:49:44 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2006/04/13 13:52:46 $
  * @module
  */
 public class ReflectometryParametersPanel extends MeasurementParametersPanel {
-	private MeasurementParameters parameters = null;
-	private Map<JComponent, MeasurementParameters.Property> requirements;
+	MeasurementParameters parameters = null;
+	Map<JComponent, MeasurementParameters.Property> requirements;
+	boolean skip; // пропускать action change события
 
 	public ReflectometryParametersPanel() {
 		this.requirements =
@@ -115,6 +122,37 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 		this.requirements.put(gsOptionBox, MeasurementParameters.Property.FLAG_GAIN_SPLICE);
 		this.requirements.put(smoothOptionBox, MeasurementParameters.Property.FLAG_SMOOTH);
 		this.requirements.put(lfdOptionBox, MeasurementParameters.Property.FLAG_LFD);
+
+		ActionListener actionListener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (ReflectometryParametersPanel.this.skip) {
+					return;
+				}
+				final Object source = e.getSource();
+				ReflectometryParametersPanel.this.processorUiChange(source);
+			}
+		};
+
+		FocusListener focusListener = new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (ReflectometryParametersPanel.this.skip) {
+					return;
+				}
+				final Object source = e.getSource();
+				ReflectometryParametersPanel.this.processorUiChange(source);
+			}
+		};
+		for (JComponent component : this.requirements.keySet()) {
+			if (component instanceof JCheckBox) {
+				((JCheckBox) component).addActionListener(actionListener);
+			} else if (component instanceof JComboBox) {
+				((JComboBox) component).addActionListener(actionListener);
+			} else if (component instanceof JTextField) {
+				((JTextField) component).addActionListener(actionListener);
+				((JTextField) component).addFocusListener(focusListener);
+			}
+		}
 
 		this.setLayout(new GridBagLayout());
 
@@ -208,7 +246,35 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 		add(new JLabel(), gbc);
 	}
 
+	void processorUiChange(Object source) {
+		final Property property = this.requirements.get(source);
+		if (property == null) {
+			Log.errorMessage("RPP: action listner: unknown event source " + source);
+			return;
+		}
+		final MeasurementParameters pars = this.parameters;
+		if (pars == null) {
+			Log.debugMessage("RPP: action listner: parameters are not present yet", Level.FINE);
+			return; // ignore
+		}
+		if (source instanceof JCheckBox) {
+			JCheckBox box = (JCheckBox) source;
+			pars.setPropertyAsBoolean(property, box.isSelected());
+		} else if (source instanceof JComboBox) {
+			JComboBox box = (JComboBox) source;
+			pars.setPropertyStringValue(property, (String)box.getSelectedItem());
+		} else if (source instanceof JTextField) {
+			JTextField field = (JTextField) source;
+			pars.setPropertyStringValue(property, field.getText());
+		} else {
+			throw new InternalError("Unknown source type: " + source);
+		}
+	}
+
 	private void updateVisibilityAndValues() {
+
+		this.skip = true;
+
 		for (JComponent component : this.requirements.keySet()) {
 			// определяем видимость
 			final Property property = this.requirements.get(component);
@@ -265,6 +331,8 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 				}
 			}
 		}
+
+		this.skip = false;
 	}
 
 //	private String getUnit(final ParameterType parameterType) {
