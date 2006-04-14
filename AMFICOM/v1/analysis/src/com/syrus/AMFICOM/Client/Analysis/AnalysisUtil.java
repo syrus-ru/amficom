@@ -1,3 +1,10 @@
+/*-
+ * $Id: AnalysisUtil.java,v 1.115.2.4 2006/04/14 11:36:04 arseniy Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 package com.syrus.AMFICOM.Client.Analysis;
 
 import java.util.Date;
@@ -50,12 +57,11 @@ import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 
 /**
- Class with methods used to save/load measuring parameters onto server
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: Syrus Systems</p>
+ * @version $Revision: 1.115.2.4 $, $Date: 2006/04/14 11:36:04 $
+ * @author $Author: arseniy $
  * @author Stanislav Kholshin
+ * @module test
  */
-
 public class AnalysisUtil {
 	private AnalysisUtil()
 	{ // non-instantiable
