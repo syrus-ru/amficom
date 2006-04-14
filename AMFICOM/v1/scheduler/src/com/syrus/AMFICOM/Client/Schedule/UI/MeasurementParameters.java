@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementParameters.java,v 1.1.2.5 2006/04/13 13:07:58 saa Exp $
+ * $Id: MeasurementParameters.java,v 1.1.2.6 2006/04/14 06:51:17 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,11 +56,11 @@ import com.syrus.util.ByteArray;
  *      зависимости от конкретного типа измерительного порта.
  * </ul>
  * 
- * @todo переименовать: Фактически этот класс завязан на рефлектометрию.<p>
+ * @todo переименовать: Фактически этот класс завязан на рефлектометрию.
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.5 $, $Date: 2006/04/13 13:07:58 $
+ * @version $Revision: 1.1.2.6 $, $Date: 2006/04/14 06:51:17 $
  * @module scheduler
  */
 public class MeasurementParameters {
@@ -68,15 +68,15 @@ public class MeasurementParameters {
 	/**
 	 * Отображение параметров в виде "свойств"
 	 * (такое представление удобно для UI).
-	 * 
+	 * <p>
 	 * В отличие от параметров,
 	 * каждое свойство имеет свой фиксированный kind,
 	 * поэтому один и тот же параметр (например, число усреднений)
 	 * может быть представлен разными свойствами.
-	 * 
+	 * <p>
 	 * Здесь мы должны обеспечить, чтобы в каждый момент времени
 	 * одному параметру соответствовало не более одного свойства.
-	 * 
+	 * <p>
 	 * Кроме того, мы полагаемся, что нет неопознанных параметров.
 	 * Тогда можно рассчитывать на отношение параметров к свойствам
 	 * вида {0,1} : 1, т.е. каждому параметру соответствует ровно одно
@@ -129,10 +129,13 @@ public class MeasurementParameters {
 	 * информацию, необходимую для его сохранения как ActionParameter,
 	 * информацию о его истинном типе,
 	 * а также множество допустимых значений параметра.
-	 * 
-	 * XXX: Создается в состоянии, когда текущее значение не определено,
-	 * но перед использованием должен быть проинициализирован.
-	 * 
+	 * <p>
+	 * NB: Создается в состоянии, когда текущее значение не определено;
+	 * перед использованием оно должно быть проинициализировано методом
+	 * {@link #setBAR(byte[])} либо соответствующим типу методом
+	 * {@link #setBoolean()} / {@link #setDouble()} / {@link #setInteger()} /
+	 * {@link #setStringValue()}.
+	 * <p>
 	 * Имеет возможность доступа и изменения с помощью типизированных
 	 * as...() и set...() методов: хотя определены все эти методы,
 	 * допустимы только те, который соответствует реальному типу.
@@ -141,7 +144,7 @@ public class MeasurementParameters {
 		DataType dataType; // must correspond to binding.parameterType
 		private ActionParameterTypeBinding binding; // please, read only access
 		private List<byte[]> allowedValues; // null for continuous
-		private byte[] data; // initialized as null, when used cheched to be not null
+		private byte[] data; // инициализируется как null
 
 		/* довольно медленная реализация (из-за new ByteArray()),
 		 * к тому же создается отдельно для каждой записи
@@ -183,7 +186,7 @@ public class MeasurementParameters {
 			default:
 				assert false;
 			}
-			this.data = null; // XXX: инициализация
+			this.data = null;
 			this.binding = binding;
 			this.dataType = binding.getParameterType().getDataType();
 
@@ -215,15 +218,31 @@ public class MeasurementParameters {
 		}
 
 		/**
-		 * please, do not modify returned array
+		 * Возвращает byte[]-представление текущего значения параметра.
+		 * Пользователь не должен изменять возвращаемое значение.
+		 * К моменту вызова метода значение уже должно быть установлено,
+		 * что проверяется assert'ом.
+		 * 
+		 * @return byte[]-представление, not null.
 		 */
-		public byte[] asBAR() {
+		byte[] asBAR() {
 			assert this.data != null;
 			return this.data;
 		}
 
 		/**
-		 * makes a safe copy
+		 * @return true, если параметр уже проинициализирован
+		 * (хоть раз установлен).
+		 */
+		public boolean isSet() {
+			return this.data != null;
+		}
+
+		/**
+		 * Устанавливает значение byte[]-представления.
+		 * Делает safe copy.
+		 * 
+		 * @param data устанавливаемое значение, not null
 		 */
 		public void setBAR(byte[] data) {
 			this.data = data.clone();
@@ -265,21 +284,45 @@ public class MeasurementParameters {
 			}
 		}
 
+		/**
+		 * Возвращает текущее значение параметра для boolean-параметра.
+		 * К моменту вызова метода значение уже должно быть установлено,
+		 * что проверяется assert'ом.
+		 * 
+		 * @return значение boolean
+		 */
 		public boolean asBoolean() {
 			assert this.data != null;
 			return asBoolean(this.data);
 		}
 
+		/**
+		 * Возвращает текущее значение параметра для double-параметра.
+		 * К моменту вызова метода значение уже должно быть установлено,
+		 * что проверяется assert'ом.
+		 * 
+		 * @return значение int
+		 */
 		public int asInteger() {
 			assert this.data != null;
 			return asInteger(this.data);
 		}
 
+		/**
+		 * Возвращает текущее значение параметра для double-параметра.
+		 * К моменту вызова метода значение уже должно быть установлено,
+		 * что проверяется assert'ом.
+		 * 
+		 * @return значение double
+		 */
 		public double asDouble() {
 			assert this.data != null;
 			return asDouble(this.data);
 		}
 
+		/**
+		 * Устанавливает значение для boolean-параметра
+		 */
 		public void setBoolean(boolean b) {
 			if (this.dataType != DataType.BOOLEAN) {
 				throw new IllegalStateException();
@@ -287,6 +330,9 @@ public class MeasurementParameters {
 			this.data = ByteArray.toByteArray(b);
 		}
 
+		/**
+		 * Устанавливает значение для int-параметра
+		 */
 		public void setInteger(int i) {
 			if (this.dataType != DataType.INTEGER) {
 				throw new IllegalStateException();
@@ -294,6 +340,9 @@ public class MeasurementParameters {
 			this.data = ByteArray.toByteArray(i);
 		}
 
+		/**
+		 * Устанавливает значение для double-параметра
+		 */
 		public void setDouble(double d) {
 			if (this.dataType != DataType.DOUBLE) {
 				throw new IllegalStateException();
@@ -333,8 +382,12 @@ public class MeasurementParameters {
 		}
 
 		/**
-		 * Makes string representation. Supports Integer and Double value types only.
-		 * @return String, not null
+		 * Возвращает строковое представление для параметра типа
+		 * int или double.
+		 * К моменту вызова метода значение уже должно быть установлено,
+		 * что проверяется assert'ом.
+		 * 
+		 * @return строковое представление, not null
 		 */
 		public String getStringValue() {
 			assert this.data != null;
@@ -342,9 +395,11 @@ public class MeasurementParameters {
 		}
 
 		/**
-		 * Sets from string value.
-		 *  Supports Integer and Double value types only.
-		 * @param value string value, not null
+		 * Устанавливает значение int или double параметра
+		 * по его заданному строковому представлению.
+		 * 
+		 * @param строковое представление величины соответствующего типа,
+		 *   not null
 		 */
 		public void setStringValue(String s) {
 			switch(this.dataType) {
@@ -360,8 +415,15 @@ public class MeasurementParameters {
 		}
 
 		/**
-		 * Gets list of allowed string representations.
-		 *   Supports Integer and Double value types only.
+		 * Возвращает список(list) строковых представлений допустимых
+		 * значений параметра.
+		 * Параметр должен быть перечислимым
+		 * ({@link ParameterValueKind#ENUMERATED}) и допускать строковое
+		 * представление ({@link #getStringValue()}),
+		 * на данный момент это int и double.
+		 * Текущее значение параметра на момент вызова может быть не
+		 * инициализирован.
+		 * 
 		 * @return list of allowed string representations or null for continuous
 		 */
 		public List<String> getAllowedStringValues() {
@@ -376,10 +438,10 @@ public class MeasurementParameters {
 		}
 	}
 
-	// paramterType view
+	/* parameterType view */
 	private Map<ParameterType, ParameterRecord> parameters;
 
-	// Property view
+	/* Property view */
 	private Map<Property, ParameterRecord> properties;
 
 	private MonitoredElement me;
@@ -403,16 +465,23 @@ public class MeasurementParameters {
 	}
 
 	/**
-	 * @todo javadoc required
-	 * @param me
-	 * @throws ApplicationException
+	 * Создает набор параметров, определенных для данной линии тестирования,
+	 * определяет множество допустимых значений, устанавливает значения
+	 * по умолчанию.
+	 * 
+	 * @param monitoredElement данная линия тестирования
+	 * @throws ApplicationException ошибки StorableObject Framework
 	 */
-	public MeasurementParameters(MonitoredElement me) throws ApplicationException {
-		this.me = me;
+	public MeasurementParameters(MonitoredElement monitoredElement)
+	throws ApplicationException {
+		this.me = monitoredElement;
 
-		// загружаем this.parameters
-		// Внимание: значения ParameterRecord.data остаются null,
-		// надо будет проинициализировать!
+		/*
+		 * Загружаем this.parameters.
+		 * Внимание: начальные значения (ParameterRecord.data)
+		 * пока не инициализируются. Это надо будет обязательно сделать
+		 * чуть позже.
+		 */
 		final MeasurementPortType mpType = getMeasurementPortType();
 		final Set<ActionParameterTypeBinding> bindings =
 			ActionParameterTypeBinding.getValues(
@@ -442,8 +511,11 @@ public class MeasurementParameters {
 			}
 		}
 
-		// инициализируем properties-ссылки,
-		// а также начальные значения свойств соответствующих им параметров
+		/*
+		 *  инициализируем properties-ссылки,
+		 *  а также начальные значения свойств соответствующих им параметров
+		 *  (ParameterRecord.data).
+		 */
 		this.properties = new HashMap<Property,ParameterRecord>(
 				Property.values().length);
 		for (Property p : Property.values()) {
@@ -482,12 +554,30 @@ public class MeasurementParameters {
 						record.getAllowedStringValues().iterator().next());
 			}
 		}
+
+		/*
+		 * Проверяем, что не осталось непроинициализированных свойств.
+		 * Если таковые все же найдутся, значит, что были загружены
+		 * параметры, на которые не ссылается ни одно свойство.
+		 */
+		for (ParameterRecord record: this.parameters.values()) {
+			assert record.isSet();
+		}
 	}
 
 	/**
-	 * @todo javadoc required
-	 * @param template
-	 * @throws ApplicationException 
+	 * Создает набор параметров, определенных для линии тестирования,
+	 * на которой задан данный шаблон измерения,
+	 * определяет множество допустимых значений, устанавливает значения
+	 * параметров такие, какие есть в данном шаблоне.
+	 * <p>
+	 * На данный момент,
+	 * если каких-то параметров в шаблоне нет,
+	 * остаются значения по умолчанию, но это поведение в будущем может
+	 * быть изменено.
+	 * 
+	 * @param template данный шаблон измерения
+	 * @throws ApplicationException ошибки StorableObject Framework
 	 */
 	public MeasurementParameters(ActionTemplate<Measurement> template)
 	throws ApplicationException {
