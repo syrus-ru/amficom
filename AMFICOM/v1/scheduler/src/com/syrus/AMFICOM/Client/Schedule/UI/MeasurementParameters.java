@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementParameters.java,v 1.1.2.9 2006/04/14 09:47:04 saa Exp $
+ * $Id: MeasurementParameters.java,v 1.1.2.10 2006/04/14 14:26:53 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.ByteArray;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.9 $, $Date: 2006/04/14 09:47:04 $
+ * @version $Revision: 1.1.2.10 $, $Date: 2006/04/14 14:26:53 $
  * @module scheduler
  */
 public class MeasurementParameters {
@@ -575,6 +575,11 @@ public class MeasurementParameters {
 	 * если каких-то параметров в шаблоне нет,
 	 * остаются значения по умолчанию, но это поведение в будущем может
 	 * быть изменено.
+	 * <p>
+	 * На данный момент, эквивалентен созданию конструктором
+	 * {@link #MeasurementParameters(MonitoredElement)}
+	 * и последующей загрузке методом
+	 * {@link #setTemplate(ActionTemplate)}
 	 * 
 	 * @param template данный шаблон измерения
 	 * @throws ApplicationException ошибки StorableObject Framework
@@ -586,6 +591,22 @@ public class MeasurementParameters {
 				true));
 
 		// устанавливаем начальные значения
+		setFromTemplate(template);
+	}
+
+	/**
+	 * Изменяет параметры в соответствии с заданным шаблоном.
+	 * Шаблон должен относиться к той же линии тестирования,
+	 * по которой создавался данный {@link MeasurementParameters}.
+	 * @param template загружаемый шаблон, по той же линии тестирования, not null
+	 * @throws ApplicationException ошибки StorableObject Framework
+	 */
+	public void setTemplate(ActionTemplate<Measurement> template)
+	throws ApplicationException {
+		if (!template.getMonitoredElementIds().iterator().next().equals(this.me)) {
+			throw new IllegalStateException(
+					"Monitored element should be change for MeasurementParameters");
+		}
 		setFromTemplate(template);
 	}
 

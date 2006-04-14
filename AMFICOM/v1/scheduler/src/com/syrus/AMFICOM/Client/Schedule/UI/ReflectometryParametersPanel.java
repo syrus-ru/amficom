@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryParametersPanel.java,v 1.1.2.7 2006/04/14 09:50:13 saa Exp $
+ * $Id: ReflectometryParametersPanel.java,v 1.1.2.8 2006/04/14 14:26:53 saa Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.7 $, $Date: 2006/04/14 09:50:13 $
+ * @version $Revision: 1.1.2.8 $, $Date: 2006/04/14 14:26:53 $
  * @module
  */
 public class ReflectometryParametersPanel extends MeasurementParametersPanel {
@@ -363,7 +363,8 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 	@Override
 	public void setMeasurementTemplate(ActionTemplate<Measurement> template) {
 		try {
-			this.parameters = new MeasurementParameters(template);
+//			this.parameters = new MeasurementParameters(template);
+			this.parameters.setTemplate(template);
 		} catch (ApplicationException e) {
 			/* XXX: ApplicationException processing */
 			Log.errorMessage(e);
