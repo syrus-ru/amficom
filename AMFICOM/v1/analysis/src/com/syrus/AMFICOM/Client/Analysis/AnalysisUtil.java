@@ -378,54 +378,106 @@ public class AnalysisUtil {
 		return true;
 	}
 
-	private static ActionParameter createParameterForAnalysisParameters(
-			Identifier userId,
+	/**
+	 * <p>
+	 * Этот метод использует
+	 * {@link ActionParameter#valueOf(Identifier, byte[], ActionParameterTypeBinding)},
+	 * для того чтобы попытаться найти существующий параметр, у которого
+	 * величина равна заданной. Если поиск не увенчался успехом, то будет создан
+	 * новый параметр с заданной величиной. Следовательно, в этом методе
+	 * происходит побайтное сравнение массивов. Возможно, для больших массивов,
+	 * такое поведение окажется нежелательным, и тогда придётся заменить
+	 * {@link ActionParameter#valueOf(Identifier, byte[], ActionParameterTypeBinding)}
+	 * на {@link ActionParameter#createInstance(Identifier, byte[], Identifier)}.
+	 * 
+	 * @param userId
+	 * @param portType
+	 * @param analysisParams
+	 * @return Параметр анализа
+	 * @throws ApplicationException
+	 */
+	private static ActionParameter createParameterForAnalysisParameters(Identifier userId,
 			MeasurementPortType portType,
 			AnalysisParameters analysisParams) throws ApplicationException {
-		return ActionParameter.createInstance(userId,
+		return ActionParameter.valueOf(userId,
 				DataStreamableUtil.writeDataStreamableToBA(analysisParams),
-				ActionParameterTypeBinding.valueOf(
-						ParameterType.valueOf(ReflectometryParameterTypeCodename.DADARA_CRITERIA),
+				ActionParameterTypeBinding.valueOf(ParameterType.valueOf(ReflectometryParameterTypeCodename.DADARA_CRITERIA),
 						AnalysisType.valueOf(AnalysisTypeCodename.DADARA),
-					portType).getId());
+						portType));
 	}
 
-	private static ActionParameter createParameterForEtalon(
-			Identifier userId,
-			MeasurementPortType portType,
-			Etalon etalon) throws ApplicationException {
-		return ActionParameter.createInstance(userId,
+	/**
+	 * <p>
+	 * Этот метод использует
+	 * {@link ActionParameter#valueOf(Identifier, byte[], ActionParameterTypeBinding)},
+	 * для того чтобы попытаться найти существующий параметр, у которого
+	 * величина равна заданной. Если поиск не увенчался успехом, то будет создан
+	 * новый параметр с заданной величиной. Следовательно, в этом методе
+	 * происходит побайтное сравнение массивов. Возможно, для больших массивов,
+	 * такое поведение окажется нежелательным, и тогда придётся заменить
+	 * {@link ActionParameter#valueOf(Identifier, byte[], ActionParameterTypeBinding)}
+	 * на {@link ActionParameter#createInstance(Identifier, byte[], Identifier)}.
+	 * 
+	 * @param userId
+	 * @param portType
+	 * @param etalon
+	 * @return Параметр для эталона
+	 * @throws ApplicationException
+	 */
+	private static ActionParameter createParameterForEtalon(Identifier userId, MeasurementPortType portType, Etalon etalon)
+			throws ApplicationException {
+		return ActionParameter.valueOf(userId,
 				DataStreamableUtil.writeDataStreamableToBA(etalon),
-				ActionParameterTypeBinding.valueOf(
-						ParameterType.valueOf(ReflectometryParameterTypeCodename.DADARA_ETALON),
+				ActionParameterTypeBinding.valueOf(ParameterType.valueOf(ReflectometryParameterTypeCodename.DADARA_ETALON),
 						AnalysisType.valueOf(AnalysisTypeCodename.DADARA),
-					portType).getId());
+						portType));
 	}
 
-	private static ActionParameter createParameterForEtalonTrace(
-			Identifier userId,
+	/**
+	 * <p>
+	 * Этот метод использует
+	 * {@link ActionParameter#valueOf(Identifier, byte[], ActionParameterTypeBinding)},
+	 * для того чтобы попытаться найти существующий параметр, у которого
+	 * величина равна заданной. Если поиск не увенчался успехом, то будет создан
+	 * новый параметр с заданной величиной. Следовательно, в этом методе
+	 * происходит побайтное сравнение массивов. Возможно, для больших массивов,
+	 * такое поведение окажется нежелательным, и тогда придётся заменить
+	 * {@link ActionParameter#valueOf(Identifier, byte[], ActionParameterTypeBinding)}
+	 * на {@link ActionParameter#createInstance(Identifier, byte[], Identifier)}.
+	 * 
+	 * @param userId
+	 * @param portType
+	 * @param bellcore
+	 * @return Параметр для эталонной рефлектограммы
+	 * @throws ApplicationException
+	 */
+	private static ActionParameter createParameterForEtalonTrace(Identifier userId,
 			MeasurementPortType portType,
 			BellcoreStructure bellcore) throws ApplicationException {
-		return ActionParameter.createInstance(userId,
+		return ActionParameter.valueOf(userId,
 				new BellcoreWriter().write(bellcore),
-				ActionParameterTypeBinding.valueOf(
-						ParameterType.valueOf(ReflectometryParameterTypeCodename.REFLECTOGRAMMA_ETALON),
+				ActionParameterTypeBinding.valueOf(ParameterType.valueOf(ReflectometryParameterTypeCodename.REFLECTOGRAMMA_ETALON),
 						AnalysisType.valueOf(AnalysisTypeCodename.DADARA),
-					portType).getId());
+						portType));
 	}
 
 	/**
 	 * яНГДЮЕР ЬЮАКНМ ЮМЮКХГЮ, БЙКЧВЮЪ, ЕЯКХ ГЮОПНЬЕМН, Х ЯПЮБМЕМХЕ Я ЩРЮКНМНЛ.
 	 * оЮПЮЛЕРПШ ЮМЮКХГЮ Х ЩРЮКНМ АЕПСРЯЪ ХГ Heap.
+	 * 
 	 * @param userId
-	 * @param portType РХО ОНПРЮ, МЮ ЙНРНПНЛ АСДЕР ОПНБНДХРЭЯЪ ЩРНР ЮМЮКХГ
-	 *  (Б ЛНДСКЕ ЮМЮКХГЮ НМ АЕПЕРЯЪ ХГ РХОЮ ОНПРЮ, ЯННРБЕРЯРБСЧЫЕЦН
-	 *  ЬЮАКНМС, ОН ЙНРНПНЛС ОПНБЕДЕМН ХГЛЕПЕМХЕ)
-	 * @param meIds ЛМНФЕЯРБН MonitoredElements (БШГШБЮЧЫЮЪ ЯРНПНМЮ ЯЮЛЮ
-	 *   ДНКФМЮ ЯКЕДХРЭ ГЮ ЯНЦКЮЯНБЮММНЯРЭЧ ЩРНЦН ОЮПЮЛЕРПЮ Я РХОНЛ ОНПРЮ)
-	 * @param withEtalon true, ВРНАШ Б ЯНГДЮБЮЕЛШИ ЬЮАКНМ БЙКЧВХРЭ ЩРЮКНМ
+	 * @param portType
+	 *        РХО ОНПРЮ, МЮ ЙНРНПНЛ АСДЕР ОПНБНДХРЭЯЪ ЩРНР ЮМЮКХГ (Б ЛНДСКЕ
+	 *        ЮМЮКХГЮ НМ АЕПЕРЯЪ ХГ РХОЮ ОНПРЮ, ЯННРБЕРЯРБСЧЫЕЦН ЬЮАКНМС, ОН
+	 *        ЙНРНПНЛС ОПНБЕДЕМН ХГЛЕПЕМХЕ)
+	 * @param meIds
+	 *        ЛМНФЕЯРБН MonitoredElements (БШГШБЮЧЫЮЪ ЯРНПНМЮ ЯЮЛЮ ДНКФМЮ
+	 *        ЯКЕДХРЭ ГЮ ЯНЦКЮЯНБЮММНЯРЭЧ ЩРНЦН ОЮПЮЛЕРПЮ Я РХОНЛ ОНПРЮ)
+	 * @param withEtalon
+	 *        true, ВРНАШ Б ЯНГДЮБЮЕЛШИ ЬЮАКНМ БЙКЧВХРЭ ЩРЮКНМ
 	 * @return ЯНГДЮММШИ ЬЮАКНМ ЮМЮКХГЮ
-	 * @throws ApplicationException НЬХАЙХ SOF.
+	 * @throws ApplicationException
+	 *         НЬХАЙХ SOF.
 	 */
 	public static ActionTemplate<Analysis> createAnalysisTemplate(Identifier userId,
 			MeasurementPortType portType,
