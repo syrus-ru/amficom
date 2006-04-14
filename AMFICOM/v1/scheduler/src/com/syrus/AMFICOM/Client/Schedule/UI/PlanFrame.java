@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 public final class PlanFrame extends JInternalFrame {
 
 	private JToolBar	toolBar;
-	private PlanPanel	mainPanel;
+	PlanPanel			mainPanel;
 
 	public PlanFrame(ApplicationContext aContext) {
 		super.setTitle(I18N.getString("Scheduler.Text.Plan.Title")); //$NON-NLS-1$

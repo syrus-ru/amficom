@@ -57,7 +57,7 @@ public final class ElementsTreeFrame extends JInternalFrame implements PropertyC
 
 	private Dispatcher dispatcher;
 
-	private PropertyChangeEvent	propertyChangeEvent;
+	PropertyChangeEvent	propertyChangeEvent;
 
 	public ElementsTreeFrame(final ApplicationContext aContext) {
 		this.aContext = aContext;
