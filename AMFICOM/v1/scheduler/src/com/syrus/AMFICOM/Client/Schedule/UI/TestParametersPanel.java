@@ -473,6 +473,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 		if (this.testSetups.getSelectedValue() == null) {
 			this.testSetups.setSelectedValue(measurementSetup, true);
 		}
+
+		this.descriptionField.setText(null);
 	}
 
 	boolean isAnalysisEnable(final MeasurementSetup measurementSetup) {
