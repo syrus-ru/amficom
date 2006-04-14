@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementParameters.java,v 1.1.2.6 2006/04/14 06:51:17 saa Exp $
+ * $Id: MeasurementParameters.java,v 1.1.2.7 2006/04/14 06:54:40 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.ByteArray;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.6 $, $Date: 2006/04/14 06:51:17 $
+ * @version $Revision: 1.1.2.7 $, $Date: 2006/04/14 06:54:40 $
  * @module scheduler
  */
 public class MeasurementParameters {
@@ -549,9 +549,9 @@ public class MeasurementParameters {
 			} else {
 				assert record.getValueKind() == ParameterValueKind.ENUMERATED;
 				assert record.getDataType() != DataType.BOOLEAN;
-				// XXX: берем первый попавшийся
-				record.setStringValue(
-						record.getAllowedStringValues().iterator().next());
+				// XXX: берем самый средний
+				final List<String> allowedValues = record.getAllowedStringValues();
+				record.setStringValue(allowedValues.get(allowedValues.size() / 2));
 			}
 		}
 
