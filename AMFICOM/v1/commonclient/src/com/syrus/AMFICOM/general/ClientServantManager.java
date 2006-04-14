@@ -1,5 +1,5 @@
 /*
- * $Id: ClientServantManager.java,v 1.20 2005/12/02 11:36:57 bob Exp $
+ * $Id: ClientServantManager.java,v 1.21 2006/04/14 11:17:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/12/02 11:36:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2006/04/14 11:17:56 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -38,11 +38,10 @@ public abstract class ClientServantManager extends VerifiedConnectionManager imp
 	private String eventServerServantName;
 
 	/**
-	 * Currently, can hold the name of CMServer and MscharServer
-	 * servants.
+	 * Currently, can hold the name of CMServer and MscharServer servants.
 	 */
 	private String commonServerServantName;
-	private Map<String, Boolean>	connectionLostMap;
+	private Map<String, Boolean> connectionLostMap;
 
 	/**
 	 * @param corbaServer
@@ -50,7 +49,6 @@ public abstract class ClientServantManager extends VerifiedConnectionManager imp
 	 * @param eventServerServantName
 	 * @param commonServerServantName
 	 */
-
 	public ClientServantManager(final CORBAServer corbaServer,
 			final String loginServerServantName,
 			final String eventServerServantName,
@@ -60,56 +58,54 @@ public abstract class ClientServantManager extends VerifiedConnectionManager imp
 		this.loginServerServantName = loginServerServantName;
 		this.eventServerServantName = eventServerServantName;
 		this.commonServerServantName = commonServerServantName;
-		
+
 		this.connectionLostMap = new HashMap<String, Boolean>();
 	}
 
-	public LoginServer getLoginServerReference() throws CommunicationException {
+	public final LoginServer getLoginServerReference() throws CommunicationException {
 		return LoginServerHelper.narrow(this.getVerifiableReference(this.loginServerServantName));
 	}
 
-	public EventServer getEventServerReference() throws CommunicationException {
+	public final EventServer getEventServerReference() throws CommunicationException {
 		return EventServerHelper.narrow(this.getVerifiableReference(this.eventServerServantName));
 	}
 
-	public IdentifierGeneratorServer getIGSReference() throws CommunicationException {
+	public final IdentifierGeneratorServer getIGSReference() throws CommunicationException {
 		return IdentifierGeneratorServerHelper.narrow(this.getVerifiableReference(this.commonServerServantName));
 	}
 
-	public CommonServer getServerReference() throws CommunicationException {
+	public final CommonServer getServerReference() throws CommunicationException {
 		return CommonServerHelper.narrow(this.getVerifiableReference(this.commonServerServantName));
 	}
 
 	@Override
 	protected final void onLoseConnection(final String servantName) {
 		this.connectionLostMap.put(servantName, Boolean.valueOf(true));
-		Log.debugMessage("Connection with '" + servantName + "' lost",
-			Log.DEBUGLEVEL08);
-		final String msg = I18N.getString("Error.ConnectionWith.ConnectionWith") + " '" + servantName + "' " + I18N.getString("Error.ConnectionWith.Lost");
+		Log.debugMessage("Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
+		final String msg = I18N.getString("Error.ConnectionWith.ConnectionWith")
+				+ " '" + servantName + "' " + I18N.getString("Error.ConnectionWith.Lost");
 		final Boolean lost = this.connectionLostMap.get(servantName);
 		if (lost != null && !lost.booleanValue()) {
-			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
-				msg,
-				I18N.getString("Error.ErrorOccur"),
-				JOptionPane.ERROR_MESSAGE);		
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
+					msg,
+					I18N.getString("Error.ErrorOccur"),
+					JOptionPane.ERROR_MESSAGE);
 		}
 		this.connectionLostMap.put(servantName, Boolean.TRUE);
 	}
 
 	@Override
 	protected final void onRestoreConnection(final String servantName) {
-		Log.debugMessage("Connection with '" + servantName + "' restored",
-			Log.DEBUGLEVEL08);
-		final String msg = I18N.getString("Common.ClientServantManager.ConnectionWith.ConnectionWith") 
-			+ " '" + servantName 
-			+ "' " + I18N.getString("Common.ClientServantManager.ConnectionWith.Restored");
-		
+		Log.debugMessage("Connection with '" + servantName + "' restored", Log.DEBUGLEVEL08);
+		final String msg = I18N.getString("Common.ClientServantManager.ConnectionWith.ConnectionWith")
+				+ " '" + servantName + "' " + I18N.getString("Common.ClientServantManager.ConnectionWith.Restored");
+
 		final Boolean lost = this.connectionLostMap.get(servantName);
 		if (lost != null && lost.booleanValue()) {
-			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
-				msg,
-				I18N.getString("Common.ClientServantManager.Title"),
-				JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
+					msg,
+					I18N.getString("Common.ClientServantManager.Title"),
+					JOptionPane.INFORMATION_MESSAGE);
 			this.connectionLostMap.put(servantName, Boolean.valueOf(false));
 		}
 
