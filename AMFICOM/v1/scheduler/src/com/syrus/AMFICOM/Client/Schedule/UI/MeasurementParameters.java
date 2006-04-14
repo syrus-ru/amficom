@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementParameters.java,v 1.1.2.8 2006/04/14 09:27:49 saa Exp $
+ * $Id: MeasurementParameters.java,v 1.1.2.9 2006/04/14 09:47:04 saa Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.ByteArray;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.8 $, $Date: 2006/04/14 09:27:49 $
+ * @version $Revision: 1.1.2.9 $, $Date: 2006/04/14 09:47:04 $
  * @module scheduler
  */
 public class MeasurementParameters {
@@ -685,8 +685,10 @@ public class MeasurementParameters {
 
 	public ActionTemplate<Measurement> createMeasurementTemplate()
 	throws ApplicationException {
-		double durationSeconds = getEstimator().getEstimatedMeasurementTime(
-				getRMP(), true);
+		double durationSeconds =
+			ReflectometryUtil.getUpperEstimatedAgentTestTime(
+					getRMP(),
+					getEstimator());
 		long durationMillis = (long)Math.ceil(durationSeconds * 1000.0);
 
 		Set<Identifier> parameterIds = new HashSet<Identifier>();
