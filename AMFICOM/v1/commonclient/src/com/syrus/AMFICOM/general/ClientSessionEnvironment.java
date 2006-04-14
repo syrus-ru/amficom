@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.44 2006/03/23 19:25:01 bass Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.45 2006/04/14 11:18:58 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.corba.CORBAClient;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2006/03/23 19:25:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2006/04/14 11:18:58 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -142,7 +142,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		final CORBAClientImpl servant = new CORBAClientImpl();
 		final CORBAClient corbaClient = servant._this(mClientServantManager.getCORBAServer().getOrb());
 
-		instance = new ClientSessionEnvironment(mscharClientServantManager, clientPoolContext, corbaClient, loginRestorer, servant);
+		instance = new ClientSessionEnvironment(mClientServantManager, clientPoolContext, corbaClient, loginRestorer, servant);
 	}
 	
 	private static void createAllSession(final LoginRestorer loginRestorer) throws CommunicationException {
@@ -167,7 +167,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		final CORBAClientImpl servant = new CORBAClientImpl();
 		final CORBAClient corbaClient = servant._this(mClientServantManager.getCORBAServer().getOrb());
 
-		instance = new ClientSessionEnvironment(mscharClientServantManager, clientPoolContext, corbaClient, loginRestorer, servant);
+		instance = new ClientSessionEnvironment(mClientServantManager, clientPoolContext, corbaClient, loginRestorer, servant);
 	}
 
 	public void addPropertyListener(final PropertyChangeListener listener) {
