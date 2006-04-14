@@ -1,5 +1,5 @@
 /*-
- * $$Id: SchemeSampleData.java,v 1.35 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: SchemeSampleData.java,v 1.36 2006/04/14 12:01:22 arseniy Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.scheme;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
@@ -25,8 +26,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
  * 
- * @version $Revision: 1.35 $, $Date: 2005/09/30 16:08:42 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.36 $, $Date: 2006/04/14 12:01:22 $
+ * @author $Author: arseniy $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -69,7 +70,8 @@ public final class SchemeSampleData {
 
 	private static void scheme1(Identifier userId, Identifier domainId) throws ApplicationException
 	{
-		ProtoEquipment protoEquipment = ProtoEquipment.createInstance(userId, EquipmentType.CABLE_PANEL, "sample", "desc", "manu", "manucode");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		final Identifier equipmentTypeId = EquipmentType.idOf(EquipmentTypeCodename.CABLE_PANEL.stringValue());
+		ProtoEquipment protoEquipment = ProtoEquipment.createInstance(userId, equipmentTypeId, "sample", "desc", "manu", "manucode");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		LinkType lt = LinkType.createInstance(userId, "1", "2", "3", LinkTypeSort.LINKTYPESORT_COPPER, "8", "9", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		CableLinkType clt = CableLinkType.createInstance(userId, "4", "5", "6", LinkTypeSort.LINKTYPESORT_OPTICAL, "8", "7", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		CableThreadType ctt = CableThreadType.createInstance(userId, "test", "7", "CTT", 0, lt, clt);  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -192,7 +194,8 @@ public final class SchemeSampleData {
 
 	private static void scheme2(Identifier userId, Identifier domainId) throws ApplicationException
 	{
-		ProtoEquipment protoEquipment = ProtoEquipment.createInstance(userId, EquipmentType.CABLE_PANEL, "samle2", "desc2", "manu", "manucode");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		final Identifier equipmentTypeId = EquipmentType.idOf(EquipmentTypeCodename.CABLE_PANEL.stringValue());
+		ProtoEquipment protoEquipment = ProtoEquipment.createInstance(userId, equipmentTypeId, "samle2", "desc2", "manu", "manucode");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		LinkType lt = LinkType.createInstance(userId, "6", "5", "4", LinkTypeSort.LINKTYPESORT_OPTICAL, "2", "3", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		CableLinkType clt = CableLinkType.createInstance(userId, "3", "2", "1", LinkTypeSort.LINKTYPESORT_OPTICAL, "4", "5", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		CableThreadType ctt = CableThreadType.createInstance(userId, "test2", "", "CTT2", 0, lt, clt);  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
