@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryParametersPanel.java,v 1.1.2.5 2006/04/13 13:52:46 saa Exp $
+ * $Id: ReflectometryParametersPanel.java,v 1.1.2.6 2006/04/14 09:40:53 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.5 $, $Date: 2006/04/13 13:52:46 $
+ * @version $Revision: 1.1.2.6 $, $Date: 2006/04/14 09:40:53 $
  * @module
  */
 public class ReflectometryParametersPanel extends MeasurementParametersPanel {
@@ -265,7 +265,15 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 			pars.setPropertyStringValue(property, (String)box.getSelectedItem());
 		} else if (source instanceof JTextField) {
 			JTextField field = (JTextField) source;
-			pars.setPropertyStringValue(property, field.getText());
+			try {
+				pars.setPropertyStringValue(property, field.getText());
+			} catch (NumberFormatException e) {
+				// введенная строка не распознана как число
+				// отменяем ввод: устанавливаем старое значение
+				this.skip = true;
+				field.setText(pars.getPropertyStringValue(property));
+				this.skip = false;
+			}
 		} else {
 			throw new InternalError("Unknown source type: " + source);
 		}
