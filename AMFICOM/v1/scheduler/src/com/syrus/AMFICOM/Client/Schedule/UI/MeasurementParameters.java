@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementParameters.java,v 1.1.2.7 2006/04/14 06:54:40 saa Exp $
+ * $Id: MeasurementParameters.java,v 1.1.2.8 2006/04/14 09:27:49 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.ByteArray;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.7 $, $Date: 2006/04/14 06:54:40 $
+ * @version $Revision: 1.1.2.8 $, $Date: 2006/04/14 09:27:49 $
  * @module scheduler
  */
 public class MeasurementParameters {
@@ -100,7 +100,7 @@ public class MeasurementParameters {
 		FLAG_GAIN_SPLICE(ReflectometryParameterTypeCodename.FLAG_GAIN_SPLICE_ON, true),
 		FLAG_SMOOTH(ReflectometryParameterTypeCodename.FLAG_SMOOTH_FILTER, false),
 		FLAG_LFD(ReflectometryParameterTypeCodename.FLAG_LIFE_FIBER_DETECT, true),
-		FLAG_HIRES(ReflectometryParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES, true), // NB: HIRES = NOT(LOWRES); XXX: может, использовать само lowres, без трансляции?
+		FLAG_HIRES(ReflectometryParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES, false), // NB: HIRES = NOT(LOWRES); false - значение для lowres. XXX: может, использовать само lowres, без трансляции?
 
 		// continuous
 		I_AVERAGES(ReflectometryParameterTypeCodename.AVERAGE_COUNT, 10); // NB: будет отфильтровано дополнительно
