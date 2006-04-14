@@ -1,11 +1,15 @@
 /*
- * $Id: SetupMeasurementPortType.java,v 1.1.2.1 2006/02/22 15:00:58 arseniy Exp $
+ * $Id: SetupMeasurementPortType.java,v 1.1.2.2 2006/04/14 14:48:37 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
+import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_QP1640A;
+import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_QP1643A;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -40,19 +44,19 @@ public final class SetupMeasurementPortType extends TestCase {
 		final Set<MeasurementPortType> measurementPortTypes = new HashSet<MeasurementPortType>();
 		String codename;
 
-		codename = MeasurementPortTypeCodename.REFLECTOMETRY_QP1640A.stringValue();
+		codename = REFLECTOMETRY_QP1640A.stringValue();
 		measurementPortTypes.add(MeasurementPortType.createInstance(creatorId,
 				codename,
 				I18N.getString(KEY_DESCRIPTION_ROOT + codename),
 				I18N.getString(KEY_NAME_ROOT + codename)));
 
-		codename = MeasurementPortTypeCodename.REFLECTOMETRY_QP1643A.stringValue();
+		codename = REFLECTOMETRY_QP1643A.stringValue();
 		measurementPortTypes.add(MeasurementPortType.createInstance(creatorId,
 				codename,
 				I18N.getString(KEY_DESCRIPTION_ROOT + codename),
 				I18N.getString(KEY_NAME_ROOT + codename)));
 
-		codename = MeasurementPortTypeCodename.REFLECTOMETRY_PK7600.stringValue();
+		codename = REFLECTOMETRY_PK7600.stringValue();
 		measurementPortTypes.add(MeasurementPortType.createInstance(creatorId,
 				codename,
 				I18N.getString(KEY_DESCRIPTION_ROOT + codename),
