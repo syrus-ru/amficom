@@ -1,5 +1,5 @@
 /*-
- * $$Id: RemoveNodeLinkCommandAtomic.java,v 1.21 2006/02/15 11:12:43 stas Exp $$
+ * $$Id: RemoveNodeLinkCommandAtomic.java,v 1.22 2006/04/14 12:04:07 arseniy Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,11 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NOT_IMPLEMENTED;
+
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -21,8 +22,8 @@ import com.syrus.util.Log;
 /**
  * удаление фрагмента линии связи из карты - атомарное действие
  * 
- * @version $Revision: 1.21 $, $Date: 2006/02/15 11:12:43 $
- * @author $Author: stas $
+ * @version $Revision: 1.22 $, $Date: 2006/04/14 12:04:07 $
+ * @author $Author: arseniy $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -72,18 +73,21 @@ public class RemoveNodeLinkCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void undo() {
-		try {
-			StorableObjectPool.putStorableObject(this.nodeLink);
-			final MapView mapView = this.logicalNetLayer.getMapView();
+		Log.errorMessage(NOT_IMPLEMENTED);
 
-			if(this.nodeLink.getPhysicalLink() instanceof UnboundLink) {
-				mapView.addUnboundNodeLink(this.nodeLink);
-			}
-			else {
-				mapView.getMap().addNodeLink(this.nodeLink);
-			}
-		} catch(IllegalObjectEntityException e) {
-			Log.errorMessage(e);
-		}
+//		Этот метод всё равно не работает
+//		try {
+//			StorableObjectPool.putStorableObject(this.nodeLink);
+//			final MapView mapView = this.logicalNetLayer.getMapView();
+//
+//			if(this.nodeLink.getPhysicalLink() instanceof UnboundLink) {
+//				mapView.addUnboundNodeLink(this.nodeLink);
+//			}
+//			else {
+//				mapView.getMap().addNodeLink(this.nodeLink);
+//			}
+//		} catch(IllegalObjectEntityException e) {
+//			Log.errorMessage(e);
+//		}
 	}
 }

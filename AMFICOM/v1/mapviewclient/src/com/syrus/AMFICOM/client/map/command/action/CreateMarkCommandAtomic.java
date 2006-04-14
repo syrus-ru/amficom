@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateMarkCommandAtomic.java,v 1.39 2006/02/15 11:12:43 stas Exp $$
+ * $$Id: CreateMarkCommandAtomic.java,v 1.40 2006/04/14 12:04:07 arseniy Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.client.map.command.action;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.NOT_IMPLEMENTED;
 
 import java.awt.Point;
 import java.util.Iterator;
@@ -20,7 +22,6 @@ import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -34,8 +35,8 @@ import com.syrus.util.Log;
 /**
  * Команда создания метки на линии
  * 
- * @version $Revision: 1.39 $, $Date: 2006/02/15 11:12:43 $
- * @author $Author: stas $
+ * @version $Revision: 1.40 $, $Date: 2006/04/14 12:04:07 $
+ * @author $Author: arseniy $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -131,12 +132,15 @@ public class CreateMarkCommandAtomic extends MapActionCommand {
 	
 	@Override
 	public void undo() {
-		try {
-			StorableObjectPool.putStorableObject(this.mark);
-			this.map.removeNode(this.mark);
-		} catch(IllegalObjectEntityException e) {
-			Log.errorMessage(e);
-		}
+		Log.errorMessage(NOT_IMPLEMENTED);
+
+//		Этот метод всё равно не работает
+//		try {
+//			StorableObjectPool.putStorableObject(this.mark);
+//			this.map.removeNode(this.mark);
+//		} catch(IllegalObjectEntityException e) {
+//			Log.errorMessage(e);
+//		}
 	}
 	
 	@Override

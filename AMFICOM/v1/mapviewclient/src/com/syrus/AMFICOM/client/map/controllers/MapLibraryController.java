@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryController.java,v 1.13 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapLibraryController.java,v 1.14 2006/04/14 12:04:07 arseniy Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -31,8 +30,8 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 /**
  * контроллер типа сетевого узла.
  * 
- * @version $Revision: 1.13 $, $Date: 2005/10/11 08:56:11 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2006/04/14 12:04:07 $
+ * @author $Author: arseniy $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -85,7 +84,6 @@ public class MapLibraryController {
 				"", //$NON-NLS-1$
 				null);
 				
-			StorableObjectPool.putStorableObject(library);
 			StorableObjectPool.flush(library, userId, true);
 		}
 		return library;

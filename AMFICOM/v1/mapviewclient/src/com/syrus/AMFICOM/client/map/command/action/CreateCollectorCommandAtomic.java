@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateCollectorCommandAtomic.java,v 1.27 2006/02/15 11:12:43 stas Exp $$
+ * $$Id: CreateCollectorCommandAtomic.java,v 1.28 2006/04/14 12:04:07 arseniy Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,12 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NOT_IMPLEMENTED;
+
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Collector;
@@ -22,8 +23,8 @@ import com.syrus.util.Log;
  * создание коллектора, внесение его в пул и на карту - 
  * атомарное действие
  *  
- * @version $Revision: 1.27 $, $Date: 2006/02/15 11:12:43 $
- * @author $Author: stas $
+ * @version $Revision: 1.28 $, $Date: 2006/04/14 12:04:07 $
+ * @author $Author: arseniy $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -66,12 +67,15 @@ public class CreateCollectorCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void redo() {
-		try {
-			StorableObjectPool.putStorableObject(this.collector);
-			this.logicalNetLayer.getMapView().getMap().addCollector(this.collector);
-		} catch(IllegalObjectEntityException e) {
-			Log.errorMessage(e);
-		}
+		Log.errorMessage(NOT_IMPLEMENTED);
+
+//Этот метод всё равно не работает
+//		try {
+//			StorableObjectPool.putStorableObject(this.collector);
+//			this.logicalNetLayer.getMapView().getMap().addCollector(this.collector);
+//		} catch(IllegalObjectEntityException e) {
+//			Log.errorMessage(e);
+//		}
 	}
 
 	@Override

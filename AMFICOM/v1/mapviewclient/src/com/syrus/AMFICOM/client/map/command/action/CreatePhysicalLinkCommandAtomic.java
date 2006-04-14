@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreatePhysicalLinkCommandAtomic.java,v 1.31 2006/02/15 11:12:43 stas Exp $$
+ * $$Id: CreatePhysicalLinkCommandAtomic.java,v 1.32 2006/04/14 12:04:07 arseniy Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,13 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NOT_IMPLEMENTED;
+
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -24,8 +25,8 @@ import com.syrus.util.Log;
  * создание физической линии, внесение ее в пул и на карту - 
  * атомарное действие
  *  
- * @version $Revision: 1.31 $, $Date: 2006/02/15 11:12:43 $
- * @author $Author: stas $
+ * @version $Revision: 1.32 $, $Date: 2006/04/14 12:04:07 $
+ * @author $Author: arseniy $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -80,12 +81,15 @@ public class CreatePhysicalLinkCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void redo() {
-		try {
-			StorableObjectPool.putStorableObject(this.link);
-			this.logicalNetLayer.getMapView().getMap().addPhysicalLink(this.link);
-		} catch(IllegalObjectEntityException e) {
-			Log.errorMessage(e);
-		}
+		Log.errorMessage(NOT_IMPLEMENTED);
+
+//		Этот метод всё равно не работает
+//		try {
+//			StorableObjectPool.putStorableObject(this.link);
+//			this.logicalNetLayer.getMapView().getMap().addPhysicalLink(this.link);
+//		} catch(IllegalObjectEntityException e) {
+//			Log.errorMessage(e);
+//		}
 	}
 
 	@Override

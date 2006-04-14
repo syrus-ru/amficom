@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapSaveCommand.java,v 1.26 2006/02/15 11:12:43 stas Exp $$
+ * $$Id: MapSaveCommand.java,v 1.27 2006/04/14 12:04:07 arseniy Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -27,8 +26,8 @@ import com.syrus.util.Log;
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * 
- * @version $Revision: 1.26 $, $Date: 2006/02/15 11:12:43 $
- * @author $Author: stas $
+ * @version $Revision: 1.27 $, $Date: 2006/04/14 12:04:07 $
+ * @author $Author: arseniy $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -57,11 +56,6 @@ public class MapSaveCommand extends AbstractCommand {
 // aContext.getDispatcher().notify(new StatusMessageEvent(
 //					StatusMessageEvent.STATUS_PROGRESS_BAR, 
 //					true));
-			try {
-				StorableObjectPool.putStorableObject(this.map);
-			} catch(IllegalObjectEntityException e) {
-				Log.errorMessage(e);
-			}
 			try {
 				// save map
 				StorableObjectPool.flush(this.map, LoginManager.getUserId(), true);

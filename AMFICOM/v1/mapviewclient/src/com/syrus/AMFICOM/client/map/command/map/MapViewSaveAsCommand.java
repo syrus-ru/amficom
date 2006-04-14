@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewSaveAsCommand.java,v 1.31 2006/02/15 11:12:43 stas Exp $$
+ * $$Id: MapViewSaveAsCommand.java,v 1.32 2006/04/14 12:04:07 arseniy Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -30,8 +29,8 @@ import com.syrus.util.Log;
  * Класс используется для сохранения топологической схемы с новым
  * именем
  * 
- * @version $Revision: 1.31 $, $Date: 2006/02/15 11:12:43 $
- * @author $Author: stas $
+ * @version $Revision: 1.32 $, $Date: 2006/04/14 12:04:07 $
+ * @author $Author: arseniy $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -64,15 +63,9 @@ public class MapViewSaveAsCommand extends AbstractCommand {
 					1.0D,
 					this.mapView.getMap());
 
-			StorableObjectPool.putStorableObject(this.newMapView);
-
 			this.newMapView.setName(this.mapView.getName() + I18N.getString(MapEditorResourceKeys.IS_ACOPY_IN_PARENTHESIS));
 		} catch(CreateObjectException e) {
 			Log.errorMessage(e);
-			return;
-		} catch(IllegalObjectEntityException e) {
-			Log.errorMessage(e);
-			setResult(RESULT_NO);
 			return;
 		}
 

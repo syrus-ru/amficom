@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateNodeLinkCommandAtomic.java,v 1.29 2006/02/15 11:12:43 stas Exp $$
+ * $$Id: CreateNodeLinkCommandAtomic.java,v 1.30 2006/04/14 12:04:07 arseniy Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,12 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NOT_IMPLEMENTED;
+
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -26,8 +27,8 @@ import com.syrus.util.Log;
  * создание фрагмента линии связи, внесение ее в пул и на карту - 
  * атомарное действие
  *  
- * @version $Revision: 1.29 $, $Date: 2006/02/15 11:12:43 $
- * @author $Author: stas $
+ * @version $Revision: 1.30 $, $Date: 2006/04/14 12:04:07 $
+ * @author $Author: arseniy $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -90,19 +91,22 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void redo() {
-		try {
-			final MapView mapView = this.logicalNetLayer.getMapView();
+		Log.errorMessage(NOT_IMPLEMENTED);
 
-			StorableObjectPool.putStorableObject(this.nodeLink);
-			if(this.physicalLink instanceof UnboundLink) {
-				mapView.addUnboundNodeLink(this.nodeLink);
-			}
-			else {
-				mapView.getMap().addNodeLink(this.nodeLink);
-			}
-		} catch(IllegalObjectEntityException e) {
-			Log.errorMessage(e);
-		}
+//		Этот метод всё равно не работает
+//		try {
+//			final MapView mapView = this.logicalNetLayer.getMapView();
+//
+//			StorableObjectPool.putStorableObject(this.nodeLink);
+//			if(this.physicalLink instanceof UnboundLink) {
+//				mapView.addUnboundNodeLink(this.nodeLink);
+//			}
+//			else {
+//				mapView.getMap().addNodeLink(this.nodeLink);
+//			}
+//		} catch(IllegalObjectEntityException e) {
+//			Log.errorMessage(e);
+//		}
 	}
 
 	@Override

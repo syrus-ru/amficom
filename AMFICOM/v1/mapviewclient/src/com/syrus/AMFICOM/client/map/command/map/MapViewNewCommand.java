@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewNewCommand.java,v 1.39 2006/02/15 11:12:43 stas Exp $$
+ * $$Id: MapViewNewCommand.java,v 1.40 2006/04/14 12:04:07 arseniy Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,9 +19,7 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.resource.DoublePoint;
@@ -30,8 +28,8 @@ import com.syrus.util.Log;
 /**
  * создать новый вид
  *  
- * @version $Revision: 1.39 $, $Date: 2006/02/15 11:12:43 $
- * @author $Author: stas $
+ * @version $Revision: 1.40 $, $Date: 2006/04/14 12:04:07 $
+ * @author $Author: arseniy $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -73,13 +71,7 @@ public class MapViewNewCommand extends AbstractCommand {
 					zoom,
 					zoom,
 					this.map);
-
-			StorableObjectPool.putStorableObject(this.mapView);
 		} catch(CreateObjectException e) {
-			Log.errorMessage(e);
-			setResult(RESULT_NO);
-			return;
-		} catch(IllegalObjectEntityException e) {
 			Log.errorMessage(e);
 			setResult(RESULT_NO);
 			return;
