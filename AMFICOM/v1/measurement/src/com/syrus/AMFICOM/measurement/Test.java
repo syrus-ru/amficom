@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.24 2006/04/11 13:06:58 arseniy Exp $
+ * $Id: Test.java,v 1.183.2.25 2006/04/14 12:25:58 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -60,8 +60,8 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.24 $, $Date: 2006/04/11 13:06:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.183.2.25 $, $Date: 2006/04/14 12:25:58 $
+ * @author $Author: saa $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -499,6 +499,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		if (measurementSetupIds != null) {
 			this.measurementSetupIds.addAll(measurementSetupIds);
 		}
+		this.invalidateCurrentMeasurementSetupId();
 	}
 
 	public Identifier getMeasurementTypeId() {
@@ -656,6 +657,10 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 		if (this.currentMeasurementSetupId == null) {
 			this.currentMeasurementSetupId = this.measurementSetupIds.iterator().next();
 		}
+	}
+
+	private void invalidateCurrentMeasurementSetupId() {
+		this.currentMeasurementSetupId = null;
 	}
 
 	/**
@@ -833,9 +838,7 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	 * Normalize end date to finishing of last test's measurement
 	 * 
 	 * @throws ApplicationException
-	 * @deprecated Объект сам должен себя нормализовать.
 	 */
-	@Deprecated
 	public final void normalize() throws ApplicationException {
 		this.normalizeEndTime();
 	}
