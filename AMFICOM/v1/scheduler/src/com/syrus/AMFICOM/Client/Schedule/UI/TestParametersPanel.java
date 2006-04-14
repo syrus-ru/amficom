@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.EventObject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -93,7 +94,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 
 	Identifier				measurementSetupId; // FIXME: не понятно, то ли мы им пользуемся, то ли нет
 
-	PropertyChangeEvent		propertyChangeEvent;
+	EventObject		currentEvent;
 
 	private JPanel			patternPanel;
 
@@ -201,11 +202,11 @@ final class TestParametersPanel implements PropertyChangeListener {
 			public void actionPerformed(final ActionEvent e) {
 				final JComboBox comboBox = (JComboBox) e.getSource();
 				final AnalysisType analysisType = (AnalysisType) comboBox.getSelectedItem();
-				if (TestParametersPanel.this.propertyChangeEvent == null) {
+				if (TestParametersPanel.this.currentEvent == null) {
 					final Set<Test> tests = TestParametersPanel.this.schedulerModel.getSelectedTests();
 					for (final Test test : tests) {
 						if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
-							test.setAnalysisTypeId(analysisType.getId());
+							test.setAnalysisTypeId(analysisType == null ? Identifier.VOID_IDENTIFIER : analysisType.getId());
 						}
 					}
 				}
@@ -273,9 +274,11 @@ final class TestParametersPanel implements PropertyChangeListener {
 					}
 				}
 
-				if (TestParametersPanel.this.propertyChangeEvent != null) {
+				if (TestParametersPanel.this.currentEvent != null) {
 					return;
 				}
+
+				TestParametersPanel.this.currentEvent = e;
 
 				if (measurementSetup != null) {
 					final boolean analysisEnable = isAnalysisEnable(measurementSetup);
@@ -283,14 +286,14 @@ final class TestParametersPanel implements PropertyChangeListener {
 						TestParametersPanel.this.analysisComboBox.setSelectedItem(null);
 					}
 					TestParametersPanel.this.analysisComboBox.setEnabled(analysisEnable);
-					if (TestParametersPanel.this.propertyChangeEvent == null) {
-						try {
-							TestParametersPanel.this.schedulerModel.changeMeasurementSetup(measurementSetup);
-						} catch (final ApplicationException e1) {
-							AbstractMainFrame.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
-						}
+					try {
+						TestParametersPanel.this.schedulerModel.changeMeasurementSetup(measurementSetup);
+					} catch (final ApplicationException e1) {
+						AbstractMainFrame.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
 					}
 				}
+
+				TestParametersPanel.this.currentEvent = null;
 			}
 		});
 		final JScrollPane scroll = new JScrollPane(this.testSetups);
@@ -584,7 +587,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 	}
 
 	public void propertyChange(final PropertyChangeEvent evt) {
-		this.propertyChangeEvent = evt;
+		this.currentEvent = evt;
 		final String propertyName = evt.getPropertyName();
 		final Object newValue = evt.getNewValue();
 		if (propertyName == SchedulerModel.COMMAND_CHANGE_ME_TYPE) {
@@ -629,7 +632,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			}
 		}
 
-		this.propertyChangeEvent = null;
+		this.currentEvent = null;
 	}
 
 	public JComponent getComponent() {
