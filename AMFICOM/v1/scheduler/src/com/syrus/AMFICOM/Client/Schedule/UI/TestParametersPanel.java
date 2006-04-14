@@ -124,7 +124,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 		final List<Describable> analysisTypeList =
 			new ArrayList<Describable>(Arrays.asList(analysisTypes));
 
-		this.analysisComboBox.removeAll(); // XXX: это лучше делать при loggedOut
+		this.analysisComboBox.removeAllItems(); // XXX: это лучше делать при loggedOut
 		this.analysisComboBox.addElements(analysisTypeList);
 		//FIXME:ContextChangeEvent.LOGGED_IN_EVENT;
 	}
@@ -639,6 +639,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 		return this.patternPanel;
 	}
 
+	/* что это за метод и кто его должен вызывать - не понятно */
 	public void unregisterDispatcher() {
 		this.dispatcher.removePropertyChangeListener(SchedulerModel.COMMAND_CHANGE_ME_TYPE, this);
 	}
@@ -654,7 +655,9 @@ final class TestParametersPanel implements PropertyChangeListener {
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_ANALYSIS_TYPE_OR_NULL, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP, this);
 
-		this.dispatcher.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
+		// оказывается, тот диспетчер, что нам дают, не сообщает о логине-логауте
+//		this.dispatcher.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
+		AbstractMainFrame.getGlobalDispatcher().addPropertyChangeListener(ContextChangeEvent.TYPE, this);
 	}
 
 	/**
