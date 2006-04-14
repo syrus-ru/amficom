@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryParameterTypeCodename.java,v 1.1.2.6 2006/04/11 09:29:05 arseniy Exp $
+ * $Id: ReflectometryParameterTypeCodename.java,v 1.1.2.7 2006/04/14 14:46:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.reflectometry;
 import com.syrus.util.Codename;
 
 /**
- * @version $Revision: 1.1.2.6 $, $Date: 2006/04/11 09:29:05 $
+ * @version $Revision: 1.1.2.7 $, $Date: 2006/04/14 14:46:11 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module reflectometry
@@ -62,7 +62,7 @@ public enum ReflectometryParameterTypeCodename implements Codename {
 
 	@Override
 	public String toString() {
-		return this.stringValue();
+		return this.name() + "(" + Integer.toString(this.ordinal()) + ")";
 	}
 
 	/**
