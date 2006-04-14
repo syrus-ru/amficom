@@ -1,5 +1,5 @@
 /*-
- * $Id: TestAddMeasurementSetup.java,v 1.1.2.7 2006/04/12 13:27:54 arseniy Exp $
+ * $Id: TestAddMeasurementSetup.java,v 1.1.2.8 2006/04/14 11:37:35 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.1.2.7 $, $Date: 2006/04/12 13:27:54 $
+ * @version $Revision: 1.1.2.8 $, $Date: 2006/04/14 11:37:35 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -130,20 +130,9 @@ public final class TestAddMeasurementSetup extends TestCase {
 					final int averageCount = 100;
 					if (parameterTypeCodename.equals(AVERAGE_COUNT.stringValue())) {
 						stringBuffer.append(", existing values: ");
-						Identifier scansActionParameterId = null;
-						for (final ActionParameter actionParameter : actionParameters) {
-							final String actionParameterStringValue = actionParameter.stringValue();
-							stringBuffer.append(actionParameterStringValue + ", id: " + actionParameter.getId().getIdentifierCode());
-							if (actionParameterStringValue.equals(Integer.toString(averageCount))) {
-								scansActionParameterId = actionParameter.getId();
-							}
-						}
-						if (scansActionParameterId == null) {
-							scansActionParameterId = ActionParameter.createInstance(creatorId,
-									ByteArray.toByteArray(averageCount),
-									actionParameterTypeBinding.getId()).getId();
-						}
-						actionParameterIds.add(scansActionParameterId);
+						actionParameterIds.add(ActionParameter.valueOf(creatorId,
+								ByteArray.toByteArray(averageCount),
+								actionParameterTypeBinding).getId());
 					}
 					break;
 				default:
