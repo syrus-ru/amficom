@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryMeasurementParametersImpl.java,v 1.4.2.7 2006/04/12 07:10:14 saa Exp $
+ * $Id: ReflectometryMeasurementParametersImpl.java,v 1.4.2.8 2006/04/14 10:52:54 saa Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
  * </p>
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.4.2.7 $, $Date: 2006/04/12 07:10:14 $
+ * @version $Revision: 1.4.2.8 $, $Date: 2006/04/14 10:52:54 $
  * @module
  */
 public final class ReflectometryMeasurementParametersImpl
@@ -36,8 +36,6 @@ implements ReflectometryMeasurementParameters {
 		METERS,
 		NANOSECONDS
 	}
-
-	private static final double SPEED_OF_LIGHT_M_NS = 0.3; // c = 0.3 m/ns
 
 	private ActionTemplate<Measurement> measurementTemplate;
 
@@ -181,8 +179,9 @@ implements ReflectometryMeasurementParameters {
 		case METERS:
 			return this.pulseWidthInternal;
 		case NANOSECONDS:
-			return (int)(SPEED_OF_LIGHT_M_NS / 2.0 / getRefractionIndex()
-				* this.pulseWidthInternal); 
+			return (int) Math.round(ReflectometryUtil.pulseWidthPKMetersToNanoseconds(
+					this.pulseWidthInternal,
+					getRefractionIndex()));
 		}
 		throw new InternalError("Unexpected pulseWidth units");
 	}
