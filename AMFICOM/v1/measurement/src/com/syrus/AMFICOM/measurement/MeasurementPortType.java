@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.21.2.10 2006/04/14 14:45:10 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.21.2.11 2006/04/17 08:22:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.21.2.10 $, $Date: 2006/04/14 14:45:10 $
+ * @version $Revision: 1.21.2.11 $, $Date: 2006/04/17 08:22:26 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -55,7 +55,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 public final class MeasurementPortType extends StorableObjectType
 		implements IdlTransferableObjectExt<IdlMeasurementPortType>, Namable, Characterizable {
-	private static final long serialVersionUID = -8270331385706277298L;
+	private static final long serialVersionUID = 4361364717691901973L;
 
 	private String name;
 
@@ -208,6 +208,7 @@ public final class MeasurementPortType extends StorableObjectType
 		return measurementPortTypes.iterator().next();
 	}
 
+
 	/*-********************************************************************
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
@@ -219,19 +220,19 @@ public final class MeasurementPortType extends StorableObjectType
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)
-				? this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE)
-				: this.characteristicContainerWrappee;
+				? this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this,
+						CHARACTERISTIC_CODE)
+					: this.characteristicContainerWrappee;
 	}
 
 	/**
 	 * @param characteristic
 	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic,
+	 *      boolean)
 	 */
-	public void addCharacteristic(final Characteristic characteristic,
-			final boolean usePool)
-	throws ApplicationException {
+	public void addCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		characteristic.setParentCharacterizable(this, usePool);
 	}
@@ -240,12 +241,10 @@ public final class MeasurementPortType extends StorableObjectType
 	 * @param characteristic
 	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic,
+	 *      boolean)
 	 */
-	public void removeCharacteristic(
-			final Characteristic characteristic,
-			final boolean usePool)
-	throws ApplicationException {
+	public void removeCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		characteristic.setParentCharacterizable(this, usePool);
@@ -256,8 +255,7 @@ public final class MeasurementPortType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
 	 */
-	public Set<Characteristic> getCharacteristics(boolean usePool)
-	throws ApplicationException {
+	public Set<Characteristic> getCharacteristics(boolean usePool) throws ApplicationException {
 		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
 	}
 
@@ -265,8 +263,7 @@ public final class MeasurementPortType extends StorableObjectType
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	Set<Characteristic> getCharacteristics0(final boolean usePool)
-	throws ApplicationException {
+	Set<Characteristic> getCharacteristics0(final boolean usePool) throws ApplicationException {
 		return this.getCharacteristicContainerWrappee().getContainees(usePool);
 	}
 
@@ -276,9 +273,7 @@ public final class MeasurementPortType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
 	 */
-	public void setCharacteristics(final Set<Characteristic> characteristics,
-			final boolean usePool)
-	throws ApplicationException {
+	public void setCharacteristics(final Set<Characteristic> characteristics, final boolean usePool) throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;
 
 		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);
