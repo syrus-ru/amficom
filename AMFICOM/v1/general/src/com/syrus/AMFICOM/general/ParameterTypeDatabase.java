@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterTypeDatabase.java,v 1.43.2.1 2006/03/27 10:10:06 bass Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.43.2.2 2006/04/17 14:24:39 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43.2.1 $, $Date: 2006/03/27 10:10:06 $
+ * @version $Revision: 1.43.2.2 $, $Date: 2006/04/17 14:24:39 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -99,8 +99,8 @@ public final class ParameterTypeDatabase {
 		} catch (SQLException sqle) {
 			final String mesg = "Cannot insert parameter type; code: " + code
 					+ ", codename: '" + codename
-					+ ", data type: '" + dataType.getCodename()
-					+ ", measurement unit: '" + measurementUnit.getCodename()
+					+ ", data type: '" + (dataType == null ? "null" : dataType.getCodename())
+					+ ", measurement unit: '" + (measurementUnit == null ? "null" : measurementUnit.getCodename())
 					+ "', description: '" + description
 					+ "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);

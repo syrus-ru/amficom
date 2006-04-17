@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.47 2005/12/14 13:10:12 arseniy Exp $
+ * $Id: StorableObjectXML.java,v 1.47.4.1 2006/04/17 14:24:39 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.Log;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.47 $, $Date: 2005/12/14 13:10:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.47.4.1 $, $Date: 2006/04/17 14:24:39 $
+ * @author $Author: bass $
  * @module general
  */
 public class StorableObjectXML {
@@ -130,8 +130,8 @@ public class StorableObjectXML {
 		final int lastPoint = className.lastIndexOf('.');
 		final String dbClassName = className.substring(0, lastPoint + 1) + "XML" + className.substring(lastPoint + 1);
 		try {
-			final Class clazz = Class.forName(dbClassName);
-			final Constructor constructor = clazz.getDeclaredConstructor(new Class[] { condition.getClass(),
+			final Class<?> clazz = Class.forName(dbClassName);
+			final Constructor<?> constructor = clazz.getDeclaredConstructor(new Class[] { condition.getClass(),
 					StorableObjectXMLDriver.class });
 			constructor.setAccessible(true);
 			xmlStorableObjectCondition = (XMLStorableObjectCondition) constructor.newInstance(new Object[] { condition, this.driver });

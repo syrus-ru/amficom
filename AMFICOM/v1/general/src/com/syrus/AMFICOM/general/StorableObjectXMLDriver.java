@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.36 2005/10/31 12:30:18 bass Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.36.4.1 2006/04/17 14:24:39 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  *
- * @version $Revision: 1.36 $, $Date: 2005/10/31 12:30:18 $
+ * @version $Revision: 1.36.4.1 $, $Date: 2006/04/17 14:24:39 $
  * @author $Author: bass $
  * @module general
  */
@@ -184,8 +184,8 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 				this.addObject(element, key + "item", element2);
 			}
 		} else if (object instanceof Map) {
-			final Map map = (Map) object;
-			for (final Iterator it = map.keySet().iterator(); it.hasNext();) {
+			final Map<?, ?> map = (Map) object;
+			for (final Iterator<?> it = map.keySet().iterator(); it.hasNext();) {
 				final String key2 = (String) it.next();
 				this.addObject(element, key2, map.get(key2));
 			}

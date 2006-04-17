@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.213.2.4 2006/04/17 13:57:20 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.213.2.5 2006/04/17 14:24:39 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.213.2.4 $, $Date: 2006/04/17 13:57:20 $
+ * @version $Revision: 1.213.2.5 $, $Date: 2006/04/17 14:24:39 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -114,7 +114,7 @@ public final class StorableObjectPool {
 	private static final class DependencySortedContainer {
 		private SortedMap<Integer, Map<Short, Set<StorableObject>>> objectsMap;
 
-		private DependencySortedContainer() {
+		DependencySortedContainer() {
 			this.objectsMap = new TreeMap<Integer, Map<Short, Set<StorableObject>>>();
 		}
 
@@ -273,7 +273,7 @@ public final class StorableObjectPool {
 	 */
 	public static void addObjectPool(final short entityCode, final int objectPoolCapacity, final long objectTimeToLive) {
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE + ": " + entityCode;
-		final LRUMap objectPool = new LRUMap(objectPoolCapacity, objectTimeToLive);
+		final LRUMap<Identifier, StorableObject> objectPool = new LRUMap<Identifier, StorableObject>(objectPoolCapacity, objectTimeToLive);
 		objectPoolMap.put(entityCode, objectPool);
 		Log.debugMessage("Pool for '" + ObjectEntities.codeToString(entityCode)
 				+ "'/" + entityCode + " of capacity " + objectPoolCapacity + " added", Log.DEBUGLEVEL08);

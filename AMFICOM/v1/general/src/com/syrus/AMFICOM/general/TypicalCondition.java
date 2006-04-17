@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalCondition.java,v 1.64.2.1 2006/03/27 11:21:42 bass Exp $
+ * $Id: TypicalCondition.java,v 1.64.2.2 2006/04/17 14:24:39 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.EnumUtil;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.64.2.1 $, $Date: 2006/03/27 11:21:42 $
+ * @version $Revision: 1.64.2.2 $, $Date: 2006/04/17 14:24:39 $
  * @author $Author: bass $
  * @module general
  */
@@ -80,7 +80,7 @@ public class TypicalCondition implements StorableObjectCondition {
 
 	protected String key;
 
-	public TypicalCondition(final Enum e,
+	public TypicalCondition(final Enum<?> e,
 			final OperationSort operation,
 			final short entityCode,
 			final String key) {
@@ -100,7 +100,7 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * @param key
 	 *        key for controller (wrapper)
 	 */
-	public TypicalCondition(final Enum e,
+	public TypicalCondition(final Enum<?> e,
 			final OperationSort operation,
 			final Short entityCode,
 			final String key) {
@@ -403,7 +403,7 @@ public class TypicalCondition implements StorableObjectCondition {
 	}
 
 	@SuppressWarnings(value = {"hiding"})
-	private void fromEnum(final Enum e,
+	private void fromEnum(final Enum<?> e,
 			final OperationSort operation,
 			final Short entityCode,
 			final String key) {
@@ -801,7 +801,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						result = (this.value != object);
 						break;
 					case _OPERATION_IN:
-						final EnumSet enumSet = (EnumSet) object;
+						final EnumSet<?> enumSet = (EnumSet) object;
 						result = enumSet.contains(this.value);
 						break;
 					default:

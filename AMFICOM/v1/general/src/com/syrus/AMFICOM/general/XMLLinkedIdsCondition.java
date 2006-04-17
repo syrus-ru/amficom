@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLLinkedIdsCondition.java,v 1.6 2005/12/09 11:36:13 arseniy Exp $
+* $Id: XMLLinkedIdsCondition.java,v 1.6.4.1 2006/04/17 14:24:39 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/12/09 11:36:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6.4.1 $, $Date: 2006/04/17 14:24:39 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module general
  */
@@ -42,7 +42,7 @@ extends XMLStorableObjectCondition<LinkedIdsCondition> {
 				condition.getEntityCode().shortValue()).toLowerCase().replaceAll("group$", "")
 			+ ".XMLLinkedIdsConditionImpl";
 		try {
-			Constructor ctor;
+			Constructor<?> ctor;
 			ctor = Class.forName(className).getDeclaredConstructor(
 				new Class[] { LinkedIdsCondition.class, 
 						StorableObjectXMLDriver.class});

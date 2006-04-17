@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.148.2.6 2006/04/17 13:57:20 bass Exp $
+ * $Id: StorableObject.java,v 1.148.2.7 2006/04/17 14:24:39 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.LRUMap.Retainable;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.148.2.6 $, $Date: 2006/04/17 13:57:20 $
+ * @version $Revision: 1.148.2.7 $, $Date: 2006/04/17 14:24:39 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -644,9 +644,11 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 		assert !storableObjects.isEmpty() : NON_EMPTY_EXPECTED;
 		assert hasSingleTypeEntities(storableObjects) :  OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
+		@SuppressWarnings("unchecked")
 		final Wrapper storableObjectWrapper = storableObjects.iterator().next().getWrapper();
 		final Map<Identifier, V> valuesMap = new HashMap<Identifier, V>();
 		for (final T storableObject : storableObjects) {
+			@SuppressWarnings("unchecked")
 			final V value = (V) storableObjectWrapper.getValue(storableObject, key);
 			valuesMap.put(storableObject.getId(), value);
 		}
@@ -702,7 +704,7 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.148.2.6 $, $Date: 2006/04/17 13:57:20 $
+	 * @version $Revision: 1.148.2.7 $, $Date: 2006/04/17 14:24:39 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -811,7 +813,7 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.148.2.6 $, $Date: 2006/04/17 13:57:20 $
+	 * @version $Revision: 1.148.2.7 $, $Date: 2006/04/17 14:24:39 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
