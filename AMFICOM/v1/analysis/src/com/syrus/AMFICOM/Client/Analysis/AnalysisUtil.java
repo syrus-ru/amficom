@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisUtil.java,v 1.115.2.4 2006/04/14 11:36:04 arseniy Exp $
+ * $Id: AnalysisUtil.java,v 1.115.2.5 2006/04/17 14:22:50 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.115.2.4 $, $Date: 2006/04/14 11:36:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.115.2.5 $, $Date: 2006/04/17 14:22:50 $
+ * @author $Author: saa $
  * @author Stanislav Kholshin
  * @module test
  */
@@ -386,20 +386,20 @@ public class AnalysisUtil {
 
 	/**
 	 * <p>
-	 * Этот метод использует
+	 * щРНР ЛЕРНД ХЯОНКЭГСЕР
 	 * {@link ActionParameter#valueOf(Identifier, byte[], ActionParameterTypeBinding)},
-	 * для того чтобы попытаться найти существующий параметр, у которого
-	 * величина равна заданной. Если поиск не увенчался успехом, то будет создан
-	 * новый параметр с заданной величиной. Следовательно, в этом методе
-	 * происходит побайтное сравнение массивов. Возможно, для больших массивов,
-	 * такое поведение окажется нежелательным, и тогда придётся заменить
+	 * ДКЪ РНЦН ВРНАШ ОНОШРЮРЭЯЪ МЮИРХ ЯСЫЕЯРБСЧЫХИ ОЮПЮЛЕРП, С ЙНРНПНЦН
+	 * БЕКХВХМЮ ПЮБМЮ ГЮДЮММНИ. еЯКХ ОНХЯЙ МЕ СБЕМВЮКЯЪ СЯОЕУНЛ, РН АСДЕР ЯНГДЮМ
+	 * МНБШИ ОЮПЮЛЕРП Я ГЮДЮММНИ БЕКХВХМНИ. яКЕДНБЮРЕКЭМН, Б ЩРНЛ ЛЕРНДЕ
+	 * ОПНХЯУНДХР ОНАЮИРМНЕ ЯПЮБМЕМХЕ ЛЮЯЯХБНБ. бНГЛНФМН, ДКЪ АНКЭЬХУ ЛЮЯЯХБНБ,
+	 * РЮЙНЕ ОНБЕДЕМХЕ НЙЮФЕРЯЪ МЕФЕКЮРЕКЭМШЛ, Х РНЦДЮ ОПХД╦РЯЪ ГЮЛЕМХРЭ
 	 * {@link ActionParameter#valueOf(Identifier, byte[], ActionParameterTypeBinding)}
-	 * на {@link ActionParameter#createInstance(Identifier, byte[], Identifier)}.
+	 * МЮ {@link ActionParameter#createInstance(Identifier, byte[], Identifier)}.
 	 * 
 	 * @param userId
 	 * @param portType
 	 * @param analysisParams
-	 * @return Параметр анализа
+	 * @return оЮПЮЛЕРП ЮМЮКХГЮ
 	 * @throws ApplicationException
 	 */
 	private static ActionParameter createParameterForAnalysisParameters(Identifier userId,
@@ -414,20 +414,20 @@ public class AnalysisUtil {
 
 	/**
 	 * <p>
-	 * Этот метод использует
+	 * щРНР ЛЕРНД ХЯОНКЭГСЕР
 	 * {@link ActionParameter#valueOf(Identifier, byte[], ActionParameterTypeBinding)},
-	 * для того чтобы попытаться найти существующий параметр, у которого
-	 * величина равна заданной. Если поиск не увенчался успехом, то будет создан
-	 * новый параметр с заданной величиной. Следовательно, в этом методе
-	 * происходит побайтное сравнение массивов. Возможно, для больших массивов,
-	 * такое поведение окажется нежелательным, и тогда придётся заменить
+	 * ДКЪ РНЦН ВРНАШ ОНОШРЮРЭЯЪ МЮИРХ ЯСЫЕЯРБСЧЫХИ ОЮПЮЛЕРП, С ЙНРНПНЦН
+	 * БЕКХВХМЮ ПЮБМЮ ГЮДЮММНИ. еЯКХ ОНХЯЙ МЕ СБЕМВЮКЯЪ СЯОЕУНЛ, РН АСДЕР ЯНГДЮМ
+	 * МНБШИ ОЮПЮЛЕРП Я ГЮДЮММНИ БЕКХВХМНИ. яКЕДНБЮРЕКЭМН, Б ЩРНЛ ЛЕРНДЕ
+	 * ОПНХЯУНДХР ОНАЮИРМНЕ ЯПЮБМЕМХЕ ЛЮЯЯХБНБ. бНГЛНФМН, ДКЪ АНКЭЬХУ ЛЮЯЯХБНБ,
+	 * РЮЙНЕ ОНБЕДЕМХЕ НЙЮФЕРЯЪ МЕФЕКЮРЕКЭМШЛ, Х РНЦДЮ ОПХД╦РЯЪ ГЮЛЕМХРЭ
 	 * {@link ActionParameter#valueOf(Identifier, byte[], ActionParameterTypeBinding)}
-	 * на {@link ActionParameter#createInstance(Identifier, byte[], Identifier)}.
+	 * МЮ {@link ActionParameter#createInstance(Identifier, byte[], Identifier)}.
 	 * 
 	 * @param userId
 	 * @param portType
 	 * @param etalon
-	 * @return Параметр для эталона
+	 * @return оЮПЮЛЕРП ДКЪ ЩРЮКНМЮ
 	 * @throws ApplicationException
 	 */
 	private static ActionParameter createParameterForEtalon(Identifier userId, MeasurementPortType portType, Etalon etalon)
@@ -441,20 +441,20 @@ public class AnalysisUtil {
 
 	/**
 	 * <p>
-	 * Этот метод использует
+	 * щРНР ЛЕРНД ХЯОНКЭГСЕР
 	 * {@link ActionParameter#valueOf(Identifier, byte[], ActionParameterTypeBinding)},
-	 * для того чтобы попытаться найти существующий параметр, у которого
-	 * величина равна заданной. Если поиск не увенчался успехом, то будет создан
-	 * новый параметр с заданной величиной. Следовательно, в этом методе
-	 * происходит побайтное сравнение массивов. Возможно, для больших массивов,
-	 * такое поведение окажется нежелательным, и тогда придётся заменить
+	 * ДКЪ РНЦН ВРНАШ ОНОШРЮРЭЯЪ МЮИРХ ЯСЫЕЯРБСЧЫХИ ОЮПЮЛЕРП, С ЙНРНПНЦН
+	 * БЕКХВХМЮ ПЮБМЮ ГЮДЮММНИ. еЯКХ ОНХЯЙ МЕ СБЕМВЮКЯЪ СЯОЕУНЛ, РН АСДЕР ЯНГДЮМ
+	 * МНБШИ ОЮПЮЛЕРП Я ГЮДЮММНИ БЕКХВХМНИ. яКЕДНБЮРЕКЭМН, Б ЩРНЛ ЛЕРНДЕ
+	 * ОПНХЯУНДХР ОНАЮИРМНЕ ЯПЮБМЕМХЕ ЛЮЯЯХБНБ. бНГЛНФМН, ДКЪ АНКЭЬХУ ЛЮЯЯХБНБ,
+	 * РЮЙНЕ ОНБЕДЕМХЕ НЙЮФЕРЯЪ МЕФЕКЮРЕКЭМШЛ, Х РНЦДЮ ОПХД╦РЯЪ ГЮЛЕМХРЭ
 	 * {@link ActionParameter#valueOf(Identifier, byte[], ActionParameterTypeBinding)}
-	 * на {@link ActionParameter#createInstance(Identifier, byte[], Identifier)}.
+	 * МЮ {@link ActionParameter#createInstance(Identifier, byte[], Identifier)}.
 	 * 
 	 * @param userId
 	 * @param portType
 	 * @param bellcore
-	 * @return Параметр для эталонной рефлектограммы
+	 * @return оЮПЮЛЕРП ДКЪ ЩРЮКНММНИ ПЕТКЕЙРНЦПЮЛЛШ
 	 * @throws ApplicationException
 	 */
 	private static ActionParameter createParameterForEtalonTrace(Identifier userId,
