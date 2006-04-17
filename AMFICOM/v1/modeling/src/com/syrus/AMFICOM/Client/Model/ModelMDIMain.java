@@ -2,11 +2,11 @@
 // Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.Client.Model;
 
-import static com.syrus.AMFICOM.resource.SchemeResourceKeys.FRAME_EDITOR_MAIN;
 import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_ANALYSIS_MAIN;
 import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_TRACE_SELECTOR;
 import static com.syrus.AMFICOM.resource.ModelResourceKeys.FRAME_TRANS_DATA;
 import static com.syrus.AMFICOM.resource.ModelResourceKeys.FRAME_TREE;
+import static com.syrus.AMFICOM.resource.SchemeResourceKeys.FRAME_EDITOR_MAIN;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -28,8 +28,8 @@ import javax.swing.WindowConstants;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MapMarkersLayeredPanel;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MapMarkersPanel;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MultipleTracesFrame;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ReportTable;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ScalableFrame;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleGraphPanel;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleResizableFrame;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.TraceSelectorFrame;
@@ -55,6 +55,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.Model.ModelApplicationModel;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
@@ -229,13 +230,13 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 				Log.debugMessage(".createValue | ANALYSIS_FRAME", Level.FINEST);
 				ModelMDIMain.this.layeredPanel = new MapMarkersLayeredPanel(ModelMDIMain.this.dispatcher);
 				
-				ScalableFrame analysisFrame = new ScalableFrame(ModelMDIMain.this.layeredPanel) {
+				MultipleTracesFrame analysisFrame = new MultipleTracesFrame(ModelMDIMain.this.dispatcher, ModelMDIMain.this.layeredPanel) {
 					@Override
 					public String getReportTitle() {
 						return FRAME_ANALYSIS_MAIN;
 					}
 				};
-				analysisFrame.setTitle(LangModelAnalyse.getString("analysisTitle"));
+				analysisFrame.setTitle(I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN));
 				desktopPane.add(analysisFrame);
 				ModelMDIMain.this.graphs.add(analysisFrame);
 				return analysisFrame;
@@ -443,7 +444,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 	public void bsHashAdded(String key) {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		
-		ScalableFrame analysisFrame = (ScalableFrame)this.frames.get(FRAME_ANALYSIS_MAIN);
+		MultipleTracesFrame analysisFrame = (MultipleTracesFrame)this.frames.get(FRAME_ANALYSIS_MAIN);
 		BellcoreStructure bs = Heap.getAnyPFTraceByKey(key).getBS();
 		
 		double delta_x = bs.getResolution();
@@ -482,7 +483,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 	public void bsHashRemoved(String key) {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		
-		ScalableFrame analysisFrame = (ScalableFrame)this.frames.get(FRAME_ANALYSIS_MAIN);
+		MultipleTracesFrame analysisFrame = (MultipleTracesFrame)this.frames.get(FRAME_ANALYSIS_MAIN);
 		analysisFrame.removeGraph(key);
 		analysisFrame.updScales();
 		
