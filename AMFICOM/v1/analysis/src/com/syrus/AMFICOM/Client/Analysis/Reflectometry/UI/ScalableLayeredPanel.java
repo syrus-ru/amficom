@@ -120,17 +120,6 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 	}
 
 	@Override
-	public void removeGraphPanel (SimpleGraphPanel panel)
-	{
-		jLayeredPane.remove(panel);
-	}
-
-	public void removeAllGraphPanels()
-	{
-		jLayeredPane.removeAll();
-	}
-
-	@Override
 	public void updScale2fit()
 	{
 		horizontalBar.setMaximum(hwidth);
