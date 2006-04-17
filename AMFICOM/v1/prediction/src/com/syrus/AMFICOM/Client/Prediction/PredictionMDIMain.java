@@ -26,11 +26,11 @@ import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.DetailedEventsFrame;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.EventsFrame;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.HistogrammFrame;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MarkersInfoFrame;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MultipleTracesFrame;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.NoiseHistogrammPanel;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.OverallStatsFrame;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.PrimaryParametersFrame;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ReportTable;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ScalableFrame;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleResizableFrame;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.TraceSelectorFrame;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
@@ -429,7 +429,7 @@ public class PredictionMDIMain extends AbstractMainFrame implements BsHashChange
 	public void bsHashRemoved(String key) {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		
-		ScalableFrame analysisFrame = (ScalableFrame)this.frames.get(FRAME_ANALYSIS_MAIN);
+		MultipleTracesFrame analysisFrame = (MultipleTracesFrame)this.frames.get(FRAME_ANALYSIS_MAIN);
 		analysisFrame.removeGraph(key);
 		analysisFrame.updScales();
 		
