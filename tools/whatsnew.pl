@@ -74,7 +74,8 @@ if ($ffn =~ m#(.+)/(.+)#) {$n = $2; $d = $1;}
 
 # print "'$d' / '$n'\n";
 
-my $rev ='';
+my $rev = '';
+my $branch = ''; # is we have sticky tag/branch, specify comparison to it
 if (!open FTMP, "< $d/CVS/Entries")
 {
 	print STDERR "\nWarning: Failed to open $d/CVS/Entries: $!\n";
@@ -82,16 +83,19 @@ if (!open FTMP, "< $d/CVS/Entries")
 }
 while(<FTMP>)
 {
-    next unless m#^/(.+)?/([\d.]+)/#;
+    #/AbstractCloneableStorableObject.java/1.13/Mon Mar 13 12:54:02 2006//TPARS_REFACT
+    next unless m#^/(.+)?/([\d.]+)/.*/.*/(.*)$#;
     next unless $1 eq $n;
     $rev = $2;
+    my $tags = $3;
+    $branch = $1 if $tags =~ m/^T(.+)$/;
 }
 close FTMP;
 # if rev eq '', it means that the file is new
 # die "Error: no Entries record found for $ffn in $d" if $rev eq '';
-# print "rev = $rev\n";
 
-my $revSpec = $rev eq '' ? '' : "-r$rev\::";
+my $revSpec = $rev eq '' ? '' : "-r$rev\::$branch";
+# print "rev = $rev; revSpec = $revSpec\n";
 
 open FCVSLOG, "cvs log -N $revSpec $ffn |";
 
