@@ -1,5 +1,5 @@
 /*-
- * $Id: SetupConstraintCharateristic.java,v 1.1.2.1 2006/04/14 14:48:10 arseniy Exp $
+ * $Id: SetupConstraintCharateristic.java,v 1.1.2.2 2006/04/17 09:43:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,11 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.OR;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
-import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
-import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_QP1640A;
-import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_QP1643A;
-import static com.syrus.AMFICOM.reflectometry.ReflectometryCharacteristicTypeCodename.HIGH_RES_MAX_PULSE_WIDTH;
-import static com.syrus.AMFICOM.reflectometry.ReflectometryCharacteristicTypeCodename.LOW_RES_MIN_PULSE_WIDTH;
+import static com.syrus.AMFICOM.reflectometry.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
+import static com.syrus.AMFICOM.reflectometry.MeasurementPortTypeCodename.REFLECTOMETRY_QP1640A;
+import static com.syrus.AMFICOM.reflectometry.MeasurementPortTypeCodename.REFLECTOMETRY_QP1643A;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryCharacteristicTypeCodename.HIGH_RES_MAX_PULSE_WIDTH_NS;
+import static com.syrus.AMFICOM.reflectometry.ReflectometryCharacteristicTypeCodename.LOW_RES_MIN_PULSE_WIDTH_NS;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryCharacteristicTypeCodename.POINTS_MAX_NUMBER;
 
 import java.util.HashSet;
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/04/14 14:48:10 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/04/17 09:43:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -52,11 +52,11 @@ public final class SetupConstraintCharateristic extends TestCase {
 	private static final int POINTS_MAX_NUMBER_QP1643A = 262144;
 	private static final int POINTS_MAX_NUMBER_PK7600 = 131072;
 
-	private static final int LOW_RES_MIN_PULSE_WIDTH_QP1640A = 10000;
-	private static final int LOW_RES_MIN_PULSE_WIDTH_QP1643A = 10000;
+	private static final int LOW_RES_MIN_PULSE_WIDTH_NS_QP1640A = 10000;
+	private static final int LOW_RES_MIN_PULSE_WIDTH_NS_QP1643A = 10000;
 
-	private static final int HIGH_RES_MAX_PULSE_WIDTH_QP1640A = 5000;
-	private static final int HIGH_RES_MAX_PULSE_WIDTH_QP1643A = 5000;
+	private static final int HIGH_RES_MAX_PULSE_WIDTH_NS_QP1640A = 5000;
+	private static final int HIGH_RES_MAX_PULSE_WIDTH_NS_QP1643A = 5000;
 
 	public SetupConstraintCharateristic(final String name) {
 		super(name);
@@ -84,7 +84,7 @@ public final class SetupConstraintCharateristic extends TestCase {
 				OPTICAL);
 
 		/* Create LOW_RES_MIN_PULSE_WIDTH CharacteristicType */
-		characteristicTypeCodename = LOW_RES_MIN_PULSE_WIDTH.stringValue();
+		characteristicTypeCodename = LOW_RES_MIN_PULSE_WIDTH_NS.stringValue();
 		final CharacteristicType lowResMinPulseWidthCharacteristicType = CharacteristicType.createInstance(creatorId,
 				characteristicTypeCodename,
 				I18N.getString(RESOURCE_KEY_ROOT + characteristicTypeCodename),
@@ -93,7 +93,7 @@ public final class SetupConstraintCharateristic extends TestCase {
 				OPTICAL);
 
 		/* Create HIGH_RES_MAX_PULSE_WIDTH CharacteristicType */
-		characteristicTypeCodename = HIGH_RES_MAX_PULSE_WIDTH.stringValue();
+		characteristicTypeCodename = HIGH_RES_MAX_PULSE_WIDTH_NS.stringValue();
 		final CharacteristicType highResMaxPulseWidthCharacteristicType = CharacteristicType.createInstance(creatorId,
 				characteristicTypeCodename,
 				I18N.getString(RESOURCE_KEY_ROOT + characteristicTypeCodename),
@@ -144,7 +144,7 @@ public final class SetupConstraintCharateristic extends TestCase {
 				lowResMinPulseWidthCharacteristicType,
 				lowResMinPulseWidthCharacteristicType.getName(),
 				lowResMinPulseWidthCharacteristicType.getDescription(),
-				Integer.toString(LOW_RES_MIN_PULSE_WIDTH_QP1640A),
+				Integer.toString(LOW_RES_MIN_PULSE_WIDTH_NS_QP1640A),
 				qp1640AMeasurementPortType,
 				false,
 				false));
@@ -152,7 +152,7 @@ public final class SetupConstraintCharateristic extends TestCase {
 				highResMaxPulseWidthCharacteristicType,
 				highResMaxPulseWidthCharacteristicType.getName(),
 				highResMaxPulseWidthCharacteristicType.getDescription(),
-				Integer.toString(HIGH_RES_MAX_PULSE_WIDTH_QP1640A),
+				Integer.toString(HIGH_RES_MAX_PULSE_WIDTH_NS_QP1640A),
 				qp1640AMeasurementPortType,
 				false,
 				false));
@@ -172,7 +172,7 @@ public final class SetupConstraintCharateristic extends TestCase {
 				lowResMinPulseWidthCharacteristicType,
 				lowResMinPulseWidthCharacteristicType.getName(),
 				lowResMinPulseWidthCharacteristicType.getDescription(),
-				Integer.toString(LOW_RES_MIN_PULSE_WIDTH_QP1643A),
+				Integer.toString(LOW_RES_MIN_PULSE_WIDTH_NS_QP1643A),
 				qp1643AMeasurementPortType,
 				false,
 				false));
@@ -180,7 +180,7 @@ public final class SetupConstraintCharateristic extends TestCase {
 				highResMaxPulseWidthCharacteristicType,
 				highResMaxPulseWidthCharacteristicType.getName(),
 				highResMaxPulseWidthCharacteristicType.getDescription(),
-				Integer.toString(HIGH_RES_MAX_PULSE_WIDTH_QP1643A),
+				Integer.toString(HIGH_RES_MAX_PULSE_WIDTH_NS_QP1643A),
 				qp1643AMeasurementPortType,
 				false,
 				false));
