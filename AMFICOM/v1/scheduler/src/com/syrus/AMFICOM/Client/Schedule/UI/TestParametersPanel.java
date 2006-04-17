@@ -6,6 +6,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
@@ -23,10 +25,13 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -296,6 +301,51 @@ final class TestParametersPanel implements PropertyChangeListener {
 				TestParametersPanel.this.currentEvent = null;
 			}
 		});
+
+		/*
+		 * Контекстное меню удаление шаблона (по RMB)
+		 */
+		this.testSetups.addMouseListener(new MouseAdapter() {
+
+			private JPopupMenu createDeleteSetupPopupMenu(String templateName) {
+				final JPopupMenu popupMenu = new JPopupMenu();
+				final JMenuItem deleteSetup = new JMenuItem(
+						I18N.getString("Scheduler.Text.MeasurementParameter.deleteSetup")
+						+ " " + templateName);
+				popupMenu.add(deleteSetup);
+				deleteSetup.addActionListener(new ActionListener() {
+					public void actionPerformed(final ActionEvent e) {
+						// @todo пока ничего не удаляет, а только выдает окно о том, что удаление не поддерживается
+						JOptionPane.showMessageDialog(TestParametersPanel.this.testSetups,
+								"MeasurementSetup deleting is not available now",
+								"Not implemented",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				});
+				return popupMenu;
+			}
+
+			@Override
+			public void mouseClicked(final MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e)) {
+					final WrapperedList source = (WrapperedList) e.getSource();
+					final Object selectedValue = source.getSelectedValue();
+					if (!(selectedValue instanceof MeasurementSetup)) {
+						// not selected or not measurementSetup
+						return;
+					}
+					if (selectedValue != null) {
+						JPopupMenu deleteSetupPopupMenu =
+							createDeleteSetupPopupMenu(
+									((MeasurementSetup)selectedValue).
+										getDescription());
+						deleteSetupPopupMenu.show(source, e.getX(), e.getY());
+					}
+				}
+			}
+
+			});
+
 		final JScrollPane scroll = new JScrollPane(this.testSetups);
 		scroll.setAutoscrolls(true);
 		gbc.weighty = 1.0;
