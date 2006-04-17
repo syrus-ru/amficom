@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.18.4.1 2006/04/04 09:12:16 arseniy Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.18.4.2 2006/04/17 13:57:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author max
- * @author $Author: arseniy $
- * @version $Revision: 1.18.4.1 $, $Date: 2006/04/04 09:12:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18.4.2 $, $Date: 2006/04/17 13:57:20 $
  * @module general
  */
 final class XmlIdentifierDatabase {
@@ -153,18 +153,18 @@ final class XmlIdentifierDatabase {
 				 * must add hooks to save/delete operations of
 				 * CORBA object loader.
 				 */
-				try {
-					if (true || StorableObjectDatabase.isObjectPresentInDatabase(id)) {
-						LocalXmlIdentifierPool.put(id, resultSet.getString(COLUMN_XML_ID), importType, LocalXmlIdentifierPool.KeyState.UP_TO_DATE);
-					} else {
-						resultSet.deleteRow();
-					}
-				} catch (IllegalObjectEntityException ioee) {
-					Log.errorMessage(ioee);
-					Log.debugMessage("Deleting row from result set due to don't know what to do", Log.DEBUGLEVEL10);
+				if (true || StorableObjectDatabase.isObjectPresentInDatabase(id)) {
+					LocalXmlIdentifierPool.put(id, resultSet.getString(COLUMN_XML_ID), importType, LocalXmlIdentifierPool.KeyState.UP_TO_DATE);
+				} else {
 					resultSet.deleteRow();
 				}
 			}
+		} catch (final IllegalObjectEntityException ioee) {
+			/*
+			 * Never.
+			 */
+			assert false;
+			throw new RetrieveObjectException(ioee);
 		} catch (final SQLException sqle) {
 			final String mesg = "Cannot retrieve ImportUIDItem" + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
