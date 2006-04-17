@@ -6,6 +6,7 @@ import javax.swing.JMenuItem;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
 import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.Model.ModelApplicationModel;
 import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
@@ -134,7 +135,7 @@ public class ModelMenuBar extends AbstractMainMenuBar {
 		menuWindowAdditionalProperties.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES));
 		menuWindowAdditionalProperties.setName(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES);
 		menuWindowAdditionalProperties.addActionListener(super.actionAdapter);
-		menuWindowAnalysis.setText(I18N.getString(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS));
+		menuWindowAnalysis.setText(I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN));
 		menuWindowAnalysis.setName(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS);
 		menuWindowAnalysis.addActionListener(super.actionAdapter);
 		menuWindowCharacteristics.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS));
@@ -155,7 +156,7 @@ public class ModelMenuBar extends AbstractMainMenuBar {
 		menuWindowScheme.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_SCHEME));
 		menuWindowScheme.setName(ModelApplicationModel.MENU_WINDOW_SCHEME);
 		menuWindowScheme.addActionListener(super.actionAdapter);
-		menuWindowTraceSelector.setText(I18N.getString(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR));
+		menuWindowTraceSelector.setText(I18N.getString(AnalysisResourceKeys.FRAME_TRACE_SELECTOR));
 		menuWindowTraceSelector.setName(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR);
 		menuWindowTraceSelector.addActionListener(super.actionAdapter);
 		menuWindowTransData.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_TRANS_DATA));
