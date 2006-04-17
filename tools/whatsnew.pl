@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 
-# Executes cvs -q -n up and prints (via cvs log and CVS/Entries)
+# Executes cvs -q -n up, cvs status,cvs log and prints
 # authors and cvs log messages that are related to 'U' and 'P' records.
 #
 # (F) saa, 2005, 2006
@@ -74,28 +74,19 @@ if ($ffn =~ m#(.+)/(.+)#) {$n = $2; $d = $1;}
 
 # print "'$d' / '$n'\n";
 
-my $rev = '';
-my $branch = ''; # is we have sticky tag/branch, specify comparison to it
-if (!open FTMP, "< $d/CVS/Entries")
-{
-	print STDERR "\nWarning: Failed to open $d/CVS/Entries: $!\n";
-	next;
-}
+my $workingRev = '';
+my $repositRev = '';
+
+open FTMP, "cvs status $ffn |";
 while(<FTMP>)
 {
-    #/AbstractCloneableStorableObject.java/1.13/Mon Mar 13 12:54:02 2006//TPARS_REFACT
-    next unless m#^/(.+)?/([\d.]+)/.*/.*/(.*)$#;
-    next unless $1 eq $n;
-    $rev = $2;
-    my $tags = $3;
-    $branch = $1 if $tags =~ m/^T(.+)$/;
+    $workingRev = $1 if m/^\s*Working revision\:\s*([\d.]+)/;
+    $repositRev = $1 if m/^\s*Repository revision\:\s*([\d.]+)/;
 }
 close FTMP;
-# if rev eq '', it means that the file is new
-# die "Error: no Entries record found for $ffn in $d" if $rev eq '';
 
-my $revSpec = $rev eq '' ? '' : "-r$rev\::$branch";
-# print "rev = $rev; revSpec = $revSpec\n";
+my $revSpec = $workingRev eq '' ? '' : "-r$workingRev\::$repositRev";
+# print "revSpec = $revSpec\n";
 
 open FCVSLOG, "cvs log -N $revSpec $ffn |";
 
