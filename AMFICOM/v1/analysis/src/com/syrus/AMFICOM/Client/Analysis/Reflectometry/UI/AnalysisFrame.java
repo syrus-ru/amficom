@@ -20,18 +20,13 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.util.Log;
 
-public class AnalysisFrame extends ScalableFrame
-implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
-{
-	protected Dispatcher dispatcher;
-	public HashMap<String,SimpleGraphPanel> traces =
-			new HashMap<String,SimpleGraphPanel>();
+public class AnalysisFrame extends MultipleTracesFrame
+implements BsHashChangeListener, EtalonMTMListener {
 
-	protected AnalysisFrame(Dispatcher dispatcher, AnalysisLayeredPanel panel)
-	{
-		super (panel);
+	protected AnalysisFrame(Dispatcher dispatcher, AnalysisLayeredPanel panel) {
+		super (dispatcher, panel);
 
-		init_module(dispatcher);
+		init_module();
 		try
 		{
 			jbInit();
@@ -65,10 +60,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		return I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN);
 	}
 
-	private void init_module(Dispatcher dispatcher1)
-	{
-		this.dispatcher = dispatcher1;
-		this.dispatcher.addPropertyChangeListener(RefUpdateEvent.typ, this);
+	private void init_module() {
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
 	}
@@ -208,19 +200,5 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 	public void etalonMTMRemoved()
 	{
 		removeEtalon();
-	}
-	
-	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals(RefUpdateEvent.typ)) {
-			RefUpdateEvent ev = (RefUpdateEvent)evt;
-			if (ev.traceChanged()) {
-				TraceResource tr = (TraceResource)evt.getNewValue();
-				SimpleGraphPanel p = traces.get(tr.getId());
-				if (p != null) {
-					p.setShowAll(tr.isShown());
-					panel.repaint();
-				}
-			}
-		}
 	}
 }

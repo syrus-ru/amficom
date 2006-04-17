@@ -1,8 +1,5 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
@@ -17,13 +14,10 @@ import com.syrus.AMFICOM.client.resource.I18N;
 public class HistogrammFrame
 extends ScalableFrame
 implements BsHashChangeListener, AnalysisParametersListener {
-	Dispatcher dispatcher;
-	private Map<String, HistogrammPanel> currentPanels =
-		new HashMap<String, HistogrammPanel>();
 	public HistogrammFrame(Dispatcher dispatcher) {
 		super (new HistogrammLayeredPanel(dispatcher));
 
-		init_module(dispatcher);
+		init_module();
 		try {
 			jbInit();
 		} catch(Exception e) {
@@ -35,13 +29,7 @@ implements BsHashChangeListener, AnalysisParametersListener {
 		setTitle(I18N.getString(AnalysisResourceKeys.FRAME_HISTOGRAMM));
 	}
 
-	@Deprecated // seems unused
-	public Dispatcher getInternalDispatcher() {
-		return dispatcher;
-	}
-
-	void init_module(Dispatcher dispatcher) {
-		this.dispatcher = dispatcher;
+	private void init_module() {
 		Heap.addBsHashListener(this);
 		Heap.addAnalysisParametersListener(this);
 	}
@@ -49,20 +37,11 @@ implements BsHashChangeListener, AnalysisParametersListener {
 	/**
 	 * If id is present, removes panel with id id.
 	 * Then, if hp is not null, adds panel hp.
-	 * @param id key
 	 * @param hp new HistogramPanel or null
 	 */
-	private void setHistogramPanel(String id, HistogrammPanel hp) {
-		final HistogrammPanel old = this.currentPanels.get(id);
-		if (old != null) {
-			((ScalableLayeredPanel)this.panel).removeGraphPanel(old);
-			this.currentPanels.remove(id);
-		}
-
-		if (hp != null) {
-			this.currentPanels.put(id, hp);
-			((ScalableLayeredPanel)this.panel).addGraphPanel(hp);
-		}
+	private void setHistogramPanel(HistogrammPanel hp) {
+		this.panel.removeAllGraphPanels();
+		((ScalableLayeredPanel)this.panel).addGraphPanel(hp);
 	}
 
 	public void addTrace (String id) {
@@ -77,17 +56,13 @@ implements BsHashChangeListener, AnalysisParametersListener {
 			double deltaX = pf.getResolution();
 			double[] y = pf.getFilteredTraceClone();
 
-			p = new HistogrammPanel(panel, y, deltaX);
+			p = new HistogrammPanel(super.panel, y, deltaX);
 			p.setColorModel(id);
-			setHistogramPanel(id, p);
-			panel.updScale2fit();
+			setHistogramPanel(p);
+			super.panel.updScale2fit();
 
 			setVisible(true);
 		}
-	}
-
-	private void removeTrace(String id) {
-		setHistogramPanel(id, null);
 	}
 
 	public void bsHashAdded(String key) {
@@ -96,19 +71,16 @@ implements BsHashChangeListener, AnalysisParametersListener {
 	}
 
 	public void bsHashRemoved(String key) {
-		removeTrace(key);
-		// Need not update visibility in this case,
-		// only bsHashRemovedAll() requires we hide window;
-		// This is a contract of Heap.
+		// nothing - as we remove only main trace - with bsHashRemovedAll() event 
 	}
 
 	public void bsHashRemovedAll() {
-		((ScalableLayeredPanel)panel).removeAllGraphPanels();
+		super.panel.removeAllGraphPanels();
 		setVisible (false);
 	}
 
 	public void analysisParametersUpdated() {
-		JLayeredPane slp = ((ScalableLayeredPanel)panel).jLayeredPane;
+		JLayeredPane slp = super.panel.jLayeredPane;
 		for(int i=0; i<slp.getComponentCount(); i++) {
 			JPanel panel1 = (JPanel)slp.getComponent(i);
 			if (panel1 instanceof HistogrammPanel) {
