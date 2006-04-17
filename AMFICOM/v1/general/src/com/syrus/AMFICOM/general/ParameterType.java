@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.74.2.12 2006/04/17 11:05:06 arseniy Exp $
+ * $Id: ParameterType.java,v 1.74.2.13 2006/04/17 11:06:27 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * типов параметров для рефлектометрических измерений см. в
  * ReflectometryParameterTypeCodename.
  * 
- * @version $Revision: 1.74.2.12 $, $Date: 2006/04/17 11:05:06 $
+ * @version $Revision: 1.74.2.13 $, $Date: 2006/04/17 11:06:27 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -208,7 +208,7 @@ public final class ParameterType extends StorableObjectType implements IdlTransf
 	 *        Кодовое имя
 	 * @return Тип параметра, соответствующиий заданному кодовому имени.
 	 * @throws ApplicationException
-	 *         {@link CreateObjectException}, если такой объект не найден;
+	 *         {@link ObjectNotFoundException}, если такой объект не найден;
 	 *         {@link ApplicationException} в случае ошибки поиска.
 	 */
 	public static ParameterType valueOf(final Codename codename) throws ApplicationException {
