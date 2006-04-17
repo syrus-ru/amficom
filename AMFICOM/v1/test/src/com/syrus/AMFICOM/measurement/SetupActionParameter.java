@@ -1,5 +1,5 @@
 /*-
- * $Id: SetupActionParameter.java,v 1.1.2.1 2006/04/11 12:48:56 arseniy Exp $
+ * $Id: SetupActionParameter.java,v 1.1.2.2 2006/04/17 09:43:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,10 +13,10 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.OR;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
-import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
-import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_QP1640A;
-import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_QP1643A;
 import static com.syrus.AMFICOM.measurement.MeasurementTypeCodename.REFLECTOMETRY;
+import static com.syrus.AMFICOM.reflectometry.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
+import static com.syrus.AMFICOM.reflectometry.MeasurementPortTypeCodename.REFLECTOMETRY_QP1640A;
+import static com.syrus.AMFICOM.reflectometry.MeasurementPortTypeCodename.REFLECTOMETRY_QP1643A;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.AVERAGE_COUNT;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_GAIN_SPLICE_ON;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_LIFE_FIBER_DETECT;
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/04/11 12:48:56 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/04/17 09:43:56 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test

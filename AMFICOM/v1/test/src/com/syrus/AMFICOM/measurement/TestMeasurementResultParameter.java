@@ -1,5 +1,5 @@
 /*-
- * $Id: TestMeasurementResultParameter.java,v 1.1.2.1 2006/03/27 09:33:59 arseniy Exp $
+ * $Id: TestMeasurementResultParameter.java,v 1.1.2.2 2006/04/17 09:43:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_SUBSTRING;
-import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
+import static com.syrus.AMFICOM.reflectometry.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2006/03/27 09:33:59 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2006/04/17 09:43:56 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test

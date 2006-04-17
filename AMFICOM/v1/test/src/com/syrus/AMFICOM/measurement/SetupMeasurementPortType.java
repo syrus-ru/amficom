@@ -1,5 +1,5 @@
 /*
- * $Id: SetupMeasurementPortType.java,v 1.1.2.2 2006/04/14 14:48:37 arseniy Exp $
+ * $Id: SetupMeasurementPortType.java,v 1.1.2.3 2006/04/17 09:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,9 +7,9 @@
  */
 package com.syrus.AMFICOM.measurement;
 
-import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
-import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_QP1640A;
-import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_QP1643A;
+import static com.syrus.AMFICOM.reflectometry.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
+import static com.syrus.AMFICOM.reflectometry.MeasurementPortTypeCodename.REFLECTOMETRY_QP1640A;
+import static com.syrus.AMFICOM.reflectometry.MeasurementPortTypeCodename.REFLECTOMETRY_QP1643A;
 
 import java.util.HashSet;
 import java.util.Set;

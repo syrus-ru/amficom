@@ -1,5 +1,5 @@
 /*-
- * $Id: TestAddMeasurementSetup.java,v 1.1.2.8 2006/04/14 11:37:35 arseniy Exp $
+ * $Id: TestAddMeasurementSetup.java,v 1.1.2.9 2006/04/17 09:43:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_SUBSTRING;
-import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
 import static com.syrus.AMFICOM.measurement.MeasurementTypeCodename.REFLECTOMETRY;
+import static com.syrus.AMFICOM.reflectometry.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.AVERAGE_COUNT;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.FLAG_SMOOTH_FILTER;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.INDEX_OF_REFRACTION;
@@ -48,7 +48,7 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.1.2.8 $, $Date: 2006/04/14 11:37:35 $
+ * @version $Revision: 1.1.2.9 $, $Date: 2006/04/17 09:43:56 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test

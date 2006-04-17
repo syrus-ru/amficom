@@ -1,5 +1,5 @@
 /*-
- * $Id: TestActionParameter.java,v 1.1.2.7 2006/04/11 12:50:39 arseniy Exp $
+ * $Id: TestActionParameter.java,v 1.1.2.8 2006/04/17 09:43:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.
 import static com.syrus.AMFICOM.measurement.Action.ActionStatus.ACTION_STATUS_COMPLETED;
 import static com.syrus.AMFICOM.measurement.ActionWrapper.COLUMN_STATUS;
 import static com.syrus.AMFICOM.measurement.AnalysisTypeCodename.DADARA;
-import static com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
 import static com.syrus.AMFICOM.measurement.MeasurementTypeCodename.REFLECTOMETRY;
+import static com.syrus.AMFICOM.reflectometry.MeasurementPortTypeCodename.REFLECTOMETRY_PK7600;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.DADARA_ANALYSIS_RESULT;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PREDICTION_TIME;
 import static com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename.PULSE_WIDTH_M;
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKi
 import com.syrus.io.DataFormatException;
 
 /**
- * @version $Revision: 1.1.2.7 $, $Date: 2006/04/11 12:50:39 $
+ * @version $Revision: 1.1.2.8 $, $Date: 2006/04/17 09:43:56 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test

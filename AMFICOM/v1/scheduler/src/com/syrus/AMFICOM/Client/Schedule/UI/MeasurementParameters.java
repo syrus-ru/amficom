@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementParameters.java,v 1.1.2.10 2006/04/14 14:26:53 saa Exp $
+ * $Id: MeasurementParameters.java,v 1.1.2.11 2006/04/17 09:44:33 arseniy Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,11 +31,11 @@ import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding;
 import com.syrus.AMFICOM.measurement.ActionTemplate;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
-import com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MeasurementTypeCodename;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.ActionParameterTypeBinding.ParameterValueKind;
+import com.syrus.AMFICOM.reflectometry.MeasurementPortTypeCodename;
 import com.syrus.AMFICOM.reflectometry.MeasurementTimeEstimator;
 import com.syrus.AMFICOM.reflectometry.ReflectometryMeasurementParameters;
 import com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename;
@@ -58,9 +58,9 @@ import com.syrus.util.ByteArray;
  * 
  * @todo переименовать: Фактически этот класс завязан на рефлектометрию.
  * 
- * @author $Author: saa $
+ * @author $Author: arseniy $
  * @author saa
- * @version $Revision: 1.1.2.10 $, $Date: 2006/04/14 14:26:53 $
+ * @version $Revision: 1.1.2.11 $, $Date: 2006/04/17 09:44:33 $
  * @module scheduler
  */
 public class MeasurementParameters {
