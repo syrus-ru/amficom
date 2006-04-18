@@ -1,5 +1,5 @@
 /*-
- * $Id: SetupActionParameter.java,v 1.1.2.2 2006/04/17 09:43:56 arseniy Exp $
+ * $Id: SetupActionParameter.java,v 1.1.2.3 2006/04/18 17:35:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/04/17 09:43:56 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2006/04/18 17:35:24 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -290,10 +290,6 @@ public final class SetupActionParameter extends TestCase {
 				false));
 		actionParameters.add(ActionParameter.createInstance(creatorId,
 				ByteArray.toByteArray(20000),
-				actionParameterTypeBinding.getId(),
-				false));
-		actionParameters.add(ActionParameter.createInstance(creatorId,
-				ByteArray.toByteArray(30000),
 				actionParameterTypeBinding.getId(),
 				false));
 
