@@ -9,11 +9,11 @@ import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_
 import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_MARKERS_INFO;
 import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_NOISE;
 import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_NOISE_HISTOGRAMM;
-import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_PRIMARY_PARAMETERS;
-import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_TRACE_SELECTOR;
 import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_OVERALL_STATS;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_PRIMARY_PARAMETERS;
 import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_THRESHOLDS;
 import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_THRESHOLDS_SELECTION;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_TRACE_SELECTOR;
 
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -208,7 +208,7 @@ implements BsHashChangeListener, EtalonMTMListener,
 		this.frames.put(FRAME_ANALYSIS_MAIN, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ANALYSIS_FRAME", Level.FINEST);
-				AnalysisFrame analysisFrame = new AnalysisFrame(ThresholdsMainFrame.this.dispatcher)  {
+				PathElementsFrame analysisFrame = new PathElementsFrame(ThresholdsMainFrame.this.aContext, ThresholdsMainFrame.this.dispatcher)  {
 					@Override
 					public String getReportTitle() {
 						return FRAME_ANALYSIS_MAIN;
