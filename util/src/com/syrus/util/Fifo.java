@@ -1,5 +1,5 @@
 /*
- * $Id: Fifo.java,v 1.11 2005/12/02 11:00:09 arseniy Exp $
+ * $Id: Fifo.java,v 1.12 2006/04/18 17:32:22 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,16 +11,17 @@ package com.syrus.util;
 import java.io.Serializable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/12/02 11:00:09 $
+ * @version $Revision: 1.12 $, $Date: 2006/04/18 17:32:22 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
-public class Fifo implements Serializable {
-	private static final long serialVersionUID = -2241622428099411636L;
+public class Fifo<T> implements Serializable {
+	private static final long serialVersionUID = -4756503248545457362L;
+
 	public static final int SIZE = 10;
 
-	private Object[] array;
+	private T[] array;
 	private int number;
 
 	public Fifo() {
@@ -29,7 +30,7 @@ public class Fifo implements Serializable {
 
 	public Fifo(final int size) {
 		if (size > 0) {
-			this.array = new Object[size];
+			this.array = (T[]) new Object[size];
 		} else {
 			throw new IllegalArgumentException("Illegal size: " + size);
 		}
@@ -40,8 +41,8 @@ public class Fifo implements Serializable {
 		return this.array.length;
 	}
 
-	public Object push(final Object obj) {
-		final Object ret = this.array[this.array.length - 1];
+	public T push(final T obj) {
+		final T ret = this.array[this.array.length - 1];
 		for (int i = this.array.length - 1; i > 0; i--) {
 			this.array[i] = this.array[i - 1];
 		}
@@ -52,9 +53,9 @@ public class Fifo implements Serializable {
 		return ret;
 	}
 
-	public Object remove() {
+	public T remove() {
 		if (this.number > 0) {
-			final Object ret = this.array[this.number - 1];
+			final T ret = this.array[this.number - 1];
 			this.array[this.number - 1] = null;
 			this.number--;
 			return ret;
@@ -62,11 +63,11 @@ public class Fifo implements Serializable {
 		return null;
 	}
 
-	public boolean contains(final Object obj) {
+	public boolean contains(final T obj) {
 		return this.indexOf(obj) >= 0;
 	}
 
-	public int indexOf(final Object obj) {
+	public int indexOf(final T obj) {
 		if (obj == null) {
 			for (int i = 0; i < this.number; i++) {
 				if (this.array[i] == null) {
@@ -83,15 +84,19 @@ public class Fifo implements Serializable {
 		return -1;
 	}
 
-	public int getNumber() {
+	public int size() {
 		return this.number;
+	}
+
+	public boolean isEmpty() {
+		return this.size() == 0;
 	}
 	
 	/**
 	 * <b>Do NOT use this metthod</b>.
 	 * <p>This method can be used only in special cases, for example in seriallization.</p>
 	 */
-	Object[] getObjects() {
+	T[] getObjects() {
 		return this.array;
 	}
 
@@ -99,14 +104,14 @@ public class Fifo implements Serializable {
 	 * <b>Do NOT use this metthod</b>.
 	 * <p>This method can be used only in special cases, for example in seriallization.</p><p>Instead one may use {@link Fifo#push(Object)}</p>
 	 */
-	void populate(final Object[] objects) {
+	void populate(final T[] objects) {
 		if (objects == null) {
 			throw new NullPointerException("Argument is null");
 		}
 
 		this.number = 0;
 		for (int i = 0; i < objects.length && i < this.array.length; i++) {
-			final Object object = objects[i];
+			final T object = objects[i];
 			if (object == null) {
 				break;
 			}
