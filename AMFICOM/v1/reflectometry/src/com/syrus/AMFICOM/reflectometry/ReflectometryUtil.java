@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryUtil.java,v 1.5.2.2 2006/04/14 14:45:59 saa Exp $
+ * $Id: ReflectometryUtil.java,v 1.5.2.3 2006/04/18 16:21:07 saa Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.reflectometry;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.5.2.2 $, $Date: 2006/04/14 14:45:59 $
+ * @version $Revision: 1.5.2.3 $, $Date: 2006/04/18 16:21:07 $
  * @module
  */
 public final class ReflectometryUtil {
@@ -87,9 +87,8 @@ public final class ReflectometryUtil {
 		double dX = rmp.getResolution(); // m
 		double av = rmp.getNumberOfAverages();
 		double estimatedTime =
-			av * len / 131 * .4 * 8 / Math.min(8,dX) + av * 35 / 1600;
-		estimatedTime += upper ? 2.0 : 0.5;
-		return estimatedTime;
+			0.5 + av * len / 131 * .4 * 8 / Math.min(8,dX) + av * 35 / 1600;
+		return upper ? 0.5 + estimatedTime * 1.01 : estimatedTime;
 	}
 
 	/**
