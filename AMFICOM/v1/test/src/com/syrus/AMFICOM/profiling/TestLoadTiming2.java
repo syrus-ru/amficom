@@ -1,5 +1,5 @@
 /*
- * $Id: TestLoadTiming2.java,v 1.3.2.1 2006/03/22 08:53:59 arseniy Exp $
+ * $Id: TestLoadTiming2.java,v 1.3.2.2 2006/04/18 10:14:43 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementResultParameter;
 
 /**
- * @version $Revision: 1.3.2.1 $, $Date: 2006/03/22 08:53:59 $
+ * @version $Revision: 1.3.2.2 $, $Date: 2006/04/18 10:14:43 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -331,9 +331,9 @@ public final class TestLoadTiming2 extends TestCase {
 	public void testLoadResult() throws ApplicationException {
 		UniCommonTest.use(new DatabaseTestContext());
 		System.out.println("==== Using DB loader ====");
-		operationLoadResult(expectationsDb);
+		operationLoadResult(this.expectationsDb);
 		UniCommonTest.use(new CorbaTestContext());
 		System.out.println("==== Using Corba loader ====");
-		operationLoadResult(expectationsCorba);
+		operationLoadResult(this.expectationsCorba);
 	}
 }
