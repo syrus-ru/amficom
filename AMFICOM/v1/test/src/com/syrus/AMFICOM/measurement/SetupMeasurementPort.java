@@ -1,5 +1,5 @@
 /*
- * $Id: SetupMeasurementPort.java,v 1.1.2.1 2006/03/06 19:02:21 arseniy Exp $
+ * $Id: SetupMeasurementPort.java,v 1.1.2.2 2006/04/18 17:35:02 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -63,7 +63,7 @@ public final class SetupMeasurementPort extends TestCase {
 		}
 		final Map<Identifier, KIS> portKISMap = new HashMap<Identifier, KIS>();
 		for (final KIS kis : kiss) {
-			final Equipment equipment = StorableObjectPool.getStorableObject(kis.getEquipmentId(), true);
+			final Equipment equipment = kis.getEquipment();
 			for (final Port port : equipment.getPorts()) {
 				portKISMap.put(port.getId(), kis);
 			}

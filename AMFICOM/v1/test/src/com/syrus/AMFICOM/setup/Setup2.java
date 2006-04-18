@@ -1,5 +1,5 @@
 /*-
- * $Id: Setup2.java,v 1.1.2.6 2006/04/14 14:48:52 arseniy Exp $
+ * $Id: Setup2.java,v 1.1.2.7 2006/04/18 17:34:36 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,15 +14,15 @@ import com.syrus.AMFICOM.configuration.SetupEquipmentType;
 import com.syrus.AMFICOM.configuration.SetupPortType;
 import com.syrus.AMFICOM.configuration.SetupTransmissionPathType;
 import com.syrus.AMFICOM.general.CORBACommonTest;
+import com.syrus.AMFICOM.general.SetupConstraintCharateristic;
 import com.syrus.AMFICOM.measurement.SetupActionParameter;
 import com.syrus.AMFICOM.measurement.SetupActionParameterTypeBinding;
 import com.syrus.AMFICOM.measurement.SetupActionType;
 import com.syrus.AMFICOM.measurement.SetupMeasurementPortType;
-import com.syrus.AMFICOM.reflectometry.SetupConstraintCharateristic;
 import com.syrus.AMFICOM.reflectometry.SetupParameterType;
 
 /**
- * @version $Revision: 1.1.2.6 $, $Date: 2006/04/14 14:48:52 $
+ * @version $Revision: 1.1.2.7 $, $Date: 2006/04/18 17:34:36 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
