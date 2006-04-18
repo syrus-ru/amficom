@@ -289,7 +289,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 	public void paint(final Graphics g) {
 		super.paint(g);
 
-		if (this.paint_path_elements && this.pathResource != null) {
+		if (this.paint_path_elements && this.pathResource != null && this.pathResource.getPath() != null) {
 			if (this.pathResource.getStartPathElement() == null || this.pathResource.getEndPathElement() == null)
 				this.setGraphBounds(this.start, this.end);
 
