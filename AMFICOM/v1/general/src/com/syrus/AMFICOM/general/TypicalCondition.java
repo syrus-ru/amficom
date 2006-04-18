@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalCondition.java,v 1.63.2.2 2006/04/13 14:08:33 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.63.2.3 2006/04/18 17:15:49 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,13 +45,11 @@ import com.syrus.util.EnumUtil;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.63.2.2 $, $Date: 2006/04/13 14:08:33 $
+ * @version $Revision: 1.63.2.3 $, $Date: 2006/04/18 17:15:49 $
  * @author $Author: arseniy $
  * @module general
  */
 public class TypicalCondition implements StorableObjectCondition {
-	private static final long serialVersionUID = -2099200598390912964L;
-
 	protected static final String ERROR_ENTITY_NOT_REGISTERED = "ERROR: Entity not registered for this condition -- ";
 	private static final String ERROR_UNKNOWN_TYPE_CODE = "ERROR: Unknown type code: ";
 	private static final String ERROR_UNKNOWN_NUMBER_CODE = "ERROR: Unknown number code: ";
@@ -83,7 +81,7 @@ public class TypicalCondition implements StorableObjectCondition {
 
 	protected String key;
 
-	public TypicalCondition(final Enum e,
+	public TypicalCondition(final Enum<?> e,
 			final OperationSort operation,
 			final short entityCode,
 			final String key) {
@@ -103,7 +101,7 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * @param key
 	 *        key for controller (wrapper)
 	 */
-	public TypicalCondition(final Enum e,
+	public TypicalCondition(final Enum<?> e,
 			final OperationSort operation,
 			final Short entityCode,
 			final String key) {
@@ -406,7 +404,7 @@ public class TypicalCondition implements StorableObjectCondition {
 	}
 
 	@SuppressWarnings(value = {"hiding"})
-	private void fromEnum(final Enum e,
+	private void fromEnum(final Enum<?> e,
 			final OperationSort operation,
 			final Short entityCode,
 			final String key) {
@@ -813,7 +811,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						result = (this.value != object);
 						break;
 					case _OPERATION_IN:
-						final EnumSet enumSet = (EnumSet) object;
+						final EnumSet<?> enumSet = (EnumSet) object;
 						result = enumSet.contains(this.value);
 						break;
 					default:
