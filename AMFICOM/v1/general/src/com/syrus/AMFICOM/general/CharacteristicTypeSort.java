@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicTypeSort.java,v 1.4.2.3 2006/03/17 10:11:31 arseniy Exp $
+ * $Id: CharacteristicTypeSort.java,v 1.4.2.4 2006/04/18 08:04:41 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.general;
+
+import java.io.Serializable;
 
 import org.omg.CORBA.ORB;
 
@@ -19,7 +21,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.4.2.3 $, $Date: 2006/03/17 10:11:31 $
+ * @version $Revision: 1.4.2.4 $, $Date: 2006/04/18 08:04:41 $
  * @module general
  */
 public enum CharacteristicTypeSort {
@@ -62,12 +64,12 @@ public enum CharacteristicTypeSort {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.4.2.3 $, $Date: 2006/03/17 10:11:31 $
+	 * @version $Revision: 1.4.2.4 $, $Date: 2006/04/18 08:04:41 $
 	 * @module general
 	 */
 	public static final class Proxy
 			implements IdlTransferableObjectExt<IdlCharacteristicTypeSort>,
-			XmlTransferableObject<XmlCharacteristicTypeSort> {
+			XmlTransferableObject<XmlCharacteristicTypeSort>, Serializable {
 		private static final long serialVersionUID = -2859495371772821057L;
 
 		private CharacteristicTypeSort value;
