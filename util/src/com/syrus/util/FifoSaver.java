@@ -1,5 +1,5 @@
 /*-
- * $Id: FifoSaver.java,v 1.8 2006/02/17 15:27:38 arseniy Exp $
+ * $Id: FifoSaver.java,v 1.9 2006/04/18 17:31:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2006/02/17 15:27:38 $
+ * @version $Revision: 1.9 $, $Date: 2006/04/18 17:31:28 $
  * @author $Author: arseniy $
  * @module util
  */
@@ -88,7 +88,7 @@ public final class FifoSaver {
 				return;
 			}
 			final Object[] objects = (Object[]) objectInputStream.readObject();
-			final Fifo fifo = new Fifo(fifoCapacity);
+			final Fifo<Object> fifo = new Fifo<Object>(fifoCapacity);
 			fifo.populate(objects);
 			fifoMap.put(entityName, fifo);
 			return;
@@ -117,7 +117,7 @@ public final class FifoSaver {
 		}
 	}
 
-	public static void save(final Fifo fifo, final String entityName) {
+	public static void save(final Fifo<?> fifo, final String entityName) {
 		final String path = cacheDir.getPath() + File.separator + entityName + FILE_SUFFIX;
 		final File fifoFile = new File(path);
 		final File tmpFifoFile = new File(path + ".swp");
