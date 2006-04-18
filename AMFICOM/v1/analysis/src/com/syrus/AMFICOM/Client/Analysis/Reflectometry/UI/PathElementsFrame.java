@@ -4,9 +4,11 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -57,10 +59,10 @@ public class PathElementsFrame extends AnalysisFrame {
 			setTitle(me.getName());
 		} catch (ApplicationException ex) {
 			Log.errorMessage(ex);
-			setTitle(LangModelAnalyse.getString("analysisTitle"));
+			setTitle(I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN));
 		} catch (Exception ex) {
 			Log.errorMessage("Exception occured while searching path: " + ex.getMessage());
-			setTitle(LangModelAnalyse.getString("analysisTitle"));
+			setTitle(I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN));
 		}
 
 		PathElementsPanel p = new PathElementsPanel((PathElementsLayeredPanel) this.panel, this.dispatcher, y, deltaX);
