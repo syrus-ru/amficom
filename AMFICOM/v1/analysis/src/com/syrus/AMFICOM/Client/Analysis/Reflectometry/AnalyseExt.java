@@ -10,8 +10,10 @@ import com.syrus.AMFICOM.client.launcher.Launcher;
 import com.syrus.AMFICOM.client.model.AbstractApplication;
 
 public class AnalyseExt extends AbstractApplication {
+	public static final String APPLICATION_NAME = "survey";
+	
 	public AnalyseExt() {
-		super(Analyse.APPLICATION_NAME);
+		super(AnalyseExt.APPLICATION_NAME);
 	}
 
 	@Override

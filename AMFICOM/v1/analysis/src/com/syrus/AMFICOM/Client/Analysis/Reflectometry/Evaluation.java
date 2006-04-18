@@ -10,9 +10,10 @@ import com.syrus.AMFICOM.Client.General.Model.ReflectometryAnalyseApplicationMod
 import com.syrus.AMFICOM.client.model.AbstractApplication;
 
 public class Evaluation extends AbstractApplication {
-
+	public static final String APPLICATION_NAME = "evaluation";
+	
 	public Evaluation() {
-		super(Analyse.APPLICATION_NAME);
+		super(Evaluation.APPLICATION_NAME);
 	}
 
 	@Override
