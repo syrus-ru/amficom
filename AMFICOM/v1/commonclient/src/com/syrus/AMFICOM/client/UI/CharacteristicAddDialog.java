@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.24 2006/04/11 07:54:14 bass Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.25 2006/04/18 17:27:35 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacter
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2006/04/11 07:54:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2006/04/18 17:27:35 $
  * @module commonclient
  */
 
@@ -216,14 +216,22 @@ public class CharacteristicAddDialog {
 				final String text = this.nameField.getText();
 				if (text != null && text.trim().length() > 0) {
 					try {
-						final Identifier userId = LoginManager.getUserId();
-						// TODO maybe create separated fields for codename, name and description ?
-						this.selectedType = CharacteristicType.createInstance(userId,
-								this.nameField.getText(),
-								this.nameField.getText(),
-								this.nameField.getText(),
-								DataType.STRING,
-								CharacteristicTypeSort.valueOf(this.sort));
+						/*
+						 * TODO Think a little more about this. User should not
+						 * create CharacteristicType.
+						 */
+						this.selectedType = CharacteristicType.valueOf(text);
+						if (this.selectedType == null) {
+							throw new InternalError("CharacteristicType '" + text + "' not found");
+						}
+//						final Identifier userId = LoginManager.getUserId();
+//						// TODO maybe create separated fields for codename, name and description ?
+//						this.selectedType = CharacteristicType.createInstance(userId,
+//								this.nameField.getText(),
+//								this.nameField.getText(),
+//								this.nameField.getText(),
+//								DataType.STRING,
+//								CharacteristicTypeSort.valueOf(this.sort));
 						StorableObjectPool.flush(this.selectedType, LoginManager.getUserId(), false); 
 					} catch (ApplicationException e) {
 						Log.errorMessage(e);

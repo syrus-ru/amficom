@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.126 2006/03/15 20:28:23 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.127 2006/04/18 17:25:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
+import static com.syrus.AMFICOM.general.ErrorMessages.ONLY_ONE_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
@@ -57,10 +58,8 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
-import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -93,8 +92,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.126 $, $Date: 2006/03/15 20:28:23 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.127 $, $Date: 2006/04/18 17:25:17 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -1054,9 +1053,20 @@ public final class SchemeCableLink extends AbstractSchemeLink
 
 		final StorableObjectCondition condition = new TypicalCondition(CharacteristicTypeCodenames.COMMON_COLOUR, OperationSort.OPERATION_EQUALS, CHARACTERISTIC_TYPE_CODE, COLUMN_CODENAME);
 		final Set<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-		final CharacteristicType characteristicType = characteristicTypes.isEmpty()
-				? CharacteristicType.createInstance(creatorId, CharacteristicTypeCodenames.COMMON_COLOUR, "", "color", DataType.INTEGER, CharacteristicTypeSort.VISUAL)
-				: characteristicTypes.iterator().next();
+
+		/*
+		 * TODO Think a little more about this. User should not create
+		 * CharacteristicType.
+		 */
+		if (characteristicTypes.isEmpty()) {
+			throw new InternalError("Cannot find CharacteristicType '" + CharacteristicTypeCodenames.COMMON_COLOUR + "'");
+		}
+		assert characteristicTypes.size() == 1 : ONLY_ONE_EXPECTED;
+		final CharacteristicType characteristicType = characteristicTypes.iterator().next();
+
+// final CharacteristicType characteristicType = characteristicTypes.isEmpty()
+//				? CharacteristicType.createInstance(creatorId, CharacteristicTypeCodenames.COMMON_COLOUR, "", "color", DataType.INTEGER, CharacteristicTypeSort.VISUAL)
+//				: characteristicTypes.iterator().next();
 
 		assert characteristicType != null : NON_NULL_EXPECTED;
 
