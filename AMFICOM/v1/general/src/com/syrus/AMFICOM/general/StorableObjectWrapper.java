@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.21.2.1.2.1 2006/04/13 14:07:28 arseniy Exp $
+ * $Id: StorableObjectWrapper.java,v 1.21.2.1.2.2 2006/04/18 17:15:49 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Wrapper;
  * a static method <code>getInstance()</code>.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.21.2.1.2.1 $, $Date: 2006/04/13 14:07:28 $
+ * @version $Revision: 1.21.2.1.2.2 $, $Date: 2006/04/18 17:15:49 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
@@ -67,7 +67,7 @@ public abstract class StorableObjectWrapper<T extends StorableObject> implements
 		final String className = ObjectGroupEntities.getPackageName(entityCode) + "."
 				+ ObjectEntities.codeToString(entityCode) + "Wrapper";
 		try {
-			final Class clazz = Class.forName(className);
+			final Class<?> clazz = Class.forName(className);
 			final Method method = clazz.getMethod("getInstance", new Class[0]);
 			wrapper = (StorableObjectWrapper) method.invoke(null, new Object[0]);
 
