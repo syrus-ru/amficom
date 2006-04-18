@@ -152,6 +152,9 @@ public class ReflectogramMath
 		final double minEffectivePulseWidth = 400;
 		if (pulsewidth < minEffectivePulseWidth)
 			pulsewidth = minEffectivePulseWidth;
+
+		// @todo: после слияния с веткой PARS_REFACT (2006-04-xx), использовать
+		// ReflectometryUtil.pulseWidthQPNanosecondsToEventLengthMeters()
 		double eventSize = 150d / refraction * pulsewidth / 1000d / resolution;
 		// ширина вейвлета меньше 2 не допустимо быть в принципе
 		// значения меньше 5 не рекомендуются как приводящие к неустойчивому анализу
