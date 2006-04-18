@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.18.2.1 2006/03/09 18:00:46 arseniy Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.18.2.2 2006/04/18 17:04:37 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author max
  * @author $Author: arseniy $
- * @version $Revision: 1.18.2.1 $, $Date: 2006/03/09 18:00:46 $
+ * @version $Revision: 1.18.2.2 $, $Date: 2006/04/18 17:04:37 $
  * @module general
  */
 final class XmlIdentifierDatabase {
@@ -147,25 +147,24 @@ final class XmlIdentifierDatabase {
 			
 			while (resultSet.next()) {
 				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
-				boolean put = false;
 				/*
 				 * The check is turned of since it's a lengthy
 				 * operation if you have 12k objects. We really
 				 * must add hooks to save/delete operations of
 				 * CORBA object loader.
 				 */
-//				try {
-//					put = StorableObjectDatabase.isObjectPresentInDatabase(id);
-//				} catch (ApplicationException ae) {
-//					Log.errorMessage(ae);
-//				}
-				put = true;
-				if (put) {
+				if (true || StorableObjectDatabase.isObjectPresentInDatabase(id)) {
 					LocalXmlIdentifierPool.put(id, resultSet.getString(COLUMN_XML_ID), importType, LocalXmlIdentifierPool.KeyState.UP_TO_DATE);
 				} else {
 					resultSet.deleteRow();
 				}
 			}
+		} catch (final IllegalObjectEntityException ioee) {
+			/*
+			 * Never.
+			 */
+			assert false;
+			throw new RetrieveObjectException(ioee);
 		} catch (final SQLException sqle) {
 			final String mesg = "Cannot retrieve ImportUIDItem" + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
