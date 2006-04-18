@@ -1,5 +1,5 @@
 /*
- * $Id: CORBACommonTest.java,v 1.6.2.1 2006/02/27 16:21:17 arseniy Exp $
+ * $Id: CORBACommonTest.java,v 1.6.2.2 2006/04/18 06:40:22 saa Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,13 +7,16 @@
  */
 package com.syrus.AMFICOM.general;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
 import com.syrus.AMFICOM.general.ClientSessionEnvironment.SessionKind;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6.2.1 $, $Date: 2006/02/27 16:21:17 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6.2.2 $, $Date: 2006/04/18 06:40:22 $
+ * @author $Author: saa $
  * @module test
  */
 public class CORBACommonTest extends CommonTest {
@@ -37,7 +40,7 @@ public class CORBACommonTest extends CommonTest {
 			ClientSessionEnvironment.getInstance().login("sys", "sys", domainId);
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
-			System.exit(0);
+			Assert.fail(ae.getMessage());
 		}
 	}
 
@@ -46,7 +49,7 @@ public class CORBACommonTest extends CommonTest {
 			ClientSessionEnvironment.getInstance().logout();
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
-			System.exit(0);
+			Assert.fail(ae.getMessage());
 		}
 	}
 }
