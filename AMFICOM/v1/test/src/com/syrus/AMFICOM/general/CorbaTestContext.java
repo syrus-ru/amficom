@@ -1,5 +1,5 @@
 /*-
- * $Id: CorbaTestContext.java,v 1.1 2006/01/20 17:08:24 saa Exp $
+ * $Id: CorbaTestContext.java,v 1.2 2006/04/18 10:31:57 saa Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,14 @@
 
 package com.syrus.AMFICOM.general;
 
+import junit.framework.Assert;
+
 import com.syrus.AMFICOM.general.ClientSessionEnvironment.SessionKind;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2006/01/20 17:08:24 $
+ * @version $Revision: 1.2 $, $Date: 2006/04/18 10:31:57 $
  * @module
  */
 public class CorbaTestContext implements TestContext {
@@ -25,7 +27,7 @@ public class CorbaTestContext implements TestContext {
 			ClientSessionEnvironment.getInstance().login("sys", "sys", new Identifier("Domain_1"));
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
-			System.exit(0);
+			Assert.fail(ae.getMessage());
 		}
 	}
 
@@ -34,7 +36,7 @@ public class CorbaTestContext implements TestContext {
 			ClientSessionEnvironment.getInstance().logout();
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
-			System.exit(0);
+			Assert.fail(ae.getMessage());
 		}
 	}
 
