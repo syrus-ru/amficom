@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseConnection.java,v 1.24 2005/10/31 12:29:58 bass Exp $
+ * $Id: DatabaseConnection.java,v 1.25 2006/04/18 17:30:48 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import oracle.jdbc.pool.OracleDataSource;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/10/31 12:29:58 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2006/04/18 17:30:48 $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -101,7 +101,7 @@ public class DatabaseConnection {
 				dataSource.close();
 				dataSource = null;
 				if (openConnections != 0) {
-					Log.debugMessage("\u0410\u0440\u0441\u0435\u043d\u0438\u0439.\u0442\u044b\u0413\u0434\u0435-\u0442\u043e\u041d\u0430\u0435\u0431\u0430\u043b\u0441\u044f() | There remains " + openConnections + " connection(s) open", SEVERE);
+					Log.debugMessage("There remains " + openConnections + " connection(s) open", SEVERE);
 				}
 				Log.debugMessage("Disconnected from database", Log.DEBUGLEVEL07);
 			} catch (Exception e) {
