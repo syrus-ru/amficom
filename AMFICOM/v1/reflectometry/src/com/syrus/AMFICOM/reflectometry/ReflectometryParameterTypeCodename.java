@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryParameterTypeCodename.java,v 1.1.2.7 2006/04/14 14:46:11 arseniy Exp $
+ * $Id: ReflectometryParameterTypeCodename.java,v 1.1.2.8 2006/04/18 16:22:05 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,32 +10,32 @@ package com.syrus.AMFICOM.reflectometry;
 import com.syrus.util.Codename;
 
 /**
- * @version $Revision: 1.1.2.7 $, $Date: 2006/04/14 14:46:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.1.2.8 $, $Date: 2006/04/18 16:22:05 $
+ * @author $Author: saa $
  * @author Tashoyan Arseniy Feliksovich
  * @module reflectometry
  */
 public enum ReflectometryParameterTypeCodename implements Codename {
 
 	// Параметры измерения
-	WAVE_LENGTH("ref_wvlen"),
-	TRACE_LENGTH("ref_trclen"),
-	RESOLUTION("ref_res"),
-	PULSE_WIDTH_NS("ref_pulswd_ns"),
-	PULSE_WIDTH_M("ref_pulswd_m"),
-	INDEX_OF_REFRACTION("ref_ior"),
-	AVERAGE_COUNT("ref_scans"),
-	FLAG_PULSE_WIDTH_LOW_RES("ref_flag_pulswd_low_res"),
-	FLAG_GAIN_SPLICE_ON("ref_flag_gain_splice_on"),
-	FLAG_LIFE_FIBER_DETECT("ref_flag_life_fiber_detect"),
-	FLAG_SMOOTH_FILTER("ref_flag_smooth_filter"),
+	WAVE_LENGTH("ref_wvlen"),			// int
+	TRACE_LENGTH("ref_trclen"),			// double
+	RESOLUTION("ref_res"),				// double
+	PULSE_WIDTH_NS("ref_pulswd_ns"),	// int
+	PULSE_WIDTH_M("ref_pulswd_m"),		// int
+	INDEX_OF_REFRACTION("ref_ior"),		// double
+	AVERAGE_COUNT("ref_scans"),			// integer
+	FLAG_PULSE_WIDTH_LOW_RES("ref_flag_pulswd_low_res"),	// boolean
+	FLAG_GAIN_SPLICE_ON("ref_flag_gain_splice_on"),			// boolean
+	FLAG_LIFE_FIBER_DETECT("ref_flag_life_fiber_detect"),	// boolean
+	FLAG_SMOOTH_FILTER("ref_flag_smooth_filter"),			// boolean
 
 	// Результат измерения
-	REFLECTOGRAMMA("reflectogramma"),
+	REFLECTOGRAMMA("reflectogramma"),	// BellcoreStructure
 
 	// Параметры анализа/сравнения dadara
 	DADARA_CRITERIA("dadara_criteria"),
-	REFLECTOGRAMMA_ETALON("reflectogramma_etalon"),
+	REFLECTOGRAMMA_ETALON("reflectogramma_etalon"),	// BellcoreStructure
 	DADARA_ETALON("dadara_etalon"),
 
 	// Результаты анализа/сравнения dadara
