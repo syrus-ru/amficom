@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.29.2.2 2006/04/04 13:09:41 arseniy Exp $
+ * $Id: ProtoEquipment.java,v 1.29.2.3 2006/04/18 11:32:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.29.2.2 $, $Date: 2006/04/04 13:09:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29.2.3 $, $Date: 2006/04/18 11:32:55 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -123,7 +123,7 @@ public final class ProtoEquipment extends StorableObject
 	 * Create new instance for client
 	 * 
 	 * @param creatorId
-	 * @param type
+	 * @param typeId
 	 * @param manufacturer
 	 * @param manufacturerCode
 	 * @return new instance.
