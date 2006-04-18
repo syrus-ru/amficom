@@ -1,11 +1,11 @@
 /*-
- * $Id: SetupConstraintCharateristic.java,v 1.1.2.2 2006/04/17 09:43:15 arseniy Exp $
+ * $Id: SetupConstraintCharateristic.java,v 1.1.2.1 2006/04/18 17:33:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-package com.syrus.AMFICOM.reflectometry;
+package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.CharacteristicTypeSort.OPTICAL;
 import static com.syrus.AMFICOM.general.DataType.INTEGER;
@@ -28,7 +28,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CORBACommonTest;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -40,7 +39,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2006/04/17 09:43:15 $
+ * @version $Revision: 1.1.2.1 $, $Date: 2006/04/18 17:33:08 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -52,7 +51,7 @@ public final class SetupConstraintCharateristic extends TestCase {
 	private static final int POINTS_MAX_NUMBER_QP1643A = 262144;
 	private static final int POINTS_MAX_NUMBER_PK7600 = 131072;
 
-	private static final int LOW_RES_MIN_PULSE_WIDTH_NS_QP1640A = 10000;
+	private static final int LOW_RES_MIN_PULSE_WIDTH_NS_QP1640A = 1000;
 	private static final int LOW_RES_MIN_PULSE_WIDTH_NS_QP1643A = 10000;
 
 	private static final int HIGH_RES_MAX_PULSE_WIDTH_NS_QP1640A = 5000;
