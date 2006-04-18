@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMap.java,v 1.52 2006/02/22 14:31:21 arseniy Exp $
+ * $Id: LRUMap.java,v 1.53 2006/04/18 17:31:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,13 +25,13 @@ import java.util.Set;
 
 
 /**
- * @version $Revision: 1.52 $, $Date: 2006/02/22 14:31:21 $
+ * @version $Revision: 1.53 $, $Date: 2006/04/18 17:31:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
 public final class LRUMap<K, V extends LRUMap.Retainable> implements Map<K, V>, Cloneable, Serializable {
-	private static final long serialVersionUID = 7021342098557013331L;
+	private static final long serialVersionUID = -4766587754119111466L;
 
 	private static final String ERRMESSG_DIFF_SIZES = "Index and data have different sizes.";
 
