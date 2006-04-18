@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicType.java,v 1.72.2.1.2.1 2006/04/17 11:07:11 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.72.2.1.2.2 2006/04/18 17:04:37 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.72.2.1.2.1 $, $Date: 2006/04/17 11:07:11 $
+ * @version $Revision: 1.72.2.1.2.2 $, $Date: 2006/04/18 17:04:37 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -147,10 +147,7 @@ public final class CharacteristicType extends StorableObjectType
 			this.dataType.fromXmlTransferable(characteristicType.xgetDataType(), importType);
 			this.sort.fromXmlTransferable(characteristicType.xgetSort(), importType);
 
-			XmlComplementorRegistry.complementStorableObject(characteristicType,
-					CHARACTERISTIC_TYPE_CODE,
-					importType,
-					POST_IMPORT);
+			XmlComplementorRegistry.complementStorableObject(characteristicType, CHARACTERISTIC_TYPE_CODE, importType, POST_IMPORT);
 		} catch (final ApplicationException ae) {
 			throw new XmlConversionException(ae);
 		}
@@ -166,7 +163,7 @@ public final class CharacteristicType extends StorableObjectType
 	 *        see {@link DataType}
 	 * @throws CreateObjectException
 	 */
-	public static CharacteristicType createInstance(final Identifier creatorId,
+	static CharacteristicType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description,
 			final String name,

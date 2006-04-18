@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.213.2.3.2.1 2006/04/17 09:25:40 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.213.2.3.2.2 2006/04/18 17:04:37 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.213.2.3.2.1 $, $Date: 2006/04/17 09:25:40 $
+ * @version $Revision: 1.213.2.3.2.2 $, $Date: 2006/04/18 17:04:37 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -114,7 +114,7 @@ public final class StorableObjectPool {
 	private static final class DependencySortedContainer {
 		private SortedMap<Integer, Map<Short, Set<StorableObject>>> objectsMap;
 
-		private DependencySortedContainer() {
+		DependencySortedContainer() {
 			this.objectsMap = new TreeMap<Integer, Map<Short, Set<StorableObject>>>();
 		}
 
@@ -273,7 +273,7 @@ public final class StorableObjectPool {
 	 */
 	public static void addObjectPool(final short entityCode, final int objectPoolCapacity, final long objectTimeToLive) {
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE + ": " + entityCode;
-		final LRUMap objectPool = new LRUMap(objectPoolCapacity, objectTimeToLive);
+		final LRUMap<Identifier, StorableObject> objectPool = new LRUMap<Identifier, StorableObject>(objectPoolCapacity, objectTimeToLive);
 		objectPoolMap.put(entityCode, objectPool);
 		Log.debugMessage("Pool for '" + ObjectEntities.codeToString(entityCode)
 				+ "'/" + entityCode + " of capacity " + objectPoolCapacity + " added", Log.DEBUGLEVEL08);
@@ -1208,8 +1208,8 @@ public final class StorableObjectPool {
 	/*	From transferable*/
 
 	/**
-	 * Create {@link Set} of {@link StorableObject} from the array of
-	 * {@link IdlStorableObject}. Update in pool every object.
+	 * Creates a {@link Set} of {@link StorableObject}s from the array of
+	 * {@link IdlStorableObject}s. Updates every object in pool.
 	 * 
 	 * @param transferables
 	 * @param continueOnError
@@ -1238,7 +1238,7 @@ public final class StorableObjectPool {
 
 	/**
 	 * Gets a <code>StorableObject</code> from pool by its <code>id</code>,
-	 * update its fields from <code>transferable</code> and return it. If the
+	 * updates its fields from <code>transferable</code> and returns it. If the
 	 * object is not found in pool, then a newly created from
 	 * <code>transferable</code> instance is returned. <em>Never</em>
 	 * returns <code>null</code>.
