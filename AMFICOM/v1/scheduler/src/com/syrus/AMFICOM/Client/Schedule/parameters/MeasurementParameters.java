@@ -1,12 +1,12 @@
 /*-
- * $Id: MeasurementParameters.java,v 1.1.2.11 2006/04/17 09:44:33 arseniy Exp $
+ * $Id: MeasurementParameters.java,v 1.1.2.1 2006/04/18 09:18:59 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.Client.Schedule.UI;
+package com.syrus.AMFICOM.Client.Schedule.parameters;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifier;
@@ -41,6 +40,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectometryMeasurementParameters;
 import com.syrus.AMFICOM.reflectometry.ReflectometryParameterTypeCodename;
 import com.syrus.AMFICOM.reflectometry.ReflectometryUtil;
 import com.syrus.util.ByteArray;
+import com.syrus.util.Log;
 
 /**
  * Обеспечивает хранение параметров измерения и
@@ -58,9 +58,9 @@ import com.syrus.util.ByteArray;
  * 
  * @todo переименовать: Фактически этот класс завязан на рефлектометрию.
  * 
- * @author $Author: arseniy $
+ * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.11 $, $Date: 2006/04/17 09:44:33 $
+ * @version $Revision: 1.1.2.1 $, $Date: 2006/04/18 09:18:59 $
  * @module scheduler
  */
 public class MeasurementParameters {
@@ -100,7 +100,7 @@ public class MeasurementParameters {
 		FLAG_GAIN_SPLICE(ReflectometryParameterTypeCodename.FLAG_GAIN_SPLICE_ON, true),
 		FLAG_SMOOTH(ReflectometryParameterTypeCodename.FLAG_SMOOTH_FILTER, false),
 		FLAG_LFD(ReflectometryParameterTypeCodename.FLAG_LIFE_FIBER_DETECT, true),
-		FLAG_HIRES(ReflectometryParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES, false), // NB: HIRES = NOT(LOWRES); false - значение для lowres. XXX: может, использовать само lowres, без трансляции?
+		FLAG_LOWRES(ReflectometryParameterTypeCodename.FLAG_PULSE_WIDTH_LOW_RES, false),
 
 		// continuous
 		I_AVERAGES(ReflectometryParameterTypeCodename.AVERAGE_COUNT, 10); // NB: будет отфильтровано дополнительно
@@ -373,9 +373,9 @@ public class MeasurementParameters {
 		private String getStringValue(byte[] someData) {
 			switch(this.dataType) {
 			case INTEGER:
-				return Integer.toString(asInteger(someData));
+				return integerToString(asInteger(someData));
 			case DOUBLE:
-				return Double.toString(asDouble(someData));
+				return doubleToString(asDouble(someData));
 			default:
 				throw new IllegalStateException();
 			}
@@ -404,14 +404,48 @@ public class MeasurementParameters {
 		public void setStringValue(String s) {
 			switch(this.dataType) {
 			case INTEGER:
-				setInteger(Integer.parseInt(s));
+				setInteger(stringToInteger(s));
 				break;
 			case DOUBLE:
-				setDouble(Double.parseDouble(s));
+				setDouble(stringToDouble(s));
 				break;
 			default:
 				throw new IllegalStateException();
 			}
+		}
+
+		/**
+		 * Осуществляет используемое преобразование из строки в int.
+		 * Бросает стандартные исключения (@see {@link Integer#parseInt(String)})
+		 * @param s строковое представление
+		 * @return int-значение
+		 */
+		public static int stringToInteger(String s) {
+			return Integer.parseInt(s);
+		}
+
+		/**
+		 * Осуществляет используемое преобразование из строки в double.
+		 * Бросает стандартные исключения (@see {@link Double#parseDouble(String)})
+		 * @param s строковое представление
+		 * @return double-значение
+		 */
+		public static double stringToDouble(String s) {
+			return Double.parseDouble(s);
+		}
+
+		/**
+		 * Осуществляет используемое преобразование из int в строку
+		 */
+		public static String integerToString(int i) {
+			return Integer.toString(i);
+		}
+
+		/**
+		 * Осуществляет используемое преобразование из double в строку
+		 */
+		public static String doubleToString(double d) {
+			return Double.toString(d);
 		}
 
 		/**
@@ -550,6 +584,7 @@ public class MeasurementParameters {
 				assert record.getValueKind() == ParameterValueKind.ENUMERATED;
 				assert record.getDataType() != DataType.BOOLEAN;
 				// XXX: берем самый средний
+				// XXX: предполагаем, что набор из самых средних значений допустим
 				final List<String> allowedValues = record.getAllowedStringValues();
 				record.setStringValue(allowedValues.get(allowedValues.size() / 2));
 			}
@@ -563,6 +598,12 @@ public class MeasurementParameters {
 		for (ParameterRecord record: this.parameters.values()) {
 			assert record.isSet();
 		}
+
+//		// debug
+//		for (Property p: Property.values()) {
+//			System.err.println("Property " + p.toString() + ", "
+//					+ " descr " + (hasProperty(p) ? getPropertyDescription(p) : "<no>"));
+//		}
 	}
 
 	/**
@@ -814,7 +855,84 @@ public class MeasurementParameters {
 	 */
 	public List<String> valuesPropertyStringValue(Property property) {
 		checkProperty(property);
-		return this.properties.get(property).getAllowedStringValues();
+		final List<String> allowed = this.properties.get(property).getAllowedStringValues();
+		return imposeConstraints(this.properties, property, allowed);
+	}
+
+	/**
+	 * Фильтрует набор допустимых значений данного
+	 * свойства в соответствии с {@link ParametersConstraints}.
+	 * @param properties текущий набор свойств
+	 * @param property данное свойство
+	 * @param allowedList входной (фильтруемый) список допустимых значений.
+	 *   Не будет изменен; а будет сделана копия.
+	 * @return Новый список, состоящий из тех элементов входного
+	 *   списка, которые удовлетворяют {@link ParametersConstraints}.
+	 *   Порядок следования элементов сохраняется.
+	 */
+	private static List<String> imposeConstraints(
+			Map<Property, ParameterRecord> properties,
+			Property property,
+			List<String> allowedList) {
+		List<String> filtered = new ArrayList<String>(allowedList.size());
+		for (String value : allowedList) {
+			if (satisfiesConstraints(property, value, properties)) {
+				filtered.add(value);
+			}
+		}
+		return filtered;
+	}
+
+	/**
+	 * @todo написать javadoc
+	 * @param property проверяемое свойство. Должно быть определено
+	 *  в текущем наборе
+	 * @param value проверяемое значение
+	 * @param properties текущий набор
+	 * @return true, если такое значение допустимо текущим набором
+	 */
+	private static boolean satisfiesConstraints(Property property,
+			String value,
+			Map<Property, ParameterRecord> properties) {
+		try {
+			return satisfiesConstraints0(property, value, properties);
+		} catch (ApplicationException e) {
+			/* XXX: ApplicationException handling */
+			Log.errorMessage(e);
+			throw new InternalError(e.getMessage());
+		}
+	}
+
+	private static boolean satisfiesConstraints0(Property property,
+			String value,
+			Map<Property, ParameterRecord> properties)
+	throws ApplicationException {
+		ParameterRecord record = properties.get(property);
+		assert record != null;
+		final Identifier portTypeId = record.getBinding().getMeasurementPortTypeId();
+		switch(property) {
+		case E_RESOLUTION:
+			final double tracelength = properties.get(Property.E_TRACELENGTH).asDouble();
+			final double resolution = ParameterRecord.stringToDouble(value);
+			return ParametersConstraints.getInstance().
+				isCompatibleResolutionAndTracelength(
+					portTypeId, resolution, tracelength);
+		case E_PULSE_WIDTH_NS:
+			/*
+			 * В наших рефлектометрах все режимы,
+			 * имеющие параметр E_PULSE_WIDTH_NS,
+			 * имеют и параметр hires/lowres.
+			 */
+			final int pulseWidth = ParameterRecord.stringToInteger(value);
+			final boolean lowRes = properties.get(Property.FLAG_LOWRES).asBoolean();
+			return ParametersConstraints.getInstance().
+			isCompatibleHiResAndPulsewidth(portTypeId, !lowRes, pulseWidth);
+		default:
+			/*
+			 * Остальные параметры не имеют ограничений совместимости
+			 */
+			return true;
+		}
 	}
 
 	/**
@@ -826,9 +944,6 @@ public class MeasurementParameters {
 	 */
 	public boolean getPropertyAsBoolean(Property property) {
 		checkProperty(property);
-		if (property == Property.FLAG_HIRES) {
-			return !this.properties.get(property).asBoolean();
-		}
 		return this.properties.get(property).asBoolean();
 	}
 
@@ -842,11 +957,7 @@ public class MeasurementParameters {
 	 */
 	public void setPropertyAsBoolean(Property property, boolean value) {
 		checkProperty(property);
-		if (property == Property.FLAG_HIRES) {
-			this.properties.get(property).setBoolean(!value);
-		} else {
-			this.properties.get(property).setBoolean(value);
-		}
+		this.properties.get(property).setBoolean(value);
 	}
 
 	private String getUnit(final ParameterType parameterType) {
@@ -856,9 +967,6 @@ public class MeasurementParameters {
 
 	public String getPropertyDescription(Property property) {
 		checkProperty(property);
-		if (property == Property.FLAG_HIRES) {
-			return I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.HighResolution");
-		}
 		try {
 			final ParameterType parameterType =
 				this.properties.get(property).getBinding().getParameterType();

@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryParametersPanel.java,v 1.1.2.8 2006/04/14 14:26:53 saa Exp $
+// * $Id: ReflectometryParametersPanel.java,v 1.1.2.9 2006/04/18 09:18:59 saa Exp $
  * 
  * Copyright © 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.Schedule.UI.MeasurementParameters.Property;
+import com.syrus.AMFICOM.Client.Schedule.parameters.MeasurementParameters;
+import com.syrus.AMFICOM.Client.Schedule.parameters.MeasurementParameters.Property;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -42,7 +43,7 @@ import com.syrus.util.Log;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.8 $, $Date: 2006/04/14 14:26:53 $
+ * @version $Revision: 1.1.2.9 $, $Date: 2006/04/18 09:18:59 $
  * @module
  */
 public class ReflectometryParametersPanel extends MeasurementParametersPanel {
@@ -68,21 +69,6 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 		JComboBox averagesComboBox = new JComboBox();
 		JFormattedTextField averagesField = new JFormattedTextField(); // XXX: как оно будет работать?
 
-//		JLabel refractLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.IndexOfRefraction"));
-//		JLabel waveLengthLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.WaveLength"));
-//		JLabel averagesCBLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.AverageQuantity"));
-//		JLabel averagesFLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.AverageQuantity"));
-//		JLabel resolutionLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.Resolution"));
-//		JLabel maxDistanceLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.Distance"));
-//		JLabel pulseWidthMLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.PulseWidth"));
-//		JLabel pulseWidthNsLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.PulseWidth"));
-//
-//		JCheckBox gsOptionBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.GainSplice"));
-//		JCheckBox smoothOptionBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.BoxCar"));
-//		JCheckBox lfdOptionBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.LiveFiberDetect"));
-
-//		JCheckBox highResolutionCheckBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.Reflectomety.HighResolution"));
-
 		JLabel refractLabel = new JLabel();
 		JLabel waveLengthLabel = new JLabel();
 		JLabel averagesCBLabel = new JLabel();
@@ -96,13 +82,12 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 		JCheckBox smoothOptionBox = new JCheckBox();
 		JCheckBox lfdOptionBox = new JCheckBox();
 
-		/* Note: название для этой опции все равно будет взято из I18N (see MeasurementParameters) */
-		JCheckBox highResolutionCheckBox = new JCheckBox();
+		JCheckBox lowResolutionCheckBox = new JCheckBox();
 
 		this.requirements.put(refractComboBox, MeasurementParameters.Property.E_REFRACTION_INDEX);
 		this.requirements.put(waveLengthComboBox, MeasurementParameters.Property.E_WAVELENGTH);
 		this.requirements.put(maxDistanceComboBox, MeasurementParameters.Property.E_TRACELENGTH);
-		this.requirements.put(highResolutionCheckBox, MeasurementParameters.Property.FLAG_HIRES);
+		this.requirements.put(lowResolutionCheckBox, MeasurementParameters.Property.FLAG_LOWRES);
 
 		this.requirements.put(pulseWidthMComboBox, MeasurementParameters.Property.E_PULSE_WIDTH_M);
 		this.requirements.put(pulseWidthNsComboBox, MeasurementParameters.Property.E_PULSE_WIDTH_NS);
@@ -184,7 +169,7 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 		add(maxDistanceComboBox, gbc);
 
 		gbc.weightx = 1.0;
-		add(highResolutionCheckBox, gbc);
+		add(lowResolutionCheckBox, gbc);
 
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		add(pulseWidthMLabel, gbc);
@@ -198,7 +183,7 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 		gbc.weightx = 0.0;
 		add(pulseWidthNsComboBox, gbc);
 
-		highResolutionCheckBox.doClick();
+//		lowResolutionCheckBox.doClick();
 
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
@@ -277,6 +262,13 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 		} else {
 			throw new InternalError("Unknown source type: " + source);
 		}
+		/*
+		 * Возможно, изменились допустимые значения некоторых параметров.
+		 * XXX: неплохо бы не делать лишних действий, и обновлять только
+		 * те comboBox'ы, допустимый набор значений которых действительно
+		 * изменился
+		 */ 
+		updateVisibilityAndValues();
 	}
 
 	private void updateVisibilityAndValues() {
@@ -343,11 +335,6 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 		this.skip = false;
 	}
 
-//	private String getUnit(final ParameterType parameterType) {
-//		String name = parameterType.getMeasurementUnit().getName();
-//		return name.trim().length() > 0 ? ',' + name : "";
-//	}
-
 	@Override
 	public final ActionTemplate<Measurement> getMeasurementTemplate()
 			throws CreateObjectException {
@@ -363,8 +350,13 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 	@Override
 	public void setMeasurementTemplate(ActionTemplate<Measurement> template) {
 		try {
-//			this.parameters = new MeasurementParameters(template);
-			this.parameters.setTemplate(template);
+			/* тот же ME? */
+			if (this.parameters.getMe().getId().equals(
+					template.getMonitoredElementIds())) {
+				this.parameters.setTemplate(template);
+			} else {
+				this.parameters = new MeasurementParameters(template);
+			}
 		} catch (ApplicationException e) {
 			/* XXX: ApplicationException processing */
 			Log.errorMessage(e);
