@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.112.2.1 2006/04/04 09:30:38 arseniy Exp $
+ * $Id: Port.java,v 1.112.2.2 2006/04/18 11:32:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.112.2.1 $, $Date: 2006/04/04 09:30:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.112.2.2 $, $Date: 2006/04/18 11:32:43 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -96,8 +96,8 @@ public final class Port extends StorableObject
 			final PortType type,
 			final String description,
 			final Identifier equipmentId) throws CreateObjectException {
-		if (creatorId == null || type == null || description == null ||
-				type == null || equipmentId == null)
+		if (creatorId == null || type == null || description == null
+				|| equipmentId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
