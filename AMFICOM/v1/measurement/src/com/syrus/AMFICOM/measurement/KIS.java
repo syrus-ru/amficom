@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.14.2.7 2006/04/11 13:06:58 arseniy Exp $
+ * $Id: KIS.java,v 1.14.2.8 2006/04/18 15:55:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.DomainMember;
+import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -38,7 +39,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.14.2.7 $, $Date: 2006/04/11 13:06:58 $
+ * @version $Revision: 1.14.2.8 $, $Date: 2006/04/18 15:55:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -224,6 +225,10 @@ public final class KIS extends DomainMember implements IdlTransferableObjectExt<
 
 	public Identifier getEquipmentId() {
 		return this.equipmentId;
+	}
+
+	public Equipment getEquipment() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.equipmentId, true);
 	}
 
 	/**
