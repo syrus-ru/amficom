@@ -1,5 +1,5 @@
 /*-
-// * $Id: ReflectometryParametersPanel.java,v 1.1.2.9 2006/04/18 09:18:59 saa Exp $
+// * $Id: ReflectometryParametersPanel.java,v 1.1.2.10 2006/04/18 16:07:20 saa Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.9 $, $Date: 2006/04/18 09:18:59 $
+ * @version $Revision: 1.1.2.10 $, $Date: 2006/04/18 16:07:20 $
  * @module
  */
 public class ReflectometryParametersPanel extends MeasurementParametersPanel {
@@ -145,14 +145,7 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 		gbc.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-		gbc.weightx = 1.0;
 		gbc.weighty = 0.0;
-
-		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		add(refractLabel, gbc);
-		gbc.weightx = 0.0;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		add(refractComboBox, gbc);
 
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
@@ -163,10 +156,24 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
+		add(refractLabel, gbc);
+		gbc.weightx = 0.0;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		add(refractComboBox, gbc);
+
+		gbc.weightx = 1.0;
+		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		add(maxDistanceLabel, gbc);
 		gbc.weightx = 0.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		add(maxDistanceComboBox, gbc);
+
+		gbc.weightx = 1.0;
+		gbc.gridwidth = GridBagConstraints.RELATIVE;
+		add(resolutionLabel, gbc);
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.weightx = 0.0;
+		add(resolutionComboBox, gbc);
 
 		gbc.weightx = 1.0;
 		add(lowResolutionCheckBox, gbc);
@@ -183,8 +190,6 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 		gbc.weightx = 0.0;
 		add(pulseWidthNsComboBox, gbc);
 
-//		lowResolutionCheckBox.doClick();
-
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		add(averagesCBLabel, gbc);
@@ -200,30 +205,14 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 		add(averagesField, gbc);
 
 		gbc.weightx = 1.0;
-		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		add(resolutionLabel, gbc);
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		gbc.weightx = 0.0;
-		add(resolutionComboBox, gbc);
-
-		gbc.weightx = 1.0;
-//		gbc.gridwidth = GridBagConstraints.RELATIVE;
-//		add(new JLabel(I18N.getString("Scheduler.Text.GainSplice")), gbc); //$NON-NLS-1$
-//		gbc.weightx = 0.0;
-//		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		add(gsOptionBox, gbc);
 
 		gbc.weightx = 1.0;
-//		add(bcOptionBox, gbc);
 		smoothOptionBox.setSelected(false);
 		smoothOptionBox.setEnabled(false);
 
 
 		gbc.weightx = 1.0;
-//		gbc.gridwidth = GridBagConstraints.RELATIVE;
-//		add(new JLabel(I18N.getString("Scheduler.Text.LiveFiberDetect")), gbc); //$NON-NLS-1$
-//		gbc.weightx = 0.0;
-//		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		add(lfdOptionBox, gbc);
 
 		gbc.weighty = 1.0;
