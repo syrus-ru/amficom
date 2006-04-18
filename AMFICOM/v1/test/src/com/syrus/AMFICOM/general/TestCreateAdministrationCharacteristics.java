@@ -1,11 +1,11 @@
 /*
- * $Id: TestCreateAdministrationCharacteristics.java,v 1.3.2.3 2006/04/11 09:31:08 arseniy Exp $
+ * $Id: TestCreateAdministrationCharacteristics.java,v 1.1.2.1 2006/04/18 17:33:52 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
-package com.syrus.AMFICOM.administration;
+package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
@@ -19,7 +19,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CORBACommonTest;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
 import com.syrus.AMFICOM.general.CharacteristicTypeSort;
@@ -33,7 +32,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.resource.LayoutItem;
 
 /**
- * @version $Revision: 1.3.2.3 $, $Date: 2006/04/11 09:31:08 $
+ * @version $Revision: 1.1.2.1 $, $Date: 2006/04/18 17:33:52 $
  * @author $Author: arseniy $
  * @module test
  */
