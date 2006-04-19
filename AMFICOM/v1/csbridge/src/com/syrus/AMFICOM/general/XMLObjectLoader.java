@@ -1,5 +1,5 @@
 /*
- * $Id: XMLObjectLoader.java,v 1.15 2006/03/13 13:53:57 bass Exp $
+ * $Id: XMLObjectLoader.java,v 1.16 2006/04/19 11:21:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2006/03/13 13:53:57 $
+ * @version $Revision: 1.16 $, $Date: 2006/04/19 11:21:37 $
  * @author $Author: bass $
  * @author Voffka
  * @module csbridge
@@ -39,7 +39,7 @@ public final class XMLObjectLoader implements ObjectLoader {
 
 		final Set<T> storableObjects = new HashSet<T>(ids.size());
 		for (final Identifier id : ids) {
-			final T storableObject = this.soXML.<T>retrieve(id);
+			final T storableObject = this.soXML.<T> retrieve(id);
 			storableObjects.add(storableObject);
 		}
 		return storableObjects;
