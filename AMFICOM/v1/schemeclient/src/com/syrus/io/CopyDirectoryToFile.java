@@ -191,7 +191,7 @@ public class CopyDirectoryToFile
 			fis.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return null;
 		}
 		return h;
@@ -270,7 +270,7 @@ public class CopyDirectoryToFile
 			fis.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return null;
 		}
 		return h;
@@ -343,7 +343,7 @@ public class CopyDirectoryToFile
 			fis.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return null;
 		}
 		return h;
@@ -414,7 +414,7 @@ public class CopyDirectoryToFile
 			fis.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return null;
 		}
 		return h;
@@ -479,7 +479,7 @@ public class CopyDirectoryToFile
 			fis.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return null;
 		}
 		return h;
@@ -544,7 +544,7 @@ public class CopyDirectoryToFile
 			fis.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return null;
 		}
 		return h;
@@ -591,7 +591,7 @@ public class CopyDirectoryToFile
 			fis.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return null;
 		}
 		return h;
@@ -653,7 +653,7 @@ public class CopyDirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -714,7 +714,7 @@ public class CopyDirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -775,7 +775,7 @@ public class CopyDirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -846,7 +846,7 @@ public class CopyDirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -921,7 +921,7 @@ public class CopyDirectoryToFile
 
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -1010,7 +1010,7 @@ public class CopyDirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -1086,7 +1086,7 @@ public class CopyDirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -1185,7 +1185,7 @@ public class CopyDirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -1277,7 +1277,7 @@ public class CopyDirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -1356,7 +1356,7 @@ public class CopyDirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}

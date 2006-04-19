@@ -12,7 +12,6 @@ package com.syrus.io;
 
 public class DirectoryToFile
 {
-}
 /*
 	public static final String typeDir = "resources/types/";
 	public static final String eqType = "equipment";
@@ -69,7 +68,7 @@ public class DirectoryToFile
 		System.out.println("Reading mapprotos...");
 		readMapProto();
 		System.out.println("Reading SchemeProtoGroups...");
-		readSchemeProtoGroups();
+		readMapProtoGroups();
 		System.out.println("Reading paths...");
 		readSchemePaths();
 		System.out.println("Reading elements...");
@@ -77,7 +76,7 @@ public class DirectoryToFile
 		System.out.println("Reading schemes...");
 		readScheme();
 	}
-
+/*
 	public static void writeAll()
 	{
 		/* кажися это лишнее
@@ -205,7 +204,7 @@ public class DirectoryToFile
 						System.out.println(counter + " EquipmentTypes of " +  eqtClass + " class written");
 					} catch (Exception ex)
 					{
-						ex.printStackTrace();
+						Log.errorMessage(ex);
 					}
 			}
 		}
@@ -255,7 +254,7 @@ public class DirectoryToFile
 				System.out.println(counter + " PortTypes written");
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 		// *******************************************************************
@@ -301,7 +300,7 @@ public class DirectoryToFile
 				System.out.println(counter + " TestPortTypes written");
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 
@@ -352,7 +351,7 @@ public class DirectoryToFile
 				System.out.println(counter + " AccessPortTypes written");
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 		// *******************************************************************
@@ -401,7 +400,7 @@ public class DirectoryToFile
 				System.out.println(counter + " LinkTypes written");
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 
@@ -451,7 +450,7 @@ public class DirectoryToFile
 				System.out.println(counter + " CableLinkTypes written");
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 
@@ -513,7 +512,7 @@ public class DirectoryToFile
 						System.out.println(counter + " CharacteristicTypes of " + chtClass + " class written");
 					} catch (Exception ex)
 					{
-						ex.printStackTrace();
+						Log.errorMessage(ex);
 					}
 				}
 
@@ -567,7 +566,7 @@ public class DirectoryToFile
 				System.out.println(counter + " SchemeDevices written");
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 	}
@@ -614,7 +613,7 @@ public class DirectoryToFile
 				System.out.println(counter + " SchemePorts written");
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 	}
@@ -661,7 +660,7 @@ public class DirectoryToFile
 				System.out.println(counter + " SchemeCablePorts written");
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 	}
@@ -708,7 +707,7 @@ public class DirectoryToFile
 				System.out.println(counter + " SchemeLinks written");
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 	}
@@ -764,7 +763,7 @@ public class DirectoryToFile
 				System.out.println(counter + " SchemeCableLinks written");
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 	}
@@ -850,7 +849,7 @@ public class DirectoryToFile
 					System.out.println(counter + " ProtoElements of " + protoClass + " class written");
 				} catch (Exception ex)
 				{
-					ex.printStackTrace();
+					Log.errorMessage(ex);
 				}
 			}
 		}
@@ -911,7 +910,7 @@ public class DirectoryToFile
 				System.out.println(counter + " SchemeProtoGroups written");
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}/
 	}
@@ -964,7 +963,7 @@ public class DirectoryToFile
 				System.out.println(counter + " SchemeProtoGroups written");
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 	}
@@ -1051,7 +1050,7 @@ public class DirectoryToFile
 				System.out.println(counter + " Schemes written");
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 	}
@@ -1118,7 +1117,7 @@ public class DirectoryToFile
 				System.out.println(counter + " SchemeElements written");
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 	}
@@ -1175,7 +1174,7 @@ public class DirectoryToFile
 				System.out.println(counter + " SchemePaths written");
 			} catch (Exception ex)
 			{
-				ex.printStackTrace();
+				Log.errorMessage(ex);
 			}
 		}
 	}
@@ -1191,7 +1190,7 @@ public class DirectoryToFile
 			return true;
 		} catch (Exception ex)
 		{
-			ex.printStackTrace();
+			Log.errorMessage(ex);
 			return false;
 		}
 	}
@@ -1212,12 +1211,12 @@ public class DirectoryToFile
 			System.err.println("Error reading " + ex.getMessage());
 			return new byte[0];
 		}
-	}
+	}*/
 
 	///////////////////////////////////////////////////////////////////////////
 	///////////////  Чтение из файлов
 	///////////////////////////////////////////////////////////////////////////
-	protected static void readTypes()
+/*	protected static void readTypes()
 	{
 		File[] files = new File(typeDir).listFiles();
 		if (files == null)
@@ -1326,7 +1325,7 @@ public class DirectoryToFile
 			fis.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return null;
 		}
 		return h;
@@ -1391,7 +1390,7 @@ public class DirectoryToFile
 			fis.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return null;
 		}
 		return h;
@@ -1456,7 +1455,7 @@ public class DirectoryToFile
 			fis.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return null;
 		}
 		return h;
@@ -1518,7 +1517,7 @@ public class DirectoryToFile
 			fis.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return null;
 		}
 		return h;
@@ -1577,7 +1576,7 @@ public class DirectoryToFile
 			fis.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return null;
 		}
 		return h;
@@ -1636,7 +1635,7 @@ public class DirectoryToFile
 			fis.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return null;
 		}
 		return h;
@@ -1695,7 +1694,7 @@ public class DirectoryToFile
 			fis.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return null;
 		}
 		return h;
@@ -1736,7 +1735,7 @@ public class DirectoryToFile
 			fis.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Log.errorMessage(e);
 			return null;
 		}
 		return h;
@@ -1794,7 +1793,7 @@ public class DirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -1853,7 +1852,7 @@ public class DirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -1912,7 +1911,7 @@ public class DirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -1987,7 +1986,7 @@ public class DirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -2062,7 +2061,7 @@ public class DirectoryToFile
 
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -2154,7 +2153,7 @@ public class DirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -2208,7 +2207,7 @@ public class DirectoryToFile
 									ImageCatalogue.add(imr.getId(), imr);
 							} catch (Exception ex)
 							{
-								ex.printStackTrace();
+								Log.errorMessage(ex);
 							}
 
 							mapproto.setImageID(s[1]);
@@ -2241,7 +2240,7 @@ public class DirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -2311,7 +2310,7 @@ public class DirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -2445,7 +2444,7 @@ public class DirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -2539,7 +2538,7 @@ public class DirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -2616,7 +2615,7 @@ public class DirectoryToFile
 						old.putAll(h);
 				} catch (IOException e)
 				{
-					e.printStackTrace();
+					Log.errorMessage(e);
 					return;
 				}
 			}
@@ -2659,7 +2658,6 @@ public class DirectoryToFile
 
 		OutputStream f = new FileOutputStream(filename);
 		return f;
-	}
+	}*/
 }
 
-*/

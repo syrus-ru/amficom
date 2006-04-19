@@ -66,6 +66,7 @@ public class SchematicsApplicationModel extends ApplicationModel
 		add(ApplicationModel.MENU_VIEW_ARRANGE);
 		
 		this.initUIConstats();
+		I18N.addResourceBundle("com.syrus.AMFICOM.resource.SchemeMessages");
 		I18N.addResourceBundle("com.syrus.AMFICOM.client.report.report");
 	}
 	
