@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.118 2006/03/15 20:28:23 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.119 2006/04/19 08:48:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.118 $, $Date: 2006/03/15 20:28:23 $
+ * @version $Revision: 1.119 $, $Date: 2006/04/19 08:48:41 $
  * @module scheme
  */
 public final class SchemeCableThread
@@ -233,7 +233,7 @@ public final class SchemeCableThread
 					parentSchemeCableLink);
 			parentSchemeCableLink.getSchemeCableThreadContainerWrappee().addToCache(schemeCableThread, usePool);
 
-			schemeCableThread.linkTypeSet = (link != null || linkType != null);
+			schemeCableThread.linkTypeSet = true;
 
 			schemeCableThread.markAsChanged();
 			return schemeCableThread;
