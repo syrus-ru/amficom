@@ -22,5 +22,7 @@
 	<classpathentry kind="var" path="JAF_HOME/activation.jar"/>
 	<classpathentry sourcepath="/JAVAMAIL_HOME/src" kind="var" path="JAVAMAIL_HOME/mail.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/bugs"/>
+	<classpathentry kind="var" path="XMLBEANS_HOME/lib/jsr173_api.jar"/>
+	<classpathentry sourcepath="/XMLBEANS_HOME/src/xmlpublic" kind="var" path="XMLBEANS_HOME/lib/xbean.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
