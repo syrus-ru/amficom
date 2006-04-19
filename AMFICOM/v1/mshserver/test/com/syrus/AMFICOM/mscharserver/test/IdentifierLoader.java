@@ -1,5 +1,5 @@
 /*-
- * $Id: IdentifierLoader.java,v 1.6 2005/10/31 12:30:11 bass Exp $
+ * $Id: IdentifierLoader.java,v 1.7 2006/04/19 13:39:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,37 +17,40 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/31 12:30:11 $
+ * @version $Revision: 1.7 $, $Date: 2006/04/19 13:39:14 $
  * @author $Author: bass $
  * @module mscharserver
  */
 public class IdentifierLoader extends SleepButWorkThread {
 
-	private MscharServer	server;
-	private Fifo		idPool;
-	private short		entityCode;
-	private static int	timeToSleep	= 1000;
+	private MscharServer server;
+	private Fifo<Identifier> idPool;
+	private short entityCode;
+	private static int timeToSleep	= 1000;
 
-	public IdentifierLoader(MscharServer server, Fifo idPool, short entityCode) {
+	public IdentifierLoader(MscharServer server, Fifo<Identifier> idPool, short entityCode) {
 		super(timeToSleep);
 		this.server = server;
 		this.idPool = idPool;
 		this.entityCode = entityCode;
 	}
 
+	@Override
 	protected void processFall() {
 		Log.errorMessage("coundn't fetch ids");
 	}
 
+	@Override
 	protected void clearFalls() {
 		super.clearFalls();
 	}
 
+	@Override
 	public void run() {
 		IdlIdentifier[] generatedIdentifierRange = null;
 		while (generatedIdentifierRange == null) {
 			try {
-				int size = this.idPool.capacity() - this.idPool.getNumber();
+				int size = this.idPool.capacity() - this.idPool.size();
 				generatedIdentifierRange = this.server.getGeneratedIdentifierRange(this.entityCode,
 													size);
 				Log.debugMessage("fetched " + generatedIdentifierRange.length + " identifiers for "
@@ -62,6 +65,5 @@ public class IdentifierLoader extends SleepButWorkThread {
 			Identifier id = new Identifier(generatedIdentifierRange[i]);
 			this.idPool.push(id);
 		}
-
 	}
 }
