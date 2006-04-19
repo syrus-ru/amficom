@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.36 2005/12/09 11:36:12 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.37 2006/04/19 13:22:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 
@@ -30,13 +32,11 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/12/09 11:36:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2006/04/19 13:22:15 $
+ * @author $Author: bass $
  * @module config
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
-	private static final long serialVersionUID = 310220981399135743L;
-
 	@SuppressWarnings("unused")
 	private LinkedIdsConditionImpl(final Set<? extends Identifiable> linkedIdentifiables, final Short linkedEntityCode, final Short entityCode) {
 		this.linkedIdentifiables = linkedIdentifiables;
@@ -72,6 +72,18 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				switch (this.linkedEntityCode) {
 					case CABLELINK_TYPE_CODE:
 						condition = super.conditionTest(cableThreadType.getCableLinkType().getId());
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
+				break;
+			case PROTOEQUIPMENT_CODE:
+				final ProtoEquipment protoEquipment = (ProtoEquipment) storableObject;
+				switch (this.linkedEntityCode) {
+					case EQUIPMENT_TYPE_CODE:
+						condition = super.conditionTest(protoEquipment.getTypeId());
 						break;
 					default:
 						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode

@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.94 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: Identifier.java,v 1.95 2006/04/19 13:22:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_GENERATE_NEW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,13 +33,13 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.94 $, $Date: 2006/03/15 15:17:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.95 $, $Date: 2006/04/19 13:22:17 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public final class Identifier implements Comparable<Identifier>,
-		IdlTransferableObject<IdlIdentifier>, Identifiable {
+		IdlTransferableObject<IdlIdentifier>, Identifiable, Serializable {
 	private static final long serialVersionUID = 1721559813677093072L;
 
 	public static final char SEPARATOR = '_';

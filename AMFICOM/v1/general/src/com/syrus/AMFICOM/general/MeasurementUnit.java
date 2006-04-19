@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementUnit.java,v 1.14 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: MeasurementUnit.java,v 1.15 2006/04/19 13:22:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2006/03/15 15:17:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2006/04/19 13:22:17 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */

@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.113 2006/03/15 15:18:30 arseniy Exp $
+ * $Id: Port.java,v 1.114 2006/04/19 13:22:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,18 +41,18 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.113 $, $Date: 2006/03/15 15:18:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.114 $, $Date: 2006/04/19 13:22:15 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class Port extends StorableObject
-		implements Characterizable, TypedObject<PortType>, ReverseDependencyContainer {
+		implements Characterizable, TypedObject<PortType>, ReverseDependencyContainer, IdlTransferableObjectExt<IdlPort> {
 	private static final long serialVersionUID = -5139393638116159453L;
 
 	private PortType type;
@@ -96,8 +96,8 @@ public final class Port extends StorableObject
 			final PortType type,
 			final String description,
 			final Identifier equipmentId) throws CreateObjectException {
-		if (creatorId == null || type == null || description == null ||
-				type == null || equipmentId == null)
+		if (creatorId == null || type == null || description == null
+				|| equipmentId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
@@ -118,19 +118,17 @@ public final class Port extends StorableObject
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlPort pt = (IdlPort) transferable;
-		super.fromIdlTransferable(pt);
-
+	public synchronized void fromIdlTransferable(final IdlPort pt) throws IdlConversionException {
 		try {
-			this.type = StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);
+			super.fromIdlTransferable(pt);
+
+			this.type = (PortType) StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);
+
+			this.description = pt.description;
+			this.equipmentId = new Identifier(pt.equipmentId);
 		} catch (final ApplicationException ae) {
 			throw new IdlConversionException(ae);
 		}
-
-		this.description = pt.description;
-		this.equipmentId = new Identifier(pt.equipmentId);
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
@@ -257,8 +255,7 @@ public final class Port extends StorableObject
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool)
-	throws ApplicationException {
+	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(this.id);
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
@@ -290,9 +287,7 @@ public final class Port extends StorableObject
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
 	 */
-	public void addCharacteristic(final Characteristic characteristic,
-			final boolean usePool)
-	throws ApplicationException {
+	public void addCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		characteristic.setParentCharacterizable(this, usePool);
 	}
@@ -303,10 +298,7 @@ public final class Port extends StorableObject
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
 	 */
-	public void removeCharacteristic(
-			final Characteristic characteristic,
-			final boolean usePool)
-	throws ApplicationException {
+	public void removeCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		characteristic.setParentCharacterizable(this, usePool);
@@ -317,8 +309,7 @@ public final class Port extends StorableObject
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
 	 */
-	public Set<Characteristic> getCharacteristics(boolean usePool)
-	throws ApplicationException {
+	public Set<Characteristic> getCharacteristics(boolean usePool) throws ApplicationException {
 		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
 	}
 
@@ -326,8 +317,7 @@ public final class Port extends StorableObject
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	Set<Characteristic> getCharacteristics0(final boolean usePool)
-	throws ApplicationException {
+	Set<Characteristic> getCharacteristics0(final boolean usePool) throws ApplicationException {
 		return this.getCharacteristicContainerWrappee().getContainees(usePool);
 	}
 
@@ -337,9 +327,7 @@ public final class Port extends StorableObject
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
 	 */
-	public void setCharacteristics(final Set<Characteristic> characteristics,
-			final boolean usePool)
-	throws ApplicationException {
+	public void setCharacteristics(final Set<Characteristic> characteristics, final boolean usePool) throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;
 
 		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);

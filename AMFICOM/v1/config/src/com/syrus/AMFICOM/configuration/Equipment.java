@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.160 2006/03/15 15:18:42 arseniy Exp $
+ * $Id: Equipment.java,v 1.161 2006/04/19 13:22:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,25 +52,24 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.160 $, $Date: 2006/03/15 15:18:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.161 $, $Date: 2006/04/19 13:22:15 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class Equipment extends DomainMember
-		implements MonitoredDomainMember,
-		Characterizable,
-		XmlTransferableObject<XmlEquipment>, ReverseDependencyContainer {
+		implements MonitoredDomainMember, Characterizable, XmlTransferableObject<XmlEquipment>, ReverseDependencyContainer,
+		IdlTransferableObjectExt<IdlEquipment> {
 	private static final long serialVersionUID = 2432748205979033898L;
 
 	private Identifier protoEquipmentId;
@@ -119,7 +118,6 @@ public final class Equipment extends DomainMember
 				creatorId,
 				version,
 				domainId);
-
 		this.protoEquipmentId = protoEquipmentId;
 		this.name = name;
 		this.description = description;
@@ -144,17 +142,14 @@ public final class Equipment extends DomainMember
 	 * @param creatorId
 	 * @throws IdentifierGenerationException
 	 */
-	private Equipment(final XmlIdentifier id,
-			final String importType,
-			final Date created,
-			final Identifier creatorId)
-	throws IdentifierGenerationException {
+	private Equipment(final XmlIdentifier id, final String importType, final Date created, final Identifier creatorId)
+			throws IdentifierGenerationException {
 		super(id, importType, EQUIPMENT_CODE, created, creatorId);
 	}
 
 	/**
 	 * create new instance for client
-	 *
+	 * 
 	 * @param creatorId
 	 * @param domainId
 	 * @param name
@@ -261,10 +256,8 @@ public final class Equipment extends DomainMember
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlEquipment et = (IdlEquipment) transferable;
-		super.fromTransferable(et, new Identifier(et.domainId));
+	public synchronized void fromIdlTransferable(final IdlEquipment et) throws IdlConversionException {
+		super.fromIdlTransferable(et, new Identifier(et.domainId));
 
 		this.protoEquipmentId = new Identifier(et.protoEquipmentId);
 
@@ -290,8 +283,7 @@ public final class Equipment extends DomainMember
 	 * @throws XmlConversionException
 	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
-	public void fromXmlTransferable(final XmlEquipment equipment, final String importType)
-	throws XmlConversionException {
+	public void fromXmlTransferable(final XmlEquipment equipment, final String importType) throws XmlConversionException {
 		try {
 			XmlComplementorRegistry.complementStorableObject(equipment, EQUIPMENT_CODE, importType, PRE_IMPORT);
 
@@ -384,10 +376,8 @@ public final class Equipment extends DomainMember
 	 * @throws XmlConversionException
 	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
-	public void getXmlTransferable(final XmlEquipment equipment,
-			final String importType,
-			final boolean usePool)
-	throws XmlConversionException {
+	public void getXmlTransferable(final XmlEquipment equipment, final String importType, final boolean usePool)
+			throws XmlConversionException {
 		try {
 			super.id.getXmlTransferable(equipment.addNewId(), importType);
 			equipment.setName(this.name);

@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.214 2006/03/15 15:16:40 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.215 2006/04/19 13:22:17 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_GROUP_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static java.util.logging.Level.SEVERE;
 import gnu.trove.TShortObjectHashMap;
 import gnu.trove.TShortObjectIterator;
 
@@ -37,10 +38,11 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.LRUMapSaver;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.214 $, $Date: 2006/03/15 15:16:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.215 $, $Date: 2006/04/19 13:22:17 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 8
@@ -78,14 +80,41 @@ public final class StorableObjectPool {
 	private static final long MAX_LOCK_TIMEOUT = 1 * 60 * 1000; // 1 minuta
 	private static final long LOCK_TIME_WAIT = 5 * 1000; // 5 sec
 
+	/**
+	 * Хранилище сохраняемых объектов. Очищается в начале каждого вызова
+	 * {@link #flush(Identifiable, Identifier, boolean)},
+	 * {@link #flush(Set, Identifier, boolean)} и
+	 * {@link #flush(short, Identifier, boolean)}. Затем, заполняется по ходу
+	 * работы метода {@link #checkChangedWithDependencies(StorableObject, int)}.
+	 * См. {@link DependencySortedContainer}.
+	 */
 	private static final DependencySortedContainer DEPENDENCY_SORTED_CONTAINER = new DependencySortedContainer();
+
+	/**
+	 * Набор сохраняемых объектов. Очищается в начале каждого вызова
+	 * {@link #flush(Identifiable, Identifier, boolean)},
+	 * {@link #flush(Set, Identifier, boolean)} и
+	 * {@link #flush(short, Identifier, boolean)}. Затем, заполняется по ходу
+	 * работы метода {@link #checkChangedWithDependencies(StorableObject, int)}.
+	 * Наличие идентификатора объекта в этом наборе свидетельствует о том, что
+	 * для этого объекта метод
+	 * {@link #checkChangedWithDependencies(StorableObject, int)} уже вызывался.
+	 */
 	private static final Set<Identifier> SAVING_OBJECT_IDS = new HashSet<Identifier>();
 
 
+	/**
+	 * Хранилище сохраняемых объектов. Устроено следующим образом: объекты
+	 * сначала упорядочены по кодам сущностей, а затем - по уровню зависимости.
+	 * Ключ для уровня зависимости берётся с обратным знаком, чтобы при переборе
+	 * обеспечить пробегание от более глубоких уровней к более мелким.
+	 * 
+	 * @author Tashoyan Arseniy Feliksovich
+	 */
 	private static final class DependencySortedContainer {
 		private SortedMap<Integer, Map<Short, Set<StorableObject>>> objectsMap;
 
-		private DependencySortedContainer() {
+		DependencySortedContainer() {
 			this.objectsMap = new TreeMap<Integer, Map<Short, Set<StorableObject>>>();
 		}
 
@@ -114,6 +143,16 @@ public final class StorableObjectPool {
 			return this.objectsMap.get(dependencyKey);
 		}
 
+		/**
+		 * Проверить, существует ли в хранилище объект
+		 * <code>storableObject</code> на уровне зависимости мельче, чем
+		 * <code>dependencyLevel</code>. Если да - то переместить этот объект
+		 * с того уровня, на котором он обнаружился, на уровень
+		 * <code>dependencyLevel</code>.
+		 * 
+		 * @param storableObject
+		 * @param dependencyLevel
+		 */
 		void moveIfAlreadyPresent(final StorableObject storableObject, final int dependencyLevel) {
 			final Integer dependencyKey0 = new Integer(-(dependencyLevel - 1));
 			final SortedMap<Integer, Map<Short, Set<StorableObject>>> rangeObjectsMap = this.objectsMap.tailMap(dependencyKey0);
@@ -234,7 +273,7 @@ public final class StorableObjectPool {
 	 */
 	public static void addObjectPool(final short entityCode, final int objectPoolCapacity, final long objectTimeToLive) {
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE + ": " + entityCode;
-		final LRUMap objectPool = new LRUMap(objectPoolCapacity, objectTimeToLive);
+		final LRUMap<Identifier, StorableObject> objectPool = new LRUMap<Identifier, StorableObject>(objectPoolCapacity, objectTimeToLive);
 		objectPoolMap.put(entityCode, objectPool);
 		Log.debugMessage("Pool for '" + ObjectEntities.codeToString(entityCode)
 				+ "'/" + entityCode + " of capacity " + objectPoolCapacity + " added", Log.DEBUGLEVEL08);
@@ -663,7 +702,13 @@ public final class StorableObjectPool {
 		if (!objectPool.containsKey(id)) {
 			objectPool.put(id, storableObject);
 		} else {
-			setStorableObjectAttributes(objectPool.get(id), storableObject);
+			final StorableObject poolStorableObject = objectPool.get(id);
+			if (!poolStorableObject.isChanged()) {
+				setStorableObjectAttributes(poolStorableObject, storableObject);
+			} else {
+				Log.debugMessage("Object '" + id + "' is already present in pool and it is changed -- not replacing it",
+						Log.DEBUGLEVEL08);
+			}
 		}
 	}
 
@@ -1003,7 +1048,7 @@ public final class StorableObjectPool {
 		}
 	}
 
-	private static void checkChangedWithDependencies(final StorableObject storableObject, int dependencyLevel)
+	private static void checkChangedWithDependencies(final StorableObject storableObject, final int dependencyLevel)
 			throws ApplicationException {
 		final Identifier id = storableObject.getId();
 		if (SAVING_OBJECT_IDS.contains(id)) {
@@ -1011,7 +1056,6 @@ public final class StorableObjectPool {
 				DEPENDENCY_SORTED_CONTAINER.moveIfAlreadyPresent(storableObject, dependencyLevel);
 				final Set<Identifiable> dependencies = storableObject.getDependencies();
 				for (final Identifiable identifiable : dependencies) {
-					assert identifiable != null : NON_NULL_EXPECTED;
 					final StorableObject dependencyObject = fromIdentifiable(identifiable);
 					if (dependencyObject != null) {
 						checkChangedWithDependencies(dependencyObject, dependencyLevel + 1);
@@ -1025,8 +1069,7 @@ public final class StorableObjectPool {
 
 		final Set<Identifiable> dependencies = storableObject.getDependencies();
 		for (final Identifiable identifiable : dependencies) {
-			assert identifiable != null : NON_NULL_EXPECTED;
-			StorableObject dependencyObject = fromIdentifiable(identifiable);
+			final StorableObject dependencyObject = fromIdentifiable(identifiable);
 			if (dependencyObject != null) {
 				checkChangedWithDependencies(dependencyObject, dependencyLevel + 1);
 			}
@@ -1039,6 +1082,7 @@ public final class StorableObjectPool {
 	}
 
 	private static final StorableObject fromIdentifiable(final Identifiable identifiable) throws IllegalDataException {
+		assert identifiable != null : NON_NULL_EXPECTED;
 		if (identifiable.getId().isVoid()) {
 			return null;
 		}
@@ -1145,9 +1189,9 @@ public final class StorableObjectPool {
 	/*	From transferable*/
 
 	/**
-	 * Create {@link Set} of {@link StorableObject} from the array of
-	 * {@link IdlStorableObject}. Update in pool every object.
-	 * 
+	 * Creates a {@link Set} of {@link StorableObject}s from the array of
+	 * {@link IdlStorableObject}s. Updates every object in pool.
+	 *
 	 * @param transferables
 	 * @param continueOnError
 	 * @return {@link Set} of {@link StorableObject}
@@ -1175,7 +1219,7 @@ public final class StorableObjectPool {
 
 	/**
 	 * Gets a <code>StorableObject</code> from pool by its <code>id</code>,
-	 * update its fields from <code>transferable</code> and return it. If the
+	 * updates its fields from <code>transferable</code> and returns it. If the
 	 * object is not found in pool, then a newly created from
 	 * <code>transferable</code> instance is returned. <em>Never</em>
 	 * returns <code>null</code>.
@@ -1183,7 +1227,6 @@ public final class StorableObjectPool {
 	 * @param transferable
 	 * @throws IdlConversionException
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T extends StorableObject> T fromTransferable(final IdlStorableObject transferable)
 			throws IdlConversionException {
 		T storableObject = null;
@@ -1197,12 +1240,21 @@ public final class StorableObjectPool {
 		}
 
 		if (storableObject != null) {
-			storableObject.fromIdlTransferable(transferable);
+			if (storableObject instanceof IdlTransferableObjectExt) {
+				@SuppressWarnings("unchecked")
+				final IdlTransferableObjectExt<IdlStorableObject> pureJava = (IdlTransferableObjectExt) storableObject;
+				pureJava.fromIdlTransferable(transferable);
+			} else {
+				Log.debugMessage(storableObject.getClass().getName() + " doesn't support IDL import/export; returning as is", SEVERE);
+			}
 		} else {
 			try {
-				storableObject = (T) transferable.getNative();
+				@SuppressWarnings("unchecked")
+				final T pureJava = (T) transferable.getNative();
+				storableObject = pureJava;
 			} catch (final IdlCreateObjectException coe) {
-				Log.debugMessage(coe, Level.SEVERE);
+				Log.debugMessage(coe.detailMessage, SEVERE);
+				Log.debugMessage(coe, SEVERE);
 				throw new IdlConversionException(new CreateObjectException(coe.detailMessage));
 			}
 		}
@@ -1383,9 +1435,29 @@ public final class StorableObjectPool {
 		assert localStorableObject.id.equals(remoteStorableObject.id) : "Local: '"
 				+ localStorableObject.id + "', remote: '" + remoteStorableObject.id + "'";
 
+		if (!(localStorableObject instanceof IdlTransferableObjectExt)) {
+			Log.debugMessage("Local object (an instance of "
+					+ localStorableObject.getClass().getName()
+					+ ") doesn't support IDL import/export; update aborted",
+					SEVERE);
+			return;
+		}
+		if (!(remoteStorableObject instanceof IdlTransferableObjectExt)) {
+			Log.debugMessage("Remote object (an instance of "
+					+ remoteStorableObject.getClass().getName()
+					+ ") doesn't support IDL import/export; update aborted",
+					SEVERE);
+			return;
+		}
+
+		@SuppressWarnings("unchecked")
+		final IdlTransferableObjectExt<IdlStorableObject> localPureJava = (IdlTransferableObjectExt) localStorableObject;
+		@SuppressWarnings("unchecked")
+		final IdlTransferableObjectExt<IdlStorableObject> remotePureJava = (IdlTransferableObjectExt) remoteStorableObject;
+
 		try {
-			localStorableObject.fromIdlTransferable(remoteStorableObject.getIdlTransferable(CRUTCH_ORB));
-		} catch (IdlConversionException ice) {
+			localPureJava.fromIdlTransferable(remotePureJava.getIdlTransferable(CRUTCH_ORB));
+		} catch (final IdlConversionException ice) {
 			Log.errorMessage(ice);
 		}
 	}

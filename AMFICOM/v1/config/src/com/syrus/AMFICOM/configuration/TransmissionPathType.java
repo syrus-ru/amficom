@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.88 2006/03/15 15:18:30 arseniy Exp $
+ * $Id: TransmissionPathType.java,v 1.89 2006/04/19 13:22:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,18 +37,17 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2006/03/15 15:18:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.89 $, $Date: 2006/04/19 13:22:15 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
-
 public final class TransmissionPathType extends StorableObjectType
-		implements Characterizable, Namable, ReverseDependencyContainer {
+		implements Characterizable, Namable, ReverseDependencyContainer, IdlTransferableObjectExt<IdlTransmissionPathType> {
 	private static final long serialVersionUID = 5311725679846973948L;
 
 	private String name;
@@ -90,8 +89,9 @@ public final class TransmissionPathType extends StorableObjectType
 			final String codename,
 			final String description,
 			final String name) throws CreateObjectException {
-		if (creatorId == null || codename == null || name == null || description == null)
+		if (creatorId == null || codename == null || name == null || description == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
+		}
 
 		try {
 			final TransmissionPathType transmissionPathType = new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(TRANSPATH_TYPE_CODE),
@@ -111,10 +111,8 @@ public final class TransmissionPathType extends StorableObjectType
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlTransmissionPathType tptt = (IdlTransmissionPathType) transferable;
-		super.fromTransferable(tptt, tptt.codename, tptt.description);
+	public synchronized void fromIdlTransferable(final IdlTransmissionPathType tptt) throws IdlConversionException {
+		super.fromIdlTransferable(tptt, tptt.codename, tptt.description);
 		this.name = tptt.name;
 
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
@@ -149,7 +147,7 @@ public final class TransmissionPathType extends StorableObjectType
 		super.markAsChanged();
 	}
 
-	protected synchronized void setAttributes(final 	Date created,
+	protected synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
@@ -179,8 +177,7 @@ public final class TransmissionPathType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool)
-	throws ApplicationException {
+	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(this.id);
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
@@ -212,9 +209,7 @@ public final class TransmissionPathType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
 	 */
-	public void addCharacteristic(final Characteristic characteristic,
-			final boolean usePool)
-	throws ApplicationException {
+	public void addCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		characteristic.setParentCharacterizable(this, usePool);
 	}
@@ -225,10 +220,7 @@ public final class TransmissionPathType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
 	 */
-	public void removeCharacteristic(
-			final Characteristic characteristic,
-			final boolean usePool)
-	throws ApplicationException {
+	public void removeCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		characteristic.setParentCharacterizable(this, usePool);
@@ -239,8 +231,7 @@ public final class TransmissionPathType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
 	 */
-	public Set<Characteristic> getCharacteristics(boolean usePool)
-	throws ApplicationException {
+	public Set<Characteristic> getCharacteristics(boolean usePool) throws ApplicationException {
 		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
 	}
 
@@ -248,8 +239,7 @@ public final class TransmissionPathType extends StorableObjectType
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	Set<Characteristic> getCharacteristics0(final boolean usePool)
-	throws ApplicationException {
+	Set<Characteristic> getCharacteristics0(final boolean usePool) throws ApplicationException {
 		return this.getCharacteristicContainerWrappee().getContainees(usePool);
 	}
 

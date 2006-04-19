@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierLoader.java,v 1.17 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: IdentifierLoader.java,v 1.18 2006/04/19 13:22:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2006/03/15 15:17:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2006/04/19 13:22:17 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -26,11 +26,11 @@ final class IdentifierLoader extends SleepButWorkThread {
 	private static final long TIME_TO_SLEEP = 200;
 
 	private IdentifierGeneratorServer	igServer;
-	private Fifo idPool;
+	private Fifo<Identifier> idPool;
 	private short entityCode;
 	private boolean running;
 
-	public IdentifierLoader(final IdentifierGeneratorServer igServer, final Fifo idPool, final short entityCode) {
+	public IdentifierLoader(final IdentifierGeneratorServer igServer, final Fifo<Identifier> idPool, final short entityCode) {
 		super(TIME_TO_SLEEP);
 		super.setName("IdentifierLoader " + ObjectEntities.codeToString(entityCode));
 
@@ -42,7 +42,7 @@ final class IdentifierLoader extends SleepButWorkThread {
 
 	@Override
 	public void run() {
-		int numberToLoad = this.idPool.capacity() - this.idPool.getNumber();
+		int numberToLoad = this.idPool.capacity() - this.idPool.size();
 		while (this.running && numberToLoad > 0) {
 			try {
 				final IdlIdentifier[] identifiersT = this.igServer.getGeneratedIdentifierRange(this.entityCode, numberToLoad);

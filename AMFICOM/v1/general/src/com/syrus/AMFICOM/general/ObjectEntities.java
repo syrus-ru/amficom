@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.96 2005/11/10 15:47:05 bass Exp $
+ * $Id: ObjectEntities.java,v 1.97 2006/04/19 13:22:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import gnu.trove.TShortObjectHashMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/11/10 15:47:05 $
+ * @version $Revision: 1.97 $, $Date: 2006/04/19 13:22:17 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -46,6 +46,7 @@ public final class ObjectEntities {
 	/*	##################################### Configuration ##################################### */
 
 	/*	Type */
+	public static final String EQUIPMENT_TYPE = "EquipmentType";
 	public static final String PORT_TYPE = "PortType";
 	public static final String TRANSPATH_TYPE = "TransmissionPathType";
 	public static final String LINK_TYPE = "LinkType";
@@ -94,6 +95,8 @@ public final class ObjectEntities {
 	public static final String EVENTSOURCE = "EventSource";
 	public static final String EVENT = "Event";
 	public static final String DELIVERYATTRIBUTES = "DeliveryAttributes";
+	public static final String REFLECTOGRAMMISMATCHEVENT = "ReflectogramMismatchEvent";
+	public static final String LINEMISMATCHEVENT = "LineMismatchEvent";
 
 
 	/*	##################################### Scheme ##################################### */
@@ -192,6 +195,8 @@ public final class ObjectEntities {
 	public static final short EVENTSOURCE_CODE = 0x0082;
 	public static final short EVENT_CODE = 0x0083;
 	public static final short DELIVERYATTRIBUTES_CODE = 0x0084;
+	public static final short REFLECTOGRAMMISMATCHEVENT_CODE = 0x0085;
+	public static final short LINEMISMATCHEVENT_CODE = 0x0086;
 
 	public static final short EVENT_TYPE_CODE = 0x00C1;
 
@@ -227,6 +232,7 @@ public final class ObjectEntities {
 	public static final short CABLELINK_CODE = 0x0186;
 	public static final short PROTOEQUIPMENT_CODE = 0x0187;
 
+	public static final short EQUIPMENT_TYPE_CODE = 0x01C1;
 	public static final short PORT_TYPE_CODE = 0x01C2;
 	public static final short LINK_TYPE_CODE = 0x01C3;
 	public static final short TRANSPATH_TYPE_CODE = 0x01C4;
@@ -385,6 +391,7 @@ public final class ObjectEntities {
 
 		registerEntity(EVENT_TYPE_CODE, EVENT_TYPE);
 
+		registerEntity(EQUIPMENT_TYPE_CODE, EQUIPMENT_TYPE);
 		registerEntity(PORT_TYPE_CODE, PORT_TYPE);
 		registerEntity(LINK_TYPE_CODE, LINK_TYPE);
 		registerEntity(CABLETHREAD_TYPE_CODE, CABLETHREAD_TYPE);
@@ -401,6 +408,8 @@ public final class ObjectEntities {
 		registerEntity(EVENTSOURCE_CODE, EVENTSOURCE);
 		registerEntity(EVENT_CODE, EVENT);
 		registerEntity(DELIVERYATTRIBUTES_CODE, DELIVERYATTRIBUTES);
+		registerEntity(REFLECTOGRAMMISMATCHEVENT_CODE, REFLECTOGRAMMISMATCHEVENT);
+		registerEntity(LINEMISMATCHEVENT_CODE, LINEMISMATCHEVENT);
 
 		registerEntity(SYSTEMUSER_CODE, SYSTEMUSER);
 		registerEntity(DOMAIN_CODE, DOMAIN);

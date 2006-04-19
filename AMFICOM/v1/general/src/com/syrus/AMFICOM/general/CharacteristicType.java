@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicType.java,v 1.73 2006/03/15 15:15:35 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.74 2006/04/19 13:22:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,26 +31,25 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypeHelper;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicType;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.xml.XmlDataType;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2006/03/15 15:15:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.74 $, $Date: 2006/04/19 13:22:17 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 
-public final class CharacteristicType
-		extends StorableObjectType
-		implements Namable, XmlTransferableObject<XmlCharacteristicType> {
+public final class CharacteristicType extends StorableObjectType
+		implements Namable, XmlTransferableObject<XmlCharacteristicType>, IdlTransferableObjectExt<IdlCharacteristicType> {
 	private static final long serialVersionUID = 6153350736368296076L;
 
 	private String name;
@@ -72,9 +71,7 @@ public final class CharacteristicType
 	}
 
 	/**
-	 * <p>
-	 * <b>Clients must never explicitly call this method.</b>
-	 * </p>
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	CharacteristicType(final Identifier id,
 			final Identifier creatorId,
@@ -99,7 +96,7 @@ public final class CharacteristicType
 
 	/**
 	 * Minimalistic constructor used when importing from XML.
-	 * 
+	 *
 	 * @param id
 	 * @param importType
 	 * @param created
@@ -112,14 +109,10 @@ public final class CharacteristicType
 	}
 
 	/**
-	 * <p>
-	 * <b>Clients must never explicitly call this method.</b>
-	 * </p>
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlCharacteristicType ctt = (IdlCharacteristicType) transferable;
-		super.fromTransferable(ctt, ctt.codename, ctt.description);
+	public synchronized void fromIdlTransferable(final IdlCharacteristicType ctt) throws IdlConversionException {
+		super.fromIdlTransferable(ctt, ctt.codename, ctt.description);
 		this.name = ctt.name;
 		this.dataType.fromIdlTransferable(ctt.dataType);
 		this.sort.fromIdlTransferable(ctt.sort);
@@ -131,8 +124,7 @@ public final class CharacteristicType
 	 * @param characteristicType
 	 * @param importType
 	 * @throws XmlConversionException
-	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject,
-	 *      String)
+	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void fromXmlTransferable(final XmlCharacteristicType characteristicType, final String importType)
 			throws XmlConversionException {
@@ -145,10 +137,7 @@ public final class CharacteristicType
 			this.dataType.fromXmlTransferable(characteristicType.xgetDataType(), importType);
 			this.sort.fromXmlTransferable(characteristicType.xgetSort(), importType);
 
-			XmlComplementorRegistry.complementStorableObject(characteristicType,
-					CHARACTERISTIC_TYPE_CODE,
-					importType,
-					POST_IMPORT);
+			XmlComplementorRegistry.complementStorableObject(characteristicType, CHARACTERISTIC_TYPE_CODE, importType, POST_IMPORT);
 		} catch (final ApplicationException ae) {
 			throw new XmlConversionException(ae);
 		}
@@ -156,7 +145,7 @@ public final class CharacteristicType
 
 	/**
 	 * create new instance for client
-	 * 
+	 *
 	 * @param creatorId
 	 * @param codename
 	 * @param description
@@ -171,7 +160,7 @@ public final class CharacteristicType
 			final DataType dataType,
 			final CharacteristicTypeSort sort) throws CreateObjectException {
 		try {
-			CharacteristicType characteristicType = new CharacteristicType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_TYPE_CODE),
+			final CharacteristicType characteristicType = new CharacteristicType(IdentifierPool.getGeneratedIdentifier(CHARACTERISTIC_TYPE_CODE),
 					creatorId,
 					INITIAL_VERSION,
 					codename,
@@ -290,9 +279,7 @@ public final class CharacteristicType
 	}
 
 	/**
-	 * <p>
-	 * <b>Clients must never explicitly call this method.</b>
-	 * </p>
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
 	public IdlCharacteristicType getIdlTransferable(final ORB orb) {
@@ -317,8 +304,7 @@ public final class CharacteristicType
 	 * @param importType
 	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject,
-	 *      String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlCharacteristicType characteristicType, final String importType, final boolean usePool)
 			throws XmlConversionException {
@@ -357,10 +343,10 @@ public final class CharacteristicType
 	}
 
 	/**
-	 * <em>As long as</em> client is allowed to set {@code dataType} property
-	 * via the corresponding wrapper, this modifier method should also remain
-	 * public.
-	 * 
+	 * <em>As long as</em> client is allowed to set {@code dataType}
+	 * property via the corresponding wrapper, this modifier method should
+	 * also remain public.
+	 *
 	 * @param dataType
 	 */
 	public void setDataType(final DataType dataType) {
@@ -386,10 +372,10 @@ public final class CharacteristicType
 	}
 
 	/**
-	 * <em>As long as</em> client is allowed to set {@code sort} property via
-	 * the corresponding wrapper, this modifier method should also remain
-	 * public.
-	 * 
+	 * <em>As long as</em> client is allowed to set {@code sort} property
+	 * via the corresponding wrapper, this modifier method should also
+	 * remain public.
+	 *
 	 * @param sort
 	 */
 	public void setSort(final CharacteristicTypeSort sort) {
@@ -398,9 +384,7 @@ public final class CharacteristicType
 	}
 
 	/**
-	 * <p>
-	 * <b>Clients must never explicitly call this method.</b>
-	 * </p>
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected synchronized void setAttributes(final Date created,
 			final Date modified,
@@ -424,9 +408,7 @@ public final class CharacteristicType
 	}
 
 	/**
-	 * <p>
-	 * <b>Clients must never explicitly call this method.</b>
-	 * </p>
+	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {

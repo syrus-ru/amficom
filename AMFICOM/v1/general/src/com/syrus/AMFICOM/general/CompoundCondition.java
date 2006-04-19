@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.45 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: CompoundCondition.java,v 1.46 2006/04/19 13:22:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,12 +27,11 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  *
- * @version $Revision: 1.45 $, $Date: 2006/03/15 15:17:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.46 $, $Date: 2006/04/19 13:22:17 $
+ * @author $Author: bass $
  * @module general
  */
 public final class CompoundCondition implements StorableObjectCondition {
-	private static final long serialVersionUID = -5517086652959242088L;
 
 	private static final String ERROR_DIFFERENT_ENTITIES = "Unable to create CompoundCondition for conditions for different entities";
 
@@ -82,8 +81,21 @@ public final class CompoundCondition implements StorableObjectCondition {
 	}
 
 	public CompoundCondition(final Set<? extends StorableObjectCondition> conditions, final CompoundConditionSort operation) {
+		/**
+		 * @todo Public API: should be a RuntimeException instead of an assertion.
+		 */
+		//*
 		assert conditions != null : NON_NULL_EXPECTED;
 		assert conditions.size() > 1 : "Unable to create CompoundCondition for alone condition, use condition itself";
+		/*/
+		if (conditions == null) {
+			throw new IllegalArgumentException("Unable to create CompoundCondition for null conditions");
+		}
+
+		if (conditions.size() <= 1) {
+			throw new IllegalArgumentException("Unable to create CompoundCondition for alone condition, use condition itself");
+		}
+		//*/
 
 		Short code = null;
 		for (final StorableObjectCondition condition : conditions) {

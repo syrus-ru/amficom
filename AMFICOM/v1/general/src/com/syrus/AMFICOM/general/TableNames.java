@@ -1,5 +1,5 @@
 /*-
- * $Id: TableNames.java,v 1.10 2005/11/11 05:19:19 bass Exp $
+ * $Id: TableNames.java,v 1.11 2006/04/19 13:22:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/11/11 05:19:19 $
+ * @version $Revision: 1.11 $, $Date: 2006/04/19 13:22:17 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -20,8 +20,6 @@ public final class TableNames {
 	public static final String PARAMETER_TYPE = "ParameterType";
 
 	public static final String SYSTEM_USER_ROLE_LINK = "SystemUserRoleLink";
-	
-	public static final String EQUIPMENT_TYPE = "EquipmentType";
 
 	public static final String MEASUREMENT_TYPE = "MeasurementType";
 	public static final String ANALYSIS_TYPE = "AnalysisType";

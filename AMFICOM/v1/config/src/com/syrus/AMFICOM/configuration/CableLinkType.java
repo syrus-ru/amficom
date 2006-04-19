@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.95 2006/03/15 15:18:30 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.96 2006/04/19 13:22:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,14 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
@@ -48,23 +49,23 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2006/03/15 15:18:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.96 $, $Date: 2006/04/19 13:22:15 $
+ * @author $Author: bass $
  * @module config
  */
-public final class CableLinkType extends AbstractLinkType implements XmlTransferableObject<XmlCableLinkType> {
-
+public final class CableLinkType extends AbstractLinkType
+		implements XmlTransferableObject<XmlCableLinkType>, IdlTransferableObjectExt<IdlCableLinkType> {
 	private static final long serialVersionUID = 3257007652839372857L;
 
 	private String name;
@@ -115,11 +116,8 @@ public final class CableLinkType extends AbstractLinkType implements XmlTransfer
 	 * @param creatorId
 	 * @throws IdentifierGenerationException
 	 */
-	private CableLinkType(final XmlIdentifier id,
-			final String importType,
-			final Date created,
-			final Identifier creatorId)
-	throws IdentifierGenerationException {
+	private CableLinkType(final XmlIdentifier id, final String importType, final Date created, final Identifier creatorId)
+			throws IdentifierGenerationException {
 		super(id, importType, CABLELINK_TYPE_CODE, created, creatorId);
 	}
 
@@ -129,11 +127,9 @@ public final class CableLinkType extends AbstractLinkType implements XmlTransfer
 	 * @param importType
 	 * @throws CreateObjectException
 	 */
-	public static CableLinkType createInstance(
-			final Identifier creatorId,
+	public static CableLinkType createInstance(final Identifier creatorId,
 			final XmlCableLinkType xmlCableLinkType,
-			final String importType)
-	throws CreateObjectException {
+			final String importType) throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
@@ -242,8 +238,9 @@ public final class CableLinkType extends AbstractLinkType implements XmlTransfer
 				|| name == null
 				|| sort == null
 				|| manufacturer == null
-				|| manufacturerCode == null)
+				|| manufacturerCode == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
+		}
 
 		try {
 			final CableLinkType cableLinkType = new CableLinkType(IdentifierPool.getGeneratedIdentifier(CABLELINK_TYPE_CODE),
@@ -267,15 +264,15 @@ public final class CableLinkType extends AbstractLinkType implements XmlTransfer
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlCableLinkType cltt = (IdlCableLinkType) transferable;
-		super.fromTransferable(cltt, cltt.codename, cltt.description);
+	public synchronized void fromIdlTransferable(final IdlCableLinkType cltt) throws IdlConversionException {
+		super.fromIdlTransferable(cltt, cltt.codename, cltt.description);
 		this.sort = cltt.sort.value();
 		this.manufacturer = cltt.manufacturer;
 		this.manufacturerCode = cltt.manufacturerCode;
 		this.imageId = new Identifier(cltt.imageId);
 		this.name = cltt.name;
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -285,9 +282,7 @@ public final class CableLinkType extends AbstractLinkType implements XmlTransfer
 	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	@Shitlet
-	public void fromXmlTransferable(final XmlCableLinkType cableLinkType,
-			final String importType)
-	throws XmlConversionException {
+	public void fromXmlTransferable(final XmlCableLinkType cableLinkType, final String importType) throws XmlConversionException {
 		try {
 			XmlComplementorRegistry.complementStorableObject(cableLinkType, CABLELINK_TYPE_CODE, importType, PRE_IMPORT);
 
@@ -328,6 +323,7 @@ public final class CableLinkType extends AbstractLinkType implements XmlTransfer
 	 */
 	@Override
 	public IdlCableLinkType getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return IdlCableLinkTypeHelper.init(orb,
 				super.id.getIdlTransferable(),
@@ -353,11 +349,8 @@ public final class CableLinkType extends AbstractLinkType implements XmlTransfer
 	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	@Shitlet
-	public void getXmlTransferable(
-			final XmlCableLinkType cableLinkType,
-			final String importType,
-			final boolean usePool)
-	throws XmlConversionException {
+	public void getXmlTransferable(final XmlCableLinkType cableLinkType, final String importType, final boolean usePool)
+			throws XmlConversionException {
 		try {
 			super.id.getXmlTransferable(cableLinkType.addNewId(), importType);
 			cableLinkType.setName(this.name);
@@ -428,12 +421,12 @@ public final class CableLinkType extends AbstractLinkType implements XmlTransfer
 			final String manufacturer,
 			final String manufacturerCode,
 			final Identifier imageId) {
-			super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
-			this.name = name;
-			this.sort = sort;
-			this.manufacturer = manufacturer;
-			this.manufacturerCode = manufacturerCode;
-			this.imageId = imageId;
+		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
+		this.name = name;
+		this.sort = sort;
+		this.manufacturer = manufacturer;
+		this.manufacturerCode = manufacturerCode;
+		this.imageId = imageId;
 	}
 
 	@Override

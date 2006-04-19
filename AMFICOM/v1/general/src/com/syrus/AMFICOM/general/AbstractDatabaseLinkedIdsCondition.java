@@ -1,7 +1,7 @@
-/*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.28 2006/03/16 08:38:51 arseniy Exp $
+/*-
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.29 2006/04/19 13:22:17 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -18,8 +18,8 @@ import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2006/03/16 08:38:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2006/04/19 13:22:17 $
+ * @author $Author: bass $
  * @module general
  */
 public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStorableObjectCondition {

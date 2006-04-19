@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLCompoundCondition.java,v 1.6 2005/10/31 12:30:19 bass Exp $
+* $Id: XMLCompoundCondition.java,v 1.7 2006/04/19 13:22:17 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/31 12:30:19 $
+ * @version $Revision: 1.7 $, $Date: 2006/04/19 13:22:17 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module general
@@ -78,9 +78,9 @@ public class XMLCompoundCondition extends XMLStorableObjectCondition<CompoundCon
 		return identifiers;
 	}
 	
-	private XMLStorableObjectCondition reflectXMLCondition(final StorableObjectCondition soCondition) {
-		XMLStorableObjectCondition xmlStorableObjectCondition = null;
-		Class soConditionClazz = soCondition.getClass();
+	private XMLStorableObjectCondition<?> reflectXMLCondition(final StorableObjectCondition soCondition) {
+		XMLStorableObjectCondition<?> xmlStorableObjectCondition = null;
+		Class<?> soConditionClazz = soCondition.getClass();
 		if (soConditionClazz.isAnonymousClass()) {
 			soConditionClazz = soConditionClazz.getSuperclass();
 		}
@@ -90,8 +90,8 @@ public class XMLCompoundCondition extends XMLStorableObjectCondition<CompoundCon
 			+ "XML" 
 			+ className.substring(lastPoint + 1);
 		try {
-			final Class clazz = Class.forName(xmlClassName);
-			final Constructor constructor = 
+			final Class<?> clazz = Class.forName(xmlClassName);
+			final Constructor<?> constructor = 
 				clazz.getDeclaredConstructor(
 					new Class[] {
 							soConditionClazz,

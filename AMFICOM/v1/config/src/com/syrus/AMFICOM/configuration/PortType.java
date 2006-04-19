@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.119 2006/03/15 15:18:30 arseniy Exp $
+ * $Id: PortType.java,v 1.120 2006/04/19 13:22:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
@@ -54,26 +55,25 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 import com.syrus.util.transport.idl.IdlConversionException;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.119 $, $Date: 2006/03/15 15:18:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.120 $, $Date: 2006/04/19 13:22:15 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
-
 public final class PortType extends StorableObjectType
-		implements Characterizable, Namable,
-		XmlTransferableObject<XmlPortType>, ReverseDependencyContainer {
+		implements Characterizable, Namable, XmlTransferableObject<XmlPortType>, ReverseDependencyContainer,
+		IdlTransferableObjectExt<IdlPortType> {
 	private static final long serialVersionUID = -115251480084275101L;
 
 	private String name;
@@ -111,18 +111,15 @@ public final class PortType extends StorableObjectType
 
 	/**
 	 * Minimalistic constructor used when importing from XML.
-	 *
+	 * 
 	 * @param id
 	 * @param importType
 	 * @param created
 	 * @param creatorId
 	 * @throws IdentifierGenerationException
 	 */
-	private PortType(final XmlIdentifier id,
-			final String importType,
-			final Date created,
-			final Identifier creatorId)
-	throws IdentifierGenerationException {
+	private PortType(final XmlIdentifier id, final String importType, final Date created, final Identifier creatorId)
+			throws IdentifierGenerationException {
 		super(id, importType, PORT_TYPE_CODE, created, creatorId);
 	}
 
@@ -132,11 +129,8 @@ public final class PortType extends StorableObjectType
 	 * @param xmlPortType
 	 * @throws CreateObjectException
 	 */
-	public  static PortType createInstance(
-			final Identifier creatorId,
-			final String importType,
-			final XmlPortType xmlPortType)
-	throws CreateObjectException {
+	public static PortType createInstance(final Identifier creatorId, final String importType, final XmlPortType xmlPortType)
+			throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
@@ -242,10 +236,10 @@ public final class PortType extends StorableObjectType
 			final String description,
 			final String name,
 			final PortTypeSort sort,
-			final PortTypeKind kind) throws CreateObjectException{
-		if (creatorId == null || codename == null || name == null || description == null ||
-				sort == null || kind == null)
+			final PortTypeKind kind) throws CreateObjectException {
+		if (creatorId == null || codename == null || name == null || description == null || sort == null || kind == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
+		}
 
 		try {
 			final PortType portType = new PortType(IdentifierPool.getGeneratedIdentifier(PORT_TYPE_CODE),
@@ -267,13 +261,13 @@ public final class PortType extends StorableObjectType
 		}
 	}
 
-	@Override
-	protected synchronized void fromIdlTransferable(final IdlStorableObject transferable) throws IdlConversionException {
-		final IdlPortType ptt = (IdlPortType) transferable;
-		super.fromTransferable(ptt, ptt.codename, ptt.description);
+	public synchronized void fromIdlTransferable(final IdlPortType ptt) throws IdlConversionException {
+		super.fromIdlTransferable(ptt, ptt.codename, ptt.description);
 		this.name = ptt.name;
 		this.sort = ptt.sort.value();
 		this.kind = ptt.kind.value();
+
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -283,9 +277,7 @@ public final class PortType extends StorableObjectType
 	 * @see XmlTransferableObject#fromXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	@Shitlet
-	public void fromXmlTransferable(final XmlPortType portType,
-			final String importType)
-	throws XmlConversionException {
+	public void fromXmlTransferable(final XmlPortType portType, final String importType) throws XmlConversionException {
 		try {
 			XmlComplementorRegistry.complementStorableObject(portType, PORT_TYPE_CODE, importType, PRE_IMPORT);
 
@@ -314,6 +306,8 @@ public final class PortType extends StorableObjectType
 	 */
 	@Override
 	public IdlPortType getIdlTransferable(final ORB orb) {
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+
 		return IdlPortTypeHelper.init(orb,
 				super.id.getIdlTransferable(),
 				super.created.getTime(),
@@ -336,10 +330,8 @@ public final class PortType extends StorableObjectType
 	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
 	 */
 	@Shitlet
-	public void getXmlTransferable(final XmlPortType portType,
-			final String importType,
-			final boolean usePool)
-	throws XmlConversionException {
+	public void getXmlTransferable(final XmlPortType portType, final String importType, final boolean usePool)
+			throws XmlConversionException {
 		try {
 			this.id.getXmlTransferable(portType.addNewId(), importType);
 			portType.setName(this.name);
@@ -433,8 +425,7 @@ public final class PortType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool)
-	throws ApplicationException {
+	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(this.id);
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
@@ -466,9 +457,7 @@ public final class PortType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
 	 */
-	public void addCharacteristic(final Characteristic characteristic,
-			final boolean usePool)
-	throws ApplicationException {
+	public void addCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		characteristic.setParentCharacterizable(this, usePool);
 	}
@@ -479,10 +468,7 @@ public final class PortType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
 	 */
-	public void removeCharacteristic(
-			final Characteristic characteristic,
-			final boolean usePool)
-	throws ApplicationException {
+	public void removeCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		characteristic.setParentCharacterizable(this, usePool);
@@ -493,8 +479,7 @@ public final class PortType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
 	 */
-	public Set<Characteristic> getCharacteristics(boolean usePool)
-	throws ApplicationException {
+	public Set<Characteristic> getCharacteristics(boolean usePool) throws ApplicationException {
 		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
 	}
 
@@ -502,8 +487,7 @@ public final class PortType extends StorableObjectType
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	Set<Characteristic> getCharacteristics0(final boolean usePool)
-	throws ApplicationException {
+	Set<Characteristic> getCharacteristics0(final boolean usePool) throws ApplicationException {
 		return this.getCharacteristicContainerWrappee().getContainees(usePool);
 	}
 
@@ -513,9 +497,7 @@ public final class PortType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
 	 */
-	public void setCharacteristics(final Set<Characteristic> characteristics,
-			final boolean usePool)
-	throws ApplicationException {
+	public void setCharacteristics(final Set<Characteristic> characteristics, final boolean usePool) throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;
 
 		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);

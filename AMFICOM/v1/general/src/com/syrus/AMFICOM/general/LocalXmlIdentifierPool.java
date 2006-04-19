@@ -1,5 +1,5 @@
 /*-
- * $Id: LocalXmlIdentifierPool.java,v 1.21 2005/10/31 12:30:17 bass Exp $
+ * $Id: LocalXmlIdentifierPool.java,v 1.22 2006/04/19 13:22:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/10/31 12:30:17 $
+ * @version $Revision: 1.22 $, $Date: 2006/04/19 13:22:17 $
  * @module general
  */
 public final class LocalXmlIdentifierPool {
@@ -384,12 +384,16 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @author Maxim Selivanov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.21 $, $Date: 2005/10/31 12:30:17 $
+	 * @version $Revision: 1.22 $, $Date: 2006/04/19 13:22:17 $
 	 * @module general
 	 */
 	private abstract static class State {
 		protected KeyState state;
-		
+
+		State() {
+			// empty
+		}
+
 		protected KeyState getState() {
 			return this.state;
 		}
@@ -402,7 +406,7 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.21 $, $Date: 2005/10/31 12:30:17 $
+	 * @version $Revision: 1.22 $, $Date: 2006/04/19 13:22:17 $
 	 * @module general
 	 */
 	static final class Key extends State {
@@ -475,7 +479,7 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.21 $, $Date: 2005/10/31 12:30:17 $
+	 * @version $Revision: 1.22 $, $Date: 2006/04/19 13:22:17 $
 	 * @module general
 	 */
 	static final class XmlKey extends State {

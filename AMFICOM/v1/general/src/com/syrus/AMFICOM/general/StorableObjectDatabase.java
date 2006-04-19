@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.208 2006/03/15 15:17:43 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.209 2006/04/19 13:22:17 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,8 +43,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.208 $, $Date: 2006/03/15 15:17:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.209 $, $Date: 2006/04/19 13:22:17 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 9
@@ -95,6 +95,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	public static final String SQL_WHERE = " WHERE ";
 	public static final String SQL_IS = " IS ";
 
+	/**
+	 * @todo Remove static keyword: inner enums are always static.
+	 */
 	protected static enum ExecuteMode {MODE_INSERT, MODE_UPDATE}
 
 	public static final int SIZE_CODENAME_COLUMN = 32;
@@ -159,6 +162,13 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 	protected abstract String getUpdateSingleSQLValuesTmpl(T storableObject) throws IllegalDataException;
 
+	/**
+	 * This method is not used any longer.
+	 *
+	 * @param storableObject
+	 * @param mode
+	 * @throws IllegalDataException
+	 */
 	protected final String getUpdateSingleSQLValues(final T storableObject, final ExecuteMode mode)
 			throws IllegalDataException {
 		String modeString;
@@ -704,17 +714,26 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				try {
 					if (statement != null) {
 						statement.close();
+						/**
+						 * @todo remove null assignment.
+						 */
 						statement = null;
 					}
 				} finally {
 					try {
 						if (resultSet != null) {
 							resultSet.close();
+							/**
+							 * @todo remove null assignment.
+							 */
 							resultSet = null;
 						}
 					} finally {
 						if (connection != null) {
 							DatabaseConnection.releaseConnection(connection);
+							/**
+							 * @todo remove null assignment.
+							 */
 							connection = null;
 						}
 					}
@@ -829,7 +848,8 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					linkedId = linkedIdIt.next();
 					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
 					DatabaseIdentifier.setIdentifier(preparedStatement, 2, linkedId);
-					Log.debugMessage("Inserting linked entity  '" + linkedId + "' for '" + id + "'", Log.DEBUGLEVEL09);
+					Log.debugMessage("Inserting linked entity  '" + linkedId + "' for '" + id + "' into " + tableName,
+							Log.DEBUGLEVEL09);
 					preparedStatement.executeUpdate();
 				}
 				connection.commit();
