@@ -1,5 +1,5 @@
 /*-
- * $Id: MuffType.java,v 1.6 2006/01/24 07:44:18 stas Exp $
+ * $Id: MuffType.java,v 1.7 2006/04/19 13:38:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,8 @@
 
 package com.syrus.impexp.unicablemap.objects;
 
+import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
 import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment;
-import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment.XmlEquipmentType;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.impexp.unicablemap.UniCableMapType;
 
@@ -55,7 +55,9 @@ public class MuffType {
 		uid.setStringValue(String.valueOf(this.id));
 		
 		xmlEQT.setName(this.name);
-		xmlEQT.setXmlEquipmentType(XmlEquipmentType.MUFF);
+		
+		XmlIdentifier eqtId = xmlEQT.addNewEquipmentTypeId();
+		eqtId.setStringValue("muff");
 		
 		return xmlEQT;
 	}
