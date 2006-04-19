@@ -1,5 +1,5 @@
 /*-
- * $Id: Codename.java,v 1.1 2006/04/05 09:44:07 arseniy Exp $
+ * $Id: Codename.java,v 1.2 2006/04/19 13:47:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,8 @@
 package com.syrus.util;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2006/04/05 09:44:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2006/04/19 13:47:03 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -17,7 +17,7 @@ public interface Codename {
 
 	/**
 	 * @return Interned representation of string value.
-	 * @see {@link String#intern()}.
+	 * @see String#intern()
 	 */
 	String stringValue();
 }
