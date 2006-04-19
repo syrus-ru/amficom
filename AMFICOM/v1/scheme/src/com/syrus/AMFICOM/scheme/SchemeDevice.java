@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.123 2006/03/15 20:28:23 bass Exp $
+ * $Id: SchemeDevice.java,v 1.124 2006/04/19 11:16:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.123 $, $Date: 2006/03/15 20:28:23 $
+ * @version $Revision: 1.124 $, $Date: 2006/04/19 11:16:13 $
  * @module scheme
  */
 public final class SchemeDevice
@@ -668,7 +668,10 @@ public final class SchemeDevice
 	 * @param parentSchemeElement
 	 * @param usePool
 	 * @throws ApplicationException
+	 * @todo Remove null warning suppression as soon as
+	 *       Eclipse's bug #137467/129907 gets fixed.
 	 */
+	@SuppressWarnings("null")
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement,
 			final boolean usePool)
 	throws ApplicationException {
@@ -739,7 +742,10 @@ public final class SchemeDevice
 	 * @param parentSchemeProtoElement
 	 * @param usePool
 	 * @throws ApplicationException
+	 * @todo Remove null warning suppression as soon as
+	 *       Eclipse's bug #137467/129907 gets fixed.
 	 */
+	@SuppressWarnings("null")
 	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement,
 			final boolean usePool)
 	throws ApplicationException {

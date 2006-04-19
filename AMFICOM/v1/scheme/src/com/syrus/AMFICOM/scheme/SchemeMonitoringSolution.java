@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.95 2006/03/15 20:28:23 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.96 2006/04/19 11:16:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.95 $, $Date: 2006/03/15 20:28:23 $
+ * @version $Revision: 1.96 $, $Date: 2006/04/19 11:16:13 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -491,7 +491,10 @@ public final class SchemeMonitoringSolution
 	 * @param parentSchemeOptimizeInfo
 	 * @param usePool
 	 * @throws ApplicationException
+	 * @todo Remove null warning suppression as soon as
+	 *       Eclipse's bug #137467/129907 gets fixed.
 	 */
+	@SuppressWarnings("null")
 	public void setParentSchemeOptimizeInfo(
 			final SchemeOptimizeInfo parentSchemeOptimizeInfo,
 			final boolean usePool)

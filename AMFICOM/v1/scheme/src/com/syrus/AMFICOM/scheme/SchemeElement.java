@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.159 2006/03/15 20:28:23 bass Exp $
+ * $Id: SchemeElement.java,v 1.160 2006/04/19 11:16:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -99,7 +99,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.159 $, $Date: 2006/03/15 20:28:23 $
+ * @version $Revision: 1.160 $, $Date: 2006/04/19 11:16:13 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1307,8 +1307,11 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param usePool
 	 * @throws ApplicationException
 	 * @see AbstractSchemeElement#setParentScheme(Scheme, boolean)
+	 * @todo Remove null warning suppression as soon as
+	 *       Eclipse's bug #137467/129907 gets fixed.
 	 */
 	@Override
+	@SuppressWarnings("null")
 	public void setParentScheme(final Scheme parentScheme,
 			final boolean usePool)
 	throws ApplicationException {
@@ -1379,7 +1382,10 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param parentSchemeElement
 	 * @param usePool
 	 * @throws ApplicationException
+	 * @todo Remove null warning suppression as soon as
+	 *       Eclipse's bug #137467/129907 gets fixed.
 	 */
+	@SuppressWarnings("null")
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement,
 			final boolean usePool)
 	throws ApplicationException {

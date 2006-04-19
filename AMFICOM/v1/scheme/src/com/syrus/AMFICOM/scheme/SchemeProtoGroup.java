@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.98 2006/03/15 19:50:28 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.99 2006/04/19 11:16:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.98 $, $Date: 2006/03/15 19:50:28 $
+ * @version $Revision: 1.99 $, $Date: 2006/04/19 11:16:13 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -510,7 +510,10 @@ public final class SchemeProtoGroup extends StorableObject
 	 * @throws ApplicationException
 	 * @todo Check whether <code>parentSchemeProtoGroup</code> is not a
 	 *       lower-level descendant of <code>this</code>.
+	 * @todo Remove null warning suppression as soon as
+	 *       Eclipse's bug #137467/129907 gets fixed.
 	 */
+	@SuppressWarnings("null")
 	public void setParentSchemeProtoGroup(
 			final SchemeProtoGroup parentSchemeProtoGroup,
 			final boolean usePool)

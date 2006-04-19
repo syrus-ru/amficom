@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.112 2006/03/15 20:28:23 bass Exp $
+ * $Id: SchemeLink.java,v 1.113 2006/04/19 11:16:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,7 +77,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.112 $, $Date: 2006/03/15 20:28:23 $
+ * @version $Revision: 1.113 $, $Date: 2006/04/19 11:16:13 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -927,8 +927,11 @@ public final class SchemeLink extends AbstractSchemeLink
 	 * @param usePool
 	 * @throws ApplicationException
 	 * @see AbstractSchemeElement#setParentScheme(Scheme, boolean)
+	 * @todo Remove null warning suppression as soon as
+	 *       Eclipse's bug #137467/129907 gets fixed.
 	 */
 	@Override
+	@SuppressWarnings("null")
 	public void setParentScheme(final Scheme parentScheme,
 			final boolean usePool)
 	throws ApplicationException {
@@ -1014,7 +1017,10 @@ public final class SchemeLink extends AbstractSchemeLink
 	 * @param parentSchemeElement
 	 * @param usePool
 	 * @throws ApplicationException
+	 * @todo Remove null warning suppression as soon as
+	 *       Eclipse's bug #137467/129907 gets fixed.
 	 */
+	@SuppressWarnings("null")
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement,
 			final boolean usePool)
 	throws ApplicationException {
@@ -1101,7 +1107,10 @@ public final class SchemeLink extends AbstractSchemeLink
 	 * @param parentSchemeProtoElement
 	 * @param usePool
 	 * @throws ApplicationException
+	 * @todo Remove null warning suppression as soon as
+	 *       Eclipse's bug #137467/129907 gets fixed.
 	 */
+	@SuppressWarnings("null")
 	public void setParentSchemeProtoElement(
 			final SchemeProtoElement parentSchemeProtoElement,
 			final boolean usePool)
