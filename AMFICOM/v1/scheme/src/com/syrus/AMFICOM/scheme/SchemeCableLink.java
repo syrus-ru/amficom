@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.127 2006/04/18 17:25:17 arseniy Exp $
+ * $Id: SchemeCableLink.java,v 1.128 2006/04/19 06:44:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.CharacteristicTypeCodenames.COMMON_COLOUR;
 import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NATURE_INVALID;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
@@ -35,6 +36,7 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
@@ -57,7 +59,6 @@ import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
-import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -73,7 +74,6 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLinkHelper;
@@ -92,8 +92,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.127 $, $Date: 2006/04/18 17:25:17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.128 $, $Date: 2006/04/19 06:44:17 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -841,7 +841,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		final StorableObjectCondition typicalCondition = new TypicalCondition(
 				sequentialNumber,
 				sequentialNumber,
-				OperationSort.OPERATION_EQUALS,
+				OPERATION_EQUALS,
 				CABLECHANNELINGITEM_CODE,
 				CableChannelingItemWrapper.COLUMN_SEQUENTIAL_NUMBER) {
 			private static final long serialVersionUID = -3614279715565428694L;
@@ -1051,22 +1051,21 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		final Set<CableThreadType> cableThreadTypes = cableLinkType.getCableThreadTypes(true);
 		final Set<SchemeCableThread> newCableThreadTypes = new HashSet<SchemeCableThread>(cableThreadTypes.size());
 
-		final StorableObjectCondition condition = new TypicalCondition(CharacteristicTypeCodenames.COMMON_COLOUR, OperationSort.OPERATION_EQUALS, CHARACTERISTIC_TYPE_CODE, COLUMN_CODENAME);
+		final StorableObjectCondition condition = new TypicalCondition(
+				COMMON_COLOUR,
+				OPERATION_EQUALS,
+				CHARACTERISTIC_TYPE_CODE,
+				COLUMN_CODENAME);
 		final Set<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-		/*
-		 * TODO Think a little more about this. User should not create
-		 * CharacteristicType.
-		 */
 		if (characteristicTypes.isEmpty()) {
-			throw new InternalError("Cannot find CharacteristicType '" + CharacteristicTypeCodenames.COMMON_COLOUR + "'");
+			throw new Error("Cannot find CharacteristicType '"
+					+ COMMON_COLOUR
+					+ "'; system setup incomplete");
 		}
 		assert characteristicTypes.size() == 1 : ONLY_ONE_EXPECTED;
-		final CharacteristicType characteristicType = characteristicTypes.iterator().next();
 
-// final CharacteristicType characteristicType = characteristicTypes.isEmpty()
-//				? CharacteristicType.createInstance(creatorId, CharacteristicTypeCodenames.COMMON_COLOUR, "", "color", DataType.INTEGER, CharacteristicTypeSort.VISUAL)
-//				: characteristicTypes.iterator().next();
+		final CharacteristicType characteristicType = characteristicTypes.iterator().next();
 
 		assert characteristicType != null : NON_NULL_EXPECTED;
 
