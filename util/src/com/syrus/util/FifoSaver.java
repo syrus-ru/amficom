@@ -1,5 +1,5 @@
 /*-
- * $Id: FifoSaver.java,v 1.9 2006/04/18 17:31:28 arseniy Exp $
+ * $Id: FifoSaver.java,v 1.10 2006/04/19 11:56:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2006/04/18 17:31:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2006/04/19 11:56:16 $
+ * @author $Author: bass $
  * @module util
  */
 public final class FifoSaver {
@@ -55,8 +55,8 @@ public final class FifoSaver {
 		}		
 	}
 
-	public static Map<String, Fifo> load(final int fifoCapacity) {
-		final Map<String, Fifo> fifoMap = new HashMap<String, Fifo>();
+	public static Map<String, Fifo<?>> load(final int fifoCapacity) {
+		final Map<String, Fifo<?>> fifoMap = new HashMap<String, Fifo<?>>();
 		final File[] fifoFiles = cacheDir.listFiles(new FifoFileFilter());
 		if(fifoFiles == null) {
 			return fifoMap;
@@ -68,7 +68,7 @@ public final class FifoSaver {
 		return fifoMap;
 	}
 
-	private static void loadFifo(final Map<String, Fifo> fifoMap, final File fifoFile, final int fifoCapacity) {
+	private static void loadFifo(final Map<String, Fifo<?>> fifoMap, final File fifoFile, final int fifoCapacity) {
 		final String fifoFileName = fifoFile.getName();
 		final int offset = fifoFileName.indexOf(FILE_SUFFIX);
 		final String entityName = fifoFileName.substring(0, offset);
