@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicType.java,v 1.74 2006/04/19 13:22:17 bass Exp $
+ * $Id: CharacteristicType.java,v 1.75 2006/04/19 13:49:44 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,12 @@
 
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_FOUND;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.ONLY_ONE_EXPECTED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
@@ -35,6 +38,7 @@ import com.syrus.AMFICOM.general.xml.XmlCharacteristicType;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicTypeSort;
 import com.syrus.AMFICOM.general.xml.XmlDataType;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.util.Codename;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
@@ -42,7 +46,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2006/04/19 13:22:17 $
+ * @version $Revision: 1.75 $, $Date: 2006/04/19 13:49:44 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -55,6 +59,12 @@ public final class CharacteristicType extends StorableObjectType
 	private String name;
 	private final DataType.Proxy dataType = new DataType.Proxy();
 	private final CharacteristicTypeSort.Proxy sort = new CharacteristicTypeSort.Proxy();
+
+	/**
+	 * Условие для поиска параметра по кодовому имени. См.
+	 * {@link #valueOf(String)}.
+	 */
+	private static TypicalCondition codenameCondition;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -421,5 +431,48 @@ public final class CharacteristicType extends StorableObjectType
 	@Override
 	protected CharacteristicTypeWrapper getWrapper() {
 		return CharacteristicTypeWrapper.getInstance();
+	}
+
+	/**
+	 * Найти тип характеристики для заданного кодового имени.
+	 * 
+	 * @param codename
+	 *        Кодовое имя
+	 * @return Тип характеристики, соответствующиий заданному кодовому имени.
+	 * @throws ApplicationException
+	 *         {@link ObjectNotFoundException}, если такой объект не найден;
+	 *         {@link ApplicationException} в случае ошибки поиска.
+	 */
+	public static CharacteristicType valueOf(final Codename codename) throws ApplicationException {
+		assert codename != null : NON_NULL_EXPECTED;
+		return valueOf(codename.stringValue());
+	}
+
+	/**
+	 * Найти тип характеристики для заданного кодового имени.
+	 * 
+	 * @param codename
+	 *        Кодовое имя
+	 * @return Тип характеристики, соответствующиий заданному кодовому имени.
+	 * @throws ApplicationException
+	 *         {@link ObjectNotFoundException}, если такой объект не найден;
+	 *         {@link ApplicationException} в случае ошибки поиска.
+	 */
+	public static CharacteristicType valueOf(final String codename) throws ApplicationException {
+		assert codename != null : NON_NULL_EXPECTED;
+
+		if (codenameCondition == null) {
+			codenameCondition = new TypicalCondition(codename, OPERATION_EQUALS, CHARACTERISTIC_TYPE_CODE, COLUMN_CODENAME);
+		} else {
+			codenameCondition.setValue(codename);
+		}
+
+		final Set<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(codenameCondition,
+				true);
+		if (characteristicTypes.isEmpty()) {
+			throw new ObjectNotFoundException(OBJECT_NOT_FOUND + ": '" + codename + "'");
+		}
+		assert characteristicTypes.size() == 1 : ONLY_ONE_EXPECTED;
+		return characteristicTypes.iterator().next();
 	}
 }
