@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.38 2005/11/30 15:58:22 arseniy Exp $
+ * $Id: IdentifierPool.java,v 1.38.4.1 2006/04/19 11:57:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/11/30 15:58:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.38.4.1 $, $Date: 2006/04/19 11:57:35 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -70,11 +70,12 @@ public class IdentifierPool {
 	public static Identifier getGeneratedIdentifier(final short entityCode) throws IdentifierGenerationException {
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 
-		Fifo fifo = (Fifo) idPoolMap.get(entityCode);
+		@SuppressWarnings("unchecked")
+		Fifo<Identifier> fifo = (Fifo) idPoolMap.get(entityCode);
 
 		/* Add new fifo if needed */
 		if (fifo == null) {
-			fifo = new Fifo(capacity);
+			fifo = new Fifo<Identifier>(capacity);
 			synchronized(idPoolMap) {
 				idPoolMap.put(entityCode, fifo);
 			}
@@ -82,13 +83,13 @@ public class IdentifierPool {
 
 		synchronized (fifo) {
 			/* Transfer ids when fifo filling minimum than minFillFactor */
-			if (fifo.getNumber() < MIN_FILL_FACTOR * fifo.capacity()) {
+			if (fifo.size() < MIN_FILL_FACTOR * fifo.capacity()) {
 				fillFifo(fifo, entityCode);
 			}
 
 			/* If identifiers available -- return one*/
-			if (fifo.getNumber() >= 1) {
-				return (Identifier) fifo.remove();
+			if (fifo.size() >= 1) {
+				return fifo.remove();
 			}
 		}
 
@@ -97,7 +98,7 @@ public class IdentifierPool {
 				+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 	}
 
-	private static void fillFifo(final Fifo fifo, final short entityCode) throws IdentifierGenerationException {
+	private static void fillFifo(final Fifo<Identifier> fifo, final short entityCode) throws IdentifierGenerationException {
 		final CORBAAction corbaAction = new CORBAAction() {
 			public void perform() throws AMFICOMRemoteException, ApplicationException {
 				IdentifierGeneratorServer igServer = null;
@@ -149,14 +150,14 @@ public class IdentifierPool {
 				iterator.advance();
 				final short entityCode = iterator.key();
 				final String entityName = ObjectEntities.codeToString(entityCode);
-				final Fifo fifo = (Fifo) iterator.value();
+				final Fifo<?> fifo = (Fifo) iterator.value();
 				FifoSaver.save(fifo, entityName);
 			}
 		}
 	}
 
 	protected static void deserialize() {
-		final Map<String, Fifo> fifoMap = FifoSaver.load(capacity);
+		final Map<String, Fifo<?>> fifoMap = FifoSaver.load(capacity);
 		for (final String entityName : fifoMap.keySet()) {
 			final short entityCode = ObjectEntities.stringToCode(entityName);
 			idPoolMap.put(entityCode, fifoMap.get(entityName));
