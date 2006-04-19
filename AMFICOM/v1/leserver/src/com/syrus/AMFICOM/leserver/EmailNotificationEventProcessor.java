@@ -1,5 +1,5 @@
 /*-
- * $Id: EmailNotificationEventProcessor.java,v 1.6 2006/04/04 06:08:46 bass Exp $
+ * $Id: EmailNotificationEventProcessor.java,v 1.7 2006/04/19 14:13:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,67 +8,71 @@
 
 package com.syrus.AMFICOM.leserver;
 
-import static com.syrus.AMFICOM.eventv2.EventType.NOTIFICATION;
 import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 
 import javax.mail.MessagingException;
 
 import com.syrus.AMFICOM.eventv2.EmailNotificationEvent;
-import com.syrus.AMFICOM.eventv2.Event;
-import com.syrus.AMFICOM.eventv2.EventType;
 import com.syrus.AMFICOM.eventv2.NotificationEvent;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2006/04/04 06:08:46 $
+ * @version $Revision: 1.7 $, $Date: 2006/04/19 14:13:46 $
  * @module leserver
  */
-final class EmailNotificationEventProcessor implements EventProcessor {
-	/**
-	 * @see EventProcessor#getEventType()
-	 */
-	public EventType getEventType() {
-		return NOTIFICATION;
+final class EmailNotificationEventProcessor extends AbstractNotificationEventProcessor {
+	EmailNotificationEventProcessor(final int capacity) {
+		super(capacity);
+	}
+
+	EmailNotificationEventProcessor() {
+		this(Integer.MAX_VALUE);
 	}
 
 	/**
-	 * @param event
-	 * @see EventProcessor#processEvent(Event)
+	 * @param notificationEvent
+	 * @see AbstractNotificationEventProcessor#processEvent(NotificationEvent)
 	 */
-	public void processEvent(final Event<?> event) {
-		@SuppressWarnings("unchecked")
-		final NotificationEvent<?> notificationEvent = (NotificationEvent) event;
+	@Override
+	void processEvent(final NotificationEvent<?> notificationEvent) {
+		final long t0 = System.nanoTime();
 
-		if (notificationEvent instanceof EmailNotificationEvent) {
-			@SuppressWarnings("unchecked")
-			final EmailNotificationEvent emailNotificationEvent = (EmailNotificationEvent) notificationEvent;
-
-			try {
-				SimpleMailer.sendMail(emailNotificationEvent.getEmail(), emailNotificationEvent.getSubject(), emailNotificationEvent.getMessage());
-				Log.debugMessage("Event: "
-						+ emailNotificationEvent
-						+ " delivered successfully",
-						CONFIG);
-			} catch (MessagingException me) {
-				while (me != null) {
-					Log.debugMessage(me, SEVERE);
-					final Exception nextException = me.getNextException();
-					if (nextException instanceof MessagingException
-							|| nextException == null) {
-						me = (MessagingException) nextException;
-						continue;
-					}
-					Log.debugMessage(nextException, SEVERE);
-					break;
-				}
-				Log.debugMessage("Event: "
-						+ emailNotificationEvent
-						+ " delivery failed",
-						SEVERE);
-			}
+		if (!(notificationEvent instanceof EmailNotificationEvent)) {
+			return;
 		}
+
+		@SuppressWarnings("unchecked")
+		final EmailNotificationEvent emailNotificationEvent = (EmailNotificationEvent) notificationEvent;
+
+		try {
+			SimpleMailer.sendMail(emailNotificationEvent.getEmail(), emailNotificationEvent.getSubject(), emailNotificationEvent.getMessage());
+			Log.debugMessage("Event: "
+					+ emailNotificationEvent
+					+ " delivered successfully",
+					CONFIG);
+		} catch (MessagingException me) {
+			while (me != null) {
+				Log.debugMessage(me, SEVERE);
+				final Exception nextException = me.getNextException();
+				if (nextException instanceof MessagingException
+						|| nextException == null) {
+					me = (MessagingException) nextException;
+					continue;
+				}
+				Log.debugMessage(nextException, SEVERE);
+				break;
+			}
+			Log.debugMessage("Event: "
+					+ emailNotificationEvent
+					+ " delivery failed",
+					SEVERE);
+		}
+
+		final long t1 = System.nanoTime();
+		Log.debugMessage(((t1 - t0) / 1e9) + " second(s)", FINEST);
 	}
 }
