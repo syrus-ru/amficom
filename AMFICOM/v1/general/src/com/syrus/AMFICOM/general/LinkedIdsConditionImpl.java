@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.29 2006/04/19 13:22:17 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.30 2006/04/20 12:25:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
@@ -49,12 +50,12 @@ import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2006/04/19 13:22:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2006/04/20 12:25:02 $
+ * @author $Author: arseniy $
  * @module general
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
-	protected static final Short CHARACTERISTIC_SHORT = new Short(ObjectEntities.CHARACTERISTIC_CODE);
+	protected static final Short CHARACTERISTIC_SHORT = new Short(CHARACTERISTIC_CODE);
 
 	@SuppressWarnings("unused")
 	private LinkedIdsConditionImpl(final Set<? extends Identifiable> linkedIdentifiables, final Short linkedEntityCode, final Short entityCode) {
@@ -127,7 +128,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
 						condition = super.conditionTest(characteristic.getParentCharacterizableId());
 						break;
-					case ObjectEntities.CHARACTERISTIC_TYPE_CODE:
+					case CHARACTERISTIC_TYPE_CODE:
 						condition = super.conditionTest(characteristic.getTypeId());
 						break;
 					default:
@@ -143,7 +144,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	@Override
 	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
-			case ObjectEntities.CHARACTERISTIC_CODE:
+			case CHARACTERISTIC_CODE:
 				this.entityCode = CHARACTERISTIC_SHORT;
 				break;
 			default:
