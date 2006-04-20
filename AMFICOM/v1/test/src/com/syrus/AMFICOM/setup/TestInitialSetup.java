@@ -1,5 +1,5 @@
 /*
- * $Id: TestInitialSetup.java,v 1.16 2005/12/15 14:53:14 arseniy Exp $
+ * $Id: TestInitialSetup.java,v 1.17 2006/04/20 11:04:10 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,10 +18,8 @@ import com.syrus.AMFICOM.administration.TestServer;
 import com.syrus.AMFICOM.administration.TestServerProcess;
 import com.syrus.AMFICOM.administration.TestSystemUser;
 import com.syrus.AMFICOM.configuration.TestEquipment;
-import com.syrus.AMFICOM.configuration.TestEquipmentType;
 import com.syrus.AMFICOM.configuration.TestPort;
 import com.syrus.AMFICOM.configuration.TestPortType;
-import com.syrus.AMFICOM.configuration.TestProtoEquipment;
 import com.syrus.AMFICOM.configuration.TestTransmissionPath;
 import com.syrus.AMFICOM.configuration.TestTransmissionPathType;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
@@ -38,7 +36,7 @@ import com.syrus.AMFICOM.measurement.TestModelingType;
 import com.syrus.AMFICOM.measurement.TestMonitoredElement;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/12/15 14:53:14 $
+ * @version $Revision: 1.17 $, $Date: 2006/04/20 11:04:10 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -58,7 +56,6 @@ public final class TestInitialSetup extends TestCase {
 		sqlCommonTest.addTest(new TestDataType("testCreateAll"));
 		sqlCommonTest.addTest(new TestMeasurementUnit("testCreateAll"));
 		sqlCommonTest.addTest(new TestParameterType("testCreateAll"));
-		sqlCommonTest.addTest(new TestEquipmentType("testCreateAll"));
 		sqlCommonTest.addTest(new TestMeasurementType("testCreateAll"));
 		sqlCommonTest.addTest(new TestAnalysisType("testCreateAll"));
 		sqlCommonTest.addTest(new TestModelingType("testCreateAll"));
@@ -80,7 +77,6 @@ public final class TestInitialSetup extends TestCase {
 		//-6. Create configuration objects.
 		databaseCommonTest.addTest(new TestPortType("testCreateInstance"));
 		databaseCommonTest.addTest(new TestTransmissionPathType("testCreateInstance"));
-		databaseCommonTest.addTest(new TestProtoEquipment("testCreateInstance"));
 		databaseCommonTest.addTest(new TestEquipment("testCreateAll"));
 		databaseCommonTest.addTest(new TestPort("testCreateAll"));
 		databaseCommonTest.addTest(new TestTransmissionPath("testCreateAll"));
