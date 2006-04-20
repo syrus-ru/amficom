@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.39 2006/04/19 13:22:17 bass Exp $
+ * $Id: IdentifierPool.java,v 1.40 2006/04/20 12:23:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,36 +8,49 @@
 
 package com.syrus.AMFICOM.general;
 
+import gnu.trove.TShortHashSet;
 import gnu.trove.TShortObjectHashMap;
 import gnu.trove.TShortObjectIterator;
 
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
-import com.syrus.util.FifoSaver;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Fifo;
+import com.syrus.util.FifoSaver;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2006/04/19 13:22:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.40 $, $Date: 2006/04/20 12:23:24 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public class IdentifierPool {
+public final class IdentifierPool {
 	private static final int DEFAULT_CAPACITY = 10;
 	private static final int MAX_CAPACITY = 100;
 	private static final double MIN_FILL_FACTOR = 0.2;
-	private static final long MAX_TIME_WAIT = 5 * 1000; /* Maximim time to wait while identifiers are loading*/
+	private static final long MAX_TIME_WAIT = 3 * 60 * 1000; /* Maximim time to wait while identifiers are loading*/
 
 	static IGSConnectionManager igsConnectionMananger;
 	private static int capacity;
 
+	private static ExecutorService executorService;
 	protected static CORBAActionProcessor corbaActionProcessor;
 	
-	/* Map <short objectEntity, Fifo idPool> */
+	/**
+	 * Карта очередей идентификаторов. Ключ - код сущности. величина - очередь
+	 * идентификаторов.
+	 */
 	private static TShortObjectHashMap idPoolMap;
+
+	/**
+	 * Набор кодов сущностей, для которых уже запущен поток подгрузки.
+	 */
+	static TShortHashSet fillingFifoCodes;
 
 	private IdentifierPool() {
 		// empty private construcor
@@ -61,73 +74,157 @@ public class IdentifierPool {
 			final CORBAActionProcessor corbaActionProcessor1) {
 		igsConnectionMananger = igsConnectionMananger1;
 		capacity = (capacity1 <= MAX_CAPACITY) ? capacity1 : MAX_CAPACITY;
+		executorService = Executors.newCachedThreadPool();
 		corbaActionProcessor = corbaActionProcessor1;
 
 		idPoolMap = new TShortObjectHashMap();
+		fillingFifoCodes = new TShortHashSet();
 	}
 
-
+	/**
+	 * <p>
+	 * Вернуть новый идентификатор для сущности <code>entityCode</code>.
+	 * <p>
+	 * Этот метод достаёт очередь идентификаторов для данного
+	 * <code>entityCode</code> из карты {@link #idPoolMap}. Если такой
+	 * очереди нет, то он создаёт её и помещает в карту.
+	 * <p>
+	 * Затем происходит проверка на очереди "неопустошённость". Считается, что
+	 * очередь "опустошена", если количество объектов в ней меньше, чем некая
+	 * часть от ёмкости этой очереди, определяемая постоянной
+	 * {@link #MIN_FILL_FACTOR}.
+	 * <p>
+	 * Если очередь содержит не слишком мало идентификаторов, то метод удаляет
+	 * один из них из очереди и возвращает его. В противном случае на каждый код
+	 * сущности <code>entityCode</code> запускается отдельный поток подгрузки
+	 * {@link IdentifierLoader} (если он до сих пор не запущен для этого
+	 * <code>entityCode</code>). Метод ждёт, пока в очереди появится хотя бы
+	 * один доступный объект, но не дольше, чем {@link #MAX_TIME_WAIT}. Если
+	 * удалось дождаться, то возвращается полученный из очереди идентификатор, в
+	 * противном случае кидается {@link IdentifierGenerationException}.
+	 * 
+	 * @param entityCode
+	 *        Код сущности, для которой необходимо получить новый идентификатор.
+	 * @return Новый, готовый к использованию идентификатор.
+	 * @throws IdentifierGenerationException
+	 *         Если невозможно получить новый идентификатор.
+	 */
 	public static Identifier getGeneratedIdentifier(final short entityCode) throws IdentifierGenerationException {
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 
-		@SuppressWarnings("unchecked")
-		Fifo<Identifier> fifo = (Fifo) idPoolMap.get(entityCode);
+		Fifo<Identifier> fifo;
 
-		/* Add new fifo if needed */
-		if (fifo == null) {
-			fifo = new Fifo<Identifier>(capacity);
-			synchronized(idPoolMap) {
+		synchronized (idPoolMap) {
+			fifo = (Fifo<Identifier>) idPoolMap.get(entityCode);
+			if (fifo == null) {
+				fifo = new Fifo<Identifier>(capacity);
 				idPoolMap.put(entityCode, fifo);
 			}
 		}
 
 		synchronized (fifo) {
-			/* Transfer ids when fifo filling minimum than minFillFactor */
-			if (fifo.size() < MIN_FILL_FACTOR * fifo.capacity()) {
-				fillFifo(fifo, entityCode);
-			}
-
-			/* If identifiers available -- return one*/
-			if (fifo.size() >= 1) {
+			if (fifo.size() > MIN_FILL_FACTOR * fifo.capacity()) {
 				return fifo.remove();
 			}
-		}
-
-		/* Else - throw IdentifierGenerationException*/
-		throw new IdentifierGenerationException("No more identifiers for entity '"
-				+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
-	}
-
-	private static void fillFifo(final Fifo<Identifier> fifo, final short entityCode) throws IdentifierGenerationException {
-		final CORBAAction corbaAction = new CORBAAction() {
-			public void perform() throws AMFICOMRemoteException, ApplicationException {
-				IdentifierGeneratorServer igServer = null;
-				try {
-					igServer = igsConnectionMananger.getIGSReference();
-				} catch (CommunicationException ce) {
-					throw new IdentifierGenerationException("Cannot obtain reference on identifier generator server", ce);
+			final long deadtime = System.currentTimeMillis() + MAX_TIME_WAIT;
+			final long start = System.currentTimeMillis();
+			for(;;) {
+				long currentTime = System.currentTimeMillis();
+				long toWait = deadtime - currentTime;
+				if (toWait <= 0) {
+					throw new IdentifierGenerationException("Cannot load identifiers for entity '"
+							+ ObjectEntities.codeToString(entityCode) + "'; wait "
+							+ (currentTime - start) + " ms (" + MAX_TIME_WAIT + ")");
 				}
 
-				final IdentifierLoader identifierLoader = new IdentifierLoader(igServer, fifo, entityCode);
-				identifierLoader.start();
-				/*	Do not wait more than MAX_TIME_WAIT*/
+				synchronized (fillingFifoCodes) {
+					if (!fillingFifoCodes.contains(entityCode)) {
+						executorService.submit(new IdentifierLoader(fifo, entityCode));
+						fillingFifoCodes.add(entityCode);
+					}
+				}
+
+				if (!fifo.isEmpty()) {
+					return fifo.remove();
+				}
+
 				try {
-					identifierLoader.join(MAX_TIME_WAIT);
+					fifo.wait(toWait);
 				} catch (InterruptedException ie) {
 					Log.errorMessage(ie);
 				}
 			}
-		};
+		}
+	}
 
-		try {
-			corbaActionProcessor.performAction(corbaAction);
-		} catch (final ApplicationException ae) {
-			if (ae instanceof IdentifierGenerationException) {
-				throw (IdentifierGenerationException) ae;
-			}
-			throw new IdentifierGenerationException("Cannot obtain reference on identifier generator server", ae);
+	/**
+	 * Поток подгрузки. Предназначен для заполнения очереди идентификаторов
+	 * {@link Fifo}.
+	 */
+	private static class IdentifierLoader implements Runnable {
+		final Fifo<Identifier> fifo;
+		final short entityCode;
+
+		IdentifierLoader(final Fifo<Identifier> fifo, final short entityCode) {
+			this.fifo = fifo;
+			this.entityCode = entityCode;
 		}
 
+		public void run() {
+			final CORBAAction corbaAction = new CORBAAction() {
+				public void perform() {
+					final IdentifierGeneratorServer identifierGeneratorServer;
+					try {
+						identifierGeneratorServer = igsConnectionMananger.getIGSReference();
+					} catch (CommunicationException ce) {
+						Log.errorMessage(ce);
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException ie) {
+							Log.errorMessage(ie);
+						}
+						return;
+					}
+
+					int numberToLoad;
+					synchronized (IdentifierLoader.this.fifo) {
+						numberToLoad = IdentifierLoader.this.fifo.capacity() - IdentifierLoader.this.fifo.size();
+					}
+					while (numberToLoad > 0) {
+						final IdlIdentifier[] idlIdentifiers;
+						try {
+							idlIdentifiers = identifierGeneratorServer.getGeneratedIdentifierRange(IdentifierLoader.this.entityCode, numberToLoad);
+						} catch (AMFICOMRemoteException are) {
+							Log.errorMessage(are.message);
+							break;
+						}
+
+						synchronized (IdentifierLoader.this.fifo) {
+							for (int i = 0; i < idlIdentifiers.length; i++) {
+								final Identifier id = Identifier.valueOf(idlIdentifiers[i]);
+								IdentifierLoader.this.fifo.push(id);
+							}
+							IdentifierLoader.this.fifo.notifyAll();
+							numberToLoad = IdentifierLoader.this.fifo.capacity() - IdentifierLoader.this.fifo.size();
+						}
+					}
+
+				}
+			};
+
+			try {
+				corbaActionProcessor.performAction(corbaAction);
+			} catch (final ApplicationException ae) {
+				Log.errorMessage(ae);
+			}
+
+			synchronized (this.fifo) {
+				synchronized (fillingFifoCodes) {
+					fillingFifoCodes.remove(IdentifierLoader.this.entityCode);
+					this.fifo.notifyAll();
+				}
+			}
+		}
 	}
 
 	private static CORBAActionProcessor getDefaultCORBAActionProcessor() {
