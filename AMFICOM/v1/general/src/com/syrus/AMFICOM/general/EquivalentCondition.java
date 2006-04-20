@@ -1,5 +1,5 @@
 /*
-* $Id: EquivalentCondition.java,v 1.20.2.1 2006/04/20 12:19:11 arseniy Exp $
+* $Id: EquivalentCondition.java,v 1.20.2.2 2006/04/20 12:19:57 arseniy Exp $
 *
 * Copyright ø 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,12 +19,11 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlEqui
 /**
  * Equivalent (identical, allways true) condition
  * written with especial cynicism
- * @version $Revision: 1.20.2.1 $, $Date: 2006/04/20 12:19:11 $
+ * @version $Revision: 1.20.2.2 $, $Date: 2006/04/20 12:19:57 $
  * @author ÷÷œ‘ $Author: arseniy $
  * @module general
  */
 public final class EquivalentCondition implements StorableObjectCondition {
-
 	private Short entityCode;
 	
 	public EquivalentCondition(short entityCode) {
