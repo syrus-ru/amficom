@@ -1,0 +1,5 @@
+#!/bin/bash
+
+orbd -defaultdb ~/.orb.db -ORBInitialPort 1050 > /dev/null 2>&1 &
+
+echo "Started"
