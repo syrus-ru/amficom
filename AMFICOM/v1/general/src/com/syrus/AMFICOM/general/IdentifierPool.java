@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.38.2.1 2006/04/18 16:41:33 arseniy Exp $
+ * $Id: IdentifierPool.java,v 1.38.2.2 2006/04/20 08:18:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.FifoSaver;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38.2.1 $, $Date: 2006/04/18 16:41:33 $
+ * @version $Revision: 1.38.2.2 $, $Date: 2006/04/20 08:18:32 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -247,14 +247,14 @@ public final class IdentifierPool {
 				iterator.advance();
 				final short entityCode = iterator.key();
 				final String entityName = ObjectEntities.codeToString(entityCode);
-				final Fifo fifo = (Fifo) iterator.value();
+				final Fifo<?> fifo = (Fifo) iterator.value();
 				FifoSaver.save(fifo, entityName);
 			}
 		}
 	}
 
 	protected static void deserialize() {
-		final Map<String, Fifo> fifoMap = FifoSaver.load(capacity);
+		final Map<String, Fifo<?>> fifoMap = FifoSaver.load(capacity);
 		for (final String entityName : fifoMap.keySet()) {
 			final short entityCode = ObjectEntities.stringToCode(entityName);
 			idPoolMap.put(entityCode, fifoMap.get(entityName));
