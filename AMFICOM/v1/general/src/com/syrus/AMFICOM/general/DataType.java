@@ -1,5 +1,5 @@
 /*-
- * $Id: DataType.java,v 1.19 2006/04/19 13:22:17 bass Exp $
+ * $Id: DataType.java,v 1.20 2006/04/20 12:37:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.general;
 import java.io.Serializable;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.IdlDataType;
 import com.syrus.AMFICOM.general.xml.XmlDataType;
@@ -22,8 +21,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2006/04/19 13:22:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2006/04/20 12:37:56 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -104,8 +103,8 @@ public enum DataType implements IdlTransferableObject<IdlDataType> {
 	 * A mutable holder for immutable enum instances.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.19 $, $Date: 2006/04/19 13:22:17 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.20 $, $Date: 2006/04/20 12:37:56 $
 	 * @module general
 	 */
 	public static final class Proxy
