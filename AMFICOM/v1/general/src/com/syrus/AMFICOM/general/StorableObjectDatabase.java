@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.209 2006/04/19 13:22:17 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.210 2006/04/20 12:37:34 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,8 +43,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.209 $, $Date: 2006/04/19 13:22:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.210 $, $Date: 2006/04/20 12:37:34 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 9
@@ -95,10 +95,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	public static final String SQL_WHERE = " WHERE ";
 	public static final String SQL_IS = " IS ";
 
-	/**
-	 * @todo Remove static keyword: inner enums are always static.
-	 */
-	protected static enum ExecuteMode {MODE_INSERT, MODE_UPDATE}
+	protected enum ExecuteMode {MODE_INSERT, MODE_UPDATE}
 
 	public static final int SIZE_CODENAME_COLUMN = 32;
 	public static final int SIZE_NAME_COLUMN = 64;
@@ -714,27 +711,15 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				try {
 					if (statement != null) {
 						statement.close();
-						/**
-						 * @todo remove null assignment.
-						 */
-						statement = null;
 					}
 				} finally {
 					try {
 						if (resultSet != null) {
 							resultSet.close();
-							/**
-							 * @todo remove null assignment.
-							 */
-							resultSet = null;
 						}
 					} finally {
 						if (connection != null) {
 							DatabaseConnection.releaseConnection(connection);
-							/**
-							 * @todo remove null assignment.
-							 */
-							connection = null;
 						}
 					}
 				}
