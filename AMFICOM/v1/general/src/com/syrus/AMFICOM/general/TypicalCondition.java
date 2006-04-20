@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalCondition.java,v 1.65 2006/04/19 13:22:17 bass Exp $
+ * $Id: TypicalCondition.java,v 1.66 2006/04/20 12:35:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.APOSTROPHE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort._OPERATION_CI_REGEXP;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort._OPERATION_EQUALS;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort._OPERATION_GREAT;
@@ -44,8 +45,8 @@ import com.syrus.util.EnumUtil;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2006/04/19 13:22:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.66 $, $Date: 2006/04/20 12:35:59 $
+ * @author $Author: arseniy $
  * @module general
  */
 public class TypicalCondition implements StorableObjectCondition {
@@ -485,10 +486,19 @@ public class TypicalCondition implements StorableObjectCondition {
 	}
 
 	/**
+	 * Если происходит поиск по кодовому имени (ключ -
+	 * {@link StorableObjectWrapper#COLUMN_CODENAME}), то <code>false</code>
+	 * возвращается в случае, когда уже найден хотя бы один объект. Это
+	 * объясняется уникальностью кодового имени для всех объектов сущности. См.
+	 * {@link StorableObjectType#codename}.
+	 * 
 	 * @param identifiables
 	 * @see StorableObjectCondition#isNeedMore(Set)
 	 */
 	public boolean isNeedMore(final Set<? extends Identifiable> identifiables) {
+		if (this.key.equals(COLUMN_CODENAME) && !identifiables.isEmpty()) {
+			return false;
+		}
 		return true;
 	}
 
