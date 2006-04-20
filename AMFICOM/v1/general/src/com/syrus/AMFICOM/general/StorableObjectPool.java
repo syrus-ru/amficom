@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.215 2006/04/19 13:22:17 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.216 2006/04/20 12:34:42 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.215 $, $Date: 2006/04/19 13:22:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.216 $, $Date: 2006/04/20 12:34:42 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 8
@@ -462,6 +462,8 @@ public final class StorableObjectPool {
 
 		Log.debugMessage("Requested objects but: " + ids + ", for condition: " + condition, Log.DEBUGLEVEL08);
 
+		long nano0 = System.nanoTime(); // performance stats
+
 		final LRUMap<Identifier, T> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
 			Log.errorMessage(ENTITY_POOL_NOT_REGISTERED + ": '"
@@ -486,6 +488,8 @@ public final class StorableObjectPool {
 			}
 		}
 
+		final int foundLocally = storableObjects.size(); // performance stats
+
 		/*
 		 * According to contract of LRUMap move found objects to the beginging.
 		 */
@@ -496,7 +500,11 @@ public final class StorableObjectPool {
 		Log.debugMessage("Found in pool " + storableObjects.size() + " objects: " + Identifier.toString(storableObjects),
 				Log.DEBUGLEVEL08);
 
+		final boolean loaderUsed; // performance stats
+		final int loaded; // performance stats
+
 		if (useLoader && condition.isNeedMore(Identifier.createSumIdentifiables(storableObjects, ids))) {
+			loaderUsed = true;
 			Identifier.addToIdentifiers(loadButIds, storableObjects);
 			Set<T> loadedObjects;
 			try {
@@ -510,6 +518,8 @@ public final class StorableObjectPool {
 			}
 			assert loadedObjects != null : NON_NULL_EXPECTED; 
 			Log.debugMessage("Loaded " + loadedObjects.size() + " objects: " + Identifier.toString(loadedObjects), Log.DEBUGLEVEL08);
+
+			loaded = loadedObjects.size();
 
 			for (final T loadedStorableObject : loadedObjects) {
 				final Identifier id = loadedStorableObject.getId();
@@ -527,11 +537,20 @@ public final class StorableObjectPool {
 					}
 				}
 			}
-
+		} else {
+			loaderUsed = false;
+			loaded = 0;
 		}
+
+		long nano1 = System.nanoTime(); // performance stats
 
 		Log.debugMessage("Returning " + storableObjects.size() + " objects: " + Identifier.toString(storableObjects),
 				Log.DEBUGLEVEL08);
+
+		Log.debugMessage("SOP stat: "
+				+ (nano1 - nano0) / 1000 / 1e3 + " ms to load "
+				+ foundLocally + (loaderUsed ? "+" + loaded : "=")
+				+ " but " + ids.size() + " for: " + condition, Level.FINEST);
 
 		return storableObjects;
 	}
@@ -1191,7 +1210,7 @@ public final class StorableObjectPool {
 	/**
 	 * Creates a {@link Set} of {@link StorableObject}s from the array of
 	 * {@link IdlStorableObject}s. Updates every object in pool.
-	 *
+	 * 
 	 * @param transferables
 	 * @param continueOnError
 	 * @return {@link Set} of {@link StorableObject}
