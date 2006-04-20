@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.128 2006/04/19 06:44:17 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.129 2006/04/20 08:33:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
-import static com.syrus.AMFICOM.general.ErrorMessages.ONLY_ONE_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
@@ -27,12 +26,10 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
@@ -67,6 +64,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -92,8 +90,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.128 $, $Date: 2006/04/19 06:44:17 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.129 $, $Date: 2006/04/20 08:33:12 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -1051,23 +1049,14 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		final Set<CableThreadType> cableThreadTypes = cableLinkType.getCableThreadTypes(true);
 		final Set<SchemeCableThread> newCableThreadTypes = new HashSet<SchemeCableThread>(cableThreadTypes.size());
 
-		final StorableObjectCondition condition = new TypicalCondition(
-				COMMON_COLOUR,
-				OPERATION_EQUALS,
-				CHARACTERISTIC_TYPE_CODE,
-				COLUMN_CODENAME);
-		final Set<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-
-		if (characteristicTypes.isEmpty()) {
+		final CharacteristicType characteristicType;
+		try {
+			characteristicType = CharacteristicType.valueOf(COMMON_COLOUR);
+		} catch (ObjectNotFoundException onfe) {
 			throw new Error("Cannot find CharacteristicType '"
 					+ COMMON_COLOUR
 					+ "'; system setup incomplete");
 		}
-		assert characteristicTypes.size() == 1 : ONLY_ONE_EXPECTED;
-
-		final CharacteristicType characteristicType = characteristicTypes.iterator().next();
-
-		assert characteristicType != null : NON_NULL_EXPECTED;
 
 		final String name = characteristicType.getName();
 		final String description = characteristicType.getDescription();

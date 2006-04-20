@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.25 2006/04/18 17:27:35 arseniy Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.26 2006/04/20 08:33:24 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.client.UI;
 
+import static com.syrus.AMFICOM.general.CharacteristicTypeCodenames.COMMON_COLOUR;
 import static com.syrus.AMFICOM.general.CharacteristicTypeWrapper.COLUMN_SORT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
@@ -40,9 +41,7 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.CharacteristicTypeWrapper;
-import com.syrus.AMFICOM.general.DataType;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -51,7 +50,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2006/04/18 17:27:35 $
+ * @version $Revision: 1.26 $, $Date: 2006/04/20 08:33:24 $
  * @module commonclient
  */
 
@@ -216,23 +215,11 @@ public class CharacteristicAddDialog {
 				final String text = this.nameField.getText();
 				if (text != null && text.trim().length() > 0) {
 					try {
-						/*
-						 * TODO Think a little more about this. User should not
-						 * create CharacteristicType.
-						 */
-						this.selectedType = CharacteristicType.valueOf(text);
-						if (this.selectedType == null) {
-							throw new InternalError("CharacteristicType '" + text + "' not found");
+						try {
+							this.selectedType = CharacteristicType.valueOf(text);
+						} catch (ObjectNotFoundException onfe) {
+							throw new Error("Cannot find CharacteristicType '" + COMMON_COLOUR + "'; system setup incomplete");
 						}
-//						final Identifier userId = LoginManager.getUserId();
-//						// TODO maybe create separated fields for codename, name and description ?
-//						this.selectedType = CharacteristicType.createInstance(userId,
-//								this.nameField.getText(),
-//								this.nameField.getText(),
-//								this.nameField.getText(),
-//								DataType.STRING,
-//								CharacteristicTypeSort.valueOf(this.sort));
-						StorableObjectPool.flush(this.selectedType, LoginManager.getUserId(), false); 
 					} catch (ApplicationException e) {
 						Log.errorMessage(e);
 					}
