@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectType.java,v 1.39 2006/04/19 13:22:17 bass Exp $
+ * $Id: StorableObjectType.java,v 1.40 2006/04/20 12:35:18 arseniy Exp $
  *
  * Copyright © 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,16 +17,21 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2006/04/19 13:22:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.40 $, $Date: 2006/04/20 12:35:18 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public abstract class StorableObjectType
-		extends StorableObject {
-	static final long serialVersionUID = 6253817645176813979L;
+public abstract class StorableObjectType extends StorableObject {
 
+	/**
+	 * Кодовое имя. Уникально среди объектов одной сущности.
+	 */
 	protected String codename;
+
+	/**
+	 * Описание.
+	 */
 	protected String description;
 
 	/**
