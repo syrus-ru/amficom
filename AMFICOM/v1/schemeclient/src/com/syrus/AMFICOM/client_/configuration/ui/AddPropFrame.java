@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.20 2006/02/15 12:18:10 stas Exp $
+ * $Id: AddPropFrame.java,v 1.21 2006/04/21 10:03:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,13 +33,12 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
-import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeWrapper;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
@@ -48,8 +47,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2006/02/15 12:18:10 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2006/04/21 10:03:00 $
  * @module schemeclient
  */
 
@@ -167,11 +166,14 @@ public class AddPropFrame extends JDialog {
 				return;
 			}
 		} else {
-			if (!this.nameField.getText().equals(SchemeResourceKeys.EMPTY)) {
+			final String characteristicTypeCodename = this.nameField.getText();
+			if (!characteristicTypeCodename.equals(SchemeResourceKeys.EMPTY)) {
 				try {
-					this.selectedType = SchemeObjectsFactory.createCharacteristicType(this.nameField.getText(), this.sort);
-				} catch (CreateObjectException ex) {
-					Log.errorMessage(ex);
+					this.selectedType = CharacteristicType.valueOf(characteristicTypeCodename);
+				} catch (ObjectNotFoundException onfe) {
+					throw new Error("Cannot find CharacteristicType '" + characteristicTypeCodename + "'; system setup incomplete");
+				} catch (ApplicationException ae) {
+					Log.errorMessage(ae);
 					return;
 				}
 			} else {

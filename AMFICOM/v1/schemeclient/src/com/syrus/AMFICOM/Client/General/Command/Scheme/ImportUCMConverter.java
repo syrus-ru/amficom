@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUCMConverter.java,v 1.17 2006/02/15 12:19:50 stas Exp $
+ * $Id: ImportUCMConverter.java,v 1.18 2006/04/21 10:03:50 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+import static com.syrus.AMFICOM.general.CharacteristicTypeCodenames.COMMON_COLOUR;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
@@ -41,6 +42,7 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -88,14 +90,13 @@ public class ImportUCMConverter {
 			List<CableThreadType> threadTypes = cableToThreadsMapping.get(type);
 			cableLinkTypes.put(Integer.valueOf(threadTypes.size()), type);
 		}
-		
-		final StorableObjectCondition condition = new TypicalCondition(CharacteristicTypeCodenames.COMMON_COLOUR, OperationSort.OPERATION_EQUALS, CHARACTERISTIC_TYPE_CODE, COLUMN_CODENAME);
-		final Set<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-		final CharacteristicType characteristicType = characteristicTypes.isEmpty()
-				? CharacteristicType.createInstance(this.userId, CharacteristicTypeCodenames.COMMON_COLOUR,
-						"", "color", DataType.INTEGER, CharacteristicTypeSort.VISUAL)
-				: characteristicTypes.iterator().next();
-		assert characteristicType != null : NON_NULL_EXPECTED;
+
+		final CharacteristicType characteristicType;
+		try {
+			characteristicType = CharacteristicType.valueOf(COMMON_COLOUR);
+		} catch (ObjectNotFoundException onfe) {
+			throw new Error("Cannot find CharacteristicType '" + COMMON_COLOUR + "'; system setup incomplete");
+		}
 		final String name = characteristicType.getName();
 		final String description = characteristicType.getDescription();
 
