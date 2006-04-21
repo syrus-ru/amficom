@@ -1,5 +1,5 @@
 /*-
- * $$Id: AbstractLinkController.java,v 1.54 2006/02/15 11:12:33 stas Exp $$
+ * $$Id: AbstractLinkController.java,v 1.55 2006/04/21 10:13:24 arseniy Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.client.map.controllers;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -24,20 +23,12 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
-import com.syrus.AMFICOM.general.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifiable;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
@@ -45,8 +36,8 @@ import com.syrus.util.Shitlet;
 /**
  * Контроллер линейного элемента карты.
  * 
- * @version $Revision: 1.54 $, $Date: 2006/02/15 11:12:33 $
- * @author $Author: stas $
+ * @version $Revision: 1.55 $, $Date: 2006/04/21 10:13:24 $
+ * @author $Author: arseniy $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -84,30 +75,25 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	public AbstractLinkController(final NetMapViewer netMapViewer) {
 		super(netMapViewer);
 
-		final Identifier userId = LoginManager.getUserId();
+		String codename = null;
+		try {
+			codename = ATTRIBUTE_STYLE;
+			this.styleCharType = CharacteristicType.valueOf(codename);
 
-		this.styleCharType = getCharacteristicType(
-				userId, 
-				AbstractLinkController.ATTRIBUTE_STYLE,
-				I18N.getString(MapEditorResourceKeys.VALUE_STYLE));
-		this.thicknessCharType = getCharacteristicType(
-				userId, 
-				AbstractLinkController.ATTRIBUTE_THICKNESS,
-				I18N.getString(MapEditorResourceKeys.VALUE_THICKNESS));
-		this.colorCharType = getCharacteristicType(
-				userId, 
-				AbstractLinkController.ATTRIBUTE_COLOR,
-				I18N.getString(MapEditorResourceKeys.VALUE_COLOR));
+			codename = ATTRIBUTE_THICKNESS;
+			this.thicknessCharType = CharacteristicType.valueOf(codename);
 
-		this.alarmedThicknessCharType = getCharacteristicType(
-				userId, 
-				AbstractLinkController.ATTRIBUTE_ALARMED_THICKNESS,
-				I18N.getString(MapEditorResourceKeys.VALUE_ALARMED_THICKNESS));
+			codename = ATTRIBUTE_COLOR;
+			this.colorCharType = CharacteristicType.valueOf(codename);
 
-		this.alarmedColorCharType = getCharacteristicType(
-				userId, 
-				AbstractLinkController.ATTRIBUTE_ALARMED_COLOR,
-				I18N.getString(MapEditorResourceKeys.VALUE_ALARMED_COLOR));
+			codename = ATTRIBUTE_ALARMED_THICKNESS;
+			this.alarmedThicknessCharType = CharacteristicType.valueOf(codename);
+
+			codename = ATTRIBUTE_ALARMED_COLOR;
+			this.alarmedColorCharType = CharacteristicType.valueOf(codename);
+		} catch (ApplicationException ae) {
+			throw new Error("Cannot load CharacteristicType '" + codename + "'", ae);
+		}
 	}
 
 	/**
@@ -116,49 +102,6 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @return флаг видимости рамки выделения
 	 */
 	public abstract boolean isSelectionVisible(final MapElement mapElement);
-
-	/**
-	 * Найти тип атрибута по кодовому имени. Если такого типа
-	 * не найдено, создать новый.
-	 * @param userId пользователь
-	 * @param codename кодовое имя
-	 * @return тип атрибута
-	 */
-	public static CharacteristicType getCharacteristicType(
-			final Identifier userId, 
-			final String codename,
-			final String name) {
-		final CharacteristicTypeSort sort = CharacteristicTypeSort.VISUAL;
-		final DataType dataType = DataType.STRING;
-
-		final StorableObjectCondition pTypeCondition = new TypicalCondition(codename,
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.CHARACTERISTIC_TYPE_CODE,
-				StorableObjectWrapper.COLUMN_CODENAME);
-		try {
-			final Collection pTypes = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
-			if (!pTypes.isEmpty()) {
-				final CharacteristicType type = (CharacteristicType) pTypes.iterator().next();
-				return type;
-			}
-		} catch (ApplicationException ex) {
-			Log.debugMessage("Exception searching CharacteristicType. Creating new one.", Level.CONFIG); //$NON-NLS-1$
-		}
-
-		try {
-			final CharacteristicType type = CharacteristicType.createInstance(userId,
-					codename,
-					I18N.getString(MapEditorResourceKeys.VALUE_NO_DESCRIPTION),
-					name,
-					dataType,
-					sort);
-			StorableObjectPool.flush(type, userId, true);
-			return type;
-		} catch (ApplicationException e) {
-			Log.errorMessage(e);
-			return null;
-		}
-	}
 
 	/**
 	 * @deprecated should be rewritten via StorableObjectCondition 
