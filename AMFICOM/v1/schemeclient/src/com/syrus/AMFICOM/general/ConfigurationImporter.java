@@ -1,12 +1,12 @@
 /*-
- * $Id: ConfigurationImporter.java,v 1.2 2006/04/07 13:53:02 arseniy Exp $
+ * $Id: ConfigurationImporter.java,v 1.1 2006/04/21 10:19:14 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.io;
+package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
@@ -44,6 +44,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.CharacteristicTypeSort;
+import com.syrus.io.Importer;
+import com.syrus.io.IntelStreamReader;
 import com.syrus.util.Log;
 
 public class ConfigurationImporter extends Importer {
