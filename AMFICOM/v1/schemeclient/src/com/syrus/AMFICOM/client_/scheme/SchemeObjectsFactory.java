@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.58 2006/04/07 13:53:02 arseniy Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.59 2006/04/21 10:03:35 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.58 $, $Date: 2006/04/07 13:53:02 $
+ * @version $Revision: 1.59 $, $Date: 2006/04/21 10:03:35 $
  * @module schemeclient
  */
 
@@ -209,13 +209,6 @@ public class SchemeObjectsFactory {
 					}
 				}
 		);
-	}
-	
-	public static CharacteristicType createCharacteristicType(String name, IdlCharacteristicTypeSort sort) throws CreateObjectException {
-		Identifier userId = LoginManager.getUserId();
-		CharacteristicType type = CharacteristicType.createInstance(userId, name, EMPTY, name, DataType.STRING, CharacteristicTypeSort.valueOf(sort));
-		type.setCodename(type.getId().getIdentifierString());
-		return type;
 	}
 	
 	public static ProtoEquipment createProtoEquipment(String name, EquipmentType type) throws CreateObjectException {
