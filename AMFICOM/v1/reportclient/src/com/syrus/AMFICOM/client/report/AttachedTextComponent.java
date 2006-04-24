@@ -1,5 +1,5 @@
 /*
- * $Id: AttachedTextComponent.java,v 1.8 2005/09/13 12:23:10 peskovsky Exp $
+ * $Id: AttachedTextComponent.java,v 1.9 2006/04/24 12:40:07 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.report.StorableElement;
 public class AttachedTextComponent extends JTextPane implements RenderingComponent{
 	private static final long serialVersionUID = 8382110834808763027L;
 	
-	public static Font DEFAULT_FONT = new Font("Times New Roman",Font.BOLD,20);
+	public static Font DEFAULT_FONT = new Font("Times New Roman",Font.BOLD,12);
 	
 	protected final AttachedTextStorableElement textRenderingElement;
 	
