@@ -114,7 +114,7 @@ private:
 	void centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1);
 
 	// расчет R-параметров splash (в момент его обнаружения, т.к. потом будет потерян вейвлет-образ)
-	void fillSplashRParameters(Splash &spl, double *f_wlet, int wlet_width);
+	void fillSplashRParameters(Splash &spl, double *f_wlet);
 
 	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
 	static double calcWletMeanValue(double* fw, int lastPoint, double from, double to, int columns);// вычислить самое популярное значение ф-ции fw
