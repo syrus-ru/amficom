@@ -1,5 +1,5 @@
 /*
- * $Id: TemplateParametersDialog.java,v 1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: TemplateParametersDialog.java,v 1.2 2006/04/24 07:15:30 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -127,15 +127,17 @@ public class TemplateParametersDialog extends JDialog {
 		this.templateSizeComboBox.addItem(A4);
 		this.templateSizeComboBox.setSelectedItem(A4);
 		
-		this.marginSizeTextField.setText(Integer.toString(ReportTemplate.STANDART_MARGIN_SIZE));
+		// in mm, so /4
+		this.marginSizeTextField.setText(Integer.toString(ReportTemplate.DEFAULT_LEFT_MARGIN_SIZE / 4));
 		
 		this.portraitRadioButton.setSelected(true);		
 	}
 	
 	public void setReportTemplate(ReportTemplate reportTemplate) {
 		this.reportTemplate = reportTemplate;
-		this.templateSizeComboBox.setSelectedItem(reportTemplate.getSize());
-		this.marginSizeTextField.setText(Integer.toString(reportTemplate.getMarginSize()));
+		this.templateSizeComboBox.setSelectedItem(reportTemplate.getDimensions());
+		// in mm, so /4
+		this.marginSizeTextField.setText(Integer.toString(reportTemplate.getMarginSize() / 4));
 		if (reportTemplate.getOrientation().equals(Orientation.LANDSCAPE))
 			this.landscapeRadioButton.setSelected(true);
 		else
@@ -159,7 +161,11 @@ public class TemplateParametersDialog extends JDialog {
 		
 		int marginSize;
 		try {
-			marginSize = Integer.parseInt(this.marginSizeTextField.getText());
+			// in points, so *4
+			marginSize = Integer.parseInt(this.marginSizeTextField.getText()) * 4;
+			if (marginSize > newSize.getSize().getWidth()) {
+				marginSize = ReportTemplate.DEFAULT_LEFT_MARGIN_SIZE;
+			}
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
