@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.129 2006/04/20 08:33:12 arseniy Exp $
+ * $Id: SchemeCableLink.java,v 1.130 2006/04/24 14:06:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,8 +90,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.129 $, $Date: 2006/04/20 08:33:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.130 $, $Date: 2006/04/24 14:06:00 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -1052,7 +1052,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		final CharacteristicType characteristicType;
 		try {
 			characteristicType = CharacteristicType.valueOf(COMMON_COLOUR);
-		} catch (ObjectNotFoundException onfe) {
+		} catch (final ObjectNotFoundException onfe) {
 			throw new Error("Cannot find CharacteristicType '"
 					+ COMMON_COLOUR
 					+ "'; system setup incomplete");
