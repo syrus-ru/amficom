@@ -1,12 +1,4 @@
 package com.syrus.AMFICOM.analysis.test;
-/*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.13 2005/12/26 15:50:25 saa Exp $
- * 
- * 
- * Copyright © 2005 Syrus Systems.
- * Dept. of Science & Technology.
- * Project: AMFICOM.
- */
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -35,7 +27,7 @@ import com.syrus.util.HashCodeGenerator;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/12/26 15:50:25 $
+ * @version $Revision: 1.14 $, $Date: 2006/04/24 07:13:07 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -46,6 +38,21 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 	//final static String A_PARAMS = "0.001;0.01;0.5;3.0;1.5;";
 
 	final static String A_PARAMS = "0.001;0.01;0.5;3.5;1.3;"; // XXX: temp xxx mark
+
+	static class EventHashCode {
+		HashCodeGenerator hcg = new HashCodeGenerator();
+		public void addEvent(ReliabilitySimpleReflectogramEvent ev) {
+			this.hcg.addInt(ev.getBegin());
+			this.hcg.addInt(ev.getEnd());
+			this.hcg.addInt(ev.getEventType());
+			if (ev.hasReliability()) {
+				this.hcg.addDouble(ev.getReliability());
+			}
+		}
+		public int getResult() {
+			return this.hcg.getResult();
+		}
+	}
 
 	private static class FailCounter {
 		// new/changed and lost events
@@ -116,12 +123,8 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 			positionRoughness += val;
 			positionNumber++;
 		}
-		public void addHash(ReliabilitySimpleReflectogramEvent ev) {
-			hashAcc.addInt(ev.getBegin());
-			hashAcc.addInt(ev.getEnd());
-			hashAcc.addInt(ev.getEventType());
-			if (ev.hasReliability())
-				hashAcc.addDouble(ev.getReliability());
+		public void addHash(EventHashCode ehc) {
+			hashAcc.addInt(ehc.getResult());
 		}
 		public int getHash() {
 			return hashAcc.getResult();
@@ -260,7 +263,8 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 			matcher = result.matcher(s);
 			if (matcher.matches()) { // result section started
 				// try to load several results sets
-				ArrayList resultList = new ArrayList();
+				ArrayList<ToleranceSimpleReflectogramEvent[]> resultList =
+					new ArrayList<ToleranceSimpleReflectogramEvent[]>();
 				while ((s = br.readLine()) != null) {
 					if (s.equals("}"))
 						break;
@@ -275,9 +279,8 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 				if (fName == null)
 					continue;
 				ToleranceSimpleReflectogramEvent[][] etalons =
-					(ToleranceSimpleReflectogramEvent[][])resultList.
-						toArray(new ToleranceSimpleReflectogramEvent
-								[resultList.size()][]);
+					resultList.toArray(new ToleranceSimpleReflectogramEvent
+							[resultList.size()][]);
 				// assert etalon correctness
 				for (int i = 0; i < etalons.length; i++) {
 					for (int j = 0; j < etalons[i].length; j++) {
@@ -296,6 +299,10 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 					}
 				}
 				// test trace
+				if (verbose) {
+					System.out.println("Testing " + fName);
+				}
+
 				int rc = performTraceTest(fName,
 						cache,
 						etalons,
@@ -391,7 +398,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 								+ fails.getAvPositionRoughness()
 						));
 			}
-			System.out.println("Hash result:     "
+			System.out.println("Overall hash:    "
 					+ Integer.toHexString(fails.getHash()));
 			long time1 = System.currentTimeMillis();
 			boolean printTiming = true;
@@ -426,7 +433,8 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 		Pattern bMaxRec = Pattern.compile("\\bBMAX=(\\d+)\\b");
 		Pattern eMinRec = Pattern.compile("\\bEMIN=(\\d+)\\b");
 		Pattern eMaxRec = Pattern.compile("\\bEMAX=(\\d+)\\b");
-		ArrayList ret = new ArrayList();
+		ArrayList<ToleranceSimpleReflectogramEvent> ret =
+			new ArrayList<ToleranceSimpleReflectogramEvent>();
 		for (;;){
 			String s = br.readLine();
 			Matcher matcher;
@@ -473,8 +481,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 				tse.setEndMax(Integer.parseInt(matcher.group(1)));
 			}
 		}
-		return (ToleranceSimpleReflectogramEvent[])
-			ret.toArray(new ToleranceSimpleReflectogramEvent[ret.size()]);
+		return ret.toArray(new ToleranceSimpleReflectogramEvent[ret.size()]);
 	}
 
 	// cache may be null
@@ -525,8 +532,13 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 		}
 
 		// вычисление хеш-значения
+		EventHashCode ehc = new EventHashCode();
 		for (int i = 0; i < re.length; i++) {
-			fails.addHash(re[i]);
+			ehc.addEvent(re[i]);
+		}
+		fails.addHash(ehc);
+		if (verbose) {
+			System.out.println("Hash: " + Integer.toHexString(ehc.getResult()));
 		}
 
 		// сравнение с эталонами
