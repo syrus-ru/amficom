@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.32 2006/03/15 14:47:29 bass Exp $
+ * $Id: ReportTemplate.java,v 1.33 2006/04/24 06:22:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.AND;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 
+import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.Collections;
 import java.util.Date;
@@ -48,7 +49,6 @@ import com.syrus.AMFICOM.report.corba.IdlReportTemplate;
 import com.syrus.AMFICOM.report.corba.IdlReportTemplateHelper;
 import com.syrus.AMFICOM.report.corba.IdlReportTemplatePackage.IdlOrientation;
 import com.syrus.AMFICOM.report.corba.IdlReportTemplatePackage.IdlSheetSize;
-import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
@@ -61,8 +61,8 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * <p>Тип шаблона характеризует из какого модуля по нему можно построить
  * отчёт </p>
  * 
- * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2006/03/15 14:47:29 $
+ * @author $Author: stas $
+ * @version $Revision: 1.33 $, $Date: 2006/04/24 06:22:15 $
  * @module report
  */
 public final class ReportTemplate extends StorableObject
@@ -73,8 +73,10 @@ public final class ReportTemplate extends StorableObject
 	public enum Orientation {
 		PORTRAIT, LANDSCAPE
 	}
-
-	public static final int STANDART_MARGIN_SIZE = 60;
+	
+	public static final int STANDART_MARGIN_SIZE = 80;
+	
+	public static final int DEFAULT_LEFT_MARGIN_SIZE = 0;
 
 	//Это хранимое поле	
 	private String name;
@@ -86,6 +88,9 @@ public final class ReportTemplate extends StorableObject
 	 * Размер шаблона (его ширина)
 	 */
 	private SheetSize sheetSize;
+	
+	private transient Dimension margins;
+	private transient Dimension dimensions;
 	/**
 	 * Размер шаблона (его ширина)
 	 */
@@ -158,7 +163,7 @@ public final class ReportTemplate extends StorableObject
 					description,
 					SheetSize.A4,
 					Orientation.PORTRAIT,
-					STANDART_MARGIN_SIZE,
+					DEFAULT_LEFT_MARGIN_SIZE,
 					destinationModule);
 			return reportTemplate;
 		} catch (final IdentifierGenerationException ige) {
@@ -396,8 +401,24 @@ public final class ReportTemplate extends StorableObject
 		return this.name;
 	}
 
-	public IntDimension getSize() {
-		return this.sheetSize.getSize();
+	public Dimension getMargins() {
+		if (this.margins == null) {
+			final Dimension size = getDimensions();
+			this.margins = new Dimension(size.width - (2 * STANDART_MARGIN_SIZE + this.marginSize), 
+					size.height - (2 * STANDART_MARGIN_SIZE));
+		}
+		return this.margins;
+	}
+	
+	public Dimension getDimensions() {
+		if (this.dimensions == null) {
+			if (this.orientation == Orientation.LANDSCAPE) {
+				this.dimensions = new Dimension(this.sheetSize.getSize().getHeight(), this.sheetSize.getSize().getWidth());
+			} else {
+				this.dimensions = new Dimension(this.sheetSize.getSize().getWidth(), this.sheetSize.getSize().getHeight());
+			}
+		}
+		return this.dimensions;
 	}
 
 	public String getDestinationModule() {
@@ -412,12 +433,13 @@ public final class ReportTemplate extends StorableObject
 	public int getMarginSize() {
 		return this.marginSize;
 	}
-
+	
 	public void setMarginSize(final int marginSize) {
 		this.marginSize = marginSize;
+		this.margins = null;
 		super.markAsChanged();
 	}
-
+	
 	public boolean doObjectsIntersect() {
 		return false;
 	}
@@ -429,6 +451,8 @@ public final class ReportTemplate extends StorableObject
 
 	public void setSize(final SheetSize sheetSize) {
 		this.sheetSize = sheetSize;
+		this.dimensions = null;
+		this.margins = null;
 		super.markAsChanged();
 	}
 
@@ -438,6 +462,8 @@ public final class ReportTemplate extends StorableObject
 
 	public void setOrientation(final Orientation orientation) {
 		this.orientation = orientation;
+		this.dimensions = null;
+		this.margins = null;
 		super.markAsChanged();
 	}
 
