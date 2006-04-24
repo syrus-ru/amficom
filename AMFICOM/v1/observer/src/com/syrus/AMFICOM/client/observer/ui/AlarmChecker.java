@@ -4,6 +4,7 @@ package com.syrus.AMFICOM.client.observer.ui;
 /**
  * @deprecated
  */
+@Deprecated
 public class AlarmChecker extends Thread
 {
 /*
