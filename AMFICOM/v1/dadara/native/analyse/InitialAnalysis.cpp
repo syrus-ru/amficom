@@ -58,7 +58,7 @@ InitialAnalysis::InitialAnalysis(
     for(int i=0; i<sz; i++){col[i] = -1;}
 #endif
 	this->delta_x				= delta_x;
-	this->minimalThresholdB		= minimalThreshold;
+	//this->minimalThresholdB		= minimalThreshold; -- игнорируем minimalThreshold
 	this->minimalWeld			= minimalWeld;
 	this->minimalConnector		= minimalConnector;
     this->minimalEnd			= minimalEnd;
@@ -457,17 +457,18 @@ double InitialAnalysis::calcWletMeanValue(double *fw, int lastPoint, double from
 //------------------------------------------------------------------------------------------------------------
 // установить пороги в соответствии с соотношением норм и масштаба используемого вейвлета
 void InitialAnalysis::setShiftedThresholds(int scale)
-{   double f_wlet_avrg = average_factor * getWLetNorma2(scale) / getWLetNorma(scale); // средний наклон
-	double thres_factor = 0.2;// степень влияния общего наклона на сдвиг порогов
-    minimalThreshold1 = minimalThresholdB + fabs(f_wlet_avrg)*thres_factor;
-    if(minimalThreshold1 > 0.9*minimalWeld)
-    {  minimalThreshold1 = 0.9*minimalWeld;
-    }
-#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
-	fprintf(stderr, "scale %d minThreshB %g minThresh1 %g minWeld %g (af %g fwa %g)\n",
-		scale, minimalThresholdB, minimalThreshold1, minimalWeld, average_factor, f_wlet_avrg);
-#endif
-	//minimalWeld += fabs(f_wlet_avrg)*thres_factor;
+{
+//	double f_wlet_avrg = average_factor * getWLetNorma2(scale) / getWLetNorma(scale); // средний наклон
+//	double thres_factor = 0.2;// степень влияния общего наклона на сдвиг порогов
+//	minimalThreshold1 = minimalThresholdB + fabs(f_wlet_avrg)*thres_factor;
+//	if(minimalThreshold1 > 0.9*minimalWeld)
+//	{  minimalThreshold1 = 0.9*minimalWeld;
+//	}
+//#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
+//	fprintf(stderr, "scale %d minThreshB %g minThresh1 %g minWeld %g (af %g fwa %g)\n",
+//		scale, minimalThresholdB, minimalThreshold1, minimalWeld, average_factor, f_wlet_avrg);
+//#endif
+//	//minimalWeld += fabs(f_wlet_avrg)*thres_factor;
 }
 // -------------------------------------------------------------------------------------------------
 //
@@ -479,9 +480,9 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, int wlet_width, ArrLis
 {   //minimalThreshold1,//минимальный уровень события
 	//minimalWeld,		//минимальный уровень неотражательного события
 	//minimalConnector,	//минимальный уровень отражательного события
-	double minimal_threshold_noise_factor = 0.4;  // XXX - надо бы это снаружи задавать
+	double edge_threshold_factor = 0.4;  // XXX - надо бы это снаружи задавать
     for(int i=1; i <= lastPoint-1; i++)// 1 т.к. i-1 // цикл (1)
-    {	if (fabs(f_wlet[i]) < calcThresh(minimalThreshold1,noise[i]*minimal_threshold_noise_factor))
+    {	if (fabs(f_wlet[i]) < calcThresh(minimalWeld,noise[i])*edge_threshold_factor)
 	continue;
 		int bt = i - 1;
 		int bw = -1;
@@ -493,7 +494,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, int wlet_width, ArrLis
 		for (; i <= lastPoint-1; i++) { // цикл (2)
 			if (f_wlet[i] * sign < 0)	// смена знака
 		break;
-			if (fabs(f_wlet[i]) < calcThresh(minimalThreshold1,noise[i]*minimal_threshold_noise_factor)) // стал меньше minTh
+			if (fabs(f_wlet[i]) < calcThresh(minimalWeld,noise[i])*edge_threshold_factor) // стал меньше minTh
 		break;
 			if (fabs(f_wlet[i]) >= calcThresh(minimalWeld, noise[i])) {
 				ew = i + 1;
@@ -547,8 +548,8 @@ return;
 
 #ifdef debug_lines
     // отображаем пороги
-    xs[cou] = 0; ys[cou] =  minimalThreshold1; xe[cou] = lastPoint*delta_x; ye[cou] =  minimalThreshold1; col[cou] = 0x004444; cou++;
-    xs[cou] = 0; ys[cou] = -minimalThreshold1; xe[cou] = lastPoint*delta_x; ye[cou] = -minimalThreshold1; col[cou] = 0x004444; cou++;
+//    xs[cou] = 0; ys[cou] =  minimalThreshold1; xe[cou] = lastPoint*delta_x; ye[cou] =  minimalThreshold1; col[cou] = 0x004444; cou++;
+//    xs[cou] = 0; ys[cou] = -minimalThreshold1; xe[cou] = lastPoint*delta_x; ye[cou] = -minimalThreshold1; col[cou] = 0x004444; cou++;
     xs[cou] = 0; ys[cou] =  minimalWeld; 	  xe[cou] = lastPoint*delta_x; ye[cou] =  minimalWeld;      col[cou] = 0x009999; cou++;
     xs[cou] = 0; ys[cou] = -minimalWeld; 	  xe[cou] = lastPoint*delta_x; ye[cou] = -minimalWeld;	   col[cou] = 0x009999; cou++;
     xs[cou] = 0; ys[cou] =  minimalConnector; xe[cou] = lastPoint*delta_x; ye[cou] =  minimalConnector; col[cou] = 0x00FFFF; cou++;

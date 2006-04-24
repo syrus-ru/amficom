@@ -68,8 +68,6 @@ private:
     ArrList* events; // список всех событий
 
 //Parameters of the analysis (criteria);
-	double minimalThresholdB;
-	double minimalThreshold1;
 	double minimalWeld;
 	double minimalConnector;
     double minimalEnd;
