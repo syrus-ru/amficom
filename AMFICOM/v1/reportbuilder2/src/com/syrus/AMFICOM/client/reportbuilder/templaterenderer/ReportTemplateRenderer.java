@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.2 2006/03/13 13:53:57 bass Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.3 2006/04/24 07:17:24 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,9 +29,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.report.AttachedTextComponent;
 import com.syrus.AMFICOM.client.report.CreateModelException;
 import com.syrus.AMFICOM.client.report.DataRenderingComponent;
@@ -62,7 +62,6 @@ import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.AMFICOM.report.StorableElement;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 import com.syrus.AMFICOM.report.TextAttachingType;
-import com.syrus.AMFICOM.report.ReportTemplate.Orientation;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.util.Log;
@@ -87,8 +86,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	private TextAttachingType labelAttachingType = null;
 	
 	private Rectangle marginBounds = new Rectangle();
-	private Rectangle templateBounds = new Rectangle();	
-	
+		
 	public ReportTemplateRenderer(){
 		jbInit();
 	}
@@ -144,10 +142,9 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 					this.selectedComponent = null;				
 					ReportTemplateRenderer.this.repaint();
 				} catch (ApplicationException e) {
-					Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e.getMessage());
-					Log.errorException(e);			
+					Log.errorMessage(e);			
 					JOptionPane.showMessageDialog(
-							Environment.getActiveWindow(),
+							AbstractMainFrame.getActiveMainFrame(),
 							I18N.getString("report.Exception.deleteObjectError"),
 							I18N.getString("report.Exception.error"),
 							JOptionPane.ERROR_MESSAGE);
@@ -175,10 +172,9 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			try {
 				this.setTemplate(((UseTemplateEvent)evt).getReportTemplate());
 			} catch (Exception e) {
-				Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e.getMessage());
-				Log.errorException(e);			
+				Log.errorMessage(e);			
 				JOptionPane.showMessageDialog(
-						Environment.getActiveWindow(),
+						AbstractMainFrame.getActiveMainFrame(),
 						e.getMessage(),
 						I18N.getString("report.Exception.error"),
 						JOptionPane.ERROR_MESSAGE);
@@ -212,10 +208,9 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 						new Point(this.marginBounds.x + 5,this.marginBounds.y + 50),
 						new Dimension(this.marginBounds.width - 10,300));
 			} catch (Exception e) {
-				Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e.getMessage());
-				Log.errorException(e);			
+				Log.errorMessage(e);			
 				JOptionPane.showMessageDialog(
-						Environment.getActiveWindow(),
+						AbstractMainFrame.getActiveMainFrame(),
 						e.getMessage(),
 						I18N.getString("report.Exception.error"),
 						JOptionPane.ERROR_MESSAGE);
@@ -260,10 +255,9 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	private void removeAllComponents() {
 		while (this.getComponentCount() > 0) {
 			try {
-				this.removeRenderingComponent(
-						(RenderingComponent)this.getComponent(0),false);
+				this.removeRenderingComponent((RenderingComponent)this.getComponent(0),false);
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		}
 	}
@@ -331,36 +325,17 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	}
 	
 	private void refreshTemplateBounds() {
-		IntDimension size = this.template.getSize();
-		
-		if (this.template.getOrientation().equals(Orientation.PORTRAIT))
-			this.setSize(size.getWidth(),size.getHeight() * 2);
-		else
-			this.setSize(2 * size.getHeight(),size.getWidth());
+		Dimension size = this.template.getDimensions();
+
+		// TODO create double height
+		this.setSize(size);
 		this.setPreferredSize(this.getSize());				
 		
-		int templateMarginSize = this.template.getMarginSize();
 		this.marginBounds.setLocation(
-				new Point(templateMarginSize,templateMarginSize));
-		this.templateBounds.setLocation(
-				new Point(2,2));
+				new Point(ReportTemplate.STANDART_MARGIN_SIZE + this.template.getMarginSize(), 
+						ReportTemplate.STANDART_MARGIN_SIZE));
 
-		if (this.template.getOrientation().equals(Orientation.PORTRAIT)){
-			this.marginBounds.setSize(
-					size.getWidth() - 2 * templateMarginSize,
-					2 * size.getHeight() - 2 * templateMarginSize);
-			this.templateBounds.setSize(
-					size.getWidth() - 4,
-					2 * size.getHeight() - 4);
-		}
-		else {
-			this.marginBounds.setSize(
-					2 * size.getHeight() - 2 * templateMarginSize,
-					size.getWidth() - 2 * templateMarginSize);
-			this.templateBounds.setSize(
-					2 * size.getHeight() - 4,
-					size.getWidth() - 4);
-		}
+		this.marginBounds.setSize(this.template.getMargins());
 	}
 	
 	@Override
@@ -369,16 +344,8 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		g.fillRect(0,0,this.getWidth(),this.getHeight());
 		
 		if (this.template != null){
-			//Рисуем края шаблона			
-			g.setColor(Color.BLACK);
-			g.drawRect(
-					this.templateBounds.x,
-					this.templateBounds.y,
-					this.templateBounds.width,
-					this.templateBounds.height);
-			
 			//Рисуем поля шаблона
-			g.setColor(Color.BLACK);
+			g.setColor(Color.LIGHT_GRAY);
 			g.drawRect(
 					this.marginBounds.x,
 					this.marginBounds.y,
@@ -429,14 +396,15 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			if (elementImage != null)
 				imageReadCorrectly = true;
 		} catch (IOException e1) {
+			Log.errorMessage(e1);
 		}
 		
 		if (!imageReadCorrectly) {
 			JOptionPane.showMessageDialog(
-				Environment.getActiveWindow(),
-				I18N.getString("report.Exception.errorReadingImage"),
-				I18N.getString("report.Exception.error"),
-				JOptionPane.ERROR_MESSAGE);
+					AbstractMainFrame.getActiveMainFrame(),
+					I18N.getString("report.Exception.errorReadingImage"),
+					I18N.getString("report.Exception.error"),
+					JOptionPane.ERROR_MESSAGE);
 				
 			this.applicationContext.getDispatcher().firePropertyChange(
 				new ReportFlagEvent(this,ReportFlagEvent.SPECIAL_MODE_CANCELED));
@@ -680,7 +648,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		fileChooser.setDialogTitle(I18N.getString("report.File.selectFileToRead"));
 		fileChooser.setMultiSelectionEnabled(false);
 
-		int option = fileChooser.showOpenDialog(Environment.getActiveWindow());
+		int option = fileChooser.showOpenDialog(AbstractMainFrame.getActiveMainFrame());
 		if(option == JFileChooser.APPROVE_OPTION) {
 			fileName = fileChooser.getSelectedFile().getPath();
 			if(!	(	fileName.endsWith(".bmp")
