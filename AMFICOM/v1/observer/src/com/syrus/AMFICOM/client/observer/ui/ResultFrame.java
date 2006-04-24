@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultFrame.java,v 1.9 2006/04/11 14:27:50 stas Exp $
+ * $Id: ResultFrame.java,v 1.10 2006/04/24 09:09:06 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,8 +78,8 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2006/04/11 14:27:50 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2006/04/24 09:09:06 $
  * @module surveyclient_v1
  */
 
@@ -122,15 +122,17 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 			}
 		});
 		this.addComponentListener(new ComponentAdapter() {
+			@Override
 			public void componentResized(ComponentEvent e) {
 				if (ResultFrame.this.layeredPanel != null)
 					ResultFrame.this.layeredPanel.resize();
 			}
 		});
-		
-		this.inParamsTableModel = new WrapperedTableModel<Parameter>(ParameterController.getInstance(), 
+
+		final ParameterController parameterController = ParameterController.getInstance();
+		this.inParamsTableModel = new WrapperedTableModel<Parameter>(parameterController, 
 				new String[] {StorableObjectWrapper.COLUMN_NAME, ParameterController.COLUMN_VALUE });
-		this.outParamsTableModel = new WrapperedTableModel<Parameter>(ParameterController.getInstance(), 
+		this.outParamsTableModel = new WrapperedTableModel<Parameter>(parameterController, 
 				new String[] {StorableObjectWrapper.COLUMN_NAME, ParameterController.COLUMN_VALUE });
 
 		WrapperedTable<Parameter> inParamsTable = new WrapperedTable<Parameter>(this.inParamsTableModel);
