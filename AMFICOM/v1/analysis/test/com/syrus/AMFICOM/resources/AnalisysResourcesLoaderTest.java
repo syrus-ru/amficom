@@ -1,5 +1,5 @@
 /*-
-* $Id: AnalisysResourcesLoaderTest.java,v 1.3 2006/03/14 12:19:24 saa Exp $
+* $Id: AnalisysResourcesLoaderTest.java,v 1.4 2006/04/24 11:07:42 saa Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.extensions.ExtensionLauncher;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2006/03/14 12:19:24 $
+ * @version $Revision: 1.4 $, $Date: 2006/04/24 11:07:42 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -121,6 +121,8 @@ public class AnalisysResourcesLoaderTest extends TestCase {
 		map.put(AnalysisResourceKeys.ICON_SHOW_PATH_ELEMENTS,
 			"images/jdirectory.gif");
 
+		map.put(AnalysisResourceKeys.ICON_ANALYSIS_LINEAR,
+			"images/linear.gif");
 		map.put(AnalysisResourceKeys.ICON_ANALYSIS_GAIN,
 			"images/gain.gif");
 		map.put(AnalysisResourceKeys.ICON_ANALYSIS_SPLICE_GAIN,

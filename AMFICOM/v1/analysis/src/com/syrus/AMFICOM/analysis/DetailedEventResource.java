@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.24 2006/04/10 13:26:53 stas Exp $
+ * $Id: DetailedEventResource.java,v 1.25 2006/04/24 11:07:42 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2006/04/10 13:26:53 $
+ * @author $Author: saa $
+ * @version $Revision: 1.25 $, $Date: 2006/04/24 11:07:42 $
  * @module analysis
  */
 
@@ -41,6 +41,7 @@ public class DetailedEventResource {
 	private static final String DASH = I18N.getString(AnalysisResourceKeys.TEXT_DASH);
 	private static final String DEFAULT_TYPE = DASH;
 	
+	private static final Icon ICON_LINEAR = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_LINEAR);
 //	private static final Icon ICON_GAIN = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_GAIN);
 	private static final Icon ICON_SPLICE_GAIN = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_SPLICE_GAIN);
 	private static final Icon ICON_SPLICE_LOSS = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_SPLICE_LOSS);
@@ -311,7 +312,7 @@ public class DetailedEventResource {
 		case SimpleReflectogramEvent.DEADZONE:
 			return ICON_DEADZONE;
 		case SimpleReflectogramEvent.LINEAR:
-			return "";
+			return ICON_LINEAR;
 		case SimpleReflectogramEvent.NOTIDENTIFIED:
 			return ICON_SINGULARITY;
 		case SimpleReflectogramEvent.CONNECTOR:

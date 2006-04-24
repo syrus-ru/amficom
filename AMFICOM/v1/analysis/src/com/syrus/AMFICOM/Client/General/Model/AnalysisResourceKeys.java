@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.32 2006/04/11 05:50:31 stas Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.33 2006/04/24 11:07:42 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.32 $, $Date: 2006/04/11 05:50:31 $
- * @author $Author: stas $
+ * @version $Revision: 1.33 $, $Date: 2006/04/24 11:07:42 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis
  */
@@ -99,6 +99,7 @@ public interface AnalysisResourceKeys extends ResourceKeys {
 	String	ICON_SHOW_PATH_ELEMENTS					= "com.syrus.AMFICOM.icon.analisys.show_pes";
 	String	ICON_ANALYSIS_WEAK_SECONDARY		= "com.syrus.AMFICOM.icon.analisys.weakSecondary";
 
+	String	ICON_ANALYSIS_LINEAR					= "com.syrus.AMFICOM.icon.analisys.linear";
 	String	ICON_ANALYSIS_GAIN					= "com.syrus.AMFICOM.icon.analisys.gain";
 	String	ICON_ANALYSIS_SPLICE_GAIN					= "com.syrus.AMFICOM.icon.analisys.splicegain";
 	String	ICON_ANALYSIS_BEND_LOSS					= "com.syrus.AMFICOM.icon.analisys.bendloss";

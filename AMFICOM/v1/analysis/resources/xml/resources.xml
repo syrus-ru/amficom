@@ -8,9 +8,6 @@
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.downloadTrace">
       <res:filename>images/download_trace.gif</res:filename>
     </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.downloadModel">
-      <res:filename>images/download_model.gif</res:filename>
-    </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.anchored">
       <res:filename>images/opt_start.gif</res:filename>
     </res:resource>
@@ -46,6 +43,9 @@
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.marker">
       <res:filename>images/marker.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.linear">
+      <res:filename>images/linear.gif</res:filename>
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.gain">
       <res:filename>images/gain.gif</res:filename>
@@ -142,9 +142,6 @@
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdInitial">
       <res:filename>images/th_initial.gif</res:filename>
-    </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.weakSecondary">
-      <res:filename>images/weak_secondary.gif</res:filename>
     </res:resource>
     <res:resource xsi:type="res:color" id="trace1">
       <res:rgb>
