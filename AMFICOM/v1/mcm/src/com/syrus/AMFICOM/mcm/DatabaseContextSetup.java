@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.38 2005/12/17 12:19:27 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.39 2006/04/24 09:07:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/12/17 12:19:27 $
+ * @version $Revision: 1.39 $, $Date: 2006/04/24 09:07:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -62,6 +62,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new MCMDatabase());
 		DatabaseContext.registerDatabase(new ServerProcessDatabase());
 
+//		DatabaseContext.registerDatabase(new EquipmentTypeDatabase());
 		DatabaseContext.registerDatabase(new PortTypeDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathTypeDatabase());
 //		DatabaseContext.registerDatabase(new LinkTypeDatabase());
@@ -71,7 +72,6 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new EquipmentDatabase());
 		DatabaseContext.registerDatabase(new PortDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathDatabase());
-		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
 //		DatabaseContext.registerDatabase(new LinkDatabase());
 //		DatabaseContext.registerDatabase(new CableLinkDatabase());
 //		DatabaseContext.registerDatabase(new CableThreadDatabase());
@@ -87,6 +87,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new CronTemporalPatternDatabase());
 		DatabaseContext.registerDatabase(new IntervalsTemporalPatternDatabase());
 		DatabaseContext.registerDatabase(new PeriodicalTemporalPatternDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
 		DatabaseContext.registerDatabase(new KISDatabase());
 		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
 	}
