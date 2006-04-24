@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateMapReportCommand.java,v 1.17 2006/04/11 14:24:14 stas Exp $$
+ * $$Id: CreateMapReportCommand.java,v 1.18 2006/04/24 06:37:21 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2006/04/11 14:24:14 $
+ * @version $Revision: 1.18 $, $Date: 2006/04/24 06:37:21 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -90,14 +90,9 @@ public class CreateMapReportCommand extends AbstractCommand {
 			reportData.put(MapReportModel.SELECTED_OBJECT_CHARS, mapElement.getId());
 		}
 		
-		try {
-			JDialog dialog = new CreateReportDialog(
-					this.aContext,
-					DestinationModules.MAP,
-					reportData);
-			dialog.setVisible(true);
-		} catch(Exception e) {
-			Log.errorMessage(e);
-		}
+		new CreateReportDialog(
+				this.aContext,
+				DestinationModules.MAP,
+				reportData);
 	}
 }

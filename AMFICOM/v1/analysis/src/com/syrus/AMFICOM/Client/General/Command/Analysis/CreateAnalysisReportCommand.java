@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JDialog;
-
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ReportTable;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleResizableFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
@@ -47,15 +45,10 @@ public class CreateAnalysisReportCommand extends AbstractCommand {
 			reportData.put(rf.getReportTitle(), rf.getTopGraphPanel());
 		}
 
-		try {
-			JDialog dialog = new CreateReportDialog(
-					this.aContext,
-					this.destinationModule,
-					reportData);
-			dialog.setVisible(true);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		new CreateReportDialog(
+				this.aContext,
+				this.destinationModule,
+				reportData);
 	}
 }
 

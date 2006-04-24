@@ -1,5 +1,5 @@
 /*-
- * $Id: CreateSchemeReportCommand.java,v 1.14 2006/04/19 12:46:41 stas Exp $
+ * $Id: CreateSchemeReportCommand.java,v 1.15 2006/04/24 06:37:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -130,14 +130,9 @@ public class CreateSchemeReportCommand extends AbstractCommand {
 			reportData.put(FRAME_ADDITIONAL_PROPERIES, selectedObject);
 		}
 		
-		try {
-			JDialog dialog = new CreateReportDialog(
-					this.aContext,
-					DestinationModules.SCHEME,
-					reportData);
-			dialog.setVisible(true);
-		} catch(Exception e) {
-			Log.errorMessage(e);
-		}
+		new CreateReportDialog(
+				this.aContext,
+				DestinationModules.SCHEME,
+				reportData);
 	}
 }
