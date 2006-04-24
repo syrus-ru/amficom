@@ -1,5 +1,5 @@
 /*
- * $Id: ReportRenderer.java,v 1.16 2006/03/13 13:54:02 bass Exp $
+ * $Id: ReportRenderer.java,v 1.17 2006/04/24 06:26:26 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.client.report;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,13 +30,11 @@ import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.ImageStorableElement;
 import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.AMFICOM.report.StorableElement;
-import com.syrus.AMFICOM.report.ReportTemplate.Orientation;
-import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
  * Реализует отчёт по шаблону
- * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2006/03/13 13:54:02 $
+ * @author $Author: stas $
+ * @version $Revision: 1.17 $, $Date: 2006/04/24 06:26:26 $
  * @module reportclient
  */
 public class ReportRenderer extends JPanel {
@@ -49,7 +47,7 @@ public class ReportRenderer extends JPanel {
 	 */
 	private int theLowestBorder = 0;
 	
-	private IntDimension templateBounds = null;
+	private Dimension templateBounds = null;
 	
 	private ApplicationContext aContext = null;
 	
@@ -60,6 +58,7 @@ public class ReportRenderer extends JPanel {
 	
 	private void jbInit(){
 		this.setLayout(null);
+		setBackground(Color.WHITE);
 	}
 	
 	public void setReportTemplate (ReportTemplate reportTemplate) {
@@ -69,6 +68,7 @@ public class ReportRenderer extends JPanel {
 	
 	public void setData(Map<Object, Object> data)
 		throws CreateReportException, CreateModelException, ApplicationException, IOException, ElementsIntersectException {
+		
 		if (this.reportTemplate == null)
 			throw new AssertionError("Report template is not set!");
 		
@@ -138,19 +138,11 @@ public class ReportRenderer extends JPanel {
 	}
 	
 	private void refreshTemplateBounds() {
-		this.templateBounds = new IntDimension(this.reportTemplate.getSize());
-		if (this.reportTemplate.getOrientation().equals(Orientation.LANDSCAPE)) {
-			int tempWidth = this.templateBounds.getWidth();
-			this.templateBounds.setWidth(this.templateBounds.getHeight());
-			this.templateBounds.setHeight(tempWidth);
-		}
+		this.templateBounds = this.reportTemplate.getDimensions();
+		this.templateBounds.height = this.theLowestBorder + ReportTemplate.STANDART_MARGIN_SIZE;
 
-		int marginSize = this.reportTemplate.getMarginSize();
-		if (this.templateBounds.getHeight()	< this.theLowestBorder + marginSize)
-			this.templateBounds.setHeight(this.theLowestBorder + marginSize);
-
-		this.setSize(this.templateBounds.getWidth(),this.templateBounds.getHeight());
-		this.setPreferredSize(this.getSize());
+		this.setSize(this.templateBounds);
+		this.setPreferredSize(this.templateBounds);
 	}
 	
 	public List<RenderingComponent> getRenderingComponents() {
@@ -159,25 +151,7 @@ public class ReportRenderer extends JPanel {
 			components.add((RenderingComponent)this.getComponent(i));
 		return components;
 	}
-	
-	@Override
-	public void paintComponent (Graphics g){
-		g.setColor(Color.WHITE);
-		g.fillRect(0,0,this.getWidth(),this.getHeight());
 		
-		if (this.reportTemplate != null){
-			//Рисуем края шаблона
-			g.setColor(Color.BLACK);
-			g.drawRect(
-					2,
-					2,
-					this.templateBounds.getWidth() - 3,
-					this.templateBounds.getHeight() - 3);
-		}
-		
-		this.paintChildren(g);
-	}
-	
 	/**
 	 * Проверка на пересечения элементов шаблона
 	 * @throws ElementsIntersectException 
@@ -232,7 +206,13 @@ public class ReportRenderer extends JPanel {
 	 * Вызывается с параметром false после печати
  	 */
 	public void setPrintable(boolean pritable) {
-		int shift = this.reportTemplate.getMarginSize();
+		this.templateBounds = this.reportTemplate.getMargins();
+		this.templateBounds.height = this.theLowestBorder;
+		
+		setSize(this.templateBounds);
+		setPreferredSize(this.templateBounds);
+		
+		int shift = ReportTemplate.STANDART_MARGIN_SIZE;
 		if (!pritable)
 			shift = -shift;
 		for (int i = 0; i < this.getComponentCount(); i++) {
@@ -240,7 +220,7 @@ public class ReportRenderer extends JPanel {
 			Point componentLocation = component.getLocation();
 			component.setLocation(
 				componentLocation.x - shift,
-				componentLocation.y - shift);
+				componentLocation.y - shift / 2);
 		}
 	}
 }
