@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.8 2005/12/12 09:04:34 bob Exp $
+# $Id: Makefile,v 1.9 2006/04/24 08:40:00 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -93,3 +93,14 @@ $(LIBDIR)/$(LIBNAME_RESOURCES_SCHEMAS): $(LIBNAME_RESOURCES_SCHEMAS)
 
 $(LIBDIR)/$(LIBNAME): $(LIBNAME)
 	install -m 0644 -p $(LIBNAME) $(LIBDIR)
+
+
+#### Archive ####
+.PHONY: arch
+arch:
+	tar -czvf $(ARCHFILE) \
+		Makefile \
+		$(SOURCES) \
+		$(wildcard $(XMLDIR)/*.xml) \
+		$(XMLDIR)/$(MODULE_NAME).xsdconfig
+
