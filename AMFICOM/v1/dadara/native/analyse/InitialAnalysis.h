@@ -8,7 +8,7 @@
 
 #include "../common/ArrList.h"
 
-//#define NEW_SHORT_LINE_EXCLUSION
+#define NEW_SHORT_LINE_EXCLUSION
 
 class Splash;
 //---------------------------------------------------------------------------------------------------------------
