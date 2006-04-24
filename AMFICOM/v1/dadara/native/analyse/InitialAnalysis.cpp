@@ -271,16 +271,7 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB, double scaleFact
 					}
 				}
 			}
-			/*if (cnSplash->begin_thr < 2840 && cnSplash->end_thr > 2840) {
-				fprintf(stderr, "HIT2840: begin %d end %d f_extr %g ai %d-%d action %d\n",
-					cnSplash->begin_thr,
-					cnSplash->end_thr,
-					cnSplash->f_extr,
-					minAccIndex,
-					maxAccIndex,
-					(int)action);
 
-			}*/
 			// NB: ACTION_REPLACE и ACTION_INSERT производитс€ только дл€
 			// всплесков, не пересекающихс€ ни с какими всплесками accSpl
 			// и дл€ всплесков, пересекающихс€ взаимно-однозначно с одним
@@ -548,24 +539,12 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, int wlet_width, ArrLis
 #endif
         }
         else
-        {  delete &spl; // если этого не делать, то будут утечки пам€ти, так как удал€тс€ только те spl, которые  были добавлены в splashes 
+        {  delete &spl;
         }
 	}
     if(splashes.getLength() == 0)
 return;
-	// напоследок добавл€ем фиктивный всплеск вниз так как из за резкого спада до нул€ в конце всплеск может не успеть уйти вниз достаточно и конец не будет распознан
-	/*
-	Splash* splend = (Splash*)splashes[splashes.getLength()-1];
-    if(splend->sign > 0)
-    {   Splash* spl = new Splash(wlet_width);
-    	spl->begin_thr 		= lastPoint+1; spl->begin_weld 	= lastPoint+1; spl->begin_conn 	= lastPoint+1;
-        spl->end_thr 		= lastPoint+2; spl->end_weld 	= lastPoint+2; spl->end_conn 	= lastPoint+2;
-		//spl->f_extr			= 0;
-		spl->sign			= -1;
-		// fillSplashRParameters() не вызываем, т.к. это невозможно, да и ни к чему
-        splashes.add(spl);
-    }
-	*/
+
 #ifdef debug_lines
     // отображаем пороги
     xs[cou] = 0; ys[cou] =  minimalThreshold1; xe[cou] = lastPoint*delta_x; ye[cou] =  minimalThreshold1; col[cou] = 0x004444; cou++;
@@ -581,46 +560,6 @@ return;
 // ======= ‘”Ќ ÷»» “–≈“№≈√ќ Ё“јѕј јЌјЋ»«ј - ќѕ–≈ƒ≈Ћ≈Ќ»я —ќЅџ“»… ѕќ ¬—ѕЋ≈— јћ =======
 //
 // -------------------------------------------------------------------------------------------------
-/*void InitialAnalysis::removedMaskedSplashes(ArrList &accSpl)
-{
-	int i;
-	for (i = 1; i < accSpl.getLength(); i++) {
-		if (((Splash*)accSpl[i - 1])->sign > 0)
-			continue; // пропускаем подъемы
-		double A0 = fabs(((Splash*)accSpl[i - 1])->f_extr);
-		double A1 = fabs(((Splash*)accSpl[i])->f_extr);
-		if (((Splash*)accSpl[i - 1])->end_conn < 0)
-			continue; // спад - не достиг коннекторного порога, игнорируем
-
-		double dist = ((Splash*)accSpl[i])->begin_thr - ((Splash*)accSpl[i - 1])->end_conn;
-
-		//fprintf(stderr, "i %d A0 %g A1 %g dist %g: ", i, A0, A1, dist);
-
-		// @todo вынести эти параметры анализа
-		const double A_MAX = 15; // амплитуда насыщени€ источника звона, дЅ
-		const double ZVON_RATIO = 0.03; // начальна€ отн. амплитуда звона, разы; рекомендую 0.01 .. 0.03 .. 0.1
-		const double CRIT_DIST = 250.0; // затухание звона в e раз, метры
-
-		if (A0 > A_MAX) A0 = A_MAX;
-
-		double LH = pow(10.0, (A1 - A0) / 5.0);
-		double RH = ZVON_RATIO * exp(-dist * delta_x / CRIT_DIST);
-		if (LH < RH) {
-			// удал€ем всплеск
-			//fprintf(stderr, " removed");
-			accSpl.slowRemove(i);
-			i--;
-		} else {
-			// (оставл€ем всплеск)
-			// корректируем достоверность всплеска
-			double rMax = (LH - RH) / RH;
-			((Splash*)accSpl[i])->lowerRFactors(rMax);
-			//fprintf(stderr, " rMax = %g", rMax);
-		}
-		//fprintf(stderr, "\n");
-	}
-}*/
-
 void InitialAnalysis::processMaskedSplashes(ArrList &accSpl) {
 	// @todo вынести эти параметры анализа
 	const double A_MAX = 15; // амплитуда насыщени€ источника звона, дЅ
@@ -668,8 +607,9 @@ void InitialAnalysis::processMaskedSplashes(ArrList &accSpl) {
 //
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::findEventsBySplashes(double *f_wletTEMP, ArrList& splashes, int dzMaxDist)
-{//* мЄртвую зону ищЄм  чуть иначе
-    int i0 = processDeadZone(splashes, dzMaxDist);// ищем мЄртвую зону
+{
+	// ищем мЄртвую зону
+    int i0 = processDeadZone(splashes, dzMaxDist);
 	// ищем остальные коннекторы  и сварки
     for(int i = i0; i<splashes.getLength(); i++)
     {
@@ -844,13 +784,6 @@ void InitialAnalysis::setSpliceParamsBySplash(EventParams& ep, Splash& sp)
     if(ep.end>lastPoint){ep.end = lastPoint;}
     if(ep.begin<0){ep.begin=0;}
 
-    //// remove this
-	//double max = -1;
-	//for(int i=sp.begin_weld; i<sp.end_weld; i++)
-    //{ double res = (fabs(f_wlet[i])-minimalWeld)/noise[i];
-    //  if(max<res){ max = res;}
-    //}
-    //ep.R = max;
 	ep.R = sp.r_weld;
 
 	ep.spliceSplash = &sp;
@@ -1119,20 +1052,6 @@ void InitialAnalysis::setConnectorParamsBySplashes(EventParams& ep, Splash& sp1,
 	} else {
 		ep.end = lastPoint;
 	}
-	//// remove this
-    //double max1 = -1, max2 = -1, max3 = -1;
-    //int i;
-    //for(i=sp1.begin_conn ; i<sp1.end_conn; i++)
-    //{ double res = (f_wlet[i]-minimalConnector)/noise[i]; // WONDER: какой f_wlet - на исходном масштабе?
-    //  if(max1<res) { max1 = res;}
-    //  res = (f_wlet[i]-rACrit)/noise[i];
-    //  if(max2<res) { max2 = res;}
-    //  res = (f_wlet[i]-minimalWeld)/noise[i];
-    //  if(max3<res) {max3 = res;}
-    //}
-    //r1s = max1;
-    //r1b = max2;
-    //r2  = max3;
 
 	r1s = sp1.r_conn;
 	r1b = sp1.r_acrit;
