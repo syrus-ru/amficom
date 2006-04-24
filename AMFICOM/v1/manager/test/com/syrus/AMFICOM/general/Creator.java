@@ -1,12 +1,12 @@
 /*-
-* $Id: Creator.java,v 1.5 2006/04/12 06:45:09 bass Exp $
+* $Id: Creator.java,v 1.1 2006/04/24 15:01:45 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
 * Project: AMFICOM.
 */
 
-package com.syrus.AMFICOM.manager;
+package com.syrus.AMFICOM.general;
 
 import java.util.Set;
 
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2006/04/12 06:45:09 $
+ * @version $Revision: 1.1 $, $Date: 2006/04/24 15:01:45 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module manager
