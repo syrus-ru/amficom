@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorInfoReport.java,v 1.4 2006/02/14 10:20:06 stas Exp $
+ * $Id: CollectorInfoReport.java,v 1.5 2006/04/24 06:43:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,6 @@ import com.syrus.AMFICOM.report.TableDataStorableElement;
 
 public class CollectorInfoReport {
 	protected static final int COLUMNS_COUNT = 2;
-	private static final int PROPERTY_NAME_COLUMN_WIDTH = 200;
-	private static final int PROPERTY_VALUE_COLUMN_WIDTH = 150;
 	
 	public static TableDataRenderingComponent createReport(
 			TableDataStorableElement tableStorableElement,
@@ -40,19 +38,8 @@ public class CollectorInfoReport {
 			tableStorableElement,
 			new CollectorInfoReportTableModel(
 					collector,
-					vertDivisionsCount),
-			getTableColumnWidths(vertDivisionsCount));
+					vertDivisionsCount));
 		return renderingComponent;
-	}
-	
-	private static List<Integer> getTableColumnWidths(int vertDivisionsCount) {
-		List<Integer> tableColumnWidths = new ArrayList<Integer>();
-		
-		for (int j = 0; j < vertDivisionsCount; j++) {
-			tableColumnWidths.add(Integer.valueOf(PROPERTY_NAME_COLUMN_WIDTH));
-			tableColumnWidths.add(Integer.valueOf(PROPERTY_VALUE_COLUMN_WIDTH));
-		}
-		return tableColumnWidths;
 	}
 }
 

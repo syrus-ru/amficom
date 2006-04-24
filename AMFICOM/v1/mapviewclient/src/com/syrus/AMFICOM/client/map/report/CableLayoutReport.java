@@ -27,15 +27,11 @@ import com.syrus.util.Log;
 /**
  * Отчёт "Прокладка кабеля"
  * @author $Author: stas $
- * @version $Revision: 1.27 $, $Date: 2006/04/11 11:37:29 $
+ * @version $Revision: 1.28 $, $Date: 2006/04/24 06:43:10 $
  * @module reportother
  */
 public class CableLayoutReport {
 	protected static final int COLUMNS_COUNT = 4;
-	private static final int SITE_NAME_COLUMN_WIDTH = 100;
-	private static final int CABLE_ENTRANCE_RESERVE_COLUMN_WIDTH = 100;
-	private static final int CABLE_EXIT_RESERVE_COLUMN_WIDTH = 100;	
-	private static final int TUNNEL_INFO_COLUMN_WIDTH = 150;
 	
 	public static TableDataRenderingComponent createReport(
 			TableDataStorableElement tableStorableElement,
@@ -48,8 +44,7 @@ public class CableLayoutReport {
 				tableStorableElement,
 				new CableLayoutReportTableModel(
 						cableLink,
-						vertDivisionsCount),
-				getTableColumnWidths(vertDivisionsCount));
+						vertDivisionsCount));
 		} catch (ApplicationException e) {
 			Log.errorMessage(e.getMessage());
 			Log.errorMessage(e);			
@@ -60,18 +55,6 @@ public class CableLayoutReport {
 		}
 		
 		return renderingComponent;
-	}
-	
-	private static List<Integer> getTableColumnWidths(int vertDivisionsCount) {
-		List<Integer> tableColumnWidths = new ArrayList<Integer>();
-		
-		for (int j = 0; j < vertDivisionsCount; j++) {
-			tableColumnWidths.add(Integer.valueOf(SITE_NAME_COLUMN_WIDTH));
-			tableColumnWidths.add(Integer.valueOf(CABLE_ENTRANCE_RESERVE_COLUMN_WIDTH));
-			tableColumnWidths.add(Integer.valueOf(CABLE_EXIT_RESERVE_COLUMN_WIDTH));
-			tableColumnWidths.add(Integer.valueOf(TUNNEL_INFO_COLUMN_WIDTH));
-		}
-		return tableColumnWidths;
 	}
 }
 

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemePortReport.java,v 1.6 2006/02/15 12:18:11 stas Exp $
+ * $Id: SchemePortReport.java,v 1.7 2006/04/24 06:41:05 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,6 @@ import com.syrus.util.Log;
 
 public class SchemePortReport {
 	protected static final int COLUMNS_COUNT = 2;
-	private static final int PROPERTY_NAME_COLUMN_WIDTH = 200;
-	private static final int PROPERTY_VALUE_COLUMN_WIDTH = 150;
 	
 	public static TableDataRenderingComponent createReport (
 			AbstractSchemePort abstractPort,
@@ -38,8 +36,7 @@ public class SchemePortReport {
 		try {
 			renderingComponent = new TableDataRenderingComponent(
 				tableStorableElement,
-				new AbstractPortTableModel(abstractPort,vertDivisionsCount),
-				getTableColumnWidths(vertDivisionsCount));
+				new AbstractPortTableModel(abstractPort,vertDivisionsCount));
 		} catch (ApplicationException e) {
 			Log.errorMessage(e.getMessage());
 			Log.errorMessage(e);			
@@ -50,16 +47,6 @@ public class SchemePortReport {
 		}
 		
 		return renderingComponent;
-	}
-
-	private static List<Integer> getTableColumnWidths(int vertDivisionsCount) {
-		List<Integer> tableColumnWidths = new ArrayList<Integer>();
-		
-		for (int j = 0; j < vertDivisionsCount; j++) {
-			tableColumnWidths.add(new Integer(PROPERTY_NAME_COLUMN_WIDTH));
-			tableColumnWidths.add(new Integer(PROPERTY_VALUE_COLUMN_WIDTH));
-		}
-		return tableColumnWidths;
 	}
 }
 

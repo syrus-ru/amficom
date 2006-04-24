@@ -23,8 +23,6 @@ import com.syrus.util.Log;
 
 public class TunnelCableListReport {
 	protected static final int COLUMNS_COUNT = 2;
-	private static final int PROPERTY_NAME_COLUMN_WIDTH = 200;
-	private static final int PROPERTY_VALUE_COLUMN_WIDTH = 150;
 	
 	public static TableDataRenderingComponent createReport(
 			TableDataStorableElement tableStorableElement,
@@ -37,8 +35,7 @@ public class TunnelCableListReport {
 				tableStorableElement,
 				new TunnelCableListTableModel(
 						physicalLink,
-						vertDivisionsCount),
-				getTableColumnWidths(vertDivisionsCount));
+						vertDivisionsCount));
 		} catch (ApplicationException e) {
 			Log.errorMessage(e.getMessage());
 			Log.errorMessage(e);			
@@ -49,16 +46,6 @@ public class TunnelCableListReport {
 		}
 		
 		return renderingComponent;
-	}
-	
-	private static List<Integer> getTableColumnWidths(int vertDivisionsCount) {
-		List<Integer> tableColumnWidths = new ArrayList<Integer>();
-		
-		for (int j = 0; j < vertDivisionsCount; j++) {
-			tableColumnWidths.add(Integer.valueOf(PROPERTY_NAME_COLUMN_WIDTH));
-			tableColumnWidths.add(Integer.valueOf(PROPERTY_VALUE_COLUMN_WIDTH));
-		}
-		return tableColumnWidths;
 	}
 }
 
