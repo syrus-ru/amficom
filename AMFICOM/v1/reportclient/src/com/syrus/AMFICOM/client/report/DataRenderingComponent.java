@@ -1,5 +1,5 @@
 /*
- * $Id: DataRenderingComponent.java,v 1.4 2005/09/13 12:23:10 peskovsky Exp $
+ * $Id: DataRenderingComponent.java,v 1.5 2006/04/24 06:28:37 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,9 @@ public abstract class DataRenderingComponent extends JPanel implements Rendering
 	 */
 	private Point mousePressedLocation = new Point();
 
-	public static Border DEFAULT_BORDER = BorderFactory.createLineBorder(Color.BLACK,1);
+	public static Border DEFAULT_BORDER = BorderFactory.createEmptyBorder();
+	
+	public static Border SELECTION_BORDER = BorderFactory.createLineBorder(Color.BLACK, 1);
 
 	protected DataRenderingComponent(StorableElement dre){
 		this.storableElement = dre;
