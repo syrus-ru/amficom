@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import javax.swing.JDesktopPane;
-import javax.swing.JDialog;
 
 import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
@@ -113,15 +112,10 @@ public class CreateObserverReportCommand extends AbstractCommand {
 			Log.debugMessage("Report for result inaccessible - resultFrame is not opened", Level.WARNING);
 		}
 		
-		try {
-			JDialog dialog = new CreateReportDialog(
-					this.aContext,
-					DestinationModules.OBSERVE,
-					reportData);
-			dialog.setVisible(true);
-		} catch(Exception e) {
-			Log.errorMessage(e);
-		}
+		new CreateReportDialog(
+				this.aContext,
+				DestinationModules.OBSERVE,
+				reportData);
 
 //		result.add(MapEditorResourceKeys.LABEL_MARKER_INFO);
 	}
