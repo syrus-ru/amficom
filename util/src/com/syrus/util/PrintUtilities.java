@@ -1,5 +1,5 @@
 /*-
- * $Id: PrintUtilities.java,v 1.1 2006/04/24 05:48:57 arseniy Exp $
+ * $Id: PrintUtilities.java,v 1.2 2006/04/24 05:52:33 arseniy Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,10 @@ import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 
 /**
+ * @version $Revision: 1.2 $, $Date: 2006/04/24 05:52:33 $
  * @author $Author: arseniy $
- * @version $Revision: 1.1 $, $Date: 2006/04/24 05:48:57 $
+ * @author Kholshin Stanislav
+ * @module util
  */
 public class PrintUtilities implements Printable {
 	private boolean fitToWidth = true;
