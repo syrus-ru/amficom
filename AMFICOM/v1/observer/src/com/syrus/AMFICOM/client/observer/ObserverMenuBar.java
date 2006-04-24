@@ -9,13 +9,15 @@ import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 import com.syrus.AMFICOM.client.model.ObserverApplicationModel;
 import com.syrus.AMFICOM.resource.LangModelObserver;
 
-public class ObserverMenuBar extends AbstractMainMenuBar
-{
+public class ObserverMenuBar extends AbstractMainMenuBar {
+	private static final long serialVersionUID = -481976816191208039L;
+
 	public ObserverMenuBar(ApplicationModel aModel)
 	{
 		super(aModel);
 	}
 
+	@Override
 	protected void addMenuItems() {
 		
 		final JMenu menuStart = new JMenu();

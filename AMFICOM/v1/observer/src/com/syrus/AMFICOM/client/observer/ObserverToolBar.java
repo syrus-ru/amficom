@@ -12,6 +12,7 @@ import com.syrus.AMFICOM.resource.LangModelObserver;
 import com.syrus.AMFICOM.resource.ObserverResourceKeys;
 
 public class ObserverToolBar extends AbstractMainToolBar {
+	private static final long serialVersionUID = 4561823485366474034L;
 
 	public ObserverToolBar() {
 		initItems();

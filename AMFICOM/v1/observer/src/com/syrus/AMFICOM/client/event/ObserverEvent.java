@@ -2,8 +2,9 @@ package com.syrus.AMFICOM.client.event;
 
 import java.beans.PropertyChangeEvent;
 
-public class ObserverEvent extends PropertyChangeEvent 
-{
+public class ObserverEvent extends PropertyChangeEvent {
+	private static final long serialVersionUID = 3180060865879867974L;
+
 	public static final String ALARM_FRAME_DISPLAYED  = "alarmFrameDisplayed";
 	public static final String ALARM_POPUP_FRAME_DISPLAYED =
 		"alarmPopupFrameDisplayed";
