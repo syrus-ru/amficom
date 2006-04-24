@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.47 2006/03/23 15:15:57 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.48 2006/04/24 09:05:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,10 +15,12 @@ import com.syrus.AMFICOM.administration.RoleDatabase;
 import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
+import com.syrus.AMFICOM.configuration.CableLinkDatabase;
 import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
+import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.LinkDatabase;
 import com.syrus.AMFICOM.configuration.LinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.PortDatabase;
@@ -56,8 +58,8 @@ import com.syrus.AMFICOM.report.ReportTemplateDatabase;
 import com.syrus.AMFICOM.report.TableDataDatabase;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2006/03/23 15:15:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.48 $, $Date: 2006/04/24 09:05:25 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  */
@@ -79,6 +81,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new ServerProcessDatabase());
 		DatabaseContext.registerDatabase(new RoleDatabase());
 
+		DatabaseContext.registerDatabase(new EquipmentTypeDatabase());
 		DatabaseContext.registerDatabase(new PortTypeDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathTypeDatabase());
 		DatabaseContext.registerDatabase(new LinkTypeDatabase());
@@ -89,6 +92,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new PortDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathDatabase());
 		DatabaseContext.registerDatabase(new LinkDatabase());
+		DatabaseContext.registerDatabase(new CableLinkDatabase());
 		DatabaseContext.registerDatabase(new CableThreadDatabase());
 
 		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
