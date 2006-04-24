@@ -1,5 +1,5 @@
 /*
- * $Id: HashCodeGenerator.java,v 1.9 2005/06/20 14:24:40 bass Exp $
+ * $Id: HashCodeGenerator.java,v 1.10 2006/04/24 06:21:09 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import java.util.Date;
  * HashCodeGenerator methods have got from Effective Java: Programming Language
  * Guide by Joshua Bloch
  *
- * @version $Revision: 1.9 $, $Date: 2005/06/20 14:24:40 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2006/04/24 06:21:09 $
+ * @author $Author: arseniy $
  * @module util
  */
 public class HashCodeGenerator {
@@ -51,6 +51,7 @@ public class HashCodeGenerator {
 	 * compares the field by recursively invoking equals, recursively invoke
 	 * hashCode on the field. If a more complex comparison is required,
 	 * compute a "canonical representation" for this field and invoke
+	 * (Joshua Bloch).
 	 */
 	public void addObject(Object value) {
 		addInt(value == null ? 0 : value.hashCode());
