@@ -1,5 +1,5 @@
 /*-
- * $Id: TestReport.java,v 1.2 2006/04/03 10:31:04 bass Exp $
+ * $Id: TestReport.java,v 1.3 2006/04/24 07:03:44 saa Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,14 +34,12 @@ import com.syrus.util.Log;
 
 /**
  * @author Peter Peskovsky
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2006/04/03 10:31:04 $
+ * @author $Author: saa $
+ * @version $Revision: 1.3 $, $Date: 2006/04/24 07:03:44 $
  * @module scheduler
  */
 final class TestReport {
 	protected static final int COLUMNS_COUNT = 2;
-	private static final int PROPERTY_NAME_COLUMN_WIDTH = 200;
-	private static final int PROPERTY_VALUE_COLUMN_WIDTH = 100;
 	
 	public static TableDataRenderingComponent createReport (
 			Test test,
@@ -53,8 +51,7 @@ final class TestReport {
 		try {
 			renderingComponent = new TableDataRenderingComponent(
 				tableStorableElement,
-				new TestReportTableModel(test,vertDivisionsCount),
-				getTableColumnWidths(vertDivisionsCount));
+				new TestReportTableModel(test,vertDivisionsCount));
 		} catch (ApplicationException e) {
 			Log.errorMessage(e.getMessage());
 			Log.errorMessage(e);			
@@ -67,20 +64,10 @@ final class TestReport {
 		return renderingComponent;
 	}
 
-	private static List<Integer> getTableColumnWidths(int vertDivisionsCount) {
-		List<Integer> tableColumnWidths = new ArrayList<Integer>();
-		
-		for (int j = 0; j < vertDivisionsCount; j++) {
-			tableColumnWidths.add(Integer.valueOf(PROPERTY_NAME_COLUMN_WIDTH));
-			tableColumnWidths.add(Integer.valueOf(PROPERTY_VALUE_COLUMN_WIDTH));
-		}
-		return tableColumnWidths;
-	}
-
 	/**
 	 * @author Peter Peskovsky
-	 * @author $Author: bass $
-	 * @version $Revision: 1.2 $, $Date: 2006/04/03 10:31:04 $
+	 * @author $Author: saa $
+	 * @version $Revision: 1.3 $, $Date: 2006/04/24 07:03:44 $
 	 * @module scheduler
 	 */
 	private static final class TestReportTableModel extends AbstractTableModel {
