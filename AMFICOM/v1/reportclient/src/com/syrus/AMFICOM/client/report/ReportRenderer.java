@@ -1,5 +1,5 @@
 /*
- * $Id: ReportRenderer.java,v 1.17 2006/04/24 06:26:26 stas Exp $
+ * $Id: ReportRenderer.java,v 1.18 2006/04/24 12:41:04 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.report.StorableElement;
 /**
  * Реализует отчёт по шаблону
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2006/04/24 06:26:26 $
+ * @version $Revision: 1.18 $, $Date: 2006/04/24 12:41:04 $
  * @module reportclient
  */
 public class ReportRenderer extends JPanel {
@@ -139,7 +139,7 @@ public class ReportRenderer extends JPanel {
 	
 	private void refreshTemplateBounds() {
 		this.templateBounds = this.reportTemplate.getDimensions();
-		this.templateBounds.height = this.theLowestBorder + ReportTemplate.STANDART_MARGIN_SIZE;
+		this.templateBounds.height = this.theLowestBorder + ReportTemplate.VERTICAL_MARGIN_SIZE;
 
 		this.setSize(this.templateBounds);
 		this.setPreferredSize(this.templateBounds);
@@ -212,15 +212,18 @@ public class ReportRenderer extends JPanel {
 		setSize(this.templateBounds);
 		setPreferredSize(this.templateBounds);
 		
-		int shift = ReportTemplate.STANDART_MARGIN_SIZE;
-		if (!pritable)
+		int shift = ReportTemplate.STANDART_LEFT_MARGIN_SIZE;
+		int shiftv = ReportTemplate.VERTICAL_MARGIN_SIZE;
+		if (!pritable) {
 			shift = -shift;
+			shiftv = -shiftv;
+		}
 		for (int i = 0; i < this.getComponentCount(); i++) {
 			Component component = this.getComponent(i);
 			Point componentLocation = component.getLocation();
 			component.setLocation(
 				componentLocation.x - shift,
-				componentLocation.y - shift / 2);
+				componentLocation.y - shiftv);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.3 2006/04/24 07:17:24 stas Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.4 2006/04/24 12:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -332,8 +332,8 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		this.setPreferredSize(this.getSize());				
 		
 		this.marginBounds.setLocation(
-				new Point(ReportTemplate.STANDART_MARGIN_SIZE + this.template.getMarginSize(), 
-						ReportTemplate.STANDART_MARGIN_SIZE));
+				new Point(ReportTemplate.STANDART_LEFT_MARGIN_SIZE + this.template.getMarginSize(), 
+						ReportTemplate.VERTICAL_MARGIN_SIZE));
 
 		this.marginBounds.setSize(this.template.getMargins());
 	}
