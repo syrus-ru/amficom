@@ -1,5 +1,5 @@
 /*
- * $Id: PrintReportCommand.java,v 1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: PrintReportCommand.java,v 1.2 2006/04/24 07:27:30 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,10 +7,9 @@
  */
 package com.syrus.AMFICOM.client.reportbuilder.command.template;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
-import com.syrus.AMFICOM.client.report.ReportPrinter;
 import com.syrus.AMFICOM.client.report.ReportRenderer;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderMainFrame;
-import com.syrus.AMFICOM.report.ReportTemplate;
+import com.syrus.util.PrintUtilities;
 
 public class PrintReportCommand extends AbstractCommand {
 	ReportBuilderMainFrame mainFrame = null;
@@ -28,9 +27,7 @@ public class PrintReportCommand extends AbstractCommand {
 		if (reportRenderer == null)
 			return;
 		
-		ReportTemplate reportTemplate = this.mainFrame.getTemplateRenderer().getTemplate();
-		ReportPrinter.printReport(
-				reportRenderer,
-				reportTemplate);
+		this.mainFrame.getTemplateRenderer().getTemplate();
+		PrintUtilities.printComponent(reportRenderer);
 	}
 }
