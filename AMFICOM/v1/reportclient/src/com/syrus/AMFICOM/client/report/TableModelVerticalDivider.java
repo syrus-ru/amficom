@@ -1,5 +1,5 @@
 /*
- * $Id: TableModelVerticalDivider.java,v 1.2 2005/10/08 13:30:14 arseniy Exp $
+ * $Id: TableModelVerticalDivider.java,v 1.3 2006/04/24 06:30:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,17 +7,22 @@
  */
 package com.syrus.AMFICOM.client.report;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
+import com.syrus.AMFICOM.client.UI.WrapperedTable;
+import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 /**
  * Класс для реализации вртикального разбиения исходной табличной
  * модели.
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/10/08 13:30:14 $
+ * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2006/04/24 06:30:28 $
  * @author Peskovsky Peter
  * @module reportclient
  */
@@ -32,23 +37,9 @@ public class TableModelVerticalDivider {
 		TableDataRenderingComponent renderingComponent = null;
 		renderingComponent = new TableDataRenderingComponent(
 			tableStorableElement,
-			new TestReportTableModel(tableModel,vertDivisionsCount),
-			getTableColumnWidths(tableModel,vertDivisionsCount));
+			new TestReportTableModel(tableModel,vertDivisionsCount));
 		
 		return renderingComponent;
-	}
-	
-	private static List<Integer> getTableColumnWidths(
-			AbstractTableModel tableModel,
-			int vertDivisionsCount) {
-		List<Integer> tableColumnWidths = new ArrayList<Integer>();
-		for (
-				int j = 0;
-				j < tableModel.getColumnCount() * vertDivisionsCount;
-				j++)
-			tableColumnWidths.add(new Integer(DEFAULT_COLUMN_WIDTH));
-
-		return tableColumnWidths;
 	}
 }
 

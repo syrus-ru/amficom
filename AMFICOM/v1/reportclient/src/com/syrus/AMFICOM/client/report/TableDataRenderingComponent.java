@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataRenderingComponent.java,v 1.6 2005/10/08 13:30:14 arseniy Exp $
+ * $Id: TableDataRenderingComponent.java,v 1.7 2006/04/24 06:30:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,17 @@
 package com.syrus.AMFICOM.client.report;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Font;
-import java.util.List;
 
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.client.UI.ATable;
-import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer.ObjectRenderer;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 
 public final class TableDataRenderingComponent extends DataRenderingComponent {
@@ -25,17 +26,14 @@ public final class TableDataRenderingComponent extends DataRenderingComponent {
 
 	private ATable table = null;
 	private TableModel tableModel = null;
-	private List<Integer> tableColumnWidths = null;
 	private TableDataStorableElement trdElement = null;
 	
 	public TableDataRenderingComponent(
 			TableDataStorableElement trde,
-			TableModel tableModel,
-			List<Integer> tableColumnWidths) {
+			TableModel tableModel) {
 		super(trde);
 		
 		this.tableModel = tableModel;
-		this.tableColumnWidths = tableColumnWidths;
 		this.trdElement = trde;
 		
 		jbinit();
@@ -52,10 +50,7 @@ public final class TableDataRenderingComponent extends DataRenderingComponent {
 		this.table.setFont(tableFont);
 		this.table.setRowHeight(tableFont.getSize() + 2);
 		for (int i = 0; i < this.table.getColumnCount(); i++) {
-			TableColumn tableColumn = this.table.getColumnModel().getColumn(i);
-			tableColumn.setWidth(this.tableColumnWidths.get(i).intValue());
-			tableColumn.setPreferredWidth(this.tableColumnWidths.get(i).intValue());
-			tableColumn.setCellRenderer(new ObjectRenderer());
+			setPreferredWidth(this.table, i);
 		}
 		JScrollPane scrollPane = new JScrollPane(this.table);
 		scrollPane.setVerticalScrollBarPolicy(
@@ -71,6 +66,30 @@ public final class TableDataRenderingComponent extends DataRenderingComponent {
 				+ this.table.getTableHeader().getPreferredSize().getHeight()) + 2);
 		this.setPreferredSize(this.getSize());
 		this.setBorder(DataRenderingComponent.DEFAULT_BORDER);
+	}
+	
+	private void setPreferredWidth(JTable table, int columnIndex) {
+		final TableColumn column = table.getColumnModel().getColumn(columnIndex);
+		final TableModel model = table.getModel();
+		
+		final TableCellRenderer headerRenderer = 
+				table.getTableHeader() != null ? this.table.getTableHeader().getDefaultRenderer() 
+				: null;
+			
+		Component comp = headerRenderer != null ?
+				headerRenderer.getTableCellRendererComponent(null, column.getHeaderValue(), false, false, 0, 0) 
+				: null;
+							
+		final int headerWidth = comp != null ? comp.getPreferredSize().width : 0;
+							
+		int cellWidth = 0;
+		for(int rowIndex = 0; rowIndex < table.getRowCount(); rowIndex++) {
+			final Object valueAt = model.getValueAt(rowIndex, columnIndex);
+			comp = table.getCellRenderer(rowIndex, columnIndex).
+			getTableCellRendererComponent(table, valueAt, false, false, rowIndex, columnIndex);
+			cellWidth = Math.max(comp.getPreferredSize().width, cellWidth);
+		}
+		column.setPreferredWidth(Math.max(headerWidth, cellWidth));
 	}
 
 	public void setX(int x) {
