@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.33 2006/04/24 06:22:15 stas Exp $
+ * $Id: ReportTemplate.java,v 1.34 2006/04/24 12:39:31 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -62,7 +62,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * отчёт </p>
  * 
  * @author $Author: stas $
- * @version $Revision: 1.33 $, $Date: 2006/04/24 06:22:15 $
+ * @version $Revision: 1.34 $, $Date: 2006/04/24 12:39:31 $
  * @module report
  */
 public final class ReportTemplate extends StorableObject
@@ -74,8 +74,10 @@ public final class ReportTemplate extends StorableObject
 		PORTRAIT, LANDSCAPE
 	}
 	
-	public static final int STANDART_MARGIN_SIZE = 80;
+	public static final int STANDART_LEFT_MARGIN_SIZE = 40;
+	public static final int STANDART_RIGHT_MARGIN_SIZE = 175;
 	
+	public static final int VERTICAL_MARGIN_SIZE = 40;
 	public static final int DEFAULT_LEFT_MARGIN_SIZE = 0;
 
 	//Это хранимое поле	
@@ -404,8 +406,8 @@ public final class ReportTemplate extends StorableObject
 	public Dimension getMargins() {
 		if (this.margins == null) {
 			final Dimension size = getDimensions();
-			this.margins = new Dimension(size.width - (2 * STANDART_MARGIN_SIZE + this.marginSize), 
-					size.height - (2 * STANDART_MARGIN_SIZE));
+			this.margins = new Dimension(size.width - (STANDART_LEFT_MARGIN_SIZE + STANDART_RIGHT_MARGIN_SIZE + this.marginSize), 
+					size.height - (2 * VERTICAL_MARGIN_SIZE));
 		}
 		return this.margins;
 	}
