@@ -58,7 +58,7 @@ InitialAnalysis::InitialAnalysis(
     for(int i=0; i<sz; i++){col[i] = -1;}
 #endif
 	this->delta_x				= delta_x;
-	this->minimalThreshold		= minimalThreshold;
+	this->minimalThresholdB		= minimalThreshold;
 	this->minimalWeld			= minimalWeld;
 	this->minimalConnector		= minimalConnector;
     this->minimalEnd			= minimalEnd;
@@ -184,8 +184,8 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB, double scaleFact
 	}
 #endif
 
-	// корректируем пороги на основе среднего наклона и начального масштаба вейвлета
-    shiftThresholds(scaleB);// сдвинуть пороги
+//	// корректируем пороги на основе среднего наклона и начального масштаба вейвлета
+//    shiftThresholds(scaleB);// сдвинуть пороги
 
 #ifdef DEBUG_INITIAL_ANALYSIS
 	{	// FIXME: debug dump
@@ -210,6 +210,8 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB, double scaleFact
 			continue;
 		if (scale < getMinScale())
 			continue;
+		setShiftedThresholds(scale);// определяем действующие пороги
+
 		// проводим поиск всплесков на данном масштабе
 		ArrList newSpl;
 		performTransformationAndCenter(data, 0, lastPoint + 1, TEMP, scale, getWLetNorma(scale));
@@ -355,17 +357,8 @@ return;}
 	accSpl.disposeAll(); // очищаем массив ArrList
 	// ====== ПЯТЫЙ ЭТАП АНАЛИЗА - ОБРАБОТКА СОБЫТИЙ =======
 #ifdef DEBUG_INITIAL_ANALYSIS_STDERR
-	{
-		fprintf(stderr, "%d events found\n", events->getLength());
-		int i;
-		for (i = 0; i < events->getLength(); i++) {
-			fprintf(stderr, "event[%d]: type %d location %d - %d\n", i,
-				((EventParams*)(*events)[i])->type,
-				((EventParams*)(*events)[i])->begin,
-				((EventParams*)(*events)[i])->end);
-		}
-		fflush(stderr);
-	}
+	fprintf(stderr, "events before processing:\n");
+	dumpEventsToStderr();
 #endif
 #ifdef SEARCH_EOT_BY_WLET
 	int scaleEOT = scaleB * 10;
@@ -415,10 +408,33 @@ return;}
 #else
 	processEndOfTrace(0);
 #endif
+#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
+	fprintf(stderr, "events before addLinearPartsBetweenEvents:\n");
+	dumpEventsToStderr();
+#endif
     addLinearPartsBetweenEvents();
+#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
+	fprintf(stderr, "events after addLinearPartsBetweenEvents:\n");
+	dumpEventsToStderr();
+#endif
+#ifdef NEW_SHORT_LINE_EXCLUSION
+    excludeShortLinesBetweenConnectors(data, scaleB); // scaleB  - масштаб вейвлета
+    excludeShortLinesBetweenLossAndConnectors(data, scaleB); 
+    excludeShortLinesBetweenConnectorAndNonidentified(data, scaleB); // удаляет короткие линейные участки между неидентифицированным событием и коннектором и между коннектором и неидентифицированным событием (то есть порядок не важен)
+    excludeShortLineAfterDeadzone(data, scaleB);
+    excludeShortLineBeforeEnd(data, scaleB);
+#endif
     excludeShortLinesBetweenConnectors(data, scaleB);
     excludeShortLinesBetweenLossAndConnectors(data, scaleB); // scaleB  - масштаб вейвлета
+#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
+	fprintf(stderr, "events after excludeShortXxx:\n");
+	dumpEventsToStderr();
+#endif
 	trimAllEvents(); // поскольку мы искусственно расширяем на одну точку влево и вправо события, то они могут наползать друг на друга на пару точек - это нормально, но мы их подравниваем для красоты и коректности работы программы в яве 
+#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
+	fprintf(stderr, "events after trim:\n");
+	dumpEventsToStderr();
+#endif
 	verifyResults(); // проверяем ошибки
 #ifdef DEBUG_INITIAL_ANALYSIS
 	fprintf(logf, "performAnalysis: done\n");
@@ -433,6 +449,9 @@ return;}
 void InitialAnalysis::calcAverageFactor(double* fw, int scale, double norma1)
 {	double f_wlet_avrg = calcWletMeanValue(fw, lastPoint, -0.5, 0, 500);
 	average_factor = f_wlet_avrg * norma1 / getWLetNorma2(scale);
+#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
+	fprintf(stderr, "calcAverageFactor: scale %d f_wlet_avrg %g af %g\n", scale, f_wlet_avrg, average_factor);
+#endif
 }
 //------------------------------------------------------------------------------------------------------------
 // вычислить среднее значение вейвлет-образа
@@ -445,14 +464,18 @@ double InitialAnalysis::calcWletMeanValue(double *fw, int lastPoint, double from
 	return mean_att;
 }
 //------------------------------------------------------------------------------------------------------------
-// изменить пороги в соответствии с соотношением норм и масштаба используемого вейвлета
-void InitialAnalysis::shiftThresholds(int scale)
+// установить пороги в соответствии с соотношением норм и масштаба используемого вейвлета
+void InitialAnalysis::setShiftedThresholds(int scale)
 {   double f_wlet_avrg = average_factor * getWLetNorma2(scale) / getWLetNorma(scale); // средний наклон
 	double thres_factor = 0.2;// степень влияния общего наклона на сдвиг порогов
-    minimalThreshold += fabs(f_wlet_avrg)*thres_factor;
-    if(minimalThreshold > 0.9*minimalWeld)
-    {  minimalThreshold = 0.9*minimalWeld;
+    minimalThreshold1 = minimalThresholdB + fabs(f_wlet_avrg)*thres_factor;
+    if(minimalThreshold1 > 0.9*minimalWeld)
+    {  minimalThreshold1 = 0.9*minimalWeld;
     }
+#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
+	fprintf(stderr, "scale %d minThreshB %g minThresh1 %g minWeld %g (af %g fwa %g)\n",
+		scale, minimalThresholdB, minimalThreshold1, minimalWeld, average_factor, f_wlet_avrg);
+#endif
 	//minimalWeld += fabs(f_wlet_avrg)*thres_factor;
 }
 // -------------------------------------------------------------------------------------------------
@@ -460,14 +483,14 @@ void InitialAnalysis::shiftThresholds(int scale)
 // ======= ФУНКЦИИ ВТОРОГО ЭТАПА АНАЛИЗА - ОПРЕДЕЛЕНИЯ ВСПЛЕСКОВ =======
 //
 // -------------------------------------------------------------------------------------------------
-// ВАЖНО: Считаем, что minimalThreshold < minimalWeld < minimalConnector
+// ВАЖНО: Считаем, что minimalThreshold1 < minimalWeld < minimalConnector
 void InitialAnalysis::findAllWletSplashes(double* f_wlet, int wlet_width, ArrList& splashes)
-{   //minimalThreshold,	//минимальный уровень события
+{   //minimalThreshold1,//минимальный уровень события
 	//minimalWeld,		//минимальный уровень неотражательного события
 	//minimalConnector,	//минимальный уровень отражательного события
 	double minimal_threshold_noise_factor = 0.4;  // XXX - надо бы это снаружи задавать
     for(int i=1; i <= lastPoint-1; i++)// 1 т.к. i-1 // цикл (1)
-    {	if (fabs(f_wlet[i]) < calcThresh(minimalThreshold,noise[i]*minimal_threshold_noise_factor))
+    {	if (fabs(f_wlet[i]) < calcThresh(minimalThreshold1,noise[i]*minimal_threshold_noise_factor))
 	continue;
 		int bt = i - 1;
 		int bw = -1;
@@ -479,7 +502,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, int wlet_width, ArrLis
 		for (; i <= lastPoint-1; i++) { // цикл (2)
 			if (f_wlet[i] * sign < 0)	// смена знака
 		break;
-			if (fabs(f_wlet[i]) < calcThresh(minimalThreshold,noise[i]*minimal_threshold_noise_factor)) // стал меньше minTh
+			if (fabs(f_wlet[i]) < calcThresh(minimalThreshold1,noise[i]*minimal_threshold_noise_factor)) // стал меньше minTh
 		break;
 			if (fabs(f_wlet[i]) >= calcThresh(minimalWeld, noise[i])) {
 				ew = i + 1;
@@ -545,8 +568,8 @@ return;
 	*/
 #ifdef debug_lines
     // отображаем пороги
-    xs[cou] = 0; ys[cou] =  minimalThreshold; xe[cou] = lastPoint*delta_x; ye[cou] =  minimalThreshold; col[cou] = 0x004444; cou++;
-    xs[cou] = 0; ys[cou] = -minimalThreshold; xe[cou] = lastPoint*delta_x; ye[cou] = -minimalThreshold; col[cou] = 0x004444; cou++;
+    xs[cou] = 0; ys[cou] =  minimalThreshold1; xe[cou] = lastPoint*delta_x; ye[cou] =  minimalThreshold1; col[cou] = 0x004444; cou++;
+    xs[cou] = 0; ys[cou] = -minimalThreshold1; xe[cou] = lastPoint*delta_x; ye[cou] = -minimalThreshold1; col[cou] = 0x004444; cou++;
     xs[cou] = 0; ys[cou] =  minimalWeld; 	  xe[cou] = lastPoint*delta_x; ye[cou] =  minimalWeld;      col[cou] = 0x009999; cou++;
     xs[cou] = 0; ys[cou] = -minimalWeld; 	  xe[cou] = lastPoint*delta_x; ye[cou] = -minimalWeld;	   col[cou] = 0x009999; cou++;
     xs[cou] = 0; ys[cou] =  minimalConnector; xe[cou] = lastPoint*delta_x; ye[cou] =  minimalConnector; col[cou] = 0x00FFFF; cou++;
@@ -1329,6 +1352,94 @@ void InitialAnalysis::addLinearPartsBetweenEvents()
     delete events;
     events = events_new;
 }
+#ifdef NEW_SHORT_LINE_EXCLUSION
+//------------------------------------------------------------------------------------------------------------
+void InitialAnalysis::excludeShortLinesBetweenConnectorAndNonidentified(double* arr, int sz)
+{       sz = sz>4 ? (int)((sz/4.)+0.5) : 1; // берём четверть ширины вейвлета
+        if(events->getLength()<2)
+return;
+        for(int n1=0, n2, n3; n1<events->getLength(); n1++)
+        {   // пока не дойдём до коннектора или неидентифицированного
+        EventParams* ev1 = (EventParams*)(*events)[n1];
+        if(ev1->type != EventParams::CONNECTOR && ev1->type != EventParams::UNRECOGNIZED)
+    continue;
+        n2 = n1+1;
+        if(n2 >= events->getLength())
+    break;
+                EventParams* ev2 = (EventParams*)(*events)[n2];
+        if(ev2->type != EventParams::LINEAR)
+    continue;
+        n3 = n2+1;
+        if(n3 >= events->getLength())
+    break;
+            EventParams* ev3 = (EventParams*)(*events)[n3];
+        if(ev1->type == EventParams::CONNECTOR && ev3->type != EventParams::UNRECOGNIZED)
+    continue;
+        if(ev1->type == EventParams::UNRECOGNIZED && ev3->type != EventParams::CONNECTOR)
+    continue;
+        if(ev2->end - ev2->begin < sz)
+        { ev1->end = ev3->begin;
+          events->slowRemove(n2);
+        }
+    }//for
+}
+//------------------------------------------------------------------------------------------------------------
+// удаляет короткий линейный участок (если он есть) после мёртвой зоны(double* arr, int sz)
+void InitialAnalysis::excludeShortLineAfterDeadzone(double* arr, int sz){
+        sz = (int)(sz/4.+0.5);
+        if(sz<=1){sz = 1;}// так читать легче, чем "sz = sz>4 ? (int)((sz/4.)+0.5) : 1;"
+        if(events->getLength()<2)
+return;
+        for(int n1=0, n2, n3; n1<events->getLength(); n1++){
+            // пока не дойдём до мёртвой зоны
+        EventParams* ev1 = (EventParams*)(*events)[n1];
+        if(ev1->type != EventParams::DEADZONE)
+    continue;
+        n2 = n1+1;
+        if(n2 >= events->getLength())
+    break;
+                EventParams* ev2 = (EventParams*)(*events)[n2];
+        if(ev2->type != EventParams::LINEAR)
+    continue;
+        n3 = n2+1;
+        if(n3 >= events->getLength())
+    break;
+            EventParams* ev3 = (EventParams*)(*events)[n3];
+        if(ev2->end - ev2->begin < sz)
+        { ev1->end = ev3->begin;
+          events->slowRemove(n2);
+        }
+    }//for
+}
+//------------------------------------------------------------------------------------------------------------
+// XXX функция не была порверена - не нашлось такой рефлектограммы, чтоб перед самым концом был короткий линейный участок
+void InitialAnalysis::excludeShortLineBeforeEnd(double* arr, int sz){
+        sz = (int)(sz/4.+0.5);
+        if(sz<=1){sz = 1;}
+        if(events->getLength()<2)
+return;
+        for(int n1=0, n2, n3; n1<events->getLength(); n1++){
+        EventParams* ev1 = (EventParams*)(*events)[n1];
+        n2 = n1+1;
+        if(n2 >= events->getLength())
+    break;
+                EventParams* ev2 = (EventParams*)(*events)[n2];
+        if(ev2->type != EventParams::LINEAR)
+    continue;
+        n3 = n2+1;
+        if(n3 >= events->getLength())
+    break;
+            EventParams* ev3 = (EventParams*)(*events)[n3];
+        if(ev3->type != EventParams::ENDOFTRACE)
+    continue;
+        if(ev2->end - ev2->begin < sz)
+        { ev1->end = ev3->begin;
+          events->slowRemove(n2);
+        }
+    }//for
+}
+//------------------------------------------------------------------------------------------------------------
+#endif // NEW_SHORT_LINE_EXCLUSION
 //------------------------------------------------------------------------------------------------------------
 // удалить небольшие линейные участки между двумя последовательными коннекорами, сдвинув конец первого коннектора
 void InitialAnalysis::excludeShortLinesBetweenConnectors(double* arr, int sz)
@@ -1590,3 +1701,18 @@ void Splash::lowerRFactors(double rMax) {
 void Splash::setMasked(bool masked) {
 	this->masked = masked;
 }
+//------------------------------------------------------------------------------------------------------------
+#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
+void InitialAnalysis::dumpEventsToStderr()
+{
+	fprintf(stderr, "%d events:\n", events->getLength());
+	int i;
+	for (i = 0; i < events->getLength(); i++) {
+		fprintf(stderr, "  event[%d]: type %d location %d - %d\n", i,
+			((EventParams*)(*events)[i])->type,
+			((EventParams*)(*events)[i])->begin,
+			((EventParams*)(*events)[i])->end);
+	}
+	fflush(stderr);
+}
+#endif
