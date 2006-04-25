@@ -1,5 +1,5 @@
 /*-
- * $Id: AveragingModeTestCase.java,v 1.1 2005/12/09 13:28:58 saa Exp $
+ * $Id: AveragingModeTestCase.java,v 1.2 2006/04/25 10:30:52 arseniy Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import junit.framework.TestCase;
 /**
  * Тестирует {@link AveragingMode} и демонстрирует его использование.
  * @author saa
- * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/12/09 13:28:58 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2006/04/25 10:30:52 $
  * @module measurement
  */
 public class AveragingModeTestCase extends TestCase {
@@ -75,7 +75,7 @@ public class AveragingModeTestCase extends TestCase {
 					final String string = "Processor invoked with mode " + mode
 							+ " for range started on " + start;
 					System.out.println(string);
-					checker.assertNext(string);
+					AveragingModeTestCase.this.checker.assertNext(string);
 				}
 		};
 
@@ -90,7 +90,7 @@ public class AveragingModeTestCase extends TestCase {
 		Date dateA = new GregorianCalendar(2005,11,14,20,00,00).getTime();
 
 		// test the actions taken under these conditions: auto-closing and opening new ranges
-		checker = new ExpectationChecker(Arrays.asList(
+		this.checker = new ExpectationChecker(Arrays.asList(
 				// opening and closing ranges when measurements ate obtaned
 				"Sun Dec 04 18:11:59 MSK 2005 - some range(s) opened",
 				"Sun Dec 04 19:01:12 MSK 2005 - state needs to process",
@@ -108,21 +108,21 @@ public class AveragingModeTestCase extends TestCase {
 			if (state.notifyResultObtained(date)) {
 				final String string = date.toString() + " - some range(s) opened";
 				System.out.println(string);
-				checker.assertNext(string);
+				this.checker.assertNext(string);
 			}
 		}
-		checker.assertNoMore();
+		this.checker.assertNoMore();
 
 		// test auto-closing (without auto-opening)
-		checker = new ExpectationChecker(Arrays.asList(
+		this.checker = new ExpectationChecker(Arrays.asList(
 				"Wed Dec 14 20:00:00 MSK 2005 - state needs to process",
 				"Processor invoked with mode HOURLY for range started on Wed Dec 14 19:00:00 MSK 2005",
 				"Wed Dec 14 20:00:00 MSK 2005 - some range(s) closed"));
 		ensureState(state, processor, dateA);
-		checker.assertNoMore();
+		this.checker.assertNoMore();
 
 		// test forces closing
-		checker = new ExpectationChecker(Arrays.asList(
+		this.checker = new ExpectationChecker(Arrays.asList(
 				"<null>",
 				"Processor invoked with mode DAYLY for range started on Wed Dec 14 00:00:00 MSK 2005",
 				"Processor invoked with mode WEEKLY for range started on Mon Dec 12 00:00:00 MSK 2005",
@@ -130,7 +130,7 @@ public class AveragingModeTestCase extends TestCase {
 				"Processor invoked with mode YEARLY for range started on Sat Jan 01 00:00:00 MSK 2005",
 				"<null>"));
 		ensureState(state, processor, null);
-		checker.assertNoMore();
+		this.checker.assertNoMore();
 	}
 
 	private void ensureState(AveragingState state,
@@ -141,13 +141,13 @@ public class AveragingModeTestCase extends TestCase {
 					? date.toString() + " - state needs to process"
 					: "<null>";
 			System.out.println(string);
-			checker.assertNext(string);
+			this.checker.assertNext(string);
 			if (state.processOpenedAverages(date, processor)) {
 				final String string2 = date != null
 						? date.toString() + " - some range(s) closed"
 						: "<null>";
 				System.out.println(string2);
-				checker.assertNext(string2);
+				this.checker.assertNext(string2);
 			}
 		}
 	}
@@ -200,13 +200,13 @@ public class AveragingModeTestCase extends TestCase {
 				// If average if this mode has started
 				//  AND (range has changed OR terminated forcely)
 				// then process and close range.
-				if (openAverage.containsKey(mode)) {
-					if (date == null ||	!openAverage.get(mode).equals(
+				if (this.openAverage.containsKey(mode)) {
+					if (date == null ||	!this.openAverage.get(mode).equals(
 							mode.getRangeStart(date))) {
 						changed = true;
-						processor.processRange(openAverage.get(mode),
+						processor.processRange(this.openAverage.get(mode),
 								mode); // process opened range
-						openAverage.remove(mode); // close range
+						this.openAverage.remove(mode); // close range
 					}
 				}
 			}
@@ -224,12 +224,12 @@ public class AveragingModeTestCase extends TestCase {
 			boolean changed = false;
 			for(AveragingMode mode: AveragingMode.values()) {
 				final Date rangeStart = mode.getRangeStart(date);
-				if (openAverage.containsKey(mode)) {
+				if (this.openAverage.containsKey(mode)) {
 					// ensure the range is the same
-					if (!openAverage.get(mode).equals(rangeStart))
+					if (!this.openAverage.get(mode).equals(rangeStart))
 						throw new IllegalStateException();
 				} else {
-					openAverage.put(mode, rangeStart);
+					this.openAverage.put(mode, rangeStart);
 					changed = true;
 				}
 			}
@@ -243,8 +243,8 @@ public class AveragingModeTestCase extends TestCase {
 		 */
 		public boolean needsProcessing(Date date) {
 			for(AveragingMode mode: AveragingMode.values()) {
-				if (openAverage.containsKey(mode)) {
-					if (date == null || !openAverage.get(mode).equals(
+				if (this.openAverage.containsKey(mode)) {
+					if (date == null || !this.openAverage.get(mode).equals(
 							mode.getRangeStart(date)))
 						return true;
 				}
@@ -261,7 +261,7 @@ public class AveragingModeTestCase extends TestCase {
 			this.position = 0;
 		}
 		public void assertNext(String string) {
-			assertEquals(string, expectation.get(position++));
+			assertEquals(string, this.expectation.get(this.position++));
 		}
 		public void assertNoMore() {
 			assertEquals(this.position, this.expectation.size());
