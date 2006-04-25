@@ -1,4 +1,4 @@
--- $Id: server.sql,v 1.10 2005/06/15 17:03:09 bass Exp $
+-- $Id: server.sql,v 1.11 2006/04/25 07:45:03 arseniy Exp $
 
 CREATE TABLE Server (
  id NUMBER(19),
@@ -9,8 +9,6 @@ CREATE TABLE Server (
  version NUMBER(19) NOT NULL,
 --
  domain_id,
---
- type_id,
 --
  name VARCHAR2(128 CHAR) NOT NULL,
  description VARCHAR2(256 CHAR),
@@ -23,10 +21,7 @@ CREATE TABLE Server (
   REFERENCES SystemUser (id) ON DELETE CASCADE,
 --
  CONSTRAINT server_domain_fk FOREIGN KEY (domain_id)
-  REFERENCES Domain (id) ON DELETE CASCADE,
---
- CONSTRAINT server_servertype_fk FOREIGN KEY (type_id)
-  REFERENCES ServerType (id) ON DELETE CASCADE
+  REFERENCES Domain (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE server_seq ORDER;
