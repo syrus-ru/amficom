@@ -1,5 +1,5 @@
 /*
- * $Id: TestDataType.java,v 1.4 2005/08/29 10:00:32 arseniy Exp $
+ * $Id: SetupDataType.java,v 1.2 2006/04/25 09:57:00 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,19 +10,19 @@ package com.syrus.AMFICOM.general;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-public final class TestDataType extends TestCase {
+public final class SetupDataType extends TestCase {
 
-	public TestDataType(final String name) {
+	public SetupDataType(final String name) {
 		super(name);
 	}
 
 	public static Test suite() {
 		final SQLCommonTest commonTest = new SQLCommonTest();
-		commonTest.addTestSuite(TestDataType.class);
+		commonTest.addTestSuite(SetupDataType.class);
 		return commonTest.createTestSetup();
 	}
 
-	public void testCreateAll() throws CreateObjectException {
+	public void testCreate() throws CreateObjectException {
 		DataTypeDatabase.insertAll();
 	}
 }
