@@ -121,7 +121,7 @@ public class MarkersInfoFrame extends JInternalFrame implements PropertyChangeLi
 	void updTableModel(final MarkersInfo mInfo) {
 		final String mt = " " + I18N.getString(AnalysisResourceKeys.TEXT_MT);
 		final String dB = " " + I18N.getString(AnalysisResourceKeys.TEXT_DB);
-		final String dbkm = " " + I18N.getString(AnalysisResourceKeys.TEXT_DB);
+		final String dbkm = " " + I18N.getString(AnalysisResourceKeys.TEXT_DBKM);
 
 		// setting keys
 		if (mInfo.a_type == MarkersInfo.REFLECTIVE) {
