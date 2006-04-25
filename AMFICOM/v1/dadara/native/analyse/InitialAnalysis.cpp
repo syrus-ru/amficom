@@ -525,7 +525,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, int wlet_width, ArrLis
 		spl.begin_conn = bc;
 		spl.end_conn = ec;
 
-		fillSplashRParameters(spl, f_wlet, wlet_width);
+		fillSplashRParameters(spl, f_wlet);
         if( spl.begin_thr < spl.end_thr // begin>end только если образ так и не пересёк ни разу верхний порог
 	        && spl.begin_weld != -1 // !!!  добавляем только существенные всплески ( если эту проверку убрать, то распознавание коннекторов надо изменить, так как если между двумя коннекторными всплесками вдруг окажется случайный незначимый всплеск вверх, то конннектор распознан НЕ БУДЕТ ! )
            )
@@ -1589,7 +1589,16 @@ return;
 }
 //------------------------------------------------------------------------------------------------------------
 // должна вызываться после заполнения остальных параметров splash (begin/end)
-void InitialAnalysis::fillSplashRParameters(Splash &spl, double *f_wlet, int wlet_width)
+// вход:
+//    spl.(begin|end)_(conn|weld),
+//    f_wlet[] на участке от begin до end
+//    noise[] на участке от begin до end
+//    minimalWeld, minimalConnector, rACrit
+// выход:
+//    spl.r_acrit,
+//    spl.r_conn,
+//    spl.r_weld
+void InitialAnalysis::fillSplashRParameters(Splash &spl, double *f_wlet)
 {
 	int sign = spl.sign;
 	// для коннекторных порогов
