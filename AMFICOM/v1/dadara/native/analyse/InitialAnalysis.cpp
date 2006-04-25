@@ -187,7 +187,7 @@ void InitialAnalysis::performAnalysis(double *TEMP0, int scaleB, double scaleFac
 	{	// FIXME: debug dump
 		FILE *f = fopen ("noise2.tmp", "w");
 		if (f) {
-			double baselineB = getWletBaseline(scaleB, getWletNorma(scaleB));
+			double baselineB = getWletBaseline(scaleB, getWLetNorma(scaleB), average_tilt);
 			int i;
 			for	(i = 0; i <= lastPoint; i++)
 				fprintf(f,"%d %g %g %g\n", i, data[i], TEMP0[i] - baselineB, noise[i]);
