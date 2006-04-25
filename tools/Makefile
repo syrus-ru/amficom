@@ -35,7 +35,13 @@ clean:
 .PHONY: arch
 arch:
 	tar -czvf $(ARCHFILE) \
-		Makefile Makefile.java.inc.mk \
-		copyjars.sh \
-		amficomsrvrc
+		Makefile Makefile.java.inc.mk Makefile.cpp.inc.mk \
+		common.properties \
+		copyjars \
+		archlogs \
+		oracledb \
+		orbd \
+		amficom \
+		amficomsrv amficomtab \
+		amficomsrvenv amficomsrvrc
 
