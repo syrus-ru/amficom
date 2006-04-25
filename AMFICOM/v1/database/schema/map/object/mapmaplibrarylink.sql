@@ -1,3 +1,5 @@
+-- $Id: mapmaplibrarylink.sql,v 1.2 2006/04/25 07:50:16 arseniy Exp $
+
 CREATE TABLE MapMapLibraryLink (
  map_id,
  map_library_id,

@@ -1,3 +1,5 @@
+-- $Id: maplibrary.sql,v 1.5 2006/04/25 07:50:16 arseniy Exp $
+
 CREATE TABLE MapLibrary (
  id NUMBER(19),
  created DATE NOT NULL,

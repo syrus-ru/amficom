@@ -1,3 +1,5 @@
+-- $Id: mapmaplink.sql,v 1.3 2006/04/25 07:50:16 arseniy Exp $
+
 CREATE TABLE MapMapLink (
  map_id,
  child_map_id,

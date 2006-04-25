@@ -1,4 +1,4 @@
---$Id: reportimage.sql,v 1.4 2005/10/06 11:35:08 max Exp $
+--$Id: reportimage.sql,v 1.5 2006/04/25 07:53:30 arseniy Exp $
 
 CREATE TABLE ReportImage (
  id NUMBER(19),
@@ -8,13 +8,13 @@ CREATE TABLE ReportImage (
  modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- location_x	NUMBER(10) 	NOT NULL,
- location_y	NUMBER(10) 	NOT NULL,
- width		NUMBER(10) 	NOT NULL,
- height		NUMBER(10) 	NOT NULL,
+ location_x NUMBER(10) NOT NULL,
+ location_y NUMBER(10) NOT NULL,
+ width NUMBER(10) NOT NULL,
+ height NUMBER(10) NOT NULL,
  report_template_id,
 --
- bitmap_image_res_id   	NOT NULL,
+ bitmap_image_res_id NOT NULL,
 --
  CONSTRAINT reportimage_pk PRIMARY KEY (id),
  CONSTRAINT reportimage_creator_fk FOREIGN KEY (creator_id)
@@ -27,6 +27,6 @@ CREATE TABLE ReportImage (
   REFERENCES ReportTemplate (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE ReportImage IS '$Id: reportimage.sql,v 1.4 2005/10/06 11:35:08 max Exp $';
+COMMENT ON TABLE ReportImage IS '$Id: reportimage.sql,v 1.5 2006/04/25 07:53:30 arseniy Exp $';
 
 CREATE SEQUENCE ReportImage_Seq ORDER;

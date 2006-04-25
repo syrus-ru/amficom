@@ -1,4 +1,4 @@
--- $Id: attachedtext.sql,v 1.4 2005/10/06 11:31:52 max Exp $
+-- $Id: attachedtext.sql,v 1.5 2006/04/25 07:53:30 arseniy Exp $
 
 CREATE TABLE AttachedText (
  id NUMBER(19),
@@ -8,20 +8,20 @@ CREATE TABLE AttachedText (
  modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- location_x				NUMBER(10)			NOT NULL,
- location_y				NUMBER(10)			NOT NULL,
- width					NUMBER(10)			NOT NULL,
- height					NUMBER(10)			NOT NULL,
+ location_x NUMBER(10)NOT NULL,
+ location_y NUMBER(10) NOT NULL,
+ width NUMBER(10) NOT NULL,
+ height NUMBER(10) NOT NULL,
  report_template_id,
 --
- text 					VARCHAR2(4000)		NOT NULL,
- distance_x				NUMBER(10) 			NOT NULL,
- distance_y				NUMBER(10) 			NOT NULL,
- font_name 				VARCHAR2(64 CHAR) 	NOT NULL,
- font_syle 				NUMBER(10) 			NOT NULL,
- font_size 				NUMBER(10) 			NOT NULL,
- vertical_attach_type 	NUMBER(3) 			NOT NULL,
- horizontal_attach_type NUMBER(3) 			NOT NULL,
+ text VARCHAR2(4000) NOT NULL,
+ distance_x NUMBER(10) NOT NULL,
+ distance_y NUMBER(10) NOT NULL,
+ font_name VARCHAR2(64 CHAR) NOT NULL,
+ font_syle NUMBER(10) NOT NULL,
+ font_size NUMBER(10) NOT NULL,
+ vertical_attach_type NUMBER(3) NOT NULL,
+ horizontal_attach_type NUMBER(3) NOT NULL,
  vertical_attacher_id	NUMBER(19),
  horizontal_attacher_id NUMBER(19),
 --
@@ -39,6 +39,6 @@ CREATE TABLE AttachedText (
 -- REFERENCES ReportData (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE AttachedText IS '$Id: attachedtext.sql,v 1.4 2005/10/06 11:31:52 max Exp $';
+COMMENT ON TABLE AttachedText IS '$Id: attachedtext.sql,v 1.5 2006/04/25 07:53:30 arseniy Exp $';
 
 CREATE SEQUENCE AttachedText_Seq ORDER;
