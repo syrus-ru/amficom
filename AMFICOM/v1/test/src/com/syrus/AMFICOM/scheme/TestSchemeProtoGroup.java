@@ -1,5 +1,5 @@
 /*-
- * $Id: TestSchemeProtoGroup.java,v 1.3 2005/12/15 13:59:17 bass Exp $
+ * $Id: TestSchemeProtoGroup.java,v 1.4 2006/04/25 10:31:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,20 +10,19 @@ package com.syrus.AMFICOM.scheme;
 import java.util.HashSet;
 import java.util.Set;
 
+import junit.framework.Test;
+import junit.framework.TestCase;
+
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-
 /**
- * @version $Revision: 1.3 $, $Date: 2005/12/15 13:59:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2006/04/25 10:31:46 $
+ * @author $Author: arseniy $
  * @module test
  */
 public final class TestSchemeProtoGroup extends TestCase {
@@ -39,7 +38,7 @@ public final class TestSchemeProtoGroup extends TestCase {
 	}
 
 	public void testRetrieve() throws ApplicationException {
-		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.SCHEMEPROTOGROUP_CODE);
+		//final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.SCHEMEPROTOGROUP_CODE);
 		final LinkedIdsCondition lic = new LinkedIdsCondition(Identifier.VOID_IDENTIFIER,ObjectEntities.SCHEMEPROTOGROUP_CODE);
 		final Set<Identifier> butIds = new HashSet<Identifier>();
 		butIds.add(new Identifier("SchemeProtoGroup_91"));
