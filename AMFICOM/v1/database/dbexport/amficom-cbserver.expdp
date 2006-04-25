@@ -1,0 +1,6 @@
+userid=amficom/amficom@vltava
+directory=amficom_dp
+dumpfile=amficom-cbserver.dmp
+logfile=amficom-cbserver-export.log
+content=all
+exclude=DB_LINK

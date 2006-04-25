@@ -1,0 +1,10 @@
+userid=system/manager@mongol
+directory=amficom_dp
+dumpfile=amficom-cbmcm.dmp
+logfile=amficom-cbmcm-import.log
+content=all
+exclude=DB_LINK
+remap_schema=amficom:cbmcm
+remap_tablespace=users:users_cb
+#sqlfile=import.sql
+#table_exists_action=truncate
