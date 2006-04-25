@@ -523,14 +523,19 @@ void InitialAnalysis::findAllWletSplashes(double* f_wletnc, double baseU, double
 		double r_acrit = -1;
 		double f_extrM = f_wletnc[i] - baseMid; // амплитуда по отношению к средней линии
 		for (; i <= lastPoint-1; i++) { // цикл (2)
-			if ((f_wletnc[i] - baseCur) * sign < calcThresh(minimalWeld, noise[i]) * edge_threshold_factor) // стал меньше minTh
+			double effWeld = calcThresh(minimalWeld, noise[i]);
+			double effConn = calcThresh(minimalConnector, noise[i]);
+			double effACrit = calcThresh(rACrit, noise[i]);
+
+			if ((f_wletnc[i] - baseCur) * sign < effWeld * edge_threshold_factor) // стал меньше minTh
 		break;
-			if ((f_wletnc[i] - baseCur) * sign >= calcThresh(minimalWeld, noise[i])) {
+
+			if ((f_wletnc[i] - baseCur) * sign >= effWeld) {
 				ew = i + 1;
 				if (bw == -1)
 					bw = i - 1;
 			}
-			if ((f_wletnc[i] - baseCur) * sign >= calcThresh(minimalConnector, noise[i])) {
+			if ((f_wletnc[i] - baseCur) * sign >= effConn) {
 				ec = i + 1;
 				if (bc == -1)
 					bc = i - 1;
@@ -538,13 +543,13 @@ void InitialAnalysis::findAllWletSplashes(double* f_wletnc, double baseU, double
 			if ((f_wletnc[i] - baseMid) * sign > f_extrM * sign)
 				f_extrM = f_wletnc[i] - baseMid;
 			{ double res;
-			  res = ((f_wletnc[i] - baseMid) * sign - calcThresh(minimalConnector, noise[i])) / noise[i];
+			  res = ((f_wletnc[i] - baseCur) * sign - effConn) / noise[i];
 			  if(r_conn<res) { r_conn = res;}
-			  res = ((f_wletnc[i] - baseMid) * sign - calcThresh(rACrit, noise[i])) / noise[i];
+			  res = ((f_wletnc[i] - baseCur) * sign - effACrit) / noise[i];
 			  if(r_acrit<res) { r_acrit = res;}
 			}
 			{ double res;
-			  res = ((f_wletnc[i] - baseMid) * sign - calcThresh(minimalWeld, noise[i])) / noise[i];
+			  res = ((f_wletnc[i] - baseCur) * sign - effWeld) / noise[i];
 			  if(r_weld<res) {r_weld = res;}
 			}
 		}
