@@ -111,7 +111,8 @@ private:
 	int getMinScale();
 	void performTransformationOnly(double *y, int begin, int end, double *trans, int freq, double norma); // end: exclusive; @todo: make end inclusive
 	void performTransformationAndCenter(double *y, int begin, int end, double *trans, int freq, double norma, double basetilt);
-	double getWletBaseline(int scale, double norma1, double tilt);
+	double tiltToBaseline(int scale, double norma1, double tilt);
+	double baselineToTilt(int scale, double norma1, double baseline);
 	void centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1, double basetilt);
 
 	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
@@ -175,7 +176,9 @@ class Splash
 	double r_acrit;		// max{(f_wlet[i]-rACrit)/noise[i]} (<0, если rACrit не достигнут)
 	double r_weld;		// max{(f_wlet[i]-minimalWeld)/noise[i]} (<0, если порог не достигнут)
 
-	double f_extr;		// экстремальное значение всплеска
+	double base_tilt;	// средний уровень наклона, на фоне которого найден всплеск
+
+	double f_extr;		// экстремальное значение всплеска (относительно некоторого базового уровня, который не обязательно соответствует base_tilt)
     int sign;  // знак всплеска
 
 	void lowerRFactors(double rMax); // понизить достоверность R-факторов этого всплеска до rMax (при прохождении всплеском фильтра)
@@ -190,6 +193,7 @@ class Splash
     	end_weld 		= -1;
 		begin_conn 		= -1;
     	end_conn 		= -1;
+		base_tilt		= 0;
         f_extr 			= 0;
     	sign 			= 0;
 		scale			= scale1;

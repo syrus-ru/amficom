@@ -218,7 +218,7 @@ void InitialAnalysis::performAnalysis(double *TEMP0, int scaleB, double scaleFac
 		// проводим поиск всплесков на данном масштабе
 		ArrList newSpl;
 		performTransformationOnly(data, 0, lastPoint + 1, TEMPnc, scale, getWLetNorma(scale));
-		double baseline = getWletBaseline(scale, getWLetNorma(scale), average_tilt);
+		double baseline = tiltToBaseline(scale, getWLetNorma(scale), average_tilt);
 
 #ifdef DEBUG_INITIAL_ANALYSIS
 	{	// FIXME: debug dump
@@ -585,6 +585,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wletnc, double baseU, double
 		spl.r_acrit = r_acrit;
 		spl.r_weld = r_weld;
 		spl.r_conn = r_conn;
+		spl.base_tilt = baselineToTilt(wlet_width, getWLetNorma(wlet_width), baseCur);
 
 		// добавляем всплеск к списку найденных (в принципе, можем и проигнорировать - но это пока не используется)
         if( spl.begin_thr < spl.end_thr // begin>end только если образ так и не пересёк ни разу верхний порог
@@ -747,8 +748,7 @@ void InitialAnalysis::processEventsBeginsEnds(double *TEMP)
 		int type = ep->type;
 		if (pass) {
 			if (type == EventParams::GAIN || type == EventParams::LOSS) {
-				double tilt = average_tilt; // XXX: assume same tilt for all events
-				correctSpliceCoords(TEMP, ep->spliceSplash->scale, tilt, ep, minBegin, maxEnd);
+				correctSpliceCoords(TEMP, ep->spliceSplash->scale, ep->spliceSplash->base_tilt, ep, minBegin, maxEnd);
 			}
 		}
 		else
@@ -1605,13 +1605,17 @@ void InitialAnalysis::performTransformationAndCenter(double* data, int begin, in
 #endif
 }
 //------------------------------------------------------------------------------------------------------------
-double InitialAnalysis::getWletBaseline(int scale, double norma1, double tilt) {
+double InitialAnalysis::tiltToBaseline(int scale, double norma1, double tilt) {
 	return tilt * getWLetNorma2(scale) / norma1;
+}
+//------------------------------------------------------------------------------------------------------------
+double InitialAnalysis::baselineToTilt(int scale, double norma1, double baseline) {
+	return baseline / (getWLetNorma2(scale) / norma1);
 }
 //------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1, double tilt)
 {   // shift (calcAverageFactor must be performed by now!)
-	double f_wlet_avrg = getWletBaseline(scale, norma1, tilt);
+	double f_wlet_avrg = tiltToBaseline(scale, norma1, tilt);
 	for(int i=begin; i<end; i++)
     {	f_wlet[i] -= f_wlet_avrg;
     }
