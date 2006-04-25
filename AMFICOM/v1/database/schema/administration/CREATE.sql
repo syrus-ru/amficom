@@ -1,7 +1,4 @@
--- $Id: CREATE.sql,v 1.4 2005/06/15 07:50:17 bass Exp $
-
-REM types
-@@administration/type/CREATE;
+-- $Id: CREATE.sql,v 1.5 2006/04/25 07:46:05 arseniy Exp $
 
 REM objects
 @@administration/object/CREATE;

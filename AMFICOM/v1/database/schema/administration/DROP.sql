@@ -1,4 +1,3 @@
--- $Id: DROP.sql,v 1.3 2005/06/15 07:50:17 bass Exp $
+-- $Id: DROP.sql,v 1.4 2006/04/25 07:46:05 arseniy Exp $
 
 @@administration/object/DROP;
-@@administration/type/DROP;
