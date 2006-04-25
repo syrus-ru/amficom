@@ -496,7 +496,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wletnc, double baseU, double
 
 	// всплески (+) анализируем только выше baseU
 	// всплески (-) анализируем только ниже baseL
-	double baseMid = (baseU + baseL) / 2.0; // амплитудой всплеска считаем относительно этого уровня
+	double baseMid = (baseU + baseL) / 2.0; // амплитуду всплеска считаем относительно этого уровня
 
 	double edge_threshold_factor = 0.4;  // XXX - надо бы это снаружи задавать
     for(int i=1; i <= lastPoint-1; i++)// 1 т.к. i-1 // цикл (1)
@@ -518,6 +518,9 @@ void InitialAnalysis::findAllWletSplashes(double* f_wletnc, double baseU, double
 		int ew = -1;
 		int bc = -1;
 		int ec = -1;
+		double r_weld = -1;
+		double r_conn = -1;
+		double r_acrit = -1;
 		double f_extrM = f_wletnc[i] - baseMid; // амплитуда по отношению к средней линии
 		for (; i <= lastPoint-1; i++) { // цикл (2)
 			if ((f_wletnc[i] - baseCur) * sign < calcThresh(minimalWeld, noise[i]) * edge_threshold_factor) // стал меньше minTh
@@ -534,6 +537,16 @@ void InitialAnalysis::findAllWletSplashes(double* f_wletnc, double baseU, double
 			}
 			if ((f_wletnc[i] - baseMid) * sign > f_extrM * sign)
 				f_extrM = f_wletnc[i] - baseMid;
+			{ double res;
+			  res = ((f_wletnc[i] - baseMid) * sign - minimalConnector) / noise[i];
+			  if(r_conn<res) { r_conn = res;}
+			  res = ((f_wletnc[i] - baseMid) * sign - rACrit) / noise[i];
+			  if(r_acrit<res) { r_acrit = res;}
+			}
+			{ double res;
+			  res = ((f_wletnc[i] - baseMid) * sign - minimalWeld) / noise[i];
+			  if(r_weld<res) {r_weld = res;}
+			}
 		}
 		int et = i; // на этой точке всплеск уже закончился и, возможно, начался следующий
 		assert(et > bt + 1); // трудно поверить, чтобы цикл (2) не выполнился ни разу. Для этого нужен очень странный FPU // FIXME: debug only
@@ -541,6 +554,14 @@ void InitialAnalysis::findAllWletSplashes(double* f_wletnc, double baseU, double
 			i--; // ставим точку перед возможным началом следующего всплеска, т.к. в цикле (1) есть пост-операция i++
 		if (bw == -1)
 	continue; // Weld-порог так и не пересекли - такой всплеск не создаем (XXX: в будущем анализе, возможно, они понадобяться для интерпретации более крупных соседних всплесков)
+
+		if (r_weld < 0)
+			r_weld = -1;
+		if (r_conn < 0)
+			r_conn = -1;
+		if (r_acrit < 0)
+			r_acrit = -1;
+
 		Splash& spl = (Splash&)(*(new Splash(wlet_width)));
         spl.f_extr = f_extrM;
 		spl.sign = sign;
@@ -550,25 +571,9 @@ void InitialAnalysis::findAllWletSplashes(double* f_wletnc, double baseU, double
 		spl.end_weld = ew;
 		spl.begin_conn = bc;
 		spl.end_conn = ec;
-
-		// заполняем spl.r_*
-		// раньше это было fillSplashRParameters(spl, f_wletnc, baseMid);
-		spl.r_acrit = spl.r_conn = spl.r_weld = -1;
-		int j;
-		double baseline = baseMid;
-		for(j=spl.begin_conn; j<spl.end_conn; j++) // если begin_conn и end_conn не определены, то ничего не делает
-		{ double res;
-		  res = ((f_wletnc[j] - baseline) * sign - minimalConnector) / noise[j];
-		  if(spl.r_conn<res) { spl.r_conn = res;}
-		  res = ((f_wletnc[j] - baseline) * sign - rACrit) / noise[j];
-		  if(spl.r_acrit<res) { spl.r_acrit = res;}
-		}
-		// для сварочных порогов
-		for(j=spl.begin_weld; j<spl.end_weld; j++) // если begin_conn и end_conn не определены, то ничего не делает
-		{ double res;
-		  res = ((f_wletnc[j] - baseline) * sign - minimalWeld) / noise[j];
-		  if(spl.r_weld<res) {spl.r_weld = res;}
-		}
+		spl.r_acrit = r_acrit;
+		spl.r_weld = r_weld;
+		spl.r_conn = r_conn;
 
 		// добавляем всплеск к списку найденных (в принципе, можем и проигнорировать - но это пока не используется)
         if( spl.begin_thr < spl.end_thr // begin>end только если образ так и не пересёк ни разу верхний порог
