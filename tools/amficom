@@ -1,0 +1,35 @@
+#!/bin/sh
+
+AMFICOM_OWNER=amficom
+if [ `grep ${AMFICOM_OWNER} /etc/passwd | wc -l` -eq 0 ]
+then
+	echo "User ${AMFICOM_OWNER} not found; exiting..."
+	exit 1
+fi
+
+AMFICOM_BASE=/opt/AMFICOM
+AMFICOMSRV=${AMFICOM_BASE}/bin/amficomsrv
+if [ ! -x ${AMFICOMSRV} ]
+then
+	echo "${AMFICOMSRV} is missing or is not executable; exiting..."
+fi
+
+case "$1" in
+	start)
+		su - ${AMFICOM_OWNER} -c "${AMFICOMSRV} start"
+		;;
+	stop)
+		su - ${AMFICOM_OWNER} -c "${AMFICOMSRV} stop"
+		;;
+	status)
+		su - ${AMFICOM_OWNER} -c "${AMFICOMSRV} status"
+		;;
+	restart)
+		su - ${AMFICOM_OWNER} -c "${AMFICOMSRV} restart"
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|status}"
+		exit 1
+		;;
+esac
+
