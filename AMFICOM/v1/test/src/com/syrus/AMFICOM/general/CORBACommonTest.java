@@ -1,5 +1,5 @@
 /*
- * $Id: CORBACommonTest.java,v 1.9 2006/04/25 09:58:46 arseniy Exp $
+ * $Id: CORBACommonTest.java,v 1.10 2006/04/25 10:24:25 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,20 +14,20 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2006/04/25 09:58:46 $
+ * @version $Revision: 1.10 $, $Date: 2006/04/25 10:24:25 $
  * @author $Author: arseniy $
  * @module test
  */
 public class CORBACommonTest extends CommonTest {
 
 	@Override
-	void oneTimeSetUp() {
+	public void oneTimeSetUp() {
 		super.oneTimeSetUp();
 		login();
 	}
 
 	@Override
-	void oneTimeTearDown() {
+	public void oneTimeTearDown() {
 		logout();
 		super.oneTimeTearDown();
 	}
