@@ -1,5 +1,5 @@
 /*
- * $Id: TestRoleAttributtes.java,v 1.9 2006/04/12 07:21:13 bass Exp $
+ * $Id: TestRoleAttributtes.java,v 1.10 2006/04/25 09:29:51 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2006/04/12 07:21:13 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2006/04/25 09:29:51 $
+ * @author $Author: arseniy $
  * @module test
  */
 public class TestRoleAttributtes extends TestCase {
@@ -42,7 +42,7 @@ public class TestRoleAttributtes extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void _testCreateRoles() throws ApplicationException {
+	public void testCreateRoles() throws ApplicationException {
 		final Identifier userId = LoginManager.getUserId();
 
 		
