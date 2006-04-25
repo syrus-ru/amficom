@@ -1,5 +1,5 @@
 /*-
- * $Id: CorbaTestContext.java,v 1.2 2006/04/18 10:31:57 saa Exp $
+ * $Id: CorbaTestContext.java,v 1.3 2006/04/25 10:13:09 arseniy Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.general.ClientSessionEnvironment.SessionKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2006/04/18 10:31:57 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2006/04/25 10:13:09 $
  * @module
  */
 public class CorbaTestContext implements TestContext {
