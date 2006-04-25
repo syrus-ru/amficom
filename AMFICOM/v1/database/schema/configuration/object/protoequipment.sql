@@ -1,4 +1,4 @@
--- $Id: protoequipment.sql,v 1.2 2005/09/29 09:04:00 arseniy Exp $
+-- $Id: protoequipment.sql,v 1.3 2006/04/25 07:34:33 arseniy Exp $
 
 CREATE TABLE ProtoEquipment (
  id NUMBER(19),
@@ -8,7 +8,7 @@ CREATE TABLE ProtoEquipment (
  modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- type_code NOT NULL,
+ type_id NOT NULL,
 --
  name VARCHAR2(128 CHAR),
  description VARCHAR2(256 CHAR),
@@ -20,8 +20,8 @@ CREATE TABLE ProtoEquipment (
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT peq_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
- CONSTRAINT peq_epqtype_fk FOREIGN KEY (type_code)
-  REFERENCES EquipmentType (code) ON DELETE CASCADE
+ CONSTRAINT peq_eqt_fk FOREIGN KEY (type_id)
+  REFERENCES EquipmentType (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE ProtoEquipment_seq ORDER;
