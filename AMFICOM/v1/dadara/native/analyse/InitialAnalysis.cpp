@@ -527,30 +527,36 @@ void InitialAnalysis::findAllWletSplashes(double* f_wletnc, double baseU, double
 			double effConn = calcThresh(minimalConnector, noise[i]);
 			double effACrit = calcThresh(rACrit, noise[i]);
 
-			if ((f_wletnc[i] - baseCur) * sign < effWeld * edge_threshold_factor) // стал меньше minTh
+			double ampl = (f_wletnc[i] - baseCur) * sign;
+			if (ampl < effWeld * edge_threshold_factor) // стал меньше minTh
 		break;
 
-			if ((f_wletnc[i] - baseCur) * sign >= effWeld) {
+			// отслеживаем начало и конец по weld и conn порогам
+			if (ampl >= effWeld) {
 				ew = i + 1;
 				if (bw == -1)
 					bw = i - 1;
 			}
-			if ((f_wletnc[i] - baseCur) * sign >= effConn) {
+			if (ampl >= effConn) {
 				ec = i + 1;
 				if (bc == -1)
 					bc = i - 1;
 			}
-			if ((f_wletnc[i] - baseMid) * sign > f_extrM * sign)
-				f_extrM = f_wletnc[i] - baseMid;
-			{ double res;
-			  res = ((f_wletnc[i] - baseCur) * sign - effConn) / noise[i];
-			  if(r_conn<res) { r_conn = res;}
-			  res = ((f_wletnc[i] - baseCur) * sign - effACrit) / noise[i];
-			  if(r_acrit<res) { r_acrit = res;}
+
+			// отслеживаем R-параметры
+			{ double res = (ampl - effConn) / noise[i];
+			  if(res > 0 && res > r_conn) { r_conn = res; }
 			}
-			{ double res;
-			  res = ((f_wletnc[i] - baseCur) * sign - effWeld) / noise[i];
-			  if(r_weld<res) {r_weld = res;}
+			{ double res = (ampl - effACrit) / noise[i];
+			  if(res > 0 && res > r_acrit) { r_acrit = res; }
+			}
+			{ double res = (ampl - effWeld) / noise[i];
+			  if(res > 0 && res > r_weld) {r_weld = res; }
+			}
+
+			// отслеживаем амплитуду всплеска
+			if (ampl > f_extrM * sign)
+			{ f_extrM = f_wletnc[i] - baseMid;
 			}
 		}
 		int et = i; // на этой точке всплеск уже закончился и, возможно, начался следующий
@@ -561,11 +567,11 @@ void InitialAnalysis::findAllWletSplashes(double* f_wletnc, double baseU, double
 	continue; // Weld-порог так и не пересекли - такой всплеск не создаем (XXX: в будущем анализе, возможно, они понадобяться для интерпретации более крупных соседних всплесков)
 
 		if (r_weld < 0)
-			r_weld = -1;
+			assert (r_weld == -1);
 		if (r_conn < 0)
-			r_conn = -1;
+			assert (r_conn == -1);
 		if (r_acrit < 0)
-			r_acrit = -1;
+			assert (r_acrit == -1);
 
 		Splash& spl = (Splash&)(*(new Splash(wlet_width)));
         spl.f_extr = f_extrM;
