@@ -63,7 +63,7 @@ private:
 	double  delta_x;
 	double *noise;
 
-    double average_factor; // характеризует ср. наклона на р/г, не привязан ни к масштабу вейвлета, ни к выбранной норме
+    double average_tilt; // характеризует ср. наклона на р/г, не привязан ни к масштабу вейвлета, ни к выбранной норме
 
     ArrList* events; // список всех событий
 
@@ -110,11 +110,12 @@ private:
 	// выполнение вейвлет-преобразования
 	int getMinScale();
 	void performTransformationOnly(double *y, int begin, int end, double *trans, int freq, double norma); // end: exclusive; @todo: make end inclusive
-	void performTransformationAndCenter(double *y, int begin, int end, double *trans, int freq, double norma);
-	void centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1);
+	void performTransformationAndCenter(double *y, int begin, int end, double *trans, int freq, double norma, double basetilt);
+	double getWletBaseline(int scale, double norma1, double tilt);
+	void centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1, double basetilt);
 
 	// расчет R-параметров splash (в момент его обнаружения, т.к. потом будет потерян вейвлет-образ)
-	void fillSplashRParameters(Splash &spl, double *f_wlet);
+	void fillSplashRParameters(Splash &spl, double *f_wletnc, double baseline);
 
 	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
 	static double calcWletMeanValue(double* fw, int lastPoint, double from, double to, int columns);// вычислить самое популярное значение ф-ции fw
@@ -122,14 +123,14 @@ private:
 	void setShiftedThresholds(int scale);// установить границы порогов в соответствии со средним значением вейвлета 
 
 	// ======= ВТОРОЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ ВСПЛЕСКОВ =======
-	void findAllWletSplashes(double* f_wlet, int wlet_width, ArrList& splashes);
+	void findAllWletSplashes(double* f_wlet, double baseline, int wlet_width, ArrList& splashes);
 
 	// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОБРАБОТКА ВСПЛЕСКОВ =======
 	//void removedMaskedSplashes(ArrList &accSpl);
 	void processMaskedSplashes(ArrList &accSpl);
 
 	// ======= ЧЕТВЕРТЫЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
-    void findEventsBySplashes(double* f_wletTEMP, ArrList&  splashes, int dzMaxDist);
+    void findEventsBySplashes(ArrList&  splashes, int dzMaxDist);
 	int	 processDeadZone(ArrList& splashes, int dzMaxDist);
     int  findConnector(int i, ArrList& splashes, EventParams *&ep);// посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и создать (не добавляя), изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен 0
     int  processMaskedToNonId(int i, ArrList& splashes);// поиск неид. областей по маскированным областям - проверка до проверки коннекторов
@@ -141,7 +142,7 @@ private:
 
 	// этап 3.2. - уточнение начал и концов
 	void processEventsBeginsEnds(double *f_wletTEMP); // уточняет начала и концы событий
-	void correctSpliceCoords(double *f_wletTMP, int scale0, EventParams* splice, int minBegin, int maxEnd);// ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
+	void correctSpliceCoords(double *TEMP, int scale0, double tilt, EventParams* splice, int minBegin, int maxEnd);// ф-я ПОРТИТ TEMP
 	void correctConnectorFront(EventParams* connector);
 
 	// ====== ПЯТЫЙ ЭТАП АНАЛИЗА - ОБРАБОТКА СОБЫТИЙ =======
