@@ -114,16 +114,13 @@ private:
 	double getWletBaseline(int scale, double norma1, double tilt);
 	void centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1, double basetilt);
 
-	// расчет R-параметров splash (в момент его обнаружения, т.к. потом будет потерян вейвлет-образ)
-	void fillSplashRParameters(Splash &spl, double *f_wletnc, double baseline);
-
 	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
 	static double calcWletMeanValue(double* fw, int lastPoint, double from, double to, int columns);// вычислить самое популярное значение ф-ции fw
 	void calcAverageFactor(double* fw, int scale, double norma1);
 	void setShiftedThresholds(int scale);// установить границы порогов в соответствии со средним значением вейвлета 
 
 	// ======= ВТОРОЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ ВСПЛЕСКОВ =======
-	void findAllWletSplashes(double* f_wlet, double baseline, int wlet_width, ArrList& splashes);
+	void findAllWletSplashes(double* f_wlet, double baseU, double baseL, int wlet_width, ArrList& splashes);
 
 	// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОБРАБОТКА ВСПЛЕСКОВ =======
 	//void removedMaskedSplashes(ArrList &accSpl);
