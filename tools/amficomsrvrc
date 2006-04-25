@@ -1,6 +1,6 @@
 ############################################################
 #
-# $Id: amficomsrvrc,v 1.1 2005/11/07 08:32:56 bass Exp $
+# $Id: amficomsrvrc,v 1.2 2006/04/25 13:42:52 arseniy Exp $
 #
 # vim:ft=sh:
 #
@@ -67,7 +67,7 @@ function start() {
 		date=`date +%Y-%m-%d\ %H:%M:%S`
 		echo "${date} ${APPNAME} started" >>${logpath}/${APPNAME}.stdout.log
 		echo "${date} ${APPNAME} started" >>${logpath}/${APPNAME}.stderr.log
-		${java} ${JAVAFLAGS} -classpath "${CLASSPATH}" ${MAIN} ${MAINOPTS} >>${logpath}/${APPNAME}.stdout.log 2>>${logpath}/${APPNAME}.stderr.log &
+		${java} ${JAVAFLAGS} -classpath "${CLASSPATH}" ${MAIN} ${MAINOPTS} </dev/null >>${logpath}/${APPNAME}.stdout.log 2>>${logpath}/${APPNAME}.stderr.log &
 		echo $! >${APPNAME}.pid
 		cd -
 
