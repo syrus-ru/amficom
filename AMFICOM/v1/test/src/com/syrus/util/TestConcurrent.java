@@ -1,5 +1,5 @@
 /*-
- * $Id: TestConcurrent.java,v 1.2 2006/04/25 10:16:32 arseniy Exp $
+ * $Id: TestConcurrent.java,v 1.3 2006/04/25 10:26:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PERMATTR_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SERVERPROCESS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2006/04/25 10:16:32 $
+ * @version $Revision: 1.3 $, $Date: 2006/04/25 10:26:18 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -49,7 +49,7 @@ public final class TestConcurrent extends TestCase {
 		for (int i = 0; i < 1000; i++) {
 			final short entityCode;
 			if (i % 8 == 0) {
-				entityCode = PARAMETER_TYPE_CODE;
+				entityCode = PERMATTR_CODE;
 			} else if (i % 8 == 1) {
 				entityCode = CHARACTERISTIC_TYPE_CODE;
 			} else if (i % 8 == 2) {
