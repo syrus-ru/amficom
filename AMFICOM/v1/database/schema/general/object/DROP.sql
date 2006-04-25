@@ -1,6 +1,8 @@
--- $Id: DROP.sql,v 1.7 2005/06/15 07:50:18 bass Exp $
+-- $Id: DROP.sql,v 1.8 2006/04/25 07:59:26 arseniy Exp $
 
-DROP TABLE characteristic;
-DROP TABLE serverproperty;
+PROMPT 02. Droping table Characteristic...;
+DROP TABLE Characteristic;
+DROP SEQUENCE Characteristic_seq;
 
-DROP SEQUENCE characteristic_seq;
+PROMPT 01. Droping table ServerProperty...;
+DROP TABLE ServerProperty;

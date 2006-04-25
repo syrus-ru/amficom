@@ -1,4 +1,4 @@
--- $Id: characteristic.sql,v 1.14 2006/01/16 09:10:16 bass Exp $
+-- $Id: characteristic.sql,v 1.15 2006/04/25 07:59:26 arseniy Exp $
 
 CREATE TABLE Characteristic (
  id NUMBER(19),
@@ -30,4 +30,4 @@ CREATE TABLE Characteristic (
 -- 
 );
 
-CREATE SEQUENCE characteristic_seq ORDER;
+CREATE SEQUENCE Characteristic_seq ORDER;
