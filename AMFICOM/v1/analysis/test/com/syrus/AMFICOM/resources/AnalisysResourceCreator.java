@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalisysResourceCreator.java,v 1.5 2006/04/24 11:07:42 saa Exp $
+ * $Id: AnalisysResourceCreator.java,v 1.6 2006/04/25 15:33:48 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.extensions.resources.Rgb;
 import com.syrus.AMFICOM.extensions.resources.Color.Name.Enum;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2006/04/24 11:07:42 $
+ * @version $Revision: 1.6 $, $Date: 2006/04/25 15:33:48 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis
@@ -104,6 +104,8 @@ public class AnalisysResourceCreator extends TestCase {
 			"images/download_add.gif");
 		map.put(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_REMOVE,
 			"images/download_remove.gif");
+		map.put(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_MODEL,
+			"images/download_model.gif");
 		map.put(AnalysisResourceKeys.ICON_ANALYSIS_CHECK_MISMATCH,
 			"images/check_mismatch.gif");
 		map.put(AnalysisResourceKeys.ICON_ANALYSIS_MARKER,
@@ -151,6 +153,8 @@ public class AnalisysResourceCreator extends TestCase {
 
 		map.put(AnalysisResourceKeys.ICON_SHOW_PATH_ELEMENTS,
 			"images/jdirectory.gif");
+		map.put(AnalysisResourceKeys.ICON_ANALYSIS_WEAK_SECONDARY,
+			"images/weak_secondary.gif");
 
 		map.put(AnalysisResourceKeys.ICON_ANALYSIS_LINEAR,
 			"images/linear.gif");

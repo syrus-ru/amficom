@@ -2,35 +2,17 @@
   <ext:extension xsi:type="res:resources" id="com.syrus.AMFICOM.resources.ResourceHandler" xmlns:res="http://syrus.com/AMFICOM/extensions/resources" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <res:resource xsi:type="res:handler" id="image" handlerClass="com.syrus.AMFICOM.resources.ImageResourceHandler"/>
     <res:resource xsi:type="res:handler" id="color" handlerClass="com.syrus.AMFICOM.resources.ColorResourceHandler"/>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.evaluation.mainmini">
-      <res:filename>images/main/evaluate_mini.gif</res:filename>
-    </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.downloadTrace">
       <res:filename>images/download_trace.gif</res:filename>
     </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.anchored">
-      <res:filename>images/opt_start.gif</res:filename>
-    </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.enlargey">
-      <res:filename>images/enlargey.gif</res:filename>
-    </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.centerA">
-      <res:filename>images/centerA.gif</res:filename>
-    </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.bendloss">
-      <res:filename>images/bendloss.gif</res:filename>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.downloadModel">
+      <res:filename>images/download_model.gif</res:filename>
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdDecrease">
       <res:filename>images/decreaseThresh.gif</res:filename>
     </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.reducex">
-      <res:filename>images/reducex.gif</res:filename>
-    </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.checkMismatch">
-      <res:filename>images/check_mismatch.gif</res:filename>
-    </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.deleteMarker">
-      <res:filename>images/marker_delete.gif</res:filename>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.bendloss">
+      <res:filename>images/bendloss.gif</res:filename>
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.perform">
       <res:filename>images/perform_analysis.gif</res:filename>
@@ -41,23 +23,80 @@
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdDecreaseAllHard">
       <res:filename>images/decreaseAllHardThresh.gif</res:filename>
     </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.marker">
-      <res:filename>images/marker.gif</res:filename>
-    </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.linear">
       <res:filename>images/linear.gif</res:filename>
     </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.gain">
-      <res:filename>images/gain.gif</res:filename>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.initailAnalysis">
+      <res:filename>images/cs_initial.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.enlargex">
+      <res:filename>images/enlargex.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdCreateNew">
+      <res:filename>images/th_createNew.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.weakSecondary">
+      <res:filename>images/weak_secondary.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.downloadRemove">
+      <res:filename>images/download_remove.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.centerB">
+      <res:filename>images/centerB.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.reflection">
+      <res:filename>images/reflection.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.splicegain">
+      <res:filename>images/splicegain.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.survey.mainmini">
+      <res:filename>images/main/survey_mini.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.events">
+      <res:filename>images/events.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdDecreaseAllSoft">
+      <res:filename>images/decreaseAllSoftThresh.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.zoombox">
+      <res:filename>images/zoom_box.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.threshold">
+      <res:filename>images/threshold.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.evaluation.mainmini">
+      <res:filename>images/main/evaluate_mini.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.anchored">
+      <res:filename>images/opt_start.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.enlargey">
+      <res:filename>images/enlargey.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.centerA">
+      <res:filename>images/centerA.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.reducex">
+      <res:filename>images/reducex.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.deleteMarker">
+      <res:filename>images/marker_delete.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.checkMismatch">
+      <res:filename>images/check_mismatch.gif</res:filename>
+    </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.marker">
+      <res:filename>images/marker.gif</res:filename>
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.defaultAnalysis">
       <res:filename>images/cs_default.gif</res:filename>
     </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.gain">
+      <res:filename>images/gain.gif</res:filename>
+    </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.modeled">
       <res:filename>images/modeled.gif</res:filename>
-    </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.initailAnalysis">
-      <res:filename>images/cs_initial.gif</res:filename>
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdIncrease">
       <res:filename>images/increaseThresh.gif</res:filename>
@@ -65,65 +104,38 @@
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.reflect">
       <res:filename>images/reflect.gif</res:filename>
     </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdCreateNew">
-      <res:filename>images/th_createNew.gif</res:filename>
-    </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.enlargex">
-      <res:filename>images/enlargex.gif</res:filename>
-    </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.fit">
       <res:filename>images/fit.gif</res:filename>
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.show_pes">
       <res:filename>images/jdirectory.gif</res:filename>
     </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.centerB">
-      <res:filename>images/centerB.gif</res:filename>
-    </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.downloadRemove">
-      <res:filename>images/download_remove.gif</res:filename>
-    </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.singularity">
       <res:filename>images/singularity.gif</res:filename>
-    </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.reflection">
-      <res:filename>images/reflection.gif</res:filename>
-    </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.spliceloss">
-      <res:filename>images/spliceloss.gif</res:filename>
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.reducey">
       <res:filename>images/reducey.gif</res:filename>
     </res:resource>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.spliceloss">
+      <res:filename>images/spliceloss.gif</res:filename>
+    </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.deadzone">
       <res:filename>images/deadzone.gif</res:filename>
-    </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.break">
-      <res:filename>images/break.gif</res:filename>
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.trace">
       <res:filename>images/original_trace.gif</res:filename>
     </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.end">
-      <res:filename>images/end.gif</res:filename>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.break">
+      <res:filename>images/break.gif</res:filename>
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.loss">
       <res:filename>images/loss.gif</res:filename>
     </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.splicegain">
-      <res:filename>images/splicegain.gif</res:filename>
+    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.end">
+      <res:filename>images/end.gif</res:filename>
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.downloadAdd">
       <res:filename>images/download_add.gif</res:filename>
-    </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.events">
-      <res:filename>images/events.gif</res:filename>
-    </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.survey.mainmini">
-      <res:filename>images/main/survey_mini.gif</res:filename>
-    </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdDecreaseAllSoft">
-      <res:filename>images/decreaseAllSoftThresh.gif</res:filename>
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.noanalysis">
       <res:filename>images/noanalyse.gif</res:filename>
@@ -131,14 +143,8 @@
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.mainmini">
       <res:filename>images/main/analyse_mini.gif</res:filename>
     </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.zoombox">
-      <res:filename>images/zoom_box.gif</res:filename>
-    </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdIncreaseAllHard">
       <res:filename>images/increaseAllHardThresh.gif</res:filename>
-    </res:resource>
-    <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.threshold">
-      <res:filename>images/threshold.gif</res:filename>
     </res:resource>
     <res:resource xsi:type="res:image" id="com.syrus.AMFICOM.icon.analisys.thresholdInitial">
       <res:filename>images/th_initial.gif</res:filename>
