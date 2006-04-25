@@ -538,13 +538,13 @@ void InitialAnalysis::findAllWletSplashes(double* f_wletnc, double baseU, double
 			if ((f_wletnc[i] - baseMid) * sign > f_extrM * sign)
 				f_extrM = f_wletnc[i] - baseMid;
 			{ double res;
-			  res = ((f_wletnc[i] - baseMid) * sign - minimalConnector) / noise[i];
+			  res = ((f_wletnc[i] - baseMid) * sign - calcThresh(minimalConnector, noise[i])) / noise[i];
 			  if(r_conn<res) { r_conn = res;}
-			  res = ((f_wletnc[i] - baseMid) * sign - rACrit) / noise[i];
+			  res = ((f_wletnc[i] - baseMid) * sign - calcThresh(rACrit, noise[i])) / noise[i];
 			  if(r_acrit<res) { r_acrit = res;}
 			}
 			{ double res;
-			  res = ((f_wletnc[i] - baseMid) * sign - minimalWeld) / noise[i];
+			  res = ((f_wletnc[i] - baseMid) * sign - calcThresh(minimalWeld, noise[i])) / noise[i];
 			  if(r_weld<res) {r_weld = res;}
 			}
 		}
