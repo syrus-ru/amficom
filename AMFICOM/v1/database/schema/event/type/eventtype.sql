@@ -1,4 +1,4 @@
--- $Id: eventtype.sql,v 1.6 2005/06/15 17:03:09 bass Exp $
+-- $Id: eventtype.sql,v 1.7 2006/04/25 08:06:56 arseniy Exp $
 
 CREATE TABLE EventType (
  id NUMBER(19),
@@ -11,12 +11,12 @@ CREATE TABLE EventType (
  codename VARCHAR2(32 CHAR) NOT NULL,
  description VARCHAR2(256 CHAR),
 --
- CONSTRAINT evtype_pk PRIMARY KEY (id),
- CONSTRAINT evtype_creator_fk FOREIGN KEY (creator_id)
+ CONSTRAINT et_pk PRIMARY KEY (id),
+ CONSTRAINT et_creator_fk FOREIGN KEY (creator_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
- CONSTRAINT evtype_modifier_fk FOREIGN KEY (modifier_id)
+ CONSTRAINT et_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
- CONSTRAINT evtype_uniq UNIQUE (codename)
+ CONSTRAINT et_uniq UNIQUE (codename)
 );
 
 CREATE SEQUENCE EventType_seq ORDER;
