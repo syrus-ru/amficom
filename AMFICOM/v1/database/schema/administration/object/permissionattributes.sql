@@ -1,6 +1,6 @@
--- $Id: permissionattributes.sql,v 1.1 2005/10/20 11:36:13 arseniy Exp $
+-- $Id: permissionattributes.sql,v 1.2 2006/04/25 07:45:14 arseniy Exp $
 
-CREATE TABLE PermissionAttributes(
+CREATE TABLE PermissionAttributes (
  id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
