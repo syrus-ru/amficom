@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.4 2006/04/24 12:41:34 stas Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.5 2006/04/25 11:03:33 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client.reportbuilder.templaterenderer;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -69,7 +70,12 @@ import com.syrus.util.Log;
 public class ReportTemplateRenderer extends JPanel implements PropertyChangeListener{
 	private static final long serialVersionUID = 1947965880055353754L;
 	private final static int BORDER_MARGIN_SIZE = 2;
-	private static final int HEADER_TOCOMPONENT_DISTANCE = 10;	
+	private static final int HEADER_TOCOMPONENT_DISTANCE = 10;
+	
+	/**
+	 * use 16 font as when printing it will be 12 = (16 * (72 / 96)) for the resolution difference 
+	 */
+	public static Font DEFAULT_FONT = new Font("Times New Roman",Font.BOLD, 16);
 	
 	private ApplicationContext applicationContext; 
 	private ReportTemplateRendererMouseListener mouseListener = null;
@@ -332,8 +338,8 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		this.setPreferredSize(this.getSize());				
 		
 		this.marginBounds.setLocation(
-				new Point(ReportTemplate.STANDART_LEFT_MARGIN_SIZE + this.template.getMarginSize(), 
-						ReportTemplate.VERTICAL_MARGIN_SIZE));
+				new Point(ReportTemplate.STANDART_MARGIN_SIZE * ReportTemplate.MONITOR_RESOLUTION + this.template.getMarginSize(), 
+						ReportTemplate.STANDART_MARGIN_SIZE * ReportTemplate.MONITOR_RESOLUTION));
 
 		this.marginBounds.setSize(this.template.getMargins());
 	}
@@ -423,6 +429,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		 
 		ImageRenderingComponent component = new ImageRenderingComponent(element,element.getBufferedImage());
 		this.add(component);
+		component.setFont(DEFAULT_FONT);
 		component.setLocation(element.getX(),element.getY());
 		component.setSize(element.getWidth(),element.getHeight());
 		component.addMouseListener(DRIComponentMouseListener.getInstance());
@@ -439,6 +446,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				imageElement,
 				imageElement.getBufferedImage());
 		this.add(component);
+		component.setFont(DEFAULT_FONT);
 		component.setLocation(imageElement.getX(),imageElement.getY());
 		component.setSize(imageElement.getWidth(),imageElement.getHeight());
 		component.addMouseListener(DRIComponentMouseListener.getInstance());
@@ -453,7 +461,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	public AttachedTextComponent createTextRenderingComponent(Point point) throws CreateObjectException{
 		AttachedTextStorableElement element = AttachedTextStorableElement.createInstance(
 				LoginManager.getUserId(),
-				AttachedTextComponent.DEFAULT_FONT,
+				DEFAULT_FONT,
 				new IntPoint(point.x,point.y),
 				new IntDimension(
 						AttachedTextComponent.MINIMUM_COMPONENT_SIZE.width,
@@ -488,6 +496,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		this.add(component);
 		
 		IntPoint location = textElement.getLocation();
+		component.setFont(DEFAULT_FONT);
 		component.setLocation(location.x,location.y);
 		component.setSize(textElement.getWidth(),textElement.getHeight());
 		component.setText(textElement.getText());
@@ -522,6 +531,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		component.refreshLabels();
 		
 		IntPoint location = storableElement.getLocation();
+		component.setFont(DEFAULT_FONT);
 		component.setLocation(location.x,location.y);
 		component.setSize(storableElement.getWidth(),storableElement.getHeight());
 		
@@ -567,6 +577,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		component.addMouseMotionListener(DRIComponentMouseMotionListener.getInstance());
 		
 		this.add(component);
+		component.setFont(DEFAULT_FONT);
 		component.refreshLabels();
 		
 		component.setLocation(location.x,location.y);
