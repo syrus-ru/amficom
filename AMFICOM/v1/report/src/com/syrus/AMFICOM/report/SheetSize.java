@@ -1,5 +1,5 @@
 /*-
- * $Id: SheetSize.java,v 1.1 2005/09/30 12:34:07 max Exp $
+ * $Id: SheetSize.java,v 1.2 2006/04/25 10:58:08 stas Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,16 +11,17 @@ import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/09/30 12:34:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.2 $, $Date: 2006/04/25 10:58:08 $
  * @module report
+ * A4 is 11?" x 8?" multiply it on 96 dpi resolution
  */
 public enum SheetSize {
-	A0(new IntDimension (3360, 4760)),
-	A1(new IntDimension (3360, 2380)),
-	A2(new IntDimension (1680, 2380)),
-	A3(new IntDimension (1680, 1190)),
-	A4(new IntDimension (840, 1190));
+	A0(new IntDimension (3168, 4512)),
+	A1(new IntDimension (3168, 2256)),
+	A2(new IntDimension (1584, 2256)),
+	A3(new IntDimension (1584, 1128)),
+	A4(new IntDimension (792, 1128));
 	
 	private IntDimension size;
 	
