@@ -1,5 +1,5 @@
 /*-
- * $Id: TestLRUMap.java,v 1.3 2006/02/22 16:11:59 arseniy Exp $
+ * $Id: TestLRUMap.java,v 1.4 2006/04/25 10:27:50 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,15 +17,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.syrus.util.LRUMap.Retainable;
-
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import com.syrus.util.LRUMap.Retainable;
+
 /**
- * @version $Revision: 1.3 $, $Date: 2006/02/22 16:11:59 $
+ * @version $Revision: 1.4 $, $Date: 2006/04/25 10:27:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
