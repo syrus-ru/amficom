@@ -1,62 +1,293 @@
 #!/bin/sh
 
-AMFICOM_OWNER=amficom
-AMFICOM_HOME=`grep "${AMFICOM_OWNER}" /etc/passwd | cut -d: -f6`
-if [ -z "${AMFICOM_HOME}" ]
-then
-	echo "User ${AMFICOM_OWNER} not found; exiting..."
-	exit 1
-fi
-AMFICOM_RUN=${AMFICOM_HOME}/run
+AMFICOM_BASE=/opt/AMFICOM
+AMFICOMTAB=${AMFICOM_BASE}/etc/amficomtab
 
-LESERVER=${AMFICOM_RUN}/leserver.sh
-MSERVER=${AMFICOM_RUN}/mserver.sh
-CMSERVER=${AMFICOM_RUN}/cmserver.sh
-MSCHARSERVER=${AMFICOM_RUN}/mscharserver.sh
-ALL_SERVERS="${LESERVER} ${MSERVER} ${CMSERVER} ${MSCHARSERVER}"
-ALL_SERVERS_REV="${MSCHARSERVER} ${CMSERVER} ${MSERVER} ${LESERVER}"
-for prog in ${ALL_SERVERS}
-do
-	if [ ! -x ${prog} ]
+LESERVER=leserver
+MSERVER=mserver
+CMSERVER=cmserver
+MSCHARSERVER=mscharserver
+MCM=mcm
+
+SUFFIX=.sh
+
+startServer() {
+	if [ $# -ne 1 ]
 	then
-		echo "${prog} is missing or is not executable; exiting..."
+		echo "startServer: Illegal number of arguments - $#"
 		exit 1
 	fi
-done
+	AMFICOM_RUN=$1
+
+	LESERVER_FULL=${AMFICOM_RUN}/${LESERVER}${SUFFIX}
+	MSERVER_FULL=${AMFICOM_RUN}/${MSERVER}${SUFFIX}
+	CMSERVER_FULL=${AMFICOM_RUN}/${CMSERVER}${SUFFIX}
+	MSCHARSERVER_FULL=${AMFICOM_RUN}/${MSCHARSERVER}${SUFFIX}
+	ALL_SERVERS_FULL="${LESERVER_FULL} ${MSERVER_FULL} ${CMSERVER_FULL} ${MSCHARSERVER_FULL}"
+	for server in ${ALL_SERVERS_FULL}
+	do
+		if [ ! -x ${server} ]
+		then
+			echo "${server} is missing or is not executable"
+			exit 1
+		fi
+	done
+
+	for server in ${ALL_SERVERS_FULL}
+	do
+		echo "Starting ${server}..."
+		${server} start
+		sleep 10
+	done
+}
+
+stopServer() {
+	if [ $# -ne 1 ]
+	then
+		echo "stopServer: Illegal number of arguments - $#"
+		exit 1
+	fi
+	AMFICOM_RUN=$1
+
+	LESERVER_FULL=${AMFICOM_RUN}/${LESERVER}${SUFFIX}
+	MSERVER_FULL=${AMFICOM_RUN}/${MSERVER}${SUFFIX}
+	CMSERVER_FULL=${AMFICOM_RUN}/${CMSERVER}${SUFFIX}
+	MSCHARSERVER_FULL=${AMFICOM_RUN}/${MSCHARSERVER}${SUFFIX}
+	ALL_SERVERS_FULL_REV="${MSCHARSERVER_FULL} ${CMSERVER_FULL} ${MSERVER_FULL} ${LESERVER_FULL}"
+	for server in ${ALL_SERVERS_FULL_REV}
+	do
+		echo "Stopping ${server}..."
+		if [ ! -x ${server} ]
+		then
+			echo "${server} is missing or is not executable"
+			continue
+		fi
+		${server} stop
+	done
+}
+
+statusServer() {
+	if [ $# -ne 1 ]
+	then
+		echo "statusServer: Illegal number of arguments - $#"
+		exit 1
+	fi
+	AMFICOM_RUN=$1
+
+	LESERVER_FULL=${AMFICOM_RUN}/${LESERVER}${SUFFIX}
+	MSERVER_FULL=${AMFICOM_RUN}/${MSERVER}${SUFFIX}
+	CMSERVER_FULL=${AMFICOM_RUN}/${CMSERVER}${SUFFIX}
+	MSCHARSERVER_FULL=${AMFICOM_RUN}/${MSCHARSERVER}${SUFFIX}
+	ALL_SERVERS_FULL="${LESERVER_FULL} ${MSERVER_FULL} ${CMSERVER_FULL} ${MSCHARSERVER_FULL}"
+	for server in ${ALL_SERVERS_FULL}
+	do
+		if [ ! -x ${server} ]
+		then
+			echo "${server} is missing or is not executable"
+			continue
+		fi
+		${server} status
+	done
+}
+
+startMCM() {
+	if [ $# -ne 1 ]
+	then
+		echo "startMCM: Illegal number of arguments - $#"
+		exit 1
+	fi
+	AMFICOM_RUN=$1
+
+	MCM_FULL=${AMFICOM_RUN}/${MCM}${SUFFIX}
+	if [ ! -x ${MCM_FULL} ]
+	then
+		echo "${MCM_FULL} is missing or is not executable"
+		exit 1
+	fi
+
+	echo "Starting ${MCM_FULL}..."
+	${MCM_FULL} start
+}
+
+stopMCM() {
+	if [ $# -ne 1 ]
+	then
+		echo "stopMCM: Illegal number of arguments - $#"
+		exit 1
+	fi
+	AMFICOM_RUN=$1
+
+	MCM_FULL=${AMFICOM_RUN}/${MCM}${SUFFIX}
+	if [ ! -x ${MCM_FULL} ]
+	then
+		echo "${MCM_FULL} is missing or is not executable"
+		exit 1
+	fi
+
+	echo "Stopping ${MCM_FULL}..."
+	${MCM_FULL} stop
+}
+
+statusMCM() {
+	if [ $# -ne 1 ]
+	then
+		echo "statusMCM: Illegal number of arguments - $#"
+		exit 1
+	fi
+	AMFICOM_RUN=$1
+
+	MCM_FULL=${AMFICOM_RUN}/${MCM}${SUFFIX}
+	if [ ! -x ${MCM_FULL} ]
+	then
+		echo "${MCM_FULL} is missing or is not executable"
+		exit 1
+	fi
+
+	${MCM_FULL} status
+}
+
+startServices() {
+	cat ${AMFICOMTAB} | while read LINE
+	do
+		case $LINE in
+		\#*)
+			;;	#comment line
+		*)
+			if [ "`echo $LINE | awk -F: '{print $NF}' -`" = "Y" ]
+			then
+				SERVICE=`echo $LINE |  awk -F: '{print $1}' -`
+				INSTALLATION=`echo $LINE |  awk -F: '{print $2}' -`
+
+				AMFICOM_HOME=${AMFICOM_BASE}/${INSTALLATION}
+				if [ ! -d ${AMFICOM_HOME} ]
+				then
+					echo "Cannot find AMFICOM_HOME ${AMFICOM_HOME}"
+				fi
+				AMFICOM_RUN=${AMFICOM_HOME}/run
+				if [ ! -d ${AMFICOM_RUN} ]
+				then
+					echo "Cannot find run directory in ${AMFICOM_HOME}"
+				fi
+
+				echo "		Installation ${INSTALLATION}:"
+				case ${SERVICE} in
+				server)
+					startServer ${AMFICOM_RUN}
+					;;
+				mcm)
+					startMCM ${AMFICOM_RUN}
+					;;
+				*)
+					echo "Unknown service - ${SERVICE}; must be server or mcm"
+					;;
+				esac
+
+			fi
+			;;
+		esac
+	done
+}
+
+stopServices() {
+	cat ${AMFICOMTAB} | while read LINE
+	do
+		case $LINE in
+		\#*)
+			;;	#comment line
+		*)
+			if [ "`echo $LINE | awk -F: '{print $NF}' -`" = "Y" ]
+			then
+				SERVICE=`echo $LINE |  awk -F: '{print $1}' -`
+				INSTALLATION=`echo $LINE |  awk -F: '{print $2}' -`
+
+				AMFICOM_HOME=${AMFICOM_BASE}/${INSTALLATION}
+				if [ ! -d ${AMFICOM_HOME} ]
+				then
+					echo "Cannot find AMFICOM_HOME ${AMFICOM_HOME}"
+				fi
+				AMFICOM_RUN=${AMFICOM_HOME}/run
+				if [ ! -d ${AMFICOM_RUN} ]
+				then
+					echo "Cannot find run directory in ${AMFICOM_HOME}"
+				fi
+
+				echo "		Installation ${INSTALLATION}:"
+				case ${SERVICE} in
+				server)
+					stopServer ${AMFICOM_RUN}
+					;;
+				mcm)
+					stopMCM ${AMFICOM_RUN}
+					;;
+				*)
+					echo "Unknown service - ${SERVICE}; must be server or mcm"
+					;;
+				esac
+
+			fi
+			;;
+		esac
+	done
+}
+
+statusServices() {
+	cat ${AMFICOMTAB} | while read LINE
+	do
+		case $LINE in
+		\#*)
+			;;	#comment line
+		*)
+			if [ "`echo $LINE | awk -F: '{print $NF}' -`" = "Y" ]
+			then
+				SERVICE=`echo $LINE |  awk -F: '{print $1}' -`
+				INSTALLATION=`echo $LINE |  awk -F: '{print $2}' -`
+
+				AMFICOM_HOME=${AMFICOM_BASE}/${INSTALLATION}
+				if [ ! -d ${AMFICOM_HOME} ]
+				then
+					echo "Cannot find AMFICOM_HOME ${AMFICOM_HOME}"
+				fi
+				AMFICOM_RUN=${AMFICOM_HOME}/run
+				if [ ! -d ${AMFICOM_RUN} ]
+				then
+					echo "Cannot find run directory in ${AMFICOM_HOME}"
+				fi
+
+				echo "		Installation ${INSTALLATION}:"
+				case ${SERVICE} in
+				server)
+					statusServer ${AMFICOM_RUN}
+					;;
+				mcm)
+					statusMCM ${AMFICOM_RUN}
+					;;
+				*)
+					echo "Unknown service - ${SERVICE}; must be server or mcm"
+					;;
+				esac
+
+			fi
+			;;
+		esac
+	done
+}
 
 case "$1" in
-	start)
-		for prog in ${ALL_SERVERS}
-		do
-			echo "\033[1;33;42m> Starting ${prog}...\033[0m"
-			su - ${AMFICOM_OWNER} -c "${prog} start"
-			sleep 20
-		done
-		;;
-	stop)
-		for prog in ${ALL_SERVERS_REV}
-		do
-			echo "\033[1;33;42m> Stopping ${prog}...\033[0m"
-			su - ${AMFICOM_OWNER} -c "${prog} stop"
-			sleep 5
-		done
-		;;
-	status)
-		for prog in ${ALL_SERVERS}
-		do
-			echo "\033[1;33;42m> ${prog} status...\033[0m"
-			su - ${AMFICOM_OWNER} -c "${prog} status"
-		done
-		;;
-	restart)
-		$0 stop
-		$0 start
-		;;
-	*)
-		echo "Usage: $0 {start|stop|restart|status}"
-		exit 1
-		;;
+start)
+	startServices
+	;;
+stop)
+	stopServices
+	;;
+status)
+	statusServices
+	;;
+restart)
+	stopServices
+	startServices
+	;;
+*)
+	echo "Usage: $0 {start|stop|restart|status}"
+	exit 1
+	;;
 esac
-
-unset AMFICOM_HOME AMFICOM_OWNER AMFICOM_RUN LESERVER MSERVER CMSERVER MSCHARSERVER ALL_SERVERS
-
