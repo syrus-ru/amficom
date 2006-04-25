@@ -1,5 +1,5 @@
 /*
- * $Id: TableModelVerticalDivider.java,v 1.3 2006/04/24 06:30:28 stas Exp $
+ * $Id: TableModelVerticalDivider.java,v 1.4 2006/04/25 10:59:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,27 +7,19 @@
  */
 package com.syrus.AMFICOM.client.report;
 
-import java.awt.Component;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 
-import com.syrus.AMFICOM.client.UI.WrapperedTable;
-import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 /**
  * Класс для реализации вртикального разбиения исходной табличной
  * модели.
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2006/04/24 06:30:28 $
+ * @version $Revision: 1.4 $, $Date: 2006/04/25 10:59:34 $
  * @author Peskovsky Peter
  * @module reportclient
  */
 public class TableModelVerticalDivider {
-	private static final int DEFAULT_COLUMN_WIDTH = 100;
+	
 	public static TableDataRenderingComponent createReport(
 			AbstractTableModel tableModel,
 			TableDataStorableElement tableStorableElement) {
