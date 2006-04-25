@@ -1,4 +1,4 @@
--- $Id: mcm.sql,v 1.9 2005/06/15 17:03:09 bass Exp $
+-- $Id: mcm.sql,v 1.10 2006/04/25 07:45:27 arseniy Exp $
 
 CREATE TABLE MCM (
  id NUMBER(19),
@@ -9,8 +9,6 @@ CREATE TABLE MCM (
  version NUMBER(19) NOT NULL,
 --
  domain_id,
---
- type_id,
 --
  name VARCHAR2(128 CHAR) NOT NULL,
  description VARCHAR2(256 CHAR),
@@ -26,9 +24,6 @@ CREATE TABLE MCM (
 --
  CONSTRAINT mcm_domain_fk FOREIGN KEY (domain_id)
   REFERENCES Domain (id) ON DELETE CASCADE,
---
- CONSTRAINT mcm_mcmtype_fk FOREIGN KEY (type_id)
-  REFERENCES MCMType (id) ON DELETE CASCADE,
 --
  CONSTRAINT mcm_user_fk FOREIGN KEY (user_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
