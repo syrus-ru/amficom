@@ -1,7 +1,11 @@
--- $Id: DROP.sql,v 1.3 2005/06/15 07:50:18 bass Exp $
+-- $Id: DROP.sql,v 1.4 2006/04/25 08:06:04 arseniy Exp $
 
+PROMPT 03. Dropping table EventTypeUserAlert...;
 DROP TABLE EventTypeUserAlert;
-DROP TABLE EventTypParTypLink;
-DROP TABLE EventType;
 
+PROMPT 02. Dropping table EventTypParTypLink...;
+DROP TABLE EventTypParTypLink;
+
+PROMPT 01. Dropping table EventType...;
+DROP TABLE EventType;
 DROP SEQUENCE EventType_seq;
