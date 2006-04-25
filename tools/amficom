@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# chkconfig: 345 98 13
+# description: Starts AMFICOM services according to $AMFICOM_BASE/etc/amficomtab
+
 AMFICOM_OWNER=amficom
 if [ `grep ${AMFICOM_OWNER} /etc/passwd | wc -l` -eq 0 ]
 then
