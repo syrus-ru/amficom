@@ -1,6 +1,9 @@
 #!/bin/sh
 
-ORBD=/bin/orbd
+# chkconfig: 345 97 14
+# description: Starts ORB daemon
+
+ORBD=`which orbd`
 GREP=/usr/xpg4/bin/grep
 SED=/usr/xpg4/bin/sed
 if [ ! -x ${ORBD} ]
@@ -40,11 +43,11 @@ case "$1" in
 				echo "orbd (pid ${pid}) is already running"
 			fi
 		else
-			echo "\033[1;33;42m> Starting orbd...\033[0m"
-			${ORBD} -defaultdb ${ORBD_DIR} -ORBInitialPort 1050 &
+			echo "Starting orbd..."
+			${ORBD} -defaultdb ${ORBD_DIR} -ORBInitialPort 1050 > /dev/null 2>&1 &
 			while [ ! -d ${ORBD_DIR} ]
 			do
-				sleep 10
+				sleep 1
 			done
 			echo $! > ${PIDFILE}
 		fi
@@ -58,7 +61,7 @@ case "$1" in
 			then
 				echo "orbd is dead but subsys is locked"
 			else
-				echo "\033[1;33;42m> Stopping orbd...\033[0m"
+				echo "Stopping orbd..."
 				kill -15 ${pid}
 				sleep 10
 				killprocess ${pid}
