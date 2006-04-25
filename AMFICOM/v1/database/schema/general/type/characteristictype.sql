@@ -1,4 +1,4 @@
--- $Id: characteristictype.sql,v 1.10 2005/07/17 04:53:00 arseniy Exp $
+-- $Id: characteristictype.sql,v 1.11 2006/04/25 08:01:22 arseniy Exp $
 
 CREATE TABLE CharacteristicType (
  id NUMBER(19),
@@ -25,4 +25,4 @@ CREATE TABLE CharacteristicType (
   REFERENCES DataType (code) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE characteristictype_seq ORDER;
+CREATE SEQUENCE CharacteristicType_seq ORDER;
