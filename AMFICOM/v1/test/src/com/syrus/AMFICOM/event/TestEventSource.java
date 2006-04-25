@@ -1,5 +1,5 @@
 /*
- * $Id: TestEventSource.java,v 1.7 2006/02/17 12:04:55 arseniy Exp $
+ * $Id: TestEventSource.java,v 1.8 2006/04/25 10:30:04 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2006/02/17 12:04:55 $
+ * @version $Revision: 1.8 $, $Date: 2006/04/25 10:30:04 $
  * @author $Author: arseniy $
  * @module test
  */
