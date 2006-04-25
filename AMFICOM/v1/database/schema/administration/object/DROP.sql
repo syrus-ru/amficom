@@ -1,16 +1,28 @@
--- $Id: DROP.sql,v 1.9 2005/11/07 20:34:04 bass Exp $
+-- $Id: DROP.sql,v 1.10 2006/04/25 07:45:35 arseniy Exp $
 
+PROMPT 07. Dropping table PermissionAttributes...;
 DROP TABLE PermissionAttributes;
-DROP TABLE SystemUserRoleLink;
-DROP TABLE Role;
-DROP TABLE ServerProcess;
-DROP TABLE MCM;
-DROP TABLE Server;
-DROP TABLE Domain;
-
 DROP SEQUENCE PermissionAttributes_Seq;
-DROP SEQUENCE Role_Seq; 
+
+PROMPT 06. Dropping table SystemUserRoleLink...;
+DROP TABLE SystemUserRoleLink;
+
+PROMPT 05. Dropping table Role...;
+DROP TABLE Role;
+DROP SEQUENCE Role_Seq;
+
+PROMPT 04. Dropping table ServerProcess...;
+DROP TABLE ServerProcess;
 DROP SEQUENCE ServerProcess_Seq;
+
+PROMPT 03. Dropping table MCM...;
+DROP TABLE MCM;
 DROP SEQUENCE MCM_Seq;
+
+PROMPT 02. Dropping table Server...;
+DROP TABLE Server;
 DROP SEQUENCE Server_Seq;
+
+PROMPT 01. Dropping table Domain...;
+DROP TABLE Domain;
 DROP SEQUENCE Domain_Seq;
