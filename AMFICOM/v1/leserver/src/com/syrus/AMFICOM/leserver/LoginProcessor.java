@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.34 2006/03/15 16:20:34 bass Exp $
+ * $Id: LoginProcessor.java,v 1.35 2006/04/26 13:38:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2006/03/15 16:20:34 $
+ * @version $Revision: 1.35 $, $Date: 2006/04/26 13:38:31 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -93,9 +93,8 @@ final class LoginProcessor extends SleepButWorkThread {
 		while (this.running) {
 
 			synchronized (loginMap) {
-				for (final Iterator<SessionKey> it = loginMap.keySet().iterator(); it.hasNext();) {
-					final SessionKey sessionKey = it.next();
-					final UserLogin userLogin = loginMap.get(sessionKey);
+				for (final Iterator<UserLogin> it = loginMap.values().iterator(); it.hasNext();) {
+					final UserLogin userLogin = it.next();
 					final Date lastActivityDate = userLogin.getLastActivityDate();
 					if (System.currentTimeMillis() - lastActivityDate.getTime() >= maxUserUnactivityPeriod + loginValidationTimeout) {
 						Log.debugMessage("User '" + userLogin.getUserId() + "' unactive more, than ("
@@ -189,14 +188,21 @@ final class LoginProcessor extends SleepButWorkThread {
 	}
 
 	/**
+	 * Returns all user logins that correspond to the user identified by
+	 * {@code userId} if he is currently logged in, or an empty {@code Set}
+	 * if he is not. The {@code Set} returned is a newly created one, and
+	 * does not reflect possible future logins and logouts.
+	 *
 	 * Get all user logins for a given user identifier
 	 * @param userId
-	 * @return Set of user logins
+	 * @return all user logins that correspond to the user identified by
+	 *         {@code userId} if he is currently logged in, or an empty
+	 *         {@code Set} if he is not.
+	 * @see #getUserLogins()
 	 */
 	static Set<UserLogin> getUserLogins(final Identifier userId) {
 		final Set<UserLogin> userLogins = new HashSet<UserLogin>();
-		for (final SessionKey sessionKey : loginMap.keySet()) {
-			final UserLogin userLogin = loginMap.get(sessionKey);
+		for (final UserLogin userLogin : loginMap.values()) {
 			if (userLogin.getUserId().equals(userId)) {
 				userLogins.add(userLogin);
 			}
@@ -206,27 +212,23 @@ final class LoginProcessor extends SleepButWorkThread {
 
 	/**
 	 * Returns user logins that correspond to <em>all</em> users currently
-	 * logged in.
+	 * logged in, as a newly created {@code Set} (does not reflect possible
+	 * future logins and logouts).
 	 *
 	 * @return user logins that correspond to <em>all</em> users currently
 	 *         logged in.
 	 * @see #getUserLogins(Identifier)
 	 */
 	static Set<UserLogin> getUserLogins() {
-		final Set<UserLogin> userLogins = new HashSet<UserLogin>();
-		for (final SessionKey sessionKey : loginMap.keySet()) {
-			userLogins.add(loginMap.get(sessionKey));
-		}
-		return userLogins;
+		return new HashSet<UserLogin>(loginMap.values());
 	}
 
 	private static void printUserLogins() {
 		final StringBuffer stringBuffer = new StringBuffer("\n\t\t LoginProcessor.printUserLogins | Logged in:\n");
 		int i = 0;
 		synchronized (loginMap) {
-			for (final SessionKey sessionKey : loginMap.keySet()) {
+			for (final UserLogin userLogin : loginMap.values()) {
 				i++;
-				final UserLogin userLogin = loginMap.get(sessionKey);
 				final Identifier userId = userLogin.getUserId();
 				SystemUser systemUser = null;
 				try {
@@ -241,7 +243,7 @@ final class LoginProcessor extends SleepButWorkThread {
 
 				//	Ключ соединения
 				stringBuffer.append(".\t Session key: '");
-				stringBuffer.append(sessionKey);
+				stringBuffer.append(userLogin.getSessionKey());
 				stringBuffer.append("'\n");
 
 				//	Идентификатор пользователя
@@ -288,5 +290,4 @@ final class LoginProcessor extends SleepButWorkThread {
 	protected void shutdown() {
 		this.running = false;
 	}
-
 }
