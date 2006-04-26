@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.5 2006/04/25 11:03:33 stas Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.6 2006/04/26 13:15:16 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -157,7 +157,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				}
 			}
 			else if (eventType.equals(ReportFlagEvent.TEMPLATE_PARAMETERS_CHANGED)) {
-				this.refreshTemplateBounds();
+				this.setDefaultTemplateBounds();
 				ReportTemplateRenderer.this.repaint();				
 			}			
 			else if (eventType.equals(ReportFlagEvent.REPAINT_RENDERER))
@@ -169,7 +169,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		else if (evt instanceof UseTemplateEvent){
 			this.removeAllComponents();
 			
-			DRIComponentMouseMotionListener.createInstance(this.applicationContext,this.marginBounds);
+			DRIComponentMouseMotionListener.createInstance(this.applicationContext,this,this.marginBounds);
 			DRIComponentMouseListener.createInstance(this.applicationContext);			
 			ATComponentMouseMotionListener.createInstance(this.applicationContext,this.marginBounds);
 			ATComponentMouseListener.createInstance(this.applicationContext);
@@ -318,7 +318,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 
 	public void setTemplate(ReportTemplate template) throws CreateModelException, ApplicationException, IOException {
 		this.template = template;
-		this.refreshTemplateBounds();
+		this.setDefaultTemplateBounds();
 		
 		for (AbstractDataStorableElement dataElement : this.template.getDataStorableElements())
 			this.createReportTemplateDataRenderingComponent(dataElement);
@@ -330,12 +330,20 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			this.createImageRenderingComponent(imageElement);
 	}
 	
-	private void refreshTemplateBounds() {
+	void refreshBounds() {
+		Dimension size = new Dimension(
+				this.marginBounds.width + ReportTemplate.STANDART_MARGIN_SIZE * ReportTemplate.MONITOR_RESOLUTION + this.template.getMarginSize(),
+				this.marginBounds.height + ReportTemplate.STANDART_MARGIN_SIZE * ReportTemplate.MONITOR_RESOLUTION);
+		
+		this.setSize(size);
+		this.setPreferredSize(size);
+	}
+	
+	private void setDefaultTemplateBounds() {
 		Dimension size = this.template.getDimensions();
 
-		// TODO create double height
 		this.setSize(size);
-		this.setPreferredSize(this.getSize());				
+		this.setPreferredSize(size);				
 		
 		this.marginBounds.setLocation(
 				new Point(ReportTemplate.STANDART_MARGIN_SIZE * ReportTemplate.MONITOR_RESOLUTION + this.template.getMarginSize(), 
