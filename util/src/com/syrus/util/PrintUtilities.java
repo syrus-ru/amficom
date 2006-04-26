@@ -1,5 +1,5 @@
 /*-
- * $Id: PrintUtilities.java,v 1.2 2006/04/24 05:52:33 arseniy Exp $
+ * $Id: PrintUtilities.java,v 1.3 2006/04/26 09:48:35 arseniy Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,14 +20,22 @@ import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2006/04/24 05:52:33 $
+ * @version $Revision: 1.3 $, $Date: 2006/04/26 09:48:35 $
  * @author $Author: arseniy $
  * @author Kholshin Stanislav
  * @module util
  */
 public class PrintUtilities implements Printable {
 	private boolean fitToWidth = true;
+	private double scale = 1;
+	private boolean scaleSet = false;
 	private final JComponent c;
+
+	public static void printComponent(final JComponent c, final double scale) {
+		final PrintUtilities pu = new PrintUtilities(c);
+		pu.setScale(scale);
+		pu.print();
+	}
 
 	public static void printComponent(final JComponent c) {
 		new PrintUtilities(c).print();
@@ -35,6 +43,11 @@ public class PrintUtilities implements Printable {
 
 	public PrintUtilities(final JComponent c) {
 		this.c = c;
+	}
+
+	public void setScale(final double scale) {
+		this.scale = scale;
+		this.scaleSet = true;
 	}
 
 	public void setFitToWidth(final boolean fitToWidth) {
@@ -57,16 +70,17 @@ public class PrintUtilities implements Printable {
 
 		final int fontHeight = g2d.getFontMetrics().getHeight();
 		final int fontDesent = g2d.getFontMetrics().getDescent();
-		double pageHeight = pageFormat.getImageableHeight() - fontHeight;
+		final double pageHeight = pageFormat.getImageableHeight() - fontHeight;
 
-		final double compWidthOnPage = pageFormat.getImageableWidth() + pageFormat.getImageableX();
+		final double compWidthOnPage = pageFormat.getImageableWidth();
 		final double compHeightOnPage = pageHeight;
-		double scale = 1.0;
-		if (this.fitToWidth && this.c.getWidth() > compWidthOnPage) {
-			scale = compWidthOnPage / this.c.getWidth();
+		if (!this.scaleSet) {
+			if (this.fitToWidth && this.c.getWidth() > compWidthOnPage) {
+				this.scale = compWidthOnPage / this.c.getWidth();
+			}
 		}
 
-		final int totalPages = (int) Math.ceil(this.c.getHeight() * scale / compHeightOnPage);
+		final int totalPages = (int) Math.ceil(this.c.getHeight() * this.scale / compHeightOnPage);
 
 		if (pageIndex >= totalPages) {
 			return Printable.NO_SUCH_PAGE;
@@ -86,14 +100,14 @@ public class PrintUtilities implements Printable {
 			g2d.setClip(0,
 					(int) (compHeightOnPage * pageIndex),
 					(int) Math.ceil(compWidthOnPage),
-					(int) Math.ceil(this.c.getSize().height * scale - pageIndex * compHeightOnPage));
+					(int) Math.ceil(this.c.getSize().height * this.scale - pageIndex * compHeightOnPage));
 		} else {
 			g2d.setClip(0,
 					(int) (compHeightOnPage * pageIndex),
 					(int) Math.ceil(compWidthOnPage),
 					(int) Math.ceil(compHeightOnPage));
 		}
-		g2d.scale(scale, scale);
+		g2d.scale(this.scale, this.scale);
 
 		disableDoubleBuffering(this.c);
 		this.c.paint(g2d);
