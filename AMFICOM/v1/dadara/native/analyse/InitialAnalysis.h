@@ -63,7 +63,7 @@ private:
 	double  delta_x;
 	double *noise;
 
-    double average_tilt; // характеризует ср. наклона на р/г, не привязан ни к масштабу вейвлета, ни к выбранной норме
+    double average_tilt; // средний наклон по всей р/г, дБ/км
 
     ArrList* events; // список всех событий
 
@@ -117,7 +117,7 @@ private:
 
 	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
 	static double calcWletMeanValue(double* fw, int lastPoint, double from, double to, int columns);// вычислить самое популярное значение ф-ции fw
-	void calcAverageFactor(double* fw, int scale, double norma1);
+	void calcAverageTilt(double* fw, int scale, double norma1);
 	void setShiftedThresholds(int scale);// установить границы порогов в соответствии со средним значением вейвлета 
 
 	// ======= ВТОРОЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ ВСПЛЕСКОВ =======

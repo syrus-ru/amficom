@@ -14,6 +14,13 @@
 
 static	SineWavelet wavelet; // используемый вейвлет
 
+//#define USE_BASELINE_RANGE
+
+#ifdef USE_BASELINE_RANGE
+const double MAX_LINEAR_LOSS_DB_PER_KILOMETER = 0.39;
+const double MIN_LINEAR_LOSS_DB_PER_KILOMETER = 0.15;
+#endif
+
 #define SEARCH_EOT_BY_WLET
 //#define SPLICE_CAN_BE_EOT
 //#define NONID_CAN_BE_EOT
@@ -174,8 +181,22 @@ void InitialAnalysis::performAnalysis(double *TEMP0, int scaleB, double scaleFac
 		// f_wletB - вейвлет-образ функции, scaleB - ширина вейвлета, wn - норма вейвлета
 		double wn = getWLetNorma(scaleB);
 		performTransformationOnly(data, 0, lastPoint + 1, TEMP0, scaleB, wn);
-		calcAverageFactor(TEMP0, scaleB, wn);
+		calcAverageTilt(TEMP0, scaleB, wn);
 	}
+
+	const double resKm = 1e-3 * delta_x; // разрешение, дЅ/км
+
+#ifdef USE_BASELINE_RANGE
+	double tiltU = -MIN_LINEAR_LOSS_DB_PER_KILOMETER * resKm;
+	double tiltL = -MAX_LINEAR_LOSS_DB_PER_KILOMETER * resKm;
+	//fprintf(stderr, "tiltU %g tiltL %g average_tilt %g\n", tiltU, tiltL, average_tilt);
+	fprintf(stderr, "dbkmU %g dbkmL %g dbkmAvg %g\n", -tiltU / resKm, -tiltL / resKm, -average_tilt / resKm);
+	if (tiltU < average_tilt)
+		tiltU = average_tilt;
+	if (tiltL > average_tilt)
+		tiltL = average_tilt;
+#endif
+
 #ifdef debug_VCL
 	{	int i;
 		for (i = 0; i <= lastPoint; i++)
@@ -187,10 +208,17 @@ void InitialAnalysis::performAnalysis(double *TEMP0, int scaleB, double scaleFac
 	{	// FIXME: debug dump
 		FILE *f = fopen ("noise2.tmp", "w");
 		if (f) {
-			double baselineB = getWletBaseline(scaleB, getWLetNorma(scaleB), average_tilt);
+			//double baselineB = getWletBaseline(scaleB, getWLetNorma(scaleB), average_tilt);
+			double wlet2dbkmFactor = baselineToTilt(scaleB, getWLetNorma(scaleB), 1.0) / resKm;
 			int i;
 			for	(i = 0; i <= lastPoint; i++)
-				fprintf(f,"%d %g %g %g\n", i, data[i], TEMP0[i] - baselineB, noise[i]);
+				fprintf(f,"%d %g %g %g %g %g\n",
+				i,
+				data[i],
+				TEMP0[i] * wlet2dbkmFactor,
+				TEMP0[i] * wlet2dbkmFactor - tiltU / resKm,
+				TEMP0[i] * wlet2dbkmFactor - tiltL / resKm,
+				noise[i] * wlet2dbkmFactor);
 			fclose(f);
 		}
 	}
@@ -218,7 +246,14 @@ void InitialAnalysis::performAnalysis(double *TEMP0, int scaleB, double scaleFac
 		// проводим поиск всплесков на данном масштабе
 		ArrList newSpl;
 		performTransformationOnly(data, 0, lastPoint + 1, TEMPnc, scale, getWLetNorma(scale));
-		double baseline = tiltToBaseline(scale, getWLetNorma(scale), average_tilt);
+
+#ifdef USE_BASELINE_RANGE
+		double baselineU = tiltToBaseline(scale, getWLetNorma(scale), tiltU);
+		double baselineL = tiltToBaseline(scale, getWLetNorma(scale), tiltL);
+#else
+		double baselineU = tiltToBaseline(scale, getWLetNorma(scale), average_tilt);
+		double baselineL = tiltToBaseline(scale, getWLetNorma(scale), average_tilt);
+#endif
 
 #ifdef DEBUG_INITIAL_ANALYSIS
 	{	// FIXME: debug dump
@@ -232,13 +267,14 @@ void InitialAnalysis::performAnalysis(double *TEMP0, int scaleB, double scaleFac
 			if (f) {
 				int i;
 				for	(i = 0; i <= lastPoint; i++)
-					fprintf(f,"%d %g %g %g\n", i, data[i], TEMPnc[i] - baseline, noise[i]);
+					fprintf(f,"%d %g %g %g %g\n",
+					i, data[i], TEMPnc[i] - baselineU, TEMPnc[i] - baselineL, noise[i]);
 				fclose(f);
 			}
 		}
 	}
 #endif
-		findAllWletSplashes(TEMPnc, baseline, baseline, scale, newSpl);
+		findAllWletSplashes(TEMPnc, baselineU, baselineL, scale, newSpl);
 		// < в этой точке TEMPnc не несет используемой информации >
 		//fprintf(stderr, "scale %d: %d splashes\n", scale, newSpl.getLength()); fflush(stderr);
 		// анализируем, что делать  с каждым найденным всплеском
@@ -450,11 +486,11 @@ return;}
 // ======= ‘”Ќ ÷»» ѕ≈–¬ќ√ќ Ё“јѕј јЌјЋ»«ј - ѕќƒ√ќ“ќ¬ » =======
 //
 // -------------------------------------------------------------------------------------------------
-void InitialAnalysis::calcAverageFactor(double* fw, int scale, double norma1)
+void InitialAnalysis::calcAverageTilt(double* fw, int scale, double norma1)
 {	double f_wlet_avrg = calcWletMeanValue(fw, lastPoint, -0.5, 0, 500);
 	average_tilt = f_wlet_avrg * norma1 / getWLetNorma2(scale);
 #ifdef DEBUG_INITIAL_ANALYSIS_STDERR
-	fprintf(stderr, "calcAverageFactor: scale %d f_wlet_avrg %g af %g\n", scale, f_wlet_avrg, average_tilt);
+	fprintf(stderr, "calcAverageTilt: scale %d f_wlet_avrg %g af %g\n", scale, f_wlet_avrg, average_tilt);
 #endif
 }
 //------------------------------------------------------------------------------------------------------------
@@ -1614,7 +1650,7 @@ double InitialAnalysis::baselineToTilt(int scale, double norma1, double baseline
 }
 //------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1, double tilt)
-{   // shift (calcAverageFactor must be performed by now!)
+{
 	double f_wlet_avrg = tiltToBaseline(scale, norma1, tilt);
 	for(int i=begin; i<end; i++)
     {	f_wlet[i] -= f_wlet_avrg;
