@@ -1,5 +1,5 @@
 /*
- * $Id: ReportRenderer.java,v 1.19 2006/04/25 11:00:56 stas Exp $
+ * $Id: ReportRenderer.java,v 1.20 2006/04/26 13:07:00 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.report.StorableElement;
 /**
  * Реализует отчёт по шаблону
  * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2006/04/25 11:00:56 $
+ * @version $Revision: 1.20 $, $Date: 2006/04/26 13:07:00 $
  * @module reportclient
  */
 public class ReportRenderer extends JPanel {
@@ -124,8 +124,11 @@ public class ReportRenderer extends JPanel {
 			component.setSize(imageElement.getWidth(),imageElement.getHeight());			
 			this.add(component);
 		}
-		ReportLayout layout = new ReportLayout();
-		layout.dolayout(this.getRenderingComponents(),this.reportTemplate);
+//		ReportLayout layout = new ReportLayout();
+//		layout.dolayout(this.getRenderingComponents(),this.reportTemplate);
+		
+		fixBounds();
+		ReportLayoutManager.performLayout(this, this.reportTemplate.getMargins());
 		
 		for (int i = 0; i < this.getComponentCount(); i++) {
 			Component component = this.getComponent(i);
@@ -138,7 +141,7 @@ public class ReportRenderer extends JPanel {
 	}
 	
 	private void refreshTemplateBounds() {
-		this.templateBounds = this.reportTemplate.getDimensions();
+		this.templateBounds = new Dimension(this.reportTemplate.getDimensions());
 		this.templateBounds.height = this.theLowestBorder + ReportTemplate.STANDART_MARGIN_SIZE * ReportTemplate.MONITOR_RESOLUTION;
 
 		this.setSize(this.templateBounds);
@@ -199,28 +202,12 @@ public class ReportRenderer extends JPanel {
 			(e1h < e1y || e1h > e2y));
 	}
 	
-	/**
-	 * Вызывается с параметром true, когда готовится HTML документ для печати.
-	 * Иначе MSHTML, который в текущий момент используется для печати документов,
-	 * складывает свои поля по умолчанию с нашими.
-	 * Вызывается с параметром false после печати
- 	 */
-	public void setPrintable(boolean pritable) {
+	private void fixBounds() {
 		this.templateBounds = this.reportTemplate.getMargins();
-		this.templateBounds.height = this.theLowestBorder;
-		
-		double k = ReportTemplate.SCALE_FACTOR;
-		if (!pritable) {
-			k = 1 / k;
-		}
-
 		setSize(this.templateBounds);
 		setPreferredSize(this.templateBounds);
 		
 		int shift = ReportTemplate.STANDART_MARGIN_SIZE * ReportTemplate.MONITOR_RESOLUTION;
-		if (!pritable) {
-			shift = -shift;
-		}
 		for (int i = 0; i < this.getComponentCount(); i++) {
 			Component component = this.getComponent(i);
 			Point componentLocation = component.getLocation();
