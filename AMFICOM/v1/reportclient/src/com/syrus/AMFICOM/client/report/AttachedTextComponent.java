@@ -1,5 +1,5 @@
 /*
- * $Id: AttachedTextComponent.java,v 1.10 2006/04/25 11:01:43 stas Exp $
+ * $Id: AttachedTextComponent.java,v 1.11 2006/04/26 13:02:25 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ public class AttachedTextComponent extends JTextPane implements RenderingCompone
 	 */
 	private static final String SYMBOLS_FOR_ADDITONAL_WIDTH1 = "X";
 
-	public static final Dimension MINIMUM_COMPONENT_SIZE = new Dimension(90, 30);	
+	public static final Dimension MINIMUM_COMPONENT_SIZE = new Dimension(90, 20);	
 	/**
 	 * Точка клика мыши на надписи
 	 */
