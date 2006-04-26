@@ -1,10 +1,11 @@
-/*
- * $Id: LoginProcessor.java,v 1.36 2006/04/26 14:45:12 bass Exp $
+/*-
+ * $Id: LoginProcessor.java,v 1.37 2006/04/26 15:17:54 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2006 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.leserver;
 
 import java.util.Collections;
@@ -30,7 +31,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2006/04/26 14:45:12 $
+ * @version $Revision: 1.37 $, $Date: 2006/04/26 15:17:54 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
