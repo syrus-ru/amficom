@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.35 2006/04/26 13:38:31 bass Exp $
+ * $Id: LoginProcessor.java,v 1.36 2006/04/26 14:45:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2006/04/26 13:38:31 $
+ * @version $Revision: 1.36 $, $Date: 2006/04/26 14:45:12 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -50,7 +50,6 @@ final class LoginProcessor extends SleepButWorkThread {
 	private static Map<SessionKey, UserLogin> loginMap;
 	private static long maxUserUnactivityPeriod;
 	private static long loginValidationTimeout;
-	private boolean running;
 
 	public LoginProcessor() {
 		super(ApplicationProperties.getInt(KEY_LOGIN_PROCESSOR_TICK_TIME, LOGIN_PROCESSOR_TICK_TIME) * 1000,
@@ -63,7 +62,6 @@ final class LoginProcessor extends SleepButWorkThread {
 
 		maxUserUnactivityPeriod = ApplicationProperties.getInt(KEY_MAX_USER_UNACTIVITY_PERIOD, MAX_USER_UNACTIVITY_PERIOD) * 60 * 1000;
 		loginValidationTimeout = ApplicationProperties.getInt(KEY_LOGIN_VALIDATION_TIMEOUT, LOGIN_VALIDATION_TIMEOUT) * 60 * 1000;
-		this.running = true;
 
 		this.restoreState();
 		printUserLogins();
@@ -90,7 +88,7 @@ final class LoginProcessor extends SleepButWorkThread {
 
 	@Override
 	public void run() {
-		while (this.running) {
+		while (!interrupted()) {
 
 			synchronized (loginMap) {
 				for (final Iterator<UserLogin> it = loginMap.values().iterator(); it.hasNext();) {
@@ -108,9 +106,8 @@ final class LoginProcessor extends SleepButWorkThread {
 
 			try {
 				sleep(super.initialTimeToSleep);
-			}
-			catch (InterruptedException ie) {
-				Log.errorMessage(ie);
+			} catch (final InterruptedException ie) {
+				return;
 			}
 		}
 	}
@@ -288,6 +285,6 @@ final class LoginProcessor extends SleepButWorkThread {
 	}
 
 	protected void shutdown() {
-		this.running = false;
+		this.interrupt();
 	}
 }
