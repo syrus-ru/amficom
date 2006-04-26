@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginProcessor.java,v 1.39 2006/04/26 16:35:40 bass Exp $
+ * $Id: LoginProcessor.java,v 1.40 2006/04/26 17:09:17 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.leserver;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2006/04/26 16:35:40 $
+ * @version $Revision: 1.40 $, $Date: 2006/04/26 17:09:17 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -50,6 +51,9 @@ final class LoginProcessor extends SleepButWorkThread {
 
 	private static final Map<SessionKey, UserLogin> LOGIN_MAP =
 			Collections.synchronizedMap(new HashMap<SessionKey, UserLogin>());
+
+	private static final ArrayList<LoginProcessorListener> LISTENERS =
+			new ArrayList<LoginProcessorListener>();
 
 	private static final long MAX_USER_INACTIVITY_PERIOD =
 			ApplicationProperties.getInt(KEY_MAX_USER_UNACTIVITY_PERIOD,
@@ -113,6 +117,10 @@ final class LoginProcessor extends SleepButWorkThread {
 		}
 	}
 
+	protected void shutdown() {
+		this.interrupt();
+	}
+
 	@Override
 	protected void processFall() {
 		switch (super.fallCode) {
@@ -124,28 +132,33 @@ final class LoginProcessor extends SleepButWorkThread {
 	}
 
 	static SessionKey addUserLogin(final Identifier userId, final Identifier domainId, final String userIOR) {
-		Log.debugMessage("Adding login for user '" + userId + "' to domain '" + domainId + "'", Log.DEBUGLEVEL08);
 		final UserLogin userLogin = UserLogin.createInstance(userId, domainId, userIOR);
-		LOGIN_MAP.put(userLogin.getSessionKey(), userLogin);
 		try {
-			userLoginDatabase.insert(userLogin);
-		} catch (CreateObjectException coe) {
-			Log.errorMessage(coe);
+			LOGIN_MAP.put(userLogin.getSessionKey(), userLogin);
+	
+			try {
+				userLoginDatabase.insert(userLogin);
+			} catch (CreateObjectException coe) {
+				Log.errorMessage(coe);
+			}
+			return userLogin.getSessionKey();
+		} finally {
+			fireUserLoggedIn(userLogin);
 		}
-		printUserLogins();
-		return userLogin.getSessionKey();
 	}
 
 	static boolean removeUserLogin(final SessionKey sessionKey) {
-		Log.debugMessage("Removing login for session key '" + sessionKey + "'", Log.DEBUGLEVEL08);
 		final UserLogin userLogin = LOGIN_MAP.remove(sessionKey);
-		if (userLogin == null) {
-			return false;
+		try {
+			if (userLogin == null) {
+				return false;
+			}
+	
+			userLoginDatabase.delete(userLogin);
+			return true;
+		} finally {
+			fireUserLoggedOut(userLogin);
 		}
-
-		userLoginDatabase.delete(userLogin);
-		printUserLogins();
-		return true;
 	}
 
 
@@ -220,7 +233,72 @@ final class LoginProcessor extends SleepButWorkThread {
 		return new HashSet<UserLogin>(LOGIN_MAP.values());
 	}
 
-	private static void printUserLogins() {
+	/*-********************************************************************
+	 * Listeners.
+	 **********************************************************************/
+
+	static void addListener(final LoginProcessorListener listener) {
+		synchronized (LISTENERS) {
+			LISTENERS.add(listener);
+		}
+	}
+
+	static void removeListener(final LoginProcessorListener listener) {
+		synchronized (LISTENERS) {
+			LISTENERS.remove(listener);
+		}
+	}
+
+	private static void fireUserLoggedIn(final UserLogin userLogin) {
+		if (userLogin == null) {
+			return;
+		}
+
+		synchronized (LISTENERS) {
+			for (int i = 0; i < LISTENERS.size(); i++) {
+				LISTENERS.get(i).userLoggedIn(userLogin);
+			}
+		}
+	}
+
+	private static void fireUserLoggedOut(final UserLogin userLogin) {
+		if (userLogin == null) {
+			return;
+		}
+
+		synchronized (LISTENERS) {
+			for (int i = 0; i < LISTENERS.size(); i++) {
+				LISTENERS.get(i).userLoggedOut(userLogin);
+			}
+		}
+	}
+
+	/*-********************************************************************
+	 * Debug output.                                                      *
+	 **********************************************************************/
+
+	static {
+		addListener(new LoginProcessorListener() {
+			public void userLoggedIn(final UserLogin userLogin) {
+				Log.debugMessage("Adding login for user '"
+						+ userLogin.getUserId()
+						+ "' to domain '"
+						+ userLogin.getDomainId() + "'",
+						Log.DEBUGLEVEL08);
+				printUserLogins();
+			}
+
+			public void userLoggedOut(final UserLogin userLogin) {
+				Log.debugMessage("Removing login for session key '"
+						+ userLogin.getSessionKey() + "'",
+						Log.DEBUGLEVEL08);
+
+				printUserLogins();
+			}
+		});
+	}
+
+	static void printUserLogins() {
 		final StringBuffer stringBuffer = new StringBuffer("\n\t\t LoginProcessor.printUserLogins | Logged in:\n");
 		int i = 0;
 		synchronized (LOGIN_MAP) {
@@ -282,9 +360,5 @@ final class LoginProcessor extends SleepButWorkThread {
 		}
 		
 		Log.debugMessage(stringBuffer.toString(), Log.DEBUGLEVEL08);
-	}
-
-	protected void shutdown() {
-		this.interrupt();
 	}
 }
