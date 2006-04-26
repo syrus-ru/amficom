@@ -1,5 +1,5 @@
 /*
- * $Id: CreateReportDialog.java,v 1.13 2006/04/25 11:02:27 stas Exp $
+ * $Id: CreateReportDialog.java,v 1.14 2006/04/26 13:10:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.PrintUtilities;
  * открытия шаблонов определённого типа.
  *
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2006/04/25 11:02:27 $
+ * @version $Revision: 1.14 $, $Date: 2006/04/26 13:10:03 $
  * @module reportclient
  */
 public class CreateReportDialog {
@@ -146,8 +146,8 @@ public class CreateReportDialog {
 				public void actionPerformed(ActionEvent e) {
 					scrollPane.getViewport().setPreferredSize(reportRenderer.getPreferredSize());
 //					openedViewDialog.setVisible(false);
-					printTemplate(reportRenderer, reportRenderer);
-					openedViewDialog.dispose();
+					printTemplate(reportRenderer);
+//					openedViewDialog.dispose();
 				}
 			});
 
@@ -196,10 +196,8 @@ public class CreateReportDialog {
 		}
 	}
 
-	void printTemplate(JComponent componentToPrint, ReportRenderer reportRenderer) {
-		reportRenderer.setPrintable(true);
+	void printTemplate(JComponent componentToPrint) {
 		PrintUtilities.printComponent(componentToPrint, 1 / ReportTemplate.SCALE_FACTOR);
-		reportRenderer.setPrintable(false);		
 	}
 	
 	ReportRenderer createReportRenderer(ReportTemplate reportTemplate) throws CreateReportException, CreateModelException, ElementsIntersectException, ApplicationException, IOException {
