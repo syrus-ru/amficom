@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.52 2006/03/13 13:53:57 bass Exp $
+ * $Id: ServerCore.java,v 1.53 2006/04/26 09:21:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,9 @@ import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
+import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -19,7 +22,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.omg.CORBA.LongHolder;
 import org.omg.CORBA.ORB;
@@ -38,8 +40,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.52 $, $Date: 2006/03/13 13:53:57 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.53 $, $Date: 2006/04/26 09:21:32 $
  * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -93,7 +95,7 @@ public abstract class ServerCore implements CommonServerOperations {
 
 			Log.debugMessage("Requested '"
 					+ ObjectEntities.codeToString(StorableObject.getEntityCodeOfIdentifiables(idsT)) + "'s for ids: "
-					+ ids, Level.FINEST);
+					+ ids, FINEST);
 
 			final Set<StorableObject> storableObjects = StorableObjectPool.getStorableObjects(ids, true);
 			final IdlStorableObject[] transferables = StorableObject.createTransferables(storableObjects, this.orb);
@@ -123,7 +125,7 @@ public abstract class ServerCore implements CommonServerOperations {
 
 			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
 
-			Log.debugMessage("Requested '" + ObjectEntities.codeToString(entityCode) + "'s but ids: " + ids + " for condition: " + condition, Level.FINEST);
+			Log.debugMessage("Requested '" + ObjectEntities.codeToString(entityCode) + "'s but ids: " + ids + " for condition: " + condition, FINEST);
 
 			/**
 			 * NOTE: If it is impossible to load objects by Loader - return only those
@@ -160,7 +162,7 @@ public abstract class ServerCore implements CommonServerOperations {
 
 			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
 
-			Log.debugMessage("Requested identifiers of '" + ObjectEntities.codeToString(entityCode) + "'s but ids: " + ids + " for condition: " + condition, Level.FINEST);
+			Log.debugMessage("Requested identifiers of '" + ObjectEntities.codeToString(entityCode) + "'s but ids: " + ids + " for condition: " + condition, FINEST);
 
 			/**
 			 * NOTE: If it is impossible to load identifiers by Loader - return only those
@@ -193,7 +195,7 @@ public abstract class ServerCore implements CommonServerOperations {
 			final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
 			assert (database != null) : NON_NULL_EXPECTED + "; entity: " + ObjectEntities.codeToString(entityCode);
 
-			Log.debugMessage("Versions for '" + ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
+			Log.debugMessage("Versions for '" + ObjectEntities.codeToString(entityCode) + "'s: " + ids, FINEST);
 
 			final Map<Identifier, StorableObjectVersion> versionsMap = database.retrieveVersions(ids);
 			final IdVersion[] idVersions = new IdVersion[versionsMap.size()];
@@ -224,17 +226,17 @@ public abstract class ServerCore implements CommonServerOperations {
 
 			this.validateLogin(new SessionKey(sessionKeyT));
 
-			final Set<? extends StorableObject> storableObjects = StorableObjectPool.fromTransferables(storableObjectsT, true);
+			final Set<StorableObject> storableObjects = StorableObjectPool.fromTransferables(storableObjectsT, true);
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
 
 			Log.debugMessage("Received '"
 					+ ObjectEntities.codeToString(entityCode) + "'s: "
-					+ Identifier.createIdentifiers(storableObjects), Level.FINEST);
+					+ Identifier.createIdentifiers(storableObjects), FINEST);
 
-			final StorableObjectDatabase<? extends StorableObject> database = DatabaseContext.getDatabase(entityCode);
+			final StorableObjectDatabase<StorableObject> database = DatabaseContext.getDatabase(entityCode);
 			assert (database != null) : NON_NULL_EXPECTED + "; entity: " + ObjectEntities.codeToString(entityCode);
-			((StorableObjectDatabase) database).save(storableObjects);
+			database.save(storableObjects);
 		} catch (ApplicationException ae) {
 			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_UPDATE);
 		} catch (final AMFICOMRemoteException are) {
@@ -256,7 +258,7 @@ public abstract class ServerCore implements CommonServerOperations {
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ILLEGAL_ENTITY_CODE;
 
-			Log.debugMessage("Deleting '" + ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
+			Log.debugMessage("Deleting '" + ObjectEntities.codeToString(entityCode) + "'s: " + ids, FINEST);
 
 			StorableObjectPool.delete(ids);
 			StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
@@ -273,9 +275,9 @@ public abstract class ServerCore implements CommonServerOperations {
 
 	public final void verify(final byte b) {
 		try {
-			Log.debugMessage("Verify value: " + b, Level.CONFIG);
+			Log.debugMessage("Verify value: " + b, CONFIG);
 		} catch (final Throwable t) {
-			Log.debugMessage(t, Level.SEVERE);
+			Log.debugMessage(t, SEVERE);
 		}
 	}
 
@@ -304,12 +306,12 @@ public abstract class ServerCore implements CommonServerOperations {
 	}
 
 	private final AMFICOMRemoteException processDefaultApplicationException(final ApplicationException ae, final IdlErrorCode errorCode) {
-		Log.debugMessage(ae, Level.SEVERE);
+		Log.debugMessage(ae, SEVERE);
 		return new AMFICOMRemoteException(errorCode, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
 	}
 
 	protected final AMFICOMRemoteException processDefaultThrowable(final Throwable throwable) {
-		Log.debugMessage(throwable, Level.SEVERE);
+		Log.debugMessage(throwable, SEVERE);
 		return new AMFICOMRemoteException(IdlErrorCode.ERROR_UNKNOWN, IdlCompletionStatus.COMPLETED_PARTIALLY, throwable.getMessage());
 	}
 
