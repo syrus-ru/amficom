@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.97 2006/04/19 13:22:17 bass Exp $
+ * $Id: ObjectEntities.java,v 1.98 2006/04/26 09:20:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.ILLEGAL_ENTITY_CODE;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 import gnu.trove.TObjectShortHashMap;
@@ -16,8 +17,8 @@ import gnu.trove.TShortObjectHashMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2006/04/19 13:22:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.98 $, $Date: 2006/04/26 09:20:24 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -520,7 +521,7 @@ public final class ObjectEntities {
 	public static String codeToString(final short entityCode) {
 		final String returnValue = (String) CODE_NAME_MAP.get(entityCode);
 		if (returnValue == null) {
-			throw new IllegalArgumentException(String.valueOf(entityCode));
+			throw new IllegalArgumentException(ILLEGAL_ENTITY_CODE + ": " + entityCode);
 		}
 		return returnValue;
 	}
