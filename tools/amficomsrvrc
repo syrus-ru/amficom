@@ -1,6 +1,6 @@
 ############################################################
 #
-# $Id: amficomsrvrc,v 1.3 2006/04/26 07:39:10 arseniy Exp $
+# $Id: amficomsrvrc,v 1.4 2006/04/26 07:40:51 arseniy Exp $
 #
 # vim:ft=sh:
 #
@@ -80,7 +80,6 @@ function stop() {
 	then
 		pid=`cat ${pidfile}`
 		psline=`ps -eo "pid,args" | ${grep} -E "^[ \t]*${pid}[ \t]"`
-		echo "psline: ${psline}"
 		if [ -z "${psline}" ]
 		then
 			echo "${APPNAME} is dead but subsys locked"
