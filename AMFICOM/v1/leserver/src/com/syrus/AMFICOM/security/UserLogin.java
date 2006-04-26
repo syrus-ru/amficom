@@ -1,5 +1,5 @@
 /*
- * $Id: UserLogin.java,v 1.11 2005/11/28 12:31:38 arseniy Exp $
+ * $Id: UserLogin.java,v 1.12 2006/04/26 12:30:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,12 +12,12 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/11/28 12:31:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2006/04/26 12:30:11 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
-public final class UserLogin {
+public final class UserLogin implements SessionData {
 	private SessionKey sessionKey;
 	private Identifier userId;
 	private Identifier domainId;
@@ -47,6 +47,9 @@ public final class UserLogin {
 		return new UserLogin(sessionKey, userId, domainId, userIOR, date, date);
 	}
 
+	/**
+	 * @see SessionData#getSessionKey()
+	 */
 	public SessionKey getSessionKey() {
 		return this.sessionKey;
 	}
@@ -75,4 +78,24 @@ public final class UserLogin {
 		this.lastActivityDate = new Date(System.currentTimeMillis());
 	}
 
+	/*-********************************************************************
+	 * #eqauls() and #hashCode()                                          *
+	 **********************************************************************/
+
+	/**
+	 * @param that
+	 * @see Object#equals(Object)
+	 */
+	@Override
+	public boolean equals(final Object that) {
+		return this.sessionKey.equals(that);
+	}
+
+	/**
+	 * @see Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return this.sessionKey.hashCode();
+	}
 }
