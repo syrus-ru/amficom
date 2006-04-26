@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.35 2006/04/25 10:58:08 stas Exp $
+ * $Id: ReportTemplate.java,v 1.36 2006/04/26 13:01:21 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -62,7 +62,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * отчёт </p>
  * 
  * @author $Author: stas $
- * @version $Revision: 1.35 $, $Date: 2006/04/25 10:58:08 $
+ * @version $Revision: 1.36 $, $Date: 2006/04/26 13:01:21 $
  * @module report
  */
 public final class ReportTemplate extends StorableObject
@@ -408,7 +408,7 @@ public final class ReportTemplate extends StorableObject
 		if (this.margins == null) {
 			final Dimension size = getDimensions();
 			this.margins = new Dimension(size.width - (2 * STANDART_MARGIN_SIZE * MONITOR_RESOLUTION + this.marginSize), 
-					size.height - (2 * STANDART_MARGIN_SIZE));
+					size.height - (2 * STANDART_MARGIN_SIZE * MONITOR_RESOLUTION));
 		}
 		return this.margins;
 	}
