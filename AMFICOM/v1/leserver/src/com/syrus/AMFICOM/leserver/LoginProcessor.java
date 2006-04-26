@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginProcessor.java,v 1.37 2006/04/26 15:17:54 bass Exp $
+ * $Id: LoginProcessor.java,v 1.38 2006/04/26 16:17:46 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2006/04/26 15:17:54 $
+ * @version $Revision: 1.38 $, $Date: 2006/04/26 16:17:46 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -191,7 +191,6 @@ final class LoginProcessor extends SleepButWorkThread {
 	 * if he is not. The {@code Set} returned is a newly created one, and
 	 * does not reflect possible future logins and logouts.
 	 *
-	 * Get all user logins for a given user identifier
 	 * @param userId
 	 * @return all user logins that correspond to the user identified by
 	 *         {@code userId} if he is currently logged in, or an empty
