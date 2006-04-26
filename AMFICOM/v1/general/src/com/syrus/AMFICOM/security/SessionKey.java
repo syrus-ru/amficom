@@ -1,10 +1,11 @@
-/*
- * $Id: SessionKey.java,v 1.20 2006/04/26 12:30:11 bass Exp $
+/*-
+ * $Id: SessionKey.java,v 1.21 2006/04/26 12:31:18 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright © 2004-2006 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
+
 package com.syrus.AMFICOM.security;
 
 import java.io.Serializable;
@@ -15,7 +16,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.transport.idl.IdlTransferableObject;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2006/04/26 12:30:11 $
+ * @version $Revision: 1.21 $, $Date: 2006/04/26 12:31:18 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -56,7 +57,7 @@ public final class SessionKey implements IdlTransferableObject<IdlSessionKey>, S
 		return this.idlSessionKey;
 	}
 
-	public final String stringValue() {
+	public String stringValue() {
 		return this.sessionCode;
 	}
 
