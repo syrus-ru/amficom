@@ -1,5 +1,18 @@
 #!/bin/sh
 
+uname="`uname -s`"
+case "${uname}" in
+	"Linux")
+		awk="awk"
+		;;
+	"SunOS")
+		awk="/usr/xpg4/bin/awk"
+		;;
+	*)
+		echo "\"${uname}\": unsupported OS"
+		exit 1
+esac
+
 AMFICOM_BASE=/opt/AMFICOM
 AMFICOMTAB=${AMFICOM_BASE}/etc/amficomtab
 
@@ -153,10 +166,10 @@ startServices() {
 		\#*)
 			;;	#comment line
 		*)
-			if [ "`echo $LINE | awk -F: '{print $NF}' -`" = "Y" ]
+			if [ "`echo $LINE | ${awk} -F: '{print $NF}' -`" = "Y" ]
 			then
-				SERVICE=`echo $LINE |  awk -F: '{print $1}' -`
-				INSTALLATION=`echo $LINE |  awk -F: '{print $2}' -`
+				SERVICE=`echo $LINE |  ${awk} -F: '{print $1}' -`
+				INSTALLATION=`echo $LINE |  ${awk} -F: '{print $2}' -`
 
 				AMFICOM_HOME=${AMFICOM_BASE}/${INSTALLATION}
 				if [ ! -d ${AMFICOM_HOME} ]
@@ -195,10 +208,10 @@ stopServices() {
 		\#*)
 			;;	#comment line
 		*)
-			if [ "`echo $LINE | awk -F: '{print $NF}' -`" = "Y" ]
+			if [ "`echo $LINE | ${awk} -F: '{print $NF}' -`" = "Y" ]
 			then
-				SERVICE=`echo $LINE |  awk -F: '{print $1}' -`
-				INSTALLATION=`echo $LINE |  awk -F: '{print $2}' -`
+				SERVICE=`echo $LINE |  ${awk} -F: '{print $1}' -`
+				INSTALLATION=`echo $LINE |  ${awk} -F: '{print $2}' -`
 
 				AMFICOM_HOME=${AMFICOM_BASE}/${INSTALLATION}
 				if [ ! -d ${AMFICOM_HOME} ]
@@ -237,10 +250,10 @@ statusServices() {
 		\#*)
 			;;	#comment line
 		*)
-			if [ "`echo $LINE | awk -F: '{print $NF}' -`" = "Y" ]
+			if [ "`echo $LINE | ${awk} -F: '{print $NF}' -`" = "Y" ]
 			then
-				SERVICE=`echo $LINE |  awk -F: '{print $1}' -`
-				INSTALLATION=`echo $LINE |  awk -F: '{print $2}' -`
+				SERVICE=`echo $LINE |  ${awk} -F: '{print $1}' -`
+				INSTALLATION=`echo $LINE |  ${awk} -F: '{print $2}' -`
 
 				AMFICOM_HOME=${AMFICOM_BASE}/${INSTALLATION}
 				if [ ! -d ${AMFICOM_HOME} ]
