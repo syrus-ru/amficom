@@ -1,5 +1,5 @@
 /*-
- * $Id: TestReport.java,v 1.2.4.3 2006/04/26 15:47:22 saa Exp $
+ * $Id: TestReport.java,v 1.2.4.4 2006/04/26 15:48:28 saa Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
 /**
  * @author Peter Peskovsky
  * @author $Author: saa $
- * @version $Revision: 1.2.4.3 $, $Date: 2006/04/26 15:47:22 $
+ * @version $Revision: 1.2.4.4 $, $Date: 2006/04/26 15:48:28 $
  * @module scheduler
  */
 final class TestReport {
@@ -75,9 +75,6 @@ final class TestReport {
 
 	/**
 	 * @author Peter Peskovsky
-	 * @author $Author: saa $
-	 * @version $Revision: 1.2.4.3 $, $Date: 2006/04/26 15:47:22 $
-	 * @module scheduler
 	 */
 	private static final class TestReportTableModel extends AbstractTableModel {
 		/**
