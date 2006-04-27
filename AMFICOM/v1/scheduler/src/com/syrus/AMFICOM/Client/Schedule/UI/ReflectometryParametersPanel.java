@@ -1,5 +1,5 @@
 /*-
-// * $Id: ReflectometryParametersPanel.java,v 1.1.2.10 2006/04/18 16:07:20 saa Exp $
+// * $Id: ReflectometryParametersPanel.java,v 1.1.2.11 2006/04/27 09:36:58 saa Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1.2.10 $, $Date: 2006/04/18 16:07:20 $
+ * @version $Revision: 1.1.2.11 $, $Date: 2006/04/27 09:36:58 $
  * @module
  */
 public class ReflectometryParametersPanel extends MeasurementParametersPanel {
@@ -328,7 +328,7 @@ public class ReflectometryParametersPanel extends MeasurementParametersPanel {
 	public final ActionTemplate<Measurement> getMeasurementTemplate()
 			throws CreateObjectException {
 		try {
-			return parameters.createMeasurementTemplate();
+			return this.parameters.createMeasurementTemplate();
 		} catch (CreateObjectException e) {
 			throw e;
 		} catch (ApplicationException e) {
