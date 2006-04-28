@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.23 2006/04/19 12:46:41 stas Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.24 2006/04/28 09:01:32 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2006/04/19 12:46:41 $
+ * @version $Revision: 1.24 $, $Date: 2006/04/28 09:01:32 $
  * @module schemeclient
  */
 
@@ -242,14 +242,21 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 	public void loggedIn() {
 		SchemeObjectsFactory.init(this.aContext);
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
+	
+		boolean creationAllowed = SchemePermissionManager.isCreationAllowed(); 
+		boolean savingAllowed = SchemePermissionManager.isSavingAllowed();
+		boolean editionAllowed = SchemePermissionManager.isEditionAllowed();
+		
+		this.elementsTab.setEditable(editionAllowed);
+		
 		aModel.setEnabled("menuWindowTree", true);
 		aModel.setEnabled("menuWindowScheme", true);
 		aModel.setEnabled("menuWindowUgo", true);
 		aModel.setEnabled("menuWindowProps", true);
 		aModel.setEnabled("menuWindowList", true);
 
-		aModel.setEnabled("menuComponentNew", true);
-		aModel.setEnabled("menuComponentSave", true);
+		aModel.setEnabled("menuComponentNew", creationAllowed);
+		aModel.setEnabled("menuComponentSave", savingAllowed);
 		
 		aModel.fireModelChanged("");
 		

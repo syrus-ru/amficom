@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.25 2006/02/09 13:47:59 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.26 2006/04/28 09:01:32 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
+import javax.swing.AbstractButton;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 
@@ -27,6 +28,7 @@ import com.jgraph.graph.DefaultGraphCell;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client_.scheme.ElementsPermissionManager;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.DeleteAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
@@ -48,7 +50,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.25 $, $Date: 2006/02/09 13:47:59 $
+ * @version $Revision: 1.26 $, $Date: 2006/04/28 09:01:32 $
  * @module schemeclient
  */
 
@@ -205,7 +207,26 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	}
 	
 	public boolean confirmUnsavedChanges() {
+		if (!ElementsPermissionManager.isSavingAllowed()) {
+			return true;
+		}
 		return confirmUnsavedChanges(this.panel);
+	}
+	
+	@Override
+	public void setEditable(boolean b) {
+		super.setEditable(b);
+		
+		String[] editableButtons = new String[] {
+				Constants.DEVICE, Constants.PORT, Constants.CABLE_PORT,
+				Constants.LINK, Constants.BLOCK_PORT, Constants.CREATE_UGO, 
+				Constants.GROUP, Constants.UNGROUP, Constants.DELETE
+		};
+		
+		for (String key : editableButtons) {
+			AbstractButton button = this.toolBar.commands.get(key);
+			button.setEnabled(b);
+		}
 	}
 	
 	/*

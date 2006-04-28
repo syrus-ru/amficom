@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.43 2006/03/28 10:17:47 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.44 2006/04/28 09:01:32 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,9 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.ProcessingDialogDummy;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client_.scheme.ElementsPermissionManager;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
@@ -73,7 +75,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.43 $, $Date: 2006/03/28 10:17:47 $
+ * @version $Revision: 1.44 $, $Date: 2006/04/28 09:01:32 $
  * @module schemeclient
  */
 
@@ -239,12 +241,12 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	}
 
 	public boolean removePanel(UgoPanel p, boolean undo) {
-		if (!confirmUnsavedChanges(p)) {
+		if (SchemePermissionManager.isSavingAllowed() && !confirmUnsavedChanges(p)) {
 			return false;
 		}
 		
 		// undo changes
-		if (undo && hasUnsavedChanges(p)) {
+		if (undo && SchemePermissionManager.isSavingAllowed() && hasUnsavedChanges(p)) {
 			try {
 				if (p instanceof ElementsPanel) {
 					SchemeResource res = ((ElementsPanel)p).getSchemeResource();
@@ -283,6 +285,10 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	
 	@Override
 	public boolean confirmUnsavedChanges() {
+		if (!SchemePermissionManager.isSavingAllowed()) {
+			return true;
+		}
+		
 		Object[] comp = this.tabs.getComponents();
 		// check for unsaved changes
 		for (int i = 0; i < comp.length; i++) {
@@ -615,6 +621,9 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		}, LangModelScheme.getString("Message.information.open_scheme"));
 		
 		panel1.setGraphSize(new Dimension(sch.getWidth(), sch.getHeight()));
+		
+		setEditable(SchemePermissionManager.isEditionAllowed());
+		
 		return clones;
 	}
 	
@@ -648,6 +657,8 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		updateTitle(se.getName());
 		SchemeGraph graph = panel1.getGraph();
 		clones = SchemeActions.openSchemeImageResource(graph, se.getSchemeCell(), false);
+		
+		setEditable(SchemePermissionManager.isEditionAllowed());
 		return clones;
 	}
 	/*
@@ -684,6 +695,20 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 							b ? "images/close_changed.gif" : "images/close_unchanged.gif")));
 				return;
 			}
+		}
+	}
+	
+	@Override
+	public void setEditable(boolean b) {
+		super.setEditable(b);
+		
+		String[] editableButtons = new String[] {
+				Constants.RACK, Constants.CABLE
+		};
+		
+		for (String key : editableButtons) {
+			AbstractButton button = this.toolBar.commands.get(key);
+			button.setEnabled(b);
 		}
 	}
 	

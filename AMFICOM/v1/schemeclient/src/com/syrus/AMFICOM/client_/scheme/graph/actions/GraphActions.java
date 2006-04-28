@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.28 2006/03/17 10:29:10 stas Exp $
+ * $Id: GraphActions.java,v 1.29 2006/04/28 09:01:32 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.28 $, $Date: 2006/03/17 10:29:10 $
+ * @version $Revision: 1.29 $, $Date: 2006/04/28 09:01:32 $
  * @module schemeclient
  */
 
@@ -716,7 +716,7 @@ public class GraphActions {
 		
 		graph.setLocation((int)(oldLocation.x * k + ((1 - k) / 2) * visibleRect.width), (int)(oldLocation.y * k + ((1 - k) / 2) * visibleRect.height));
 		
-		if (graph.getScale() < .5)
+		if (graph.isEditable() && graph.getScale() < .5)
 			graph.setGridVisible(false);		
 	}
 }

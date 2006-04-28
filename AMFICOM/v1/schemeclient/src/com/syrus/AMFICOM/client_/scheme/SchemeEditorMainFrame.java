@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.38 2006/04/19 12:46:41 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.39 2006/04/28 09:01:32 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.38 $, $Date: 2006/04/19 12:46:41 $
+ * @version $Revision: 1.39 $, $Date: 2006/04/28 09:01:32 $
  * @module schemeclient
  */
 
@@ -91,7 +91,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 	protected void initFrames() {
 		this.frames = new UIDefaults();
 		this.schemeTab = new SchemeTabbedPane(this.aContext);
-		this.schemeTab.setEditable(true);
+		this.schemeTab.setEditable(false);
 		
 		this.frames.put(FRAME_EDITOR_MAIN, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
@@ -221,28 +221,11 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setCommand("Menu.export.protos", new ProtoElementsExportCommand(this.schemeTab));
 		aModel.setCommand("Menu.export.config", new ConfigExportCommand(this.schemeTab));
 		aModel.setCommand("Menu.export.scheme", new SchemeExportCommand(this.schemeTab));
-
-		// TODO разобраться с созданием пути
 		
 		aModel.setCommand("menuPathNew", new PathNewCommand(this.schemeTab));
 		aModel.setCommand("menuPathSave", new PathSaveCommand(this.schemeTab));
 		aModel.setCommand("menuPathCancel", new PathCancelCommand(this.schemeTab));
 		aModel.setCommand("menuPathEdit", new PathEditCommand(this.schemeTab));
-		/*aModel.setCommand("menuPathAddStart", new PathSetStartCommand(aContext,
-				schemeTab));
-		aModel.setCommand("menuPathAddEnd", new PathSetEndCommand(aContext,
-				schemeTab));
-		aModel.setCommand("menuPathAddLink", new PathAddLinkCommand(aContext,
-				schemeTab));
-
-		aModel.setCommand("menuPathRemoveLink", new PathRemoveLinkCommand(aContext,
-				scheme_graph));
-		aModel.setCommand("menuPathAutoCreate", new PathAutoCreateCommand(aContext,
-				schemeTab.getPanel()));
-
-		
-		aModel.setCommand("menuPathDelete", new PathDeleteCommand(aContext,
-				schemeTab));*/
 
 //		CreateSchemeReportCommand rc = new CreateSchemeReportCommand(aContext);
 //		for (Iterator it = graphs.iterator(); it.hasNext();)
@@ -285,16 +268,6 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 				aModel.fireModelChanged("");
 			}
 		}
-		/*
-		 * else if (ae.getActionCommand().equals(CatalogNavigateEvent.type)) {
-		 * CatalogNavigateEvent cne = (CatalogNavigateEvent)ae; if
-		 * (cne.CATALOG_PATH_SELECTED) { ApplicationModel aModel =
-		 * aContext.getApplicationModel(); aModel.setEnabled("menuPathEdit", true);
-		 * aModel.setEnabled("menuPathDelete", true); aModel.fireModelChanged(""); }
-		 * if (cne.CATALOG_PATH_DESELECTED) { ApplicationModel aModel =
-		 * aContext.getApplicationModel(); aModel.setEnabled("menuPathEdit", false);
-		 * aModel.setEnabled("menuPathDelete", false); aModel.fireModelChanged(""); } }
-		 */
 		super.propertyChange(ae);
 	}
 
@@ -326,27 +299,33 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		SchemeObjectsFactory.init(this.aContext);
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
 
+		boolean creationAllowed = SchemePermissionManager.isCreationAllowed(); 
+		boolean savingAllowed = SchemePermissionManager.isSavingAllowed();
+		boolean editionAllowed = SchemePermissionManager.isEditionAllowed();
+		
+		this.schemeTab.setEditable(editionAllowed);
+		
 		aModel.setEnabled("menuWindowTree", true);
 		aModel.setEnabled("menuWindowScheme", true);
 		aModel.setEnabled("menuWindowUgo", true);
 		aModel.setEnabled("menuWindowProps", true);
 		aModel.setEnabled("menuWindowList", true);
 		
-		aModel.setEnabled("Menu.export", true);
-		aModel.setEnabled("Menu.export.scheme", true);
-		aModel.setEnabled("Menu.export.config", true);
-		aModel.setEnabled("Menu.export.protos", true);
-		aModel.setEnabled("Menu.import", true);
-		aModel.setEnabled("Menu.import.scheme", true);
-		aModel.setEnabled("Menu.import.config", true);
-		aModel.setEnabled("Menu.import.protos", true);
+		aModel.setEnabled("Menu.export", creationAllowed && savingAllowed);
+		aModel.setEnabled("Menu.export.scheme", creationAllowed && savingAllowed);
+		aModel.setEnabled("Menu.export.config", creationAllowed && savingAllowed);
+		aModel.setEnabled("Menu.export.protos", creationAllowed && savingAllowed);
+		aModel.setEnabled("Menu.import", creationAllowed && savingAllowed);
+		aModel.setEnabled("Menu.import.scheme", creationAllowed && savingAllowed);
+		aModel.setEnabled("Menu.import.config", creationAllowed && savingAllowed);
+		aModel.setEnabled("Menu.import.protos", creationAllowed && savingAllowed);
 		
-		aModel.setEnabled("menuSchemeNew", true);
+		aModel.setEnabled("menuSchemeNew", creationAllowed);
 		aModel.setEnabled("menuSchemeLoad", true);
-		aModel.setEnabled("menuSchemeSave", true);
-		aModel.setEnabled("menuSchemeSaveAs", true);
-		aModel.setEnabled("menuSchemeValidate", true);
-		aModel.setEnabled("menuPathNew", true);
+		aModel.setEnabled("menuSchemeSave", savingAllowed);
+		aModel.setEnabled("menuSchemeSaveAs", savingAllowed);
+		aModel.setEnabled("menuSchemeValidate", editionAllowed);
+		aModel.setEnabled("menuPathNew", editionAllowed);
 		aModel.setEnabled("menuReportCreate", true);
 		
 		aModel.fireModelChanged("");

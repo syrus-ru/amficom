@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.19 2006/02/15 12:18:10 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.20 2006/04/28 09:01:32 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.awt.BorderLayout;
 import java.util.Collections;
 import java.util.Set;
 
+import javax.swing.AbstractButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -20,7 +21,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2006/02/15 12:18:10 $
+ * @version $Revision: 1.20 $, $Date: 2006/04/28 09:01:32 $
  * @module schemeclient
  */
 
@@ -105,8 +106,18 @@ public class UgoTabbedPane extends JPanel {
 
 	public void setEditable(boolean b) {
 		this.editable = b;
+		
+		String[] editableButtons = new String[] {
+			Constants.RECTANGLE, Constants.ELLIPSE, Constants.LINE, Constants.TEXT
+		};
+		
+		for (String key : editableButtons) {
+			AbstractButton button = this.toolBar.commands.get(key);
+			button.setEnabled(b);
+		}
+
 		for (UgoPanel p : getAllPanels()) {
-			p.getGraph().setEditable(b);
+			p.getGraph().setGraphEditable(b);
 		}
 	}
 	

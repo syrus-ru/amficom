@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.37 2006/03/08 07:20:34 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.38 2006/04/28 09:01:33 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,8 @@ import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.ElementsPermissionManager;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.LinkType;
@@ -41,6 +43,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.measurement.MeasurementPortType;
+import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -55,7 +59,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.37 $, $Date: 2006/03/08 07:20:34 $
+ * @version $Revision: 1.38 $, $Date: 2006/04/28 09:01:33 $
  * @module schemeclient
  */
 
@@ -101,6 +105,15 @@ public class SchemeTreeUI extends IconedTreeUI {
 						Item item = (Item)selectedPath.getLastPathComponent();
 						Object object = item.getObject();
 						if (object instanceof Scheme) {
+							if (!SchemePermissionManager.isDeletionAllowed()) {
+								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+										LangModelScheme.getString("Message.error.access_denied"),  //$NON-NLS-1$ 
+										LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+										JOptionPane.ERROR_MESSAGE);
+								Log.debugMessage("Scheme deletion is not allowed", Level.FINER);
+								return;
+							}
+							
 							Scheme scheme = (Scheme)object;
 							try {
 								LinkedIdsCondition condition = new LinkedIdsCondition(scheme.getId(), 
@@ -137,6 +150,15 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Log.errorMessage(e1);
 							}
 						} else if (object instanceof SchemePath) {
+							if (!SchemePermissionManager.isEditionAllowed()) {
+								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+										LangModelScheme.getString("Message.error.access_denied"),  //$NON-NLS-1$ 
+										LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+										JOptionPane.ERROR_MESSAGE);
+								Log.debugMessage("SchemePath deletion is not allowed", Level.FINER);
+								return;
+							}
+							
 							try {
 								SchemePath path = (SchemePath)object;
 								Set<Identifiable> ids = path.getReverseDependencies(false);
@@ -150,6 +172,15 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Log.errorMessage(e1);
 							}
 						} else if (object instanceof SchemeProtoElement) {
+							if (!ElementsPermissionManager.isEditionAllowed()) {
+								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+										LangModelScheme.getString("Message.error.access_denied"),  //$NON-NLS-1$ 
+										LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+										JOptionPane.ERROR_MESSAGE);
+								Log.debugMessage("SchemeProtoElement deletion is not allowed", Level.FINER);
+								return;
+							}
+							
 							try {
 								SchemeProtoElement proto = (SchemeProtoElement)object;
 								Set<Identifiable> ids = proto.getReverseDependencies(false);
@@ -163,6 +194,15 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Log.errorMessage(e1);
 							}
 						} else if (object instanceof SchemeProtoGroup) {
+							if (!ElementsPermissionManager.isEditionAllowed()) {
+								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+										LangModelScheme.getString("Message.error.access_denied"),  //$NON-NLS-1$ 
+										LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+										JOptionPane.ERROR_MESSAGE);
+								Log.debugMessage("SchemeProtoGroup deletion is not allowed", Level.FINER);
+								return;
+							}
+							
 							SchemeProtoGroup group = (SchemeProtoGroup)object;
 							try {
 								if (group.getSchemeProtoElements(false).isEmpty() && 
@@ -179,6 +219,15 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Log.errorMessage(e1);
 							}
 						} else if (object instanceof ProtoEquipment) {
+							if (!ElementsPermissionManager.isTypeEditionAllowed()) {
+								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+										LangModelScheme.getString("Message.error.access_denied"),  //$NON-NLS-1$ 
+										LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+										JOptionPane.ERROR_MESSAGE);
+								Log.debugMessage("ProtoEquipment deletion is not allowed", Level.FINER);
+								return;
+							}
+							
 							ProtoEquipment protoEq = (ProtoEquipment)object;
 							try {
 								LinkedIdsCondition condition1 = new LinkedIdsCondition(protoEq.getId(), ObjectEntities.SCHEMEPROTOELEMENT_CODE);
@@ -207,6 +256,15 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Log.errorMessage(e1);
 							}
 						} else if (object instanceof LinkType) {
+							if (!ElementsPermissionManager.isTypeEditionAllowed()) {
+								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+										LangModelScheme.getString("Message.error.access_denied"),  //$NON-NLS-1$ 
+										LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+										JOptionPane.ERROR_MESSAGE);
+								Log.debugMessage("LinkType deletion is not allowed", Level.FINER);
+								return;
+							}
+							
 							LinkType type = (LinkType)object;
 							try {
 								LinkedIdsCondition condition1 = new LinkedIdsCondition(type.getId(), ObjectEntities.SCHEMELINK_CODE);
@@ -225,6 +283,15 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Log.errorMessage(e1);
 							}
 						} else if (object instanceof CableLinkType) {
+							if (!ElementsPermissionManager.isTypeEditionAllowed()) {
+								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+										LangModelScheme.getString("Message.error.access_denied"),  //$NON-NLS-1$ 
+										LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+										JOptionPane.ERROR_MESSAGE);
+								Log.debugMessage("CableLinkType deletion is not allowed", Level.FINER);
+								return;
+							}
+							
 							CableLinkType type = (CableLinkType)object;
 							
 							try {
@@ -250,6 +317,15 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Log.errorMessage(e1);
 							}
 						} else if (object instanceof PortType) {
+							if (!ElementsPermissionManager.isTypeEditionAllowed()) {
+								Log.debugMessage("PortType deletion is not allowed", Level.FINER);
+								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+										LangModelScheme.getString("Message.error.access_denied"),  //$NON-NLS-1$ 
+										LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+										JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+							
 							PortType type = (PortType)object;
 							try {
 								LinkedIdsCondition condition1 = new LinkedIdsCondition(type.getId(), ObjectEntities.SCHEMEPORT_CODE);
@@ -275,6 +351,14 @@ public class SchemeTreeUI extends IconedTreeUI {
 							} catch (ApplicationException e1) {
 								Log.errorMessage(e1);
 							}
+						} else if (object instanceof MeasurementType
+									|| object instanceof MeasurementPortType) {
+							JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+									LangModelScheme.getString("Message.error.object_undeletable"),  //$NON-NLS-1$ 
+									LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+									JOptionPane.ERROR_MESSAGE);
+							Log.debugMessage("Measurement objects deletion is not allowed", Level.FINER);
+							return;
 						}
 					}
 					if (selectedPath1 != null) {

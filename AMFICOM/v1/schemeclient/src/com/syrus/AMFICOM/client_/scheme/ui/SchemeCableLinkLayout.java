@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkLayout.java,v 1.19 2006/02/01 14:24:30 stas Exp $
+ * $Id: SchemeCableLinkLayout.java,v 1.20 2006/04/28 09:01:33 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2006/02/01 14:24:30 $
+ * @version $Revision: 1.20 $, $Date: 2006/04/28 09:01:33 $
  * @module schemeclient
  */
 
@@ -74,7 +74,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		this.internalContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 
 		this.panel = new UgoTabbedPane(this.internalContext);
-		this.panel.getGraph().setGraphEditable(false);
+		this.panel.setEditable(false);
 		this.panel.getGraph().setAntiAliased(true);
 		this.scrollPane = new JScrollPane(this.panel.getGraph());
 		

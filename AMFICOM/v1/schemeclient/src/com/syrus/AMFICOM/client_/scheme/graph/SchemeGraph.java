@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.26 2006/03/17 10:29:10 stas Exp $
+ * $Id: SchemeGraph.java,v 1.27 2006/04/28 09:01:32 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.26 $, $Date: 2006/03/17 10:29:10 $
+ * @version $Revision: 1.27 $, $Date: 2006/04/28 09:01:32 $
  * @module schemeclient
  */
 
@@ -487,7 +487,7 @@ public class SchemeGraph extends GPGraph {
 		return null;
 	}
 	
-	public void setGraphEditable(boolean b) {
+	void setGraphEditable(boolean b) {
 		setEditable(b);
 		setSizeable(b);
 	}

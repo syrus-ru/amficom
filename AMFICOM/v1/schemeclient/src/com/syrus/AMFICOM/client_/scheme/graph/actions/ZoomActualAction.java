@@ -1,5 +1,5 @@
 /*
- * $Id: ZoomActualAction.java,v 1.6 2005/10/10 11:07:38 stas Exp $
+ * $Id: ZoomActualAction.java,v 1.7 2006/04/28 09:01:33 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/10/10 11:07:38 $
+ * @version $Revision: 1.7 $, $Date: 2006/04/28 09:01:33 $
  * @module schemeclient
  */
 
@@ -40,7 +40,9 @@ public class ZoomActualAction extends AbstractAction {
 		Rectangle visibleRect = graph.getVisibleRect();
 		graph.setScale(1);
 		graph.setPreferredSize(graph.getActualSize());
-		graph.setGridVisible(graph.isGridVisibleAtActualSize());
+		if (graph.isEditable()) {
+			graph.setGridVisible(graph.isGridVisibleAtActualSize());
+		}
 		
 		graph.setLocation((int)(oldLocation.x / oldScale - visibleRect.width / 2 * (1 / oldScale - 1)),
 				(int)(oldLocation.y / oldScale - visibleRect.height / 2 * (1 / oldScale - 1)));

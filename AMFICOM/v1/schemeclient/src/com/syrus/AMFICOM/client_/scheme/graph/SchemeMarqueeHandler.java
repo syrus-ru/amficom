@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.43 2006/02/15 12:18:10 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.44 2006/04/28 09:01:32 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.43 $, $Date: 2006/02/15 12:18:10 $
+ * @version $Revision: 1.44 $, $Date: 2006/04/28 09:01:32 $
  * @module schemeclient
  */
 
@@ -152,8 +152,8 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 
 	public void updateButtonsState(Object[] cells) {
 		SchemeGraph graph = this.pane.getGraph();
-		this.ugo.setEnabled((graph.getAll().length == 0) ? false : true);
-		this.del.setEnabled(cells.length != 0 && !GraphActions.hasGroupedParent(cells[0]));
+		this.ugo.setEnabled(graph.isEditable() && graph.getAll().length != 0);
+		this.del.setEnabled(graph.isEditable() &&  cells.length != 0 && !GraphActions.hasGroupedParent(cells[0]));
 		this.ugr.setEnabled(false);
 		this.gr.setEnabled(false);
 		this.gr2.setEnabled(false);
@@ -189,15 +189,15 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 		if (groups == 0) {
 			if (devices == 0) {
 				if (ports + cablePorts == 1)
-					this.bp.setEnabled(true);
+					this.bp.setEnabled(graph.isEditable());
 			} 
 			else if (devices == 1) {
 				if (!GraphActions.hasGroupedParent(device)) {
-					this.p1.setEnabled(true);
-					this.p2.setEnabled(true);
+					this.p1.setEnabled(graph.isEditable());
+					this.p2.setEnabled(graph.isEditable());
 					if (device.getChildCount() > 1) {
-						this.gr.setEnabled(true);
-						this.gr2.setEnabled(true);
+						this.gr.setEnabled(graph.isEditable());
+						this.gr2.setEnabled(graph.isEditable());
 					}
 				}
 			}
@@ -205,14 +205,14 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 			// ugo.setEnabled(true);
 		}
 		if (racks > 0 || groups > 0) {
-			this.ugr.setEnabled(true);
+			this.ugr.setEnabled(graph.isEditable());
 		}
 		if (groups > 1) {
-			this.gr.setEnabled(true);
-			this.gr2.setEnabled(true);
+			this.gr.setEnabled(graph.isEditable());
+			this.gr2.setEnabled(graph.isEditable());
 		}
 		if (groups + racks > 1 && racks < 2) {
-			this.gr3.setEnabled(true);
+			this.gr3.setEnabled(graph.isEditable());
 		}
 	}
 
