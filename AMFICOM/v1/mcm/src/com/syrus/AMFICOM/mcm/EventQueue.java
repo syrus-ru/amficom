@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.10 2006/04/28 11:00:55 arseniy Exp $
+ * $Id: EventQueue.java,v 1.11 2006/04/28 11:22:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2006/04/28 11:00:55 $
+ * @version $Revision: 1.11 $, $Date: 2006/04/28 11:22:55 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -60,7 +60,7 @@ final class EventQueue extends SleepButWorkThread {
 		final MCMSessionEnvironment mcmSessionEnvironment = MCMSessionEnvironment.getInstance();
 		final BaseConnectionManager connectionManager = mcmSessionEnvironment.getConnectionManager();
 
-		while (interrupted()) {
+		while (!interrupted()) {
 
 			synchronized (this.eventQueue) {
 				while (this.eventQueue.isEmpty()) {
