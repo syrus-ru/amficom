@@ -1,5 +1,5 @@
 /*-
-* $Id: LazyChangeListener.java,v 1.2 2006/01/19 09:59:18 bob Exp $
+* $Id: LazyChangeListener.java,v 1.3 2006/04/28 07:36:45 saa Exp $
 *
 * Copyright ї 2006 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,6 +8,10 @@
 
 package com.syrus.AMFICOM.client.UI;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -17,17 +21,19 @@ import javax.swing.event.ChangeListener;
  * 
  * change state only on last event within timeout
  * 
- * @version $Revision: 1.2 $, $Date: 2006/01/19 09:59:18 $
- * @author $Author: bob $
+ * @deprecated Нет описания.
+ *   Первичная реализация (rev. 1.2) содержала грубую ошибку синхронизации.
+ * 
+ * @version $Revision: 1.3 $, $Date: 2006/04/28 07:36:45 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
+@Deprecated
 public class LazyChangeListener implements ChangeListener {
-	
-	private Thread		thread;
-	
+
 	long previousEventTime;		
-	final long timeout;
+	final int timeout;
 	ChangeEvent changeEvent;
 	
 	final ChangeListener changeListener;
@@ -35,41 +41,28 @@ public class LazyChangeListener implements ChangeListener {
 	public LazyChangeListener(final ChangeListener changeListener) {
 		this(changeListener, 500);
 	}
-	
+
 	public LazyChangeListener(final ChangeListener changeListener,
-			final long timeout) {
+			final int timeout) {
 		this.changeListener = changeListener;
 		this.timeout = timeout;
-		
+
 		this.createThread();
-		this.thread.start();
 	}
 	
 	private void createThread() {
-		this.thread = new Thread() {
-
-			@SuppressWarnings("unqualified-field-access")
-			@Override
-			public void run() {
-				while (true) {
-					if (changeEvent != null && (System.currentTimeMillis() - previousEventTime) > timeout) {
-						changeListener.stateChanged(changeEvent);
-						changeEvent = null;			
-					}
-					try {
-						Thread.sleep(timeout);
-					} catch (final InterruptedException e) {
-						return;
-					}
+		new Timer(this.timeout, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (changeEvent != null && (System.currentTimeMillis() - previousEventTime) > timeout) {
+					changeListener.stateChanged(changeEvent);
+					changeEvent = null;
 				}
-			}
-		};
+			}}).start();
 	}
-	
-	public void stateChanged(final ChangeEvent e) {			
+
+	public void stateChanged(final ChangeEvent e) {
 		this.changeEvent = e;
 		this.previousEventTime = System.currentTimeMillis();
-		
 	}
 }
 
