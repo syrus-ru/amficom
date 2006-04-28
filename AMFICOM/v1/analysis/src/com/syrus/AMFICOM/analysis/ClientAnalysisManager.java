@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.27 2005/12/26 15:42:31 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.28 2006/04/28 11:19:21 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,12 +21,12 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.27 $, $Date: 2005/12/26 15:42:31 $
+ * @version $Revision: 1.28 $, $Date: 2006/04/28 11:19:21 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
 {
-	private static final String PROPERTIES_FILE_NAME = "analysis.ini";
+	private static final String PROPERTIES_FILE_NAME = AnalysisIniFile.INI_FILE_NAME;
 
 	public ClientAnalysisManager() {
 		AnalysisParameters minuitParams = null;

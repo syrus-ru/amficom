@@ -8,6 +8,7 @@ import java.util.Properties;
 import javax.swing.JFileChooser;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.analysis.AnalysisIniFile;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -17,7 +18,7 @@ import com.syrus.io.TextWriter;
 public class FileSaveAsTextCommand extends AbstractCommand
 {
 	private ApplicationContext aContext;
-	private String propertiesFileName = "analysis.properties";
+	private String propertiesFileName = AnalysisIniFile.INI_FILE_NAME;
 
 	public FileSaveAsTextCommand(ApplicationContext aContext)
 	{

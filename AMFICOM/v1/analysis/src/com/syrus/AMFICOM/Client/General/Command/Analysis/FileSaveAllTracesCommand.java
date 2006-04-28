@@ -11,12 +11,13 @@ import javax.swing.JFileChooser;
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Trace;
+import com.syrus.AMFICOM.analysis.AnalysisIniFile;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreWriter;
 
 public class FileSaveAllTracesCommand extends AbstractCommand {
-	private static String propertiesFileName = "analysis.properties";
+	private static String propertiesFileName = AnalysisIniFile.INI_FILE_NAME;
 
 	public FileSaveAllTracesCommand() {
 		// empty
