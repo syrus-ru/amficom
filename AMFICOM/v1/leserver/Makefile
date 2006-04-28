@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.30 2006/04/04 10:35:53 arseniy Exp $
+# $Id: Makefile,v 1.31 2006/04/28 07:19:43 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -115,5 +115,6 @@ arch:
 		Makefile \
 		$(IDLDIR)/leserver.idl \
 		$(SOURCES) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/leserver/*.properties) \
 		leserver.properties \
 		leserver.sh
