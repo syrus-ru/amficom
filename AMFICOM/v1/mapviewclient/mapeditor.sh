@@ -8,8 +8,8 @@ EXTLIB=../../extlib
 EXTCLASSPATH=$EXTLIB/kunststoff.jar:\
 $EXTLIB/trove.jar:\
 $EXTLIB/jgraphpad.jar:\
-$EXTLIB/dom4j-1.6.jar:\
-$EXTLIB/jaxen-1.1-beta-6.jar
+$EXTLIB/dom4j.jar:\
+$EXTLIB/jaxen.jar
 
 MAPINFODIR=$EXTLIB/mapinfo
 COMMONMAPINFODIR=$MAPINFODIR/common
