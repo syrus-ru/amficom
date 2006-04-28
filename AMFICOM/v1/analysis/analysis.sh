@@ -38,5 +38,5 @@ $LIB/resources_schemas.jar
 
 
 #JAVA="$JAVA -Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"
-$JAVA -Xmx256m -client -ea -classpath $APPCLASSPATH:${XMLCLASSPATH}:$EXTCLASSPATH -Djava.library.path=$LIB com.syrus.AMFICOM.Client.Analysis.Reflectometry.AnalyseExt
+$JAVA -Xmx256m -client -ea -classpath $APPCLASSPATH:${XMLCLASSPATH}:$EXTCLASSPATH -Djava.library.path=$LIB com.syrus.AMFICOM.Client.Analysis.Reflectometry.Analyse
 
