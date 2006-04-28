@@ -1,5 +1,5 @@
 /*
- * $Id: Application.java,v 1.11 2005/10/31 12:29:58 bass Exp $
+ * $Id: Application.java,v 1.12 2006/04/28 10:54:18 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/31 12:29:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2006/04/28 10:54:18 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -25,13 +25,13 @@ public final class Application {
 		assert false;
 	}
 
-	public static void init(String appName) {
+	public static void init(final String appName) {
 		applicationName = appName;
 		ApplicationProperties.init(applicationName);
 		initializeLogging();
 	}
 
-	public static void init(String appName, String inetAddress) {
+	public static void init(final String appName, final String inetAddress) {
 		applicationName = appName;
 		internetAddress = inetAddress;
 		ApplicationProperties.init(applicationName);
@@ -49,10 +49,10 @@ public final class Application {
 		Log.debugMessage(applicationName + " -- started", Log.DEBUGLEVEL01);
 	}
 
-	public static String getApplicationName () {
+	public static String getApplicationName() {
 		return applicationName;
 	}
-	
+
 	public static String getInternetAddress() {
 		return internetAddress;
 	}
