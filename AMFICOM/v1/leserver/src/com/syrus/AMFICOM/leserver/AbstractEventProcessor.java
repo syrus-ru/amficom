@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractEventProcessor.java,v 1.2 2006/04/19 14:13:46 bass Exp $
+ * $Id: AbstractEventProcessor.java,v 1.3 2006/04/28 05:26:09 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2006/04/19 14:13:46 $
+ * @version $Revision: 1.3 $, $Date: 2006/04/28 05:26:09 $
  * @module leserver
  */
 abstract class AbstractEventProcessor implements EventProcessor, Runnable {
@@ -53,10 +53,14 @@ abstract class AbstractEventProcessor implements EventProcessor, Runnable {
 	static final Event<?> POISON = newPoison();
 
 	/**
-	 * Background executors used to asynchronously deliver events to clients.
+	 * <p>Background EXECUTORS used to asynchronously deliver events to
+	 * clients.</p>
+	 *
+	 * <p>Note: this map is an object shared between various instances of
+	 * classes that inherit from {@code AbstractEventProcessor}.</p>
 	 */
-	private final Map<SessionKey, ExecutorService> executors =
-		Collections.synchronizedMap(new HashMap<SessionKey, ExecutorService>());
+	static final Map<SessionKey, ExecutorService> EXECUTORS =
+			Collections.synchronizedMap(new HashMap<SessionKey, ExecutorService>());
 
 	AbstractEventProcessor(final int capacity) {
 		this.queue = new LinkedBlockingQueue<Event<?>>(capacity);
@@ -153,11 +157,11 @@ abstract class AbstractEventProcessor implements EventProcessor, Runnable {
 		final long t0 = System.nanoTime();
 		final CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
 		for (final UserLogin client : clients) {
-			final SessionKey sessionKey = client.getSessionKey();
-			ExecutorService executorService = this.executors.get(sessionKey);
+			final SessionKey sessionKey = client.getSessionKey();			
+			ExecutorService executorService = EXECUTORS.get(sessionKey);
 			if (executorService == null) {
 				executorService = Executors.newSingleThreadExecutor();
-				this.executors.put(sessionKey, executorService);
+				EXECUTORS.put(sessionKey, executorService);
 			}
 			final long t1 = System.nanoTime();
 			executorService.submit(new Runnable() {
