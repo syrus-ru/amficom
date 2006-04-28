@@ -1,13 +1,15 @@
 /*-
- * $Id: LEServerPoolContext.java,v 1.21 2006/03/31 06:42:16 bass Exp $
+ * $Id: LEServerPoolContext.java,v 1.22 2006/04/28 06:29:42 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.leserver;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
@@ -15,9 +17,10 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETERSET_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.*;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierLRUMapSaver;
@@ -30,7 +33,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.LRUMapSaver;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2006/03/31 06:42:16 $
+ * @version $Revision: 1.22 $, $Date: 2006/04/28 06:29:42 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -66,6 +69,7 @@ final class LEServerPoolContext extends PoolContext {
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.SCHEME_GROUP_CODE, schemePoolSize, schemePoolTimeToLive);
 
 		StorableObjectPool.addObjectPool(EQUIPMENT_CODE, configurationPoolSize, configurationPoolTimeToLive);
+		StorableObjectPool.addObjectPool(EQUIPMENT_TYPE_CODE, configurationPoolSize, configurationPoolTimeToLive);
 		StorableObjectPool.addObjectPool(PROTOEQUIPMENT_CODE, configurationPoolSize, configurationPoolTimeToLive);
 		StorableObjectPool.addObjectPool(TRANSPATH_TYPE_CODE, configurationPoolSize, configurationPoolTimeToLive);
 		StorableObjectPool.addObjectPool(TRANSMISSIONPATH_CODE, configurationPoolSize, configurationPoolTimeToLive);
