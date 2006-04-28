@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationProperties.java,v 1.17 2006/04/28 10:46:59 arseniy Exp $
+ * $Id: ApplicationProperties.java,v 1.18 2006/04/28 10:54:49 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2006/04/28 10:46:59 $
+ * @version $Revision: 1.18 $, $Date: 2006/04/28 10:54:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -116,13 +116,5 @@ public class ApplicationProperties {
 
 	public static boolean getBoolean(final String key, final boolean defaultValue) {
 		return Boolean.valueOf(getString(key, Boolean.valueOf(defaultValue).toString())).booleanValue();
-	}
-
-	public static String getCommonFileName() {
-		return commonFileName;
-	}
-
-	public static String getApplicationFileName() {
-		return applicationFileName;
 	}
 }
