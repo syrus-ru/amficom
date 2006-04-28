@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.8 2005/10/12 10:03:32 bass Exp $
+# $Id: Makefile,v 1.9 2006/04/28 10:15:18 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -24,7 +24,7 @@ mapclient \
 mapviewclient \
 mscharserver_interface
 
-EXTCLASSPATH := $(EXTLIBDIR)/xalan.jar:$(EXTLIBDIR)/dom4j-1.6.jar
+EXTCLASSPATH := $(EXTLIBDIR)/xalan.jar:$(EXTLIBDIR)/dom4j.jar
 
 MAPINFODIR := $(EXTLIBDIR)/mapinfo
 COMMONMAPINFODIR := $(MAPINFODIR)/common
