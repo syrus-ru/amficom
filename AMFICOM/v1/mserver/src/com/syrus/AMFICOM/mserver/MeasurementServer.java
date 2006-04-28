@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.95.2.6 2006/03/30 12:30:52 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.95.2.7 2006/04/28 13:24:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.95.2.6 $, $Date: 2006/03/30 12:30:52 $
+ * @version $Revision: 1.95.2.7 $, $Date: 2006/04/28 13:24:20 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -677,7 +677,11 @@ final class MeasurementServer extends SleepButWorkThread {
 			Log.errorMessage(ce);
 			super.fallCode = FALL_CODE_MCM_DISCONNECTED;
 			this.disconnectedMCMIds.add(mcmId);
-			super.sleepCauseOfFall();
+			try {
+				super.sleepCauseOfFall();
+			} catch (InterruptedException ie) {
+				Log.errorMessage(ie);
+			}
 		} catch (AMFICOMRemoteException are) {
 			if (are.errorCode.value() == _ERROR_NOT_LOGGED_IN) {
 				try {
@@ -689,7 +693,11 @@ final class MeasurementServer extends SleepButWorkThread {
 			Log.errorMessage("Cannot transmit: " + are.message + "; sleeping cause of fall");
 			super.fallCode = FALL_CODE_MCM_DISCONNECTED;
 			this.disconnectedMCMIds.add(mcmId);
-			super.sleepCauseOfFall();
+			try {
+				super.sleepCauseOfFall();
+			} catch (InterruptedException ie) {
+				Log.errorMessage(ie);
+			}
 		}
 	}
 
