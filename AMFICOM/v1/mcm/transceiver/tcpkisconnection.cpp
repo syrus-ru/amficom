@@ -28,24 +28,25 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_establishSock
 
 
 	fid = env->GetFieldID(cls, FIELDNAME_KIS_HOST_NAME, "Ljava/lang/String;");
-	jkisHostName = (jstring)env->GetObjectField(obj, fid);
+	jkisHostName = (jstring) env->GetObjectField(obj, fid);
 	kis_host_name = env->GetStringUTFChars(jkisHostName, NULL);
 
 	fid = env->GetFieldID(cls, FIELDNAME_KIS_TCP_PORT, "S");
-	kis_port = (short)env->GetShortField(obj, fid);
+	kis_port = (short) env->GetShortField(obj, fid);
 
 	kis_socket = create_connected_socket(kis_host_name, kis_port);
 	env->ReleaseStringUTFChars(jkisHostName, kis_host_name);
 
-	if (kis_socket == INVALID_SOCKET)
-		kis_socket = (SOCKET)com_syrus_AMFICOM_mcm_TCPKISConnection_KIS_TCP_SOCKET_DISCONNECTED;
-	return (jint)kis_socket;
+	if (kis_socket == INVALID_SOCKET) {
+		kis_socket = (SOCKET) com_syrus_AMFICOM_mcm_TCPKISConnection_KIS_TCP_SOCKET_DISCONNECTED;
+	}
+	return (jint) kis_socket;
 }
 
 JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_dropSocketConnection(JNIEnv *env, jobject obj) {
 	jclass cls = env->GetObjectClass(obj);
 	jfieldID fid = env->GetFieldID(cls, FIELDNAME_KIS_TCP_SOCKET, "I");
-	SOCKET kis_socket = (SOCKET)env->GetIntField(obj, fid);
+	SOCKET kis_socket = (SOCKET) env->GetIntField(obj, fid);
 	close_socket(kis_socket);
 }
 
@@ -121,7 +122,7 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_transmitM
 
 	jclass cls = env->GetObjectClass(obj);
 	jfieldID fid = env->GetFieldID(cls, FIELDNAME_KIS_TCP_SOCKET, "I");
-	SOCKET kis_socket = (SOCKET)env->GetIntField(obj, fid);
+	SOCKET kis_socket = (SOCKET) env->GetIntField(obj, fid);
 
 	WriteSegmentStatus wrt_ret = transmit_segment(kis_socket, timewait, measurement_segment);
 	switch (wrt_ret) {
@@ -148,7 +149,7 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_receiveKI
 	unsigned int timewait = (unsigned int)(jtimewait / 1000);
 
 	fid = env->GetFieldID(cls, FIELDNAME_KIS_TCP_SOCKET, "I");
-	SOCKET kis_socket = (SOCKET)env->GetIntField(obj, fid);
+	SOCKET kis_socket = (SOCKET) env->GetIntField(obj, fid);
 
 	fd_set in;
 	timeval tv;
@@ -204,11 +205,11 @@ jobject create_kis_report(JNIEnv *env, ResultSegment* result_segment) {
 	char* measurement_id = result_segment->getMeasurementId()->getData();
 	jstring j_measurement_id = env->NewStringUTF(measurement_id);
 
-	jsize parnumber = (jsize)result_segment->getParnumber();
+	jsize parnumber = (jsize) result_segment->getParnumber();
 	Parameter** parameters = result_segment->getParameters();
 
-	jobjectArray j_par_codenames = (jobjectArray)env->NewObjectArray(parnumber, env->FindClass("java/lang/String"), NULL);
-	jobjectArray j_par_values= (jobjectArray)env->NewObjectArray(parnumber, env->FindClass("[B"), NULL);
+	jobjectArray j_par_codenames = (jobjectArray) env->NewObjectArray(parnumber, env->FindClass("java/lang/String"), NULL);
+	jobjectArray j_par_values= (jobjectArray) env->NewObjectArray(parnumber, env->FindClass("[B"), NULL);
 	jbyteArray jpar_value;
 	for (jsize s = 0; s < parnumber; s++) {
 		env->SetObjectArrayElement(j_par_codenames, s, env->NewStringUTF(parameters[s]->getName()->getData()));
