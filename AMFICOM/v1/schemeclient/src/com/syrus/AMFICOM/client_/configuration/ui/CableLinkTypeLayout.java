@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.16 2006/02/17 13:07:20 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.17 2006/04/28 09:08:22 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.configuration.CableThreadType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2006/02/17 13:07:20 $
+ * @version $Revision: 1.17 $, $Date: 2006/04/28 09:08:22 $
  * @module schemeclient
  */
 
@@ -61,7 +61,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 		this.internalContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 
 		this.panel = new UgoTabbedPane(this.internalContext);
-		this.panel.getGraph().setGraphEditable(false);
+		this.panel.setEditable(false);
 		this.panel.getGraph().setAntiAliased(true);
 		this.scrollPane = new JScrollPane(this.panel.getGraph());
 	}
