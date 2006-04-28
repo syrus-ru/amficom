@@ -1,21 +1,16 @@
 #!/bin/bash
 
-LIB=$HOME/lib
-EXTLIB=$HOME/extlib
-
-ORACLECLASSPATH=\
-$ORACLE_HOME/jdbc/lib/ojdbc14_g.jar:\
-$ORACLE_HOME/jdbc/lib/orai18n.jar:\
-$ORACLE_HOME/jdbc/lib/classes12.jar:\
-$ORACLE_HOME/jdbc/lib/nls_charset12.jar
+. `dirname $0`/amficomsrvenv
 
 XMLCLASSPATH=\
-$EXTLIB/xbean.jar:\
-$LIB/generalxml.jar:\
+$XMLCLASSPATH:\
 $LIB/configurationxml.jar
 
-TROVECLASSPATH=\
-$EXTLIB/trove.jar
+PATCHCLASSPATH=\
+$PATCHLIB/csbridge.jar:\
+$PATCHLIB/cmserver.jar:\
+$PATCHLIB/general.jar:\
+$PATCHLIB/util.jar
 
 APPCLASSPATH=\
 $LIB/cmserver.jar:\
@@ -33,6 +28,7 @@ $LIB/mserver_interface.jar:\
 $LIB/util.jar
 
 CLASSPATH=\
+${PATCHCLASSPATH}:\
 ${APPCLASSPATH}:\
 ${ORACLECLASSPATH}:\
 ${TROVECLASSPATH}:\
@@ -41,6 +37,7 @@ ${XMLCLASSPATH}
 APPNAME="cmserver"
 JAVAFLAGS="-agentlib:jdwp=transport=dt_socket,address=8003,server=y,suspend=n"
 JAVAFLAGS="${JAVAFLAGS} -Xloggc:`dirname $0`/gc -Xms128m -Xmx256m -server -ea"
+JAVAFLAGS="${JAVAFLAGS} -Damficom.stack.trace.data.source=none"
 MAIN="com.syrus.AMFICOM.cmserver.ClientMeasurementServer"
 MAINOPTS=""
 

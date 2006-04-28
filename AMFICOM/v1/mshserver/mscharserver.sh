@@ -2,38 +2,15 @@
 
 echo "*** Mscharserver v1.0.0 ``Bobruysk''"
 
-LIB=$HOME/lib
-EXTLIB=$HOME/extlib
-
-ORACLECLASSPATH=\
-$ORACLE_HOME/jdbc/lib/ojdbc14_g.jar:\
-$ORACLE_HOME/jdbc/lib/orai18n.jar:\
-$ORACLE_HOME/jdbc/lib/classes12.jar:\
-$ORACLE_HOME/jdbc/lib/nls_charset12.jar
-
-TROVECLASSPATH=\
-$EXTLIB/trove.jar
+. `dirname $0`/amficomsrvenv
 
 XMLCLASSPATH=\
-$EXTLIB/xbean.jar:\
-$EXTLIB/dom4j-1.6.jar:\
-$EXTLIB/jaxen-1.1-beta-6.jar:\
-$LIB/generalxml.jar:\
+$XMLCLASSPATH:\
+$EXTLIB/dom4j.jar:\
+$EXTLIB/jaxen.jar:\
 $LIB/configurationxml.jar:\
 $LIB/mapxml.jar:\
 $LIB/schemexml.jar
-
-MAPINFOCLASSPATH=\
-$EXTLIB/jdom.jar:\
-$EXTLIB/micsys.jar:\
-$EXTLIB/miutil.jar:\
-$EXTLIB/mxj.jar:\
-$EXTLIB/commons-logging.jar:\
-$EXTLIB/mxjgeom.jar:\
-$EXTLIB/miappletsup.jar:\
-$EXTLIB/xercesImpl.jar:\
-$EXTLIB/mxjtabdp.jar:\
-$EXTLIB/mistyles.jar
 
 APPCLASSPATH=\
 $LIB/filter.jar:\

@@ -1,27 +1,6 @@
 #!/bin/bash
-#
-# vim:ft=sh:
-#
 
-LIB=$HOME/lib
-EXTLIB=$HOME/extlib
-
-ORACLECLASSPATH=\
-$ORACLE_HOME/jdbc/lib/ojdbc14_g.jar:\
-$ORACLE_HOME/jdbc/lib/orai18n.jar:\
-$ORACLE_HOME/jdbc/lib/classes12.jar:\
-$ORACLE_HOME/jdbc/lib/nls_charset12.jar
-
-XMLCLASSPATH=\
-$EXTLIB/xbean.jar:\
-$LIB/generalxml.jar
-
-TROVECLASSPATH=\
-$EXTLIB/trove.jar
-
-MAILCLASSPATH=\
-$EXTLIB/activation.jar:\
-$EXTLIB/mail.jar
+. `dirname $0`/amficomsrvenv
 
 APPCLASSPATH=\
 $LIB/leserver.jar:\

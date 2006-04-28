@@ -1,23 +1,12 @@
 #!/bin/bash
 
-LIB=$HOME/lib
-EXTLIB=$HOME/extlib
+. `dirname $0`/amficomsrvenv
 
 TRANSCEIVER=$LIB
 DADARA=$LIB
 
-ORACLECLASSPATH=\
-$ORACLE_HOME/jdbc/lib/ojdbc14_g.jar:\
-$ORACLE_HOME/jdbc/lib/orai18n.jar:\
-$ORACLE_HOME/jdbc/lib/classes12.jar:\
-$ORACLE_HOME/jdbc/lib/nls_charset12.jar
-
-TROVECLASSPATH=\
-$EXTLIB/trove.jar
-
 XMLCLASSPATH=\
-$EXTLIB/xbean.jar:\
-$LIB/generalxml.jar:\
+$XMLCLASSPATH:\
 $LIB/configurationxml.jar
 
 APPCLASSPATH=\

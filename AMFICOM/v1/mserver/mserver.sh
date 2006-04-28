@@ -1,23 +1,16 @@
 #!/bin/bash
 
-LOGPATH="logs"
-
-LIB=$HOME/lib
-EXTLIB=$HOME/extlib
-
-ORACLECLASSPATH=\
-$ORACLE_HOME/jdbc/lib/ojdbc14_g.jar:\
-$ORACLE_HOME/jdbc/lib/orai18n.jar:\
-$ORACLE_HOME/jdbc/lib/classes12.jar:\
-$ORACLE_HOME/jdbc/lib/nls_charset12.jar
-
-TROVECLASSPATH=\
-$EXTLIB/trove.jar
+. `dirname $0`/amficomsrvenv
 
 XMLCLASSPATH=\
-$EXTLIB/xbean.jar:\
-$LIB/generalxml.jar:\
+$XMLCLASSPATH:\
 $LIB/configurationxml.jar
+
+PATCHCLASSPATH=\
+$PATCHLIB/csbridge.jar:\
+$PATCHLIB/cmserver.jar:\
+$PATCHLIB/general.jar:\
+$PATCHLIB/util.jar
 
 APPCLASSPATH=\
 $LIB/mserver.jar:\
@@ -31,6 +24,7 @@ $LIB/mcm_interface.jar:\
 $LIB/util.jar
 
 CLASSPATH=\
+${PATCHCLASSPATH}:\
 ${APPCLASSPATH}:\
 ${ORACLECLASSPATH}:\
 ${TROVECLASSPATH}:\
@@ -39,6 +33,7 @@ ${XMLCLASSPATH}
 APPNAME="mserver"
 JAVAFLAGS="-agentlib:jdwp=transport=dt_socket,address=8002,server=y,suspend=n"
 JAVAFLAGS="${JAVAFLAGS} -Xms128m -Xmx256m -ea -server"
+JAVAFLAGS="${JAVAFLAGS} -Damficom.stack.trace.data.source=none"
 MAIN="com.syrus.AMFICOM.mserver.MeasurementServer"
 MAINOPTS=""
 
