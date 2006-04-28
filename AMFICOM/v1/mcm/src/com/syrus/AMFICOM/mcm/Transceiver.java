@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.80.2.6 2006/04/10 17:06:34 arseniy Exp $
+ * $Id: Transceiver.java,v 1.80.2.7 2006/04/28 13:37:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.80.2.6 $, $Date: 2006/04/10 17:06:34 $
+ * @version $Revision: 1.80.2.7 $, $Date: 2006/04/28 13:37:07 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -91,11 +91,6 @@ final class Transceiver extends SleepButWorkThread {
 	 */
 	private Measurement measurementToRemove;
 
-	/**
-	 * Знак работы главного цикла.
-	 */
-	private boolean running;
-
 	public Transceiver(final Identifier kisId) throws KISException {
 		super(ApplicationProperties.getInt(KEY_KIS_TICK_TIME, KIS_TICK_TIME) * 1000,
 				ApplicationProperties.getInt(KEY_KIS_MAX_FALLS, KIS_MAX_FALLS));
@@ -108,8 +103,6 @@ final class Transceiver extends SleepButWorkThread {
 		this.kisConnection = MeasurementControlModule.getInstance().getKISConnection(this.kisId);
 		this.newMeasurements = Collections.synchronizedList(new LinkedList<Measurement>());
 		this.runningMeasurementIds = Collections.synchronizedSet(new HashSet<Identifier>());
-
-		this.running = true;
 	}
 
 	/**
@@ -209,10 +202,10 @@ final class Transceiver extends SleepButWorkThread {
 	 */
 	@Override
 	public void run() {
-		while (this.running) {
+		while (!interrupted()) {
 
 			synchronized (this) {
-				while (this.newMeasurements.isEmpty() && this.runningMeasurementIds.isEmpty() && this.running) {
+				while (this.newMeasurements.isEmpty() && this.runningMeasurementIds.isEmpty()) {
 					try {
 						this.wait(super.initialTimeToSleep);
 					} catch (InterruptedException ie) {
@@ -241,7 +234,11 @@ final class Transceiver extends SleepButWorkThread {
 						this.kisConnection.drop();
 						super.fallCode = FALL_CODE_TRANSMIT_MEASUREMENT;
 						this.measurementToRemove = measurement;
-						super.sleepCauseOfFall();
+						try {
+							super.sleepCauseOfFall();
+						} catch (InterruptedException e) {
+							return;
+						}
 						continue;
 					} catch (ApplicationException ae) {
 						Log.errorMessage(ae);
@@ -256,7 +253,11 @@ final class Transceiver extends SleepButWorkThread {
 						Log.errorMessage(ce);
 						this.kisConnection.drop();
 						super.fallCode = FALL_CODE_RECEIVE_KIS_REPORT;
-						super.sleepCauseOfFall();
+						try {
+							super.sleepCauseOfFall();
+						} catch (InterruptedException e) {
+							return;
+						}
 					}
 				} else {// if (this.kisReport == null)
 					final Identifier measurementId = this.kisReport.getMeasurementId();
@@ -291,7 +292,11 @@ final class Transceiver extends SleepButWorkThread {
 							measurementResultParameters = null;
 							super.fallCode = FALL_CODE_CREATE_RESULT;
 							this.measurementToRemove = measurement;
-							super.sleepCauseOfFall();
+							try {
+								super.sleepCauseOfFall();
+							} catch (InterruptedException e) {
+								return;
+							}
 						} catch (ApplicationException ae) {
 							Log.errorMessage(ae);
 						}
@@ -323,7 +328,11 @@ final class Transceiver extends SleepButWorkThread {
 				} catch (CommunicationException ce) {
 					Log.errorMessage(ce);
 					super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
-					super.sleepCauseOfFall();
+					try {
+						super.sleepCauseOfFall();
+					} catch (InterruptedException e) {
+						return;
+					}
 				}
 			}// else if (this.kisConnection.isEstablished())
 
@@ -423,7 +432,7 @@ final class Transceiver extends SleepButWorkThread {
 	 * @todo Реализовать прерывание измерения на КИС.
 	 */
 	synchronized void shutdown() {
-		this.running = false;
+		this.interrupt();
 		/* @todo Послать команду прерывания измерения на КИС. */
 		this.kisConnection.drop();
 		this.notifyAll();

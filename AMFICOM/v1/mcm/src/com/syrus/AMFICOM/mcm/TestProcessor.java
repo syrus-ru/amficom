@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.90.2.6 2006/03/31 08:38:11 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.90.2.7 2006/04/28 13:37:07 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.90.2.6 $, $Date: 2006/03/31 08:38:11 $
+ * @version $Revision: 1.90.2.7 $, $Date: 2006/04/28 13:37:07 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -83,8 +83,6 @@ abstract class TestProcessor extends SleepButWorkThread {
 	private List<MeasurementResultParameter> measurementResults;
 
 	private Transceiver transceiver;
-
-	private boolean running;
 
 	public TestProcessor(final Test test) throws TestProcessingException {
 		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000,
@@ -116,8 +114,6 @@ abstract class TestProcessor extends SleepButWorkThread {
 				Log.errorMessage(ae);
 			}
 		}
-
-		this.running = true;
 	}
 
 	private void setupMeasurements() throws TestProcessingException {
@@ -235,7 +231,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 	@Override
 	public final void run() {
-		while (this.running) {
+		while (!interrupted()) {
 
 			if (!this.lastMeasurementAcquisition) {
 				if (this.nextMeasurementStartTime == null) {
@@ -264,7 +260,11 @@ abstract class TestProcessor extends SleepButWorkThread {
 							} else {
 								super.fallCode = FALL_CODE_CREATE_MEASUREMENT;
 							}
-							super.sleepCauseOfFall();
+							try {
+								super.sleepCauseOfFall();
+							} catch (InterruptedException e) {
+								return;
+							}
 						}
 					}
 				}
@@ -420,7 +420,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 	 */
 	void finishTest() {
 		/* Проверить, может уже остановлено. */
-		if (!this.running) {
+		if (this.isInterrupted()) {
 			return;
 		}
 
@@ -467,7 +467,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 	 * перезагрузки можно было подхватить их "на лету".
 	 */
 	void shutdown() {
-		this.running = false;
+		this.interrupt();
 		MeasurementControlModule.getInstance().testProcessorShutdown(this.getTestId());
 	}
 
