@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
@@ -33,8 +34,13 @@ public class ComponentNewCommand extends AbstractCommand {
 		
 		aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
 		
+		boolean savingAllowed = SchemePermissionManager.isSavingAllowed();
+		boolean editionAllowed = SchemePermissionManager.isEditionAllowed();
+		
 		SchemeGraph cellGraph = this.cellPane.getGraph();
-		if (cellGraph.isGraphChanged()) {
+		this.cellPane.setEditable(editionAllowed);
+		
+		if (savingAllowed && cellGraph.isGraphChanged()) {
 			int ret = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(),
 					LangModelScheme.getString("Message.confirmation.component_not_saved"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$

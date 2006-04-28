@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.21 2006/02/17 13:08:09 stas Exp $
+ * $Id: SchemeResource.java,v 1.22 2006/04/28 09:07:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
@@ -36,7 +37,7 @@ import com.syrus.util.Log;
 /**
  * 
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2006/02/17 13:08:09 $
+ * @version $Revision: 1.22 $, $Date: 2006/04/28 09:07:03 $
  * @module schemeclient
  */
 
@@ -68,23 +69,23 @@ public class SchemeResource {
 
 	public static void setSchemePath(SchemePath path, boolean forEdit) {
 		schemePath = path;
-		isEditing = forEdit;
+		isEditing = SchemePermissionManager.isEditionAllowed() && forEdit;
 		
 		if (aContext != null) {
 			ApplicationModel aModel = aContext.getApplicationModel();
 			if (path == null) {
-				aModel.setEnabled("menuPathNew", true);
+				aModel.setEnabled("menuPathNew", SchemePermissionManager.isEditionAllowed());
 				aModel.setEnabled("menuPathEdit", false);
 				aModel.setEnabled("menuPathSave", false);
 				aModel.setEnabled("menuPathCancel", false);
 			} else if (forEdit) {
 				aModel.setEnabled("menuPathNew", false);
 				aModel.setEnabled("menuPathEdit", false);
-				aModel.setEnabled("menuPathSave", true);
+				aModel.setEnabled("menuPathSave", SchemePermissionManager.isEditionAllowed());
 				aModel.setEnabled("menuPathCancel", true);
 			} else {
-				aModel.setEnabled("menuPathNew", true);
-				aModel.setEnabled("menuPathEdit", true);
+				aModel.setEnabled("menuPathNew", SchemePermissionManager.isEditionAllowed());
+				aModel.setEnabled("menuPathEdit", SchemePermissionManager.isEditionAllowed());
 				aModel.setEnabled("menuPathSave", false);
 				aModel.setEnabled("menuPathCancel", false);
 			}
