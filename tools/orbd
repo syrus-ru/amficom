@@ -17,11 +17,11 @@ PIDFILE=${ORBD_DIR}/orbd.pid
 
 killprocess() {
 	pid=$1
-	psline=`ps -eo "pid,args" | ${GREP} -E "^\ *${pid}\ *"`
+	psline=`ps -eo "pid,args" | ${GREP} -E "^[ \t]*${pid}[ \t]"`
 	if [ ! -z "${psline}" ]
 	then
-		args=`echo ${psline} | ${SED} "s/^\ *${pid}\ *//g"`
-		echo "${args}"
+		args=`echo ${psline} | ${SED} "s/^\s*${pid}\s*//g"`
+		echo "Args: ${args}"
 
 		kill -9 ${pid}
 		sleep 10
@@ -35,7 +35,7 @@ case "$1" in
 		if [ -f "${PIDFILE}" ]
 		then
 			pid=`cat ${PIDFILE}`
-			psline=`ps -eo "pid,args" | ${GREP} -E "^\ *${pid}\ *"`
+			psline=`ps -eo "pid,args" | ${GREP} -E "^[ \t]*${pid}[ \t]"`
 			if [ -z "${psline}" ]
 			then
 				echo "orbd is dead but subsys locked"
@@ -56,7 +56,7 @@ case "$1" in
 		if [ -f ${PIDFILE} ]
 		then
 			pid=`cat ${PIDFILE}`
-			psline=`ps -eo "pid,args" | ${GREP} -E "^\ *${pid}\ *"`
+			psline=`ps -eo "pid,args" | ${GREP} -E "^[ \t]*${pid}[ \t]"`
 			if [ -z "${psline}" ]
 			then
 				echo "orbd is dead but subsys is locked"
@@ -75,7 +75,7 @@ case "$1" in
 		if [ -f ${PIDFILE} ]
 		then
 			pid=`cat ${PIDFILE}`
-			psline=`ps -eo "pid,args" | ${GREP} -E "^\ *${pid}\ *"`
+			psline=`ps -eo "pid,args" | ${GREP} -E "^[ \t]*${pid}[ \t]"`
 			if [ -z "${psline}" ]
 			then
 				echo "orbd is dead but subsys is locked"
