@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseContextSetup.java,v 1.22.6.1 2006/04/13 08:24:29 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.22.6.2 2006/04/28 13:14:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
+import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.ProtoEquipmentDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
@@ -54,7 +55,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElementDatabase;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroupDatabase;
 
 /**
- * @version $Revision: 1.22.6.1 $, $Date: 2006/04/13 08:24:29 $
+ * @version $Revision: 1.22.6.2 $, $Date: 2006/04/28 13:14:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -77,6 +78,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new RoleDatabase());
 
 		DatabaseContext.registerDatabase(new EquipmentDatabase());
+		DatabaseContext.registerDatabase(new EquipmentTypeDatabase());
 		DatabaseContext.registerDatabase(new ProtoEquipmentDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathTypeDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathDatabase());
