@@ -1,5 +1,5 @@
 /*-
- * $Id: PrintUtilities.java,v 1.3 2006/04/26 09:48:35 arseniy Exp $
+ * $Id: PrintUtilities.java,v 1.4 2006/04/28 09:03:04 arseniy Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.util;
 
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
@@ -20,13 +19,15 @@ import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2006/04/26 09:48:35 $
+ * @version $Revision: 1.4 $, $Date: 2006/04/28 09:03:04 $
  * @author $Author: arseniy $
  * @author Kholshin Stanislav
  * @module util
  */
 public class PrintUtilities implements Printable {
-	private boolean fitToWidth = true;
+	private static boolean fitToWidth = true;
+	private static boolean useDoubleBuffering = false;
+
 	private double scale = 1;
 	private boolean scaleSet = false;
 	private final JComponent c;
@@ -50,8 +51,12 @@ public class PrintUtilities implements Printable {
 		this.scaleSet = true;
 	}
 
-	public void setFitToWidth(final boolean fitToWidth) {
-		this.fitToWidth = fitToWidth;
+	public static void fitToWidth(final boolean b) {
+		fitToWidth = b;
+	}
+	
+	public static void useDoubleBuffering(final boolean b) {
+		useDoubleBuffering = b;
 	}
 
 	public void print() {
@@ -70,14 +75,12 @@ public class PrintUtilities implements Printable {
 
 		final int fontHeight = g2d.getFontMetrics().getHeight();
 		final int fontDesent = g2d.getFontMetrics().getDescent();
-		final double pageHeight = pageFormat.getImageableHeight() - fontHeight;
+		final double pageHeight = pageFormat.getImageableHeight();
 
 		final double compWidthOnPage = pageFormat.getImageableWidth();
 		final double compHeightOnPage = pageHeight;
-		if (!this.scaleSet) {
-			if (this.fitToWidth && this.c.getWidth() > compWidthOnPage) {
-				this.scale = compWidthOnPage / this.c.getWidth();
-			}
+		if (!this.scaleSet && fitToWidth && this.c.getWidth() > compWidthOnPage) {
+			this.scale = compWidthOnPage / this.c.getWidth();
 		}
 
 		final int totalPages = (int) Math.ceil(this.c.getHeight() * this.scale / compHeightOnPage);
@@ -89,9 +92,9 @@ public class PrintUtilities implements Printable {
 		g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
 
 		if (totalPages > 1) {
-			g2d.drawString("page: " + (pageIndex + 1),
-					(int) pageFormat.getImageableWidth() / 2 - 35,
-					(int) (pageHeight + fontHeight - fontDesent));
+			g2d.drawString(Integer.toString(pageIndex + 1),
+					(int)pageFormat.getImageableWidth() / 2,
+					(int)(pageHeight + fontHeight - fontDesent));
 		}
 
 		g2d.translate(0f, -pageIndex * compHeightOnPage);
@@ -109,20 +112,12 @@ public class PrintUtilities implements Printable {
 		}
 		g2d.scale(this.scale, this.scale);
 
-		disableDoubleBuffering(this.c);
+		final RepaintManager currentManager = RepaintManager.currentManager(this.c);
+		final boolean doubleBufferingEnabled = currentManager.isDoubleBufferingEnabled();
+		currentManager.setDoubleBufferingEnabled(useDoubleBuffering);
 		this.c.paint(g2d);
-		enableDoubleBuffering(this.c);
-
+		currentManager.setDoubleBufferingEnabled(doubleBufferingEnabled);
+		
 		return Printable.PAGE_EXISTS;
-	}
-
-	private static void disableDoubleBuffering(final Component c) {
-		final RepaintManager currentManager = RepaintManager.currentManager(c);
-		currentManager.setDoubleBufferingEnabled(false);
-	}
-
-	private static void enableDoubleBuffering(final Component c) {
-		final RepaintManager currentManager = RepaintManager.currentManager(c);
-		currentManager.setDoubleBufferingEnabled(true);
 	}
 }
