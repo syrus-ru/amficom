@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.9 2006/04/04 10:33:24 arseniy Exp $
+ * $Id: EventQueue.java,v 1.10 2006/04/28 11:00:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2006/04/04 10:33:24 $
+ * @version $Revision: 1.10 $, $Date: 2006/04/28 11:00:55 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -37,7 +37,6 @@ final class EventQueue extends SleepButWorkThread {
 	private static final int FALL_CODE_ESTABLISH_CONNECTION = 1;
 
 	private List<Event<?>> eventQueue;
-	private volatile boolean running;
 
 	public EventQueue() {
 		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, MeasurementControlModule.TICK_TIME) * 1000,
@@ -46,7 +45,6 @@ final class EventQueue extends SleepButWorkThread {
 		super.setName("EventQueue");
 
 		this.eventQueue = new LinkedList<Event<?>>();
-		this.running = true;
 	}
 
 	void addEvent(final Event<?> event) {
@@ -62,14 +60,14 @@ final class EventQueue extends SleepButWorkThread {
 		final MCMSessionEnvironment mcmSessionEnvironment = MCMSessionEnvironment.getInstance();
 		final BaseConnectionManager connectionManager = mcmSessionEnvironment.getConnectionManager();
 
-		while (this.running) {
+		while (interrupted()) {
 
 			synchronized (this.eventQueue) {
-				while (this.eventQueue.isEmpty() && this.running) {
+				while (this.eventQueue.isEmpty()) {
 					try {
 						this.eventQueue.wait(10000);
 					} catch (final InterruptedException ie) {
-						Log.debugMessage(this.getName() + " -- interrupted", Log.DEBUGLEVEL07);
+						return;
 					}
 				}
 			}
@@ -90,7 +88,11 @@ final class EventQueue extends SleepButWorkThread {
 			} catch (final CommunicationException ce) {
 				Log.debugMessage(ce, SEVERE);
 				super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
-				super.sleepCauseOfFall();
+				try {
+					super.sleepCauseOfFall();
+				} catch (InterruptedException e) {
+					return;
+				}
 			} catch (final SystemException se) {
 				if (idlEvents != null) {
 					Log.debugMessage(idlEvents.length
@@ -99,7 +101,11 @@ final class EventQueue extends SleepButWorkThread {
 				}
 				Log.debugMessage(se, SEVERE);
 				super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
-				super.sleepCauseOfFall();
+				try {
+					super.sleepCauseOfFall();
+				} catch (InterruptedException e) {
+					return;
+				}
 			}
 		}
 	}
@@ -132,7 +138,7 @@ final class EventQueue extends SleepButWorkThread {
 	}
 
 	void shutdown() {
-		this.running = false;
+		this.interrupt();
 		synchronized (this.eventQueue) {
 			this.eventQueue.notifyAll();
 		}

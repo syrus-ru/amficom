@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.82 2006/04/04 10:35:01 arseniy Exp $
+ * $Id: Transceiver.java,v 1.83 2006/04/28 11:00:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2006/04/04 10:35:01 $
+ * @version $Revision: 1.83 $, $Date: 2006/04/28 11:00:55 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -55,8 +55,6 @@ final class Transceiver extends SleepButWorkThread {
 	private KISReport kisReport;
 	private Measurement measurementToRemove;
 
-	private boolean running;
-
 	public Transceiver(final KIS kis) {
 		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_TICK_TIME, MeasurementControlModule.KIS_TICK_TIME) * 1000,
 				ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_MAX_FALLS, MeasurementControlModule.KIS_MAX_FALLS));
@@ -72,7 +70,6 @@ final class Transceiver extends SleepButWorkThread {
 		} catch (CommunicationException ce) {
 			Log.errorMessage(ce);
 		}
-		this.running = true;
 	}
 
 	synchronized void addMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
@@ -122,14 +119,14 @@ final class Transceiver extends SleepButWorkThread {
 
 	@Override
 	public void run() {
-		while (this.running) {
+		while (!interrupted()) {
 
 			synchronized (this) {
 				while (this.testProcessors.isEmpty()) {
 					try {
 						this.wait(10000);
 					} catch (InterruptedException ie) {
-						Log.debugMessage(this.getName() + " -- interrupted", Log.DEBUGLEVEL07);
+						return;
 					}
 				}
 			}
@@ -156,7 +153,11 @@ final class Transceiver extends SleepButWorkThread {
 							this.kisConnection.drop();
 							super.fallCode = FALL_CODE_TRANSMIT_MEASUREMENT;
 							this.measurementToRemove = measurement;
-							super.sleepCauseOfFall();
+							try {
+								super.sleepCauseOfFall();
+							} catch (InterruptedException e) {
+								return;
+							}
 							continue;
 						} catch (ApplicationException ae) {
 							Log.errorMessage(ae);
@@ -171,7 +172,11 @@ final class Transceiver extends SleepButWorkThread {
 							Log.errorMessage(ce);
 							this.kisConnection.drop();
 							super.fallCode = FALL_CODE_RECEIVE_KIS_REPORT;
-							super.sleepCauseOfFall();
+							try {
+								super.sleepCauseOfFall();
+							} catch (InterruptedException e) {
+								return;
+							}
 						}
 					} else {// if (this.kisReport == null)
 						// Additional assert to prove, that measurements not leak
@@ -206,7 +211,11 @@ final class Transceiver extends SleepButWorkThread {
 								result = null;
 								super.fallCode = FALL_CODE_CREATE_RESULT;
 								this.measurementToRemove = measurement;
-								super.sleepCauseOfFall();
+								try {
+									super.sleepCauseOfFall();
+								} catch (InterruptedException e) {
+									return;
+								}
 							}
 
 							if (result != null) {
@@ -240,7 +249,11 @@ final class Transceiver extends SleepButWorkThread {
 					} catch (CommunicationException ce) {
 						Log.errorMessage(ce);
 						super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
-						super.sleepCauseOfFall();
+						try {
+							super.sleepCauseOfFall();
+						} catch (InterruptedException e) {
+							return;
+						}
 					}
 				}// else if (this.kisConnection.isEstablished())
 			} else {// if (this.kisConnection != null)
@@ -250,7 +263,11 @@ final class Transceiver extends SleepButWorkThread {
 				} catch (CommunicationException ce) {
 					Log.errorMessage(ce);
 					super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
-					super.sleepCauseOfFall();
+					try {
+						super.sleepCauseOfFall();
+					} catch (InterruptedException e) {
+						return;
+					}
 				}
 			}// else if (this.kisConnection != null)
 
@@ -326,8 +343,8 @@ final class Transceiver extends SleepButWorkThread {
 	}
 
 	synchronized void shutdown() {
+		this.interrupt();
 		this.scheduledMeasurements.clear();
-		this.running = false;
 		if (this.kisConnection != null) {
 			this.kisConnection.drop();
 		}

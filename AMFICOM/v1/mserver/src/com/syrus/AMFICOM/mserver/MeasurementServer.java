@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.96 2006/03/30 12:41:22 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.97 2006/04/28 11:00:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2006/03/30 12:41:22 $
+ * @version $Revision: 1.97 $, $Date: 2006/04/28 11:00:54 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -114,8 +114,6 @@ final class MeasurementServer extends SleepButWorkThread {
 	 */
 	private static StorableObjectCondition testLoadCondition;
 
-	private boolean running;
-
 	/*	Variables for method processFall()	(abort tests, ...)*/
 	/*	Identifiers of MCMs on which cannot transmit tests	*/
 	private static Set<Identifier> mcmIdsToAbortTests;	
@@ -124,8 +122,6 @@ final class MeasurementServer extends SleepButWorkThread {
 	private MeasurementServer() {
 		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000, ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
 		super.setName("MeasurementServer");
-
-		this.running = true;
 	}
 
 	public static void main(String[] args) {
@@ -239,7 +235,7 @@ final class MeasurementServer extends SleepButWorkThread {
 	public void run() {
 		final MServerServantManager servantManager = MServerSessionEnvironment.getInstance().getMServerServantManager();
 
-		while (this.running) {
+		while (!interrupted()) {
 			/*	Now Measurement Server can get new tests only from database
 			 * (not through direct CORBA operation).
 			 * Maybe in future change such behaviour*/
@@ -261,7 +257,11 @@ final class MeasurementServer extends SleepButWorkThread {
 							Log.errorMessage(ae);
 							super.fallCode = FALL_CODE_RECEIVE_TESTS;
 							mcmIdsToAbortTests.add(mcmId);
-							super.sleepCauseOfFall();
+							try {
+								super.sleepCauseOfFall();
+							} catch (InterruptedException e) {
+								return;
+							}
 							continue;
 						}
 
@@ -296,7 +296,11 @@ final class MeasurementServer extends SleepButWorkThread {
 							Log.errorMessage("Cannot transmit: " + are.message + "; sleeping cause of fall");
 							super.fallCode = FALL_CODE_RECEIVE_TESTS;
 							mcmIdsToAbortTests.add(mcmId);
-							super.sleepCauseOfFall();
+							try {
+								super.sleepCauseOfFall();
+							} catch (InterruptedException e) {
+								return;
+							}
 						} catch (Throwable throwable) {
 							Log.errorMessage(throwable);
 						}
@@ -427,7 +431,7 @@ final class MeasurementServer extends SleepButWorkThread {
 	}
 
 	void shutdown() {
-		this.running = false;
+		this.interrupt();
 		DatabaseConnection.closeConnection();
 	}
 

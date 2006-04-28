@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.93 2006/04/04 10:35:01 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.94 2006/04/28 11:00:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2006/04/04 10:35:01 $
+ * @version $Revision: 1.94 $, $Date: 2006/04/28 11:00:55 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -76,8 +76,6 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 	private Transceiver transceiver;
 
-	private boolean running;
-
 	public TestProcessor(final Test test) {
 		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, MeasurementControlModule.TICK_TIME) * 1000,
 				ApplicationProperties.getInt(MeasurementControlModule.KEY_MAX_FALLS, SleepButWorkThread.MAX_FALLS));
@@ -88,8 +86,6 @@ abstract class TestProcessor extends SleepButWorkThread {
 		MeasurementControlModule.putTestProcessor(this);
 
 		this.measurementResults = Collections.synchronizedList(new LinkedList<Result>());
-
-		this.running = true;
 
 		try {
 			final Set<MeasurementSetup> measurementSetups = StorableObjectPool.getStorableObjects(this.test.getMeasurementSetupIds(), true);
@@ -235,7 +231,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 	@Override
 	public final void run() {
-		while (this.running) {
+		while (!interrupted()) {
 
 			if (!this.lastMeasurementAcquisition) {
 				if (this.nextMeasurementStartTime == null) {
@@ -264,7 +260,11 @@ abstract class TestProcessor extends SleepButWorkThread {
 							} else {
 								super.fallCode = FALL_CODE_CREATE_MEASUREMENT;
 							}
-							super.sleepCauseOfFall();
+							try {
+								super.sleepCauseOfFall();
+							} catch (InterruptedException e) {
+								return;
+							}
 						}
 					}
 				}
@@ -278,7 +278,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 			try {
 				sleep(super.initialTimeToSleep);
 			} catch (InterruptedException ie) {
-				Log.errorMessage(ie);
+				return;
 			}
 		}
 	}
@@ -451,7 +451,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 	}
 
 	void shutdown() {
-		this.running = false;
+		this.interrupt();
 		this.cleanup();
 	}
 
