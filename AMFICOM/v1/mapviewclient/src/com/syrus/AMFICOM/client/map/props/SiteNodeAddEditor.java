@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeAddEditor.java,v 1.39 2006/02/15 11:27:23 stas Exp $$
+ * $$Id: SiteNodeAddEditor.java,v 1.40 2006/04/28 10:00:17 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2006/02/15 11:27:23 $
+ * @version $Revision: 1.40 $, $Date: 2006/04/28 10:00:17 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -198,7 +198,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 
 		this.treeScrollPane.getViewport().add(this.elementsTree);
 		this.crossingScrollPane.getViewport().add(this.crossingPanel);
-		this.schemePane.getGraph().setGraphEditable(false);
+		this.schemePane.setEditable(false);
 		
 //		this.crossingScrollPane.setMinimumSize(new Dimension(50, 100));
 		this.crossingPanel.setPreferredSize(new Dimension(50, 100));
