@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.9 2006/04/24 08:40:00 arseniy Exp $
+# $Id: Makefile,v 1.10 2006/04/28 09:31:38 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -102,5 +102,6 @@ arch:
 		Makefile \
 		$(SOURCES) \
 		$(wildcard $(XMLDIR)/*.xml) \
-		$(XMLDIR)/$(MODULE_NAME).xsdconfig
+		$(XMLDIR)/$(MODULE_NAME).xsdconfig \
+		$(wildcard $(XMLDIR)/*.xsd)
 
