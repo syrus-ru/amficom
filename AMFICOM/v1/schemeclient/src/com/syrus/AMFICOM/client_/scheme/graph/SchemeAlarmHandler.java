@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeAlarmHandler.java,v 1.13 2006/03/27 15:08:54 stas Exp $
+ * $Id: SchemeAlarmHandler.java,v 1.14 2006/05/02 07:23:32 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.swing.SwingUtilities;
 
 import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.GraphCell;
@@ -39,7 +41,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2006/03/27 15:08:54 $
+ * @version $Revision: 1.14 $, $Date: 2006/05/02 07:23:32 $
  * @module schemeclient_v1
  */
 
@@ -236,28 +238,36 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 		
 		@Override
 		public void run() {
-				while (true) {
-					try {
-						sleep(REPAINT_TIME);
-					} catch (InterruptedException e) {
-						Log.errorMessage(e);
-					}
-					synchronized (this) {
-						if (this.cells.length == 0) {
-							break;
-						}
-						GraphActions.setObjectsColor(this.graph, this.cells, Color.RED);
-					}
-					try {
-						sleep(REPAINT_TIME);
-					} catch (InterruptedException e) {
-						Log.errorMessage(e);
-					}
-					
-					synchronized (this) {
-						GraphActions.setObjectsColor(this.graph, this.cells, Color.BLACK);
-					}
+			while (true) {
+				try {
+					sleep(REPAINT_TIME);
+				} catch (InterruptedException e) {
+					Log.errorMessage(e);
 				}
+				
+				if (this.cells.length == 0) {
+					break;
+				}
+				
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						GraphActions.setObjectsColor(AlarmPainter.this.graph, AlarmPainter.this.cells, Color.RED);
+					}
+				});
+					
+
+				try {
+					sleep(REPAINT_TIME);
+				} catch (InterruptedException e) {
+					Log.errorMessage(e);
+				}
+				
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						GraphActions.setObjectsColor(AlarmPainter.this.graph, AlarmPainter.this.cells, Color.BLACK);
+					}
+				});
+			}
 		}
 	}
 }
