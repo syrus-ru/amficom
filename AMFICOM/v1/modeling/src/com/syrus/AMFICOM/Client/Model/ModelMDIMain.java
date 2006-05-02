@@ -51,7 +51,6 @@ import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
@@ -594,8 +593,6 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		aModel.setEnabled("menuFileOpenAsBellcore", true);
 		aModel.setEnabled("menuFileOpenAsWavetek", true);
 		aModel.setEnabled("menuViewModelLoad", true);
-		
-		aModel.setEnabled("menuSessionOpen", false);
 
 		aModel.fireModelChanged();
 		
@@ -603,16 +600,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 			public void run() {
 				showTraceFrames(true);
 				showSchemeFrames(true);
-//				aModel.getCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR).execute();
-//				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_TREE).execute();
-//				aModel.getCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS).execute();
-//				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_TRANS_DATA).execute();
-//				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS).execute();
-//				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_SCHEME).execute();
-//				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES).execute();
-//				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES).execute();
-//				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS).execute();
-				
+
 				aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);
 				aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
 				aModel.fireModelChanged();
@@ -652,8 +640,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		if (true) // XXX: if(isCreated)
 		{
-			final boolean saveFilePermitted = true;
-//					PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE);
+			final boolean saveFilePermitted = ModelingPermissionManager.isSavingAllowed();
 			aModel.setEnabled("menuFileSave", saveFilePermitted);
 			aModel.setEnabled("menuFileSaveAll", saveFilePermitted);
 			aModel.setEnabled("menuFileSaveAs", saveFilePermitted);
@@ -662,7 +649,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 			aModel.setEnabled("menuFileAddCompare", true);
 //					PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
 
-			aModel.setEnabled("menuViewModelSave", true);
+			aModel.setEnabled("menuViewModelSave", saveFilePermitted);
 			
 			aModel.setEnabled("menuTraceClose", true);
 			aModel.setEnabled("menuTraceAddCompare", true);
@@ -690,7 +677,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 				Identifier id = ((Identifiable)ose.getSelectedObject()).getId();
 				ApplicationModel aModel = this.aContext.getApplicationModel();
 				aModel.getCommand("menuViewMapViewOpen").setParameter("scheme_id", id);
-				aModel.setEnabled("menuViewMapViewOpen", true);
+				aModel.setEnabled("menuViewMapViewOpen", ModelingPermissionManager.isOpenMapAllowed());
 				aModel.fireModelChanged("");
 			}
 		}
