@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.38 2006/04/28 09:01:33 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.39 2006/05/02 07:22:01 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.38 $, $Date: 2006/04/28 09:01:33 $
+ * @version $Revision: 1.39 $, $Date: 2006/05/02 07:22:01 $
  * @module schemeclient
  */
 
@@ -90,17 +90,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 				public void actionPerformed(ActionEvent e) {
 					TreePath[] selectedPaths = SchemeTreeUI.this.treeUI.getTree().getSelectionModel().getSelectionPaths();
 					TreePath selectedPath1 = SchemeTreeUI.this.treeUI.getTree().getSelectionModel().getSelectionPath();
-					
-					if (selectedPath1 != null) {
-						int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), 
-								LangModelScheme.getString("Message.confirmation.sure_delete"),  //$NON-NLS-1$ 
-								LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$
-								JOptionPane.OK_CANCEL_OPTION);
-						if (res == JOptionPane.CANCEL_OPTION) {
-							return;
-						}
-					}
-					
+										
 					for (TreePath selectedPath : selectedPaths) {
 						Item item = (Item)selectedPath.getLastPathComponent();
 						Object object = item.getObject();
@@ -121,6 +111,14 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Set<MapView> views = StorableObjectPool.getStorableObjectsByCondition(condition, false);
 								
 								if (views.isEmpty() && scheme.getParentSchemeElement() == null) {
+									int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), 
+											LangModelScheme.getString("Message.confirmation.sure_delete"),  //$NON-NLS-1$ 
+											LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$
+											JOptionPane.OK_CANCEL_OPTION);
+									if (res == JOptionPane.CANCEL_OPTION) {
+										return;
+									}
+									
 									// отцепляем линки
 									for (SchemeCableLink link : scheme.getSchemeCableLinks(false)) {
 										link.setSourceAbstractSchemePort(null);
@@ -144,7 +142,8 @@ public class SchemeTreeUI extends IconedTreeUI {
 											LangModelScheme.getString("Message.error.delete.scheme"),
 											LangModelScheme.getString("Message.error"),
 											JOptionPane.OK_OPTION);
-									Log.debugMessage("Can not delete ProtoEquipmet as there are PropoElements with such type", Level.WARNING);
+									Log.debugMessage("Can not delete Scheme as there is parent Scheme or MapView", Level.WARNING);
+									return;
 								}
 							} catch (ApplicationException e1) {
 								Log.errorMessage(e1);
@@ -160,6 +159,14 @@ public class SchemeTreeUI extends IconedTreeUI {
 							}
 							
 							try {
+								int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), 
+										LangModelScheme.getString("Message.confirmation.sure_delete"),  //$NON-NLS-1$ 
+										LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$
+										JOptionPane.OK_CANCEL_OPTION);
+								if (res == JOptionPane.CANCEL_OPTION) {
+									return;
+								}
+								
 								SchemePath path = (SchemePath)object;
 								Set<Identifiable> ids = path.getReverseDependencies(false);
 								
@@ -182,6 +189,14 @@ public class SchemeTreeUI extends IconedTreeUI {
 							}
 							
 							try {
+								int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), 
+										LangModelScheme.getString("Message.confirmation.sure_delete"),  //$NON-NLS-1$ 
+										LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$
+										JOptionPane.OK_CANCEL_OPTION);
+								if (res == JOptionPane.CANCEL_OPTION) {
+									return;
+								}
+								
 								SchemeProtoElement proto = (SchemeProtoElement)object;
 								Set<Identifiable> ids = proto.getReverseDependencies(false);
 
@@ -207,6 +222,14 @@ public class SchemeTreeUI extends IconedTreeUI {
 							try {
 								if (group.getSchemeProtoElements(false).isEmpty() && 
 									group.getSchemeProtoGroups(false).isEmpty()) {
+									int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), 
+											LangModelScheme.getString("Message.confirmation.sure_delete"),  //$NON-NLS-1$ 
+											LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$
+											JOptionPane.OK_CANCEL_OPTION);
+									if (res == JOptionPane.CANCEL_OPTION) {
+										return;
+									}
+									
 									Set<Identifiable> ids = group.getReverseDependencies(false);
 									
 									SchemeTreeUI.this.aContext.getDispatcher().firePropertyChange(
@@ -214,6 +237,12 @@ public class SchemeTreeUI extends IconedTreeUI {
 									
 									StorableObjectPool.delete(ids);
 									StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
+								} else {
+									JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
+											LangModelScheme.getString("Message.error.delete.proto_group"),
+											LangModelScheme.getString("Message.error"),
+											JOptionPane.OK_OPTION);
+									Log.debugMessage("Can not delete ProtoGroup as there are PropoElement(s) or ProtoGroup(s) in it", Level.WARNING);
 								}
 							} catch (ApplicationException e1) {
 								Log.errorMessage(e1);
@@ -236,6 +265,14 @@ public class SchemeTreeUI extends IconedTreeUI {
 									LinkedIdsCondition condition2 = new LinkedIdsCondition(protoEq.getId(), ObjectEntities.SCHEMEELEMENT_CODE);
 									Set<SchemeElement> schemeElements = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 									if (schemeElements.isEmpty()) {
+										int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), 
+												LangModelScheme.getString("Message.confirmation.sure_delete"),  //$NON-NLS-1$ 
+												LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$
+												JOptionPane.OK_CANCEL_OPTION);
+										if (res == JOptionPane.CANCEL_OPTION) {
+											return;
+										}
+
 										StorableObjectPool.delete(protoEq.getId());
 										StorableObjectPool.flush(protoEq, LoginManager.getUserId(), false);
 									} else {
@@ -251,6 +288,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 											LangModelScheme.getString("Message.error"),
 											JOptionPane.OK_OPTION);
 									Log.debugMessage("Can not delete ProtoEquipmet as there are PropoElements with such type", Level.WARNING);
+									return;
 								}
 							} catch (ApplicationException e1) {
 								Log.errorMessage(e1);
@@ -270,6 +308,14 @@ public class SchemeTreeUI extends IconedTreeUI {
 								LinkedIdsCondition condition1 = new LinkedIdsCondition(type.getId(), ObjectEntities.SCHEMELINK_CODE);
 								Set<SchemeLink> links = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 								if (links.isEmpty()) {
+									int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), 
+											LangModelScheme.getString("Message.confirmation.sure_delete"),  //$NON-NLS-1$ 
+											LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$
+											JOptionPane.OK_CANCEL_OPTION);
+									if (res == JOptionPane.CANCEL_OPTION) {
+										return;
+									}
+
 									StorableObjectPool.delete(type.getId());
 									StorableObjectPool.flush(type, LoginManager.getUserId(), false);
 								} else {
@@ -278,6 +324,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 											LangModelScheme.getString("Message.error"),
 											JOptionPane.OK_OPTION);
 									Log.debugMessage("Can not delete LinkType as there are SchemeLinks with such type", Level.WARNING);
+									return;
 								}
 							} catch (ApplicationException e1) {
 								Log.errorMessage(e1);
@@ -298,6 +345,14 @@ public class SchemeTreeUI extends IconedTreeUI {
 								LinkedIdsCondition condition1 = new LinkedIdsCondition(type.getId(), ObjectEntities.SCHEMECABLELINK_CODE);
 								Set<SchemeCableLink> links = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 								if (links.isEmpty()) {
+									int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), 
+											LangModelScheme.getString("Message.confirmation.sure_delete"),  //$NON-NLS-1$ 
+											LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$
+											JOptionPane.OK_CANCEL_OPTION);
+									if (res == JOptionPane.CANCEL_OPTION) {
+										return;
+									}
+									
 									Set<CableThreadType> threadTypes = type.getCableThreadTypes(false);
 									Set<Identifier> ids = new HashSet<Identifier>();
 									for (CableThreadType ctt : threadTypes) {
@@ -312,6 +367,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 											LangModelScheme.getString("Message.error"),
 											JOptionPane.OK_OPTION);
 									Log.debugMessage("Can not delete CableLinkType as there are SchemeCableLinks with such type", Level.WARNING);
+									return;
 								}
 							} catch (ApplicationException e1) {
 								Log.errorMessage(e1);
@@ -334,6 +390,13 @@ public class SchemeTreeUI extends IconedTreeUI {
 									LinkedIdsCondition condition2 = new LinkedIdsCondition(type.getId(), ObjectEntities.SCHEMECABLEPORT_CODE);
 									Set<SchemeCablePort> cablePorts = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 									if (cablePorts.isEmpty()) {
+										int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), 
+												LangModelScheme.getString("Message.confirmation.sure_delete"),  //$NON-NLS-1$ 
+												LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$
+												JOptionPane.OK_CANCEL_OPTION);
+										if (res == JOptionPane.CANCEL_OPTION) {
+											return;
+										}
 										StorableObjectPool.delete(type.getId());
 										StorableObjectPool.flush(type, LoginManager.getUserId(), false);
 									} else {
@@ -341,12 +404,16 @@ public class SchemeTreeUI extends IconedTreeUI {
 												LangModelScheme.getString("Message.error.delete.port_type"),
 												LangModelScheme.getString("Message.error"),
 												JOptionPane.OK_OPTION);
+										Log.debugMessage("Can not delete PortType as there are SchemeCablePorts with such type", Level.WARNING);
+										return;
 									}
 								} else {
 									JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
 											LangModelScheme.getString("Message.error.delete.port_type"),
 											LangModelScheme.getString("Message.error"),
 											JOptionPane.OK_OPTION);
+									Log.debugMessage("Can not delete PortType as there are SchemePorts with such type", Level.WARNING);
+									return;
 								}
 							} catch (ApplicationException e1) {
 								Log.errorMessage(e1);
