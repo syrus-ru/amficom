@@ -64,6 +64,7 @@ import com.syrus.AMFICOM.client.UI.GeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.command.editor.ViewMapWindowCommand;
 import com.syrus.AMFICOM.client.map.command.map.OpenLinkedMapViewCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.MapPropertiesEventHandler;
@@ -422,7 +423,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES, this.getLazyCommand(GeneralPropertiesFrame.NAME));
 		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES, this.getLazyCommand(AdditionalPropertiesFrame.NAME));
 		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS, this.getLazyCommand(CharacteristicPropertiesFrame.NAME));
-		aModel.setCommand(MapEditorApplicationModel.ITEM_VIEW_MAP, this.getLazyCommand(MapFrame.NAME));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_VIEW_MAP, new ViewMapWindowCommand(this.desktopPane, this.aContext, mapApplicationModelFactory));
 		
 		aModel.fireModelChanged("");
 	}
