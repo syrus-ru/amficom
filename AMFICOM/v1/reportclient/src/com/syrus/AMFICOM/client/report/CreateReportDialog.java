@@ -1,5 +1,5 @@
 /*
- * $Id: CreateReportDialog.java,v 1.14 2006/04/26 13:10:03 stas Exp $
+ * $Id: CreateReportDialog.java,v 1.15 2006/05/03 04:52:26 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.PrintUtilities;
  * открытия шаблонов определённого типа.
  *
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2006/04/26 13:10:03 $
+ * @version $Revision: 1.15 $, $Date: 2006/05/03 04:52:26 $
  * @module reportclient
  */
 public class CreateReportDialog {
@@ -197,6 +197,7 @@ public class CreateReportDialog {
 	}
 
 	void printTemplate(JComponent componentToPrint) {
+		PrintUtilities.useDoubleBuffering(true);
 		PrintUtilities.printComponent(componentToPrint, 1 / ReportTemplate.SCALE_FACTOR);
 	}
 	
