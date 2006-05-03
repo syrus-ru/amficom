@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenLinkedMapViewCommand.java,v 1.2 2006/02/15 11:12:43 stas Exp $
+ * $Id: OpenLinkedMapViewCommand.java,v 1.3 2006/05/03 11:54:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -123,6 +123,12 @@ public class OpenLinkedMapViewCommand extends AbstractCommand {
 			if(mapFrame == null) {
 				return;
 			}
+			
+			if (mapView.equals(mapFrame.getMapView())) {
+				Log.debugMessage("MapView already opened", Level.INFO);
+				return;
+			}
+			
 			mapView.getMap().open();
 			
 			final MapViewController mapViewController = mapFrame.getMapViewer().getLogicalNetLayer().getMapViewController();
