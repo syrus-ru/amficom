@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePermissionManager.java,v 1.2 2006/05/02 07:20:29 stas Exp $
+ * $Id: SchemePermissionManager.java,v 1.3 2006/05/03 04:51:02 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,8 @@ public class SchemePermissionManager {
 	
 	public static boolean isTypeEditionAllowed() {
 		try {
-			return Application.getApplicationName().equals(SchemeEditor.APPLICATION_NAME)
+			return (Application.getApplicationName().equals(SchemeEditor.APPLICATION_NAME)
+					|| Application.getApplicationName().equals(ElementsEditor.APPLICATION_NAME))
 					&& LoginManager.isLoggedIn() && Checker.isPermitted(ELEMENTS_EDITOR_CREATE_CHANGE_SAVE_TYPE);
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
