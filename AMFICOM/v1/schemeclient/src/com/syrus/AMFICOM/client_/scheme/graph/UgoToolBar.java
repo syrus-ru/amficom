@@ -1,5 +1,5 @@
 /*-
- * $Id: UgoToolBar.java,v 1.11 2005/10/12 10:08:41 stas Exp $
+ * $Id: UgoToolBar.java,v 1.12 2006/05/03 04:50:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomOutAction;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/10/12 10:08:41 $
+ * @version $Revision: 1.12 $, $Date: 2006/05/03 04:50:03 $
  * @module schemeclient
  */
 
@@ -47,9 +47,7 @@ public class UgoToolBar extends JToolBar {
 //	private static LayoutManager horizontal = new FlowLayout(FlowLayout.LEFT, 0, 0);
 	private static String[] buttons = new String[] { Constants.MARQUEE,
 			Constants.SEPARATOR, Constants.RECTANGLE, Constants.ELLIPSE,
-			Constants.LINE, Constants.TEXT, Constants.SEPARATOR, Constants.ZOOM_IN,
-			Constants.ZOOM_OUT, Constants.ZOOM_BOX, 
-			Constants.ZOOM_ACTUAL, Constants.HORIZONTAL_GLUE };
+			Constants.LINE, Constants.TEXT, Constants.HORIZONTAL_GLUE };
 
 	protected UgoToolBar(UgoTabbedPane pane) {
 		this.pane = pane;
