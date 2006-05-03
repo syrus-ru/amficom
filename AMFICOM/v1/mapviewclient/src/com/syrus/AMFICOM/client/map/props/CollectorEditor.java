@@ -1,5 +1,5 @@
 /*-
- * $$Id: CollectorEditor.java,v 1.25 2006/02/15 11:27:23 stas Exp $$
+ * $$Id: CollectorEditor.java,v 1.26 2006/05/03 04:46:32 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.editor.MapPermissionManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
@@ -43,7 +44,7 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2006/02/15 11:27:23 $
+ * @version $Revision: 1.26 $, $Date: 2006/05/03 04:46:32 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -254,8 +255,14 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 		return this.collector;
 	}
 
-	public void setObject(Object object)
-	{
+	@Override
+	protected boolean isEditable() {
+		return MapPermissionManager.isEditionAllowed();
+	}
+
+	public void setObject(Object object) {
+		this.commitButton.setEnabled(isEditable());
+		
 		this.collector = (Collector)object;
 
 		this.piquetsList.removeAll();

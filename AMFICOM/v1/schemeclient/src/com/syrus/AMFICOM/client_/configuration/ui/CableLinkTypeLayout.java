@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.17 2006/04/28 09:08:22 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.18 2006/05/03 04:49:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.configuration.CableThreadType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2006/04/28 09:08:22 $
+ * @version $Revision: 1.18 $, $Date: 2006/05/03 04:49:00 $
  * @module schemeclient
  */
 
@@ -64,6 +64,11 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 		this.panel.setEditable(false);
 		this.panel.getGraph().setAntiAliased(true);
 		this.scrollPane = new JScrollPane(this.panel.getGraph());
+	}
+	
+	@Override
+	protected boolean isEditable() {
+		return false;
 	}
 
 	public void setObject(Object or) {

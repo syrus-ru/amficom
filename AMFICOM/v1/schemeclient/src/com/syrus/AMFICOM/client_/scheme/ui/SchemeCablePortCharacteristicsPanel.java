@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortCharacteristicsPanel.java,v 1.15 2005/12/06 11:40:35 bass Exp $
+ * $Id: SchemeCablePortCharacteristicsPanel.java,v 1.16 2006/05/03 04:48:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -17,8 +18,8 @@ import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/12/06 11:40:35 $
+ * @author $Author: stas $
+ * @version $Revision: 1.16 $, $Date: 2006/05/03 04:48:52 $
  * @module schemeclient
  */
 
@@ -37,6 +38,11 @@ public class SchemeCablePortCharacteristicsPanel extends CharacteristicsPanel {
 	public Object getObject() {
 		return this.schemeCablePort;
 	}
+	
+	@Override
+	protected boolean isEditable() {
+		return SchemePermissionManager.isEditionAllowed();
+	}
 
 	public void setObject(Object or) {
 		this.schemeCablePort = (SchemeCablePort)or;
@@ -46,14 +52,14 @@ public class SchemeCablePortCharacteristicsPanel extends CharacteristicsPanel {
 			try {
 				super.setTypeSortMapping(IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 						this.schemeCablePort,
-						this.schemeCablePort.getId(), true);
+						this.schemeCablePort.getId(), isEditable());
 				super.addCharacteristics(this.schemeCablePort.getCharacteristics(true), this.schemeCablePort.getId());
 				Port port = this.schemeCablePort.getPort();
 				if (port != null) {
 					for (int i = 0; i < sorts.length; i++)
 						super.setTypeSortMapping(sorts[i],
 								port,
-								port.getId(), true);
+								port.getId(), isEditable());
 					super.addCharacteristics(port.getCharacteristics(true), port.getId());
 				} else {
 					PortType portType = this.schemeCablePort.getPortType();

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortGeneralPanel.java,v 1.22 2006/02/15 12:18:11 stas Exp $
+ * $Id: SchemeCablePortGeneralPanel.java,v 1.23 2006/05/03 04:48:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
@@ -52,7 +53,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2006/02/15 12:18:11 $
+ * @version $Revision: 1.23 $, $Date: 2006/05/03 04:48:52 $
  * @module schemeclient
  */
 
@@ -290,7 +291,14 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		return this.pnPanel0;
 	}
 
+	@Override
+	protected boolean isEditable() {
+		return SchemePermissionManager.isEditionAllowed();
+	}
+	
 	public void setObject(final Object or) {
+		this.btCommitBut.setEnabled(isEditable());
+		
 		this.schemePort = (SchemeCablePort) or;
 		Port port = null;
 		this.cmbTypeCombo.removeAllItems();

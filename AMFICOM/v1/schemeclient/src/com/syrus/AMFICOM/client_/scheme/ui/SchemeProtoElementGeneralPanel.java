@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.29 2006/04/07 13:53:02 arseniy Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.30 2006/05/03 04:48:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.ElementsPermissionManager;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.ProtoEquipmentWrapper;
@@ -63,8 +64,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2006/04/07 13:53:02 $
+ * @author $Author: stas $
+ * @version $Revision: 1.30 $, $Date: 2006/05/03 04:48:52 $
  * @module schemeclient
  */
 
@@ -406,7 +407,14 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		return this.schemeProtoElement;
 	}
 
+	@Override
+	protected boolean isEditable() {
+		return ElementsPermissionManager.isEditionAllowed();
+	}
+	
 	public void setObject(final Object or) {
+		this.commitButton.setEnabled(isEditable());
+		
 		this.schemeProtoElement = (SchemeProtoElement) or;
 		ProtoEquipment protoEq = null;
 		Icon symbol = null;

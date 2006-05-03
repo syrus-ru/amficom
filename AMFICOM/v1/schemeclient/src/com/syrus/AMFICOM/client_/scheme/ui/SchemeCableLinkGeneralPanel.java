@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.28 2006/02/16 14:56:05 stas Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.29 2006/05/03 04:48:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,6 +45,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.configuration.CableLink;
@@ -68,7 +69,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.28 $, $Date: 2006/02/16 14:56:05 $
+ * @version $Revision: 1.29 $, $Date: 2006/05/03 04:48:52 $
  * @module schemeclient
  */
 
@@ -444,8 +445,15 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 	public JComponent getGUI() {
 		return this.pnPanel0;
 	}
+	
+	@Override
+	protected boolean isEditable() {
+		return SchemePermissionManager.isEditionAllowed();
+	}
 
 	public void setObject(final Object or) {
+		this.btCommitBut.setEnabled(isEditable());
+		
 		this.schemeCableLink = (SchemeCableLink) or;
 
 		this.cmbTypeCombo.removeAllItems();

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeGeneralPanel.java,v 1.13 2006/02/15 12:18:10 stas Exp $
+ * $Id: LinkTypeGeneralPanel.java,v 1.14 2006/05/03 04:49:00 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -43,7 +44,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2006/02/15 12:18:10 $
+ * @version $Revision: 1.14 $, $Date: 2006/05/03 04:49:00 $
  * @module schemeclient
  */
 
@@ -236,7 +237,14 @@ public class LinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		return this.linkType;
 	}
 
+	@Override
+	protected boolean isEditable() {
+		return SchemePermissionManager.isTypeEditionAllowed();
+	}
+	
 	public void setObject(final Object or) {
+		this.commitButton.setEnabled(isEditable());
+		
 		this.linkType = (LinkType) or;
 
 		// EquivalentCondition condition = new

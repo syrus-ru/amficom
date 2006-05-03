@@ -1,5 +1,5 @@
 /*-
- * $$Id: UnboundNodeEditor.java,v 1.21 2006/02/15 12:54:38 stas Exp $$
+ * $$Id: UnboundNodeEditor.java,v 1.22 2006/05/03 04:46:32 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.editor.MapPermissionManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2006/02/15 12:54:38 $
+ * @version $Revision: 1.22 $, $Date: 2006/05/03 04:46:32 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -263,7 +264,14 @@ public class UnboundNodeEditor extends DefaultStorableObjectEditor {
 		return this.unbound;
 	}
 
+	@Override
+	protected boolean isEditable() {
+		return MapPermissionManager.isEditionAllowed();
+	}
+
 	public void setObject(Object object) {
+		this.commitButton.setEnabled(isEditable());
+		
 		this.unbound = (UnboundNode )object;
 
 		this.typeComboBox.removeAllItems();

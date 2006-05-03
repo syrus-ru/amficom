@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPropertiesManager.java,v 1.62 2006/03/19 14:43:58 stas Exp $$
+ * $$Id: MapPropertiesManager.java,v 1.63 2006/05/03 04:46:59 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
  * <li>center
  * <li>zoom
  * 
- * @version $Revision: 1.62 $, $Date: 2006/03/19 14:43:58 $
+ * @version $Revision: 1.63 $, $Date: 2006/05/03 04:46:59 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -418,10 +418,6 @@ public final class MapPropertiesManager {
 	}
 
 	public static boolean isPermitted(PermissionCodename code) {
-		if (true) {
-			return true;
-		}
-		
 		if (code == null) {
 			// the functionality requested is not defined for this mode
 			return false;

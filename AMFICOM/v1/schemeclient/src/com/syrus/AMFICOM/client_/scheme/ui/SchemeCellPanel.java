@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCellPanel.java,v 1.11 2006/02/15 12:18:11 stas Exp $
+ * $Id: SchemeCellPanel.java,v 1.12 2006/05/03 04:48:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
@@ -31,7 +32,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2006/02/15 12:18:11 $
+ * @version $Revision: 1.12 $, $Date: 2006/05/03 04:48:52 $
  * @module schemeclient
  */
 
@@ -79,11 +80,19 @@ public class SchemeCellPanel extends DefaultStorableObjectEditor {
 		return this.pane;
 	}
 
+	@Override
+	protected boolean isEditable() {
+		return SchemePermissionManager.isEditionAllowed();
+	}
+	
 	/**
 	 * @param or SchemeCellContainer
 	 * @see com.syrus.AMFICOM.client.UI.StorableObjectEditor#setObject(java.lang.Object)
 	 */
 	public void setObject(Object or) {
+		this.commitButton.setEnabled(isEditable());
+		this.pane.setEditable(isEditable());
+		
 		this.schemeCellContainer = (SchemeCellContainer)or;
 		GraphActions.clearGraph(this.pane.getGraph());
 		if (this.schemeCellContainer != null) {

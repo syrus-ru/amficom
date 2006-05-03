@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementCharacteristicsPanel.java,v 1.17 2005/12/06 11:40:34 bass Exp $
+ * $Id: SchemeElementCharacteristicsPanel.java,v 1.18 2006/05/03 04:48:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -19,8 +20,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/12/06 11:40:34 $
+ * @author $Author: stas $
+ * @version $Revision: 1.18 $, $Date: 2006/05/03 04:48:52 $
  * @module schemeclient
  */
 
@@ -39,6 +40,11 @@ public class SchemeElementCharacteristicsPanel extends CharacteristicsPanel {
 	public Object getObject() {
 		return this.schemeElement;
 	}
+	
+	@Override
+	protected boolean isEditable() {
+		return SchemePermissionManager.isEditionAllowed();
+	}
 
 	public void setObject(Object or) {
 		this.schemeElement = (SchemeElement)or;
@@ -48,7 +54,7 @@ public class SchemeElementCharacteristicsPanel extends CharacteristicsPanel {
 			try {
 				super.setTypeSortMapping(IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 						this.schemeElement,
-						this.schemeElement.getId(), true);
+						this.schemeElement.getId(), isEditable());
 				super.addCharacteristics(this.schemeElement.getCharacteristics(true), this.schemeElement.getId());
 				Equipment eq = null;
 				try {
@@ -60,7 +66,7 @@ public class SchemeElementCharacteristicsPanel extends CharacteristicsPanel {
 					for (int i = 0; i < sorts.length; i++)
 						super.setTypeSortMapping(sorts[i],
 								eq,
-								eq.getId(), true);
+								eq.getId(), isEditable());
 					super.addCharacteristics(eq.getCharacteristics(true), eq.getId());
 				} else {
 					ProtoEquipment protoEq = null;

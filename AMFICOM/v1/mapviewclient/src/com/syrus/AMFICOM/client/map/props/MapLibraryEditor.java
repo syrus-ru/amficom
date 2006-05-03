@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryEditor.java,v 1.11 2006/02/15 11:27:23 stas Exp $$
+ * $$Id: MapLibraryEditor.java,v 1.12 2006/05/03 04:46:32 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
+import com.syrus.AMFICOM.client.map.editor.MapPermissionManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2006/02/15 11:27:23 $
+ * @version $Revision: 1.12 $, $Date: 2006/05/03 04:46:32 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -210,7 +211,14 @@ public class MapLibraryEditor extends DefaultStorableObjectEditor {
 		return this.mapLibrary;
 	}
 
+	@Override
+	protected boolean isEditable() {
+		return MapPermissionManager.isEditionAllowed();
+	}
+
 	public void setObject(Object objectResource) {
+		this.commitButton.setEnabled(isEditable());
+		
 		this.mapLibrary = (MapLibrary )objectResource;
 
 		this.componentsList.removeAll();

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortCharacteristicsPanel.java,v 1.16 2005/12/06 11:40:35 bass Exp $
+ * $Id: SchemePortCharacteristicsPanel.java,v 1.17 2006/05/03 04:48:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 import java.util.Set;
 
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -19,8 +20,8 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/12/06 11:40:35 $
+ * @author $Author: stas $
+ * @version $Revision: 1.17 $, $Date: 2006/05/03 04:48:52 $
  * @module schemeclient
  */
 
@@ -39,6 +40,11 @@ public class SchemePortCharacteristicsPanel extends CharacteristicsPanel {
 	public Object getObject() {
 		return this.schemePort;
 	}
+	
+	@Override
+	protected boolean isEditable() {
+		return SchemePermissionManager.isEditionAllowed();
+	}
 
 	public void setObject(Object or) {
 		if (or instanceof Set) {
@@ -51,7 +57,7 @@ public class SchemePortCharacteristicsPanel extends CharacteristicsPanel {
 			try {
 				super.setTypeSortMapping(IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 						this.schemePort,
-						this.schemePort.getId(), true);
+						this.schemePort.getId(), isEditable());
 				super.addCharacteristics(this.schemePort.getCharacteristics(true), this.schemePort.getId());
 				Port port = this.schemePort.getPort();
 				if (port != null) {

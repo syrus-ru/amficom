@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeGeneralPanel.java,v 1.21 2006/02/15 12:18:10 stas Exp $
+ * $Id: PortTypeGeneralPanel.java,v 1.22 2006/05/03 04:49:00 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
@@ -47,7 +48,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2006/02/15 12:18:10 $
+ * @version $Revision: 1.22 $, $Date: 2006/05/03 04:49:00 $
  * @module schemeclient
  */
 
@@ -222,7 +223,14 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		return this.portType;
 	}
 
+	@Override
+	protected boolean isEditable() {
+		return SchemePermissionManager.isTypeEditionAllowed();
+	}
+	
 	public void setObject(final Object or) {
+		this.commitButton.setEnabled(isEditable());
+		
 		this.portType = (PortType) or;
 
 		if (this.portType != null) {

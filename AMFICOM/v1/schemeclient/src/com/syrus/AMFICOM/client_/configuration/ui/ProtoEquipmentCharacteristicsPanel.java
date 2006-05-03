@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentCharacteristicsPanel.java,v 1.4 2005/10/31 12:30:25 bass Exp $
+ * $Id: ProtoEquipmentCharacteristicsPanel.java,v 1.5 2006/05/03 04:49:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,13 +9,14 @@
 package com.syrus.AMFICOM.client_.configuration.ui;
 
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/10/31 12:30:25 $
+ * @author $Author: stas $
+ * @version $Revision: 1.5 $, $Date: 2006/05/03 04:49:00 $
  * @module schemeclient
  */
 
@@ -35,6 +36,11 @@ public class ProtoEquipmentCharacteristicsPanel extends CharacteristicsPanel {
 		return this.type;
 	}
 
+	@Override
+	protected boolean isEditable() {
+		return SchemePermissionManager.isEditionAllowed();
+	}
+	
 	public void setObject(final Object or) {
 		this.type = (ProtoEquipment) or;
 		super.clear();
@@ -42,7 +48,7 @@ public class ProtoEquipmentCharacteristicsPanel extends CharacteristicsPanel {
 		if (this.type != null) {
 			try {
 				for (int i = 0; i < sorts.length; i++) {
-					super.setTypeSortMapping(sorts[i], this.type, this.type.getId(), true);
+					super.setTypeSortMapping(sorts[i], this.type, this.type.getId(), isEditable());
 				}
 				super.addCharacteristics(this.type.getCharacteristics(true), this.type.getId());
 			} catch (ApplicationException e) {

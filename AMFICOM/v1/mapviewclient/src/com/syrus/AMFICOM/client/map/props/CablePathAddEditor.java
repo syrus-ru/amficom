@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathAddEditor.java,v 1.37 2006/02/15 11:55:14 stas Exp $$
+ * $$Id: CablePathAddEditor.java,v 1.38 2006/05/03 04:46:32 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,6 +47,7 @@ import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundl
 import com.syrus.AMFICOM.client.map.command.action.RemoveUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
+import com.syrus.AMFICOM.client.map.editor.MapPermissionManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
@@ -66,7 +67,7 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2006/02/15 11:55:14 $
+ * @version $Revision: 1.38 $, $Date: 2006/05/03 04:46:32 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -186,7 +187,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 
 					Object selectedStartLink = CablePathAddEditor.this.startLinkComboBox.getSelectedItem();
 					Object selectedEndLink = CablePathAddEditor.this.endLinkComboBox.getSelectedItem();
-					boolean flag = (selectedStartLink instanceof PhysicalLink) || (selectedEndLink instanceof PhysicalLink);
+					boolean flag = isEditable() && (selectedStartLink instanceof PhysicalLink) || (selectedEndLink instanceof PhysicalLink);
 					CablePathAddEditor.this.bindButton.setEnabled(flag);
 					CablePathAddEditor.this.bindChainButton.setEnabled(flag);
 					
@@ -211,6 +212,10 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			{
 				public void actionPerformed(ActionEvent e)
 				{
+					if (!isEditable()) {
+						return;
+					}
+					
 					if(!CablePathAddEditor.this.doChanges)
 						return;
 
@@ -256,8 +261,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			public void valueChanged(ListSelectionEvent e)
 			{
 				boolean itemSelected = CablePathAddEditor.this.table.getSelectedRowCount() != 0;
-				CablePathAddEditor.this.unbindButton.setEnabled(itemSelected);
-				CablePathAddEditor.this.selectButton.setEnabled(itemSelected);
+				CablePathAddEditor.this.unbindButton.setEnabled(isEditable() && itemSelected);
+				CablePathAddEditor.this.selectButton.setEnabled(isEditable() && itemSelected);
 			}
 		});
 
@@ -621,8 +626,12 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		return this.cablePath;
 	}
 
-	public void setObject(Object object)
-	{
+	@Override
+	protected boolean isEditable() {
+		return MapPermissionManager.isEditionAllowed();
+	}
+
+	public void setObject(Object object) {
 		this.cablePath = (CablePath)object;
 
 		this.table.removeAll();
@@ -635,10 +644,12 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		this.startNodeToComboBox.removeAllItems();
 		this.endNodeToComboBox.removeAllItems();
 
-		this.startLinkComboBox.setEnabled(true);
-		this.endLinkComboBox.setEnabled(true);
-		this.startNodeToComboBox.setEnabled(true);
-		this.endNodeToComboBox.setEnabled(true);
+		this.startLinkComboBox.setEnabled(isEditable());
+		this.endLinkComboBox.setEnabled(isEditable());
+		this.startNodeToComboBox.setEnabled(isEditable());
+		this.endNodeToComboBox.setEnabled(isEditable());
+		
+		this.clearBindingButton.setEnabled(isEditable());
 		
 		this.bindButton.setEnabled(false);
 		this.bindChainButton.setEnabled(false);
@@ -782,10 +793,10 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			this.endNodeToComboBox.addElements(this.availableNodesFromEnd);
 			this.endNodeToComboBox.setSelectedItem(this.stubObject);
 	
-			this.startLinkComboBox.setEnabled(true);
-			this.endLinkComboBox.setEnabled(true);
-			this.startNodeToComboBox.setEnabled(true);
-			this.endNodeToComboBox.setEnabled(true);
+			this.startLinkComboBox.setEnabled(isEditable());
+			this.endLinkComboBox.setEnabled(isEditable());
+			this.startNodeToComboBox.setEnabled(isEditable());
+			this.endNodeToComboBox.setEnabled(isEditable());
 		}
 	}
 

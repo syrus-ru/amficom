@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathCharacteristicsPanel.java,v 1.5 2005/12/06 11:40:35 bass Exp $
+ * $Id: SchemePathCharacteristicsPanel.java,v 1.6 2006/05/03 04:48:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
@@ -30,6 +31,11 @@ public class SchemePathCharacteristicsPanel extends CharacteristicsPanel {
 	public Object getObject() {
 		return this.schemePath;
 	}
+	
+	@Override
+	protected boolean isEditable() {
+		return SchemePermissionManager.isEditionAllowed();
+	}
 
 	public void setObject(Object or) {
 		this.schemePath = (SchemePath)or;
@@ -39,7 +45,7 @@ public class SchemePathCharacteristicsPanel extends CharacteristicsPanel {
 			try {
 				super.setTypeSortMapping(IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 						this.schemePath,
-						this.schemePath.getId(), true);
+						this.schemePath.getId(), isEditable());
 				super.addCharacteristics(this.schemePath.getCharacteristics(true), this.schemePath.getId());
 				TransmissionPath tp = null;
 				try {

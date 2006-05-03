@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.32 2006/02/15 12:18:11 stas Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.33 2006/05/03 04:48:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
@@ -73,7 +74,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.32 $, $Date: 2006/02/15 12:18:11 $
+ * @version $Revision: 1.33 $, $Date: 2006/05/03 04:48:52 $
  * @module schemeclient
  */
 
@@ -510,7 +511,14 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		return this.pnPanel0;
 	}
 
+	@Override
+	protected boolean isEditable() {
+		return SchemePermissionManager.isEditionAllowed();
+	}
+	
 	public void setObject(final Object or) {
+		this.btCommitBut.setEnabled(isEditable());
+		
 		boolean multiplePorts = (or instanceof Set);
 		this.schemePorts = multiplePorts ? (Set<SchemePort>)or : Collections.singleton((SchemePort)or);
 		this.schemePort = multiplePorts ? ((Set<SchemePort>)or).iterator().next() : (SchemePort)or;

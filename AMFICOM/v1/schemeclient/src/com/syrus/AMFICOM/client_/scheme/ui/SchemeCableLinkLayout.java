@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkLayout.java,v 1.20 2006/04/28 09:01:33 stas Exp $
+ * $Id: SchemeCableLinkLayout.java,v 1.21 2006/05/03 04:48:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
@@ -50,7 +51,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2006/04/28 09:01:33 $
+ * @version $Revision: 1.21 $, $Date: 2006/05/03 04:48:52 $
  * @module schemeclient
  */
 
@@ -87,6 +88,11 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
 		}
+	}
+	
+	@Override
+	protected boolean isEditable() {
+		return false;
 	}
 
 	public void setObject(Object or) {

@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeAddEditor.java,v 1.40 2006/04/28 10:00:17 stas Exp $$
+ * $$Id: SiteNodeAddEditor.java,v 1.41 2006/05/03 04:46:32 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundl
 import com.syrus.AMFICOM.client.map.command.action.RemoveUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
+import com.syrus.AMFICOM.client.map.editor.MapPermissionManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
@@ -67,7 +68,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2006/04/28 10:00:17 $
+ * @version $Revision: 1.41 $, $Date: 2006/05/03 04:46:32 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -570,7 +571,14 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		}
 	}
 
+	@Override
+	protected boolean isEditable() {
+		return MapPermissionManager.isEditionAllowed();
+	}
+
 	public void setObject(Object objectResource) {
+		this.commitButton.setEnabled(isEditable());
+		
 		this.site = (SiteNode )objectResource;
 		createTree(this.site);
 		this.schemePane.getGraph().removeAll();

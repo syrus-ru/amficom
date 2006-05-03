@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.31 2006/04/07 13:53:02 arseniy Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.32 2006/05/03 04:48:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,6 +45,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
@@ -67,8 +68,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKi
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.31 $, $Date: 2006/04/07 13:53:02 $
+ * @author $Author: stas $
+ * @version $Revision: 1.32 $, $Date: 2006/05/03 04:48:52 $
  * @module schemeclient
  */
 
@@ -784,7 +785,14 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		return this.schemeElement;
 	}
 
+	@Override
+	protected boolean isEditable() {
+		return SchemePermissionManager.isEditionAllowed();
+	}
+
 	public void setObject(final Object or) {
+		this.btCommitBut.setEnabled(isEditable());
+		
 		this.schemeElement = (SchemeElement) or;
 		ProtoEquipment protoEq = null;
 		Equipment eq = null;

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupGeneralPanel.java,v 1.17 2006/03/30 11:17:22 stas Exp $
+ * $Id: SchemeProtoGroupGeneralPanel.java,v 1.18 2006/05/03 04:48:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.ElementsPermissionManager;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -57,7 +58,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2006/03/30 11:17:22 $
+ * @version $Revision: 1.18 $, $Date: 2006/05/03 04:48:52 $
  * @module schemeclient
  */
 
@@ -229,7 +230,14 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 		return this.schemeProtoGroup;
 	}
 
+	@Override
+	protected boolean isEditable() {
+		return ElementsPermissionManager.isEditionAllowed();
+	}
+	
 	public void setObject(final Object or) {
+		this.commitButton.setEnabled(isEditable());
+		
 		this.schemeProtoGroup = (SchemeProtoGroup) or;
 		Icon symbol = null;
 

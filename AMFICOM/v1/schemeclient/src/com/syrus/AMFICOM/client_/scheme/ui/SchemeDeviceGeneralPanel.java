@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceGeneralPanel.java,v 1.20 2006/02/15 12:18:11 stas Exp $
+ * $Id: SchemeDeviceGeneralPanel.java,v 1.21 2006/05/03 04:48:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
 import com.syrus.AMFICOM.client_.scheme.utils.NumberedComparator;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Namable;
@@ -59,7 +60,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2006/02/15 12:18:11 $
+ * @version $Revision: 1.21 $, $Date: 2006/05/03 04:48:52 $
  * @module schemeclient
  */
 
@@ -141,11 +142,18 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 	  return this.pnPanel0;
 	}
 
+	@Override
+	protected boolean isEditable() {
+		return SchemePermissionManager.isEditionAllowed();
+	}
+	
 	/**
 	 * @param or SchemeDevice
 	 * @see StorableObjectEditor#setObject(java.lang.Object)
 	 */
 	public void setObject(Object or) {
+		this.commitBut.setEnabled(isEditable());
+		
 		this.schemeDevice = (SchemeDevice)or;
 		this.combo.removeAllItems();
 		if (this.schemeDevice != null) {

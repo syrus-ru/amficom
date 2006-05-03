@@ -1,5 +1,5 @@
 /*-
- * $$Id: MeasurementPathEditor.java,v 1.22 2006/02/22 13:49:02 stas Exp $$
+ * $$Id: MeasurementPathEditor.java,v 1.23 2006/05/03 04:46:32 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.editor.MapPermissionManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2006/02/22 13:49:02 $
+ * @version $Revision: 1.23 $, $Date: 2006/05/03 04:46:32 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -321,7 +322,14 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 		return this.measurementPath;
 	}
 
+	@Override
+	protected boolean isEditable() {
+		return MapPermissionManager.isEditionAllowed();
+	}
+
 	public void setObject(Object object) {
+		this.commitButton.setEnabled(isEditable());
+		
 		this.measurementPath = (MeasurementPath )object;
 
 		this.startComboBox.removeAllItems();

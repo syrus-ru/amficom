@@ -1,5 +1,5 @@
 /*-
- * $$Id: UnboundLinkEditor.java,v 1.17 2006/02/15 11:15:42 stas Exp $$
+ * $$Id: UnboundLinkEditor.java,v 1.18 2006/05/03 04:46:32 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.map.editor.MapPermissionManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2006/02/15 11:15:42 $
+ * @version $Revision: 1.18 $, $Date: 2006/05/03 04:46:32 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -263,6 +264,11 @@ public class UnboundLinkEditor extends DefaultStorableObjectEditor {
 
 	public Object getObject() {
 		return this.link;
+	}
+
+	@Override
+	protected boolean isEditable() {
+		return MapPermissionManager.isEditionAllowed();
 	}
 
 	public void setObject(Object object) {

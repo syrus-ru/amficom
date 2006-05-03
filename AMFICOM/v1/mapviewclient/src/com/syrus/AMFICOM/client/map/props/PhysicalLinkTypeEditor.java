@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkTypeEditor.java,v 1.14 2006/02/15 11:27:23 stas Exp $$
+ * $$Id: PhysicalLinkTypeEditor.java,v 1.15 2006/05/03 04:46:32 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
+import com.syrus.AMFICOM.client.map.editor.MapPermissionManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
@@ -53,7 +54,7 @@ import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2006/02/15 11:27:23 $
+ * @version $Revision: 1.15 $, $Date: 2006/05/03 04:46:32 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -423,7 +424,14 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 		return this.type;
 	}
 
+	@Override
+	protected boolean isEditable() {
+		return MapPermissionManager.isEditionAllowed();
+	}
+
 	public void setObject(Object object) {
+		this.commitButton.setEnabled(isEditable());
+		
 		this.type = (PhysicalLinkType )object;
 
 		this.libraryComboBox.removeAllItems();

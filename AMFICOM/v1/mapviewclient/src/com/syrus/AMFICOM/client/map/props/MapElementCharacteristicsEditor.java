@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapElementCharacteristicsEditor.java,v 1.25 2005/12/06 11:34:01 bass Exp $$
+ * $$Id: MapElementCharacteristicsEditor.java,v 1.26 2006/05/03 04:46:32 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/12/06 11:34:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2006/05/03 04:46:32 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -59,7 +59,7 @@ public class MapElementCharacteristicsEditor extends CharacteristicsPanel {
 						IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
 						characterizable,
 						characterizable.getId(), 
-						true);
+						isEditable());
 			try {
 				super.addCharacteristics(characterizable.getCharacteristics(true), characterizable.getId());
 			} catch(ApplicationException e) {

@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkAddEditor.java,v 1.44 2006/03/13 15:54:27 bass Exp $$
+ * $$Id: PhysicalLinkAddEditor.java,v 1.45 2006/05/03 04:46:32 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,6 +48,7 @@ import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
+import com.syrus.AMFICOM.client.map.editor.MapPermissionManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
@@ -70,8 +71,8 @@ import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2006/03/13 15:54:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2006/05/03 04:46:32 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -170,9 +171,9 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 					Object or = PhysicalLinkAddEditor.this.cableList
 							.getSelectedValue();
 					cableSelected(or);
-					PhysicalLinkAddEditor.this.bindButton.setEnabled(or != null);
-					PhysicalLinkAddEditor.this.unbindButton.setEnabled(or != null);
-					PhysicalLinkAddEditor.this.selectButton.setEnabled(or != null);
+					PhysicalLinkAddEditor.this.bindButton.setEnabled(isEditable() && or != null);
+					PhysicalLinkAddEditor.this.unbindButton.setEnabled(isEditable() && or != null);
+					PhysicalLinkAddEditor.this.selectButton.setEnabled(isEditable() && or != null);
 					PhysicalLinkAddEditor.this.processSelection = true;
 				}
 			}
@@ -219,22 +220,6 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 
-		final ActionListener dimensionActionListener = new ActionListener() {
-		
-			public void actionPerformed(ActionEvent e) {
-				int m = Integer.parseInt(PhysicalLinkAddEditor.this.mTextField.getText());
-				int n = Integer.parseInt(PhysicalLinkAddEditor.this.nTextField.getText());
-				if(!PhysicalLinkAddEditor.this.pipeBlock.getDimension().equals(new IntDimension(m, n))) {
-					PhysicalLinkAddEditor.this.pipeBlock.setDimension(new IntDimension(m, n));
-					PhysicalLinkAddEditor.this.tunnelLayout.setDimension(m, n);
-					PhysicalLinkAddEditor.this.tunnelLayout.updateElements();
-				}
-			}
-		
-		};
-		this.mTextField.addActionListener(dimensionActionListener);
-		this.nTextField.addActionListener(dimensionActionListener);
-		
 		this.dimensionLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_DIMENSION));
 		this.pipeBlockLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_PIPEBLOCK));
 
@@ -244,8 +229,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.pipeBlockComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
-					Object or = PhysicalLinkAddEditor.this.pipeBlockComboBox
-						.getSelectedItem();
+					Object or = PhysicalLinkAddEditor.this.pipeBlockComboBox.getSelectedItem();
 					selectBlock(or);
 				}
 				else {
@@ -282,6 +266,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			public void actionPerformed(ActionEvent e) {
 				PhysicalLinkAddEditor.this.physicalLink.getBinding().removePipeBlock(PhysicalLinkAddEditor.this.pipeBlock);
 				PhysicalLinkAddEditor.this.pipeBlockComboBox.removeItem(PhysicalLinkAddEditor.this.pipeBlock);
+				selectBlock(PhysicalLinkAddEditor.this.pipeBlockComboBox.getSelectedItem());
 			}
 		});
 
@@ -293,36 +278,39 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.horvertLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				PhysicalLinkAddEditor.this.pipeBlock
-						.flipHorizontalVertical();
-				PhysicalLinkAddEditor.this.horvertLabel.setIcon(
-						PhysicalLinkAddEditor.this.pipeBlock.isHorizontalVertical() 
+				if (PhysicalLinkAddEditor.this.horvertLabel.isEnabled()) {
+					PhysicalLinkAddEditor.this.pipeBlock.flipHorizontalVertical();
+					PhysicalLinkAddEditor.this.horvertLabel.setIcon(
+							PhysicalLinkAddEditor.this.pipeBlock.isHorizontalVertical() 
 							? horverticon : verthoricon);
-				PhysicalLinkAddEditor.this.tunnelLayout.updateElements();
+					PhysicalLinkAddEditor.this.tunnelLayout.updateElements();
+				}
 			}
 		});
 
 		this.topDownLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				PhysicalLinkAddEditor.this.pipeBlock
-						.flipTopToBottom();
-				PhysicalLinkAddEditor.this.topDownLabel.setIcon(
-						PhysicalLinkAddEditor.this.pipeBlock.isTopToBottom() 
+				if (PhysicalLinkAddEditor.this.topDownLabel.isEnabled()) {
+					PhysicalLinkAddEditor.this.pipeBlock.flipTopToBottom();
+					PhysicalLinkAddEditor.this.topDownLabel.setIcon(
+							PhysicalLinkAddEditor.this.pipeBlock.isTopToBottom() 
 							? topdownicon : downtopicon);
-				PhysicalLinkAddEditor.this.tunnelLayout.updateElements();
+					PhysicalLinkAddEditor.this.tunnelLayout.updateElements();
+				}
 			}
 		});
 
 		this.leftRightLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				PhysicalLinkAddEditor.this.pipeBlock
-						.flipLeftToRight();
-				PhysicalLinkAddEditor.this.leftRightLabel.setIcon(
-						PhysicalLinkAddEditor.this.pipeBlock.isLeftToRight() 
+				if (PhysicalLinkAddEditor.this.leftRightLabel.isEnabled()) {
+					PhysicalLinkAddEditor.this.pipeBlock.flipLeftToRight();
+					PhysicalLinkAddEditor.this.leftRightLabel.setIcon(
+							PhysicalLinkAddEditor.this.pipeBlock.isLeftToRight() 
 							? leftrighticon : rightlefticon);
-				PhysicalLinkAddEditor.this.tunnelLayout.updateElements();
+					PhysicalLinkAddEditor.this.tunnelLayout.updateElements();
+				}
 			}
 		});
 
@@ -591,6 +579,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	}
 
 	protected void selectBlock(Object or) {
+		this.removeBlockButton.setEnabled(isEditable() && this.pipeBlockComboBox.getModel().getSize() > 1);
 		if(!(or instanceof PipeBlock)) {
 			this.pipeBlock = null;
 			this.tunnelLayout.setPipeBlock(null);
@@ -619,7 +608,21 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		return this.physicalLink;
 	}
 
+	@Override
+	protected boolean isEditable() {
+		return MapPermissionManager.isEditionAllowed();
+	}
+
 	public void setObject(Object object) {
+		final boolean editable = isEditable();
+		this.commitButton.setEnabled(editable);
+		this.addBlockButton.setEnabled(editable);
+		this.removeBlockButton.setEnabled(false);
+		
+		this.horvertLabel.setEnabled(editable);
+		this.topDownLabel.setEnabled(editable);
+		this.leftRightLabel.setEnabled(editable);
+		
 		this.cableList.removeAll();
 		this.pipeBlockComboBox.removeAllItems();
 		this.physicalLink = (PhysicalLink )object;
@@ -652,7 +655,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	}
 
 	public void cableSelected(Object or) {
-		if(this.pipeBlock.equals(this.physicalLink.getBinding().getPipeBlock(or))) {
+		if(this.pipeBlock != null && this.pipeBlock.equals(this.physicalLink.getBinding().getPipeBlock(or))) {
 			this.tunnelLayout.setActiveElement(or);
 		}
 	}
@@ -730,9 +733,9 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			this.selectButton.setEnabled(false);
 		}
 		else {
-			this.cableList.setEnabled(true);
-			this.unbindButton.setEnabled(true);
-			this.selectButton.setEnabled(true);
+			this.cableList.setEnabled(isEditable());
+			this.unbindButton.setEnabled(isEditable());
+			this.selectButton.setEnabled(isEditable());
 		}
 	}
 
@@ -800,6 +803,15 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
 			return;
 		}
+		
+		int m = Integer.parseInt(PhysicalLinkAddEditor.this.mTextField.getText());
+		int n = Integer.parseInt(PhysicalLinkAddEditor.this.nTextField.getText());
+		if(!PhysicalLinkAddEditor.this.pipeBlock.getDimension().equals(new IntDimension(m, n))) {
+			PhysicalLinkAddEditor.this.pipeBlock.setDimension(new IntDimension(m, n));
+			PhysicalLinkAddEditor.this.tunnelLayout.setDimension(m, n);
+			PhysicalLinkAddEditor.this.tunnelLayout.updateElements();
+		}
+
 		super.commitChanges();
 	}
 }
