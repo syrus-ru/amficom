@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.36 2006/05/11 11:25:31 bass Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.37 2006/05/11 11:32:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2006/05/11 11:25:31 $
+ * @version $Revision: 1.37 $, $Date: 2006/05/11 11:32:32 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -27,8 +27,8 @@ public abstract class BaseSessionEnvironment {
 
 	protected BaseConnectionManager baseConnectionManager;
 	protected PoolContext poolContext;
-	protected Date sessionEstablishDate;
-	protected boolean sessionEstablished;
+	private Date sessionEstablishDate;
+	private boolean sessionEstablished;
 
 	protected class LogoutShutdownHook extends Thread {
 
@@ -87,11 +87,13 @@ public abstract class BaseSessionEnvironment {
 //		return this.poolContext;
 //	}
 
-	public Date getSessionEstablishDate() {
-		return this.sessionEstablishDate;
+	public final Date getSessionEstablishDate() {
+		return this.sessionEstablishDate == null
+				? null
+				: (Date) this.sessionEstablishDate.clone();
 	}
 
-	public boolean isSessionEstablished() {
+	public final boolean isSessionEstablished() {
 		return this.sessionEstablished;
 	}
 
@@ -137,7 +139,7 @@ public abstract class BaseSessionEnvironment {
 
 		this.baseConnectionManager.getCORBAServer().addShutdownHook(this.logoutShutdownHook);
 
-		this.sessionEstablishDate = new Date(System.currentTimeMillis());
+		this.sessionEstablishDate = new Date();
 		this.sessionEstablished = true;
 	}
 
