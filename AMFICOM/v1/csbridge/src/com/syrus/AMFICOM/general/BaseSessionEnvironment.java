@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.35 2006/03/30 12:08:32 arseniy Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.36 2006/05/11 11:25:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2006/03/30 12:08:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2006/05/11 11:25:31 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -91,7 +91,7 @@ public abstract class BaseSessionEnvironment {
 		return this.sessionEstablishDate;
 	}
 
-	public boolean sessionEstablished() {
+	public boolean isSessionEstablished() {
 		return this.sessionEstablished;
 	}
 
