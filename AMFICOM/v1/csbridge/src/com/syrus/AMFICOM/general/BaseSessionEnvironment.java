@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.45 2006/05/11 12:35:54 bass Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.46 2006/05/11 13:16:56 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,16 @@
 
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.ALREADY_LOGGED_IN;
+import static com.syrus.AMFICOM.general.ErrorMessages.NOT_LOGGED_IN;
+
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2006/05/11 12:35:54 $
+ * @version $Revision: 1.46 $, $Date: 2006/05/11 13:16:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -52,22 +55,6 @@ public abstract class BaseSessionEnvironment {
 	 */
 	private Date sessionEstablishDate;
 
-	protected class LogoutShutdownHook extends Thread {
-
-		@Override
-		public void run() {
-			try {
-				BaseSessionEnvironment.this.logout0();
-			}
-			catch (final ApplicationException ae) {
-				Log.errorMessage(ae);
-			}
-		}
-
-	}
-
-	protected LogoutShutdownHook logoutShutdownHook;
-
 	public BaseSessionEnvironment(final BaseConnectionManager baseConnectionManager,
 			final PoolContext poolContext,
 			final CommonUser commonUser,
@@ -86,11 +73,23 @@ public abstract class BaseSessionEnvironment {
 		this.poolContext.init();
 		LoginManager.init(new CORBALoginPerformer(this.baseConnectionManager, commonUser), loginRestorer);
 		
-		this.logoutShutdownHook = new LogoutShutdownHook();
-		
 		this.sessionEstablishDate = null;
 
 		IdentifierPool.init(this.baseConnectionManager, identifierPoolCORBAActionProcessor);
+		this.baseConnectionManager.getCORBAServer().addShutdownHook(new Thread("LogoutShutdownHook") {
+			@Override
+			public void run() {
+				try {
+					synchronized (BaseSessionEnvironment.this) {
+						if (BaseSessionEnvironment.this.isSessionEstablished()) {
+							BaseSessionEnvironment.this.logout();
+						}
+					}
+				} catch (final Throwable t) {
+					Log.errorMessage(t);
+				}
+			}
+		});
 	}
 
 	public final BaseConnectionManager getConnectionManager() {
@@ -101,13 +100,13 @@ public abstract class BaseSessionEnvironment {
 //		return this.poolContext;
 //	}
 
-	public final Date getSessionEstablishDate() {
+	public final synchronized Date getSessionEstablishDate() {
 		return this.isSessionEstablished()
 				? (Date) this.sessionEstablishDate.clone()
 				: null;
 	}
 
-	public final boolean isSessionEstablished() {
+	public final synchronized boolean isSessionEstablished() {
 		return this.sessionEstablishDate != null;
 	}
 
@@ -117,9 +116,13 @@ public abstract class BaseSessionEnvironment {
 	 * @throws CommunicationException
 	 * @throws LoginException
 	 */
-	public final void login(final String login, final String password, final Identifier domainId)
+	public final synchronized void login(final String login, final String password, final Identifier domainId)
 			throws CommunicationException,
 				LoginException {
+		if (this.isSessionEstablished()) {
+			throw new LoginException(ALREADY_LOGGED_IN);
+		}
+
 		final long loginDeadTime = System.currentTimeMillis() + LOGIN_TIMEOUT;
 		boolean loggedId = false;
 		while (!loggedId) {
@@ -152,8 +155,6 @@ public abstract class BaseSessionEnvironment {
 		}
 		IdentifierPool.deserialize();
 
-		this.baseConnectionManager.getCORBAServer().addShutdownHook(this.logoutShutdownHook);
-
 		this.sessionEstablishDate = new Date();
 	}
 
@@ -161,18 +162,14 @@ public abstract class BaseSessionEnvironment {
 	 * @throws CommunicationException
 	 * @throws LoginException
 	 */
-	public final void logout() throws CommunicationException, LoginException {
-		this.baseConnectionManager.getCORBAServer().removeShutdownHook(this.logoutShutdownHook);
-
-		this.logout0();
-
-		//@todo Maybe move to logout0()
-		this.sessionEstablishDate = null;
-	}
-
-	final void logout0() throws CommunicationException, LoginException {
+	public final synchronized void logout() throws CommunicationException, LoginException {
+		if (!this.isSessionEstablished()) {
+			throw new LoginException(NOT_LOGGED_IN);
+		}
+		
 		IdentifierPool.serialize();
 		StorableObjectPool.serialize(this.poolContext.getLRUMapSaver());
 		LoginManager.logout();
+		this.sessionEstablishDate = null;
 	}
 }
