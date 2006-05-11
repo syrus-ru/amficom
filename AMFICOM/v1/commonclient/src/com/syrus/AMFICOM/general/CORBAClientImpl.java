@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAClientImpl.java,v 1.9 2006/03/21 08:45:21 bass Exp $
+ * $Id: CORBAClientImpl.java,v 1.10 2006/05/11 10:14:44 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.general;
+
+import static java.util.logging.Level.SEVERE;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -18,15 +20,12 @@ import java.util.logging.Level;
 import com.syrus.AMFICOM.client.event.EventReceiver;
 import com.syrus.AMFICOM.eventv2.Event;
 import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CORBAClientPOA;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlCompletionStatus;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2006/03/21 08:45:21 $
+ * @version $Revision: 1.10 $, $Date: 2006/05/11 10:14:44 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -57,20 +56,21 @@ final class CORBAClientImpl extends CORBAClientPOA {
 
 	/**
 	 * @param idlEvent
-	 * @throws AMFICOMRemoteException
 	 * @see com.syrus.AMFICOM.eventv2.corba.EventReceiverOperations#receiveEvent(IdlEvent)
 	 */
-	public void receiveEvent(final IdlEvent idlEvent)
-	throws AMFICOMRemoteException {
+	public void receiveEvent(final IdlEvent idlEvent) {
 		final Event<?> event;
 
 		try {
 			event = idlEvent.getNativeEvent();
 		} catch (final IdlCreateObjectException coe) {
-			throw new AMFICOMRemoteException(
-					IdlErrorCode.ERROR_UNKNOWN,
-					IdlCompletionStatus.COMPLETED_NO,
-					coe.detailMessage);
+			/**
+			 * @todo Probably, a user should be notified that an
+			 * event just arrived is a badly-formed one and thus
+			 * cannot be displayed.
+			 */
+			Log.debugMessage(coe, SEVERE);
+			return;
 		}
 
 		synchronized (this.eventReceivers) {

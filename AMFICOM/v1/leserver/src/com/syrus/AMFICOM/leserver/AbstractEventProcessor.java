@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractEventProcessor.java,v 1.3 2006/04/28 05:26:09 bass Exp $
+ * $Id: AbstractEventProcessor.java,v 1.4 2006/05/11 10:14:43 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2006/04/28 05:26:09 $
+ * @version $Revision: 1.4 $, $Date: 2006/05/11 10:14:43 $
  * @module leserver
  */
 abstract class AbstractEventProcessor implements EventProcessor, Runnable {
@@ -221,15 +221,15 @@ abstract class AbstractEventProcessor implements EventProcessor, Runnable {
 						 */
 						Log.debugMessage(cf.toString(), SEVERE);
 					} catch (final SystemException se) {
+						/**
+						 * @todo Generaly, system
+						 * exceptions should be handled
+						 * separately from all other
+						 * (unexpected) throwables.
+						 * Custom handling code pending.
+						 */
 						Log.debugMessage(se, SEVERE);
 					} catch (final Throwable t) {
-						/**
-						 * @todo EventReceiver#receiveEvent(...)
-						 * should't throw an ARE: there's
-						 * no need to, and I'm unsure
-						 * which specific handling there
-						 * should be.
-						 */
 						Log.debugMessage(t, SEVERE);
 					}
 				}
