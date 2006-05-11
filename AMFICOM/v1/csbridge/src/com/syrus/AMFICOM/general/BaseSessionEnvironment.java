@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.40 2006/05/11 11:55:41 bass Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.41 2006/05/11 12:00:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2006/05/11 11:55:41 $
+ * @version $Revision: 1.41 $, $Date: 2006/05/11 12:00:06 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -122,9 +122,9 @@ public abstract class BaseSessionEnvironment {
 			try {
 				LoginManager.login(login, password, domainId);
 				loggedId = true;
-			} catch (CommunicationException ce) {
-				Log.errorMessage("Cannot establish connection -- " + ce.getMessage());
+			} catch (final CommunicationException ce) {
 				if (System.currentTimeMillis() >= loginDeadTime) {
+					Log.errorMessage("Cannot establish connection -- " + ce.getMessage());
 					throw ce;
 				}
 				try {
