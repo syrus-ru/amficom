@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.44 2006/05/11 12:23:27 bass Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.45 2006/05/11 12:35:54 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2006/05/11 12:23:27 $
+ * @version $Revision: 1.45 $, $Date: 2006/05/11 12:35:54 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -39,12 +39,12 @@ public abstract class BaseSessionEnvironment {
 	/**
 	 * Immutable: initialized <em>once</em> at object creation stage.
 	 */
-	private BaseConnectionManager baseConnectionManager;
+	private final BaseConnectionManager baseConnectionManager;
 
 	/**
 	 * Immutable: initialized <em>once</em> at object creation stage.
 	 */
-	private PoolContext poolContext;
+	private final PoolContext poolContext;
 
 	/**
 	 * Mutable: set to the current date upon login, and to {@code null} upon
@@ -72,8 +72,7 @@ public abstract class BaseSessionEnvironment {
 			final PoolContext poolContext,
 			final CommonUser commonUser,
 			final LoginRestorer loginRestorer) {
-		this.init0(baseConnectionManager, poolContext, commonUser, loginRestorer);
-		IdentifierPool.init(this.baseConnectionManager);
+		this(baseConnectionManager, poolContext, commonUser, loginRestorer, null);
 	}
 
 	public BaseSessionEnvironment(final BaseConnectionManager baseConnectionManager,
@@ -81,23 +80,17 @@ public abstract class BaseSessionEnvironment {
 			final CommonUser commonUser,
 			final LoginRestorer loginRestorer,
 			final CORBAActionProcessor identifierPoolCORBAActionProcessor) {
-		this.init0(baseConnectionManager, poolContext, commonUser, loginRestorer);
-		IdentifierPool.init(this.baseConnectionManager, identifierPoolCORBAActionProcessor);
-	}
-
-	private void init0(final BaseConnectionManager baseConnectionManager1,
-			final PoolContext poolContext1,
-			final CommonUser commonUser,
-			final LoginRestorer loginRestorer) {
-		this.baseConnectionManager = baseConnectionManager1;
-		this.poolContext = poolContext1;
-
+		this.baseConnectionManager = baseConnectionManager;
+		this.poolContext = poolContext;
+		
 		this.poolContext.init();
 		LoginManager.init(new CORBALoginPerformer(this.baseConnectionManager, commonUser), loginRestorer);
-
+		
 		this.logoutShutdownHook = new LogoutShutdownHook();
-
+		
 		this.sessionEstablishDate = null;
+
+		IdentifierPool.init(this.baseConnectionManager, identifierPoolCORBAActionProcessor);
 	}
 
 	public final BaseConnectionManager getConnectionManager() {
