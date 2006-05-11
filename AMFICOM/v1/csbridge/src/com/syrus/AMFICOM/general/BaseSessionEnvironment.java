@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.41 2006/05/11 12:00:06 bass Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.42 2006/05/11 12:01:29 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2006/05/11 12:00:06 $
+ * @version $Revision: 1.42 $, $Date: 2006/05/11 12:01:29 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -129,7 +129,7 @@ public abstract class BaseSessionEnvironment {
 				}
 				try {
 					Thread.sleep(2 * 1000);
-				} catch (InterruptedException ie) {
+				} catch (final InterruptedException ie) {
 					Log.errorMessage(ie);
 				}
 			}
