@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.42 2006/05/11 12:01:29 bass Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.43 2006/05/11 12:05:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2006/05/11 12:01:29 $
+ * @version $Revision: 1.43 $, $Date: 2006/05/11 12:05:35 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -137,12 +137,13 @@ public abstract class BaseSessionEnvironment {
 
 		try {
 			StorableObjectPool.deserialize(this.poolContext.getLRUMapSaver());
+		} catch (final CommunicationException ce) {
+			LoginManager.logout();
+			StorableObjectPool.clean();
+			throw ce;
 		} catch (final ApplicationException ae) {
 			LoginManager.logout();
 			StorableObjectPool.clean();
-			if (ae instanceof CommunicationException) {
-				throw (CommunicationException) ae;
-			}
 			throw new LoginException(I18N.getString("Error.Text.DeserializationFailed"), ae);
 		}
 		IdentifierPool.deserialize();
