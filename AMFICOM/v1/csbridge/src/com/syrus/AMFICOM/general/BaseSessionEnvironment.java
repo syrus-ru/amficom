@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.37 2006/05/11 11:32:32 bass Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.38 2006/05/11 11:37:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2006/05/11 11:32:32 $
+ * @version $Revision: 1.38 $, $Date: 2006/05/11 11:37:43 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -28,7 +28,6 @@ public abstract class BaseSessionEnvironment {
 	protected BaseConnectionManager baseConnectionManager;
 	protected PoolContext poolContext;
 	private Date sessionEstablishDate;
-	private boolean sessionEstablished;
 
 	protected class LogoutShutdownHook extends Thread {
 
@@ -76,7 +75,6 @@ public abstract class BaseSessionEnvironment {
 		this.logoutShutdownHook = new LogoutShutdownHook();
 
 		this.sessionEstablishDate = null;
-		this.sessionEstablished = false;
 	}
 
 	public BaseConnectionManager getConnectionManager() {
@@ -88,13 +86,13 @@ public abstract class BaseSessionEnvironment {
 //	}
 
 	public final Date getSessionEstablishDate() {
-		return this.sessionEstablishDate == null
-				? null
-				: (Date) this.sessionEstablishDate.clone();
+		return this.isSessionEstablished()
+				? (Date) this.sessionEstablishDate.clone()
+				: null;
 	}
 
 	public final boolean isSessionEstablished() {
-		return this.sessionEstablished;
+		return this.sessionEstablishDate != null;
 	}
 
 	/**
@@ -140,7 +138,6 @@ public abstract class BaseSessionEnvironment {
 		this.baseConnectionManager.getCORBAServer().addShutdownHook(this.logoutShutdownHook);
 
 		this.sessionEstablishDate = new Date();
-		this.sessionEstablished = true;
 	}
 
 	/**
@@ -154,7 +151,6 @@ public abstract class BaseSessionEnvironment {
 
 		//@todo Maybe move to logout0()
 		this.sessionEstablishDate = null;
-		this.sessionEstablished = false;
 	}
 
 	protected void logout0() throws CommunicationException, LoginException {
