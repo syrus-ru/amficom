@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.39 2006/05/11 11:46:31 bass Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.40 2006/05/11 11:55:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2006/05/11 11:46:31 $
+ * @version $Revision: 1.40 $, $Date: 2006/05/11 11:55:41 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -25,8 +25,20 @@ public abstract class BaseSessionEnvironment {
 	 */
 	private static final long LOGIN_TIMEOUT = 10 * 1000;
 
+	/**
+	 * Immutable: initialized <em>once</em> at object creation stage.
+	 */
 	private BaseConnectionManager baseConnectionManager;
-	protected PoolContext poolContext;
+
+	/**
+	 * Immutable: initialized <em>once</em> at object creation stage.
+	 */
+	private PoolContext poolContext;
+
+	/**
+	 * Mutable: set to the current date upon login, and to {@code null} upon
+	 * logout.
+	 */
 	private Date sessionEstablishDate;
 
 	protected class LogoutShutdownHook extends Thread {
@@ -77,11 +89,11 @@ public abstract class BaseSessionEnvironment {
 		this.sessionEstablishDate = null;
 	}
 
-	public BaseConnectionManager getConnectionManager() {
+	public final BaseConnectionManager getConnectionManager() {
 		return this.baseConnectionManager;
 	}
-//
-//	public PoolContext getPoolContext() {
+
+//	public final PoolContext getPoolContext() {
 //		return this.poolContext;
 //	}
 
@@ -153,7 +165,7 @@ public abstract class BaseSessionEnvironment {
 		this.sessionEstablishDate = null;
 	}
 
-	protected void logout0() throws CommunicationException, LoginException {
+	final void logout0() throws CommunicationException, LoginException {
 		IdentifierPool.serialize();
 		StorableObjectPool.serialize(this.poolContext.getLRUMapSaver());
 		LoginManager.logout();
