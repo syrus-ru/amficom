@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.45 2006/04/14 11:18:58 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.46 2006/05/11 11:46:31 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.corba.CORBAClient;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2006/04/14 11:18:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.46 $, $Date: 2006/05/11 11:46:31 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -65,11 +65,11 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 	}
 
 	public ClientServantManager getClientServantManager() {
-		return (ClientServantManager) super.baseConnectionManager;
+		return (ClientServantManager) this.getConnectionManager();
 	}
 
 	public final String getServerName() {
-		return super.baseConnectionManager.getCORBAServer().getRootContextName();
+		return this.getConnectionManager().getCORBAServer().getRootContextName();
 	}
 
 	public static ClientSessionEnvironment getInstance() {
@@ -96,7 +96,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 		/* Print available objects -- for debugging purpose */
 		if (instance != null) {
-			instance.baseConnectionManager.getCORBAServer().printNamingContext();
+			instance.getConnectionManager().getCORBAServer().printNamingContext();
 		}
 	}
 

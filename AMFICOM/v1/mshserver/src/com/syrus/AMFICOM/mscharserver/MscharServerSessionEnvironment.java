@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerSessionEnvironment.java,v 1.7 2005/11/28 12:47:46 arseniy Exp $
+ * $Id: MscharServerSessionEnvironment.java,v 1.8 2006/05/11 11:46:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.util.ApplicationProperties;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/11/28 12:47:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2006/05/11 11:46:32 $
  * @module mscharserver
  */
 final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
@@ -43,7 +43,7 @@ final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
 	}
 
 	public MscharServerServantManager getMscharServerServantManager() {
-		return (MscharServerServantManager) super.baseConnectionManager;
+		return (MscharServerServantManager) this.getConnectionManager();
 	}
 
 	public static void createInstance(final String serverHostName, final String servantName) throws CommunicationException {

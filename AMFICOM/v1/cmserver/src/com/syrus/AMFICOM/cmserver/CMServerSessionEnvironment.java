@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerSessionEnvironment.java,v 1.10 2005/11/28 12:35:01 arseniy Exp $
+ * $Id: CMServerSessionEnvironment.java,v 1.11 2006/05/11 11:46:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.ObjectLoader;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/11/28 12:35:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2006/05/11 11:46:31 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  */
@@ -40,7 +40,7 @@ final class CMServerSessionEnvironment extends BaseSessionEnvironment {
 	}
 
 	public CMServerServantManager getCMServerServantManager() {
-		return (CMServerServantManager) super.baseConnectionManager;
+		return (CMServerServantManager) this.getConnectionManager();
 	}
 
 	public static void createInstance(final String serverHostName, final String servantName) throws CommunicationException {

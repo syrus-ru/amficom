@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMSessionEnvironment.java,v 1.11 2005/11/28 12:35:30 arseniy Exp $
+ * $Id: MCMSessionEnvironment.java,v 1.12 2006/05/11 11:46:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.mcm.corba.MCMPOA;
 import com.syrus.AMFICOM.mcm.corba.MCMPOATie;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/11/28 12:35:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2006/05/11 11:46:31 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -29,7 +29,7 @@ final class MCMSessionEnvironment extends BaseSessionEnvironment {
 	}
 
 	public MCMServantManager getMCMServantManager() {
-		return (MCMServantManager) super.baseConnectionManager;
+		return (MCMServantManager) this.getConnectionManager();
 	}
 
 	public static void createInstance(final String serverHostName, final String servantName) throws CommunicationException {

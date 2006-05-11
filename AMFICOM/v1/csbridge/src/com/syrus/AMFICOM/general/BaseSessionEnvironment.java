@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.38 2006/05/11 11:37:43 bass Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.39 2006/05/11 11:46:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2006/05/11 11:37:43 $
+ * @version $Revision: 1.39 $, $Date: 2006/05/11 11:46:31 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -25,7 +25,7 @@ public abstract class BaseSessionEnvironment {
 	 */
 	private static final long LOGIN_TIMEOUT = 10 * 1000;
 
-	protected BaseConnectionManager baseConnectionManager;
+	private BaseConnectionManager baseConnectionManager;
 	protected PoolContext poolContext;
 	private Date sessionEstablishDate;
 

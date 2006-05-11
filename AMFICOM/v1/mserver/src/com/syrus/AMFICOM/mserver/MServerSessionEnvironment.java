@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerSessionEnvironment.java,v 1.10 2005/11/28 12:35:30 arseniy Exp $
+ * $Id: MServerSessionEnvironment.java,v 1.11 2006/05/11 11:46:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.AMFICOM.mserver.corba.MServerPOATie;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/11/28 12:35:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2006/05/11 11:46:31 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
  */
@@ -34,7 +34,7 @@ final class MServerSessionEnvironment extends BaseSessionEnvironment {
 	}
 
 	public MServerServantManager getMServerServantManager() {
-		return (MServerServantManager) super.baseConnectionManager;
+		return (MServerServantManager) this.getConnectionManager();
 	}
 
 	public static void createInstance(final String serverHostName, final Set<Identifier> mcmIds, final String servantName)
