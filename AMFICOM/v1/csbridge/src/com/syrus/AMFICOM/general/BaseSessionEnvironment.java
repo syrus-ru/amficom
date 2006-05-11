@@ -1,7 +1,7 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.43 2006/05/11 12:05:35 bass Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.44 2006/05/11 12:23:27 bass Exp $
  *
- * Copyright © 2004-2005 Syrus Systems.
+ * Copyright © 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -14,16 +14,27 @@ import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2006/05/11 12:05:35 $
+ * @version $Revision: 1.44 $, $Date: 2006/05/11 12:23:27 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
 public abstract class BaseSessionEnvironment {
 	/**
+	 * Amount of login attempts to take before reporting an error. 
+	 */
+	private static final int MAX_LOGIN_ATTEMPTS = 5;
+
+	/**
+	 * Sleep timeout between subsequent login attempts, in milliseconds.
+	 */
+	private static final long SLEEP_BETWEEN_LOGIN_ATTEMPTS = 2 * 1000;
+
+	/**
 	 * Время, отводимое на попытки войти в систему. Должно быть в миллисекундах.
 	 */
-	private static final long LOGIN_TIMEOUT = 10 * 1000;
+	private static final long LOGIN_TIMEOUT = MAX_LOGIN_ATTEMPTS * SLEEP_BETWEEN_LOGIN_ATTEMPTS;
+
 
 	/**
 	 * Immutable: initialized <em>once</em> at object creation stage.
@@ -128,7 +139,7 @@ public abstract class BaseSessionEnvironment {
 					throw ce;
 				}
 				try {
-					Thread.sleep(2 * 1000);
+					Thread.sleep(SLEEP_BETWEEN_LOGIN_ATTEMPTS);
 				} catch (final InterruptedException ie) {
 					Log.errorMessage(ie);
 				}
