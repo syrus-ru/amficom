@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.40 2006/04/20 12:23:24 arseniy Exp $
+ * $Id: IdentifierPool.java,v 1.41 2006/05/11 12:30:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.util.FifoSaver;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2006/04/20 12:23:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.41 $, $Date: 2006/05/11 12:30:09 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -61,8 +61,17 @@ public final class IdentifierPool {
 		init(igsConnectionMananger1, DEFAULT_CAPACITY, getDefaultCORBAActionProcessor());
 	}
 
+	/**
+	 * @param igsConnectionMananger1
+	 * @param corbaActionProcessor1 if {@code null}, then the
+	 *        {@link #getDefaultCORBAActionProcessor() default} CORBA action
+	 *        processor is used.
+	 */
 	public static void init(final IGSConnectionManager igsConnectionMananger1, final CORBAActionProcessor corbaActionProcessor1) {
-		init(igsConnectionMananger1, DEFAULT_CAPACITY, corbaActionProcessor1);
+		init(igsConnectionMananger1, DEFAULT_CAPACITY,
+				corbaActionProcessor1 == null
+						? getDefaultCORBAActionProcessor()
+						: corbaActionProcessor1);
 	}
 
 	public static void init(final IGSConnectionManager igsConnectionMananger1, final int capacity1) {
