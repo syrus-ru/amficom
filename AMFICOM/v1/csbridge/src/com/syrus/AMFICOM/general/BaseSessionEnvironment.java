@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.47 2006/05/12 17:30:27 bass Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.48 2006/05/12 17:33:12 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCod
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2006/05/12 17:30:27 $
+ * @version $Revision: 1.48 $, $Date: 2006/05/12 17:33:12 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -54,7 +54,7 @@ public abstract class BaseSessionEnvironment {
 	/**
 	 * Immutable: initialized <em>once</em> at object creation stage.
 	 */
-	private final BaseConnectionManager baseConnectionManager;
+	private final BaseConnectionManager connectionManager;
 
 	/**
 	 * Immutable: initialized <em>once</em> at object creation stage.
@@ -72,28 +72,28 @@ public abstract class BaseSessionEnvironment {
 	 */
 	private Date sessionEstablishDate;
 
-	public BaseSessionEnvironment(final BaseConnectionManager baseConnectionManager,
+	public BaseSessionEnvironment(final BaseConnectionManager connectionManager,
 			final PoolContext poolContext,
 			final CommonUser commonUser,
 			final LoginRestorer loginRestorer) {
-		this(baseConnectionManager, poolContext, commonUser, loginRestorer, null);
+		this(connectionManager, poolContext, commonUser, loginRestorer, null);
 	}
 
-	public BaseSessionEnvironment(final BaseConnectionManager baseConnectionManager,
+	public BaseSessionEnvironment(final BaseConnectionManager connectionManager,
 			final PoolContext poolContext,
 			final CommonUser commonUser,
 			final LoginRestorer loginRestorer,
 			final CORBAActionProcessor identifierPoolCORBAActionProcessor) {
-		this.baseConnectionManager = baseConnectionManager;
+		this.connectionManager = connectionManager;
 		this.sessionEstablishDate = null;
 
 		(this.poolContext = poolContext).init();
 		(this.loginValidator = this.newLoginValidator()).start();
 
-		LoginManager.init(new CORBALoginPerformer(this.baseConnectionManager, commonUser), loginRestorer);
-		IdentifierPool.init(this.baseConnectionManager, identifierPoolCORBAActionProcessor);
+		LoginManager.init(new CORBALoginPerformer(this.connectionManager, commonUser), loginRestorer);
+		IdentifierPool.init(this.connectionManager, identifierPoolCORBAActionProcessor);
 
-		final CORBAServer corbaServer = this.baseConnectionManager.getCORBAServer();
+		final CORBAServer corbaServer = this.connectionManager.getCORBAServer();
 		corbaServer.addShutdownHook(new Thread("LoginValidatorShutdown") {
 			@Override
 			public void run() {
@@ -113,7 +113,7 @@ public abstract class BaseSessionEnvironment {
 	}
 
 	public final BaseConnectionManager getConnectionManager() {
-		return this.baseConnectionManager;
+		return this.connectionManager;
 	}
 
 //	public final PoolContext getPoolContext() {
