@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginProcessor.java,v 1.40 2006/04/26 17:09:17 bass Exp $
+ * $Id: LoginProcessor.java,v 1.41 2006/05/15 09:11:31 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2006/04/26 17:09:17 $
+ * @version $Revision: 1.41 $, $Date: 2006/05/15 09:11:31 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -74,7 +74,7 @@ final class LoginProcessor extends SleepButWorkThread {
 		Runtime.getRuntime().addShutdownHook(new Thread("LoginProcessor -- shutdown hook") {
 			@Override
 			public void run() {
-				LoginProcessor.this.shutdown();
+				LoginProcessor.this.interrupt();
 			}
 		});
 	}
@@ -115,10 +115,6 @@ final class LoginProcessor extends SleepButWorkThread {
 				return;
 			}
 		}
-	}
-
-	protected void shutdown() {
-		this.interrupt();
 	}
 
 	@Override
