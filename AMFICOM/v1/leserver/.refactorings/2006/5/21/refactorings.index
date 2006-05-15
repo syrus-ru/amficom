@@ -1,1 +1,5 @@
 1147674760104	Inline method 'com.syrus.AMFICOM.leserver.LoginProcessor.shutdown()' in 'com.syrus.AMFICOM.leserver.LoginProcessor'
+1147693869678	Extract local variable 'remove' from expression 'EXECUTORS.remove(sessionKey)'
+1147691209433	Extract local variable 'unfinishedTasks' from expression 'execSvc.shutdownNow()'
+1147688787028	Extract local variable 'shutdownNow' from expression 'executorService.shutdownNow()'
+1147687972388	Extract local variable 'newSingleThreadExecutor' from expression 'Executors.newSingleThreadExecutor()'

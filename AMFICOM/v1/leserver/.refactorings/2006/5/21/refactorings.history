@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <session version="1.0">
 <refactoring delete="true" description="Inline method 'com.syrus.AMFICOM.leserver.LoginProcessor.shutdown()' in 'com.syrus.AMFICOM.leserver.LoginProcessor'" flags="786438" id="org.eclipse.jdt.ui.inline.method" input="/src&lt;com.syrus.AMFICOM.leserver{LoginProcessor.java" mode="1" selection="4159 0" stamp="1147674760104" version="1.0"/>
+<refactoring description="Extract local variable 'newSingleThreadExecutor' from expression 'Executors.newSingleThreadExecutor()'" final="true" id="org.eclipse.jdt.ui.extract.temp" input="/test&lt;com.syrus.AMFICOM.leserver{AbstractEventProcessorTest.java" name="newSingleThreadExecutor" replace="true" selection="821 35" stamp="1147687972388" version="1.0"/>
+<refactoring description="Extract local variable 'shutdownNow' from expression 'executorService.shutdownNow()'" final="true" id="org.eclipse.jdt.ui.extract.temp" input="/test&lt;com.syrus.AMFICOM.leserver{AbstractEventProcessorTest.java" name="shutdownNow" replace="true" selection="1662 29" stamp="1147688787028" version="1.0"/>
+<refactoring description="Extract local variable 'unfinishedTasks' from expression 'execSvc.shutdownNow()'" final="true" id="org.eclipse.jdt.ui.extract.temp" input="/src&lt;com.syrus.AMFICOM.leserver{AbstractEventProcessor.java" name="unfinishedTasks" replace="true" selection="4825 21" stamp="1147691209433" version="1.0"/>
+<refactoring description="Extract local variable 'remove' from expression 'EXECUTORS.remove(sessionKey)'" final="true" id="org.eclipse.jdt.ui.extract.temp" input="/src&lt;com.syrus.AMFICOM.leserver{AbstractEventProcessor.java" name="remove" replace="true" selection="2419 28" stamp="1147693869678" version="1.0"/>
 </session>
