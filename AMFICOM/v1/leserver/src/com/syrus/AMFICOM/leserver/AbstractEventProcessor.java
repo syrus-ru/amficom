@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractEventProcessor.java,v 1.4 2006/05/11 10:14:43 bass Exp $
+ * $Id: AbstractEventProcessor.java,v 1.5 2006/05/15 11:57:32 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,9 +10,11 @@ package com.syrus.AMFICOM.leserver;
 
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
@@ -38,7 +40,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2006/05/11 10:14:43 $
+ * @version $Revision: 1.5 $, $Date: 2006/05/15 11:57:32 $
  * @module leserver
  */
 abstract class AbstractEventProcessor implements EventProcessor, Runnable {
@@ -61,6 +63,33 @@ abstract class AbstractEventProcessor implements EventProcessor, Runnable {
 	 */
 	static final Map<SessionKey, ExecutorService> EXECUTORS =
 			Collections.synchronizedMap(new HashMap<SessionKey, ExecutorService>());
+
+	static {
+		LoginProcessor.addListener(new LoginProcessorAdapter() {
+			@Override
+			public void userLoggedOut(final UserLogin userLogin) {
+				final SessionKey sessionKey = userLogin.getSessionKey();
+				/*
+				 * This happens AFTER LoginProcessor updates its own map,
+				 * so noone will try again to talk to this session
+				 * (i. e. put the same K/V pair to EXECUTORS).
+				 */
+				final ExecutorService executorService = EXECUTORS.remove(sessionKey);
+				if (executorService != null) {
+					/*
+					 * This will not prevent the currently executed (blocked!) task
+					 * from immediate suspension, but there's a guarantee all
+					 * subsequent task will NOT run.
+					 */
+					final List<Runnable> unfinishedTasks = executorService.shutdownNow();
+					Log.debugMessage(unfinishedTasks.size()
+							+ " event(s) dropped: adressee "
+							+ sessionKey + " missing.",
+							WARNING);
+				}
+			}
+		});
+	}
 
 	AbstractEventProcessor(final int capacity) {
 		this.queue = new LinkedBlockingQueue<Event<?>>(capacity);
@@ -216,10 +245,8 @@ abstract class AbstractEventProcessor implements EventProcessor, Runnable {
 								+ " second(s)",
 								FINEST);
 					} catch (final COMM_FAILURE cf) {
-						/**
-						 * @todo request failed session removal.
-						 */
 						Log.debugMessage(cf.toString(), SEVERE);
+						LoginProcessor.removeUserLogin(sessionKey);
 					} catch (final SystemException se) {
 						/**
 						 * @todo Generaly, system
