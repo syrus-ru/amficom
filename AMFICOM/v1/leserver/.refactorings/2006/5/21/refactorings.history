@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<session version="1.0">
+<refactoring delete="true" description="Inline method 'com.syrus.AMFICOM.leserver.LoginProcessor.shutdown()' in 'com.syrus.AMFICOM.leserver.LoginProcessor'" flags="786438" id="org.eclipse.jdt.ui.inline.method" input="/src&lt;com.syrus.AMFICOM.leserver{LoginProcessor.java" mode="1" selection="4159 0" stamp="1147674760104" version="1.0"/>
+</session>
