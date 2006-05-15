@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementStatusChangedEventProcessor.java,v 1.3 2006/04/19 14:13:46 bass Exp $
+ * $Id: MeasurementStatusChangedEventProcessor.java,v 1.4 2006/05/15 11:56:43 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2006/04/19 14:13:46 $
+ * @version $Revision: 1.4 $, $Date: 2006/05/15 11:56:43 $
  * @module leserver
  */
 final class MeasurementStatusChangedEventProcessor extends AbstractEventProcessor {
@@ -42,7 +42,7 @@ final class MeasurementStatusChangedEventProcessor extends AbstractEventProcesso
 	 * @param event
 	 * @see EventProcessor#processEvent(Event)
 	 */
-	public void processEvent(Event<?> event) {
+	public void processEvent(final Event<?> event) {
 		@SuppressWarnings("unchecked")
 		final MeasurementStatusChangedEvent<?> measurementStatusChangedEvent = (MeasurementStatusChangedEvent) event;
 
