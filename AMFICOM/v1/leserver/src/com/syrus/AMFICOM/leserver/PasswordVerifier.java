@@ -1,5 +1,5 @@
 /*
- * $Id: PasswordVerifier.java,v 1.6 2005/09/21 15:18:02 arseniy Exp $
+ * $Id: PasswordVerifier.java,v 1.7 2006/05/16 07:07:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,9 +19,9 @@ import java.util.regex.Pattern;
  * This class brings the same functionality as the Linux crypt() function does.
  * See <b><tt>crypt(3)</tt></b> manual entry for details.
  *
- * @version $Revision: 1.6 $, $Date: 2005/09/21 15:18:02 $
+ * @version $Revision: 1.7 $, $Date: 2006/05/16 07:07:55 $
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
+ * @author $Author: bass $
  * @module leserver
  * @see "<b><tt>crypt(3)</tt></b> manual entry."
  */
@@ -320,7 +320,8 @@ final class PasswordVerifier {
 	 *        written to the subsequent buffer entries.
 	 * @param byteCount number of bytes (of encoded data) to store in
 	 *        buffer.
-	 */	
+	 */
+	@SuppressWarnings("all")
 	private static void base64From24Bit(byte b2, byte b1, byte b0,
 			byte buffer[], int bufferPosition, int byteCount) {
 		int w = ((b2 & 0xff) << 16) | ((b1 & 0xff) << 8) | (b0 & 0xff);
