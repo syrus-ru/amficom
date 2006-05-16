@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultStorableObjectEditor.java,v 1.4 2005/09/09 18:54:27 arseniy Exp $
+ * $Id: DefaultStorableObjectEditor.java,v 1.5 2006/05/16 06:00:45 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/09/09 18:54:27 $
+ * @author $Author: stas $
+ * @version $Revision: 1.5 $, $Date: 2006/05/16 06:00:45 $
  * @module commonclient
  */
 
@@ -49,9 +49,13 @@ public abstract class DefaultStorableObjectEditor implements StorableObjectEdito
 		component.addKeyListener(this.keyAdapter);
 	}
 	
+	protected boolean isEditable() {
+		return true;
+	}
+	
 	public void commitChanges() {
 		final Object obj = getObject();
-		if (obj != null) {
+		if (obj != null && isEditable()) {
 			for (final ChangeListener changeListener : this.changeListeners) {
 				changeListener.stateChanged(new ChangeEvent(obj));
 			}
@@ -68,9 +72,13 @@ public abstract class DefaultStorableObjectEditor implements StorableObjectEdito
 		@Override
 		public void keyPressed(final KeyEvent e) {
 			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-				this.editor.commitChanges();
+				if (isEditable()) {
+					this.editor.commitChanges();
+				}
 			} else if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-				this.editor.setObject(this.editor.getObject());
+				if (isEditable()) {
+					this.editor.setObject(this.editor.getObject());
+				}
 			}
 		}
 	}
