@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorToolBar.java,v 1.25 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: MapEditorToolBar.java,v 1.26 2006/05/17 10:13:46 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.client.resource.I18N;
 /**
  * Панель инструментов модуля "Редактор топологических схем".
  *  
- * @version $Revision: 1.25 $, $Date: 2005/10/11 08:56:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.26 $, $Date: 2006/05/17 10:13:46 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
 */
@@ -68,7 +68,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 	 */
 	JButton menuMapAddExternal = new JButton();
 	/**
-	 * <img src="images/newview.gif">.
+	 * <img src="images/newmapview.gif">.
 	 */
 	JButton menuMapViewNew = new JButton();
 	/**
@@ -89,7 +89,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 	JButton menuMapViewRemoveScheme = new JButton();
 
 	/**
-	 * <img src="images/mapsetup.gif">.
+	 * <img src="images/map_layers.gif">.
 	 */
 	JButton menuViewMapLayers = new JButton();
 
