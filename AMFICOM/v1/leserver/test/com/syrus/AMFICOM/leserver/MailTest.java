@@ -1,5 +1,5 @@
 /*-
- * $Id: MailTest.java,v 1.2 2005/11/13 06:29:01 bass Exp $
+ * $Id: MailTest.java,v 1.3 2006/05/17 18:31:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/11/13 06:29:01 $
+ * @version $Revision: 1.3 $, $Date: 2006/05/17 18:31:26 $
  * @module leserver
  */
 final class MailTest {
@@ -30,6 +30,7 @@ final class MailTest {
 							? args[0]
 							: "bass@localhost",
 					"Sample Subject",
+					"Sample body.",
 					"Sample body.");
 		} catch (MessagingException me) {
 			while (me != null) {

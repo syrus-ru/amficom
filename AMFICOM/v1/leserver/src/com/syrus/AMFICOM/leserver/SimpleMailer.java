@@ -1,5 +1,5 @@
 /*-
- * $Id: SimpleMailer.java,v 1.5 2005/11/13 06:29:01 bass Exp $
+ * $Id: SimpleMailer.java,v 1.6 2006/05/17 18:31:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,15 +24,22 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.mail.Authenticator;
+import javax.mail.BodyPart;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Part;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
@@ -42,7 +49,7 @@ import com.syrus.util.mail.EmailAddressRegexp;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/11/13 06:29:01 $
+ * @version $Revision: 1.6 $, $Date: 2006/05/17 18:31:26 $
  * @module leserver
  */
 public final class SimpleMailer {
@@ -310,25 +317,97 @@ public final class SimpleMailer {
 	/**
 	 * @param address
 	 * @param subject
-	 * @param body
+	 * @param plainTextBody
+	 * @param richTextBody
 	 * @throws MessagingException
 	 */
-	public static void sendMail(final String address, final String subject, final String body)
+	public static void sendMail(
+			final String address,
+			final String subject,
+			final String plainTextBody,
+			final String richTextBody)
 	throws MessagingException {
-		if (body == null || body.length() == 0) {
-			throw new IllegalArgumentException("Message body cannot be empty.");
+		if (plainTextBody == null || plainTextBody.length() == 0) {
+			throw new IllegalArgumentException("Message body (plain text one) cannot be empty.");
 		}
+		if (richTextBody == null || richTextBody.length() == 0) {
+			throw new IllegalArgumentException("Message body (rich text one) cannot be empty.");
+		}
+
+		final Multipart multipart = new MimeMultipart("alternative");		
+		multipart.addBodyPart(getPlainTextBodyPart(plainTextBody));
+		multipart.addBodyPart(getRichTextBodyPart(subject, richTextBody));
 
 		final MimeMessage mimeMessage = new MimeMessage(session);
 		mimeMessage.setFrom(from);
 		mimeMessage.setRecipients(RecipientType.TO, new InternetAddress[]{getInternetAddress(address, false)});
 		mimeMessage.setSubject(subject, CHARSET);
 		mimeMessage.setSentDate(new Date());
-		mimeMessage.setContent(body, "text/plain; charset=" + CHARSET);
+		mimeMessage.setContent(multipart);
+
 		if (NOTIFY_SENDER) {
 			mimeMessage.setHeader("Disposition-Notification-To", from.toString());
 		}
 		Transport.send(mimeMessage);
+	}
+
+	private static BodyPart getPlainTextBodyPart(final String body)
+	throws MessagingException {
+		final MimeBodyPart mimeBodyPart = new MimeBodyPart();
+		mimeBodyPart.setText(body, CHARSET);
+		return mimeBodyPart;
+	}
+
+	private static BodyPart getRichTextBodyPart(final String title, final String body)
+	throws MessagingException {
+		final MimeBodyPart mimeBodyPart = new MimeBodyPart();
+
+		final String filename = "pizdec.png";
+
+		final Multipart multipart = new MimeMultipart("related");		
+		multipart.addBodyPart(getHtmlBodyPart(title, body, filename));
+		if (false) {
+			multipart.addBodyPart(getPngBodyPart(filename));
+		}
+
+		mimeBodyPart.setContent(multipart);
+		return mimeBodyPart;
+	}
+
+	private static BodyPart getHtmlBodyPart(final String title, final String body, final String filename)
+	throws MessagingException {
+		final MimeBodyPart mimeBodyPart = new MimeBodyPart();
+		mimeBodyPart.setContent(
+				"<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n" + 
+				"<html>\n" + 
+				"<head>\n" + 
+				"<meta content=\"text/html;charset=KOI8-R\" http-equiv=\"Content-Type\">\n" +
+				"<title>" + title + "</title>\n" +
+				"</head>\n" +
+				"<!-- body background=\"cid:" + filename + "\" -->\n" +
+				"<!-- body bgcolor = \"#cccccc\" -->\n" +
+				"<body style = \"background-color: window;\">\n" +
+				"<!-- img src=\"cid:" + filename + "\" -->\n" +
+				body +
+				"</body>\n" +
+				"</html>\n",
+				"text/html; charset=" + CHARSET);
+		return mimeBodyPart;
+	}
+
+	private static BodyPart getPngBodyPart(final String filename)
+	throws MessagingException {
+		final MimeBodyPart mimeBodyPart = new MimeBodyPart();
+		mimeBodyPart.setDataHandler(new DataHandler(new FileDataSource(("/tmp/jes/" + filename))));
+
+		mimeBodyPart.setHeader("Content-Type", "image/png");
+		mimeBodyPart.setHeader("Content-Transfer-Encoding", ContentTransferEncoding.BASE64.getValue());
+		mimeBodyPart.setDisposition(Part.INLINE);
+		mimeBodyPart.setContentID('<' + filename + '>');
+
+		mimeBodyPart.setFileName(filename);
+
+		return mimeBodyPart;
 	}
 
 	/**
@@ -380,6 +459,36 @@ public final class SimpleMailer {
 					return null;
 				}
 			}
+		}
+	}
+
+	/**
+	 * Represents all possible &quot;Content-Transfer-Encoding&quot;s that
+	 * JavaMail API supports.
+	 *
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.6 $, $Date: 2006/05/17 18:31:26 $
+	 * @module leserver
+	 */
+	public enum ContentTransferEncoding {
+		BASE64("base64"),
+		QUOTED_PRINTABLE("quoted-printable"),
+		UUENCODE("uuencode"),
+		X_UUENCODE("x-uuencode"),
+		X_UUE("x-uue"),
+		BINARY("binary"),
+		_7BIT("7bit"),
+		_8BIT("8bit");
+		
+		private final String value;
+
+		private ContentTransferEncoding(final String value) {
+			this.value = value;
+		}
+
+		String getValue() {
+			return this.value;
 		}
 	}
 }
