@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.13 2006/03/28 09:52:16 stas Exp $
+ * $Id: Constants.java,v 1.14 2006/05/17 10:10:47 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import javax.swing.ImageIcon;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2006/03/28 09:52:16 $
+ * @version $Revision: 1.14 $, $Date: 2006/05/17 10:10:47 $
  * @module schemeclient
  */
 
@@ -86,7 +86,7 @@ public interface Constants {
 	public static final Icon ICON_CREATE_UGO = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/component_ugo.gif")); //$NON-NLS-1$
 	public static final Icon ICON_HIERARCHY_PORT = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/hierarchy_port.gif")); //$NON-NLS-1$
 	public static final Icon ICON_SCHEME_SIZE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/sheme_size.gif")); //$NON-NLS-1$
-	public static final Icon ICON_LINK_MODE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/linkmode.gif")); //$NON-NLS-1$
+	public static final Icon ICON_LINK_MODE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/cablemode.gif")); //$NON-NLS-1$
 	public static final Icon ICON_PATH_MODE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pathmode.gif")); //$NON-NLS-1$
 	public static final Icon ICON_RACK_MODE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/rack.gif")); //$NON-NLS-1$
 	public static final Icon ICON_TOP_LEVEL_MODE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")); //$NON-NLS-1$
