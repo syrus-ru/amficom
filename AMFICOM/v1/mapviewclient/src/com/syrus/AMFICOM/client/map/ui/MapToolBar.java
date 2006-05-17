@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapToolBar.java,v 1.39 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: MapToolBar.java,v 1.40 2006/05/17 10:12:54 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,8 +43,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 /**
  * Панель инструментов окна карты
  * 
- * @version $Revision: 1.39 $, $Date: 2005/10/11 08:56:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.40 $, $Date: 2006/05/17 10:12:54 $
+ * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -220,7 +220,7 @@ public final class MapToolBar extends JPanel implements
 		// this.showPhysicalToggleButton.setSelected(true);// режим по умолчанию
 
 		this.showCablePathToggleButton.setIcon(new ImageIcon(
-				"images/pathmode.gif")); //$NON-NLS-1$
+				"images/cablemode.gif")); //$NON-NLS-1$
 		this.showCablePathToggleButton.addActionListener(actionAdapter);
 		this.showCablePathToggleButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_CABLE_MODE));
