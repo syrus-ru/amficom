@@ -11,7 +11,8 @@ ARCHFILE := $(MODULE_NAME).tar.gz
 #TEST_PACKAGE=com.syrus.util
 #TEST_CLASS=TestSystemUser
 #TEST_PACKAGE=com.syrus.AMFICOM.administration
-TEST_CLASS=SetupEquipmentType
+#TEST_CLASS=SetupEquipmentType
+TEST_CLASS=ConvertEquipmentType
 TEST_PACKAGE=com.syrus.AMFICOM.configuration
 
 JAVA_SUFFIX = .java
