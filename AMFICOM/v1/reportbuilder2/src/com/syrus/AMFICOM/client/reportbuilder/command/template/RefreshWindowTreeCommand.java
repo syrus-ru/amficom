@@ -1,5 +1,5 @@
 /*-
- * $Id: RefreshWindowTreeCommand.java,v 1.1.1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: RefreshWindowTreeCommand.java,v 1.3 2006/04/11 14:48:57 stas Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import javax.swing.WindowConstants;
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.report.CreateModelException;
 import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderApplicationModel;
@@ -37,8 +38,8 @@ import com.syrus.util.Log;
 
 /**
  * @author max
- * @author $Author: bass $
- * @version $Revision: 1.1.1.1 $, $Date: 2005/12/02 11:37:17 $
+ * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2006/04/11 14:48:57 $
  * @module reportbuilder
  */
 
@@ -102,8 +103,16 @@ public class RefreshWindowTreeCommand extends AbstractCommand {
 		boolean enable = (reportModel == null) ? true : false;
 		iconedTreeUI.getRefreshButton().setEnabled(enable);
 		treeFilterUI.getShowFilterButton().setEnabled(enable);
-		this.mainFrame.innerToolbar.getChangeViewButton().setEnabled(enable);
 		
+		ApplicationModel aModel = this.aContext.getApplicationModel();
+		// FIXME make setEnabled
+		aModel.setVisible(ReportBuilderApplicationModel.MENU_CHANGE_VIEW, enable);
+		aModel.setVisible(ReportBuilderApplicationModel.MENU_SAVE_REPORT, enable);		
+		aModel.setVisible(ReportBuilderApplicationModel.MENU_PRINT_REPORT, enable);
+		aModel.fireModelChanged("");
+		// FIXME make setEnabled		
+		iconedTreeUI.getToolBar().setVisible(enable);
+				
 		this.treeFrame.setVisible(true);
 	}
 	

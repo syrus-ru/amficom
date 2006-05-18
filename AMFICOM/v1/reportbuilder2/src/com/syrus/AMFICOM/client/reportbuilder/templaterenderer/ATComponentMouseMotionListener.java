@@ -1,5 +1,5 @@
 /*
- * $Id: ATComponentMouseMotionListener.java,v 1.1.1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: ATComponentMouseMotionListener.java,v 1.2 2006/04/26 13:13:49 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,8 +56,7 @@ public class ATComponentMouseMotionListener implements MouseMotionListener{
 		AttachedTextComponent component = (AttachedTextComponent)e.getSource();
 		int cursorType = component.getCursor().getType();
 		if (cursorType != Cursor.HAND_CURSOR) {
-			//TODO Надо завести карту курсоров
-			component.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		}
 		
 		AttachedTextStorableElement element =

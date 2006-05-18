@@ -1,0 +1,14 @@
+classes
+docs
+images
+logs
+.settings
+.classpath
+.project
+.xml
+.mach
+*.jar
+*.swp
+Application.properties
+common.properties
+cache

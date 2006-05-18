@@ -1,0 +1,60 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xsd:schema 
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	xmlns:map = "http://syrus.com/AMFICOM/map/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/map/xml"
+	elementFormDefault = "qualified">
+
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: SiteNodeType.xsd,v 1.18 2005/09/29 14:42:43 krupenn Exp $
+
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/Characteristic.xsd"/>
+
+	<xsd:element name = "siteNodeTypes" type = "map:XmlSiteNodeTypeSeq">
+		<xsd:key name = "siteNodeTypeId">
+			<xsd:selector xpath = "map:siteNodeTypes/map:siteNodeType"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key>
+	</xsd:element>
+
+	<xsd:simpleType name = "XmlSiteNodeTypeSort">
+		<xsd:restriction base = "xsd:string">
+			<xsd:enumeration value = "well"/>
+			<xsd:enumeration value = "piquet"/>
+			<xsd:enumeration value = "ats"/>
+			<xsd:enumeration value = "building"/>
+			<xsd:enumeration value = "cableinlet"/>
+			<xsd:enumeration value = "tower"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name = "XmlSiteNodeType" final = "#all">
+		<xsd:complexContent>
+			<xsd:extension base = "general:XmlStorableObjectType">
+				<xsd:sequence>
+					<xsd:element name = "name" type = "xsd:string"/>
+					<xsd:element name = "sort" type = "map:XmlSiteNodeTypeSort"/>
+					<xsd:element name = "topological" type = "xsd:boolean"/>
+					<xsd:element name = "image" type = "xsd:string" minOccurs = "0"/>
+					<xsd:element ref = "general:characteristics" minOccurs = "0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name = "XmlSiteNodeTypeSeq" final = "#all">
+		<xsd:sequence>
+			<xsd:element name = "siteNodeType" type = "map:XmlSiteNodeType" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

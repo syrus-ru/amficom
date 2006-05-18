@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.Client.Model.ModelMath;
 
 import java.util.ArrayList;
-import com.syrus.AMFICOM.Client.Model.RefModelParamsFrame;
+
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 
 /////////////////////////////////////////////////////////////////
@@ -9,6 +9,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 //        Size of the connector = eventSize*2!!!               //
 //        Size of the weld  =  eventSize !!!                   //
 /////////////////////////////////////////////////////////////////
+
 
 public class NewModelGenerator
 {
@@ -35,12 +36,12 @@ public class NewModelGenerator
 	double[] modelArray;
 
 	public NewModelGenerator(ModelingEvent[] rm_ip,
-												double delta_x,
-												double dinamicDiapazon,
-												double pulsWidth,
-												double maxLength,
-												double addNoise,
-												double formFactor)
+			double delta_x,
+			double dinamicDiapazon,
+			double pulsWidth,
+			double maxLength,
+			double addNoise,
+			double formFactor)
 	{
 		this.rmip = rm_ip;
 		this.dinamicDiapazon = dinamicDiapazon;
@@ -51,7 +52,6 @@ public class NewModelGenerator
 		this.formFactor = formFactor;
 		performModeling();
 	}
-
 	void performModeling()
 	{
 		correctRMIP();
@@ -108,6 +108,7 @@ public class NewModelGenerator
 
 		// Noise = A*(exp(s*x)-1); // s = 1/2000;
 //		double maximalNoise = 125./pulsWidth;
+		double coeff = this.addNoise;
 		double maximalNoise = 50./pulsWidth;
 		double arg = 0.;
 		for(int i=0; i<modelArray.length; i++)
@@ -130,10 +131,10 @@ public class NewModelGenerator
 					{
 						arg *=0.3;
 					}
-					modelArray[i] += rnd(-arg, 0.05*arg)*
+					modelArray[i] += (rnd(-arg, 0.05*arg)*
 													 (1.+0.02*Math.sin(i*3.14/eventSize) +
-													 0.03*Math.cos(i*3.14/(eventSize*1.1)));
-					modelArray[i] += rnd(addNoise);
+													 0.03*Math.cos(i*3.14/(eventSize*1.1))) * coeff);
+//					modelArray[i] += (rnd(addNoise) * coeff);
 				}
 			}
 
@@ -142,21 +143,21 @@ public class NewModelGenerator
 				if(rnd(0., 1.)>0.1)
 					modelArray[i] = 0.;
 				else
-					modelArray[i] -=rnd(0, dDynamicDiapazon*0.8);
+					modelArray[i] -= (rnd(0, dDynamicDiapazon*0.8) * coeff);
 			}
 			else if((modelArray[i]-dDynamicDiapazon)/dinamicDiapazon<0.1)
 			{
 				if(rnd(0., 1.)>0.6)
 					modelArray[i] = 0.;
 				else
-					modelArray[i] -=rnd(0, dDynamicDiapazon*0.9);
+					modelArray[i] -= (rnd(0, dDynamicDiapazon*0.9) * coeff);
 			}
 			else if((modelArray[i]-dDynamicDiapazon)/dinamicDiapazon<0.05)
 			{
 				if(rnd(0., 1.)>0.3)
 					modelArray[i] = 0.;
 				else
-					modelArray[i] -=rnd(0, dDynamicDiapazon);
+					modelArray[i] -= (rnd(0, dDynamicDiapazon) * coeff);
 			}
 		}
 		for(int i=0; i<modelArray.length; i++)
@@ -272,12 +273,10 @@ public class NewModelGenerator
 			}
 		}
 	}
-
 	public double []getModelArray()
 	{
 		return modelArray;
 	}
-
 	void buildEventParams()
 	{
 		eventParams = new EventParams2[rmip.length];
@@ -533,9 +532,7 @@ public class NewModelGenerator
 
 		return ret;
 	}
-
 }
-
 class EventParams2 extends ReflectogramEvent
 {
 	public boolean emptyEvent = false;

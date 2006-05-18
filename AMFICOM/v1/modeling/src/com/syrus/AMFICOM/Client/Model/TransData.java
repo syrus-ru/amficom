@@ -13,8 +13,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.table.AbstractTableModel;
 
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.Client.General.UI.ATable;
+import com.syrus.AMFICOM.client.UI.AComboBox;
+import com.syrus.AMFICOM.client.UI.ATable;
+import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.resource.ModelResourceKeys;
 
 public class TransData extends JInternalFrame {
 
@@ -22,8 +24,8 @@ public class TransData extends JInternalFrame {
 	JScrollPane jScrollPane1 = new JScrollPane();
 	ATable jTable1 = new ATable();
 	JPanel jPanel1 = new JPanel(new GridLayout(2, 2));
-	AComboBox jComboBox1 = new AComboBox(AComboBox.SMALL_FONT);
-	AComboBox jComboBox2 = new AComboBox(AComboBox.SMALL_FONT);
+	AComboBox jComboBox1 = new AComboBox();
+	AComboBox jComboBox2 = new AComboBox();
 	JLabel jLabel1 = new JLabel();
 	JLabel jLabel2 = new JLabel();
 
@@ -35,6 +37,7 @@ public class TransData extends JInternalFrame {
 			e.printStackTrace();
 		}
 	}
+
 	private void jbInit() throws Exception
 	{
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
@@ -55,7 +58,7 @@ public class TransData extends JInternalFrame {
 		jScrollPane1.getViewport().add(jTable1);
 		jScrollPane1.getViewport().setBackground(SystemColor.window);
 
-		this.setTitle("Параметры системы передачи");
+		this.setTitle(I18N.getString(ModelResourceKeys.FRAME_TRANS_DATA));
 
 		jComboBox1.addItemListener(new java.awt.event.ItemListener()
 		{
@@ -256,9 +259,5 @@ public class TransData extends JInternalFrame {
 						data[row][col] = value;
 						fireTableCellUpdated(row, col);
 				}
-
 	}
-
 }
-
-

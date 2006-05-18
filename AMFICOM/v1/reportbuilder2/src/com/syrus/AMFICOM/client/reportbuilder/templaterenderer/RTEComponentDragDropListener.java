@@ -1,5 +1,5 @@
 /*
- * $Id: RTEComponentDragDropListener.java,v 1.1.1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: RTEComponentDragDropListener.java,v 1.2 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ public class RTEComponentDragDropListener implements DropTargetListener {
 						ReportDataChecker.REPORT_NAME);
 				String modelClassName = reportObjectProperties.get(
 						ReportDataChecker.MODEL_CLASS_NAME);
-				AbstractDataStorableElement<?> dsElement =
+				AbstractDataStorableElement dsElement =
 					(AbstractDataStorableElement) this.renderingComponent.getElement();
 				
 				if (	!reportName.equals(dsElement.getReportName())
@@ -85,7 +85,7 @@ public class RTEComponentDragDropListener implements DropTargetListener {
 				
 				dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 				dtde.getDropTargetContext().dropComplete(true);
-				AbstractDataStorableElement<?> storableElement = 
+				AbstractDataStorableElement storableElement = 
 					(AbstractDataStorableElement)this.renderingComponent.getElement();
 				storableElement.setReportObjectId(additionalData);
 				

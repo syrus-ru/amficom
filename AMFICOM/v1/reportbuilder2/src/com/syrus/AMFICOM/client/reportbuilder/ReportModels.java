@@ -1,5 +1,5 @@
 /*-
- * $Id: ReportModels.java,v 1.1.1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: ReportModels.java,v 1.5 2006/04/12 06:11:49 stas Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,34 +10,34 @@ package com.syrus.AMFICOM.client.reportbuilder;
 import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.SurveyReportModel;
+import com.syrus.AMFICOM.Client.Schedule.report.SchedulerReportModel;
 import com.syrus.AMFICOM.client.map.report.MapReportModel;
-import com.syrus.AMFICOM.client.modelling.report.ModelingReportModel;
-import com.syrus.AMFICOM.client.observe.report.ObserveReportModel;
-import com.syrus.AMFICOM.client.prediction.report.PredictionReportModel;
+import com.syrus.AMFICOM.report.ModelingReportModel;
+import com.syrus.AMFICOM.report.ObserverReportModel;
+import com.syrus.AMFICOM.report.PredictionReportModel;
 import com.syrus.AMFICOM.client.report.ReportModel;
-import com.syrus.AMFICOM.client.scheduler.report.SchedulerReportModel;
 import com.syrus.AMFICOM.client_.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.report.DestinationModules;
 
 /**
  * @author max
- * @author $Author: bass $
- * @version $Revision: 1.1.1.1 $, $Date: 2005/12/02 11:37:17 $
+ * @author $Author: stas $
+ * @version $Revision: 1.5 $, $Date: 2006/04/12 06:11:49 $
  * @module reportbuilder
  */
 
 public enum ReportModels {
+	OBSERVE(new ObserverReportModel()),
 	ANALYSIS(new AnalysisReportModel()),
 	EVALUATION(new EvaluationReportModel()),
-	MAP(new MapReportModel()),
-	MODELING(new ModelingReportModel()),
-	OBSERVE(new ObserveReportModel()),
-	OPTIMIZATION(null),
-	PREDICTION(new PredictionReportModel()),
-	SCHEDULER(new SchedulerReportModel()),
-	SCHEME(new SchemeReportModel()),
 	SURVEY(new SurveyReportModel()),
-	COMBINED(null);
+	MODELING(new ModelingReportModel()),
+	PREDICTION(new PredictionReportModel()),
+	MAP(new MapReportModel()),
+	SCHEME(new SchemeReportModel());
+//	OPTIMIZATION(null),
+//	SCHEDULER(new SchedulerReportModel());
+//	COMBINED(null);
 	
 	ReportModel reportModel;
 	

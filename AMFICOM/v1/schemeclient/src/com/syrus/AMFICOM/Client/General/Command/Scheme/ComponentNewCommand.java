@@ -2,44 +2,55 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client_.scheme.ElementsPermissionManager;
+import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
+import com.syrus.AMFICOM.resource.LangModelScheme;
 
-public class ComponentNewCommand extends VoidCommand
-{
+public class ComponentNewCommand extends AbstractCommand {
 	ApplicationContext aContext;
-	SchemeGraph cell_graph;
-	SchemeGraph ugo_graph;
+	UgoTabbedPane cellPane;
 
-	public ComponentNewCommand(ApplicationContext aContext, SchemeGraph cell_graph, SchemeGraph ugo_graph)
-	{
+	public ComponentNewCommand(ApplicationContext aContext,
+			UgoTabbedPane cellPane) {
 		this.aContext = aContext;
-		this.cell_graph = cell_graph;
-		this.ugo_graph = ugo_graph;
+		this.cellPane = cellPane;
 	}
 
-	public Object clone()
-	{
-		return new ComponentNewCommand(aContext, cell_graph, ugo_graph);
-	}
-
-	public void execute()
-	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if (dataSource == null)
-			return;
-
-		if (cell_graph.getAll().length != 0)
-		{
-			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Создать новый компонент?", "Новый компонент", JOptionPane.YES_NO_OPTION);
-			if (ret == JOptionPane.NO_OPTION)
+	@Override
+	public void execute() {
+		ApplicationModel aModel = this.aContext.getApplicationModel(); 
+		aModel.getCommand("menuWindowScheme").execute();
+		aModel.getCommand("menuWindowTree").execute();
+		aModel.getCommand("menuWindowUgo").execute();
+		aModel.getCommand("menuWindowProps").execute();
+		aModel.getCommand("menuWindowList").execute();
+		
+		aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
+		
+		boolean savingAllowed = ElementsPermissionManager.isSavingAllowed();
+		boolean editionAllowed = ElementsPermissionManager.isEditionAllowed();
+		
+		SchemeGraph cellGraph = this.cellPane.getGraph();
+		cellGraph.setGridVisibleAtActualSize(editionAllowed);
+		this.cellPane.setEditable(editionAllowed);
+		
+		if (savingAllowed && cellGraph.isGraphChanged()) {
+			int ret = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(),
+					LangModelScheme.getString("Message.confirmation.component_not_saved"), //$NON-NLS-1$
+					LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$
+					JOptionPane.OK_CANCEL_OPTION);
+			if (ret == JOptionPane.CANCEL_OPTION)
 				return;
-		}
-		cell_graph.removeAll();
-		ugo_graph.removeAll();
-		cell_graph.selectionNotify();
+		} 
+		((ElementsPanel)this.cellPane.getCurrentPanel()).getSchemeResource().setSchemeProtoElement(null);
+		GraphActions.clearGraph(cellGraph);
+		cellGraph.selectionNotify();
 	}
 }

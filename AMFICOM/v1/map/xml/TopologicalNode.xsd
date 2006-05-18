@@ -1,0 +1,52 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xsd:schema 
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	xmlns:map = "http://syrus.com/AMFICOM/map/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/map/xml"
+	elementFormDefault = "qualified">
+
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: TopologicalNode.xsd,v 1.11 2005/09/02 13:22:58 bass Exp $
+
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/StorableObject.xsd"/>
+
+	<xsd:element name = "topologicalNodes" type = "map:XmlTopologicalNodeSeq">
+		<xsd:key name = "topologicalNodeId">
+			<xsd:selector xpath = "map:topologicalNodes/map:topologicalNode"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key>
+
+		<xsd:key name = "abstractNodeId">
+			<xsd:selector xpath = "map:topologicalNodes/map:topologicalNode"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key>
+	</xsd:element>
+
+	<xsd:complexType name = "XmlTopologicalNode" final = "#all">
+		<xsd:complexContent>
+			<xsd:extension base = "general:XmlStorableObject">
+				<xsd:sequence>
+					<xsd:element name = "x" type = "xsd:double"/>
+					<xsd:element name = "y" type = "xsd:double"/>
+					<xsd:element name = "active" type = "xsd:boolean"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name = "XmlTopologicalNodeSeq" final = "#all">
+		<xsd:sequence>
+			<xsd:element name = "topologicalNode" type = "map:XmlTopologicalNode" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

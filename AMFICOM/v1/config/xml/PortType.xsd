@@ -1,0 +1,67 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xsd:schema 
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	xmlns:configuration = "http://syrus.com/AMFICOM/configuration/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/configuration/xml"
+	elementFormDefault = "qualified">
+
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: PortType.xsd,v 1.8 2005/12/08 16:12:54 bass Exp $
+
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/StorableObjectType.xsd"/>
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/Characteristic.xsd"/>
+
+	<xsd:element name = "portTypes" type = "configuration:XmlPortTypeSeq">
+		<xsd:key name = "portTypeId">
+			<xsd:selector xpath = "configuration:portTypes/configuration:portType"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key>
+	</xsd:element>
+
+	<xsd:simpleType name = "XmlPortTypeSort">
+		<xsd:restriction base = "xsd:string">
+			<xsd:enumeration value = "optical"/>
+			<xsd:enumeration value = "electrical"/>
+			<xsd:enumeration value = "thermal"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name = "XmlPortTypeKind">
+		<xsd:restriction base = "xsd:string">
+			<xsd:enumeration value = "simple"/>
+			<xsd:enumeration value = "cable"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name = "XmlPortType" final = "#all">
+		<xsd:complexContent>
+			<xsd:extension base = "general:XmlStorableObjectType">
+				<xsd:sequence>
+					<xsd:element name = "name" type = "xsd:string"/>
+					<xsd:element name = "sort" type = "configuration:XmlPortTypeSort"/>
+					<xsd:element name = "kind" type = "configuration:XmlPortTypeKind"/>
+					<xsd:element ref = "general:characteristics"
+						minOccurs = "0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name = "XmlPortTypeSeq" final = "#all">
+		<xsd:sequence>
+			<xsd:element name = "portType" type = "configuration:XmlPortType" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

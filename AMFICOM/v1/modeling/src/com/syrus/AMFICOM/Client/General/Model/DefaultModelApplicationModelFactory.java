@@ -1,20 +1,26 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
-public class DefaultModelApplicationModelFactory
-		extends ModelApplicationModelFactory
-{
-	public DefaultModelApplicationModelFactory()
-	{
-	}
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.MapModelingApplicationModelFactory;
 
-	public ApplicationModel create()
-	{
+public class DefaultModelApplicationModelFactory extends ModelApplicationModelFactory {
+
+	@Override
+	public ApplicationModel create() {
+		new ReflectometryAnalyseApplicationModelFactory().create();
+		new SchematicsApplicationModelFactory().create();
+		
+		new MapModelingApplicationModelFactory().create();
+		
 		ApplicationModel aModel = super.create();
 
 		aModel.setUsable("menuSessionSave", false);
 		aModel.setUsable("menuSessionUndo", false);
 		aModel.setVisible("menuSessionOptions", false);
+		
 		aModel.setVisible("menuView", false);
+		aModel.setVisible("menuViewSchemeOpen", false);
+		aModel.setVisible(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS, false);
 
 		aModel.setUsable("menuHelpContents", false);
 		aModel.setUsable("menuHelpFind", false);

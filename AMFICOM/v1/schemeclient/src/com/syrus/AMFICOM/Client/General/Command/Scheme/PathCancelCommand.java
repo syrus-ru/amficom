@@ -1,29 +1,47 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.Notifier;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.Log;
 
-public class PathCancelCommand extends VoidCommand
-{
-	ApplicationContext aContext;
-	SchemeGraph graph;
+public class PathCancelCommand extends AbstractCommand {
+	SchemeTabbedPane pane;
 
-	public PathCancelCommand(ApplicationContext aContext, SchemeGraph graph)
-	{
-		this.aContext = aContext;
-		this.graph = graph;
+	public PathCancelCommand(SchemeTabbedPane pane) {
+		this.pane = pane;
 	}
 
-	public Object clone()
-	{
-		return new PathCancelCommand(aContext, graph);
-	}
+	@Override
+	public void execute() {
+//		SchemePath path = SchemeResource.getSchemePath();
+//		try {
+//			path.setParentSchemeMonitoringSolution(null, false);
+//		} catch (ApplicationException e) {
+//			Log.errorMessage(e);
+//		}
+		SchemeResource.setSchemePath(null, false);
+//		SchemeResource.setCashedPathStart(null);
+		SchemeResource.setCashedPathEnd(null);
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.PATHELEMENT_CODE);
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.SCHEMEPATH_CODE);
+		this.pane.setLinkMode();
+		
+		final ElementsPanel currentPanel = this.pane.getCurrentPanel();
+		final SchemeGraph graph = currentPanel.getGraph();
+		graph.clearSelection();
 
-	public void execute()
-	{
-		aContext.getDispatcher().notify(new CreatePathEvent(graph, null, CreatePathEvent.CANCEL_PATH_CREATION_EVENT));
+		try {
+			Notifier.notify(graph, this.pane.getContext(), currentPanel.getSchemeResource().getCellContainer());
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
+		}
 	}
 }
 

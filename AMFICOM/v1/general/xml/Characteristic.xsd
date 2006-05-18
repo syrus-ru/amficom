@@ -1,0 +1,65 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xsd:schema 
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/general/xml"
+	elementFormDefault = "qualified">
+
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: Characteristic.xsd,v 1.16 2006/01/16 09:10:16 bass Exp $
+
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:include
+		schemaLocation = "CharacteristicType.xsd"/>
+
+	<xsd:element name = "characteristics" type = "general:XmlCharacteristicSeq">
+		<xsd:key name = "characteristicId">
+			<xsd:selector xpath = "general:characteristics/general:characteristic"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key>
+	</xsd:element>
+
+	<xsd:complexType name = "XmlCharacteristic" final = "#all">
+		<xsd:complexContent>
+			<xsd:extension base = "general:XmlStorableObject">
+				<xsd:sequence>
+					<xsd:element name = "typeId" type = "general:XmlIdentifier"/>
+					<xsd:element name = "name">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:string">
+								<xsd:minLength value = "1"/>
+								<xsd:maxLength value = "128"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element ref = "general:description"
+						minOccurs = "0"/>
+					<xsd:element name = "value"
+						minOccurs = "0">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:string">
+								<xsd:minLength value = "1"/>
+								<xsd:maxLength value = "256"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name = "editable" type = "xsd:boolean"/>
+					<xsd:element name = "visible" type = "xsd:boolean"/>
+					<xsd:element name = "parentCharacterizableId" type = "general:XmlIdentifier"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name = "XmlCharacteristicSeq" final = "#all">
+		<xsd:sequence>
+			<xsd:element name = "characteristic" type = "general:XmlCharacteristic" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

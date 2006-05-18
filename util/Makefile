@@ -1,90 +1,81 @@
-SRC=./src
-CLASSES=./classes
-LOAD=../load
-LIB=../lib
+#
+# $Id: Makefile,v 1.32 2005/12/06 13:00:24 bass Exp $
+#
+# vim:set ft=make:
+#
 
-LIBNAME=util.jar
-LIBNAMESERVER=utilserver.jar
-ARCHFILE=util.tar.gz
+MODULE_NAME := util
 
-ORACLECLASSPATH=$(JDEV_HOME)/sqlj/lib/translator.jar:$(JDEV_HOME)/sqlj/lib/runtime12.jar:$(JDEV_HOME)/jdbc/lib/classes12.jar
+LIBNAME := $(MODULE_NAME).jar
+ARCHFILE := $(MODULE_NAME).tar.gz
 
-DBHOSTNAME=mongol
-CONNECTSTRING=mongol
-#DBHOSTNAME=amficom
-#CONNECTSTRING=jamaica
+IDL_SOURCES = 
 
-JAVAC=javac
-SQLJ=$(JDEV_HOME)/bin/sqlj
-SQLJOPTIONS=-compile=false -optcols -u amficom/amficom -url=jdbc:oracle:thin:@$(DBHOSTNAME):1521:$(CONNECTSTRING) -codegen=oraclejdbc -status -d $(CLASSES) -dir $(SRC) -classpath $(ORACLECLASSPATH)
-JAR=jar-3.3.1
+include ../tools/Makefile.java.inc.mk
+$(call checkenve,JAVA_HOME)
+$(call checkenve,ORACLE_HOME)
+$(call checkenve,JDBCCLASSPATH)
+$(call checkenve,XMLBEANSCLASSPATH)
+
+DEPENDENCIES =
+
+EXTCLASSPATH := $(JDBCCLASSPATH):$(XMLBEANSCLASSPATH)
+XMLCLASSPATH :=
+
+SOURCES := $(shell find $(SRCDIR) -name '*.java')
 
 
-.PHONY:	clean arch
+$(LIBNAME): .mach
+	$(JAR) cf $@ \
+		-C $(CLASSDIR) com
 
-$(LIBNAME):	misc con corba
-	$(JAR) -cf $(LIBNAME) \
-		-C $(CLASSES) com/syrus/util/Application.class \
-		-C $(CLASSES) com/syrus/util/ApplicationLogger.class \
-		-C $(CLASSES) com/syrus/util/ApplicationProperties.class \
-		-C $(CLASSES) com/syrus/util/ByteArray.class \
-		-C $(CLASSES) com/syrus/util/Log.class \
-		-C $(CLASSES) com/syrus/util/Logger.class \
-		-C $(CLASSES) com/syrus/util/MathRef.class \
-		-C $(CLASSES) com/syrus/util/StolenLogger.class \
-		-C $(CLASSES) com/syrus/util/database/DatabaseConnection.class \
-		-C $(CLASSES) com/syrus/util/database/DatabaseDate.class \
-		-C $(CLASSES) com/syrus/util/database/ByteArrayDatabase.class \
-		-C $(CLASSES) com/syrus/util/corba/CORBAServer.class
-	cp -f $(LIBNAME) $(LIB)
+.mach: $(CLASSDIR)
+	$(JAVAC) $(JAVACFLAGS) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		$(SOURCES)
+	touch $@
 
-misc:	log
-	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) $(SRC)/com/syrus/util/MathRef.java
-	$(JAVAC) -d $(CLASSES) -classpath $(ORACLECLASSPATH) -sourcepath $(SRC) $(SRC)/com/syrus/util/database/ByteArrayDatabase.java
-	$(JAVAC) -d $(CLASSES) $(SRC)/com/syrus/util/database/DatabaseDate.java
-	touch misc
 
-con:	log
-	$(JAVAC) -d $(CLASSES) -classpath $(CLASSES) $(SRC)/com/syrus/util/database/DatabaseConnection.java
-	touch con
+.PHONY: clean
+clean: cleanmach
+	$(RM) $(LIBNAME)
 
-corba:	log
-	$(JAVAC) -d $(CLASSES) -classpath $(CLASSES) $(SRC)/com/syrus/util/corba/CORBAServer.java
-	touch corba
+.PHONY: cleanmach
+cleanmach:
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES))) \
+		.mach
 
-log:
-	$(SQLJ) $(SQLJOPTIONS) $(SRC)/com/syrus/util/database/ServerProperties.sqlj
-	$(JAVAC) -d $(CLASSES) -classpath $(ORACLECLASSPATH) -sourcepath $(SRC) $(SRC)/com/syrus/util/database/Server.java
-	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) $(SRC)/com/syrus/util/Application.java
-	touch log
+.PHONY: dist
+dist: distclean
+	$(RM) ../$(MODULE_NAME)-$(MODULE_VERSION).tar*
+	cd .. && tar cf $(MODULE_NAME)-$(MODULE_VERSION).tar $(MODULE_NAME)
+	bzip2 -9 ../$(MODULE_NAME)-$(MODULE_VERSION).tar
 
-$(LIBNAMESERVER):	$(LIBNAME)
-	jar -cf $(LIBNAMESERVER)\
-		-C $(CLASSES) com/syrus/util/ByteArray.class \
-		-C $(CLASSES) com/syrus/util/Log.class \
-		-C $(CLASSES) com/syrus/util/Logger.class \
-		-C $(CLASSES) com/syrus/util/ServerLogger.class \
-		-C $(CLASSES) com/syrus/util/StolenLogger.class \
-		-C $(CLASSES) com/syrus/util/database/ByteArrayDatabase.class \
-		-C $(CLASSES) com/syrus/util/database/DatabaseConnection.class \
-		-C $(CLASSES) com/syrus/util/database/Server.class \
-		-C $(CLASSES) com/syrus/util/database/ServerProperties.class
-	cp -f $(LIBNAMESERVER) $(LIB)/
-#	$(LOAD)/lp $(LIBNAMESERVER) $(DBHOSTNAME) $(CONNECTSTRING)
 
-clean:
-	rm -f $(SRC)/com/syrus/util/database/ServerProperties.java
-	rm -f $(SRC)/com/syrus/util/database/ServerProperties.generated.java
-	rm -rf $(CLASSES)/com
-	rm -f $(LIBNAME)
-	rm -f misc con corba log
+.PHONY: install
+install: $(LIBDIR) $(LIBDIR)/$(LIBNAME)
 
+$(LIBDIR)/$(LIBNAME): $(LIBNAME)
+	install -m 0644 -p $(LIBNAME) $(LIBDIR)
+
+.PHONY: uninstall
+uninstall:
+	$(RM) $(LIBDIR)/$(LIBNAME)
+
+#### Archive ####
+.PHONY: arch
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(SRC)/com/syrus/util/*.java \
-		$(SRC)/com/syrus/util/database/ByteArrayDatabase.java \
-		$(SRC)/com/syrus/util/database/DatabaseConnection.java \
-		$(SRC)/com/syrus/util/database/Server.java \
-		$(SRC)/com/syrus/util/database/ServerProperties.sqlj \
-		$(SRC)/com/syrus/util/corba
+		$(IDL_SOURCES) \
+		$(SOURCES)
+
+.javadocs: $(JAVADOCDIR)
+	$(JAVADOC) \
+		$(JAVADOCFLAGS) \
+		-link "http://$(JAVADOCHOST)/apidocs/oraclejdbc/" \
+		-link "http://$(JAVADOCHOST)/apidocs/junit/" \
+		-sourcepath $(SRCDIR):test \
+		-classpath "$(APPCLASSPATH):$(JDBCCLASSPATH):$(JUNIT_HOME)/junit.jar" \
+		-subpackages "com.syrus.io:com.syrus.util"
+	touch $@

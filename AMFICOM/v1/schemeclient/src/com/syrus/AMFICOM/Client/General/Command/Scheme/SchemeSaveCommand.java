@@ -1,145 +1,211 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Scheme.GraphActions;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
-import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.resource.SchemeImageResource;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
+import com.syrus.util.Log;
 
-public class SchemeSaveCommand extends VoidCommand
-{
+public class SchemeSaveCommand extends AbstractCommand {
 	public static final int CANCEL = 0;
 	public static final int OK = 1;
-
-	ApplicationContext aContext;
-	SchemePanel schemePanel;
-	UgoPanel ugoPanel;
-
 	public int ret_code = CANCEL;
+	
+	ElementsTabbedPane schemeTab;
 
-	public SchemeSaveCommand(ApplicationContext aContext, SchemePanel schemePanel, UgoPanel ugoPanel)
-	{
-		this.aContext = aContext;
-		this.schemePanel = schemePanel;
-		this.ugoPanel = ugoPanel;
+	public SchemeSaveCommand(ElementsTabbedPane schemeTab) {
+		this.schemeTab = schemeTab;
 	}
 
-	public Object clone()
-	{
-		return new SchemeSaveCommand(aContext, schemePanel, ugoPanel);
-	}
-
-	public void execute()
-	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if (dataSource == null)
-			return;
-
-		SchemeGraph graph = schemePanel.getGraph();
-
-		Scheme scheme = schemePanel.scheme;
-
-		if (graph.getRoots().length == 0)
-		{
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Невозможно сохранить пустую схему", "Ошибка", JOptionPane.OK_OPTION);
+	@Override
+	public void execute() {
+		if (this.schemeTab.getCurrentPanel().isTopLevelSchemeMode()) {
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
+					LangModelScheme.getString("Message.error.save_top_level"), //$NON-NLS-1$
+					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+					JOptionPane.OK_OPTION);
 			return;
 		}
+		
+		SchemeGraph graph = this.schemeTab.getGraph();
 
-		if (ugoPanel != null && ugoPanel.getGraph().getRoots().length == 0)
-		{
-			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Схему нельзя будет включить в другую схему,\nт.к. не создано условное графическое обозначение схемы.\nПродолжить сохранение?", "Предупреждение", JOptionPane.YES_NO_OPTION);
-			if (ret == JOptionPane.NO_OPTION || ret == JOptionPane.CANCEL_OPTION)
-				return;
-		}
-
-//		if (scheme.getId().equals("") || scheme.getName().equals(""))
-//		{
-		SaveDialog sd;
-		while (true)
-		{
-			sd = new SaveDialog(aContext, aContext.getDispatcher(), "Сохранение схемы");
-			int ret = //sd.init(schemePanel.scheme.getName(), schemePanel.scheme.description, false);
-					sd.init(scheme, scheme.getName(), false);
-			if (ret == 0)
-				return;
-
-			if (!MyUtil.validName(sd.name))
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Некорректное название схемы.", "Ошибка", JOptionPane.OK_OPTION);
-			else
-				break;
-		}
-		ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
-
-		scheme.name = sd.name;
-		scheme.description = sd.description;
-		if (scheme.getId().equals(""))
-			scheme.id = dataSource.GetUId(Scheme.typ);
-
-		scheme.created = System.currentTimeMillis();
-		scheme.created_by = dataSource.getSession().getUserId();
-		scheme.modified_by = dataSource.getSession().getUserId();
-		scheme.owner_id = dataSource.getSession().getUserId();
-		scheme.domain_id = dataSource.getSession().getDomainId();
-
-		Pool.put(Scheme.typ, scheme.getId(), scheme);
-		//}
-
-		if (ugoPanel != null)
-		{
-			scheme.serializable_ugo = ugoPanel.getGraph().getArchiveableState(ugoPanel.getGraph().getRoots());
-			GraphActions.setResizable(ugoPanel.getGraph(), ugoPanel.getGraph().getAll(), false);
-		}
-		scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
-		boolean res = scheme.pack();
-
-		if (!res)
-		{
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка сохранения схемы " +
-																		scheme.getName(), "Ошибка", JOptionPane.OK_OPTION);
+		long status = SchemeActions.getGraphState(graph);
+		if ((status & SchemeActions.SCHEME_EMPTY) != 0) {
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
+					LangModelScheme.getString("Message.error.empty_scheme"), //$NON-NLS-1$
+					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+					JOptionPane.OK_OPTION);
 			return;
 		}
-
-		Hashtable h = schemePanel.schemes_to_save;
-		h.put(scheme.getId(), scheme);
-
-		for (Enumeration e = h.elements(); e.hasMoreElements();)
-		{
-			Scheme s = (Scheme)e.nextElement();
-			dataSource.SaveScheme(s.getId());
+		if ((status & SchemeActions.SCHEME_HAS_UNGROUPED_DEVICE) != 0) {
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
+					LangModelScheme.getString("Message.error.ungrouped_device"), //$NON-NLS-1$
+					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+					JOptionPane.OK_OPTION);
+			return;
 		}
-		schemePanel.schemes_to_save = new Hashtable();
-		graph.setGraphChanged(false);
-		if (ugoPanel != null)
-			ugoPanel.getGraph().setGraphChanged(false);
+		if ((status & SchemeActions.SCHEME_HAS_DEVICE_GROUP) == 0) {
+			JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
+					LangModelScheme.getString("Message.error.component_not_found"), //$NON-NLS-1$
+					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+					JOptionPane.OK_OPTION);
+			return;
+		}
+		
+		SchemeResource res = this.schemeTab.getCurrentPanel().getSchemeResource();
 
-		aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme, SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
+		if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) // сохраняем компонент
+		{
+			try {
+				SchemeElement se = res.getSchemeElement();
+				
+				// add internal objects - SL, SE
+				Set<SchemeLink> schemeLinks = new HashSet<SchemeLink>();
+				Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
+				Object[] objects = graph.getRoots();
+				for (Object object : objects) {
+					if (object instanceof DefaultLink)
+						schemeLinks.add(((DefaultLink)object).getSchemeLink());
+					else if (object instanceof DeviceGroup) {
+						SchemeElement schemeElement = ((DeviceGroup)object).getSchemeElement();
+						assert schemeElement != null;
+						if (!schemeElement.equals(se))
+							schemeElements.add(schemeElement);
+					}
+				}
+				se.setSchemeLinks(schemeLinks, false);
+				se.setSchemeElements(schemeElements, false);
+				
+				//	create SchemeImageResource
+				if (se.getSchemeCell() == null) {
+					try {
+						se.setSchemeCell(SchemeObjectsFactory.createSchemeImageResource());
+					} catch (CreateObjectException e) {
+						Log.errorMessage(e);
+						return;
+					}
+				}
+				se.getSchemeCell().setData((List) graph.getArchiveableState());
+				
+				for (Iterator it = this.schemeTab.getAllPanels().iterator(); it.hasNext();) {
+					ElementsPanel p = (ElementsPanel) it.next();
+					SchemeResource res1 = p.getSchemeResource();
+					if (res1.getCellContainerType() == SchemeResource.SCHEME) {
+						Scheme s = res1.getScheme();
+						if (s.equals(se.getParentScheme())) {
+							// TODO refreshing view (ugo)
+							
+							this.schemeTab.setGraphChanged(true);
+							JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
+									se.getName() + LangModelScheme.getString("Message.information.element_saved_in_scheme") + s.getName(),  //$NON-NLS-1$
+									LangModelScheme.getString("Message.information"), //$NON-NLS-1$
+									JOptionPane.INFORMATION_MESSAGE);
+							break;
+						}
+					}
+				}
+			} catch (ApplicationException e) {
+				Log.errorMessage(e);
+			}
+			this.schemeTab.setGraphChanged(false);
+			return;
+		} else if (res.getCellContainerType() == SchemeResource.SCHEME) { // сохраняем схему
 
-		JOptionPane.showMessageDialog(
-						Environment.getActiveWindow(),
-						"Схема "+ scheme.getName() +" успешно сохранена",
-						"Сообщение",
-						JOptionPane.INFORMATION_MESSAGE);
+			try {
+				Scheme scheme = res.getScheme();
+//				scheme.setSchemeLinks(schemeLinks);
+//				scheme.setSchemeCableLinks(schemeCableLinks);
+//				scheme.setSchemeElements(schemeElements);
+			
+				//	create SchemeImageResource
+				SchemeImageResource schemeIr = scheme.getSchemeCell();
+				if (schemeIr == null) {
+					schemeIr = SchemeObjectsFactory.createSchemeImageResource();
+				}
 
-//		aContext.getDispatcher().notify(new TreeListSelectionEvent(Scheme.typ,
-//				TreeListSelectionEvent.SELECT_EVENT + TreeListSelectionEvent.REFRESH_EVENT));
-
-		aContext.getDispatcher().notify(new TreeListSelectionEvent(Scheme.typ, TreeListSelectionEvent.REFRESH_EVENT));
-
-		Pool.remove("serialized", "serialized");
-		ret_code = OK;
+				long t = System.currentTimeMillis();
+				schemeIr.setData((List) graph.getArchiveableState());
+				scheme.setSchemeCell(schemeIr);
+				Log.debugMessage("Scheme cell created for : " + (System.currentTimeMillis() - t) + "ms (" + schemeIr.getImage().length + " bytes)", Level.FINEST);
+				
+				Identifier userId = LoginManager.getUserId();
+				long startSaving = System.currentTimeMillis();
+				t = System.currentTimeMillis();
+				Set<Scheme> internalSchemes = new HashSet<Scheme>();
+				for (SchemeElement se : scheme.getSchemeElements(false)) {
+					if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
+						Scheme internal = se.getScheme(false);
+						if (internal != null && internal.isChanged()) {
+							internalSchemes.add(internal);
+						}
+					}
+				}
+				Log.debugMessage("Internal schemes search took : " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);
+				
+				t = System.currentTimeMillis();
+				final Set<Identifiable> reverseDependencies = scheme.getReverseDependencies(false);
+				Log.debugMessage("Top scheme reversed dependencies search took : " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);
+				
+				t = System.currentTimeMillis();
+				StorableObjectPool.flush(reverseDependencies, userId, false);
+				Log.debugMessage("Top scheme flush took : " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);
+				
+				t = System.currentTimeMillis();
+				for (Scheme changed : internalSchemes) {
+					StorableObjectPool.flush(changed.getReverseDependencies(false), userId, false);
+				}
+				Log.debugMessage("Internal schemes took " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);
+				Log.debugMessage("Total save took " + (System.currentTimeMillis() - startSaving) + "ms", Level.FINEST);
+				
+				LocalXmlIdentifierPool.flush();
+				
+				this.schemeTab.setGraphChanged(false);
+				
+				if (scheme.getUgoCell() == null) {
+					JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+							scheme.getName() + " " + LangModelScheme.getString("Message.information.no_ugo"),  //$NON-NLS-1$ //$NON-NLS-2$
+							LangModelScheme.getString("Message.information"), //$NON-NLS-1$
+							JOptionPane.INFORMATION_MESSAGE);					
+				} else {
+					JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
+							scheme.getName() + " " + LangModelScheme.getString("Message.information.scheme_saved"),  //$NON-NLS-1$ //$NON-NLS-2$
+							LangModelScheme.getString("Message.information"), //$NON-NLS-1$
+							JOptionPane.INFORMATION_MESSAGE);
+				}
+			} catch (ApplicationException e) {
+				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(),
+						LangModelScheme.getString("Message.error.save_scheme") + ": " + e.getMessage(), //$NON-NLS-1$ //$NON-NLS-2$
+						LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+						JOptionPane.OK_OPTION);
+				Log.errorMessage(e);
+			}
+		}
 	}
 }
-

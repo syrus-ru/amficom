@@ -1,158 +1,155 @@
 #
-# $Id: Makefile,v 1.1.1.1 2004/06/22 11:27:59 cvsadmin Exp $
+# $Id: Makefile,v 1.85 2006/03/13 09:40:06 bass Exp $
 #
 # vim:set ft=make:
 #
 
-MODULE_NAME = general_v1
-MODULE_VERSION = $(shell date +%Y%m%d)
+MODULE_NAME := general
 
-USER = AMFICOM
-PASSWORD = amficom
-HOST = RESEARCH
-SERVICE_NAME = SHAITAN
+LIBNAME := $(MODULE_NAME).jar
+LIBNAMEXML := $(MODULE_NAME)xml.jar
+ARCHFILE := $(MODULE_NAME).tar.gz
 
-LIBNAME = general.jar
-SRC_SUFFIXES = \
-	.java \
-	.generated.java
+IDL_SOURCES = $(IDLDIR)/$(MODULE_NAME).idl
 
-CLASS_SUFFIXES = \
-	.class \
-	$$%.class \
-	_SJProfile0.class \
-	_SJProfileKeys.class
-
-IDLDIR = ../idl_v1/idl
-SRCDIR = src
-CLASSDIR = classes
-ifeq ($(shell hostname -s),bass)
-LIBDIR = lib
-else
-LIBDIR = ../lib
-endif
-ENCODING = windows-1251
-JAVACFLAGS = -source 1.4 -sourcepath $(SRCDIR) -deprecation -g -O
-SUNJAVACFLAGS = -target 1.4.2
-JIKESFLAGS = \
-	-target 1.4.2 \
-	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
-	+E \
-	+P \
-	+Pmodifier-order \
-	+Predundant-modifiers \
-	+Pno-switchcheck \
-	+Pnaming-convention \
-	-nowarn \
-	+T=8
-IDL2JAVAFLAGS = \
-	-C \
-	-H \
-	-no_bind \
-	-no_examples \
-	-no_tie \
-	-narrow_compliance \
-	-portable \
-	-root_dir $(SRCDIR) \
-	-strict \
-	-no_toString
-SQLJFLAGS = \
-	-cache=true \
-	-checkfilename=true \
-	-checksource=true \
-	-codegen=iso \
-	-compile=true \
-	-compiler-encoding-flag=true \
-	-explain=true \
-	-linemap=true \
-	-parse=both \
-	-password "$(PASSWORD)" \
-	-profile=true \
-	-ser2class=true \
-	-status=true \
-	-url "jdbc:oracle:oci:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=$(HOST))(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=$(SERVICE_NAME))))" \
-	-user "$(USER)" \
-	-warn=all
-
-include Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
-$(call checkenve,IDL2JAVA)
+$(call checkenve,TROVE4JCLASSPATH)
+$(call checkenve,XALANJCLASSPATH)
+$(call checkenve,XMLBEANSCLASSPATH)
+$(call checkenve,SCOMP)
+$(call checkenve,SCOMPFLAGS)
 
-.PHONY: export
-export: $(LIBNAME)
 
-.PHONY: all
-all: .all
+DEPENDENCIES = \
+util \
+bugs
 
-.all: .idl .sqlj
-	$(JAVAC) \
-		$(JAVACFLAGS) \
-		-classpath $(AMFICOMCLASSPATH)$(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(DEPRECATEDCLASSPATH):$(CLASSDIR) \
-		-d $(CLASSDIR) \
-		-encoding $(ENCODING) \
-	 	$(shell find $(SRCDIR) -name '*.java')
-	touch $@
+EXTCLASSPATH := $(TROVE4JCLASSPATH):$(XMLBEANSCLASSPATH):$(XALANJCLASSPATH)
+XMLCLASSPATH := $(LIBNAMEXML)
 
-.PHONY: idl
-idl: .idl
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/logic/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/security/*.java)
+XSD_SOURCES := $(wildcard $(XMLDIR)/*.xsd)
+XSD_CONFIG := $(XMLDIR)/$(MODULE_NAME).xsdconfig
 
-.idl: $(SRCDIR) $(CLASSDIR)
-	$(IDL2JAVA) \
-		$(IDL2JAVAFLAGS) \
-		$(IDLDIR)/general.idl
-	touch $@
 
-.PHONY: idlclean
-idlclean:
-	$(RM) -r \
-		$(SRCDIR)/com/syrus/AMFICOM/general/corba \
-		$(CLASSDIR)/com/syrus/AMFICOM/general/corba \
-		.idl
-
-.PHONY: sqlj
-sqlj: .sqlj
-
-.sqlj: $(CLASSDIR)
-	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS)" > sqlj.properties
-	$(RM) \
-		$(filter $(foreach source, $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj')), $(foreach src_suffix, $(SRC_SUFFIXES), $(source)$(src_suffix))), $(shell find $(SRCDIR) -name '*\.java')) \
-		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)')
-	touch $@
-
-.PHONY: sqljclean
-sqljclean:
-	$(RM) \
-		$(foreach file, $(filter $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
-		.sqlj
-
-$(SRCDIR) $(CLASSDIR):
-	mkdir -p $@
-
-.PHONY: clean
-clean: sqljclean idlclean
-	$(RM) \
-		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
-		.all
-	$(RM) \
-		$(LIBNAME)
-
-.PHONY: dist
-dist: distclean
-	$(RM) ../$(MODULE_NAME)-$(MODULE_VERSION).tar*
-	cd .. && tar cf $(MODULE_NAME)-$(MODULE_VERSION).tar $(MODULE_NAME)
-	bzip2 -9 ../$(MODULE_NAME)-$(MODULE_VERSION).tar
-
-.PHONY: distclean
-distclean: clean
-	$(RM) -r \
-		$(SRCDIR) \
-		$(CLASSDIR) \
-		SQLChecker.cache \
-		sqlj.properties \
-		*.jar
-
-$(LIBNAME): .all
+$(LIBNAME): .mach
+	$(CP) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/*.properties) \
+		$(CLASSDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/
 	$(JAR) cf $@ \
 		-C $(CLASSDIR) com
 
+.mach: $(CLASSDIR) $(LIBNAMEXML) .corba
+	$(JAVAC) $(JAVACFLAGS) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		$(SOURCES)
+	touch $@
+
+.PHONY: corba
+corba: .corba
+
+.corba: $(CLASSDIR) .idl $(LIBNAMEXML)
+	$(JAVAC) \
+		$(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		-sourcepath $(SRCDIR) \
+		$(SRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/corba/*.java \
+		$(SRCDIR)/com/syrus/AMFICOM/security/corba/*.java
+	touch $@
+
+.PHONY: xml
+xml: $(LIBNAMEXML)
+
+$(LIBNAMEXML): $(XSD_SOURCES) $(XSD_CONFIG)
+	$(RM) -r $(XMLCLASSDIR)/*
+	$(SCOMP) $(SCOMPFLAGS) \
+		-cp $(XMLBEANSCLASSPATH) \
+		-out $@ \
+		$(XSD_SOURCES) \
+		$(XSD_CONFIG)
+
+.PHONY: xmlclean
+xmlclean:
+	$(RM) $(LIBNAMEXML)
+	if [ -f $(XMLSRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/xml/.cvsignore ]; \
+	then \
+		cd $(XMLSRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/xml && $(RM) -r `cat .cvsignore`; \
+	else \
+		$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/xml; \
+	fi
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/xml
+
+.PHONY: clean
+clean: cleanmach cleancorba xmlclean
+	$(RM) $(LIBNAME)
+
+.PHONY: cleanmach
+cleanmach:
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES))) \
+		.mach
+
+.PHONY: cleancorba
+cleancorba: idlclean
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/corba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/security/corba
+	$(RM) .corba
+
+.PHONY: idlclean
+idlclean:
+	cd $(SRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/corba && \
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/corba/.cvsignore | grep .java)
+	cd $(SRCDIR)/com/syrus/AMFICOM/security/corba && \
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/security/corba/.cvsignore | grep .java)
+	$(RM) .idl
+
+
+.PHONY: xmlinstall
+xmlinstall: $(LIBDIR) $(LIBDIR)/$(LIBNAMEXML)
+
+.PHONY: install
+install: $(LIBDIR) $(LIBDIR)/$(LIBNAME) xmlinstall
+
+$(LIBDIR)/$(LIBNAMEXML): $(LIBNAMEXML)
+	install -m 0644 -p $(LIBNAMEXML) $(LIBDIR)
+
+$(LIBDIR)/$(LIBNAME): $(LIBNAME)
+	install -m 0644 -p $(LIBNAME) $(LIBDIR)
+
+.PHONY: xmluninstall
+xmluninstall:
+	$(RM) $(LIBDIR)/$(LIBNAMEXML)
+
+.PHONY: uninstall
+uninstall: xmluninstall
+	$(RM) $(LIBDIR)/$(LIBNAME)
+
+#### Archive ####
+.PHONY: arch
+arch:
+	tar -czvf $(ARCHFILE) \
+		Makefile \
+		$(IDL_SOURCES) \
+		$(SOURCES) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/$(MODULE_NAME)/*.properties) \
+		$(wildcard $(XMLDIR)/*.xsd) \
+		$(XMLDIR)/$(MODULE_NAME).xsdconfig
+
+.javadocs: .idl $(LIBNAMEXML) $(JAVADOCDIR)
+	$(JAVADOC) \
+		$(JAVADOCFLAGS) \
+		-link "http://$(JAVADOCHOST)/apidocs/trove/" \
+		-link "http://$(JAVADOCHOST)/apidocs/xalan-j/" \
+		-link "http://$(JAVADOCHOST)/apidocs/xmlbeans/" \
+		-sourcepath $(SRCDIR) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH) \
+		-group "$(MODULE_NAME)" "com.syrus.AMFICOM.$(MODULE_NAME):com.syrus.AMFICOM.$(MODULE_NAME).logic" \
+		-group "$(MODULE_NAME)-IDL" "com.syrus.AMFICOM.$(MODULE_NAME).corba*" \
+		-group "$(MODULE_NAME)-XML" "com.syrus.AMFICOM.$(MODULE_NAME).xml*" \
+		-group "security" "com.syrus.AMFICOM.security" \
+		-group "security-IDL" "com.syrus.AMFICOM.security.corba*" \
+		-subpackages "com.syrus.AMFICOM.$(MODULE_NAME):com.syrus.AMFICOM.security" \
+		2>&1 | grep -vE '(XMLInputStream|com\.syrus\.AMFICOM\.[a-z]+\.corba\..*@serial)'
+	touch $@

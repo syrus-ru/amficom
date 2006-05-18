@@ -1,5 +1,5 @@
 /*
- * $Id: ATComponentKeyListener.java,v 1.1.1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: ATComponentKeyListener.java,v 1.2 2006/04/26 13:13:01 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,17 +38,13 @@ public class ATComponentKeyListener implements KeyListener{
 	}
 
 	public void keyTyped(KeyEvent e) {
-		//Empty
-	}
-
-	public void keyPressed(KeyEvent e) {
 		AttachedTextComponent component = (AttachedTextComponent)e.getSource();
 		AttachedTextStorableElement element =
 			(AttachedTextStorableElement)component.getElement();
 		
 		char keyChar = e.getKeyChar();
 		if (keyChar != KeyEvent.CHAR_UNDEFINED) {
-			String textToProcess = component.getText() + keyChar;
+			String textToProcess = component.getText();
 	
 			element.setText(textToProcess);
 			
@@ -65,6 +61,9 @@ public class ATComponentKeyListener implements KeyListener{
 		
 		this.applicationContext.getDispatcher().firePropertyChange(
 				new ReportFlagEvent(this,ReportFlagEvent.REPAINT_RENDERER));
+	}
+
+	public void keyPressed(KeyEvent e) {
 	}
 
 	public void keyReleased(KeyEvent e) {

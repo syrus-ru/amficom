@@ -15,4 +15,10 @@ Makefile.inc
 .project
 .classpath
 .settings
+.idl
 test
+javadoc.xml
+build.xml
+nbproject
+.nbintdb
+.pmd

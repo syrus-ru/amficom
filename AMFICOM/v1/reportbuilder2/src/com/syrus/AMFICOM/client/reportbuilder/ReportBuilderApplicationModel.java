@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderApplicationModel.java,v 1.1.1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: ReportBuilderApplicationModel.java,v 1.3 2006/04/11 14:30:02 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ public class ReportBuilderApplicationModel extends ApplicationModel
 	public static final String	START							= "_start";
 	public static final String	CANCEL							= "_cancel";
 	
-	public static final String	MENU_WINDOW						= "menuWindow";
 	public static final String	MENU_WINDOW_TREE				= "menuWindowTree";
 	public static final String	MENU_WINDOW_TEMPLATE_SCHEME		= "menuWindowTemplateScheme";
 
@@ -54,9 +53,10 @@ public class ReportBuilderApplicationModel extends ApplicationModel
 		add(MENU_TEMPLATE);
 		add(MENU_TEMPLATE_PARAMETERS);
 		
-		add(MENU_WINDOW);
+		add(ApplicationModel.MENU_VIEW);
 		add(MENU_WINDOW_TREE);
 		add(MENU_WINDOW_TEMPLATE_SCHEME);
+		add(ApplicationModel.MENU_VIEW_ARRANGE);
 		
 		add(MENU_REPORT_TEMPLATE_NEW);
 		add(MENU_REPORT_TEMPLATE_SAVE);
@@ -83,6 +83,8 @@ public class ReportBuilderApplicationModel extends ApplicationModel
 	
 	private void initUIConstats() {
 		//Для внутреннего тулбара рендерера шаблона
+		UIManager.put(ReportBuilderResourceKeys.ICON_REPORTBUILDER_MAIN, Toolkit
+				.getDefaultToolkit().getImage("images/main/report_mini.gif"));
 		UIManager.put(
 				ReportBuilderResourceKeys.ICON_INSERT_LABEL,
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addtext.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
@@ -139,5 +141,7 @@ public class ReportBuilderApplicationModel extends ApplicationModel
 		I18N.addResourceBundle("com.syrus.AMFICOM.Client.General.Lang.schematics");
 		I18N.addResourceBundle("com.syrus.AMFICOM.client.resource.map");
 		I18N.addResourceBundle("com.syrus.AMFICOM.Client.General.lang.scheduler");
+		I18N.addResourceBundle("com.syrus.AMFICOM.client.resource.map");
+		I18N.addResourceBundle("com.syrus.AMFICOM.resource.observer");
 	}
 }

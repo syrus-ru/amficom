@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderResourceKeys.java,v 1.1.1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: ReportBuilderResourceKeys.java,v 1.2 2006/04/11 05:58:32 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client.reportbuilder;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public interface ReportBuilderResourceKeys extends ResourceKeys{
+	String ICON_REPORTBUILDER_MAIN = "icon.reportbuilder_main";
 	String ICON_INSERT_LABEL = "icon.insertLabel";
 	String ICON_INSERT_IMAGE = "icon.insertImage";	
 	String ICON_DELETE_OBJECT = "icon.deleteObject";

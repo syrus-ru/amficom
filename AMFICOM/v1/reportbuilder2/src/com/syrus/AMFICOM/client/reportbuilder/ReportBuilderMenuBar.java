@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderMenuBar.java,v 1.1.1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: ReportBuilderMenuBar.java,v 1.2 2006/04/11 05:58:32 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ public class ReportBuilderMenuBar extends AbstractMainMenuBar {
 		menuTemplate.add(menuTemplateParameters);
 				
 		menuWindow.setText(I18N.getString("report.UI.Menubar.menuWindow"));
-		menuWindow.setName(ReportBuilderApplicationModel.MENU_WINDOW);
+		menuWindow.setName(ReportBuilderApplicationModel.MENU_VIEW);
 		
 		menuWindowTree.setText(I18N.getString("report.UI.Menubar.menuTree"));
 		menuWindowTree.setName(ReportBuilderApplicationModel.MENU_WINDOW_TREE);
@@ -109,12 +109,14 @@ public class ReportBuilderMenuBar extends AbstractMainMenuBar {
 				menuTemplateLoad.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD));
 				menuTemplateLoad.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD));
 				
-				menuWindow.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_WINDOW));
-				menuWindow.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_WINDOW));
+				menuWindow.setVisible(aModel.isVisible(ApplicationModel.MENU_VIEW));
+				menuWindow.setEnabled(aModel.isEnabled(ApplicationModel.MENU_VIEW));
 				menuWindowTree.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_WINDOW_TREE));
 				menuWindowTree.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TREE));
 				menuWindowTemplateScheme.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME));
 				menuWindowTemplateScheme.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME));
+				menuViewArrange.setVisible(aModel.isVisible(ApplicationModel.MENU_VIEW_ARRANGE));
+				menuViewArrange.setEnabled(aModel.isEnabled(ApplicationModel.MENU_VIEW_ARRANGE));
 			}
 		});
 	}

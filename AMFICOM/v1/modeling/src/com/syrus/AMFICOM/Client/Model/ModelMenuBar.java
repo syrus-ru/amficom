@@ -1,264 +1,171 @@
 package com.syrus.AMFICOM.Client.Model;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractButton;
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
+import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.General.Model.ModelApplicationModel;
+import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
+import com.syrus.AMFICOM.client.resource.I18N;
 
-public class ModelMenuBar extends JMenuBar
-		implements ApplicationModelListener
-{
-	private ApplicationModel aModel;
+public class ModelMenuBar extends AbstractMainMenuBar {
+	private static final long serialVersionUID = 2888050801820884065L;
 
-	JMenu menuSession = new JMenu();
-	JMenuItem menuSessionOpen = new JMenuItem();
-	JMenuItem menuSessionClose = new JMenuItem();
-	JMenuItem menuSessionOptions = new JMenuItem();
-	JMenuItem menuSessionConnection = new JMenuItem();
-	JMenuItem menuSessionChangePassword = new JMenuItem();
-	JMenuItem menuSessionDomain = new JMenuItem();
-	JMenuItem menuExit = new JMenuItem();
-
-	JMenu menuView = new JMenu();
-	JMenuItem menuViewMapOpen = new JMenuItem();
-	JMenuItem menuViewMapEdit = new JMenuItem();
-	JMenuItem menuViewMapClose = new JMenuItem();
-	JMenuItem menuViewSchemeOpen = new JMenuItem();
-	JMenuItem menuViewSchemeEdit = new JMenuItem();
-	JMenuItem menuViewSchemeClose = new JMenuItem();
-
-	JMenu menuFile = new JMenu();
-	JMenuItem menuFileOpen = new JMenuItem();
-	JMenuItem menuFileOpenAs = new JMenu();
-	JMenuItem menuFileOpenAsBellcore = new JMenuItem();
-	JMenuItem menuFileOpenAsWavetek = new JMenuItem();
-	JMenuItem menuFileSave = new JMenuItem();
-	JMenuItem menuFileSaveAs = new JMenu();
-	JMenuItem menuFileSaveAsText = new JMenuItem();
-	JMenuItem menuFileClose = new JMenuItem();
-	JMenuItem menuFileAddCompare = new JMenuItem();
-	JMenuItem menuFileRemoveCompare = new JMenuItem();
-
-	JMenu menuTrace = new JMenu();
-	JMenuItem menuViewModelLoad = new JMenuItem();
-	JMenuItem menuTraceAddCompare = new JMenuItem();
-	JMenuItem menuTraceRemoveCompare = new JMenuItem();
-	JMenuItem menuTraceClose = new JMenuItem();
-	JMenuItem menuViewModelSave = new JMenuItem();
-
-	JMenu menuReport = new JMenu();
-	JMenuItem menuReportCreate = new JMenuItem();
-
-	JMenu menuHelp = new JMenu();
-	JMenuItem menuHelpContents = new JMenuItem();
-	JMenuItem menuHelpFind = new JMenuItem();
-	JMenuItem menuHelpTips = new JMenuItem();
-	JMenuItem menuHelpStart = new JMenuItem();
-	JMenuItem menuHelpCourse = new JMenuItem();
-	JMenuItem menuHelpHelp = new JMenuItem();
-	JMenuItem menuHelpSupport = new JMenuItem();
-	JMenuItem menuHelpLicense = new JMenuItem();
-	JMenuItem menuHelpAbout = new JMenuItem();
-
-	JMenu menuWindow = new JMenu();
-	JMenuItem menuWindowTraceSelector = new JMenuItem();
-	JMenuItem menuWindowPrimaryParameters = new JMenuItem();
-	JMenuItem menuWindowOverallStats = new JMenuItem();
-	JMenuItem menuWindowNoiseFrame = new JMenuItem();
-	JMenuItem menuWindowFilteredFrame = new JMenuItem();
-	JMenuItem menuWindowEvents = new JMenuItem();
-	JMenuItem menuWindowDetailedEvents = new JMenuItem();
-	JMenuItem menuWindowAnalysis = new JMenuItem();
-	JMenuItem menuWindowMarkersInfo = new JMenuItem();
-	JMenuItem menuWindowAnalysisSelection = new JMenuItem();
-	JMenuItem menuWindowDerivHistoFrame = new JMenuItem();
-	JMenuItem menuWindowThresholdsSelection = new JMenuItem();
-	JMenuItem menuWindowThresholds = new JMenuItem();
-
-	public ModelMenuBar()
-	{
-		super();
-		try
-		{
-			jbInit();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+	public ModelMenuBar(ApplicationModel aModel) {
+		super(aModel);
 	}
-
-	public ModelMenuBar(ApplicationModel aModel)
-	{
-		this();
-		this.aModel = aModel;
-	}
-
-	private void jbInit() throws Exception
-	{
-		ModelMenuBar_this_actionAdapter actionAdapter =
-				new ModelMenuBar_this_actionAdapter(this);
-
-		menuSession.setText(LangModel.Text("menuSession"));
-		menuSession.setName("menuSession");
-		menuSessionOpen.setText(LangModelModel.Text("menuSessionOpen"));
-		menuSessionOpen.setName("menuSessionOpen");
-		menuSessionOpen.addActionListener(actionAdapter);
-		menuSessionClose.setText(LangModel.Text("menuSessionClose"));
-		menuSessionClose.setName("menuSessionClose");
-		menuSessionClose.addActionListener(actionAdapter);
-		menuSessionOptions.setText(LangModel.Text("menuSessionOptions"));
-		menuSessionOptions.setName("menuSessionOptions");
-		menuSessionOptions.addActionListener(actionAdapter);
-		menuSessionConnection.setText(LangModel.Text("menuSessionConnection"));
-		menuSessionConnection.setName("menuSessionConnection");
-		menuSessionConnection.addActionListener(actionAdapter);
-		menuSessionChangePassword.setText(LangModel.Text("menuSessionChangePassword"));
-		menuSessionChangePassword.setName("menuSessionChangePassword");
-		menuSessionChangePassword.addActionListener(actionAdapter);
-		menuSessionDomain.setText(LangModel.Text("menuSessionDomain"));
-		menuSessionDomain.setName("menuSessionDomain");
-		menuSessionDomain.addActionListener(actionAdapter);
-		menuExit.setText(LangModel.Text("menuExit"));
-		menuExit.setName("menuExit");
-		menuExit.addActionListener(actionAdapter);
-
-		menuView.setText(LangModelModel.Text("menuView"));
+	
+	@Override
+	protected void addMenuItems() {
+		final JMenu menuView = new JMenu();
+		final JMenuItem menuViewMapViewOpen = new JMenuItem();
+		final JMenuItem menuViewSchemeOpen = new JMenuItem();
+		
+		final JMenu menuFile = new JMenu();
+		final JMenuItem menuFileOpen = new JMenuItem();
+		final JMenuItem menuFileOpenAs = new JMenu();
+		final JMenuItem menuFileOpenAsBellcore = new JMenuItem();
+		final JMenuItem menuFileOpenAsWavetek = new JMenuItem();
+		final JMenuItem menuFileSave = new JMenuItem();
+		final JMenuItem menuFileSaveAs = new JMenu();
+		final JMenuItem menuFileSaveAsText = new JMenuItem();
+		final JMenuItem menuFileClose = new JMenuItem();
+		final JMenuItem menuFileAddCompare = new JMenuItem();
+		final JMenuItem menuFileRemoveCompare = new JMenuItem();
+		
+		final JMenu menuTrace = new JMenu();
+		final JMenuItem menuViewModelLoad = new JMenuItem();
+		final JMenuItem menuTraceAddCompare = new JMenuItem();
+		final JMenuItem menuTraceRemoveCompare = new JMenuItem();
+		final JMenuItem menuTraceClose = new JMenuItem();
+		final JMenuItem menuViewModelSave = new JMenuItem();
+		
+		final JMenu menuReport = new JMenu();
+		final JMenuItem menuReportCreate = new JMenuItem();
+		
+		final JMenu menuWindow = new JMenu();
+		final JMenuItem	menuWindowArrange	= new JMenuItem();
+		final JMenuItem menuWindowTraceSelector = new JMenuItem();
+		final JMenuItem menuWindowPrimaryParameters = new JMenuItem();
+		final JMenuItem menuWindowAnalysis = new JMenuItem();
+		final JMenuItem menuWindowTransData = new JMenuItem();
+		final JMenuItem menuWindowModelRapameters = new JMenuItem();
+		final JMenuItem menuWindowScheme = new JMenuItem();
+		final JMenuItem menuWindowMap = new JMenuItem();
+		final JMenuItem menuWindowGeneralProperties = new JMenuItem();
+		final JMenuItem menuWindowCharacteristics = new JMenuItem();
+		final JMenuItem menuWindowAdditionalProperties = new JMenuItem();
+		
+		menuView.setText(I18N.getString(ModelApplicationModel.MENU_APPEARANCE));
 		menuView.setName("menuView");
-		menuViewMapOpen.setText(LangModelModel.Text("menuViewMapOpen"));
-		menuViewMapOpen.setName("menuViewMapOpen");
-		menuViewMapOpen.addActionListener(actionAdapter);
-		menuViewMapEdit.setText(LangModelModel.Text("menuViewMapEdit"));
-		menuViewMapEdit.setName("menuViewMapEdit");
-		menuViewMapEdit.addActionListener(actionAdapter);
-		menuViewMapClose.setText(LangModelModel.Text("menuViewMapClose"));
-		menuViewMapClose.setName("menuViewMapClose");
-		menuViewMapClose.addActionListener(actionAdapter);
-		menuViewModelSave.setText(LangModelModel.Text("menuViewModelSave"));
+		menuViewModelSave.setText(LangModelModel.getString("menuViewModelSave"));
 		menuViewModelSave.setName("menuViewModelSave");
-		menuViewModelSave.addActionListener(actionAdapter);
-		menuViewModelLoad.setText(LangModelModel.Text("menuViewModelLoad"));
+		menuViewModelSave.addActionListener(super.actionAdapter);
+		menuViewModelLoad.setText(LangModelModel.getString("menuViewModelLoad"));
 		menuViewModelLoad.setName("menuViewModelLoad");
-		menuViewModelLoad.addActionListener(actionAdapter);
+		menuViewModelLoad.addActionListener(super.actionAdapter);
 
-		menuViewSchemeOpen.setText(LangModelModel.Text("menuViewSchemeOpen"));
+		menuViewMapViewOpen.setText(I18N.getString(ModelApplicationModel.MENU_APPEARANCE_MAP));
+		menuViewMapViewOpen.setName("menuViewMapViewOpen");
+		menuViewMapViewOpen.addActionListener(super.actionAdapter);
+		menuViewSchemeOpen.setText(I18N.getString(ModelApplicationModel.MENU_APPEARANCE_SCHEME));
 		menuViewSchemeOpen.setName("menuViewSchemeOpen");
-		menuViewSchemeOpen.addActionListener(actionAdapter);
-		menuViewSchemeEdit.setText(LangModelModel.Text("menuViewSchemeEdit"));
-		menuViewSchemeEdit.setName("menuViewSchemeEdit");
-		menuViewSchemeEdit.addActionListener(actionAdapter);
-		menuViewSchemeClose.setText(LangModelModel.Text("menuViewSchemeClose"));
-		menuViewSchemeClose.setName("menuViewSchemeClose");
-		menuViewSchemeClose.addActionListener(actionAdapter);
-
-		menuFile.setText(LangModelAnalyse.Text("menuFile"));
+		menuViewSchemeOpen.addActionListener(super.actionAdapter);
+		
+		menuFile.setText(LangModelAnalyse.getString("menuFile"));
 		menuFile.setName("menuFile");
-		menuFileOpen.setText(LangModelAnalyse.Text("menuFileOpen"));
+		menuFileOpen.setText(LangModelAnalyse.getString("menuFileOpen"));
 		menuFileOpen.setName("menuFileOpen");
-		menuFileOpen.addActionListener(actionAdapter);
-		menuFileOpenAs.setText(LangModelAnalyse.Text("menuFileOpenAs"));
+		menuFileOpen.addActionListener(super.actionAdapter);
+		menuFileOpenAs.setText(LangModelAnalyse.getString("menuFileOpenAs"));
 		menuFileOpenAs.setName("menuFileOpenAs");
-		menuFileOpenAs.addActionListener(actionAdapter);
-		menuFileOpenAsBellcore.setText(LangModelAnalyse.Text("menuFileOpenAsBellcore"));
+		menuFileOpenAs.addActionListener(super.actionAdapter);
+		menuFileOpenAsBellcore.setText(LangModelAnalyse.getString("menuFileOpenAsBellcore"));
 		menuFileOpenAsBellcore.setName("menuFileOpenAsBellcore");
-		menuFileOpenAsBellcore.addActionListener(actionAdapter);
-		menuFileOpenAsWavetek.setText(LangModelAnalyse.Text("menuFileOpenAsWavetek"));
+		menuFileOpenAsBellcore.addActionListener(super.actionAdapter);
+		menuFileOpenAsWavetek.setText(LangModelAnalyse.getString("menuFileOpenAsWavetek"));
 		menuFileOpenAsWavetek.setName("menuFileOpenAsWavetek");
-		menuFileOpenAsWavetek.addActionListener(actionAdapter);
-		menuFileSave.setText(LangModelAnalyse.Text("menuFileSave"));
+		menuFileOpenAsWavetek.addActionListener(super.actionAdapter);
+		menuFileSave.setText(LangModelAnalyse.getString("menuFileSave"));
 		menuFileSave.setName("menuFileSave");
-		menuFileSave.addActionListener(actionAdapter);
-		menuFileSaveAs.setText(LangModelAnalyse.Text("menuFileSaveAs"));
+		menuFileSave.addActionListener(super.actionAdapter);
+		menuFileSaveAs.setText(LangModelAnalyse.getString("menuFileSaveAs"));
 		menuFileSaveAs.setName("menuFileSaveAs");
-		menuFileSaveAsText.setText(LangModelAnalyse.Text("menuFileSaveAsText"));
+		menuFileSaveAsText.setText(LangModelAnalyse.getString("menuFileSaveAsText"));
 		menuFileSaveAsText.setName("menuFileSaveAsText");
-		menuFileSaveAsText.addActionListener(actionAdapter);
-		menuFileClose.setText(LangModelAnalyse.Text("menuFileClose"));
+		menuFileSaveAsText.addActionListener(super.actionAdapter);
+		menuFileClose.setText(LangModelAnalyse.getString("menuFileClose"));
 		menuFileClose.setName("menuFileClose");
-		menuFileClose.addActionListener(actionAdapter);
-		menuFileAddCompare.setText(LangModelAnalyse.Text("menuFileAddCompare"));
+		menuFileClose.addActionListener(super.actionAdapter);
+		menuFileAddCompare.setText(LangModelAnalyse.getString("menuFileAddCompare"));
 		menuFileAddCompare.setName("menuFileAddCompare");
-		menuFileAddCompare.addActionListener(actionAdapter);
-		menuFileRemoveCompare.setText(LangModelAnalyse.Text("menuFileRemoveCompare"));
+		menuFileAddCompare.addActionListener(super.actionAdapter);
+		menuFileRemoveCompare.setText(LangModelAnalyse.getString("menuFileRemoveCompare"));
 		menuFileRemoveCompare.setName("menuFileRemoveCompare");
-		menuFileRemoveCompare.addActionListener(actionAdapter);
-		menuTrace.setText(LangModelAnalyse.Text("menuTrace"));
+		menuFileRemoveCompare.addActionListener(super.actionAdapter);
+		menuTrace.setText(LangModelAnalyse.getString("menuTrace"));
 		menuTrace.setName("menuTrace");
-		menuTraceAddCompare.setText(LangModelAnalyse.Text("menuTraceAddCompare"));
+		menuTraceAddCompare.setText(LangModelAnalyse.getString("menuTraceAddCompare"));
 		menuTraceAddCompare.setName("menuTraceAddCompare");
-		menuTraceAddCompare.addActionListener(actionAdapter);
-		menuTraceRemoveCompare.setText(LangModelAnalyse.Text("menuTraceRemoveCompare"));
+		menuTraceAddCompare.addActionListener(super.actionAdapter);
+		menuTraceRemoveCompare.setText(LangModelAnalyse.getString("menuTraceRemoveCompare"));
 		menuTraceRemoveCompare.setName("menuTraceRemoveCompare");
-		menuTraceRemoveCompare.addActionListener(actionAdapter);
-		menuTraceClose.setText(LangModelAnalyse.Text("menuFileClose"));
+		menuTraceRemoveCompare.addActionListener(super.actionAdapter);
+		menuTraceClose.setText(LangModelAnalyse.getString("menuFileClose"));
 		menuTraceClose.setName("menuFileClose");
-		menuTraceClose.addActionListener(actionAdapter);
-
-		menuReport.setText(LangModelAnalyse.Text("menuReport"));
+		menuTraceClose.addActionListener(super.actionAdapter);
+		
+		menuReport.setText(LangModelAnalyse.getString("menuReport"));
 		menuReport.setName("menuReport");
-		menuReportCreate.setText(LangModelAnalyse.Text("menuReportCreate"));
+		menuReportCreate.setText(LangModelAnalyse.getString("menuReportCreate"));
 		menuReportCreate.setName("menuReportCreate");
-		menuReportCreate.addActionListener(actionAdapter);
-		menuReport.add(menuReportCreate);
-
-		menuHelp.setText(LangModelModel.Text("menuHelp"));
-		menuHelp.setName("menuHelp");
-		menuHelpContents.setText(LangModelModel.Text("menuHelpContents"));
-		menuHelpContents.setName("menuHelpContents");
-		menuHelpContents.addActionListener(actionAdapter);
-		menuHelpFind.setText(LangModelModel.Text("menuHelpFind"));
-		menuHelpFind.setName("menuHelpFind");
-		menuHelpFind.addActionListener(actionAdapter);
-		menuHelpTips.setText(LangModelModel.Text("menuHelpTips"));
-		menuHelpTips.setName("menuHelpTips");
-		menuHelpTips.addActionListener(actionAdapter);
-		menuHelpStart.setText(LangModelModel.Text("menuHelpStart"));
-		menuHelpStart.setName("menuHelpStart");
-		menuHelpStart.addActionListener(actionAdapter);
-		menuHelpCourse.setText(LangModelModel.Text("menuHelpCourse"));
-		menuHelpCourse.setName("menuHelpCourse");
-		menuHelpCourse.addActionListener(actionAdapter);
-		menuHelpHelp.setText(LangModelModel.Text("menuHelpHelp"));
-		menuHelpHelp.setName("menuHelpHelp");
-		menuHelpHelp.addActionListener(actionAdapter);
-		menuHelpSupport.setText(LangModelModel.Text("menuHelpSupport"));
-		menuHelpSupport.setName("menuHelpSupport");
-		menuHelpSupport.addActionListener(actionAdapter);
-		menuHelpLicense.setText(LangModelModel.Text("menuHelpLicense"));
-		menuHelpLicense.setName("menuHelpLicense");
-		menuHelpLicense.addActionListener(actionAdapter);
-		menuHelpAbout.setText(LangModelModel.Text("menuHelpAbout"));
-		menuHelpAbout.setName("menuHelpAbout");
-		menuHelpAbout.addActionListener(actionAdapter);
-
-		menuSession.add(menuSessionOpen);
-		menuSession.add(menuSessionClose);
-		menuSession.add(menuSessionOptions);
-		menuSession.add(menuSessionChangePassword);
-		menuSession.addSeparator();
-		menuSession.add(menuSessionConnection);
-//		menuSession.addSeparator();
-		menuSession.add(menuSessionDomain);
-		menuSession.addSeparator();
-		menuSession.add(menuExit);
-
-		menuView.add(menuViewMapOpen);
-		menuView.add(menuViewMapEdit);
-		menuView.add(menuViewMapClose);
-		menuView.addSeparator();
+		menuReportCreate.addActionListener(super.actionAdapter);
+				
+		menuWindow.setText(I18N.getString(ApplicationModel.MENU_VIEW));
+		menuWindow.setName(ApplicationModel.MENU_VIEW);
+		menuWindowArrange.setText(I18N.getString(ApplicationModel.MENU_VIEW_ARRANGE));
+		menuWindowArrange.setName(ApplicationModel.MENU_VIEW_ARRANGE);
+		menuWindowArrange.addActionListener(this.actionAdapter);
+		menuWindowAdditionalProperties.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES));
+		menuWindowAdditionalProperties.setName(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES);
+		menuWindowAdditionalProperties.addActionListener(super.actionAdapter);
+		menuWindowAnalysis.setText(I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN));
+		menuWindowAnalysis.setName(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS);
+		menuWindowAnalysis.addActionListener(super.actionAdapter);
+		menuWindowCharacteristics.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS));
+		menuWindowCharacteristics.setName(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS);
+		menuWindowCharacteristics.addActionListener(super.actionAdapter);
+		menuWindowGeneralProperties.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES));
+		menuWindowGeneralProperties.setName(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES);
+		menuWindowGeneralProperties.addActionListener(super.actionAdapter);
+		menuWindowMap.setText(I18N.getString(MapEditorApplicationModel.ITEM_VIEW_MAP));
+		menuWindowMap.setName(MapEditorApplicationModel.ITEM_VIEW_MAP);
+		menuWindowMap.addActionListener(super.actionAdapter);
+		menuWindowModelRapameters.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS));
+		menuWindowModelRapameters.setName(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS);
+		menuWindowModelRapameters.addActionListener(super.actionAdapter);
+		menuWindowPrimaryParameters.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_TREE));
+		menuWindowPrimaryParameters.setName(ModelApplicationModel.MENU_WINDOW_TREE);
+		menuWindowPrimaryParameters.addActionListener(super.actionAdapter);
+		menuWindowScheme.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_SCHEME));
+		menuWindowScheme.setName(ModelApplicationModel.MENU_WINDOW_SCHEME);
+		menuWindowScheme.addActionListener(super.actionAdapter);
+		menuWindowTraceSelector.setText(I18N.getString(AnalysisResourceKeys.FRAME_TRACE_SELECTOR));
+		menuWindowTraceSelector.setName(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR);
+		menuWindowTraceSelector.addActionListener(super.actionAdapter);
+		menuWindowTransData.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_TRANS_DATA));
+		menuWindowTransData.setName(ModelApplicationModel.MENU_WINDOW_TRANS_DATA);
+		menuWindowTransData.addActionListener(super.actionAdapter);
+		
+		menuView.add(menuViewMapViewOpen);
 		menuView.add(menuViewSchemeOpen);
-		menuView.add(menuViewSchemeEdit);
-		menuView.add(menuViewSchemeClose);
-
+		
 		menuFile.add(menuFileOpen);
 		menuFile.add(menuFileOpenAs);
 		menuFileOpenAs.add(menuFileOpenAsBellcore);
@@ -271,7 +178,7 @@ public class ModelMenuBar extends JMenuBar
 		menuFile.add(menuFileSave);
 		menuFile.add(menuFileSaveAs);
 		menuFileSaveAs.add(menuFileSaveAsText);
-
+		
 		menuTrace.add(menuViewModelLoad);
 		menuTrace.add(menuTraceAddCompare);
 		menuTrace.addSeparator();
@@ -279,159 +186,106 @@ public class ModelMenuBar extends JMenuBar
 		menuTrace.add(menuTraceRemoveCompare);
 		menuTrace.addSeparator();
 		menuTrace.add(menuViewModelSave);
-
-		menuHelp.add(menuHelpContents);
-		menuHelp.add(menuHelpFind);
-		menuHelp.add(menuHelpTips);
-		menuHelp.add(menuHelpStart);
-		menuHelp.add(menuHelpCourse);
-		menuHelp.addSeparator();
-		menuHelp.add(menuHelpHelp);
-		menuHelp.addSeparator();
-		menuHelp.add(menuHelpSupport);
-		menuHelp.add(menuHelpLicense);
-		menuHelp.addSeparator();
-		menuHelp.add(menuHelpAbout);
-
-		this.add(menuSession);
-		this.add(menuView);
-		this.add(menuFile);
-		this.add(menuTrace);
-		this.add(menuReport);
-		this.add(menuHelp);
-	}
-
-	public void setModel(ApplicationModel a)
-	{
-		aModel = a;
-	}
-
-	public ApplicationModel getModel()
-	{
-		return aModel;
-	}
-
-	public void modelChanged(String e[])
-	{
-		int count = e.length;
-		int i;
-
-		menuSession.setVisible(aModel.isVisible("menuSession"));
-		menuSession.setEnabled(aModel.isEnabled("menuSession"));
-		menuSessionOpen.setVisible(aModel.isVisible("menuSessionOpen"));
-		menuSessionOpen.setEnabled(aModel.isEnabled("menuSessionOpen"));
-		menuSessionClose.setVisible(aModel.isVisible("menuSessionClose"));
-		menuSessionClose.setEnabled(aModel.isEnabled("menuSessionClose"));
-		menuSessionOptions.setVisible(aModel.isVisible("menuSessionOptions"));
-		menuSessionOptions.setEnabled(aModel.isEnabled("menuSessionOptions"));
-		menuSessionConnection.setVisible(aModel.isVisible("menuSessionConnection"));
-		menuSessionConnection.setEnabled(aModel.isEnabled("menuSessionConnection"));
-		menuSessionChangePassword.setVisible(aModel.isVisible("menuSessionChangePassword"));
-		menuSessionChangePassword.setEnabled(aModel.isEnabled("menuSessionChangePassword"));
-		menuSessionDomain.setVisible(aModel.isVisible("menuSessionDomain"));
-		menuSessionDomain.setEnabled(aModel.isEnabled("menuSessionDomain"));
-		menuExit.setVisible(aModel.isVisible("menuExit"));
-		menuExit.setEnabled(aModel.isEnabled("menuExit"));
-
-		menuView.setVisible(aModel.isVisible("menuView"));
-		menuView.setEnabled(aModel.isEnabled("menuView"));
-		menuViewMapOpen.setVisible(aModel.isVisible("menuViewMapOpen"));
-		menuViewMapOpen.setEnabled(aModel.isEnabled("menuViewMapOpen"));
-		menuViewMapEdit.setVisible(aModel.isVisible("menuViewMapEdit"));
-		menuViewMapEdit.setEnabled(aModel.isEnabled("menuViewMapEdit"));
-		menuViewMapClose.setVisible(aModel.isVisible("menuViewMapClose"));
-		menuViewMapClose.setEnabled(aModel.isEnabled("menuViewMapClose"));
-		menuViewSchemeOpen.setVisible(aModel.isVisible("menuViewSchemeOpen"));
-		menuViewSchemeOpen.setEnabled(aModel.isEnabled("menuViewSchemeOpen"));
-		menuViewSchemeEdit.setVisible(aModel.isVisible("menuViewSchemeEdit"));
-		menuViewSchemeEdit.setEnabled(aModel.isEnabled("menuViewSchemeEdit"));
-		menuViewSchemeClose.setVisible(aModel.isVisible("menuViewSchemeClose"));
-		menuViewSchemeClose.setEnabled(aModel.isEnabled("menuViewSchemeClose"));
-
-		menuViewModelSave.setVisible(aModel.isVisible("menuViewModelSave"));
-		menuViewModelSave.setEnabled(aModel.isEnabled("menuViewModelSave"));
-		menuViewModelLoad.setVisible(aModel.isVisible("menuViewModelLoad"));
-		menuViewModelLoad.setEnabled(aModel.isEnabled("menuViewModelLoad"));
-		menuFileOpen.setVisible(aModel.isVisible("menuFileOpen"));
-		menuFileOpen.setEnabled(aModel.isEnabled("menuFileOpen"));
-		menuFileOpenAs.setVisible(aModel.isVisible("menuFileOpenAs"));
-		menuFileOpenAs.setEnabled(aModel.isEnabled("menuFileOpenAs"));
-		menuFileOpenAsBellcore.setVisible(aModel.isVisible("menuFileOpenAsBellcore"));
-		menuFileOpenAsBellcore.setEnabled(aModel.isEnabled("menuFileOpenAsBellcore"));
-		menuFileOpenAsWavetek.setVisible(aModel.isVisible("menuFileOpenAsWavetek"));
-		menuFileOpenAsWavetek.setEnabled(aModel.isEnabled("menuFileOpenAsWavetek"));
-		menuFileSave.setVisible(aModel.isVisible("menuFileSave"));
-		menuFileSave.setEnabled(aModel.isEnabled("menuFileSave"));
-		menuFileSaveAs.setVisible(aModel.isVisible("menuFileSaveAs"));
-		menuFileSaveAs.setEnabled(aModel.isEnabled("menuFileSaveAs"));
-		menuFileSaveAsText.setVisible(aModel.isVisible("menuFileSaveAsText"));
-		menuFileSaveAsText.setEnabled(aModel.isEnabled("menuFileSaveAsText"));
-		menuFileClose.setVisible(aModel.isVisible("menuFileClose"));
-		menuFileClose.setEnabled(aModel.isEnabled("menuFileClose"));
-		menuFileAddCompare.setVisible(aModel.isVisible("menuFileAddCompare"));
-		menuFileAddCompare.setEnabled(aModel.isEnabled("menuFileAddCompare"));
-		menuFileRemoveCompare.setVisible(aModel.isVisible("menuFileRemoveCompare"));
-		menuFileRemoveCompare.setEnabled(aModel.isEnabled("menuFileRemoveCompare"));
-
-		menuTraceAddCompare.setVisible(aModel.isVisible("menuTraceAddCompare"));
-		menuTraceAddCompare.setEnabled(aModel.isEnabled("menuTraceAddCompare"));
-		menuTraceRemoveCompare.setVisible(aModel.isVisible("menuTraceRemoveCompare"));
-		menuTraceRemoveCompare.setEnabled(aModel.isEnabled("menuTraceRemoveCompare"));
-		menuTraceClose.setVisible(aModel.isVisible("menuTraceClose"));
-		menuTraceClose.setEnabled(aModel.isEnabled("menuTraceClose"));
-
-		menuReport.setVisible(aModel.isVisible("menuReport"));
-		menuReport.setEnabled(aModel.isEnabled("menuReport"));
-		menuReportCreate.setVisible(aModel.isVisible("menuReportCreate"));
-		menuReportCreate.setEnabled(aModel.isEnabled("menuReportCreate"));
-
-		menuHelp.setVisible(aModel.isVisible("menuHelp"));
-		menuHelp.setEnabled(aModel.isEnabled("menuHelp"));
-		menuHelpContents.setVisible(aModel.isVisible("menuHelpContents"));
-		menuHelpContents.setEnabled(aModel.isEnabled("menuHelpContents"));
-		menuHelpFind.setVisible(aModel.isVisible("menuHelpFind"));
-		menuHelpFind.setEnabled(aModel.isEnabled("menuHelpFind"));
-		menuHelpTips.setVisible(aModel.isVisible("menuHelpTips"));
-		menuHelpTips.setEnabled(aModel.isEnabled("menuHelpTips"));
-		menuHelpStart.setVisible(aModel.isVisible("menuHelpStart"));
-		menuHelpStart.setEnabled(aModel.isEnabled("menuHelpStart"));
-		menuHelpCourse.setVisible(aModel.isVisible("menuHelpCourse"));
-		menuHelpCourse.setEnabled(aModel.isEnabled("menuHelpCourse"));
-		menuHelpHelp.setVisible(aModel.isVisible("menuHelpHelp"));
-		menuHelpHelp.setEnabled(aModel.isEnabled("menuHelpHelp"));
-		menuHelpSupport.setVisible(aModel.isVisible("menuHelpSupport"));
-		menuHelpSupport.setEnabled(aModel.isEnabled("menuHelpSupport"));
-		menuHelpLicense.setVisible(aModel.isVisible("menuHelpLicense"));
-		menuHelpLicense.setEnabled(aModel.isEnabled("menuHelpLicense"));
-		menuHelpAbout.setVisible(aModel.isVisible("menuHelpAbout"));
-		menuHelpAbout.setEnabled(aModel.isEnabled("menuHelpAbout"));
-	}
-
-	public void this_actionPerformed(ActionEvent e)
-	{
-		if(aModel == null)
-			return;
-		AbstractButton jb = (AbstractButton )e.getSource();
-		String s = jb.getName();
-		Command command = aModel.getCommand(s);
-		command = (Command )command.clone();
-		command.execute();
+		
+		menuReport.add(menuReportCreate);
+		
+		menuWindow.add(menuWindowArrange);
+		menuWindow.addSeparator();
+		menuWindow.add(menuWindowAnalysis);
+		menuWindow.add(menuWindowTraceSelector);
+		menuWindow.add(menuWindowPrimaryParameters);
+		menuWindow.add(menuWindowTransData);
+		menuWindow.add(menuWindowModelRapameters);
+		menuWindow.add(menuWindowScheme);
+		menuWindow.add(menuWindowMap);
+		menuWindow.add(menuWindowGeneralProperties);
+		menuWindow.add(menuWindowCharacteristics);
+		menuWindow.add(menuWindowAdditionalProperties);
+		
+		add(menuView);
+		add(menuFile);
+		add(menuTrace);
+		add(menuReport);
+		add(menuWindow);
+		
+		this.addApplicationModelListener(new ApplicationModelListener() {
+			public void modelChanged(String e) {
+				modelChanged(new String[] { e});
+			}
+			
+			public void modelChanged(String e[])
+			{
+				ApplicationModel aModel = ModelMenuBar.this.getApplicationModel();
+				
+				menuView.setVisible(aModel.isVisible("menuView"));
+				menuView.setEnabled(aModel.isEnabled("menuView"));
+				menuViewMapViewOpen.setVisible(aModel.isVisible("menuViewMapViewOpen"));
+				menuViewMapViewOpen.setEnabled(aModel.isEnabled("menuViewMapViewOpen"));
+				menuViewSchemeOpen.setVisible(aModel.isVisible("menuViewSchemeOpen"));
+				menuViewSchemeOpen.setEnabled(aModel.isEnabled("menuViewSchemeOpen"));
+				
+				menuViewModelSave.setVisible(aModel.isVisible("menuViewModelSave"));
+				menuViewModelSave.setEnabled(aModel.isEnabled("menuViewModelSave"));
+				menuViewModelLoad.setVisible(aModel.isVisible("menuViewModelLoad"));
+				menuViewModelLoad.setEnabled(aModel.isEnabled("menuViewModelLoad"));
+				menuFileOpen.setVisible(aModel.isVisible("menuFileOpen"));
+				menuFileOpen.setEnabled(aModel.isEnabled("menuFileOpen"));
+				menuFileOpenAs.setVisible(aModel.isVisible("menuFileOpenAs"));
+				menuFileOpenAs.setEnabled(aModel.isEnabled("menuFileOpenAs"));
+				menuFileOpenAsBellcore.setVisible(aModel.isVisible("menuFileOpenAsBellcore"));
+				menuFileOpenAsBellcore.setEnabled(aModel.isEnabled("menuFileOpenAsBellcore"));
+				menuFileOpenAsWavetek.setVisible(aModel.isVisible("menuFileOpenAsWavetek"));
+				menuFileOpenAsWavetek.setEnabled(aModel.isEnabled("menuFileOpenAsWavetek"));
+				menuFileSave.setVisible(aModel.isVisible("menuFileSave"));
+				menuFileSave.setEnabled(aModel.isEnabled("menuFileSave"));
+				menuFileSaveAs.setVisible(aModel.isVisible("menuFileSaveAs"));
+				menuFileSaveAs.setEnabled(aModel.isEnabled("menuFileSaveAs"));
+				menuFileSaveAsText.setVisible(aModel.isVisible("menuFileSaveAsText"));
+				menuFileSaveAsText.setEnabled(aModel.isEnabled("menuFileSaveAsText"));
+				menuFileClose.setVisible(aModel.isVisible("menuFileClose"));
+				menuFileClose.setEnabled(aModel.isEnabled("menuFileClose"));
+				menuFileAddCompare.setVisible(aModel.isVisible("menuFileAddCompare"));
+				menuFileAddCompare.setEnabled(aModel.isEnabled("menuFileAddCompare"));
+				menuFileRemoveCompare.setVisible(aModel.isVisible("menuFileRemoveCompare"));
+				menuFileRemoveCompare.setEnabled(aModel.isEnabled("menuFileRemoveCompare"));
+				
+				menuTraceAddCompare.setVisible(aModel.isVisible("menuTraceAddCompare"));
+				menuTraceAddCompare.setEnabled(aModel.isEnabled("menuTraceAddCompare"));
+				menuTraceRemoveCompare.setVisible(aModel.isVisible("menuTraceRemoveCompare"));
+				menuTraceRemoveCompare.setEnabled(aModel.isEnabled("menuTraceRemoveCompare"));
+				menuTraceClose.setVisible(aModel.isVisible("menuTraceClose"));
+				menuTraceClose.setEnabled(aModel.isEnabled("menuTraceClose"));
+				
+				menuReport.setVisible(aModel.isVisible("menuReport"));
+				menuReport.setEnabled(aModel.isEnabled("menuReport"));
+				menuReportCreate.setVisible(aModel.isVisible("menuReportCreate"));
+				menuReportCreate.setEnabled(aModel.isEnabled("menuReportCreate"));
+				
+				menuWindow.setVisible(aModel.isVisible(ApplicationModel.MENU_VIEW));
+				menuWindow.setEnabled(aModel.isEnabled(ApplicationModel.MENU_VIEW));
+				menuWindowArrange.setVisible(aModel.isVisible(ApplicationModel.MENU_VIEW_ARRANGE));
+				menuWindowArrange.setEnabled(aModel.isEnabled(ApplicationModel.MENU_VIEW_ARRANGE));
+				menuWindowAdditionalProperties.setVisible(aModel.isVisible(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES));
+				menuWindowAdditionalProperties.setEnabled(aModel.isEnabled(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES));
+				menuWindowAnalysis.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS));
+				menuWindowAnalysis.setEnabled(aModel.isEnabled(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS));
+				menuWindowCharacteristics.setVisible(aModel.isVisible(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS));
+				menuWindowCharacteristics.setEnabled(aModel.isEnabled(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS));
+				menuWindowGeneralProperties.setVisible(aModel.isVisible(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES));
+				menuWindowGeneralProperties.setEnabled(aModel.isEnabled(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES));
+				menuWindowMap.setVisible(aModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_MAP));
+				menuWindowMap.setEnabled(aModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_MAP));
+				menuWindowModelRapameters.setVisible(aModel.isVisible(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS));
+				menuWindowModelRapameters.setEnabled(aModel.isEnabled(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS));
+				menuWindowPrimaryParameters.setVisible(aModel.isVisible(ModelApplicationModel.MENU_WINDOW_TREE));
+				menuWindowPrimaryParameters.setEnabled(aModel.isEnabled(ModelApplicationModel.MENU_WINDOW_TREE));
+				menuWindowScheme.setVisible(aModel.isVisible(ModelApplicationModel.MENU_WINDOW_SCHEME));
+				menuWindowScheme.setEnabled(aModel.isEnabled(ModelApplicationModel.MENU_WINDOW_SCHEME));
+				menuWindowTraceSelector.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR));
+				menuWindowTraceSelector.setEnabled(aModel.isEnabled(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR));
+				menuWindowTransData.setVisible(aModel.isVisible(ModelApplicationModel.MENU_WINDOW_TRANS_DATA));
+				menuWindowTransData.setEnabled(aModel.isEnabled(ModelApplicationModel.MENU_WINDOW_TRANS_DATA));
+			}
+		});
 	}
 }
-
-class ModelMenuBar_this_actionAdapter
-		implements java.awt.event.ActionListener
-{
-	ModelMenuBar adaptee;
-
-	ModelMenuBar_this_actionAdapter(ModelMenuBar adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e)
-	{
-		adaptee.this_actionPerformed(e);
-	}
-}
-

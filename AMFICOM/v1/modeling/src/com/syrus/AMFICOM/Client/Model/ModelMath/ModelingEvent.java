@@ -18,7 +18,6 @@ public class ModelingEvent
 	public double splash;  //dB
 	private double connectorSigma = wl_1550;
 
-//----------------------------------------------------------
 	public void setConnector(double reflection, double loss)
 	{
 		type = CONNECTOR;

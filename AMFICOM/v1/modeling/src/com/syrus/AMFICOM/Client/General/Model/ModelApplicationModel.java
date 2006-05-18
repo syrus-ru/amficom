@@ -1,35 +1,52 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.EmptySurveyDataSource;
-import com.syrus.AMFICOM.Client.Resource.RISDSurveyDataSource;
+import java.awt.Toolkit;
+
+import javax.swing.UIManager;
+
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
+import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.resource.ModelResourceKeys;
 
 public class ModelApplicationModel extends ApplicationModel
 {
+	private static final String MENU = "Menu";
+	public static final String MENU_APPEARANCE = MENU + ".Appearance";
+	public static final String MENU_APPEARANCE_SCHEME = MENU_APPEARANCE + ".Scheme";
+	public static final String MENU_APPEARANCE_MAP = MENU_APPEARANCE + ".Map";
+	
+	private static final String MENU_WINDOW = "Menu.window";
+	public static final String MENU_WINDOW_TREE = MENU_WINDOW + ".tree";
+	public static final String MENU_WINDOW_TRANS_DATA = MENU_WINDOW + ".trans_data";
+	public static final String MENU_WINDOW_MODEL_PARAMETERS = MENU_WINDOW + ".model_parameters";
+	public static final String MENU_WINDOW_SCHEME = MENU_WINDOW + ".scheme";
+	public static final String MENU_WINDOW_GENERAL_PROPERTIES = MENU_WINDOW + ".general_properties";
+	public static final String MENU_WINDOW_ADDITIONAL_PROPERTIES = MENU_WINDOW + ".additional_properties";
+	public static final String MENU_WINDOW_CHARACTERISTICS = MENU_WINDOW + ".characteristics";
+	
 	public ModelApplicationModel()
 	{
 		super();
 
-		add("menuSession");
-		add("menuSessionOpen");
-		add("menuSessionClose");
-		add("menuSessionOptions");
-		add("menuSessionConnection");
-		add("menuSessionChangePassword");
-		add("menuSessionDomain");
-		add("menuSessionSave");
-		add("menuSessionUndo");
-		add("menuExit");
+    add(ApplicationModel.MENU_SESSION);
+    add(ApplicationModel.MENU_SESSION_NEW);
+    add(ApplicationModel.MENU_SESSION_CLOSE);
+    add(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD);
+    add(ApplicationModel.MENU_EXIT);
+
+    add(ApplicationModel.MENU_HELP);
+    add(ApplicationModel.MENU_HELP_ABOUT);
+    
+    add(ApplicationModel.MENU_VIEW_ARRANGE);
 
 		add("menuView");
-		add("menuViewMapOpen");
-		add("menuViewMapEdit");
-		add("menuViewMapClose");
+		add("menuViewMapViewOpen");
+		add("menuViewMapViewEdit");
+		add("menuViewMapViewClose");
 		add("menuViewSchemeOpen");
 		add("menuViewSchemeEdit");
 		add("menuViewSchemeClose");
-		add("menuViewPerformModeling");
 		add("menuViewModelSave");
 		add("menuViewModelLoad");
 
@@ -44,7 +61,6 @@ public class ModelApplicationModel extends ApplicationModel
 		add("menuFileClose");
 		add("menuFileAddCompare");
 		add("menuFileRemoveCompare");
-		add("menuExit");
 
 		add("menuTrace");
 		add("menuTraceAddCompare");
@@ -53,28 +69,31 @@ public class ModelApplicationModel extends ApplicationModel
 
 		add("menuReport");
 		add("menuReportCreate");
-
-		add("menuHelp");
-		add("menuHelpContents");
-		add("menuHelpFind");
-		add("menuHelpTips");
-		add("menuHelpStart");
-		add("menuHelpCourse");
-		add("menuHelpHelp");
-		add("menuHelpSupport");
-		add("menuHelpLicense");
-		add("menuHelpAbout");
+		
+		add(MENU_VIEW);
+		add(MENU_WINDOW_ADDITIONAL_PROPERTIES);
+		add(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS);
+		add(MENU_WINDOW_CHARACTERISTICS);
+		add(MENU_WINDOW_GENERAL_PROPERTIES);
+		add(MapEditorApplicationModel.ITEM_VIEW_MAP);
+		add(MENU_WINDOW_MODEL_PARAMETERS);
+		add(MENU_WINDOW_TREE);
+		add(MENU_WINDOW_SCHEME);
+		add(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR);
+		add(MENU_WINDOW_TRANS_DATA);
+		
+		initUIConstats();
+		I18N.addResourceBundle("com.syrus.AMFICOM.resource.modeling");
+		I18N.addResourceBundle("com.syrus.AMFICOM.resource.analysis");
+		I18N.addResourceBundle("com.syrus.AMFICOM.client.resource.map");
+		I18N.addResourceBundle("com.syrus.AMFICOM.client.report.report");
+		I18N.addResourceBundle("com.syrus.AMFICOM.resource.SchemeMessages");
+		I18N.addResourceBundle("com.syrus.AMFICOM.client_.scheme.graph.messages");
 	}
-
-	public DataSourceInterface getDataSource(SessionInterface si)
-	{
-		String connection = Environment.getConnectionType();
-		if(connection.equals("RISD"))
-			return new RISDSurveyDataSource(si);
-		else
-		if(connection.equals("Empty"))
-			return new EmptySurveyDataSource(si);
-		return null;
+	
+	private void initUIConstats() {
+		UIManager.put(ModelResourceKeys.ICON_MODEL_MAIN, Toolkit
+				.getDefaultToolkit().getImage("images/main/model_mini.gif"));
 	}
 
 }

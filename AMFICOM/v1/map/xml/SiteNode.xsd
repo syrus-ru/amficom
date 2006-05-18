@@ -1,0 +1,63 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xsd:schema 
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	xmlns:map = "http://syrus.com/AMFICOM/map/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/map/xml"
+	elementFormDefault = "qualified">
+
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: SiteNode.xsd,v 1.14 2005/09/07 12:18:34 krupenn Exp $
+
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:include
+		schemaLocation = "SiteNodeType.xsd"/>
+
+	<xsd:element name = "siteNodes" type = "map:XmlSiteNodeSeq">
+		<xsd:key name = "siteNodeId">
+			<xsd:selector xpath = "map:siteNodes/map:siteNode"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key>
+
+		<xsd:key name = "abstractNodeId">
+			<xsd:selector xpath = "map:siteNodes/map:siteNode"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key>
+
+		<xsd:keyref name = "dummyBar" refer = "map:siteNodeTypeId">
+			<xsd:selector xpath = "map:siteNode"/>
+			<xsd:field xpath = "siteNodeTypeId"/>
+		</xsd:keyref>
+	</xsd:element>
+
+	<xsd:complexType name = "XmlSiteNode" final = "#all">
+		<xsd:complexContent>
+			<xsd:extension base = "general:XmlStorableObject">
+				<xsd:sequence>
+					<xsd:element name = "name" type = "xsd:string"/>
+					<xsd:element name = "description" type = "xsd:string" minOccurs = "0"/>
+					<xsd:element name = "siteNodeTypeCodename" type = "xsd:string"/>
+					<xsd:element name = "x" type = "xsd:double"/>
+					<xsd:element name = "y" type = "xsd:double"/>
+					<xsd:element name = "city" type = "xsd:string" minOccurs = "0"/>
+					<xsd:element name = "street" type = "xsd:string" minOccurs = "0"/>
+					<xsd:element name = "building" type = "xsd:string" minOccurs = "0"/>
+					<xsd:element name = "attachmentSiteNodeId" type = "general:XmlIdentifier" minOccurs="0"/>
+					<xsd:element ref = "general:characteristics" minOccurs = "0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name = "XmlSiteNodeSeq" final = "#all">
+		<xsd:sequence>
+			<xsd:element name = "siteNode" type = "map:XmlSiteNode" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

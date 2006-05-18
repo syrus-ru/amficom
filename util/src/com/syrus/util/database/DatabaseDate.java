@@ -1,40 +1,70 @@
+/*
+ * $Id: DatabaseDate.java,v 1.21 2006/03/27 11:27:17 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.util.database;
 
-import java.util.Date;
-import java.text.SimpleDateFormat;
-import java.text.ParsePosition;
-import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import com.syrus.util.Log;
+
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2006/03/27 11:27:17 $
+ * @author Tashoyan Arseniy Feliksovich
+ * @module util
+ */
 public class DatabaseDate {
 
-	public DatabaseDate() {
+	public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd HHmmss");
+
+	private DatabaseDate() {
+		assert false;
 	}
 
-	public static Date fromQuerySubString(ResultSet resultset, String column) throws SQLException {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HHmmss");
-		ParsePosition pp = new ParsePosition(0);
+	/**
+	 * <p>WARNING: prior to migration to
+	 * {@link java.sql.ResultSet#getTimestamp(String)} database schemas
+	 * should be updated in order to reference TIMESTAMP, not DATE. This
+	 * is not an easy task and requires a tool for schema alteration
+	 * to be written.</p>
+	 * 
+	 * <p>Currently, blind migration would result in an
+	 * {@code IllegalArgumentException} at {@link java.sql.Timestamp#valueOf(String)}.</p>
+	 * 
+	 * @see <a href = "http://ararat.science.syrus.ru/cgi-bin/bugzilla/show_bug.cgi?id=525">bug #525</a> 
+	 */
+	public static Date fromQuerySubString(final ResultSet resultSet, final String column) throws SQLException {
 		Date date = null;
-		String date_str = resultset.getString(column);
-		if(date_str != null)
-			date = sdf.parse(date_str, pp);
+		try {
+			final String dateStr = resultSet.getString(column);
+			if (dateStr != null) {
+				date = SDF.parse(dateStr);
+			}
+		} catch (final ParseException pe) {
+			Log.errorMessage("parse exception '" + pe.getMessage() + '\'');
+		}
 		return date;
 	}
 
-	public static String toQuerySubString(String column) {
-		String subString = new String("TO_CHAR(" + column + ", 'YYYYMMDD HH24MISS') " + column);
+	public static String toQuerySubString(final String column) {
+		final String subString = "TO_CHAR(" + column + ", 'YYYYMMDD HH24MISS') " + column;
 		return subString;
 	}
 
-	public static String toUpdateSubString(Date date) {
-		if(date != null) {
-			String subString = new String("TO_DATE('");
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HHmmss");
-			subString = subString.concat(sdf.format(date));
-			subString = subString.concat("', 'YYYYMMDD HH24MISS')");
+	public static String toUpdateSubString(final Date date) {
+		if (date != null) {
+			final String subString = "TO_DATE('" + SDF.format(date) + "', 'YYYYMMDD HH24MISS')";
 			return subString;
 		}
-		else
-			return null;
+		return null;
 	}
 }

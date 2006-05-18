@@ -1,11 +1,14 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+import java.beans.PropertyVetoException;
+
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.util.Log;
 
-public class ShowFrameCommand extends VoidCommand
+public class ShowFrameCommand extends AbstractCommand
 {
 	JDesktopPane desktop;
 	JInternalFrame frame;
@@ -16,17 +19,24 @@ public class ShowFrameCommand extends VoidCommand
 		this.frame = frame;
 	}
 
-	public Object clone()
-	{
-		return new ShowFrameCommand(desktop, frame);
-	}
-
+	@Override
 	public void execute()
 	{
-		if (frame != null)
+		if (this.frame != null)
 		{
-			frame.setVisible(true);
-			frame.toFront();
+			this.frame.setVisible(true);
+			if (this.frame.isIcon())
+			{
+				try
+				{
+					this.frame.setIcon(false);
+				} catch (PropertyVetoException ex)
+				{
+					Log.errorMessage(ex);
+				}
+			}
+			this.frame.moveToFront();
 		}
 	}
 }
+

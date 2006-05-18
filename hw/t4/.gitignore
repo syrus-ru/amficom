@@ -1,9 +1,0 @@
-t4
-*.a
-*.so
-*.o
-*.swp
-*.tar
-*.gz
-hlam
-tcpdump

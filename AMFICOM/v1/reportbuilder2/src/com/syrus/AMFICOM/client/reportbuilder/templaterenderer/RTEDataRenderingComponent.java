@@ -1,5 +1,5 @@
 /*
- * $Id: RTEDataRenderingComponent.java,v 1.1.1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: RTEDataRenderingComponent.java,v 1.2 2006/03/13 13:53:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -82,7 +82,7 @@ public class RTEDataRenderingComponent extends
 			this.reportNameLocation.x,
 			this.reportNameLocation.y);
 
-		AbstractDataStorableElement<?> dsElement = (AbstractDataStorableElement)this.getElement();
+		AbstractDataStorableElement dsElement = (AbstractDataStorableElement)this.getElement();
 		if (dsElement.getReportObjectId() != null)	
 			g.drawString(
 					this.objectName,
@@ -96,7 +96,7 @@ public class RTEDataRenderingComponent extends
 	 * Метод вызывается при изменении габаритов элемента отображения.
 	 */
 	private void refreshPositions() {
-		AbstractDataStorableElement<?> dsElement = (AbstractDataStorableElement)this.getElement();
+		AbstractDataStorableElement dsElement = (AbstractDataStorableElement)this.getElement();
 
 		if (dsElement.getReportObjectId() == null) {		
 			this.modelNameLocation.y = (int) (this.getHeight() / 3.D);
@@ -148,7 +148,7 @@ public class RTEDataRenderingComponent extends
 	 * @throws ApplicationException 
 	 */
 	public void refreshLabels()  throws CreateModelException, ApplicationException{
-		AbstractDataStorableElement<?> dsElement = (AbstractDataStorableElement)this.getElement();
+		AbstractDataStorableElement dsElement = (AbstractDataStorableElement)this.getElement();
 		ReportModel reportModel = ReportModelPool.getModel(
 				dsElement.getModelClassName());
 	

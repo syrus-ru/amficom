@@ -1,5 +1,5 @@
 /*
- * $Id: DRIComponentMouseMotionListener.java,v 1.1.1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: DRIComponentMouseMotionListener.java,v 1.2 2006/04/26 13:14:31 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.report.StorableElement;
 
 /**
  * MouseMotionListener for DataRenderingComponent è ImageRenderingComponent
- * @author $Author: bass $
- * @version $Revision: 1.1.1.1 $, $Date: 2005/12/02 11:37:17 $
+ * @author $Author: stas $
+ * @version $Revision: 1.2 $, $Date: 2006/04/26 13:14:31 $
  * @module reportclient_v1
  */
 public class DRIComponentMouseMotionListener implements MouseMotionListener{
@@ -36,11 +36,12 @@ public class DRIComponentMouseMotionListener implements MouseMotionListener{
 	private final ApplicationContext applicationContext;
 	
 	private static DRIComponentMouseMotionListener instance = null;
-	
+	private ReportTemplateRenderer renderer;
 	public static void createInstance(
 			ApplicationContext aContext,
+			ReportTemplateRenderer renderer,
 			Rectangle templateBounds) {
-		instance = new DRIComponentMouseMotionListener(aContext,templateBounds);
+		instance = new DRIComponentMouseMotionListener(aContext,renderer, templateBounds);
 	}
 
 	public static DRIComponentMouseMotionListener getInstance(){
@@ -51,9 +52,11 @@ public class DRIComponentMouseMotionListener implements MouseMotionListener{
 	
 	private DRIComponentMouseMotionListener(
 			ApplicationContext aContext,
+			ReportTemplateRenderer renderer,
 			Rectangle templateBounds) {
 		this.applicationContext = aContext;
 		this.templateBounds = templateBounds;
+		this.renderer = renderer;
 	}
 	
 	public void mouseMoved(MouseEvent e) {
@@ -180,8 +183,9 @@ public class DRIComponentMouseMotionListener implements MouseMotionListener{
 			newLocation.y = this.templateBounds.y;
 		}
 		else if (newLocation.y + newSize.height > this.templateBounds.y + this.templateBounds.height) {
-			newSize.height = component.getHeight();			
-			newLocation.y = this.templateBounds.y + this.templateBounds.height - newSize.height;
+//			newSize.height = component.getHeight();			
+			this.templateBounds.height = newLocation.y - this.templateBounds.y + newSize.height;
+			this.renderer.refreshBounds();
 		}
 		
 		component.setLocation(newLocation);

@@ -2,819 +2,578 @@
 // Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.Client.Model;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_ANALYSIS_MAIN;
+import static com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys.FRAME_TRACE_SELECTOR;
+import static com.syrus.AMFICOM.resource.ModelResourceKeys.FRAME_TRANS_DATA;
+import static com.syrus.AMFICOM.resource.ModelResourceKeys.FRAME_TREE;
+import static com.syrus.AMFICOM.resource.SchemeResourceKeys.FRAME_EDITOR_MAIN;
 
-import javax.swing.*;
-import javax.swing.event.InternalFrameEvent;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
 
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.*;
-import com.syrus.AMFICOM.Client.General.Command.Config.*;
-import com.syrus.AMFICOM.Client.General.Command.Model.*;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
-import com.syrus.AMFICOM.Client.General.Command.Session.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-import com.syrus.AMFICOM.Client.General.Scheme.*;
-import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import javax.swing.JInternalFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.*;
-import com.syrus.AMFICOM.Client.Configure.Map.*;
-import com.syrus.AMFICOM.Client.Schematics.Elements.*;
-import com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeViewerFrame;
-import com.syrus.io.*;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MapMarkersLayeredPanel;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MapMarkersPanel;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MultipleTracesFrame;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ReportTable;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleGraphPanel;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleResizableFrame;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.TraceSelectorFrame;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateAnalysisReportCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileAddCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileCloseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsBellcoreCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsWavetekCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadModelingCommand;
+import com.syrus.AMFICOM.Client.General.Command.Model.SaveModelingCommand;
+import com.syrus.AMFICOM.Client.General.Command.Model.SchemeOpenCommand;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
+import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.General.Model.ModelApplicationModel;
+import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
+import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
+import com.syrus.AMFICOM.client.UI.AdditionalPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.CharacteristicPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.GeneralPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.WindowArranger;
+import com.syrus.AMFICOM.client.event.ContextChangeEvent;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.command.editor.ViewMapWindowCommand;
+import com.syrus.AMFICOM.client.map.command.map.OpenLinkedMapViewCommand;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
+import com.syrus.AMFICOM.client.map.ui.MapPropertiesEventHandler;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
+import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
+import com.syrus.AMFICOM.client.model.MapSurveyApplicationModelFactory;
+import com.syrus.AMFICOM.client.model.ShowWindowCommand;
+import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.SchemeViewerFrame;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeAlarmHandler;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeEventHandler;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
+import com.syrus.AMFICOM.filter.UI.FilterPanel;
+import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.report.DestinationModules;
+import com.syrus.io.BellcoreStructure;
+import com.syrus.util.Log;
 
-public class ModelMDIMain extends JFrame implements OperationListener
-{
-	private Dispatcher internal_dispatcher = new Dispatcher();
-	public ApplicationContext aContext = new ApplicationContext();
+public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListener, 
+	PrimaryTraceListener,	PrimaryRefAnalysisListener, CurrentTraceChangeListener {
+	private static final long serialVersionUID = 2212105265261102560L;
 
-	static IniFile iniFile;
-	static String iniFileName = "Model.properties";
+	ClientAnalysisManager		aManager					= new ClientAnalysisManager();
+	
+	SchemeTabbedPane schemePane;
+	MapMarkersLayeredPanel layeredPanel;
+	
+	public UIDefaults					frames;
+	
+	List<ReportTable>					tables;
+	List<SimpleResizableFrame>					graphs;
 
-	static SimpleDateFormat sdf =
-			new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-
-	JPanel mainPanel = new JPanel();
-	JScrollPane scrollPane = new JScrollPane();
-	JViewport viewport = new JViewport();
-	public JDesktopPane desktopPane = new JDesktopPane();
-	JPanel statusBarPanel = new JPanel();
-	StatusBarModel statusBar = new StatusBarModel(0);
-	ModelMainToolBar toolBar = new ModelMainToolBar();
-	ModelMenuBar menuBar = new ModelMenuBar();
-	TransData transData;
-
-	public RefModelParamsFrame paramsFrame;
-	TraceSelectorFrame selectorFrame;
-	PrimaryParametersFrame paramFrame;
-
-	HashMap traces = new HashMap();
-	ScalableFrame analysisFrame;
-	MapMarkersLayeredPanel mmlp;
-	MapMarkersPanel mmp;
-	public MapElementsFrame mapElementsFrame;
-	public MapPropertyFrame mapPropertyFrame;
-	public JInternalFrame mapframe;
-
-	PropsFrame propsFrame;
-	ElementsListFrame elementsListFrame;
-	JInternalFrame schemeFrame;
-	SchemeGraph graph;
-
-//  public ISMMapContext ismMapContext;
-	public MapContext mapContext;
-//	public GetMapElementStructure elementStructure;
-	public Checker checker;
-
-	ArrayList tables = new ArrayList();
-	ArrayList graphs = new ArrayList();
-
-	public ModelMDIMain(ApplicationContext aContext)
-	{
-		super();
-		setContext(aContext);
-		try
-		{
-			jbInit();
+	public ModelMDIMain(final ApplicationContext aContext) {
+		super(aContext, LangModelModel.getString("AppTitle"), //$NON-NLS-1$
+				new ModelMenuBar(aContext.getApplicationModel()),
+				new ModelMainToolBar());
+		
+		this.addComponentListener(new ComponentAdapter() {
+			/* (non-Javadoc)
+			 * @see java.awt.event.ComponentAdapter#componentShown(java.awt.event.ComponentEvent)
+			 */
+			@Override
+			public void componentShown(ComponentEvent e) {
+				ModelMDIMain.this.desktopPane.setPreferredSize(ModelMDIMain.this.desktopPane.getSize());
+			}
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		Environment.addWindow(this);
+		);
+		
+		this.addWindowListener(new WindowAdapter() {
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				ModelMDIMain.this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE,
+						ModelMDIMain.this);
+				Environment.getDispatcher()
+				.removePropertyChangeListener(ContextChangeEvent.TYPE, ModelMDIMain.this);
+				aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT).execute();
+			}
+		});
 	}
 
-	public ModelMDIMain()
-	{
+	public ModelMDIMain() {
 		this(new ApplicationContext());
 	}
 
-	private void jbInit() throws Exception
-	{
-		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
-		setContentPane(mainPanel);
-		this.setTitle(LangModelModel.String("AppTitle"));
-		this.addComponentListener(new ModelMDIMain_this_componentAdapter(this));
-		this.addWindowListener(new java.awt.event.WindowAdapter()
-		{
-			public void windowClosing(WindowEvent e)
-			{
-				this_windowClosing(e);
+	protected void initFrames() {
+		this.frames = new UIDefaults();
+		this.schemePane = new SchemeTabbedPane(this.aContext);
+		new SchemeAlarmHandler(this.aContext, this.schemePane);
+		this.schemePane.setEditable(false);
+		this.schemePane.setToolBarVisible(false);
+		
+		this.tables = new LinkedList<ReportTable>();
+		this.graphs = new LinkedList<SimpleResizableFrame>();
+		
+		this.frames.put(FRAME_EDITOR_MAIN, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | SCHEME_VIEWER_FRAME", Level.FINEST);
+				SchemeViewerFrame editorFrame = new SchemeViewerFrame(ModelMDIMain.this.aContext, ModelMDIMain.this.schemePane);
+				editorFrame.setTitle(LangModelSchematics.getString("schemeMainTitle"));
+				ModelMDIMain.this.desktopPane.add(editorFrame);
+				return editorFrame;
+			}
+		});
+		
+		this.frames.put(GeneralPropertiesFrame.NAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | GENERAL_PROPERIES_FRAME", Level.FINEST);
+				GeneralPropertiesFrame generalFrame = new GeneralPropertiesFrame(I18N.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
+				ModelMDIMain.this.desktopPane.add(generalFrame);
+				new SchemeEventHandler(generalFrame, ModelMDIMain.this.aContext);
+				new MapPropertiesEventHandler(generalFrame, ModelMDIMain.this.aContext);
+				return generalFrame;
 			}
 		});
 
-		//Center the window
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = new Dimension (screenSize.width, screenSize.height - 24);
-		setSize(frameSize);
-		setLocation(0, 0);
-
-		mainPanel.setLayout(new BorderLayout());
-		desktopPane.setBackground(SystemColor.control.darker().darker());
-
-		statusBarPanel.setBorder(BorderFactory.createLoweredBevelBorder());
-		statusBarPanel.setLayout(new BorderLayout());
-		statusBarPanel.add(statusBar, BorderLayout.CENTER);
-
-		statusBar.add("status");
-		statusBar.add("server");
-		statusBar.add("domain");
-		statusBar.add("session");
-		statusBar.add("user");
-		statusBar.add("time");
-
-		viewport.setView(desktopPane);
-		scrollPane.setViewport(viewport);
-		scrollPane.setAutoscrolls(true);
-
-		mainPanel.add(toolBar, BorderLayout.NORTH);
-		mainPanel.add(statusBarPanel, BorderLayout.SOUTH);
-		mainPanel.add(scrollPane, BorderLayout.CENTER);
-
-		this.setJMenuBar(menuBar);
-
-		paramsFrame = new RefModelParamsFrame(aContext);
-		desktopPane.add(paramsFrame);
-		tables.add(paramsFrame);
-
-		selectorFrame = new TraceSelectorFrame(internal_dispatcher);
-		desktopPane.add(selectorFrame);
-
-		paramFrame = new PrimaryParametersFrame(internal_dispatcher);
-		desktopPane.add(paramFrame);
-		tables.add(paramFrame);
-
-		transData = new TransData ();
-		desktopPane.add(transData);
-
-		mmlp = new MapMarkersLayeredPanel(internal_dispatcher);
-		analysisFrame = new ScalableFrame(mmlp)
-		{
-			public String getReportTitle()
-			{
-				return LangModelAnalyse.String("analysisTitle");
+		this.frames.put(AdditionalPropertiesFrame.NAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | ADDITIONAL_PROPERIES_FRAME", Level.FINEST);
+				AdditionalPropertiesFrame additionalFrame = new AdditionalPropertiesFrame(I18N.getString(MapEditorResourceKeys.TITLE_ADDITIONAL_PROPERTIES));
+				ModelMDIMain.this.desktopPane.add(additionalFrame);
+				new SchemeEventHandler(additionalFrame, ModelMDIMain.this.aContext);
+				new MapPropertiesEventHandler(additionalFrame, ModelMDIMain.this.aContext);
+				return additionalFrame;
 			}
-		};
-		analysisFrame.setTitle(LangModelAnalyse.String("analysisTitle"));
-		graphs.add(analysisFrame);
-		desktopPane.add(analysisFrame);
+		});
 
-		IniFile ini = new IniFile("analyse.ini");
-		Pool.put("inifile", "analyse", ini);
-	}
-
-	public void init_module()
-	{
-		ApplicationModel aModel = aContext.getApplicationModel();
-
-		statusBar.distribute();
-		statusBar.setWidth("status", 100);
-		statusBar.setWidth("server", 250);
-		statusBar.setWidth("domain", 200);
-		statusBar.setWidth("session", 200);
-		statusBar.setWidth("user", 100);
-		statusBar.setWidth("time", 50);
-
-		statusBar.setText("status", LangModel.String("statusReady"));
-		statusBar.setText("server", LangModel.String("statusNoConnection"));
-		statusBar.setText("session", LangModel.String("statusNoSession"));
-		statusBar.setText("user", LangModel.String("statusNoUser"));
-		statusBar.setText("time", " ");
-		statusBar.organize();
-
-		// load values from properties file
-		try
-		{
-			iniFile = new IniFile(iniFileName);
-			System.out.println("read ini file " + iniFileName);
-		}
-		catch(java.io.IOException e)
-		{
-			System.out.println("Error opening " + iniFileName + " - setting defaults");
-		}
-
-		aContext.setDispatcher(internal_dispatcher);
-		internal_dispatcher.register(this, "mapopenevent");
-		internal_dispatcher.register(this, "mapcloseevent");
-		internal_dispatcher.register(this, "contextchange");
-		internal_dispatcher.register(this, SchemeElementsEvent.type);
-		internal_dispatcher.register(this, RefChangeEvent.typ);
-		internal_dispatcher.register(this, "addschemeelementevent");
-		internal_dispatcher.register(this, "addschemeevent");
-
-		Environment.the_dispatcher.register(this, "contextchange");
-
-
-		aModel.setCommand("menuSessionOpen", new SessionOpenCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
-		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuExit", new ExitCommand(this));
-
-		aModel.setCommand("menuViewMapOpen", new MapModelOpenCommand(internal_dispatcher, aContext, this));
-		aModel.setCommand("menuViewMapEdit", new OpenMapEditorCommand(Environment.the_dispatcher, aContext, null));
-		aModel.setCommand("menuViewMapClose", new MapCloseCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuViewPerformModeling", new PerformModelingCommand(internal_dispatcher, this, aContext));
-		aModel.setCommand("menuViewModelSave", new SaveModelingCommand(internal_dispatcher, aContext, "primarytrace"));
-		aModel.setCommand("menuViewModelLoad", new LoadModelingCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuViewSchemeOpen", new SchemeOpenCommand(aContext, graph));
-		aModel.setCommand("menuViewSchemeEdit", new OpenSchemeEditorCommand(internal_dispatcher, aContext, new SchematicsApplicationModelFactory()));
-		aModel.setCommand("menuViewSchemeClose", new SchemeCloseCommand(aContext, graph));
-
-		aModel.setCommand("menuFileOpen", new FileOpenCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileOpenAsBellcore", new FileOpenAsBellcoreCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileOpenAsWavetek", new FileOpenAsWavetekCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileSave", new FileSaveCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileSaveAsText", new FileSaveAsTextCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileClose", new FileCloseCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileAddCompare",new FileAddCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(internal_dispatcher, null, aContext));
-
-		aModel.setCommand("menuTraceAddCompare", new AddTraceFromDatabaseCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(internal_dispatcher, null, aContext));
-		aModel.setCommand("menuTraceClose", new FileCloseCommand(internal_dispatcher, aContext));
-
-		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(aContext);
-		for (Iterator it = tables.iterator(); it.hasNext();)
-			rc.setParameter(CreateAnalysisReportCommand.TABLE, it.next());
-		for (Iterator it = graphs.iterator(); it.hasNext();)
-			rc.setParameter(CreateAnalysisReportCommand.PANEL, it.next());
-		rc.setParameter(CreateAnalysisReportCommand.TYPE, ReportTemplate.rtt_Modeling);
-		aModel.setCommand("menuReportCreate", rc);
-
-		aModel.add("menuHelpAbout", new HelpAboutCommand(this));
-
-		aModel.setAllItemsEnabled(false);
-		aModel.setEnabled("menuSession", true);
-		aModel.setEnabled("menuSessionOpen", true);
-		aModel.setEnabled("menuSessionConnection", true);
-		aModel.setEnabled("menuExit", true);
-		aModel.setEnabled("menuView", true);
-		aModel.setEnabled("menuHelp", true);
-		aModel.setEnabled("menuHelpAbout", true);
-		aModel.setEnabled("menuReport", true);
-
-//    aModel.setEnabled("menuViewMapOpen", false);
-//    aModel.setEnabled("menuViewMapEdit", false);
-//    aModel.setEnabled("menuViewMapClose", false);
-//    aModel.setEnabled("menuViewModelLoad", false);
-//    aModel.setEnabled("menuViewModelSave", false);
-//    aModel.setEnabled("menuViewSchemeOpen", false);
-//    aModel.setEnabled("menuViewMapOpen", false);
-
-		aModel.fireModelChanged("");
-
-		if(ConnectionInterface.getActiveConnection() != null)
-	 {
-		 aContext.setConnectionInterface(ConnectionInterface.getActiveConnection());
-		 if(aContext.getConnectionInterface().isConnected())
-			 internal_dispatcher.notify(new ContextChangeEvent(
-					 aContext.getConnectionInterface(),
-					 ContextChangeEvent.CONNECTION_OPENED_EVENT));
-	 }
-	 else
-	 {
-		 aContext.setConnectionInterface(Environment.getDefaultConnectionInterface());
-		 ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
-//			new CheckConnectionCommand(internal_dispatcher, aContext).execute();
-	 }
-	 if(SessionInterface.getActiveSession() != null)
-	 {
-		 aContext.setSessionInterface(SessionInterface.getActiveSession());
-		 aContext.setConnectionInterface(aContext.getSessionInterface().getConnectionInterface());
-		 if(aContext.getSessionInterface().isOpened())
-			 internal_dispatcher.notify(new ContextChangeEvent(
-					 aContext.getSessionInterface(),
-					 ContextChangeEvent.SESSION_OPENED_EVENT));
-	 }
-	 else
-	 {
-		 aContext.setSessionInterface(Environment.getDefaultSessionInterface(aContext.getConnectionInterface()));
-		 SessionInterface.setActiveSession(aContext.getSessionInterface());
-		}
-	}
-
-
-
-	public void setContext(ApplicationContext aContext)
-	{
-		this.aContext = aContext;
-		aContext.setDispatcher(internal_dispatcher);
-		if(aContext.getApplicationModel() == null)
-			aContext.setApplicationModel(new ApplicationModel());
-		setModel(aContext.getApplicationModel());
-	}
-
-	public ApplicationContext getContext()
-	{
-		return aContext;
-	}
-
-	public void setModel(ApplicationModel aModel)
-	{
-		toolBar.setModel(aModel);
-		menuBar.setModel(aModel);
-		aModel.addListener(menuBar);
-		aModel.addListener(toolBar);
-		aModel.fireModelChanged("");
-	}
-
-	void addTrace (String id)
-	{
-		if (traces.get(id) != null)
-			return;
-
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-
-		double delta_x = bs.getDeltaX();
-		double[] y = bs.getTraceData();
-
-		if (id.equals("primarytrace"))
-		{
-			if (mmp != null)
-				mmp.removeAllMarkers();
-			mmp = new MapMarkersPanel(mmlp, internal_dispatcher, y, delta_x);
-			mmlp.setGraphPanel(mmp);
-			String path_id = (String)Pool.get("activecontext", "activepathid");
-			mmp.setMapPathId(path_id);
-			analysisFrame.setGraph(mmp, true, "primarytrace");
-
-			new InitialAnalysisCommand().execute();//1
-			mmp.updEvents("primarytrace");
-			String name = bs.title;
-			if(name != null)
-				analysisFrame.setTitle(name);
-		}
-		else
-		{
-			SimpleGraphPanel p = new SimpleGraphPanel(y, delta_x);
-			analysisFrame.addGraph(p, id);
-			analysisFrame.updScales();
-			traces.put(id, p);
-		}
-
-	}
-
-	public void removeTrace (String id)
-	{
-		if (id.equals("all"))
-		{
-			mmlp.removeAllGraphPanels();
-			traces = new HashMap();
-		}
-		else
-		{
-			SimpleGraphPanel p = (SimpleGraphPanel)traces.get(id);
-			if (p != null)
-			{
-				mmlp.removeGraphPanel(p);
-				traces.remove(id);
-				mmlp.updScale2fit();
+		this.frames.put(CharacteristicPropertiesFrame.NAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | CHARACTERISTIC_PROPERIES_FRAME", Level.FINEST);
+				CharacteristicPropertiesFrame characteristicFrame = new CharacteristicPropertiesFrame(I18N.getString(MapEditorResourceKeys.TITLE_CHARACTERISTICS));
+				ModelMDIMain.this.desktopPane.add(characteristicFrame);
+				new SchemeEventHandler(characteristicFrame, ModelMDIMain.this.aContext);
+				new MapPropertiesEventHandler(characteristicFrame, ModelMDIMain.this.aContext);
+				return characteristicFrame;
 			}
-		}
-	}
-
-	public ApplicationModel getModel()
-	{
-		return aContext.getApplicationModel();
-	}
-
-	public void operationPerformed(OperationEvent ae)
-	{
-		ApplicationModel aModel = aContext.getApplicationModel();
-		if (ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if (rce.OPEN)
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
-				{
-					aModel.setEnabled("menuFileSave", true);
-					aModel.setEnabled("menuFileSaveAll", true);
-					aModel.setEnabled("menuFileSaveAs", true);
-					aModel.setEnabled("menuFileSaveAsText", true);
-					aModel.setEnabled("menuFileClose", true);
-					aModel.setEnabled("menuFileAddCompare", true);
-					aModel.setEnabled("menuReportCreate", true);
-
-					aModel.setEnabled("menuTraceClose", true);
-					aModel.setEnabled("menuTraceAddCompare", true);
-					aModel.setEnabled("menuViewModelSave", true);
-					aModel.setEnabled("menuViewPerformModeling", true);
-					updTraceFrames();
-
-					aModel.fireModelChanged("");
-				}
-				else
-				{
-					aModel.setEnabled("menuTraceRemoveCompare", true);
-					aModel.setEnabled("menuFileRemoveCompare", true);
-					aModel.fireModelChanged("");
-				}
-				addTrace(id);
+		});
+		
+		this.frames.put(RefModelParamsFrame.NAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | " + RefModelParamsFrame.NAME, Level.FINEST);
+				RefModelParamsFrame paramsFrame = new RefModelParamsFrame(aContext);
+				ModelMDIMain.this.desktopPane.add(paramsFrame);
+				
+				ModelMDIMain.this.tables.add(paramsFrame);
+				
+				return paramsFrame;
 			}
-			if(rce.CLOSE)
-			{
-				String id = (String)(rce.getSource());
-				analysisFrame.removeGraph(id);
-				if (Pool.getHash("bellcorestructure") == null)
-				{
-					aModel.setEnabled("menuFileSave", false);
-					aModel.setEnabled("menuFileSaveAll", false);
-					aModel.setEnabled("menuFileSaveAs", false);
-					aModel.setEnabled("menuFileSaveAsText", false);
-					aModel.setEnabled("menuFileClose", false);
-					aModel.setEnabled("menuFileAddCompare", false);
-					aModel.setEnabled("menuFileRemoveCompare", false);
-
-					aModel.setEnabled("menuReportCreate", false);
-					aModel.setEnabled("menuViewModelSave", false);
-//          aModel.setEnabled("menuViewPerformModeling", false);
-
-					aModel.setEnabled("menuTraceClose", false);
-					aModel.setEnabled("menuTraceAddCompare", false);
-					aModel.setEnabled("menuFileRemoveCompare", false);
-					aModel.setEnabled("menuTraceRemoveCompare", false);
-//          aModel.setEnabled("menuTraceReference", false);
- //         aModel.setEnabled("menuTraceCurrent", false);
-					aModel.fireModelChanged("");
-
-					paramsFrame.setVisible(false);
-					analysisFrame.setVisible(false);
-					transData.setVisible(false);
-					selectorFrame.setVisible(false);
-					paramFrame.setVisible(false);
-				}
-				else
-				{
-					Enumeration enum = Pool.getHash("bellcorestructure").keys();
-					String nextId = (String)enum.nextElement();
-					if (nextId.equals("primarytrace"))
-					{
-						if (!enum.hasMoreElements())
-						{
-							aModel.setEnabled("menuFileRemoveCompare", false);
-							aModel.setEnabled("menuTraceRemoveCompare", false);
-							aModel.fireModelChanged("");
-						}
-						else
-							nextId = (String)enum.nextElement();
-					}
-					internal_dispatcher.notify(new RefChangeEvent(nextId, RefChangeEvent.SELECT_EVENT));
-				}
-				removeTrace(id);
+		});
+		
+		this.frames.put(FRAME_TRACE_SELECTOR, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | SELECTOR_FRAME", Level.FINEST);
+				TraceSelectorFrame selectFrame = new TraceSelectorFrame(ModelMDIMain.this.dispatcher);
+				desktopPane.add(selectFrame);
+				return selectFrame;
 			}
-			if(rce.SELECT)
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
-				{
-					aModel.setEnabled("menuFileRemoveCompare", false);
-					aModel.setEnabled("menuTraceRemoveCompare", false);
-
-					if( Pool.get("bellcorestructure", "primarytrace") != null &&
-							((BellcoreStructure)Pool.get("bellcorestructure", "primarytrace")).title.equals("model"))
-						aModel.setEnabled("menuViewModelSave", true);
-					else
-						aModel.setEnabled("menuViewModelSave", false);
-
-					aModel.fireModelChanged("");
-				}
-				else
-				{
-					aModel.setEnabled("menuViewModelSave", false);
-
-					aModel.setEnabled("menuFileRemoveCompare", true);
-					aModel.setEnabled("menuTraceRemoveCompare", true);
-					aModel.fireModelChanged("");
-					setActiveRefId(id);
-				}
+		});
+		
+		this.frames.put(FRAME_TRANS_DATA, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | TRANS_DATA_FRAME", Level.FINEST);
+				TransData transDataFrame = new TransData();
+				desktopPane.add(transDataFrame);
+				return transDataFrame;
 			}
-		}
-		if(ae.getActionCommand().equals("mapopenevent"))
-		{
-			aModel.setEnabled("menuViewPerformModeling", true);
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		});
+		
+		this.frames.put(FRAME_ANALYSIS_MAIN, new UIDefaults.LazyValue() {
 
-			Dimension dim = desktopPane.getSize();
-			updTraceFrames();
-
-			mapframe.setSize(4 * dim.width / 5, 3 * dim.height / 5);
-			mapframe.setLocation(0, 2 * dim.height / 5);
-			mapElementsFrame.toFront();
-			mapPropertyFrame.toFront();
-			mapframe.toFront();
-
-			aModel.setEnabled("menuViewMapClose", true);
-			aModel.setEnabled("menuViewMapEdit", true);
-			aModel.setEnabled("menuViewModelLoad", true);
-			aModel.fireModelChanged("");
-
-			Scheme scheme = (Scheme)ae.getSource();
-			paramsFrame.setModelingScheme(scheme);
-		}
-		if(ae.getActionCommand().equals("mapcloseevent"))
-		{
-
-//			if (mapframe != null)
-//				mapframe.setVisible(false);
-//			if (mapPropertyFrame != null)
-//				mapPropertyFrame.setVisible(false);
-//			if (mapElementsFrame != null)
-//				mapElementsFrame.setVisible(false);
-			for(int i = 0; i < desktopPane.getComponents().length; i++)
-			{
-							Component comp = desktopPane.getComponent(i);
-							if (comp instanceof MapMainFrame)
-							{
-											((MapMainFrame)comp).setVisible(false);
-//											((MapMainFrame)comp).dispose();
-											((MapMainFrame)comp).setMapContext(null);
-											((MapMainFrame)comp).setContext(null);
-							}
-							else
-							if (comp instanceof MapPropertyFrame)
-											((MapPropertyFrame)comp).setVisible(false);
-//												((MapPropertyFrame)comp).dispose();
-							else
-							if (comp instanceof MapElementsFrame)
-											((MapElementsFrame)comp).setVisible(false);
-//												((MapElementsFrame)comp).dispose();
-			}
-
-			aModel.setEnabled("menuViewMapClose", false);
-			aModel.setEnabled("menuViewMapEdit", false);
-			aModel.fireModelChanged("");
-		}
-		if(ae.getActionCommand().equals(SchemeElementsEvent.type))
-		{
-			aModel.setEnabled("menuViewPerformModeling", true);
-			SchemeElementsEvent see = (SchemeElementsEvent)ae;
-			if (see.OPEN_PRIMARY_SCHEME)
-			{
-				updTraceFrames();
-
-				propsFrame = new PropsFrame(aContext, true);
-				propsFrame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
-				desktopPane.add(propsFrame);
-
-				elementsListFrame = new ElementsListFrame(aContext, false);
-				elementsListFrame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
-				desktopPane.add(elementsListFrame);
-
-				schemeFrame = new JInternalFrame()
-				{
-					protected void fireInternalFrameEvent(int id)
-					{
-						if (id == InternalFrameEvent.INTERNAL_FRAME_CLOSING)
-						{
-							//elementsListFrame.setVisible(false);
-							//propsFrame.setVisible(false);
-							elementsListFrame.dispose();
-							propsFrame.dispose();
-							super.fireInternalFrameEvent(id);
-						}
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | ANALYSIS_FRAME", Level.FINEST);
+				ModelMDIMain.this.layeredPanel = new MapMarkersLayeredPanel(ModelMDIMain.this.dispatcher);
+				
+				MultipleTracesFrame analysisFrame = new MultipleTracesFrame(ModelMDIMain.this.dispatcher, ModelMDIMain.this.layeredPanel) {
+					@Override
+					public String getReportTitle() {
+						return FRAME_ANALYSIS_MAIN;
 					}
 				};
-				schemeFrame.setResizable(true);
-				schemeFrame.setClosable(true);
-				schemeFrame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-				schemeFrame.setMaximizable(true);
-				schemeFrame.setIconifiable(true);
-				schemeFrame.getContentPane().setLayout(new BorderLayout());
-				SchemePanelNoEdition panel = new SchemePanelNoEdition(aContext);
-				graph = panel.getGraph();
-				schemeFrame.getContentPane().add(panel, BorderLayout.CENTER);
-				schemeFrame.setTitle(LangModelModel.String("elementsMainTitle"));
-				schemeFrame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-				desktopPane.add(schemeFrame);
-
-				Dimension dim = desktopPane.getSize();
-
-				propsFrame.setVisible(true);
-				elementsListFrame.setVisible(true);
-				schemeFrame.setVisible(true);
-
-				propsFrame.toFront();
-				elementsListFrame.toFront();
-				schemeFrame.toFront();
-
-				propsFrame.setSize(dim.width / 5, 3 * dim.height / 10);
-				propsFrame.setLocation(4 * dim.width / 5, 2  * dim.height / 5);
-				elementsListFrame.setSize(dim.width / 5, 3 * dim.height / 10);
-				elementsListFrame.setLocation(4 * dim.width / 5, 7 * dim.height / 10);
-				schemeFrame.setSize(4 * dim.width / 5, 3 * dim.height / 5);
-				schemeFrame.setLocation(0, 2 * dim.height / 5);
-
-				aModel.setEnabled("menuViewSchemeClose", true);
-				aModel.setEnabled("menuViewSchemeEdit", true);
-				aModel.setEnabled("menuViewModelLoad", true);
-				aModel.fireModelChanged("");
-
-				Scheme scheme = (Scheme)see.obj;
-				paramsFrame.setModelingScheme(scheme);
-
+				analysisFrame.setTitle(I18N.getString(AnalysisResourceKeys.FRAME_ANALYSIS_MAIN));
+				desktopPane.add(analysisFrame);
+				ModelMDIMain.this.graphs.add(analysisFrame);
+				return analysisFrame;
 			}
-			if(see.CLOSE_SCHEME)
-			{
-				propsFrame.dispose();
-				elementsListFrame.dispose();
-				schemeFrame.dispose();
+		});
+		
+		this.frames.put(FRAME_TREE, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | TREE_FRAME", Level.FINEST);
+				JInternalFrame treeFrame = new JInternalFrame();
+				treeFrame.setName(FRAME_TREE);
+				treeFrame.setIconifiable(true);
+				treeFrame.setClosable(true);
+				treeFrame.setResizable(true);
+				treeFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+				treeFrame.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
+				treeFrame.setTitle(LangModelSchematics.getString("treeFrameTitle"));
+				
+				FullModelChildrenFactory model = new FullModelChildrenFactory(ModelMDIMain.this.aContext);
+				SchemeTreeUI treeUI = new SchemeTreeUI(model.getRoot(), ModelMDIMain.this.aContext);
+//				treeUI.getTreeUI().getTree().setRootVisible(false);
+				TreeFilterUI tfUI = new TreeFilterUI(treeUI, new FilterPanel());
+				
 
-				aModel.setEnabled("menuViewSchemeClose", false);
-				aModel.setEnabled("menuViewSchemeEdit", false);
-				aModel.fireModelChanged("");
+				treeFrame.getContentPane().setLayout(new BorderLayout());
+				treeFrame.getContentPane().add(tfUI.getPanel(), BorderLayout.CENTER);
+
+				ModelMDIMain.this.desktopPane.add(treeFrame);
+				return treeFrame;
 			}
+		});
+		
+		super.setWindowArranger(new WindowArranger(ModelMDIMain.this) {
+			@Override
+			public void arrange() {
+				ModelMDIMain f = (ModelMDIMain)this.mainframe;
+
+				int w = f.desktopPane.getSize().width;
+				int h = f.desktopPane.getSize().height;
+				int minh = Math.min(205, h / 4);
+
+				JInternalFrame selectFrame = (JInternalFrame) f.frames.get(FRAME_TRACE_SELECTOR);
+				JInternalFrame treeFrame = (JInternalFrame) f.frames.get(FRAME_TREE);
+				JInternalFrame tdFrame = (JInternalFrame) f.frames.get(FRAME_TRANS_DATA);
+				JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(FRAME_ANALYSIS_MAIN);
+				JInternalFrame modelParamsFrame = (JInternalFrame) f.frames.get(RefModelParamsFrame.NAME);
+								
+				JInternalFrame schemeFrame = (JInternalFrame) f.frames.get(FRAME_EDITOR_MAIN);
+				JInternalFrame generalFrame = (JInternalFrame) f.frames.get(GeneralPropertiesFrame.NAME);
+				JInternalFrame charFrame = (JInternalFrame) f.frames.get(CharacteristicPropertiesFrame.NAME);
+				JInternalFrame additionalFrame = (JInternalFrame) f.frames.get(AdditionalPropertiesFrame.NAME);
+				
+				normalize(treeFrame);
+				normalize(selectFrame);
+				normalize(tdFrame);
+				normalize(analysisFrame);
+				normalize(modelParamsFrame);
+				normalize(schemeFrame);
+				normalize(generalFrame);
+				normalize(charFrame);
+				normalize(additionalFrame);
+												
+				analysisFrame.setSize(11 * w / 20, 2 * minh);
+				selectFrame.setSize(w / 5, minh);
+				treeFrame.setSize(w / 5, h - minh);
+				tdFrame.setSize(w / 4, minh);
+				modelParamsFrame.setSize(w / 4, minh);
+				schemeFrame.setSize(11 * w / 20, h - 2 * minh);
+				generalFrame.setSize(w / 4, 2 * (h - 2 * minh) / 3);
+				charFrame.setSize(w / 4, (h - 2 * minh) / 3);
+				additionalFrame.setSize(w / 4, (h - 2 * minh) / 3);
+								
+				selectFrame.setLocation(0, 0);
+				treeFrame.setLocation(0, minh);
+				analysisFrame.setLocation(w / 5, 0);
+				tdFrame.setLocation(3 * w / 4, minh);
+				modelParamsFrame.setLocation(3 * w / 4, 0);
+				schemeFrame.setLocation(w / 5, 2 * minh);
+				generalFrame.setLocation(3 * w / 4, 2 * minh);
+				charFrame.setLocation(3 * w / 4, 2 * minh + (h - 2 * minh) / 2);
+				additionalFrame.setLocation(3 * w / 4, 2 * minh + 2 * (h - 2 * minh) / 3);
+				
+				// optional windows
+				for (final Component component : ModelMDIMain.this.desktopPane.getComponents()) {
+					String componentName = component.getName();
+					if (componentName == null) {
+						Log.debugMessage("Name is null for component: "
+								+ component,
+								Level.FINER);
+						continue;
+						
+					}
+					componentName = componentName.intern();
+					if (componentName == MapFrame.NAME) {
+						final JInternalFrame mapFrame = (JInternalFrame) component;
+						normalize(mapFrame);
+						mapFrame.setSize(11 * w / 20, h - 2 * minh);
+						mapFrame.setLocation(w / 5, 2 * minh);						
+					} 
+				}
+			}				
+		});
+	}
+
+	private AbstractCommand getLazyCommand(final Object key) {
+		return new AbstractCommand() {
+			private Command	command;
+
+			private Command getLazyCommand() {
+				if (this.command == null) {
+					Object object = ModelMDIMain.this.frames.get(key);
+					if (object instanceof JInternalFrame) {
+						System.out.println("init getLazyCommand for " + key);
+						this.command = new ShowWindowCommand((JInternalFrame) object);
+					}
+				}
+				return this.command;
+			}
+
+			@Override
+			public void execute() {
+				this.getLazyCommand().execute();
+			}
+		};
+	}
+	
+	@Override
+	protected void setDefaultModel (ApplicationModel aModel) {
+		super.setDefaultModel(aModel);
+		
+		aModel.setEnabled("menuView", true);
+		aModel.setEnabled("menuReport", true);
+		aModel.setEnabled(ApplicationModel.MENU_VIEW, true);
+	}
+
+	@Override
+	public void initModule() {
+		super.initModule();
+		initFrames();
+		
+		Heap.addBsHashListener(this);
+		Heap.addPrimaryRefAnalysisListener(this);
+		Heap.addPrimaryTraceListener(this);
+		Heap.addCurrentTraceChangeListener(this);
+		
+		ApplicationModel aModel = aContext.getApplicationModel();
+
+		setDefaultModel(aModel);
+
+		MapApplicationModelFactory mapApplicationModelFactory = new MapSurveyApplicationModelFactory();
+
+		aModel.setCommand("menuViewMapViewOpen", new OpenLinkedMapViewCommand(this.desktopPane, this.aContext, mapApplicationModelFactory));
+		
+		aModel.setCommand("menuViewModelSave", new SaveModelingCommand(aContext, "primarytrace"));
+		aModel.setCommand("menuViewModelLoad", new LoadModelingCommand(aContext));
+		aModel.setCommand("menuViewSchemeOpen", new SchemeOpenCommand(aContext));
+
+		aModel.setCommand("menuFileOpen", new FileOpenCommand(aContext.getDispatcher(), aContext));
+		aModel.setCommand("menuFileOpenAsBellcore", new FileOpenAsBellcoreCommand(aContext.getDispatcher(), aContext));
+		aModel.setCommand("menuFileOpenAsWavetek", new FileOpenAsWavetekCommand(aContext.getDispatcher(), aContext));
+		aModel.setCommand("menuFileSave", new FileSaveCommand(aContext));
+		aModel.setCommand("menuFileSaveAsText", new FileSaveAsTextCommand(aContext));
+		aModel.setCommand("menuFileClose", new FileCloseCommand());
+		aModel.setCommand("menuFileAddCompare",new FileAddCommand(aContext));
+		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(null, aContext));
+
+		aModel.setCommand("menuTraceAddCompare", new AddTraceFromDatabaseCommand(aContext));
+		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(null, aContext));
+		aModel.setCommand("menuTraceClose", new FileCloseCommand());
+
+		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(this.aContext, 
+				DestinationModules.MODELING);
+		rc.setParameter(CreateAnalysisReportCommand.TABLE, this.tables);
+		rc.setParameter(CreateAnalysisReportCommand.PANEL, this.graphs);
+
+		aModel.setCommand("menuReportCreate", rc);
+
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, this.getLazyCommand(FRAME_TRACE_SELECTOR));
+		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_TREE, this.getLazyCommand(FRAME_TREE));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, this.getLazyCommand(FRAME_ANALYSIS_MAIN));
+		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_TRANS_DATA, this.getLazyCommand(FRAME_TRANS_DATA));
+		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS, this.getLazyCommand(RefModelParamsFrame.NAME));
+		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_SCHEME, this.getLazyCommand(FRAME_EDITOR_MAIN));
+		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES, this.getLazyCommand(GeneralPropertiesFrame.NAME));
+		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES, this.getLazyCommand(AdditionalPropertiesFrame.NAME));
+		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS, this.getLazyCommand(CharacteristicPropertiesFrame.NAME));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_VIEW_MAP, new ViewMapWindowCommand(this.desktopPane, this.aContext, mapApplicationModelFactory));
+		
+		aModel.fireModelChanged("");
+	}
+
+	@Override
+	public void setContext(ApplicationContext aContext) {
+		if (this.aContext != null) {
+			this.aContext.getDispatcher().removePropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 		}
-/**/
-		if (ae.getActionCommand().equals("addschemeevent"))
-		{
-			Dimension dim = desktopPane.getSize();
-
-			String scheme_id = (String)ae.getSource();
-			Scheme scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
-			scheme.unpack();
-
-			SchemePanelNoEdition panel = new SchemePanelNoEdition(aContext);
-			panel.ignore_loading = true;
-			//ElementsEditorFrame frame = new ElementsEditorFrame(aContext, panel);
-			SchemeViewerFrame frame = new SchemeViewerFrame(aContext, panel);
-			frame.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-			frame.setTitle(scheme.getName());
-			desktopPane.add(frame);
-
-			frame.setSize(4 * dim.width / 5, 3 * dim.height / 5);
-			frame.setLocation(0, 2 * dim.height / 5);//+ 25 * scheme_count
-			frame.setVisible(true);
-			frame.toFront();
-
-			panel.openScheme(scheme);
-		}
-		else if (ae.getActionCommand().equals("addschemeelementevent"))
-		{
-			String se_id = (String)ae.getSource();
-			SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, se_id);
-			se.unpack();
-
-			SchemePanelNoEdition panel = new SchemePanelNoEdition(aContext);
-			panel.setGraphSize(new Dimension());
-			SchemeViewerFrame frame = new SchemeViewerFrame(aContext, panel);
-			frame.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-			frame.setTitle(se.getName());
-			desktopPane.add(frame);
-
-			Dimension dim = desktopPane.getSize();
-
-			frame.setSize(4 * dim.width / 5, 3 * dim.height / 5);
-			frame.setLocation(0, 2 * dim.height / 5);
-			frame.setVisible(true);
-			frame.toFront();
-			panel.openSchemeElement(se);
-		}
-/**/
-		if(ae.getActionCommand().equals("contextchange"))
-		{
-			ContextChangeEvent cce = (ContextChangeEvent)ae;
-			System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at " + this.getTitle());
-			if(cce.SESSION_OPENED)
-			{
-				SessionInterface ssi = (SessionInterface)cce.getSource();
-
-				if(aContext.getSessionInterface().equals(ssi))
-				{
-					aContext.setSessionInterface(ssi);
-					aContext.setDataSourceInterface(aContext.getApplicationModel().getDataSource(aContext.getSessionInterface()));
-					DataSourceInterface dataSource = aContext.getDataSourceInterface();
-
-					new SurveyDataSourceImage(dataSource).LoadParameterTypes();
-					new SurveyDataSourceImage(dataSource).LoadTestTypes();
-					new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
-					new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
-					new SurveyDataSourceImage(dataSource).LoadModelingTypes();
-					new SchemeDataSourceImage(dataSource).LoadAttributeTypes();
-
-					new SchemeDataSourceImage(dataSource).LoadNetDirectory();
-					new SchemeDataSourceImage(dataSource).LoadISMDirectory();
-
-
-					new ConfigDataSourceImage(dataSource).LoadISM();
-					//dataSource.LoadISM();
-					new ConfigDataSourceImage(dataSource).LoadNet();
-					//dataSource.LoadNet();
-
-
-					new SchemeDataSourceImage(dataSource).LoadSchemeProto();
-					new SchemeDataSourceImage(dataSource).LoadSchemes();
-					new MapDataSourceImage(dataSource).LoadProtoElements();
-					new MapDataSourceImage(dataSource).LoadMaps();
-
-					setSessionOpened();
-
-					statusBar.setText("status", LangModel.String("statusReady"));
-					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
-					statusBar.setText("user", aContext.getSessionInterface().getUser());
-				}
-			}
-			if(cce.SESSION_CLOSED)
-			{
-				SessionInterface ssi = (SessionInterface)cce.getSource();
-				if(aContext.getSessionInterface().equals(ssi))
-				{
-					aContext.setDataSourceInterface(null);
-
-					setSessionClosed();
-
-					statusBar.setText("status", LangModel.String("statusReady"));
-					statusBar.setText("session", LangModel.String("statusNoSession"));
-					statusBar.setText("user", LangModel.String("statusNoUser"));
-				}
-			}
-			if(cce.CONNECTION_OPENED)
-			{
-				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
-				{
-					setConnectionOpened();
-
-					statusBar.setText("status", LangModel.String("statusReady"));
-					statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
-				}
-			}
-			if(cce.CONNECTION_CLOSED)
-			{
-				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
-				{
-					statusBar.setText("status", LangModel.String("statusError"));
-					statusBar.setText("server", LangModel.String("statusConnectionError"));
-
-					statusBar.setText("status", LangModel.String("statusDisconnected"));
-					statusBar.setText("server", LangModel.String("statusNoConnection"));
-
-					setConnectionClosed();
-				}
-			}
-			if(cce.CONNECTION_FAILED)
-			{
-				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
-				{
-					statusBar.setText("status", LangModel.String("statusError"));
-					statusBar.setText("server", LangModel.String("statusConnectionError"));
-
-					setConnectionFailed();
-				}
-			}
-			if(cce.DOMAIN_SELECTED)
-			{
-				setDomainSelected();
-				String name = Pool.getName("domain", aContext.getSessionInterface().getDomainId());
-				if(name != null)
-					statusBar.setText("domain", name);
-			}
+		
+		super.setContext(aContext);
+		
+		if(aContext != null) {
+			this.aContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 		}
 	}
 
-	void updTraceFrames()
-	{
-		Dimension dim = desktopPane.getSize();
+	public void bsHashAdded(String key) {
+		ApplicationModel aModel = this.aContext.getApplicationModel();
+		
+		MultipleTracesFrame analysisFrame = (MultipleTracesFrame)this.frames.get(FRAME_ANALYSIS_MAIN);
+		BellcoreStructure bs = Heap.getAnyPFTraceByKey(key).getBS();
+		
+		double delta_x = bs.getResolution();
+		double[] y = bs.getTraceData();
+		
+		if (key.equals(Heap.PRIMARY_TRACE_KEY)) {
+			this.layeredPanel.removeAllGraphPanels();
+			
+			MapMarkersPanel panel = new MapMarkersPanel(this.layeredPanel, this.aContext.getDispatcher(), y, delta_x);
+			analysisFrame.setGraph(panel, true, key);
 
-		int twoByoneFive = 2*dim.height/5;
-		int half = dim.height/2;
+			if (bs.schemePathId != null) {
+				panel.setSchemePathId(new Identifier(bs.schemePathId));
+			}
+			if (bs.monitoredElementId != null) {
+				panel.setMonitoredElementId(new Identifier(bs.monitoredElementId));
+			}
+			panel.updEvents(key);
+			updFrames();
+		} else {
+			if (key.equals(Heap.REFERENCE_TRACE_KEY)) {
+				aModel.setEnabled("menuTraceReferenceMakeCurrent", true);
+				aModel.fireModelChanged(new String[] { "menuTraceReferenceMakeCurrent"});
+			} else {
+				aModel.setEnabled("menuTraceRemoveCompare", true);
+				aModel.setEnabled("menuFileRemoveCompare", true);
+				aModel.fireModelChanged("");
+			}
+			
+			SimpleGraphPanel p = new SimpleGraphPanel(y, delta_x);
+			analysisFrame.addGraph(p, key);
+			analysisFrame.updScales();
+		}
+	}
 
-		transData.setSize (dim.width / 5, (int)(twoByoneFive*.5));
-		transData.setLocation(4 * dim.width / 5, 0);
+	public void bsHashRemoved(String key) {
+		ApplicationModel aModel = this.aContext.getApplicationModel();
+		
+		MultipleTracesFrame analysisFrame = (MultipleTracesFrame)this.frames.get(FRAME_ANALYSIS_MAIN);
+		analysisFrame.removeGraph(key);
+		analysisFrame.updScales();
+		
+		if (!Heap.hasSecondaryBS()) {
+			aModel.setEnabled("menuFileRemoveCompare", false);
+			aModel.setEnabled("menuTraceRemoveCompare", false);
+			aModel.fireModelChanged(new String[] { "menuTraceRemoveCompare"});
+		}
+	}
 
-		paramsFrame.setSize (dim.width / 5, (int)(twoByoneFive*.5));
-		paramsFrame.setLocation(4 * dim.width / 5,  (int)(twoByoneFive*.5));
+	public void bsHashRemovedAll() {
+		ApplicationModel aModel = this.aContext.getApplicationModel();
+		aModel.setEnabled("menuFileSave", false);
+		aModel.setEnabled("menuFileSaveAll", false);
+		aModel.setEnabled("menuFileSaveAs", false);
+		aModel.setEnabled("menuFileSaveAsText", false);
+		aModel.setEnabled("menuFileClose", false);
+		aModel.setEnabled("menuFileAddCompare", false);
+		aModel.setEnabled("menuFileRemoveCompare", false);
+		
+		aModel.setEnabled("menuViewModelSave", false);
 
-		analysisFrame.setSize (19 * dim.width / 30 , 2 * dim.height / 5);
-		analysisFrame.setLocation(dim.width / 6, 0);
+		aModel.setEnabled("menuTraceClose", false);
+		aModel.setEnabled("menuTraceAddCompare", false);
+		aModel.setEnabled("menuFileRemoveCompare", false);
+		aModel.setEnabled("menuTraceRemoveCompare", false);
 
-		selectorFrame.setSize (dim.width / 6 , (int)(twoByoneFive*.4));
-		selectorFrame.setLocation(0, 0);
+		aModel.setEnabled("menuReportCreate", false);
 
-		paramFrame.setSize (dim.width / 6 , (int)(twoByoneFive*.6));
-		paramFrame.setLocation(0, (int)(twoByoneFive*.4));
+		aModel.setEnabled("menuWindowArrange", false);
 
-		paramsFrame.setVisible(true);
-		analysisFrame.setVisible(true);
-		transData.setVisible(true);
-		selectorFrame.setVisible(true);
-		paramFrame.setVisible(true);
+		aModel.fireModelChanged("");
+		updFrames();
+	}
+	
+	void updFrames() {
+//		PFTrace pf = Heap.getPFTracePrimary();
+		RefAnalysis ra = Heap.getRefAnalysisPrimary();
+		if (ra == null) {
+			showTraceFrames(false);
+		} else {
+//			double[] filtered = Heap.getRefAnalysisPrimary().filtered;
+			showTraceFrames(true);
+		}
+	}
+	
+	void showTraceFrames(boolean b) {
+		JInternalFrame analysisFrame = (JInternalFrame) this.frames.get(FRAME_ANALYSIS_MAIN);
+		analysisFrame.setVisible(b);
+		JInternalFrame tdFrame = (JInternalFrame) this.frames.get(FRAME_TRANS_DATA);
+		tdFrame.setVisible(b);
+		JInternalFrame treeFrame = (JInternalFrame) this.frames.get(FRAME_TREE);
+		treeFrame.setVisible(b);
+		JInternalFrame selectFrame = (JInternalFrame) this.frames.get(FRAME_TRACE_SELECTOR);
+		selectFrame.setVisible(b);
+		JInternalFrame modelParamsFrame = (JInternalFrame) this.frames.get(RefModelParamsFrame.NAME);
+		modelParamsFrame.setVisible(b);
+		
+		ApplicationModel aModel = this.aContext.getApplicationModel();
+		aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, b);
+		aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_TREE, b);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, b);
+		aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_TRANS_DATA, b);
+		aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS, b);
+		aModel.fireModelChanged("");
+	}
+	
+	void showSchemeFrames(boolean b) {
+		ApplicationModel aModel = this.aContext.getApplicationModel();
+	
+		JInternalFrame schemeFrame = (JInternalFrame) this.frames.get(FRAME_EDITOR_MAIN);
+		schemeFrame.setVisible(b);
+		JInternalFrame generalFrame = (JInternalFrame) this.frames.get(GeneralPropertiesFrame.NAME);
+		generalFrame.setVisible(b);
+		JInternalFrame additionalFrame = (JInternalFrame) this.frames.get(AdditionalPropertiesFrame.NAME);
+		additionalFrame.setVisible(b);
+// XXX temporary not shown - characteristics work bad and no room on desktop
+//		JInternalFrame characteristicsFrame = (JInternalFrame) this.frames.get(CharacteristicPropertiesFrame.NAME);
+//		characteristicsFrame.setVisible(b);
+		JInternalFrame mapFrame = MapDesktopCommand.findMapFrame(ModelMDIMain.this.desktopPane);
+		if (mapFrame != null) {
+			mapFrame.setVisible(b);
+			aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_MAP, b);
+		}
+		
+		aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_SCHEME, b);
+		aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES, b);
+		aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES, b);
+		aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS, b);
+		aModel.fireModelChanged("");
 	}
 
 	void setActiveRefId (String id)
@@ -824,91 +583,10 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		aModel.getCommand("menuTraceRemoveCompare").setParameter("activeRefId", id);
 	}
 
-	public void setConnectionOpened()
-	{
-		ApplicationModel aModel = aContext.getApplicationModel();
+	@Override
+	public void loggedIn() {
+		final ApplicationModel aModel = aContext.getApplicationModel();
 
-		aModel.setEnabled("menuSessionOpen", true);
-		aModel.setEnabled("menuSessionClose", false);
-		aModel.setEnabled("menuSessionConnection", true);
-		aModel.setEnabled("menuSessionChangePassword", false);
-
-		aModel.fireModelChanged("");
-	}
-
-	public void setConnectionClosed()
-	{
-		ApplicationModel aModel = aContext.getApplicationModel();
-
-		aModel.setAllItemsEnabled(false);
-		aModel.setEnabled("menuSession", true);
-		aModel.setEnabled("menuSessionOpen", true);
-		aModel.setEnabled("menuSessionConnection", true);
-		aModel.setEnabled("menuExit", true);
-		aModel.setEnabled("menuView", true);
-		aModel.setEnabled("menuHelp", true);
-		aModel.setEnabled("menuHelpAbout", true);
-
-		aModel.fireModelChanged("");
-	}
-
-	public void setConnectionFailed()
-	{
-		ApplicationModel aModel = aContext.getApplicationModel();
-
-		aModel.setEnabled("menuSessionOpen", false);
-		aModel.setEnabled("menuSessionClose", false);
-		aModel.setEnabled("menuSessionOptions", false);
-		aModel.setEnabled("menuSessionChangePassword", false);
-
-		aModel.fireModelChanged("");
-	}
-
-	public void setSessionOpened()
-	{
-		this.checker = new Checker(this.aContext.getDataSourceInterface());
-		if(!checker.checkCommand(checker.enterReflectoModelingWindow))
-			return;
-
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
-		new SurveyDataSourceImage(dataSource).LoadTestTypes();
-		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
-		new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
-//    dataSource.LoadModelingTypes();
-		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
-
-		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.enable("menuSessionDomain");
-		aModel.enable("menuSessionClose");
-		aModel.enable("menuSessionOptions");
-		aModel.enable("menuSessionChangePassword");
-
-		aModel.disable("menuSessionOpen");
-
-		aModel.fireModelChanged("");
-
-		String domain_id = aContext.getSessionInterface().getDomainId();
-		if (domain_id != null && !domain_id.equals(""))
-		{
-			String name = Pool.getName("domain", domain_id);
-			if(name != null)
-				statusBar.setText("domain", name);
-			setDomainSelected();
-		}
-	}
-
-	public void setDomainSelected()
-	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-
-		ApplicationModel aModel = aContext.getApplicationModel();
-
-		aModel.enable("menuSessionClose");
-		aModel.enable("menuSessionOptions");
-		aModel.enable("menuSessionChangePassword");
-
-		aModel.setEnabled("menuViewMapOpen", true);
 		aModel.setEnabled("menuViewSchemeOpen", true);
 
 		aModel.setEnabled("menuFileOpen", true);
@@ -917,93 +595,121 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		aModel.setEnabled("menuFileOpenAsWavetek", true);
 		aModel.setEnabled("menuViewModelLoad", true);
 
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged();
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				showTraceFrames(true);
+				showSchemeFrames(true);
+
+				aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);
+				aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
+				aModel.fireModelChanged();
+			}
+		});
 	}
 
-	public void setSessionClosed()
-	{
+	@Override
+	public void loggedOut() {
+		Heap.closeAll();
+		
 		ApplicationModel aModel = aContext.getApplicationModel();
 
-		aModel.setAllItemsEnabled(false);
-
-		aModel.setEnabled("menuSessionClose", false);
-		aModel.setEnabled("menuSessionOptions", false);
-		aModel.setEnabled("menuSessionChangePassword", false);
-
-		aModel.setEnabled("menuViewMapOpen", false);
+		aModel.setEnabled("menuViewMapViewOpen", false);
 		aModel.setEnabled("menuViewSchemeOpen", false);
-		aModel.setEnabled("menuViewModelSave", false);
-		aModel.setEnabled("menuViewPerformModeling", false);
 		aModel.setEnabled("menuViewModelLoad", false);
 		aModel.setEnabled("menuFileOpen", false);
-		aModel.setEnabled("menuFileOpen", false);
+		aModel.setEnabled("menuFileOpenAs", false);
 
-		aModel.enable("menuSessionOpen");
-		aModel.enable("menuSession");
-		aModel.enable("menuHelp");
-		aModel.enable("menuView");
-		aModel.enable("menuHelpView");
-
-		aModel.fireModelChanged("menuFileOpenAsBellcore");
-		aModel.fireModelChanged("menuFileOpenAsWavetek");
-		aModel.fireModelChanged("menuFileSaveAs");
-		aModel.fireModelChanged("menuFileSave");
+		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, false);
+	
+		showTraceFrames(false);
+		showSchemeFrames(false);
+		
+		aModel.fireModelChanged();
 	}
-
-
-	public Dispatcher getInternalDispatcher()
-	{
-		return internal_dispatcher;
-	}
-
-	void this_componentShown(ComponentEvent e)
-	{
-		init_module();
-		desktopPane.setPreferredSize(desktopPane.getSize());
-	}
-
-	void this_windowClosing(WindowEvent e)
-	{
-		internal_dispatcher.notify(new OperationEvent(this, 0, "mapcloseevent"));
-		internal_dispatcher.unregister(this, "contextchange");
-		Environment.the_dispatcher.unregister(this, "contextchange");
-		aContext.getApplicationModel().getCommand("menuExit").execute();
-	}
-
-	protected void processWindowEvent(WindowEvent e)
-	{
-		if (e.getID() == WindowEvent.WINDOW_ACTIVATED)
-		{
-			Environment.setActiveWindow(this);
-			//ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
-			//SessionInterface.setActiveSession(aContext.getSessionInterface());
-		}
-		if (e.getID() == WindowEvent.WINDOW_CLOSING)
-		{
-			internal_dispatcher.notify(new OperationEvent(this, 0, "mapcloseevent"));
-
-			internal_dispatcher.unregister(this, "contextchange");
-			Environment.the_dispatcher.unregister(this, "contextchange");
-			aContext.getApplicationModel().getCommand("menuExit").execute();
-			return;
+	
+	@Override
+	protected void processWindowEvent(WindowEvent e) {
+		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+			this.aManager.saveIni();
 		}
 		super.processWindowEvent(e);
 	}
-}
 
-class ModelMDIMain_this_componentAdapter extends java.awt.event.ComponentAdapter
-{
-	ModelMDIMain adaptee;
+	public void primaryTraceCUpdated() {
+		ApplicationModel aModel = this.aContext.getApplicationModel();
+		if (true) // XXX: if(isCreated)
+		{
+			final boolean saveFilePermitted = ModelingPermissionManager.isSavingAllowed();
+			aModel.setEnabled("menuFileSave", saveFilePermitted);
+			aModel.setEnabled("menuFileSaveAll", saveFilePermitted);
+			aModel.setEnabled("menuFileSaveAs", saveFilePermitted);
+			aModel.setEnabled("menuFileSaveAsText", saveFilePermitted);
+			aModel.setEnabled("menuFileClose", true);
+			aModel.setEnabled("menuFileAddCompare", true);
+//					PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
 
-	ModelMDIMain_this_componentAdapter(ModelMDIMain adaptee)
-	{
-		this.adaptee = adaptee;
+			aModel.setEnabled("menuViewModelSave", saveFilePermitted);
+			
+			aModel.setEnabled("menuTraceClose", true);
+			aModel.setEnabled("menuTraceAddCompare", true);
+//					PermissionManager.isPermitted(Operation.LOAD_TRACE));
+			
+			aModel.setEnabled("menuReportCreate", true);
+
+			aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES, true);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, true);
+			aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS, true);
+			aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_TREE, true);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, true);
+			aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_TRANS_DATA, true);
+			aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);
+		}
+
+		aModel.fireModelChanged("");
+	}
+	
+		@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
+			ObjectSelectedEvent ose = (ObjectSelectedEvent)evt;
+			if (ose.isSelected(ObjectSelectedEvent.SCHEME)) {
+				Identifier id = ((Identifiable)ose.getSelectedObject()).getId();
+				ApplicationModel aModel = this.aContext.getApplicationModel();
+				aModel.getCommand("menuViewMapViewOpen").setParameter("scheme_id", id);
+				aModel.setEnabled("menuViewMapViewOpen", ModelingPermissionManager.isOpenMapAllowed());
+				aModel.fireModelChanged("");
+			}
+		}
+		super.propertyChange(evt);
 	}
 
-	public void componentShown(ComponentEvent e)
-	{
-		adaptee.this_componentShown(e);
+	public void primaryTraceRemoved() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void primaryRefAnalysisCUpdated() {
+		updFrames();		
+	}
+
+	public void primaryRefAnalysisRemoved() {
+		updFrames();
+	}
+
+	public void currentTraceChanged(String id) {
+		ApplicationModel aModel = this.aContext.getApplicationModel();
+
+		if (id.equals(Heap.PRIMARY_TRACE_KEY)) {
+			aModel.setEnabled("menuFileRemoveCompare", false);
+			aModel.setEnabled("menuTraceRemoveCompare", false);
+		} else {
+			aModel.setEnabled("menuFileRemoveCompare", true);
+			aModel.setEnabled("menuTraceRemoveCompare", true);
+			setActiveRefId(id);
+		}
+		aModel.setEnabled("menuMakeCurrentTracePrimary", Heap.isTraceSecondary(id));
+		aModel.fireModelChanged(new String[] { "menuFileRemoveCompare", "menuTraceRemoveCompare", "menuMakeCurrentTracePrimary"});
 	}
 }
-
-

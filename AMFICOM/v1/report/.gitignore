@@ -1,0 +1,12 @@
+classes
+.classpath
+.project
+.idl
+.corba
+.mach
+*.jar
+*.swp
+*.tar
+*.gz
+*.bz2
+.settings
