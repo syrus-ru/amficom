@@ -1,5 +1,5 @@
 /*-
- * $Id: AlarmWrapper.java,v 1.2 2006/04/11 09:42:24 stas Exp $
+ * $Id: AlarmWrapper.java,v 1.3 2006/05/18 14:00:05 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,16 @@
 
 package com.syrus.AMFICOM.client.observer.ui;
 
+import java.awt.Color;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import com.syrus.AMFICOM.alarm.Alarm;
+import com.syrus.AMFICOM.alarm.AlarmState;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
@@ -26,6 +29,7 @@ public class AlarmWrapper implements Wrapper<Alarm> {
 	public static final String COLUMN_PATH_NAME = "path_name";
 	public static final String COLUMN_MISMATCH_OPTICAL_DISTANCE = "mismatch_optical_distance";
 	public static final String COLUMN_MISMATCH_PHYSICAL_DISTANCE = "mismatch_physical_distance";
+	public static final String COLOR = "color";
 		
 	private final List<String> keys;
 	
@@ -54,6 +58,10 @@ public class AlarmWrapper implements Wrapper<Alarm> {
 	}
 
 	public String getName(final String key) {
+		final String internedKey = key.intern();
+		if (internedKey == COLOR) {
+			return " ";
+		}
 		return I18N.getString(WRAPPER_KEY + key);
 	}
 
@@ -73,6 +81,9 @@ public class AlarmWrapper implements Wrapper<Alarm> {
 		if (internedKey == COLUMN_MISMATCH_OPTICAL_DISTANCE
 				|| internedKey == COLUMN_MISMATCH_PHYSICAL_DISTANCE) {
 			return Double.class;
+		}
+		if (internedKey == COLOR) {
+			return Color.class;
 		}
 		return null;
 	}
@@ -111,6 +122,37 @@ public class AlarmWrapper implements Wrapper<Alarm> {
 		} 
 		if (internedKey == COLUMN_MISMATCH_PHYSICAL_DISTANCE) {
 			return Double.valueOf(alarm.getMismatchPhysicalDistance());
+		}
+		if (internedKey == COLOR) {
+			AlarmState state = alarm.getState();
+			
+			if (state == AlarmState.OPENED) {
+					if (alarm.getSeverity() == Severity.SEVERITY_HARD) {
+						return Color.RED;
+					}
+					if (alarm.getSeverity() == Severity.SEVERITY_SOFT) {
+						return Color.YELLOW;
+					}
+					return Color.WHITE;
+				}
+				if (state == AlarmState.ABORTED) {
+					return Color.WHITE;
+				}
+				if (state == AlarmState.ACCEPTED) {
+					return Color.ORANGE; 
+				}
+				if (state == AlarmState.CLOSED) {
+					return Color.WHITE; 
+				}
+				if (state == AlarmState.FIXED) {
+					return Color.GREEN; 
+				}
+				if (state == AlarmState.REPARING) {
+					return Color.YELLOW;
+				}
+				if (state == AlarmState.TESTING) {
+					return Color.CYAN;
+				}
 		}
 		return null;
 	}

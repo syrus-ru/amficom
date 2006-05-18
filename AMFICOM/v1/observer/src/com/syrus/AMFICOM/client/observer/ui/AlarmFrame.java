@@ -3,6 +3,8 @@ package com.syrus.AMFICOM.client.observer.ui;
 import static com.syrus.AMFICOM.resource.ObserverResourceKeys.FRAME_ALARM;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
@@ -21,6 +23,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.event.InternalFrameEvent;
@@ -30,6 +33,7 @@ import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.alarm.Alarm;
+import com.syrus.AMFICOM.alarm.AlarmState;
 import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
@@ -128,7 +132,6 @@ public class AlarmFrame extends JInternalFrame {
 					if (!added) {
 						Alarm alarm = new Alarm(lineMismatchEvent);
 						AlarmFrame.this.model.addObject(alarm);
-						AlarmFrame.this.model.sortRows(0, AlarmFrame.this.model.getSortOrder(0));
 						AlarmFrame.this.table.setSelectedValue(alarm);
 						alarmSignal();
 					}
@@ -165,6 +168,7 @@ public class AlarmFrame extends JInternalFrame {
 		this.model = new WrapperedTableModel<Alarm>(
 				this.wrapper,
 				new String[] {
+						AlarmWrapper.COLOR, 
 						AlarmWrapper.COLUMN_PATH_NAME, 
 						AlarmWrapper.COLUMN_PATHELEMENT_NAME,
 						AlarmWrapper.COLUMN_DATE_STARTED,
@@ -181,6 +185,18 @@ public class AlarmFrame extends JInternalFrame {
 		
 		this.table.setRenderer(dateRenderer, AlarmWrapper.COLUMN_DATE_STARTED);
 		this.table.setRenderer(dateRenderer, AlarmWrapper.COLUMN_DATE_FINISHED);
+		this.table.setRenderer(new ADefaultTableCellRenderer.IconRenderer() {
+			private static final long serialVersionUID = -6542942610617832169L;
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected1, boolean hasFocus, int row, int column) {
+				Alarm alarm = AlarmFrame.this.model.getObject(row);
+				Component component = super.getTableCellRendererComponent(table, value, isSelected1, hasFocus, row, column);
+				component.setBackground((Color)AlarmWrapper.getInstance().getValue(alarm, AlarmWrapper.COLOR));
+				return component;
+			}
+		}, AlarmWrapper.COLOR);
+		
+		
 		this.table.setAllowAutoResize(true);
 		this.table.setAutoscrolls(true);
 		
@@ -397,7 +413,8 @@ public class AlarmFrame extends JInternalFrame {
 					this.model.addObject(alarm);
 				}
 			}
-			this.model.sortRows(3, this.model.getSortOrder(3));
+			this.table.sortColumn(4);
+			this.model.sortRows(4, false);
 			
 			if (!lineMismatchEvents.isEmpty()) {
 				alarmSignal();
@@ -439,6 +456,7 @@ public class AlarmFrame extends JInternalFrame {
 	void buttonFix_actionPerformed(ActionEvent e) {
 		SoundManager.stop();
 		final Alarm alarm = this.model.getObject(this.table.getSelectedRow());
+		
 		this.table.setSelectedValue(null);
 		
 		MarkerEvent mEvent2 = new MarkerEvent(this, MarkerEvent.MARKER_DELETED_EVENT, alarm.getMarkerId());
