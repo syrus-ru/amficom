@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.22 2006/04/19 14:13:46 bass Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.23 2006/05/18 19:37:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2006/04/19 14:13:46 $
+ * @version $Revision: 1.23 $, $Date: 2006/05/18 19:37:22 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
@@ -235,6 +235,9 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 				return;
 			}
 
+			/**
+			 * @todo Escape HTML text before submission!
+			 */
 			final LineMismatchEvent lineMismatchEvent = DefaultLineMismatchEvent.newInstance(
 					LoginManager.getUserId(),
 					affectedPathElement.getId(),
@@ -250,6 +253,7 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 							affectedPathElement,
 							physicalDistanceFromStart,
 							physicalDistanceFromEnd),
+					"<pre></pre>\n",
 					reflectogramMismatchEvent.getId());
 			final LEServerServantManager servantManager = LEServerSessionEnvironment.getInstance().getLEServerServantManager();
 			servantManager.getEventServerReference().receiveEvents(new IdlEvent[] {

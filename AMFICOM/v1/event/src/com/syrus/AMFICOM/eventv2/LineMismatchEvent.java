@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.13 2006/03/28 10:17:19 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.14 2006/05/18 19:37:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.Identifier;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2006/03/28 10:17:19 $
+ * @version $Revision: 1.14 $, $Date: 2006/05/18 19:37:22 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -115,7 +115,9 @@ public interface LineMismatchEvent
 
 	double getMismatchPhysicalDistance();
 
-	String getMessage();
+	String getPlainTextMessage();
+
+	String getRichTextMessage();
 
 	/**
 	 * <p>{@code reflectogramMismatchEventId} is guaranteed to be

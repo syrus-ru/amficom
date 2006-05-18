@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.9 2006/03/28 10:17:19 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.10 2006/05/18 19:37:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2006/03/28 10:17:19 $
+ * @version $Revision: 1.10 $, $Date: 2006/05/18 19:37:22 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -67,7 +67,12 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	/**
 	 * @serial include
 	 */
-	private String message; 
+	private String plainTextMessage;
+
+	/**
+	 * @serial include
+	 */
+	private String richTextMessage;
 
 	/**
 	 * @serial include
@@ -92,7 +97,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	 * @param physicalDistanceToEnd
 	 * @param mismatchOpticalDistance
 	 * @param mismatchPhysicalDistance
-	 * @param message
+	 * @param plainTextMessage
+	 * @param richTextMessage
 	 * @param reflectogramMismatchEventId
 	 */
 	private DefaultLineMismatchEvent(final Identifier id,
@@ -103,7 +109,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			final double physicalDistanceToEnd,
 			final double mismatchOpticalDistance,
 			final double mismatchPhysicalDistance,
-			final String message,
+			final String plainTextMessage,
+			final String richTextMessage,
 			final Identifier reflectogramMismatchEventId) {
 		super(id, creatorId, new Date(), INITIAL_VERSION);
 
@@ -122,7 +129,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 
 		this.mismatchOpticalDistance = mismatchOpticalDistance;
 		this.mismatchPhysicalDistance = mismatchPhysicalDistance;
-		this.message = message;
+		this.plainTextMessage = plainTextMessage;
+		this.richTextMessage = richTextMessage;
 		this.reflectogramMismatchEventId = reflectogramMismatchEventId;
 	}
 
@@ -163,7 +171,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 
 			this.mismatchOpticalDistance = lineMismatchEvent.getMismatchOpticalDistance();
 			this.mismatchPhysicalDistance = lineMismatchEvent.getMismatchPhysicalDistance();
-			this.message = lineMismatchEvent.getMessage();
+			this.plainTextMessage = lineMismatchEvent.getPlainTextMessage();
+			this.richTextMessage = lineMismatchEvent.getRichTextMessage();
 			this.reflectogramMismatchEventId = Identifier.valueOf(lineMismatchEvent.getReflectogramMismatchEventId());
 		}
 	}
@@ -179,7 +188,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			final double physicalDistanceToEnd,
 			final double mismatchOpticalDistance,
 			final double mismatchPhysicalDistance,
-			final String message,
+			final String plainTextMessage,
+			final String richTextMessage,
 			final Identifier reflectogramMismatchEventId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		
@@ -198,7 +208,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 
 		this.mismatchOpticalDistance = mismatchOpticalDistance;
 		this.mismatchPhysicalDistance = mismatchPhysicalDistance;
-		this.message = message;
+		this.plainTextMessage = plainTextMessage;
+		this.richTextMessage = richTextMessage;
 		this.reflectogramMismatchEventId = reflectogramMismatchEventId;
 	}
 
@@ -214,7 +225,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	 * @param physicalDistanceToEnd
 	 * @param mismatchOpticalDistance
 	 * @param mismatchPhysicalDistance
-	 * @param message
+	 * @param plainTextMessage
 	 * @param reflectogramMismatchEventId
 	 * @throws CreateObjectException
 	 */
@@ -226,7 +237,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			final double physicalDistanceToEnd,
 			final double mismatchOpticalDistance,
 			final double mismatchPhysicalDistance,
-			final String message,
+			final String plainTextMessage,
+			final String richTextMessage,
 			final Identifier reflectogramMismatchEventId)
 	throws CreateObjectException {
 		if (creatorId == null) {
@@ -243,8 +255,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 					affectedPathElementId,
 					affectedPathElementSpacious, physicalDistanceToStart,
 					physicalDistanceToEnd, mismatchOpticalDistance,
-					mismatchPhysicalDistance, message,
-					reflectogramMismatchEventId);
+					mismatchPhysicalDistance, plainTextMessage,
+					richTextMessage, reflectogramMismatchEventId);
 			lineMismatchEvent.markAsChanged();
 			StorableObjectPool.flush(lineMismatchEvent, creatorId, false);
 			return lineMismatchEvent;
@@ -304,10 +316,17 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	}
 
 	/**
-	 * @see LineMismatchEvent#getMessage()
+	 * @see LineMismatchEvent#getPlainTextMessage()
 	 */
-	public String getMessage() {
-		return this.message;
+	public String getPlainTextMessage() {
+		return this.plainTextMessage;
+	}
+
+	/**
+	 * @see LineMismatchEvent#getRichTextMessage()
+	 */
+	public String getRichTextMessage() {
+		return this.richTextMessage;
 	}
 
 	/**

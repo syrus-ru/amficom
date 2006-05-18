@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultEmailNotificationEvent.java,v 1.6 2006/03/28 10:17:19 bass Exp $
+ * $Id: DefaultEmailNotificationEvent.java,v 1.7 2006/05/18 19:37:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2006/03/28 10:17:19 $
+ * @version $Revision: 1.7 $, $Date: 2006/05/18 19:37:22 $
  * @module event
  */
 public final class DefaultEmailNotificationEvent extends
@@ -39,7 +39,12 @@ public final class DefaultEmailNotificationEvent extends
 	/**
 	 * @serial include 
 	 */
-	private String message;
+	private String plainTextMessage;
+
+	/**
+	 * @serial include
+	 */
+	private String richTextMessage;
 
 	/**
 	 * @param emailNotificationEvent
@@ -57,13 +62,15 @@ public final class DefaultEmailNotificationEvent extends
 
 	private DefaultEmailNotificationEvent(final String address,
 			final String subject,
-			final String message) {
+			final String plainTextMessage,
+			final String richTextMessage) {
 		assert address != null : NON_NULL_EXPECTED;
 		assert address.length() != 0 : NON_EMPTY_EXPECTED;
 
 		this.email = address;
 		this.subject = subject;
-		this.message = message;
+		this.plainTextMessage = plainTextMessage;
+		this.richTextMessage = richTextMessage;
 	}
 
 	/**
@@ -72,7 +79,8 @@ public final class DefaultEmailNotificationEvent extends
 	 */
 	public IdlEmailNotificationEvent getIdlTransferable(final ORB orb) {
 		return IdlEmailNotificationEventHelper.init(orb, this.email,
-				this.subject, this.message);
+				this.subject, this.plainTextMessage,
+				this.richTextMessage);
 	}
 
 	public void fromIdlTransferable(final IdlEmailNotificationEvent emailNotificationEvent)
@@ -80,7 +88,8 @@ public final class DefaultEmailNotificationEvent extends
 		synchronized (this) {
 			this.email = emailNotificationEvent.getEmail();
 			this.subject = emailNotificationEvent.getSubject();
-			this.message = emailNotificationEvent.getMessage();
+			this.plainTextMessage = emailNotificationEvent.getPlainTextMessage();
+			this.richTextMessage = emailNotificationEvent.getRichTextMessage();
 		}
 	}
 
@@ -92,8 +101,9 @@ public final class DefaultEmailNotificationEvent extends
 
 	public static EmailNotificationEvent valueOf(final String address,
 			final String subject,
-			final String message) {
-		return new DefaultEmailNotificationEvent(address, subject, message);
+			final String plainTextMessage,
+			final String richTextMessage) {
+		return new DefaultEmailNotificationEvent(address, subject, plainTextMessage, richTextMessage);
 	}
 
 	/**
@@ -111,9 +121,16 @@ public final class DefaultEmailNotificationEvent extends
 	}
 
 	/**
-	 * @see EmailNotificationEvent#getMessage()
+	 * @see EmailNotificationEvent#getPlainTextMessage()
 	 */
-	public String getMessage() {
-		return this.message;
+	public String getPlainTextMessage() {
+		return this.plainTextMessage;
+	}
+
+	/**
+	 * @see EmailNotificationEvent#getRichTextMessage()
+	 */
+	public String getRichTextMessage() {
+		return this.richTextMessage;
 	}
 }

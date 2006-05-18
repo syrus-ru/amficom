@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.28 2006/04/19 14:13:46 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.29 2006/05/18 19:37:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2006/04/19 14:13:46 $
+ * @version $Revision: 1.29 $, $Date: 2006/05/18 19:37:22 $
  * @module leserver
  */
 final class LineMismatchEventProcessor extends AbstractEventProcessor {
@@ -122,7 +122,8 @@ final class LineMismatchEventProcessor extends AbstractEventProcessor {
 							DefaultEmailNotificationEvent.valueOf(
 									address,
 									severity.getLocalizedName(),
-									lineMismatchEvent.getMessage());
+									lineMismatchEvent.getPlainTextMessage(),
+									lineMismatchEvent.getRichTextMessage());
 				notificationEvents[i++] = emailNotificationEvent.getIdlTransferable(orb);
 			}
 

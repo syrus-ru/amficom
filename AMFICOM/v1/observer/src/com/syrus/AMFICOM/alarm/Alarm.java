@@ -1,5 +1,5 @@
 /*-
- * $Id: Alarm.java,v 1.3 2006/05/18 13:58:47 stas Exp $
+ * $Id: Alarm.java,v 1.4 2006/05/18 19:37:23 bass Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -205,7 +205,7 @@ public class Alarm {
 			if (last < time) {
 				last = time;
 				lastMeasurementId = event.rme.getMeasurementId();
-				this.lastMessage = event.lme.getMessage();
+				this.lastMessage = event.lme.getPlainTextMessage();
 			}
 		}
 		this.startDate = new Date(first);

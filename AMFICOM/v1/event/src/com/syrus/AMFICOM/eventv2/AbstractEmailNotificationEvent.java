@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractEmailNotificationEvent.java,v 1.3 2005/10/19 13:46:13 bass Exp $
+ * $Id: AbstractEmailNotificationEvent.java,v 1.4 2006/05/18 19:37:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.eventv2.corba.IdlEmailNotificationEvent;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/19 13:46:13 $
+ * @version $Revision: 1.4 $, $Date: 2006/05/18 19:37:22 $
  * @module event
  */
 public abstract class AbstractEmailNotificationEvent
@@ -26,7 +26,7 @@ public abstract class AbstractEmailNotificationEvent
 	}
 
 	protected String paramString() {
-		return "message = " + this.getMessage();
+		return "plainTextMessage = " + this.getPlainTextMessage();
 	}
 
 	@Override

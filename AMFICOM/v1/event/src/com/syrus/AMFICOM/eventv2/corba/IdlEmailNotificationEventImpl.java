@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlEmailNotificationEventImpl.java,v 1.6 2006/03/30 08:06:47 bass Exp $
+ * $Id: IdlEmailNotificationEventImpl.java,v 1.7 2006/05/18 19:37:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2006/03/30 08:06:47 $
+ * @version $Revision: 1.7 $, $Date: 2006/05/18 19:37:22 $
  * @module event
  */
 final class IdlEmailNotificationEventImpl extends IdlEmailNotificationEvent {
@@ -33,7 +33,7 @@ final class IdlEmailNotificationEventImpl extends IdlEmailNotificationEvent {
 	}
 
 	IdlEmailNotificationEventImpl(final String email, final String subject,
-			final String message) {
+			final String plainTextMessage, final String richTextMessage) {
 		final IdlIdentifier voidId = VOID_IDENTIFIER.getIdlTransferable();
 		this.id = voidId;
 		this.creatorId = voidId;
@@ -41,7 +41,8 @@ final class IdlEmailNotificationEventImpl extends IdlEmailNotificationEvent {
 
 		this.email = email;
 		this.subject = subject;
-		this.message = message;
+		this.plainTextMessage = plainTextMessage;
+		this.richTextMessage = richTextMessage;
 	}
 
 	/**
@@ -75,11 +76,19 @@ final class IdlEmailNotificationEventImpl extends IdlEmailNotificationEvent {
 	}
 
 	/**
-	 * @see IdlEmailNotificationEvent#getMessage()
+	 * @see IdlEmailNotificationEvent#getPlainTextMessage()
 	 */
 	@Override
-	public String getMessage() {
-		return this.message;
+	public String getPlainTextMessage() {
+		return this.plainTextMessage;
+	}
+
+	/**
+	 * @see IdlEmailNotificationEvent#getRichTextMessage()
+	 */
+	@Override
+	public String getRichTextMessage() {
+		return this.richTextMessage;
 	}
 
 	/**

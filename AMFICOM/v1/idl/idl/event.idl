@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.61 2006/05/11 10:14:44 bass Exp $
+ * $Id: event.idl,v 1.62 2006/05/18 19:37:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -219,7 +219,8 @@ module eventv2 {
 			private IdlSpacialData spacialData;
 			private double mismatchOpticalDistance;
 			private double mismatchPhysicalDistance;
-			private general::corba::WString4000 message;
+			private general::corba::WString4000 plainTextMessage;
+			private general::corba::WString4000 richTextMessage;
 			private general::corba::IdlIdentifier reflectogramMismatchEventId;
 
 			general::corba::IdlIdentifier getAffectedPathElementId();
@@ -228,7 +229,8 @@ module eventv2 {
 			double getPhysicalDistanceToEnd();
 			double getMismatchOpticalDistance();
 			double getMismatchPhysicalDistance();
-			general::corba::WString4000 getMessage();
+			general::corba::WString4000 getPlainTextMessage();
+			general::corba::WString4000 getRichTextMessage();
 			general::corba::IdlIdentifier getReflectogramMismatchEventId();
 
 			factory init(in general::corba::IdlIdentifier id,
@@ -241,7 +243,8 @@ module eventv2 {
 					in IdlSpacialData spacialData,
 					in double mismatchOpticalDistance,
 					in double mismatchPhysicalDistance,
-					in general::corba::WString4000 message,
+					in general::corba::WString4000 plainTextMessage,
+					in general::corba::WString4000 richTextMessage,
 					in general::corba::IdlIdentifier reflectogramMismatchEventId);
 		};
 
@@ -258,13 +261,15 @@ module eventv2 {
 		valuetype IdlEmailNotificationEvent : general::corba::IdlStorableObject, IdlNotificationEvent {
 			private string email;
 			private wstring subject;
-			private wstring message;
+			private wstring plainTextMessage;
+			private wstring richTextMessage;
 
 			string getEmail();
 			wstring getSubject();
-			wstring getMessage();
+			wstring getPlainTextMessage();
+			wstring getRichTextMessage();
 
-			factory init(in string email, in wstring subject, in wstring message);
+			factory init(in string email, in wstring subject, in wstring plainTextMessage, in wstring richTextMessage);
 		};
 
 		valuetype IdlSmsNotificationEvent : general::corba::IdlStorableObject, IdlNotificationEvent {

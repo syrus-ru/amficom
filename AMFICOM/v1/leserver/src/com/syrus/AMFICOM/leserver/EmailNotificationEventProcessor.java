@@ -1,5 +1,5 @@
 /*-
- * $Id: EmailNotificationEventProcessor.java,v 1.8 2006/05/17 18:31:26 bass Exp $
+ * $Id: EmailNotificationEventProcessor.java,v 1.9 2006/05/18 19:37:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2006/05/17 18:31:26 $
+ * @version $Revision: 1.9 $, $Date: 2006/05/18 19:37:22 $
  * @module leserver
  */
 final class EmailNotificationEventProcessor extends AbstractNotificationEventProcessor {
@@ -49,11 +49,8 @@ final class EmailNotificationEventProcessor extends AbstractNotificationEventPro
 		final EmailNotificationEvent emailNotificationEvent = (EmailNotificationEvent) notificationEvent;
 
 		try {
-			/**
-			 * @todo Escape HTML text before submission!
-			 */
-			final String plainTextMessage = emailNotificationEvent.getMessage();
-			final String richTextMessage = "<pre></pre>\n";
+			final String plainTextMessage = emailNotificationEvent.getPlainTextMessage();
+			final String richTextMessage = emailNotificationEvent.getRichTextMessage();
 			SimpleMailer.sendMail(
 					emailNotificationEvent.getEmail(),
 					emailNotificationEvent.getSubject(),

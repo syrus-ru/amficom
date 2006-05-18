@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLineMismatchEvent.java,v 1.5 2006/03/28 10:17:19 bass Exp $
+ * $Id: AbstractLineMismatchEvent.java,v 1.6 2006/05/18 19:37:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2006/03/28 10:17:19 $
+ * @version $Revision: 1.6 $, $Date: 2006/05/18 19:37:22 $
  * @module event
  */
 public abstract class AbstractLineMismatchEvent extends StorableObject
@@ -86,7 +86,8 @@ public abstract class AbstractLineMismatchEvent extends StorableObject
 				spacialData,
 				this.getMismatchOpticalDistance(),
 				this.getMismatchPhysicalDistance(),
-				this.getMessage(),
+				this.getPlainTextMessage(),
+				this.getRichTextMessage(),
 				this.getReflectogramMismatchEventId().getIdlTransferable(orb));
 	}
 

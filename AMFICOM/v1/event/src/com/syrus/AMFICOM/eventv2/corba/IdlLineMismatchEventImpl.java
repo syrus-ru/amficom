@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlLineMismatchEventImpl.java,v 1.7 2006/03/28 10:17:19 bass Exp $
+ * $Id: IdlLineMismatchEventImpl.java,v 1.8 2006/05/18 19:37:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2006/03/28 10:17:19 $
+ * @version $Revision: 1.8 $, $Date: 2006/05/18 19:37:22 $
  * @module event
  */
 final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
@@ -41,7 +41,8 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	 * @param spacialData
 	 * @param mismatchOpticalDistance
 	 * @param mismatchPhysicalDistance
-	 * @param message
+	 * @param plainTextMessage
+	 * @param richTextMessage
 	 * @param reflectogramMismatchEventId
 	 */
 	IdlLineMismatchEventImpl(final IdlIdentifier id,
@@ -52,7 +53,8 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 			final IdlSpacialData spacialData,
 			final double mismatchOpticalDistance,
 			final double mismatchPhysicalDistance,
-			final String message,
+			final String plainTextMessage,
+			final String richTextMessage,
 			final IdlIdentifier reflectogramMismatchEventId) {
 		this.id = id;
 		this.created = created;
@@ -67,7 +69,8 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 		this.mismatchOpticalDistance = mismatchOpticalDistance;
 		this.mismatchPhysicalDistance = mismatchPhysicalDistance;
 
-		this.message = message;
+		this.plainTextMessage = plainTextMessage;
+		this.richTextMessage = richTextMessage;
 		this.reflectogramMismatchEventId = reflectogramMismatchEventId;
 	}
 
@@ -133,11 +136,19 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	}
 
 	/**
-	 * @see IdlLineMismatchEvent#getMessage()
+	 * @see IdlLineMismatchEvent#getPlainTextMessage()
 	 */
 	@Override
-	public String getMessage() {
-		return this.message;
+	public String getPlainTextMessage() {
+		return this.plainTextMessage;
+	}
+
+	/**
+	 * @see IdlLineMismatchEvent#getRichTextMessage()
+	 */
+	@Override
+	public String getRichTextMessage() {
+		return this.richTextMessage;
 	}
 
 	/**
