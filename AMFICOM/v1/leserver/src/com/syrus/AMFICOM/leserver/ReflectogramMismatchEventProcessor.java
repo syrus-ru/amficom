@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.23 2006/05/18 19:37:22 bass Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.24 2006/05/18 19:47:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2006/05/18 19:37:22 $
+ * @version $Revision: 1.24 $, $Date: 2006/05/18 19:47:18 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
@@ -235,9 +235,16 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 				return;
 			}
 
-			/**
-			 * @todo Escape HTML text before submission!
-			 */
+			final String plainTextMessage = createPlainTextMessage(
+					reflectogramMismatchEvent,
+					test,
+					kis,
+					monitoredElement,
+					affectedPathElement,
+					physicalDistanceFromStart,
+					physicalDistanceFromEnd);
+			final String richTextMessage = toRichTextMessage(plainTextMessage);
+
 			final LineMismatchEvent lineMismatchEvent = DefaultLineMismatchEvent.newInstance(
 					LoginManager.getUserId(),
 					affectedPathElement.getId(),
@@ -246,14 +253,8 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 					physicalDistanceFromEnd,
 					eventOpticalDistance,
 					eventPhysicalDistance,
-					createMessage(reflectogramMismatchEvent,
-							test,
-							kis,
-							monitoredElement,
-							affectedPathElement,
-							physicalDistanceFromStart,
-							physicalDistanceFromEnd),
-					"<pre></pre>\n",
+					plainTextMessage,
+					richTextMessage,
 					reflectogramMismatchEvent.getId());
 			final LEServerServantManager servantManager = LEServerSessionEnvironment.getInstance().getLEServerServantManager();
 			servantManager.getEventServerReference().receiveEvents(new IdlEvent[] {
@@ -306,7 +307,7 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 	 *         {@link com.syrus.AMFICOM.reflectometry.ReflectogramMismatch mismatch}
 	 *         that triggerred this event's generation.
 	 */
-	private static String createMessage(
+	private static String createPlainTextMessage(
 			final ReflectogramMismatchEvent reflectogramMismatchEvent,
 			final Test test,
 			final KIS kis,
@@ -405,6 +406,17 @@ final class ReflectogramMismatchEventProcessor extends AbstractEventProcessor {
 				+ (reflectogramMismatchEvent.hasMismatch()
 						? MISMATCH_LEVEL + COLON_TAB + reflectogramMismatchEvent.getMinMismatch() + RANGE + reflectogramMismatchEvent.getMaxMismatch() + NEWLINE
 						: "");
+	}
+
+	private static String toRichTextMessage(final String plainTextMessage) {
+		final StringBuilder builder = new StringBuilder();
+		builder.append(plainTextMessage.replaceAll("&", "&amp;").
+				replaceAll("\"", "&quot;").
+				replaceAll("'", "&apos;").
+				replaceAll("<", "&lt;").
+				replaceAll(">", "&gt;").
+				replaceAll("\n", "<br>\n"));			
+		return builder.toString();
 	}
 
 	private static String getLocalizedDistance(final int distance) {
