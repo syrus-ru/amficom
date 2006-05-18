@@ -1,5 +1,5 @@
 /*-
- * $Id: SimpleMailer.java,v 1.7 2006/05/18 09:56:10 bass Exp $
+ * $Id: SimpleMailer.java,v 1.8 2006/05/18 11:37:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.mail.EmailAddressRegexp;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2006/05/18 09:56:10 $
+ * @version $Revision: 1.8 $, $Date: 2006/05/18 11:37:40 $
  * @module leserver
  */
 public final class SimpleMailer {
@@ -196,8 +196,8 @@ public final class SimpleMailer {
 		properties.put("mail.smtp.host", smtpHost);
 		properties.put("mail.smtp.port", Integer.toString(smtpPort));
 		properties.put("mail.smtp.auth", Boolean.toString(useAuth));
-		properties.put("mail.smtp.allow8bitmime", "true");
-		properties.put("mail.smtp.quitwait", "true");
+		properties.put("mail.smtp.allow8bitmime", Boolean.TRUE.toString());
+		properties.put("mail.smtp.quitwait", Boolean.TRUE.toString());
 
 		if (NOTIFY_SENDER) {
 			properties.put("mail.smtp.dsn.ret", "FULL"); // "FULL"|"HDRS"
@@ -468,7 +468,7 @@ public final class SimpleMailer {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.7 $, $Date: 2006/05/18 09:56:10 $
+	 * @version $Revision: 1.8 $, $Date: 2006/05/18 11:37:40 $
 	 * @module leserver
 	 */
 	private enum ContentTransferEncoding {

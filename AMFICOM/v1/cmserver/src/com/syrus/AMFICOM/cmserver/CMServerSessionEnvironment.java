@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerSessionEnvironment.java,v 1.11 2006/05/11 11:46:31 bass Exp $
+ * $Id: CMServerSessionEnvironment.java,v 1.12 2006/05/18 11:37:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.ObjectLoader;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2006/05/11 11:46:31 $
+ * @version $Revision: 1.12 $, $Date: 2006/05/18 11:37:40 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -28,7 +28,7 @@ final class CMServerSessionEnvironment extends BaseSessionEnvironment {
 	private static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
 	private static final String KEY_REFRESH_TIMEOUT = "RefreshPoolTimeout";
 
-	private static final String DATABASE_LOADER_ONLY = "false";
+	private static final String DATABASE_LOADER_ONLY = Boolean.FALSE.toString();
 	private static final int REFRESH_TIMEOUT = 30; //sec
 
 	private static CMServerSessionEnvironment instance;

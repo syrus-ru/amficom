@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerSessionEnvironment.java,v 1.8 2006/05/11 11:46:32 bass Exp $
+ * $Id: MscharServerSessionEnvironment.java,v 1.9 2006/05/18 11:37:39 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,14 +21,14 @@ import com.syrus.util.ApplicationProperties;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2006/05/11 11:46:32 $
+ * @version $Revision: 1.9 $, $Date: 2006/05/18 11:37:39 $
  * @module mscharserver
  */
 final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
 	private static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
 	private static final String KEY_REFRESH_TIMEOUT = "RefreshPoolTimeout";
 
-	private static final String DATABASE_LOADER_ONLY = "false";
+	private static final String DATABASE_LOADER_ONLY = Boolean.FALSE.toString();
 	private static final int REFRESH_TIMEOUT = 30; //sec
 
 	private static MscharServerSessionEnvironment instance;

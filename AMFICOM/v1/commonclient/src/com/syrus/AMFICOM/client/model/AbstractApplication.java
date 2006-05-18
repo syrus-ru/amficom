@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.32 2006/04/07 13:01:04 bass Exp $
+ * $Id: AbstractApplication.java,v 1.33 2006/05/18 11:37:39 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2006/04/07 13:01:04 $
+ * @version $Revision: 1.33 $, $Date: 2006/05/18 11:37:39 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -262,8 +262,8 @@ public abstract class AbstractApplication {
 			}			
 		}
 
-		final String xmlSession = ApplicationProperties.getString(XMLSESSION_KEY, "false");
-		boolean usingXMLSession = xmlSession.equalsIgnoreCase("true") || xmlSession.equalsIgnoreCase("yes");
+		final String xmlSession = ApplicationProperties.getString(XMLSESSION_KEY, Boolean.FALSE.toString());
+		boolean usingXMLSession = xmlSession.equalsIgnoreCase(Boolean.TRUE.toString()) || xmlSession.equalsIgnoreCase("yes");
 		if (!usingXMLSession) {
 			final int kind = ApplicationProperties.getInt(ClientSessionEnvironment.SESSION_KIND_KEY, -1);
 			final SessionKind sessionKind = SessionKind.valueOf(kind);
