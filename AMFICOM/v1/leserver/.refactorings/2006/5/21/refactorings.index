@@ -1,4 +1,8 @@
 1147674760104	Inline method 'com.syrus.AMFICOM.leserver.LoginProcessor.shutdown()' in 'com.syrus.AMFICOM.leserver.LoginProcessor'
+1147981514207	Extract local variable 'plainTextMessage' from expression 'createPlainTextMessage(reflectogramMismatchEvent,test,kis,monitoredElement,affectedPathElement,physicalDistanceFromStart,physicalDistanceFromEnd)'
+1147981374630	Rename method 'com.syrus.AMFICOM.leserver.ReflectogramMismatchEventProcessor.createMessage(...)' to 'createPlainTextMessage'
+1147981338396	Rename method 'com.syrus.AMFICOM.leserver.ReflectogramMismatchEventProcessor.toHtmlString(...)' to 'toRichTextMessage'
+1147981328975	Rename local variable 'plainTextString' in 'com.syrus.AMFICOM.leserver.ReflectogramMismatchEventProcessor.toHtmlString(...)' to 'plainTextMessage'
 1147889523395	Extract local variable 'message' from expression 'emailNotificationEvent.getMessage()'
 1147869180486	Inline local variable 'path' in 'com.syrus.AMFICOM.leserver.SimpleMailer.getHtmlBodyPart()'
 1147868304921	Inline local variable 'image' in 'com.syrus.AMFICOM.leserver.SimpleMailer.getHtmlBodyPart()'
