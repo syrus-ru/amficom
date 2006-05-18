@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.152 2006/05/18 11:25:32 bass Exp $
+ * $Id: StorableObject.java,v 1.153 2006/05/18 17:59:39 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.LRUMap.Retainable;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.152 $, $Date: 2006/05/18 11:25:32 $
+ * @version $Revision: 1.153 $, $Date: 2006/05/18 17:59:39 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -656,20 +656,29 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 		return valuesMap;
 	}
 
+	/**
+	 * @see com.syrus.util.LRUMap.Retainable#retain()
+	 */
+	public boolean retain() {
+		return this.isChanged();
+	}
+
 	/*-********************************************************************
 	 * Caching sub-framework.                                             *
 	 **********************************************************************/
 
-	private static final String KEY = "amficom.sof.cache.on.modification";
+	private static final String BUILD_CACHE_ON_MODIFICATION_KEY = "amficom.sof.cache.on.modification";
 
-	private static final String DEFAULT_VALUE = "false";
+	private static final String BUILD_CACHE_ON_MODIFICATION_DEFAULT_VALUE = Boolean.FALSE.toString();
 
 	static {
-		Log.debugMessage(KEY + '=' + System.getProperty(KEY, DEFAULT_VALUE), INFO);
+		Log.debugMessage(BUILD_CACHE_ON_MODIFICATION_KEY + '=' + buildCacheOnModification(), INFO);
 	}
 
 	protected static boolean buildCacheOnModification() {
-		return Boolean.parseBoolean(System.getProperty(KEY, DEFAULT_VALUE));
+		return Boolean.parseBoolean(System.getProperty(
+				BUILD_CACHE_ON_MODIFICATION_KEY,
+				BUILD_CACHE_ON_MODIFICATION_DEFAULT_VALUE));
 	}
 
 	/**
@@ -704,7 +713,7 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.152 $, $Date: 2006/05/18 11:25:32 $
+	 * @version $Revision: 1.153 $, $Date: 2006/05/18 17:59:39 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -813,19 +822,12 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.152 $, $Date: 2006/05/18 11:25:32 $
+	 * @version $Revision: 1.153 $, $Date: 2006/05/18 17:59:39 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
 	@Target(METHOD)
 	protected static @interface ParameterizationPending {
 		String[] value();
-	}
-
-	/**
-	 * @see com.syrus.util.LRUMap.Retainable#retain()
-	 */
-	public boolean retain() {
-		return this.isChanged();
 	}
 }
