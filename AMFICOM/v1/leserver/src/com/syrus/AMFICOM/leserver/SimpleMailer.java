@@ -1,5 +1,5 @@
 /*-
- * $Id: SimpleMailer.java,v 1.6 2006/05/17 18:31:26 bass Exp $
+ * $Id: SimpleMailer.java,v 1.7 2006/05/18 09:56:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.mail.EmailAddressRegexp;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2006/05/17 18:31:26 $
+ * @version $Revision: 1.7 $, $Date: 2006/05/18 09:56:10 $
  * @module leserver
  */
 public final class SimpleMailer {
@@ -468,10 +468,10 @@ public final class SimpleMailer {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.6 $, $Date: 2006/05/17 18:31:26 $
+	 * @version $Revision: 1.7 $, $Date: 2006/05/18 09:56:10 $
 	 * @module leserver
 	 */
-	public enum ContentTransferEncoding {
+	private enum ContentTransferEncoding {
 		BASE64("base64"),
 		QUOTED_PRINTABLE("quoted-printable"),
 		UUENCODE("uuencode"),
