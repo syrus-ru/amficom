@@ -22,8 +22,8 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2006/01/24 12:46:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2006/05/18 19:32:18 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -119,15 +119,20 @@ public final class CommonUIUtilities {
 	 * @return htmled string
 	 */
 	public static final String convertToHTMLString(final String string) {
-		if (string.startsWith("<html>")) {
+		if (string.startsWith("<html>") || string.startsWith("<HTML>")) {
 			return string;
 		}
 		
-		final StringBuffer buffer = new StringBuffer("<html>");
-		String s = string.replaceAll("<", "&lt;").replaceAll("<", "&lt;");
-		buffer.append(s.replaceAll("\n", "<br>"));			
-		buffer.append("</html>");
-		return buffer.toString();
+		final StringBuilder builder = new StringBuilder();
+		builder.append("<html>");
+		builder.append(string.replaceAll("&", "&amp;").
+				replaceAll("\"", "&quot;").
+				replaceAll("'", "&apos;").
+				replaceAll("<", "&lt;").
+				replaceAll(">", "&gt;").
+				replaceAll("\n", "<br>"));			
+		builder.append("</html>");
+		return builder.toString();
 	}
 
 	/**
