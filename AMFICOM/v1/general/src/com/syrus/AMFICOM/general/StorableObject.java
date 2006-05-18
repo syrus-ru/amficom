@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.151 2006/04/19 13:22:17 bass Exp $
+ * $Id: StorableObject.java,v 1.152 2006/05/18 11:25:32 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.LRUMap.Retainable;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.151 $, $Date: 2006/04/19 13:22:17 $
+ * @version $Revision: 1.152 $, $Date: 2006/05/18 11:25:32 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -675,7 +675,7 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	/**
 	 * <p>This class shouldn&apos;t have been declared static since it&apos;s
 	 * not referenced within a static context anywhere, unless an ugly
-	 * fucking bug in javac (up to version 1.5.0_05):</p>
+	 * fucking bug in javac (up to version 1.5.0_06):</p>
 	 *
 	 * <pre>java.lang.NullPointerException
 	 * at com.sun.tools.javac.code.Types$IsSameTypeFcn.visitClassType(Types.java:652)
@@ -704,7 +704,7 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.151 $, $Date: 2006/04/19 13:22:17 $
+	 * @version $Revision: 1.152 $, $Date: 2006/05/18 11:25:32 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -813,7 +813,7 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.151 $, $Date: 2006/04/19 13:22:17 $
+	 * @version $Revision: 1.152 $, $Date: 2006/05/18 11:25:32 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
