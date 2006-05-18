@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.105 2006/03/15 20:28:23 bass Exp $
+ * $Id: PathElement.java,v 1.105.6.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.105 $, $Date: 2006/03/15 20:28:23 $
+ * @version $Revision: 1.105.6.1 $, $Date: 2006/05/18 17:50:00 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -322,14 +322,11 @@ public final class PathElement extends StorableObject
 	 *         {@link IdlKind#SCHEME_ELEMENT}.
 	 * @throws CreateObjectException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public static PathElement createInstance(final Identifier creatorId,
 			final SchemePath parentSchemePath,
 			final AbstractSchemePort startAbstractSchemePort,
 			final AbstractSchemePort endAbstractSchemePort)
 	throws CreateObjectException {
-		final boolean usePool = false;
-
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
 		
 		/*
@@ -358,7 +355,7 @@ public final class PathElement extends StorableObject
 					parentSchemePath,
 					startAbstractSchemePort,
 					endAbstractSchemePort);
-			parentSchemePath.getPathElementContainerWrappee().addToCache(pathElement, usePool);
+			parentSchemePath.getPathElementContainerWrappee().addToCache(pathElement);
 
 			pathElement.markAsChanged();
 			return pathElement;
@@ -379,13 +376,10 @@ public final class PathElement extends StorableObject
 	 *         {@link IdlKind#SCHEME_CABLE_LINK}.
 	 * @throws CreateObjectException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public static PathElement createInstance(final Identifier creatorId,
 			final SchemePath parentSchemePath,
 			final SchemeCableThread schemeCableThread)
 	throws CreateObjectException {
-		final boolean usePool = false;
-
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
 		assert parentSchemePath != null && schemeCableThread != null: NON_NULL_EXPECTED;
 		try {
@@ -398,7 +392,7 @@ public final class PathElement extends StorableObject
 					INITIAL_VERSION,
 					parentSchemePath,
 					schemeCableThread);
-			parentSchemePath.getPathElementContainerWrappee().addToCache(pathElement, usePool);
+			parentSchemePath.getPathElementContainerWrappee().addToCache(pathElement);
 
 			pathElement.markAsChanged();
 			return pathElement;
@@ -419,13 +413,10 @@ public final class PathElement extends StorableObject
 	 *         {@link IdlKind#SCHEME_LINK}.
 	 * @throws CreateObjectException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public static PathElement createInstance(final Identifier creatorId,
 			final SchemePath parentSchemePath,
 			final SchemeLink schemeLink)
 	throws CreateObjectException {
-		final boolean usePool = false;
-
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
 		assert parentSchemePath != null && schemeLink != null: NON_NULL_EXPECTED;
 		try {
@@ -438,7 +429,7 @@ public final class PathElement extends StorableObject
 					INITIAL_VERSION,
 					parentSchemePath,
 					schemeLink);
-			parentSchemePath.getPathElementContainerWrappee().addToCache(pathElement, usePool);
+			parentSchemePath.getPathElementContainerWrappee().addToCache(pathElement);
 
 			pathElement.markAsChanged();
 			return pathElement;
@@ -553,9 +544,9 @@ public final class PathElement extends StorableObject
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) {
+	public Set<Identifiable> getReverseDependencies() {
 		return Collections.<Identifiable>singleton(super.id);
 	}
 
@@ -827,14 +818,12 @@ public final class PathElement extends StorableObject
 	/**
 	 * @param pathElement
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void getXmlTransferable(
 			final XmlPathElement pathElement,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
@@ -975,24 +964,19 @@ public final class PathElement extends StorableObject
 
 	/**
 	 * @param parentScheme
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	public void setParentScheme(final Scheme parentScheme,
-			final boolean usePool)
+	public void setParentScheme(final Scheme parentScheme)
 	throws ApplicationException {
-		getAbstractSchemeElement().setParentScheme(parentScheme, usePool);
+		getAbstractSchemeElement().setParentScheme(parentScheme);
 	}
 
 	/**
 	 * @param parentSchemePathId
 	 * @throws ApplicationException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	void setParentSchemePathId(final Identifier parentSchemePathId)
 	throws ApplicationException {
-		final boolean usePool = false;
-
 		assert parentSchemePathId != null : NON_NULL_EXPECTED;
 		assert parentSchemePathId.isVoid() || parentSchemePathId.getMajor() == SCHEMEPATH_CODE;
 
@@ -1000,13 +984,13 @@ public final class PathElement extends StorableObject
 			return;
 		}
 
-		this.getParentPathOwner().getPathElementContainerWrappee().removeFromCache(this, usePool);
+		this.getParentPathOwner().getPathElementContainerWrappee().removeFromCache(this);
 
 		if (parentSchemePathId.isVoid()) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-			StorableObjectPool.delete(this.getReverseDependencies(usePool));
+			StorableObjectPool.delete(this.getReverseDependencies());
 		} else {
-			StorableObjectPool.<SchemePath>getStorableObject(parentSchemePathId, true).getPathElementContainerWrappee().addToCache(this, usePool);
+			StorableObjectPool.<SchemePath>getStorableObject(parentSchemePathId, true).getPathElementContainerWrappee().addToCache(this);
 		}
 
 		this.parentSchemePathId = parentSchemePathId;

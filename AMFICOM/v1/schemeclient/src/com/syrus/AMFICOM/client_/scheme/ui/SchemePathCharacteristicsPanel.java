@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathCharacteristicsPanel.java,v 1.6 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemePathCharacteristicsPanel.java,v 1.6.2.1 2006/05/18 17:50:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ public class SchemePathCharacteristicsPanel extends CharacteristicsPanel {
 				super.setTypeSortMapping(IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 						this.schemePath,
 						this.schemePath.getId(), isEditable());
-				super.addCharacteristics(this.schemePath.getCharacteristics(true), this.schemePath.getId());
+				super.addCharacteristics(this.schemePath.getCharacteristics(), this.schemePath.getId());
 				TransmissionPath tp = null;
 				try {
 					tp = this.schemePath.getTransmissionPath();
@@ -58,7 +58,7 @@ public class SchemePathCharacteristicsPanel extends CharacteristicsPanel {
 						super.setTypeSortMapping(sorts[i],
 								tp,
 								tp.getId(), true);
-					super.addCharacteristics(tp.getCharacteristics(true), tp.getId());
+					super.addCharacteristics(tp.getCharacteristics(), tp.getId());
 				}
 			} catch (ApplicationException e) {
 				Log.errorMessage(e);

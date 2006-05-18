@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.29 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.29.2.1 2006/05/18 17:50:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.29 $, $Date: 2006/05/03 04:48:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.29.2.1 $, $Date: 2006/05/18 17:50:01 $
  * @module schemeclient
  */
 
@@ -517,7 +517,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 				final CableLinkType newType = (CableLinkType) this.cmbTypeCombo.getSelectedItem();
 				if (this.schemeCableLink.getAbstractLinkType() == null
 						|| (newType != null && !newType.equals(this.schemeCableLink.getAbstractLinkType()))
-						|| (newType != null && newType.getCableThreadTypes(false).size() != this.schemeCableLink.getSchemeCableThreads(false).size())) {
+						|| (newType != null && newType.getCableThreadTypes(false).size() != this.schemeCableLink.getSchemeCableThreads().size())) {
 					
 					LinkedIdsCondition condition = new LinkedIdsCondition(this.schemeCableLink.getId(), ObjectEntities.PATHELEMENT_CODE);
 					Set<PathElement> pes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -531,7 +531,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 						}
 					}
 										
-					this.schemeCableLink.setAbstractLinkTypeExt(newType, LoginManager.getUserId(), false);
+					this.schemeCableLink.setAbstractLinkTypeExt(newType, LoginManager.getUserId());
 					
 					if (!peThreads.isEmpty()) {
 						List<SchemeCableThread> sortedCableThreads2 = ClientUtils.getSortedCableThreads(this.schemeCableLink);

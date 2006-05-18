@@ -1,5 +1,5 @@
 /*
- * $Id: SchemePathReport.java,v 1.7 2006/04/24 06:41:05 stas Exp $
+ * $Id: SchemePathReport.java,v 1.7.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -97,7 +97,7 @@ class SchemePathTableModel extends AbstractTableModel {
 		this.propertyValuesColumn.add(EMPTY_STRING);
 		this.originalRowCount += 5;
 
-		Set<Characteristic> objectChars = schemePath.getCharacteristics(true);
+		Set<Characteristic> objectChars = schemePath.getCharacteristics();
 		for (Characteristic characteristic : objectChars) {
 			this.propertyNamesColumn.add(characteristic.getName());
 			this.propertyValuesColumn.add(characteristic.getValue());

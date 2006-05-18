@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceGeneralPanel.java,v 1.21 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemeDeviceGeneralPanel.java,v 1.21.2.1 2006/05/18 17:50:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,8 +59,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2006/05/03 04:48:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.21.2.1 $, $Date: 2006/05/18 17:50:01 $
  * @module schemeclient
  */
 
@@ -158,13 +158,13 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 		this.combo.removeAllItems();
 		if (this.schemeDevice != null) {
 			try {
-				List<SchemePort> sPorts = new ArrayList<SchemePort>(this.schemeDevice.getSchemePorts(false));
+				List<SchemePort> sPorts = new ArrayList<SchemePort>(this.schemeDevice.getSchemePorts());
 				Comparator<SchemePort> sorter1 = new NumberedComparator<SchemePort>(
 						SchemePortWrapper.getInstance(),
 						StorableObjectWrapper.COLUMN_NAME);
 				Collections.sort(sPorts, sorter1);
 				
-				Set<SchemeCablePort> schemeCablePorts = this.schemeDevice.getSchemeCablePorts(false);
+				Set<SchemeCablePort> schemeCablePorts = this.schemeDevice.getSchemeCablePorts();
 				Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
 				for (SchemeCablePort schemeCablePort : schemeCablePorts) {
 					SchemeCableLink scl = schemeCablePort.getAbstractSchemeLink();
@@ -179,7 +179,7 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 				}
 				List<SchemeCableThread> scThreads = new ArrayList<SchemeCableThread>();
 				for (SchemeCableLink scl : schemeCableLinks) {
-					scThreads.addAll(scl.getSchemeCableThreads(false));
+					scThreads.addAll(scl.getSchemeCableThreads());
 				}
 				NumberedComparator<SchemeCableThread> sorter2 = new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, true);
 				Collections.sort(scThreads, sorter2);

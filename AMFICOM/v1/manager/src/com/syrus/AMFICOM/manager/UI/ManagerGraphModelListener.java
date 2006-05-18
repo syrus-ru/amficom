@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModelListener.java,v 1.13 2005/12/21 11:33:04 bob Exp $
+* $Id: ManagerGraphModelListener.java,v 1.13.2.1 2006/05/18 17:47:01 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/12/21 11:33:04 $
- * @author $Author: bob $
+ * @version $Revision: 1.13.2.1 $, $Date: 2006/05/18 17:47:01 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -250,10 +250,10 @@ public class ManagerGraphModelListener implements GraphModelListener {
 								boolean nameFound = false;
 								assert Log.debugMessage(item.getName()
 										+ " characteristics "
-										+ item.getCharacteristics(false), 
+										+ item.getCharacteristics(), 
 									Log.DEBUGLEVEL10);
 								
-								for(final Characteristic characteristic : item.getCharacteristics(false)) {
+								for(final Characteristic characteristic : item.getCharacteristics()) {
 									final String codename = characteristic.getType().getCodename();
 									if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_X)) {
 										xFound = true;
@@ -314,7 +314,7 @@ public class ManagerGraphModelListener implements GraphModelListener {
 										true);
 								}
 								
-								for(Characteristic characteristic : item.getCharacteristics(false)) {
+								for(Characteristic characteristic : item.getCharacteristics()) {
 									String codename = characteristic.getType().getCodename();
 									if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_X)) {
 										characteristic.setValue(Integer.toString((int) rectangle2D.getX()));

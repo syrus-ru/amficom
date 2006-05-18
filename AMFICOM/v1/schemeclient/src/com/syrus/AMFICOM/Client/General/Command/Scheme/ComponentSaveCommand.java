@@ -130,14 +130,14 @@ public class ComponentSaveCommand extends AbstractCommand {
 					if (!schemeProto.equals(proto)) {
 						schemeProtoElements.add(schemeProto);
 					} else {
-						schemeLinks.addAll(schemeProto.getSchemeLinks(false));
-						schemeProtoElements.addAll(schemeProto.getSchemeProtoElements(false));
+						schemeLinks.addAll(schemeProto.getSchemeLinks());
+						schemeProtoElements.addAll(schemeProto.getSchemeProtoElements());
 					}
 				}
 			}
 
-			proto.setSchemeLinks(schemeLinks, false);
-			proto.setSchemeProtoElements(schemeProtoElements, false);
+			proto.setSchemeLinks(schemeLinks);
+			proto.setSchemeProtoElements(schemeProtoElements);
 
 			// create SchemeImageResource
 			SchemeImageResource schemeIr = proto.getSchemeCell();
@@ -149,7 +149,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 
 			Identifier userId = LoginManager.getUserId();
 			StorableObjectPool.flush(proto.getId(), userId, false);
-			for (Identifiable identifiable : proto.getReverseDependencies(false)) {
+			for (Identifiable identifiable : proto.getReverseDependencies()) {
 				StorableObjectPool.flush(identifiable, userId, false);
 			}
 			this.cellPane.setGraphChanged(false);

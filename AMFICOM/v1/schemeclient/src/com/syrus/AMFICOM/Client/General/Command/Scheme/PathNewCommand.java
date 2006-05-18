@@ -49,7 +49,7 @@ public class PathNewCommand extends AbstractCommand {
 		
 		try {
 			SchemeMonitoringSolution solution = null;
-			Set<SchemeMonitoringSolution> solutions = scheme.getSchemeMonitoringSolutions(false);
+			Set<SchemeMonitoringSolution> solutions = scheme.getSchemeMonitoringSolutions();
 			if(solutions.isEmpty()) {
 				solution = SchemeObjectsFactory.createSchemeMonitoringSolution(scheme);
 			} else {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThreadWrapper.java,v 1.13 2006/03/15 17:31:13 bass Exp $
+ * $Id: SchemeCableThreadWrapper.java,v 1.13.6.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2006/03/15 17:31:13 $
+ * @version $Revision: 1.13.6.1 $, $Date: 2006/05/18 17:50:00 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -113,8 +113,6 @@ public final class SchemeCableThreadWrapper extends StorableObjectWrapper<Scheme
 	public void setValue(final SchemeCableThread schemeCableThread,
 			final String key, final Object value)
 	throws PropertyChangeException {
-		final boolean usePool = false;
-
 		try {
 			if (schemeCableThread != null) {
 				if (key.equals(COLUMN_NAME)) {
@@ -126,7 +124,7 @@ public final class SchemeCableThreadWrapper extends StorableObjectWrapper<Scheme
 				} else if (key.equals(COLUMN_LINK_ID)) {
 					schemeCableThread.setLinkId((Identifier) value);
 				} else if (key.equals(COLUMN_PARENT_SCHEME_CABLE_LINK_ID)) {
-					schemeCableThread.setParentSchemeCableLinkId((Identifier) value, usePool);
+					schemeCableThread.setParentSchemeCableLinkId((Identifier) value);
 				} else if (key.equals(COLUMN_SOURCE_SCHEME_PORT_ID)) {
 					schemeCableThread.setSourceSchemePortId((Identifier) value);
 				} else if (key.equals(COLUMN_TARGET_SCHEME_PORT_ID)) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigExportCommand.java,v 1.10 2006/04/07 13:53:02 arseniy Exp $
+ * $Id: ConfigExportCommand.java,v 1.10.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ public class ConfigExportCommand extends ImportExportCommand {
 			Set<XmlLinkType> xmlLinkTypes = new HashSet<XmlLinkType>();
 			for (LinkType linkType : linkTypes) {
 				XmlLinkType xmlLinkType = XmlLinkType.Factory.newInstance();
-				linkType.getXmlTransferable(xmlLinkType, AMFICOM_IMPORT, false);
+				linkType.getXmlTransferable(xmlLinkType, AMFICOM_IMPORT);
 				xmlLinkTypes.add(xmlLinkType);
 			}
 			condition2 = new EquivalentCondition(ObjectEntities.CABLELINK_TYPE_CODE); 
@@ -77,7 +77,7 @@ public class ConfigExportCommand extends ImportExportCommand {
 			Set<XmlCableLinkType> xmlCableLinkTypes = new HashSet<XmlCableLinkType>();
 			for (CableLinkType linkType : cableLinkTypes) {
 				XmlCableLinkType xmlCableLinkType = XmlCableLinkType.Factory.newInstance();
-				linkType.getXmlTransferable(xmlCableLinkType, AMFICOM_IMPORT, false);
+				linkType.getXmlTransferable(xmlCableLinkType, AMFICOM_IMPORT);
 				xmlCableLinkTypes.add(xmlCableLinkType);
 			}
 			condition2 = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE); 
@@ -85,7 +85,7 @@ public class ConfigExportCommand extends ImportExportCommand {
 			Set<XmlPortType> xmlPortTypes = new HashSet<XmlPortType>();
 			for (PortType portType : portTypes) {
 				XmlPortType xmlPortType = XmlPortType.Factory.newInstance();
-				portType.getXmlTransferable(xmlPortType, AMFICOM_IMPORT, false);
+				portType.getXmlTransferable(xmlPortType, AMFICOM_IMPORT);
 				xmlPortTypes.add(xmlPortType);
 			}
 			condition2 = new EquivalentCondition(ObjectEntities.PROTOEQUIPMENT_CODE); 
@@ -94,7 +94,7 @@ public class ConfigExportCommand extends ImportExportCommand {
 			for (ProtoEquipment protoEq : protoEquipments) {
 				if (!protoEq.getType().getCodename().equals(BUG_136.stringValue())) {
 					XmlProtoEquipment xmlEquipmentType = XmlProtoEquipment.Factory.newInstance();
-					protoEq.getXmlTransferable(xmlEquipmentType, AMFICOM_IMPORT, false);
+					protoEq.getXmlTransferable(xmlEquipmentType, AMFICOM_IMPORT);
 					xmlEquipmentTypes.add(xmlEquipmentType);
 				}
 			}
@@ -103,7 +103,7 @@ public class ConfigExportCommand extends ImportExportCommand {
 			Set<XmlEquipment> xmlEquipments = new HashSet<XmlEquipment>();
 			for (Equipment eq : equipments) {
 				XmlEquipment xmlEquipment = XmlEquipment.Factory.newInstance();
-				eq.getXmlTransferable(xmlEquipment, AMFICOM_IMPORT, false);
+				eq.getXmlTransferable(xmlEquipment, AMFICOM_IMPORT);
 				xmlEquipments.add(xmlEquipment);
 			}
 			File configFile = new File(fileName);

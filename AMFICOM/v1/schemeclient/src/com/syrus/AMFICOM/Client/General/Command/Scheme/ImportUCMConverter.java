@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUCMConverter.java,v 1.18 2006/04/21 10:03:50 arseniy Exp $
+ * $Id: ImportUCMConverter.java,v 1.18.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -100,12 +100,12 @@ public class ImportUCMConverter {
 		final String name = characteristicType.getName();
 		final String description = characteristicType.getDescription();
 
-		for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks(false)) {
+		for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks()) {
 			CableLinkType cableLinkType = schemeCableLink.getAbstractLinkType();
 			if (cableLinkType == null) {
 				Log.debugMessage("No real CableLinkType for " + schemeCableLink.getName(), Level.FINEST);
 				CableLinkType suitableType;
-				Integer fibers = Integer.valueOf(schemeCableLink.getSchemeCableThreads(false).size());
+				Integer fibers = Integer.valueOf(schemeCableLink.getSchemeCableThreads().size());
 				suitableType = cableLinkTypes.get(fibers);
 				if (suitableType == null) {
 					for (Integer i : cableLinkTypes.keySet()) {
@@ -126,7 +126,7 @@ public class ImportUCMConverter {
 					final CableThreadType cableThreadType = it1.next();
 					final SchemeCableThread schemeCableThread = it2.next();
 
-					if (ClientUtils.getCharacteristic(schemeCableThread.getCharacteristics(false), 
+					if (ClientUtils.getCharacteristic(schemeCableThread.getCharacteristics(), 
 							CharacteristicTypeCodenames.COMMON_COLOUR) == null) {
 						Characteristic.createInstance(this.userId,
 								characteristicType,
@@ -154,7 +154,7 @@ public class ImportUCMConverter {
 		invisibleGraph.setMakeNotifications(false);
 //		Identifier domainId = LoginManager.getDomainId();
 	
-		for (SchemeElement schemeElement : scheme.getSchemeElements(false)) {
+		for (SchemeElement schemeElement : scheme.getSchemeElements()) {
 			if (!this.placedObjectIds.contains(schemeElement.getId())) {
 			try{
 				if (schemeElement.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {

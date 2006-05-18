@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.24 2006/04/20 12:36:31 arseniy Exp $
+ * $Id: StorableObjectWrapper.java,v 1.24.4.1 2006/05/18 17:46:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.util.Wrapper;
  * wrapper's constructor must be private and its instance must be obtained using
  * a static method <code>getInstance()</code>.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2006/04/20 12:36:31 $
+ * @author $Author: bass $
+ * @version $Revision: 1.24.4.1 $, $Date: 2006/05/18 17:46:35 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
@@ -45,7 +45,7 @@ public abstract class StorableObjectWrapper<T extends StorableObject> implements
 
 	/**
 	 * В пределах одной сущности существует только один объект с данным кодовым
-	 * именем. См. {@link TypicalCondition#isNeedMore(Set)} и
+	 * именем. См. {@link TypicalCondition#isNeedMore(java.util.Set)} и
 	 * {@link StorableObjectType#codename}.
 	 */
 	public static final String COLUMN_CODENAME = "codename";

@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientUtils.java,v 1.8 2006/02/15 12:18:11 stas Exp $
+ * $Id: ClientUtils.java,v 1.8.4.1 2006/05/18 17:50:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ public class ClientUtils {
 	}
 	
 	public static List<SchemeCableThread> getSortedCableThreads(SchemeCableLink link) throws ApplicationException {
-		Set<SchemeCableThread> schemeCableThreads = link.getSchemeCableThreads(false);
+		Set<SchemeCableThread> schemeCableThreads = link.getSchemeCableThreads();
 		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(schemeCableThreads);
 		Collections.sort(threads, new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(),
 				StorableObjectWrapper.COLUMN_NAME));

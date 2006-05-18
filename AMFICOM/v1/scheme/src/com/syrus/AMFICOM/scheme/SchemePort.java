@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.90 2006/03/15 20:28:23 bass Exp $
+ * $Id: SchemePort.java,v 1.90.6.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.90 $, $Date: 2006/03/15 20:28:23 $
+ * @version $Revision: 1.90.6.1 $, $Date: 2006/05/18 17:50:00 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort
@@ -178,7 +178,6 @@ public final class SchemePort extends AbstractSchemePort
 	 * @param parentSchemeDevice
 	 * @throws CreateObjectException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemePort createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -188,8 +187,6 @@ public final class SchemePort extends AbstractSchemePort
 			final MeasurementPort measurementPort,
 			final SchemeDevice parentSchemeDevice)
 	throws CreateObjectException {
-		final boolean usePool = false;
-
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -211,7 +208,7 @@ public final class SchemePort extends AbstractSchemePort
 					port,
 					measurementPort,
 					parentSchemeDevice);
-			parentSchemeDevice.getSchemePortContainerWrappee().addToCache(schemePort, usePool);
+			parentSchemeDevice.getSchemePortContainerWrappee().addToCache(schemePort);
 
 			schemePort.portTypeSet = (port != null || portType != null);
 
@@ -344,16 +341,14 @@ public final class SchemePort extends AbstractSchemePort
 	/**
 	 * @param schemePort
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void getXmlTransferable(final XmlSchemePort schemePort,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException {
 		try {
-			super.getXmlTransferable(schemePort, importType, usePool);
+			super.getXmlTransferable(schemePort, importType);
 			if (schemePort.isSetPortTypeId()) {
 				schemePort.unsetPortTypeId();
 			}
@@ -438,13 +433,11 @@ public final class SchemePort extends AbstractSchemePort
 
 	/**
 	 * @param parentSchemeDevice
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	@Override
 	public final void setParentSchemeDevice(
-			final SchemeDevice parentSchemeDevice,
-			final boolean usePool)
+			final SchemeDevice parentSchemeDevice)
 	throws ApplicationException {
 		assert this.parentSchemeDeviceId != null: OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeDeviceId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
@@ -454,13 +447,13 @@ public final class SchemePort extends AbstractSchemePort
 			return;
 		}
 
-		this.getParentSchemeDevice().getSchemePortContainerWrappee().removeFromCache(this, usePool);
+		this.getParentSchemeDevice().getSchemePortContainerWrappee().removeFromCache(this);
 
 		if (parentSchemeDevice == null) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-			StorableObjectPool.delete(this.getReverseDependencies(usePool));
+			StorableObjectPool.delete(this.getReverseDependencies());
 		} else {
-			parentSchemeDevice.getSchemePortContainerWrappee().addToCache(this, usePool);
+			parentSchemeDevice.getSchemePortContainerWrappee().addToCache(this);
 		}
 
 		this.parentSchemeDeviceId = newParentSchemeDeviceId;

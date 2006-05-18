@@ -1,5 +1,5 @@
 /*-
- * $Id: CreateRack.java,v 1.9 2006/04/07 13:53:02 arseniy Exp $
+ * $Id: CreateRack.java,v 1.9.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -172,13 +172,13 @@ public class CreateRack extends AbstractAction {
 		
 		try {
 			for (SchemeDevice device : childSchemeDevices) {
-				device.setParentSchemeElement(element, false);
+				device.setParentSchemeElement(element);
 			}
 			for (SchemeLink link : childSchemeLinks) {
-				link.setParentSchemeElement(element, false);
+				link.setParentSchemeElement(element);
 			}
 			for (SchemeElement element2 : childSchemeElements) {
-				element2.setParentSchemeElement(element, false);
+				element2.setParentSchemeElement(element);
 			}
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);

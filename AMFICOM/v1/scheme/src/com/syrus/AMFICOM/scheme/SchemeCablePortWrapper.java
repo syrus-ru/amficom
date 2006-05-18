@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortWrapper.java,v 1.16 2006/03/15 17:31:13 bass Exp $
+ * $Id: SchemeCablePortWrapper.java,v 1.16.6.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2006/03/15 17:31:13 $
+ * @version $Revision: 1.16.6.1 $, $Date: 2006/05/18 17:50:00 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -126,8 +126,6 @@ public final class SchemeCablePortWrapper extends StorableObjectWrapper<SchemeCa
 	public void setValue(final SchemeCablePort schemeCablePort,
 			final String key, final Object value)
 	throws PropertyChangeException {
-		final boolean usePool = false;
-
 		try {
 			if (schemeCablePort != null) {
 				if (key.equals(COLUMN_NAME)) {
@@ -143,7 +141,7 @@ public final class SchemeCablePortWrapper extends StorableObjectWrapper<SchemeCa
 				} else if (key.equals(COLUMN_MEASUREMENT_PORT_ID)) {
 					schemeCablePort.setMeasurementPortId((Identifier) value);
 				} else if (key.equals(COLUMN_PARENT_DEVICE_ID)) {
-					schemeCablePort.setParentSchemeDeviceId((Identifier) value, usePool);
+					schemeCablePort.setParentSchemeDeviceId((Identifier) value);
 				}
 			}
 		} catch (final ApplicationException ae) {

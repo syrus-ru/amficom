@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlock.java,v 1.20 2006/03/15 14:47:33 bass Exp $
+ * $Id: PipeBlock.java,v 1.20.2.1 2006/05/18 17:47:22 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * и матрицу пролегани€ кабелей по трубам тоннел€.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2006/03/15 14:47:33 $
+ * @version $Revision: 1.20.2.1 $, $Date: 2006/05/18 17:47:22 $
  * @module map
  */
 public final class PipeBlock 
@@ -481,8 +481,7 @@ public final class PipeBlock
 
 	public void getXmlTransferable(
 			XmlPipeBlock xmlPipeBlock, 
-			String importType, 
-			boolean usePool)
+			String importType)
 	throws XmlConversionException {
 		this.id.getXmlTransferable(xmlPipeBlock.addNewId(), importType);
 		xmlPipeBlock.setNumber(this.number);

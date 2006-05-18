@@ -1,5 +1,5 @@
 /*-
- * $Id: Characterizable.java,v 1.15 2005/10/05 13:43:32 bass Exp $
+ * $Id: Characterizable.java,v 1.15.8.1 2006/05/18 17:46:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObject.StorableObjectContainerWrappee;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/05 13:43:32 $
+ * @version $Revision: 1.15.8.1 $, $Date: 2006/05/18 17:46:35 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -23,33 +23,29 @@ public interface Characterizable extends Identifiable {
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	void addCharacteristic(final Characteristic characteristic, final boolean usePool)
+	void addCharacteristic(final Characteristic characteristic)
 	throws ApplicationException;
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	void removeCharacteristic(final Characteristic characteristic, final boolean usePool)
+	void removeCharacteristic(final Characteristic characteristic)
 	throws ApplicationException;
 
 	/**
-	 * @param usePool
 	 * @return an immutable set.
 	 * @throws ApplicationException
 	 */
-	Set<Characteristic> getCharacteristics(final boolean usePool)
+	Set<Characteristic> getCharacteristics()
 	throws ApplicationException;
 
 	/**
 	 * @param characteristics
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	void setCharacteristics(final Set<Characteristic> characteristics, final boolean usePool)
+	void setCharacteristics(final Set<Characteristic> characteristics)
 	throws ApplicationException;
 }

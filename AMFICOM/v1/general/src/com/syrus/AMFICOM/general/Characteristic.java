@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.94 2006/04/19 13:22:17 bass Exp $
+ * $Id: Characteristic.java,v 1.94.4.1 2006/05/18 17:46:35 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2006/04/19 13:22:17 $
+ * @version $Revision: 1.94.4.1 $, $Date: 2006/05/18 17:46:35 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -181,7 +181,6 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	 * @param parentCharacterizable
 	 * @throws CreateObjectException
 	 */
-	@ParameterizationPending(value = { "final boolean usePool" })
 	public static Characteristic createInstance(final Identifier creatorId,
 			final CharacteristicType type,
 			final String name,
@@ -190,8 +189,6 @@ public final class Characteristic extends AbstractCloneableStorableObject
 			final Characterizable parentCharacterizable,
 			final boolean editable,
 			final boolean visible) throws CreateObjectException {
-		final boolean usePool = false;
-
 		final Identifier parentCharacterizableId = Identifier.possiblyVoid(parentCharacterizable);
 
 		checkTypeValid(type);
@@ -212,7 +209,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 					editable,
 					visible);
 			if (parentCharacterizable != null) {
-				parentCharacterizable.getCharacteristicContainerWrappee().addToCache(characteristic, usePool);
+				parentCharacterizable.getCharacteristicContainerWrappee().addToCache(characteristic);
 			}
 
 			assert characteristic.isValid() : OBJECT_STATE_ILLEGAL;
@@ -359,14 +356,12 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	/**
 	 * @param characteristic
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void getXmlTransferable(
 			final XmlCharacteristic characteristic,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException {
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
@@ -534,16 +529,14 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * A wrapper around {@link #setParentCharacterizable(Characterizable, boolean)}.
+	 * A wrapper around {@link #setParentCharacterizable(Characterizable)}.
 	 *
 	 * @param parentCharacterizableId
-	 * @param usePool
 	 * @throws ApplicationException
 	 * @bug current code permits orphan characteristics.
 	 */
 	public void setParentCharacterizableId(
-			final Identifier parentCharacterizableId,
-			final boolean usePool)
+			final Identifier parentCharacterizableId)
 	throws ApplicationException {
 		checkParentCaharacterizableIdValid(parentCharacterizableId);
 		/*
@@ -563,7 +556,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		 * handled somehow. However, currently it is not.
 		 */
 		if (storableObject == null || storableObject instanceof Characterizable) {
-			this.setParentCharacterizable((Characterizable) storableObject, usePool);
+			this.setParentCharacterizable((Characterizable) storableObject);
 		} else {
 			throw new ClassCastException();
 		}
@@ -571,13 +564,11 @@ public final class Characteristic extends AbstractCloneableStorableObject
 
 	/**
 	 * @param parentCharacterizable
-	 * @param usePool
 	 * @throws ApplicationException
 	 * @bug current code permits orphan characteristics.
 	 */
 	public void setParentCharacterizable(
-			final Characterizable parentCharacterizable,
-			final boolean usePool)
+			final Characterizable parentCharacterizable)
 	throws ApplicationException {
 		final Identifier newParentCharacterizableId = Identifier.possiblyVoid(parentCharacterizable);
 		if (this.parentCharacterizableId.equals(newParentCharacterizableId)) {
@@ -586,10 +577,10 @@ public final class Characteristic extends AbstractCloneableStorableObject
 
 		final Characterizable oldParentCharacterizable = this.getParentCharacterizable();
 		if (oldParentCharacterizable != null) {
-			oldParentCharacterizable.getCharacteristicContainerWrappee().removeFromCache(this, usePool);
+			oldParentCharacterizable.getCharacteristicContainerWrappee().removeFromCache(this);
 		}
 		if (parentCharacterizable != null) {
-			parentCharacterizable.getCharacteristicContainerWrappee().addToCache(this, usePool);
+			parentCharacterizable.getCharacteristicContainerWrappee().addToCache(this);
 		}
 
 		this.parentCharacterizableId = newParentCharacterizableId;
@@ -634,7 +625,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		return dependencies;
 	}
 
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) {
+	public Set<Identifiable> getReverseDependencies() {
 		return Collections.<Identifiable> singleton(super.id);
 	}
 

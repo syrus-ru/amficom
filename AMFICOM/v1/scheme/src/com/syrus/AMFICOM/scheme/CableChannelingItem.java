@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.93 2006/03/15 20:28:23 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.93.6.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.93 $, $Date: 2006/03/15 20:28:23 $
+ * @version $Revision: 1.93.6.1 $, $Date: 2006/05/18 17:50:00 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -213,7 +213,6 @@ public final class CableChannelingItem
 	 * @param parentSchemeCableLink
 	 * @throws CreateObjectException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public static CableChannelingItem createInstance(final Identifier creatorId,
 			final double startSpare,
 			final double endSpare,
@@ -225,8 +224,6 @@ public final class CableChannelingItem
 			final SiteNode endSiteNode,
 			final SchemeCableLink parentSchemeCableLink)
 	throws CreateObjectException {
-		final boolean usePool = false;
-
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert startSiteNode != null : NON_NULL_EXPECTED;
 		assert endSiteNode != null : NON_NULL_EXPECTED;
@@ -255,7 +252,7 @@ public final class CableChannelingItem
 					startSiteNode,
 					endSiteNode,
 					parentSchemeCableLink);
-			parentSchemeCableLink.getCableChannelingItemContainerWrappee().addToCache(cableChannelingItem, usePool);
+			parentSchemeCableLink.getCableChannelingItemContainerWrappee().addToCache(cableChannelingItem);
 
 			cableChannelingItem.markAsChanged();
 			return cableChannelingItem;
@@ -334,9 +331,9 @@ public final class CableChannelingItem
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) {
+	public Set<Identifiable> getReverseDependencies() {
 		return Collections.<Identifiable>singleton(super.id);
 	}
 
@@ -488,14 +485,12 @@ public final class CableChannelingItem
 	/**
 	 * @param cableChannelingItem
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void getXmlTransferable(
 			final XmlCableChannelingItem cableChannelingItem,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException {
 		try {
 			super.id.getXmlTransferable(cableChannelingItem.addNewId(), importType);
@@ -618,11 +613,8 @@ public final class CableChannelingItem
 	 * @param parentSchemeCableLinkId
 	 * @throws ApplicationException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	void setParentSchemeCableLinkId(final Identifier parentSchemeCableLinkId)
 	throws ApplicationException {
-		final boolean usePool = false;
-
 		assert parentSchemeCableLinkId != null : NON_NULL_EXPECTED;
 		assert parentSchemeCableLinkId.isVoid() || parentSchemeCableLinkId.getMajor() == SCHEMECABLELINK_CODE;
 
@@ -630,13 +622,13 @@ public final class CableChannelingItem
 			return;
 		}
 
-		this.getParentPathOwner().getCableChannelingItemContainerWrappee().removeFromCache(this, usePool);
+		this.getParentPathOwner().getCableChannelingItemContainerWrappee().removeFromCache(this);
 
 		if (parentSchemeCableLinkId.isVoid()) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-			StorableObjectPool.delete(this.getReverseDependencies(usePool));
+			StorableObjectPool.delete(this.getReverseDependencies());
 		} else {
-			StorableObjectPool.<SchemeCableLink>getStorableObject(parentSchemeCableLinkId, true).getCableChannelingItemContainerWrappee().addToCache(this, usePool);
+			StorableObjectPool.<SchemeCableLink>getStorableObject(parentSchemeCableLinkId, true).getCableChannelingItemContainerWrappee().addToCache(this);
 		}
 
 		this.parentSchemeCableLinkId = parentSchemeCableLinkId;

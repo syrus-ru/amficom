@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkWrapper.java,v 1.13 2006/03/15 17:30:37 bass Exp $
+ * $Id: SchemeCableLinkWrapper.java,v 1.13.6.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2006/03/15 17:30:37 $
+ * @version $Revision: 1.13.6.1 $, $Date: 2006/05/18 17:50:00 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -139,8 +139,6 @@ public final class SchemeCableLinkWrapper extends StorableObjectWrapper<SchemeCa
 	public void setValue(final SchemeCableLink schemeCableLink,
 			final String key, final Object value)
 	throws PropertyChangeException {
-		final boolean usePool = false;
-
 		try {
 			if (schemeCableLink != null) {
 				if (key.equals(COLUMN_NAME)) {
@@ -160,7 +158,7 @@ public final class SchemeCableLinkWrapper extends StorableObjectWrapper<SchemeCa
 				} else if (key.equals(COLUMN_TARGET_SCHEME_CABLE_PORT_ID)) {
 					schemeCableLink.setTargetAbstractSchemePortId((Identifier) value);
 				} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
-					schemeCableLink.setParentSchemeId((Identifier) value, usePool);
+					schemeCableLink.setParentSchemeId((Identifier) value);
 				}
 			}
 		} catch (final ApplicationException ae) {

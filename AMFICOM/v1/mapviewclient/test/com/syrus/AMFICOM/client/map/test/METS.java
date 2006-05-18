@@ -1,5 +1,5 @@
 /**
- * $Id: METS.java,v 1.15 2005/10/17 07:00:21 krupenn Exp $
+ * $Id: METS.java,v 1.15.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeSampleData;
  
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/17 07:00:21 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.15.2.1 $, $Date: 2006/05/18 17:50:00 $
+ * @author $Author: bass $
  * @module mapviewclient
  */
 public class METS {
@@ -83,11 +83,11 @@ public class METS {
 	}
 	
 	private static void clearSchemeBinding(Scheme scheme) throws ApplicationException {
-		for(Iterator iter = scheme.getSchemeElements(false).iterator(); iter.hasNext();) {
+		for(Iterator iter = scheme.getSchemeElements().iterator(); iter.hasNext();) {
 			SchemeElement element = (SchemeElement )iter.next();
 			element.setSiteNode(null);
 		}
-		for(Iterator iter = scheme.getSchemeCableLinks(false).iterator(); iter.hasNext();) {
+		for(Iterator iter = scheme.getSchemeCableLinks().iterator(); iter.hasNext();) {
 			SchemeCableLink element = (SchemeCableLink )iter.next();
 			final SortedSet<CableChannelingItem> cableChannelingItems = element.getPathMembers();
 			if (!cableChannelingItems.isEmpty()) {

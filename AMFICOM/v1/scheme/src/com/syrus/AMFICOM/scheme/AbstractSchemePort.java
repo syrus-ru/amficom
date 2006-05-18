@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.96 2006/03/15 20:22:53 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.96.6.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.96 $, $Date: 2006/03/15 20:22:53 $
+ * @version $Revision: 1.96.6.1 $, $Date: 2006/05/18 17:50:00 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -186,13 +186,13 @@ public abstract class AbstractSchemePort
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
-	public final Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+	public final Set<Identifiable> getReverseDependencies() throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);
@@ -412,14 +412,12 @@ public abstract class AbstractSchemePort
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeDevice(SchemeDevice, boolean)}.
+	 * A wrapper around {@link #setParentSchemeDevice(SchemeDevice)}.
 	 *
 	 * @param parentSchemeDeviceId
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	final void setParentSchemeDeviceId(final Identifier parentSchemeDeviceId,
-			final boolean usePool)
+	final void setParentSchemeDeviceId(final Identifier parentSchemeDeviceId)
 	throws ApplicationException {
 		assert parentSchemeDeviceId != null : NON_NULL_EXPECTED;
 		assert parentSchemeDeviceId.isVoid() || parentSchemeDeviceId.getMajor() == SCHEMEDEVICE_CODE;
@@ -429,18 +427,15 @@ public abstract class AbstractSchemePort
 		}
 
 		this.setParentSchemeDevice(
-				StorableObjectPool.<SchemeDevice>getStorableObject(parentSchemeDeviceId, true),
-				usePool);
+				StorableObjectPool.<SchemeDevice>getStorableObject(parentSchemeDeviceId, true));
 	}
 
 	/**
 	 * @param parentSchemeDevice
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	public abstract void setParentSchemeDevice(
-			final SchemeDevice parentSchemeDevice,
-			final boolean usePool)
+			final SchemeDevice parentSchemeDevice)
 	throws ApplicationException;
 
 	/**
@@ -579,8 +574,6 @@ public abstract class AbstractSchemePort
 	 */
 	@Override
 	public AbstractSchemePort clone() throws CloneNotSupportedException {
-		final boolean usePool = false;
-
 		final StackTraceElement stackTrace[] = (new Throwable()).getStackTrace();
 		final int depth = 2;
 		if (stackTrace.length > depth) {
@@ -611,10 +604,10 @@ public abstract class AbstractSchemePort
 			clone.clonedIdMap.put(this.id, clone.id);
 
 			clone.characteristicContainerWrappee = null;
-			for (final Characteristic characteristic : this.getCharacteristics0(usePool)) {
+			for (final Characteristic characteristic : this.getCharacteristics0()) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
-				clone.addCharacteristic(characteristicClone, usePool);
+				clone.addCharacteristic(characteristicClone);
 			}
 			return clone;
 		} catch (final ApplicationException ae) {
@@ -627,13 +620,11 @@ public abstract class AbstractSchemePort
 	/**
 	 * @param abstractSchemePort
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
 	 * @throws ApplicationException
 	 */
 	final void getXmlTransferable(final XmlAbstractSchemePort abstractSchemePort,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException, ApplicationException {
 		super.id.getXmlTransferable(abstractSchemePort.addNewId(), importType);
 		abstractSchemePort.setName(this.name);
@@ -654,11 +645,11 @@ public abstract class AbstractSchemePort
 		if (abstractSchemePort.isSetCharacteristics()) {
 			abstractSchemePort.unsetCharacteristics();
 		}
-		final Set<Characteristic> characteristics = this.getCharacteristics0(usePool);
+		final Set<Characteristic> characteristics = this.getCharacteristics0();
 		if (!characteristics.isEmpty()) {
 			final XmlCharacteristicSeq characteristicSeq = abstractSchemePort.addNewCharacteristics();
 			for (final Characteristic characteristic : characteristics) {
-				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);
+				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType);
 			}
 		}
 	}
@@ -680,74 +671,66 @@ public abstract class AbstractSchemePort
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic)
 	 */
-	public final void addCharacteristic(final Characteristic characteristic,
-			final boolean usePool)
+	public final void addCharacteristic(final Characteristic characteristic)
 	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
-		characteristic.setParentCharacterizable(this, usePool);
+		characteristic.setParentCharacterizable(this);
 	}
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic)
 	 */
 	public final void removeCharacteristic(
-			final Characteristic characteristic,
-			final boolean usePool)
+			final Characteristic characteristic)
 	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		characteristic.setParentCharacterizable(this, usePool);
+		characteristic.setParentCharacterizable(this);
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public final Set<Characteristic> getCharacteristics(boolean usePool)
+	public final Set<Characteristic> getCharacteristics()
 	throws ApplicationException {
-		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
+		return Collections.unmodifiableSet(this.getCharacteristics0());
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	final Set<Characteristic> getCharacteristics0(final boolean usePool)
+	final Set<Characteristic> getCharacteristics0()
 	throws ApplicationException {
-		return this.getCharacteristicContainerWrappee().getContainees(usePool);
+		return this.getCharacteristicContainerWrappee().getContainees();
 	}
 
 	/**
 	 * @param characteristics
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public final void setCharacteristics(final Set<Characteristic> characteristics,
-			final boolean usePool)
+	public final void setCharacteristics(final Set<Characteristic> characteristics)
 	throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;
 
-		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);
+		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0();
 
 		final Set<Characteristic> toRemove = new HashSet<Characteristic>(oldCharacteristics);
 		toRemove.removeAll(characteristics);
 		for (final Characteristic characteristic : toRemove) {
-			this.removeCharacteristic(characteristic, usePool);
+			this.removeCharacteristic(characteristic);
 		}
 
 		final Set<Characteristic> toAdd = new HashSet<Characteristic>(characteristics);
 		toAdd.removeAll(oldCharacteristics);
 		for (final Characteristic characteristic : toAdd) {
-			this.addCharacteristic(characteristic, usePool);
+			this.addCharacteristic(characteristic);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapRemoveWrapper.java,v 1.8 2006/02/15 11:14:01 stas Exp $
+ * $Id: MapRemoveWrapper.java,v 1.8.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -86,7 +86,7 @@ public class MapRemoveWrapper extends DefaultStorableObjectRemoveWrapper {
 				// и стираем все CableChannelingItems на отвязанных схемах
 				Set<Identifiable> toDelete = new HashSet<Identifiable>();
 				for (Scheme scheme : schemes) {
-					 for (SchemeCableLink scl : scheme.getSchemeCableLinks(false)) {
+					 for (SchemeCableLink scl : scheme.getSchemeCableLinks()) {
 						 toDelete.addAll(scl.getPathMembers());
 					 }
 				}

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeExportCommand.java,v 1.15 2006/02/15 12:19:50 stas Exp $
+ * $Id: SchemeExportCommand.java,v 1.15.4.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ public class SchemeExportCommand extends ImportExportCommand {
 			
 			try {
 				XmlScheme xmlScheme = XmlScheme.Factory.newInstance();
-				scheme.getXmlTransferable(xmlScheme, AMFICOM_IMPORT, false);
+				scheme.getXmlTransferable(xmlScheme, AMFICOM_IMPORT);
 				
 				final File schemeFile = new File(fileName);
 				saveSchemeXML(schemeFile, xmlScheme);

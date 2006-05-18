@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewSaveCommand.java,v 1.40 2006/02/15 11:12:43 stas Exp $$
+ * $$Id: MapViewSaveCommand.java,v 1.40.2.1 2006/05/18 17:50:00 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * 
- * @version $Revision: 1.40 $, $Date: 2006/02/15 11:12:43 $
- * @author $Author: stas $
+ * @version $Revision: 1.40.2.1 $, $Date: 2006/05/18 17:50:00 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -95,9 +95,9 @@ public class MapViewSaveCommand extends AbstractCommand {
 							internalSchemes.add(internal);
 						}
 					}
-					StorableObjectPool.flush(scheme.getReverseDependencies(false), userId, false);
+					StorableObjectPool.flush(scheme.getReverseDependencies(), userId, false);
 					for (Scheme changed : internalSchemes) {
-						StorableObjectPool.flush(changed.getReverseDependencies(false), userId, false);
+						StorableObjectPool.flush(changed.getReverseDependencies(), userId, false);
 					}
 				} catch(VersionCollisionException e) {
 					Log.errorMessage(e);

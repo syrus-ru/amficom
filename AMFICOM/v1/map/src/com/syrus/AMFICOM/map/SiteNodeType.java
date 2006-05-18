@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.118 2006/03/15 14:47:33 bass Exp $
+ * $Id: SiteNodeType.java,v 1.118.2.1 2006/05/18 17:47:22 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -82,7 +82,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: bass $
- * @version $Revision: 1.118 $, $Date: 2006/03/15 14:47:33 $
+ * @version $Revision: 1.118.2.1 $, $Date: 2006/05/18 17:47:22 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType
@@ -297,14 +297,12 @@ public final class SiteNodeType extends StorableObjectType
 	/**
 	 * @param siteNodeType
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void getXmlTransferable(
 			final XmlSiteNodeType siteNodeType,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException {
 		try {
 			this.id.getXmlTransferable(siteNodeType.addNewId(), importType);
@@ -631,74 +629,66 @@ public final class SiteNodeType extends StorableObjectType
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic)
 	 */
-	public void addCharacteristic(final Characteristic characteristic,
-			final boolean usePool)
+	public void addCharacteristic(final Characteristic characteristic)
 	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
-		characteristic.setParentCharacterizable(this, usePool);
+		characteristic.setParentCharacterizable(this);
 	}
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic)
 	 */
 	public void removeCharacteristic(
-			final Characteristic characteristic,
-			final boolean usePool)
+			final Characteristic characteristic)
 	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		characteristic.setParentCharacterizable(this, usePool);
+		characteristic.setParentCharacterizable(this);
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public Set<Characteristic> getCharacteristics(boolean usePool)
+	public Set<Characteristic> getCharacteristics()
 	throws ApplicationException {
-		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
+		return Collections.unmodifiableSet(this.getCharacteristics0());
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	Set<Characteristic> getCharacteristics0(final boolean usePool)
+	Set<Characteristic> getCharacteristics0()
 	throws ApplicationException {
-		return this.getCharacteristicContainerWrappee().getContainees(usePool);
+		return this.getCharacteristicContainerWrappee().getContainees();
 	}
 
 	/**
 	 * @param characteristics
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(final Set<Characteristic> characteristics,
-			final boolean usePool)
+	public void setCharacteristics(final Set<Characteristic> characteristics)
 	throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;
 
-		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);
+		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0();
 
 		final Set<Characteristic> toRemove = new HashSet<Characteristic>(oldCharacteristics);
 		toRemove.removeAll(characteristics);
 		for (final Characteristic characteristic : toRemove) {
-			this.removeCharacteristic(characteristic, usePool);
+			this.removeCharacteristic(characteristic);
 		}
 
 		final Set<Characteristic> toAdd = new HashSet<Characteristic>(characteristics);
 		toAdd.removeAll(oldCharacteristics);
 		for (final Characteristic characteristic : toAdd) {
-			this.addCharacteristic(characteristic, usePool);
+			this.addCharacteristic(characteristic);
 		}
 	}
 }

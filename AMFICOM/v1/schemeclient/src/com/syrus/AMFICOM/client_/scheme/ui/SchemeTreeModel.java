@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.52 2006/02/15 12:18:11 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.52.4.1 2006/05/18 17:50:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.52 $, $Date: 2006/02/15 12:18:11 $
+ * @author $Author: bass $
+ * @version $Revision: 1.52.4.1 $, $Date: 2006/05/18 17:50:01 $
  * @module schemeclient
  */
 
@@ -146,7 +146,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 					for (Iterator it = toAdd.iterator(); it.hasNext();) {
 						SchemeElement sc = (SchemeElement) it.next();
 						if (sc.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
-							Scheme scheme = sc.getScheme(false);
+							Scheme scheme = sc.getScheme();
 							node.addChild(new PopulatableIconedNode(this, scheme, UIManager.getIcon(SchemeResourceKeys.ICON_SCHEME)));
 						}
 					}
@@ -241,7 +241,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 			else if (node.getObject() instanceof Scheme) {
 				Scheme s = (Scheme) node.getObject();
 				try {
-					Set<SchemeElement> innerSEs = s.getSchemeElements(false); 
+					Set<SchemeElement> innerSEs = s.getSchemeElements(); 
 					if (innerSEs.size() != 0) {
 						boolean has_schemes = false;
 						boolean has_elements = false;
@@ -288,7 +288,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 							child.setFilter(new Filter(new SchemeElementConditionWrapper()));
 							node.addChild(child);
 						}
-						if (!contents.contains(SchemeResourceKeys.SCHEME_LINK) && !s.getSchemeLinks(false).isEmpty()) {
+						if (!contents.contains(SchemeResourceKeys.SCHEME_LINK) && !s.getSchemeLinks().isEmpty()) {
 							LinkedIdsCondition condition = new LinkedIdsCondition(s.getId(), ObjectEntities.SCHEMELINK_CODE);
 							FiltrableIconedNode child = new FiltrableIconedNode();
 							child.setChildrenFactory(this);
@@ -297,7 +297,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 							child.setDefaultCondition(condition);
 							node.addChild(child);
 						}
-						if (!contents.contains(SchemeResourceKeys.SCHEME_CABLELINK) && !s.getSchemeCableLinks(false).isEmpty()) {
+						if (!contents.contains(SchemeResourceKeys.SCHEME_CABLELINK) && !s.getSchemeCableLinks().isEmpty()) {
 							LinkedIdsCondition condition = new LinkedIdsCondition(s.getId(), ObjectEntities.SCHEMECABLELINK_CODE);
 							FiltrableIconedNode child = new FiltrableIconedNode();
 							child.setChildrenFactory(this);
@@ -307,7 +307,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 							child.setFilter(new Filter(new SchemeCableLinkConditionWrapper()));
 							node.addChild(child);
 						}
-						if (!contents.contains(SchemeResourceKeys.SCHEME_MONITORING_SOLUTION) && !s.getSchemeMonitoringSolutions(false).isEmpty()) {
+						if (!contents.contains(SchemeResourceKeys.SCHEME_MONITORING_SOLUTION) && !s.getSchemeMonitoringSolutions().isEmpty()) {
 							LinkedIdsCondition condition = new LinkedIdsCondition(s.getId(), ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE);
 							FiltrableIconedNode child = new FiltrableIconedNode();
 							child.setChildrenFactory(this);
@@ -325,7 +325,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 				SchemeElement se = (SchemeElement) node.getObject();
 				
 				try {
-					if (!contents.contains(SchemeResourceKeys.SCHEME_ELEMENT) && !se.getSchemeElements(false).isEmpty()) {
+					if (!contents.contains(SchemeResourceKeys.SCHEME_ELEMENT) && !se.getSchemeElements().isEmpty()) {
 						LinkedIdsCondition condition1 = new LinkedIdsCondition(se.getId(), ObjectEntities.SCHEMEELEMENT_CODE);
 						FiltrableIconedNode child = new FiltrableIconedNode();
 						child.setChildrenFactory(this);
@@ -334,7 +334,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 						child.setDefaultCondition(condition1);
 						node.addChild(child);
 					}
-					if (!contents.contains(SchemeResourceKeys.SCHEME_LINK) && !se.getSchemeLinks(false).isEmpty()) {
+					if (!contents.contains(SchemeResourceKeys.SCHEME_LINK) && !se.getSchemeLinks().isEmpty()) {
 						LinkedIdsCondition condition1 = new LinkedIdsCondition(se.getId(), ObjectEntities.SCHEMELINK_CODE);
 						FiltrableIconedNode child = new FiltrableIconedNode();
 						child.setChildrenFactory(this);
@@ -346,7 +346,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 					if (!contents.contains(SchemeResourceKeys.SCHEME_CABLE_PORT)) {
 						Collection<SchemeCablePort> cablePorts = Collections.emptySet();
 						try {
-							cablePorts = se.getSchemeCablePortsRecursively(false);
+							cablePorts = se.getSchemeCablePortsRecursively();
 						} catch (ApplicationException e) {
 							Log.errorMessage(e);
 						}
@@ -366,7 +366,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 					if (!contents.contains(SchemeResourceKeys.SCHEME_PORT)) {
 						Collection<SchemePort> ports = Collections.emptySet();
 						try {
-							ports = se.getSchemePortsRecursively(false);
+							ports = se.getSchemePortsRecursively();
 						} catch (ApplicationException e) {
 							Log.errorMessage(e);
 						}

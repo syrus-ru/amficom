@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.120 2006/03/15 14:47:33 bass Exp $
+ * $Id: NodeLink.java,v 1.120.2.1 2006/05/18 17:47:22 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.120 $, $Date: 2006/03/15 14:47:33 $
+ * @version $Revision: 1.120.2.1 $, $Date: 2006/05/18 17:47:22 $
  * @module map
  */
 public final class NodeLink extends StorableObject
@@ -440,13 +440,11 @@ public final class NodeLink extends StorableObject
 	/**
 	 * @param nodeLink
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void getXmlTransferable(final XmlNodeLink nodeLink,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException {
 		this.id.getXmlTransferable(nodeLink.addNewId(), importType);
 		nodeLink.setLength(this.length);

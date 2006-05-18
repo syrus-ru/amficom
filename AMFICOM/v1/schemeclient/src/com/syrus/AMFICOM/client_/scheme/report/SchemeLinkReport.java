@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeLinkReport.java,v 1.7 2006/04/24 06:41:05 stas Exp $
+ * $Id: SchemeLinkReport.java,v 1.7.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -106,7 +106,7 @@ class AbstractLinkTableModel extends AbstractTableModel {
 				+ LangModelScheme.getString(SchemeResourceKeys.METRE));
 		this.originalRowCount += 7;
 		
-		Set<Characteristic> objectChars = abstractLink.getCharacteristics(true);
+		Set<Characteristic> objectChars = abstractLink.getCharacteristics();
 		
 		for (Characteristic characteristic : objectChars) {
 			this.propertyNamesColumn.add(characteristic.getName());
@@ -121,7 +121,7 @@ class AbstractLinkTableModel extends AbstractTableModel {
 		
 		this.originalRowCount += 2;
 
-		Set<Characteristic> typeChars = linkType.getCharacteristics(true);
+		Set<Characteristic> typeChars = linkType.getCharacteristics();
 		
 		for (Characteristic characteristic : typeChars) {
 			this.propertyNamesColumn.add(characteristic.getName());

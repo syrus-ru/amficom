@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.10 2006/04/10 18:31:58 arseniy Exp $
+ * $Id: UserBean.java,v 1.10.2.1 2006/05/18 17:47:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2006/04/10 18:31:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10.2.1 $, $Date: 2006/05/18 17:47:01 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -77,10 +77,10 @@ public class UserBean extends Bean implements WorkstationItem {
 	
 	@Override
 	public void dispose() throws ApplicationException {
-		assert Log.debugMessage(this.user.getCharacteristics(false),
+		assert Log.debugMessage(this.user.getCharacteristics(),
 			Log.DEBUGLEVEL09);
 		assert Log.debugMessage(this.identifier, Log.DEBUGLEVEL09);		
-		StorableObjectPool.delete(this.user.getCharacteristics(false));
+		StorableObjectPool.delete(this.user.getCharacteristics());
 		StorableObjectPool.delete(this.identifier);		
 		
 		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
@@ -170,7 +170,7 @@ public class UserBean extends Bean implements WorkstationItem {
 		if (!characteristicTypes.isEmpty()) {
 			final CharacteristicType characteristicType = characteristicTypes.iterator().next();
 			final Identifier characteristicTypeId = characteristicType.getId();
-			for(final Characteristic characteristic : this.user.getCharacteristics(false)) {
+			for(final Characteristic characteristic : this.user.getCharacteristics()) {
 				if (characteristic.getType().getId().equals(characteristicTypeId)) {
 					return characteristic;
 				}

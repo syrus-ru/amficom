@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.155 2006/03/15 14:47:33 bass Exp $
+ * $Id: PhysicalLink.java,v 1.155.2.1 2006/05/18 17:47:22 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,7 +79,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.155 $, $Date: 2006/03/15 14:47:33 $
+ * @version $Revision: 1.155.2.1 $, $Date: 2006/05/18 17:47:22 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -223,8 +223,6 @@ public class PhysicalLink extends StorableObject
 				&& building != null : NON_NULL_EXPECTED;
 		assert !startNodeId.isVoid() && !endNodeId.isVoid() : NON_NULL_EXPECTED;		
 
-		final boolean usePool = false;
-		
 		try {
 			final PhysicalLink physicalLink = new PhysicalLink(IdentifierPool.getGeneratedIdentifier(PHYSICALLINK_CODE),
 					creatorId,
@@ -238,7 +236,7 @@ public class PhysicalLink extends StorableObject
 					street,
 					building);
 
-			physicalLink.copyCharacteristics(physicalLinkType, usePool);
+			physicalLink.copyCharacteristics(physicalLinkType);
 			
 			PipeBlock pipeBlock = PipeBlock.createInstance(
 					creatorId,
@@ -262,12 +260,12 @@ public class PhysicalLink extends StorableObject
 		}
 	}
 
-	private void copyCharacteristics(PhysicalLinkType physicalLinkType2, boolean usePool) throws ApplicationException {
+	private void copyCharacteristics(PhysicalLinkType physicalLinkType2) throws ApplicationException {
 		try {
-			for (final Characteristic characteristic : physicalLinkType2.getCharacteristics0(usePool)) {
+			for (final Characteristic characteristic : physicalLinkType2.getCharacteristics0()) {
 				if (characteristic.getType().getSort() == CharacteristicTypeSort.OPERATIONAL) {
 					final Characteristic characteristicClone = characteristic.clone();
-					this.addCharacteristic(characteristicClone, usePool);
+					this.addCharacteristic(characteristicClone);
 				}
 			}
 		} catch (final CloneNotSupportedException cnse) {
@@ -874,14 +872,12 @@ public class PhysicalLink extends StorableObject
 	/**
 	 * @param physicalLink
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public final void getXmlTransferable(
 			final XmlPhysicalLink physicalLink,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException {
 		this.id.getXmlTransferable(physicalLink.addNewId(), importType);
 		physicalLink.setName(this.name);
@@ -907,7 +903,7 @@ public class PhysicalLink extends StorableObject
 		if (!pipeBlocks.isEmpty()) {
 			final XmlPipeBlockSeq pipeBlockSeq = physicalLink.addNewPipeBlocks();
 			for (final PipeBlock pipeBlock : pipeBlocks) {
-				pipeBlock.getXmlTransferable(pipeBlockSeq.addNewPipeBlock(), importType, usePool);
+				pipeBlock.getXmlTransferable(pipeBlockSeq.addNewPipeBlock(), importType);
 			}
 		}
 	}
@@ -1078,74 +1074,66 @@ public class PhysicalLink extends StorableObject
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic)
 	 */
-	public final void addCharacteristic(final Characteristic characteristic,
-			final boolean usePool)
+	public final void addCharacteristic(final Characteristic characteristic)
 	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
-		characteristic.setParentCharacterizable(this, usePool);
+		characteristic.setParentCharacterizable(this);
 	}
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic)
 	 */
 	public final void removeCharacteristic(
-			final Characteristic characteristic,
-			final boolean usePool)
+			final Characteristic characteristic)
 	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		characteristic.setParentCharacterizable(this, usePool);
+		characteristic.setParentCharacterizable(this);
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public final Set<Characteristic> getCharacteristics(boolean usePool)
+	public final Set<Characteristic> getCharacteristics()
 	throws ApplicationException {
-		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
+		return Collections.unmodifiableSet(this.getCharacteristics0());
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	final Set<Characteristic> getCharacteristics0(final boolean usePool)
+	final Set<Characteristic> getCharacteristics0()
 	throws ApplicationException {
-		return this.getCharacteristicContainerWrappee().getContainees(usePool);
+		return this.getCharacteristicContainerWrappee().getContainees();
 	}
 
 	/**
 	 * @param characteristics
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public final void setCharacteristics(final Set<Characteristic> characteristics,
-			final boolean usePool)
+	public final void setCharacteristics(final Set<Characteristic> characteristics)
 	throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;
 
-		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);
+		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0();
 
 		final Set<Characteristic> toRemove = new HashSet<Characteristic>(oldCharacteristics);
 		toRemove.removeAll(characteristics);
 		for (final Characteristic characteristic : toRemove) {
-			this.removeCharacteristic(characteristic, usePool);
+			this.removeCharacteristic(characteristic);
 		}
 
 		final Set<Characteristic> toAdd = new HashSet<Characteristic>(characteristics);
 		toAdd.removeAll(oldCharacteristics);
 		for (final Characteristic characteristic : toAdd) {
-			this.addCharacteristic(characteristic, usePool);
+			this.addCharacteristic(characteristic);
 		}
 	}
 }	

@@ -1,5 +1,5 @@
 /*
- * $Id: UngroupAction.java,v 1.11 2006/03/30 11:17:22 stas Exp $
+ * $Id: UngroupAction.java,v 1.11.4.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2006/03/30 11:17:22 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11.4.1 $, $Date: 2006/05/18 17:50:00 $
  * @module schemeclient
  */
 
@@ -80,11 +80,11 @@ public class UngroupAction extends AbstractAction {
 					toDelete.add(seToDelete);
 					if (seToDelete.getParentScheme() != null) {
 						Scheme parentS = seToDelete.getParentScheme();
-						for (SchemeElement child : new HashSet<SchemeElement>(seToDelete.getSchemeElements(false))) {
-							child.setParentScheme(parentS, false);
+						for (SchemeElement child : new HashSet<SchemeElement>(seToDelete.getSchemeElements())) {
+							child.setParentScheme(parentS);
 						}
-						for (SchemeLink child : new HashSet<SchemeLink>(seToDelete.getSchemeLinks(false))) {
-							child.setParentScheme(parentS, false);
+						for (SchemeLink child : new HashSet<SchemeLink>(seToDelete.getSchemeLinks())) {
+							child.setParentScheme(parentS);
 						}
 					}
 				}
@@ -97,28 +97,28 @@ public class UngroupAction extends AbstractAction {
 						toDelete.add(seToDelete);
 						
 						// Devices and links moves up, inner SE delete
-						for (SchemeDevice device : new HashSet<SchemeDevice>(seToDelete.getSchemeDevices(false))) {
-							device.setParentSchemeProtoElement(SchemeObjectsFactory.getStubProtoElementInitialyzed(), false);
+						for (SchemeDevice device : new HashSet<SchemeDevice>(seToDelete.getSchemeDevices())) {
+							device.setParentSchemeProtoElement(SchemeObjectsFactory.getStubProtoElementInitialyzed());
 						}
-						for (SchemeLink link : new HashSet<SchemeLink>(seToDelete.getSchemeLinks(false))) {
-							link.setParentSchemeProtoElement(SchemeObjectsFactory.getStubProtoElementInitialyzed(), false);
+						for (SchemeLink link : new HashSet<SchemeLink>(seToDelete.getSchemeLinks())) {
+							link.setParentSchemeProtoElement(SchemeObjectsFactory.getStubProtoElementInitialyzed());
 						}
 												
 						if (seToDelete.getParentSchemeElement() != null) {
 							SchemeElement parentSE = seToDelete.getParentSchemeElement();
-							for (SchemeElement child : new HashSet<SchemeElement>(seToDelete.getSchemeElements(false))) {
-								child.setParentSchemeElement(parentSE, false);
+							for (SchemeElement child : new HashSet<SchemeElement>(seToDelete.getSchemeElements())) {
+								child.setParentSchemeElement(parentSE);
 							}
-							for (SchemeLink child : new HashSet<SchemeLink>(seToDelete.getSchemeLinks(false))) {
-								child.setParentSchemeElement(parentSE, false);
+							for (SchemeLink child : new HashSet<SchemeLink>(seToDelete.getSchemeLinks())) {
+								child.setParentSchemeElement(parentSE);
 							}
 						} else if (seToDelete.getParentScheme() != null) {
 							Scheme parentS = seToDelete.getParentScheme();
-							for (SchemeElement child : new HashSet<SchemeElement>(seToDelete.getSchemeElements(false))) {
-								child.setParentScheme(parentS, false);
+							for (SchemeElement child : new HashSet<SchemeElement>(seToDelete.getSchemeElements())) {
+								child.setParentScheme(parentS);
 							}
-							for (SchemeLink child : new HashSet<SchemeLink>(seToDelete.getSchemeLinks(false))) {
-								child.setParentScheme(parentS, false);
+							for (SchemeLink child : new HashSet<SchemeLink>(seToDelete.getSchemeLinks())) {
+								child.setParentScheme(parentS);
 							}
 						}
 					} else if (group.getType() == DeviceGroup.PROTO_ELEMENT) {
@@ -126,24 +126,24 @@ public class UngroupAction extends AbstractAction {
 						toDelete.add(speToDelete);
 						
 						// Devices and links moves up, inner SE delete
-						for (SchemeDevice device : new HashSet<SchemeDevice>(speToDelete.getSchemeDevices(false))) {
-							device.setParentSchemeProtoElement(SchemeObjectsFactory.getStubProtoElementInitialyzed(), false);
+						for (SchemeDevice device : new HashSet<SchemeDevice>(speToDelete.getSchemeDevices())) {
+							device.setParentSchemeProtoElement(SchemeObjectsFactory.getStubProtoElementInitialyzed());
 						}
 						
 						if (speToDelete.getParentSchemeProtoElement() != null) {
 							SchemeProtoElement parentSPE = speToDelete.getParentSchemeProtoElement();
-							for (SchemeProtoElement child : new HashSet<SchemeProtoElement>(speToDelete.getSchemeProtoElements(true))) {
-								child.setParentSchemeProtoElement(parentSPE, false);
+							for (SchemeProtoElement child : new HashSet<SchemeProtoElement>(speToDelete.getSchemeProtoElements())) {
+								child.setParentSchemeProtoElement(parentSPE);
 							}
-							for (SchemeLink child : new HashSet<SchemeLink>(speToDelete.getSchemeLinks(false))) {
-								child.setParentSchemeProtoElement(parentSPE, false);
+							for (SchemeLink child : new HashSet<SchemeLink>(speToDelete.getSchemeLinks())) {
+								child.setParentSchemeProtoElement(parentSPE);
 							}
 						} else {
-							for (SchemeProtoElement spe : new HashSet<SchemeProtoElement>(speToDelete.getSchemeProtoElements(false))) {
+							for (SchemeProtoElement spe : new HashSet<SchemeProtoElement>(speToDelete.getSchemeProtoElements())) {
 								toDelete.add(spe);
 							} 
-							for (SchemeLink link : new HashSet<SchemeLink>(speToDelete.getSchemeLinks(false))) {
-								link.setParentSchemeProtoElement(SchemeObjectsFactory.getStubProtoElementInitialyzed(), false);
+							for (SchemeLink link : new HashSet<SchemeLink>(speToDelete.getSchemeLinks())) {
+								link.setParentSchemeProtoElement(SchemeObjectsFactory.getStubProtoElementInitialyzed());
 							}
 						}
 					}

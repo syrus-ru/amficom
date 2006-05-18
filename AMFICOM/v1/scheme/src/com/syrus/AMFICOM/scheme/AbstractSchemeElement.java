@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.83 2006/03/15 20:22:53 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.83.6.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.83 $, $Date: 2006/03/15 20:22:53 $
+ * @version $Revision: 1.83.6.1 $, $Date: 2006/05/18 17:50:00 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -191,14 +191,12 @@ public abstract class AbstractSchemeElement
 	}
 
 	/**
-	 * A wrapper around {@link #setParentScheme(Scheme, boolean)}.
+	 * A wrapper around {@link #setParentScheme(Scheme)}.
 	 *
 	 * @param parentSchemeId
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	final void setParentSchemeId(final Identifier parentSchemeId,
-			final boolean usePool)
+	final void setParentSchemeId(final Identifier parentSchemeId)
 	throws ApplicationException {
 		assert parentSchemeId != null : NON_NULL_EXPECTED;
 		assert parentSchemeId.isVoid() || parentSchemeId.getMajor() == SCHEME_CODE;
@@ -208,17 +206,14 @@ public abstract class AbstractSchemeElement
 		}
 
 		this.setParentScheme(
-				StorableObjectPool.<Scheme>getStorableObject(parentSchemeId, true),
-				usePool);
+				StorableObjectPool.<Scheme>getStorableObject(parentSchemeId, true));
 	}
 
 	/**
 	 * @param parentScheme
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	public abstract void setParentScheme(final Scheme parentScheme,
-			final boolean usePool)
+	public abstract void setParentScheme(final Scheme parentScheme)
 	throws ApplicationException;
 
 	/**
@@ -282,14 +277,12 @@ public abstract class AbstractSchemeElement
 	/**
 	 * @param abstractSchemeElement
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
 	 * @throws ApplicationException 
 	 */
 	final void getXmlTransferable(
 			final XmlAbstractSchemeElement abstractSchemeElement,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException, ApplicationException {
 		super.id.getXmlTransferable(abstractSchemeElement.addNewId(), importType);
 		abstractSchemeElement.setName(this.name);
@@ -299,14 +292,14 @@ public abstract class AbstractSchemeElement
 		if (this.description.length() != 0) {
 			abstractSchemeElement.setDescription(this.description);
 		}
-		final Set<Characteristic> characteristics = this.getCharacteristics0(usePool);
+		final Set<Characteristic> characteristics = this.getCharacteristics0();
 		if (abstractSchemeElement.isSetCharacteristics()) { 
 			abstractSchemeElement.unsetCharacteristics();
 		}
 		if (!characteristics.isEmpty()) {
 			final XmlCharacteristicSeq characteristicSeq = abstractSchemeElement.addNewCharacteristics();
 			for (final Characteristic characteristic : characteristics) {
-				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);
+				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType);
 			}
 		}
 	}
@@ -338,74 +331,66 @@ public abstract class AbstractSchemeElement
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic)
 	 */
-	public final void addCharacteristic(final Characteristic characteristic,
-			final boolean usePool)
+	public final void addCharacteristic(final Characteristic characteristic)
 	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
-		characteristic.setParentCharacterizable(this, usePool);
+		characteristic.setParentCharacterizable(this);
 	}
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic)
 	 */
 	public final void removeCharacteristic(
-			final Characteristic characteristic,
-			final boolean usePool)
+			final Characteristic characteristic)
 	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		characteristic.setParentCharacterizable(this, usePool);
+		characteristic.setParentCharacterizable(this);
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public final Set<Characteristic> getCharacteristics(boolean usePool)
+	public final Set<Characteristic> getCharacteristics()
 	throws ApplicationException {
-		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
+		return Collections.unmodifiableSet(this.getCharacteristics0());
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	final Set<Characteristic> getCharacteristics0(final boolean usePool)
+	final Set<Characteristic> getCharacteristics0()
 	throws ApplicationException {
-		return this.getCharacteristicContainerWrappee().getContainees(usePool);
+		return this.getCharacteristicContainerWrappee().getContainees();
 	}
 
 	/**
 	 * @param characteristics
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public final void setCharacteristics(final Set<Characteristic> characteristics,
-			final boolean usePool)
+	public final void setCharacteristics(final Set<Characteristic> characteristics)
 	throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;
 
-		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);
+		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0();
 
 		final Set<Characteristic> toRemove = new HashSet<Characteristic>(oldCharacteristics);
 		toRemove.removeAll(characteristics);
 		for (final Characteristic characteristic : toRemove) {
-			this.removeCharacteristic(characteristic, usePool);
+			this.removeCharacteristic(characteristic);
 		}
 
 		final Set<Characteristic> toAdd = new HashSet<Characteristic>(characteristics);
 		toAdd.removeAll(oldCharacteristics);
 		for (final Characteristic characteristic : toAdd) {
-			this.addCharacteristic(characteristic, usePool);
+			this.addCharacteristic(characteristic);
 		}
 	}
 

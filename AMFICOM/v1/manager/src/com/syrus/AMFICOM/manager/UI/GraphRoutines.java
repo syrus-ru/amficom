@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphRoutines.java,v 1.18 2005/12/26 13:17:41 bob Exp $
+* $Id: GraphRoutines.java,v 1.18.2.1 2006/05/18 17:47:01 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -62,8 +62,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/12/26 13:17:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.18.2.1 $, $Date: 2006/05/18 17:47:01 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -310,7 +310,7 @@ public final class GraphRoutines {
 			boolean xFound = false;
 			boolean yFound = false;
 			
-			for(final Characteristic characteristic : layoutItem.getCharacteristics(false)) {
+			for(final Characteristic characteristic : layoutItem.getCharacteristics()) {
 				final String codename = characteristic.getType().getCodename();
 				if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_X)) {
 					xFound = true;
@@ -393,7 +393,7 @@ public final class GraphRoutines {
 		int x = 0;
 		int y = 0;
 		String title = null;
-		for(Characteristic characteristic : item.getCharacteristics(false)) {
+		for(Characteristic characteristic : item.getCharacteristics()) {
 			String codename = characteristic.getType().getCodename();
 			if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_X)) {
 				x = Integer.parseInt(characteristic.getValue());

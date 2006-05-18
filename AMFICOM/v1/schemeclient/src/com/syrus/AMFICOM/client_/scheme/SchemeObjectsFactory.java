@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.59 2006/04/21 10:03:35 arseniy Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.59.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -89,8 +89,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.59 $, $Date: 2006/04/21 10:03:35 $
+ * @author $Author: bass $
+ * @version $Revision: 1.59.2.1 $, $Date: 2006/05/18 17:50:00 $
  * @module schemeclient
  */
 
@@ -291,32 +291,32 @@ public class SchemeObjectsFactory {
 		try {
 			Equipment eq = Equipment.createInstance(userId, domainId, schemeElement.getProtoEquipment().getId(), schemeElement.getName(), schemeElement.getDescription(), schemeElement.getSymbol() == null ? Identifier.VOID_IDENTIFIER : schemeElement.getSymbol().getId(), EMPTY, EMPTY, 0, 0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
 			
-			for (Characteristic c : schemeElement.getProtoEquipment().getCharacteristics(true)) {
+			for (Characteristic c : schemeElement.getProtoEquipment().getCharacteristics()) {
 				Characteristic cloned = c.clone();
-				cloned.setParentCharacterizable(eq, false);
+				cloned.setParentCharacterizable(eq);
 			}
 			
 			schemeElement.setEquipment(eq);
 			
 			Identifier equipmentId = eq.getId();
 			try {
-				for (SchemePort sp : schemeElement.getSchemePortsRecursively(false)) {
+				for (SchemePort sp : schemeElement.getSchemePortsRecursively()) {
 					createPort(sp, equipmentId);
 				}
 			} catch (ApplicationException e) {
 				throw new CreateObjectException(e);
 			}
 			try {
-				for (SchemeCablePort sp : schemeElement.getSchemeCablePortsRecursively(false)) {
+				for (SchemeCablePort sp : schemeElement.getSchemeCablePortsRecursively()) {
 					createPort(sp, equipmentId);
 				}
 			} catch (ApplicationException e) {
 				throw new CreateObjectException(e);
 			}
-			for (SchemeLink sl : schemeElement.getSchemeLinks(false)) {
+			for (SchemeLink sl : schemeElement.getSchemeLinks()) {
 				createLink(sl);
 			}
-			for (SchemeElement se : schemeElement.getSchemeElements(false)) {
+			for (SchemeElement se : schemeElement.getSchemeElements()) {
 				createEquipment(se);
 			}
 			return eq;
@@ -340,9 +340,9 @@ public class SchemeObjectsFactory {
 		Link link = Link.createInstance(userId, domainId, schemeLink.getName(), schemeLink.getDescription(), schemeLink.getAbstractLinkType(), EMPTY, EMPTY, EMPTY, 0, EMPTY);
 		
 		try {
-			for (Characteristic c : schemeLink.getAbstractLinkType().getCharacteristics(true)) {
+			for (Characteristic c : schemeLink.getAbstractLinkType().getCharacteristics()) {
 				Characteristic cloned = c.clone();
-				cloned.setParentCharacterizable(link, false);
+				cloned.setParentCharacterizable(link);
 			}
 		} catch (ApplicationException e) {
 			throw new CreateObjectException(e); 
@@ -360,9 +360,9 @@ public class SchemeObjectsFactory {
 		CableLink cableLink = CableLink.createInstance(userId, domainId, schemeLink.getName(), schemeLink.getDescription(), schemeLink.getAbstractLinkType(), EMPTY, EMPTY, EMPTY, 0, EMPTY);
 		
 		try {
-			for (Characteristic c : schemeLink.getAbstractLinkType().getCharacteristics(true)) {
+			for (Characteristic c : schemeLink.getAbstractLinkType().getCharacteristics()) {
 				Characteristic cloned = c.clone();
-				cloned.setParentCharacterizable(cableLink, false);
+				cloned.setParentCharacterizable(cableLink);
 			}
 		} catch (ApplicationException e) {
 			throw new CreateObjectException(e); 
@@ -379,9 +379,9 @@ public class SchemeObjectsFactory {
 		Port port = Port.createInstance(userId, sp.getPortType(), sp.getName(), equipmentId);
 		
 		try {
-			for (Characteristic c : sp.getPortType().getCharacteristics(true)) {
+			for (Characteristic c : sp.getPortType().getCharacteristics()) {
 				Characteristic cloned = c.clone();
-				cloned.setParentCharacterizable(port, false);
+				cloned.setParentCharacterizable(port);
 			}
 		} catch (ApplicationException e) {
 			throw new CreateObjectException(e); 
@@ -643,7 +643,7 @@ public class SchemeObjectsFactory {
 		
 		Identifier userId = LoginManager.getUserId();
 		SchemeCableLink schemeLink = SchemeCableLink.createInstance(userId, name, parent);
-		schemeLink.setAbstractLinkTypeExt(type, userId, false);
+		schemeLink.setAbstractLinkTypeExt(type, userId);
 		
 		if (aContext != null) {
 			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, schemeLink.getId(), SchemeEvent.CREATE_OBJECT));

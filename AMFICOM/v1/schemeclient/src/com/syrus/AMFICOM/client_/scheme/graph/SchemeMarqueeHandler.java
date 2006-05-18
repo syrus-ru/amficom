@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.44 2006/04/28 09:01:32 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.44.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,8 +66,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.44 $, $Date: 2006/04/28 09:01:32 $
+ * @author $Author: bass $
+ * @version $Revision: 1.44.2.1 $, $Date: 2006/05/18 17:50:00 $
  * @module schemeclient
  */
 
@@ -529,7 +529,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 									Notifier.notify(graph, this.pane.aContext, link);
 								} catch (CreateObjectException e1) {
 									Log.errorMessage(e1.getMessage());
-									link.setParentScheme(null, false);
+									link.setParentScheme(null);
 									JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 											LangModelGraph.getString("Error.create_cablelink"), //$NON-NLS-1$
 											LangModelGraph.getString("error"), //$NON-NLS-1$
@@ -564,25 +564,25 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 									if (res.getCellContainerType() == SchemeResource.SCHEME) {
 										final Scheme scheme = res.getScheme();
 										if (scheme != null) {
-											link.setParentScheme(scheme, false);
+											link.setParentScheme(scheme);
 										}
 									} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
 										final SchemeElement schemeElement = res.getSchemeElement();
 										if (schemeElement != null) {
-											link.setParentSchemeElement(schemeElement, false);
+											link.setParentSchemeElement(schemeElement);
 										}
 									}
 									else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
 										final SchemeProtoElement schemeProtoElement = res.getSchemeProtoElement();
 										if (schemeProtoElement != null) {
-											link.setParentSchemeProtoElement(schemeProtoElement, false);
+											link.setParentSchemeProtoElement(schemeProtoElement);
 										}
 									}
 								}
 								Notifier.notify(graph, this.pane.aContext, link);
 							} catch (CreateObjectException e1) {
 								Log.errorMessage(e1.getMessage());
-								link.setParentSchemeProtoElement(null, false);
+								link.setParentSchemeProtoElement(null);
 								JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 										LangModelGraph.getString("Error.create_link"), //$NON-NLS-1$
 										LangModelGraph.getString("error"), //$NON-NLS-1$

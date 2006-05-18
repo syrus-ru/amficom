@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicType.java,v 1.76 2006/04/20 12:39:47 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.76.4.1 2006/05/18 17:46:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2006/04/20 12:39:47 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.76.4.1 $, $Date: 2006/05/18 17:46:35 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -312,11 +312,10 @@ public final class CharacteristicType extends StorableObjectType
 	/**
 	 * @param characteristicType
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
-	public void getXmlTransferable(final XmlCharacteristicType characteristicType, final String importType, final boolean usePool)
+	public void getXmlTransferable(final XmlCharacteristicType characteristicType, final String importType)
 			throws XmlConversionException {
 		try {
 			this.id.getXmlTransferable(characteristicType.addNewId(), importType);
@@ -331,11 +330,11 @@ public final class CharacteristicType extends StorableObjectType
 			}
 
 			final XmlDataType xmlDataType = XmlDataType.Factory.newInstance();
-			this.dataType.getXmlTransferable(xmlDataType, importType, usePool);
+			this.dataType.getXmlTransferable(xmlDataType, importType);
 			characteristicType.xsetDataType(xmlDataType);
 
 			final XmlCharacteristicTypeSort xmlCharacteristicTypeSort = XmlCharacteristicTypeSort.Factory.newInstance();
-			this.sort.getXmlTransferable(xmlCharacteristicTypeSort, importType, usePool);
+			this.sort.getXmlTransferable(xmlCharacteristicTypeSort, importType);
 			characteristicType.xsetSort(xmlCharacteristicTypeSort);
 
 			XmlComplementorRegistry.complementStorableObject(characteristicType, CHARACTERISTIC_TYPE_CODE, importType, EXPORT);

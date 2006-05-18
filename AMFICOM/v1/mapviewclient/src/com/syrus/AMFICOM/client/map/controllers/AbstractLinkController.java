@@ -1,5 +1,5 @@
 /*-
- * $$Id: AbstractLinkController.java,v 1.55 2006/04/21 10:13:24 arseniy Exp $$
+ * $$Id: AbstractLinkController.java,v 1.55.2.1 2006/05/18 17:50:00 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.util.Shitlet;
 /**
  * Контроллер линейного элемента карты.
  * 
- * @version $Revision: 1.55 $, $Date: 2006/04/21 10:13:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.55.2.1 $, $Date: 2006/05/18 17:50:00 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -111,7 +111,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	public static Characteristic getCharacteristic(final Characterizable characterizable, final CharacteristicType characteristicType) {
 		try {
 			final long d = System.nanoTime();
-			final Set<Characteristic> characteristics = characterizable.getCharacteristics(false);
+			final Set<Characteristic> characteristics = characterizable.getCharacteristics();
 			final long f = System.nanoTime();
 			MapViewController.addTime6(f - d);
 //			Log.debugMessage("at " + (f - d) + "ns", Level.INFO);
@@ -148,7 +148,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
-				characterizable.addCharacteristic(attribute, false);
+				characterizable.addCharacteristic(attribute);
 			} catch (CreateObjectException e) {
 				Log.errorMessage(e);
 				return;
@@ -261,7 +261,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
-				characterizable.addCharacteristic(attribute, false);
+				characterizable.addCharacteristic(attribute);
 			} catch(CreateObjectException e) {
 				Log.errorMessage(e);
 				return;
@@ -317,7 +317,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
-				characterizable.addCharacteristic(attribute, false);
+				characterizable.addCharacteristic(attribute);
 			} catch (CreateObjectException e) {
 				Log.errorMessage(e);
 				return;

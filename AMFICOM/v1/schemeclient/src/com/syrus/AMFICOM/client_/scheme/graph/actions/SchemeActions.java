@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.69 2006/04/07 13:53:02 arseniy Exp $
+ * $Id: SchemeActions.java,v 1.69.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -104,8 +104,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.69 $, $Date: 2006/04/07 13:53:02 $
+ * @author $Author: bass $
+ * @version $Revision: 1.69.2.1 $, $Date: 2006/05/18 17:50:00 $
  * @module schemeclient
  */
 
@@ -337,7 +337,7 @@ public class SchemeActions {
 		try {
 			SchemeElement se = group.getSchemeElement();
 			if (se != null && se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
-				IdlKind kind = se.getScheme(false).getKind();
+				IdlKind kind = se.getScheme().getKind();
 				if (kind == IdlKind.BUILDING || kind == IdlKind.NETWORK)
 					return true;
 			}
@@ -414,7 +414,7 @@ public class SchemeActions {
 	
 	public static void insertSEbyS(SchemeGraph graph, SchemeElement schemeElement, Point p, boolean doClone) {
 		try {
-			Scheme scheme = schemeElement.getScheme(false);
+			Scheme scheme = schemeElement.getScheme();
 			Map<Identifier, Identifier>clonedIds = schemeElement.getClonedIdMap();
 			SchemeImageResource res = scheme.getUgoCell();
 			if (res == null) {
@@ -490,7 +490,7 @@ public class SchemeActions {
 		
 		// determine bounds
 		double xmin = 180, ymin = 90, xmax = -180, ymax = -90; 
-		for (SchemeElement schemeElement : scheme.getSchemeElements(false)) {
+		for (SchemeElement schemeElement : scheme.getSchemeElements()) {
 			Equipment equipment = schemeElement.getEquipment();
 			if (equipment != null) {
 				double x0 = equipment.getLongitude();
@@ -507,7 +507,7 @@ public class SchemeActions {
 		
 		Set<Identifier> placedObjectIds = getPlacedObjects(schemeGraph);
 		
-		for (SchemeElement schemeElement : scheme.getSchemeElements(false)) {
+		for (SchemeElement schemeElement : scheme.getSchemeElements()) {
 			if (!placedObjectIds.contains(schemeElement.getId())) {
 				Equipment equipment = schemeElement.getEquipment();
 				Point p;
@@ -520,14 +520,14 @@ public class SchemeActions {
 					p = new Point((int)(width * Math.random()), (int)(height * Math.random()));
 				}
 				if (schemeElement.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
-					internalDispatcher.firePropertyChange(new SchemeEvent(schemeGraph, schemeElement.getScheme(false).getId(), p, SchemeEvent.INSERT_SCHEME));	
+					internalDispatcher.firePropertyChange(new SchemeEvent(schemeGraph, schemeElement.getScheme().getId(), p, SchemeEvent.INSERT_SCHEME));	
 				} else {
 					internalDispatcher.firePropertyChange(new SchemeEvent(schemeGraph, schemeElement.getId(), p, SchemeEvent.INSERT_SCHEMEELEMENT));
 				}
 			}
 		}
 		
-		for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks(false)) {
+		for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks()) {
 			if (!placedObjectIds.contains(schemeCableLink.getId())) {
 			Point p = null;
 			SchemeCablePort sourcePort = schemeCableLink.getSourceAbstractSchemePort();
@@ -579,16 +579,16 @@ public class SchemeActions {
 			return;
 		}
 		
-		if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER && se.getScheme(true) == null) {
+		if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER && se.getScheme() == null) {
 			Scheme internalScheme = Scheme.createInstance(
 					LoginManager.getUserId(), se.getName(), IdlKind.BUILDING, LoginManager.getDomainId());
 			
-			internalScheme.setSchemeElements(schemeElements, false);
-			internalScheme.setSchemeLinks(se.getSchemeLinks(false), false);
+			internalScheme.setSchemeElements(schemeElements);
+			internalScheme.setSchemeLinks(se.getSchemeLinks());
 			internalScheme.setDescription(se.getDescription());
 			internalScheme.setLabel(se.getLabel());
 			internalScheme.setSymbol(se.getSymbol());
-			se.setScheme(internalScheme, false);
+			se.setScheme(internalScheme);
 		}
 		
 		int leftCount = 0;
@@ -598,10 +598,10 @@ public class SchemeActions {
 			if (child.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER && 
 					child.getProtoEquipment().getType().getCodename().equals(RACK.stringValue())) {
 //				List<DefaultGraphCell> insertedCells = new ArrayList<DefaultGraphCell>();				
-				for (SchemeElement child2 : child.getSchemeElements(false)) {
+				for (SchemeElement child2 : child.getSchemeElements()) {
 					Point p;
 					int grid = graph.getGridSize();
-					Set<SchemeCablePort> cablePorts = child2.getSchemeCablePortsRecursively(false);
+					Set<SchemeCablePort> cablePorts = child2.getSchemeCablePortsRecursively();
 					if (!cablePorts.isEmpty()) {
 						if (cablePorts.iterator().next().getDirectionType() == IdlDirectionType._IN) {
 							p = new Point(grid * 8, grid * (leftCount * 20 + 6));
@@ -648,7 +648,7 @@ public class SchemeActions {
 			} else {
 				Point p;
 				int grid = graph.getGridSize();
-				Set<SchemeCablePort> cablePorts = child.getSchemeCablePortsRecursively(false);
+				Set<SchemeCablePort> cablePorts = child.getSchemeCablePortsRecursively();
 				if (!cablePorts.isEmpty()) {
 					if (cablePorts.iterator().next().getDirectionType() == IdlDirectionType._IN) {
 						p = new Point(grid * 8, grid * (leftCount * 20 + 6));
@@ -673,9 +673,9 @@ public class SchemeActions {
 		
 		Set<SchemeLink> schemeLinks;
 		if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
-			schemeLinks = se.getScheme(false).getSchemeLinks(false);
+			schemeLinks = se.getScheme().getSchemeLinks();
 		} else {
-			schemeLinks = se.getSchemeLinks(false);
+			schemeLinks = se.getSchemeLinks();
 		}
 		
 		for (SchemeLink link : schemeLinks) {
@@ -747,7 +747,7 @@ public class SchemeActions {
 		res.setData((List)graph.getArchiveableState());
 		
 		if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
-			se.getScheme(false).setSchemeCell(res);
+			se.getScheme().setSchemeCell(res);
 		} else {
 			se.setSchemeCell(res);
 		}
@@ -768,7 +768,7 @@ public class SchemeActions {
 		ugo.setData((List)graph.getArchiveableState());
 		
 		if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
-			se.getScheme(false).setUgoCell(ugo);
+			se.getScheme().setUgoCell(ugo);
 		} else {
 			se.setUgoCell(ugo);
 		}
@@ -781,12 +781,12 @@ public class SchemeActions {
 		int totalHeight = grid * 10;
 		List<DefaultGraphCell> insertedObjects = new LinkedList<DefaultGraphCell>();
 		
-		for (SchemeDevice device : se.getSchemeDevices(false)) {
+		for (SchemeDevice device : se.getSchemeDevices()) {
 			List<AbstractSchemePort> inPorts = new LinkedList<AbstractSchemePort>();
 			List<AbstractSchemePort> outPorts = new LinkedList<AbstractSchemePort>();
 			
-			List<SchemePort> ports = new LinkedList<SchemePort>(device.getSchemePorts(false));
-			List<SchemeCablePort> cablePorts = new LinkedList<SchemeCablePort>(device.getSchemeCablePorts(false));
+			List<SchemePort> ports = new LinkedList<SchemePort>(device.getSchemePorts());
+			List<SchemeCablePort> cablePorts = new LinkedList<SchemeCablePort>(device.getSchemeCablePorts());
 			
 			Collections.sort(ports, new NumberedComparator<SchemePort>(
 					SchemePortWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
@@ -1547,7 +1547,7 @@ public class SchemeActions {
 		List<SchemePort> ports = new ArrayList<SchemePort>(findPorts(scp.getParentSchemeDevice(), direction));
 		Collections.sort(ports, new NumberedComparator<SchemePort>(SchemePortWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
 
-		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(scl.getSchemeCableThreads(false));	
+		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(scl.getSchemeCableThreads());	
 		Collections.sort(threads, new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
 		for (Iterator it1 = ports.iterator(), it2 = threads.iterator(); it1.hasNext() && it2.hasNext();) {
 			SchemePort sport = (SchemePort)it1.next();
@@ -1605,7 +1605,7 @@ public class SchemeActions {
 			GraphActions.setObjectBackColor(graph, port, determinePortColor(sp, null));
 			
 			try {
-				for (SchemeCableThread thread : sl.getSchemeCableThreads(false)) {
+				for (SchemeCableThread thread : sl.getSchemeCableThreads()) {
 					if (is_source) {
 						thread.setSourceSchemePort(null);
 					} else {
@@ -1661,7 +1661,7 @@ public class SchemeActions {
 	
 	public static Set<SchemePort> findPorts(SchemeDevice dev, IdlDirectionType direction) throws ApplicationException {
 		Set<SchemePort> ports = new HashSet<SchemePort>();
-		for (Iterator it = dev.getSchemePorts(false).iterator(); it.hasNext();) {
+		for (Iterator it = dev.getSchemePorts().iterator(); it.hasNext();) {
 			SchemePort p = (SchemePort)it.next();
 			if (p.getDirectionType().equals(direction))
 				ports.add(p);
@@ -1671,7 +1671,7 @@ public class SchemeActions {
 
 	public static Set<SchemeCablePort> findCablePorts(SchemeDevice dev, IdlDirectionType direction) throws ApplicationException {
 		Set<SchemeCablePort> ports = new HashSet<SchemeCablePort>();
-		for (Iterator it = dev.getSchemeCablePorts(false).iterator(); it.hasNext();) {
+		for (Iterator it = dev.getSchemeCablePorts().iterator(); it.hasNext();) {
 			SchemeCablePort p = (SchemeCablePort)it.next();
 			if (p.getDirectionType().equals(direction))
 				ports.add(p);

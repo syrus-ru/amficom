@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicTypeSort.java,v 1.7 2006/04/19 13:22:17 bass Exp $
+ * $Id: CharacteristicTypeSort.java,v 1.7.4.1 2006/05/18 17:46:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2006/04/19 13:22:17 $
+ * @version $Revision: 1.7.4.1 $, $Date: 2006/05/18 17:46:35 $
  * @module general
  */
 public enum CharacteristicTypeSort {
@@ -64,7 +64,7 @@ public enum CharacteristicTypeSort {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.7 $, $Date: 2006/04/19 13:22:17 $
+	 * @version $Revision: 1.7.4.1 $, $Date: 2006/05/18 17:46:35 $
 	 * @module general
 	 */
 	public static final class Proxy
@@ -112,14 +112,12 @@ public enum CharacteristicTypeSort {
 		/**
 		 * @param characteristicTypeSort
 		 * @param importType
-		 * @param usePool
 		 * @throws XmlConversionException
-		 * @see XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+		 * @see XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 		 */
 		public void getXmlTransferable(
 				final XmlCharacteristicTypeSort characteristicTypeSort,
-				final String importType,
-				final boolean usePool)
+				final String importType)
 		throws XmlConversionException {
 			characteristicTypeSort.set(XmlCharacteristicTypeSort.Enum.forInt(this.value.ordinal() + 1));
 		}

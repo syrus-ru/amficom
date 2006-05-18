@@ -1,5 +1,5 @@
 /*-
- * $Id: ValidateSchemeCommand.java,v 1.5 2006/03/28 09:36:14 stas Exp $
+ * $Id: ValidateSchemeCommand.java,v 1.5.4.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ї 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ public class ValidateSchemeCommand extends AbstractCommand {
 				try {
 					Scheme scheme = res.getScheme();
 					
-					Set<SchemePath> paths = scheme.getSchemePathsRecursively(true);
+					Set<SchemePath> paths = scheme.getSchemePathsRecursively();
 					for (SchemePath path : paths) {
 						for (PathElement pe : path.getPathMembers()) {
 							try {
@@ -77,19 +77,19 @@ public class ValidateSchemeCommand extends AbstractCommand {
 						}
 					}
 					
-					Set<SchemeCableLink> scls = scheme.getSchemeCableLinks(true);
+					Set<SchemeCableLink> scls = scheme.getSchemeCableLinks();
 					for (SchemeCableLink scl : scls) {
 						DefaultCableLink dcl = SchemeActions.findSchemeCableLinkById(graph, scl.getId());
 
 						if (dcl == null) {
 							Log.errorMessage("SchemeCableLink " + scl + " is invalid. It doesn't found on parent schemeGraph. Deleting it.");
-							scl.setParentScheme(null, false);
+							scl.setParentScheme(null);
 						}
 					}
 					
 					String[] wells = new String[] {"тк", "пк", "нк", "пик" };
 					
-					for (SchemeElement se : scheme.getSchemeElements(false)) {
+					for (SchemeElement se : scheme.getSchemeElements()) {
 						final String name = se.getName();
 						se.setLabel(name);
 						for (int i = 0; i < wells.length; i++) {

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemePortReport.java,v 1.7 2006/04/24 06:41:05 stas Exp $
+ * $Id: SchemePortReport.java,v 1.7.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -94,7 +94,7 @@ class AbstractPortTableModel extends AbstractTableModel {
 		
 		this.originalRowCount += 5;
 		
-		Set<Characteristic> objectChars = abstractPort.getCharacteristics(true);
+		Set<Characteristic> objectChars = abstractPort.getCharacteristics();
 		
 		for (Characteristic characteristic : objectChars) {
 			this.propertyNamesColumn.add(characteristic.getName());
@@ -109,7 +109,7 @@ class AbstractPortTableModel extends AbstractTableModel {
 		
 		this.originalRowCount += 2;
 
-		Set<Characteristic> typeChars = portType.getCharacteristics(true);
+		Set<Characteristic> typeChars = portType.getCharacteristics();
 		
 		for (Characteristic characteristic : typeChars) {
 			this.propertyNamesColumn.add(characteristic.getName());

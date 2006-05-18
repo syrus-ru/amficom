@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoElementsExportCommand.java,v 1.8 2006/02/15 12:19:50 stas Exp $
+ * $Id: ProtoElementsExportCommand.java,v 1.8.4.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ public class ProtoElementsExportCommand extends ImportExportCommand {
 			Set<XmlSchemeProtoGroup> xmlProtoGroups = new HashSet<XmlSchemeProtoGroup>();
 			for (SchemeProtoGroup protoGroup : groups) {
 				XmlSchemeProtoGroup xmlProto = XmlSchemeProtoGroup.Factory.newInstance();
-				protoGroup.getXmlTransferable(xmlProto, AMFICOM_IMPORT, false);
+				protoGroup.getXmlTransferable(xmlProto, AMFICOM_IMPORT);
 				xmlProtoGroups.add(xmlProto);
 			}
 			final File protoFile = new File(fileName);

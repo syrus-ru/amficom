@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathWrapper.java,v 1.15 2006/03/15 17:32:11 bass Exp $
+ * $Id: SchemePathWrapper.java,v 1.15.6.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2006/03/15 17:32:11 $
+ * @version $Revision: 1.15.6.1 $, $Date: 2006/05/18 17:50:00 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -99,8 +99,6 @@ public final class SchemePathWrapper extends StorableObjectWrapper<SchemePath> {
 	public void setValue(final SchemePath schemePath, final String key,
 			final Object value)
 	throws PropertyChangeException {
-		final boolean usePool = false;
-
 		try {
 			if (schemePath != null) {
 				if (key.equals(COLUMN_NAME)) {
@@ -110,7 +108,7 @@ public final class SchemePathWrapper extends StorableObjectWrapper<SchemePath> {
 				} else if (key.equals(COLUMN_TRANSMISSION_PATH_ID)) {
 					schemePath.setTransmissionPathId((Identifier) value);
 				} else if (key.equals(COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID)) {
-					schemePath.setParentSchemeMonitoringSolutionId((Identifier) value, usePool);
+					schemePath.setParentSchemeMonitoringSolutionId((Identifier) value);
 				}
 			}
 		} catch (final ApplicationException ae) {

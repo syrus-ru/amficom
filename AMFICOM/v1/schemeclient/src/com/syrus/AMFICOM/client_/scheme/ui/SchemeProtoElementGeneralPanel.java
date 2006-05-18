@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.30 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.30.2.1 2006/05/18 17:50:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,8 +64,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.30 $, $Date: 2006/05/03 04:48:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.30.2.1 $, $Date: 2006/05/18 17:50:01 $
  * @module schemeclient
  */
 
@@ -521,7 +521,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			final Object parent = this.parentCombo.getSelectedItem();
 			if (parent != null) {
 				try {
-					this.schemeProtoElement.setParentSchemeProtoGroup((SchemeProtoGroup) parent, false);
+					this.schemeProtoElement.setParentSchemeProtoGroup((SchemeProtoGroup) parent);
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
 				}

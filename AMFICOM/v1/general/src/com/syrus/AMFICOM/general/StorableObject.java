@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.152 2006/05/18 11:25:32 bass Exp $
+ * $Id: StorableObject.java,v 1.152.2.1 2006/05/18 17:46:35 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,14 +16,10 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.INITIAL_VERSION;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 
 import java.io.Serializable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,7 +43,7 @@ import com.syrus.util.LRUMap.Retainable;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.152 $, $Date: 2006/05/18 11:25:32 $
+ * @version $Revision: 1.152.2.1 $, $Date: 2006/05/18 17:46:35 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -656,20 +652,40 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 		return valuesMap;
 	}
 
+	/**
+	 * @see com.syrus.util.LRUMap.Retainable#retain()
+	 */
+	public boolean retain() {
+		return this.isChanged();
+	}
+
 	/*-********************************************************************
 	 * Caching sub-framework.                                             *
 	 **********************************************************************/
 
-	private static final String KEY = "amficom.sof.cache.on.modification";
+	private static final String BUILD_CACHE_ON_MODIFICATION_KEY = "amficom.sof.cache.on.modification";
 
-	private static final String DEFAULT_VALUE = "false";
+	private static final String USE_POOL_KEY = "amficom.sof.use.pool";
+
+	private static final String BUILD_CACHE_ON_MODIFICATION_DEFAULT_VALUE = Boolean.FALSE.toString();
+
+	private static final String USE_POOL_DEFAULT_VALUE = Boolean.FALSE.toString();
 
 	static {
-		Log.debugMessage(KEY + '=' + System.getProperty(KEY, DEFAULT_VALUE), INFO);
+		Log.debugMessage(BUILD_CACHE_ON_MODIFICATION_KEY + '=' + buildCacheOnModification(), INFO);
+		Log.debugMessage(USE_POOL_KEY + '=' + usePool(), INFO);
 	}
 
 	protected static boolean buildCacheOnModification() {
-		return Boolean.parseBoolean(System.getProperty(KEY, DEFAULT_VALUE));
+		return Boolean.parseBoolean(System.getProperty(
+				BUILD_CACHE_ON_MODIFICATION_KEY,
+				BUILD_CACHE_ON_MODIFICATION_DEFAULT_VALUE));
+	}
+
+	static boolean usePool() {
+		return Boolean.parseBoolean(System.getProperty(
+				USE_POOL_KEY,
+				USE_POOL_DEFAULT_VALUE));
 	}
 
 	/**
@@ -704,7 +720,7 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.152 $, $Date: 2006/05/18 11:25:32 $
+	 * @version $Revision: 1.152.2.1 $, $Date: 2006/05/18 17:46:35 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -731,7 +747,7 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 		 * @throws ApplicationException
 		 */
 		@Crutch134(notes = "Remove the final modifier: containing class itself should be final.")
-		public final void addToCache(final T containee, final boolean usePool)
+		public final void addToCache(final T containee)
 		throws ApplicationException {
 			if (containee.isDeleted()) {
 				return;
@@ -740,7 +756,7 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 			if (this.cacheBuilt) {
 				this.containeeIds.add(containee.getId());
 			} else if (buildCacheOnModification()) {
-				this.ensureCacheBuilt(usePool);
+				this.ensureCacheBuilt();
 
 				this.containeeIds.add(containee.getId());
 			}
@@ -748,16 +764,15 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 
 		/**
 		 * @param containee
-		 * @param usePool
 		 * @throws ApplicationException
 		 */
 		@Crutch134(notes = "Remove the final modifier: containing class itself should be final.")
-		public final void removeFromCache(final T containee, final boolean usePool)
+		public final void removeFromCache(final T containee)
 		throws ApplicationException {
 			if (this.cacheBuilt) {
 				this.containeeIds.remove(containee);
 			} else if (buildCacheOnModification()) {
-				this.ensureCacheBuilt(usePool);
+				this.ensureCacheBuilt();
 
 				this.containeeIds.remove(containee);
 			}
@@ -771,13 +786,12 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 		 * returned is mutable; however, any modifications made to it do not get reflected
 		 * in cache&apos;s internal state.</p>
 		 *
-		 * @param usePool
 		 * @throws ApplicationException
 		 */
 		@Crutch134(notes = "Remove the final modifier: containing class itself should be final.")
-		public final Set<T> getContainees(final boolean usePool)
+		public final Set<T> getContainees()
 		throws ApplicationException {
-			this.ensureCacheBuilt(usePool);
+			this.ensureCacheBuilt();
 			synchronized (this.containeeIds) {
 				final Set<T> containees = new HashSet<T>(StorableObjectPool.<T> getStorableObjects(this.containeeIds, this.useLoader()));
 				this.containeeIds.retainAll(containees);
@@ -786,13 +800,12 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 		}
 
 		/**
-		 * @param usePool
 		 * @throws ApplicationException
 		 */
-		private void ensureCacheBuilt(final boolean usePool)
+		private void ensureCacheBuilt()
 		throws ApplicationException {
 			synchronized (this) {
-				if (!this.cacheBuilt || usePool) {
+				if (!this.cacheBuilt || usePool()) {
 					if (this.containeeIds == null) {
 						this.containeeIds = Collections.synchronizedSet(new HashSet<Identifier>());
 					} else {
@@ -808,24 +821,5 @@ public abstract class StorableObject implements Identifiable, Retainable, Serial
 		protected boolean useLoader() {
 			return true;
 		}
-	}
-
-	/**
-	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.152 $, $Date: 2006/05/18 11:25:32 $
-	 * @module general
-	 */
-	@Retention(SOURCE)
-	@Target(METHOD)
-	protected static @interface ParameterizationPending {
-		String[] value();
-	}
-
-	/**
-	 * @see com.syrus.util.LRUMap.Retainable#retain()
-	 */
-	public boolean retain() {
-		return this.isChanged();
 	}
 }

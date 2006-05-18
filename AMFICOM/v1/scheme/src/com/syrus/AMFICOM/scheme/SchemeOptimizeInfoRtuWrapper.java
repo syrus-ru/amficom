@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtuWrapper.java,v 1.12 2006/03/15 17:32:11 bass Exp $
+ * $Id: SchemeOptimizeInfoRtuWrapper.java,v 1.12.6.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.PropertyChangeException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2006/03/15 17:32:11 $
+ * @version $Revision: 1.12.6.1 $, $Date: 2006/05/18 17:50:00 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtuWrapper extends StorableObjectWrapper<SchemeOptimizeInfoRtu> {
@@ -111,8 +111,6 @@ public final class SchemeOptimizeInfoRtuWrapper extends StorableObjectWrapper<Sc
 			final String key,
 			final Object value)
 	throws PropertyChangeException {
-		final boolean usePool = false;
-		
 		try {
 			if (schemeOptimizeInfoRtu != null) {
 				if (key.equals(COLUMN_NAME)) {
@@ -122,7 +120,7 @@ public final class SchemeOptimizeInfoRtuWrapper extends StorableObjectWrapper<Sc
 				} else if (key.equals(COLUMN_RANGE)) {
 					schemeOptimizeInfoRtu.setRangeDb(((Float) value).floatValue());
 				} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
-					schemeOptimizeInfoRtu.setParentSchemeOptimizeInfoId((Identifier) value, usePool);
+					schemeOptimizeInfoRtu.setParentSchemeOptimizeInfoId((Identifier) value);
 				}
 			}
 		} catch (final ApplicationException ae) {

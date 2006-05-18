@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.36 2006/04/26 13:01:21 stas Exp $
+ * $Id: ReportTemplate.java,v 1.36.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -61,8 +61,8 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * <p>Тип шаблона характеризует из какого модуля по нему можно построить
  * отчёт </p>
  * 
- * @author $Author: stas $
- * @version $Revision: 1.36 $, $Date: 2006/04/26 13:01:21 $
+ * @author $Author: bass $
+ * @version $Revision: 1.36.2.1 $, $Date: 2006/05/18 17:50:00 $
  * @module report
  */
 public final class ReportTemplate extends StorableObject
@@ -362,10 +362,6 @@ public final class ReportTemplate extends StorableObject
 	}
 
 	public Set<AbstractDataStorableElement> getDataStorableElements() throws ApplicationException {
-		return this.getDataStorableElements(true);
-	}
-
-	public Set<AbstractDataStorableElement> getDataStorableElements(final boolean usePool) throws ApplicationException {
 		if (this.dataCondition == null) {
 			this.dataCondition = new LinkedIdsCondition(this.getId(), REPORTDATA_CODE);
 		}
@@ -373,31 +369,23 @@ public final class ReportTemplate extends StorableObject
 			this.tableDataCondition = new LinkedIdsCondition(this.getId(), REPORTTABLEDATA_CODE);
 		}
 		final Set<AbstractDataStorableElement> dataSet = new HashSet<AbstractDataStorableElement>();
-		dataSet.addAll(StorableObjectPool.<DataStorableElement> getStorableObjectsByCondition(this.dataCondition, usePool));
-		dataSet.addAll(StorableObjectPool.<TableDataStorableElement> getStorableObjectsByCondition(this.tableDataCondition, usePool));
+		dataSet.addAll(StorableObjectPool.<DataStorableElement> getStorableObjectsByCondition(this.dataCondition, true));
+		dataSet.addAll(StorableObjectPool.<TableDataStorableElement> getStorableObjectsByCondition(this.tableDataCondition, true));
 		return dataSet;
 	}
 
 	public Set<ImageStorableElement> getImageStorableElements() throws ApplicationException {
-		return this.getImageStorableElements(true);
-	}
-
-	public Set<ImageStorableElement> getImageStorableElements(final boolean usePool) throws ApplicationException {
 		if (this.imageCondition == null) {
 			this.imageCondition = new LinkedIdsCondition(this.getId(), REPORTIMAGE_CODE);
 		}
-		return StorableObjectPool.getStorableObjectsByCondition(this.imageCondition, usePool);
+		return StorableObjectPool.getStorableObjectsByCondition(this.imageCondition, true);
 	}
 
 	public Set<AttachedTextStorableElement> getAttachedTextStorableElements() throws ApplicationException {
-		return this.getAttachedTextStorableElements(true);
-	}
-
-	public Set<AttachedTextStorableElement> getAttachedTextStorableElements(final boolean usePool) throws ApplicationException {
 		if (this.attTextCondition == null) {
 			this.attTextCondition = new LinkedIdsCondition(this.getId(), ATTACHEDTEXT_CODE);
 		}
-		return StorableObjectPool.getStorableObjectsByCondition(this.attTextCondition, usePool);
+		return StorableObjectPool.getStorableObjectsByCondition(this.attTextCondition, true);
 	}
 
 	public String getName() {
@@ -488,11 +476,11 @@ public final class ReportTemplate extends StorableObject
 		return this.sheetSize;
 	}
 
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
-		reverseDependencies.addAll(getAttachedTextStorableElements(usePool));
-		reverseDependencies.addAll(getDataStorableElements(usePool));
-		reverseDependencies.addAll(getImageStorableElements(usePool));
+		reverseDependencies.addAll(getAttachedTextStorableElements());
+		reverseDependencies.addAll(getDataStorableElements());
+		reverseDependencies.addAll(getImageStorableElements());
 		if (this.storableElementsToRemove != null) {
 			reverseDependencies.addAll(this.storableElementsToRemove);
 		}
@@ -542,7 +530,7 @@ public final class ReportTemplate extends StorableObject
 		clone.tableDataCondition = null;
 
 		try {
-			final Set<AttachedTextStorableElement> attText = this.getAttachedTextStorableElements(false);
+			final Set<AttachedTextStorableElement> attText = this.getAttachedTextStorableElements();
 			for (final AttachedTextStorableElement attTextElement : attText) {
 				final AttachedTextStorableElement clonedAttText = attTextElement.clone();
 				clone.addElement(clonedAttText);
@@ -557,7 +545,7 @@ public final class ReportTemplate extends StorableObject
 				}
 			}
 
-			final Set<ImageStorableElement> images = this.getImageStorableElements(false);
+			final Set<ImageStorableElement> images = this.getImageStorableElements();
 			for (final ImageStorableElement imageElement : images) {
 				clone.addElement(imageElement.clone());
 			}

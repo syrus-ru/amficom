@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.44 2006/03/15 20:28:23 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.44.6.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2006/03/15 20:28:23 $
+ * @version $Revision: 1.44.6.1 $, $Date: 2006/05/18 17:50:00 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu
@@ -119,15 +119,12 @@ public final class SchemeOptimizeInfoRtu
 	 * @param parentSchemeOptimizeInfo
 	 * @throws CreateObjectException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeOptimizeInfoRtu createInstance(final Identifier creatorId,
 			final String name,
 			final int priceUsd,
 			final float rangeDb,
 			final SchemeOptimizeInfo parentSchemeOptimizeInfo)
 	throws CreateObjectException {
-		final boolean usePool = false;
-
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert parentSchemeOptimizeInfo != null : NON_NULL_EXPECTED;
 
@@ -143,7 +140,7 @@ public final class SchemeOptimizeInfoRtu
 					priceUsd,
 					rangeDb,
 					parentSchemeOptimizeInfo);
-			parentSchemeOptimizeInfo.getSchemeOptimizeInfoRtuContainerWrappee().addToCache(schemeOptimizeInfoRtu, usePool);
+			parentSchemeOptimizeInfo.getSchemeOptimizeInfoRtuContainerWrappee().addToCache(schemeOptimizeInfoRtu);
 
 			schemeOptimizeInfoRtu.markAsChanged();
 			return schemeOptimizeInfoRtu;
@@ -166,9 +163,9 @@ public final class SchemeOptimizeInfoRtu
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) {
+	public Set<Identifiable> getReverseDependencies() {
 		return Collections.<Identifiable>singleton(super.id);
 	}
 
@@ -229,14 +226,12 @@ public final class SchemeOptimizeInfoRtu
 	/**
 	 * @param schemeOptimizeInfoRtu
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeOptimizeInfoRtu schemeOptimizeInfoRtu,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
@@ -266,15 +261,13 @@ public final class SchemeOptimizeInfoRtu
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeOptimizeInfo(SchemeOptimizeInfo, boolean)}.
+	 * A wrapper around {@link #setParentSchemeOptimizeInfo(SchemeOptimizeInfo)}.
 	 *
 	 * @param parentSchemeOptimizeInfoId
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	void setParentSchemeOptimizeInfoId(
-			final Identifier parentSchemeOptimizeInfoId,
-			final boolean usePool)
+			final Identifier parentSchemeOptimizeInfoId)
 	throws ApplicationException {
 		assert parentSchemeOptimizeInfoId != null : NON_NULL_EXPECTED;
 		assert parentSchemeOptimizeInfoId.isVoid() || parentSchemeOptimizeInfoId.getMajor() == SCHEMEOPTIMIZEINFO_CODE;
@@ -284,18 +277,15 @@ public final class SchemeOptimizeInfoRtu
 		}
 
 		this.setParentSchemeOptimizeInfo(
-				StorableObjectPool.<SchemeOptimizeInfo>getStorableObject(parentSchemeOptimizeInfoId, true),
-				usePool);
+				StorableObjectPool.<SchemeOptimizeInfo>getStorableObject(parentSchemeOptimizeInfoId, true));
 	}
 
 	/**
 	 * @param parentSchemeOptimizeInfo
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	public void setParentSchemeOptimizeInfo(
-			final SchemeOptimizeInfo parentSchemeOptimizeInfo,
-			final boolean usePool)
+			final SchemeOptimizeInfo parentSchemeOptimizeInfo)
 	throws ApplicationException {
 		assert this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeOptimizeInfoId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
@@ -305,13 +295,13 @@ public final class SchemeOptimizeInfoRtu
 			return;
 		}
 
-		this.getParentSchemeOptimizeInfo().getSchemeOptimizeInfoRtuContainerWrappee().removeFromCache(this, usePool);
+		this.getParentSchemeOptimizeInfo().getSchemeOptimizeInfoRtuContainerWrappee().removeFromCache(this);
 
 		if (parentSchemeOptimizeInfo == null) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-			StorableObjectPool.delete(this.getReverseDependencies(usePool));
+			StorableObjectPool.delete(this.getReverseDependencies());
 		} else {
-			parentSchemeOptimizeInfo.getSchemeOptimizeInfoRtuContainerWrappee().addToCache(this, usePool);
+			parentSchemeOptimizeInfo.getSchemeOptimizeInfoRtuContainerWrappee().addToCache(this);
 		}
 
 		this.parentSchemeOptimizeInfoId = newParentSchemeOptimizeInfoId;

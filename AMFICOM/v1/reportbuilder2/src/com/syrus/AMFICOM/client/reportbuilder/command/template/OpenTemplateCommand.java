@@ -1,5 +1,5 @@
 /*
- * $Id: OpenTemplateCommand.java,v 1.1.1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: OpenTemplateCommand.java,v 1.1.1.1.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -100,9 +100,9 @@ public class OpenTemplateCommand extends AbstractCommand {
 			return true;
 		}
 		try {
-			Set<AttachedTextStorableElement> attTexts = template.getAttachedTextStorableElements(false);
-			Set<AbstractDataStorableElement> dataElements = template.getDataStorableElements(false);
-			Set<ImageStorableElement> images = template.getImageStorableElements(false);
+			Set<AttachedTextStorableElement> attTexts = template.getAttachedTextStorableElements();
+			Set<AbstractDataStorableElement> dataElements = template.getDataStorableElements();
+			Set<ImageStorableElement> images = template.getImageStorableElements();
 			
 			for (AttachedTextStorableElement element : attTexts) {
 				if (element.isChanged()) {

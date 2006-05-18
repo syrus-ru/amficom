@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathGeneralPanel.java,v 1.17 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemePathGeneralPanel.java,v 1.17.2.1 2006/05/18 17:50:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -288,7 +288,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 				final SchemeMonitoringSolution solution = this.schemePath.getParentSchemeMonitoringSolution();
 				final Scheme scheme = solution.getParentScheme();
 				try {
-					this.cmbSolutionCombo.addElements(scheme.getSchemeMonitoringSolutions(false));
+					this.cmbSolutionCombo.addElements(scheme.getSchemeMonitoringSolutions());
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
 				}
@@ -347,7 +347,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 			
 			// set name for associated MonitoredElement if any
 			try {
-				this.schemePath.setParentSchemeMonitoringSolution((SchemeMonitoringSolution) this.cmbSolutionCombo.getSelectedItem(), false);
+				this.schemePath.setParentSchemeMonitoringSolution((SchemeMonitoringSolution) this.cmbSolutionCombo.getSelectedItem());
 				SortedSet<PathElement> pathMemebers = this.schemePath.getPathMembers();
 				if (!pathMemebers.isEmpty()) {
 					AbstractSchemePort startPort = pathMemebers.first().getEndAbstractSchemePort();

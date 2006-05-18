@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.39 2006/02/15 12:58:34 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.39.4.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -131,19 +131,19 @@ public class SchemeImportCommand extends ImportExportCommand {
 //			scheme.setName(scheme.getName()	+ "(imported " + " from \'" + xmlfile.getName() + "\')");
 			
 			List<String> errorMessages = new LinkedList<String>();
-			for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks(false)) {
-				if (schemeCableLink.getSchemeCableThreads(false).size() == 0) {
+			for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks()) {
+				if (schemeCableLink.getSchemeCableThreads().size() == 0) {
 					errorMessages.add(LangModelScheme.getString("Message.warning.cable_no_threads") + schemeCableLink.getName()); //$NON-NLS-1$
 				}
 				SchemeCablePort sourcePort = schemeCableLink.getSourceAbstractSchemePort();
 				if (sourcePort != null) {
-					this.portThreadsCount.put(sourcePort, schemeCableLink.getSchemeCableThreads(false));
+					this.portThreadsCount.put(sourcePort, schemeCableLink.getSchemeCableThreads());
 				} else {
 					errorMessages.add(LangModelScheme.getString("Message.warning.cable_no_source") + schemeCableLink.getName()); //$NON-NLS-1$
 				}
 				SchemeCablePort targetPort = schemeCableLink.getTargetAbstractSchemePort();
 				if (targetPort != null) {
-					this.portThreadsCount.put(targetPort, schemeCableLink.getSchemeCableThreads(false));
+					this.portThreadsCount.put(targetPort, schemeCableLink.getSchemeCableThreads());
 				} else {
 					errorMessages.add(LangModelScheme.getString("Message.warning.cable_no_target") + schemeCableLink.getName()); //$NON-NLS-1$
 				}

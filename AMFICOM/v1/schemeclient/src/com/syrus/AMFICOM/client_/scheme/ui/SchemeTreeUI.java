@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.39 2006/05/02 07:22:01 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.39.2.1 2006/05/18 17:50:01 bass Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,8 +58,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.39 $, $Date: 2006/05/02 07:22:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.39.2.1 $, $Date: 2006/05/18 17:50:01 $
  * @module schemeclient
  */
 
@@ -120,11 +120,11 @@ public class SchemeTreeUI extends IconedTreeUI {
 									}
 									
 									// отцепляем линки
-									for (SchemeCableLink link : scheme.getSchemeCableLinks(false)) {
+									for (SchemeCableLink link : scheme.getSchemeCableLinks()) {
 										link.setSourceAbstractSchemePort(null);
 										link.setTargetAbstractSchemePort(null);
 									}
-									for (SchemeLink link : scheme.getSchemeLinks(false)) {
+									for (SchemeLink link : scheme.getSchemeLinks()) {
 										link.setSourceAbstractSchemePort(null);
 										link.setTargetAbstractSchemePort(null);
 									}
@@ -132,7 +132,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 									SchemeTreeUI.this.aContext.getDispatcher().firePropertyChange(
 											new SchemeEvent(this, scheme.getId(), SchemeEvent.DELETE_OBJECT));
 									
-									Set<Identifiable> ids = scheme.getReverseDependencies(false);
+									Set<Identifiable> ids = scheme.getReverseDependencies();
 									StorableObjectPool.delete(ids);
 									
 									Identifier userId = LoginManager.getUserId();
@@ -168,7 +168,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 								}
 								
 								SchemePath path = (SchemePath)object;
-								Set<Identifiable> ids = path.getReverseDependencies(false);
+								Set<Identifiable> ids = path.getReverseDependencies();
 								
 								SchemeTreeUI.this.aContext.getDispatcher().firePropertyChange(
 										new SchemeEvent(this, path.getId(), SchemeEvent.DELETE_OBJECT));
@@ -198,7 +198,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 								}
 								
 								SchemeProtoElement proto = (SchemeProtoElement)object;
-								Set<Identifiable> ids = proto.getReverseDependencies(false);
+								Set<Identifiable> ids = proto.getReverseDependencies();
 
 								SchemeTreeUI.this.aContext.getDispatcher().firePropertyChange(
 										new SchemeEvent(this, proto.getId(), SchemeEvent.DELETE_OBJECT));
@@ -220,8 +220,8 @@ public class SchemeTreeUI extends IconedTreeUI {
 							
 							SchemeProtoGroup group = (SchemeProtoGroup)object;
 							try {
-								if (group.getSchemeProtoElements(false).isEmpty() && 
-									group.getSchemeProtoGroups(false).isEmpty()) {
+								if (group.getSchemeProtoElements().isEmpty() && 
+									group.getSchemeProtoGroups().isEmpty()) {
 									int res = JOptionPane.showConfirmDialog(AbstractMainFrame.getActiveMainFrame(), 
 											LangModelScheme.getString("Message.confirmation.sure_delete"),  //$NON-NLS-1$ 
 											LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$
@@ -230,7 +230,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 										return;
 									}
 									
-									Set<Identifiable> ids = group.getReverseDependencies(false);
+									Set<Identifiable> ids = group.getReverseDependencies();
 									
 									SchemeTreeUI.this.aContext.getDispatcher().firePropertyChange(
 											new SchemeEvent(this, group.getId(), SchemeEvent.DELETE_OBJECT));

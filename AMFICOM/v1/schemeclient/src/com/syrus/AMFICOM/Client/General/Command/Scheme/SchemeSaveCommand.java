@@ -100,8 +100,8 @@ public class SchemeSaveCommand extends AbstractCommand {
 							schemeElements.add(schemeElement);
 					}
 				}
-				se.setSchemeLinks(schemeLinks, false);
-				se.setSchemeElements(schemeElements, false);
+				se.setSchemeLinks(schemeLinks);
+				se.setSchemeElements(schemeElements);
 				
 				//	create SchemeImageResource
 				if (se.getSchemeCell() == null) {
@@ -159,9 +159,9 @@ public class SchemeSaveCommand extends AbstractCommand {
 				long startSaving = System.currentTimeMillis();
 				t = System.currentTimeMillis();
 				Set<Scheme> internalSchemes = new HashSet<Scheme>();
-				for (SchemeElement se : scheme.getSchemeElements(false)) {
+				for (SchemeElement se : scheme.getSchemeElements()) {
 					if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
-						Scheme internal = se.getScheme(false);
+						Scheme internal = se.getScheme();
 						if (internal != null && internal.isChanged()) {
 							internalSchemes.add(internal);
 						}
@@ -170,7 +170,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 				Log.debugMessage("Internal schemes search took : " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);
 				
 				t = System.currentTimeMillis();
-				final Set<Identifiable> reverseDependencies = scheme.getReverseDependencies(false);
+				final Set<Identifiable> reverseDependencies = scheme.getReverseDependencies();
 				Log.debugMessage("Top scheme reversed dependencies search took : " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);
 				
 				t = System.currentTimeMillis();
@@ -179,7 +179,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 				
 				t = System.currentTimeMillis();
 				for (Scheme changed : internalSchemes) {
-					StorableObjectPool.flush(changed.getReverseDependencies(false), userId, false);
+					StorableObjectPool.flush(changed.getReverseDependencies(), userId, false);
 				}
 				Log.debugMessage("Internal schemes took " + (System.currentTimeMillis() - t) + "ms", Level.FINEST);
 				Log.debugMessage("Total save took " + (System.currentTimeMillis() - startSaving) + "ms", Level.FINEST);

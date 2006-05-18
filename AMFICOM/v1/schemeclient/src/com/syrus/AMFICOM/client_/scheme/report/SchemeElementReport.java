@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElementReport.java,v 1.7 2006/04/24 06:41:05 stas Exp $
+ * $Id: SchemeElementReport.java,v 1.7.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -99,7 +99,7 @@ class SchemeElementTableModel extends AbstractTableModel {
 		
 		this.originalRowCount += 5;
 		
-		Set<Characteristic> objectChars = schemeElement.getCharacteristics(true);
+		Set<Characteristic> objectChars = schemeElement.getCharacteristics();
 		
 		for (Characteristic characteristic : objectChars) {
 			this.propertyNamesColumn.add(characteristic.getName());
@@ -114,7 +114,7 @@ class SchemeElementTableModel extends AbstractTableModel {
 		
 		this.originalRowCount += 2;
 
-		Set<Characteristic> typeChars = protoEquipment.getCharacteristics(true);
+		Set<Characteristic> typeChars = protoEquipment.getCharacteristics();
 		
 		for (Characteristic characteristic : typeChars) {
 			this.propertyNamesColumn.add(characteristic.getName());
@@ -168,7 +168,7 @@ class SchemeElementTableModel extends AbstractTableModel {
 				this.originalRowCount += 3;
 			}
 			
-			Set<Characteristic> equipmentChars = equipment.getCharacteristics(true);
+			Set<Characteristic> equipmentChars = equipment.getCharacteristics();
 			for (Characteristic characteristic : equipmentChars) {
 				this.propertyNamesColumn.add(characteristic.getName());
 				this.propertyValuesColumn.add(characteristic.getValue());

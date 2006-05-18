@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommitCommand.java,v 1.13 2006/03/30 11:17:22 stas Exp $
+ * $Id: SchemeImportCommitCommand.java,v 1.13.4.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ public class SchemeImportCommitCommand extends AbstractCommand {
 			protos.remove(SchemeObjectsFactory.getStubProtoElement());
 
 			for (SchemeProtoElement proto : protos) {
-				Set<Identifiable> ids = proto.getReverseDependencies(false);
+				Set<Identifiable> ids = proto.getReverseDependencies();
 				StorableObjectPool.flush(ids, userId, false);
 			}
 			LocalXmlIdentifierPool.flush();

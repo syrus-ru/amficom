@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.26 2006/03/13 15:54:27 bass Exp $
+ * $Id: CharacteristicWrapper.java,v 1.26.8.1 2006/05/18 17:46:35 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2006/03/13 15:54:27 $
+ * @version $Revision: 1.26.8.1 $, $Date: 2006/05/18 17:46:35 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -124,8 +124,6 @@ public final class CharacteristicWrapper extends StorableObjectWrapper<Character
 	@Override
 	public void setValue(final Characteristic characteristic, final String key, final Object value)
 	throws PropertyChangeException {
-		final boolean usePool = false;
-
 		try {
 			if (characteristic != null) {
 				if (key.equals(COLUMN_TYPE_ID))
@@ -135,7 +133,7 @@ public final class CharacteristicWrapper extends StorableObjectWrapper<Character
 				else if (key.equals(COLUMN_DESCRIPTION))
 					characteristic.setDescription0((String) value);
 				else if (key.equals(COLUMN_CHARACTERIZABLE_ID))
-					characteristic.setParentCharacterizableId((Identifier) value, usePool);
+					characteristic.setParentCharacterizableId((Identifier) value);
 				else if (key.equals(COLUMN_EDITABLE))
 					characteristic.setEditable(((Boolean) value).booleanValue());
 				else if (key.equals(COLUMN_VISIBLE))

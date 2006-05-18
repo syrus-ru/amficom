@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.89 2006/03/15 20:28:23 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.89.6.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.89 $, $Date: 2006/03/15 20:28:23 $
+ * @version $Revision: 1.89.6.1 $, $Date: 2006/05/18 17:50:00 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -204,7 +204,6 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 * @param parentScheme
 	 * @throws CreateObjectException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeOptimizeInfo createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -222,8 +221,6 @@ public final class SchemeOptimizeInfo extends StorableObject
 			final double survivorRate,
 			final Scheme parentScheme)
 	throws CreateObjectException {
-		final boolean usePool = false;
-
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -252,7 +249,7 @@ public final class SchemeOptimizeInfo extends StorableObject
 					nodesCutProb,
 					survivorRate,
 					parentScheme);
-			parentScheme.getSchemeOptimizeInfoContainerWrappee().addToCache(schemeOptimizeInfo, usePool);
+			parentScheme.getSchemeOptimizeInfoContainerWrappee().addToCache(schemeOptimizeInfo);
 
 			schemeOptimizeInfo.markAsChanged();
 			return schemeOptimizeInfo;
@@ -277,19 +274,19 @@ public final class SchemeOptimizeInfo extends StorableObject
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeOptimizeInfoSwitches0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeOptimizeInfoSwitches0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeOptimizeInfoRtus0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeOptimizeInfoRtus0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeMonitoringSolutions0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeMonitoringSolutions0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);
@@ -408,14 +405,12 @@ public final class SchemeOptimizeInfo extends StorableObject
 	/**
 	 * @param schemeOptimizeInfo
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeOptimizeInfo schemeOptimizeInfo,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
@@ -563,14 +558,12 @@ public final class SchemeOptimizeInfo extends StorableObject
 	}
 
 	/**
-	 * A wrapper around {@link #setParentScheme(Scheme, boolean)}.
+	 * A wrapper around {@link #setParentScheme(Scheme)}.
 	 *
 	 * @param parentSchemeId
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	void setParentSchemeId(final Identifier parentSchemeId,
-			final boolean usePool)
+	void setParentSchemeId(final Identifier parentSchemeId)
 	throws ApplicationException {
 		assert parentSchemeId != null : NON_NULL_EXPECTED;
 		assert parentSchemeId.isVoid() || parentSchemeId.getMajor() == SCHEME_CODE;
@@ -580,17 +573,14 @@ public final class SchemeOptimizeInfo extends StorableObject
 		}
 
 		this.setParentScheme(
-				StorableObjectPool.<Scheme>getStorableObject(parentSchemeId, true),
-				usePool);
+				StorableObjectPool.<Scheme>getStorableObject(parentSchemeId, true));
 	}
 
 	/**
 	 * @param parentScheme
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	public void setParentScheme(final Scheme parentScheme,
-			final boolean usePool)
+	public void setParentScheme(final Scheme parentScheme)
 	throws ApplicationException {
 		assert this.parentSchemeId != null : OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
@@ -600,13 +590,13 @@ public final class SchemeOptimizeInfo extends StorableObject
 			return;
 		}
 
-		this.getParentScheme().getSchemeOptimizeInfoContainerWrappee().removeFromCache(this, usePool);
+		this.getParentScheme().getSchemeOptimizeInfoContainerWrappee().removeFromCache(this);
 
 		if (parentScheme == null) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-			StorableObjectPool.delete(this.getReverseDependencies(usePool));
+			StorableObjectPool.delete(this.getReverseDependencies());
 		} else {
-			parentScheme.getSchemeOptimizeInfoContainerWrappee().addToCache(this, usePool);
+			parentScheme.getSchemeOptimizeInfoContainerWrappee().addToCache(this);
 		}
 
 		this.parentSchemeId = newParentSchemeId;
@@ -710,74 +700,64 @@ public final class SchemeOptimizeInfo extends StorableObject
 
 	/**
 	 * @param schemeOptimizeInfoSwitch
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	public void addSchemeOptimizeInfoSwitch(
-			final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch,
-			final boolean usePool)
+			final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch)
 	throws ApplicationException {
 		assert schemeOptimizeInfoSwitch != null: NON_NULL_EXPECTED;
-		schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfo(this, usePool);
+		schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfo(this);
 	}
 
 	/**
 	 * @param schemeOptimizeInfoSwitch
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	public void removeSchemeOptimizeInfoSwitch(
-			final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch,
-			final boolean usePool)
+			final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch)
 	throws ApplicationException {
 		assert schemeOptimizeInfoSwitch != null: NON_NULL_EXPECTED;
 		assert schemeOptimizeInfoSwitch.getParentSchemeOptimizeInfoId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfo(null, usePool);
+		schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfo(null);
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	public Set<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitches(
-			final boolean usePool)
+	public Set<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitches()
 	throws ApplicationException {
-		return Collections.unmodifiableSet(this.getSchemeOptimizeInfoSwitches0(usePool));
+		return Collections.unmodifiableSet(this.getSchemeOptimizeInfoSwitches0());
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	private Set<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitches0(
-			final boolean usePool)
+	private Set<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitches0()
 	throws ApplicationException {
-		return this.getSchemeOptimizeInfoSwitchContainerWrappee().getContainees(usePool);
+		return this.getSchemeOptimizeInfoSwitchContainerWrappee().getContainees();
 	}
 
 	/**
 	 * @param schemeOptimizeInfoSwitches
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	public void setSchemeOptimizeInfoSwitches(
-			final Set<SchemeOptimizeInfoSwitch> schemeOptimizeInfoSwitches,
-			final boolean usePool)
+			final Set<SchemeOptimizeInfoSwitch> schemeOptimizeInfoSwitches)
 	throws ApplicationException {
 		assert schemeOptimizeInfoSwitches != null: NON_NULL_EXPECTED;
 
-		final Set<SchemeOptimizeInfoSwitch> oldSchemeOptimizeInfoSwitches = this.getSchemeOptimizeInfoSwitches0(usePool);
+		final Set<SchemeOptimizeInfoSwitch> oldSchemeOptimizeInfoSwitches = this.getSchemeOptimizeInfoSwitches0();
 
 		final Set<SchemeOptimizeInfoSwitch> toRemove = new HashSet<SchemeOptimizeInfoSwitch>(oldSchemeOptimizeInfoSwitches);
 		toRemove.removeAll(schemeOptimizeInfoSwitches);
 		for (final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch : toRemove) {
-			this.removeSchemeOptimizeInfoSwitch(schemeOptimizeInfoSwitch, usePool);
+			this.removeSchemeOptimizeInfoSwitch(schemeOptimizeInfoSwitch);
 		}
 
 		final Set<SchemeOptimizeInfoSwitch> toAdd = new HashSet<SchemeOptimizeInfoSwitch>(schemeOptimizeInfoSwitches);
 		toAdd.removeAll(oldSchemeOptimizeInfoSwitches);
 		for (final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch : toAdd) {
-			this.addSchemeOptimizeInfoSwitch(schemeOptimizeInfoSwitch, usePool);
+			this.addSchemeOptimizeInfoSwitch(schemeOptimizeInfoSwitch);
 		}
 	}
 
@@ -795,74 +775,64 @@ public final class SchemeOptimizeInfo extends StorableObject
 
 	/**
 	 * @param schemeOptimizeInfoRtu
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	public void addSchemeOptimizeInfoRtu(
-			final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu,
-			final boolean usePool)
+			final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu)
 	throws ApplicationException {
 		assert schemeOptimizeInfoRtu != null: NON_NULL_EXPECTED;
-		schemeOptimizeInfoRtu.setParentSchemeOptimizeInfo(this, usePool);
+		schemeOptimizeInfoRtu.setParentSchemeOptimizeInfo(this);
 	}
 
 	/**
 	 * @param schemeOptimizeInfoRtu
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	public void removeSchemeOptimizeInfoRtu(
-			final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu,
-			final boolean usePool)
+			final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu)
 	throws ApplicationException {
 		assert schemeOptimizeInfoRtu != null: NON_NULL_EXPECTED;
 		assert schemeOptimizeInfoRtu.getParentSchemeOptimizeInfoId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeOptimizeInfoRtu.setParentSchemeOptimizeInfo(null, usePool);
+		schemeOptimizeInfoRtu.setParentSchemeOptimizeInfo(null);
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	public Set<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtus(
-			final boolean usePool)
+	public Set<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtus()
 	throws ApplicationException {
-		return Collections.unmodifiableSet(this.getSchemeOptimizeInfoRtus0(usePool));
+		return Collections.unmodifiableSet(this.getSchemeOptimizeInfoRtus0());
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	private Set<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtus0(
-			final boolean usePool)
+	private Set<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtus0()
 	throws ApplicationException {
-		return this.getSchemeOptimizeInfoRtuContainerWrappee().getContainees(usePool);
+		return this.getSchemeOptimizeInfoRtuContainerWrappee().getContainees();
 	}
 
 	/**
 	 * @param schemeOptimizeInfoRtus
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	public void setSchemeOptimizeInfoRtus(
-			final Set<SchemeOptimizeInfoRtu> schemeOptimizeInfoRtus,
-			final boolean usePool)
+			final Set<SchemeOptimizeInfoRtu> schemeOptimizeInfoRtus)
 	throws ApplicationException {
 		assert schemeOptimizeInfoRtus != null: NON_NULL_EXPECTED;
 
-		final Set<SchemeOptimizeInfoRtu> oldSchemeOptimizeInfoRtus = this.getSchemeOptimizeInfoRtus0(usePool);
+		final Set<SchemeOptimizeInfoRtu> oldSchemeOptimizeInfoRtus = this.getSchemeOptimizeInfoRtus0();
 
 		final Set<SchemeOptimizeInfoRtu> toRemove = new HashSet<SchemeOptimizeInfoRtu>(oldSchemeOptimizeInfoRtus);
 		toRemove.removeAll(schemeOptimizeInfoRtus);
 		for (final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu : toRemove) {
-			this.removeSchemeOptimizeInfoRtu(schemeOptimizeInfoRtu, usePool);
+			this.removeSchemeOptimizeInfoRtu(schemeOptimizeInfoRtu);
 		}
 
 		final Set<SchemeOptimizeInfoRtu> toAdd = new HashSet<SchemeOptimizeInfoRtu>(schemeOptimizeInfoRtus);
 		toAdd.removeAll(oldSchemeOptimizeInfoRtus);
 		for (final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu : toAdd) {
-			this.addSchemeOptimizeInfoRtu(schemeOptimizeInfoRtu, usePool);
+			this.addSchemeOptimizeInfoRtu(schemeOptimizeInfoRtu);
 		}
 	}
 
@@ -880,74 +850,64 @@ public final class SchemeOptimizeInfo extends StorableObject
 
 	/**
 	 * @param schemeMonitoringSolution
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	public void addSchemeMonitoringSolution(
-			final SchemeMonitoringSolution schemeMonitoringSolution,
-			final boolean usePool)
+			final SchemeMonitoringSolution schemeMonitoringSolution)
 	throws ApplicationException {
 		assert schemeMonitoringSolution != null: NON_NULL_EXPECTED;
-		schemeMonitoringSolution.setParentSchemeOptimizeInfo(this, usePool);
+		schemeMonitoringSolution.setParentSchemeOptimizeInfo(this);
 	}
 
 	/**
 	 * @param schemeMonitoringSolution
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	public void removeSchemeMonitoringSolution(
-			final SchemeMonitoringSolution schemeMonitoringSolution,
-			final boolean usePool)
+			final SchemeMonitoringSolution schemeMonitoringSolution)
 	throws ApplicationException {
 		assert schemeMonitoringSolution != null: NON_NULL_EXPECTED;
 		assert schemeMonitoringSolution.getParentSchemeOptimizeInfoId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeMonitoringSolution.setParentSchemeOptimizeInfo(null, usePool);
+		schemeMonitoringSolution.setParentSchemeOptimizeInfo(null);
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	public Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions(
-			final boolean usePool)
+	public Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions()
 	throws ApplicationException {
-		return Collections.unmodifiableSet(this.getSchemeMonitoringSolutions0(usePool));
+		return Collections.unmodifiableSet(this.getSchemeMonitoringSolutions0());
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	private Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions0(
-			final boolean usePool)
+	private Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions0()
 	throws ApplicationException {
-		return this.getSchemeMonitoringSolutionContainerWrappee().getContainees(usePool);
+		return this.getSchemeMonitoringSolutionContainerWrappee().getContainees();
 	}
 
 	/**
 	 * @param schemeMonitoringSolutions
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	public void setSchemeMonitoringSolutions(
-			final Set<SchemeMonitoringSolution> schemeMonitoringSolutions,
-			final boolean usePool)
+			final Set<SchemeMonitoringSolution> schemeMonitoringSolutions)
 	throws ApplicationException {
 		assert schemeMonitoringSolutions != null: NON_NULL_EXPECTED;
 
-		final Set<SchemeMonitoringSolution> oldSchemeMonitoringSolutions = this.getSchemeMonitoringSolutions0(usePool);
+		final Set<SchemeMonitoringSolution> oldSchemeMonitoringSolutions = this.getSchemeMonitoringSolutions0();
 
 		final Set<SchemeMonitoringSolution> toRemove = new HashSet<SchemeMonitoringSolution>(oldSchemeMonitoringSolutions);
 		toRemove.removeAll(schemeMonitoringSolutions);
 		for (final SchemeMonitoringSolution schemeMonitoringSolution : toRemove) {
-			this.removeSchemeMonitoringSolution(schemeMonitoringSolution, usePool);
+			this.removeSchemeMonitoringSolution(schemeMonitoringSolution);
 		}
 
 		final Set<SchemeMonitoringSolution> toAdd = new HashSet<SchemeMonitoringSolution>(schemeMonitoringSolutions);
 		toAdd.removeAll(oldSchemeMonitoringSolutions);
 		for (final SchemeMonitoringSolution schemeMonitoringSolution : toAdd) {
-			this.addSchemeMonitoringSolution(schemeMonitoringSolution, usePool);
+			this.addSchemeMonitoringSolution(schemeMonitoringSolution);
 		}
 	}
 }

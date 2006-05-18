@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementWrapper.java,v 1.17 2006/03/15 16:58:43 bass Exp $
+ * $Id: SchemeProtoElementWrapper.java,v 1.17.6.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2006/03/15 16:58:43 $
+ * @version $Revision: 1.17.6.1 $, $Date: 2006/05/18 17:50:00 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -139,8 +139,6 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper<Schem
 			final String key,
 			final Object value)
 	throws PropertyChangeException {
-		final boolean usePool = false;
-
 		try {
 			if (schemeProtoElement != null) {
 				if (key.equals(COLUMN_NAME)) {
@@ -158,9 +156,9 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper<Schem
 				} else if (key.equals(COLUMN_SCHEME_CELL_ID)) {
 					schemeProtoElement.setSchemeCellId((Identifier) value);
 				} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_GROUP_ID)) {
-					schemeProtoElement.setParentSchemeProtoGroupId((Identifier) value, usePool);
+					schemeProtoElement.setParentSchemeProtoGroupId((Identifier) value);
 				} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
-					schemeProtoElement.setParentSchemeProtoElementId((Identifier) value, usePool);
+					schemeProtoElement.setParentSchemeProtoElementId((Identifier) value);
 				}
 			}
 		} catch (final ApplicationException ae) {

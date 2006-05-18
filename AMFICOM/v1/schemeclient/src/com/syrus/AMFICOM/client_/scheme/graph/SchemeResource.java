@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.22 2006/04/28 09:07:03 stas Exp $
+ * $Id: SchemeResource.java,v 1.22.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2006/04/28 09:07:03 $
+ * @author $Author: bass $
+ * @version $Revision: 1.22.2.1 $, $Date: 2006/05/18 17:50:00 $
  * @module schemeclient
  */
 
@@ -118,7 +118,6 @@ public class SchemeResource {
 	
 	/**
 	 * @return Set of AbstractSchemeElements Identifiers
-	 * @throws ApplicationException 
 	 */
 //	public static SortedSet<Identifier> getCashedPathElementIds() {
 //		return pmIds;

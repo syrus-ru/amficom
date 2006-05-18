@@ -117,15 +117,15 @@ public class SchemeSaveAsCommand extends AbstractCommand {
 				
 				// write clonedIds to all schemeImages
 				this.childSchemes.clear();
-				for (SchemeElement schemeElement : scheme.getSchemeElements(false)) {
+				for (SchemeElement schemeElement : scheme.getSchemeElements()) {
 					writeIdsToCloneAndChildren(schemeElement, invisibleGraph, clonedIds);
 				}
 
 				Identifier userId = LoginManager.getUserId();
-				scheme.setParentSchemeElement(null, false);
-				StorableObjectPool.flush(scheme.getReverseDependencies(false), userId, false);
+				scheme.setParentSchemeElement(null);
+				StorableObjectPool.flush(scheme.getReverseDependencies(), userId, false);
 				for (Scheme child : this.childSchemes) {
-					StorableObjectPool.flush(child.getReverseDependencies(false), userId, false);
+					StorableObjectPool.flush(child.getReverseDependencies(), userId, false);
 				}
 				
 				this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.CREATE_OBJECT));
@@ -195,7 +195,7 @@ public class SchemeSaveAsCommand extends AbstractCommand {
 		}
 		*/
 		
-		for (SchemeElement child : schemeElement.getSchemeElements(false)) {
+		for (SchemeElement child : schemeElement.getSchemeElements()) {
 			writeIdsToCloneAndChildren(child, graph, clonedIds);
 		}
 	}

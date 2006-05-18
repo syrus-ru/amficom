@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlTransferableObject.java,v 1.1 2005/12/07 17:15:29 bass Exp $
+ * $Id: XmlTransferableObject.java,v 1.1.6.1 2006/05/18 17:50:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,14 +13,13 @@ import org.apache.xmlbeans.XmlObject;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/12/07 17:15:29 $
+ * @version $Revision: 1.1.6.1 $, $Date: 2006/05/18 17:50:01 $
  * @module util
  */
 public interface XmlTransferableObject<T extends XmlObject> {
 	void fromXmlTransferable(final T transferable, final String importType)
 	throws XmlConversionException;
 
-	void getXmlTransferable(final T transferable, final String importType,
-			final boolean usePool)
+	void getXmlTransferable(final T transferable, final String importType)
 	throws XmlConversionException;
 }

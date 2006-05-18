@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkCharacteristicsPanel.java,v 1.17 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemeLinkCharacteristicsPanel.java,v 1.17.2.1 2006/05/18 17:50:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2006/05/03 04:48:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.17.2.1 $, $Date: 2006/05/18 17:50:01 $
  * @module schemeclient
  */
 
@@ -53,14 +53,14 @@ public class SchemeLinkCharacteristicsPanel extends CharacteristicsPanel {
 				super.setTypeSortMapping(IdlCharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 						this.schemeLink,
 						this.schemeLink.getId(), isEditable());
-				super.addCharacteristics(this.schemeLink.getCharacteristics(true), this.schemeLink.getId());
+				super.addCharacteristics(this.schemeLink.getCharacteristics(), this.schemeLink.getId());
 				Link link = this.schemeLink.getAbstractLink();
 				if (link != null) {
 					for (int i = 0; i < sorts.length; i++)
 						super.setTypeSortMapping(sorts[i],
 								link,
 								link.getId(), isEditable());
-					super.addCharacteristics(link.getCharacteristics(true), link.getId());
+					super.addCharacteristics(link.getCharacteristics(), link.getId());
 				} else {
 					LinkType linkType = this.schemeLink.getAbstractLinkType();
 					if (linkType != null) {
@@ -68,7 +68,7 @@ public class SchemeLinkCharacteristicsPanel extends CharacteristicsPanel {
 							super.setTypeSortMapping(sorts[i],
 									linkType,
 									linkType.getId(), false);
-						super.addCharacteristics(linkType.getCharacteristics(true), linkType.getId());
+						super.addCharacteristics(linkType.getCharacteristics(), linkType.getId());
 					}
 				}
 			} catch (ApplicationException e) {

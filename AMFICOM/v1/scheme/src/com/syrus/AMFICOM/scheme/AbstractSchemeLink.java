@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.56 2006/03/15 20:22:53 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.56.6.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.transport.xml.XmlConversionException;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2006/03/15 20:22:53 $
+ * @version $Revision: 1.56.6.1 $, $Date: 2006/05/18 17:50:00 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink
@@ -542,15 +542,13 @@ public abstract class AbstractSchemeLink
 	/**
 	 * @param abstractSchemeLink
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
 	 * @throws ApplicationException
 	 */
 	final void getXmlTransferable(final XmlAbstractSchemeLink abstractSchemeLink,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException, ApplicationException {
-		super.getXmlTransferable(abstractSchemeLink, importType, usePool);
+		super.getXmlTransferable(abstractSchemeLink, importType);
 		abstractSchemeLink.setPhysicalLength(this.physicalLength);
 		abstractSchemeLink.setOpticalLength(this.opticalLength);
 	}

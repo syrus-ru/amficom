@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.119 2006/04/19 08:48:41 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.119.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.119 $, $Date: 2006/04/19 08:48:41 $
+ * @version $Revision: 1.119.2.1 $, $Date: 2006/05/18 17:50:00 $
  * @module scheme
  */
 public final class SchemeCableThread
@@ -198,7 +198,6 @@ public final class SchemeCableThread
 	 * @param parentSchemeCableLink
 	 * @throws CreateObjectException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeCableThread createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -208,8 +207,6 @@ public final class SchemeCableThread
 			final SchemePort targetSchemePort,
 			final SchemeCableLink parentSchemeCableLink)
 	throws CreateObjectException {
-		final boolean usePool = false;
-
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -231,7 +228,7 @@ public final class SchemeCableThread
 					sourceSchemePort,
 					targetSchemePort,
 					parentSchemeCableLink);
-			parentSchemeCableLink.getSchemeCableThreadContainerWrappee().addToCache(schemeCableThread, usePool);
+			parentSchemeCableLink.getSchemeCableThreadContainerWrappee().addToCache(schemeCableThread);
 
 			schemeCableThread.linkTypeSet = true;
 
@@ -297,8 +294,6 @@ public final class SchemeCableThread
 	 */
 	@Override
 	public SchemeCableThread clone() throws CloneNotSupportedException {
-		final boolean usePool = false;
-
 		final StackTraceElement stackTrace[] = (new Throwable()).getStackTrace();
 		final int depth = 1;
 		if (stackTrace.length > depth) {
@@ -330,10 +325,10 @@ public final class SchemeCableThread
 			clone.clonedIdMap.put(this.id, clone.id);
 
 			clone.characteristicContainerWrappee = null;
-			for (final Characteristic characteristic : this.getCharacteristics0(usePool)) {
+			for (final Characteristic characteristic : this.getCharacteristics0()) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
-				clone.addCharacteristic(characteristicClone, usePool);
+				clone.addCharacteristic(characteristicClone);
 			}
 			return clone;
 		} catch (final ApplicationException ae) {
@@ -385,13 +380,13 @@ public final class SchemeCableThread
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);
@@ -551,14 +546,12 @@ public final class SchemeCableThread
 	/**
 	 * @param schemeCableThread
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeCableThread schemeCableThread,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException {
 		try {
 			super.id.getXmlTransferable(schemeCableThread.addNewId(), importType);
@@ -597,11 +590,11 @@ public final class SchemeCableThread
 			if (schemeCableThread.isSetCharacteristics()) {
 				schemeCableThread.unsetCharacteristics();
 			}
-			final Set<Characteristic> characteristics = this.getCharacteristics0(usePool);
+			final Set<Characteristic> characteristics = this.getCharacteristics0();
 			if (!characteristics.isEmpty()) {
 				final XmlCharacteristicSeq characteristicSeq = schemeCableThread.addNewCharacteristics();
 				for (final Characteristic characteristic : characteristics) {
-					characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);
+					characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType);
 				}
 			}
 			XmlComplementorRegistry.complementStorableObject(schemeCableThread, SCHEMECABLETHREAD_CODE, importType, EXPORT);
@@ -734,14 +727,12 @@ public final class SchemeCableThread
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeCableLink(SchemeCableLink, boolean)}.
+	 * A wrapper around {@link #setParentSchemeCableLink(SchemeCableLink)}.
 	 *
 	 * @param parentSchemeCableLinkId
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	void setParentSchemeCableLinkId(final Identifier parentSchemeCableLinkId,
-			final boolean usePool)
+	void setParentSchemeCableLinkId(final Identifier parentSchemeCableLinkId)
 	throws ApplicationException {
 		assert parentSchemeCableLinkId != null : NON_NULL_EXPECTED;
 		assert parentSchemeCableLinkId.isVoid() || parentSchemeCableLinkId.getMajor() == SCHEMECABLELINK_CODE;
@@ -751,18 +742,15 @@ public final class SchemeCableThread
 		}
 
 		this.setParentSchemeCableLink(
-				StorableObjectPool.<SchemeCableLink>getStorableObject(parentSchemeCableLinkId, true),
-				usePool);
+				StorableObjectPool.<SchemeCableLink>getStorableObject(parentSchemeCableLinkId, true));
 	}
 
 	/**
 	 * @param parentSchemeCableLink
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	public void setParentSchemeCableLink(
-			final SchemeCableLink parentSchemeCableLink,
-			final boolean usePool)
+			final SchemeCableLink parentSchemeCableLink)
 	throws ApplicationException {
 		assert this.parentSchemeCableLinkId != null: OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeCableLinkId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
@@ -772,13 +760,13 @@ public final class SchemeCableThread
 			return;
 		}
 
-		this.getParentSchemeCableLink().getSchemeCableThreadContainerWrappee().removeFromCache(this, usePool);
+		this.getParentSchemeCableLink().getSchemeCableThreadContainerWrappee().removeFromCache(this);
 
 		if (parentSchemeCableLink == null) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-			StorableObjectPool.delete(this.getReverseDependencies(usePool));
+			StorableObjectPool.delete(this.getReverseDependencies());
 		} else {
-			parentSchemeCableLink.getSchemeCableThreadContainerWrappee().addToCache(this, usePool);
+			parentSchemeCableLink.getSchemeCableThreadContainerWrappee().addToCache(this);
 		}
 
 		this.parentSchemeCableLinkId = newParentSchemeCableLinkId;
@@ -980,74 +968,66 @@ public final class SchemeCableThread
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic)
 	 */
-	public void addCharacteristic(final Characteristic characteristic,
-			final boolean usePool)
+	public void addCharacteristic(final Characteristic characteristic)
 	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
-		characteristic.setParentCharacterizable(this, usePool);
+		characteristic.setParentCharacterizable(this);
 	}
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic)
 	 */
 	public void removeCharacteristic(
-			final Characteristic characteristic,
-			final boolean usePool)
+			final Characteristic characteristic)
 	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		characteristic.setParentCharacterizable(this, usePool);
+		characteristic.setParentCharacterizable(this);
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public Set<Characteristic> getCharacteristics(boolean usePool)
+	public Set<Characteristic> getCharacteristics()
 	throws ApplicationException {
-		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
+		return Collections.unmodifiableSet(this.getCharacteristics0());
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	Set<Characteristic> getCharacteristics0(final boolean usePool)
+	Set<Characteristic> getCharacteristics0()
 	throws ApplicationException {
-		return this.getCharacteristicContainerWrappee().getContainees(usePool);
+		return this.getCharacteristicContainerWrappee().getContainees();
 	}
 
 	/**
 	 * @param characteristics
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(final Set<Characteristic> characteristics,
-			final boolean usePool)
+	public void setCharacteristics(final Set<Characteristic> characteristics)
 	throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;
 
-		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);
+		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0();
 
 		final Set<Characteristic> toRemove = new HashSet<Characteristic>(oldCharacteristics);
 		toRemove.removeAll(characteristics);
 		for (final Characteristic characteristic : toRemove) {
-			this.removeCharacteristic(characteristic, usePool);
+			this.removeCharacteristic(characteristic);
 		}
 
 		final Set<Characteristic> toAdd = new HashSet<Characteristic>(characteristics);
 		toAdd.removeAll(oldCharacteristics);
 		for (final Characteristic characteristic : toAdd) {
-			this.addCharacteristic(characteristic, usePool);
+			this.addCharacteristic(characteristic);
 		}
 	}
 }

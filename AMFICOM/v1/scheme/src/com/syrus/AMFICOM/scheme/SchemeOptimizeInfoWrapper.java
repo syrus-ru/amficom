@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoWrapper.java,v 1.13 2006/03/15 17:32:11 bass Exp $
+ * $Id: SchemeOptimizeInfoWrapper.java,v 1.13.6.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2006/03/15 17:32:11 $
+ * @version $Revision: 1.13.6.1 $, $Date: 2006/05/18 17:50:00 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -180,8 +180,6 @@ public final class SchemeOptimizeInfoWrapper extends StorableObjectWrapper<Schem
 	public void setValue(final SchemeOptimizeInfo schemeOptimizeInfo,
 			final String key, final Object value)
 	throws PropertyChangeException {
-		final boolean usePool = false;
-
 		try {
 			if (schemeOptimizeInfo != null) {
 				if (key.equals(COLUMN_NAME)) {
@@ -213,7 +211,7 @@ public final class SchemeOptimizeInfoWrapper extends StorableObjectWrapper<Schem
 				} else if (key.equals(COLUMN_SURVIVOR_RATE)) {
 					schemeOptimizeInfo.setSurvivorRate(((Double) value).doubleValue());
 				} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
-					schemeOptimizeInfo.setParentSchemeId((Identifier) value, usePool);
+					schemeOptimizeInfo.setParentSchemeId((Identifier) value);
 				}
 			}
 		} catch (final ApplicationException ae) {

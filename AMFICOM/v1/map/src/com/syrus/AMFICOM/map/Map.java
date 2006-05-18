@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.131 2006/03/22 16:47:15 arseniy Exp $
+ * $Id: Map.java,v 1.131.2.1 2006/05/18 17:47:22 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.131 $, $Date: 2006/03/22 16:47:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.131.2.1 $, $Date: 2006/05/18 17:47:22 $
  * @module map
  */
 public final class Map extends DomainMember
@@ -1111,13 +1111,11 @@ public final class Map extends DomainMember
 	/**
 	 * @param map
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void getXmlTransferable(final XmlMap map,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException {
 		this.id.getXmlTransferable(map.addNewId(), importType);
 		map.setName(this.name);
@@ -1132,7 +1130,7 @@ public final class Map extends DomainMember
 		if (!topologicalNodes2.isEmpty()) {
 			final XmlTopologicalNodeSeq topologicalNodeSeq = map.addNewTopologicalNodes();
 			for (final TopologicalNode topologicalNode : topologicalNodes2) {
-				topologicalNode.getXmlTransferable(topologicalNodeSeq.addNewTopologicalNode(), importType, usePool);
+				topologicalNode.getXmlTransferable(topologicalNodeSeq.addNewTopologicalNode(), importType);
 			}
 		}
 		if (map.isSetSiteNodes()) {
@@ -1152,14 +1150,14 @@ public final class Map extends DomainMember
 					// check if attachmentSiteNode has already been written to xml
 					// as an attachment site node of some other site node
 					if(!addedSiteNodes.contains(attachmentSiteNode)) {
-						attachmentSiteNode.getXmlTransferable(siteNodeSeq.addNewSiteNode(), importType, usePool);
+						attachmentSiteNode.getXmlTransferable(siteNodeSeq.addNewSiteNode(), importType);
 						addedSiteNodes.add(attachmentSiteNode);
 					}
 				}
 				// check if siteNode has already been written to xml
 				// as an attachment site node of some other site node
 				if(!addedSiteNodes.contains(siteNode)) {
-					siteNode.getXmlTransferable(siteNodeSeq.addNewSiteNode(), importType, usePool);
+					siteNode.getXmlTransferable(siteNodeSeq.addNewSiteNode(), importType);
 					addedSiteNodes.add(siteNode);
 				}
 			}
@@ -1171,7 +1169,7 @@ public final class Map extends DomainMember
 		if (!physicalLinks2.isEmpty()) {
 			final XmlPhysicalLinkSeq physicalLinkSeq = map.addNewPhysicalLinks();
 			for (final PhysicalLink physicalLink : physicalLinks2) {
-				physicalLink.getXmlTransferable(physicalLinkSeq.addNewPhysicalLink(), importType, usePool);
+				physicalLink.getXmlTransferable(physicalLinkSeq.addNewPhysicalLink(), importType);
 			}
 		}
 		if (map.isSetNodeLinks()) {
@@ -1181,7 +1179,7 @@ public final class Map extends DomainMember
 		if (!nodeLinks2.isEmpty()) {
 			final XmlNodeLinkSeq nodeLinkSeq = map.addNewNodeLinks();
 			for (final NodeLink nodeLink : nodeLinks2) {
-				nodeLink.getXmlTransferable(nodeLinkSeq.addNewNodeLink(), importType, usePool);
+				nodeLink.getXmlTransferable(nodeLinkSeq.addNewNodeLink(), importType);
 			}
 		}
 		if (map.isSetCollectors()) {
@@ -1191,7 +1189,7 @@ public final class Map extends DomainMember
 		if (!collectors2.isEmpty()) {
 			final XmlCollectorSeq collectorSeq = map.addNewCollectors();
 			for (final Collector collector : collectors2) {
-				collector.getXmlTransferable(collectorSeq.addNewCollector(), importType, usePool);
+				collector.getXmlTransferable(collectorSeq.addNewCollector(), importType);
 			}
 		}
 		map.setImportType(importType);

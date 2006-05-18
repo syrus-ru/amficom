@@ -1,5 +1,5 @@
 /*
- * $Id: CreateGroup.java,v 1.22 2006/02/15 12:18:11 stas Exp $
+ * $Id: CreateGroup.java,v 1.22.4.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2006/02/15 12:18:11 $
+ * @author $Author: bass $
+ * @version $Revision: 1.22.4.1 $, $Date: 2006/05/18 17:50:00 $
  * @module schemeclient
  */
 
@@ -224,9 +224,9 @@ public class CreateGroup extends AbstractAction {
 		}
 		
 		try {
-			proto.setSchemeDevices(childSchemeDevices, false);
-			proto.setSchemeLinks(childSchemeLinks, false);
-			proto.setSchemeProtoElements(childSchemeProtoElements, false);
+			proto.setSchemeDevices(childSchemeDevices);
+			proto.setSchemeLinks(childSchemeLinks);
+			proto.setSchemeProtoElements(childSchemeProtoElements);
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
 		}
@@ -264,13 +264,13 @@ public class CreateGroup extends AbstractAction {
 		
 		try {
 			for (SchemeDevice device : childSchemeDevices) {
-				device.setParentSchemeElement(element, false);
+				device.setParentSchemeElement(element);
 			}
 			for (SchemeLink link : childSchemeLinks) {
-				link.setParentSchemeElement(element, false);
+				link.setParentSchemeElement(element);
 			}
 			for (SchemeElement element2 : childSchemeElements) {
-				element2.setParentSchemeElement(element, false);
+				element2.setParentSchemeElement(element);
 			}
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);

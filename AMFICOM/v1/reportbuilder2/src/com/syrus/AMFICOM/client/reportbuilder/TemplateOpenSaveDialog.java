@@ -347,7 +347,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 					try {
 						ReportTemplate oldTemplate = this.templateProcessed;
 						this.templateProcessed = this.templateProcessed.clone();
-						StorableObjectPool.cleanChangedStorableObjects(oldTemplate.getReverseDependencies(false));
+						StorableObjectPool.cleanChangedStorableObjects(oldTemplate.getReverseDependencies());
 					} catch (CloneNotSupportedException e) {
 						Log.errorMessage(e);
 					}
@@ -360,7 +360,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 			
 			StorableObjectPool.flush(this.templateProcessed,LoginManager.getUserId(),true);
 			StorableObjectPool.flush(
-					this.templateProcessed.getReverseDependencies(false),
+					this.templateProcessed.getReverseDependencies(),
 					LoginManager.getUserId(),
 					true);			
 			this.templateProcessed.setNew(false);
@@ -383,7 +383,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 		
 		Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		for (ReportTemplate reportTemplate : selectedTemplates) {
-			dependencies.addAll(reportTemplate.getReverseDependencies(true));
+			dependencies.addAll(reportTemplate.getReverseDependencies());
 		}
 		
 		StorableObjectPool.delete(selectedTemplates);

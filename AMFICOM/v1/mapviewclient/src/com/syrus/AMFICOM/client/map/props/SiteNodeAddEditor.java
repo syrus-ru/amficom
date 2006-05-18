@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeAddEditor.java,v 1.41 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: SiteNodeAddEditor.java,v 1.41.2.1 2006/05/18 17:50:00 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2006/05/03 04:46:32 $
- * @author $Author: stas $
+ * @version $Revision: 1.41.2.1 $, $Date: 2006/05/18 17:50:00 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -546,7 +546,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 			SchemeElement schemeElement = (SchemeElement)or;
 			Scheme scheme = null;
 			try {
-				scheme = schemeElement.getScheme(false);
+				scheme = schemeElement.getScheme();
 			}
 			catch (Exception e) {
 				// nothing
@@ -612,7 +612,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 				List schemeElements = new LinkedList();
 				for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();) {
 					Scheme scheme = (Scheme )it.next();
-					schemeElements.addAll(scheme.getTopologicalSchemeElementsRecursively(true));
+					schemeElements.addAll(scheme.getTopologicalSchemeElementsRecursively());
 				}
 				List<CablePath> cableElementsTransit = new LinkedList<CablePath>(mapView.getCablePaths(siteNode));
 				List<CablePath> cableElementsDropped = new LinkedList<CablePath>();

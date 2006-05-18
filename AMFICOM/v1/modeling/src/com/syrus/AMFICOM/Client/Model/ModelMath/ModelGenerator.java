@@ -253,7 +253,7 @@ public class ModelGenerator {
 		double attenuation;
 
 		if (scl.getAbstractLink() != null)
-			ht = scl.getAbstractLink().getCharacteristics(false);
+			ht = scl.getAbstractLink().getCharacteristics();
 
 		if (ht == null)
 		{
@@ -261,7 +261,7 @@ public class ModelGenerator {
 			if(linkType == null)
 				return null;
 			else
-				ht = linkType.getCharacteristics(false);
+				ht = linkType.getCharacteristics();
 		}
 
 		c = getCharacteristic(ht, attenuationString);
@@ -293,9 +293,9 @@ public class ModelGenerator {
 		}
 
 		if (sp.getPort() != null)
-			ht = sp.getPort().getCharacteristics(false);
+			ht = sp.getPort().getCharacteristics();
 		else
-			ht = portType.getCharacteristics(false);
+			ht = portType.getCharacteristics();
 
 		ModelEvent event;
 		if(portType.getSort().value() == PortTypeSort._PORTTYPESORT_OPTICAL) // optical connector
@@ -343,14 +343,14 @@ public class ModelGenerator {
 		double attenuation;
 
 		if (sl.getAbstractLink() != null)
-				ht = sl.getAbstractLink().getCharacteristics(false);
+				ht = sl.getAbstractLink().getCharacteristics();
 		if (ht == null)
 		{
 			LinkType linkType =	sl.getAbstractLinkType();
 			if(linkType == null) {
 				return null;
 			}	else {
-				ht = linkType.getCharacteristics(false);
+				ht = linkType.getCharacteristics();
 			}
 		}
 

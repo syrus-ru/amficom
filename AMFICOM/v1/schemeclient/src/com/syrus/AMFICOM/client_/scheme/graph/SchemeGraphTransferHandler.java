@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphTransferHandler.java,v 1.7 2005/12/27 10:26:05 stas Exp $
+ * $Id: SchemeGraphTransferHandler.java,v 1.7.4.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -142,13 +142,13 @@ public class SchemeGraphTransferHandler extends TransferHandler {
 	private void assingToNewScheme(Object[] cells, Scheme scheme) {
 		try {
 			for (SchemeElement schemeElement : SchemeActions.getSchemeElements(cells)) {
-				schemeElement.setParentScheme(scheme, false);
+				schemeElement.setParentScheme(scheme);
 			}
 			for (SchemeCableLink schemeCableLink : SchemeActions.getSchemeCableLinks(cells)) {
-				schemeCableLink.setParentScheme(scheme, false);
+				schemeCableLink.setParentScheme(scheme);
 			}
 			for (SchemeLink schemeLink : SchemeActions.getSchemeLinks(cells)) {
-				schemeLink.setParentScheme(scheme, false);
+				schemeLink.setParentScheme(scheme);
 			}
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);

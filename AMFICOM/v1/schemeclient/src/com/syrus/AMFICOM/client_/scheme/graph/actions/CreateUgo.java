@@ -1,5 +1,5 @@
 /*
- * $Id: CreateUgo.java,v 1.18 2006/02/15 12:18:11 stas Exp $
+ * $Id: CreateUgo.java,v 1.18.4.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2006/02/15 12:18:11 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18.4.1 $, $Date: 2006/05/18 17:50:00 $
  * @module schemeclient
  */
 
@@ -123,7 +123,7 @@ public class CreateUgo {
 		
 		int lines = 0;
 		try {
-			for (SchemeElement se : element.getSchemeElements(false)) {
+			for (SchemeElement se : element.getSchemeElements()) {
 				lines = createGroup(lines, graph, step, se);
 			}
 		} catch (ApplicationException e) {
@@ -133,10 +133,10 @@ public class CreateUgo {
 	
 	private static int createGroup(int lines, SchemeGraph graph, int step, SchemeElement element) throws ApplicationException {
 		List<Object> toInsert = new LinkedList<Object>();
-		for (SchemeDevice dev : element.getSchemeDevices(false)) {
+		for (SchemeDevice dev : element.getSchemeDevices()) {
 			int columns = 0;
-			List<SchemePort> schemePorts = ClientUtils.getSortedPorts(dev.getSchemePorts(false));
-			List<SchemeCablePort> schemeCablePorts = ClientUtils.getSortedCablePorts(dev.getSchemeCablePorts(false));
+			List<SchemePort> schemePorts = ClientUtils.getSortedPorts(dev.getSchemePorts());
+			List<SchemeCablePort> schemeCablePorts = ClientUtils.getSortedCablePorts(dev.getSchemeCablePorts());
 			
 			Rectangle bounds = new Rectangle(step, step * (lines + 1), step * (schemePorts.size() + schemeCablePorts.size()), step);
 			DeviceCell cell = SchemeActions.createDevice(graph, "", bounds, dev.getId());  //$NON-NLS-1$
@@ -159,7 +159,7 @@ public class CreateUgo {
 		if (objs.length != 0) {
 			CreateGroup.createElementsGroup(graph, objs, element);
 		}
-		for (SchemeElement inner : element.getSchemeElements(false)) {
+		for (SchemeElement inner : element.getSchemeElements()) {
 			lines = createGroup(lines, graph, step, inner);
 		}
 		return lines;

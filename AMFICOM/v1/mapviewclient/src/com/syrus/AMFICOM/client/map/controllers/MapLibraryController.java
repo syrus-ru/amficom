@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryController.java,v 1.14 2006/04/14 12:04:07 arseniy Exp $$
+ * $$Id: MapLibraryController.java,v 1.14.2.1 2006/05/18 17:50:00 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 /**
  * контроллер типа сетевого узла.
  * 
- * @version $Revision: 1.14 $, $Date: 2006/04/14 12:04:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14.2.1 $, $Date: 2006/05/18 17:50:00 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -70,7 +70,6 @@ public class MapLibraryController {
 	 * @param codename кодовое имя
 	 * @return тип сетевого узла
 	 * @throws ApplicationException 
-	 * @throws CreateObjectException 
 	 */
 	private static MapLibrary getMapLibrary(
 			Identifier userId,

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.127 2006/04/04 09:33:26 arseniy Exp $
+ * $Id: SchemePath.java,v 1.127.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,8 +73,8 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
 /**
  * #16 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.127 $, $Date: 2006/04/04 09:33:26 $
+ * @author $Author: bass $
+ * @version $Revision: 1.127.2.1 $, $Date: 2006/05/18 17:50:00 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -158,15 +158,12 @@ public final class SchemePath extends StorableObject
 	 * @param parentSchemeMonitoringSolution
 	 * @throws CreateObjectException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemePath createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
 			final TransmissionPath transmissionPath,
 			final SchemeMonitoringSolution parentSchemeMonitoringSolution)
 	throws CreateObjectException {
-		final boolean usePool = false;
-
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -183,7 +180,7 @@ public final class SchemePath extends StorableObject
 					description,
 					transmissionPath,
 					parentSchemeMonitoringSolution);
-			parentSchemeMonitoringSolution.getSchemePathContainerWrappee().addToCache(schemePath, usePool);
+			parentSchemeMonitoringSolution.getSchemePathContainerWrappee().addToCache(schemePath);
 
 			schemePath.markAsChanged();
 			return schemePath;
@@ -211,16 +208,16 @@ public final class SchemePath extends StorableObject
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getPathMembers0()) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);
@@ -286,13 +283,11 @@ public final class SchemePath extends StorableObject
 	/**
 	 * @param schemePath
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void getXmlTransferable(final XmlSchemePath schemePath,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException {
 		throw new UnsupportedOperationException();
 	}
@@ -377,15 +372,13 @@ public final class SchemePath extends StorableObject
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeMonitoringSolution(SchemeMonitoringSolution, boolean)}.
+	 * A wrapper around {@link #setParentSchemeMonitoringSolution(SchemeMonitoringSolution)}.
 	 *
 	 * @param parentSchemeMonitoringSolutionId
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	void setParentSchemeMonitoringSolutionId(
-			final Identifier parentSchemeMonitoringSolutionId,
-			final boolean usePool)
+			final Identifier parentSchemeMonitoringSolutionId)
 	throws ApplicationException {
 		assert parentSchemeMonitoringSolutionId != null : NON_NULL_EXPECTED;
 		assert parentSchemeMonitoringSolutionId.isVoid() || parentSchemeMonitoringSolutionId.getMajor() == SCHEMEMONITORINGSOLUTION_CODE;
@@ -395,18 +388,15 @@ public final class SchemePath extends StorableObject
 		}
 
 		this.setParentSchemeMonitoringSolution(
-				StorableObjectPool.<SchemeMonitoringSolution>getStorableObject(parentSchemeMonitoringSolutionId, true),
-				usePool);
+				StorableObjectPool.<SchemeMonitoringSolution>getStorableObject(parentSchemeMonitoringSolutionId, true));
 	}
 
 	/**
 	 * @param parentSchemeMonitoringSolution
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	public void setParentSchemeMonitoringSolution(
-			final SchemeMonitoringSolution parentSchemeMonitoringSolution,
-			final boolean usePool)
+			final SchemeMonitoringSolution parentSchemeMonitoringSolution)
 	throws ApplicationException {
 		assert this.parentSchemeMonitoringSolutionId != null : OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeMonitoringSolutionId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
@@ -416,13 +406,13 @@ public final class SchemePath extends StorableObject
 			return;
 		}
 
-		this.getParentSchemeMonitoringSolution().getSchemePathContainerWrappee().removeFromCache(this, usePool);
+		this.getParentSchemeMonitoringSolution().getSchemePathContainerWrappee().removeFromCache(this);
 
 		if (parentSchemeMonitoringSolution == null) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-			StorableObjectPool.delete(this.getReverseDependencies(usePool));
+			StorableObjectPool.delete(this.getReverseDependencies());
 		} else {
-			parentSchemeMonitoringSolution.getSchemePathContainerWrappee().addToCache(this, usePool);
+			parentSchemeMonitoringSolution.getSchemePathContainerWrappee().addToCache(this);
 		}
 
 		this.parentSchemeMonitoringSolutionId = newParentSchemeMonitoringSolutionId;
@@ -545,74 +535,66 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic)
 	 */
-	public void addCharacteristic(final Characteristic characteristic,
-			final boolean usePool)
+	public void addCharacteristic(final Characteristic characteristic)
 	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
-		characteristic.setParentCharacterizable(this, usePool);
+		characteristic.setParentCharacterizable(this);
 	}
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic)
 	 */
 	public void removeCharacteristic(
-			final Characteristic characteristic,
-			final boolean usePool)
+			final Characteristic characteristic)
 	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		characteristic.setParentCharacterizable(this, usePool);
+		characteristic.setParentCharacterizable(this);
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public Set<Characteristic> getCharacteristics(boolean usePool)
+	public Set<Characteristic> getCharacteristics()
 	throws ApplicationException {
-		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
+		return Collections.unmodifiableSet(this.getCharacteristics0());
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	Set<Characteristic> getCharacteristics0(final boolean usePool)
+	Set<Characteristic> getCharacteristics0()
 	throws ApplicationException {
-		return this.getCharacteristicContainerWrappee().getContainees(usePool);
+		return this.getCharacteristicContainerWrappee().getContainees();
 	}
 
 	/**
 	 * @param characteristics
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(final Set<Characteristic> characteristics,
-			final boolean usePool)
+	public void setCharacteristics(final Set<Characteristic> characteristics)
 	throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;
 
-		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);
+		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0();
 
 		final Set<Characteristic> toRemove = new HashSet<Characteristic>(oldCharacteristics);
 		toRemove.removeAll(characteristics);
 		for (final Characteristic characteristic : toRemove) {
-			this.removeCharacteristic(characteristic, usePool);
+			this.removeCharacteristic(characteristic);
 		}
 
 		final Set<Characteristic> toAdd = new HashSet<Characteristic>(characteristics);
 		toAdd.removeAll(oldCharacteristics);
 		for (final Characteristic characteristic : toAdd) {
-			this.addCharacteristic(characteristic, usePool);
+			this.addCharacteristic(characteristic);
 		}
 	}
 
@@ -669,11 +651,9 @@ public final class SchemePath extends StorableObject
 	/**
 	 * @return child <code>PathElement</code>s in an unsorted manner.
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	SortedSet<PathElement> getPathMembers0() throws ApplicationException {
-		final boolean usePool = false;
 		return new TreeSet<PathElement>(
-				this.getPathElementContainerWrappee().getContainees(usePool));
+				this.getPathElementContainerWrappee().getContainees());
 	}
 
 	/*-********************************************************************

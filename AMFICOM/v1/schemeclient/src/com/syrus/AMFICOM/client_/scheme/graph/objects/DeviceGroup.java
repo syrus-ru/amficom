@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceGroup.java,v 1.19 2006/02/15 12:18:11 stas Exp $
+ * $Id: DeviceGroup.java,v 1.19.4.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKi
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2006/02/15 12:18:11 $
+ * @author $Author: bass $
+ * @version $Revision: 1.19.4.1 $, $Date: 2006/05/18 17:50:00 $
  * @module schemeclient
  */
 
@@ -97,7 +97,7 @@ public class DeviceGroup extends DefaultGraphCell implements IdentifiableCell {
 			} else if (this.type == SCHEME_ELEMENT) { 
 				SchemeElement element = getSchemeElement();
 				if (element != null && element.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
-					return element.getScheme(false);
+					return element.getScheme();
 				}
 			}
 		} catch (final ApplicationException ae) {

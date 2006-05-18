@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolutionWrapper.java,v 1.15 2006/03/15 17:31:13 bass Exp $
+ * $Id: SchemeMonitoringSolutionWrapper.java,v 1.15.6.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2006/03/15 17:31:13 $
+ * @version $Revision: 1.15.6.1 $, $Date: 2006/05/18 17:50:00 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -112,8 +112,6 @@ public final class SchemeMonitoringSolutionWrapper extends StorableObjectWrapper
 			final SchemeMonitoringSolution schemeMonitoringSolution,
 			final String key, final Object value)
 	throws PropertyChangeException {
-		final boolean usePool = false;
-
 		try {
 			if (schemeMonitoringSolution != null) {
 				if (key.equals(COLUMN_NAME)) {
@@ -123,11 +121,11 @@ public final class SchemeMonitoringSolutionWrapper extends StorableObjectWrapper
 				} else if (key.equals(COLUMN_PRICE_USD)) {
 					schemeMonitoringSolution.setPrice(((Integer) value).intValue());
 				} else if (key.equals(COLUMN_ACTIVE)) {
-					schemeMonitoringSolution.setActive(((Boolean) value).booleanValue(), usePool);
+					schemeMonitoringSolution.setActive(((Boolean) value).booleanValue());
 				} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
-					schemeMonitoringSolution.setParentSchemeId((Identifier) value, usePool);
+					schemeMonitoringSolution.setParentSchemeId((Identifier) value);
 				} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
-					schemeMonitoringSolution.setParentSchemeOptimizeInfoId((Identifier) value, usePool);
+					schemeMonitoringSolution.setParentSchemeOptimizeInfoId((Identifier) value);
 				}
 			}
 		} catch (final ApplicationException ae) {

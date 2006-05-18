@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.113 2006/04/19 11:16:13 bass Exp $
+ * $Id: SchemeLink.java,v 1.113.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,7 +77,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.113 $, $Date: 2006/04/19 11:16:13 $
+ * @version $Revision: 1.113.2.1 $, $Date: 2006/05/18 17:50:00 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -244,7 +244,6 @@ public final class SchemeLink extends AbstractSchemeLink
 	 * @param parentScheme
 	 * @throws CreateObjectException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeLink createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -257,8 +256,6 @@ public final class SchemeLink extends AbstractSchemeLink
 			final SchemePort targetSchemePort,
 			final Scheme parentScheme)
 	throws CreateObjectException {
-		final boolean usePool = false;
-
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -284,7 +281,7 @@ public final class SchemeLink extends AbstractSchemeLink
 					parentScheme,
 					null,
 					null);
-			parentScheme.getSchemeLinkContainerWrappee().addToCache(schemeLink, usePool);
+			parentScheme.getSchemeLinkContainerWrappee().addToCache(schemeLink);
 
 			schemeLink.abstractLinkTypeSet = (link != null || linkType != null);
 
@@ -313,7 +310,6 @@ public final class SchemeLink extends AbstractSchemeLink
 	 * @param parentSchemeElement
 	 * @throws CreateObjectException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeLink createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -326,8 +322,6 @@ public final class SchemeLink extends AbstractSchemeLink
 			final SchemePort targetSchemePort,
 			final SchemeElement parentSchemeElement)
 	throws CreateObjectException {
-		final boolean usePool = false;
-
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -353,7 +347,7 @@ public final class SchemeLink extends AbstractSchemeLink
 					null,
 					parentSchemeElement,
 					null);
-			parentSchemeElement.getSchemeLinkContainerWrappee().addToCache(schemeLink, usePool);
+			parentSchemeElement.getSchemeLinkContainerWrappee().addToCache(schemeLink);
 
 			schemeLink.abstractLinkTypeSet = (link != null || linkType != null);
 
@@ -382,7 +376,6 @@ public final class SchemeLink extends AbstractSchemeLink
 	 * @param parentSchemeProtoElement
 	 * @throws CreateObjectException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeLink createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -395,8 +388,6 @@ public final class SchemeLink extends AbstractSchemeLink
 			final SchemePort targetSchemePort,
 			final SchemeProtoElement parentSchemeProtoElement)
 	throws CreateObjectException {
-		final boolean usePool = false;
-
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -422,7 +413,7 @@ public final class SchemeLink extends AbstractSchemeLink
 					null,
 					null,
 					parentSchemeProtoElement);
-			parentSchemeProtoElement.getSchemeLinkContainerWrappee().addToCache(schemeLink, usePool);
+			parentSchemeProtoElement.getSchemeLinkContainerWrappee().addToCache(schemeLink);
 
 			schemeLink.abstractLinkTypeSet = (link != null || linkType != null);
 
@@ -488,8 +479,6 @@ public final class SchemeLink extends AbstractSchemeLink
 	 */
 	@Override
 	public SchemeLink clone() throws CloneNotSupportedException {
-		final boolean usePool = false;
-
 		final StackTraceElement stackTrace[] = (new Throwable()).getStackTrace();
 		final int depth = 1;
 		if (stackTrace.length > depth) {
@@ -524,10 +513,10 @@ public final class SchemeLink extends AbstractSchemeLink
 			clone.clonedIdMap.put(this.id, clone.id);
 
 			clone.characteristicContainerWrappee = null;
-			for (final Characteristic characteristic : this.getCharacteristics0(usePool)) {
+			for (final Characteristic characteristic : this.getCharacteristics0()) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
-				clone.addCharacteristic(characteristicClone, usePool);
+				clone.addCharacteristic(characteristicClone);
 			}
 			return clone;
 		} catch (final ApplicationException ae) {
@@ -554,13 +543,13 @@ public final class SchemeLink extends AbstractSchemeLink
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);
@@ -775,17 +764,15 @@ public final class SchemeLink extends AbstractSchemeLink
 	/**
 	 * @param schemeLink
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeLink schemeLink,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException {
 		try {
-			super.getXmlTransferable(schemeLink, importType, usePool);
+			super.getXmlTransferable(schemeLink, importType);
 			if (schemeLink.isSetLinkTypeId()) {
 				schemeLink.unsetLinkTypeId();
 			}
@@ -924,16 +911,14 @@ public final class SchemeLink extends AbstractSchemeLink
 
 	/**
 	 * @param parentScheme
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see AbstractSchemeElement#setParentScheme(Scheme, boolean)
+	 * @see AbstractSchemeElement#setParentScheme(Scheme)
 	 * @todo Remove null warning suppression as soon as
 	 *       Eclipse's bug #137467/129907 gets fixed.
 	 */
 	@Override
 	@SuppressWarnings("null")
-	public void setParentScheme(final Scheme parentScheme,
-			final boolean usePool)
+	public void setParentScheme(final Scheme parentScheme)
 	throws ApplicationException {
 		final boolean thisParentSchemeIdVoid = this.parentSchemeId.isVoid();
 		final boolean thisParentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
@@ -958,7 +943,7 @@ public final class SchemeLink extends AbstractSchemeLink
 				 * Moving from a scheme protoelement to a scheme.
 				 * At this point, newParentSchemeId is non-void.
 				 */
-				this.getParentSchemeProtoElement().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+				this.getParentSchemeProtoElement().getSchemeLinkContainerWrappee().removeFromCache(this);
 
 				this.parentSchemeProtoElementId = VOID_IDENTIFIER;
 			} else {
@@ -966,7 +951,7 @@ public final class SchemeLink extends AbstractSchemeLink
 				 * Moving from a scheme element to a scheme.
 				 * At this point, newParentSchemeId is non-void.
 				 */
-				this.getParentSchemeElement().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+				this.getParentSchemeElement().getSchemeLinkContainerWrappee().removeFromCache(this);
 
 				this.parentSchemeElementId = VOID_IDENTIFIER;
 			}
@@ -975,16 +960,16 @@ public final class SchemeLink extends AbstractSchemeLink
 			 * Moving from a scheme to another scheme.
 			 * At this point, newParentSchemeId may be void.
 			 */
-			this.getParentScheme().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+			this.getParentScheme().getSchemeLinkContainerWrappee().removeFromCache(this);
 
 			if (parentSchemeNull) {
 				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-				StorableObjectPool.delete(this.getReverseDependencies(usePool));
+				StorableObjectPool.delete(this.getReverseDependencies());
 			}
 		}
 
 		if (!parentSchemeNull) {
-			parentScheme.getSchemeLinkContainerWrappee().addToCache(this, usePool);
+			parentScheme.getSchemeLinkContainerWrappee().addToCache(this);
 		}
 
 		this.parentSchemeId = newParentSchemeId;
@@ -992,14 +977,12 @@ public final class SchemeLink extends AbstractSchemeLink
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeElement(SchemeElement, boolean)}.
+	 * A wrapper around {@link #setParentSchemeElement(SchemeElement)}.
 	 *
 	 * @param parentSchemeElementId
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	void setParentSchemeElementId(final Identifier parentSchemeElementId,
-			final boolean usePool)
+	void setParentSchemeElementId(final Identifier parentSchemeElementId)
 	throws ApplicationException {
 		assert parentSchemeElementId != null : NON_NULL_EXPECTED;
 		assert parentSchemeElementId.isVoid() || parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
@@ -1009,20 +992,17 @@ public final class SchemeLink extends AbstractSchemeLink
 		}
 
 		this.setParentSchemeElement(
-				StorableObjectPool.<SchemeElement>getStorableObject(parentSchemeElementId, true),
-				usePool);
+				StorableObjectPool.<SchemeElement>getStorableObject(parentSchemeElementId, true));
 	}
 
 	/**
 	 * @param parentSchemeElement
-	 * @param usePool
 	 * @throws ApplicationException
 	 * @todo Remove null warning suppression as soon as
 	 *       Eclipse's bug #137467/129907 gets fixed.
 	 */
 	@SuppressWarnings("null")
-	public void setParentSchemeElement(final SchemeElement parentSchemeElement,
-			final boolean usePool)
+	public void setParentSchemeElement(final SchemeElement parentSchemeElement)
 	throws ApplicationException {
 		final boolean thisParentSchemeIdVoid = this.parentSchemeId.isVoid();
 		final boolean thisParentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
@@ -1047,7 +1027,7 @@ public final class SchemeLink extends AbstractSchemeLink
 				 * Moving from a scheme protoelement to a scheme element.
 				 * At this point, newParentSchemeElementId is non-void.
 				 */
-				this.getParentSchemeProtoElement().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+				this.getParentSchemeProtoElement().getSchemeLinkContainerWrappee().removeFromCache(this);
 
 				this.parentSchemeProtoElementId = VOID_IDENTIFIER;
 			} else {
@@ -1055,11 +1035,11 @@ public final class SchemeLink extends AbstractSchemeLink
 				 * Moving from a scheme element to another scheme element.
 				 * At this point, newParentSchemeElementId may be void.
 				 */
-				this.getParentSchemeElement().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+				this.getParentSchemeElement().getSchemeLinkContainerWrappee().removeFromCache(this);
 
 				if (parentSchemeElementIsNull) {
 					Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-					StorableObjectPool.delete(this.getReverseDependencies(usePool));
+					StorableObjectPool.delete(this.getReverseDependencies());
 				}
 			}
 		} else {
@@ -1067,13 +1047,13 @@ public final class SchemeLink extends AbstractSchemeLink
 			 * Moving from a scheme to a scheme element. At this
 			 * point, newParentSchemeElementId is non-void.
 			 */
-			super.getParentScheme().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+			super.getParentScheme().getSchemeLinkContainerWrappee().removeFromCache(this);
 
 			super.parentSchemeId = VOID_IDENTIFIER;
 		}
 
 		if (!parentSchemeElementIsNull) {
-			parentSchemeElement.getSchemeLinkContainerWrappee().addToCache(this, usePool);
+			parentSchemeElement.getSchemeLinkContainerWrappee().addToCache(this);
 		}
 
 		this.parentSchemeElementId = newParentSchemeElementId;
@@ -1081,15 +1061,13 @@ public final class SchemeLink extends AbstractSchemeLink
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeProtoElement(SchemeProtoElement, boolean)}.
+	 * A wrapper around {@link #setParentSchemeProtoElement(SchemeProtoElement)}.
 	 *
 	 * @param parentSchemeProtoElementId
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	void setParentSchemeProtoElementId(
-			final Identifier parentSchemeProtoElementId,
-			final boolean usePool)
+			final Identifier parentSchemeProtoElementId)
 	throws ApplicationException {
 		assert parentSchemeProtoElementId != null : NON_NULL_EXPECTED;
 		assert parentSchemeProtoElementId.isVoid() || parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
@@ -1099,21 +1077,18 @@ public final class SchemeLink extends AbstractSchemeLink
 		}
 
 		this.setParentSchemeProtoElement(
-				StorableObjectPool.<SchemeProtoElement>getStorableObject(parentSchemeProtoElementId, true),
-				usePool);
+				StorableObjectPool.<SchemeProtoElement>getStorableObject(parentSchemeProtoElementId, true));
 	}
 
 	/**
 	 * @param parentSchemeProtoElement
-	 * @param usePool
 	 * @throws ApplicationException
 	 * @todo Remove null warning suppression as soon as
 	 *       Eclipse's bug #137467/129907 gets fixed.
 	 */
 	@SuppressWarnings("null")
 	public void setParentSchemeProtoElement(
-			final SchemeProtoElement parentSchemeProtoElement,
-			final boolean usePool)
+			final SchemeProtoElement parentSchemeProtoElement)
 	throws ApplicationException {
 		final boolean thisParentSchemeIdVoid = this.parentSchemeId.isVoid();
 		final boolean thisParentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
@@ -1138,18 +1113,18 @@ public final class SchemeLink extends AbstractSchemeLink
 				 * Moving from a scheme protoelement to another scheme protoelement.
 				 * At this point, newParentSchemeProtoElementId may be void.
 				 */
-				this.getParentSchemeProtoElement().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+				this.getParentSchemeProtoElement().getSchemeLinkContainerWrappee().removeFromCache(this);
 
 				if (parentSchemeProtoElementNull) {
 					Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-					StorableObjectPool.delete(this.getReverseDependencies(usePool));
+					StorableObjectPool.delete(this.getReverseDependencies());
 				}
 			} else {
 				/*
 				 * Moving from a scheme element to a scheme protoelement.
 				 * At this point, newParentSchemeProtoElementId is non-void.
 				 */
-				this.getParentSchemeElement().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+				this.getParentSchemeElement().getSchemeLinkContainerWrappee().removeFromCache(this);
 
 				this.parentSchemeElementId = VOID_IDENTIFIER;
 			}
@@ -1158,13 +1133,13 @@ public final class SchemeLink extends AbstractSchemeLink
 			 * Moving from a scheme to a scheme protoelement.
 			 * At this point, newParentSchemeProtoElementId is non-void.
 			 */
-			this.getParentScheme().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+			this.getParentScheme().getSchemeLinkContainerWrappee().removeFromCache(this);
 
 			super.parentSchemeId = VOID_IDENTIFIER;
 		}
 
 		if (!parentSchemeProtoElementNull) {
-			parentSchemeProtoElement.getSchemeLinkContainerWrappee().addToCache(this, usePool);
+			parentSchemeProtoElement.getSchemeLinkContainerWrappee().addToCache(this);
 		}
 
 		this.parentSchemeProtoElementId = newParentSchemeProtoElementId;

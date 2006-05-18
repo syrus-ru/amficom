@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysModelGenerator.java,v 1.2 2006/01/11 14:46:01 stas Exp $
+ * $Id: PhysModelGenerator.java,v 1.2.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -271,7 +271,7 @@ public class PhysModelGenerator {
 		double attenuation;
 
 		if (scl.getAbstractLink() != null)
-			ht = scl.getAbstractLink().getCharacteristics(false);
+			ht = scl.getAbstractLink().getCharacteristics();
 
 		if (ht == null)
 		{
@@ -279,7 +279,7 @@ public class PhysModelGenerator {
 			if(linkType == null)
 				return null;
 			else
-				ht = linkType.getCharacteristics(false);
+				ht = linkType.getCharacteristics();
 		}
 
 		c = getCharacteristic(ht, attenuationString);
@@ -313,9 +313,9 @@ public class PhysModelGenerator {
 		}
 
 		if (sp.getPort() != null)
-			ht = sp.getPort().getCharacteristics(false);
+			ht = sp.getPort().getCharacteristics();
 		else
-			ht = portType.getCharacteristics(false);
+			ht = portType.getCharacteristics();
 
 		ModelingEvent event = new ModelingEvent();
 		if(portType.getSort().value() == PortTypeSort._PORTTYPESORT_OPTICAL) // optical connector
@@ -364,14 +364,14 @@ public class PhysModelGenerator {
 		double attenuation;
 
 		if (sl.getAbstractLink() != null)
-				ht = sl.getAbstractLink().getCharacteristics(false);
+				ht = sl.getAbstractLink().getCharacteristics();
 		if (ht == null)
 		{
 			LinkType linkType =	sl.getAbstractLinkType();
 			if(linkType == null)
 				return null;
 			else
-				ht = linkType.getCharacteristics(false);
+				ht = linkType.getCharacteristics();
 		}
 
 		c = getCharacteristic(ht, attenuationString);

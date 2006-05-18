@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.44 2006/04/28 09:01:32 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.44.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,8 +74,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.44 $, $Date: 2006/04/28 09:01:32 $
+ * @author $Author: bass $
+ * @version $Revision: 1.44.2.1 $, $Date: 2006/05/18 17:50:00 $
  * @module schemeclient
  */
 
@@ -253,17 +253,17 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 					if (res.getCellContainerType() == SchemeResource.SCHEME) {
 						Scheme scheme = res.getScheme();
 						if (!scheme.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
-							StorableObjectPool.cleanChangedStorableObjects(scheme.getReverseDependencies(false));
+							StorableObjectPool.cleanChangedStorableObjects(scheme.getReverseDependencies());
 						}
 					} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
 						SchemeElement schemeElement = res.getSchemeElement();
 						if (!schemeElement.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
-							StorableObjectPool.cleanChangedStorableObjects(schemeElement.getReverseDependencies(false));
+							StorableObjectPool.cleanChangedStorableObjects(schemeElement.getReverseDependencies());
 						}
 					} else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
 						SchemeProtoElement schemeProtoElement = res.getSchemeProtoElement();
 						if (!schemeProtoElement.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
-							StorableObjectPool.cleanChangedStorableObjects(schemeProtoElement.getReverseDependencies(false));
+							StorableObjectPool.cleanChangedStorableObjects(schemeProtoElement.getReverseDependencies());
 						}
 					}
 				}

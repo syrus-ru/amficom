@@ -269,10 +269,10 @@ public class PathBuilder {
 		
 		if (!path.getPathMembers().isEmpty()) {  // non fisrt element
 			if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
-				Scheme scheme = se.getScheme(false);
+				Scheme scheme = se.getScheme();
 				exploreScheme(path, scheme);
 				return path.getPathMembers().last();
-			} else if (!se.getSchemeElements(false).isEmpty()) {
+			} else if (!se.getSchemeElements().isEmpty()) {
 				exploreSchemeElement(path, se);
 				return path.getPathMembers().last();
 			}
@@ -284,7 +284,7 @@ public class PathBuilder {
 			if (lastPE.getKind() == IdlKind.SCHEME_LINK) {
 				SchemeLink link = lastPE.getSchemeLink();
 				SchemePort endPort = link.getTargetAbstractSchemePort();
-				Set<SchemePort> sePorts = se.getSchemePortsRecursively(false);
+				Set<SchemePort> sePorts = se.getSchemePortsRecursively();
 				if (sePorts.contains(endPort)) {
 					newStartPort = endPort;
 				} else {
@@ -296,7 +296,7 @@ public class PathBuilder {
 			} else if (lastPE.getKind() == IdlKind.SCHEME_CABLE_LINK) {
 				SchemeCableLink link = lastPE.getSchemeCableLink();
 				SchemeCablePort endPort = link.getTargetAbstractSchemePort();
-				Set<SchemeCablePort> sePorts = se.getSchemeCablePortsRecursively(false);
+				Set<SchemeCablePort> sePorts = se.getSchemeCablePortsRecursively();
 				if (sePorts.contains(endPort)) {
 					newStartPort = endPort;
 				} else {
@@ -370,7 +370,7 @@ public class PathBuilder {
 			}
 		} else {//first element
 			// must be non scheme element
-			if (se.getScheme(false) != null) {
+			if (se.getScheme() != null) {
 				JOptionPane.showMessageDialog(AbstractMainFrame.getActiveMainFrame(), 
 				LangModelScheme.getString("Message.error.path.starting_scheme"), 
 				LangModelScheme.getString("Message.error"), 
@@ -382,7 +382,7 @@ public class PathBuilder {
 			int accessPorts = 0;
 			SchemePort port = null;
 
-			for (SchemePort p : se.getSchemePortsRecursively(false)) {
+			for (SchemePort p : se.getSchemePortsRecursively()) {
 				MeasurementPort measurementPort = p.getMeasurementPort();
 				if (measurementPort != null && measurementPort.getType() != null) {
 					port = p;
@@ -429,7 +429,7 @@ public class PathBuilder {
 					}
 				} 
 				//если не нашли - пытаемся найти по общему порту предыдущего эл-та и линка
-				for (SchemePort port : se.getSchemePortsRecursively(false)) {
+				for (SchemePort port : se.getSchemePortsRecursively()) {
 					if (port.equals(link.getSourceAbstractSchemePort()) ||
 							port.equals(link.getTargetAbstractSchemePort())) {
 						lastPE.setEndAbstractSchemePort(port);
@@ -465,7 +465,7 @@ public class PathBuilder {
 						newStartPort = (SchemeCablePort)lastEndPort; 
 					}
 				} else { //в противном случае ищем по общему порту предыдущего эл-та и линка
-					for (SchemeCablePort port : se.getSchemeCablePortsRecursively(false)) {
+					for (SchemeCablePort port : se.getSchemeCablePortsRecursively()) {
 						if (port.equals(link.getSourceAbstractSchemePort()) ||
 								port.equals(link.getTargetAbstractSchemePort())) {
 							lastPE.setEndAbstractSchemePort(port);
@@ -530,7 +530,7 @@ public class PathBuilder {
 			SchemeCablePort port = (SchemeCablePort)it.next();
 			if (port.getAbstractSchemeLink() != null)
 			{
-				if (port.getAbstractSchemeLink().getSchemeCableThreads(false).contains(thread))
+				if (port.getAbstractSchemeLink().getSchemeCableThreads().contains(thread))
 					return port;
 			}
 		}

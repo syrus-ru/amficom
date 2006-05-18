@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationImporter.java,v 1.1 2006/04/21 10:19:14 arseniy Exp $
+ * $Id: ConfigurationImporter.java,v 1.1.2.1 2006/05/18 17:50:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -300,7 +300,7 @@ public class ConfigurationImporter extends Importer {
 					
 					if (protoEquipment != null) {
 						try {
-							protoEquipment.setCharacteristics(characteristics, false);
+							protoEquipment.setCharacteristics(characteristics);
 						} catch (ApplicationException e) {
 							throw new CreateObjectException(e);
 						}
@@ -423,7 +423,7 @@ public class ConfigurationImporter extends Importer {
 					}
 					
 					try {
-						linkType.setCharacteristics(characteristics, false);
+						linkType.setCharacteristics(characteristics);
 					} catch (ApplicationException e) {
 						throw new CreateObjectException(e);
 					}
@@ -546,7 +546,7 @@ public class ConfigurationImporter extends Importer {
 					}
 					
 					try {
-						linkType.setCharacteristics(characteristics, false);
+						linkType.setCharacteristics(characteristics);
 					} catch (ApplicationException e) {
 						throw new CreateObjectException(e);
 					}
@@ -662,7 +662,7 @@ public class ConfigurationImporter extends Importer {
 					}
 					
 					try {
-						portType.setCharacteristics(characteristics, false);
+						portType.setCharacteristics(characteristics);
 					} catch (ApplicationException e) {
 						throw new CreateObjectException(e);
 					}

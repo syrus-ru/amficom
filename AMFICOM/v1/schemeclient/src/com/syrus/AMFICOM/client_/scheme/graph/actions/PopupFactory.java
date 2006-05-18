@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.27 2006/04/07 13:53:02 arseniy Exp $
+ * $Id: PopupFactory.java,v 1.27.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -121,7 +121,7 @@ public class PopupFactory {
 			if (group.getType() == DeviceGroup.SCHEME_ELEMENT) {
 				final SchemeElement se = group.getSchemeElement();
 				if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
-					pop.add(createOpenSchemeMenuItem(aContext, se.getScheme(false)));
+					pop.add(createOpenSchemeMenuItem(aContext, se.getScheme()));
 					if (editable) {
 						JMenuItem item2 = createRefreshSchemeElementMenuItem(pane.getGraph(), se);
 						if (item2 != null) {
@@ -343,7 +343,7 @@ public class PopupFactory {
 								
 								Point p = getCenterPoint(graph, view);
 								SchemeActions.insertSEbyPE(graph, schemeElement, schemeElement.getClonedIdMap(), p, true);
-								Set<SchemeCablePort> cablePorts = schemeElement.getSchemeCablePortsRecursively(false);
+								Set<SchemeCablePort> cablePorts = schemeElement.getSchemeCablePortsRecursively();
 								CablePortCell inPort = null;
 								CablePortCell outPort = null;
 
@@ -604,7 +604,7 @@ public class PopupFactory {
 		Identifier innerId;
 		try {
 			if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
-				Scheme scheme = se.getScheme(true);
+				Scheme scheme = se.getScheme();
 				innerId = scheme.getId();
 				
 				if (scheme.getUgoCell() != null) {
@@ -618,7 +618,7 @@ public class PopupFactory {
 			}
 
 			if ((v != null && v.size() != 0 && ((Object[]) v.get(0)).length != 0) && 
-					(innerId.getMajor() == ObjectEntities.SCHEME_CODE || !se.getSchemeElements(false).isEmpty())) {
+					(innerId.getMajor() == ObjectEntities.SCHEME_CODE || !se.getSchemeElements().isEmpty())) {
 				JMenuItem menu1 = new JMenuItem(new AbstractAction() {
 					private static final long serialVersionUID = 7612382099522511230L;
 					
@@ -627,7 +627,7 @@ public class PopupFactory {
 							Identifier innerId1;
 							SchemeImageResource sir;
 							if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
-								Scheme scheme = se.getScheme(true);
+								Scheme scheme = se.getScheme();
 								innerId1 = scheme.getId();
 								sir = scheme.getUgoCell();
 							} else { // SchemeElement container
@@ -655,7 +655,7 @@ public class PopupFactory {
 			v = se.getUgoCell().getData();
 		}
 		try {
-			if ((v != null && v.size() != 0 && ((Object[]) v.get(0)).length != 0) && !se.getSchemeElements(false).isEmpty()) {
+			if ((v != null && v.size() != 0 && ((Object[]) v.get(0)).length != 0) && !se.getSchemeElements().isEmpty()) {
 				JMenuItem menu1 = new JMenuItem(new AbstractAction() {
 					private static final long serialVersionUID = 7612382099522511230L;
 					

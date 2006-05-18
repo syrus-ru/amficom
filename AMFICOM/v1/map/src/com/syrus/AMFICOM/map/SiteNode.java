@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.125 2006/03/15 14:47:33 bass Exp $
+ * $Id: SiteNode.java,v 1.125.2.1 2006/05/18 17:47:22 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.125 $, $Date: 2006/03/15 14:47:33 $
+ * @version $Revision: 1.125.2.1 $, $Date: 2006/05/18 17:47:22 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -147,8 +147,6 @@ public class SiteNode extends AbstractNode
 				|| building == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
-		final boolean usePool = false;
-
 		try {
 			final SiteNode siteNode = new SiteNode(IdentifierPool.getGeneratedIdentifier(SITENODE_CODE),
 					creatorId,
@@ -163,7 +161,7 @@ public class SiteNode extends AbstractNode
 					street,
 					building);
 
-			siteNode.copyCharacteristics(siteNodeType, usePool);
+			siteNode.copyCharacteristics(siteNodeType);
 
 			assert siteNode.isValid() : OBJECT_BADLY_INITIALIZED;
 
@@ -177,12 +175,12 @@ public class SiteNode extends AbstractNode
 		}
 	}
 
-	private void copyCharacteristics(SiteNodeType siteNodeType, boolean usePool) throws ApplicationException {
+	private void copyCharacteristics(SiteNodeType siteNodeType) throws ApplicationException {
 		try {
-			for (final Characteristic characteristic : siteNodeType.getCharacteristics0(usePool)) {
+			for (final Characteristic characteristic : siteNodeType.getCharacteristics0()) {
 				if (characteristic.getType().getSort() == CharacteristicTypeSort.OPERATIONAL) {
 					final Characteristic characteristicClone = characteristic.clone();
-					this.addCharacteristic(characteristicClone, usePool);
+					this.addCharacteristic(characteristicClone);
 				}
 			}
 		} catch (final CloneNotSupportedException cnse) {
@@ -364,13 +362,11 @@ public class SiteNode extends AbstractNode
 	/**
 	 * @param siteNode
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public final void getXmlTransferable(final XmlSiteNode siteNode,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException {
 		this.id.getXmlTransferable(siteNode.addNewId(), importType);
 		siteNode.setName(this.name);
@@ -569,74 +565,66 @@ public class SiteNode extends AbstractNode
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic)
 	 */
-	public final void addCharacteristic(final Characteristic characteristic,
-			final boolean usePool)
+	public final void addCharacteristic(final Characteristic characteristic)
 	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
-		characteristic.setParentCharacterizable(this, usePool);
+		characteristic.setParentCharacterizable(this);
 	}
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic)
 	 */
 	public final void removeCharacteristic(
-			final Characteristic characteristic,
-			final boolean usePool)
+			final Characteristic characteristic)
 	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		characteristic.setParentCharacterizable(this, usePool);
+		characteristic.setParentCharacterizable(this);
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public final Set<Characteristic> getCharacteristics(boolean usePool)
+	public final Set<Characteristic> getCharacteristics()
 	throws ApplicationException {
-		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
+		return Collections.unmodifiableSet(this.getCharacteristics0());
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	final Set<Characteristic> getCharacteristics0(final boolean usePool)
+	final Set<Characteristic> getCharacteristics0()
 	throws ApplicationException {
-		return this.getCharacteristicContainerWrappee().getContainees(usePool);
+		return this.getCharacteristicContainerWrappee().getContainees();
 	}
 
 	/**
 	 * @param characteristics
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public final void setCharacteristics(final Set<Characteristic> characteristics,
-			final boolean usePool)
+	public final void setCharacteristics(final Set<Characteristic> characteristics)
 	throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;
 
-		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);
+		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0();
 
 		final Set<Characteristic> toRemove = new HashSet<Characteristic>(oldCharacteristics);
 		toRemove.removeAll(characteristics);
 		for (final Characteristic characteristic : toRemove) {
-			this.removeCharacteristic(characteristic, usePool);
+			this.removeCharacteristic(characteristic);
 		}
 
 		final Set<Characteristic> toAdd = new HashSet<Characteristic>(characteristics);
 		toAdd.removeAll(oldCharacteristics);
 		for (final Characteristic characteristic : toAdd) {
-			this.addCharacteristic(characteristic, usePool);
+			this.addCharacteristic(characteristic);
 		}
 	}
 }

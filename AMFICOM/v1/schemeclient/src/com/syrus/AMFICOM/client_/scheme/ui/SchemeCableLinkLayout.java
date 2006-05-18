@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkLayout.java,v 1.21 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemeCableLinkLayout.java,v 1.21.2.1 2006/05/18 17:50:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2006/05/03 04:48:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.21.2.1 $, $Date: 2006/05/18 17:50:01 $
  * @module schemeclient
  */
 
@@ -159,7 +159,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 				
 				Color color = Color.WHITE;
 				try {
-					Characteristic ch = ClientUtils.getCharacteristic(sct.getCharacteristics(false), CharacteristicTypeCodenames.COMMON_COLOUR);
+					Characteristic ch = ClientUtils.getCharacteristic(sct.getCharacteristics(), CharacteristicTypeCodenames.COMMON_COLOUR);
 					if (ch != null) {
 						color = new Color(Integer.parseInt(ch.getValue()));
 					}
@@ -211,7 +211,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 					
 					Color color = Color.WHITE;
 					try {
-						Characteristic ch = ClientUtils.getCharacteristic(sct.getCharacteristics(false), CharacteristicTypeCodenames.COMMON_COLOUR);
+						Characteristic ch = ClientUtils.getCharacteristic(sct.getCharacteristics(), CharacteristicTypeCodenames.COMMON_COLOUR);
 						if (ch != null) {
 							color = new Color(Integer.parseInt(ch.getValue()));
 						}

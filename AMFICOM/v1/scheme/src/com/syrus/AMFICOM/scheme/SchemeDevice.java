@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.124 2006/04/19 11:16:13 bass Exp $
+ * $Id: SchemeDevice.java,v 1.124.2.1 2006/05/18 17:50:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,7 @@ import com.syrus.util.transport.xml.XmlTransferableObject;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.124 $, $Date: 2006/04/19 11:16:13 $
+ * @version $Revision: 1.124.2.1 $, $Date: 2006/05/18 17:50:00 $
  * @module scheme
  */
 public final class SchemeDevice
@@ -199,14 +199,11 @@ public final class SchemeDevice
 	 * @param parentSchemeProtoElement
 	 * @throws CreateObjectException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeDevice createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
 			final SchemeProtoElement parentSchemeProtoElement)
 	throws CreateObjectException {
-		final boolean usePool = false;
-
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -224,7 +221,7 @@ public final class SchemeDevice
 					description,
 					parentSchemeProtoElement,
 					null);
-			parentSchemeProtoElement.getSchemeDeviceContainerWrappee().addToCache(schemeDevice, usePool);
+			parentSchemeProtoElement.getSchemeDeviceContainerWrappee().addToCache(schemeDevice);
 
 			schemeDevice.markAsChanged();
 			return schemeDevice;
@@ -244,14 +241,11 @@ public final class SchemeDevice
 	 * @param parentSchemeElement
 	 * @throws CreateObjectException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeDevice createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
 			final SchemeElement parentSchemeElement)
 	throws CreateObjectException {
-		final boolean usePool = false;
-
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -269,7 +263,7 @@ public final class SchemeDevice
 					description,
 					null,
 					parentSchemeElement);
-			parentSchemeElement.getSchemeDeviceContainerWrappee().addToCache(schemeDevice, usePool);
+			parentSchemeElement.getSchemeDeviceContainerWrappee().addToCache(schemeDevice);
 
 			schemeDevice.markAsChanged();
 			return schemeDevice;
@@ -329,8 +323,6 @@ public final class SchemeDevice
 
 	@Override
 	public SchemeDevice clone() throws CloneNotSupportedException {
-		final boolean usePool = true;
-
 		final StackTraceElement stackTrace[] = (new Throwable()).getStackTrace();
 		final int depth = 1;
 		if (stackTrace.length > depth) {
@@ -364,22 +356,22 @@ public final class SchemeDevice
 			clone.clonedIdMap.put(this.id, clone.id);
 	
 			clone.characteristicContainerWrappee = null;
-			for (final Characteristic characteristic : this.getCharacteristics0(usePool)) {
+			for (final Characteristic characteristic : this.getCharacteristics0()) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
-				clone.addCharacteristic(characteristicClone, usePool);
+				clone.addCharacteristic(characteristicClone);
 			}
 			clone.schemePortContainerWrappee = null;
-			for (final SchemePort schemePort : this.getSchemePorts0(usePool)) {
+			for (final SchemePort schemePort : this.getSchemePorts0()) {
 				final SchemePort schemePortClone = schemePort.clone();
 				clone.clonedIdMap.putAll(schemePortClone.getClonedIdMap());
-				clone.addSchemePort(schemePortClone, usePool);
+				clone.addSchemePort(schemePortClone);
 			}
 			clone.schemeCablePortContainerWrappee = null;
-			for (final SchemeCablePort schemeCablePort : this.getSchemeCablePorts0(usePool)) {
+			for (final SchemeCablePort schemeCablePort : this.getSchemeCablePorts0()) {
 				final SchemeCablePort schemeCablePortClone = schemeCablePort.clone();
 				clone.clonedIdMap.putAll(schemeCablePortClone.getClonedIdMap());
-				clone.addSchemeCablePort(schemeCablePortClone, usePool);
+				clone.addSchemeCablePort(schemeCablePortClone);
 			}
 			return clone;
 		} catch (final ApplicationException ae) {
@@ -403,19 +395,19 @@ public final class SchemeDevice
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
-	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
+	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemePorts0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemePorts0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeCablePorts0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeCablePorts0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);
@@ -514,14 +506,12 @@ public final class SchemeDevice
 	/**
 	 * @param schemeDevice
 	 * @param importType
-	 * @param usePool
 	 * @throws XmlConversionException
-	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String, boolean)
+	 * @see com.syrus.util.transport.xml.XmlTransferableObject#getXmlTransferable(org.apache.xmlbeans.XmlObject, String)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeDevice schemeDevice,
-			final String importType,
-			final boolean usePool)
+			final String importType)
 	throws XmlConversionException {
 		try {
 			super.id.getXmlTransferable(schemeDevice.addNewId(), importType);
@@ -547,31 +537,31 @@ public final class SchemeDevice
 			if (schemeDevice.isSetCharacteristics()) {
 				schemeDevice.unsetCharacteristics();
 			}
-			final Set<Characteristic> characteristics = this.getCharacteristics0(usePool);
+			final Set<Characteristic> characteristics = this.getCharacteristics0();
 			if (!characteristics.isEmpty()) {
 				final XmlCharacteristicSeq characteristicSeq = schemeDevice.addNewCharacteristics();
 				for (final Characteristic characteristic : characteristics) {
-					characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);
+					characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType);
 				}
 			}
 			if (schemeDevice.isSetSchemePorts()) {
 				schemeDevice.unsetSchemePorts();
 			}
-			final Set<SchemePort> schemePorts = this.getSchemePorts0(usePool);
+			final Set<SchemePort> schemePorts = this.getSchemePorts0();
 			if (!schemePorts.isEmpty()) {
 				final XmlSchemePortSeq schemePortSeq = schemeDevice.addNewSchemePorts();
 				for (final SchemePort schemePort : schemePorts) {
-					schemePort.getXmlTransferable(schemePortSeq.addNewSchemePort(), importType, usePool);
+					schemePort.getXmlTransferable(schemePortSeq.addNewSchemePort(), importType);
 				}
 			}
 			if (schemeDevice.isSetSchemeCablePorts()) {
 				schemeDevice.unsetSchemeCablePorts();
 			}
-			final Set<SchemeCablePort> schemeCablePorts = this.getSchemeCablePorts0(usePool);
+			final Set<SchemeCablePort> schemeCablePorts = this.getSchemeCablePorts0();
 			if (!schemeCablePorts.isEmpty()) {
 				final XmlSchemeCablePortSeq schemeCablePortSeq = schemeDevice.addNewSchemeCablePorts();
 				for (final SchemeCablePort schemeCablePort : schemeCablePorts) {
-					schemeCablePort.getXmlTransferable(schemeCablePortSeq.addNewSchemeCablePort(), importType, usePool);
+					schemeCablePort.getXmlTransferable(schemeCablePortSeq.addNewSchemeCablePort(), importType);
 				}
 			}
 			XmlComplementorRegistry.complementStorableObject(schemeDevice, SCHEMEDEVICE_CODE, importType, EXPORT);
@@ -643,14 +633,12 @@ public final class SchemeDevice
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeElement(SchemeElement, boolean)}.
+	 * A wrapper around {@link #setParentSchemeElement(SchemeElement)}.
 	 *
 	 * @param parentSchemeElementId
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	void setParentSchemeElementId(final Identifier parentSchemeElementId,
-			final boolean usePool)
+	void setParentSchemeElementId(final Identifier parentSchemeElementId)
 	throws ApplicationException {
 		assert parentSchemeElementId != null : NON_NULL_EXPECTED;
 		assert parentSchemeElementId.isVoid() || parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
@@ -660,20 +648,17 @@ public final class SchemeDevice
 		}
 
 		this.setParentSchemeElement(
-				StorableObjectPool.<SchemeElement>getStorableObject(parentSchemeElementId, true),
-				usePool);
+				StorableObjectPool.<SchemeElement>getStorableObject(parentSchemeElementId, true));
 	}
 
 	/**
 	 * @param parentSchemeElement
-	 * @param usePool
 	 * @throws ApplicationException
 	 * @todo Remove null warning suppression as soon as
 	 *       Eclipse's bug #137467/129907 gets fixed.
 	 */
 	@SuppressWarnings("null")
-	public void setParentSchemeElement(final SchemeElement parentSchemeElement,
-			final boolean usePool)
+	public void setParentSchemeElement(final SchemeElement parentSchemeElement)
 	throws ApplicationException {
 		assert this.parentSchemeElementId != null
 				&& this.parentSchemeProtoElementId != null
@@ -692,24 +677,24 @@ public final class SchemeDevice
 			 * Moving from an element to another element. At this
 			 * point, newParentSchemeElementId may be void.
 			 */
-			this.getParentSchemeElement().getSchemeDeviceContainerWrappee().removeFromCache(this, usePool);
+			this.getParentSchemeElement().getSchemeDeviceContainerWrappee().removeFromCache(this);
 
 			if (parentSchemeElementNull) {
 				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-				StorableObjectPool.delete(this.getReverseDependencies(usePool));
+				StorableObjectPool.delete(this.getReverseDependencies());
 			}
 		} else {
 			/*
 			 * Moving from a protoelement to an element. At this
 			 * point, newParentSchemeElementId is non-void.
 			 */
-			this.getParentSchemeProtoElement().getSchemeDeviceContainerWrappee().removeFromCache(this, usePool);
+			this.getParentSchemeProtoElement().getSchemeDeviceContainerWrappee().removeFromCache(this);
 
 			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
 		}
 
 		if (!parentSchemeElementNull) {
-			parentSchemeElement.getSchemeDeviceContainerWrappee().addToCache(this, usePool);
+			parentSchemeElement.getSchemeDeviceContainerWrappee().addToCache(this);
 		}
 
 		this.parentSchemeElementId = newParentSchemeElementId;
@@ -717,14 +702,12 @@ public final class SchemeDevice
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeProtoElement(SchemeProtoElement, boolean)}.
+	 * A wrapper around {@link #setParentSchemeProtoElement(SchemeProtoElement)}.
 	 *
 	 * @param parentSchemeProtoElementId
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	void setParentSchemeProtoElementId(final Identifier parentSchemeProtoElementId,
-			final boolean usePool)
+	void setParentSchemeProtoElementId(final Identifier parentSchemeProtoElementId)
 	throws ApplicationException {
 		assert parentSchemeProtoElementId != null : NON_NULL_EXPECTED;
 		assert parentSchemeProtoElementId.isVoid() || parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
@@ -734,20 +717,17 @@ public final class SchemeDevice
 		}
 
 		this.setParentSchemeProtoElement(
-				StorableObjectPool.<SchemeProtoElement>getStorableObject(parentSchemeProtoElementId, true),
-				usePool);
+				StorableObjectPool.<SchemeProtoElement>getStorableObject(parentSchemeProtoElementId, true));
 	}
 
 	/**
 	 * @param parentSchemeProtoElement
-	 * @param usePool
 	 * @throws ApplicationException
 	 * @todo Remove null warning suppression as soon as
 	 *       Eclipse's bug #137467/129907 gets fixed.
 	 */
 	@SuppressWarnings("null")
-	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement,
-			final boolean usePool)
+	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement)
 	throws ApplicationException {
 		assert this.parentSchemeElementId != null
 				&& this.parentSchemeProtoElementId != null
@@ -767,24 +747,24 @@ public final class SchemeDevice
 			 * At this point, newParentSchemeProtoElementId may be
 			 * void.
 			 */
-			this.getParentSchemeProtoElement().getSchemeDeviceContainerWrappee().removeFromCache(this, usePool);
+			this.getParentSchemeProtoElement().getSchemeDeviceContainerWrappee().removeFromCache(this);
 
 			if (parentSchemeProtoElementNull) {
 				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-				StorableObjectPool.delete(this.getReverseDependencies(usePool));
+				StorableObjectPool.delete(this.getReverseDependencies());
 			}
 		} else {
 			/*
 			 * Moving from an element to a protoelement. At this
 			 * point, newParentSchemeProtoElementId is non-void.
 			 */
-			this.getParentSchemeElement().getSchemeDeviceContainerWrappee().removeFromCache(this, usePool);
+			this.getParentSchemeElement().getSchemeDeviceContainerWrappee().removeFromCache(this);
 
 			this.parentSchemeElementId = VOID_IDENTIFIER;
 		}
 
 		if (!parentSchemeProtoElementNull) {
-			parentSchemeProtoElement.getSchemeDeviceContainerWrappee().addToCache(this, usePool);
+			parentSchemeProtoElement.getSchemeDeviceContainerWrappee().addToCache(this);
 		}
 
 		this.parentSchemeProtoElementId = newParentSchemeProtoElementId;
@@ -891,74 +871,66 @@ public final class SchemeDevice
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic)
 	 */
-	public void addCharacteristic(final Characteristic characteristic,
-			final boolean usePool)
+	public void addCharacteristic(final Characteristic characteristic)
 	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
-		characteristic.setParentCharacterizable(this, usePool);
+		characteristic.setParentCharacterizable(this);
 	}
 
 	/**
 	 * @param characteristic
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic)
 	 */
 	public void removeCharacteristic(
-			final Characteristic characteristic,
-			final boolean usePool)
+			final Characteristic characteristic)
 	throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		characteristic.setParentCharacterizable(this, usePool);
+		characteristic.setParentCharacterizable(this);
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public Set<Characteristic> getCharacteristics(boolean usePool)
+	public Set<Characteristic> getCharacteristics()
 	throws ApplicationException {
-		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
+		return Collections.unmodifiableSet(this.getCharacteristics0());
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	Set<Characteristic> getCharacteristics0(final boolean usePool)
+	Set<Characteristic> getCharacteristics0()
 	throws ApplicationException {
-		return this.getCharacteristicContainerWrappee().getContainees(usePool);
+		return this.getCharacteristicContainerWrappee().getContainees();
 	}
 
 	/**
 	 * @param characteristics
-	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(final Set<Characteristic> characteristics,
-			final boolean usePool)
+	public void setCharacteristics(final Set<Characteristic> characteristics)
 	throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;
 
-		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);
+		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0();
 
 		final Set<Characteristic> toRemove = new HashSet<Characteristic>(oldCharacteristics);
 		toRemove.removeAll(characteristics);
 		for (final Characteristic characteristic : toRemove) {
-			this.removeCharacteristic(characteristic, usePool);
+			this.removeCharacteristic(characteristic);
 		}
 
 		final Set<Characteristic> toAdd = new HashSet<Characteristic>(characteristics);
 		toAdd.removeAll(oldCharacteristics);
 		for (final Characteristic characteristic : toAdd) {
-			this.addCharacteristic(characteristic, usePool);
+			this.addCharacteristic(characteristic);
 		}
 	}
 
@@ -976,14 +948,12 @@ public final class SchemeDevice
 
 	/**
 	 * @param schemePort cannot be <code>null</code>.
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	public void addSchemePort(final SchemePort schemePort,
-			final boolean usePool)
+	public void addSchemePort(final SchemePort schemePort)
 	throws ApplicationException {
 		assert schemePort != null: NON_NULL_EXPECTED;
-		schemePort.setParentSchemeDevice(this, usePool);
+		schemePort.setParentSchemeDevice(this);
 	}
 
 	/**
@@ -991,58 +961,52 @@ public final class SchemeDevice
 	 * <code>SchemeDevice</code>, or crap will meet the fan.
 	 *
 	 * @param schemePort
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	public void removeSchemePort(final SchemePort schemePort,
-			final boolean usePool)
+	public void removeSchemePort(final SchemePort schemePort)
 	throws ApplicationException {
 		assert schemePort != null: NON_NULL_EXPECTED;
 		assert schemePort.getParentSchemeDeviceId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemePort.setParentSchemeDevice(null, usePool);
+		schemePort.setParentSchemeDevice(null);
 	}
 
 	/**
-	 * @param usePool
 	 * @return an immutable set.
 	 * @throws ApplicationException
 	 */
-	public Set<SchemePort> getSchemePorts(final boolean usePool)
+	public Set<SchemePort> getSchemePorts()
 	throws ApplicationException {
-		return Collections.unmodifiableSet(this.getSchemePorts0(usePool));
+		return Collections.unmodifiableSet(this.getSchemePorts0());
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	Set<SchemePort> getSchemePorts0(final boolean usePool)
+	Set<SchemePort> getSchemePorts0()
 	throws ApplicationException {
-		return this.getSchemePortContainerWrappee().getContainees(usePool);
+		return this.getSchemePortContainerWrappee().getContainees();
 	}
 
 	/**
 	 * @param schemePorts
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	public void setSchemePorts(final Set<SchemePort> schemePorts,
-			final boolean usePool)
+	public void setSchemePorts(final Set<SchemePort> schemePorts)
 	throws ApplicationException {
 		assert schemePorts != null: NON_NULL_EXPECTED;
 
-		final Set<SchemePort> oldSchemePorts = this.getSchemePorts0(usePool);
+		final Set<SchemePort> oldSchemePorts = this.getSchemePorts0();
 
 		final Set<SchemePort> toRemove = new HashSet<SchemePort>(oldSchemePorts);
 		toRemove.removeAll(schemePorts);
 		for (final SchemePort schemePort : toRemove) {
-			this.removeSchemePort(schemePort, usePool);
+			this.removeSchemePort(schemePort);
 		}
 
 		final Set<SchemePort> toAdd = new HashSet<SchemePort>(schemePorts);
 		toAdd.removeAll(oldSchemePorts);
 		for (final SchemePort schemePort : toAdd) {
-			this.addSchemePort(schemePort, usePool);
+			this.addSchemePort(schemePort);
 		}
 	}
 
@@ -1060,14 +1024,12 @@ public final class SchemeDevice
 
 	/**
 	 * @param schemeCablePort cannot be <code>null</code>.
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	public void addSchemeCablePort(final SchemeCablePort schemeCablePort,
-			final boolean usePool)
+	public void addSchemeCablePort(final SchemeCablePort schemeCablePort)
 	throws ApplicationException {
 		assert schemeCablePort != null: NON_NULL_EXPECTED;
-		schemeCablePort.setParentSchemeDevice(this, usePool);
+		schemeCablePort.setParentSchemeDevice(this);
 	}
 
 	/**
@@ -1075,59 +1037,53 @@ public final class SchemeDevice
 	 * <code>SchemeDevice</code>, or crap will meet the fan.
 	 *
 	 * @param schemeCablePort
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	public void removeSchemeCablePort(final SchemeCablePort schemeCablePort,
-			final boolean usePool)
+	public void removeSchemeCablePort(final SchemeCablePort schemeCablePort)
 	throws ApplicationException {
 		assert schemeCablePort != null: NON_NULL_EXPECTED;
 		assert schemeCablePort.getParentSchemeDeviceId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeCablePort.setParentSchemeDevice(null, usePool);
+		schemeCablePort.setParentSchemeDevice(null);
 	}
 
 	/**
-	 * @param usePool
 	 * @return an immutable set.
 	 * @throws ApplicationException
 	 */
-	public Set<SchemeCablePort> getSchemeCablePorts(final boolean usePool)
+	public Set<SchemeCablePort> getSchemeCablePorts()
 	throws ApplicationException {
-		return Collections.unmodifiableSet(this.getSchemeCablePorts0(usePool));
+		return Collections.unmodifiableSet(this.getSchemeCablePorts0());
 	}
 
 	/**
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	Set<SchemeCablePort> getSchemeCablePorts0(final boolean usePool)
+	Set<SchemeCablePort> getSchemeCablePorts0()
 	throws ApplicationException {
-		return this.getSchemeCablePortContainerWrappee().getContainees(usePool);
+		return this.getSchemeCablePortContainerWrappee().getContainees();
 	}
 
 	/**
 	 * @param schemeCablePorts
-	 * @param usePool
 	 * @throws ApplicationException
 	 */
 	public void setSchemeCablePorts(
-			final Set<SchemeCablePort> schemeCablePorts,
-			final boolean usePool)
+			final Set<SchemeCablePort> schemeCablePorts)
 	throws ApplicationException {
 		assert schemeCablePorts != null: NON_NULL_EXPECTED;
 
-		final Set<SchemeCablePort> oldSchemeCablePorts = this.getSchemeCablePorts0(usePool);
+		final Set<SchemeCablePort> oldSchemeCablePorts = this.getSchemeCablePorts0();
 
 		final Set<SchemeCablePort> toRemove = new HashSet<SchemeCablePort>(oldSchemeCablePorts);
 		toRemove.removeAll(schemeCablePorts);
 		for (final SchemeCablePort schemeCablePort : toRemove) {
-			this.removeSchemeCablePort(schemeCablePort, usePool);
+			this.removeSchemeCablePort(schemeCablePort);
 		}
 
 		final Set<SchemeCablePort> toAdd = new HashSet<SchemeCablePort>(schemeCablePorts);
 		toAdd.removeAll(oldSchemeCablePorts);
 		for (final SchemeCablePort schemeCablePort : toAdd) {
-			this.addSchemeCablePort(schemeCablePort, usePool);
+			this.addSchemeCablePort(schemeCablePort);
 		}
 	}
 }
