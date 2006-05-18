@@ -1,5 +1,5 @@
 /*-
- * $Id: Alarm.java,v 1.2 2006/04/11 09:41:54 stas Exp $
+ * $Id: Alarm.java,v 1.3 2006/05/18 13:58:47 stas Exp $
  *
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.alarm;
 
+import java.awt.Color;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,6 +24,7 @@ import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
@@ -37,6 +39,7 @@ public class Alarm {
 	private final Identifier monitoredElementId;
 	private final double physicalDistance;
 	private final double opticalDistance;
+	private final Severity severity;
 
 	private Identifier markerId;
 	
@@ -44,6 +47,8 @@ public class Alarm {
 	private Date endDate;
 	private Measurement lastMeasurement;
 	private String lastMessage;
+	
+	private AlarmState state = AlarmState.OPENED;
 	
 	private class AlarmEvent {
 		LineMismatchEvent lme;
@@ -66,6 +71,7 @@ public class Alarm {
 			this.monitoredElementId = measurement.getMonitoredElementId();
 			this.opticalDistance = event.getMismatchOpticalDistance();
 			this.physicalDistance = event.getMismatchPhysicalDistance();
+			this.severity = rme.getSeverity();
 			
 			addLineMismatchEvent(event);
 		} catch (ApplicationException e) {
@@ -116,20 +122,50 @@ public class Alarm {
 		return this.lastMeasurement;
 	}
 	
+	public Severity getSeverity() {
+		return this.severity;
+	}
+
+	public AlarmState getState() {
+		return this.state;
+	}
+	
+	public void setState(AlarmState state) {
+		this.state = state;
+	}
+
 	public String getMessage() {
 		return this.lastMessage;
 	}
 	
 	public boolean isSuitable(LineMismatchEvent event1) {
-		if (this.pathElement.getId().equals(event1.getAffectedPathElementId())
-				&& Math.abs(this.opticalDistance - event1.getMismatchOpticalDistance()) < this.delta_x
-				&& Math.abs(this.physicalDistance - event1.getMismatchPhysicalDistance()) < this.delta_x) {
-			return true;
+		// not add to closed alarm
+		if (this.state == AlarmState.CLOSED) {
+			return false;
+		}
+
+		try {
+			if (this.pathElement.getId().equals(event1.getAffectedPathElementId())
+					&& Math.abs(this.opticalDistance - event1.getMismatchOpticalDistance()) < this.delta_x
+					&& Math.abs(this.physicalDistance - event1.getMismatchPhysicalDistance()) < this.delta_x) {
+				
+				final AbstractReflectogramMismatchEvent rme1 = StorableObjectPool.getStorableObject(event1.getReflectogramMismatchEventId(), true);
+				if (rme1.getSeverity() == this.severity) {
+					return true;	
+				}
+			}
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
 		}
 		return false;
 	}
 	
 	public boolean isSuitable(Set<LineMismatchEvent> events) {
+		// not add to closed alarm
+		if (this.state == AlarmState.CLOSED) {
+			return false;
+		}
+		
 		for (LineMismatchEvent event1 : events) {
 			if (!isSuitable(event1)) {
 				return false;
@@ -177,5 +213,12 @@ public class Alarm {
 		
 		assert lastMeasurementId != Identifier.VOID_IDENTIFIER;
 		this.lastMeasurement = StorableObjectPool.getStorableObject(lastMeasurementId, true);
+		
+		if (this.state == AlarmState.FIXED 
+				|| this.state == AlarmState.TESTING) {
+			this.state = AlarmState.ACCEPTED;
+		} else if (this.state == AlarmState.ABORTED) {
+			this.state = AlarmState.OPENED;
+		}
 	}
 }
