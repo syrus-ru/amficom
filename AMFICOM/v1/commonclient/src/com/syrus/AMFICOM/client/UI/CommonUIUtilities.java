@@ -22,7 +22,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2006/05/18 19:32:18 $
+ * @version $Revision: 1.18 $, $Date: 2006/05/18 19:44:36 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -130,7 +130,7 @@ public final class CommonUIUtilities {
 				replaceAll("'", "&apos;").
 				replaceAll("<", "&lt;").
 				replaceAll(">", "&gt;").
-				replaceAll("\n", "<br>"));			
+				replaceAll("\n", "<br>\n"));			
 		builder.append("</html>");
 		return builder.toString();
 	}
