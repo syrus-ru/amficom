@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.32 2005/11/23 12:07:10 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.33 2006/05/19 07:08:16 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.32 $, $Date: 2005/11/23 12:07:10 $
+ * @version $Revision: 1.33 $, $Date: 2006/05/19 07:08:16 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -279,10 +279,15 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 		SimpleReflectogramEvent ev = this.rse[i];
 		double y0 = this.mt.getY(ev.getBegin());
 		double y1 = this.mt.getY(ev.getEnd());
+		// ¬ычисление альтернативно вычисленного значени€
 		// если слева лин. событие хот€ бы из 5 точек,
 		// то альтернативным y0 будет экстраполированное значение по точке
-		// непосредственно слева началом событи€;
+		// непосредственно слева перед началом событи€;
 		// иначе альтернативное y0 совпадает с y0
+
+		// FIXME: плоха€ обусловленность на пороге срабатывани€ этого услови€
+		// ≈сли слева - не лин. участок, то, наверное, надо брать min(y0, getY(begin-1)), т.к. резкого подъема перед отражением не бывает
+		// @todo перед решением этих проблем посмотреть, как оно вли€ет на качество Ћ“ в ÷Ѕ
 		double y0alt = i > 0 && isEventLinear(i - 1)
 					&& this.rse[i - 1].getEnd() - this.rse[i - 1].getBegin() > 5
 				? this.mt.getY(ev.getBegin() - 1) - linearTangent(i - 1) * 1.0
