@@ -212,6 +212,7 @@ void InitialAnalysis::performAnalysis(double *TEMP0, int scaleB, double scaleFac
 			double wlet2dbkmFactor = baselineToTilt(scaleB, getWLetNorma(scaleB), 1.0) / resKm;
 			int i;
 			for	(i = 0; i <= lastPoint; i++)
+#ifdef USE_BASELINE_RANGE
 				fprintf(f,"%d %g %g %g %g %g\n",
 				i,
 				data[i],
@@ -219,6 +220,13 @@ void InitialAnalysis::performAnalysis(double *TEMP0, int scaleB, double scaleFac
 				TEMP0[i] * wlet2dbkmFactor - tiltU / resKm,
 				TEMP0[i] * wlet2dbkmFactor - tiltL / resKm,
 				noise[i] * wlet2dbkmFactor);
+#else
+				fprintf(f,"%d %g %g %g\n",
+				i,
+				data[i],
+				TEMP0[i] * wlet2dbkmFactor,
+				noise[i] * wlet2dbkmFactor);
+#endif
 			fclose(f);
 		}
 	}
