@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventWrapper.java,v 1.3 2006/05/18 19:37:22 bass Exp $
+ * $Id: LineMismatchEventWrapper.java,v 1.4 2006/05/21 16:00:11 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Wrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2006/05/18 19:37:22 $
+ * @version $Revision: 1.4 $, $Date: 2006/05/21 16:00:11 $
  * @module event
  */
 public final class LineMismatchEventWrapper
@@ -32,7 +32,7 @@ public final class LineMismatchEventWrapper
 	public static final String COLUMN_MISMATCH_OPTICAL_DISTANCE = "mismatch_optical_distance";
 	public static final String COLUMN_MISMATCH_PHYSICAL_DISTANCE = "mismatch_physical_distance";
 	public static final String COLUMN_PLAIN_TEXT_MESSAGE = "plain_text_message";
-	public static final String COLUMN_RICH_TEXT_MESSAGE = "rich_text_mesage";
+	public static final String COLUMN_RICH_TEXT_MESSAGE = "rich_text_message";
 	public static final String COLUMN_REFLECTOGRAM_MISMATCH_EVENT_ID = "reflectogram_mismatch_event_id";
 
 	private final List<String> keys;
