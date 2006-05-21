@@ -1,25 +1,47 @@
-MODULE := trc
-CXX_SOURCES := T5 \
-	crc32 \
-	util \
-	DCL \
-	DCLTable \
-	BellcoreStructure \
-	BellcoreWriter \
-	IntelDataOutputStream
-USE_JNI := 1
+OUT := tracedata.a
+OUTSO := libtracedata.so
 
-TraceReader$(OBJ_SUFFIX):			NTTraceData.h TraceReader.h T5.h util.h
-T5$(OBJ_SUFFIX):					NTTraceData.h DCL.h T5.h crc32.h util.h
-crc32$(OBJ_SUFFIX):				crc32.h
-util$(OBJ_SUFFIX):					util.h
-DCL$(OBJ_SUFFIX):					DCL.h
-DCLTable$(OBJ_SUFFIX):				DCL.h
-BellcoreStructure$(OBJ_SUFFIX):		BellcoreStructure.h
-BellcoreWriter$(OBJ_SUFFIX):			BellcoreStructure.h IntelDataOutputStream.h BellcoreWriter.h
-IntelDataOutputStream$(OBJ_SUFFIX):	IntelDataOutputStream.h
+CXX := g++#-3.4.1
+CXXFLAGS := -W -Wall -Wno-unused-parameter
 
-include ../tools/Makefile.cpp.inc.mk
+CPPFLAGS := -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
 
-.PHONY:	all
-all:	$(OUT_LIBAR)
+AR := ar
+ARFLAGS := rcsv
+
+#OBJS := TraceReader.o \
+	T5.o \
+	crc32.o \
+	util.o \
+	DCL.o \
+	DCLTable.o \
+	BellcoreStructure.o \
+	BellcoreWriter.o \
+	IntelDataOutputStream.o
+OBJS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
+
+ARCHFILE := trc.tar.gz
+
+$(OUT):		$(OBJS)
+	$(AR) $(ARFLAGS) $(OUT) $(OBJS)
+
+$(OUTSO):	$(OBJS)
+	$(CXX) -shared -o $(OUTSO) $(OBJS)
+
+TraceReader.o:	NTTraceData.h TraceReader.h T5.h util.h
+T5.o:		NTTraceData.h DCL.h T5.h crc32.h util.h
+crc32.o:	crc32.h
+util.o:		util.h
+DCL.o:		DCL.h
+DCLTable.o:	DCL.h
+BellcoreStructure.o:		BellcoreStructure.h
+BellcoreWriter.o:		BellcoreStructure.h IntelDataOutputStream.h BellcoreWriter.h
+IntelDataOutputStream.o:	IntelDataOutputStream.h
+
+.PHONY:	clean
+clean:
+	rm -f $(OBJS) $(OUT) $(OUTSO)
+
+.PHONY:	arch
+arch:
+	tar -czvf $(ARCHFILE) *.cpp *.h Makefile

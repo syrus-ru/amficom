@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTUTransceiver.cpp,v 1.27 2005/11/10 14:43:21 arseniy Exp $
+// $Id: RTUTransceiver.cpp,v 1.24 2005/09/25 17:36:59 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.27 $, $Date: 2005/11/10 14:43:21 $
+// $Revision: 1.24 $, $Date: 2005/09/25 17:36:59 $
 // $Author: arseniy $
 //
 // RTUTransceiver.cpp: implementation of the RTUTransceiver class.
@@ -418,10 +418,10 @@ int RTUTransceiver::set_measurement_parameters(Parameter** parameters, unsigned 
 	int set_params_ret = QPOTDRAcqSetParams(this->otdr_cards[otdr_card_index],
 								(WORD)(this->averages / this->plugin_data->dwFastScanCount),
 								wave_index,
-								(DWORD)(this->trace_length * 1000.f / min(this->resolution, 4.0f)/*this->resolution*/),//???
+								(DWORD)(this->trace_length * 1000.f / this->resolution/*min (resolution, 4.0f)*/),//???
 								point_spacing_index,
 								pulse_width_index,
-								4); //4 times 128 averages each
+								3 + 1);//???
 
     switch(set_params_ret) {
 		case 0:
@@ -524,7 +524,7 @@ int RTUTransceiver::get_pulse_width_index(const short pulswd,
 
 int RTUTransceiver::ior_is_valid(const double ior, const WORD otdr_card, const float wave) {
 	float default_ior = QPOTDRGetDefaultIOR(otdr_card, wave);
-	return ((int)(ior * 10000 + 0.5) == (int)(default_ior * 10000 + 0.5)) ? 1 : 0;
+	return (((int)ior * 10000) == ((int)default_ior * 10000)) ? 1 : 0;
 }
 
 int RTUTransceiver::get_averages_index(const double scans, const WORD otdr_card, const float wave) {
@@ -563,7 +563,7 @@ void RTUTransceiver::retrieve_plugin_data(unsigned int otdr_card_index) {
 	QPOTDRDataCollectInfo(this->otdr_cards[otdr_card_index], this->plugin_data);
 }
 
-void RTUTransceiver::fill_bellcore_structure(BellcoreStructure*& bs, QPOTDRWaveformHeader* wave_form_header, QPOTDRWaveformData*  wave_form_data) const {
+void RTUTransceiver::fill_bellcore_structure(BellcoreStructure*& bs, QPOTDRWaveformHeader* wave_form_header,QPOTDRWaveformData*  wave_form_data) const {
 	int offset = wave_form_header->FPOffset >> 16;
 	int i;
 

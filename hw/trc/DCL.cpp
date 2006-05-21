@@ -123,7 +123,7 @@ U32 sub_1002BED0(register U8* work_buff) {
 		}
 		if (*(U32*)(work_buff + 0x08) >= 0x2000) {
 			write_size = 0x1000;
-			WB_write_data(work_buff + 0x1030, (U16)write_size, WB_param);
+			WB_write_data(work_buff + 0x1030, write_size, WB_param);
 			sub_1002C3D0(work_buff + 0x30, work_buff + 0x1030, *(U32*)(work_buff + 0x08) - 0x1000);
 			(*(U32*)(work_buff + 0x08)) -= 0x1000;
 		}
