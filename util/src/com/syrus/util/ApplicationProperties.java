@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationProperties.java,v 1.18 2006/04/28 10:54:49 arseniy Exp $
+ * $Id: ApplicationProperties.java,v 1.19 2006/05/21 16:38:16 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.util;
+
+import static java.util.logging.Level.FINEST;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,8 +18,8 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2006/04/28 10:54:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2006/05/21 16:38:16 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -77,7 +79,7 @@ public class ApplicationProperties {
 			try {
 				return applicationResourceBundle.getString(key);
 			} catch (Exception e) {
-				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", Log.DEBUGLEVEL02);
+				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", FINEST);
 			}
 		}
 
@@ -98,7 +100,7 @@ public class ApplicationProperties {
 			try {
 				return Integer.parseInt(applicationResourceBundle.getString(key));
 			} catch (Exception e) {
-				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", Log.DEBUGLEVEL02);
+				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", FINEST);
 			}
 		}
 
