@@ -1,5 +1,5 @@
  /*-
- * $$Id: MarkerController.java,v 1.49 2006/03/27 14:44:49 stas Exp $$
+ * $$Id: MarkerController.java,v 1.50 2006/05/22 12:43:40 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер маркера.
  * 
- * @version $Revision: 1.49 $, $Date: 2006/03/27 14:44:49 $
+ * @version $Revision: 1.50 $, $Date: 2006/05/22 12:43:40 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -304,7 +304,7 @@ public class MarkerController extends AbstractNodeController {
 		final SortedSet<PathElement> pathElements = measurementPath.getSchemePath().getPathMembers();
 		for (final PathElement pathElement : pathElements) {
 			final double d = SchemeUtils.getPhysicalLength(pathElement);
-			if (pathLength + d > marker.getPhysicalDistance()) {
+			if (pathLength + d >= marker.getPhysicalDistance()) {
 				me = pathController.getMapElement(measurementPath, pathElement);
 				localDistance = marker.getPhysicalDistance() - pathLength;
 				break;
@@ -449,27 +449,32 @@ public class MarkerController extends AbstractNodeController {
 	public void adjustPosition(final Marker marker, final double screenDistance) throws MapConnectionException, MapDataException {
 		final MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 
-		final Point sp = converter.convertMapToScreen(marker.getStartNode().getLocation());
-
-		final double startNodeX = sp.x;
-		final double startNodeY = sp.y;
-
-		final Point ep = converter.convertMapToScreen(marker.getEndNode().getLocation());
-
-		final double endNodeX = ep.x;
-		final double endNodeY = ep.y;
-
-		final double nodeLinkLength = Math.sqrt((endNodeX - startNodeX)
-				* (endNodeX - startNodeX)
-				+ (endNodeY - startNodeY)
-				* (endNodeY - startNodeY));
-
-		final double sinB = (endNodeY - startNodeY) / nodeLinkLength;
-
-		final double cosB = (endNodeX - startNodeX) / nodeLinkLength;
-
-		marker.setLocation(converter.convertScreenToMap(new Point((int) Math.round(startNodeX + cosB * screenDistance),
-				(int) Math.round(startNodeY + sinB * screenDistance))));
+		
+		if (marker.getStartNode().equals(marker.getEndNode())) {
+			marker.setLocation(marker.getStartNode().getLocation());
+		} else {
+			final Point sp = converter.convertMapToScreen(marker.getStartNode().getLocation());
+			
+			final double startNodeX = sp.x;
+			final double startNodeY = sp.y;
+			
+			final Point ep = converter.convertMapToScreen(marker.getEndNode().getLocation());
+			
+			final double endNodeX = ep.x;
+			final double endNodeY = ep.y;
+			
+			final double nodeLinkLength = Math.sqrt((endNodeX - startNodeX)
+					* (endNodeX - startNodeX)
+					+ (endNodeY - startNodeY)
+					* (endNodeY - startNodeY));
+			
+			final double sinB = (endNodeY - startNodeY) / nodeLinkLength;
+			
+			final double cosB = (endNodeX - startNodeX) / nodeLinkLength;
+			
+			marker.setLocation(converter.convertScreenToMap(new Point((int) Math.round(startNodeX + cosB * screenDistance),
+					(int) Math.round(startNodeY + sinB * screenDistance))));
+		}
 	}
 
 	/**
