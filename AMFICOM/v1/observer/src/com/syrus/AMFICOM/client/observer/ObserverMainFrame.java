@@ -269,6 +269,15 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
+		aModel.setVisible(ObserverApplicationModel.MENU_START, false);
+		aModel.setVisible(ObserverApplicationModel.MENU_START_ANALIZE, false);
+		aModel.setVisible(ObserverApplicationModel.MENU_START_ANALIZE_EXT, false);
+		aModel.setVisible(ObserverApplicationModel.MENU_START_EVALUATION, false);
+		aModel.setVisible(ObserverApplicationModel.MENU_START_MAP_EDITOR, false);
+		aModel.setVisible(ObserverApplicationModel.MENU_START_PROGNOSIS, false);
+		aModel.setVisible(ObserverApplicationModel.MENU_START_SCHEDULER, false);
+		aModel.setVisible(ObserverApplicationModel.MENU_START_SCHEME_EDITOR, false);
+		
 		aModel.setCommand(ObserverApplicationModel.MENU_START_SCHEDULER, new OpenSchedulerCommand(this.aContext));
 		aModel.setCommand(ObserverApplicationModel.MENU_START_ANALIZE, new OpenAnalysisCommand(this.aContext));
 		aModel.setCommand(ObserverApplicationModel.MENU_START_ANALIZE_EXT, new OpenExtendedAnalysisCommand(this.aContext));
