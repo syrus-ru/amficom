@@ -1,7 +1,7 @@
 /*-
- * $Id: Log.java,v 1.24 2006/05/23 15:55:21 bass Exp $
+ * $Id: Log.java,v 1.25 2006/05/23 16:07:13 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -17,12 +17,13 @@ import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2006/05/23 15:55:21 $
+ * @version $Revision: 1.25 $, $Date: 2006/05/23 16:07:13 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -44,17 +45,22 @@ public final class Log {
 	private static Logger logger;
 
 	static {
-		DEBUG_LEVEL_MAP = new HashMap<Integer, Level>(10);
-		DEBUG_LEVEL_MAP.put(new Integer(1), DEBUGLEVEL01);
-		DEBUG_LEVEL_MAP.put(new Integer(2), DEBUGLEVEL02);
-		DEBUG_LEVEL_MAP.put(new Integer(3), DEBUGLEVEL03);
-		DEBUG_LEVEL_MAP.put(new Integer(4), DEBUGLEVEL04);
-		DEBUG_LEVEL_MAP.put(new Integer(5), DEBUGLEVEL05);
-		DEBUG_LEVEL_MAP.put(new Integer(6), DEBUGLEVEL06);
-		DEBUG_LEVEL_MAP.put(new Integer(7), DEBUGLEVEL07);
-		DEBUG_LEVEL_MAP.put(new Integer(8), DEBUGLEVEL08);
-		DEBUG_LEVEL_MAP.put(new Integer(9), DEBUGLEVEL09);
-		DEBUG_LEVEL_MAP.put(new Integer(10), DEBUGLEVEL10);
+		int i = 10;
+
+		final HashMap<Integer, Level> debugLevelMap = new HashMap<Integer, Level>(i);
+
+		debugLevelMap.put(Integer.valueOf(i--), DEBUGLEVEL10);
+		debugLevelMap.put(Integer.valueOf(i--), DEBUGLEVEL09);
+		debugLevelMap.put(Integer.valueOf(i--), DEBUGLEVEL08);
+		debugLevelMap.put(Integer.valueOf(i--), DEBUGLEVEL07);
+		debugLevelMap.put(Integer.valueOf(i--), DEBUGLEVEL06);
+		debugLevelMap.put(Integer.valueOf(i--), DEBUGLEVEL05);
+		debugLevelMap.put(Integer.valueOf(i--), DEBUGLEVEL04);
+		debugLevelMap.put(Integer.valueOf(i--), DEBUGLEVEL03);
+		debugLevelMap.put(Integer.valueOf(i--), DEBUGLEVEL02);
+		debugLevelMap.put(Integer.valueOf(i--), DEBUGLEVEL01);
+
+		DEBUG_LEVEL_MAP = Collections.unmodifiableMap(debugLevelMap);
 	}
 
 	private Log() {
@@ -323,7 +329,7 @@ public final class Log {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.24 $, $Date: 2006/05/23 15:55:21 $
+	 * @version $Revision: 1.25 $, $Date: 2006/05/23 16:07:13 $
 	 * @module util
 	 */
 	private static class CustomLevel extends Level {
