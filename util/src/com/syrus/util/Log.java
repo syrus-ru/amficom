@@ -1,5 +1,5 @@
 /*-
- * $Id: Log.java,v 1.25 2006/05/23 16:07:13 bass Exp $
+ * $Id: Log.java,v 1.26 2006/05/23 16:14:11 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2006/05/23 16:07:13 $
+ * @version $Revision: 1.26 $, $Date: 2006/05/23 16:14:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -42,7 +42,9 @@ public final class Log {
 
 	static final Map<Integer, Level> DEBUG_LEVEL_MAP;
 
-	private static Logger logger;
+	private static final Logger DEFAULT_LOGGER = getDefaultLogger();
+
+	private static Logger logger = DEFAULT_LOGGER;
 
 	static {
 		int i = 10;
@@ -67,8 +69,36 @@ public final class Log {
 		assert false;
 	}
 
-	private static void setDefaultLogger() {
-		setLogger(new Logger() {
+	public static void setLogger(final Logger logger) {
+		if (logger == null) {
+			throw new NullPointerException();
+		}
+		Log.logger = logger;
+	}
+
+	/**
+	 * @see java.util.logging.Logger#isLoggable(Level)
+	 */
+	public static boolean isLoggable(final Level level) {
+		return logger.isLoggable(level);
+	}
+
+	/**
+	 * @see java.util.logging.Logger#getLevel()
+	 */
+	public static Level getLevel() {
+		return logger.getLevel();
+	}
+
+	/**
+	 * @see java.util.logging.Logger#setLevel(Level)
+	 */
+	public static void setLevel(final Level newLevel) {
+		logger.setLevel(newLevel);
+	}
+
+	private static Logger getDefaultLogger() {
+		return new Logger() {
 			public void debugMessage(final String message, final Level debugLevel) {
 				System.out.println(message);
 			}
@@ -98,44 +128,7 @@ public final class Log {
 			@SuppressWarnings("all")
 			public void setLevel(final Level newLevel) {
 			}
-		});
-	}
-
-	public static void setLogger(final Logger logger) {
-		if (logger == null) {
-			throw new NullPointerException();
-		}
-		Log.logger = logger;
-	}
-
-	/**
-	 * @see java.util.logging.Logger#isLoggable(Level)
-	 */
-	public static boolean isLoggable(final Level level) {
-		if (logger == null) {
-			setDefaultLogger();
-		}
-		return logger.isLoggable(level);
-	}
-
-	/**
-	 * @see java.util.logging.Logger#getLevel()
-	 */
-	public static Level getLevel() {
-		if (logger == null) {
-			setDefaultLogger();
-		}
-		return logger.getLevel();
-	}
-
-	/**
-	 * @see java.util.logging.Logger#setLevel(Level)
-	 */
-	public static void setLevel(final Level newLevel) {
-		if (logger == null) {
-			setDefaultLogger();
-		}
-		logger.setLevel(newLevel);
+		};
 	}
 
 	/*-********************************************************************
@@ -202,9 +195,6 @@ public final class Log {
 	 * @param debugLevel
 	 */
 	private static boolean debugMessage0(final String message, final Level debugLevel) {
-		if (logger == null) {
-			setDefaultLogger();
-		}
 		logger.debugMessage(message, debugLevel);
 		return true;
 	}
@@ -216,9 +206,6 @@ public final class Log {
 	 * @param debugLevel
 	 */
 	private static boolean debugMessage0(final Throwable t, final Level debugLevel) {
-		if (logger == null) {
-			setDefaultLogger();
-		}
 		logger.debugException(t, debugLevel);
 		return true;
 	}
@@ -286,9 +273,6 @@ public final class Log {
 	 * @param message
 	 */
 	private static boolean errorMessage0(final String message) {
-		if (logger == null) {
-			setDefaultLogger();
-		}
 		logger.errorMessage(message);
 		return true;
 	}
@@ -299,9 +283,6 @@ public final class Log {
 	 * @param t
 	 */
 	private static boolean errorMessage0(final Throwable t) {
-		if (logger == null) {
-			setDefaultLogger();
-		}
 		logger.errorException(t);
 		return true;
 	}
@@ -329,7 +310,7 @@ public final class Log {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.25 $, $Date: 2006/05/23 16:07:13 $
+	 * @version $Revision: 1.26 $, $Date: 2006/05/23 16:14:11 $
 	 * @module util
 	 */
 	private static class CustomLevel extends Level {
