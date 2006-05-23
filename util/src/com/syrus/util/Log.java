@@ -1,5 +1,5 @@
 /*-
- * $Id: Log.java,v 1.22 2006/05/23 15:44:33 bass Exp $
+ * $Id: Log.java,v 1.23 2006/05/23 15:46:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2006/05/23 15:44:33 $
+ * @version $Revision: 1.23 $, $Date: 2006/05/23 15:46:57 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -316,13 +316,13 @@ public final class Log {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.22 $, $Date: 2006/05/23 15:44:33 $
+	 * @version $Revision: 1.23 $, $Date: 2006/05/23 15:46:57 $
 	 * @module util
 	 */
 	private static class CustomLevel extends Level {
 		private static final long serialVersionUID = 8040407643584688402L;
 
-		private CustomLevel(final String name, final int value) {
+		CustomLevel(final String name, final int value) {
 			super(name, value);
 		}
 	}
