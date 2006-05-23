@@ -1,5 +1,5 @@
 /*-
-* $Id: ExtensionLauncher.java,v 1.5 2005/12/21 10:39:54 bob Exp $
+* $Id: ExtensionLauncher.java,v 1.6 2006/05/23 15:41:59 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import org.apache.xmlbeans.XmlException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/12/21 10:39:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2006/05/23 15:41:59 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module resources
  */
@@ -166,19 +166,19 @@ public final class ExtensionLauncher {
 			/*
 			 * Never.
 			 */
-			Log.errorException(iae);
+			Log.errorMessage(iae);
 			Log.errorMessage(INVOKE_EXTENSION + "Caught an IllegalAccessException");
 		} catch (final IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			Log.errorException(iae);
+			Log.errorMessage(iae);
 			Log.errorMessage(INVOKE_EXTENSION + "Caught an IllegalArgumentException");
 		} catch (final SecurityException se) {
 			/*
 			 * Never.
 			 */
-			Log.errorException(se);
+			Log.errorMessage(se);
 			Log.errorMessage(INVOKE_EXTENSION + "Caught a SecurityException");
 		}
 		
@@ -194,7 +194,7 @@ public final class ExtensionLauncher {
 			}
 			throw new XmlException("Document '" + xmlFile + "' isn't valid.");
 		} catch (final IOException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			throw new XmlException("Cannot read document '" + xmlFile + "'.");
 		}
 	}    

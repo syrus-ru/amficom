@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRendererMouseListener.java,v 1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: ReportTemplateRendererMouseListener.java,v 1.2 2006/05/23 15:41:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ public class ReportTemplateRendererMouseListener implements MouseListener {
 				this.renderer.createImageRenderingComponent(e.getPoint());
 			} catch (Exception e1) {
 				Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e1.getMessage());
-				Log.errorException(e1);			
+				Log.errorMessage(e1);			
 			}
 		}
 		else if (RendererMode.getMode().equals(RENDERER_MODE.CREATE_LABEL)){
@@ -55,7 +55,7 @@ public class ReportTemplateRendererMouseListener implements MouseListener {
 				this.renderer.createTextRenderingComponent(e.getPoint());
 			} catch (CreateObjectException e1) {
 				Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e1.getMessage());
-				Log.errorException(e1);			
+				Log.errorMessage(e1);			
 			}
 		}
 		this.applicationContext.getDispatcher().firePropertyChange(

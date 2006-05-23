@@ -1,5 +1,5 @@
 /*
- * $Id: RTEComponentDragDropListener.java,v 1.2 2006/03/13 13:53:57 bass Exp $
+ * $Id: RTEComponentDragDropListener.java,v 1.3 2006/05/23 15:41:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -93,7 +93,7 @@ public class RTEComponentDragDropListener implements DropTargetListener {
 					this.renderingComponent.refreshLabels();
 				} catch (Exception e) {
 					Log.errorMessage("RTEComponentDragDropListener.drop | " + e.getMessage());
-					Log.errorException(e);			
+					Log.errorMessage(e);			
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
 							e.getMessage(),

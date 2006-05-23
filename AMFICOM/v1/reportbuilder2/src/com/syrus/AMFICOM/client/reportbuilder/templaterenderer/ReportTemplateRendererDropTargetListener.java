@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRendererDropTargetListener.java,v 1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: ReportTemplateRendererDropTargetListener.java,v 1.2 2006/05/23 15:41:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -93,7 +93,7 @@ public class ReportTemplateRendererDropTargetListener implements DropTargetListe
 						null);
 			} catch (Exception e) {
 				Log.errorMessage("ReportTemplateRendererDropTargetListener.drop | " + e.getMessage());
-				Log.errorException(e);			
+				Log.errorMessage(e);			
 				JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
 						e.getMessage(),

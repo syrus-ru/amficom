@@ -1,5 +1,5 @@
 /*
- * $Id: ATComponentMouseMotionListener.java,v 1.2 2006/04/26 13:13:49 stas Exp $
+ * $Id: ATComponentMouseMotionListener.java,v 1.3 2006/05/23 15:41:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -83,7 +83,7 @@ public class ATComponentMouseMotionListener implements MouseMotionListener{
 			element.refreshAttachingDistances();
 		} catch (ApplicationException e1) {
 			Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e1.getMessage());
-			Log.errorException(e1);			
+			Log.errorMessage(e1);			
 		}
 		
 		this.applicationContext.getDispatcher().firePropertyChange(new ReportFlagEvent(this,ReportFlagEvent.REPAINT_RENDERER));

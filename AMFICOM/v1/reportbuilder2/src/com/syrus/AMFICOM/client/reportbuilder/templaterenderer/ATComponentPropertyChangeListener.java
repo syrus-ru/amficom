@@ -1,5 +1,5 @@
 /*
- * $Id: ATComponentPropertyChangeListener.java,v 1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: ATComponentPropertyChangeListener.java,v 1.2 2006/05/23 15:41:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ public class ATComponentPropertyChangeListener implements PropertyChangeListener
 				}
 			} catch (ApplicationException e) {
 				Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e.getMessage());
-				Log.errorException(e);			
+				Log.errorMessage(e);			
 			}
 		}
 		else if (evt instanceof ComponentSelectionChangeEvent) {

@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractExtensionHandler.java,v 1.2 2005/12/12 13:40:13 bob Exp $
+* $Id: AbstractExtensionHandler.java,v 1.3 2006/05/23 15:41:59 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/12/12 13:40:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2006/05/23 15:41:59 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module extensions
  */
@@ -66,19 +66,19 @@ public abstract class AbstractExtensionHandler<T extends ExtensionPoint> impleme
 			/*
 			 * Never.
 			 */
-			Log.errorException(iae);
+			Log.errorMessage(iae);
 			Log.errorMessage("Caught an IllegalAccessException");
 		} catch (final IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			Log.errorException(iae);			
+			Log.errorMessage(iae);			
 			Log.errorMessage("Caught an IllegalArgumentException");
 		} catch (final SecurityException se) {
 			/*
 			 * Never.
 			 */
-			Log.errorException(se);
+			Log.errorMessage(se);
 			Log.errorMessage("Caught a SecurityException");
 		}
 		return null;

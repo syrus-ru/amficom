@@ -1,5 +1,5 @@
 /*
- * $Id: OpenTemplateCommand.java,v 1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: OpenTemplateCommand.java,v 1.2 2006/05/23 15:41:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ public class OpenTemplateCommand extends AbstractCommand {
 								LoginManager.getUserId(),
 								true);
 					} catch (ApplicationException e) {
-						Log.errorException(e);
+						Log.errorMessage(e);
 					}
 				} else {
 					StorableObjectPool.clean();

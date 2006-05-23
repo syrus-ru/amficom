@@ -1,5 +1,5 @@
 /*
- * $Id: SaveTemplateCommand.java,v 1.1 2005/12/02 11:37:17 bass Exp $
+ * $Id: SaveTemplateCommand.java,v 1.2 2006/05/23 15:41:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ public class SaveTemplateCommand extends AbstractCommand {
 					currentTemplate.setNew(false);
 				} catch (ApplicationException e1) {
 					Log.errorMessage("SaveTemplateCommand.execute | " + e1.getMessage());
-					Log.errorException(e1);			
+					Log.errorMessage(e1);			
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
 							I18N.getString("report.Exception.saveTemplateError")

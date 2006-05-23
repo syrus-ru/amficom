@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderMainFrame.java,v 1.2 2006/04/11 05:58:32 stas Exp $
+ * $Id: ReportBuilderMainFrame.java,v 1.3 2006/05/23 15:41:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,8 +59,8 @@ import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.util.Log;
 /**
  * 
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2006/04/11 05:58:32 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2006/05/23 15:41:59 $
  * @author Peskovsky Peter
  * @module reportbuilder_v1
  */
@@ -396,7 +396,7 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 					} catch (Exception e) {
 						Log.errorMessage("ReportBuilderMainFrame.propertyChange | "
 								+ e.getMessage());
-						Log.errorException(e);
+						Log.errorMessage(e);
 						JOptionPane.showMessageDialog(
 								Environment.getActiveWindow(),
 								e.getMessage(),

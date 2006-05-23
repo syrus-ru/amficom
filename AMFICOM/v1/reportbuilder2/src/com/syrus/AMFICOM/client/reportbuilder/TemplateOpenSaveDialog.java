@@ -143,7 +143,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 					openSaveButton_actionPerformed();
 				} catch (ApplicationException e1) {
 					Log.errorMessage("TemplateOpenSaveDialog.actionPerformed | " + e1.getMessage());
-					Log.errorException(e1);			
+					Log.errorMessage(e1);			
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
 							I18N.getString(
@@ -178,7 +178,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 					removeButton_actionPerformed();
 				} catch (ApplicationException e1) {
 					Log.errorMessage("TemplateOpenSaveDialog.actionPerformed | " + e1.getMessage());
-					Log.errorException(e1);			
+					Log.errorMessage(e1);			
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
 							I18N.getString("report.Exception.deleteTemplateError"),
@@ -201,7 +201,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 					templateTypesComboBox_actionPerformed();
 				} catch (ApplicationException e1) {
 					Log.errorMessage("TemplateOpenSaveDialog.actionPerformed | " + e1.getMessage());
-					Log.errorException(e1);			
+					Log.errorMessage(e1);			
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
 							I18N.getString("report.Exception.deleteTemplateError"),
