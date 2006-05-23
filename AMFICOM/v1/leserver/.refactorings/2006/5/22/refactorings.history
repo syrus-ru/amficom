@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<session version="1.0">
+<refactoring delegate="false" deprecate="true" description="Rename field 'com.syrus.AMFICOM.leserver.SimpleMailer.smtpHost' to 'smtpHostname'" flags="589826" getter="false" id="org.eclipse.jdt.ui.rename.field" input="/src&lt;com.syrus.AMFICOM.leserver{SimpleMailer.java[SimpleMailer^smtpHost" name="smtpHostname" references="true" setter="false" stamp="1148397637227" textual="true" version="1.0"/>
+</session>
