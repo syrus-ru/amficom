@@ -1,5 +1,5 @@
 /*-
- * $Id: Log.java,v 1.21 2005/11/10 15:47:46 bass Exp $
+ * $Id: Log.java,v 1.22 2006/05/23 15:44:33 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/11/10 15:47:46 $
+ * @version $Revision: 1.22 $, $Date: 2006/05/23 15:44:33 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -302,7 +302,7 @@ public final class Log {
 	 */
 	@Deprecated
 	public static boolean debugException(final Throwable t, final Level level) {
-		return debugMessage(t, level);
+		return debugMessage0(t, level);
 	}
 
 	/**
@@ -310,13 +310,13 @@ public final class Log {
 	 */
 	@Deprecated
 	public static boolean errorException(final Throwable t) {
-		return errorMessage(t);
+		return errorMessage0(t);
 	}
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.21 $, $Date: 2005/11/10 15:47:46 $
+	 * @version $Revision: 1.22 $, $Date: 2006/05/23 15:44:33 $
 	 * @module util
 	 */
 	private static class CustomLevel extends Level {
