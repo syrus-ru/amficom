@@ -1,5 +1,5 @@
 /*-
- * $Id: Log.java,v 1.23 2006/05/23 15:46:57 bass Exp $
+ * $Id: Log.java,v 1.24 2006/05/23 15:55:21 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,25 +9,32 @@
 package com.syrus.util;
 
 import static java.util.logging.Level.ALL;
+import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2006/05/23 15:46:57 $
+ * @version $Revision: 1.24 $, $Date: 2006/05/23 15:55:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
 public final class Log {
-	public static final Level DEBUGLEVEL01 = new CustomLevel("DEBUGLEVEL01", Level.SEVERE.intValue());
-	public static final Level DEBUGLEVEL02 = new CustomLevel("DEBUGLEVEL02", Level.WARNING.intValue());
-	public static final Level DEBUGLEVEL03 = new CustomLevel("DEBUGLEVEL03", Level.INFO.intValue());
-	public static final Level DEBUGLEVEL04 = new CustomLevel("DEBUGLEVEL04", Level.CONFIG.intValue());
-	public static final Level DEBUGLEVEL05 = new CustomLevel("DEBUGLEVEL05", Level.FINE.intValue());
-	public static final Level DEBUGLEVEL06 = new CustomLevel("DEBUGLEVEL06", Level.FINER.intValue());
-	public static final Level DEBUGLEVEL07 = new CustomLevel("DEBUGLEVEL07", Level.FINEST.intValue());
+	public static final Level DEBUGLEVEL01 = SEVERE;
+	public static final Level DEBUGLEVEL02 = WARNING;
+	public static final Level DEBUGLEVEL03 = INFO;
+	public static final Level DEBUGLEVEL04 = CONFIG;
+	public static final Level DEBUGLEVEL05 = FINE;
+	public static final Level DEBUGLEVEL06 = FINER;
+	public static final Level DEBUGLEVEL07 = FINEST;
 	public static final Level DEBUGLEVEL08 = new CustomLevel("DEBUGLEVEL08", 200);
 	public static final Level DEBUGLEVEL09 = new CustomLevel("DEBUGLEVEL09", 100);
 	public static final Level DEBUGLEVEL10 = new CustomLevel("DEBUGLEVEL10", 50);
@@ -316,7 +323,7 @@ public final class Log {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.23 $, $Date: 2006/05/23 15:46:57 $
+	 * @version $Revision: 1.24 $, $Date: 2006/05/23 15:55:21 $
 	 * @module util
 	 */
 	private static class CustomLevel extends Level {
