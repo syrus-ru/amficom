@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationLogger.java,v 1.15 2005/11/10 11:30:43 bass Exp $
+ * $Id: ApplicationLogger.java,v 1.16 2006/05/23 17:14:59 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.util;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/11/10 11:30:43 $
+ * @version $Revision: 1.16 $, $Date: 2006/05/23 17:14:59 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -27,6 +27,7 @@ final class ApplicationLogger extends AbstractLogger {
 		this.setLevel(ApplicationProperties.getInt(KEY_LOG_DEBUG_LEVEL, DEFAULT_LOG_DEBUG_LEVEL));
 		this.baseLogPath = ApplicationProperties.getString(KEY_LOG_PATH, DEFAULT_LOG_PATH);
 		this.fullSte = ApplicationProperties.getBoolean(KEY_FULL_STE, DEFAULT_FULL_STE);
+		this.allowLevelOutput = ApplicationProperties.getBoolean(KEY_ALLOW_LEVEL_OUTPUT, DEFAULT_ALLOW_LEVEL_OUTPUT);
 
 		this.stackTraceDataSource = System.getProperty(
 				"amficom.stack.trace.data.source",

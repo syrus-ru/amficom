@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLogger.java,v 1.16 2006/02/14 11:08:20 saa Exp $
+ * $Id: AbstractLogger.java,v 1.17 2006/05/23 17:14:59 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.util;
 import static com.syrus.util.Log.DEBUG_LEVEL_MAP;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.OFF;
+import static java.util.logging.Level.SEVERE;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -21,8 +22,8 @@ import java.util.Date;
 import java.util.logging.Level;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.16 $, $Date: 2006/02/14 11:08:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2006/05/23 17:14:59 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
@@ -36,6 +37,7 @@ abstract class AbstractLogger implements Logger {
 	static final String KEY_LOG_ONLY_THIS_LEVEL = "LogOnlyThisLevel";
 	static final String KEY_LOG_PATH = "LogPath";
 	static final String KEY_FULL_STE = "FullSte";
+	static final String KEY_ALLOW_LEVEL_OUTPUT = "AllowLevelOutput";
 
 	static final String DEFAULT_APPNAME = "defaultApp";
 	static final String DEFAULT_HOSTNAME = "defaultHost";
@@ -46,6 +48,7 @@ abstract class AbstractLogger implements Logger {
 	static final boolean DEFAULT_LOG_ONLY_THIS_LEVEL = false;
 	static final String DEFAULT_LOG_PATH = System.getProperty("user.home") + File.separatorChar + "logs";
 	static final boolean DEFAULT_FULL_STE = false;
+	static final boolean DEFAULT_ALLOW_LEVEL_OUTPUT = false;
 
 	private String appName;
 	private String hostName;
@@ -79,6 +82,10 @@ abstract class AbstractLogger implements Logger {
 	 * printed.
 	 */
 	boolean fullSte;
+	/**
+	 * Whether loglevel should be printed.
+	 */
+	boolean allowLevelOutput;
 
 	/*-********************************************************************
 	 *  StackTraceDataSource                                              *
@@ -120,42 +127,42 @@ abstract class AbstractLogger implements Logger {
 
 	abstract void initSpec();
 
-	public void debugMessage(final String message, final Level debugLevel) {
-		if (this.isLoggable(debugLevel)) {
+	public void debugMessage(final String message, final Level level) {
+		if (this.isLoggable(level)) {
 			try {
 				synchronized (this) {
 					this.checkLogRollover();
 					if (this.debugLog == null) {
 						this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
 					}
-					this.logMessage(this.debugLog, message);
+					this.logMessage(this.debugLog, message, level);
 					this.debugLog.flush();
 					if (this.echoDebug) {
-						this.logMessage(System.out, message);
+						this.logMessage(System.out, message, level);
 					}
 				}
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				System.out.println("Exception in debug logging: " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public void debugException(final Throwable t, final Level debugLevel) {
-		if (this.isLoggable(debugLevel)) {
+	public void debugException(final Throwable t, final Level level) {
+		if (this.isLoggable(level)) {
 			try {
 				synchronized(this) {
 					this.checkLogRollover();
 					if (this.debugLog == null) {
 						this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
 					}
-					this.logThrowable(this.debugLog, t);
+					this.logThrowable(this.debugLog, t, level);
 					this.debugLog.flush();
 					if (this.echoDebug) {
-						this.logThrowable(System.out, t);
+						this.logThrowable(System.out, t, level);
 					}
 				}
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				System.out.println("Exception in debug logging: " + e.getMessage());
 				e.printStackTrace();
 			}
@@ -168,13 +175,13 @@ abstract class AbstractLogger implements Logger {
 			if (this.errorLog == null) {
 				this.errorLog = new PrintWriter(new FileWriter(this.errorLogFileName, true), true);
 			}
-			this.logMessage(this.errorLog, message);
+			this.logMessage(this.errorLog, message, SEVERE);
 			this.errorLog.flush();
 
 			if (this.echoError) {
-				this.logMessage(System.err, message);
+				this.logMessage(System.err, message, SEVERE);
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			System.out.println("Exception in error logging: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -186,13 +193,13 @@ abstract class AbstractLogger implements Logger {
 			if (this.errorLog == null) {
 				this.errorLog = new PrintWriter(new FileWriter(this.errorLogFileName, true), true);
 			}
-			this.logThrowable(this.errorLog, t);
+			this.logThrowable(this.errorLog, t, SEVERE);
 			this.errorLog.flush();
 
 			if (this.echoError) {
-				this.logThrowable(System.err, t);
+				this.logThrowable(System.err, t, SEVERE);
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			System.out.println("Exception in error logging: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -223,27 +230,31 @@ abstract class AbstractLogger implements Logger {
 		this.errorLog = null;
 	}
 
-	private void logMessage(final PrintWriter out, final String message) {
+	private void logMessage(final PrintWriter out, final String message, final Level level) {
 		logTimestamp(out);
+		this.logLevel(out, level);
 		this.logStackTraceElement(out);
 		out.println(message);
 	}
 
-	private void logMessage(final PrintStream out, final String message) {
+	private void logMessage(final PrintStream out, final String message, final Level level) {
 		logTimestamp(out);
+		this.logLevel(out, level);
 		this.logStackTraceElement(out);
 		out.println(message);
 	}
 
-	private void logThrowable(final PrintWriter out, final Throwable t) {
+	private void logThrowable(final PrintWriter out, final Throwable t, final Level level) {
 		logTimestamp(out);
+		this.logLevel(out, level);
 		this.logStackTraceElement(out);
 		out.println("Exception (stack trace follows): " + t.getMessage());
 		t.printStackTrace(out);
 	}
 
-	private void logThrowable(final PrintStream out, final Throwable t) {
+	private void logThrowable(final PrintStream out, final Throwable t, final Level level) {
 		logTimestamp(out);
+		this.logLevel(out, level);
 		this.logStackTraceElement(out);
 		out.println("Exception (stack trace follows): " + t.getMessage());
 		t.printStackTrace(out);
@@ -299,6 +310,36 @@ abstract class AbstractLogger implements Logger {
 			stackTrace = (new Throwable()).getStackTrace();
 		}
 		return (stackTrace.length > depth) ? stackTrace[depth] : null;
+	}
+
+	/**
+	 * Outputs the string representation of the level specified, padding it
+	 * with spaces as necessary.
+	 */
+	private void logLevel(final PrintWriter out, final Level level) {
+		if (this.allowLevelOutput) {
+			final String levelName = level.getName();
+			out.print('[' + levelName + ']');
+			for (int i = levelName.length(); i < Log.MAX_LEVEL_NAME_LENGTH; i ++) {
+				out.print(' ');
+			}
+			out.print(" | ");
+		}
+	}
+
+	/**
+	 * Outputs the string representation of the level specified, padding it
+	 * with spaces as necessary.
+	 */
+	private void logLevel(final PrintStream out, final Level level) {
+		if (this.allowLevelOutput) {
+			final String levelName = level.getName();
+			out.print('[' + levelName + ']');
+			for (int i = levelName.length(); i < Log.MAX_LEVEL_NAME_LENGTH; i ++) {
+				out.print(' ');
+			}
+			out.print(" | ");
+		}
 	}
 
 	private String createLogFileName(final String logType) {

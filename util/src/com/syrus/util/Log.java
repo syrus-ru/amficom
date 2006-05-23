@@ -1,5 +1,5 @@
 /*-
- * $Id: Log.java,v 1.26 2006/05/23 16:14:11 bass Exp $
+ * $Id: Log.java,v 1.27 2006/05/23 17:14:59 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2006/05/23 16:14:11 $
+ * @version $Revision: 1.27 $, $Date: 2006/05/23 17:14:59 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -36,11 +36,13 @@ public final class Log {
 	public static final Level DEBUGLEVEL05 = FINE;
 	public static final Level DEBUGLEVEL06 = FINER;
 	public static final Level DEBUGLEVEL07 = FINEST;
-	public static final Level DEBUGLEVEL08 = new CustomLevel("DEBUGLEVEL08", 200);
-	public static final Level DEBUGLEVEL09 = new CustomLevel("DEBUGLEVEL09", 100);
-	public static final Level DEBUGLEVEL10 = new CustomLevel("DEBUGLEVEL10", 50);
+	public static final Level DEBUGLEVEL08 = new CustomLevel("DBGLV08", 200);
+	public static final Level DEBUGLEVEL09 = new CustomLevel("DBGLV09", 100);
+	public static final Level DEBUGLEVEL10 = new CustomLevel("DBGLV10", 50);
 
 	static final Map<Integer, Level> DEBUG_LEVEL_MAP;
+
+	static final int MAX_LEVEL_NAME_LENGTH;
 
 	private static final Logger DEFAULT_LOGGER = getDefaultLogger();
 
@@ -63,6 +65,19 @@ public final class Log {
 		debugLevelMap.put(Integer.valueOf(i--), DEBUGLEVEL01);
 
 		DEBUG_LEVEL_MAP = Collections.unmodifiableMap(debugLevelMap);
+	}
+
+	static {
+		int maxLevelNameLength = 0;
+
+		for (final Level level : DEBUG_LEVEL_MAP.values()) {
+			final int levelNameLength = level.getName().length();
+			if (maxLevelNameLength < levelNameLength) {
+				maxLevelNameLength = levelNameLength;
+			}
+		}
+
+		MAX_LEVEL_NAME_LENGTH = maxLevelNameLength;
 	}
 
 	private Log() {
@@ -310,7 +325,7 @@ public final class Log {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.26 $, $Date: 2006/05/23 16:14:11 $
+	 * @version $Revision: 1.27 $, $Date: 2006/05/23 17:14:59 $
 	 * @module util
 	 */
 	private static class CustomLevel extends Level {
