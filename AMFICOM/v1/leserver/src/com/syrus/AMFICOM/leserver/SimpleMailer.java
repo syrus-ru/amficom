@@ -1,5 +1,5 @@
 /*-
- * $Id: SimpleMailer.java,v 1.8 2006/05/18 11:37:40 bass Exp $
+ * $Id: SimpleMailer.java,v 1.9 2006/05/23 15:30:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.mail.EmailAddressRegexp;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2006/05/18 11:37:40 $
+ * @version $Revision: 1.9 $, $Date: 2006/05/23 15:30:31 $
  * @module leserver
  */
 public final class SimpleMailer {
@@ -122,6 +122,8 @@ public final class SimpleMailer {
 
 	private static InternetAddress from;
 
+	private static String smtpHostname;
+
 	static {
 		initialize();
 	}
@@ -131,12 +133,12 @@ public final class SimpleMailer {
 	}
 
 	private static void initialize() {
-		String smtpHost = ApplicationProperties.getString(KEY_SMTP_HOST, DEFAULT_SMTP_HOST);
-		if (smtpHost == null || smtpHost.length() == 0) {
+		smtpHostname = ApplicationProperties.getString(KEY_SMTP_HOST, DEFAULT_SMTP_HOST);
+		if (smtpHostname == null || smtpHostname.length() == 0) {
 			Log.debugMessage("SMTP host is either null or empty; changing to ``"
 					+ DEFAULT_SMTP_HOST + "''",
 					WARNING); 
-			smtpHost = DEFAULT_SMTP_HOST;
+			smtpHostname = DEFAULT_SMTP_HOST;
 		}
 
 		int smtpPort = ApplicationProperties.getInt(KEY_SMTP_PORT, DEFAULT_SMTP_PORT);
@@ -193,7 +195,7 @@ public final class SimpleMailer {
 		}
 
 		final Properties properties = new Properties();
-		properties.put("mail.smtp.host", smtpHost);
+		properties.put("mail.smtp.host", smtpHostname);
 		properties.put("mail.smtp.port", Integer.toString(smtpPort));
 		properties.put("mail.smtp.auth", Boolean.toString(useAuth));
 		properties.put("mail.smtp.allow8bitmime", Boolean.TRUE.toString());
@@ -211,7 +213,7 @@ public final class SimpleMailer {
 		}
 		session.setDebug(debug);
 
-		from = getInternetAddress(smtpUsername + '@' + smtpHost, true);
+		from = getInternetAddress(smtpUsername + '@' + smtpHostname, true);
 	}
 
 	/**
@@ -219,7 +221,6 @@ public final class SimpleMailer {
 	 */
 	private static String getPersonal(final String address) {
 		final String smtpUsername = address.substring(0, address.indexOf('@'));
-		final String smtpHostname = address.substring(address.indexOf('@') + 1);
 
 		boolean lookupPersonal = false;
 		try {
@@ -468,7 +469,7 @@ public final class SimpleMailer {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.8 $, $Date: 2006/05/18 11:37:40 $
+	 * @version $Revision: 1.9 $, $Date: 2006/05/23 15:30:31 $
 	 * @module leserver
 	 */
 	private enum ContentTransferEncoding {
