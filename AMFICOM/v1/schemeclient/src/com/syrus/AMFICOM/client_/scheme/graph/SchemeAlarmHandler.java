@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeAlarmHandler.java,v 1.14 2006/05/02 07:23:32 stas Exp $
+ * $Id: SchemeAlarmHandler.java,v 1.15 2006/05/23 12:14:21 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -41,7 +42,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2006/05/02 07:23:32 $
+ * @version $Revision: 1.15 $, $Date: 2006/05/23 12:14:21 $
  * @module schemeclient_v1
  */
 
@@ -243,6 +244,7 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 					sleep(REPAINT_TIME);
 				} catch (InterruptedException e) {
 					Log.errorMessage(e);
+					break;
 				}
 				
 				if (this.cells.length == 0) {
@@ -251,7 +253,17 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 				
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						GraphActions.setObjectsColor(AlarmPainter.this.graph, AlarmPainter.this.cells, Color.RED);
+						try {
+							GraphActions.setObjectsColor(AlarmPainter.this.graph, AlarmPainter.this.cells, Color.RED);
+						} catch (RuntimeException e) {
+							if (!LoginManager.isLoggedIn()) {
+								// it was logout
+								AlarmPainter.this.cells = new GraphCell[0];
+								AlarmPainter.this.cellsSet.clear();
+							} else {
+								Log.errorMessage(e);
+							}
+						}
 					}
 				});
 					
@@ -264,7 +276,18 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 				
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						GraphActions.setObjectsColor(AlarmPainter.this.graph, AlarmPainter.this.cells, Color.BLACK);
+						try {
+							GraphActions.setObjectsColor(AlarmPainter.this.graph, AlarmPainter.this.cells, Color.BLACK);
+						} catch (RuntimeException e) {
+							if (!LoginManager.isLoggedIn()) {
+								// it was logout
+								AlarmPainter.this.cells = new GraphCell[0];
+								AlarmPainter.this.cellsSet.clear();
+							} else {
+								Log.errorMessage(e);
+							}
+						}
+
 					}
 				});
 			}
