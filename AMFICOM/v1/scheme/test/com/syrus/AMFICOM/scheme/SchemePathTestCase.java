@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.38 2006/03/15 16:41:40 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.39 2006/05/24 10:48:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2006/03/15 16:41:40 $
+ * @version $Revision: 1.39 $, $Date: 2006/05/24 10:48:17 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -115,6 +115,10 @@ public final class SchemePathTestCase extends TestCase {
 
 			public Level getLevel() {
 				return OFF;
+			}
+
+			@SuppressWarnings("all")
+			public void setLevel(final int reverseIntValue) {
 			}
 
 			@SuppressWarnings("all")

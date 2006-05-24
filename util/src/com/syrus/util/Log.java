@@ -1,5 +1,5 @@
 /*-
- * $Id: Log.java,v 1.27 2006/05/23 17:14:59 bass Exp $
+ * $Id: Log.java,v 1.28 2006/05/24 10:45:11 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2006/05/23 17:14:59 $
+ * @version $Revision: 1.28 $, $Date: 2006/05/24 10:45:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -138,6 +138,10 @@ public final class Log {
 
 			public Level getLevel() {
 				return ALL;
+			}
+
+			@SuppressWarnings("all")
+			public void setLevel(final int reverseIntValue) {
 			}
 
 			@SuppressWarnings("all")
@@ -325,7 +329,7 @@ public final class Log {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.27 $, $Date: 2006/05/23 17:14:59 $
+	 * @version $Revision: 1.28 $, $Date: 2006/05/24 10:45:11 $
 	 * @module util
 	 */
 	private static class CustomLevel extends Level {
