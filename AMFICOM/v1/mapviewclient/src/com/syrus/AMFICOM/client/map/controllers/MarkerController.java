@@ -1,5 +1,5 @@
  /*-
- * $$Id: MarkerController.java,v 1.50 2006/05/22 12:43:40 stas Exp $$
+ * $$Id: MarkerController.java,v 1.51 2006/05/24 10:19:54 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 /**
  *  онтроллер маркера.
  * 
- * @version $Revision: 1.50 $, $Date: 2006/05/22 12:43:40 $
+ * @version $Revision: 1.51 $, $Date: 2006/05/24 10:19:54 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -276,50 +276,41 @@ public class MarkerController extends AbstractNodeController {
 	 * 
 	 * @param marker
 	 *        маркер
-	 * @param physicalDistance
+	 * @param opticalDistance
 	 *        рассто€ние
 	 * @throws ApplicationException 
 	 * @throws ApplicationException 
 	 * @throws MapDataException 
 	 * @throws MapConnectionException 
 	 */
-	public void moveToFromStartLf(final Marker marker, final double physicalDistance)
+	public void moveToFromStartLo(final Marker marker, final double opticalDistance)
 	throws MapConnectionException,
 	MapDataException, ApplicationException {
-		marker.setPhysicalDistance(physicalDistance);
-		
 		final MeasurementPath measurementPath = marker.getMeasurementPath();
+		final SchemePath schemePath = measurementPath.getSchemePath();
+		final SortedSet<PathElement> pathElements = schemePath.getPathMembers();
 		
-		final double pathl = measurementPath.getLengthLf();
-		if (marker.getPhysicalDistance() > pathl) {
-			marker.setPhysicalDistance(pathl);
-		}
+		final PathElement currentPE = schemePath.getPathElementByOpticalDistance(opticalDistance);
+		double[] optPEDistance = schemePath.getOpticalDistanceFromStart(currentPE);
 		
-		MapElement me = null;
-		double pathLength = 0;
-		double localDistance = 0.0;
-		
-		final MeasurementPathController pathController = (MeasurementPathController) this.logicalNetLayer.getMapViewController().getController(measurementPath);
-		
-		final SortedSet<PathElement> pathElements = measurementPath.getSchemePath().getPathMembers();
-		for (final PathElement pathElement : pathElements) {
-			final double d = SchemeUtils.getPhysicalLength(pathElement);
-			if (pathLength + d >= marker.getPhysicalDistance()) {
-				me = pathController.getMapElement(measurementPath, pathElement);
-				localDistance = marker.getPhysicalDistance() - pathLength;
-				break;
+		double opticalDistance1 = opticalDistance;
+		// for lastPE check marker not exceeds length of path
+		if (currentPE.equals(pathElements.last())) {
+			if (opticalDistance > optPEDistance[1]) {
+				opticalDistance1 = optPEDistance[1];
 			}
-			
-			pathLength += d;
 		}
+		marker.setPhysicalDistance(schemePath.getPhysicalDistance(opticalDistance1));
+
+		final MeasurementPathController pathController = (MeasurementPathController) this.logicalNetLayer.getMapViewController().getController(measurementPath);		
+		MapElement me = pathController.getMapElement(measurementPath, currentPE);
+		double localDistance = marker.getPhysicalDistance() - schemePath.getPhysicalDistance(optPEDistance[0]);
 		
-		if (me != null) {
-			if (me instanceof CablePath) {
-				marker.setCablePath((CablePath) me);
-				this.setRelativeToCablePath(marker, localDistance);
-			} else {
-				this.setRelativeToNode(marker, (AbstractNode) me);
-			}
+		if (me instanceof CablePath) {
+			marker.setCablePath((CablePath) me);
+			this.setRelativeToCablePath(marker, localDistance);
+		} else {
+			this.setRelativeToNode(marker, (AbstractNode) me);
 		}
 	}
 	

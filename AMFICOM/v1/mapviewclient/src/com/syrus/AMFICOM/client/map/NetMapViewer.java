@@ -1,5 +1,5 @@
 /*-
- * $$Id: NetMapViewer.java,v 1.74 2006/03/27 14:42:52 stas Exp $$
+ * $$Id: NetMapViewer.java,v 1.75 2006/05/24 10:19:41 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -85,7 +85,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * 
- * @version $Revision: 1.74 $, $Date: 2006/03/27 14:42:52 $
+ * @version $Revision: 1.75 $, $Date: 2006/05/24 10:19:41 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -538,7 +538,7 @@ public abstract class NetMapViewer {
 						} else {
 							mc.moveToFromStartLo(marker, mne.getOpticalDistance());
 						}*/
-						mc.moveToFromStartLf(marker, mne.getOpticalDistance());
+						mc.moveToFromStartLo(marker, mne.getOpticalDistance());
 //						marker.setPhysicalDistance(mne.getOpticalDistance());
 						this.logicalNetLayer.updateZoom();
 					}
@@ -585,7 +585,7 @@ public abstract class NetMapViewer {
 							mc.moveToFromStartLo(marker, mne.getOpticalDistance());
 						}*/
 //						marker.setPhysicalDistance(mne.getOpticalDistance());
-						mc.moveToFromStartLf(marker, mne.getOpticalDistance());
+						mc.moveToFromStartLo(marker, mne.getOpticalDistance());
 						this.logicalNetLayer.updateZoom();
 
 						final NodeLink nodeLink = marker.getNodeLink();
@@ -611,16 +611,18 @@ public abstract class NetMapViewer {
 						
 						final Identifier schemePathId = mne.getSchemePathId();
 						final MarkerController mc = (MarkerController)mapViewController.getController(marker);
-						if (schemePathId != null) {
-							final SchemePath schemePath = StorableObjectPool.getStorableObject(schemePathId, true);
-							if(measurementPath.getSchemePath() == null)
-								measurementPath.setSchemePath(schemePath);
-							
-							mc.moveToFromStartLf(marker, schemePath.getPhysicalDistance(mne.getOpticalDistance()));
-						} else {
-							Log.debugMessage("SchemePathId is null! It will have to move marker by optical distance" , Level.FINE);
-							mc.moveToFromStartLf(marker, mne.getOpticalDistance());
-						}
+						mc.moveToFromStartLo(marker, mne.getOpticalDistance());
+
+//						if (schemePathId != null) {
+//							final SchemePath schemePath = StorableObjectPool.getStorableObject(schemePathId, true);
+//							if(measurementPath.getSchemePath() == null)
+//								measurementPath.setSchemePath(schemePath);
+//							
+//							mc.moveToFromStartLo(marker, schemePath.getPhysicalDistance(mne.getOpticalDistance()));
+//						} else {
+//							Log.debugMessage("SchemePathId is null! It will have to move marker by optical distance" , Level.FINE);
+//							
+//						}
 					}
 				}
 				else if(mne.getMarkerEventType() == MarkerEvent.MARKER_SELECTED_EVENT) {
