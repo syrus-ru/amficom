@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLogger.java,v 1.19 2006/05/24 07:24:08 bass Exp $
+ * $Id: AbstractLogger.java,v 1.20 2006/05/24 10:15:48 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,25 +19,29 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 import java.util.logging.Level;
 
 /**
+ * @author Tashoyan Arseniy Feliksovich
+ * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2006/05/24 07:24:08 $
+ * @version $Revision: 1.20 $, $Date: 2006/05/24 10:15:48 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
-	static final String DELIMITER = ".";
-	static final String ERROR = "error";
-	static final String DEBUG = "debug";	
+	private static final String DELIMITER = ".";
+	private static final String ERROR = "error";
+	private static final String DEBUG = "debug";
 
-	static final String DEFAULT_APPNAME = "defaultApp";
-	static final String DEFAULT_HOSTNAME = "defaultHost";
+	static final String PROPERTY_NAME_PREFIX = "amficom.logging.";
 
 	/*-********************************************************************
 	 * Keys.                                                              *
 	 **********************************************************************/
 
+	static final String KEY_APPLICATION_NAME = "ApplicationName";
+	static final String KEY_HOSTNAME = "Hostname";
 	static final String KEY_ECHO_DEBUG = "EchoDebug";
 	static final String KEY_ECHO_ERROR = "EchoError";
 	static final String KEY_LOG_ONLY_THIS_LEVEL = "LogOnlyThisLevel";
@@ -51,13 +55,16 @@ abstract class AbstractLogger implements Logger {
 	 * Devault values.                                                    *
 	 **********************************************************************/
 
-	static final boolean DEFAULT_ECHO_DEBUG = false;
-	static final boolean DEFAULT_ECHO_ERROR = false;
-	static final boolean DEFAULT_LOG_ONLY_THIS_LEVEL = false;
-	static final int DEFAULT_LOG_DEBUG_LEVEL = 5;
+	static final String DEFAULT_APPLICATION_NAME = "default";
+	static final String DEFAULT_HOSTNAME = "localhost";
+	static final String DEFAULT_ECHO_DEBUG = Boolean.toString(false);
+	static final String DEFAULT_ECHO_ERROR = Boolean.toString(false);
+	static final String DEFAULT_LOG_ONLY_THIS_LEVEL = Boolean.toString(false);
+	private static final int DEFAULT_LOG_DEBUG_LEVEL_INT = 5;
+	static final String DEFAULT_LOG_DEBUG_LEVEL = Integer.toString(DEFAULT_LOG_DEBUG_LEVEL_INT);
 	static final String DEFAULT_LOG_PATH = System.getProperty("user.home") + File.separatorChar + "logs";
-	static final boolean DEFAULT_FULL_STE = false;
-	static final boolean DEFAULT_ALLOW_LEVEL_OUTPUT = false;
+	static final String DEFAULT_FULL_STE = Boolean.toString(false);
+	static final String DEFAULT_ALLOW_LEVEL_OUTPUT = Boolean.toString(false);
 
 	static final String STACK_TRACE_DATA_SOURCE_THREAD = "thread";
 	static final String STACK_TRACE_DATA_SOURCE_THROWABLE = "throwable";
@@ -69,11 +76,15 @@ abstract class AbstractLogger implements Logger {
 	 * Actual values.                                                     *
 	 **********************************************************************/
 
-	boolean echoDebug;
+	private final String applicationName;
 
-	boolean echoError;
+	private final String hostname;
 
-	boolean thisLevelOnly;
+	private final boolean echoDebug;
+
+	private final boolean echoError;
+
+	private final boolean logOnlyThisLevel;
 
 	/**
 	 * @see java.util.logging.Logger#levelObject
@@ -90,18 +101,18 @@ abstract class AbstractLogger implements Logger {
 	 */
 	private static final int offValue = OFF.intValue();
 
-	String baseLogPath;
+	private final String logDir;
 
 	/**
 	 * Whether full or short form of a stack trace element should be 
 	 * printed.
 	 */
-	boolean fullSte;
+	private final boolean fullSte;
 
 	/**
 	 * Whether loglevel should be printed.
 	 */
-	boolean allowLevelOutput;
+	private final boolean allowLevelOutput;
 
 	/**
 	 * <p>For server-side applications, {@link #STACK_TRACE_DATA_SOURCE_THREAD} is
@@ -114,11 +125,9 @@ abstract class AbstractLogger implements Logger {
 	 * <p>This field is assumed to hold a reference to a canonical string,
 	 * since further it gets compared by reference, not by value.</p>
 	 */
-	String stackTraceDataSource;
+	private final String stackTraceDataSource;
 
 
-	private final String appName;
-	private final String hostName;
 	private String debugLogFileName;
 	private String errorLogFileName;
 	private PrintWriter errorLog;
@@ -126,13 +135,75 @@ abstract class AbstractLogger implements Logger {
 
 	private long logMillis; // current milliseconds
 
-	public AbstractLogger(final String appName, final String hostName) {
-		this.appName = (appName != null) ? appName : DEFAULT_APPNAME;
-		this.hostName = (hostName != null) ? hostName : DEFAULT_HOSTNAME;
-		this.debugLogFileName = this.createLogFileName(DEBUG);
-		this.errorLogFileName = this.createLogFileName(ERROR);
+	public AbstractLogger() {
+		this(System.getProperties());
+	}
+
+	public AbstractLogger(final Properties properties) {
+		this.applicationName = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_APPLICATION_NAME, DEFAULT_APPLICATION_NAME);
+		this.hostname = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_HOSTNAME, DEFAULT_HOSTNAME);
+		this.echoDebug = Boolean.getBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_ECHO_DEBUG, DEFAULT_ECHO_DEBUG));
+		this.echoError = Boolean.getBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_ECHO_ERROR, DEFAULT_ECHO_ERROR));
+		this.logOnlyThisLevel = Boolean.getBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_LOG_ONLY_THIS_LEVEL, DEFAULT_LOG_ONLY_THIS_LEVEL));
+		try {
+			this.setLevel(Integer.parseInt(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_LOG_DEBUG_LEVEL, DEFAULT_LOG_DEBUG_LEVEL)));
+		} catch (final NumberFormatException nfe) {
+			this.setLevel(DEFAULT_LOG_DEBUG_LEVEL_INT);
+		}
+		this.logDir = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_LOG_PATH, DEFAULT_LOG_PATH);
+		this.fullSte = Boolean.getBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_FULL_STE, DEFAULT_FULL_STE));
+		this.allowLevelOutput = Boolean.getBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_ALLOW_LEVEL_OUTPUT, DEFAULT_ALLOW_LEVEL_OUTPUT));
+		String probablyStackTraceDataSource = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_STACK_TRACE_DATA_SOURCE, DEFAULT_STACK_TRACE_DATA_SOURCE).intern();
+		if (probablyStackTraceDataSource != STACK_TRACE_DATA_SOURCE_THREAD
+				&& probablyStackTraceDataSource != STACK_TRACE_DATA_SOURCE_THROWABLE
+				&& probablyStackTraceDataSource != STACK_TRACE_DATA_SOURCE_NONE) {
+			probablyStackTraceDataSource = DEFAULT_STACK_TRACE_DATA_SOURCE;
+		}
+		this.stackTraceDataSource = probablyStackTraceDataSource;
 
 		this.logMillis = System.currentTimeMillis();
+
+		this.debugLogFileName = this.createLogFileName(DEBUG);
+		this.errorLogFileName = this.createLogFileName(ERROR);
+	}
+
+	/**
+	 * @param applicationName
+	 * @param hostname
+	 * @param properties
+	 * @deprecated Use {@link #AbstractLogger()} or
+	 *             {@link #AbstractLogger(Properties)} instead.
+	 */
+	@Deprecated
+	AbstractLogger(final String applicationName, final String hostname, final Properties properties) {
+		properties.put(PROPERTY_NAME_PREFIX + KEY_APPLICATION_NAME, applicationName);
+		properties.put(PROPERTY_NAME_PREFIX + KEY_HOSTNAME, hostname);
+
+		this.applicationName = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_APPLICATION_NAME, DEFAULT_APPLICATION_NAME);
+		this.hostname = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_HOSTNAME, DEFAULT_HOSTNAME);
+		this.echoDebug = Boolean.parseBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_ECHO_DEBUG, DEFAULT_ECHO_DEBUG));
+		this.echoError = Boolean.parseBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_ECHO_ERROR, DEFAULT_ECHO_ERROR));
+		this.logOnlyThisLevel = Boolean.parseBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_LOG_ONLY_THIS_LEVEL, DEFAULT_LOG_ONLY_THIS_LEVEL));
+		try {
+			this.setLevel(Integer.parseInt(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_LOG_DEBUG_LEVEL, DEFAULT_LOG_DEBUG_LEVEL)));
+		} catch (final NumberFormatException nfe) {
+			this.setLevel(DEFAULT_LOG_DEBUG_LEVEL_INT);
+		}
+		this.logDir = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_LOG_PATH, DEFAULT_LOG_PATH);
+		this.fullSte = Boolean.parseBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_FULL_STE, DEFAULT_FULL_STE));
+		this.allowLevelOutput = Boolean.parseBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_ALLOW_LEVEL_OUTPUT, DEFAULT_ALLOW_LEVEL_OUTPUT));
+		String probablyStackTraceDataSource = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_STACK_TRACE_DATA_SOURCE, DEFAULT_STACK_TRACE_DATA_SOURCE).intern();
+		if (probablyStackTraceDataSource != STACK_TRACE_DATA_SOURCE_THREAD
+				&& probablyStackTraceDataSource != STACK_TRACE_DATA_SOURCE_THROWABLE
+				&& probablyStackTraceDataSource != STACK_TRACE_DATA_SOURCE_NONE) {
+			probablyStackTraceDataSource = DEFAULT_STACK_TRACE_DATA_SOURCE;
+		}
+		this.stackTraceDataSource = probablyStackTraceDataSource;
+
+		this.logMillis = System.currentTimeMillis();
+
+		this.debugLogFileName = this.createLogFileName(DEBUG);
+		this.errorLogFileName = this.createLogFileName(ERROR);
 	}
 
 	public void debugMessage(final String message, final Level level) {
@@ -353,12 +424,12 @@ abstract class AbstractLogger implements Logger {
 	private String createLogFileName(final String logType) {
 		return this.getLogPath(logType) +	File.separator +
 				logType +	DELIMITER +
-				this.appName + DELIMITER +
-				this.hostName + ".log";
+				this.applicationName + DELIMITER +
+				this.hostname + ".log";
 	}
 
 	private String getLogPath(final String logType) {
-		String logPath = this.baseLogPath;
+		String logPath = this.logDir;
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		logPath += File.separator + sdf.format(new Date(this.logMillis)) + File.separator + logType;
 		final File file = new File(logPath);
@@ -414,7 +485,7 @@ abstract class AbstractLogger implements Logger {
 	 * @see java.util.logging.Logger#isLoggable(Level)
 	 */
 	public final boolean isLoggable(final Level level) {
-		return this.levelValue != offValue && (this.thisLevelOnly
+		return this.levelValue != offValue && (this.logOnlyThisLevel
 				? level.intValue() == this.levelValue
 				: level.intValue() >= this.levelValue);
 	}
