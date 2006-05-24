@@ -1,7 +1,7 @@
 /*-
- * $Id: AbstractLogger.java,v 1.18 2006/05/24 06:58:01 bass Exp $
+ * $Id: AbstractLogger.java,v 1.19 2006/05/24 07:24:08 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -23,37 +23,56 @@ import java.util.logging.Level;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2006/05/24 06:58:01 $
+ * @version $Revision: 1.19 $, $Date: 2006/05/24 07:24:08 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
 	static final String DELIMITER = ".";
 	static final String ERROR = "error";
-	static final String DEBUG = "debug";
-	
-	static final String KEY_LOG_DEBUG_LEVEL = "LogDebugLevel";
-	static final String KEY_ECHO_DEBUG = "EchoDebug";
-	static final String KEY_ECHO_ERROR = "EchoError";
-	static final String KEY_LOG_ONLY_THIS_LEVEL = "LogOnlyThisLevel";
-	static final String KEY_LOG_PATH = "LogPath";
-	static final String KEY_FULL_STE = "FullSte";
-	static final String KEY_ALLOW_LEVEL_OUTPUT = "AllowLevelOutput";
+	static final String DEBUG = "debug";	
 
 	static final String DEFAULT_APPNAME = "defaultApp";
 	static final String DEFAULT_HOSTNAME = "defaultHost";
 
-	static final int DEFAULT_LOG_DEBUG_LEVEL = 5;
+	/*-********************************************************************
+	 * Keys.                                                              *
+	 **********************************************************************/
+
+	static final String KEY_ECHO_DEBUG = "EchoDebug";
+	static final String KEY_ECHO_ERROR = "EchoError";
+	static final String KEY_LOG_ONLY_THIS_LEVEL = "LogOnlyThisLevel";
+	static final String KEY_LOG_DEBUG_LEVEL = "LogDebugLevel";
+	static final String KEY_LOG_PATH = "LogPath";
+	static final String KEY_FULL_STE = "FullSte";
+	static final String KEY_ALLOW_LEVEL_OUTPUT = "AllowLevelOutput";
+	static final String KEY_STACK_TRACE_DATA_SOURCE = "StackTraceDataSource";
+
+	/*-********************************************************************
+	 * Devault values.                                                    *
+	 **********************************************************************/
+
 	static final boolean DEFAULT_ECHO_DEBUG = false;
 	static final boolean DEFAULT_ECHO_ERROR = false;
 	static final boolean DEFAULT_LOG_ONLY_THIS_LEVEL = false;
+	static final int DEFAULT_LOG_DEBUG_LEVEL = 5;
 	static final String DEFAULT_LOG_PATH = System.getProperty("user.home") + File.separatorChar + "logs";
 	static final boolean DEFAULT_FULL_STE = false;
 	static final boolean DEFAULT_ALLOW_LEVEL_OUTPUT = false;
 
-	private String appName;
-	private String hostName;
+	static final String STACK_TRACE_DATA_SOURCE_THREAD = "thread";
+	static final String STACK_TRACE_DATA_SOURCE_THROWABLE = "throwable";
+	static final String STACK_TRACE_DATA_SOURCE_NONE = "none";
+
+	static final String DEFAULT_STACK_TRACE_DATA_SOURCE = STACK_TRACE_DATA_SOURCE_THREAD;
+
+	/*-********************************************************************
+	 * Actual values.                                                     *
+	 **********************************************************************/
+
 	boolean echoDebug;
+
 	boolean echoError;
+
 	boolean thisLevelOnly;
 
 	/**
@@ -72,38 +91,24 @@ abstract class AbstractLogger implements Logger {
 	private static final int offValue = OFF.intValue();
 
 	String baseLogPath;
-	private long logMillis; // current milliseconds
-	private String debugLogFileName;
-	private String errorLogFileName;
-	private PrintWriter errorLog;
-	private PrintWriter debugLog;
+
 	/**
 	 * Whether full or short form of a stack trace element should be 
 	 * printed.
 	 */
 	boolean fullSte;
+
 	/**
 	 * Whether loglevel should be printed.
 	 */
 	boolean allowLevelOutput;
 
-	/*-********************************************************************
-	 *  StackTraceDataSource                                              *
-	 **********************************************************************/
-
-	static final String STACK_TRACE_DATA_SOURCE_THREAD = "thread";
-	static final String STACK_TRACE_DATA_SOURCE_THROWABLE = "throwable";
-	static final String STACK_TRACE_DATA_SOURCE_NONE = "none";
-
-	static final String KEY_STACK_TRACE_DATA_SOURCE = "StackTraceDataSource";
-	static final String DEFAULT_STACK_TRACE_DATA_SOURCE = STACK_TRACE_DATA_SOURCE_THREAD;
-
 	/**
-	 * <p>For server-side applications, STACK_TRACE_DATA_SOURCE_THREAD is
+	 * <p>For server-side applications, {@link #STACK_TRACE_DATA_SOURCE_THREAD} is
 	 * the default.</p>
 	 * 
 	 * <p>For client-side ones (Jet-compiled to native code),
-	 * STACK_TRACE_DATA_SOURCE_THROWABLE is the default, since currently
+	 * {@link #STACK_TRACE_DATA_SOURCE_THROWABLE} is the default, since currently
 	 * Jet can't fetch current thread's stack trace.</p>
 	 *
 	 * <p>This field is assumed to hold a reference to a canonical string,
@@ -111,6 +116,15 @@ abstract class AbstractLogger implements Logger {
 	 */
 	String stackTraceDataSource;
 
+
+	private final String appName;
+	private final String hostName;
+	private String debugLogFileName;
+	private String errorLogFileName;
+	private PrintWriter errorLog;
+	private PrintWriter debugLog;
+
+	private long logMillis; // current milliseconds
 
 	public AbstractLogger(final String appName, final String hostName) {
 		this.appName = (appName != null) ? appName : DEFAULT_APPNAME;
