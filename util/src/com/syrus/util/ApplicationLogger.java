@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationLogger.java,v 1.19 2006/05/24 10:43:31 bass Exp $
+ * $Id: ApplicationLogger.java,v 1.20 2006/05/24 11:21:36 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import java.util.logging.Level;
  * @author Tashoyan Arseniy Feliksovich
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2006/05/24 10:43:31 $
+ * @version $Revision: 1.20 $, $Date: 2006/05/24 11:21:36 $
  * @module util
  */
 final class ApplicationLogger implements Logger {
@@ -93,7 +93,9 @@ final class ApplicationLogger implements Logger {
 	 * taken from properties file.
 	 */
 	public ApplicationLogger() {
-		this.logger = new DefaultLogger(this.properties);
+		final DefaultLogger defaultLogger = new DefaultLogger(this.properties);
+		defaultLogger.incrementStackDepth(1);
+		this.logger = defaultLogger;
 	}
 
 	/**
@@ -107,7 +109,9 @@ final class ApplicationLogger implements Logger {
 		this.properties.put(PROPERTY_NAME_PREFIX + KEY_APPLICATION_NAME, applicationName);
 		this.properties.put(PROPERTY_NAME_PREFIX + KEY_HOSTNAME, hostname);
 
-		this.logger = new DefaultLogger(this.properties);
+		final DefaultLogger defaultLogger = new DefaultLogger(this.properties);
+		defaultLogger.incrementStackDepth(1);
+		this.logger = defaultLogger;
 	}
 
 	/**

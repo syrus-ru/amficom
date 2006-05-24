@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLogger.java,v 1.2 2006/05/24 11:05:45 bass Exp $
+ * $Id: DefaultLogger.java,v 1.3 2006/05/24 11:21:36 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,13 +26,16 @@ import java.util.logging.Level;
  * @author Tashoyan Arseniy Feliksovich
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2006/05/24 11:05:45 $
+ * @version $Revision: 1.3 $, $Date: 2006/05/24 11:21:36 $
  * @module util
  */
 public final class DefaultLogger implements Logger {
 	private static final String DELIMITER = ".";
 	private static final String ERROR = "error";
 	private static final String DEBUG = "debug";
+
+	private static final SimpleDateFormat SIMPLE_DATE_FORMAT =
+		new SimpleDateFormat("HH:mm:ss.SSS");
 
 	static final String PROPERTY_NAME_PREFIX = "amficom.logging.";
 
@@ -132,6 +135,9 @@ public final class DefaultLogger implements Logger {
 	private String errorLogFileName;
 	private PrintWriter errorLog;
 	private PrintWriter debugLog;
+
+	private int threadStackDepth = 8;
+	private int throwableStackDepth = 6;
 
 	private long logMillis; // current milliseconds
 
@@ -300,9 +306,6 @@ public final class DefaultLogger implements Logger {
 		t.printStackTrace(out);
 	}
 
-	private static final SimpleDateFormat SIMPLE_DATE_FORMAT =
-		new SimpleDateFormat("HH:mm:ss.SSS");
-
 	private static void logTimestamp(final PrintWriter out) {
 		out.print(SIMPLE_DATE_FORMAT.format(new Date()) + "| ");
 	}
@@ -341,15 +344,13 @@ public final class DefaultLogger implements Logger {
 		}
 
 		final StackTraceElement stackTrace[];
-		final int depth;
 		if (this.stackTraceDataSource == STACK_TRACE_DATA_SOURCE_THREAD) {
-			depth = 8;
 			stackTrace = Thread.currentThread().getStackTrace();
-		} else {
-			depth = 6;
-			stackTrace = (new Throwable()).getStackTrace();
+			return (stackTrace.length > this.threadStackDepth) ? stackTrace[this.threadStackDepth] : null;
 		}
-		return (stackTrace.length > depth) ? stackTrace[depth] : null;
+
+		stackTrace = (new Throwable()).getStackTrace();
+		return (stackTrace.length > this.throwableStackDepth) ? stackTrace[this.throwableStackDepth] : null;
 	}
 
 	/**
@@ -398,6 +399,15 @@ public final class DefaultLogger implements Logger {
 			file.mkdirs();
 		}
 		return logPath;
+	}
+
+	void incrementStackDepth(final int increment) {
+		if (increment <= 0) {
+			throw new IllegalArgumentException(String.valueOf(increment));
+		}
+
+		this.threadStackDepth += increment;
+		this.throwableStackDepth += increment;
 	}
 
 	/**
