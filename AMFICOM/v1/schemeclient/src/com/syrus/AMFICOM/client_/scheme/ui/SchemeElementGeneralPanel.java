@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.32 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.33 2006/05/24 06:32:01 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.32 $, $Date: 2006/05/03 04:48:52 $
+ * @version $Revision: 1.33 $, $Date: 2006/05/24 06:32:01 $
  * @module schemeclient
  */
 
@@ -136,6 +136,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 
 		try {
 			this.eqtCombo = new AComboBox(EquipmentType.valuesArray());
+			this.eqtCombo.removeItem(EquipmentType.valueOf("bug136"));
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
 		}
