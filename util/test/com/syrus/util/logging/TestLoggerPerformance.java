@@ -1,5 +1,5 @@
 /*-
- * $Id: TestLoggerPerformance.java,v 1.1 2006/05/24 12:07:37 saa Exp $
+ * $Id: TestLoggerPerformance.java,v 1.2 2006/05/24 14:48:53 bass Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.util.logging;
 
+import java.io.File;
 import java.util.logging.Level;
 
 import junit.framework.TestCase;
@@ -19,8 +20,8 @@ import com.syrus.util.Log;
  * This is not an actual test. This is a measuring tool only.
  * 
  * @author saa
- * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2006/05/24 12:07:37 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2006/05/24 14:48:53 $
  * @module util/test
  */
 public class TestLoggerPerformance extends TestCase {
@@ -56,13 +57,16 @@ public class TestLoggerPerformance extends TestCase {
 	}
 
 	public void test() {
+		final String logDir = System.getProperty("java.io.tmpdir") + File.separatorChar
+				+ ".amficom-" + System.getProperty("user.name");
 		System.setProperty("amficom.logging.LogDebugLevel", "10");
 		System.setProperty("amficom.logging.EchoDebug", "false");
+		System.setProperty("amficom.logging.LogPath", logDir);
 		measureAtConditions("false", "none");
 		measureAtConditions("true", "none");
 		measureAtConditions("false", "throwable");
 		measureAtConditions("false", "thread");
-		System.out.println("... Sorry, I wrote a lot of logs, " +
+		System.out.println("... Sorry, I wrote a lot of logs under " + logDir + ", " +
 				"Please delete that junk logfiles.");
 	}
 }
