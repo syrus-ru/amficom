@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeCableLinkCommand.java,v 1.64 2006/05/24 10:22:09 stas Exp $$
+ * $$Id: PlaceSchemeCableLinkCommand.java,v 1.65 2006/05/24 14:33:39 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.64 $, $Date: 2006/05/24 10:22:09 $
+ * @version $Revision: 1.65 $, $Date: 2006/05/24 14:33:39 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -94,8 +94,6 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			long t3 = System.currentTimeMillis();
 			this.cablePath = this.mapView.findCablePath(this.schemeCableLink);
 			long t4 = System.currentTimeMillis();
-			
-			fixNodes(this.startNode, this.endNode);
 			
 			// если кабельный путь уже есть - ничего не делать
 			if(this.cablePath != null)
@@ -268,29 +266,5 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			setException(e);
 			Log.errorMessage(e);
 		}
-	}
-
-	private void fixNodes(final SiteNode startNode1, final SiteNode endNode1) {
-		final LinkedIdsCondition condition = new LinkedIdsCondition(this.schemeCableLink, ObjectEntities.PATHELEMENT_CODE);
-		try {
-			Set<PathElement> pes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-			if (!pes.isEmpty()) {
-				final PathElement sclPE = pes.iterator().next();
-				final int seq = sclPE.getSequentialNumber();
-				final PathElement previous = sclPE.getParentPathOwner().getPathMember(seq - 1);
-				
-				final SchemeCablePort sourcePort = this.schemeCableLink.getSourceAbstractSchemePort();
-				final SchemeElement source = sourcePort.getParentSchemeDevice().getParentSchemeElement();
-
-				if (!previous.getAbstractSchemeElement().equals(source)) {
-					Log.debugMessage("Swap cablePath source and target for " + this.schemeCableLink.getName(), Level.FINER);
-					this.startNode = endNode1;
-					this.endNode = startNode1;
-				}
-			}
-		} catch (ApplicationException e) {
-			Log.errorMessage(e);
-		}
-		
 	}
 }
