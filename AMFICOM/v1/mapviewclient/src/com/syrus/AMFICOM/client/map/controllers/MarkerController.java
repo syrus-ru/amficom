@@ -1,5 +1,5 @@
  /*-
- * $$Id: MarkerController.java,v 1.52 2006/05/24 14:33:12 stas Exp $$
+ * $$Id: MarkerController.java,v 1.53 2006/05/24 14:42:32 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер маркера.
  * 
- * @version $Revision: 1.52 $, $Date: 2006/05/24 14:33:12 $
+ * @version $Revision: 1.53 $, $Date: 2006/05/24 14:42:32 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -348,14 +348,6 @@ public class MarkerController extends AbstractNodeController {
 				this.setRelativeToNode(marker, (AbstractNode) me);
 				Log.errorMessage("MarkerController : not SchemeElement object but sets relative to AbstractNode");
 			}
-		}
-		
-		
-		
-		if (me instanceof CablePath) {
-			
-		} else {
-			
 		}
 	}
 	
