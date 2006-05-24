@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationProperties.java,v 1.19 2006/05/21 16:38:16 bass Exp $
+ * $Id: ApplicationProperties.java,v 1.20 2006/05/24 10:13:56 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,8 +7,6 @@
  */
 
 package com.syrus.util;
-
-import static java.util.logging.Level.FINEST;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,7 +16,7 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2006/05/21 16:38:16 $
+ * @version $Revision: 1.20 $, $Date: 2006/05/24 10:13:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -55,7 +53,6 @@ public class ApplicationProperties {
 		} catch (final IOException ioe) {
 			absolutePath = file.getAbsolutePath();
 		}
-		System.out.println("Reading file:" + absolutePath);
 		if (file.exists()) {
 			try {
 				FileInputStream fis = new FileInputStream(filepath);
@@ -78,8 +75,8 @@ public class ApplicationProperties {
 		if (applicationResourceBundle != null) {
 			try {
 				return applicationResourceBundle.getString(key);
-			} catch (Exception e) {
-				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", FINEST);
+			} catch (final Exception e) {
+				// Silently ignore
 			}
 		}
 
@@ -87,11 +84,10 @@ public class ApplicationProperties {
 			try {
 				return commonResourceBundle.getString(key);
 			} catch (Exception e) {
-				Log.debugMessage("Cannot get resource '" + key + "' from " + commonFileName, Log.DEBUGLEVEL02);
+				Log.debugMessage("Cannot get resource '" + key + "' from " + commonFileName + "; returning '" + defaultValue + '\'', Log.DEBUGLEVEL02);
 			}
 		}
 
-		Log.debugMessage("Returning default for key '" + key + "' -- '" + defaultValue + "'", Log.DEBUGLEVEL02);
 		return defaultValue;
 	}
 
@@ -100,7 +96,7 @@ public class ApplicationProperties {
 			try {
 				return Integer.parseInt(applicationResourceBundle.getString(key));
 			} catch (Exception e) {
-				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", FINEST);
+				// Silently ignore
 			}
 		}
 
@@ -108,11 +104,10 @@ public class ApplicationProperties {
 			try {
 				return Integer.parseInt(commonResourceBundle.getString(key));
 			} catch (Exception e) {
-				Log.debugMessage("Cannot get resource '" + key + "' from " + commonFileName, Log.DEBUGLEVEL02);
+				Log.debugMessage("Cannot get resource '" + key + "' from " + commonFileName + "; returning '" + defaultValue + '\'', Log.DEBUGLEVEL02);
 			}
 		}
 
-		Log.debugMessage("Returning default for key '" + key + "' -- " + defaultValue, Log.DEBUGLEVEL02);
 		return defaultValue;
 	}
 
