@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeCableLinkCommand.java,v 1.63 2006/02/15 12:54:38 stas Exp $$
+ * $$Id: PlaceSchemeCableLinkCommand.java,v 1.64 2006/05/24 10:22:09 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,10 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
@@ -27,13 +31,17 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
 
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.63 $, $Date: 2006/02/15 12:54:38 $
+ * @version $Revision: 1.64 $, $Date: 2006/05/24 10:22:09 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -86,6 +94,9 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			long t3 = System.currentTimeMillis();
 			this.cablePath = this.mapView.findCablePath(this.schemeCableLink);
 			long t4 = System.currentTimeMillis();
+			
+			fixNodes(this.startNode, this.endNode);
+			
 			// если кабельный путь уже есть - ничего не делать
 			if(this.cablePath != null)
 			{
@@ -99,11 +110,11 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			// идем по всем узлам кабельного пути от начального
 			SiteNode bufferStartSite = this.startNode;
 			// цикл по элементам привязки кабеля.
-			XmlIdentifier xmlId1 = XmlIdentifier.Factory.newInstance();
-			this.schemeCableLink.getId().getXmlTransferable(xmlId1, "ucm");
-			if(xmlId1.getStringValue().equals("682647")) {
-				@SuppressWarnings("unused") int a = 0;
-			}
+			
+			// XXX commented by Stas - is it really need for import/export?
+//			XmlIdentifier xmlId1 = XmlIdentifier.Factory.newInstance();
+//			this.schemeCableLink.getId().getXmlTransferable(xmlId1, "ucm");
+
 			final Set<AbstractNode> siteNodesPresent = this.mapView.getAllNodes();
 			final SortedSet<CableChannelingItem> pathMembers = this.schemeCableLink.getPathMembers();
 //			Log.debugMessage("SchemeCableLink " + xmlId1.getStringValue() + " has " + pathMembers.size() + " cci's");
@@ -148,7 +159,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 				// создать на месте разрыва непроложенную линию из одного фрагмента
 				if(!exists) {
 					UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, currentStartNode);
-					Log.debugMessage("Unbound fragment for Cable " + xmlId1.getStringValue() + " between nodes  '" + bufferStartSite.getName() + "' and '" + currentStartNode.getName() + "'", Log.DEBUGLEVEL09);
+//					Log.debugMessage("Unbound fragment for Cable " + xmlId1.getStringValue() + " between nodes  '" + bufferStartSite.getName() + "' and '" + currentStartNode.getName() + "'", Log.DEBUGLEVEL09);
 					CableChannelingItem newCableChannelingItem = 
 						CableController.generateCCI(
 								this.cablePath, 
@@ -176,7 +187,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 					// если линия не существует, опустить данный элемент привязки
 					if(link == null) {
 						UnboundLink unbound = super.createUnboundLinkWithNodeLink(currentStartNode, currentEndNode);
-						Log.debugMessage("Unbound fragment for Cable " + xmlId1.getStringValue() + " between nodes  '" + currentStartNode.getName() + "' and '" + currentEndNode.getName() + "'", Log.DEBUGLEVEL09);
+//						Log.debugMessage("Unbound fragment for Cable " + xmlId1.getStringValue() + " between nodes  '" + currentStartNode.getName() + "' and '" + currentEndNode.getName() + "'", Log.DEBUGLEVEL09);
 						this.cablePath.addLink(unbound, cci);
 						unbound.setCablePath(this.cablePath);
 					}
@@ -231,7 +242,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			// линию от текущего до конечного узла
 			if(this.endNode != bufferStartSite) {
 				UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, this.endNode);
-				Log.debugMessage("Unbound fragment for Cable " + xmlId1.getStringValue() + " between nodes  '" + bufferStartSite.getName() + "' and '" + this.endNode.getName() + "'", Log.DEBUGLEVEL09);
+//				Log.debugMessage("Unbound fragment for Cable " + xmlId1.getStringValue() + " between nodes  '" + bufferStartSite.getName() + "' and '" + this.endNode.getName() + "'", Log.DEBUGLEVEL09);
 				CableChannelingItem newCableChannelingItem = 
 					CableController.generateCCI(
 							this.cablePath, 
@@ -246,12 +257,12 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			setResult(Command.RESULT_OK);
 			// операция закончена - оповестить слушателей
 			this.logicalNetLayer.setCurrentMapElement(this.cablePath);
-			Log.debugMessage("PlaceSchemeCableLinkCommand :: get start node for scl " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-			Log.debugMessage("PlaceSchemeCableLinkCommand :: get end node for scl " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-			Log.debugMessage("PlaceSchemeCableLinkCommand :: find cable path " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-			Log.debugMessage("PlaceSchemeCableLinkCommand :: create cable path " + (t5 - t4) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-			Log.debugMessage("PlaceSchemeCableLinkCommand :: walk through CCIs " + (t6 - t5) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-			Log.debugMessage("PlaceSchemeCableLinkCommand :: create final unbound node " + (t7 - t6) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: get start node for scl " + (t2 - t1) + " ms", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: get end node for scl " + (t3 - t2) + " ms", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: find cable path " + (t4 - t3) + " ms", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: create cable path " + (t5 - t4) + " ms", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: walk through CCIs " + (t6 - t5) + " ms", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: create final unbound node " + (t7 - t6) + " ms", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);
@@ -259,4 +270,27 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 		}
 	}
 
+	private void fixNodes(final SiteNode startNode1, final SiteNode endNode1) {
+		final LinkedIdsCondition condition = new LinkedIdsCondition(this.schemeCableLink, ObjectEntities.PATHELEMENT_CODE);
+		try {
+			Set<PathElement> pes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (!pes.isEmpty()) {
+				final PathElement sclPE = pes.iterator().next();
+				final int seq = sclPE.getSequentialNumber();
+				final PathElement previous = sclPE.getParentPathOwner().getPathMember(seq - 1);
+				
+				final SchemeCablePort sourcePort = this.schemeCableLink.getSourceAbstractSchemePort();
+				final SchemeElement source = sourcePort.getParentSchemeDevice().getParentSchemeElement();
+
+				if (!previous.getAbstractSchemeElement().equals(source)) {
+					Log.debugMessage("Swap cablePath source and target for " + this.schemeCableLink.getName(), Level.FINER);
+					this.startNode = endNode1;
+					this.endNode = startNode1;
+				}
+			}
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
+		}
+		
+	}
 }
