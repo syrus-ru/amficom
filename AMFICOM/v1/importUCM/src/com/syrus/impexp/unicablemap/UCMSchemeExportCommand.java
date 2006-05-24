@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.21 2006/01/24 15:13:10 stas Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.22 2006/05/24 11:05:45 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.impexp.unicablemap.objects.ThreadType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2006/01/24 15:13:10 $
+ * @version $Revision: 1.22 $, $Date: 2006/05/24 11:05:45 $
  * @module importUCM
  */
 
@@ -434,9 +434,9 @@ public class UCMSchemeExportCommand {
 							} else if (param.realParameter.text.equals(UniCableMapParameter.UCM_Y)) {
 								poy = Integer.parseInt(param.value);
 							} else if(param.realParameter.text.equals(UniCableMapParameter.UCM_FROM_TOP)) {
-								topToBottom = Boolean.getBoolean(param.value);
+								topToBottom = Boolean.parseBoolean(param.value);
 							} else if(param.realParameter.text.equals(UniCableMapParameter.UCM_FROM_RIGHT)) {
-								leftToRight = ! Boolean.getBoolean(param.value);
+								leftToRight = ! Boolean.parseBoolean(param.value);
 							}
 						}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: Block.java,v 1.1 2005/10/15 13:41:52 krupenn Exp $
+ * $Id: Block.java,v 1.2 2006/05/24 11:05:45 stas Exp $
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -100,10 +100,10 @@ public class Block {
 				poy = Integer.parseInt(param.value);
 			}
 			if(param.realParameter.text.equals(UniCableMapParameter.UCM_FROM_TOP)) {
-				topToBottom = Boolean.getBoolean(param.value);
+				topToBottom = Boolean.parseBoolean(param.value);
 			}
 			if(param.realParameter.text.equals(UniCableMapParameter.UCM_FROM_RIGHT)) {
-				leftToRight = ! Boolean.getBoolean(param.value);
+				leftToRight = ! Boolean.parseBoolean(param.value);
 			}
 		}
 		String comment = "";
