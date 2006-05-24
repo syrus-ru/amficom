@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLogger.java,v 1.20 2006/05/24 10:15:48 bass Exp $
+ * $Id: DefaultLogger.java,v 1.1 2006/05/24 10:43:09 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,10 +26,10 @@ import java.util.logging.Level;
  * @author Tashoyan Arseniy Feliksovich
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2006/05/24 10:15:48 $
+ * @version $Revision: 1.1 $, $Date: 2006/05/24 10:43:09 $
  * @module util
  */
-abstract class AbstractLogger implements Logger {
+public final class DefaultLogger implements Logger {
 	private static final String DELIMITER = ".";
 	private static final String ERROR = "error";
 	private static final String DEBUG = "debug";
@@ -135,11 +135,11 @@ abstract class AbstractLogger implements Logger {
 
 	private long logMillis; // current milliseconds
 
-	public AbstractLogger() {
+	public DefaultLogger() {
 		this(System.getProperties());
 	}
 
-	public AbstractLogger(final Properties properties) {
+	public DefaultLogger(final Properties properties) {
 		this.applicationName = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_APPLICATION_NAME, DEFAULT_APPLICATION_NAME);
 		this.hostname = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_HOSTNAME, DEFAULT_HOSTNAME);
 		this.echoDebug = Boolean.getBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_ECHO_DEBUG, DEFAULT_ECHO_DEBUG));
@@ -153,45 +153,6 @@ abstract class AbstractLogger implements Logger {
 		this.logDir = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_LOG_PATH, DEFAULT_LOG_PATH);
 		this.fullSte = Boolean.getBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_FULL_STE, DEFAULT_FULL_STE));
 		this.allowLevelOutput = Boolean.getBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_ALLOW_LEVEL_OUTPUT, DEFAULT_ALLOW_LEVEL_OUTPUT));
-		String probablyStackTraceDataSource = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_STACK_TRACE_DATA_SOURCE, DEFAULT_STACK_TRACE_DATA_SOURCE).intern();
-		if (probablyStackTraceDataSource != STACK_TRACE_DATA_SOURCE_THREAD
-				&& probablyStackTraceDataSource != STACK_TRACE_DATA_SOURCE_THROWABLE
-				&& probablyStackTraceDataSource != STACK_TRACE_DATA_SOURCE_NONE) {
-			probablyStackTraceDataSource = DEFAULT_STACK_TRACE_DATA_SOURCE;
-		}
-		this.stackTraceDataSource = probablyStackTraceDataSource;
-
-		this.logMillis = System.currentTimeMillis();
-
-		this.debugLogFileName = this.createLogFileName(DEBUG);
-		this.errorLogFileName = this.createLogFileName(ERROR);
-	}
-
-	/**
-	 * @param applicationName
-	 * @param hostname
-	 * @param properties
-	 * @deprecated Use {@link #AbstractLogger()} or
-	 *             {@link #AbstractLogger(Properties)} instead.
-	 */
-	@Deprecated
-	AbstractLogger(final String applicationName, final String hostname, final Properties properties) {
-		properties.put(PROPERTY_NAME_PREFIX + KEY_APPLICATION_NAME, applicationName);
-		properties.put(PROPERTY_NAME_PREFIX + KEY_HOSTNAME, hostname);
-
-		this.applicationName = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_APPLICATION_NAME, DEFAULT_APPLICATION_NAME);
-		this.hostname = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_HOSTNAME, DEFAULT_HOSTNAME);
-		this.echoDebug = Boolean.parseBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_ECHO_DEBUG, DEFAULT_ECHO_DEBUG));
-		this.echoError = Boolean.parseBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_ECHO_ERROR, DEFAULT_ECHO_ERROR));
-		this.logOnlyThisLevel = Boolean.parseBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_LOG_ONLY_THIS_LEVEL, DEFAULT_LOG_ONLY_THIS_LEVEL));
-		try {
-			this.setLevel(Integer.parseInt(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_LOG_DEBUG_LEVEL, DEFAULT_LOG_DEBUG_LEVEL)));
-		} catch (final NumberFormatException nfe) {
-			this.setLevel(DEFAULT_LOG_DEBUG_LEVEL_INT);
-		}
-		this.logDir = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_LOG_PATH, DEFAULT_LOG_PATH);
-		this.fullSte = Boolean.parseBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_FULL_STE, DEFAULT_FULL_STE));
-		this.allowLevelOutput = Boolean.parseBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_ALLOW_LEVEL_OUTPUT, DEFAULT_ALLOW_LEVEL_OUTPUT));
 		String probablyStackTraceDataSource = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_STACK_TRACE_DATA_SOURCE, DEFAULT_STACK_TRACE_DATA_SOURCE).intern();
 		if (probablyStackTraceDataSource != STACK_TRACE_DATA_SOURCE_THREAD
 				&& probablyStackTraceDataSource != STACK_TRACE_DATA_SOURCE_THROWABLE
@@ -440,14 +401,8 @@ abstract class AbstractLogger implements Logger {
 	}
 
 	/**
-	 * @param reverseIntValue AMFICOM-standard debug level, ranging from 1
-	 *        to 10. Higher <code>reverseIntValue</code>s mean more verbose
-	 *        output. This behaviour is opposite to that of
-	 *        {@link Level Level}<code>.</code>{@link Level#intValue() intValue()},
-	 *        that's the reason why parameter is named
-	 *        <code>reverseIntValue</code>.
-	 * @see #setLevel(Level)
-	 * @see java.util.logging.Logger#setLevel(Level)
+	 * @param reverseIntValue
+	 * @see com.syrus.util.Logger#setLevel(int)
 	 */
 	public void setLevel(final int reverseIntValue) {
 		if (10 < reverseIntValue || reverseIntValue < 1) {
