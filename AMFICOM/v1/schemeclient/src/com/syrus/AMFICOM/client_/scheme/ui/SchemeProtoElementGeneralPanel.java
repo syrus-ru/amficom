@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.30 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.31 2006/05/24 06:30:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.ElementsPermissionManager;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.ProtoEquipmentWrapper;
@@ -65,7 +66,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.30 $, $Date: 2006/05/03 04:48:52 $
+ * @version $Revision: 1.31 $, $Date: 2006/05/24 06:30:38 $
  * @module schemeclient
  */
 
@@ -104,6 +105,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 
 		try {
 			this.eqtCombo = new AComboBox(EquipmentType.valuesArray());
+			this.eqtCombo.removeItem(EquipmentType.valueOf("bug136"));
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
 		}
@@ -426,8 +428,8 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			final List<SchemeProtoGroup> sortedGroups = new LinkedList<SchemeProtoGroup>(groups);
 			Collections.sort(sortedGroups, new WrapperComparator<SchemeProtoGroup>(SchemeProtoGroupWrapper.getInstance(),
 					StorableObjectWrapper.COLUMN_NAME));
+			sortedGroups.remove(SchemeObjectsFactory.getStubProtoGroup());
 			this.parentCombo.addElements(sortedGroups);
-			// parentCombo.addItem(NON_GROUP_ITEM);
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
 		}
