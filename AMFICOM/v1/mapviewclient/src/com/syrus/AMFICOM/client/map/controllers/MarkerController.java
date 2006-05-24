@@ -1,5 +1,5 @@
  /*-
- * $$Id: MarkerController.java,v 1.51 2006/05/24 10:19:54 stas Exp $$
+ * $$Id: MarkerController.java,v 1.52 2006/05/24 14:33:12 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,14 +35,20 @@ import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.scheme.PathElement;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
  * Контроллер маркера.
  * 
- * @version $Revision: 1.51 $, $Date: 2006/05/24 10:19:54 $
+ * @version $Revision: 1.52 $, $Date: 2006/05/24 14:33:12 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -304,13 +310,52 @@ public class MarkerController extends AbstractNodeController {
 
 		final MeasurementPathController pathController = (MeasurementPathController) this.logicalNetLayer.getMapViewController().getController(measurementPath);		
 		MapElement me = pathController.getMapElement(measurementPath, currentPE);
-		double localDistance = marker.getPhysicalDistance() - schemePath.getPhysicalDistance(optPEDistance[0]);
+
+		
+		if (currentPE.getKind().equals(IdlKind.SCHEME_ELEMENT)) {
+			if (me instanceof CablePath) {
+				this.setRelativeToCablePath(marker, 0);
+				Log.errorMessage("MarkerController : SchemeElement object but sets relative to CablePath");
+			} else { 
+				this.setRelativeToNode(marker, (AbstractNode) me);
+			}
+		} else {
+			double localDistance;
+			SchemeElement source;
+			if (currentPE.getKind().equals(IdlKind.SCHEME_CABLE_LINK)) {
+				final SchemeCableLink scl = currentPE.getSchemeCableLink();
+				final SchemeCablePort sourcePort = scl.getSourceAbstractSchemePort();
+				source = sourcePort.getParentSchemeDevice().getParentSchemeElement();
+			} else {
+				final SchemeLink sl = currentPE.getSchemeLink();
+				final SchemePort sourcePort = sl.getSourceAbstractSchemePort();
+				source = sourcePort.getParentSchemeDevice().getParentSchemeElement();
+			}
+			
+			final int seq = currentPE.getSequentialNumber();
+			final PathElement previous = schemePath.getPathMember(seq - 1);
+			
+			if (!previous.getAbstractSchemeElement().equals(source)) {
+				localDistance = schemePath.getPhysicalDistance(optPEDistance[1]) - marker.getPhysicalDistance();
+			} else {
+				localDistance = marker.getPhysicalDistance() - schemePath.getPhysicalDistance(optPEDistance[0]);
+			}
+			
+			if (me instanceof CablePath) {
+				marker.setCablePath((CablePath) me);
+				this.setRelativeToCablePath(marker, localDistance);
+			} else { 
+				this.setRelativeToNode(marker, (AbstractNode) me);
+				Log.errorMessage("MarkerController : not SchemeElement object but sets relative to AbstractNode");
+			}
+		}
+		
+		
 		
 		if (me instanceof CablePath) {
-			marker.setCablePath((CablePath) me);
-			this.setRelativeToCablePath(marker, localDistance);
+			
 		} else {
-			this.setRelativeToNode(marker, (AbstractNode) me);
+			
 		}
 	}
 	
