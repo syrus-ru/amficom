@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLogger.java,v 1.17 2006/05/23 17:14:59 bass Exp $
+ * $Id: AbstractLogger.java,v 1.18 2006/05/24 06:58:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import java.util.logging.Level;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2006/05/23 17:14:59 $
+ * @version $Revision: 1.18 $, $Date: 2006/05/24 06:58:01 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
@@ -115,17 +115,11 @@ abstract class AbstractLogger implements Logger {
 	public AbstractLogger(final String appName, final String hostName) {
 		this.appName = (appName != null) ? appName : DEFAULT_APPNAME;
 		this.hostName = (hostName != null) ? hostName : DEFAULT_HOSTNAME;
-		this.init();
-	}
-
-	private void init() {
-		this.initSpec();
-		this.logMillis = System.currentTimeMillis();
 		this.debugLogFileName = this.createLogFileName(DEBUG);
 		this.errorLogFileName = this.createLogFileName(ERROR);
-	}
 
-	abstract void initSpec();
+		this.logMillis = System.currentTimeMillis();
+	}
 
 	public void debugMessage(final String message, final Level level) {
 		if (this.isLoggable(level)) {

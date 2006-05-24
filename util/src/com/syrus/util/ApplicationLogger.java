@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationLogger.java,v 1.16 2006/05/23 17:14:59 bass Exp $
+ * $Id: ApplicationLogger.java,v 1.17 2006/05/24 06:58:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,18 +9,13 @@
 package com.syrus.util;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2006/05/23 17:14:59 $
+ * @version $Revision: 1.17 $, $Date: 2006/05/24 06:58:01 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
 final class ApplicationLogger extends AbstractLogger {
-	public ApplicationLogger(final String appName, final String hostName) {
-		super(appName, hostName);
-	}
-
-	@Override
-	void initSpec() {
+	{
 		this.echoDebug = ApplicationProperties.getBoolean(KEY_ECHO_DEBUG, DEFAULT_ECHO_DEBUG);
 		this.echoError = ApplicationProperties.getBoolean(KEY_ECHO_ERROR, DEFAULT_ECHO_ERROR);
 		this.thisLevelOnly = ApplicationProperties.getBoolean(KEY_LOG_ONLY_THIS_LEVEL, DEFAULT_LOG_ONLY_THIS_LEVEL);
@@ -30,12 +25,16 @@ final class ApplicationLogger extends AbstractLogger {
 		this.allowLevelOutput = ApplicationProperties.getBoolean(KEY_ALLOW_LEVEL_OUTPUT, DEFAULT_ALLOW_LEVEL_OUTPUT);
 
 		this.stackTraceDataSource = System.getProperty(
-				"amficom.stack.trace.data.source",
+				AbstractLogger.KEY_STACK_TRACE_DATA_SOURCE,
 				DEFAULT_STACK_TRACE_DATA_SOURCE).intern();
 		if (this.stackTraceDataSource != STACK_TRACE_DATA_SOURCE_THREAD
 				&& this.stackTraceDataSource != STACK_TRACE_DATA_SOURCE_THROWABLE
 				&& this.stackTraceDataSource != STACK_TRACE_DATA_SOURCE_NONE) {
-			this.stackTraceDataSource = STACK_TRACE_DATA_SOURCE_THREAD;
+			this.stackTraceDataSource = DEFAULT_STACK_TRACE_DATA_SOURCE;
 		}
+	}
+
+	public ApplicationLogger(final String appName, final String hostName) {
+		super(appName, hostName);
 	}
 }
