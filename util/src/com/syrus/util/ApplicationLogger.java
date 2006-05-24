@@ -1,5 +1,5 @@
-/*
- * $Id: ApplicationLogger.java,v 1.20 2006/05/24 11:21:36 bass Exp $
+/*-
+ * $Id: ApplicationLogger.java,v 1.21 2006/05/24 14:50:07 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.util;
 
+import static com.syrus.util.DefaultLogger.DEFAULT_ALLOW_ANSI_COLOR;
 import static com.syrus.util.DefaultLogger.DEFAULT_ALLOW_LEVEL_OUTPUT;
 import static com.syrus.util.DefaultLogger.DEFAULT_APPLICATION_NAME;
 import static com.syrus.util.DefaultLogger.DEFAULT_ECHO_DEBUG;
@@ -18,6 +19,7 @@ import static com.syrus.util.DefaultLogger.DEFAULT_LOG_DEBUG_LEVEL;
 import static com.syrus.util.DefaultLogger.DEFAULT_LOG_ONLY_THIS_LEVEL;
 import static com.syrus.util.DefaultLogger.DEFAULT_LOG_PATH;
 import static com.syrus.util.DefaultLogger.DEFAULT_STACK_TRACE_DATA_SOURCE;
+import static com.syrus.util.DefaultLogger.KEY_ALLOW_ANSI_COLOR;
 import static com.syrus.util.DefaultLogger.KEY_ALLOW_LEVEL_OUTPUT;
 import static com.syrus.util.DefaultLogger.KEY_APPLICATION_NAME;
 import static com.syrus.util.DefaultLogger.KEY_ECHO_DEBUG;
@@ -37,7 +39,7 @@ import java.util.logging.Level;
  * @author Tashoyan Arseniy Feliksovich
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2006/05/24 11:21:36 $
+ * @version $Revision: 1.21 $, $Date: 2006/05/24 14:50:07 $
  * @module util
  */
 final class ApplicationLogger implements Logger {
@@ -82,6 +84,10 @@ final class ApplicationLogger implements Logger {
 				ApplicationProperties.getString(
 						KEY_ALLOW_LEVEL_OUTPUT,
 						DEFAULT_ALLOW_LEVEL_OUTPUT));
+		this.properties.put(PROPERTY_NAME_PREFIX+ KEY_ALLOW_ANSI_COLOR,
+				ApplicationProperties.getString(
+						KEY_ALLOW_ANSI_COLOR,
+						DEFAULT_ALLOW_ANSI_COLOR));
 		this.properties.put(PROPERTY_NAME_PREFIX + KEY_STACK_TRACE_DATA_SOURCE,
 				ApplicationProperties.getString(
 						KEY_STACK_TRACE_DATA_SOURCE,

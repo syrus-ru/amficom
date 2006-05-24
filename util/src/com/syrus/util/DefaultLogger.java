@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLogger.java,v 1.3 2006/05/24 11:21:36 bass Exp $
+ * $Id: DefaultLogger.java,v 1.4 2006/05/24 14:50:07 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import java.util.logging.Level;
  * @author Tashoyan Arseniy Feliksovich
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2006/05/24 11:21:36 $
+ * @version $Revision: 1.4 $, $Date: 2006/05/24 14:50:07 $
  * @module util
  */
 public final class DefaultLogger implements Logger {
@@ -52,6 +52,7 @@ public final class DefaultLogger implements Logger {
 	static final String KEY_LOG_PATH = "LogPath";
 	static final String KEY_FULL_STE = "FullSte";
 	static final String KEY_ALLOW_LEVEL_OUTPUT = "AllowLevelOutput";
+	static final String KEY_ALLOW_ANSI_COLOR = "AllowAnsiColor";
 	static final String KEY_STACK_TRACE_DATA_SOURCE = "StackTraceDataSource";
 
 	/*-********************************************************************
@@ -68,6 +69,7 @@ public final class DefaultLogger implements Logger {
 	static final String DEFAULT_LOG_PATH = System.getProperty("user.home") + File.separatorChar + "logs";
 	static final String DEFAULT_FULL_STE = Boolean.toString(false);
 	static final String DEFAULT_ALLOW_LEVEL_OUTPUT = Boolean.toString(false);
+	static final String DEFAULT_ALLOW_ANSI_COLOR = Boolean.toString(false);
 
 	static final String STACK_TRACE_DATA_SOURCE_THREAD = "thread";
 	static final String STACK_TRACE_DATA_SOURCE_THROWABLE = "throwable";
@@ -118,6 +120,11 @@ public final class DefaultLogger implements Logger {
 	private final boolean allowLevelOutput;
 
 	/**
+	 * Whether ANSI color should be used when issuing a log record.
+	 */
+	private final boolean allowAnsiColor;
+
+	/**
 	 * <p>For server-side applications, {@link #STACK_TRACE_DATA_SOURCE_THREAD} is
 	 * the default.</p>
 	 * 
@@ -159,6 +166,7 @@ public final class DefaultLogger implements Logger {
 		this.logDir = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_LOG_PATH, DEFAULT_LOG_PATH);
 		this.fullSte = Boolean.parseBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_FULL_STE, DEFAULT_FULL_STE));
 		this.allowLevelOutput = Boolean.parseBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_ALLOW_LEVEL_OUTPUT, DEFAULT_ALLOW_LEVEL_OUTPUT));
+		this.allowAnsiColor = Boolean.parseBoolean(properties.getProperty(PROPERTY_NAME_PREFIX + KEY_ALLOW_ANSI_COLOR, DEFAULT_ALLOW_ANSI_COLOR));
 		String probablyStackTraceDataSource = properties.getProperty(PROPERTY_NAME_PREFIX + KEY_STACK_TRACE_DATA_SOURCE, DEFAULT_STACK_TRACE_DATA_SOURCE).intern();
 		if (probablyStackTraceDataSource != STACK_TRACE_DATA_SOURCE_THREAD
 				&& probablyStackTraceDataSource != STACK_TRACE_DATA_SOURCE_THROWABLE
