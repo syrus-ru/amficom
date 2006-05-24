@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeGeneralPanel.java,v 1.14 2006/05/03 04:49:00 stas Exp $
+ * $Id: LinkTypeGeneralPanel.java,v 1.15 2006/05/24 06:42:26 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,10 +26,10 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.SchemePermissionManager;
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2006/05/03 04:49:00 $
+ * @version $Revision: 1.15 $, $Date: 2006/05/24 06:42:26 $
  * @module schemeclient
  */
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathGeneralPanel.java,v 1.17 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemePathGeneralPanel.java,v 1.18 2006/05/24 06:42:26 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;

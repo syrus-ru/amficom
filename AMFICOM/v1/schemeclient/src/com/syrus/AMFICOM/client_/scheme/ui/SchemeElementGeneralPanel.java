@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.33 2006/05/24 06:32:01 stas Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.34 2006/05/24 06:42:26 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.NumberFormatter;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.NameableListCellRenderer;
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.33 $, $Date: 2006/05/24 06:32:01 $
+ * @version $Revision: 1.34 $, $Date: 2006/05/24 06:42:26 $
  * @module schemeclient
  */
 
