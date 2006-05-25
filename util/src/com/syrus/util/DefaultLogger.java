@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLogger.java,v 1.4 2006/05/24 14:50:07 bass Exp $
+ * $Id: DefaultLogger.java,v 1.5 2006/05/25 18:33:30 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,18 @@
 
 package com.syrus.util;
 
+import static com.syrus.util.Log.DEBUGLEVEL08;
+import static com.syrus.util.Log.DEBUGLEVEL09;
+import static com.syrus.util.Log.DEBUGLEVEL10;
 import static com.syrus.util.Log.DEBUG_LEVEL_MAP;
+import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.OFF;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -19,6 +27,8 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -26,7 +36,7 @@ import java.util.logging.Level;
  * @author Tashoyan Arseniy Feliksovich
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2006/05/24 14:50:07 $
+ * @version $Revision: 1.5 $, $Date: 2006/05/25 18:33:30 $
  * @module util
  */
 public final class DefaultLogger implements Logger {
@@ -35,7 +45,7 @@ public final class DefaultLogger implements Logger {
 	private static final String DEBUG = "debug";
 
 	private static final SimpleDateFormat SIMPLE_DATE_FORMAT =
-		new SimpleDateFormat("HH:mm:ss.SSS");
+			new SimpleDateFormat("HH:mm:ss.SSS");
 
 	static final String PROPERTY_NAME_PREFIX = "amficom.logging.";
 
@@ -137,6 +147,62 @@ public final class DefaultLogger implements Logger {
 	 */
 	private final String stackTraceDataSource;
 
+	/*-********************************************************************
+	 * ANSI escape sequences.                                             *
+	 **********************************************************************/
+
+	private static final char ESC = '\033';
+	private static final String CSI = "" + ESC + '[';
+	@SuppressWarnings("unused")
+	private static final String REVERSE_VIDEO_ON = CSI + "?5h";
+	@SuppressWarnings("unused")
+	private static final String REVERSE_VIDEO_OFF = CSI + "?5l";
+	private static final byte ALL_ATTRIBUTES_OFF = 0;
+	private static final byte BOLD_ON = 1;
+	private static final byte UNDERLINE_ON = 4;
+	private static final byte BLINK_ON = 5;
+	private static final byte REVERSE_ON = 7;
+	private static final byte BOLD_OFF = 22;
+	private static final byte UNDERLINE_OFF = 24;
+	private static final byte BLINK_OFF = 25;
+	private static final byte REVERSE_OFF = 27;
+	private static final byte FG_COLOR_BLACK = 30;
+	@SuppressWarnings("unused")
+	private static final byte FG_COLOR_RED = 31;
+	@SuppressWarnings("unused")
+	private static final byte FG_COLOR_GREEN = 32;
+	@SuppressWarnings("unused")
+	private static final byte FG_COLOR_YELLOW = 33;
+	@SuppressWarnings("unused")
+	private static final byte FG_COLOR_BLUE = 34;
+	@SuppressWarnings("unused")
+	private static final byte FG_COLOR_MAGENTA = 35;
+	@SuppressWarnings("unused")
+	private static final byte FG_COLOR_CYAN = 36;
+	private static final byte FG_COLOR_WHITE = 37;
+	private static final byte FG_COLOR_DEFAULT = 39;
+	private static final byte BG_COLOR_BLACK = 40;
+	@SuppressWarnings("unused")
+	private static final byte BG_COLOR_RED = 41;
+	@SuppressWarnings("unused")
+	private static final byte BG_COLOR_GREEN = 42;
+	@SuppressWarnings("unused")
+	private static final byte BG_COLOR_YELLOW = 43;
+	@SuppressWarnings("unused")
+	private static final byte BG_COLOR_BLUE = 44;
+	@SuppressWarnings("unused")
+	private static final byte BG_COLOR_MAGENTA = 45;
+	@SuppressWarnings("unused")
+	private static final byte BG_COLOR_CYAN = 46;
+	private static final byte BG_COLOR_WHITE = 47;
+	private static final byte BG_COLOR_DEFAULT = 49;
+
+	private static final Map<Integer, TextAttributes> TEXT_ATTRIBUTES_MAPPING =
+			new HashMap<Integer, TextAttributes>();
+
+	private static final TextAttributes DEFAULT_TEXT_ATTRIBUTES =
+			new TextAttributes(false, false, false, false, FG_COLOR_DEFAULT, BG_COLOR_DEFAULT);
+
 
 	private String debugLogFileName;
 	private String errorLogFileName;
@@ -205,7 +271,7 @@ public final class DefaultLogger implements Logger {
 	public void debugException(final Throwable t, final Level level) {
 		if (this.isLoggable(level)) {
 			try {
-				synchronized(this) {
+				synchronized (this) {
 					this.checkLogRollover();
 					if (this.debugLog == null) {
 						this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
@@ -285,33 +351,77 @@ public final class DefaultLogger implements Logger {
 	}
 
 	private void logMessage(final PrintWriter out, final String message, final Level level) {
+		if (this.allowAnsiColor) {
+			final TextAttributes textAttributes = TEXT_ATTRIBUTES_MAPPING.get(Integer.valueOf(level.intValue()));
+			setColor(out, textAttributes == null
+					? DEFAULT_TEXT_ATTRIBUTES
+					: textAttributes);
+		}
+
 		logTimestamp(out);
 		this.logLevel(out, level);
 		this.logStackTraceElement(out);
 		out.println(message);
+
+		if (this.allowAnsiColor) {
+			resetColor(out);
+		}
 	}
 
 	private void logMessage(final PrintStream out, final String message, final Level level) {
+		if (this.allowAnsiColor) {
+			final TextAttributes textAttributes = TEXT_ATTRIBUTES_MAPPING.get(Integer.valueOf(level.intValue()));
+			setColor(out, textAttributes == null
+					? DEFAULT_TEXT_ATTRIBUTES
+					: textAttributes);
+		}
+
 		logTimestamp(out);
 		this.logLevel(out, level);
 		this.logStackTraceElement(out);
 		out.println(message);
+
+		if (this.allowAnsiColor) {
+			resetColor(out);
+		}
 	}
 
 	private void logThrowable(final PrintWriter out, final Throwable t, final Level level) {
+		if (this.allowAnsiColor) {
+			final TextAttributes textAttributes = TEXT_ATTRIBUTES_MAPPING.get(Integer.valueOf(level.intValue()));
+			setColor(out, textAttributes == null
+					? DEFAULT_TEXT_ATTRIBUTES
+					: textAttributes);
+		}
+
 		logTimestamp(out);
 		this.logLevel(out, level);
 		this.logStackTraceElement(out);
 		out.println("Exception (stack trace follows): " + t.getMessage());
 		t.printStackTrace(out);
+
+		if (this.allowAnsiColor) {
+			resetColor(out);
+		}
 	}
 
 	private void logThrowable(final PrintStream out, final Throwable t, final Level level) {
+		if (this.allowAnsiColor) {
+			final TextAttributes textAttributes = TEXT_ATTRIBUTES_MAPPING.get(Integer.valueOf(level.intValue()));
+			setColor(out, textAttributes == null
+					? DEFAULT_TEXT_ATTRIBUTES
+					: textAttributes);
+		}
+
 		logTimestamp(out);
 		this.logLevel(out, level);
 		this.logStackTraceElement(out);
 		out.println("Exception (stack trace follows): " + t.getMessage());
 		t.printStackTrace(out);
+
+		if (this.allowAnsiColor) {
+			resetColor(out);
+		}
 	}
 
 	private static void logTimestamp(final PrintWriter out) {
@@ -391,6 +501,36 @@ public final class DefaultLogger implements Logger {
 		}
 	}
 
+	private void setColor(final PrintWriter out, final TextAttributes textAttributes) {
+		out.print(CSI
+				+ (textAttributes.bold ? BOLD_ON : BOLD_OFF) + ';'
+				+ (textAttributes.underline ? UNDERLINE_ON : UNDERLINE_OFF) + ';'
+				+ (textAttributes.blink ? BLINK_ON : BLINK_OFF) + ';'
+				+ (textAttributes.reverse ? REVERSE_ON : REVERSE_OFF) + ';'
+				+ textAttributes.fgColor + ';'
+				+ textAttributes.bgColor
+				+ 'm');
+	}
+
+	private void setColor(final PrintStream out, final TextAttributes textAttributes) {
+		out.print(CSI
+				+ (textAttributes.bold ? BOLD_ON : BOLD_OFF) + ';'
+				+ (textAttributes.underline ? UNDERLINE_ON : UNDERLINE_OFF) + ';'
+				+ (textAttributes.blink ? BLINK_ON : BLINK_OFF) + ';'
+				+ (textAttributes.reverse ? REVERSE_ON : REVERSE_OFF) + ';'
+				+ textAttributes.fgColor + ';'
+				+ textAttributes.bgColor
+				+ 'm');
+	}
+
+	private void resetColor(final PrintWriter out) {
+		out.print(CSI + ALL_ATTRIBUTES_OFF + 'm');
+	}
+
+	private void resetColor(final PrintStream out) {
+		out.print(CSI + ALL_ATTRIBUTES_OFF + 'm');
+	}
+
 	private String createLogFileName(final String logType) {
 		return this.getLogPath(logType) +	File.separator +
 				logType +	DELIMITER +
@@ -461,5 +601,76 @@ public final class DefaultLogger implements Logger {
 		return this.levelValue != offValue && (this.logOnlyThisLevel
 				? level.intValue() == this.levelValue
 				: level.intValue() >= this.levelValue);
+	}
+
+	static {
+		TEXT_ATTRIBUTES_MAPPING.put(
+				Integer.valueOf(SEVERE.intValue()),
+				new TextAttributes(true, false, false, false, FG_COLOR_RED, BG_COLOR_BLACK));
+		TEXT_ATTRIBUTES_MAPPING.put(
+				Integer.valueOf(WARNING.intValue()),
+				new TextAttributes(true, false, false, false, FG_COLOR_YELLOW, BG_COLOR_BLACK));
+		TEXT_ATTRIBUTES_MAPPING.put(
+				Integer.valueOf(INFO.intValue()),
+				new TextAttributes(true, false, false, false, FG_COLOR_GREEN, BG_COLOR_BLACK));
+		TEXT_ATTRIBUTES_MAPPING.put(
+				Integer.valueOf(CONFIG.intValue()),
+				new TextAttributes(true, false, false, false, FG_COLOR_CYAN, BG_COLOR_BLACK));
+		TEXT_ATTRIBUTES_MAPPING.put(
+				Integer.valueOf(FINE.intValue()),
+				new TextAttributes(true, false, false, false, FG_COLOR_BLUE, BG_COLOR_WHITE));
+		TEXT_ATTRIBUTES_MAPPING.put(
+				Integer.valueOf(FINER.intValue()),
+				new TextAttributes(false, true, false, false, FG_COLOR_BLUE, BG_COLOR_WHITE));
+		TEXT_ATTRIBUTES_MAPPING.put(
+				Integer.valueOf(FINEST.intValue()),
+				new TextAttributes(false, true, false, false, FG_COLOR_GREEN, BG_COLOR_WHITE));
+		TEXT_ATTRIBUTES_MAPPING.put(
+				Integer.valueOf(DEBUGLEVEL08.intValue()),
+				new TextAttributes(false, false, false, false, FG_COLOR_BLUE, BG_COLOR_WHITE));
+		TEXT_ATTRIBUTES_MAPPING.put(
+				Integer.valueOf(DEBUGLEVEL09.intValue()),
+				new TextAttributes(false, false, false, false, FG_COLOR_GREEN, BG_COLOR_WHITE));
+		TEXT_ATTRIBUTES_MAPPING.put(
+				Integer.valueOf(DEBUGLEVEL10.intValue()),
+				new TextAttributes(false, false, false, false, FG_COLOR_CYAN, BG_COLOR_WHITE));
+	}
+
+	/**
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.5 $, $Date: 2006/05/25 18:33:30 $
+	 * @module util
+	 */
+	private static final class TextAttributes {
+		final boolean bold;
+		final boolean underline;
+		final boolean blink;
+		final boolean reverse;
+		final byte fgColor;
+		final byte bgColor;
+
+		TextAttributes(final boolean bold,
+				final boolean underline,
+				final boolean blink,
+				final boolean reverse,
+				final byte fgColor,
+				final byte bgColor) {
+			if (fgColor != FG_COLOR_DEFAULT
+					&& (fgColor < FG_COLOR_BLACK || fgColor > FG_COLOR_WHITE)) {
+				throw new IllegalArgumentException("fgColor = " + fgColor);
+			}
+			if (bgColor != BG_COLOR_DEFAULT
+					&& (bgColor < BG_COLOR_BLACK || bgColor > BG_COLOR_WHITE)) {
+				throw new IllegalArgumentException("bgColor = " + bgColor);
+			}
+
+			this.bold = bold;
+			this.underline = underline;
+			this.blink = blink;
+			this.reverse = reverse;
+			this.fgColor = fgColor;
+			this.bgColor = bgColor;
+		}
 	}
 }

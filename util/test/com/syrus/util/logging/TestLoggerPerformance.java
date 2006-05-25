@@ -1,5 +1,5 @@
 /*-
- * $Id: TestLoggerPerformance.java,v 1.2 2006/05/24 14:48:53 bass Exp $
+ * $Id: TestLoggerPerformance.java,v 1.3 2006/05/25 18:33:30 bass Exp $
  * 
  * Copyright ¿ 2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
  * 
  * @author saa
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2006/05/24 14:48:53 $
+ * @version $Revision: 1.3 $, $Date: 2006/05/25 18:33:30 $
  * @module util/test
  */
 public class TestLoggerPerformance extends TestCase {
@@ -45,13 +45,17 @@ public class TestLoggerPerformance extends TestCase {
 				+ ", " + measureDtMillis() + ", " + measureDtMillis() + " ms";
 	}
 
-	private void measureAtConditions(String allowLevel, String stackTrace) {
+	private void measureAtConditions(final String allowLevel,
+			final String allowColor,
+			final String stackTrace) {
 		System.setProperty("amficom.logging.AllowLevelOutput", allowLevel);
+		System.setProperty("amficom.logging.AllowAnsiColor", allowColor);
 		System.setProperty("amficom.logging.StackTraceDataSource", stackTrace);
 		Log.setLogger(new DefaultLogger());
 		Log.debugMessage("Hello", Level.INFO);
-		System.out.printf("allowLevel: %6s;  STDS: %10s | %s%n",
+		System.out.printf("allowLevel: %6s; allowColor: %6s;  STDS: %10s | %s%n",
 				allowLevel,
+				allowColor,
 				stackTrace,
 				measureAverages());
 	}
@@ -62,10 +66,11 @@ public class TestLoggerPerformance extends TestCase {
 		System.setProperty("amficom.logging.LogDebugLevel", "10");
 		System.setProperty("amficom.logging.EchoDebug", "false");
 		System.setProperty("amficom.logging.LogPath", logDir);
-		measureAtConditions("false", "none");
-		measureAtConditions("true", "none");
-		measureAtConditions("false", "throwable");
-		measureAtConditions("false", "thread");
+		measureAtConditions("false", "false", "none");
+		measureAtConditions("true", "false", "none");
+		measureAtConditions("false", "true", "none");
+		measureAtConditions("false", "false", "throwable");
+		measureAtConditions("false", "false", "thread");
 		System.out.println("... Sorry, I wrote a lot of logs under " + logDir + ", " +
 				"Please delete that junk logfiles.");
 	}
