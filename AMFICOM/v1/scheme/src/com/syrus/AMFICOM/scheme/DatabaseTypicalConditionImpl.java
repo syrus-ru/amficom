@@ -1,13 +1,15 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.14 2005/11/11 09:15:19 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.15 2006/05/25 08:42:37 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2005-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
@@ -21,12 +23,11 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/11/11 09:15:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2006/05/25 08:42:37 $
  * @module scheme
  */
 final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
-
 	@SuppressWarnings("unused")
 	private DatabaseTypicalConditionImpl(final TypicalCondition typicalCondition) {
 		super(typicalCondition);
@@ -62,6 +63,10 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 			return key == COLUMN_NAME;
 		case SCHEMECABLELINK_CODE:
 			return key == COLUMN_NAME;
+		case PATHELEMENT_CODE:
+			return key == PathElementWrapper.COLUMN_SEQUENTIAL_NUMBER;
+		case CABLECHANNELINGITEM_CODE:
+			return key == CableChannelingItemWrapper.COLUMN_SEQUENTIAL_NUMBER;
 		default:
 			return false;
 		}
