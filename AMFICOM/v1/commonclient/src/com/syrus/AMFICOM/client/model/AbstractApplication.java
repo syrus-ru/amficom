@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.33 2006/05/18 11:37:39 bass Exp $
+ * $Id: AbstractApplication.java,v 1.34 2006/05/29 09:37:03 stas Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 
 import com.syrus.AMFICOM.client.UI.AMFICOMMetalTheme;
+import com.syrus.AMFICOM.client.UI.AMFICOMOceanTheme;
 import com.syrus.AMFICOM.client.UI.dialogs.ModuleCodeDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
@@ -50,8 +51,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2006/05/18 11:37:39 $
- * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2006/05/29 09:37:03 $
+ * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -60,8 +61,11 @@ public abstract class AbstractApplication {
 	public static final String		KEY_MODULE_CODE				= "Module.Code";
 	public static final String		KEY_MODULE_TITLE			= "Module.Title.I18NKey";
 
-	public static final String		KEY_LOOK_AND_FEEL			= "LookAndFeel";
-
+	public static final String		KEY_LOOK_AND_FEEL	= "LookAndFeel";
+	public static final String		CONTROL_FONT_SIZE	= "ControlFontSize";
+	public static final String		SYSTEM_FONT_SIZE	= "SystemFontSize";
+	public static final String		SUB_FONT_SIZE			= "SubFontSize";
+	
 	public static final String		LOOK_AND_FEEL_KUNSTSTOFF	= "Kunststoff";
 	public static final String		LOOK_AND_FEEL_METAL			= "Metal";
 	public static final String		LOOK_AND_FEEL_MOTIF			= "Motif";
@@ -146,7 +150,7 @@ public abstract class AbstractApplication {
 				LOOK_AND_FEEL_WINDOWS);
 		LookAndFeel lnf = null;
 		if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_METAL)) {
-			MetalLookAndFeel.setCurrentTheme(new AMFICOMMetalTheme());
+			MetalLookAndFeel.setCurrentTheme(new AMFICOMOceanTheme());
 			lnf = new MetalLookAndFeel();
 		} else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_KUNSTSTOFF)) {
 			try {
