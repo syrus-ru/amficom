@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.14 2006/05/18 19:37:22 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.15 2006/05/29 13:30:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.Identifier;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2006/05/18 19:37:22 $
+ * @version $Revision: 1.15 $, $Date: 2006/05/29 13:30:31 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -131,4 +131,146 @@ public interface LineMismatchEvent
 	 * {@link #getAffectedPathElementId() affectedPathElementId} property.</p>
 	 */
 	Identifier getReflectogramMismatchEventId();
+
+	/**
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.15 $, $Date: 2006/05/29 13:30:31 $
+	 * @module event
+	 */
+	enum AlarmStatus {
+		/**
+		 * <p>Pending (NQMS-standard). Initial status an alarm is
+		 * assigned after it is generated.</p>
+		 *
+		 * <p>Previous: none.</p>
+		 *
+		 * <p>Next: {@link #XTRA_ASSIGNED assigned} or {@link #TIMED_OUT
+		 * timed out}.</p>
+		 */
+		PENDING,
+
+		/**
+		 * <p>Ignored (NQMS-standard).</p>
+		 *
+		 * <p>Previous: {@link #XTRA_ASSIGNED assigned}.</p>
+		 *
+		 * <p>Next: {@link #XTRA_VERIFIED verified}.</p>
+		 */
+		IGNORED,
+
+		/**
+		 * <p> Acknowledged (NQMS-standard).</p>
+		 *
+		 * <p>Previous: {@link #XTRA_ASSIGNED assigned}.</p>
+		 *
+		 * <p>Next: {@link #IN_PROGRESS in progress}.</p>
+		 */
+		ACKNOWLEDGED,
+
+		/**
+		 * <p>In progress (NQMS-standard).</p>
+		 *
+		 * <p>Previous: {@link #ACKNOWLEDGED acknowledged}.</p>
+		 *
+		 * <p>Next: {@link #ABANDONED abandoned}, {@link
+		 * #XTRA_TT_COMPLETED <em>trouble&nbsp;ticket</em> successfully
+		 * completed} or {@link #TIMED_OUT timed out}.</p>
+		 */
+		IN_PROGRESS,
+
+		/**
+		 * <p>Resolved (NQMS-standard).</p>
+		 *
+		 * <p>Previous: {@link #XTRA_ASSIGNED assigned} or {@link
+		 * #XTRA_VTEST_IN_PROGRESS verification test in progress}.</p>
+		 *
+		 * <p>Next: {@link #XTRA_VERIFIED verified}.</p>
+		 */
+		RESOLVED,
+
+		/**
+		 * <p>Abandoned (NQMS-standard).</p>
+		 *
+		 * <p>Previous: {@link #IN_PROGRESS in progress}.</p>
+		 *
+		 * <p>Next: {@link #XTRA_VERIFIED verified}.</p>
+		 */
+		ABANDONED,
+
+		/**
+		 * <p>Timed out (NQMS-standard). Alarm automatically (i.&nbsp;e.
+		 * without any human interference) gets assigned this status in
+		 * either of the two cases:<ol>
+		 *
+		 * <li>it is a {@link #PENDING pending} alarm, and the operator
+		 * doesn&apos;t change its status within the preset time-out
+		 * period;</li>
+		 * <li>it is an alarm with a <em>trouble&nbsp;ticket</em> in
+		 * &quot;{@link #IN_PROGRESS in progress}&quot; state, and the
+		 * <em>trouble&nbsp;ticket</em> gets neither {@link #ABANDONED
+		 * abandoned} nor {@link #XTRA_TT_COMPLETED successfully
+		 * completed} within the preset time-out period.</li>
+		 * </ol></p>
+		 *
+		 * <p>Previous: {@link #PENDING pending} or {@link #IN_PROGRESS
+		 * in progress}.</p>
+		 */
+		TIMED_OUT,
+
+		/**
+		 * <p>Assigned (<em>Non-NQMS-standard</em>).</p>
+		 *
+		 * <p>Previous: {@link #PENDING pending}.</p>
+		 *
+		 * <p>Next: {@link #IGNORED ignored}, {@link #RESOLVED
+		 * acknowledged and resolved} (with no <em>trouble&nbsp;ticket</em>)
+		 * or {@link #ACKNOWLEDGED acknowledged, resolution pending}
+		 * (with a <em>trouble&nbsp;ticket</em> having been assigned).</p>
+		 */
+		XTRA_ASSIGNED,
+
+		/**
+		 * <p><em>Trouble&nbsp;ticket</em> successfully completed
+		 * (<em>Non-NQMS-standard</em>).</p>
+		 *
+		 * <p>Previous: {@link #IN_PROGRESS in progress}.</p>
+		 *
+		 * <p>Next: {@link #XTRA_VTEST_IN_PROGRESS verification test in
+		 * progress}.</p>
+		 */
+		XTRA_TT_COMPLETED,
+
+		/**
+		 * <p>Verification test in progress (<em>Non-NQMS-standard</em>).</p>
+		 *
+		 * <p>Previous: {@link #XTRA_TT_COMPLETED <em>trouble&nbsp;ticket</em>
+		 * successfully completed}.</p>
+		 *
+		 * <p>Next: {@link #RESOLVED resolved}.</p>
+		 */
+		XTRA_VTEST_IN_PROGRESS,
+
+		/**
+		 * <p>Verified (<em>Non-NQMS-standard</em>).</p>
+		 *
+		 * <p>Previous: {@link #RESOLVED resolved} (either with or
+		 * without a <em>trouble&nbsp;ticket</em>), {@link #ABANDONED
+		 * abandoned}, {@link #IGNORED ignored} or {@link #TIMED_OUT
+		 * timed out}.</p>
+		 *
+		 * <p>Next: {@link #XTRA_CLOSED closed}.</p>
+		 */
+		XTRA_VERIFIED,
+
+		/**
+		 * <p>Closed (<em>Non-NQMS-standard</em>). This is the last
+		 * state in the life cycle of an alarm.</p>
+		 *
+		 * <p>Previous: {@link #XTRA_VERIFIED verified}.</p>
+		 *
+		 * <p>Next: none.</p>
+		 */
+		XTRA_CLOSED
+	}
 }
