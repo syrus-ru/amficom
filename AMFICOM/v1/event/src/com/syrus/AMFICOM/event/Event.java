@@ -1,5 +1,5 @@
 /*-
- * $Id: Event.java,v 1.56 2006/03/28 10:17:19 bass Exp $
+ * $Id: Event.java,v 1.57 2006/05/29 09:07:50 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2006/03/28 10:17:19 $
+ * @version $Revision: 1.57 $, $Date: 2006/05/29 09:07:50 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -48,10 +48,22 @@ public final class Event extends StorableObject
 		IdlTransferableObjectExt<IdlEvent> {
 	private static final long serialVersionUID = 3977015150102788401L;
 
+	/**
+	 * @serial include
+	 */
 	private EventType type;
+	/**
+	 * @serial include
+	 */
 	private String description;
 
+	/**
+	 * @serial include
+	 */
 	private Set<EventParameter> eventParameters;
+	/**
+	 * @serial include
+	 */
 	private Set<Identifier> eventSourceIds;
 
 	public Event(final IdlEvent event) throws CreateObjectException {

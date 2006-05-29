@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.64 2006/03/28 10:17:19 bass Exp $
+ * $Id: EventType.java,v 1.65 2006/05/29 09:07:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.transport.idl.IdlConversionException;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2006/03/28 10:17:19 $
+ * @version $Revision: 1.65 $, $Date: 2006/05/29 09:07:50 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -51,7 +51,13 @@ public final class EventType extends StorableObjectType
 
 	public static final String CODENAME_MEASUREMENT_ALARM = "measurement_alarm";
 
+	/**
+	 * @serial include
+	 */
 	private EnumSet<ParameterType> parameterTypes;
+	/**
+	 * @serial include
+	 */
 	private Map<Identifier, Set<AlertKind>> userAlertKindsMap;	//Map <Identifier userId, Set <AlertKind> alertKinds>
 
 	public EventType(final IdlEventType ett) throws CreateObjectException {

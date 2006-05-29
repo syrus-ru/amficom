@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.17 2006/03/28 11:43:45 arseniy Exp $
+ * $Id: DeliveryAttributes.java,v 1.18 2006/05/29 09:07:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,18 +44,27 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2006/03/28 11:43:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2006/05/29 09:07:50 $
  * @module event
  */
 public final class DeliveryAttributes extends StorableObject
 		implements IdlTransferableObjectExt<IdlDeliveryAttributes> {
 	private static final long serialVersionUID = -8861427452530992582L;
 
+	/**
+	 * @serial include
+	 */
 	private Severity severity;
 
+	/**
+	 * @serial include
+	 */
 	private Set<Identifier> systemUserIds;
 
+	/**
+	 * @serial include
+	 */
 	private Set<Identifier> roleIds;
 
 	DeliveryAttributes(final Identifier id,
