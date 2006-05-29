@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.34 2006/05/29 09:37:03 stas Exp $
+ * $Id: AbstractApplication.java,v 1.35 2006/05/29 11:13:42 stas Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2006/05/29 09:37:03 $
+ * @version $Revision: 1.35 $, $Date: 2006/05/29 11:13:42 $
  * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -231,13 +231,7 @@ public abstract class AbstractApplication {
 		defaults.put("Table.foreground", Color.BLACK);
 		defaults.put("Table.gridColor", Color.BLACK);
 		defaults.put("Viewport.background", Color.WHITE);
-
-		{
-			Font font = defaults.getFont("TextField.font");
-			font = new Font(font.getFamily(), font.getStyle(), 12);
-			defaults.put("TextField.font", font);			
-		}
-		
+	
 //		 switch off
 //		{
 //			Font font = UIManager.getFont("Table.font");
