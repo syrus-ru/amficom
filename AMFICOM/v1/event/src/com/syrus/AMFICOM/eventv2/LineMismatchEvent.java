@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.15 2006/05/29 13:30:31 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.16 2006/05/29 14:02:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,12 @@
  */
 
 package com.syrus.AMFICOM.eventv2;
+
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -18,7 +24,7 @@ import com.syrus.AMFICOM.general.Identifier;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2006/05/29 13:30:31 $
+ * @version $Revision: 1.16 $, $Date: 2006/05/29 14:02:13 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -135,7 +141,7 @@ public interface LineMismatchEvent
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.15 $, $Date: 2006/05/29 13:30:31 $
+	 * @version $Revision: 1.16 $, $Date: 2006/05/29 14:02:13 $
 	 * @module event
 	 */
 	enum AlarmStatus {
@@ -148,7 +154,21 @@ public interface LineMismatchEvent
 		 * <p>Next: {@link #XTRA_ASSIGNED assigned} or {@link #TIMED_OUT
 		 * timed out}.</p>
 		 */
+		@AllowedPredecessors({})
 		PENDING,
+
+		/**
+		 * <p>Assigned (<em>Non-NQMS-standard</em>).</p>
+		 *
+		 * <p>Previous: {@link #PENDING pending}.</p>
+		 *
+		 * <p>Next: {@link #IGNORED ignored}, {@link #RESOLVED
+		 * acknowledged and resolved} (with no <em>trouble&nbsp;ticket</em>)
+		 * or {@link #ACKNOWLEDGED acknowledged, resolution pending}
+		 * (with a <em>trouble&nbsp;ticket</em> having been assigned).</p>
+		 */
+		@AllowedPredecessors(PENDING)
+		XTRA_ASSIGNED,
 
 		/**
 		 * <p>Ignored (NQMS-standard).</p>
@@ -157,6 +177,7 @@ public interface LineMismatchEvent
 		 *
 		 * <p>Next: {@link #XTRA_VERIFIED verified}.</p>
 		 */
+		@AllowedPredecessors(XTRA_ASSIGNED)
 		IGNORED,
 
 		/**
@@ -166,6 +187,7 @@ public interface LineMismatchEvent
 		 *
 		 * <p>Next: {@link #IN_PROGRESS in progress}.</p>
 		 */
+		@AllowedPredecessors(XTRA_ASSIGNED)
 		ACKNOWLEDGED,
 
 		/**
@@ -177,7 +199,31 @@ public interface LineMismatchEvent
 		 * #XTRA_TT_COMPLETED <em>trouble&nbsp;ticket</em> successfully
 		 * completed} or {@link #TIMED_OUT timed out}.</p>
 		 */
+		@AllowedPredecessors(ACKNOWLEDGED)
 		IN_PROGRESS,
+
+		/**
+		 * <p><em>Trouble&nbsp;ticket</em> successfully completed
+		 * (<em>Non-NQMS-standard</em>).</p>
+		 *
+		 * <p>Previous: {@link #IN_PROGRESS in progress}.</p>
+		 *
+		 * <p>Next: {@link #XTRA_VTEST_IN_PROGRESS verification test in
+		 * progress}.</p>
+		 */
+		@AllowedPredecessors(IN_PROGRESS)
+		XTRA_TT_COMPLETED,
+
+		/**
+		 * <p>Verification test in progress (<em>Non-NQMS-standard</em>).</p>
+		 *
+		 * <p>Previous: {@link #XTRA_TT_COMPLETED <em>trouble&nbsp;ticket</em>
+		 * successfully completed}.</p>
+		 *
+		 * <p>Next: {@link #RESOLVED resolved}.</p>
+		 */
+		@AllowedPredecessors(XTRA_TT_COMPLETED)
+		XTRA_VTEST_IN_PROGRESS,
 
 		/**
 		 * <p>Resolved (NQMS-standard).</p>
@@ -187,6 +233,7 @@ public interface LineMismatchEvent
 		 *
 		 * <p>Next: {@link #XTRA_VERIFIED verified}.</p>
 		 */
+		@AllowedPredecessors({XTRA_ASSIGNED, XTRA_VTEST_IN_PROGRESS})
 		RESOLVED,
 
 		/**
@@ -196,6 +243,7 @@ public interface LineMismatchEvent
 		 *
 		 * <p>Next: {@link #XTRA_VERIFIED verified}.</p>
 		 */
+		@AllowedPredecessors(IN_PROGRESS)
 		ABANDONED,
 
 		/**
@@ -215,41 +263,11 @@ public interface LineMismatchEvent
 		 *
 		 * <p>Previous: {@link #PENDING pending} or {@link #IN_PROGRESS
 		 * in progress}.</p>
+		 *
+		 * <p>Next: {@link #XTRA_VERIFIED verified}.</p>
 		 */
+		@AllowedPredecessors({PENDING, IN_PROGRESS})
 		TIMED_OUT,
-
-		/**
-		 * <p>Assigned (<em>Non-NQMS-standard</em>).</p>
-		 *
-		 * <p>Previous: {@link #PENDING pending}.</p>
-		 *
-		 * <p>Next: {@link #IGNORED ignored}, {@link #RESOLVED
-		 * acknowledged and resolved} (with no <em>trouble&nbsp;ticket</em>)
-		 * or {@link #ACKNOWLEDGED acknowledged, resolution pending}
-		 * (with a <em>trouble&nbsp;ticket</em> having been assigned).</p>
-		 */
-		XTRA_ASSIGNED,
-
-		/**
-		 * <p><em>Trouble&nbsp;ticket</em> successfully completed
-		 * (<em>Non-NQMS-standard</em>).</p>
-		 *
-		 * <p>Previous: {@link #IN_PROGRESS in progress}.</p>
-		 *
-		 * <p>Next: {@link #XTRA_VTEST_IN_PROGRESS verification test in
-		 * progress}.</p>
-		 */
-		XTRA_TT_COMPLETED,
-
-		/**
-		 * <p>Verification test in progress (<em>Non-NQMS-standard</em>).</p>
-		 *
-		 * <p>Previous: {@link #XTRA_TT_COMPLETED <em>trouble&nbsp;ticket</em>
-		 * successfully completed}.</p>
-		 *
-		 * <p>Next: {@link #RESOLVED resolved}.</p>
-		 */
-		XTRA_VTEST_IN_PROGRESS,
 
 		/**
 		 * <p>Verified (<em>Non-NQMS-standard</em>).</p>
@@ -261,6 +279,7 @@ public interface LineMismatchEvent
 		 *
 		 * <p>Next: {@link #XTRA_CLOSED closed}.</p>
 		 */
+		@AllowedPredecessors({RESOLVED, ABANDONED, IGNORED, TIMED_OUT})
 		XTRA_VERIFIED,
 
 		/**
@@ -271,6 +290,19 @@ public interface LineMismatchEvent
 		 *
 		 * <p>Next: none.</p>
 		 */
-		XTRA_CLOSED
+		@AllowedPredecessors(XTRA_VERIFIED)
+		XTRA_CLOSED;
+
+		/**
+		 * @author Andrew ``Bass'' Shcheglov
+		 * @author $Author: bass $
+		 * @version $Revision: 1.16 $, $Date: 2006/05/29 14:02:13 $
+		 * @module event
+		 */
+		@Retention(RUNTIME)
+		@Target(FIELD)
+		private @interface AllowedPredecessors {
+			AlarmStatus[] value();
+		}
 	}
 }
