@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.25 2005/12/06 11:35:25 bass Exp $
+ * $Id: CharacteristicsPanel.java,v 1.26 2006/05/29 11:31:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,9 +44,9 @@ import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -61,10 +61,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.IdlCharacteristicTypeSort;
 import com.syrus.util.Log;
+import com.syrus.util.PropertyChangeException;
+import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/12/06 11:35:25 $
+ * @author $Author: stas $
+ * @version $Revision: 1.26 $, $Date: 2006/05/29 11:31:34 $
  * @module commonclient
  */
 public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
@@ -112,19 +114,19 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 			String name;
 			switch (sort.value()) {
 				case IdlCharacteristicTypeSort._CHARACTERISTICTYPESORT_OPTICAL:
-					name = LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_OPTICAL);
+					name = I18N.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_OPTICAL);
 					break;
 				case IdlCharacteristicTypeSort._CHARACTERISTICTYPESORT_ELECTRICAL:
-					name = LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_ELECTRICAL);
+					name = I18N.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_ELECTRICAL);
 					break;
 				case IdlCharacteristicTypeSort._CHARACTERISTICTYPESORT_OPERATIONAL:
-					name = LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_OPERATIONAL);
+					name = I18N.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_OPERATIONAL);
 					break;
 				case IdlCharacteristicTypeSort._CHARACTERISTICTYPESORT_INTERFACE:
-					name = LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_INTERFACE);
+					name = I18N.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_INTERFACE);
 					break;
 				case IdlCharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL:
-					name = LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_VISUAL);
+					name = I18N.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_VISUAL);
 					break;
 				default:
 					throw new UnsupportedOperationException("CharacteristicTypeSortRenderer: unknown CharacteristicTypeSort " + sort.value()); //$NON-NLS-1$
@@ -133,7 +135,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 			return this;
 		}
 	}
-	
+		
 	public CharacteristicsPanel() {
 		super();
 
@@ -161,7 +163,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 	private void jbInit() throws Exception {
 		this.toolBar = new PropsADToolBar();
 
-		this.wtModel = new WrapperedTableModel<Characteristic>(CharacteristicWrapper.getInstance(),
+		this.wtModel = new WrapperedTableModel<Characteristic>(CharacteristicAdapter.getInstance(),
 				new String[] { StorableObjectWrapper.COLUMN_NAME, CharacteristicWrapper.COLUMN_VALUE });
 
 		this.wTable = new WrapperedTable<Characteristic>(this.wtModel);
@@ -405,7 +407,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		}
 
 		private void jbInit() throws Exception {
-			this.addButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
+			this.addButton.setToolTipText(I18N.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
 			this.addButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 			this.addButton.setFocusPainted(false);
 			this.addButton.setEnabled(false);
@@ -422,7 +424,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 						return;
 					}
 
-					final CharacteristicAddDialog frame = new CharacteristicAddDialog(Environment.getActiveWindow(), "Add characteristic");
+					final CharacteristicAddDialog frame = new CharacteristicAddDialog(AbstractMainFrame.getActiveMainFrame(), "Add characteristic");
 					if (frame.showDialog(CharacteristicsPanel.this.selectedTypeSort, CharacteristicsPanel.this.wtModel.getValues()) == JOptionPane.OK_OPTION) {
 						final CharacteristicType type = frame.getCharacteristicType();
 						final Identifier userId = LoginManager.getUserId();
@@ -457,7 +459,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 				}
 			});
 
-			this.deleteButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_REMOVE_CHARACTERISTIC));
+			this.deleteButton.setToolTipText(I18N.getString(ResourceKeys.I18N_REMOVE_CHARACTERISTIC));
 			this.deleteButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 			this.deleteButton.setEnabled(false);
 			this.deleteButton.setFocusPainted(false);
@@ -503,7 +505,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 				}
 			});
 
-			this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+			this.commitButton.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 			this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 			this.commitButton.setFocusPainted(false);
 			this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
@@ -533,3 +535,48 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		}
 	}
 }
+
+class CharacteristicAdapter implements Wrapper<Characteristic> {
+		static CharacteristicAdapter instance;
+		static CharacteristicWrapper INSTANCE;
+
+		static CharacteristicAdapter getInstance() {
+			if (INSTANCE == null) {
+				instance = new CharacteristicAdapter();
+				INSTANCE = CharacteristicWrapper.getInstance();
+			}
+			return instance;
+		}
+		
+		public List<String> getKeys() {
+			return INSTANCE.getKeys();
+		}
+
+		public String getName(String key) {
+			return "";
+		}
+
+		public Class< ? > getPropertyClass(String key) {
+			return INSTANCE.getPropertyClass(key);
+		}
+
+		public Object getPropertyValue(String key) {
+			return INSTANCE.getPropertyValue(key);
+		}
+
+		public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+			INSTANCE.setPropertyValue(key, objectKey, objectValue);
+		}
+
+		public Object getValue(Characteristic object, String key) {
+			return INSTANCE.getValue(object, key);
+		}
+
+		public boolean isEditable(String key) {
+			return INSTANCE.isEditable(key);
+		}
+
+		public void setValue(Characteristic object, String key, Object value) throws PropertyChangeException {
+			INSTANCE.setValue(object, key, value);			
+		}
+	}
