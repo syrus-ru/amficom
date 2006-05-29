@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.183.2.25 2006/04/14 12:25:58 saa Exp $
+ * $Id: Test.java,v 1.183.2.26 2006/05/29 12:55:49 saa Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -60,7 +60,7 @@ import com.syrus.util.transport.idl.IdlTransferableObject;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
- * @version $Revision: 1.183.2.25 $, $Date: 2006/04/14 12:25:58 $
+ * @version $Revision: 1.183.2.26 $, $Date: 2006/05/29 12:55:49 $
  * @author $Author: saa $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -575,9 +575,11 @@ public final class Test extends StorableObject implements IdlTransferableObjectE
 	/**
 	 * Остановить задание в указанное время.
 	 * 
+	 * @deprecated Никакой остановки нифига не производит
 	 * @param stopTime
 	 * @param reason
 	 */
+	@Deprecated
 	public void addStop(final Date stopTime, final String reason) {
 		assert stopTime != null : NON_NULL_EXPECTED;
 		assert reason != null : NON_NULL_EXPECTED;
