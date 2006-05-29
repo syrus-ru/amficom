@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.26 2006/05/29 11:31:34 stas Exp $
+ * $Id: CharacteristicsPanel.java,v 1.27 2006/05/29 11:38:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.26 $, $Date: 2006/05/29 11:31:34 $
+ * @version $Revision: 1.27 $, $Date: 2006/05/29 11:38:38 $
  * @module commonclient
  */
 public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
@@ -217,7 +217,6 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		this.pnPanel0.add(this.characteristicTypeSortCombo);
 
 		final JScrollPane tablePane = new JScrollPane(this.wTable);
-		tablePane.getViewport().setBackground(SystemColor.window);
 		tablePane.setAutoscrolls(true);
 		tablePane.setPreferredSize(new Dimension(100, 50));
 
