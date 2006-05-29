@@ -1,7 +1,7 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.16 2006/05/29 14:02:13 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.17 2006/05/29 15:05:31 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.Identifier;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2006/05/29 14:02:13 $
+ * @version $Revision: 1.17 $, $Date: 2006/05/29 15:05:31 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -141,7 +141,7 @@ public interface LineMismatchEvent
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.16 $, $Date: 2006/05/29 14:02:13 $
+	 * @version $Revision: 1.17 $, $Date: 2006/05/29 15:05:31 $
 	 * @module event
 	 */
 	enum AlarmStatus {
@@ -296,7 +296,7 @@ public interface LineMismatchEvent
 		/**
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.16 $, $Date: 2006/05/29 14:02:13 $
+		 * @version $Revision: 1.17 $, $Date: 2006/05/29 15:05:31 $
 		 * @module event
 		 */
 		@Retention(RUNTIME)
