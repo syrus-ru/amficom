@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSessionEnvironment.java,v 1.1 2006/05/30 11:42:20 bass Exp $
+ * $Id: AbstractSessionEnvironment.java,v 1.2 2006/05/30 12:32:10 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCod
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2006/05/30 11:42:20 $
+ * @version $Revision: 1.2 $, $Date: 2006/05/30 12:32:10 $
  * @author Tashoyan Arseniy Feliksovich
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
@@ -64,6 +64,8 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 
 	/**
 	 * Immutable: initialized <em>once</em> at object creation stage.
+	 *
+	 * @see #newLoginValidator()
 	 */
 	final Thread loginValidator;
 
@@ -73,6 +75,18 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 	 */
 	private Date sessionEstablishDate;
 
+	/**
+	 * Creates a new session environment with the default CORBA action
+	 * processor.
+	 *
+	 * @param connectionManager
+	 * @param poolContext
+	 * @param commonUser
+	 * @param loginRestorer
+	 * @see IdentifierPool#init(IGSConnectionManager, CORBAActionProcessor)
+	 * @see #AbstractSessionEnvironment(BaseConnectionManager, PoolContext,
+	 *      CommonUser, LoginRestorer, CORBAActionProcessor)
+	 */
 	public AbstractSessionEnvironment(final T connectionManager,
 			final PoolContext poolContext,
 			final CommonUser commonUser,
@@ -80,6 +94,33 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 		this(connectionManager, poolContext, commonUser, loginRestorer, null);
 	}
 
+	/**
+	 * Creates a new session environment with custom CORBA action
+	 * processor. In addition, adds two {@link CORBAServer <em>CORBA&nbsp;server</em>}
+	 * {@link CORBAServer#addShutdownHook(Thread) shutdown hooks}:<ol>
+	 *
+	 * <li>LoginValidatorShutdown: once <em>CORBA&nbsp;server</em> (actually,
+	 * a client-side servant) shuts down, client stops any previous attempt
+	 * to exhibit activity needed to remain logged in (see {@link
+	 * #newLoginValidator()} for more information);</li>
+	 *
+	 * <li>LogoutShutdown: once <em>CORBA&nbsp;server</em> shuts down, client
+	 * tries to {@link #logout() log himself out} if he&apos;s still {@link
+	 * #login(String, String, Identifier) logged in}, or does nothing if
+	 * he&apos;s not.</li>
+	 *
+	 * </ol>
+	 *
+	 * @param connectionManager
+	 * @param poolContext
+	 * @param commonUser
+	 * @param loginRestorer
+	 * @param identifierPoolCORBAActionProcessor
+	 * @see #newLoginValidator()
+	 * @see #login(String, String, Identifier)
+	 * @see #logout()
+	 * @see CORBAServer#addShutdownHook(Thread)
+	 */
 	public AbstractSessionEnvironment(final T connectionManager,
 			final PoolContext poolContext,
 			final CommonUser commonUser,
@@ -256,6 +297,26 @@ public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager
 		}
 	}
 
+	/**
+	 * <p>Invoked once, at object creation stage, to initialize the {@link
+	 * #loginValidator} field. Returns a newly-created thread with {@link
+	 * Thread#run() run()} method overridden. At the same object creation
+	 * stage, the thread is started.</p>
+	 *
+	 * <p>Once user {@link #login(String, String, Identifier) logs in},
+	 * <em>login&nbsp;validator</em> is asked to wake up. As long as user
+	 * is logged in, <em>login&nbsp;validator</em> is periodically bothering
+	 * the server, invoking {@link
+	 * com.syrus.AMFICOM.leserver.corba.LoginServerOperations#validateLogin(
+	 * com.syrus.AMFICOM.security.corba.IdlSessionKey, LongHolder)} and thus
+	 * preventing itself from being logged out by the server. Once user is
+	 * {@link #logout() logged out} (either with one or without any assistance
+	 * from the server), <em>login&nbsp;validator</em> is put asleep until
+	 * the next login.</p>
+	 *
+	 * @return a newly-created thread with {@link Thread#run() run()} method
+	 *         overridden.
+	 */
 	private Thread newLoginValidator() {
 		return new Thread("LoginValidator") {
 			@Override
