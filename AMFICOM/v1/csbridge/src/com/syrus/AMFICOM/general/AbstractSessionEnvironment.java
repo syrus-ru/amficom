@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.48 2006/05/12 17:33:12 bass Exp $
+ * $Id: AbstractSessionEnvironment.java,v 1.1 2006/05/30 11:42:20 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,12 +22,13 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCod
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2006/05/12 17:33:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.1 $, $Date: 2006/05/30 11:42:20 $
  * @author Tashoyan Arseniy Feliksovich
+ * @author Andrew ``Bass'' Shcheglov
+ * @author $Author: bass $
  * @module csbridge
  */
-public abstract class BaseSessionEnvironment {
+public abstract class AbstractSessionEnvironment<T extends BaseConnectionManager> {
 	/**
 	 * Amount of login attempts to take before reporting an error. 
 	 */
@@ -54,7 +55,7 @@ public abstract class BaseSessionEnvironment {
 	/**
 	 * Immutable: initialized <em>once</em> at object creation stage.
 	 */
-	private final BaseConnectionManager connectionManager;
+	private final T connectionManager;
 
 	/**
 	 * Immutable: initialized <em>once</em> at object creation stage.
@@ -72,14 +73,14 @@ public abstract class BaseSessionEnvironment {
 	 */
 	private Date sessionEstablishDate;
 
-	public BaseSessionEnvironment(final BaseConnectionManager connectionManager,
+	public AbstractSessionEnvironment(final T connectionManager,
 			final PoolContext poolContext,
 			final CommonUser commonUser,
 			final LoginRestorer loginRestorer) {
 		this(connectionManager, poolContext, commonUser, loginRestorer, null);
 	}
 
-	public BaseSessionEnvironment(final BaseConnectionManager connectionManager,
+	public AbstractSessionEnvironment(final T connectionManager,
 			final PoolContext poolContext,
 			final CommonUser commonUser,
 			final LoginRestorer loginRestorer,
@@ -97,14 +98,14 @@ public abstract class BaseSessionEnvironment {
 		corbaServer.addShutdownHook(new Thread("LoginValidatorShutdown") {
 			@Override
 			public void run() {
-				BaseSessionEnvironment.this.loginValidator.interrupt();
+				AbstractSessionEnvironment.this.loginValidator.interrupt();
 			}
 		});
 		corbaServer.addShutdownHook(new Thread("LogoutShutdown") {
 			@Override
 			public void run() {
 				try {
-					BaseSessionEnvironment.this.safeLogout(true);
+					AbstractSessionEnvironment.this.safeLogout(true);
 				} catch (final Throwable t) {
 					Log.errorMessage(t);
 				}
@@ -112,7 +113,7 @@ public abstract class BaseSessionEnvironment {
 		});
 	}
 
-	public final BaseConnectionManager getConnectionManager() {
+	public final T getConnectionManager() {
 		return this.connectionManager;
 	}
 
@@ -260,12 +261,12 @@ public abstract class BaseSessionEnvironment {
 			@Override
 			public void run() {
 				while (!interrupted()) {
-					if (BaseSessionEnvironment.this.isSessionEstablished()) {
+					if (AbstractSessionEnvironment.this.isSessionEstablished()) {
 						try {
 							final LongHolder loginValidationTimeout = new LongHolder(-1);
-							synchronized (BaseSessionEnvironment.this) {
-								if (BaseSessionEnvironment.this.isSessionEstablished()) {
-									BaseSessionEnvironment.this.getConnectionManager().getLoginServerReference().validateLogin(LoginManager.getSessionKey().getIdlTransferable(), loginValidationTimeout);
+							synchronized (AbstractSessionEnvironment.this) {
+								if (AbstractSessionEnvironment.this.isSessionEstablished()) {
+									AbstractSessionEnvironment.this.getConnectionManager().getLoginServerReference().validateLogin(LoginManager.getSessionKey().getIdlTransferable(), loginValidationTimeout);
 								}
 							}
 							if (loginValidationTimeout.value != -1) {
@@ -287,7 +288,7 @@ public abstract class BaseSessionEnvironment {
 								 * Perform local cleanup and wait
 								 * until logged in again.
 								 */
-								BaseSessionEnvironment.this.localLogout();
+								AbstractSessionEnvironment.this.localLogout();
 								synchronized (this) {
 									try {
 										this.wait();
