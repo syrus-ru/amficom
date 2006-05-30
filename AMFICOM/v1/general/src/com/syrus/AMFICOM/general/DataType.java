@@ -1,5 +1,5 @@
 /*-
- * $Id: DataType.java,v 1.20 2006/04/20 12:37:56 arseniy Exp $
+ * $Id: DataType.java,v 1.21 2006/05/30 13:23:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2006/04/20 12:37:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2006/05/30 13:23:31 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -103,8 +103,8 @@ public enum DataType implements IdlTransferableObject<IdlDataType> {
 	 * A mutable holder for immutable enum instances.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.20 $, $Date: 2006/04/20 12:37:56 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.21 $, $Date: 2006/05/30 13:23:31 $
 	 * @module general
 	 */
 	public static final class Proxy
@@ -143,7 +143,7 @@ public enum DataType implements IdlTransferableObject<IdlDataType> {
 
 		/**
 		 * @param dataType
-		 * @see IdlTransferableObjectExt#fromIdlTransferable(IDLEntity)
+		 * @see IdlTransferableObjectExt#fromIdlTransferable(org.omg.CORBA.portable.IDLEntity)
 		 */
 		public void fromIdlTransferable(final IdlDataType dataType) {
 			this.value = valueOf(dataType);
