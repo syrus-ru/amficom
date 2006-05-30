@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginValidatorTest.java,v 1.1 2006/05/12 17:30:27 bass Exp $
+ * $Id: LoginValidatorTest.java,v 1.2 2006/05/30 11:42:40 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,9 +20,9 @@ import javax.swing.WindowConstants;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2006/05/12 17:30:27 $
+ * @version $Revision: 1.2 $, $Date: 2006/05/30 11:42:40 $
  * @module csbridge
- * @see BaseSessionEnvironment
+ * @see AbstractSessionEnvironment
  */
 final class LoginValidatorTest {
 	static volatile boolean loggedIn;
