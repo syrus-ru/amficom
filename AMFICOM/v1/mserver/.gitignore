@@ -18,3 +18,4 @@ logs
 cache
 orb.db
 docs
+.refactorings

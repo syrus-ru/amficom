@@ -19,3 +19,4 @@ SerializedLRUMaps
 .classpath
 .project
 docs
+.refactorings

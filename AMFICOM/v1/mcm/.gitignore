@@ -19,3 +19,4 @@ test
 .idl
 common.properties
 docs
+.refactorings
