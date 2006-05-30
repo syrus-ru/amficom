@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.83 2006/04/28 11:00:55 arseniy Exp $
+ * $Id: Transceiver.java,v 1.84 2006/05/30 11:44:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2006/04/28 11:00:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.84 $, $Date: 2006/05/30 11:44:32 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -204,7 +204,7 @@ final class Transceiver extends SleepButWorkThread {
 								Log.errorMessage(ae);
 								Log.debugMessage("Cannot create result -- trying to wait", Log.DEBUGLEVEL07);
 								try {
-									MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
+									MCMSessionEnvironment.getInstance().getConnectionManager().getMServerReference();
 								} catch (CommunicationException ce) {
 									Log.errorMessage(ce);
 								}

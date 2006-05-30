@@ -1,5 +1,5 @@
 /*
- * $Id: MCMSetup.java,v 1.24 2006/04/04 10:34:11 arseniy Exp $
+ * $Id: MCMSetup.java,v 1.25 2006/05/30 11:44:32 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2006/04/04 10:34:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2006/05/30 11:44:32 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -120,7 +120,7 @@ final class MCMSetup {
 	}
 
 	private static IdlMCM retrieveIdlMCM() throws ApplicationException {
-		final MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
+		final MServer mServerRef = MCMSessionEnvironment.getInstance().getConnectionManager().getMServerReference();
 		final IdlStorableObject[] idlStorableObjects;
 		try {
 			idlStorableObjects = mServerRef.transmitStorableObjects(new IdlIdentifier[] { ID.getIdlTransferable() },

@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.97 2006/04/28 11:00:54 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.98 2006/05/30 11:44:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2006/04/28 11:00:54 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.98 $, $Date: 2006/05/30 11:44:31 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
  */
@@ -233,7 +233,7 @@ final class MeasurementServer extends SleepButWorkThread {
 
 	@Override
 	public void run() {
-		final MServerServantManager servantManager = MServerSessionEnvironment.getInstance().getMServerServantManager();
+		final MServerServantManager servantManager = MServerSessionEnvironment.getInstance().getConnectionManager();
 
 		while (!interrupted()) {
 			/*	Now Measurement Server can get new tests only from database
