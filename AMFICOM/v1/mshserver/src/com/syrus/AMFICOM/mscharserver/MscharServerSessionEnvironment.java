@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerSessionEnvironment.java,v 1.9 2006/05/18 11:37:39 bass Exp $
+ * $Id: MscharServerSessionEnvironment.java,v 1.10 2006/05/30 11:44:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.mscharserver;
 
-import com.syrus.AMFICOM.general.BaseSessionEnvironment;
+import com.syrus.AMFICOM.general.AbstractSessionEnvironment;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
@@ -21,10 +21,10 @@ import com.syrus.util.ApplicationProperties;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2006/05/18 11:37:39 $
+ * @version $Revision: 1.10 $, $Date: 2006/05/30 11:44:00 $
  * @module mscharserver
  */
-final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
+final class MscharServerSessionEnvironment extends AbstractSessionEnvironment<MscharServerServantManager> {
 	private static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
 	private static final String KEY_REFRESH_TIMEOUT = "RefreshPoolTimeout";
 
@@ -40,10 +40,6 @@ final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
 				mscharServerPoolContext,
 				mscharServer,
 				new MapSchemeAdministrationResourceServer.MscharServerLoginRestorer());
-	}
-
-	public MscharServerServantManager getMscharServerServantManager() {
-		return (MscharServerServantManager) this.getConnectionManager();
 	}
 
 	public static void createInstance(final String serverHostName, final String servantName) throws CommunicationException {

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.46 2006/05/11 11:46:31 bass Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.47 2006/05/30 11:44:00 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,12 +28,12 @@ import com.syrus.AMFICOM.general.corba.CORBAClient;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2006/05/11 11:46:31 $
+ * @version $Revision: 1.47 $, $Date: 2006/05/30 11:44:00 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
-public final class ClientSessionEnvironment extends BaseSessionEnvironment {
+public final class ClientSessionEnvironment extends AbstractSessionEnvironment<ClientServantManager> {
 
 	public enum SessionKind {
 		UNKNOWN, MEASUREMENT, MAPSCHEME, ALL;
@@ -62,10 +62,6 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		this.corbaClientImplServant = servant;
 		this.receiver = new PopupNotificationEventReceiver();
 		this.corbaClientImplServant.addEventReceiver(this.receiver);
-	}
-
-	public ClientServantManager getClientServantManager() {
-		return (ClientServantManager) this.getConnectionManager();
 	}
 
 	public final String getServerName() {
@@ -171,11 +167,11 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 	}
 
 	public void addPropertyListener(final PropertyChangeListener listener) {
-		this.getClientServantManager().addPropertyListener(listener);
+		this.getConnectionManager().addPropertyListener(listener);
 	}
 
 	public void removePropertyListener(final PropertyChangeListener listener) {
-		this.getClientServantManager().removePropertyListener(listener);
+		this.getConnectionManager().removePropertyListener(listener);
 	}
 
 	public void addEventReceiver(final EventReceiver eventReceiver) {
