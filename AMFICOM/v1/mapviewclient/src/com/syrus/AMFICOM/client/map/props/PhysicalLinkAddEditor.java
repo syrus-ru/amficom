@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkAddEditor.java,v 1.45 2006/05/03 04:46:32 stas Exp $$
+ * $$Id: PhysicalLinkAddEditor.java,v 1.46 2006/05/30 11:27:00 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2006/05/03 04:46:32 $
+ * @version $Revision: 1.46 $, $Date: 2006/05/30 11:27:00 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -168,8 +168,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			public void valueChanged(ListSelectionEvent e) {
 				if(PhysicalLinkAddEditor.this.processSelection) {
 					PhysicalLinkAddEditor.this.processSelection = false;
-					Object or = PhysicalLinkAddEditor.this.cableList
-							.getSelectedValue();
+					Object or = PhysicalLinkAddEditor.this.cableList.getSelectedValue();
 					cableSelected(or);
 					PhysicalLinkAddEditor.this.bindButton.setEnabled(isEditable() && or != null);
 					PhysicalLinkAddEditor.this.unbindButton.setEnabled(isEditable() && or != null);
@@ -602,6 +601,9 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 					? topdownicon : downtopicon);
 
 		this.tunnelLayout.setPipeBlock(this.pipeBlock);
+		
+		Object cable = PhysicalLinkAddEditor.this.cableList.getSelectedValue();
+		cableSelected(cable);
 	}
 
 	public Object getObject() {
@@ -655,8 +657,15 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	}
 
 	public void cableSelected(Object or) {
-		if(this.pipeBlock != null && this.pipeBlock.equals(this.physicalLink.getBinding().getPipeBlock(or))) {
+		PipeBlock currentBlock = this.physicalLink.getBinding().getPipeBlock(or);
+		
+		if(currentBlock != null) {
+			this.pipeBlockComboBox.setSelectedItem(currentBlock);
+			this.tunnelLayout.setPipeBlock(currentBlock);
 			this.tunnelLayout.setActiveElement(or);
+			this.pipeBlock = currentBlock;
+		} else {
+			this.tunnelLayout.setActiveElement(null);
 		}
 	}
 
@@ -716,8 +725,13 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	public void bind(Object or) throws ApplicationException {
 		IntPoint pt = this.tunnelLayout.getActiveCoordinates();
 		if(pt != null) {
-			this.pipeBlock.bind(or, pt.x, pt.y);
 			CablePath cablePath = (CablePath )or;
+			
+			for (PipeBlock pb : this.physicalLink.getBinding().getPipeBlocks()) {
+				pb.unbind(cablePath);
+			}
+			this.pipeBlock.bind(cablePath, pt.x, pt.y);
+			
 			CableChannelingItem cci = cablePath.getFirstCCI(this.physicalLink);
 			cci.setRowX(pt.x);
 			cci.setPlaceY(pt.y);
@@ -727,15 +741,14 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	}
 
 	void setBindMode(boolean bindModeEnabled) {
-		if(bindModeEnabled) {
-			this.cableList.setEnabled(false);
-			this.unbindButton.setEnabled(false);
-			this.selectButton.setEnabled(false);
-		}
-		else {
-			this.cableList.setEnabled(isEditable());
-			this.unbindButton.setEnabled(isEditable());
-			this.selectButton.setEnabled(isEditable());
+		boolean b = !bindModeEnabled && isEditable(); 
+		
+		this.cableList.setEnabled(b);
+		this.unbindButton.setEnabled(b);
+		this.selectButton.setEnabled(b);
+		this.tunnelLayout.setEnabled(!b);
+		if (this.cableList.getSelectedIndex() == -1) {
+			this.tunnelLayout.removeSelection();
 		}
 	}
 
@@ -811,7 +824,6 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			PhysicalLinkAddEditor.this.tunnelLayout.setDimension(m, n);
 			PhysicalLinkAddEditor.this.tunnelLayout.updateElements();
 		}
-
 		super.commitChanges();
 	}
 }

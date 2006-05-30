@@ -1,5 +1,5 @@
 /*-
- * $$Id: TunnelLayout.java,v 1.29 2006/04/28 10:03:37 stas Exp $$
+ * $$Id: TunnelLayout.java,v 1.30 2006/05/30 11:27:00 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.map.PipeBlock;
 import com.syrus.AMFICOM.resource.IntPoint;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2006/04/28 10:03:37 $
+ * @version $Revision: 1.30 $, $Date: 2006/05/30 11:27:00 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -60,6 +60,8 @@ public class TunnelLayout implements PropertyChangeListener {
 		this.internalContext.getDispatcher().addPropertyChangeListener(
 				ObjectSelectedEvent.TYPE,
 				this);
+		
+		setEnabled(false);
 	}
 
 	public UgoTabbedPane getUgoPanel() {
@@ -167,6 +169,10 @@ public class TunnelLayout implements PropertyChangeListener {
 		return this.activeCoordinates;
 	}
 
+	public void setEnabled(boolean b) {
+		this.ugoTabbedPane.getGraph().setEnabled(b);
+	}
+	
 	public void updateElements() {
 		if(this.pipeBlock == null) {
 			return;
