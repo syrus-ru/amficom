@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.43.2.16 2006/04/11 07:30:56 arseniy Exp $
+ * $Id: Action.java,v 1.43.2.17 2006/05/30 08:12:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlActionStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43.2.16 $, $Date: 2006/04/11 07:30:56 $
+ * @version $Revision: 1.43.2.17 $, $Date: 2006/05/30 08:12:22 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -78,6 +78,7 @@ public abstract class Action<R extends ActionResultParameter> extends StorableOb
 	private Identifier actionTemplateId;
 	private String name;
 	private Date startTime;
+	//XXX М.б., не нужно
 	private long duration;
 	private ActionStatus status;
 
