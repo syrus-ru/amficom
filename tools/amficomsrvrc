@@ -1,6 +1,6 @@
 ############################################################
 #
-# $Id: amficomsrvrc,v 1.4 2006/04/26 07:40:51 arseniy Exp $
+# $Id: amficomsrvrc,v 1.5 2006/05/30 11:56:52 arseniy Exp $
 #
 # vim:ft=sh:
 #
@@ -90,9 +90,9 @@ function stop() {
 
 			echo "Stopping ${APPNAME}..."
 			kill -15 ${pid}
+			rm -f "${pidfile}"
 			sleep 10
 			killprocess ${pid}
-			rm "${pidfile}"
 
 			cd `dirname $0`
 			mkdir -p "${logpath}"
