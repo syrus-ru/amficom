@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeCableLinkCommand.java,v 1.65 2006/05/24 14:33:39 stas Exp $$
+ * $$Id: PlaceSchemeCableLinkCommand.java,v 1.66 2006/05/30 14:15:08 stas Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,6 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -31,17 +26,13 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
-import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.SchemeCablePort;
-import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
 
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.65 $, $Date: 2006/05/24 14:33:39 $
+ * @version $Revision: 1.66 $, $Date: 2006/05/30 14:15:08 $
  * @author $Author: stas $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -197,34 +188,34 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 							try {
 								block = cci.getPipeBlock();
 								if(block == null) {
-									XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance(); 
-									link.getId().getXmlTransferable(xmlId, "ucm");
-									String linkUn = xmlId.getStringValue();
-									cci.getId().getXmlTransferable(xmlId, "ucm");
-									String cciUn = xmlId.getStringValue();
+//									XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance(); 
+//									link.getId().getXmlTransferable(xmlId, "ucm");
+//									String linkUn = xmlId.getStringValue();
+//									cci.getId().getXmlTransferable(xmlId, "ucm");
+//									String cciUn = xmlId.getStringValue();
 									Log.errorMessage(
 											"link '" + link.getName() 
-											+ "' (un " + linkUn 
-											+ ") cci '" + cciUn 
+											+ "' (id " + link.getId() 
+											+ ") cci '" + cci.getId() 
 											+ "' has null block!");
 								}
 								else {
 									block.bind(this.cablePath, cci.getRowX(), cci.getPlaceY());
 								}
 							} catch(ArrayIndexOutOfBoundsException e) {
-								XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance(); 
-								link.getId().getXmlTransferable(xmlId, "ucm");
-								String linkUn = xmlId.getStringValue();
-								cci.getId().getXmlTransferable(xmlId, "ucm");
-								String cciUn = xmlId.getStringValue();
+//								XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance(); 
+//								link.getId().getXmlTransferable(xmlId, "ucm");
+//								String linkUn = xmlId.getStringValue();
+//								cci.getId().getXmlTransferable(xmlId, "ucm");
+//								String cciUn = xmlId.getStringValue();
 								final IntDimension dimension = block.getDimension();
 								Log.errorMessage(
 										"link '" + link.getName() 
-										+ "' (un " + linkUn 
+										+ "' (id " + link.getId() 
 										+ ") block '" + block.getNumber() 
 										+ "' has dimensions (" + dimension.getWidth()
 										+ ", " + dimension.getHeight()
-										+ "), which is inconsistent with cci (un " + cciUn
+										+ "), which is inconsistent with cci (id " + cci.getId()
 										+ ") with position (" + cci.getRowX()
 										+ ", " + cci.getPlaceY() + ")");
 //								Log.errorMessage(e);
