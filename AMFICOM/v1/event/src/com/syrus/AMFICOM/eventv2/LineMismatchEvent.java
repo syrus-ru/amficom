@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.19 2006/05/31 09:53:58 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.20 2006/05/31 15:43:05 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,9 +10,13 @@ package com.syrus.AMFICOM.eventv2;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static java.util.logging.Level.SEVERE;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.EnumSet;
 
 import org.omg.CORBA.BAD_PARAM;
 import org.omg.CORBA.ORB;
@@ -21,6 +25,7 @@ import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlAlarmStatus;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.util.Log;
 import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
@@ -29,7 +34,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2006/05/31 09:53:58 $
+ * @version $Revision: 1.20 $, $Date: 2006/05/31 15:43:05 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -150,7 +155,7 @@ public interface LineMismatchEvent
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.19 $, $Date: 2006/05/31 09:53:58 $
+	 * @version $Revision: 1.20 $, $Date: 2006/05/31 15:43:05 $
 	 * @module event
 	 */
 	enum AlarmStatus {
@@ -337,6 +342,117 @@ public interface LineMismatchEvent
 		}
 
 		/**
+		 * <p>For any two different alarm statii, <em>A</em> and <em>B</em>,
+		 * {@code A.isAllowedPredecessorOf(B) ^ B.isAllowedPredecessorOf(A)}
+		 * is {@code true} <em>only in case</em> <strong>state rollbacks
+		 * aren&apos;t enabled</strong>.</p>
+		 *
+		 * <p>{@code A.isAllowedPredecessorOf(A)} is always {@code false}.</p>
+		 *
+		 * @param successor
+		 * @see #getAllowedSuccessors()
+		 */
+		public boolean isAllowedPredecessorOf(final AlarmStatus successor) {
+			if (successor == null) {
+				throw new NullPointerException();
+			}
+			if (successor == this) {
+				return false;
+			}
+
+			final Class<AlarmStatus> clazz = AlarmStatus.class;
+
+			boolean possiblyAllowedPredecessor1;
+			try {
+				final Field field = clazz.getField(this.name());
+				if (field.isAnnotationPresent(AllowedSuccessors.class)) {
+					possiblyAllowedPredecessor1 = Arrays.asList(field.getAnnotation(AllowedSuccessors.class).value()).contains(successor);
+				} else {
+					possiblyAllowedPredecessor1 = false;
+				}
+			} catch (final SecurityException se) {
+				Log.debugMessage(se, SEVERE);
+				possiblyAllowedPredecessor1 = false;
+			} catch (final NoSuchFieldException nsfe) {
+				/*
+				 * Never.
+				 */
+				assert false;
+				possiblyAllowedPredecessor1 = false;
+			}
+
+			boolean possiblyAllowedPredecessor2;
+			try {
+				final Field field = clazz.getField(successor.name());
+				if (field.isAnnotationPresent(AllowedPredecessors.class)) {
+					possiblyAllowedPredecessor2 = Arrays.asList(field.getAnnotation(AllowedPredecessors.class).value()).contains(this);
+				} else {
+					possiblyAllowedPredecessor2 = false;
+				}
+			} catch (final SecurityException se) {
+				Log.debugMessage(se, SEVERE);
+				possiblyAllowedPredecessor2 = false;
+			} catch (final NoSuchFieldException nsfe) {
+				/*
+				 * Never.
+				 */
+				assert false;
+				possiblyAllowedPredecessor2 = false;
+			}
+
+			assert !(possiblyAllowedPredecessor1 && possiblyAllowedPredecessor2) : this + "; " + successor + "; possiblyAllowedPredecessor1 = " + possiblyAllowedPredecessor1  + "; possiblyAllowedPredecessor2 = " + possiblyAllowedPredecessor2;
+			
+			return possiblyAllowedPredecessor1 || possiblyAllowedPredecessor2;
+		}
+
+		/**
+		 * @return a new mutable {@code Set} upon every invocation.
+		 * @see #isAllowedPredecessorOf(AlarmStatus) 
+		 */
+		public EnumSet<AlarmStatus> getAllowedSuccessors() {
+			final Class<AlarmStatus> clazz = AlarmStatus.class;
+
+			final EnumSet<AlarmStatus> allowedSuccessors = EnumSet.noneOf(clazz);
+
+			try {
+				final Field field = clazz.getField(this.name());
+				if (field.isAnnotationPresent(AllowedSuccessors.class)) {
+					allowedSuccessors.addAll(Arrays.asList(field.getAnnotation(AllowedSuccessors.class).value()));
+				}
+			} catch (final SecurityException se) {
+				Log.debugMessage(se, SEVERE);
+			} catch (final NoSuchFieldException nsfe) {
+				/*
+				 * Never.
+				 */
+				assert false;
+			}
+
+			for (final AlarmStatus alarmStatus :  EnumSet.complementOf(EnumSet.of(this))) {
+				final Field field;
+				try {
+					field = clazz.getField(alarmStatus.name());
+				} catch (final SecurityException se) {
+					Log.debugMessage(se, SEVERE);
+					continue;
+				} catch (final NoSuchFieldException nsfe) {
+					/*
+					 * Never.
+					 */
+					assert false;
+					continue;
+				}
+				if (field.isAnnotationPresent(AllowedPredecessors.class)) {
+					if (Arrays.asList(field.getAnnotation(AllowedPredecessors.class).value()).contains(this)) {
+						allowedSuccessors.add(alarmStatus);
+					}
+				}
+			}
+
+			return allowedSuccessors;
+		}
+
+		/**
 		 * Status <em>A</em> is an &laquo;allowed&nbsp;predecessor&raquo;
 		 * of status <em>B</em> if an alarm with status <em>A</em> can be
 		 * assigned status <em>B</em> directly, omitting any other
@@ -360,7 +476,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.19 $, $Date: 2006/05/31 09:53:58 $
+		 * @version $Revision: 1.20 $, $Date: 2006/05/31 15:43:05 $
 		 * @see AllowedSuccessors
 		 * @module event
 		 */
@@ -373,7 +489,7 @@ public interface LineMismatchEvent
 		/**
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.19 $, $Date: 2006/05/31 09:53:58 $
+		 * @version $Revision: 1.20 $, $Date: 2006/05/31 15:43:05 $
 		 * @see AllowedPredecessors
 		 * @module event
 		 */
@@ -388,7 +504,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.19 $, $Date: 2006/05/31 09:53:58 $
+		 * @version $Revision: 1.20 $, $Date: 2006/05/31 15:43:05 $
 		 * @module event
 		 */
 		public static final class Proxy
