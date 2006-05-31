@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.17 2006/05/29 15:05:31 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.18 2006/05/31 07:45:19 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,9 +14,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import org.omg.CORBA.BAD_PARAM;
+import org.omg.CORBA.ORB;
+
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlAlarmStatus;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 /**
  * Generation of this one may be triggered upon receipt of a
@@ -24,7 +29,7 @@ import com.syrus.AMFICOM.general.Identifier;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2006/05/29 15:05:31 $
+ * @version $Revision: 1.18 $, $Date: 2006/05/31 07:45:19 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -141,7 +146,7 @@ public interface LineMismatchEvent
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.17 $, $Date: 2006/05/29 15:05:31 $
+	 * @version $Revision: 1.18 $, $Date: 2006/05/31 07:45:19 $
 	 * @module event
 	 */
 	enum AlarmStatus {
@@ -293,16 +298,92 @@ public interface LineMismatchEvent
 		@AllowedPredecessors(XTRA_VERIFIED)
 		XTRA_CLOSED;
 
+		private static final AlarmStatus VALUES[] = values();
+
+		/**
+		 * @param ordinal
+		 * @throws IllegalArgumentException
+		 */
+		public static AlarmStatus valueOf(final int ordinal) {
+			try {
+				return VALUES[ordinal];
+			} catch (final ArrayIndexOutOfBoundsException aioobe) {
+				throw new IllegalArgumentException(String.valueOf(ordinal));
+			}
+		}
+
+		/**
+		 * @param alarmStatus
+		 * @throws IllegalArgumentException
+		 */
+		public static AlarmStatus valueOf(final IdlAlarmStatus alarmStatus) {
+			return valueOf(alarmStatus.value());
+		}
+
 		/**
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.17 $, $Date: 2006/05/29 15:05:31 $
+		 * @version $Revision: 1.18 $, $Date: 2006/05/31 07:45:19 $
 		 * @module event
 		 */
 		@Retention(RUNTIME)
 		@Target(FIELD)
 		private @interface AllowedPredecessors {
 			AlarmStatus[] value();
+		}
+
+		/**
+		 * A mutable holder for immutable enum instances.
+		 *
+		 * @author Andrew ``Bass'' Shcheglov
+		 * @author $Author: bass $
+		 * @version $Revision: 1.18 $, $Date: 2006/05/31 07:45:19 $
+		 * @module event
+		 */
+		public static final class Proxy
+				implements IdlTransferableObjectExt<IdlAlarmStatus> {
+			private AlarmStatus value;
+
+			/**
+			 * Creates a new uninitialized instance.
+			 */
+			public Proxy() {
+				// empty
+			}
+
+			public Proxy(final AlarmStatus value) {
+				this.value = value;
+			}
+
+			public AlarmStatus getValue() {
+				return this.value;
+			}
+
+			public void setValue(final AlarmStatus value) {
+				this.value = value;
+			}
+
+			/**
+			 * @param orb
+			 * @throws IllegalArgumentException
+			 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
+			 */
+			public IdlAlarmStatus getIdlTransferable(final ORB orb) {
+				try {
+					return IdlAlarmStatus.from_int(this.value.ordinal());
+				} catch (final BAD_PARAM bp) {
+					throw new IllegalArgumentException(String.valueOf(this.value.ordinal()), bp);
+				}
+			}
+
+			/**
+			 * @param alarmStatus
+			 * @throws IllegalArgumentException
+			 * @see IdlTransferableObjectExt#fromIdlTransferable(org.omg.CORBA.portable.IDLEntity)
+			 */
+			public void fromIdlTransferable(final IdlAlarmStatus alarmStatus) {
+				this.value = valueOf(alarmStatus);
+			}
 		}
 	}
 }

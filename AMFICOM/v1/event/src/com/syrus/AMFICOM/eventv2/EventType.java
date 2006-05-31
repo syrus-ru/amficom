@@ -1,7 +1,7 @@
 /*-
- * $Id: EventType.java,v 1.6 2006/04/04 11:31:54 bass Exp $
+ * $Id: EventType.java,v 1.7 2006/05/31 07:45:19 bass Exp $
  *
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -12,20 +12,22 @@ import org.omg.CORBA.BAD_PARAM;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlEventPackage.IdlEventType;
-import com.syrus.util.transport.idl.IdlTransferableObject;
+import com.syrus.util.transport.idl.IdlTransferableObjectExt;
 
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2006/04/04 11:31:54 $
+ * @version $Revision: 1.7 $, $Date: 2006/05/31 07:45:19 $
  * @module event
  */
-public enum EventType implements IdlTransferableObject<IdlEventType> {
+public enum EventType {
 	REFLECTORGAM_MISMATCH("reflectogramMismatch"),
 	LINE_MISMATCH("lineMismatch"),
 	NOTIFICATION("notification"),
 	MEASUREMENT_STATUS_CHANGED("measurementStatusChanged");
+
+	private static final EventType VALUES[] = values();
 
 	private String codename;
 
@@ -37,11 +39,77 @@ public enum EventType implements IdlTransferableObject<IdlEventType> {
 		return this.codename;
 	}
 
-	public IdlEventType getIdlTransferable(final ORB orb) {
+	/**
+	 * @param ordinal
+	 * @throws IllegalArgumentException
+	 */
+	public static EventType valueOf(final int ordinal) {
 		try {
-			return IdlEventType.from_int(this.ordinal());
-		} catch (final BAD_PARAM bp) {
-			throw new IllegalArgumentException(bp);
+			return VALUES[ordinal];
+		} catch (final ArrayIndexOutOfBoundsException aioobe) {
+			throw new IllegalArgumentException(String.valueOf(ordinal));
+		}
+	}
+
+	/**
+	 * @param eventType
+	 * @throws IllegalArgumentException
+	 */
+	public static EventType valueOf(final IdlEventType eventType) {
+		return valueOf(eventType.value());
+	}
+
+	/**
+	 * A mutable holder for immutable enum instances.
+	 *
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.7 $, $Date: 2006/05/31 07:45:19 $
+	 * @module event
+	 */
+	public static final class Proxy
+			implements IdlTransferableObjectExt<IdlEventType> {
+		private EventType value;
+
+		/**
+		 * Creates a new uninitialized instance.
+		 */
+		public Proxy() {
+			// empty
+		}
+
+		public Proxy(final EventType value) {
+			this.value = value;
+		}
+
+		public EventType getValue() {
+			return this.value;
+		}
+
+		public void setValue(final EventType value) {
+			this.value = value;
+		}
+
+		/**
+		 * @param orb
+		 * @throws IllegalArgumentException
+		 * @see com.syrus.util.transport.idl.IdlTransferableObject#getIdlTransferable(ORB)
+		 */
+		public IdlEventType getIdlTransferable(final ORB orb) {
+			try {
+				return IdlEventType.from_int(this.value.ordinal());
+			} catch (final BAD_PARAM bp) {
+				throw new IllegalArgumentException(String.valueOf(this.value.ordinal()), bp);
+			}
+		}
+
+		/**
+		 * @param eventType
+		 * @throws IllegalArgumentException
+		 * @see IdlTransferableObjectExt#fromIdlTransferable(org.omg.CORBA.portable.IDLEntity)
+		 */
+		public void fromIdlTransferable(final IdlEventType eventType) {
+			this.value = valueOf(eventType);
 		}
 	}
 }

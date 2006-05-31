@@ -1,12 +1,14 @@
 /*-
- * $Id: UserEventNotifier.java,v 1.12 2005/11/13 06:34:54 bass Exp $
+ * $Id: UserEventNotifier.java,v 1.13 2006/05/31 07:45:19 bass Exp $
  * 
- * Copyright ¿ 2004-2005 Syrus Systems.
+ * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.leserver;
+
+import static com.syrus.AMFICOM.eventv2.DeliveryMethod.EMAIL;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -15,14 +17,15 @@ import java.util.List;
 
 import com.syrus.AMFICOM.event.Event;
 import com.syrus.AMFICOM.event.EventType;
-import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.AlertKind;
+import com.syrus.AMFICOM.eventv2.DeliveryMethod;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/11/13 06:34:54 $
+ * @version $Revision: 1.13 $, $Date: 2006/05/31 07:45:19 $
+ * @author Tashoyan Arseniy Feliksovich
  * @author $Author: bass $
  * @module leserver
  */
@@ -55,8 +58,8 @@ final class UserEventNotifier extends SleepButWorkThread {
 				final Event event = it1.next();
 				final EventType eventType = event.getType();
 				boolean delivered = false;
-				for (AlertKind alertKind : eventType.getUserAlertKinds(this.userId)) {
-					final Alerter alerter = Alerter.getAlerter(AlertKind.ALERT_KIND_EMAIL);
+				for (final DeliveryMethod deliveryMethod : eventType.getUserAlertKinds(this.userId)) {
+					final Alerter alerter = Alerter.getAlerter(EMAIL);
 					if (alerter != null) {
 						try {
 							alerter.notifyUser(this.userId);
@@ -67,7 +70,7 @@ final class UserEventNotifier extends SleepButWorkThread {
 						}
 					}
 					else {
-						Log.errorMessage("Unknown alert kind -- " + alertKind.value()
+						Log.errorMessage("Unknown alert kind -- " + deliveryMethod.getCodename()
 								+ " for event type '" + eventType.getId()
 								+ "' and user '" + this.userId + "'");
 					}

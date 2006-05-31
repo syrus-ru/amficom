@@ -1,24 +1,30 @@
-/*
- * $Id: EMailAlerter.java,v 1.5 2005/08/08 11:42:21 arseniy Exp $
+/*-
+ * $Id: EMailAlerter.java,v 1.6 2006/05/31 07:45:19 bass Exp $
  * 
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2006 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.leserver;
 
-import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.AlertKind;
+import static com.syrus.AMFICOM.eventv2.DeliveryMethod.EMAIL;
+
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:42:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2006/05/31 07:45:19 $
+ * @author Tashoyan Arseniy Feliksovich
+ * @author $Author: bass $
+ * @deprecated {@link EmailNotificationEventProcessor} should be used instead.
+ * @see EmailNotificationEventProcessor
  * @module leserver
  */
+@Deprecated
 final class EMailAlerter extends Alerter {
 
 	protected EMailAlerter() {
-		registerAlerter(AlertKind.ALERT_KIND_EMAIL, this);
+		registerAlerter(EMAIL, this);
 	}
 
 	@Override

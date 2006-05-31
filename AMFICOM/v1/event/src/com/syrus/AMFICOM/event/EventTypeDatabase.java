@@ -1,5 +1,5 @@
 /*-
- * $Id: EventTypeDatabase.java,v 1.53 2006/03/28 10:17:19 bass Exp $
+ * $Id: EventTypeDatabase.java,v 1.54 2006/05/31 07:45:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,12 +30,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.AlertKind;
+import com.syrus.AMFICOM.eventv2.DeliveryMethod;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.DatabaseStorableObjectCondition;
@@ -53,9 +53,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2006/03/28 10:17:19 $
- * @author $Author: bass $
+ * @version $Revision: 1.54 $, $Date: 2006/05/31 07:45:19 $
  * @author Tashoyan Arseniy Feliksovich
+ * @author $Author: bass $
  * @module event
  */
 
@@ -149,17 +149,17 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			return;
 		}
 
-		final Map<Identifier, Map<Identifier, Set<AlertKind>>> dbEventTypeUserAlertKindsMap = this.retrieveDBUserAlertKindsMap(eventTypes);
+		final Map<Identifier, Map<Identifier, Set<DeliveryMethod>>> dbEventTypeUserAlertKindsMap = this.retrieveDBUserAlertKindsMap(eventTypes);
 
 		for (final EventType eventType : eventTypes) {
 			final Identifier eventTypeId = eventType.getId();
-			final Map<Identifier, Set<AlertKind>> userAlertKindsMap = dbEventTypeUserAlertKindsMap.get(eventTypeId);
+			final Map<Identifier, Set<DeliveryMethod>> userAlertKindsMap = dbEventTypeUserAlertKindsMap.get(eventTypeId);
 
 			eventType.setUserAlertKindsMap0(userAlertKindsMap);
 		}
 	}
 
-	private Map<Identifier, Map<Identifier, Set<AlertKind>>> retrieveDBUserAlertKindsMap(final Set<EventType> eventTypes) throws RetrieveObjectException {
+	private Map<Identifier, Map<Identifier, Set<DeliveryMethod>>> retrieveDBUserAlertKindsMap(final Set<EventType> eventTypes) throws RetrieveObjectException {
 		final StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ LINK_COLUMN_USER_ID + COMMA
 				+ LINK_COLUMN_ALERT_KIND + COMMA
@@ -168,7 +168,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 				+ SQL_WHERE);
 		sql.append(idsEnumerationString(eventTypes, LINK_COLUMN_EVENT_TYPE_ID, true));
 
-		final Map<Identifier, Map<Identifier, Set<AlertKind>>> dbEventTypeUserAlertKindsMap = new HashMap<Identifier, Map<Identifier, Set<AlertKind>>>();
+		final Map<Identifier, Map<Identifier, Set<DeliveryMethod>>> dbEventTypeUserAlertKindsMap = new HashMap<Identifier, Map<Identifier, Set<DeliveryMethod>>>();
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -180,20 +180,20 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			resultSet = statement.executeQuery(sql.toString());
 			while (resultSet.next()) {
 				final Identifier userId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_USER_ID);
-				final AlertKind alertKind = AlertKind.from_int(resultSet.getInt(LINK_COLUMN_ALERT_KIND));
+				final DeliveryMethod deliveryMethod = DeliveryMethod.valueOf(resultSet.getInt(LINK_COLUMN_ALERT_KIND));
 				final Identifier eventTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_EVENT_TYPE_ID);
 
-				Map<Identifier, Set<AlertKind>> userAlertKindsMap = dbEventTypeUserAlertKindsMap.get(eventTypeId);
+				Map<Identifier, Set<DeliveryMethod>> userAlertKindsMap = dbEventTypeUserAlertKindsMap.get(eventTypeId);
 				if (userAlertKindsMap == null) {
-					userAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
+					userAlertKindsMap = new HashMap<Identifier, Set<DeliveryMethod>>();
 					dbEventTypeUserAlertKindsMap.put(eventTypeId, userAlertKindsMap);
 				}
-				Set<AlertKind> userAlertKinds = userAlertKindsMap.get(userId);
-				if (userAlertKinds == null) {
-					userAlertKinds = new HashSet<AlertKind>();
-					userAlertKindsMap.put(userId, userAlertKinds);
+				Set<DeliveryMethod> deliveryMethods = userAlertKindsMap.get(userId);
+				if (deliveryMethods == null) {
+					deliveryMethods = EnumSet.noneOf(DeliveryMethod.class);
+					userAlertKindsMap.put(userId, deliveryMethods);
 				}
-				userAlertKinds.add(alertKind);
+				deliveryMethods.add(deliveryMethod);
 			}
 
 			return dbEventTypeUserAlertKindsMap;
@@ -273,7 +273,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			return;
 		}
 
-		Map<Identifier, Map<Identifier, Set<AlertKind>>> dbEventTypeUserAlertKindsMap = null;
+		Map<Identifier, Map<Identifier, Set<DeliveryMethod>>> dbEventTypeUserAlertKindsMap = null;
 		try {
 			dbEventTypeUserAlertKindsMap = this.retrieveDBUserAlertKindsMap(eventTypes);
 		}
@@ -281,7 +281,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			throw new UpdateObjectException(roe);
 		}
 
-		final Map<Identifier, Map<Identifier, Set<AlertKind>>> eventTypeUserAlertKindsMap = new HashMap<Identifier, Map<Identifier, Set<AlertKind>>>(eventTypes.size());
+		final Map<Identifier, Map<Identifier, Set<DeliveryMethod>>> eventTypeUserAlertKindsMap = new HashMap<Identifier, Map<Identifier, Set<DeliveryMethod>>>(eventTypes.size());
 		for (final EventType eventType : eventTypes) {
 			eventTypeUserAlertKindsMap.put(eventType.getId(), eventType.getUserAlertKindsMap());
 		}
@@ -289,50 +289,50 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 		this.updateUserAlertKinds(eventTypeUserAlertKindsMap, dbEventTypeUserAlertKindsMap);
 	}
 
-	private void updateUserAlertKinds(final Map<Identifier, Map<Identifier, Set<AlertKind>>> eventTypeUserAlertKindsMap,
-			final Map<Identifier, Map<Identifier, Set<AlertKind>>> dbEventTypeUserAlertKindsMap) throws UpdateObjectException {
-		final Map<Identifier, Map<Identifier, Set<AlertKind>>> insertUserAlertKindsMap = new HashMap<Identifier, Map<Identifier, Set<AlertKind>>>();
-		final Map<Identifier, Map<Identifier, Set<AlertKind>>> deleteUserAlertKindsMap = new HashMap<Identifier, Map<Identifier, Set<AlertKind>>>();
-		Map<Identifier, Set<AlertKind>> altUserAlertKindsMap;
-		Set<AlertKind> altUserAlertKinds;
+	private void updateUserAlertKinds(final Map<Identifier, Map<Identifier, Set<DeliveryMethod>>> eventTypeUserAlertKindsMap,
+			final Map<Identifier, Map<Identifier, Set<DeliveryMethod>>> dbEventTypeUserAlertKindsMap) throws UpdateObjectException {
+		final Map<Identifier, Map<Identifier, Set<DeliveryMethod>>> insertUserAlertKindsMap = new HashMap<Identifier, Map<Identifier, Set<DeliveryMethod>>>();
+		final Map<Identifier, Map<Identifier, Set<DeliveryMethod>>> deleteUserAlertKindsMap = new HashMap<Identifier, Map<Identifier, Set<DeliveryMethod>>>();
+		Map<Identifier, Set<DeliveryMethod>> altUserAlertKindsMap;
+		Set<DeliveryMethod> altDeliveryMethods;
 		for (final Identifier eventTypeId : eventTypeUserAlertKindsMap.keySet()) {
-			final Map<Identifier, Set<AlertKind>> userAlertKindsMap = eventTypeUserAlertKindsMap.get(eventTypeId);
-			final Map<Identifier, Set<AlertKind>> dbUserAlertKindsMap = dbEventTypeUserAlertKindsMap.get(eventTypeId);
+			final Map<Identifier, Set<DeliveryMethod>> userAlertKindsMap = eventTypeUserAlertKindsMap.get(eventTypeId);
+			final Map<Identifier, Set<DeliveryMethod>> dbUserAlertKindsMap = dbEventTypeUserAlertKindsMap.get(eventTypeId);
 			if (dbUserAlertKindsMap != null) {
 				for (final Identifier userId : userAlertKindsMap.keySet()) {
-					final Set<AlertKind> userAlertKinds = userAlertKindsMap.get(userId);
-					final Set<AlertKind> dbUserAlertKinds = dbUserAlertKindsMap.get(userId);
-					if (dbUserAlertKinds != null) {
-						for (final AlertKind alertKind : userAlertKinds) {
-							if (!dbUserAlertKinds.contains(alertKind)) {
+					final Set<DeliveryMethod> deliveryMethods = userAlertKindsMap.get(userId);
+					final Set<DeliveryMethod> dbDeliveryMethods = dbUserAlertKindsMap.get(userId);
+					if (dbDeliveryMethods != null) {
+						for (final DeliveryMethod deliveryMethod : deliveryMethods) {
+							if (!dbDeliveryMethods.contains(deliveryMethod)) {
 								//Insert alert kind
 								altUserAlertKindsMap = insertUserAlertKindsMap.get(eventTypeId);
 								if (altUserAlertKindsMap == null) {
-									altUserAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
+									altUserAlertKindsMap = new HashMap<Identifier, Set<DeliveryMethod>>();
 									insertUserAlertKindsMap.put(eventTypeId, altUserAlertKindsMap);
 								}
-								altUserAlertKinds = altUserAlertKindsMap.get(userId);
-								if (altUserAlertKinds == null) {
-									altUserAlertKinds = new HashSet<AlertKind>();
-									altUserAlertKindsMap.put(userId, altUserAlertKinds);
+								altDeliveryMethods = altUserAlertKindsMap.get(userId);
+								if (altDeliveryMethods == null) {
+									altDeliveryMethods = EnumSet.noneOf(DeliveryMethod.class);
+									altUserAlertKindsMap.put(userId, altDeliveryMethods);
 								}
-								altUserAlertKinds.add(alertKind);
+								altDeliveryMethods.add(deliveryMethod);
 							}
 						}
-						for (final AlertKind alertKind : dbUserAlertKinds) {
-							if (!userAlertKinds.contains(alertKind)) {
+						for (final DeliveryMethod deliveryMethod : dbDeliveryMethods) {
+							if (!deliveryMethods.contains(deliveryMethod)) {
 								//Delete alert kind
 								altUserAlertKindsMap = deleteUserAlertKindsMap.get(eventTypeId);
 								if (altUserAlertKindsMap == null) {
-									altUserAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
+									altUserAlertKindsMap = new HashMap<Identifier, Set<DeliveryMethod>>();
 									deleteUserAlertKindsMap.put(eventTypeId, altUserAlertKindsMap);
 								}
-								altUserAlertKinds = altUserAlertKindsMap.get(userId);
-								if (altUserAlertKinds == null) {
-									altUserAlertKinds = new HashSet<AlertKind>();
-									altUserAlertKindsMap.put(userId, altUserAlertKinds);
+								altDeliveryMethods = altUserAlertKindsMap.get(userId);
+								if (altDeliveryMethods == null) {
+									altDeliveryMethods = EnumSet.noneOf(DeliveryMethod.class);
+									altUserAlertKindsMap.put(userId, altDeliveryMethods);
 								}
-								altUserAlertKinds.add(alertKind);
+								altDeliveryMethods.add(deliveryMethod);
 							}
 						}
 					}
@@ -340,10 +340,10 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 						//Insert all userAlertingKinds for this userId and this eventTypeId
 						altUserAlertKindsMap = insertUserAlertKindsMap.get(eventTypeId);
 						if (altUserAlertKindsMap == null) {
-							altUserAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
+							altUserAlertKindsMap = new HashMap<Identifier, Set<DeliveryMethod>>();
 							insertUserAlertKindsMap.put(eventTypeId, altUserAlertKindsMap);
 						}
-						altUserAlertKindsMap.put(userId, userAlertKinds);
+						altUserAlertKindsMap.put(userId, deliveryMethods);
 					}
 				}
 				for (final Identifier userId : dbUserAlertKindsMap.keySet()) {
@@ -351,7 +351,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 						//Delete all userAlertingKinds for this userId and this eventTypeId
 						altUserAlertKindsMap = deleteUserAlertKindsMap.get(eventTypeId);
 						if (altUserAlertKindsMap == null) {
-							altUserAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
+							altUserAlertKindsMap = new HashMap<Identifier, Set<DeliveryMethod>>();
 							deleteUserAlertKindsMap.put(eventTypeId, altUserAlertKindsMap);
 						}
 						altUserAlertKindsMap.put(userId, dbUserAlertKindsMap.get(userId));
@@ -360,7 +360,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			}
 			else {
 				//Insert all userAlertingKinds for all userId for this eventTypeId
-				altUserAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
+				altUserAlertKindsMap = new HashMap<Identifier, Set<DeliveryMethod>>();
 				altUserAlertKindsMap.putAll(userAlertKindsMap);
 				insertUserAlertKindsMap.put(eventTypeId, altUserAlertKindsMap);
 			}
@@ -376,7 +376,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 
 	}
 
-	private void insertUserAlertKinds(final Map<Identifier, Map<Identifier, Set<AlertKind>>> insertUserAlertKindsMap) throws CreateObjectException {
+	private void insertUserAlertKinds(final Map<Identifier, Map<Identifier, Set<DeliveryMethod>>> insertUserAlertKindsMap) throws CreateObjectException {
 		if (insertUserAlertKindsMap == null || insertUserAlertKindsMap.isEmpty()) {
 			return;
 		}
@@ -398,15 +398,15 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			preparedStatement = connection.prepareStatement(sql);
 
 			for (final Identifier eventTypeId : insertUserAlertKindsMap.keySet()) {
-				final Map<Identifier, Set<AlertKind>> userAlertKindsMap = insertUserAlertKindsMap.get(eventTypeId);
+				final Map<Identifier, Set<DeliveryMethod>> userAlertKindsMap = insertUserAlertKindsMap.get(eventTypeId);
 				for (final Identifier userId : userAlertKindsMap.keySet()) {
-					final Set<AlertKind> userAlertKinds = userAlertKindsMap.get(userId);
-					for (final AlertKind alertKind : userAlertKinds) {
+					final Set<DeliveryMethod> deliveryMethods = userAlertKindsMap.get(userId);
+					for (final DeliveryMethod deliveryMethod : deliveryMethods) {
 						DatabaseIdentifier.setIdentifier(preparedStatement, 1, userId);
-						preparedStatement.setInt(2, alertKind.value());
+						preparedStatement.setInt(2, deliveryMethod.ordinal());
 						DatabaseIdentifier.setIdentifier(preparedStatement, 3, eventTypeId);
 						Log.debugMessage(this.getEntityName() + "Database.insertUserAlertKinds | Inserting alerting kind "
-								+ alertKind.value() + " for user '" + userId + "' and event type '" + eventTypeId
+								+ deliveryMethod.getCodename() + " for user '" + userId + "' and event type '" + eventTypeId
 								+ "'", Log.DEBUGLEVEL09);
 						preparedStatement.executeUpdate();
 					}
@@ -437,7 +437,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 
 	}
 
-	private void deleteUserAlertKinds(final Map<Identifier, Map<Identifier, Set<AlertKind>>> deleteUserAlertKindsMap) {
+	private void deleteUserAlertKinds(final Map<Identifier, Map<Identifier, Set<DeliveryMethod>>> deleteUserAlertKindsMap) {
 		if (deleteUserAlertKindsMap == null || deleteUserAlertKindsMap.isEmpty()) {
 			return;
 		}
@@ -446,14 +446,14 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 				+ SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
 
 		for (final Identifier eventTypeId : deleteUserAlertKindsMap.keySet()) {
-			final Map<Identifier, Set<AlertKind>> userAlertKindsMap = deleteUserAlertKindsMap.get(eventTypeId);
+			final Map<Identifier, Set<DeliveryMethod>> userAlertKindsMap = deleteUserAlertKindsMap.get(eventTypeId);
 			for (final Identifier userId : userAlertKindsMap.keySet()) {
-				final Set<AlertKind> userAlertKinds = userAlertKindsMap.get(userId);
-				for (final AlertKind alertKind : userAlertKinds) {
+				final Set<DeliveryMethod> deliveryMethods = userAlertKindsMap.get(userId);
+				for (final DeliveryMethod deliveryMethod : deliveryMethods) {
 					sql.append(SQL_OR + OPEN_BRACKET
 							+ LINK_COLUMN_EVENT_TYPE_ID + EQUALS + DatabaseIdentifier.toSQLString(eventTypeId) + SQL_AND
 							+ LINK_COLUMN_USER_ID + EQUALS + DatabaseIdentifier.toSQLString(userId) + SQL_AND
-							+ LINK_COLUMN_ALERT_KIND + EQUALS + alertKind.value()
+							+ LINK_COLUMN_ALERT_KIND + EQUALS + deliveryMethod.ordinal()
 							+ CLOSE_BRACKET);
 				}
 			}

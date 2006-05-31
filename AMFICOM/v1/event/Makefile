@@ -3,7 +3,7 @@ MODULE_NAME := event
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-IDL_SOURCES = $(IDLDIR)/alarm.idl $(IDLDIR)/event.idl
+IDL_SOURCES = $(IDLDIR)/event.idl
 
 include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
