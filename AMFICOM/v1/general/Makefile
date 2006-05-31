@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.86 2006/05/31 15:52:10 bass Exp $
+# $Id: Makefile,v 1.87 2006/05/31 16:18:37 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -144,7 +144,7 @@ arch:
 		-link "http://$(JAVADOCHOST)/apidocs/xalan-j/" \
 		-link "http://$(JAVADOCHOST)/apidocs/xmlbeans/" \
 		-sourcepath $(SRCDIR):test \
-		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH) \
+		-classpath "$(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH):$(JUNIT_HOME)/junit.jar" \
 		-group "$(MODULE_NAME)" "com.syrus.AMFICOM.$(MODULE_NAME):com.syrus.AMFICOM.$(MODULE_NAME).logic" \
 		-group "$(MODULE_NAME)-IDL" "com.syrus.AMFICOM.$(MODULE_NAME).corba*" \
 		-group "$(MODULE_NAME)-XML" "com.syrus.AMFICOM.$(MODULE_NAME).xml*" \

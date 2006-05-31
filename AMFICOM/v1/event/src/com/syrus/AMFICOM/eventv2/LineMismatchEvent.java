@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.20 2006/05/31 15:43:05 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.21 2006/05/31 16:18:37 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2006/05/31 15:43:05 $
+ * @version $Revision: 1.21 $, $Date: 2006/05/31 16:18:37 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -155,7 +155,7 @@ public interface LineMismatchEvent
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.20 $, $Date: 2006/05/31 15:43:05 $
+	 * @version $Revision: 1.21 $, $Date: 2006/05/31 16:18:37 $
 	 * @module event
 	 */
 	enum AlarmStatus {
@@ -407,7 +407,7 @@ public interface LineMismatchEvent
 
 		/**
 		 * @return a new mutable {@code Set} upon every invocation.
-		 * @see #isAllowedPredecessorOf(AlarmStatus) 
+		 * @see #isAllowedPredecessorOf(com.syrus.AMFICOM.eventv2.LineMismatchEvent.AlarmStatus) 
 		 */
 		public EnumSet<AlarmStatus> getAllowedSuccessors() {
 			final Class<AlarmStatus> clazz = AlarmStatus.class;
@@ -476,7 +476,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.20 $, $Date: 2006/05/31 15:43:05 $
+		 * @version $Revision: 1.21 $, $Date: 2006/05/31 16:18:37 $
 		 * @see AllowedSuccessors
 		 * @module event
 		 */
@@ -489,7 +489,7 @@ public interface LineMismatchEvent
 		/**
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.20 $, $Date: 2006/05/31 15:43:05 $
+		 * @version $Revision: 1.21 $, $Date: 2006/05/31 16:18:37 $
 		 * @see AllowedPredecessors
 		 * @module event
 		 */
@@ -504,7 +504,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.20 $, $Date: 2006/05/31 15:43:05 $
+		 * @version $Revision: 1.21 $, $Date: 2006/05/31 16:18:37 $
 		 * @module event
 		 */
 		public static final class Proxy
