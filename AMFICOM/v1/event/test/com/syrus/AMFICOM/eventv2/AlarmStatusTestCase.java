@@ -1,5 +1,5 @@
 /*-
- * $Id: AlarmStatusTestCase.java,v 1.1 2006/05/31 16:13:40 bass Exp $
+ * $Id: AlarmStatusTestCase.java,v 1.2 2006/05/31 16:41:01 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.eventv2.LineMismatchEvent.AlarmStatus;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2006/05/31 16:13:40 $
+ * @version $Revision: 1.2 $, $Date: 2006/05/31 16:41:01 $
  * @module event
  */
 public final class AlarmStatusTestCase extends TestCase {
@@ -49,7 +49,9 @@ public final class AlarmStatusTestCase extends TestCase {
 		}
 		for (final AlarmStatus successor : AlarmStatus.values()) {
 			for (final AlarmStatus predecessor : AlarmStatus.values()) {
-				System.out.print("" + (predecessor.isAllowedPredecessorOf(successor) ? '+' : '-') + '\t');
+				System.out.print("" + (predecessor.isAllowedPredecessorOf(successor)
+						? '+'
+						: predecessor == successor ? '=' : '-') + '\t');
 			}
 			System.out.println(successor);
 		}
