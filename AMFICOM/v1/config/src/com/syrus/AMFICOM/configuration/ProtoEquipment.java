@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.31 2006/04/19 13:22:15 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.32 2006/05/31 10:45:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.util.transport.xml.XmlConversionException;
 import com.syrus.util.transport.xml.XmlTransferableObject;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2006/04/19 13:22:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2006/05/31 10:45:34 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -396,7 +396,9 @@ public final class ProtoEquipment extends StorableObject
 
 	@Override
 	protected Set<Identifiable> getDependenciesTmpl() {
-		return Collections.emptySet();
+		final Set<Identifiable> dependencies =  new HashSet<Identifiable>();
+		dependencies.add(this.typeId);
+		return dependencies;
 	}
 
 	/**
