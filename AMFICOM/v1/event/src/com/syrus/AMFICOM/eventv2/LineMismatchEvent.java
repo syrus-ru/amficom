@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.18 2006/05/31 07:45:19 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.19 2006/05/31 09:53:58 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2006/05/31 07:45:19 $
+ * @version $Revision: 1.19 $, $Date: 2006/05/31 09:53:58 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -144,9 +144,13 @@ public interface LineMismatchEvent
 	Identifier getReflectogramMismatchEventId();
 
 	/**
+	 * Those alarm statii that aren&apos;t present in the
+	 * <em>Consultronics&nbsp;NQMS</em> Alarm Model, have &laquo;{@code
+	 * XTRA_}&raquo; prefix.
+	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.18 $, $Date: 2006/05/31 07:45:19 $
+	 * @version $Revision: 1.19 $, $Date: 2006/05/31 09:53:58 $
 	 * @module event
 	 */
 	enum AlarmStatus {
@@ -160,6 +164,7 @@ public interface LineMismatchEvent
 		 * timed out}.</p>
 		 */
 		@AllowedPredecessors({})
+		@AllowedSuccessors({})
 		PENDING,
 
 		/**
@@ -173,6 +178,7 @@ public interface LineMismatchEvent
 		 * (with a <em>trouble&nbsp;ticket</em> having been assigned).</p>
 		 */
 		@AllowedPredecessors(PENDING)
+		@AllowedSuccessors({})
 		XTRA_ASSIGNED,
 
 		/**
@@ -183,6 +189,7 @@ public interface LineMismatchEvent
 		 * <p>Next: {@link #XTRA_VERIFIED verified}.</p>
 		 */
 		@AllowedPredecessors(XTRA_ASSIGNED)
+		@AllowedSuccessors({})
 		IGNORED,
 
 		/**
@@ -193,6 +200,7 @@ public interface LineMismatchEvent
 		 * <p>Next: {@link #IN_PROGRESS in progress}.</p>
 		 */
 		@AllowedPredecessors(XTRA_ASSIGNED)
+		@AllowedSuccessors({})
 		ACKNOWLEDGED,
 
 		/**
@@ -205,6 +213,7 @@ public interface LineMismatchEvent
 		 * completed} or {@link #TIMED_OUT timed out}.</p>
 		 */
 		@AllowedPredecessors(ACKNOWLEDGED)
+		@AllowedSuccessors({})
 		IN_PROGRESS,
 
 		/**
@@ -217,6 +226,7 @@ public interface LineMismatchEvent
 		 * progress}.</p>
 		 */
 		@AllowedPredecessors(IN_PROGRESS)
+		@AllowedSuccessors({})
 		XTRA_TT_COMPLETED,
 
 		/**
@@ -228,6 +238,7 @@ public interface LineMismatchEvent
 		 * <p>Next: {@link #RESOLVED resolved}.</p>
 		 */
 		@AllowedPredecessors(XTRA_TT_COMPLETED)
+		@AllowedSuccessors({})
 		XTRA_VTEST_IN_PROGRESS,
 
 		/**
@@ -239,6 +250,7 @@ public interface LineMismatchEvent
 		 * <p>Next: {@link #XTRA_VERIFIED verified}.</p>
 		 */
 		@AllowedPredecessors({XTRA_ASSIGNED, XTRA_VTEST_IN_PROGRESS})
+		@AllowedSuccessors({})
 		RESOLVED,
 
 		/**
@@ -249,6 +261,7 @@ public interface LineMismatchEvent
 		 * <p>Next: {@link #XTRA_VERIFIED verified}.</p>
 		 */
 		@AllowedPredecessors(IN_PROGRESS)
+		@AllowedSuccessors({})
 		ABANDONED,
 
 		/**
@@ -272,6 +285,7 @@ public interface LineMismatchEvent
 		 * <p>Next: {@link #XTRA_VERIFIED verified}.</p>
 		 */
 		@AllowedPredecessors({PENDING, IN_PROGRESS})
+		@AllowedSuccessors({})
 		TIMED_OUT,
 
 		/**
@@ -285,6 +299,7 @@ public interface LineMismatchEvent
 		 * <p>Next: {@link #XTRA_CLOSED closed}.</p>
 		 */
 		@AllowedPredecessors({RESOLVED, ABANDONED, IGNORED, TIMED_OUT})
+		@AllowedSuccessors({})
 		XTRA_VERIFIED,
 
 		/**
@@ -296,6 +311,7 @@ public interface LineMismatchEvent
 		 * <p>Next: none.</p>
 		 */
 		@AllowedPredecessors(XTRA_VERIFIED)
+		@AllowedSuccessors({})
 		XTRA_CLOSED;
 
 		private static final AlarmStatus VALUES[] = values();
@@ -321,9 +337,31 @@ public interface LineMismatchEvent
 		}
 
 		/**
+		 * Status <em>A</em> is an &laquo;allowed&nbsp;predecessor&raquo;
+		 * of status <em>B</em> if an alarm with status <em>A</em> can be
+		 * assigned status <em>B</em> directly, omitting any other
+		 * intermediate status. The statement saying that <em>B</em> is
+		 * an &laquo;allowed&nbsp;successor&raquo; of <em>A</em> has the
+		 * same meaning. Logically, there&apos;s no need to introduce an
+		 * additional {@link AllowedSuccessors} annotation, but semantically,
+		 * there is one: fields can&apos;t be referenced prior they&apos;re
+		 * defined. Thus, given the way enum constants are declared, one
+		 * can&apos;t write:<pre style = "background: #fff7e9;">
+		 * &#64;AllowedSuccessors(XTRA_CLOSED)
+		 * XTRA_VERIFIED,
+		 *
+		 * XTRA_CLOSED;</pre>
+		 * but can:
+		 * <pre style = "background: #fff7e9;">
+		 * XTRA_VERIFIED,
+		 *
+		 * &#64;AllowedPredecessors(XTRA_VERIFIED)
+		 * XTRA_CLOSED;</pre>
+		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.18 $, $Date: 2006/05/31 07:45:19 $
+		 * @version $Revision: 1.19 $, $Date: 2006/05/31 09:53:58 $
+		 * @see AllowedSuccessors
 		 * @module event
 		 */
 		@Retention(RUNTIME)
@@ -333,11 +371,24 @@ public interface LineMismatchEvent
 		}
 
 		/**
+		 * @author Andrew ``Bass'' Shcheglov
+		 * @author $Author: bass $
+		 * @version $Revision: 1.19 $, $Date: 2006/05/31 09:53:58 $
+		 * @see AllowedPredecessors
+		 * @module event
+		 */
+		@Retention(RUNTIME)
+		@Target(FIELD)
+		private @interface AllowedSuccessors {
+			AlarmStatus[] value();
+		}
+
+		/**
 		 * A mutable holder for immutable enum instances.
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.18 $, $Date: 2006/05/31 07:45:19 $
+		 * @version $Revision: 1.19 $, $Date: 2006/05/31 09:53:58 $
 		 * @module event
 		 */
 		public static final class Proxy
