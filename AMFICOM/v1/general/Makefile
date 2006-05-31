@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.85 2006/03/13 09:40:06 bass Exp $
+# $Id: Makefile,v 1.86 2006/05/31 15:52:10 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -143,7 +143,7 @@ arch:
 		-link "http://$(JAVADOCHOST)/apidocs/trove/" \
 		-link "http://$(JAVADOCHOST)/apidocs/xalan-j/" \
 		-link "http://$(JAVADOCHOST)/apidocs/xmlbeans/" \
-		-sourcepath $(SRCDIR) \
+		-sourcepath $(SRCDIR):test \
 		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH) \
 		-group "$(MODULE_NAME)" "com.syrus.AMFICOM.$(MODULE_NAME):com.syrus.AMFICOM.$(MODULE_NAME).logic" \
 		-group "$(MODULE_NAME)-IDL" "com.syrus.AMFICOM.$(MODULE_NAME).corba*" \

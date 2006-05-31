@@ -95,7 +95,7 @@ pmd:
 .javadocs: .idl $(JAVADOCDIR)
 	$(JAVADOC) \
 		$(JAVADOCFLAGS) \
-		-sourcepath $(SRCDIR) \
+		-sourcepath $(SRCDIR):test \
 		-classpath $(APPCLASSPATH) \
 		-group "$(MODULE_NAME)" "com.syrus.AMFICOM.event:com.syrus.AMFICOM.eventv2" \
 		-group "$(MODULE_NAME)-IDL" "com.syrus.AMFICOM.event.corba*:com.syrus.AMFICOM.eventv2.corba*" \
