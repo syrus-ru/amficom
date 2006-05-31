@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.39 2006/04/24 09:07:14 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.40 2006/05/31 12:13:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,10 @@ import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
+import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.PortDatabase;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
+import com.syrus.AMFICOM.configuration.ProtoEquipmentDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
@@ -39,7 +41,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 
 
 /**
- * @version $Revision: 1.39 $, $Date: 2006/04/24 09:07:14 $
+ * @version $Revision: 1.40 $, $Date: 2006/05/31 12:13:11 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -62,13 +64,13 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new MCMDatabase());
 		DatabaseContext.registerDatabase(new ServerProcessDatabase());
 
-//		DatabaseContext.registerDatabase(new EquipmentTypeDatabase());
+		DatabaseContext.registerDatabase(new EquipmentTypeDatabase());
 		DatabaseContext.registerDatabase(new PortTypeDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathTypeDatabase());
 //		DatabaseContext.registerDatabase(new LinkTypeDatabase());
 //		DatabaseContext.registerDatabase(new CableLinkTypeDatabase());
 //		DatabaseContext.registerDatabase(new CableThreadTypeDatabase());
-//		DatabaseContext.registerDatabase(new ProtoEquipmentDatabase());
+		DatabaseContext.registerDatabase(new ProtoEquipmentDatabase());
 		DatabaseContext.registerDatabase(new EquipmentDatabase());
 		DatabaseContext.registerDatabase(new PortDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathDatabase());
