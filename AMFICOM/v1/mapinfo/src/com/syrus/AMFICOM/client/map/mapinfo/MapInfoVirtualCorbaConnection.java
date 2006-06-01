@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoVirtualCorbaConnection.java,v 1.11 2006/02/17 12:47:16 arseniy Exp $
+ * $Id: MapInfoVirtualCorbaConnection.java,v 1.12 2006/06/01 07:57:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,11 +7,13 @@
  */
 package com.syrus.AMFICOM.client.map.mapinfo;
 
+import static com.syrus.io.FileLoader.BUFF_SIZE;
+import static com.syrus.io.FileLoader.NULL_STUB;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +23,7 @@ import java.util.List;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
+import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
@@ -43,9 +46,6 @@ import com.syrus.AMFICOM.mscharserver.corba.MscharServerHelper;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
-
-import static com.syrus.io.FileLoader.BUFF_SIZE;
-import static com.syrus.io.FileLoader.NULL_STUB;
 
 
 public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
@@ -314,7 +314,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 		}
 		
 		try {
-	        XMLWriter writer = new XMLWriter(new FileWriter(localMdf));
+			final XMLWriter writer = new XMLWriter(new FileOutputStream(localMdf), new OutputFormat());
 	        writer.write(document);
 	        writer.close();
 		} catch (IOException e) {
