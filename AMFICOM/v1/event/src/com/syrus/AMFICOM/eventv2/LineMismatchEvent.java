@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.21 2006/05/31 16:18:37 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.22 2006/06/01 15:51:11 bass Exp $
  *
  * Copyright ¿ 2004-2006 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.transport.idl.IdlTransferableObjectExt;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2006/05/31 16:18:37 $
+ * @version $Revision: 1.22 $, $Date: 2006/06/01 15:51:11 $
  * @module event
  */
 public interface LineMismatchEvent
@@ -149,13 +149,76 @@ public interface LineMismatchEvent
 	Identifier getReflectogramMismatchEventId();
 
 	/**
+	 * <p>Updates <em>alarm&nbsp;status</em> of the event itself or its
+	 * <em>event&nbsp;group</em> (if applicable).</p>
+	 *  
+	 * <p>If the event doesn&apos;t belong to any <em>event&nbsp;group</em>
+	 * (i.&nbsp;e. doesn&apos;t reference any event as a parent and
+	 * isn&apos;t referenced as a parent by any event) or is a leader of an
+	 * <em>event&nbsp;group</em> (i.&nbsp;e. doesn&apos;t reference any
+	 * event as a parent, but is referenced as a parent by at least one
+	 * event), then its own <em>alarm&nbsp;status</em> is updated to {@code
+	 * alarmStatus}.</p>
+	 *
+	 * <p>If the event belongs to an <em>event&nbsp;group</em>, but
+	 * isn&apos;t a group leader (i.&nbsp;e. references some other event as
+	 * a parent and isn&apos;t referenced as a parent by any event), then
+	 * its group leader&apos;s <em>alarm&nbsp;status</em> is updated to
+	 * {@code alarmStatus}.</p>
+	 *
+	 * <p>No event can be both a leader of an <em>event&nbsp;group</em> and
+	 * a non-leader member of another <em>event&nbsp;group</em>; in other
+	 * words, no event can belong to more than one group.</p>
+	 *
+	 * <p>No event can be both a leader of an <em>event&nbsp;group</em> and
+	 * a non-leader member of the same <em>event&nbsp;group</em>; i.&nbsp;e.
+	 * no event can reference itself as a parent.</p>
+	 *
+	 * <p>All newly-created events have &quot;{@link AlarmStatus#PENDING
+	 * pending}&quot; <em>alarm&nbsp;status</em> and no parent (i.&nbsp;e.
+	 * any such event is a leader of the <em>event&nbsp;group</em>
+	 * consisting only of itself).</p>
+	 *
+	 * <p>Note that not any new <em>alarm&nbsp;status</em> is an allowed
+	 * successor of the current event&apos;s status. If transition from
+	 * current status to {@code alarmStatus} is disallowed, an {@link
+	 * IllegalArgumentException} is thrown. To find out whether such
+	 * transition is possible, {@link
+	 * AlarmStatus#isAllowedPredecessorOf(LineMismatchEvent.AlarmStatus)}
+	 * and {@link AlarmStatus#getAllowedSuccessors()} methods can be used.</p>
+	 *
+	 * @param alarmStatus the new <em>alarm&nbsp;status</em> to be set.
+	 * @throws IllegalArgumentException if transition from current status to
+	 *         {@code alarmStatus} is disallowed.
+	 * @see AlarmStatus#isAllowedPredecessorOf(LineMismatchEvent.AlarmStatus)
+	 * @see AlarmStatus#getAllowedSuccessors()
+	 * @see #getAlarmStatus()
+	 * @see #setParentLineMismatchEvent(LineMismatchEvent)
+	 * @see #getParentLineMismatchEvent()
+	 */
+	void setAlarmStatus(final AlarmStatus alarmStatus);
+
+	/**
+	 */
+	AlarmStatus getAlarmStatus();
+
+	/**
+	 * @param parentLineMismatchEvent
+	 */
+	void setParentLineMismatchEvent(final LineMismatchEvent parentLineMismatchEvent);
+
+	/**
+	 */
+	LineMismatchEvent getParentLineMismatchEvent();
+
+	/**
 	 * Those alarm statii that aren&apos;t present in the
 	 * <em>Consultronics&nbsp;NQMS</em> Alarm Model, have &laquo;{@code
 	 * XTRA_}&raquo; prefix.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.21 $, $Date: 2006/05/31 16:18:37 $
+	 * @version $Revision: 1.22 $, $Date: 2006/06/01 15:51:11 $
 	 * @module event
 	 */
 	enum AlarmStatus {
@@ -407,7 +470,7 @@ public interface LineMismatchEvent
 
 		/**
 		 * @return a new mutable {@code Set} upon every invocation.
-		 * @see #isAllowedPredecessorOf(com.syrus.AMFICOM.eventv2.LineMismatchEvent.AlarmStatus) 
+		 * @see #isAllowedPredecessorOf(LineMismatchEvent.AlarmStatus) 
 		 */
 		public EnumSet<AlarmStatus> getAllowedSuccessors() {
 			final Class<AlarmStatus> clazz = AlarmStatus.class;
@@ -476,7 +539,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.21 $, $Date: 2006/05/31 16:18:37 $
+		 * @version $Revision: 1.22 $, $Date: 2006/06/01 15:51:11 $
 		 * @see AllowedSuccessors
 		 * @module event
 		 */
@@ -489,7 +552,7 @@ public interface LineMismatchEvent
 		/**
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.21 $, $Date: 2006/05/31 16:18:37 $
+		 * @version $Revision: 1.22 $, $Date: 2006/06/01 15:51:11 $
 		 * @see AllowedPredecessors
 		 * @module event
 		 */
@@ -504,7 +567,7 @@ public interface LineMismatchEvent
 		 *
 		 * @author Andrew ``Bass'' Shcheglov
 		 * @author $Author: bass $
-		 * @version $Revision: 1.21 $, $Date: 2006/05/31 16:18:37 $
+		 * @version $Revision: 1.22 $, $Date: 2006/06/01 15:51:11 $
 		 * @module event
 		 */
 		public static final class Proxy
