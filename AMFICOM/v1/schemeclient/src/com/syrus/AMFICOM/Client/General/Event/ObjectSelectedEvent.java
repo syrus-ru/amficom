@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectSelectedEvent.java,v 1.11 2005/10/17 14:59:14 stas Exp $
+ * $Id: ObjectSelectedEvent.java,v 1.12 2006/06/01 14:29:21 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,10 +13,11 @@ import java.util.Collections;
 import java.util.Set;
 
 import com.syrus.AMFICOM.client.UI.VisualManager;
+import com.syrus.AMFICOM.general.Identifiable;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/10/17 14:59:14 $
+ * @version $Revision: 1.12 $, $Date: 2006/06/01 14:29:21 $
  * @module schemeclient
  */
 
@@ -26,7 +27,7 @@ public class ObjectSelectedEvent extends PropertyChangeEvent {
 	public static final long PORT_TYPE = 						0x00000001;
 	public static final long CABLEPORT_TYPE = 			0x00000040;
 	public static final long MEASUREMENTPORT_TYPE = 0x00000002;
-	public static final long MEASUREMENT_TYPE = 		0x00000004;
+//	public static final long MEASUREMENT_TYPE = 		0x00000004;
 	public static final long LINK_TYPE = 						0x00000008;
 	public static final long CABLELINK_TYPE = 			0x00000010;
 	public static final long PROTO_EQUIPMENT = 			0x00000020;
@@ -56,14 +57,14 @@ public class ObjectSelectedEvent extends PropertyChangeEvent {
 	private long type;
 	private VisualManager manager;
 	
-	public ObjectSelectedEvent(Object source,	Set<? extends Object> selectedObjects, VisualManager manager, long type) {
+	public ObjectSelectedEvent(Object source,	Set<Identifiable> selectedObjects, VisualManager manager, long type) {
 		super(source, TYPE, null, selectedObjects);
 		this.type = type;
 		this.manager = manager;
 	}
 	
-	public ObjectSelectedEvent(Object source,	Object selectedObject, VisualManager manager, long type) {
-		this(source, Collections.singleton(selectedObject), manager, type);
+	public ObjectSelectedEvent(Object source,	Identifiable selectedObject, VisualManager manager, long type) {
+		this(source, Collections.<Identifiable>singleton(selectedObject), manager, type);
 	}
 
 	public boolean isSelected(long value) {
@@ -74,12 +75,12 @@ public class ObjectSelectedEvent extends PropertyChangeEvent {
 		return this.manager;
 	}
 	
-	public Set<? extends Object> getSelectedObjects() {
-		return (Set<? extends Object>)getNewValue();
+	public Set<Identifiable> getSelectedObjects() {
+		return (Set<Identifiable>) getNewValue();
 	}
 	
-	public Object getSelectedObject() {
-		Set<? extends Object> identifiables = getSelectedObjects();
+	public Identifiable getSelectedObject() {
+		Set<Identifiable> identifiables = getSelectedObjects();
 		if (identifiables.isEmpty()) {
 			return null;
 		}
