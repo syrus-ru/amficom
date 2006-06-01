@@ -1,5 +1,5 @@
 /*
- * $Id: IconedTreeUI.java,v 1.11 2005/11/16 18:15:41 max Exp $
+ * $Id: IconedTreeUI.java,v 1.12 2006/06/01 14:28:04 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.logic.Populatable;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.11 $, $Date: 2005/11/16 18:15:41 $
+ * @author $Author: stas $
+ * @version $Revision: 1.12 $, $Date: 2006/06/01 14:28:04 $
  * @module commonclient
  */
 
@@ -186,7 +186,7 @@ public class IconedTreeUI {
 		if (item instanceof Populatable) {
 			Populatable populatable = (Populatable)item;
 			if (populatable.isPopulated()) {
-				populatable.repopulate();
+				populatable.populate();
 			}
 			for(final Item item2 : item.getChildren()) {
 				this.updateRecursively(item2);

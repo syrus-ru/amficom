@@ -1,5 +1,5 @@
 /*
- * $Id: PopulatableIconedNode.java,v 1.7 2005/09/06 14:31:15 bob Exp $
+ * $Id: PopulatableIconedNode.java,v 1.8 2006/06/01 14:28:04 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.logic.Populatable;
 import com.syrus.util.Shitlet;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2005/09/06 14:31:15 $
+ * @author $Author: stas $
+ * @version $Revision: 1.8 $, $Date: 2006/06/01 14:28:04 $
  * @module commonclient
  */
 @Shitlet
@@ -88,11 +88,6 @@ public class PopulatableIconedNode extends IconedNode implements Populatable, Vi
 			this.childrenFactory.populate(this);
 			this.populated = true;
 		}
-	}
-	
-	@Shitlet
-	public void repopulate() {
-		this.populate();		
 	}
 	
 	public VisualManager getVisualManager() {
