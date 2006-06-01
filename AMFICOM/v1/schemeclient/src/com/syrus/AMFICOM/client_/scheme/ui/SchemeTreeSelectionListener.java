@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeSelectionListener.java,v 1.21 2006/03/08 07:23:48 stas Exp $
+ * $Id: SchemeTreeSelectionListener.java,v 1.22 2006/06/01 14:30:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,16 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
+import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.ALL_DESELECTED;
+
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.logging.Level;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -25,33 +29,20 @@ import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.UI.tree.Visualizable;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.configuration.CableLinkType;
-import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.LinkType;
-import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.ProtoEquipment;
-import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
+import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MeasurementPortType;
-import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemeLink;
-import com.syrus.AMFICOM.scheme.SchemePath;
-import com.syrus.AMFICOM.scheme.SchemePort;
-import com.syrus.AMFICOM.scheme.SchemeProtoElement;
-import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2006/03/08 07:23:48 $
+ * @version $Revision: 1.22 $, $Date: 2006/06/01 14:30:40 $
  * @module schemeclient
  */
 
@@ -67,7 +58,7 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
-					TreePath selectedPath1 = treeUI.getTree().getSelectionModel().getSelectionPath();
+					TreePath selectedPath1 = treeUI.getTree().getClosestPathForLocation(e.getX(), e.getY());
 					if (selectedPath1 != null) {
 						Item item = (Item)selectedPath1.getLastPathComponent();
 						Object object = item.getObject();
@@ -82,7 +73,7 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 							aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemeElement.getId(), SchemeEvent.OPEN_SCHEMEELEMENT));
 							treeUI.getTree().setCursor(Cursor.getDefaultCursor());
 						} else if (object instanceof Measurement) {
-							ObjectSelectedEvent ev = new ObjectSelectedEvent(this, object, null, ObjectSelectedEvent.MEASUREMENT);
+							ObjectSelectedEvent ev = new ObjectSelectedEvent(this, (Measurement)object, null, ObjectEntities.MEASUREMENT_CODE);
 							treeUI.getTree().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 							aContext.getDispatcher().firePropertyChange(ev, false);
 							treeUI.getTree().setCursor(Cursor.getDefaultCursor());
@@ -106,84 +97,69 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 	}
 	
 	public void valueChanged(TreeSelectionEvent e) {
-		if (!this.doNotify || !e.isAddedPath()) {
+		if (!this.doNotify) {
 			return;
 		}
 			
-		Item node = (Item)e.getPath().getLastPathComponent();
-		if (node == null)
-			return;
-		VisualManager manager = null;
-		if (node instanceof Visualizable)
-			manager = ((Visualizable)node).getVisualManager();
-		
-		Object object = node.getObject();
-		
-		long type;
-		if (object instanceof PortType) {
-			if (((PortType)object).getKind().equals(PortTypeKind.PORT_KIND_SIMPLE))
-				type = ObjectSelectedEvent.PORT_TYPE;
-			else
-				type = ObjectSelectedEvent.CABLEPORT_TYPE;
-		}
-		else if (object instanceof MeasurementPortType)
-			type = ObjectSelectedEvent.MEASUREMENTPORT_TYPE;
-		else if (object instanceof MeasurementType)
-			type = ObjectSelectedEvent.MEASUREMENT_TYPE;
-		else if (object instanceof LinkType)
-			type = ObjectSelectedEvent.LINK_TYPE; 
-		else if (object instanceof CableLinkType)
-			type = ObjectSelectedEvent.CABLELINK_TYPE;
-		else if (object instanceof ProtoEquipment)
-			type = ObjectSelectedEvent.PROTO_EQUIPMENT;
-		else if (object instanceof SchemeProtoGroup)
-			type = ObjectSelectedEvent.SCHEME_PROTOGROUP;
-		else if (object instanceof SchemeProtoElement)
-			type = ObjectSelectedEvent.SCHEME_PROTOELEMENT;
-		else if (object instanceof Scheme)
-			type = ObjectSelectedEvent.SCHEME;
-		else if (object instanceof SchemeElement)
-			type = ObjectSelectedEvent.SCHEME_ELEMENT;
-		else if (object instanceof SchemeLink)
-			type = ObjectSelectedEvent.SCHEME_LINK;
-		else if (object instanceof SchemeCableLink)
-			type = ObjectSelectedEvent.SCHEME_CABLELINK;
-		else if (object instanceof SchemePath)
-			type = ObjectSelectedEvent.SCHEME_PATH;
-		else if (object instanceof SchemePort)
-			type = ObjectSelectedEvent.SCHEME_PORT;
-		else if (object instanceof SchemeCablePort)
-			type = ObjectSelectedEvent.SCHEME_CABLEPORT;
-		else if (object instanceof String || object instanceof IdlKind || object instanceof EquipmentType) {
-			type = ObjectSelectedEvent.OTHER_OBJECT;
-			if (manager != null)
-				object = null; 
+		TreePath[] paths = this.treeUI.getTree().getSelectionPaths();
+		ObjectSelectedEvent ev;
+		if (paths == null || paths.length == 0) {
+			ev = new ObjectSelectedEvent(this, Collections.<Identifiable>emptySet(), null, ALL_DESELECTED);
 		} else {
-			Log.debugMessage("Unsupported tree object type " + object, Level.FINER); //$NON-NLS-1$
-			return;
+			Set<Identifiable> objects = new HashSet<Identifiable>();
+			Visualizable visualizableNode = null;
+
+			for (TreePath path : paths) {
+				Item node = (Item)path.getLastPathComponent();
+				if (visualizableNode == null && node instanceof Visualizable) {
+					visualizableNode = (Visualizable)node;
+				}
+
+				final Object object = node.getObject();
+				if (object instanceof Identifiable) {
+					objects.add((Identifiable)object);
+				}
+			}
+
+			VisualManager manager = null;
+			long type = 0;
+			if (objects.isEmpty()) {
+				type = ALL_DESELECTED;
+			} else if (objects.size() == 1 &&  visualizableNode != null) {
+				manager = visualizableNode.getVisualManager();
+				type = ClientUtils.getEventType(objects.iterator().next());
+			} else {
+				manager = MultipleSelectionPropertiesManager.getInstance(this.aContext); 
+				type = ClientUtils.getEventType(objects.iterator().next()) + ObjectSelectedEvent.MULTIPLE;
+			}
+			if (this.treeUI.isLinkObjects()) {
+				type += ObjectSelectedEvent.INSURE_VISIBLE;
+			}
+			ev = new ObjectSelectedEvent(this, objects, manager, type);
 		}
-		if (this.treeUI.isLinkObjects()) {
-			type += ObjectSelectedEvent.INSURE_VISIBLE;
-		}
-		ObjectSelectedEvent ev = new ObjectSelectedEvent(this, object, manager, type);
 		this.aContext.getDispatcher().firePropertyChange(ev, false);
 	}
 	
 	public void propertyChange(PropertyChangeEvent e) {
 		if (e.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ev = (ObjectSelectedEvent)e;
-			Object selected = ev.getSelectedObject();
-			if (selected != null && this.treeUI.isLinkObjects()) {
-				ItemTreeModel model = this.treeUI.getTreeUI().getTreeModel();
-				Item node = this.treeUI.findNode((Item)model.getRoot(), selected, false);
-				if (node == null) {
-					node = this.treeUI.findNode((Item)model.getRoot(), selected, true);
-				} 
-				if (node != null) {
-					this.doNotify = false;
-					this.treeUI.getTree().setSelectionPath(new TreePath(model.getPathToRoot(node)));
-					this.doNotify = true;
+			if (this.treeUI.isLinkObjects()) {
+				Set<TreePath> paths = new HashSet<TreePath>();
+				for (Identifiable selected : ev.getSelectedObjects()) {
+					ItemTreeModel model = this.treeUI.getTreeUI().getTreeModel();
+					Item node = this.treeUI.findNode((Item)model.getRoot(), selected, false);
+					
+					// XXX commented by Stas as in observer in might result in open all measurements
+//					if (node == null) {
+//						node = this.treeUI.findNode((Item)model.getRoot(), selected, true);
+//					} 
+					if (node != null) {
+						this.doNotify = false;
+						paths.add(new TreePath(model.getPathToRoot(node)));
+					}
 				}
+				this.treeUI.getTree().setSelectionPaths(paths.toArray(new TreePath[paths.size()]));
+				this.doNotify = true;
 			}
 		} else if (e.getPropertyName().equals(SchemeEvent.TYPE)) {
 			SchemeEvent ev = (SchemeEvent)e;

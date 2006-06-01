@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.59 2006/04/21 10:03:35 arseniy Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.60 2006/06/01 14:30:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -89,8 +89,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.59 $, $Date: 2006/04/21 10:03:35 $
+ * @author $Author: stas $
+ * @version $Revision: 1.60 $, $Date: 2006/06/01 14:30:40 $
  * @module schemeclient
  */
 
@@ -171,13 +171,13 @@ public class SchemeObjectsFactory {
 					public void propertyChange(PropertyChangeEvent evt) {
 						ObjectSelectedEvent ose = (ObjectSelectedEvent)evt;
 						if (ose.isSelected(ObjectSelectedEvent.CABLELINK_TYPE)) {
-							cachedCableLinkTypeId = ((Identifiable)ose.getSelectedObject()).getId();	
+							cachedCableLinkTypeId = ose.getSelectedObject().getId();	
 						} else if (ose.isSelected(ObjectSelectedEvent.LINK_TYPE)) {
-							cachedLinkTypeId = ((Identifiable)ose.getSelectedObject()).getId();	
+							cachedLinkTypeId = ose.getSelectedObject().getId();	
 						} else if (ose.isSelected(ObjectSelectedEvent.CABLEPORT_TYPE)) {
-							cachedCablePortTypeId = ((Identifiable)ose.getSelectedObject()).getId();	
+							cachedCablePortTypeId = ose.getSelectedObject().getId();	
 						} else if (ose.isSelected(ObjectSelectedEvent.PORT_TYPE)) {
-							cachedPortTypeId = ((Identifiable)ose.getSelectedObject()).getId();	
+							cachedPortTypeId = ose.getSelectedObject().getId();	
 						}
 					}
 		});

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.27 2006/04/28 09:01:32 stas Exp $
+ * $Id: SchemeGraph.java,v 1.28 2006/06/01 14:30:40 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -54,7 +55,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.27 $, $Date: 2006/04/28 09:01:32 $
+ * @version $Revision: 1.28 $, $Date: 2006/06/01 14:30:40 $
  * @module schemeclient
  */
 
@@ -239,25 +240,33 @@ public class SchemeGraph extends GPGraph {
 		marqee.updateButtonsState(selected);
 		
 		this.notifying = true;
-		if (selected.length == 0) {
 			UgoPanel panel = marqee.pane.getCurrentPanel();
 			if (panel instanceof ElementsPanel) {
 				SchemeResource res = ((ElementsPanel)panel).getSchemeResource();
 				if (SchemeResource.getSchemePath() != null) {
-					this.notifying = false;
-					return;
-				}
-				try {
-					SchemeCellContainer cellContainer = res.getCellContainer(); 
-					if (cellContainer != null) {
-						Notifier.notify(this, this.aContext, cellContainer);
+					if (selected.length == 0) {
+						Notifier.notify(this, this.aContext, SchemeResource.getSchemePath());
+						this.notifying = false;
+						return;
+					} 						
+					List<Object> pathCells = res.getPathElements(SchemeResource.getSchemePath());
+					if (pathCells.containsAll(Arrays.asList(selected))) {
+						Notifier.notify(this, this.aContext, SchemeResource.getSchemePath());
 						this.notifying = false;
 						return;
 					}
-				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+				} else if (selected.length == 0) {
+					try {
+						SchemeCellContainer cellContainer = res.getCellContainer(); 
+						if (cellContainer != null) {
+							Notifier.notify(this, this.aContext, cellContainer);
+							this.notifying = false;
+							return;
+						}
+					} catch (ApplicationException e) {
+						Log.errorMessage(e);
+					}
 				}
-			}
 		}
 		Notifier.notify(this, this.aContext, selected);
 		this.notifying = false;
@@ -294,7 +303,7 @@ public class SchemeGraph extends GPGraph {
 	
 	@Override
 	public void setSelectionCells(Object[] cells) {
-		if (!this.notifying)
+//		if (!this.notifying)
 			super.setSelectionCells(cells);
 	}
 	

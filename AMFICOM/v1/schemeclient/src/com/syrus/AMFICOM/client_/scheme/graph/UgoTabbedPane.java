@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.20 2006/04/28 09:01:32 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.21 2006/06/01 14:30:40 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2006/04/28 09:01:32 $
+ * @version $Revision: 1.21 $, $Date: 2006/06/01 14:30:40 $
  * @module schemeclient
  */
 
@@ -108,12 +108,12 @@ public class UgoTabbedPane extends JPanel {
 		this.editable = b;
 		
 		String[] editableButtons = new String[] {
-			Constants.RECTANGLE, Constants.ELLIPSE, Constants.LINE, Constants.TEXT
+			Constants.MARQUEE, Constants.RECTANGLE, Constants.ELLIPSE, Constants.LINE, Constants.TEXT, Constants.ZOOM_BOX
 		};
 		
 		for (String key : editableButtons) {
 			AbstractButton button = this.toolBar.commands.get(key);
-			button.setEnabled(b);
+			button.setVisible(b);
 		}
 
 		for (UgoPanel p : getAllPanels()) {

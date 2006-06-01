@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.69 2006/04/07 13:53:02 arseniy Exp $
+ * $Id: SchemeActions.java,v 1.70 2006/06/01 14:30:40 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -104,8 +104,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.69 $, $Date: 2006/04/07 13:53:02 $
+ * @author $Author: stas $
+ * @version $Revision: 1.70 $, $Date: 2006/06/01 14:30:40 $
  * @module schemeclient
  */
 
@@ -1372,6 +1372,19 @@ public class SchemeActions {
 				}
 					
 		return null;
+	}
+	
+	public static DefaultGraphCell[] findObjectsByIds(SchemeGraph graph, Set<Identifier> ids) {
+		Set<DefaultGraphCell> found = new HashSet<DefaultGraphCell>();
+		Object[] cells = graph.getAll();
+		for (int i = 0; i < cells.length; i++)
+			if (cells[i] instanceof IdentifiableCell)
+				if (ids.contains(((IdentifiableCell) cells[i]).getId())) {
+					if (cells[i] instanceof DefaultGraphCell) {
+						found.add((DefaultGraphCell) cells[i]);
+					}
+				}
+		return found.toArray(new DefaultGraphCell[found.size()]);
 	}
 
 	public static boolean connectSchemeLink(SchemeGraph graph, DefaultLink link,

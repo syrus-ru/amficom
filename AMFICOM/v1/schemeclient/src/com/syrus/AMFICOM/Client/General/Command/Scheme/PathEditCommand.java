@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemePathPropertiesManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.scheme.SchemePath;
 
 public class PathEditCommand extends AbstractCommand {
@@ -24,7 +25,7 @@ public class PathEditCommand extends AbstractCommand {
 			aContext.getDispatcher().firePropertyChange(
 					new ObjectSelectedEvent(this, path, 
 							SchemePathPropertiesManager.getInstance(aContext), 
-							ObjectSelectedEvent.SCHEME_PATH));
+							ObjectEntities.SCHEMEPATH_CODE));
 			SchemeResource.setSchemePath(path, true);
 		}
 	}

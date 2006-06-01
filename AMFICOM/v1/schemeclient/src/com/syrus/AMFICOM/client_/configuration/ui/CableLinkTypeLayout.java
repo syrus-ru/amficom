@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.18 2006/05/03 04:49:00 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.19 2006/06/01 14:30:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,10 +36,11 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.ThreadTypeCell;
 import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
+import com.syrus.AMFICOM.general.Identifiable;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2006/05/03 04:49:00 $
+ * @version $Revision: 1.19 $, $Date: 2006/06/01 14:30:40 $
  * @module schemeclient
  */
 
@@ -166,7 +167,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 		if (oe.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ev = (ObjectSelectedEvent) oe;
 			if (ev.isSelected(ObjectSelectedEvent.OTHER_OBJECT)) {
-				Object obj = ev.getSelectedObject();
+				Identifiable obj = ev.getSelectedObject();
 				if (obj instanceof ThreadTypeCell) {
 					ThreadTypeCell cell = (ThreadTypeCell)obj;
 					Color newColor = new Color(cell.getCableThreadType().getColor());

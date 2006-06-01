@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.22 2006/04/28 09:07:03 stas Exp $
+ * $Id: SchemeResource.java,v 1.23 2006/06/01 14:30:40 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -37,7 +38,7 @@ import com.syrus.util.Log;
 /**
  * 
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2006/04/28 09:07:03 $
+ * @version $Revision: 1.23 $, $Date: 2006/06/01 14:30:40 $
  * @module schemeclient
  */
 
@@ -227,7 +228,7 @@ public class SchemeResource {
 		}
 	}
 	
-	public Object[] getPathElements(SchemePath path) {
+	public List<Object> getPathElements(SchemePath path) {
 		Object[] cells = this.graph.getRoots();
 		List<Object> new_cells = new ArrayList<Object>();
 		SortedSet<Identifier> pmIds = null;
@@ -238,7 +239,7 @@ public class SchemeResource {
 				pes = path.getPathMembers();
 			} catch (ApplicationException e) {
 				Log.errorMessage(e);
-				return new Object[0];
+				return Collections.emptyList();
 			}	
 			pmIds = new TreeSet<Identifier>();
 			for(PathElement pe : pes) {
@@ -261,6 +262,6 @@ public class SchemeResource {
 					new_cells.add(group);
 			}
 		}
-		return new_cells.toArray();
+		return new_cells;
 	}
 }

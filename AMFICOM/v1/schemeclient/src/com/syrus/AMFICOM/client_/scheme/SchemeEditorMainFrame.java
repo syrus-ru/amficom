@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.39 2006/04/28 09:01:32 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.40 2006/06/01 14:30:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.39 $, $Date: 2006/04/28 09:01:32 $
+ * @version $Revision: 1.40 $, $Date: 2006/06/01 14:30:40 $
  * @module schemeclient
  */
 
@@ -72,6 +72,7 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemeEventHandler;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.util.Log;
 
 public class SchemeEditorMainFrame extends AbstractMainFrame {
@@ -256,7 +257,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 	public void propertyChange(PropertyChangeEvent ae) {
 		if (ae.getPropertyName().equals(SchemeEvent.TYPE)) {
 			ObjectSelectedEvent sne = (ObjectSelectedEvent) ae;
-			if (sne.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
+			if (sne.isSelected(ObjectEntities.SCHEMEPATH_CODE)) {
 				ApplicationModel aModel = this.aContext.getApplicationModel();
 				aModel.setEnabled("menuPathEdit", true);
 				aModel.setEnabled("menuPathDelete", true);

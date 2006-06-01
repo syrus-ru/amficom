@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.21 2006/02/15 12:18:10 stas Exp $
+ * $Id: ElementsPanel.java,v 1.22 2006/06/01 14:30:40 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,9 @@
 package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.jgraph.graph.GraphModel;
@@ -20,20 +23,16 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
-import com.syrus.AMFICOM.scheme.SchemePort;
-import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2006/02/15 12:18:10 $
+ * @version $Revision: 1.22 $, $Date: 2006/06/01 14:30:40 $
  * @module schemeclient
  */
 
@@ -105,101 +104,64 @@ public class ElementsPanel extends UgoPanel {
 	public void propertyChange(PropertyChangeEvent ae) {
 		if (ae.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ev = (ObjectSelectedEvent) ae;
+			List<Object> cells = new ArrayList<Object>();
+			
 			if (ev.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
 				try {
-					SchemePath path = StorableObjectPool.getStorableObject(((Identifiable)ev.getSelectedObject()).getId(), false);
-					this.graph.setSelectionCells(this.schemeResource.getPathElements(path));
-				} catch (ApplicationException e) {
-					Log.errorMessage(e);
-				}
-				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) {
-					this.graph.insureSelectionVisible();
-				}
-			} else if (ev.isSelected(ObjectSelectedEvent.SCHEME)) {
-				try {
-					Scheme scheme = StorableObjectPool.getStorableObject(((Identifiable)ev.getSelectedObject()).getId(), false);
-					SchemeElement schemeElement = scheme.getParentSchemeElement();
-					if (schemeElement != null) {
-						this.graph.setSelectionCell(SchemeActions.findGroupById(this.graph, schemeElement.getId()));
-						if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
-							this.graph.insureSelectionVisible();
+					for (Identifiable id : ev.getSelectedObjects()) {
+						if (id.getId().getMajor() == ObjectEntities.SCHEMEPATH_CODE) {
+							SchemePath path = StorableObjectPool.getStorableObject(id.getId(), false);
+							cells.addAll(this.schemeResource.getPathElements(path));
+						} else {
+							cells.add(SchemeActions.findObjectById(this.graph, id.getId()));
 						}
 					}
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
 				}
-			} else if (ev.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT)) {
+			} else if (ev.isSelected(ObjectSelectedEvent.SCHEME)) {
 				try {
-					SchemeElement element = StorableObjectPool.getStorableObject(((Identifiable)ev.getSelectedObject()).getId(), false);
-					this.graph.setSelectionCell(SchemeActions.findGroupById(this.graph, element.getId()));
+					for (Identifiable id : ev.getSelectedObjects()) {
+						if (id.getId().getMajor() == ObjectEntities.SCHEME_CODE) {
+							Scheme scheme = StorableObjectPool.getStorableObject(id.getId(), false);
+							SchemeElement schemeElement = scheme.getParentSchemeElement();
+							if (schemeElement != null) {
+								cells.add(SchemeActions.findGroupById(this.graph, schemeElement.getId()));
+							}
+						} else {
+							cells.add(SchemeActions.findObjectById(this.graph, id.getId()));
+						}
+					}
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
 				}
-				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
-					this.graph.insureSelectionVisible();
-				}
-			} 
-			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_PROTOELEMENT)) {
-				try {
-					SchemeProtoElement proto = StorableObjectPool.getStorableObject(((Identifiable)ev.getSelectedObject()).getId(), false);
-					this.graph.setSelectionCell(SchemeActions.findGroupById(this.graph, proto.getId()));
-				} catch (ApplicationException e) {
-					Log.errorMessage(e);
-				}
-				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
-					this.graph.insureSelectionVisible();
-				}
-			} 
-			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_PORT)) {
-				// TODO multiple selection
-				Identifier portId;
-				if (ev.getSelectedObject() instanceof Set) {
-					portId = ((Identifiable)((Set)ev.getSelectedObject()).iterator().next()).getId();
-				} else {
-					portId = ((Identifiable)ev.getSelectedObject()).getId();
-				}
-				try {
-					SchemePort port = StorableObjectPool.getStorableObject(portId, false);
-					this.graph.setSelectionCell(SchemeActions.findPortCellById(this.graph, port.getId()));
-				} catch (ApplicationException e) {
-					Log.errorMessage(e);
-				}
-				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
-					this.graph.insureSelectionVisible();
-				}
-			} 
-			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_CABLEPORT)) {
-				try {
-					SchemeCablePort port = StorableObjectPool.getStorableObject(((Identifiable)ev.getSelectedObject()).getId(), false);
-					this.graph.setSelectionCell(SchemeActions.findCablePortCellById(this.graph, port.getId()));
-				} catch (ApplicationException e) {
-					Log.errorMessage(e);
-				}
-				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
-					this.graph.insureSelectionVisible();
-				}
-			} else if (ev.isSelected(ObjectSelectedEvent.SCHEME_LINK)) {
-				try {
-					SchemeLink link = StorableObjectPool.getStorableObject(((Identifiable)ev.getSelectedObject()).getId(), false);
-					this.graph.setSelectionCell(SchemeActions.findSchemeLinkById(this.graph, link.getId()));
-				} catch (ApplicationException e) {
-					Log.errorMessage(e);
-				}
-				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
-					this.graph.insureSelectionVisible();
-				}
-			} 
-			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_CABLELINK)) {
-				try {
-					SchemeCableLink link = StorableObjectPool.getStorableObject(((Identifiable)ev.getSelectedObject()).getId(), false);
-					this.graph.setSelectionCell(SchemeActions.findSchemeCableLinkById(this.graph, link.getId()));
-				} catch (ApplicationException e) {
-					Log.errorMessage(e);
-				}
-				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
-					this.graph.insureSelectionVisible();
+			} else if (ev.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT)
+					|| ev.isSelected(ObjectSelectedEvent.SCHEME_PROTOELEMENT)
+					|| ev.isSelected(ObjectSelectedEvent.SCHEME_PORT)
+					|| ev.isSelected(ObjectSelectedEvent.SCHEME_CABLEPORT)
+					|| ev.isSelected(ObjectSelectedEvent.SCHEME_LINK)
+					|| ev.isSelected(ObjectSelectedEvent.SCHEME_CABLELINK)) {
+				for (Identifiable id : ev.getSelectedObjects()) {
+					cells.add(SchemeActions.findObjectById(this.graph, id.getId()));	
 				}
 			}
+			this.graph.setSelectionCells(cells.toArray());
+			if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
+				this.graph.insureSelectionVisible();
+			}
+			
+//			else if (ev.isSelected(ObjectSelectedEvent.MULTIPLE)) {
+//				final Set< ? extends Object> selectedObjects = ev.getSelectedObjects();
+//				final Set<Identifier> selectedIds = new HashSet<Identifier>();
+//				for (Object obj : selectedObjects) {
+//					if (obj instanceof Identifiable) {
+//						selectedIds.add(((Identifiable)obj).getId());
+//					}
+//				}
+//				if (!selectedIds.isEmpty()) {
+//					this.graph.setSelectionCells(SchemeActions.findObjectsByIds(this.graph, selectedIds));
+//				}
+//			}
 		} else if (ae.getPropertyName().equals(MarkerEvent.MARKER_EVENT_TYPE)) {
 			MarkerEvent ev = (MarkerEvent)ae;
 			if (ev.getMarkerEventType() == MarkerEvent.ALARMMARKER_CREATED_EVENT) {

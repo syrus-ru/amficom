@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.26 2006/04/28 09:01:32 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.27 2006/06/01 14:30:40 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.26 $, $Date: 2006/04/28 09:01:32 $
+ * @version $Revision: 1.27 $, $Date: 2006/06/01 14:30:40 $
  * @module schemeclient
  */
 
@@ -225,7 +225,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 		
 		for (String key : editableButtons) {
 			AbstractButton button = this.toolBar.commands.get(key);
-			button.setEnabled(b);
+			button.setVisible(b);
 		}
 	}
 	

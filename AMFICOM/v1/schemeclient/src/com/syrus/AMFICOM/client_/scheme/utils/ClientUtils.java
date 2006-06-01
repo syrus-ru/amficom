@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientUtils.java,v 1.8 2006/02/15 12:18:11 stas Exp $
+ * $Id: ClientUtils.java,v 1.9 2006/06/01 14:30:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,12 +24,19 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.CableThreadTypeWrapper;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -39,6 +46,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemePortWrapper;
+import com.syrus.util.Log;
 
 public class ClientUtils {
 	private ClientUtils() {
@@ -93,6 +101,52 @@ public class ClientUtils {
 		Collections.sort(threads, new NumberedComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
 				StorableObjectWrapper.COLUMN_NAME));
 		return threads;
+	}
+	
+	public static long getEventType(Identifiable object) {
+		Identifier id = object.getId();
+		short major = id.getMajor();
+		switch (major) {
+		case ObjectEntities.PORT_TYPE_CODE:
+			PortType type;
+				try {
+					type = StorableObjectPool.getStorableObject(id, true);
+					if (type.getKind().equals(PortTypeKind.PORT_KIND_SIMPLE))
+						return ObjectSelectedEvent.PORT_TYPE;
+					return ObjectSelectedEvent.CABLEPORT_TYPE;
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
+					return ObjectSelectedEvent.OTHER_OBJECT;
+				}
+		case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
+			return ObjectSelectedEvent.MEASUREMENTPORT_TYPE;
+		case ObjectEntities.LINK_TYPE_CODE:
+			return ObjectSelectedEvent.LINK_TYPE; 
+		case ObjectEntities.CABLELINK_TYPE_CODE:
+			return ObjectSelectedEvent.CABLELINK_TYPE;
+		case ObjectEntities.PROTOEQUIPMENT_CODE:
+			return ObjectSelectedEvent.PROTO_EQUIPMENT;
+		case ObjectEntities.SCHEMEPROTOGROUP_CODE:
+			return ObjectSelectedEvent.SCHEME_PROTOGROUP;
+		case ObjectEntities.SCHEMEPROTOELEMENT_CODE:
+			return ObjectSelectedEvent.SCHEME_PROTOELEMENT;
+		case ObjectEntities.SCHEME_CODE:
+			return ObjectSelectedEvent.SCHEME;
+		case ObjectEntities.SCHEMEELEMENT_CODE:
+			return ObjectSelectedEvent.SCHEME_ELEMENT;
+		case ObjectEntities.SCHEMELINK_CODE:
+			return ObjectSelectedEvent.SCHEME_LINK;
+		case ObjectEntities.SCHEMECABLELINK_CODE:
+			return ObjectSelectedEvent.SCHEME_CABLELINK;
+		case ObjectEntities.SCHEMEPATH_CODE:
+			return ObjectSelectedEvent.SCHEME_PATH;
+		case ObjectEntities.SCHEMEPORT_CODE:
+			return ObjectSelectedEvent.SCHEME_PORT;
+		case ObjectEntities.SCHEMECABLEPORT_CODE:
+			return ObjectSelectedEvent.SCHEME_CABLEPORT;
+		default:
+			return ObjectSelectedEvent.OTHER_OBJECT;			
+		}
 	}
 	
 	static JOptionPane optionPane;

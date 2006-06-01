@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEventHandler.java,v 1.15 2006/04/07 13:53:02 arseniy Exp $
+ * $Id: SchemeEventHandler.java,v 1.16 2006/06/01 14:30:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2006/04/07 13:53:02 $
+ * @author $Author: stas $
+ * @version $Revision: 1.16 $, $Date: 2006/06/01 14:30:40 $
  * @module schemeclient
  */
 
@@ -73,10 +73,9 @@ public class SchemeEventHandler extends AbstractEventHandler {
 			 * 
 			 */
 			
-			if (event.getSelectedObject() instanceof Identifiable) {
+			if (!event.isSelected(ObjectSelectedEvent.ALL_DESELECTED)) {
 				try {
-					StorableObject object = StorableObjectPool.getStorableObject(((Identifiable)event.getSelectedObject()).getId(), false);
-					
+					StorableObject object = StorableObjectPool.getStorableObject(event.getSelectedObject().getId(), false);
 					if (!event.isSelected(ObjectSelectedEvent.INRACK)) {
 						this.frame.setVisualManager(event.getVisualManager());
 						StorableObjectEditor editor = this.frame.getCurrentEditor();
@@ -119,12 +118,6 @@ public class SchemeEventHandler extends AbstractEventHandler {
 					}
 				} catch (ApplicationException e1) {
 					Log.errorMessage(e1);
-				}
-			} else {
-				this.frame.setVisualManager(event.getVisualManager());
-				StorableObjectEditor editor = this.frame.getCurrentEditor();
-				if (editor != null) {
-					editor.setObject(event.getSelectedObject());
 				}
 			}
 		} else if (e.getPropertyName().equals(SchemeEvent.TYPE)) {

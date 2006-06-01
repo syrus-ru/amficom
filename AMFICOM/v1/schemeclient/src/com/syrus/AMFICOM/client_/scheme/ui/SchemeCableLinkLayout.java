@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkLayout.java,v 1.21 2006/05/03 04:48:52 stas Exp $
+ * $Id: SchemeCableLinkLayout.java,v 1.22 2006/06/01 14:30:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,6 +40,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -51,7 +52,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2006/05/03 04:48:52 $
+ * @version $Revision: 1.22 $, $Date: 2006/06/01 14:30:40 $
  * @module schemeclient
  */
 
@@ -204,7 +205,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		if (evt.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ev = (ObjectSelectedEvent)evt;
 			if (ev.isSelected(ObjectSelectedEvent.OTHER_OBJECT)) {
-				Object obj = ev.getSelectedObject();
+				Identifiable obj = ev.getSelectedObject();
 				if (obj instanceof ThreadCell) {
 					ThreadCell cell = (ThreadCell)obj;
 					SchemeCableThread sct = cell.getSchemeCableThread();
@@ -221,7 +222,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 					
 					this.panel.getGraph().setSelectionCell(cell);
 					GraphActions.setObjectBackColor(this.panel.getGraph(), cell, color);
-				} else if (obj instanceof EllipseCell) {
+				} else {
 					this.panel.getGraph().clearSelection();
 				}
 			}

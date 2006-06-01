@@ -1,5 +1,5 @@
 /*
- * $Id: ThreadTypeCell.java,v 1.5 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: ThreadTypeCell.java,v 1.6 2006/06/01 14:30:40 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,14 +16,18 @@ import com.jgraph.graph.GraphConstants;
 import com.jgraph.pad.EllipseCell;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.configuration.CableThreadType;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2006/06/01 14:30:40 $
  * @module schemeclient
  */
 
-public class ThreadTypeCell extends EllipseCell {
+public class ThreadTypeCell extends EllipseCell implements IdentifiableCell {
 	private static final long serialVersionUID = 3905527090152224055L;
 
 	private CableThreadType threadType;
@@ -55,6 +59,18 @@ public class ThreadTypeCell extends EllipseCell {
 
 	public void setCableThreadType(CableThreadType threadType) {
 		this.threadType = threadType;
+	}
+
+	public void setId(Identifier id) {
+		try {
+			this.threadType = StorableObjectPool.getStorableObject(id, true);
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
+		}
+	}
+
+	public Identifier getId() {
+		return this.threadType.getId();
 	}
 }
 

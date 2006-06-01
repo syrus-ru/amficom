@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.44 2006/04/28 09:01:32 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.45 2006/06/01 14:30:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.44 $, $Date: 2006/04/28 09:01:32 $
+ * @version $Revision: 1.45 $, $Date: 2006/06/01 14:30:40 $
  * @module schemeclient
  */
 
@@ -544,7 +544,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			if (ose.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
 				setPathMode();
 				try {
-					SchemePath path = StorableObjectPool.getStorableObject(((Identifiable)ose.getSelectedObject()).getId(), false);
+					SchemePath path = StorableObjectPool.getStorableObject(ose.getSelectedObject().getId(), false);
 					SchemeResource.setSchemePath(path, SchemeResource.isPathEditing());
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
@@ -703,12 +703,12 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		super.setEditable(b);
 		
 		String[] editableButtons = new String[] {
-				Constants.RACK, Constants.CABLE
+				Constants.RACK, Constants.CABLE, Constants.TOP_LEVEL_MODE
 		};
 		
 		for (String key : editableButtons) {
 			AbstractButton button = this.toolBar.commands.get(key);
-			button.setEnabled(b);
+			button.setVisible(b);
 		}
 	}
 	

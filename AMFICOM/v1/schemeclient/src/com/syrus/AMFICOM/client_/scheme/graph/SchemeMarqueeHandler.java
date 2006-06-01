@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.44 2006/04/28 09:01:32 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.45 2006/06/01 14:30:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.44 $, $Date: 2006/04/28 09:01:32 $
+ * @version $Revision: 1.45 $, $Date: 2006/06/01 14:30:40 $
  * @module schemeclient
  */
 
@@ -238,9 +238,13 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 				Object cell = graph.getSelectionCell();
 				if (this.pane instanceof SchemeTabbedPane) {
 					
-					PathElement pe = SchemeActions.getSelectedPathElement(cell);
-					SchemePath path = pe != null ? pe.getParentPathOwner() : 
-						SchemeResource.getSchemePath();
+					SchemePath path = SchemeResource.getSchemePath();
+					if (path == null) {
+						PathElement pe = SchemeActions.getSelectedPathElement(cell);
+						if (pe != null) {
+							path = pe.getParentPathOwner();
+						}
+					}
 					
 					if (path != null) {
 						Notifier.notify(graph, graph.aContext, path);
@@ -692,9 +696,9 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler implements MouseWh
 		
 		graph.repaint();
 		graph.setCursor(DEFAULT_CURSOR);
-		if (!SchemeGraph.getMode().equals(Constants.PATH_MODE) && notify) {
-			graph.selectionNotify();
-		}
+//		if (!SchemeGraph.getMode().equals(Constants.PATH_MODE) && notify) {
+//			graph.selectionNotify();
+//		}
 	}
 
 	@Override
