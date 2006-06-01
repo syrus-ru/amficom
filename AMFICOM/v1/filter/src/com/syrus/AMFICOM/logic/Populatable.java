@@ -1,5 +1,5 @@
 /*
- * $Id: Populatable.java,v 1.5 2005/09/02 14:20:20 bob Exp $
+ * $Id: Populatable.java,v 1.6 2006/06/01 14:26:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,14 @@
 package com.syrus.AMFICOM.logic;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/02 14:20:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2006/06/01 14:26:59 $
+ * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module filter
  */
 public interface Populatable {
 
 	void populate();
-
-	void repopulate();
 
 	boolean isPopulated();
 }
