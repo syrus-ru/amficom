@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.35 2006/05/29 11:13:42 stas Exp $
+ * $Id: AbstractApplication.java,v 1.36 2006/06/02 10:44:57 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.client.model;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -29,7 +28,6 @@ import javax.swing.plaf.metal.MetalTheme;
 
 import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
-
 import com.syrus.AMFICOM.client.UI.AMFICOMMetalTheme;
 import com.syrus.AMFICOM.client.UI.AMFICOMOceanTheme;
 import com.syrus.AMFICOM.client.UI.dialogs.ModuleCodeDialog;
@@ -51,8 +49,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2006/05/29 11:13:42 $
- * @author $Author: stas $
+ * @version $Revision: 1.36 $, $Date: 2006/06/02 10:44:57 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */

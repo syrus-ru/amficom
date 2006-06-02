@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.27 2006/05/29 11:38:38 stas Exp $
+ * $Id: CharacteristicsPanel.java,v 1.28 2006/06/02 10:46:07 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -65,8 +64,8 @@ import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.27 $, $Date: 2006/05/29 11:38:38 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2006/06/02 10:46:07 $
  * @module commonclient
  */
 public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
